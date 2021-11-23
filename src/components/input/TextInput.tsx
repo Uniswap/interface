@@ -1,6 +1,7 @@
 import {
   backgroundColor,
   BackgroundColorProps,
+  BackgroundColorShorthandProps,
   border,
   BorderProps,
   color,
@@ -20,14 +21,14 @@ type RestyleProps = SpacingProps<Theme> &
   SpacingShorthandProps<Theme> &
   BorderProps<Theme> &
   BackgroundColorProps<Theme> &
+  BackgroundColorShorthandProps<Theme> &
   ColorProps<Theme>
 
 export type TextInputProps = RestyleProps &
   BaseTextInputProps &
   Required<Pick<BaseTextInputProps, 'onChangeText'>>
 
-export function TextInput(props: TextInputProps) {
-  const { onChangeText, ...rest } = props
+export function TextInput({ onChangeText, ...rest }: TextInputProps) {
   // Set defaults for style values
   rest.backgroundColor ??= 'mainBackground'
   rest.px ??= 'md'

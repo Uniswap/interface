@@ -11,11 +11,8 @@ type Props = {
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-export function BackButton(props: Props) {
-  const { onPressBack, size, ...rest } = props
-
+export function BackButton({ onPressBack, size, ...rest }: Props) {
   const navigation = useNavigation()
-
   const goBack = onPressBack ? onPressBack : () => navigation.goBack()
 
   return (

@@ -5,7 +5,7 @@ import {
   SpacingShorthandProps,
 } from '@shopify/restyle'
 import React, { memo } from 'react'
-import Checkmark from 'src/assets/icons/checkmark.svg'
+import Dash from 'src/assets/icons/dash.svg'
 import { Box } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
 
@@ -17,7 +17,7 @@ type Props = {
   SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-function _CheckmarkCircle({ size, ...rest }: Props) {
+function _DashCircle({ size, ...rest }: Props) {
   return (
     <Box
       width={size}
@@ -26,9 +26,9 @@ function _CheckmarkCircle({ size, ...rest }: Props) {
       alignItems="center"
       justifyContent="center"
       {...rest}>
-      <Checkmark height={size / 2} width={size / 2} />
+      <Dash height={size / 2} width={size / 2} />
     </Box>
   )
 }
 
-export const CheckmarkCircle = memo(_CheckmarkCircle)
+export const DashCircle = memo(_DashCircle)

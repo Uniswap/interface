@@ -10,8 +10,7 @@ type Props = {
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-export function CloseButton(props: Props) {
-  const { onPress, size, ...rest } = props
+export function CloseButton({ onPress, size, ...rest }: Props) {
   return (
     <Button onPress={onPress} {...rest}>
       <XIcon width={size ?? 20} height={size ?? 20} />

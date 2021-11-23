@@ -10,8 +10,7 @@ interface Props extends ModalProps {
   hide?: () => void
 }
 
-export function Modal(props: React.PropsWithChildren<Props>) {
-  const { title, hide, children, ...rest } = props
+export function Modal({ title, hide, children, ...rest }: React.PropsWithChildren<Props>) {
   return (
     <BaseModal
       animationType="slide"

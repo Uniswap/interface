@@ -1,72 +1,72 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { AccountHeader } from 'src/components/AccountHeader'
+import Plus from 'src/assets/icons/plus.svg'
+import { AccountCard } from 'src/components/accounts/AccountCard'
+import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
+import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
-import { Text } from 'src/components/Text'
-import { AccountStub } from 'src/features/wallet/accounts/types'
-import { useAccounts } from 'src/features/wallet/hooks'
+import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { RootStackParamList } from 'src/screens/navTypes'
 import { Screens } from 'src/screens/Screens'
-import { shortenAddress } from 'src/utils/addresses'
+import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Accounts>
 
 export function AccountsScreen({ navigation }: Props) {
+  const [isEditMode, setIsEditMode] = useState(false)
   const { t } = useTranslation()
 
   const accounts = useAccounts()
+  const activeAccount = useActiveAccount()
+
+  const onPressRemoveAddress = (address: Address) => {
+    logger.debug('AccountsScreen', 'onPressRemoveAddress', 'removing', address)
+    // TODO re-move it move it
+  }
 
   return (
-    <Screen>
+    <Screen bg="gray50">
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <Box flex={1}>
+        <Box>
           <AccountHeader>
-            <Button label={t`Manage`} p="sm" />
-            <Button
-              label="+"
-              onPress={() => navigation.navigate(Screens.ImportAccount)}
-              p="sm"
-              testID="accounts/add/button"
-            />
+            {!isEditMode ? (
+              <CenterBox flexDirection="row">
+                <Button label={t`Manage`} p="sm" onPress={() => setIsEditMode(true)} />
+                <Button
+                  onPress={() => navigation.navigate(Screens.ImportAccount)}
+                  p="sm"
+                  testID="accounts/add/button">
+                  <Plus height={14} width={14} />
+                </Button>
+              </CenterBox>
+            ) : (
+              <Button
+                label={t`Done`}
+                p="sm"
+                color="primary1"
+                onPress={() => setIsEditMode(false)}
+              />
+            )}
           </AccountHeader>
-          <Box flex={1} p="md">
+          <Box p="md">
             {Object.values(accounts).map((account) => (
-              <AccountItem account={account} key={account.address} />
+              <AccountCard
+                account={account}
+                key={account.address}
+                isActive={!!activeAccount && activeAccount.address === account.address}
+                isEditable={isEditMode}
+                onRemove={onPressRemoveAddress}
+              />
             ))}
           </Box>
         </Box>
       </ScrollView>
     </Screen>
-  )
-}
-
-interface AccountItemProps {
-  account: AccountStub
-}
-
-function AccountItem({ account: { address, name } }: AccountItemProps) {
-  return (
-    <Box
-      flexDirection="row"
-      p="md"
-      borderColor="gray200"
-      borderRadius="lg"
-      borderWidth={2}
-      mb="sm"
-      testID={`account_item/${address.toLowerCase()}`}>
-      <Box bg="gray400" borderRadius="full" width={50} height={50} marginRight="sm" />
-      <Box>
-        <Text variant="h3">$2,243.22</Text>
-        <Text variant="body">
-          {name} - {shortenAddress(address)}
-        </Text>
-      </Box>
-    </Box>
   )
 }
 

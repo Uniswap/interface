@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useState } from 'react'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
-import { AccountHeader } from 'src/components/AccountHeader'
+import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
@@ -32,7 +32,7 @@ export function HomeScreen({ navigation }: Props) {
 
   if (!activeAccount)
     return (
-      <Screen backgroundColor="mainBackground">
+      <Screen>
         <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
       </Screen>
     )

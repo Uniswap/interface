@@ -13,9 +13,8 @@ type Props = {
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-export function TooltipButton(props: Props) {
+export function TooltipButton({ title, lines, size, ...rest }: Props) {
   const [showModal, setShowModal] = useState(false)
-  const { title, lines, size, ...rest } = props
   return (
     <>
       <Button onPress={() => setShowModal(true)} {...rest}>

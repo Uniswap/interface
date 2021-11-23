@@ -107,7 +107,7 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         <Stack.Screen
           name={Screens.Accounts}
           component={AccountsScreen}
-          options={{ title: 'Uniswap | Accounts' }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name={Screens.Camera}

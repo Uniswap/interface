@@ -14,8 +14,12 @@ export type SwitchProps = {
 
 // A themed switch toggle
 // TODO may need to replace with a custom switch implementation to match designs
-export function Switch(props: PropsWithChildren<SwitchProps>) {
-  const { value, onValueChange, disabled, ...rest } = props
+export function Switch({
+  value,
+  onValueChange,
+  disabled,
+  ...rest
+}: PropsWithChildren<SwitchProps>) {
   const theme = useTheme<Theme>()
 
   return (

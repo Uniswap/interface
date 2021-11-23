@@ -1,5 +1,6 @@
 import {
   BackgroundColorProps,
+  BackgroundColorShorthandProps,
   BorderProps,
   ColorProps,
   createBox,
@@ -18,6 +19,7 @@ type RestyleProps = SpacingProps<Theme> &
   SpacingShorthandProps<Theme> &
   BorderProps<Theme> &
   BackgroundColorProps<Theme> &
+  BackgroundColorShorthandProps<Theme> &
   ColorProps<Theme>
 
 export type ButtonProps = {
@@ -26,8 +28,7 @@ export type ButtonProps = {
 } & ComponentProps<typeof BaseButton> &
   RestyleProps
 
-export function Button(props: PropsWithChildren<ButtonProps>) {
-  const { label, color, children, ...rest } = props
+export function Button({ label, color, children, ...rest }: PropsWithChildren<ButtonProps>) {
   const baseProps = { hitSlop: defaultHitslopInset, ...rest }
   return (
     <BaseButton {...baseProps}>
