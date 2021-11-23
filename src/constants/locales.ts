@@ -49,7 +49,7 @@ export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
   'el-GR': 'ελληνικά',
   'en-US': 'English',
   'es-ES': 'Español',
-  'fi-FI': 'Suomalainen',
+  'fi-FI': 'suomi',
   'fr-FR': 'français',
   'he-IL': 'עִברִית',
   'hu-HU': 'Magyar',
