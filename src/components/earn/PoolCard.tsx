@@ -86,6 +86,7 @@ const pairDataGql = gql`
     }
   }
 `
+const COMPOUNDS_PER_YEAR = 2
 
 export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
   const { t } = useTranslation()
@@ -112,29 +113,24 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
     )
     swapRewardsUSDPerYear = Math.floor(lastDayVolumeUsd * 365 * 0.0025)
   }
-  const rewardApy = new Percent(farmSummary.rewardsUSDPerYear, farmSummary.tvlUSD)
-  const swapApy = new Percent(toWei(swapRewardsUSDPerYear.toString()), farmSummary.tvlUSD)
-  const apy = new Percent(
+  const rewardApr = new Percent(farmSummary.rewardsUSDPerYear, farmSummary.tvlUSD)
+  const swapApr = new Percent(toWei(swapRewardsUSDPerYear.toString()), farmSummary.tvlUSD)
+  const apr = new Percent(
     toBN(toWei(swapRewardsUSDPerYear.toString())).add(toBN(farmSummary.rewardsUSDPerYear)).toString(),
     farmSummary.tvlUSD
   )
 
-  let quarterlyAPY: React.ReactNode | undefined = <>🤯</>
+  let compoundedAPY: React.ReactNode | undefined = <>🤯</>
   try {
-    quarterlyAPY = apy
-      ? new Percent(
-          Math.floor(parseFloat(apy.divide('2').add('1').toFixed(10)) ** 2 * 1_000_000).toFixed(0),
-          '1000000'
-        ).toFixed(0, { groupSeparator: ',' })
-      : undefined
+    compoundedAPY = annualizedPercentageYield(apr, COMPOUNDS_PER_YEAR)
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    console.error('Weekly apy overflow', farmSummary.farmName, e)
+    console.error('apy calc overflow', farmSummary.farmName, e)
   }
 
   const displayedPercentageReturn =
-    apy.denominator.toString() !== '0'
-      ? `${userAprMode ? apy.toFixed(0, { groupSeparator: ',' }) : quarterlyAPY}%`
+    apr.denominator.toString() !== '0'
+      ? `${userAprMode ? apr.toFixed(0, { groupSeparator: ',' }) : compoundedAPY}%`
       : '-'
 
   return (
@@ -147,7 +143,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
           <TYPE.white fontWeight={600} fontSize={[18, 24]}>
             {token0?.symbol}-{token1?.symbol}
           </TYPE.white>
-          {apy && apy.greaterThan('0') && (
+          {apr && apr.greaterThan('0') && (
             <span
               aria-label="Toggle APR/APY"
               onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}
@@ -180,7 +176,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
             maximumFractionDigits: 0,
           })}
         />
-        {apy && apy.greaterThan('0') && (
+        {apr && apr.greaterThan('0') && (
           <div aria-label="Toggle APR/APY" onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
             <PoolStatRow
               helperText={
@@ -188,8 +184,10 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
                   'Pool is empty'
                 ) : (
                   <>
-                    Reward APR: {rewardApy?.greaterThan('0') && rewardApy?.toSignificant(4)}%<br />
-                    Swap APR: {swapApy?.greaterThan('0') && swapApy?.toSignificant(4)}%<br />
+                    Reward APR: {rewardApr?.greaterThan('0') && rewardApr?.toSignificant(4)}%<br />
+                    Swap APR: {swapApr?.greaterThan('0') && swapApr?.toSignificant(4)}%<br />
+                    <small>APY assumes compounding {COMPOUNDS_PER_YEAR}/year</small>
+                    <br />
                   </>
                 )
               }
@@ -227,6 +225,16 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
       )}
     </Wrapper>
   )
+}
+
+// formula is 1 + ((nom/compoundsPerYear)^compoundsPerYear) - 1
+function annualizedPercentageYield(nominal: Percent, compounds: number) {
+  const ONE = 1
+
+  const divideNominalByNAddOne = Number(nominal.divide(BigInt(compounds)).add(BigInt(ONE)).toFixed(10))
+
+  // multiply 100 to turn decimal into percent, to fixed since we only display integer
+  return ((divideNominalByNAddOne ** compounds - ONE) * 100).toFixed(0)
 }
 
 const PoolInfo = styled.div`
