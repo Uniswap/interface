@@ -1,43 +1,21 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { ChangeEvent, RefObject, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, CheckCircle, ChevronDown, HelpCircle, Info } from 'react-feather'
+import { useState } from 'react'
+import { ChevronDown } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
-import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 
-import AddressInputPanel from '../../components/AddressInputPanel'
-import {
-  BaseButton,
-  ButtonConfirmed,
-  ButtonError,
-  ButtonGray,
-  ButtonLight,
-  ButtonPrimary,
-  ButtonSecondary,
-} from '../../components/Button'
+import { FaucetContract } from '../../abis/types'
+import { ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import FaucetAddressInputPanel from '../../components/faucet/FaucetAddressInputPanel'
 import FaucetDropDown from '../../components/faucet/FaucetDropDown'
-import { FlyoutAlignment, NewMenu } from '../../components/Menu'
-import RangeSelector from '../../components/RangeSelector'
-import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { SearchInput } from '../../components/SearchModal/styleds'
+import { RowBetween } from '../../components/Row'
+import { useFaucetContract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { useSingleCallResult } from '../../state/multicall/hooks'
 import { useDefaultsFromURLSearch } from '../../state/swap/hooks'
-import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 
-const StyledInfo = styled(Info)`
-  height: 16px;
-  width: 16px;
-  margin-left: 4px;
-  color: ${({ theme }) => theme.text3};
-  :hover {
-    color: ${({ theme }) => theme.text1};
-  }
-`
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.text2};
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -62,26 +40,6 @@ export const Wrapper = styled.div`
     max-width: 500px;
   `};
 `
-// const Menu = styled(NewMenu)`
-//   margin-left: 0;
-//   ${({ theme }) => theme.mediaWidth.upToSmall`
-//     flex: 1 1 auto;
-//     width: 49%;
-//     right: 0px;
-//   `};
-//
-//   a {
-//     width: 100%;
-//   }
-// `
-// const MoreOptionsButton = styled(ButtonGray)`
-//   border-radius: 12px;
-//   flex: 1 1 auto;
-//   padding: 6px 8px;
-//   width: 100%;
-//   background-color: ${({ theme }) => theme.bg0};
-//   margin-right: 8px;
-// `
 
 const FormWrapper = styled.div`
   width: 100%;
@@ -105,81 +63,81 @@ const Form = styled.form`
   padding: 8px;
 `
 
-const SelectWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  border-radius: 1.25rem;
-  background-color: ${({ theme }) => theme.bg1};
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  padding-left: 8px;
-  padding-right: 8px;
-`
+const faucetTokens = [
+  {
+    name: 'UzhUniToken',
+    address: '0xE771E7A06abDC5176C9D20365c844680dC75b173',
+    logo: '',
+  },
+  {
+    name: 'UZHSushi',
+    address: '0x8182965A5dC302e6b25b2b177c7CCa42C5099795',
+    logo: '',
+  },
+  {
+    name: 'UZHCro',
+    address: '0x90aF2F7f19A93fc80D4F983218C56Bc2f8544989',
+    logo: '',
+  },
+  {
+    name: 'Incoingnito',
+    address: '0xEe9E427945A073c9C8801dC5da44a276aF339333',
+    logo: '',
+  },
+  {
+    name: 'Intellicoin',
+    address: '0x2A35E060849Fa56Ba648C93a50E23359b5d14515',
+    logo: '',
+  },
+  {
+    name: 'Privatepedia',
+    address: '0x5e1bcb66D6CbFA4F98bB63BaF4357a543232BFbc',
+    logo: '',
+  },
+  {
+    name: 'Coinicious',
+    address: '0xC486C817bE36F9ccf257BfF86CC33ff71a69D651',
+    logo: '',
+  },
+  {
+    name: 'Cryptofficialcoin',
+    address: '0xd0b00725255C35514A8d702b4B4F78C141E8B5eF',
+    logo: '',
+  },
+]
 
-const Select = styled.select`
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg1};
-  border: none;
-`
-
-const Input = styled.input`
-  font-size: 1.25rem;
-  outline: none;
-  border: none;
-  flex: 1 1 auto;
-  width: 0;
-  background-color: ${({ theme }) => theme.bg1};
-  transition: color 300ms;
-  color: ${({ theme }) => theme.text1};
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 500;
-  width: 100%;
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
-  padding: 0px;
-  -webkit-appearance: textfield;
-
-  ::-webkit-search-decoration {
-    -webkit-appearance: none;
-  }
-
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
-`
-
-export default function Faucet({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
+export default function Faucet() {
+  const { account, error } = useActiveWeb3React()
+  const faucetContract = useFaucetContract()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
-  const [walletAddress, setWalletAddress] = useState('')
-  const [selectToken, setselectToken] = useState('ETH')
+  const [selectedToken, setSelectedToken] = useState(faucetTokens[0].name)
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState(faucetTokens[0].address)
 
-  // const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setValue(event.target.value)
-  // }
-
-  const handleChange = (val: string) => {
-    setWalletAddress(val)
-  }
-
-  // const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
-  //   setselectToken(event.target.value)
-  // }
+  const faucetState = useSingleCallResult(faucetContract, 'claim', [selectedTokenAddress])
 
   // const handleSubmit = (event: MouseEvent<HTMLButtonElement>) => {
   //   console.log('Faucet claim request send!')
   // }
+  const claimTokenFaucet = async () => {
+    if (faucetContract) {
+      await faucetContract.claim(selectedTokenAddress)
+    } else {
+      throw new Error('Claim faucet did not work')
+    }
+    // if (!faucetContract) {
+    //   console.log('contract not initialized')
+    // }
+    // console.log(faucetState)
+    // faucetContract
+    //   ?.claim(selectedTokenAddress)
+    //   .then((tx) => {
+    //     console.log(tx)
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+  }
 
   return (
     <>
@@ -197,15 +155,22 @@ export default function Faucet({ history }: RouteComponentProps) {
                   <div>
                     <Trans>Select Token</Trans>
                   </div>
-                  <FaucetDropDown />
+                  <FaucetDropDown
+                    currentToken={selectedToken}
+                    updateCurrentToken={setSelectedToken}
+                    updateSelectedTokenAddress={setSelectedTokenAddress}
+                    availableTokens={faucetTokens}
+                  />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '70%', gap: '8px' }}>
-                  <Trans>Enter your account address</Trans>
-                  <FaucetAddressInputPanel value={walletAddress} onChange={handleChange} />
+                  <Trans>Token contract address</Trans>
+                  <FaucetAddressInputPanel tokenAddress={selectedTokenAddress} />
                 </div>
               </div>
               <div style={{ display: 'flex', width: '100%', gap: '30px', alignItems: 'center' }}>
-                <ButtonSecondary style={{ width: '30%', height: '60%' }}> Send request! </ButtonSecondary>
+                <ButtonSecondary style={{ width: '30%', height: '60%' }} onClick={claimTokenFaucet}>
+                  Send request!
+                </ButtonSecondary>
                 <div style={{ width: '70%' }}>
                   <Trans>How it works</Trans>
                   <p>
