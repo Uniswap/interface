@@ -58,7 +58,7 @@
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
-    "@uniswap/router-sdk": "^1.0.0-beta.6",
+    "@uniswap/router-sdk": "^1.0.0-beta.7",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/smart-order-router": "^2.0.0-beta.7",
     "@uniswap/token-lists": "^1.0.0-beta.27",
