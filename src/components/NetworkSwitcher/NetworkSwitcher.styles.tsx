@@ -76,3 +76,13 @@ export const CloseButton = styled.button`
 export const Image = styled.img`
   max-width: 100%;
 `
+
+export const NetworkTagRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 12px;
+  text-transform: uppercase;
+  color: ${props => props.theme.purple3};
+`
