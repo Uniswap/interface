@@ -1,10 +1,10 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Row, { AutoRow } from 'components/Row'
-import { Version } from 'hooks/useToggledVersion'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
@@ -16,7 +16,7 @@ import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 export interface RoutingDiagramEntry {
   percent: Percent
   path: [Currency, Currency, FeeAmount][]
-  protocol: Version
+  protocol: Protocol
 }
 
 const Wrapper = styled(Box)`
