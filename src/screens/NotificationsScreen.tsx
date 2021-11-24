@@ -32,14 +32,14 @@ export function NotificationsScreen() {
 
   if (!activeAccount || !activeAccount.address) {
     return (
-      <Screen bg="blue">
+      <Screen>
         <Text variant="h1">{t`Connect Wallet`}</Text>
       </Screen>
     )
   }
 
   return (
-    <Screen bg="red">
+    <Screen>
       <NotificationsHeader address={activeAccount?.address} />
       <WebView source={{ uri: `https://etherscan.io/address/${activeAccount?.address}` }} />
     </Screen>
