@@ -19,7 +19,7 @@ import {
   transferTokenReducer,
   transferTokenSaga,
   transferTokenSagaName,
-} from 'src/features/transfer/transferToken'
+} from 'src/features/transfer/transferTokenSaga'
 import {
   createAccountActions,
   createAccountReducer,

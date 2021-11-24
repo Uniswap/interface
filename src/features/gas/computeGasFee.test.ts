@@ -3,10 +3,6 @@ import { ChainId } from 'src/constants/chains'
 import { computeGasFee } from 'src/features/gas/computeGasFee'
 import { gweiToWei } from 'src/utils/wei'
 
-// Note: Unclear why this is needed
-// Without it, jest never passes first await statement
-jest.useRealTimers()
-
 // Data taken from eth_feeHistory queries on Mainnet
 // To generate, send calls like: await provider.send('eth_feeHistory'...
 // As shown in feeSuggestion.ts

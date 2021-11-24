@@ -7,7 +7,7 @@ import { AddressInput } from 'src/components/input/AddressInput'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout/Box'
 import { Modal } from 'src/components/modals/Modal'
-import { transferTokenActions } from 'src/features/transfer/transferToken'
+import { transferTokenActions } from 'src/features/transfer/transferTokenSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
 const initialValues = {
