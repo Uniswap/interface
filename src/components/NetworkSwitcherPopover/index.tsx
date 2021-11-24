@@ -53,7 +53,6 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
         onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
       }
     })
-  console.log({ options })
 
   function optionsV3(network: NetworkOptionsPreset) {
     const { chainId, logoSrc, name } = network
@@ -66,7 +65,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   }
 
   const tagFilteredArray = networkOptionsPreset.reduce<NetworkList[]>((taggedArray, currentNet) => {
-    const tag = currentNet.tag ? currentNet.tag : 'default'
+    const tag = currentNet.tag ? currentNet.tag : 'mainnet'
     // check if tag exist and if not create array
     const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
     if (tagArrIndex > -1) {
@@ -77,7 +76,6 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
 
     return taggedArray
   }, [])
-  console.log({ tagFilteredArray })
 
   return (
     <NetworkSwitcher

@@ -42,7 +42,7 @@ export const NetworkSwitcher = ({
   })
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-
+  console.log({ list })
   return (
     <div ref={popoverRef}>
       <EthereumOptionPopover show={ethereumOptionPopoverOpen}>
@@ -50,16 +50,14 @@ export const NetworkSwitcher = ({
           placement={placement}
           content={
             <>
-              <OptionGrid>
-                {options.map((props, index) => (
-                  <Option key={index} {...props} />
-                ))}
-              </OptionGrid>
-
-              <OptionGrid>
-                <NetworkTagRow>{list && list[0].tag}</NetworkTagRow>
-                {list && list[0].networks.map((props, index) => <Option key={index} {...props} />)}
-              </OptionGrid>
+              {list.map((network, index) => (
+                <OptionGrid key={index}>
+                  <NetworkTagRow>{network.tag}</NetworkTagRow>
+                  {network.networks.map((props, index) => (
+                    <Option key={index} {...props} />
+                  ))}
+                </OptionGrid>
+              ))}
               {showWalletConnector && !!account && (
                 <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>
               )}

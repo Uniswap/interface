@@ -1,5 +1,5 @@
 import { ChainId } from '@swapr/sdk'
-import { NetworkOptionProps, networkOptionsPreset } from '../../components/NetworkSwitcher'
+import { NetworkList, NetworkOptionProps, NetworkOptionsPreset, networkOptionsPreset } from '../../components/NetworkSwitcher'
 import { NETWORK_DETAIL } from '../../constants'
 
 export enum BridgeStep {
@@ -36,3 +36,50 @@ export const createNetworkOptions = ({
 
 export const getNetworkOptionById = (chainId: ChainId, options: ReturnType<typeof createNetworkOptions>) =>
   options.find(option => option.chainId === chainId)
+
+export const createNetworkOptionsList = ({
+  value,
+  setValue,
+  activeChainId,
+  option
+}: {
+  value: ChainId
+  setValue: (chainId: ChainId) => void
+  activeChainId: ChainId | undefined
+  option: NetworkOptionsPreset
+}) => {
+      const { chainId: optionChainId, logoSrc, name } = option
+      return {
+        chainId: optionChainId,
+        header: name,
+        logoSrc: logoSrc,
+        active: value === activeChainId,
+        disabled: value === optionChainId,
+        onClick: () => setValue(optionChainId)
+      }
+    }
+}
+
+export const tagFilteredArray = ({
+  value,
+  setValue,
+  activeChainId
+}: {
+  value: ChainId
+  setValue: (chainId: ChainId) => void
+  activeChainId: ChainId | undefined
+}): NetworkList[] => {
+  return networkOptionsPreset.reduce<NetworkList[]>((taggedArray, currentNet) => {
+    const net: NetworkOptionsPreset = currentNet
+  const tag = currentNet.tag ? currentNet.tag : 'mainnet'
+  if(tag){
+  // check if tag exist and if not create array
+  const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
+  if (tagArrIndex > -1) {
+    taggedArray[tagArrIndex].networks.push(createNetworkOptionsList({value, setValue, activeChainId, net}))
+  } else {
+    taggedArray.push({ tag, networks: [createNetworkOptionsList({value, setValue, activeChainId, net})] })
+  }}
+
+  return taggedArray
+}}

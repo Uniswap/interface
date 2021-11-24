@@ -16,7 +16,7 @@ export const StyledPopover = styled(Popover)`
 export const OptionGrid = styled.div`
   display: grid;
   grid-gap: 10px;
-  padding: 22px 22px 15px;
+  padding: 22px 22px 5px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     grid-gap: 10px;
