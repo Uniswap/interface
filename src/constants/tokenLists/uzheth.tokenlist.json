@@ -1,6 +1,6 @@
 {
   "name": "UZHETH Tokens",
-  "logoURI": "https://ipfs.io/ipfs/QmYf3URM81VCRyzaaSRmLvaAivAdspgFAKWz5fmn5DybK6",
+  "logoURI": "https://ipfs.io/ipfs/QmeviQixXbRdgBczykx5H1Hpxksgt2tbZjtxiCCTLXdtps",
   "keywords": [
     "set",
     "tokensets",
@@ -14,7 +14,7 @@
       "name": "UZHSushiToken",
       "symbol": "UZHSUS",
       "decimals": 18,
-      "logoURI": "https://ipfs.io/ipfs/Qma6dQ8BoHBDEhJZHgfErJuURT7zexnTtjgZhJhH9dFou1"
+      "logoURI": "https://ipfs.io/ipfs/QmPRwT9douodVtnD8aKGVwi13Z8f2wpZKSMfEw4RZg1wZ7"
     },
     {
       "chainId": 702,
@@ -22,7 +22,7 @@
       "name": "UZUniToken",
       "symbol": "UNI",
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/dpi.svg"
+      "logoURI": "https://ipfs.io/ipfs/QmeviQixXbRdgBczykx5H1Hpxksgt2tbZjtxiCCTLXdtps"
     },
     {
       "chainId": 702,
@@ -30,7 +30,7 @@
       "name": "Incoingnito",
       "symbol": "ICG",
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/dpi.svg"
+      "logoURI": "https://ipfs.io/ipfs/QmeviQixXbRdgBczykx5H1Hpxksgt2tbZjtxiCCTLXdtps"
     },
     {
       "chainId": 702,
@@ -38,7 +38,7 @@
       "name": "UZHCroToken",
       "symbol": "UZHCRO",
       "decimals": 18,
-      "logoURI": "https://ipfs.io/ipfs/Qma6dQ8BoHBDEhJZHgfErJuURT7zexnTtjgZhJhH9dFou1"
+      "logoURI": "https://ipfs.io/ipfs/QmeviQixXbRdgBczykx5H1Hpxksgt2tbZjtxiCCTLXdtps"
     },
     {
       "chainId": 702,
@@ -46,7 +46,7 @@
       "name": "Intellicoin",
       "symbol": "ITC",
       "decimals": 18,
-      "logoURI": "https://ipfs.io/ipfs/QmWzds3UZgazTMnQc4r8hyYuERQUb4SdYtYdaDD1k1YXB3"
+      "logoURI": "https://ipfs.io/ipfs/QmeviQixXbRdgBczykx5H1Hpxksgt2tbZjtxiCCTLXdtps"
     },
     {
       "chainId": 702,
@@ -54,7 +54,7 @@
       "name": "Privatepedia",
       "symbol": "PVT",
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/dpi.svg"
+      "logoURI": "https://ipfs.io/ipfs/QmeviQixXbRdgBczykx5H1Hpxksgt2tbZjtxiCCTLXdtps"
     },
     {
       "chainId": 702,
@@ -62,7 +62,7 @@
       "name": "Coinicious",
       "symbol": "CNS",
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/dpi.svg"
+      "logoURI": "https://ipfs.io/ipfs/QmeviQixXbRdgBczykx5H1Hpxksgt2tbZjtxiCCTLXdtps"
     },
     {
       "chainId": 702,
@@ -70,7 +70,7 @@
       "name": "Cryptofficailcoin",
       "symbol": "COC",
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/dpi.svg"
+      "logoURI": "https://ipfs.io/ipfs/QmPRwT9douodVtnD8aKGVwi13Z8f2wpZKSMfEw4RZg1wZ7"
     }
   ],
   "version": {
