@@ -114,7 +114,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    trade: { state: v3TradeState, trade },
+    trade: { state: tradeState, trade },
     allowedSlippage,
     currencyBalances,
     parsedAmount,
@@ -145,8 +145,8 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
-    () => [!trade?.swaps, TradeState.LOADING === v3TradeState, TradeState.SYNCING === v3TradeState],
-    [trade, v3TradeState]
+    () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
+    [trade, tradeState]
   )
 
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
