@@ -57,7 +57,6 @@ export function useContract<T extends Contract = Contract>(
     if (!address) return null
     try {
       return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
-      console.log(library, account, chainId)
     } catch (error) {
       console.error('Failed to get contract', error)
       return null
@@ -150,5 +149,9 @@ export function useV3Quoter() {
 }
 
 export function useFaucetContract() {
+  const { library, account, chainId } = useActiveWeb3React()
+  console.log(library)
+  console.log('account: ', account)
+  console.log(chainId)
   return useContract<FaucetContract>(FAUCET_ADDRESSES, FAUCET_ABI, true)
 }

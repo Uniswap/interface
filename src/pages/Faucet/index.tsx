@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { FaucetContract } from '../../abis/types'
@@ -116,11 +115,10 @@ export default function Faucet() {
 
   const faucetState = useSingleCallResult(faucetContract, 'claim', [selectedTokenAddress])
 
-  // const handleSubmit = (event: MouseEvent<HTMLButtonElement>) => {
-  //   console.log('Faucet claim request send!')
-  // }
   const claimTokenFaucet = async () => {
-    if (faucetContract) {
+    console.log(faucetState)
+    if (faucetContract && faucetState.valid) {
+      console.log(faucetContract)
       await faucetContract.claim(selectedTokenAddress)
     } else {
       throw new Error('Claim faucet did not work')
