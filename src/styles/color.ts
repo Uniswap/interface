@@ -22,6 +22,7 @@ interface Palette {
   success: string
   warning: string
   error: string
+  none: string
 }
 
 export const colorsLight: Palette = {
@@ -46,6 +47,7 @@ export const colorsLight: Palette = {
   success: '#007D35',
   warning: '#FF8F00',
   error: '#DF1F38',
+  none: 'transparent',
 }
 
 export const colorsDark: Palette = {
@@ -70,4 +72,5 @@ export const colorsDark: Palette = {
   success: '#27AE60',
   warning: '#FF8F00',
   error: '#FD4040',
+  none: 'transparent',
 }

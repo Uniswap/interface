@@ -1,17 +1,13 @@
 import { createTheme } from '@shopify/restyle'
+import { buttonVariants } from 'src/styles/button'
 import { colorsDark, colorsLight } from 'src/styles/color'
 import { textVariants } from 'src/styles/font'
 import { borderRadii, spacing } from 'src/styles/sizing'
 import { zIndices } from 'src/styles/zIndices'
 
 export const theme = createTheme({
-  colors: {
-    mainBackground: colorsLight.white,
-    mainForeground: colorsLight.black,
-    ...colorsLight,
-  },
-  textVariants,
-  spacing,
+  buttonVariants,
+  borderRadii,
   breakpoints: {
     phone: 0,
     longPhone: {
@@ -21,7 +17,13 @@ export const theme = createTheme({
     tablet: 768,
     largeTablet: 1024,
   },
-  borderRadii,
+  colors: {
+    mainBackground: colorsLight.white,
+    mainForeground: colorsLight.black,
+    ...colorsLight,
+  },
+  spacing,
+  textVariants,
   zIndices,
 })
 

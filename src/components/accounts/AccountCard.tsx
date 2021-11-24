@@ -27,7 +27,7 @@ export function AccountCard({ account: { address, name }, isActive, isEditable, 
       borderWidth={1}
       testID={`account_item/${address.toLowerCase()}`}>
       {isEditable && onRemove && (
-        <Button onPress={() => onRemove(address)} mr="sm">
+        <Button variant="text" onPress={() => onRemove(address)} mr="sm">
           <DashCircle backgroundColor="red" size={24} />
         </Button>
       )}

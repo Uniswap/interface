@@ -36,8 +36,14 @@ export function AccountsScreen({ navigation }: Props) {
           <AccountHeader>
             {!isEditMode ? (
               <CenterBox flexDirection="row">
-                <Button label={t`Manage`} p="sm" onPress={() => setIsEditMode(true)} />
                 <Button
+                  variant="text"
+                  label={t`Manage`}
+                  p="sm"
+                  onPress={() => setIsEditMode(true)}
+                />
+                <Button
+                  variant="text"
                   onPress={() => navigation.navigate(Screens.ImportAccount)}
                   p="sm"
                   testID="accounts/add/button">
@@ -46,6 +52,7 @@ export function AccountsScreen({ navigation }: Props) {
               </CenterBox>
             ) : (
               <Button
+                variant="text"
                 label={t`Done`}
                 p="sm"
                 color="primary1"

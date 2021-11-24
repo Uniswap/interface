@@ -82,6 +82,7 @@ export function DevScreen({ navigation }: Props) {
           <Box flexDirection="row" alignItems="center" justifyContent="center" flexWrap="wrap">
             {Object.values(Screens).map((s) => (
               <Button
+                variant="text"
                 testID={`dev_screen/${s}`}
                 label={s}
                 onPress={() => activateWormhole(s)}
@@ -94,10 +95,15 @@ export function DevScreen({ navigation }: Props) {
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
 
-          <Button label={t('Create Account')} onPress={onPressCreate} mt="md" />
-          <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="sm" />
-          <Button label={t('Toggle Rinkeby')} onPress={onPressToggleRinkeby} mt="sm" />
-          <Button label={t('Compute fee')} onPress={onPressComputeFee} mt="sm" />
+          <Button variant="text" label={t('Create Account')} onPress={onPressCreate} mt="md" />
+          <Button variant="text" label={t('Get Balance')} onPress={onPressGetBalance} mt="sm" />
+          <Button
+            variant="text"
+            label={t('Toggle Rinkeby')}
+            onPress={onPressToggleRinkeby}
+            mt="sm"
+          />
+          <Button variant="text" label={t('Compute fee')} onPress={onPressComputeFee} mt="sm" />
           <Text textAlign="center" mt="xl">
             {`Active Chains: ${activeChains}`}
           </Text>

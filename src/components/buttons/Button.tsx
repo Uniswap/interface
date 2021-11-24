@@ -1,32 +1,28 @@
 import {
-  BackgroundColorProps,
-  BackgroundColorShorthandProps,
-  BorderProps,
+  color as restyleColor,
   ColorProps,
-  createBox,
-  SpacingProps,
-  SpacingShorthandProps,
+  createRestyleComponent,
+  createVariant,
+  VariantProps,
 } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren } from 'react'
-import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { Pressable, PressableProps } from 'react-native'
+import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
-const BaseButton = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
-
-type RestyleProps = SpacingProps<Theme> &
-  SpacingShorthandProps<Theme> &
-  BorderProps<Theme> &
-  BackgroundColorProps<Theme> &
-  BackgroundColorShorthandProps<Theme> &
-  ColorProps<Theme>
+const BaseButton = createRestyleComponent<
+  VariantProps<Theme, 'buttonVariants'> &
+    ColorProps<Theme> &
+    PressableProps &
+    ComponentProps<typeof Box>,
+  Theme
+>([restyleColor, createVariant({ themeKey: 'buttonVariants' })], Pressable)
 
 export type ButtonProps = {
   label?: string
-  // Add more custom props here as needed
-} & ComponentProps<typeof BaseButton> &
-  RestyleProps
+} & ComponentProps<typeof BaseButton>
 
 export function Button({ label, color, children, ...rest }: PropsWithChildren<ButtonProps>) {
   const baseProps = { hitSlop: defaultHitslopInset, ...rest }
