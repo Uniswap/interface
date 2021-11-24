@@ -13,7 +13,7 @@ import { computeRoutes, transformRoutesToTrade } from './utils'
 /**
  * Picks required properties of a `Token` to make it serializable
  * Required to pass token data in the redux store
- * */
+ */
 const tokenToSerializable = ({ address, chainId, symbol, decimals }: Token) => ({
   address,
   chainId,

@@ -10,9 +10,7 @@ export type Dependencies = {
   [chainId in SupportedChainId]?: AlphaRouterParams
 }
 
-/**
- * Minimal set of dependencies for the router to work locally.
- */
+/** Minimal set of dependencies for the router to work locally.  */
 export function buildDependencies(): Dependencies {
   const dependenciesByChain: Dependencies = {}
   for (const chainId of SUPPORTED_CHAINS) {

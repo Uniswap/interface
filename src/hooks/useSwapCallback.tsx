@@ -120,7 +120,6 @@ function useSwapCallArguments(
         value,
       },
     ]
-    // }
   }, [account, allowedSlippage, argentWalletContract, chainId, deadline, library, recipient, signatureData, trade])
 }
 

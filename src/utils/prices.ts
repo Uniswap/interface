@@ -38,15 +38,14 @@ export function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, Tra
 
       const routeRealizedLPFeePercent = overallPercent.multiply(
         ONE_HUNDRED_PERCENT.subtract(
-          swap.route.pools.reduce<Percent>(
-            (currentFee: Percent, pool): Percent =>
-              currentFee.multiply(
-                ONE_HUNDRED_PERCENT.subtract(
-                  new Fraction(pool instanceof Pair ? FeeAmount.MEDIUM : pool.fee, 1_000_000)
-                )
-              ),
-            ONE_HUNDRED_PERCENT
-          )
+          swap.route.pools.reduce<Percent>((currentFee: Percent, pool): Percent => {
+            const fee =
+              pool instanceof Pair
+                ? // not currently possible given the if above, but not fatal
+                  FeeAmount.MEDIUM
+                : pool.fee
+            return currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(fee, 1_000_000)))
+          }, ONE_HUNDRED_PERCENT)
         )
       )
 

@@ -2,14 +2,12 @@ import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import Badge, { BadgeVariant } from 'components/Badge'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { memo } from 'react'
-import { Check } from 'react-feather'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
@@ -41,18 +39,6 @@ export default memo(function SwapRoute({
           <AutoRouterLogo />
           <AutoRouterLabel />
         </AutoRow>
-        {syncing ? (
-          <LoadingRows>
-            <div style={{ width: '30px', height: '24px' }} />
-          </LoadingRows>
-        ) : (
-          <Badge variant={BadgeVariant.POSITIVE}>
-            <Check size={14} color="white" />
-            <TYPE.white fontSize={12} marginLeft="4px">
-              <Trans>Best Price</Trans>
-            </TYPE.white>
-          </Badge>
-        )}
       </RowBetween>
       <Separator />
       {syncing ? (
