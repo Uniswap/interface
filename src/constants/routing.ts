@@ -1,5 +1,6 @@
 // a list of tokens by chain
 import { Currency, Token } from '@uniswap/sdk-core'
+import { binanceTokens } from 'utils/binance.tokens'
 import { SupportedChainId } from './chains'
 import {
   AMPL,
@@ -64,6 +65,7 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  */
 export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.MAINNET]: [
+    new Token(SupportedChainId.MAINNET, '0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 9, 'KIBA', 'Kiba Inu'),
     ExtendedEther.onChain(SupportedChainId.MAINNET),
     DAI,
     USDC,
@@ -78,6 +80,15 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.RINKEBY]: [
     ExtendedEther.onChain(SupportedChainId.RINKEBY),
     WETH9_EXTENDED[SupportedChainId.RINKEBY],
+  ],
+  [SupportedChainId.BINANCE]: [
+    new Token(SupportedChainId.BINANCE, '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 9, 'KIBA', 'Kiba Inu'),
+    binanceTokens.bnb,
+    binanceTokens.wbnb,
+    binanceTokens.busd,
+    binanceTokens.cake,
+    binanceTokens.dai,
+    binanceTokens.eth
   ],
   [SupportedChainId.GOERLI]: [ExtendedEther.onChain(SupportedChainId.GOERLI), WETH9_EXTENDED[SupportedChainId.GOERLI]],
   [SupportedChainId.KOVAN]: [ExtendedEther.onChain(SupportedChainId.KOVAN), WETH9_EXTENDED[SupportedChainId.KOVAN]],

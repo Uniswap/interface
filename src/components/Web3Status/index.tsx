@@ -25,6 +25,8 @@ import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 import Badge, { BadgeVariant } from 'components/Badge'
+import { switchToNetwork } from 'utils/switchToNetwork'
+import { SupportedChainId } from 'constants/chains'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -247,40 +249,7 @@ export default function Web3Status() {
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
   const { library, chainId } = useWeb3React()
   const [isSwitching, setIsSwitching] = React.useState(false)
-
-  const switchNetwork = React.useCallback(async () => {
-    if (library && library.provider && !isSwitching) {
-      console.log('switch request')
-      setIsSwitching(true)
-      try {
-        library.provider
-          .request({
-            method: 'wallet_switchEthereumChain',
-            params: [{
-              //@ts-ignore // need this for incorrect ethers provider type
-              chainId: chainId === 56 ? '0x1' : `0x38`
-            }]
-          }).finally(() => setIsSwitching(false))
-      } catch (switchError: any) {
-        console.log('switch error' ,switchError)
-        if (switchError.code === 4902) {
-          try {
-            await library.provider.request({
-              method: 'wallet_addEthereumChain',
-              params: [{ chainId: chainId === 56 ? '0x1' : `0x38` }],
-            }).finally(() => setIsSwitching(false));
-          } catch (addError) {
-            // handle "add" error
-            setIsSwitching(false)
-          }
-        }
-        setIsSwitching(false)
-      }
-    } else {
-      alert("No provider");
-      setIsSwitching(false)
-    }
-  }, [chainId])
+  const chainToSwitchTo = React.useMemo(() => chainId && chainId === 1 ? SupportedChainId.BINANCE : SupportedChainId.MAINNET,[chainId])
 
   if (!contextNetwork.active && !active) {
     return null
@@ -289,7 +258,13 @@ export default function Web3Status() {
   return (
     <>
       <Web3StatusInner />
-      <Badge variant={BadgeVariant.PRIMARY} style={{background:"#222"}} onClick={async () => await switchNetwork()}>{chainId === 1 ? 'ETH' : 'BSC'} &nbsp; {chainId === 56 ? <ToggleRight/> : <ToggleLeft />} </Badge>
+      <Badge 
+        variant={BadgeVariant.PRIMARY} 
+        style={{background:"#222"}} 
+        onClick={async () => await switchToNetwork({library,chainId: chainToSwitchTo})}>
+          {chainId === 1 ? 'ETH' : 'BSC'} 
+          &nbsp; {chainId === 56 ? <ToggleRight/> : <ToggleLeft />} 
+      </Badge>
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )

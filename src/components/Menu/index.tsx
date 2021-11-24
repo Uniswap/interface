@@ -15,6 +15,8 @@ import {
   Lock,
   Star,
   Tool,
+  DollarSign,
+  List,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -89,7 +91,7 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 196px;
-  max-height: 350px;
+  max-height: 370px;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -223,21 +225,17 @@ export default function Menu() {
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
-
   const [darkMode, toggleDarkMode] = useDarkModeManager()
-
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
 
   useEffect(() => {
     setMenu('main')
   }, [open])
-  const[ showLockModal, setShowLM] = React.useState(false)
+  const [showLockModal, setShowLM] = React.useState(false)
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton style={{background:"#222"}} onClick={toggle}>
+      <StyledMenuButton style={{ background: "#222" }} onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
@@ -249,62 +247,68 @@ export default function Menu() {
             case 'main':
             default:
               return (
-            <>
-                <MenuFlyout>
-                <InternalLinkMenuItem to="/fomo">
-                  <div>
-                    <Trans>KibaFomo</Trans>
-                  </div>
-                  <Star opacity={0.6} size={16} />
-                </InternalLinkMenuItem>
-                <InternalLinkMenuItem to="/honeypot-checker">
-                <div>
-                  <Trans>Honeypot Checker</Trans>
-                </div>
-                <Code opacity={0.6} size={16} />
-              </InternalLinkMenuItem>
-              <InternalLinkMenuItem to="/suite">
-              <div>
-                      <Trans>KibaTools</Trans>
-                    </div>
-                    <Tool size={16} opacity={0.6} />
-              </InternalLinkMenuItem>
-                  <MenuItem href="https://kibainu.space/">
-                    <div>
-                      <Trans>About</Trans>
-                    </div>
-                    <Info opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href="https://t.me/kibainueth/">
-                    <div>
-                      <Trans>Telegram</Trans>
-                    </div>
-                    <BookOpen opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href="https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104">
-                    <div>
-                      <Trans>Dextools</Trans>
-                    </div>
-                    <BarChart2 opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href={'https://twitter.com/kibainu_eth'}>
-                    <div>
-                      <Trans>Twitter</Trans>
-                    </div>
-                    <Twitter opacity={0.6} size={16} />
-                  </MenuItem>
-                  <ToggleMenuItem onClick={() => setMenu('lang')}>
-                    <div>
-                      <Trans>Language</Trans>
-                    </div>
-                    <ChevronRight size={16} opacity={0.6} />
-                  </ToggleMenuItem>
-                </MenuFlyout>
+                <>
+                  <MenuFlyout>
+                    <InternalLinkMenuItem to="/fomo">
+                      <div>
+                        <Trans>KibaFomo</Trans>
+                      </div>
+                      <Star opacity={0.6} size={16} />
+                    </InternalLinkMenuItem>
+                    <InternalLinkMenuItem to="/honeypot-checker">
+                      <div>
+                        <Trans>Honeypot Checker</Trans>
+                      </div>
+                      <Code opacity={0.6} size={16} />
+                    </InternalLinkMenuItem>
+                    <InternalLinkMenuItem to="/suite">
+                      <div>
+                        <Trans>KibaTools</Trans>
+                      </div>
+                      <Tool size={16} opacity={0.6} />
+                    </InternalLinkMenuItem>
+                    {chainId && chainId === 1 && <InternalLinkMenuItem to="/details">
+                      <div>
+                        <Trans>Transactions</Trans>
+                      </div>
+                      <List size={16} opacity={0.6} />
+                    </InternalLinkMenuItem>}
+                    <MenuItem href="https://kibainu.space/">
+                      <div>
+                        <Trans>About</Trans>
+                      </div>
+                      <Info opacity={0.6} size={16} />
+                    </MenuItem>
+                    <MenuItem href="https://t.me/KibaInuGlobal/">
+                      <div>
+                        <Trans>Telegram</Trans>
+                      </div>
+                      <BookOpen opacity={0.6} size={16} />
+                    </MenuItem>
+                    <MenuItem href="https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104">
+                      <div>
+                        <Trans>Dextools</Trans>
+                      </div>
+                      <BarChart2 opacity={0.6} size={16} />
+                    </MenuItem>
+                    <MenuItem href={'https://twitter.com/kibainukiba'}>
+                      <div>
+                        <Trans>Twitter</Trans>
+                      </div>
+                      <Twitter opacity={0.6} size={16} />
+                    </MenuItem>
+                    <ToggleMenuItem onClick={() => setMenu('lang')}>
+                      <div>
+                        <Trans>Language</Trans>
+                      </div>
+                      <ChevronRight size={16} opacity={0.6} />
+                    </ToggleMenuItem>
+                  </MenuFlyout>
                 </>
               )
           }
         })()}
-                <LockModal isOpen={showLockModal} setIsOpen={setShowLM} />
+      <LockModal isOpen={showLockModal} setIsOpen={setShowLM} />
 
     </StyledMenu>
   )

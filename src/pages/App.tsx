@@ -14,6 +14,7 @@ import {
   useQuery,
   gql
 } from "@apollo/client";
+import { GelatoProvider } from "@gelatonetwork/limit-orders-react";
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
@@ -24,7 +25,7 @@ import { Route, Switch } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import ThemeProvider, { TYPE } from 'theme'
 import { IconWrapper } from 'theme/components'
 import { isAddress } from 'utils'
 import Web3 from 'web3'
@@ -85,6 +86,7 @@ import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import Tooltip from 'components/Tooltip'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import { AccountPage } from 'components/AccountPage/AccountPage'
+import { Transactions } from './Vote/TransactionsPage'
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
@@ -124,7 +126,7 @@ const HeaderWrapper = styled.div`
 
 const StyledHeader = styled.div`
   font-family:"Bangers", cursive;
-  font-size:22px;
+  font-size:24px;
 `
 const Marginer = styled.div`
   margin-top: 5rem;
@@ -146,12 +148,11 @@ const VideoWrapper = styled.div`
   background-position:center center;
   background-repeat:no-repeat;
 `
-export const isHoneyPot =  (address:string)  => {
-  const provider = window.ethereum ? window.ethereum : walletconnect
+export const isHoneyPot =  (address:string, provider?: any)  => {
   const web3 = new Web3(provider as any);
 
     if (!address) {
-      return false;
+      return Promise.resolve(false);
     }
 
     if (isAddress(address.toLowerCase())) {
@@ -243,7 +244,7 @@ export const isHoneyPot =  (address:string)  => {
         })
       });
 
-  } else return false;
+  } else return Promise.resolve(false);
 }
 
 const HoneyPotDetector = () => {
@@ -359,9 +360,9 @@ const HoneyPotDetector = () => {
   if (chainId === 56) return <HoneyPotBsc />
   
   return (<DarkCard style={{ background:'radial-gradient(#f5b642, rgba(129,3,3,.99))', opacity: '.96', maxWidth: 600 }} id="honeypage">
-    <div style={{ maxWidth: 600, margin: 'auto', paddingBottom: '1rem' }}>
-      <StyledHeader>Honeypot Checker (ETH)</StyledHeader>
-      <small>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
+    <div style={{ maxWidth: 600, display:'flex', flexFlow:'column wrap',margin: 'auto', paddingBottom: '1rem' }}>
+      <Badge style={{width:220}}><StyledHeader>Honeypot Checker (ETH)</StyledHeader></Badge>
+      <small style={{marginTop:3, paddingLeft:3}}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
     </div>
     <RowFixed style={{ maxWidth: 600, width: "100%" }} >
       {hasInvalidPermissions === false &&
@@ -443,13 +444,19 @@ export default function App() {
       </VideoWrapper>
     )
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
-  const {chainId} = useWeb3React()
+  const {chainId,account,library} = useWeb3React()
   const GainsPage = (props:any) =>   <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
+      <GelatoProvider
+  library={library}
+  chainId={chainId}
+  account={account ?? undefined} 
+  useDefaultTheme={false}
+  >
         <ApolloProvider client={chainId && chainId === 1 ? client : chainId && chainId === 56 ? bscClient : new ApolloClient({
           uri: '',
           cache: new InMemoryCache() as any
@@ -460,6 +467,7 @@ export default function App() {
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
+         
             <Popups />
             <Polling />
             <TopLevelModals />
@@ -467,13 +475,13 @@ export default function App() {
               <Route exact strict path="/details" component={AccountPage} />
               <Route exact strict path="/limit" component={LimitOrders} />
               <Route exact strict path="/selective-charts" component={SelectiveChart}/>
-              <Route exact strict path="/fomo" component={Fomo} />
+              <Route exact strict path="/fomo" component={FomoPage} />
               <Route exact strict path="/donation-tracker" component={DonationTracker} />
               <Route exact strict path="/proposal/create" component={AddProposal} />
               <Route exact strict path="/proposal/details/:id" component={ProposalDetails} />
               <Route exact strict path="/gains-tracker" component={GainsTracker} />
               <Route exact strict path="/suite" component={Suite} />
-            
+              <Route exact strict path="/transactions" component={Transactions} />
               <Route exact strict path="/gains" component={GainsPage} />
 
               <Route exact strict path="/honeypot-checker" component={HoneyPotDetector} />
@@ -524,12 +532,13 @@ export default function App() {
 
             <Marginer />
 
-
           </BodyWrapper>
 
 
         </AppWrapper>
         </ApolloProvider>
+    </GelatoProvider>
+
       </Web3ReactManager>
 
     </ErrorBoundary>

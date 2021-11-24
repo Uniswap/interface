@@ -38,6 +38,7 @@ import Swal from 'sweetalert2'
 import { ChartModal } from 'components/swap/ChartModal'
 import { useEthPrice } from 'state/logs/utils'
 import Badge from 'components/Badge'
+import useInterval from 'hooks/useInterval'
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
   grid-template-columns: 150px 1fr 120px;
@@ -328,23 +329,12 @@ export default function Header() {
       window.removeEventListener('resize', handleWindowSizeChange)
     }
   }, [])
-  const ChartModalElm = React.memo(() => <ChartModal isOpen={chartOpen} onDismiss={() => setChartOpen(false)} />);
-  ChartModalElm.displayName = 'CHART_MODAL_ELEMENT';
   const isMobile: boolean = width <= 768
-  const [showTip, setShowTip] = useState(false)
-  const [darkmode] = useDarkModeManager()
+
   const [gas, setGas] = React.useState<any>()
   const [showNotify, setShowNotify] = React.useState(!!localStorage.getItem('subscribed') && localStorage.getItem('subscribed') !== 'false');
-
-  let interval = null
-  const [isOpen, setIsOpen] = React.useState(false)
   React.useEffect(() => {
-    const promise = () => fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
-    .then((res) => res.json())
-    .then((response) => {
-      setGas(response)
-    }).then(() => {
-      if (!isOpen && showNotify && Math.trunc(gas?.fast / 10) <= 85) {
+      if (showNotify && Math.trunc(gas?.fast / 10) <= 85) {
         Swal.fire({
           toast: true,
           position: 'bottom-end',
@@ -354,16 +344,17 @@ export default function Header() {
           icon: 'success',
           title: 'GWEI is currently at ' + Math.trunc(gas?.fast / 10)
         })
-      }
-    });  
-      promise();
-    return () => {
-      interval = null;
-    }
-  }, [isOpen, showNotify])
-
+      } 
+  }, [gas, showNotify])
+  const promise = () => {
+    console.log(`fetching gas prices`)
+    fetch('https://ethgasstation.info/api/ethgasAPI.json?api-key=XXAPI_Key_HereXXX', { method: 'GET' })
+    .then((res) => res.json())
+    .then((response) => {
+      setGas(response)
+    })
+  } 
   const onNotify = React.useCallback(() => {
-    setIsOpen(true);
     Swal.fire({
       title: showNotify ? "Cancel notifications" : 'Subscribe to notifications',
       text: showNotify ? "Cancelling notifications will no longer alert you when GWEI is in optimal conditions ( GWEI < 85 )." : 'Subscribing to notifications will alert you in app when GWEI is in optimal conditions (GWEI < 85).',
@@ -372,7 +363,6 @@ export default function Header() {
       showCancelButton: true,
       icon: 'question',
     }).then(({ isConfirmed }) => {
-      setIsOpen(false)
       if (showNotify && isConfirmed) {
         setShowNotify(() => false)
         localStorage.setItem('subscribed', 'false')
@@ -381,14 +371,13 @@ export default function Header() {
         localStorage.setItem('subscribed', 'true')
       }
     })
-  }, [showNotify, isOpen])
+  }, [showNotify])
 
-  const [chartOpen, setChartOpen] = React.useState(false)
   const [showGasTt, setShowGasTt] = React.useState(false)
+  useInterval(promise, 15000, true)
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>
-        {isOpen && <ChartModalElm />}
         <ClaimModal />
         <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
           <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
