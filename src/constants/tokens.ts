@@ -7,33 +7,39 @@ import { SupportedChainId } from './chains'
 uzh swap tokens
  */
 
+export const UZHUNI = new Token(
+  SupportedChainId.UZH,
+  '0xd0948BF75F37679ae6F10589a05E014A8Bd70630',
+  18,
+  'UZHUNI',
+  'UZHUniToken'
+)
 export const UZHSUSHI = new Token(
   SupportedChainId.UZH,
-  '0x8182965A5dC302e6b25b2b177c7CCa42C5099795',
+  '0x2FBD50A221E7fD24270ef3EbA9357f4ef01b6C85',
   18,
   'UZHSUS',
   'UZHSushiToken'
 )
-
-export const INCOINGNITO = new Token(
-  SupportedChainId.UZH,
-  '0x8182965A5dC302e6b25b2b177c7CCa42C5099795',
-  18,
-  'ICG',
-  'Incoingnito '
-)
-
 export const UZHCRO = new Token(
   SupportedChainId.UZH,
-  '0xEe9E427945A073c9C8801dC5da44a276aF339333',
+  '0xbc03c6fB1fCe0027C21126a51c6175890971A2F9',
   18,
   'UZHCRO',
   'UZHCroToken'
 )
 
+export const INCOINGNITO = new Token(
+  SupportedChainId.UZH,
+  '0x82299e7E86353B248aeAe9Eb453953edAef7385d',
+  18,
+  'ICG',
+  'Incoingnito '
+)
+
 export const INTELLICOIN = new Token(
   SupportedChainId.UZH,
-  '0x2A35E060849Fa56Ba648C93a50E23359b5d14515',
+  '0x856E6FB873282A59aA6fE32e013e3e1f4438c6A8',
   18,
   'ITC',
   'Intellicoin '
@@ -41,7 +47,7 @@ export const INTELLICOIN = new Token(
 
 export const PRIVATEPEDIA = new Token(
   SupportedChainId.UZH,
-  '0x5e1bcb66D6CbFA4F98bB63BaF4357a543232BFbc',
+  '0xE93f4F6ff8E841649C762D8f50f3a9acb1B67758',
   18,
   'PVT',
   'Privatepedia '
@@ -49,7 +55,7 @@ export const PRIVATEPEDIA = new Token(
 
 export const COINICIOUS = new Token(
   SupportedChainId.UZH,
-  '0xC486C817bE36F9ccf257BfF86CC33ff71a69D651',
+  '0x388EE3B1843254A0D266392bD3bD0Ad95E86C8CF',
   18,
   'CNS',
   'Coinicious  '
@@ -57,12 +63,13 @@ export const COINICIOUS = new Token(
 
 export const CRYPTOOFFICIALCOIN = new Token(
   SupportedChainId.UZH,
-  '0xd0b00725255C35514A8d702b4B4F78C141E8B5eF',
+  '0xbA2AFd13C87011AaA12B6370c29590c3e29B59C8',
   18,
   'COC',
   'Cryptofficailcoin  '
 )
 
+/*
 /*
 Example Tokens
  */
@@ -216,13 +223,6 @@ export const ETH2X_FLI = new Token(
 )
 
 export const UNI: { [chainId: number]: Token } = {
-  [SupportedChainId.UZH]: new Token(
-    SupportedChainId.UZH,
-    '0x3ad438090d6ca3c26f2e4c4c2e7833066b87e709',
-    18,
-    'UNI',
-    'Uniswap'
-  ),
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),

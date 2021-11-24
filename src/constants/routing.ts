@@ -9,8 +9,6 @@ import {
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
-  DMY,
-  DMY2,
   ETH2X_FLI,
   ExtendedEther,
   FEI,
@@ -30,6 +28,7 @@ import {
   USDT_OPTIMISM,
   UZHCRO,
   UZHSUSHI,
+  UZHUNI,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
@@ -51,7 +50,7 @@ const WETH_ONLY: ChainTokenList = Object.fromEntries(
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [SupportedChainId.MAINNET]: [...WETH_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC, DMY],
+  [SupportedChainId.MAINNET]: [...WETH_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
   [SupportedChainId.OPTIMISM]: [...WETH_ONLY[SupportedChainId.OPTIMISM], DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
   [SupportedChainId.ARBITRUM_ONE]: [
     ...WETH_ONLY[SupportedChainId.ARBITRUM_ONE],
@@ -85,6 +84,14 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
+  [SupportedChainId.UZH]: [
+    ExtendedEther.onChain(SupportedChainId.UZH),
+    WETH9_EXTENDED[SupportedChainId.UZH],
+    UZHSUSHI,
+    UZHCRO,
+    UZHUNI,
+  ],
+
   [SupportedChainId.MAINNET]: [
     ExtendedEther.onChain(SupportedChainId.MAINNET),
     DAI,
@@ -123,7 +130,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_OPTIMISM,
   ],
   [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
-  [SupportedChainId.UZH]: [ExtendedEther.onChain(SupportedChainId.UZH), WETH9_EXTENDED[SupportedChainId.UZH]],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
