@@ -65,76 +65,61 @@ const Form = styled.form`
 const faucetTokens = [
   {
     name: 'UzhUniToken',
-    address: '0xE771E7A06abDC5176C9D20365c844680dC75b173',
+    address: '0xd0948BF75F37679ae6F10589a05E014A8Bd70630',
     logo: '',
   },
   {
     name: 'UZHSushi',
-    address: '0x8182965A5dC302e6b25b2b177c7CCa42C5099795',
+    address: '0x2FBD50A221E7fD24270ef3EbA9357f4ef01b6C85',
     logo: '',
   },
   {
     name: 'UZHCro',
-    address: '0x90aF2F7f19A93fc80D4F983218C56Bc2f8544989',
+    address: '0xbc03c6fB1fCe0027C21126a51c6175890971A2F9',
     logo: '',
   },
   {
     name: 'Incoingnito',
-    address: '0xEe9E427945A073c9C8801dC5da44a276aF339333',
+    address: '0x82299e7E86353B248aeAe9Eb453953edAef7385d',
     logo: '',
   },
   {
     name: 'Intellicoin',
-    address: '0x2A35E060849Fa56Ba648C93a50E23359b5d14515',
+    address: '0x856E6FB873282A59aA6fE32e013e3e1f4438c6A8',
     logo: '',
   },
   {
     name: 'Privatepedia',
-    address: '0x5e1bcb66D6CbFA4F98bB63BaF4357a543232BFbc',
+    address: '0xE93f4F6ff8E841649C762D8f50f3a9acb1B67758',
     logo: '',
   },
   {
     name: 'Coinicious',
-    address: '0xC486C817bE36F9ccf257BfF86CC33ff71a69D651',
+    address: '0x388EE3B1843254A0D266392bD3bD0Ad95E86C8CF',
     logo: '',
   },
   {
     name: 'Cryptofficialcoin',
-    address: '0xd0b00725255C35514A8d702b4B4F78C141E8B5eF',
+    address: '0xbA2AFd13C87011AaA12B6370c29590c3e29B59C8',
     logo: '',
   },
 ]
 
 export default function Faucet() {
-  const { account, error } = useActiveWeb3React()
   const faucetContract = useFaucetContract()
-  const loadedUrlParams = useDefaultsFromURLSearch()
 
   const [selectedToken, setSelectedToken] = useState(faucetTokens[0].name)
   const [selectedTokenAddress, setSelectedTokenAddress] = useState(faucetTokens[0].address)
-
   const faucetState = useSingleCallResult(faucetContract, 'claim', [selectedTokenAddress])
 
   const claimTokenFaucet = async () => {
     console.log(faucetState)
+    console.log(faucetContract)
     if (faucetContract && faucetState.valid) {
-      console.log(faucetContract)
       await faucetContract.claim(selectedTokenAddress)
     } else {
       throw new Error('Claim faucet did not work')
     }
-    // if (!faucetContract) {
-    //   console.log('contract not initialized')
-    // }
-    // console.log(faucetState)
-    // faucetContract
-    //   ?.claim(selectedTokenAddress)
-    //   .then((tx) => {
-    //     console.log(tx)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
   }
 
   return (
@@ -161,7 +146,7 @@ export default function Faucet() {
                   />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '70%', gap: '8px' }}>
-                  <Trans>Token contract address</Trans>
+                  <Trans>Token Contract Address</Trans>
                   <FaucetAddressInputPanel tokenAddress={selectedTokenAddress} />
                 </div>
               </div>
@@ -172,8 +157,8 @@ export default function Faucet() {
                 <div style={{ width: '70%' }}>
                   <Trans>How it works</Trans>
                   <p>
-                    You can send a faucet request every 60 seconds. To do so, you need to provide a valid account
-                    address
+                    You can send a Faucet request every 60 seconds and, if not already done, import the token into
+                    Metamask with the provided token contract address
                   </p>
                 </div>
               </div>
