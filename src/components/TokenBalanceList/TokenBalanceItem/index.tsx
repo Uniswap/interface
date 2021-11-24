@@ -5,6 +5,7 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
+import { formatCurrencyAmount } from 'src/utils/format'
 
 // TODO(#89): use date manipulation util
 const d = new Date()
@@ -55,8 +56,8 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
           <Text fontSize={20} fontWeight="500">
             {currency.symbol}
           </Text>
-          <Text fontSize={14} fontWeight="400" color="gray400">{`${currencyAmount.toSignificant(
-            6
+          <Text fontSize={14} fontWeight="400" color="gray400">{`${formatCurrencyAmount(
+            currencyAmount
           )} ${currency.symbol}`}</Text>
         </Box>
       </Box>
