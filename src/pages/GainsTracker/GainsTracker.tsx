@@ -56,7 +56,7 @@ const CUSTOM_GAINS_KEY = 'custom_gains'
 
 export const GainsTracker = () => {
   const { account } = useWeb3React()
-  const trumpBalance = useKiba(account)
+  const kibaBalance = useKiba(account)
   const [currency, setCurrency] = React.useState<any>(undefined)
   const onUserInput = (value: any) => {
     setCurrency(value)
@@ -193,7 +193,7 @@ export const GainsTracker = () => {
     font-size: 12px;
   `
 
-  const GainsWrapper = (!!account && !trumpBalance || (trumpBalance && +trumpBalance.toFixed(2) <= 0)) ? DisabledMask : React.Fragment
+  const GainsWrapper = (!!account && !kibaBalance || (kibaBalance && +kibaBalance.toFixed(2) <= 0)) ? DisabledMask : React.Fragment
   const [currencyValue, setCurrencyValue] = React.useState('')
   const total = useUSDCValue(selectedCurrencyBalance ?? undefined)
   React.useEffect(() => {
@@ -242,9 +242,9 @@ export const GainsTracker = () => {
   }, [selectedCurrencyBalance, total, currency, account])
 
   const showWarning = React.useMemo(() => {
-    const showWarning = !!account && (!trumpBalance || +trumpBalance?.toFixed(2) <= 0)
+    const showWarning = !!account && (!kibaBalance || +kibaBalance?.toFixed(2) <= 0)
     return showWarning
-  }, [trumpBalance, account])
+  }, [kibaBalance, account])
 
   return (
     <GainsWrapper>
