@@ -197,8 +197,8 @@ export default function VotePage() {
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
   const transactions = useUserTransactions(account ? account : undefined)
   const storedKibaBalance = useMemo(() => {
-    return localStorage.getItem("trumpBalance") || undefined;
-  }, [localStorage.getItem("trumpBalance")]);
+    return localStorage.getItem("kibaBalance") || undefined;
+  }, [localStorage.getItem("kibaBalance")]);
 
   const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
     storedKibaBalance !== undefined && +storedKibaBalance > 0 && !!account
@@ -213,7 +213,7 @@ export default function VotePage() {
   }, [localStorage.getItem("trackingSince"), date]);
 
   const stopTrackingGains = () => {
-    localStorage.setItem("trumpBalance", "0");
+    localStorage.setItem("kibaBalance", "0");
     localStorage.setItem("trackingSince", "");
     setTrumpGainsUSD("");
     setStimGainsUSD("");
@@ -222,11 +222,11 @@ export default function VotePage() {
 
   const trackGains = () => {
     if (isTrackingGains) {
-      localStorage.setItem("trumpBalance", "0");
+      localStorage.setItem("kibaBalance", "0");
       localStorage.setItem("trackingSince", "");
       setIsTrackingGains(false);
     } else if (!!kibaBalance) {
-      localStorage.setItem("trumpBalance", (kibaBalance || 0)?.toFixed(2));
+      localStorage.setItem("kibaBalance", (kibaBalance || 0)?.toFixed(2));
       localStorage.setItem("trackingSince", `${new Date()}`);
       setIsTrackingGains(true);
     } else {
@@ -299,11 +299,11 @@ export default function VotePage() {
     }
   }, [rawTrumpCurrency, isBinance, kibaBalance, storedKibaBalance]);
 
-  const [trumpBalanceUSD, setTrumpBalanceUSD] = React.useState("");
+  const [kibaBalanceUSD, setkibaBalanceUSD] = React.useState("");
   React.useEffect(() => {
     try {
       if (kibaBalance && +kibaBalance < 0) {
-        setTrumpBalanceUSD("-");
+        setkibaBalanceUSD("-");
         return;
       }
       if (kibaBalance && +kibaBalance.toFixed(0) > 0) {
@@ -323,7 +323,7 @@ export default function VotePage() {
           let usdcValue = usdc / ten6;
           if (isBinance) usdcValue = usdcValue / 10 ** 12;
           const number = Number(usdcValue.toFixed(2));
-          setTrumpBalanceUSD(number.toLocaleString());
+          setkibaBalanceUSD(number.toLocaleString());
         });
       }
     } catch (ex) {
@@ -371,7 +371,7 @@ const [darkMode] = useDarkModeManager()
                       <Trans>
                         {kibaBalance !== undefined 
                         && (+(kibaBalance) > 0 || +kibaBalance?.toFixed(0) > 0 )
-                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} (${(trumpBalanceUSD)} USD) </span></div>
+                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} (${(kibaBalanceUSD)} USD) </span></div>
                           : null}
                       </Trans>
                     </TYPE.white>
@@ -390,7 +390,7 @@ const [darkMode] = useDarkModeManager()
                                 +kibaBalance?.toFixed(2) - +storedKibaBalance
                               ).toFixed(2)).toLocaleString()} </span>
                               {isTrackingGains && trumpGainsUSD && (
-                                <Badge style={{ color:"#FFF",paddingTop: 5 }}>
+                                <Badge style={{ marginTop: 5, color:"#FFF",paddingTop: 5 }}>
                                   <small>
                                     <GainsText>Total Reflections</GainsText>
                                   </small>
