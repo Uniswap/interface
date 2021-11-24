@@ -62,7 +62,7 @@ function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#111' : '#73b588',
+    primary1: darkMode ? '#ea3627' : '#73b588',
     primary2: darkMode ? '#222' : '#d9dc51',
     primary3: darkMode ? '#eee' : '#d9dc51',
     primary4: darkMode ? 'rgb(170, 64, 88)' : '#F6DDE8',

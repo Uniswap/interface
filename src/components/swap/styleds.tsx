@@ -9,6 +9,13 @@ import { AutoColumn } from '../Column'
 export const Wrapper = styled.div`
   position: relative;
   padding: 8px;
+
+  > [aria-modal="true"] {
+    background: #222;
+  }
+  .dFigrI[data-reach-dialog-content] {
+    background:#222;
+  }
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`

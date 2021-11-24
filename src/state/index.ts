@@ -16,7 +16,10 @@ import multicall from './multicall/reducer'
 import { api as dataApi } from './data/slice'
 import { routingApi } from './routing/slice'
 import infoReducer from './logs/infoReducer'
-
+import {
+  gelatoReducers,
+  GELATO_PERSISTED_KEYS,
+} from "@gelatonetwork/limit-orders-react";
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
 const store = configureStore({
@@ -35,6 +38,7 @@ const store = configureStore({
     info: infoReducer,
     [dataApi.reducerPath]: dataApi.reducer,
     [routingApi.reducerPath]: routingApi.reducer,
+    ...gelatoReducers
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })

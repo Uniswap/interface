@@ -62,7 +62,7 @@ export const useContractOwner = (address:string) => {
   const contract = useContract(address, minABIToCheckRenounced)
 React.useEffect(() =>{
   if (contract) {
-    
+    try {
     if (chainId === 1) {
       const ownerCall  = contract?.owner;
       ownerCall().then(setOwner);
@@ -73,7 +73,9 @@ React.useEffect(() =>{
       const ownerCall = bscContract.owner;
       ownerCall().then(setOwner)
     }
-
+  } catch (er) {
+    setOwner('N/A')
+  }
   }
 }, [contract])
   return owner;

@@ -15,5 +15,7 @@ export const replaceSwapState =
     inputCurrencyId?: string
     outputCurrencyId?: string
     recipient: string | null
+    useOtherAddress?: boolean | null
   }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
+export const setUseOtherAddress = createAction<{ on: boolean }>('swap/setUseAddress')

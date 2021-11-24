@@ -64,6 +64,7 @@ import Modal from 'components/Modal'
 import { useKiba } from 'pages/Vote/VotePage'
 import { ChartModal } from 'components/swap/ChartModal'
 import { LimitOrders } from 'state/transactions/hooks'
+import Badge from 'components/Badge'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -114,7 +115,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const toggledVersion = useToggledVersion()
 
   // swap state
-  const { independentField, typedValue, recipient } = useSwapState()
+  const { independentField, typedValue, recipient, useOtherAddress } = useSwapState()
   const {
     v2Trade,
     v3TradeState: { trade: v3Trade, state: v3TradeState },
@@ -149,7 +150,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
   const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient, onSwitchUseChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -377,7 +378,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-    
+
       <AppBody style={{maxWidth: view === 'bridge' ? 690 : 480}}>
       <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
 
@@ -414,6 +415,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 otherCurrency={currencies[Field.OUTPUT]}
                 showOnlyTrumpCoins={true}
                 showCommonBases={true}
+                
                 id="swap-currency-input"
               />
               <ArrowWrapper clickable>
@@ -443,19 +445,28 @@ export default function Swap({ history }: RouteComponentProps) {
               />
             </div>
 
-            {recipient !== null && !showWrap ? (
+            {!cannotUseFeature && useOtherAddress && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                   <ArrowWrapper clickable={false}>
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                  <LinkStyledButton id="remove-recipient-button" onClick={() => {
+                    onChangeRecipient('')
+                    onSwitchUseChangeRecipient(false)
+                  }}>
                     <Trans>- Remove send</Trans>
                   </LinkStyledButton>
                 </AutoRow>
-                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                <AddressInputPanel id="recipient" value={recipient as string} onChange={onChangeRecipient} />
               </>
             ) : null}
+
+            {!!cannotUseFeature && useOtherAddress && !showWrap &&     (
+                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                  <p>You must own Kiba Inu tokens to use the <Badge>Swap to Receiver</Badge> feature.</p>
+                </AutoRow>
+            )}
 
             {showWrap ? null : (
               <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
@@ -708,9 +719,10 @@ export default function Swap({ history }: RouteComponentProps) {
             </AutoColumn>
           </Wrapper>
         )}
-        {view === 'limit' && <Wrapper>
-          <AutoColumn>
-            <LimitOrders /></AutoColumn></Wrapper>}
+        {view === 'limit' && 
+        <Wrapper>
+            <LimitOrders />
+            </Wrapper>}
       {!!isBinance && view === 'swap' && <iframe style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width: '100%'}} src="https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341" />}
       </AppBody>
       <SwitchLocaleLink />
