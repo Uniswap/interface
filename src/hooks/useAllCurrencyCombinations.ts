@@ -48,7 +48,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
               const firstIndexInOtherPairs = otherPairs.findIndex(([t0Other, t1Other]) => {
                 return (t0.equals(t0Other) && t1.equals(t1Other)) || (t0.equals(t1Other) && t1.equals(t0Other))
               })
-              // only accept the first occurence of the same 2 tokens
+              // only accept the first occurrence of the same 2 tokens
               return firstIndexInOtherPairs === i
             })
             // optionally filter out some pairs for tokens with custom bases defined

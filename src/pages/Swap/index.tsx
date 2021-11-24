@@ -334,6 +334,10 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
+    ReactGA.event({
+      category: 'Swap',
+      action: 'Max',
+    })
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
