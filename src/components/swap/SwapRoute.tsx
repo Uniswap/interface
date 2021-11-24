@@ -1,4 +1,4 @@
-import { Plural, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -70,11 +70,12 @@ export default memo(function SwapRoute({
       )}
       {autoRouterSupported && (
         <TYPE.main fontSize={12} width={400}>
-          <Plural
-            value={routes.length}
-            one="Best route via 1 hop on Uniswap V2 and V3"
-            other="Best route via # hops on Unsiwap V2 and V3"
-          />
+          {/* could not get <Plural> to render `one` correctly. */}
+          {routes.length === 1 ? (
+            <Trans>Best route via 1 hop on Uniswap V2 and V3</Trans>
+          ) : (
+            <Trans>Best route via {routes.length} hops on Uniswap V2 and V3</Trans>
+          )}
         </TYPE.main>
       )}
     </AutoColumn>
