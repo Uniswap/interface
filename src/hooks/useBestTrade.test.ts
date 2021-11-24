@@ -29,11 +29,11 @@ const mockUseClientSideV3Trade = useClientSideV3Trade as jest.MockedFunction<typ
 
 // helpers to set mock expectations
 const expectRouterMock = (state: TradeState) => {
-  mockUseRoutingAPITrade.mockReturnValue({ state, trade: null })
+  mockUseRoutingAPITrade.mockReturnValue({ state, trade: undefined })
 }
 
 const expectClientSideMock = (state: TradeState) => {
-  mockUseClientSideV3Trade.mockReturnValue({ state, trade: null })
+  mockUseClientSideV3Trade.mockReturnValue({ state, trade: undefined })
 }
 
 beforeEach(() => {
@@ -54,7 +54,7 @@ describe('#useBestV3Trade ExactIn', () => {
 
     expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI)
     expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, USDCAmount, DAI)
-    expect(result.current).toEqual({ state: TradeState.VALID, trade: null })
+    expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })
 
   it('does not compute routing api trade when window is not focused', () => {
@@ -66,7 +66,7 @@ describe('#useBestV3Trade ExactIn', () => {
 
     expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI)
     expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, USDCAmount, DAI)
-    expect(result.current).toEqual({ state: TradeState.VALID, trade: null })
+    expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })
 
   describe('when routing api is in non-error state', () => {
@@ -76,7 +76,7 @@ describe('#useBestV3Trade ExactIn', () => {
       const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
       expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, undefined)
-      expect(result.current).toEqual({ state: TradeState.LOADING, trade: null })
+      expect(result.current).toEqual({ state: TradeState.LOADING, trade: undefined })
     })
 
     it('does not compute client side v3 trade if routing api is VALID', () => {
@@ -85,7 +85,7 @@ describe('#useBestV3Trade ExactIn', () => {
       const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
       expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, undefined)
-      expect(result.current).toEqual({ state: TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
     })
 
     it('does not compute client side v3 trade if routing api is SYNCING', () => {
@@ -94,7 +94,7 @@ describe('#useBestV3Trade ExactIn', () => {
       const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
       expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, undefined)
-      expect(result.current).toEqual({ state: TradeState.SYNCING, trade: null })
+      expect(result.current).toEqual({ state: TradeState.SYNCING, trade: undefined })
     })
   })
 
@@ -115,7 +115,7 @@ describe('#useBestV3Trade ExactIn', () => {
       const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
       expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, USDCAmount, DAI)
-      expect(result.current).toEqual({ state: TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
     })
   })
 })
@@ -130,7 +130,7 @@ describe('#useBestV3Trade ExactOut', () => {
 
     expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, USDC)
     expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, DAIAmount, USDC)
-    expect(result.current).toEqual({ state: TradeState.VALID, trade: null })
+    expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })
 
   it('does not compute routing api trade when window is not focused', () => {
@@ -142,7 +142,7 @@ describe('#useBestV3Trade ExactOut', () => {
 
     expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, USDC)
     expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, DAIAmount, USDC)
-    expect(result.current).toEqual({ state: TradeState.VALID, trade: null })
+    expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })
   describe('when routing api is in non-error state', () => {
     it('does not compute client side v3 trade if routing api is LOADING', () => {
@@ -151,7 +151,7 @@ describe('#useBestV3Trade ExactOut', () => {
       const { result } = renderHook(() => useBestTrade(TradeType.EXACT_OUTPUT, DAIAmount, USDC))
 
       expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, undefined)
-      expect(result.current).toEqual({ state: TradeState.LOADING, trade: null })
+      expect(result.current).toEqual({ state: TradeState.LOADING, trade: undefined })
     })
 
     it('does not compute client side v3 trade if routing api is VALID', () => {
@@ -160,7 +160,7 @@ describe('#useBestV3Trade ExactOut', () => {
       const { result } = renderHook(() => useBestTrade(TradeType.EXACT_OUTPUT, DAIAmount, USDC))
 
       expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, undefined)
-      expect(result.current).toEqual({ state: TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
     })
 
     it('does not compute client side v3 trade if routing api is SYNCING', () => {
@@ -169,7 +169,7 @@ describe('#useBestV3Trade ExactOut', () => {
       const { result } = renderHook(() => useBestTrade(TradeType.EXACT_OUTPUT, DAIAmount, USDC))
 
       expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, undefined)
-      expect(result.current).toEqual({ state: TradeState.SYNCING, trade: null })
+      expect(result.current).toEqual({ state: TradeState.SYNCING, trade: undefined })
     })
   })
 
@@ -190,7 +190,7 @@ describe('#useBestV3Trade ExactOut', () => {
       const { result } = renderHook(() => useBestTrade(TradeType.EXACT_OUTPUT, DAIAmount, USDC))
 
       expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, DAIAmount, USDC)
-      expect(result.current).toEqual({ state: TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
     })
   })
 })

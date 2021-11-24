@@ -31,8 +31,18 @@ async function getClientSideQuote({
     {
       type,
       chainId: tokenIn.chainId,
-      tokenIn: { address: tokenIn.address, chainId: tokenIn.chainId, decimals: tokenIn.decimals },
-      tokenOut: { address: tokenOut.address, chainId: tokenOut.chainId, decimals: tokenOut.decimals },
+      tokenIn: {
+        address: tokenIn.address,
+        chainId: tokenIn.chainId,
+        decimals: tokenIn.decimals,
+        symbol: tokenIn.symbol,
+      },
+      tokenOut: {
+        address: tokenOut.address,
+        chainId: tokenOut.chainId,
+        decimals: tokenOut.decimals,
+        symbol: tokenOut.symbol,
+      },
       amount,
     },
     { protocols }
