@@ -57,6 +57,7 @@ export const QUOTER_ADDRESSES: AddressMap = constructSameAddressMap('0xffF309A1C
   SupportedChainId.OPTIMISTIC_KOVAN,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.UZH,
 ])
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = constructSameAddressMap(
   '0xD7409c33D27c744bb42301a73238c2D079a36649',

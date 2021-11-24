@@ -3,6 +3,77 @@ import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
+/*
+uzh swap tokens
+ */
+
+export const UZHUNI = new Token(
+  SupportedChainId.UZH,
+  '0xd0948BF75F37679ae6F10589a05E014A8Bd70630',
+  18,
+  'UZHUNI',
+  'UZHUniToken'
+)
+export const UZHSUSHI = new Token(
+  SupportedChainId.UZH,
+  '0x2FBD50A221E7fD24270ef3EbA9357f4ef01b6C85',
+  18,
+  'UZHSUS',
+  'UZHSushiToken'
+)
+export const UZHCRO = new Token(
+  SupportedChainId.UZH,
+  '0xbc03c6fB1fCe0027C21126a51c6175890971A2F9',
+  18,
+  'UZHCRO',
+  'UZHCroToken'
+)
+
+export const INCOINGNITO = new Token(
+  SupportedChainId.UZH,
+  '0x82299e7E86353B248aeAe9Eb453953edAef7385d',
+  18,
+  'ICG',
+  'Incoingnito '
+)
+
+export const INTELLICOIN = new Token(
+  SupportedChainId.UZH,
+  '0x856E6FB873282A59aA6fE32e013e3e1f4438c6A8',
+  18,
+  'ITC',
+  'Intellicoin '
+)
+
+export const PRIVATEPEDIA = new Token(
+  SupportedChainId.UZH,
+  '0xE93f4F6ff8E841649C762D8f50f3a9acb1B67758',
+  18,
+  'PVT',
+  'Privatepedia '
+)
+
+export const COINICIOUS = new Token(
+  SupportedChainId.UZH,
+  '0x388EE3B1843254A0D266392bD3bD0Ad95E86C8CF',
+  18,
+  'CNS',
+  'Coinicious  '
+)
+
+export const CRYPTOOFFICIALCOIN = new Token(
+  SupportedChainId.UZH,
+  '0xbA2AFd13C87011AaA12B6370c29590c3e29B59C8',
+  18,
+  'COC',
+  'Cryptofficailcoin  '
+)
+
+/*
+/*
+Example Tokens
+ */
+
 export const DMY = new Token(
   SupportedChainId.UZH,
   '0xfb4A1DeE8894fd44Ee3233aAB41C95d61C90c86d',
@@ -150,14 +221,8 @@ export const ETH2X_FLI = new Token(
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
 )
+
 export const UNI: { [chainId: number]: Token } = {
-  [SupportedChainId.UZH]: new Token(
-    SupportedChainId.UZH,
-    '0x3ad438090d6ca3c26f2e4c4c2e7833066b87e709',
-    18,
-    'UNI',
-    'Uniswap'
-  ),
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),

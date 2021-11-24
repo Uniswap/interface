@@ -132,6 +132,7 @@ export function useUnsupportedTokenList(): TokenAddressMap {
     [brokenListMap, localUnsupportedListMap, loadedUnsupportedListMap]
   )
 }
+
 export function useIsListActive(url: string): boolean {
   const activeListUrls = useActiveListUrls()
   return Boolean(activeListUrls?.includes(url))
