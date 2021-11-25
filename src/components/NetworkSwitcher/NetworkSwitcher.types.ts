@@ -28,6 +28,7 @@ export type NetworkOptionProps = {
   active?: boolean
   disabled?: boolean
   comingSoon?: boolean
+  chainId?: ChainId
 }
 
 export type NetworkOptionsPreset = {
@@ -35,6 +36,7 @@ export type NetworkOptionsPreset = {
   name: string
   logoSrc: string
   color: string
+  tag?: string
 }
 
 export type NetworkList = {

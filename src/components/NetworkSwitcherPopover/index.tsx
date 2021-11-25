@@ -66,12 +66,13 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
 
   const tagFilteredArray = networkOptionsPreset.reduce<NetworkList[]>((taggedArray, currentNet) => {
     const tag = currentNet.tag ? currentNet.tag : 'mainnet'
+    const enhancedNet = optionsV3(currentNet)
     // check if tag exist and if not create array
     const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
     if (tagArrIndex > -1) {
-      taggedArray[tagArrIndex].networks.push(optionsV3(currentNet))
+      taggedArray[tagArrIndex].networks.push(enhancedNet)
     } else {
-      taggedArray.push({ tag, networks: [optionsV3(currentNet)] })
+      taggedArray.push({ tag, networks: [enhancedNet] })
     }
 
     return taggedArray

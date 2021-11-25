@@ -21,7 +21,7 @@ import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal, useBridgeTxsFil
 
 import { NETWORK_DETAIL, SHOW_TESTNETS } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
+import { BridgeStep, createNetworkOptions, getNetworkOptionById, tagFilteredArray } from './utils'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
@@ -186,6 +186,18 @@ export default function Bridge() {
     setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
+  const fromTabelka = tagFilteredArray({
+    value: fromNetwork.chainId,
+    setValue: onFromNetworkChange,
+    activeChainId: !!account ? chainId : -1
+  })
+  const toTabelka = tagFilteredArray({
+    value: toNetwork.chainId,
+    setValue: onToNetworkChange,
+    activeChainId: !!account ? chainId : -1
+  })
+  console.log({ toOptions })
+  console.log({ toTabelka })
 
   return (
     <Wrapper>
@@ -215,6 +227,7 @@ export default function Bridge() {
               show={SHOW_TESTNETS ? showFromList : false}
               onOuterClick={SHOW_TESTNETS ? () => setShowFromList(false) : () => null}
               placement="bottom"
+              list={fromTabelka}
             />
           </AssetWrapper>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
@@ -234,6 +247,7 @@ export default function Bridge() {
               show={SHOW_TESTNETS ? showToList : false}
               onOuterClick={SHOW_TESTNETS ? () => setShowToList(false) : () => null}
               placement="bottom"
+              list={toTabelka}
             />
           </AssetWrapper>
         </Row>
