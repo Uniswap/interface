@@ -24,6 +24,7 @@ import { YellowCard } from '../Card'
 import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
+import BridgeMenuGroup from './BridgeMenuGroup'
 import UbeBalanceContent from './UbeBalanceContent'
 
 const HeaderFrame = styled.div`
@@ -175,7 +176,7 @@ const UbeIcon = styled.div`
 
 const activeClassName = 'ACTIVE'
 
-const StyledNavLink = styled(NavLink).attrs({
+export const StyledNavLink = styled(NavLink).attrs({
   activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -322,9 +323,7 @@ export default function Header() {
           <StyledNavLink id="farm-nav-link" to="/farm">
             {t('farm')}
           </StyledNavLink>
-          <StyledNavLink id={`bridge-nav-link`} to={'/bridge'}>
-            {t('bridge')}
-          </StyledNavLink>
+          <BridgeMenuGroup />
           <StyledNavLink id={`stake-nav-link`} to={'/stake'}>
             {t('stake')}
           </StyledNavLink>

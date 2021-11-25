@@ -20,6 +20,7 @@ export type PopupContent =
 
 export enum ApplicationModal {
   WALLET,
+  BRIDGE,
   SETTINGS,
   SELF_CLAIM,
   ADDRESS_CLAIM,

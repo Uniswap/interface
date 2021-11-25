@@ -17,7 +17,6 @@ import {
   RedirectOldAddLiquidityPathStructure,
   RedirectToAddLiquidity,
 } from './AddLiquidity/redirects'
-import { Bridge } from './Bridge'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
 import Pool from './Pool'
@@ -119,7 +118,6 @@ export default function App() {
               <Route exact strict path="/farm" component={Earn} />
               <Route exact strict path="/farm/:currencyIdA/:currencyIdB/:stakingAddress" component={Manage} />
               <Route exact strict path="/dualfarm/:currencyIdA/:currencyIdB/:stakingAddress" component={Manage} />
-              <Route exact strict path="/bridge" component={Bridge} />
               <Route exact strict path="/stake" component={Stake} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
