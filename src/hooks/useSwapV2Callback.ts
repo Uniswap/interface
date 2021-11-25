@@ -34,6 +34,7 @@ import invariant from 'tiny-invariant'
 import { Web3Provider } from '@ethersproject/providers'
 
 import { ROUTER_ADDRESSES_V2 } from '../constants'
+import { formatCurrencyAmount } from 'utils/formatBalance'
 
 /**
  * The parameters to use in the call to the DmmExchange Router to execute a trade.
@@ -307,8 +308,8 @@ export function useSwapV2Callback(
           .then((response: any) => {
             const inputSymbol = convertToNativeTokenFromETH(trade.inputAmount.currency, chainId).symbol
             const outputSymbol = convertToNativeTokenFromETH(trade.outputAmount.currency, chainId).symbol
-            const inputAmount = trade.inputAmount.toSignificant(3)
-            const outputAmount = trade.outputAmount.toSignificant(3)
+            const inputAmount = formatCurrencyAmount(trade.inputAmount)
+            const outputAmount = formatCurrencyAmount(trade.outputAmount)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
             const withRecipient =
