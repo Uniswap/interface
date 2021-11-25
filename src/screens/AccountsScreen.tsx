@@ -6,6 +6,8 @@ import Plus from 'src/assets/icons/plus.svg'
 import { AccountCard } from 'src/components/accounts/AccountCard'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
+import { BlueToPinkRadial } from 'src/components/gradients/BlueToPinkRadial'
+import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
@@ -30,7 +32,10 @@ export function AccountsScreen({ navigation }: Props) {
   }
 
   return (
-    <Screen bg="gray50">
+    <Screen>
+      <GradientBackground>
+        <BlueToPinkRadial />
+      </GradientBackground>
       <ScrollView contentContainerStyle={flex.fill}>
         <Box>
           <AccountHeader>

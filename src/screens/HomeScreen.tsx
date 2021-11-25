@@ -1,11 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useState } from 'react'
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import Bell from 'src/assets/icons/bell.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
+import { GradientBackground } from 'src/components/gradients/GradientBackground'
+import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
@@ -50,15 +51,9 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Box flex={1}>
-      <Svg height="100%" width="100%" opacity={0.05}>
-        <Defs>
-          <LinearGradient id="background" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#FF007A" stopOpacity="1" />
-            <Stop offset="1" stopColor="#426CFF" stopOpacity="0.3" />
-          </LinearGradient>
-        </Defs>
-        <Rect x="0" y="0" width="100%" height="100%" fill="url(#background)" />
-      </Svg>
+      <GradientBackground>
+        <PinkToBlueLinear />
+      </GradientBackground>
       <Box height="100%" width="100%" position="absolute" my="xxl">
         <Box flexDirection="row" alignItems="center" justifyContent="space-between">
           <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
