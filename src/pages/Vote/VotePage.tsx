@@ -196,8 +196,8 @@ export default function VotePage() {
   );
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
   const storedKibaBalance = useMemo(() => {
-    return localStorage.getItem("trumpBalance") || undefined;
-  }, [localStorage.getItem("trumpBalance")]);
+    return localStorage.getItem("kibaBalance") || undefined;
+  }, [localStorage.getItem("kibaBalance")]);
 
   const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
     storedKibaBalance !== undefined && +storedKibaBalance > 0 && !!account
@@ -212,7 +212,7 @@ export default function VotePage() {
   }, [localStorage.getItem("trackingSince"), date]);
 
   const stopTrackingGains = () => {
-    localStorage.setItem("trumpBalance", "0");
+    localStorage.setItem("kibaBalance", "0");
     localStorage.setItem("trackingSince", "");
     setTrumpGainsUSD("");
     setStimGainsUSD("");
@@ -221,11 +221,11 @@ export default function VotePage() {
 
   const trackGains = () => {
     if (isTrackingGains) {
-      localStorage.setItem("trumpBalance", "0");
+      localStorage.setItem("kibaBalance", "0");
       localStorage.setItem("trackingSince", "");
       setIsTrackingGains(false);
     } else if (!!kibaBalance) {
-      localStorage.setItem("trumpBalance", (kibaBalance || 0)?.toFixed(2));
+      localStorage.setItem("kibaBalance", (kibaBalance || 0)?.toFixed(2));
       localStorage.setItem("trackingSince", `${new Date()}`);
       setIsTrackingGains(true);
     } else {
@@ -389,7 +389,7 @@ const [darkMode] = useDarkModeManager()
                                 +kibaBalance?.toFixed(2) - +storedKibaBalance
                               ).toFixed(2)).toLocaleString()} </span>
                               {isTrackingGains && trumpGainsUSD && (
-                                <Badge style={{ color:"#FFF",paddingTop: 5 }}>
+                                <Badge style={{ marginTop: 5, color:"#FFF",paddingTop: 5 }}>
                                   <small>
                                     <GainsText>Total Reflections</GainsText>
                                   </small>

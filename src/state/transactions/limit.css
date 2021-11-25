@@ -1,7 +1,7 @@
 [data-reach-dialog-content] {
 background-color: #222 !important;
 }
-.eRvDHB {
+span[innerHTML="Frontrun Protection"] {
     color: #FFF !important
 }
 [href="https://www.gelato.network"] > *{
