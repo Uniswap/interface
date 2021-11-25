@@ -64,6 +64,14 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 2,
     active: true,
   },
+  // SOURCE-mcUSD
+  {
+    address: '0xF4662e4E254006939c2198cb6F61635b03fd14Eb',
+    underlyingPool: '0x5F5c3eEa2b9e65f667E34C70Db68f62bbbFC9188',
+    basePool: '0x9cAF0Cd20C8eF7622EEb8dB50e5bB4d407e38AE2',
+    numRewards: 3,
+    active: true,
+  },
 
   // ** D4P ** //
   // UBE-CELO
