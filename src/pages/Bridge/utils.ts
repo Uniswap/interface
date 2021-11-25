@@ -35,7 +35,6 @@ export const createNetworkOptions = ({
       onClick: () => setValue(optionChainId)
     }
   })
-  //  .filter(option => !!NETWORK_DETAIL[option.chainId]?.partnerChainId)
 }
 
 export const getNetworkOptionById = (chainId: ChainId, options: ReturnType<typeof createNetworkOptions>) =>
@@ -88,4 +87,23 @@ export const tagFilteredArray = ({
 
       return taggedArray
     }, [])
+}
+
+export const getNetworkInfo = (chainId: ChainId) => {
+  return {
+    name: NETWORK_DETAIL[chainId].chainName,
+    rpcUrl: NETWORK_DETAIL[chainId].rpcUrls,
+    blockExplorerUrls: NETWORK_DETAIL[chainId].blockExplorerUrls,
+    iconUrls: NETWORK_DETAIL[chainId].iconUrls,
+    partnerChainId: NETWORK_DETAIL[chainId].partnerChainId,
+    isArbitrum: NETWORK_DETAIL[chainId].isArbitrum,
+    nativeCurrency: {
+      name: NETWORK_DETAIL[chainId].nativeCurrency.name,
+      symbol: NETWORK_DETAIL[chainId].nativeCurrency.symbol,
+      decimals: NETWORK_DETAIL[chainId].nativeCurrency.decimals
+    }
+  }
+}
+export const getNetworkById = (chainId: ChainId, networks: NetworkList[]) => {
+  return networks.find(net => net.networks.find(a => a.chainId === chainId))
 }

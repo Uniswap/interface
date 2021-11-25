@@ -76,7 +76,6 @@ interface AssetSelectorProps {
 }
 
 export const AssetSelector = ({ label, selectedNetwork, onClick, disabled = false }: AssetSelectorProps) => {
-  console.log({ label, selectedNetwork })
   return (
     <Section disabled={disabled} onClick={disabled ? undefined : onClick}>
       <Row>
