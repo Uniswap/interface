@@ -11,6 +11,7 @@ import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { useTradeExactIn } from './Trades'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
+import { formatCurrencyAmount } from 'utils/formatBalance'
 
 export enum SwapCallbackState {
   INVALID,
@@ -192,8 +193,8 @@ export function useSwapCallback(
           .then((response: any) => {
             const inputSymbol = convertToNativeTokenFromETH(trade.inputAmount.currency, chainId).symbol
             const outputSymbol = convertToNativeTokenFromETH(trade.outputAmount.currency, chainId).symbol
-            const inputAmount = trade.inputAmount.toSignificant(3)
-            const outputAmount = trade.outputAmount.toSignificant(3)
+            const inputAmount = formatCurrencyAmount(trade.inputAmount)
+            const outputAmount = formatCurrencyAmount(trade.outputAmount)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
             const withRecipient =

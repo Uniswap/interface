@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Fraction, JSBI } from '@dynamic-amm/sdk'
+import { CurrencyAmount, Fraction, JSBI } from '@dynamic-amm/sdk'
 
 export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, significant = 6): string => {
   return new Fraction(balance.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(
@@ -66,4 +66,12 @@ export const formatTokenBalance = (balance: number): string => {
 export const fixedFormatting = (value: BigNumber, decimals: number) => {
   const res = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toFixed(6)
   return parseFloat(res).toString()
+}
+
+export const formatCurrencyAmount = (amount: CurrencyAmount): string => {
+  if (amount.lessThan(new Fraction('1'))) {
+    return amount.toSignificant(3)
+  }
+
+  return amount.toFixed(3)
 }
