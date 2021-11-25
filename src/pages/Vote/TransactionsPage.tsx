@@ -144,7 +144,6 @@ export const Transactions = ({transactions, loading, error}:{transactions?: any[
                 display: 'block',
                 width: '100%',
                 overflowY: 'auto',
-                maxHeight: 500
             }}>
                 <table style={{ width: '100%' }}>
                     <thead style={{

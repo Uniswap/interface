@@ -195,7 +195,6 @@ export default function VotePage() {
     "Kiba Inu"
   );
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
-  const transactions = useUserTransactions(account ? account : undefined)
   const storedKibaBalance = useMemo(() => {
     return localStorage.getItem("trumpBalance") || undefined;
   }, [localStorage.getItem("trumpBalance")]);
@@ -299,11 +298,11 @@ export default function VotePage() {
     }
   }, [rawTrumpCurrency, isBinance, kibaBalance, storedKibaBalance]);
 
-  const [trumpBalanceUSD, setTrumpBalanceUSD] = React.useState("");
+  const [kibaBalanceUSD, setKibaBalanceUSD] = React.useState("");
   React.useEffect(() => {
     try {
       if (kibaBalance && +kibaBalance < 0) {
-        setTrumpBalanceUSD("-");
+        setKibaBalanceUSD("-");
         return;
       }
       if (kibaBalance && +kibaBalance.toFixed(0) > 0) {
@@ -323,7 +322,7 @@ export default function VotePage() {
           let usdcValue = usdc / ten6;
           if (isBinance) usdcValue = usdcValue / 10 ** 12;
           const number = Number(usdcValue.toFixed(2));
-          setTrumpBalanceUSD(number.toLocaleString());
+          setKibaBalanceUSD(number.toLocaleString());
         });
       }
     } catch (ex) {
@@ -371,7 +370,7 @@ const [darkMode] = useDarkModeManager()
                       <Trans>
                         {kibaBalance !== undefined 
                         && (+(kibaBalance) > 0 || +kibaBalance?.toFixed(0) > 0 )
-                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} (${(trumpBalanceUSD)} USD) </span></div>
+                          ? <div style={{display:'flex'}}><GainsText style={{marginRight:10}}>Kiba Balance</GainsText> <span style={{fontSize:18}}> {Number(kibaBalance?.toFixed(2)).toLocaleString()} (${(kibaBalanceUSD)} USD) </span></div>
                           : null}
                       </Trans>
                     </TYPE.white>
