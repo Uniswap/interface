@@ -9,7 +9,7 @@ import { useBridgeTxsFilter } from '../../state/bridge/hooks'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { getExplorerLink } from '../../utils'
 
-const TableContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-flow: column;
 `
@@ -88,12 +88,12 @@ const Filler = styled.div`
 `
 
 const Dots = styled.div<{ status: BridgeTransactionStatus }>`
-  display: 'flex';
-  height: '100%';
-  overflow: 'hidden';
-  width: '50%';
-  justify-content: 'space-between';
-  align-items: 'center';
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  width: 50%;
+  justify-content: space-between;
+  align-items: center;
   color: ${({ theme, status }) =>
     status === 'confirmed' || status === 'claimed' ? theme.green2 : status === 'failed' ? theme.red2 : theme.purple3};
 
@@ -142,7 +142,7 @@ export const BridgeTransactionsSummary = ({
   return (
     <>
       <AdvancedDetailsFooter fullWidth padding="12px">
-        <TableContainer>
+        <Container>
           <Header>
             <ColumnBridging>Bridging</ColumnBridging>
             <ColumnFrom>From</ColumnFrom>
@@ -154,7 +154,7 @@ export const BridgeTransactionsSummary = ({
               <BridgeTransactionsSummaryRow key={index} tx={tx} onCollect={onCollect} />
             ))}
           </Body>
-        </TableContainer>
+        </Container>
         {collectableTx && (
           <ButtonPrimary onClick={() => onCollect(collectableTx)} mt="12px">
             Collect
