@@ -27,6 +27,7 @@ import WalletModal from '../WalletModal'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { SupportedChainId } from 'constants/chains'
+import Swal from 'sweetalert2'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -251,17 +252,20 @@ export default function Web3Status() {
   const [isSwitching, setIsSwitching] = React.useState(false)
   const chainToSwitchTo = React.useMemo(() => chainId && chainId === 1 ? SupportedChainId.BINANCE : SupportedChainId.MAINNET,[chainId])
 
+  
   if (!contextNetwork.active && !active) {
     return null
   }
-  
+
   return (
     <>
       <Web3StatusInner />
       <Badge 
         variant={BadgeVariant.PRIMARY} 
         style={{background:"#222"}} 
-        onClick={async () => await switchToNetwork({library,chainId: chainToSwitchTo})}>
+        onClick={async () => {
+          await switchToNetwork({library, chainId: chainToSwitchTo})
+        }}>
           {chainId === 1 ? 'ETH' : 'BSC'} 
           &nbsp; {chainId === 56 ? <ToggleRight/> : <ToggleLeft />} 
       </Badge>
