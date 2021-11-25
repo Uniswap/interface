@@ -35,6 +35,7 @@ import Slider from 'components/Slider'
 import CurrencyLogo from 'components/CurrencyLogo'
 import FormattedPriceImpact from 'components/swap/FormattedPriceImpact'
 import ZapError from 'components/ZapError'
+import CurrentPrice from 'components/CurrentPrice'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { usePairContract } from 'hooks/useContract'
@@ -64,7 +65,8 @@ import {
   DetailWrapper,
   DetailBox,
   TokenWrapper,
-  ModalDetailWrapper
+  ModalDetailWrapper,
+  CurrentPriceWrapper
 } from './styled'
 
 export default function ZapOut({
@@ -487,6 +489,15 @@ export default function ZapOut({
         <ModalDetailWrapper>
           {pair && (
             <>
+              <CurrentPriceWrapper style={{ paddingBottom: '8px' }}>
+                <TYPE.subHeader fontSize={14} fontWeight={400} color={theme.subText}>
+                  <Trans>Current Price</Trans>
+                </TYPE.subHeader>
+                <TYPE.black fontSize={14} fontWeight={400}>
+                  <CurrentPrice price={price} />
+                </TYPE.black>
+              </CurrentPriceWrapper>
+
               <RowBetween style={{ paddingBottom: '12px' }}>
                 <TYPE.subHeader fontSize={14} fontWeight={400} color={theme.subText}>
                   <Trans>Price Impact</Trans>
@@ -674,7 +685,7 @@ export default function ZapOut({
 
               {pair && (
                 <DetailWrapper>
-                  <DetailBox>
+                  <DetailBox style={{ paddingBottom: '12px', borderBottom: `1px dashed ${theme.border4}` }}>
                     <AutoColumn gap="8px">
                       <TYPE.subHeader fontWeight={500} fontSize={12} color={theme.subText}>
                         <UppercaseText>
@@ -711,6 +722,22 @@ export default function ZapOut({
                         </TokenWrapper>
                       </AutoColumn>
                     )}
+                  </DetailBox>
+
+                  <DetailBox style={{ paddingTop: '12px' }}>
+                    <TYPE.subHeader
+                      fontWeight={500}
+                      fontSize={12}
+                      color={theme.subText}
+                      style={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      <UppercaseText>
+                        <Trans>Current Price:</Trans>
+                      </UppercaseText>
+                    </TYPE.subHeader>
+                    <TYPE.black fontWeight={400} fontSize={14}>
+                      <CurrentPrice price={price} />
+                    </TYPE.black>
                   </DetailBox>
                 </DetailWrapper>
               )}

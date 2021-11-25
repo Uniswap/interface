@@ -413,7 +413,7 @@ export default function TokenPair({
         <ModalDetailWrapper>
           {pair && (
             <>
-              <CurrentPriceWrapper style={{ paddingBottom: '12px' }}>
+              <CurrentPriceWrapper style={{ paddingBottom: '8px' }}>
                 <TYPE.subHeader fontSize={14} fontWeight={400} color={theme.subText}>
                   <Trans>Current Price</Trans>
                 </TYPE.subHeader>
