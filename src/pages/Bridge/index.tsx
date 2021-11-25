@@ -186,18 +186,16 @@ export default function Bridge() {
     setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
-  const fromTabelka = tagFilteredArray({
+  const fromNetList = tagFilteredArray({
     value: fromNetwork.chainId,
     setValue: onFromNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
-  const toTabelka = tagFilteredArray({
+  const toNetList = tagFilteredArray({
     value: toNetwork.chainId,
     setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
-  console.log({ toOptions })
-  console.log({ toTabelka })
 
   return (
     <Wrapper>
@@ -227,7 +225,7 @@ export default function Bridge() {
               show={SHOW_TESTNETS ? showFromList : false}
               onOuterClick={SHOW_TESTNETS ? () => setShowFromList(false) : () => null}
               placement="bottom"
-              list={fromTabelka}
+              list={fromNetList}
             />
           </AssetWrapper>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
@@ -247,7 +245,7 @@ export default function Bridge() {
               show={SHOW_TESTNETS ? showToList : false}
               onOuterClick={SHOW_TESTNETS ? () => setShowToList(false) : () => null}
               placement="bottom"
-              list={toTabelka}
+              list={toNetList}
             />
           </AssetWrapper>
         </Row>
