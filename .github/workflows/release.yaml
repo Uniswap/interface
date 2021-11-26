@@ -91,7 +91,7 @@ jobs:
             org.label-schema.name=${{ env.SERVICE }}
           tags: |
             kybernetwork/${{ env.SERVICE }}:latest
-            kybernetwork/${{ env.SERVICE }}:v${{ github.event.inputs.version }}
+            kybernetwork/${{ env.SERVICE }}:${{ github.event.inputs.version }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -123,7 +123,7 @@ jobs:
 
       - name: Upload to GCS
         env:
-          BUCKET: dmm.exchange
+          BUCKET: dev-dmm.knstats.com
         run: |
           gsutil -m rsync -R $PWD/build gs://$BUCKET
           gsutil setmeta -h "Cache-Control: no-cache" gs://$BUCKET/*.html
@@ -132,7 +132,7 @@ jobs:
     needs:
       - docker
       - upload-gcs
-    run-ons: ubuntu-18.04
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -152,7 +152,7 @@ jobs:
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          repo_token: ${{ secret.GH_PAT }}
+          repo_token: ${{ secrets.GH_PAT }}
           automatic_release_tag: ${{ github.event.inputs.version }}
           prerelease: false 
           title: "Dmm Interface v${{ github.event.inputs.version }}"
