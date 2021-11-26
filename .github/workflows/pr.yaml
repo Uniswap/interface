@@ -33,7 +33,7 @@ jobs:
         id: current_branch
         run: |
           BRANCH="${GITHUB_REF#refs/heads/}"
-          if [[ "$GITHUB_REF" =~ refs/tags ]]; then
+          if [[ ! "$GITHUB_REF" =~ refs/heads ]]; then
             raw=$(git branch -r --contains ${{ github.ref }})
             BRANCH=${raw/origin\/}
           fi
@@ -45,7 +45,7 @@ jobs:
           PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
           echo "::set-output name=value::$PR_NUMBER"
 
-      - name: Get tag
+      - name: Get Docker image tag
         id: get_tag
         env:
           CURRENT_BRANCH: ${{ steps.current_branch.outputs.value }}
@@ -105,12 +105,16 @@ jobs:
           push: true
           labels: |
             commit=${{ github.sha }}
+            org.label-schema.schema-version=1.0
+            org.label-schema.vcs-ref=${{ github.sha }}
+            org.label-schema.version=v${{ needs.prepare.outputs.image_tag }}
+            org.label-schema.name=${{ env.SERVICE }}
           tags: |
             ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.image_tag }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
-      - name: Move cache
+      - name: Move Docker cache 
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
