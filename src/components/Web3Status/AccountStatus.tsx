@@ -28,7 +28,7 @@ const ChainLogo: any = {
 }
 
 const View = styled.div`
-  height: 29px;
+  height: 32px;
   display: flex;
   align-items: center;
   margin-left: auto;
