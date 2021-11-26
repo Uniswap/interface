@@ -7,6 +7,8 @@ import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from '../constants/chains'
+import { IS_IN_IFRAME } from '../constants/misc'
+import { parsedQueryString } from '../hooks/useParsedQueryString'
 import getLibrary from '../utils/getLibrary'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
@@ -17,6 +19,16 @@ const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
 if (typeof INFURA_KEY === 'undefined') {
   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
+}
+
+const isInsideLedgerDappBrowser = () => {
+  const queryParams = parsedQueryString(window.location.search)
+  return IS_IN_IFRAME && queryParams.embed === 'ledgerdappbrowser'
+}
+if (isInsideLedgerDappBrowser()) {
+  import('@ledgerhq/iframe-provider').then(({ IFrameEthereumProvider }) => {
+    window.ethereum = new IFrameEthereumProvider()
+  })
 }
 
 const NETWORK_URLS: { [key in SupportedChainId]: string } = {

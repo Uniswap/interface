@@ -2936,6 +2936,13 @@
     "@json-rpc-tools/types" "^1.7.6"
     "@pedrouid/environment" "^1.0.1"
 
+"@ledgerhq/iframe-provider@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/iframe-provider/-/iframe-provider-0.4.2.tgz#2b63892bb3ab9a0719d2b00488be18b176ad6b7e"
+  integrity sha512-RbdwvQow/ITLk0TLb6c3M7y8IyjopIGXhhuUEMjqTU6PZhAL9Gl7TzH8INit9x9cOeG2WCuV+ZbHQ2oWsLfJ+A==
+  dependencies:
+    eventemitter3 "^4.0.0"
+
 "@lingui/babel-plugin-extract-messages@^3.9.0":
   version "3.9.0"
   resolved "https://registry.npmjs.org/@lingui/babel-plugin-extract-messages/-/babel-plugin-extract-messages-3.9.0.tgz"

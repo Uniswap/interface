@@ -17,6 +17,7 @@
     "@graphql-codegen/typescript": "1.22.3",
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
+    "@ledgerhq/iframe-provider": "^0.4.2",
     "@lingui/cli": "^3.9.0",
     "@lingui/macro": "^3.9.0",
     "@lingui/react": "^3.9.0",
