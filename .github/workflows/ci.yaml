@@ -1,5 +1,9 @@
 name: "DMM Interface CI"
 
+concurrency: 
+  group: pr-workflow-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:

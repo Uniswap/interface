@@ -1,6 +1,9 @@
 name: "Auto Deploy PR"
 
-concurrency: open-pr-${{ github.ref }}-${{ github.event.action }}
+concurrency: 
+  group: pr-workflow-${{ github.ref }}-${{ github.event.action }}
+  cancel-in-progress: true
+
 on: 
   pull_request:
     types:
@@ -131,7 +134,7 @@ jobs:
   on-pr-opened:
     needs:
       - prepare
-      - docker
+      - build
     if: github.event.action == 'opened' || github.event.action == 'reopened' 
     runs-on: ubuntu-18.04
     steps:
