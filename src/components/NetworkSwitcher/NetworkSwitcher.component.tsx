@@ -42,7 +42,6 @@ export const NetworkSwitcher = ({
   })
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-  console.log({ list })
   return (
     <div ref={popoverRef}>
       <EthereumOptionPopover show={ethereumOptionPopoverOpen}>

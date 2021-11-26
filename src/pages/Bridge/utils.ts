@@ -62,7 +62,7 @@ export const createNetworkOptionsList = ({
   }
 }
 
-export const tagFilteredArray = ({
+export const createEnhancedNetsArray = ({
   value,
   setValue,
   activeChainId
@@ -90,20 +90,25 @@ export const tagFilteredArray = ({
 }
 
 export const getNetworkInfo = (chainId: ChainId) => {
+  const net = networkOptionsPreset.find(net => {
+    return net.chainId === chainId
+  })
   return {
     name: NETWORK_DETAIL[chainId].chainName,
-    rpcUrl: NETWORK_DETAIL[chainId].rpcUrls,
-    blockExplorerUrls: NETWORK_DETAIL[chainId].blockExplorerUrls,
-    iconUrls: NETWORK_DETAIL[chainId].iconUrls,
-    partnerChainId: NETWORK_DETAIL[chainId].partnerChainId,
     isArbitrum: NETWORK_DETAIL[chainId].isArbitrum,
+    partnerChainId: NETWORK_DETAIL[chainId].partnerChainId,
+    rpcUrl: NETWORK_DETAIL[chainId].rpcUrls,
+    iconUrls: NETWORK_DETAIL[chainId].iconUrls,
     nativeCurrency: {
       name: NETWORK_DETAIL[chainId].nativeCurrency.name,
       symbol: NETWORK_DETAIL[chainId].nativeCurrency.symbol,
       decimals: NETWORK_DETAIL[chainId].nativeCurrency.decimals
-    }
+    },
+    logoSrc: net?.logoSrc,
+    tag: net?.tag
   }
 }
+
 export const getNetworkById = (chainId: ChainId, arajka: NetworkList[]) => {
   for (const { networks } of arajka) {
     for (const config of networks) {

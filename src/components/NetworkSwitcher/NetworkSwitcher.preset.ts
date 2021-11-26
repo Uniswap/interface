@@ -15,7 +15,8 @@ export const networkOptionsPreset = [
     chainId: ChainId.ARBITRUM_ONE,
     name: 'Arbitrum one',
     logoSrc: ArbitrumLogo,
-    color: '#2C374B'
+    color: '#2C374B',
+    tag: 'mainnet layer 2'
   },
   {
     chainId: ChainId.XDAI,
