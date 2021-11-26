@@ -74,7 +74,7 @@ export const createEnhancedNetsArray = ({
   return networkOptionsPreset
     .filter(option => !!NETWORK_DETAIL[option.chainId]?.partnerChainId)
     .reduce<NetworkList[]>((taggedArray, currentNet) => {
-      const tag = currentNet.tag ? currentNet.tag : 'mainnet'
+      const tag = currentNet.tag ? currentNet.tag : ''
       const option: NetworkOptionsPreset = currentNet
       const emhancedNet = createNetworkOptionsList({ value, setValue, activeChainId, option })
       // check if tag exist and if not create array

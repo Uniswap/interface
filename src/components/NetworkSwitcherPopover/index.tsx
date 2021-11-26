@@ -32,7 +32,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   }, [chainId, closeModals])
 
   const isOptionDisabled = (networkId: ChainId, tag?: string) => {
-    return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId || tag === 'COMING SOON'
+    return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId || tag === 'coming soon'
   }
 
   function getNetOptionsPreset(network: NetworkOptionsPreset) {
@@ -48,7 +48,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   const taggedNetworksList = networkOptionsPreset
     .filter(network => SHOW_TESTNETS || !TESTNETS.includes(network.chainId))
     .reduce<NetworkList[]>((taggedArray, currentNet) => {
-      const tag = currentNet.tag ? currentNet.tag : 'mainnet'
+      const tag = currentNet.tag ? currentNet.tag : ''
       const enhancedNet = getNetOptionsPreset(currentNet)
       // check if tag exist and if not create array
       const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
