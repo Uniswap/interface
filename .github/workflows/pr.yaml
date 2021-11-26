@@ -32,12 +32,23 @@ jobs:
         shell: bash
         id: current_branch
         run: |
-          BRANCH="${GITHUB_REF#refs/heads/}"
-          if [[ ! "$GITHUB_REF" =~ refs/heads ]]; then
-            raw=$(git branch -r --contains ${{ github.ref }})
-            BRANCH=${raw/origin\/}
+          if [[ ! "$GITHUB_REF"  = "refs/tags/"* ]]; then
+            if [[ "$GITHUB_EVENT_NAME" = "pull_request" ]]; then
+              HEAD_REF=$(printf "%q" "$GITHUB_HEAD_REF")
+              HEAD_REF=${HEAD_REF/refs\/heads\//}
+              BRANCH=$HEAD_REF
+            else 
+              REF=$(printf "%q" "$GITHUB_REF")
+              REF_BRANCH=${REF/refs\/pull\//}
+              REF_BRANCH=${REF_BRANCH/refs\/heads\//}
+              BRANCH=$HEAD_REF
+            fi
+          else 
+            REF=$(printf "%q" "$GITHUB_REF")
+            REF_BRANCH=${REF/refs\/tags\//}
+            BRANCH=$REF_BRANCH
           fi
-          echo "::set-output name=value::$BRANCH"
+          echo "::set-output name=value::$BRANCH" 
 
       - name: Get PR Number
         id: pr_number
