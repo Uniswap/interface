@@ -104,6 +104,11 @@ export const getNetworkInfo = (chainId: ChainId) => {
     }
   }
 }
-export const getNetworkById = (chainId: ChainId, networks: NetworkList[]) => {
-  return networks.find(net => net.networks.find(a => a.chainId === chainId))
+export const getNetworkById = (chainId: ChainId, arajka: NetworkList[]) => {
+  for (const { networks } of arajka) {
+    for (const config of networks) {
+      if (config.chainId === chainId) return config
+    }
+  }
+  return undefined
 }
