@@ -155,4 +155,4 @@ jobs:
           repo_token: ${{ secrets.GH_PAT }}
           automatic_release_tag: ${{ github.event.inputs.version }}
           prerelease: false 
-          title: "Dmm Interface ${{ github.event.inputs.version }}"
+          title: "DMM Interface - ${{ github.event.inputs.version }}"
