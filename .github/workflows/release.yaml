@@ -123,7 +123,7 @@ jobs:
 
       - name: Upload to GCS
         env:
-          BUCKET: dev-dmm.knstats.com
+          BUCKET: dmm.exchange
         run: |
           gsutil -m rsync -R $PWD/build gs://$BUCKET
           gsutil setmeta -h "Cache-Control: no-cache" gs://$BUCKET/*.html
