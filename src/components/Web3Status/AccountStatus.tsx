@@ -110,13 +110,20 @@ const AddressMobile = styled.span`
   `};
 `
 
-const Avatar = styled.img({
-  maxHeight: '100%',
-  maxWidth: '100%',
+export interface StyledAvatarProps {
+  url: string
+}
+
+const Avatar = styled.div<StyledAvatarProps>(props => ({
+  height: 32,
+  width: 32,
   borderRadius: '50%',
   marginRight: 6,
-  marginLeft: -12
-})
+  marginLeft: -12,
+  backgroundColor: props.theme.bg1,
+  backgroundSize: 'cover',
+  backgroundImage: `url(${props.url})`
+}))
 
 interface AccountStatusProps {
   pendingTransactions: string[]
@@ -160,7 +167,7 @@ export function AccountStatus({
             </RowBetween>
           ) : ENSName ? (
             <>
-              {avatar && <Avatar alt={ENSName} src={avatar.image} />}
+              {avatar && <Avatar url={avatar.image} />}
               <>{ENSName}</>
             </>
           ) : (
