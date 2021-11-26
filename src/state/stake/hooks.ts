@@ -6,7 +6,7 @@ import { UBE } from 'constants/tokens'
 import { PoolManager } from 'generated/'
 import { useAllTokens } from 'hooks/Tokens'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import { zip } from 'lodash'
+import zip from 'lodash/zip'
 // Hooks
 import { useMemo } from 'react'
 

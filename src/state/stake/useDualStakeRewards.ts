@@ -4,7 +4,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import { useToken } from 'hooks/Tokens'
 import { useMultiStakingContract } from 'hooks/useContract'
-import { zip } from 'lodash'
+import zip from 'lodash/zip'
 import { useMemo } from 'react'
 import { useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 
