@@ -25,8 +25,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with: 
-          fetch-depth: 0
 
       - name: Extract branch
         shell: bash
@@ -66,7 +64,7 @@ jobs:
           echo "::set-output name=value::$branch_tag-$short_sha"  
 
 
-  docker:
+  build:
     if: github.event.action != 'closed'
     needs:
       - prepare
@@ -107,7 +105,7 @@ jobs:
       - name: Yarn Build
         env:
           CI: false 
-        run: yarn build
+        run: yarn build-production
         
       - name: Docker build and push
         uses: docker/build-push-action@v2
@@ -118,7 +116,7 @@ jobs:
             commit=${{ github.sha }}
             org.label-schema.schema-version=1.0
             org.label-schema.vcs-ref=${{ github.sha }}
-            org.label-schema.version=v${{ needs.prepare.outputs.image_tag }}
+            org.label-schema.version=${{ needs.prepare.outputs.image_tag }}
             org.label-schema.name=${{ env.SERVICE }}
           tags: |
             ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.image_tag }}

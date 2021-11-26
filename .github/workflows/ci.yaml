@@ -1,0 +1,51 @@
+name: "DMM Interface CI"
+
+on:
+  push:
+    branches:
+      - develop
+      - ci
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Setup GCloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          service_account_key: ${{ env.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Restore node_modules
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependences
+        uses: bahmutov/npm-install@HEAD
+
+      - name: Yarn Build
+        env:
+          CI: false 
+        run: yarn build-ropsten
+      
+      - name: Deploy to GCS
+        env:
+          DEV_BUCKET: dev-dmm.knstats.com
+          TESTNET_BUCKET: testnet.dmm.exchange
+        run: |
+          gsutil -m rsync -R $PWD/build gs://$DEV_BUCKET
+          gsutil setmeta -h "Cache-Control: no-cache" gs://$DEV_BUCKET/*.html
+          
+          # Mirror 2 bucket
+          gsutil -m rsync -r -d gs://$DEV_BUCKET gs://$TESTNET_BUCKET
