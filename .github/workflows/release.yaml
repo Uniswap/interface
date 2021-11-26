@@ -1,7 +1,7 @@
-name: "DMM Interface release"
+name: "DMM Interface Release"
 
 on: 
-  workflow_dispath:
+  workflow_dispatch:
     inputs:
       version:
         description: "Release version"
@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-   build:
+  build:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -150,6 +150,7 @@ jobs:
           git push origin "refs/tags/$VERSION"
 
       - name: Create release
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secret.GH_PAT }}
           automatic_release_tag: ${{ github.event.inputs.version }}
