@@ -5,11 +5,10 @@ export interface NetworkSwitcherProps {
   children?: ReactNode
   show: boolean
   onOuterClick: () => void
-  options: NetworkOptionProps[]
+  networksList: NetworkList[]
   placement?: Placement
   showWalletConnector?: boolean
   parentRef?: RefObject<HTMLElement>
-  list: NetworkList[]
 }
 
 export interface EthereumOptionPopoverProps {

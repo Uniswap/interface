@@ -21,7 +21,7 @@ import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal, useBridgeTxsFil
 
 import { NETWORK_DETAIL, SHOW_TESTNETS } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { BridgeStep, createNetworkOptions, getNetworkById, createEnhancedNetsArray } from './utils'
+import { BridgeStep, getNetworkById, createEnhancedNetsArray } from './utils'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
@@ -175,17 +175,6 @@ export default function Bridge() {
     setStep(BridgeStep.Success)
   }, [bridgeService, collectableTx])
 
-  const fromOptions = createNetworkOptions({
-    value: fromNetwork.chainId,
-    setValue: onFromNetworkChange,
-    activeChainId: !!account ? chainId : -1
-  })
-
-  const toOptions = createNetworkOptions({
-    value: toNetwork.chainId,
-    setValue: onToNetworkChange,
-    activeChainId: !!account ? chainId : -1
-  })
   const fromNetsList = createEnhancedNetsArray({
     value: fromNetwork.chainId,
     setValue: onFromNetworkChange,
@@ -219,13 +208,12 @@ export default function Bridge() {
               disabled={SHOW_TESTNETS ? isCollecting : true}
             />
             <NetworkSwitcherPopover
-              options={fromOptions}
+              networksList={fromNetsList}
               showWalletConnector={false}
               parentRef={fromPanelRef}
               show={SHOW_TESTNETS ? showFromList : false}
               onOuterClick={SHOW_TESTNETS ? () => setShowFromList(false) : () => null}
               placement="bottom"
-              list={fromNetsList}
             />
           </AssetWrapper>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
@@ -239,13 +227,12 @@ export default function Bridge() {
               disabled={SHOW_TESTNETS ? isCollecting : true}
             />
             <NetworkSwitcherPopover
-              options={toOptions}
+              networksList={toNetsList}
               showWalletConnector={false}
               parentRef={toPanelRef}
               show={SHOW_TESTNETS ? showToList : false}
               onOuterClick={SHOW_TESTNETS ? () => setShowToList(false) : () => null}
               placement="bottom"
-              list={toNetsList}
             />
           </AssetWrapper>
         </Row>

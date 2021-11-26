@@ -25,13 +25,12 @@ import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitc
 
 export const NetworkSwitcher = ({
   show,
-  options,
+  networksList,
   children,
   placement,
   onOuterClick,
   parentRef,
-  showWalletConnector = true,
-  list
+  showWalletConnector = true
 }: NetworkSwitcherProps) => {
   const popoverRef = useRef(null)
   const { account } = useActiveWeb3React()
@@ -49,7 +48,7 @@ export const NetworkSwitcher = ({
           placement={placement}
           content={
             <>
-              {list.map((network, index) => (
+              {networksList.map((network, index) => (
                 <OptionGrid key={index}>
                   <NetworkTagRow>{network.tag}</NetworkTagRow>
                   {network.networks.map((props, index) => (

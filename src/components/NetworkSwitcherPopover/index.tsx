@@ -6,13 +6,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useCloseModals } from '../../state/application/hooks'
-import {
-  NetworkSwitcher,
-  NetworkOptionProps,
-  networkOptionsPreset,
-  NetworkList,
-  NetworkOptionsPreset
-} from '../NetworkSwitcher'
+import { NetworkSwitcher, networkOptionsPreset, NetworkList, NetworkOptionsPreset } from '../NetworkSwitcher'
 
 interface NetworkSwitcherPopoverProps {
   children: ReactNode
@@ -37,54 +31,41 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
     }
   }, [chainId, closeModals])
 
-  const isOptionDisabled = (networkId: ChainId) => {
-    return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId
+  const isOptionDisabled = (networkId: ChainId, tag?: string) => {
+    return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId || tag === 'COMING SOON'
   }
 
-  const options = networkOptionsPreset
-    .filter(option => SHOW_TESTNETS || !TESTNETS.includes(option.chainId))
-    .map<NetworkOptionProps>(network => {
-      const { chainId, logoSrc, name } = network
-
-      return {
-        logoSrc,
-        header: name,
-        disabled: isOptionDisabled(chainId),
-        onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
-      }
-    })
-
-  function optionsV3(network: NetworkOptionsPreset) {
-    const { chainId, logoSrc, name } = network
+  function getNetOptionsPreset(network: NetworkOptionsPreset) {
+    const { chainId, logoSrc, name, tag } = network
     return {
       logoSrc,
       header: name,
-      disabled: isOptionDisabled(chainId),
+      disabled: isOptionDisabled(chainId, tag),
       onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
     }
   }
 
-  const tagFilteredArray = networkOptionsPreset.reduce<NetworkList[]>((taggedArray, currentNet) => {
-    const tag = currentNet.tag ? currentNet.tag : 'mainnet'
-    const enhancedNet = optionsV3(currentNet)
-    // check if tag exist and if not create array
-    const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
-    if (tagArrIndex > -1) {
-      taggedArray[tagArrIndex].networks.push(enhancedNet)
-    } else {
-      taggedArray.push({ tag, networks: [enhancedNet] })
-    }
-
-    return taggedArray
-  }, [])
+  const taggedNetworksList = networkOptionsPreset
+    .filter(network => SHOW_TESTNETS || !TESTNETS.includes(network.chainId))
+    .reduce<NetworkList[]>((taggedArray, currentNet) => {
+      const tag = currentNet.tag ? currentNet.tag : 'mainnet'
+      const enhancedNet = getNetOptionsPreset(currentNet)
+      // check if tag exist and if not create array
+      const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
+      if (tagArrIndex > -1) {
+        taggedArray[tagArrIndex].networks.push(enhancedNet)
+      } else {
+        taggedArray.push({ tag, networks: [enhancedNet] })
+      }
+      return taggedArray
+    }, [])
 
   return (
     <NetworkSwitcher
-      options={options}
+      networksList={taggedNetworksList}
       show={networkSwitcherPopoverOpen}
       onOuterClick={closeModals}
       placement={placement}
-      list={tagFilteredArray}
     >
       {children}
     </NetworkSwitcher>
