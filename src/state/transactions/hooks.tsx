@@ -581,7 +581,7 @@ export const FomoPage = () => {
                 </div>
               </td>
               <td style={{width:'5%'}}>{item.symbol}</td>
-              <td><div style={{ display: 'flex', justifyContent: 'space-between' }}><small>{item.addr}</small><ExternalLinkIcon style={{}} href={getNetworkLink(item)} />
+              <td><div style={{ display: 'flex', alignItems:'center', justifyContent: 'space-between' }}><small>{item.addr}</small><ExternalLinkIcon style={{}} href={getNetworkLink(item)} />
                 {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></StyledInternalLink>}
                 {network === 'bsc' && <ExternalLink href={`https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></ExternalLink>}
               </div> </td>

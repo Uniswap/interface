@@ -7,8 +7,9 @@ import React from 'react'
 import useInterval from 'hooks/useInterval'
 import _, { isEqual } from 'lodash'
 import { request } from 'graphql-request'
-import { INFO_CLIENT } from './bscUtils'
+import { fetchBscTokenData, INFO_CLIENT, useBnbPrices } from './bscUtils'
 import { useWeb3React  } from '@web3-react/core'
+import { useActiveWeb3React } from 'hooks/web3'
 export interface EventFilter {
   address?: string
   topics?: Array<string | Array<string> | null>
@@ -198,6 +199,26 @@ export async function getBlockFromTimestamp(timestamp: number) {
     fetchPolicy: 'network-only',
   })
   return result?.data?.blocks?.[0]?.number
+}
+
+
+export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceOld: any) {
+  const { chainId } = useActiveWeb3React()
+  const [tokenData, setTokenData] = React.useState<any>()
+  const prices = useBnbPrices()
+  const func = async ( ) => {
+     if (address && ethPrice && ethPriceOld && 
+      chainId === 1) {
+     await getTokenData(address, ethPrice, ethPriceOld).then(setTokenData)
+      } else if (address && chainId && chainId === 56) {
+        fetchBscTokenData('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', prices?.current, prices?.current).then(setTokenData)
+      }
+  }
+  React.useEffect(() => {
+    func()
+  }, [chainId, ethPriceOld, ethPrice, prices])
+  useInterval(func, 30000, false);
+  return tokenData
 }
 
 export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any) => {

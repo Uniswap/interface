@@ -9,6 +9,7 @@ import useInterval from 'hooks/useInterval'
 import { useWeb3React } from '@web3-react/core';
 import { useQuery } from '@apollo/client'
 import { useBlockNumber } from 'state/application/hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 export const INFO_CLIENT = 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2'
 export const BITQUERY_CLIENT = 'https://graphql.bitquery.io';
 
@@ -137,6 +138,29 @@ interface TransactionResults {
   burns: any[]
 }
 
+const BIT_QUERY_CLIENT = 'https://graphql.bitquery.io';
+
+const QUERY_HOLDERS_BSC = gql`
+query MyQuery {
+  ethereum(network: bsc) {
+    transfers(
+      currency: {in: ["0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341"]}
+      options: { limitBy: { each: "currency.address", limit: 10 } }
+    ) {
+      currency {
+        address
+      }
+      count(uniq: receivers, amount: { gt: 10 })
+    }
+  }
+}
+`
+
+export const fetchBscHolders = async () => {
+  const response = await request(BIT_QUERY_CLIENT, QUERY_HOLDERS_BSC);
+  console.dir(response)
+  return response?.data?.ethereum?.transfers?.find((x: any) => x.count)?.count;
+}
 const fetchPoolTransactions = async (address: string): Promise<{ data?: any[]; error: boolean }> => {
   try {
     const data = await request<TransactionResults>(INFO_CLIENT, POOL_TRANSACTIONS, {
@@ -399,13 +423,13 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(2, 'days').unix()
   const payload = useBlocksFromTimestamps([utcOneDayBack, utcTwoDaysBack])
- 
+
   const QUERY_ONE = BSC_TOKEN_DATA(address)
   const QUERY_TWO = BSC_TOKEN_DATA_BY_BLOCK_ONE(address, payload.blocks?.[0]?.number?.toString())
   const QUERY_THREE = BSC_TOKEN_DATA_BY_BLOCK_TWO(address, (payload.blocks?.[1]?.number?.toString()));
 
   // initialize data arrays
-  const queryOne = useQuery(QUERY_ONE, {  fetchPolicy: 'network-only' });
+  const queryOne = useQuery(QUERY_ONE, { fetchPolicy: 'network-only' });
   const queryTwo = useQuery(QUERY_TWO, { fetchPolicy: 'network-only' });
   const queryThree = useQuery(QUERY_THREE, { fetchPolicy: 'network-only' });
 
@@ -419,11 +443,11 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
     queryTwo.stopPolling();
     queryThree.stopPolling();
     setIsPolling(false)
-  } else if (chainId && 
-    chainId === 56 && 
-    !isPolling && 
-    queryOne.data && 
-    queryTwo.data && 
+  } else if (chainId &&
+    chainId === 56 &&
+    !isPolling &&
+    queryOne.data &&
+    queryTwo.data &&
     queryThree.data) {
     setIsPolling(true)
     queryOne.startPolling(15000)
@@ -505,41 +529,41 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
 export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld: any) => {
   const address = addy?.toLowerCase()
   const utcCurrentTime = moment().utc()
-  
+
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(2, 'days').unix()
- 
+
   const QUERY_ONE = BSC_TOKEN_DATA(address)
 
   // initialize data arrays
   const queryOne = await request(INFO_CLIENT, QUERY_ONE)
 
-  const one =  queryOne.data
+  const one = queryOne.data
   const data = one?.tokens[0];
 
 
   try {
     if (data
-      ) {
+    ) {
       // calculate percentage changes and daily changes
       const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
         +data?.tradeVolumeUSD ?? 0,
-         0,
-         0
+        0,
+        0
       )
 
       // calculate percentage changes and daily changes
       const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
         +data?.untrackedVolumeUSD,
-         0,
-         0
+        0,
+        0
       )
 
       // calculate percentage changes and daily changes
       const [oneDayTxns, txnChange] = get2DayPercentChange(
         +data?.totalTransactions,
         0,
-         0
+        0
       )
 
       const priceChangeUSD = getPercentChange(
@@ -653,6 +677,22 @@ export function useBscTokenTransactions(tokenAddress: string, interval: null | n
   })
   if (chainId && chainId !== 56) query.stopPolling();
   return React.useMemo(() => ({ data: query.data, lastFetched: new Date() }), [query]);
+}
+
+export function useBscPoocoinTransactions() {
+  const [data, setData] = React.useState<any[]>()
+  const { chainId } = useActiveWeb3React()
+  const fn = React.useCallback(async () => {
+      if (chainId && chainId === 56) {
+        console.log("fetching...")
+        fetch('https://stg-api.unmarshal.io/v2/bsc/address/0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341/transactions?auth_key=VGVtcEtleQ%3D%3D&pageSize=100', { method: "GET" })
+          .then(response => response.json())
+          .then(setData)
+      }
+  }, [chainId])
+
+  useInterval(fn, 15000, true);
+  return data;
 }
 
 /* eslint-disable no-param-reassign */
