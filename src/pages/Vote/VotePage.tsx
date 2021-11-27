@@ -186,6 +186,8 @@ font-family:'Bangers', cursive;`
 
 export default function VotePage() {
   const {account,chainId} = useActiveWeb3React();
+  const gainsKey = React.useMemo(() => `kibaBalance_${account}`,[account])
+
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
@@ -196,8 +198,8 @@ export default function VotePage() {
   );
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
   const storedKibaBalance = useMemo(() => {
-    return localStorage.getItem("kibaBalance") || undefined;
-  }, [localStorage.getItem("kibaBalance")]);
+    return localStorage.getItem(gainsKey) || undefined;
+  }, [localStorage.getItem(gainsKey)]);
 
   const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
     storedKibaBalance !== undefined && +storedKibaBalance > 0 && !!account
@@ -212,7 +214,7 @@ export default function VotePage() {
   }, [localStorage.getItem("trackingSince"), date]);
 
   const stopTrackingGains = () => {
-    localStorage.setItem("kibaBalance", "0");
+    localStorage.setItem(gainsKey, "0");
     localStorage.setItem("trackingSince", "");
     setTrumpGainsUSD("");
     setStimGainsUSD("");
@@ -221,11 +223,11 @@ export default function VotePage() {
 
   const trackGains = () => {
     if (isTrackingGains) {
-      localStorage.setItem("kibaBalance", "0");
+      localStorage.setItem(gainsKey, "0");
       localStorage.setItem("trackingSince", "");
       setIsTrackingGains(false);
     } else if (!!kibaBalance) {
-      localStorage.setItem("kibaBalance", (kibaBalance || 0)?.toFixed(2));
+      localStorage.setItem(gainsKey, (kibaBalance || 0)?.toFixed(2));
       localStorage.setItem("trackingSince", `${new Date()}`);
       setIsTrackingGains(true);
     } else {
