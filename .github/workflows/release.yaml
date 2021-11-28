@@ -91,7 +91,7 @@ jobs:
             org.label-schema.name=${{ env.SERVICE }}
           tags: |
             kybernetwork/${{ env.SERVICE }}:latest
-            kybernetwork/${{ env.SERVICE }}:${{ github.event.inputs.version }}
+            kybernetwork/${{ env.SERVICE }}:v${{ github.event.inputs.version }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -146,7 +146,7 @@ jobs:
         env: 
           VERSION: ${{ github.event.inputs.version }}
         run: |
-          git tag --annotate --message "Tag for release $VERSION" "$VERSION"
+          git tag --annotate --message "DMM Interface - v$VERSION" "$VERSION"
           git push origin "refs/tags/$VERSION"
 
       - name: Create release
@@ -155,4 +155,4 @@ jobs:
           repo_token: ${{ secrets.GH_PAT }}
           automatic_release_tag: ${{ github.event.inputs.version }}
           prerelease: false 
-          title: "DMM Interface - ${{ github.event.inputs.version }}"
+          title: "DMM Interface - v${{ github.event.inputs.version }}"
