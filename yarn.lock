@@ -4901,14 +4901,14 @@
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.7.1"
 
-"@uniswap/router-sdk@^1.0.0-beta.6":
-  version "1.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.0.0-beta.6.tgz#cb17c818ed2c6defa4fb86d4db2d46cd9e2d782d"
-  integrity sha512-F/wP88icJqyHu/BpPURPfExLMzTc2J993OoEVQkfv8kheJG5Z9Ak1bbK32GOWUxozfyiXxZWfImXZ1svJgU27A==
+"@uniswap/router-sdk@^1.0.0-beta.7":
+  version "1.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.0.0-beta.7.tgz#a975dc5c838917d55c7092bc06536045b4e6df99"
+  integrity sha512-7J2NQG0P1NynJjkhgypKWQ/TmoaHEt1d7dF0HNfjY3m56q2BQhRw4kBtAPke/IOAOrCz9PI2MkFgxX98lhlpBA==
   dependencies:
     "@ethersproject/abi" "^5.5.0"
     "@uniswap/sdk-core" "^3.0.1"
-    "@uniswap/swap-router-contracts" "^1.0.0-beta.4"
+    "@uniswap/swap-router-contracts" "^1.0.0-beta.5"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.7.1"
 
@@ -4977,10 +4977,10 @@
     "@uniswap/v3-periphery" "1.2.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/swap-router-contracts@^1.0.0-beta.4":
-  version "1.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.0.0-beta.4.tgz#267758498b17044ef3e96fa43475617884eaab73"
-  integrity sha512-97TD47x4i+SFlZnO/gslEardRGLleWKLr+adhW5IQ7GwOlkO1NoKaR7ytqJ36j6HJeOPizOsQ3qCzA2JJF8z2g==
+"@uniswap/swap-router-contracts@^1.0.0-beta.5":
+  version "1.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.0.0-beta.5.tgz#ec5848b568dee38aed09f7c5a2184c9b3407e7a0"
+  integrity sha512-AogRSg8iFzDZzygbMNdRpO0yesuhiI/mMCVpRrPGlDRFxejnoa0BLD7dGFqTHis9nInenpvInE1YKaadCWsQ7g==
   dependencies:
     "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
     "@uniswap/v2-core" "1.0.1"
