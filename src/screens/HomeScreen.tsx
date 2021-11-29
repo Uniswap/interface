@@ -57,8 +57,8 @@ export function HomeScreen({ navigation }: Props) {
       <Box height="100%" width="100%" position="absolute" my="xxl">
         <Box flexDirection="row" alignItems="center" justifyContent="space-between">
           <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
-          <Box flexDirection="row" marginRight="md">
-            <Button marginRight="md">
+          <Box flexDirection="row" mr="md">
+            <Button mr="md">
               <Settings height={30} width={30} />
             </Button>
             <Button onPress={() => navigation.navigate(Screens.Notifications)}>

@@ -14,13 +14,14 @@ import { call, cancel, fork, take, takeEvery } from 'typed-redux-saga'
 export function* initProviders() {
   // Wait for rehydration so we know which networks are enabled
   const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
-  const chains = persisted.payload.chains.byChainId
-
-  logger.debug('providerSaga', 'initProviders', 'Initializing providers')
-  const manager = yield* call(getWalletProviders)
-  const activeChains = getActiveChainIds(chains)
-  for (const chainId of activeChains) {
-    yield* fork(initProvider, chainId, manager)
+  const chains = persisted.payload?.chains?.byChainId
+  if (chains) {
+    logger.debug('providerSaga', 'initProviders', 'Initializing providers')
+    const manager = yield* call(getWalletProviders)
+    const activeChains = getActiveChainIds(chains)
+    for (const chainId of activeChains) {
+      yield* fork(initProvider, chainId, manager)
+    }
   }
   yield* takeEvery(setChainActiveStatus.type, modifyProviders)
 }
