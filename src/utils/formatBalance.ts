@@ -2,9 +2,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Fraction, JSBI } from '@dynamic-amm/sdk'
 
 export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, significant = 6): string => {
-  return new Fraction(balance.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(
-    significant
-  )
+  const amount = new Fraction(balance.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
+
+  if (amount.lessThan(new Fraction('1'))) {
+    return amount.toSignificant(significant)
+  }
+
+  return amount.toFixed(significant)
 }
 
 export const formatJSBIValue = (balance?: JSBI, decimals = 18, significant = 6): string => {
