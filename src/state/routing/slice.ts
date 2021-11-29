@@ -14,6 +14,10 @@ const DEFAULT_QUERY_PARAMS = {
   // minSplits: '5',
 }
 
+const FORCED_QUERY_PARAMS = {
+  forceCrossProtocol: 'true',
+}
+
 type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 
 async function getClientSideQuote({
@@ -75,7 +79,8 @@ export const routingApi = createApi({
             result = await getClientSideQuote(args)
           } else {
             const query = qs.stringify({
-              ...DEFAULT_QUERY_PARAMS,
+              // TODO: REMOVE ONCE BUG BASH IS DONE
+              ...(type === 'exactOut' ? FORCED_QUERY_PARAMS : DEFAULT_QUERY_PARAMS),
               tokenInAddress: tokenIn.address,
               tokenInChainId: tokenIn.chainId,
               tokenOutAddress: tokenOut.address,
