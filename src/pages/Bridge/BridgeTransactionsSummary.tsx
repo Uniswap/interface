@@ -1,17 +1,126 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
 import { ButtonPrimary, ShowMoreButton } from '../../components/Button'
-import { Table, Th } from '../../components/Table'
-import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
-import { TYPE } from '../../theme'
+import { BridgeTransactionStatus, BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
 import { BridgeStatusTag } from './BridgeStatusTag'
 import { NETWORK_DETAIL } from '../../constants'
 import { useBridgeTxsFilter } from '../../state/bridge/hooks'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { getExplorerLink } from '../../utils'
-import { useWindowSize } from '../../hooks/useWindowSize'
 
+const Container = styled.div`
+  display: flex;
+  flex-flow: column;
+`
+
+const Body = styled.div`
+  flex-flow: column;
+  justify-content: space-between;
+`
+
+const Row = styled.div`
+  display: flex;
+  flex-flow: row;
+  text-align: end;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.25rem 0rem;
+  font-weight: 500;
+  font-size: 0.825rem;
+  color: ${({ theme }) => theme.text5};
+`
+
+const Header = styled(Row)`
+  justify-content: space-evenly;
+  line-height: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: ${props => props.theme.purple3};
+`
+
+const ColumnBridging = styled.div`
+  width: 25%;
+  text-align: start;
+`
+
+const ColumnFrom = styled.div`
+  width: 20%;
+`
+
+const ColumnTo = styled.div`
+  width: 35%;
+`
+
+const ColumnStatus = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 20%;
+  margin: 0px 0px 0px 5px;
+`
+
+const ColumnToFlex = styled(ColumnTo)`
+  display: flex;
+  align-items: center;
+`
+
+const Link = styled.a`
+  cursor: initial;
+  color: ${props => props.theme.green2};
+
+  &[href] {
+    cursor: pointer;
+  }
+
+  &[href]:hover {
+    text-decoration: underline;
+  }
+`
+
+const Filler = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0px 5px;
+`
+
+const Dots = styled.div<{ status: BridgeTransactionStatus }>`
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  width: 50%;
+  justify-content: space-between;
+  align-items: center;
+  color: ${({ theme, status }) =>
+    status === 'confirmed' || status === 'claimed' ? theme.green2 : status === 'failed' ? theme.red2 : theme.purple3};
+
+  &:after {
+    font-size: 14px;
+    content: '\\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7 \\00B7';
+  }
+`
+
+const TextBridging = styled.div`
+  font-size: 12px;
+  line-height: 12px;
+  color: ${props => props.theme.text1};
+`
+
+const TextFrom = styled.div`
+  font-size: 10px;
+  line-height: 12px;
+  color: ${props => props.theme.text4};
+`
+
+const TextTo = styled(Link)<{ status: BridgeTransactionStatus }>`
+  font-size: 10px;
+  line-height: 12px;
+  color: ${({ theme, status }) =>
+    status === 'confirmed' || status === 'claimed' ? theme.green2 : status === 'failed' ? theme.red2 : theme.purple3};
+`
 interface BridgeTransactionsSummaryProps {
   transactions: BridgeTransactionSummary[]
   collectableTx: BridgeTransactionSummary
@@ -31,28 +140,21 @@ export const BridgeTransactionsSummary = ({
   }, [setTxsFilter, txsFilter])
 
   return (
-    <div style={{ marginTop: '10px' }}>
-      <AdvancedDetailsFooter fullWidth padding="16px">
-        <Table>
-          <thead>
-            <tr>
-              <Th>Bridging</Th>
-              <Th align="right">From</Th>
-              <Th align="right">To</Th>
-              <Th align="right">Status</Th>
-            </tr>
-          </thead>
-          <tbody>
+    <>
+      <AdvancedDetailsFooter fullWidth padding="12px">
+        <Container>
+          <Header>
+            <ColumnBridging>Bridging</ColumnBridging>
+            <ColumnFrom>From</ColumnFrom>
+            <ColumnTo>To</ColumnTo>
+            <ColumnStatus>Status</ColumnStatus>
+          </Header>
+          <Body>
             {Object.values(transactions).map((tx, index) => (
-              <BridgeTransactionsSummaryRow
-                transactionsLength={transactions.length}
-                key={index}
-                tx={tx}
-                onCollect={onCollect}
-              />
+              <BridgeTransactionsSummaryRow key={index} tx={tx} onCollect={onCollect} />
             ))}
-          </tbody>
-        </Table>
+          </Body>
+        </Container>
         {collectableTx && (
           <ButtonPrimary onClick={() => onCollect(collectableTx)} mt="12px">
             Collect
@@ -63,123 +165,53 @@ export const BridgeTransactionsSummary = ({
       <ShowMoreButton isOpen={txsFilter === BridgeTxsFilter.NONE} onClick={toggleFilter}>
         Past transactions
       </ShowMoreButton>
-    </div>
+    </>
   )
 }
-
-const Td = styled.td`
-  padding: 0 8px;
-
-  &:not(:first-child) {
-    text-align: right;
-  }
-`
-
-const Link = styled.a`
-  cursor: initial;
-  color: #0e9f6e;
-
-  &[href] {
-    cursor: pointer;
-  }
-
-  &[href]:hover {
-    text-decoration: underline;
-  }
-`
-
-const TextFrom = styled.div`
-  position: relative;
-`
-
-const Progress = styled.span<{ dashedLineWidth: number; success: boolean }>`
-  position: absolute;
-  right: -3px;
-  top: 50%;
-  transform: translate(100%, -50%);
-  width: ${({ dashedLineWidth }) => dashedLineWidth - 2 + 'px'};
-  height: 2px;
-  background-color: #8780bf;
-  -webkit-mask-image: repeating-linear-gradient(90deg, transparent, transparent 2px, black 2px, black 4px);
-  mask-image: repeating-linear-gradient(90deg, transparent, transparent 2px, black 2px, black 4px);
-
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: ${({ success }) => (success ? '100%' : '50%')};
-    height: 100%;
-    background-color: #0e9f6e;
-  }
-`
-
-const TextTo = styled(Link)<{ success: boolean }>`
-  color: ${({ success }) => (success ? '#0e9f6e' : '#8780bf')};
-`
 
 interface BridgeTransactionsSummaryRow {
   tx: BridgeTransactionSummary
   onCollect: BridgeTransactionsSummaryProps['onCollect']
-  transactionsLength: number
 }
 
-const BridgeTransactionsSummaryRow = ({ tx, onCollect, transactionsLength }: BridgeTransactionsSummaryRow) => {
+const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSummaryRow) => {
   const { assetName, fromChainId, status, toChainId, value, pendingReason, log } = tx
 
-  const refFrom = useRef<HTMLDivElement>(null)
-  const refTo = useRef<HTMLAnchorElement>(null)
-  const [dashedLineWidth, setDashedLineWidth] = useState(0)
-
-  const windowSize = useWindowSize()
-
-  useEffect(() => {
-    if (refFrom && refFrom.current && refTo && refTo.current) {
-      const refFromX = refFrom.current.getBoundingClientRect().right
-      const refToX = refTo.current.getBoundingClientRect().left
-      setDashedLineWidth(refToX - refFromX - 3)
-    }
-  }, [transactionsLength, windowSize.width])
-
-  const success = status === 'confirmed' || status === 'claimed'
-
   return (
-    <tr style={{ lineHeight: '22px' }}>
-      <Td>
-        <TYPE.main color="white" fontSize="14px" lineHeight="14px" fontWeight="600">
-          {`${value} ${assetName}`}
-        </TYPE.main>
-      </Td>
-      <Td>
-        <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
-          <TextFrom ref={refFrom}>
-            <Link
-              href={getExplorerLink(log[0].chainId, log[0].txHash, 'transaction')}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {NETWORK_DETAIL[fromChainId].chainName}
-            </Link>
-            <Progress success={success} dashedLineWidth={dashedLineWidth} />
-          </TextFrom>
-        </TYPE.main>
-      </Td>
-      <Td>
-        <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
-          <TextTo
-            success={success}
-            ref={refTo}
-            href={log[1] && getExplorerLink(log[1].chainId, log[1].txHash, 'transaction')}
+    <Row>
+      <ColumnBridging>
+        <TextBridging>
+          {value} {assetName}
+        </TextBridging>
+      </ColumnBridging>
+      <ColumnFrom>
+        <TextFrom>
+          <Link
+            href={getExplorerLink(log[0].chainId, log[0].txHash, 'transaction')}
             rel="noopener noreferrer"
             target="_blank"
           >
-            {NETWORK_DETAIL[toChainId].chainName}
-          </TextTo>
-        </TYPE.main>
-      </Td>
-      <td align="right">
+            {NETWORK_DETAIL[fromChainId].chainName}
+          </Link>
+        </TextFrom>
+      </ColumnFrom>
+      <ColumnToFlex>
+        <Filler>
+          <Dots status={'confirmed'} />
+          <Dots status={status} />
+        </Filler>
+        <TextTo
+          status={status}
+          href={log[1] && getExplorerLink(log[1].chainId, log[1].txHash, 'transaction')}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {NETWORK_DETAIL[toChainId].chainName}
+        </TextTo>
+      </ColumnToFlex>
+      <ColumnStatus>
         <BridgeStatusTag status={status} pendingReason={pendingReason} onCollect={() => onCollect(tx)} />
-      </td>
-    </tr>
+      </ColumnStatus>
+    </Row>
   )
 }

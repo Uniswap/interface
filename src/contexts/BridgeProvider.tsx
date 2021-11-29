@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Bridge } from 'arb-ts'
 import { providers, Signer } from 'ethers'
 import { useDispatch } from 'react-redux'
-
 import { useActiveWeb3React } from '../hooks'
-import { useChains } from '../hooks/useChains'
 import { NETWORK_DETAIL } from '../constants'
 import { INFURA_PROJECT_ID } from '../connectors'
 import { POOLING_INTERVAL } from '../utils/getLibrary'
+import { getChainPair } from '../utils/arbitrum'
+import { setFromBridgeNetwork, setToBridgeNetwork } from '../state/bridge/actions'
 
 type BridgeContextType = Bridge | null
 
@@ -28,9 +28,9 @@ const addInfuraKey = (rpcUrl: string) => {
 }
 
 export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => {
-  const { library, account } = useActiveWeb3React()
+  const { library, account, chainId } = useActiveWeb3React()
   const [bridge, setBridge] = useState<Bridge | null>(null)
-  const { chainId, isArbitrum, partnerChainId } = useChains()
+  const { isArbitrum, partnerChainId } = getChainPair(chainId)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -75,6 +75,8 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
 
         if (l1Signer && l2Signer) {
           initBridge(abortController.signal, l1Signer, l2Signer)
+          dispatch(setFromBridgeNetwork({ chainId }))
+          dispatch(setToBridgeNetwork({ chainId: partnerChainId }))
         }
       }
     }

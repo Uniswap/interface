@@ -131,7 +131,8 @@ export const bridgeTxsSummarySelector = createSelector(
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
-          assetAddress: tx.assetAddress,
+          assetAddressL1: tx.assetAddressL1,
+          assetAddressL2: tx.assetAddressL2,
           fromChainId: from,
           toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
@@ -215,7 +216,8 @@ export const bridgeTxsSummarySelector = createSelector(
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
-          assetAddress: tx.assetAddress,
+          assetAddressL1: tx.assetAddressL1,
+          assetAddressL2: tx.assetAddressL2,
           value: tx.value,
           txHash: tx.txHash,
           batchNumber: tx.batchNumber,
@@ -272,7 +274,6 @@ export const bridgeTxsSummarySelector = createSelector(
           return retVal.filter(summary => summary.status === 'redeem')
         case BridgeTxsFilter.RECENT:
           const passed24h = new Date().getTime() - 1000 * 60 * 60 * 24
-
           return retVal.filter(summary => {
             if (!summary.timestampResolved) return true
             return summary.timestampResolved >= passed24h
