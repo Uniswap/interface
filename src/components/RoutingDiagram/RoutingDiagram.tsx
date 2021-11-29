@@ -61,16 +61,22 @@ const DotColor = styled(DotLine)`
 
 const OpaqueBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.bg2};
+  border-radius: 8px;
   display: grid;
+  font-size: 12px;
   grid-gap: 4px;
   grid-auto-flow: column;
   justify-content: start;
+  padding: 4px 6px 4px 4px;
   z-index: ${Z_INDEX.sticky};
 `
 
 const ProtocolBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.bg3};
-  border-radius: 0.3rem;
+  border-radius: 4px;
+  color: ${({ theme }) => theme.text2};
+  font-size: 10px;
+  padding: 2px 4px;
   z-index: ${Z_INDEX.sticky + 1};
 `
 

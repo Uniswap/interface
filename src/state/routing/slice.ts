@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Token } from '@uniswap/sdk-core'
+import ms from 'ms.macro'
 import qs from 'qs'
 
 import { GetQuoteResult } from './types'
@@ -12,10 +13,6 @@ const DEFAULT_QUERY_PARAMS = {
   // example other params
   // forceCrossProtocol: 'true',
   // minSplits: '5',
-}
-
-const FORCED_QUERY_PARAMS = {
-  forceCrossProtocol: 'true',
 }
 
 type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
@@ -79,8 +76,7 @@ export const routingApi = createApi({
             result = await getClientSideQuote(args)
           } else {
             const query = qs.stringify({
-              // TODO: REMOVE ONCE BUG BASH IS DONE
-              ...(type === 'exactOut' ? FORCED_QUERY_PARAMS : DEFAULT_QUERY_PARAMS),
+              ...DEFAULT_QUERY_PARAMS,
               tokenInAddress: tokenIn.address,
               tokenInChainId: tokenIn.chainId,
               tokenOutAddress: tokenOut.address,
@@ -91,14 +87,14 @@ export const routingApi = createApi({
             result = await fetch(`quote?${query}`)
           }
 
-          if (result.error) {
-            throw result.error
-          }
-
           return { data: result.data as GetQuoteResult }
         } catch (e) {
           return { error: e as FetchBaseQueryError }
         }
+      },
+      keepUnusedDataFor: ms`10s`,
+      extraOptions: {
+        maxRetries: 0,
       },
     }),
   }),

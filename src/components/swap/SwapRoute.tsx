@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
+import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
@@ -32,6 +32,9 @@ export default memo(function SwapRoute({
 
   const routes = getTokenPath(trade)
 
+  const hasV2Routes = routes.some((r) => r.protocol === Protocol.V2)
+  const hasV3Routes = routes.some((r) => r.protocol === Protocol.V3)
+
   return (
     <AutoColumn gap="12px">
       <RowBetween>
@@ -56,9 +59,17 @@ export default memo(function SwapRoute({
         <TYPE.main fontSize={12} width={400}>
           {/* could not get <Plural> to render `one` correctly. */}
           {routes.length === 1 ? (
-            <Trans>Best route via 1 hop on Uniswap V2 and V3</Trans>
-          ) : (
+            hasV2Routes && hasV3Routes ? (
+              <Trans>Best route via 1 hop on Uniswap V2 and V3</Trans>
+            ) : (
+              <Trans>Best route via 1 hop on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
+            )
+          ) : hasV2Routes && hasV3Routes ? (
             <Trans>Best route via {routes.length} hops on Uniswap V2 and V3</Trans>
+          ) : (
+            <Trans>
+              Best route via {routes.length} hops on Uniswap {hasV2Routes ? 'V2' : 'V3'}
+            </Trans>
           )}
         </TYPE.main>
       )}
