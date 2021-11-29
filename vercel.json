@@ -1,0 +1,22 @@
+{
+  "headers": [
+    {
+      "source": "/static/:foo/(.*).chunk.css",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/static/:foo/(.*).chunk.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, must-revalidate"
+        }
+      ]
+    }
+  ]
+}

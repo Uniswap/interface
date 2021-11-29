@@ -1,5 +1,6 @@
 import React, { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { useUserAllowMoolaWithdrawal, useUserDisableSmartRouting, useUserMinApprove } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components'
@@ -125,7 +126,7 @@ export default function SettingsTab() {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
-
+  const { t } = useTranslation()
   const theme = useContext(ThemeContext)
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
   const [minApprove, setMinApprove] = useUserMinApprove()
@@ -183,7 +184,11 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
+      <StyledMenuButton
+        aria-label={open ? t('settingsClose') : t('settingsOpen')}
+        onClick={toggle}
+        id="open-settings-dialog-button"
+      >
         <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>

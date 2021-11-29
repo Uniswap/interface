@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle, PieChart, Send } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -106,11 +107,12 @@ export default function Menu() {
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
+  const { t } = useTranslation()
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle}>
+      <StyledMenuButton onClick={toggle} aria-label={open ? t('menuClose') : t('menuOpen')}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
