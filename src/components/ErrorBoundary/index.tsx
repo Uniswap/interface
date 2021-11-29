@@ -47,6 +47,8 @@ type ErrorBoundaryState = {
   error: Error | null
 }
 
+const IS_UNISWAP = window.location.hostname === 'app.uniswap.org'
+
 export default class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
   constructor(props: unknown) {
     super(props)
@@ -67,6 +69,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
 
   render() {
     const { error } = this.state
+
     if (error !== null) {
       const encodedBody = encodeURIComponent(issueBody(error))
       return (
@@ -83,30 +86,32 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                   <TYPE.main fontSize={10}>{error.stack}</TYPE.main>
                 </code>
               </CodeBlockWrapper>
-              <AutoRow>
-                <LinkWrapper>
-                  <ExternalLink
-                    id="create-github-issue-link"
-                    href={`https://github.com/Uniswap/uniswap-interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=${encodeURIComponent(
-                      `Crash report: \`${error.name}${error.message && `: ${error.message}`}\``
-                    )}`}
-                    target="_blank"
-                  >
-                    <TYPE.link fontSize={16}>
-                      <Trans>Create an issue on GitHub</Trans>
-                      <span>↗</span>
-                    </TYPE.link>
-                  </ExternalLink>
-                </LinkWrapper>
-                <LinkWrapper>
-                  <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
-                    <TYPE.link fontSize={16}>
-                      <Trans>Get support on Discord</Trans>
-                      <span>↗</span>
-                    </TYPE.link>
-                  </ExternalLink>
-                </LinkWrapper>
-              </AutoRow>
+              {IS_UNISWAP ? (
+                <AutoRow>
+                  <LinkWrapper>
+                    <ExternalLink
+                      id="create-github-issue-link"
+                      href={`https://github.com/Uniswap/uniswap-interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=${encodeURIComponent(
+                        `Crash report: \`${error.name}${error.message && `: ${error.message}`}\``
+                      )}`}
+                      target="_blank"
+                    >
+                      <TYPE.link fontSize={16}>
+                        <Trans>Create an issue on GitHub</Trans>
+                        <span>↗</span>
+                      </TYPE.link>
+                    </ExternalLink>
+                  </LinkWrapper>
+                  <LinkWrapper>
+                    <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
+                      <TYPE.link fontSize={16}>
+                        <Trans>Get support on Discord</Trans>
+                        <span>↗</span>
+                      </TYPE.link>
+                    </ExternalLink>
+                  </LinkWrapper>
+                </AutoRow>
+              ) : null}
             </AutoColumn>
           </BodyWrapper>
         </FallbackWrapper>
