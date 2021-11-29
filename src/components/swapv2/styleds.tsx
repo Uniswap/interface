@@ -219,7 +219,7 @@ export function SwapCallbackError({ error }: { error: string }) {
     <SwapCallbackErrorInner>
       <Alert style={{ marginBottom: 'auto' }} />
       <AutoColumn style={{ flexBasis: '100%', margin: '10px 0 auto 8px' }}>
-        <Text fontSize="16px" fontWeight="500" color={theme.red}>
+        <Text fontSize="16px" fontWeight="500" color={theme.red} style={{ lineHeight: '24px' }}>
           {errorFriendly(error)}
         </Text>
         <Text
@@ -231,7 +231,7 @@ export function SwapCallbackError({ error }: { error: string }) {
           Show more details
         </Text>
         {showDetail && (
-          <Text color={theme.text1} fontSize="10px" style={{ margin: '10px 0 4px 0' }}>
+          <Text color={theme.text1} fontSize="10px" style={{ margin: '10px 0 4px 0', lineHeight: '16px' }}>
             {error}
           </Text>
         )}

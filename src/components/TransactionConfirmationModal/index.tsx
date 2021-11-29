@@ -192,6 +192,7 @@ const ErrorDetail = styled(Section)`
   font-size: 10px;
   width: 100%;
   text-align: center;
+  line-height: 16px;
 `
 
 const StyledAlert = styled(Alert)`
@@ -212,7 +213,12 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
         </RowBetween>
         <AutoColumn style={{ marginTop: 20 }} gap="8px" justify="center">
           <StyledAlert />
-          <Text fontWeight={500} fontSize={16} color={theme.red} style={{ textAlign: 'center', width: '85%' }}>
+          <Text
+            fontWeight={500}
+            fontSize={16}
+            color={theme.red}
+            style={{ textAlign: 'center', width: '85%', lineHeight: '24px' }}
+          >
             {errorFriendly(message)}
             {/* {message.includes('minTotalAmountOut') &&
               ' Try to refresh the exchange rate or increase the Slippage tolerance in Settings'} */}
