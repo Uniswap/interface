@@ -29,7 +29,7 @@ const pool13 = new Pool(
   -69633
 )
 
-const currencyAmount = (token: Token, amount: number) => CurrencyAmount.fromRawAmount(token1, JSBI.BigInt(amount))
+const currencyAmount = (token: Token, amount: number) => CurrencyAmount.fromRawAmount(token, JSBI.BigInt(amount))
 
 describe('prices', () => {
   describe('#computeRealizedLPFeeAmount', () => {
