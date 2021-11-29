@@ -43,33 +43,29 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
     : '-'
 
   return (
-    <Button
-      onPress={() => onPressToken(currencyAmount)}
-      flexDirection="row"
-      width="100%"
-      justifyContent="space-between"
-      py="md"
-      px="lg">
-      <Box flexDirection="row">
-        <CurrencyLogo currency={currency} size={40} />
-        <Box marginHorizontal="md" alignItems="flex-start">
-          <Text fontSize={20} fontWeight="500">
-            {currency.symbol}
-          </Text>
-          <Text fontSize={14} fontWeight="400" color="gray400">{`${formatCurrencyAmount(
-            currencyAmount
-          )} ${currency.symbol}`}</Text>
+    <Button onPress={() => onPressToken(currencyAmount)} flexDirection="row">
+      <Box flex={1} flexDirection="row" justifyContent="space-between" mx="md">
+        <Box flexDirection="row">
+          <CurrencyLogo currency={currency} size={40} />
+          <Box mx="md" alignItems="flex-start">
+            <Text fontSize={20} fontWeight="500">
+              {currency.symbol}
+            </Text>
+            <Text fontSize={14} fontWeight="400" color="gray400">{`${formatCurrencyAmount(
+              currencyAmount
+            )} ${currency.symbol}`}</Text>
+          </Box>
         </Box>
-      </Box>
-      <Box alignItems="flex-end">
-        <Text fontSize={20} fontWeight="400">
-          {balance}
-        </Text>
-        <Text
-          fontSize={14}
-          color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>
-          {percentChange ? `${percentChange.toFixed(1)}%` : '-'}
-        </Text>
+        <Box alignItems="flex-end">
+          <Text fontSize={20} fontWeight="400">
+            {balance}
+          </Text>
+          <Text
+            fontSize={14}
+            color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>
+            {percentChange ? `${percentChange.toFixed(1)}%` : '-'}
+          </Text>
+        </Box>
       </Box>
     </Button>
   )

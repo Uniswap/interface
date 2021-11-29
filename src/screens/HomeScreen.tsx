@@ -54,15 +54,15 @@ export function HomeScreen({ navigation }: Props) {
       <GradientBackground>
         <PinkToBlueLinear />
       </GradientBackground>
-      <Box height="100%" width="100%" position="absolute" my="xxl">
+      <Box height="100%" width="100%" position="absolute" my="xl">
         <Box flexDirection="row" alignItems="center" justifyContent="space-between">
           <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
           <Box flexDirection="row" mr="md">
-            <Button mr="md">
-              <Settings height={30} width={30} />
+            <Button>
+              <Settings height={24} width={24} />
             </Button>
             <Button onPress={() => navigation.navigate(Screens.Notifications)}>
-              <Bell height={30} width={30} />
+              <Bell height={24} width={24} />
             </Button>
           </Box>
         </Box>
