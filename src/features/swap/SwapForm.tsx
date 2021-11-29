@@ -1,21 +1,18 @@
 import { Formik, FormikErrors, useFormikContext } from 'formik'
 import React, { useState } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AddressInput } from 'src/components/input/AddressInput'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { QuoteProvider } from 'src/features/swap/QuoteProvider'
-import { swapActions } from 'src/features/swap/SwapSaga'
 import { QuoteParams, QuoteResult } from 'src/features/swap/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { isValidAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 
 export function SwapForm() {
-  const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
 
   const [quoteResult, setQuoteResult] = useState<QuoteResult>()
@@ -27,13 +24,6 @@ export function SwapForm() {
       logger.error('SwapForm', 'onSubmit', '`activeAccount` and `quoteResult` must be defined.')
       return
     }
-
-    dispatch(
-      swapActions.trigger({
-        account: activeAccount,
-        methodParameters: quoteResult.methodParameters,
-      })
-    )
   }
 
   return (

@@ -11,12 +11,11 @@ export interface ApproveParams {
   account: AccountStub
   txAmount: string
   contract: Erc20
-  requireReceipt?: boolean
   spender: Address
 }
 
 export function* maybeApprove(params: ApproveParams) {
-  const { account, txAmount, contract, spender, requireReceipt = false } = params
+  const { account, txAmount, contract, spender } = params
 
   const accountManager = yield* call(getWalletAccounts)
   const walletAccount = accountManager.getAccount(account.address)
@@ -59,12 +58,9 @@ export function* maybeApprove(params: ApproveParams) {
       }
     )
 
-    if (requireReceipt) {
-      yield* call(response.wait)
-      return true
-    } else {
-      return response
-    }
+    yield* call(response.wait)
+
+    return true
   } catch (e) {
     logger.error('approveSaga', 'approve', 'Failed to estimate gas:' + e)
     return false

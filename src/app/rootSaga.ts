@@ -13,7 +13,7 @@ import {
   importAccountSagaName,
 } from 'src/features/import/importAccountSaga'
 import { initProviders } from 'src/features/providers/providerSaga'
-import { swapActions, swapReducer, swapSaga, swapSagaName } from 'src/features/swap/SwapSaga'
+import { swapActions, swapReducer, swapSaga, swapSagaName } from 'src/features/swap/swapSaga'
 import {
   transferTokenActions,
   transferTokenReducer,

@@ -8,7 +8,13 @@ import { fixedNumberToInt } from 'src/utils/number'
 
 // Using a const list of 1559 chains to save a network request for each fee calculation
 // Must be kept up to date if more chains adopt 1559
-const EIP_1559_CHAINS = [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.GOERLI]
+const EIP_1559_CHAINS = [
+  ChainId.MAINNET,
+  ChainId.ROPSTEN,
+  // TODO: removed until figure out why EIP-1559 gas estimation fails
+  // ChainId.RINKEBY,
+  ChainId.GOERLI,
+]
 
 export async function computeGasFee(
   chainId: ChainId,
