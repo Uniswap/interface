@@ -176,13 +176,13 @@ export default function Bridge() {
   }, [bridgeService, collectableTx])
 
   const fromNetsList = createEnhancedNetsArray({
-    value: fromNetwork.chainId,
-    setValue: onFromNetworkChange,
+    selectedNetChainId: fromNetwork.chainId,
+    setChainId: onFromNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
   const toNetsList = createEnhancedNetsArray({
-    value: toNetwork.chainId,
-    setValue: onToNetworkChange,
+    selectedNetChainId: toNetwork.chainId,
+    setChainId: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
 

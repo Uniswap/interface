@@ -5,7 +5,7 @@ export interface NetworkSwitcherProps {
   children?: ReactNode
   show: boolean
   onOuterClick: () => void
-  networksList: NetworkList[]
+  networksList: NetworksList[]
   placement?: Placement
   showWalletConnector?: boolean
   parentRef?: RefObject<HTMLElement>
@@ -38,7 +38,7 @@ export type NetworkOptionsPreset = {
   tag?: string
 }
 
-export type NetworkList = {
+export type NetworksList = {
   tag: string
   networks: NetworkOptionProps[]
 }
