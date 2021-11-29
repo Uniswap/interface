@@ -219,19 +219,21 @@ export function SwapCallbackError({ error }: { error: string }) {
     <SwapCallbackErrorInner>
       <Alert style={{ marginBottom: 'auto' }} />
       <AutoColumn style={{ flexBasis: '100%', margin: '10px 0 auto 8px' }}>
-        <Text fontSize="16px" fontWeight="500" color={theme.red}>
+        <Text fontSize="16px" fontWeight="500" color={theme.red} lineHeight={'24px'}>
           {errorFriendly(error)}
         </Text>
-        <Text
-          color={theme.primary1}
-          fontSize="12px"
-          sx={{ cursor: `pointer` }}
-          onClick={() => setShowDetail(!showDetail)}
-        >
-          Show more details
-        </Text>
+        {error != errorFriendly(error) && (
+          <Text
+            color={theme.primary1}
+            fontSize="12px"
+            sx={{ cursor: `pointer` }}
+            onClick={() => setShowDetail(!showDetail)}
+          >
+            Show more details
+          </Text>
+        )}
         {showDetail && (
-          <Text color={theme.text1} fontSize="10px" style={{ margin: '10px 0 4px 0' }}>
+          <Text color={theme.text1} fontSize="10px" margin={'10px 0 4px 0'} lineHeight={'16px'}>
             {error}
           </Text>
         )}

@@ -429,10 +429,12 @@ msgstr "创建新的池或选择另一个代币对已查看可用池。"
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Current Price"
 msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Current Price:"
 msgstr ""
 

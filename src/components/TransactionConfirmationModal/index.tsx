@@ -192,6 +192,7 @@ const ErrorDetail = styled(Section)`
   font-size: 10px;
   width: 100%;
   text-align: center;
+  line-height: 16px;
 `
 
 const StyledAlert = styled(Alert)`
@@ -212,22 +213,30 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
         </RowBetween>
         <AutoColumn style={{ marginTop: 20 }} gap="8px" justify="center">
           <StyledAlert />
-          <Text fontWeight={500} fontSize={16} color={theme.red} style={{ textAlign: 'center', width: '85%' }}>
+          <Text
+            fontWeight={500}
+            fontSize={16}
+            color={theme.red}
+            lineHeight={'24px'}
+            style={{ textAlign: 'center', width: '85%' }}
+          >
             {errorFriendly(message)}
             {/* {message.includes('minTotalAmountOut') &&
               ' Try to refresh the exchange rate or increase the Slippage tolerance in Settings'} */}
           </Text>
-          <AutoColumn justify="center" style={{ width: '100%' }}>
-            <Text
-              color={theme.primary1}
-              fontSize="14px"
-              sx={{ cursor: `pointer` }}
-              onClick={() => setShowDetail(!showDetail)}
-            >
-              Show more details
-            </Text>
-            {showDetail && <ErrorDetail>{message}</ErrorDetail>}
-          </AutoColumn>
+          {message != errorFriendly(message) && (
+            <AutoColumn justify="center" style={{ width: '100%' }}>
+              <Text
+                color={theme.primary1}
+                fontSize="14px"
+                sx={{ cursor: `pointer` }}
+                onClick={() => setShowDetail(!showDetail)}
+              >
+                Show more details
+              </Text>
+              {showDetail && <ErrorDetail>{message}</ErrorDetail>}
+            </AutoColumn>
+          )}
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
