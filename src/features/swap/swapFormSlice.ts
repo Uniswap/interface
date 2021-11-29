@@ -6,7 +6,7 @@ export enum CurrencyField {
   OUTPUT,
 }
 
-interface State {
+export interface SwapFormState {
   exactCurrencyField: CurrencyField
   exactAmount: string
   [CurrencyField.INPUT]: {
@@ -20,7 +20,7 @@ interface State {
 }
 
 // Represents the active swap form
-export const initialSwapState: Readonly<State> = {
+export const initialSwapFormState: Readonly<SwapFormState> = {
   exactCurrencyField: CurrencyField.INPUT,
   exactAmount: '',
   [CurrencyField.INPUT]: {
@@ -33,7 +33,7 @@ export const initialSwapState: Readonly<State> = {
 // using `createSlice` for convenience -- slice is not added to root reducer
 const slice = createSlice({
   name: 'swap',
-  initialState: initialSwapState,
+  initialState: initialSwapFormState,
   reducers: {
     /**
      * Sets currency at `field` to the given currency
@@ -90,4 +90,4 @@ const slice = createSlice({
 })
 
 export const { selectCurrency, switchCurrencySides, enterExactAmount } = slice.actions
-export const swapReducer = slice.reducer
+export const { reducer: swapFormReducer, actions: swapFormActions } = slice

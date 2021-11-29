@@ -23,6 +23,7 @@ export function NetworkButtonGroup({ onPress, selected }: NetworkButtonGroupProp
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {CHAINS_TO_DISPLAY.map(([chainId, label]) => (
           <Button
+            key={label}
             variant="pill"
             bg={selected === chainId ? 'blue' : 'gray100'}
             label={label}

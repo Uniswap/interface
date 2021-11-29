@@ -54,7 +54,7 @@ export function CurrencySelector({
         {selectedCurrency ? (
           <CenterBox flexDirection="row">
             <CurrencyLogo currency={selectedCurrency} size={20} />
-            <CenterBox flexDirection="row" marginHorizontal="sm">
+            <CenterBox flexDirection="row" ml="sm">
               <Text variant="h3" color="black" mr="sm">
                 {selectedCurrency.symbol}
               </Text>

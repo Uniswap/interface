@@ -66,6 +66,7 @@ const providerManager: Partial<ProviderManager> = {
 
 const approveParams: ApproveParams = {
   account,
+  chainId: ChainId.RINKEBY,
   txAmount: '1',
   contract: tokenContract,
   spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
@@ -100,7 +101,7 @@ describe(approveAndSwap, () => {
       .next(providerManager)
       .call(maybeApprove, swapParams)
       .next(/*approved=*/ true)
-      .call(account.signer.sendTransaction, {
+      .call([account.signer, account.signer.sendTransaction], {
         from: account.address,
         to: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
         data: '0x01',
@@ -122,7 +123,7 @@ describe(approveAndSwap, () => {
       .next(providerManager)
       .call(maybeApprove, params)
       .next(/*approved=*/ true)
-      .call(account.signer.sendTransaction, {
+      .call([account.signer, account.signer.sendTransaction], {
         from: account.address,
         to: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
         data: '0x01',

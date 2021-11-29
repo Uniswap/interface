@@ -1,6 +1,5 @@
-import { DEBUG } from 'react-native-dotenv'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useQuery } from 'react-query'
-import { ChainId } from 'src/constants/chains'
 import { QuoteResult } from 'src/features/swap/types'
 import { serializeQueryParams } from 'src/features/swap/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -10,39 +9,59 @@ import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from '../../constants/
 const ROUTING_API_BASE_URL = 'https://api.uniswap.org/v1'
 
 interface QuoteParams {
-  amount?: string
-  tokenInAddress?: Address
-  tokenOutAddress?: Address
-  chainId?: ChainId
+  currencyAmount: CurrencyAmount<Currency> | null | undefined
+  currencyIn: Currency | null | undefined
+  currencyOut: Currency | null | undefined
+  tradeType: TradeType
 }
 
-// Fetches quote from Routing API with caching and invalidation
+/**
+ * Fetches quote from Routing API
+ * Handles caching, invalidation, polling, etc.
+ */
 export function useQuote(params: QuoteParams) {
-  const { amount: amountIn, tokenInAddress: tokenIn, tokenOutAddress: tokenOut, chainId } = params
-
   const recipient = useActiveAccount()
 
-  return useQuery<QuoteResult>(
-    ['swap', params],
+  const { currencyAmount, tradeType, currencyIn, currencyOut } = params
+  const { address: tokenInAddress, chainId: tokenInChainId } = currencyIn?.wrapped || {}
+  const { address: tokenOutAddress, chainId: tokenOutChainId } = currencyOut?.wrapped || {}
+
+  // builds a unique key to represent the quote in the cache
+  const key = [
+    currencyAmount?.toExact(),
+    tradeType,
+    tokenInAddress,
+    tokenOutAddress,
+    tokenInChainId,
+    tokenOutChainId,
+  ]
+
+  const result = useQuery<QuoteResult>(
+    ['swap', key],
     async () => {
-      if (!amountIn || !tokenIn || !tokenOut || !chainId) {
+      if (
+        !currencyAmount ||
+        !tokenInAddress ||
+        !tokenOutAddress ||
+        !tokenInChainId ||
+        !tokenOutChainId
+      ) {
         logger.error(
           'useQuote',
           'useQuery',
-          'Expected all params to be defined. Query should not be enabled.'
+          'Unexpected. Ensure all required params are included in `enabled`'
         )
         return
       }
 
       const queryParams = serializeQueryParams({
-        tokenInChainId: chainId,
-        tokenOutChainId: chainId,
-        tokenInAddress: tokenIn,
-        tokenOutAddress: tokenOut,
-        // TODO: represent tokenIn|Out as currencies and use `CurrencyAmount`
-        // assumes ETH as input
-        amount: parseFloat(amountIn) * 1e18,
-        type: 'exactIn',
+        tokenInChainId,
+        tokenOutChainId,
+        tokenInAddress,
+        tokenOutAddress,
+        amount: currencyAmount.quotient.toString(),
+        type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
+        protocols: 'v3',
         ...(recipient
           ? {
               recipient: recipient.address,
@@ -54,25 +73,29 @@ export function useQuote(params: QuoteParams) {
 
       const response = await fetch(
         `${ROUTING_API_BASE_URL}/quote?${queryParams}`,
-        DEBUG
-          ? {
-              // spoof origin to go around server permissions
-              headers: {
-                origin: 'https://app.uniswap.org',
-              },
-            }
-          : undefined
+        // config.debug ?
+        {
+          // spoof origin to go around server permissions
+          headers: {
+            Origin: 'https://app.uniswap.org',
+          },
+        }
+        // : undefined
       )
 
       if (!response.ok) {
-        throw new Error('Routing API response was not okay')
+        throw new Error(
+          `Routing API response was not ok: ${response.status}: ${response.statusText}`
+        )
       }
 
       return response.json()
     },
     {
-      enabled: Boolean(amountIn && tokenIn && tokenOut && chainId),
+      enabled: Boolean(currencyAmount && currencyIn && currencyOut),
       // refetchInterval: 50000,
     }
   )
+
+  return result
 }

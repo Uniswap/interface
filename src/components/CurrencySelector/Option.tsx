@@ -14,12 +14,7 @@ interface OptionProps {
 export function Option({ currency, onPress }: OptionProps) {
   return (
     <Pressable onPress={onPress}>
-      <Box
-        flexDirection="row"
-        paddingVertical="sm"
-        justifyContent="space-between"
-        alignItems="center"
-        width="100%">
+      <Box flexDirection="row" justifyContent="space-between" alignItems="center" width="100%">
         <Box flexDirection="row">
           <Box>
             <CurrencyLogo currency={currency} size={20} />

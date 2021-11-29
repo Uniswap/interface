@@ -13,7 +13,7 @@ import { ChainId } from 'src/constants/chains'
 
 interface DropdownProps {
   currencies: Partial<Record<ChainId, Record<string, Currency>>>
-  onSelectCurrency: (token: Currency) => void
+  onSelectCurrency: (currency: Currency) => void
 }
 
 export function DropdownWithSearch({ currencies, onSelectCurrency }: DropdownProps) {

@@ -15,6 +15,7 @@ import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
+import { swapActions } from 'src/features/swap/swapSaga'
 
 const sagaMiddleware = createSagaMiddleware({
   context: {
@@ -39,7 +40,16 @@ export const store = configureStore({
       ...getDefaultMiddleware({
         thunk: false,
         serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+          ignoredActions: [
+            FLUSH,
+            REHYDRATE,
+            PAUSE,
+            PERSIST,
+            PURGE,
+            REGISTER,
+            // contains non-serializable objects that do not hit the store
+            swapActions.trigger.type,
+          ],
         },
         immutableCheck: {
           warnAfter: 128,

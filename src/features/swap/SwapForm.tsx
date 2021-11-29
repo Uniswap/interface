@@ -1,158 +1,141 @@
-import { Formik, FormikErrors, useFormikContext } from 'formik'
-import React, { useState } from 'react'
-import { TFunction, useTranslation } from 'react-i18next'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { AddressInput } from 'src/components/input/AddressInput'
-import { TextInput } from 'src/components/input/TextInput'
+import { Currency } from '@uniswap/sdk-core'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { StyleSheet } from 'react-native'
+import { AnyAction } from 'redux'
+import SwapArrow from 'src/assets/icons/swap-arrow.svg'
+import { Button } from 'src/components/buttons/Button'
+import { CurrencyInput } from 'src/components/input/CurrencyInput'
 import { Box } from 'src/components/layout/Box'
-import { Text } from 'src/components/Text'
-import { QuoteProvider } from 'src/features/swap/QuoteProvider'
-import { QuoteParams, QuoteResult } from 'src/features/swap/types'
-import { useActiveAccount } from 'src/features/wallet/hooks'
-import { isValidAddress } from 'src/utils/addresses'
-import { logger } from 'src/utils/logger'
+import { useDerivedSwapInfo, useSwapActionHandlers, useSwapCallback } from 'src/features/swap/hooks'
+import { SwapDetailRow } from 'src/features/swap/SwapDetailsRow'
+import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
+import { SagaStatus } from 'src/utils/saga'
 
-export function SwapForm() {
-  const activeAccount = useActiveAccount()
+interface SwapFormProps {
+  state: SwapFormState
+  dispatch: React.Dispatch<AnyAction>
+}
 
-  const [quoteResult, setQuoteResult] = useState<QuoteResult>()
+// TODO: handle wrap eth
+// TODO: token warnings
+export function SwapForm(props: SwapFormProps) {
+  const { state, dispatch } = props
+
+  const {
+    currencies,
+    currencyAmounts,
+    // currencyBalances,
+    exactCurrencyField,
+    // inputError,
+    trade: { quoteResult: quote, status: quoteStatus },
+  } = useDerivedSwapInfo(state)
+
+  const { onSelectCurrency, onSwitchCurrencies, onEnterExactAmount } =
+    useSwapActionHandlers(dispatch)
+  const { swapCallback, swapState } = useSwapCallback(quote)
+
+  // TODO:
+  // -check approval status
+  // -check erc20 permits
+  // -handle max amount input/show max amount button
+  // -handle price impact too high
 
   const { t } = useTranslation()
 
-  const onSubmit = () => {
-    if (!activeAccount || !quoteResult?.methodParameters) {
-      logger.error('SwapForm', 'onSubmit', '`activeAccount` and `quoteResult` must be defined.')
-      return
+  // TODO: clear redux state on unmount?
+  // useEffect(() => {
+  //   return () => {
+  //     dispatched(reset())
+  //   }
+  // }, [])
+
+  const swapButtonDisabled = Boolean(
+    !quote || (swapState?.status && swapState.status !== SagaStatus.Success)
+  )
+
+  // TODO: move to a helper function
+  let infoLabel: string = ''
+  if (!currencies[CurrencyField.INPUT] || !currencies[CurrencyField.OUTPUT]) {
+    infoLabel = t`Select currencies to continue`
+  } else if (
+    (exactCurrencyField === CurrencyField.INPUT && !currencyAmounts[CurrencyField.INPUT]) ||
+    (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT])
+  ) {
+    infoLabel = t`Select an amount to continue`
+  } else if (quoteStatus === 'loading') {
+    infoLabel = t`Fetching best price...`
+  } else if (quoteStatus === 'error') {
+    infoLabel = t`Quote error`
+  } else if (swapState?.status) {
+    if (swapState.status === SagaStatus.Success) {
+      infoLabel = t`Swap successful`
+    } else if (swapState.status === SagaStatus.Failure) {
+      infoLabel = t`Swap error`
+    } else {
+      infoLabel = t`Swapping...`
     }
   }
 
   return (
-    <Formik initialValues={{}} onSubmit={onSubmit} validate={validate(t)}>
-      {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
-        <Box alignItems="center" justifyContent="center" p="lg" pt="xs">
-          <Text variant="h2" mb="sm">
-            Swap on Rinkeby
-          </Text>
+    <Box paddingHorizontal="md" flex={1} justifyContent="space-between">
+      <Box>
+        {/* TODO: input currency selector should only token tokens in wallet */}
+        <CurrencyInput
+          currency={currencies[CurrencyField.INPUT]}
+          currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+          onSelectCurrency={(newCurrency: Currency) =>
+            onSelectCurrency(CurrencyField.INPUT, newCurrency)
+          }
+          onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
+        />
 
-          <BaseCurrencies />
-
-          <Box alignItems="center" mt="sm">
-            <Text variant="buttonLabel">Input Amount</Text>
-            <TextInput
-              onChangeText={handleChange('amountIn')}
-              onBlur={handleBlur('amountIn')}
-              placeholder={t`Amount In`}
-              value={values.amountIn}
-              keyboardType="numeric"
-            />
-            {touched.amountIn && errors.amountIn && (
-              <Text variant="bodySm" color="error">
-                {errors.amountIn}
-              </Text>
-            )}
-          </Box>
-
-          <Box alignItems="center" mt="lg">
-            <Text variant="buttonLabel">Input Address</Text>
-
-            <AddressInput
-              onChangeText={handleChange('inAddress')}
-              onBlur={handleBlur('inAddress')}
-              value={values.inAddress}
-              placeholder={t`In address`}
-            />
-            {touched.inAddress && errors.inAddress && (
-              <Text variant="bodySm" color="error">
-                {errors.inAddress}
-              </Text>
-            )}
-          </Box>
-
-          <Box alignItems="center" mt="lg">
-            <Text variant="buttonLabel">Output Address</Text>
-            <AddressInput
-              onChangeText={handleChange('outAddress')}
-              onBlur={handleBlur('outAddress')}
-              value={values.outAddress}
-              placeholder={t`Out address`}
-            />
-            {touched.outAddress && errors.outAddress && (
-              <Text variant="bodySm" color="error">
-                {errors.outAddress}
-              </Text>
-            )}
-          </Box>
-
-          <PrimaryButton mt="lg" onPress={handleSubmit} label={t`Swap`} />
-
-          <Box mt="lg" mb="sm" alignItems="center">
-            <Text variant="buttonLabel">Quote output amount (raw)</Text>
-            <TextInput
-              keyboardType="numeric"
-              onBlur={handleBlur('amountOut')}
-              onChangeText={handleChange('amountOut')}
-              placeholder={t`Amount out`}
-              value={values.amountOut}
-            />
-            {touched.amountOut && errors.amountOut && (
-              <Text variant="bodySm" color="error">
-                {errors.amountOut}
-              </Text>
-            )}
-          </Box>
-
-          <Box mt="lg">
-            <QuoteProvider
-              params={values}
-              setQuoteResult={(_quoteResult: QuoteResult) => {
-                if (quoteResult === _quoteResult) return
-                setFieldValue('amountOut', _quoteResult.quote)
-                setQuoteResult(_quoteResult)
-              }}
-            />
+        <Box zIndex="popover">
+          <Box style={StyleSheet.absoluteFill} alignItems="center" height={34}>
+            <Box
+              bg="gray50"
+              borderRadius="lg"
+              borderColor="white"
+              borderWidth={4}
+              justifyContent="center"
+              alignItems="center">
+              <Button
+                onPress={onSwitchCurrencies}
+                height={30}
+                width={30}
+                justifyContent="center"
+                alignItems="center">
+                <SwapArrow height={24} width={24} />
+              </Button>
+            </Box>
           </Box>
         </Box>
-      )}
-    </Formik>
-  )
-}
 
-// Utility component to provide devs with preset token addresses
-// Will be removed once the token selector is built
-function BaseCurrencies() {
-  const { setFieldValue } = useFormikContext<QuoteParams>()
+        <CurrencyInput
+          currency={currencies[CurrencyField.OUTPUT]}
+          currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+          onSelectCurrency={(newCurrency: Currency) =>
+            onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
+          }
+          onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
+          backgroundColor="gray50"
+        />
+      </Box>
+      <Box>
+        <SwapDetailRow trade={quote} label={infoLabel} />
 
-  return (
-    <Box flexDirection="row" alignItems="center" justifyContent="center" p="sm">
-      <PrimaryButton
-        label="Rinkeby ETH (in)"
-        onPress={() => setFieldValue('inAddress', '0xc778417E063141139Fce010982780140Aa0cD5Ab')}
-        mr="md"
-      />
-      <PrimaryButton
-        label="Rinkeby UNI (out)"
-        onPress={() => setFieldValue('outAddress', '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')}
-      />
+        <Button
+          variant="primary"
+          alignSelf="stretch"
+          justifyContent="center"
+          flexDirection="row"
+          borderRadius="lg"
+          onPress={swapCallback}
+          label={swapButtonDisabled ? t`Swap` : t`Swap`}
+          disabled={swapButtonDisabled}
+          mt="md"
+        />
+      </Box>
     </Box>
   )
-}
-
-function validate(t: TFunction) {
-  return (values: QuoteParams) => {
-    let errors: FormikErrors<QuoteParams> = {}
-    if (!values.amountIn) {
-      errors.amountIn = t`Required`
-    } else if (!values.inAddress) {
-      errors.inAddress = t`Required`
-    } else if (!values.outAddress) {
-      errors.outAddress = t`Required`
-    } else if (isNaN(parseFloat(values.amountIn))) {
-      errors.amountIn = t`Invalid amount`
-    } else if (!isValidAddress(values.inAddress)) {
-      errors.inAddress = t`Invalid address in`
-    } else if (!isValidAddress(values.outAddress)) {
-      errors.outAddress = t`Invalid address out`
-    }
-    return errors
-  }
 }

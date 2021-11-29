@@ -4,7 +4,7 @@ import { providers, Wallet } from 'ethers'
 import { testSaga } from 'redux-saga-test-plan'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20 } from 'src/abis/types'
-import { getWalletAccounts } from 'src/app/walletContext'
+import { getWalletAccounts, getWalletProviders } from 'src/app/walletContext'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
@@ -15,16 +15,35 @@ import { ContractManager } from 'src/features/contracts/ContractManager'
 import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
+class MockSigner {
+  async getAddress() {
+    return NULL_ADDRESS
+  }
+
+  async signMessage() {
+    return ''
+  }
+
+  async signTransaction() {
+    return ''
+  }
+
+  connect() {
+    return this
+  }
+}
+
 const account: Account = {
   type: AccountType.local,
   address: NULL_ADDRESS,
   name: 'Test Account',
-  signer: Wallet.fromMnemonic(
-    'twist sad gauge frog divide reduce enact boy coconut fix student magnet'
-  ),
+  signer: new MockSigner() as unknown as Wallet,
 }
 
 const provider = new providers.JsonRpcProvider()
+const providerManager = {
+  getProvider: () => provider,
+}
 
 const accountManager = new AccountManager()
 accountManager.addAccount(account)
@@ -35,6 +54,7 @@ const tokenContract = contractManager.getContract(ChainId.RINKEBY, DAI.address) 
 
 const approveParams: ApproveParams = {
   account,
+  chainId: ChainId.RINKEBY,
   txAmount: '1',
   contract: tokenContract,
   spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
@@ -46,6 +66,12 @@ describe(maybeApprove, () => {
       .next()
       .call(getWalletAccounts)
       .next(accountManager)
+      .call(getWalletProviders)
+      .next(providerManager)
+      .call([account.signer, account.signer.connect], provider)
+      .next(account.signer)
+      .call([tokenContract, tokenContract.connect], account.signer)
+      .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .next(BigNumber.from(approveParams.txAmount).add('1000'))
       .isDone()
@@ -56,6 +82,12 @@ describe(maybeApprove, () => {
       .next()
       .call(getWalletAccounts)
       .next(accountManager)
+      .call(getWalletProviders)
+      .next(providerManager)
+      .call([account.signer, account.signer.connect], provider)
+      .next(account.signer)
+      .call([tokenContract, tokenContract.connect], account.signer)
+      .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .throw(new Error('Failed to get allowance'))
       .call(approveParams.contract.estimateGas.approve, approveParams.spender, MaxUint256)
@@ -66,6 +98,12 @@ describe(maybeApprove, () => {
       .next()
       .call(getWalletAccounts)
       .next(accountManager)
+      .call(getWalletProviders)
+      .next(providerManager)
+      .call([account.signer, account.signer.connect], provider)
+      .next(account.signer)
+      .call([tokenContract, tokenContract.connect], account.signer)
+      .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .next(BigNumber.from('0'))
       .call(approveParams.contract.estimateGas.approve, approveParams.spender, MaxUint256)
@@ -83,6 +121,14 @@ describe(maybeApprove, () => {
       .next()
       .call(getWalletAccounts)
       .next(accountManager)
+
+      .call(getWalletProviders)
+      .next(providerManager)
+      .call([account.signer, account.signer.connect], provider)
+      .next(account.signer)
+      .call([tokenContract, tokenContract.connect], account.signer)
+      .next(tokenContract)
+
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .next(BigNumber.from('0'))
       .call(approveParams.contract.estimateGas.approve, approveParams.spender, MaxUint256)

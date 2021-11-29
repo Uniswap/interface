@@ -1,7 +1,6 @@
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
 import { getWalletAccounts, getWalletProviders } from 'src/app/walletContext'
-import { ChainId } from 'src/constants/chains'
 import { ApproveParams, maybeApprove } from 'src/features/approve/approveSaga'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
@@ -10,7 +9,6 @@ import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
 export interface SwapParams extends ApproveParams {
-  chainId: ChainId
   methodParameters: MethodParameters
 }
 
@@ -46,10 +44,17 @@ export function* approveAndSwap(params: SwapParams) {
     }
 
     // Signer.sendTransaction populates fields (gas, nonce, chainId, etc.), signs and sends
-    const transactionResponse = yield* call(signer.sendTransaction, transaction)
+    // TODO use provider to send signed tx (populate field before sending
+    const transactionResponse = yield* call([signer, signer.sendTransaction], transaction)
+    logger.debug(
+      'swapSaga',
+      'approveAndSwap',
+      'Transaction response hash:',
+      transactionResponse.hash
+    )
 
     const receipt = yield* call(transactionResponse.wait)
-    logger.debug('swapSaga', '', 'Swap receipt:', receipt.transactionHash)
+    logger.debug('swapSaga', '', 'Receipt:', receipt.transactionHash)
   } catch (e) {
     logger.error('swapSaga', 'approveAndSwap', 'Failed:', e)
     return false

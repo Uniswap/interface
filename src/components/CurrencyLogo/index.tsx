@@ -26,12 +26,12 @@ export function CurrencyLogo({ currency, size = 40 }: CurrencyLogoProps) {
   }
 
   // TODO(#95): Currently just uses the first URL in the source because unclear when we want to use a different one
-  return srcs[0].toLowerCase().includes('.svg') ? (
+  return srcs.length > 0 && srcs[0].toLowerCase().includes('.svg') ? (
     <SvgUri width={size} height={size} uri={srcs[0]} />
   ) : (
     <Image
       style={{ width: size, height: size, borderRadius: size / 2 }}
-      source={{ uri: srcs[0] }}
+      source={srcs.map((s) => ({ uri: s }))}
     />
   )
 }

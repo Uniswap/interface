@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Fraction } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
 export function formatCurrencyAmount(
-  amount?: CurrencyAmount<Currency>,
+  amount?: CurrencyAmount<Currency> | null,
   sigFigs: number = 4,
   minDisplayAmount: Fraction = new Fraction(1, 100000)
 ) {
