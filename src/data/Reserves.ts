@@ -47,5 +47,7 @@ export function usePairs(
 }
 
 export function usePair(tokenA?: Token, tokenB?: Token): readonly [PairState, Pair | null] {
-  return usePairs([[tokenA, tokenB]])[0]
+  // if we dont memoize the array then every time this function is ran the tokens variable passed used to create pairAddresses in usePairs is new and therefor no memoization happens :(
+  const tokens: readonly [Token | undefined, Token | undefined][] = useMemo(() => [[tokenA, tokenB]], [tokenA, tokenB])
+  return usePairs(tokens)[0]
 }
