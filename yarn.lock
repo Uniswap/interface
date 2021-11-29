@@ -4890,17 +4890,6 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/router-sdk@^1.0.0-beta.3":
-  version "1.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.0.0-beta.4.tgz#d6933388997d599af78a470649bdd8427b1a0a67"
-  integrity sha512-INVVwbou8uUShldhhc2Awora6lS2QGSa+PQLaGpevGbd65UJ5OhAXAwaLljaWbC44SOZnQfW/KQSz5AyJu9u6w==
-  dependencies:
-    "@ethersproject/abi" "^5.5.0"
-    "@uniswap/sdk-core" "^3.0.1"
-    "@uniswap/swap-router-contracts" "^1.0.0-beta.2"
-    "@uniswap/v2-sdk" "^3.0.1"
-    "@uniswap/v3-sdk" "^3.7.1"
-
 "@uniswap/router-sdk@^1.0.0-beta.7":
   version "1.0.0-beta.7"
   resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.0.0-beta.7.tgz#a975dc5c838917d55c7092bc06536045b4e6df99"
@@ -4924,10 +4913,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^2.0.0-beta.7":
-  version "2.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.0.0-beta.7.tgz#aca8b47caa2744c97c3724588e0c2ed69e719681"
-  integrity sha512-46wb8LDEe/w+c7TpJrZvi2KBY8BXRPNPcofnO12t5BozpCSkv8HbF0rOOXA1zq65fn1Y4lolvBYp5565bwY/FA==
+"@uniswap/smart-order-router@^2.0.0-beta.14":
+  version "2.0.0-beta.14"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.0.0-beta.14.tgz#6b31069facbef9f28865e9b8f3b820d72cfbece3"
+  integrity sha512-hC0pumiJLBNDC0PPyW53hMKN6kIYlSKY2BO/BHXpl0SstdNEkwIfYvyKdnQfBNfES8kwsyKFNzicPTzzBTwT+w==
   dependencies:
     "@bitauth/libauth" "^1.17.1"
     "@ethersproject/bignumber" "^5.1.1"
@@ -4941,7 +4930,7 @@
     "@types/sinon" "^10.0.2"
     "@types/stats-lite" "^2.2.0"
     "@uniswap/default-token-list" "^2.0.0"
-    "@uniswap/router-sdk" "^1.0.0-beta.3"
+    "@uniswap/router-sdk" "^1.0.0-beta.7"
     "@uniswap/token-lists" "^1.0.0-beta.25"
     "@uniswap/v2-core" "^1.0.1"
     "@uniswap/v2-periphery" "^1.1.0-beta.0"
@@ -4965,17 +4954,6 @@
     node-cache "^5.1.2"
     stats-lite "^2.2.0"
     tslib "^1.14.1"
-
-"@uniswap/swap-router-contracts@^1.0.0-beta.2":
-  version "1.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.0.0-beta.3.tgz#90992869ab043d70a3f890987926f21669653991"
-  integrity sha512-wOxThGaqmuPkJTPnq5z3M4pMOFcWJGy+jAcRf+ceC8/uMxSeLKBYDrNjUgA+chXvm+Uc1sR03j7O2PfVj8hkzg==
-  dependencies:
-    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
-    "@uniswap/v2-core" "1.0.1"
-    "@uniswap/v3-core" "1.0.0"
-    "@uniswap/v3-periphery" "1.2.1"
-    hardhat-watcher "^2.1.1"
 
 "@uniswap/swap-router-contracts@^1.0.0-beta.5":
   version "1.0.0-beta.5"
@@ -5027,10 +5005,10 @@
   resolved "https://registry.npmjs.org/@uniswap/v3-core/-/v3-core-1.0.0.tgz"
   integrity sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==
 
-"@uniswap/v3-periphery@1.2.1", "@uniswap/v3-periphery@^1.0.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.2.1.tgz#7775630bea774a2cf989ab87ce3c328ac52e0d50"
-  integrity sha512-45W8hT8X1j9ZcXa+y3NSVao90hMZtgtoJyDlMOg91wmUGi2idXAiGivOQYdB7+7Lq8Gc6Upv/ggFZknixZrv7g==
+"@uniswap/v3-periphery@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.3.0.tgz#37f0a1ef6025221722e50e9f3f2009c2d5d6e4ec"
+  integrity sha512-HjHdI5RkjBl8zz3bqHShrbULFoZSrjbbrRHoO2vbzn+WRzTa6xY4PWphZv2Tlcb38YEKfKHp6NPl5hVedac8uw==
   dependencies:
     "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
     "@uniswap/lib" "^4.0.1-alpha"
@@ -5039,10 +5017,10 @@
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/v3-periphery@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.3.0.tgz#37f0a1ef6025221722e50e9f3f2009c2d5d6e4ec"
-  integrity sha512-HjHdI5RkjBl8zz3bqHShrbULFoZSrjbbrRHoO2vbzn+WRzTa6xY4PWphZv2Tlcb38YEKfKHp6NPl5hVedac8uw==
+"@uniswap/v3-periphery@^1.0.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.2.1.tgz#7775630bea774a2cf989ab87ce3c328ac52e0d50"
+  integrity sha512-45W8hT8X1j9ZcXa+y3NSVao90hMZtgtoJyDlMOg91wmUGi2idXAiGivOQYdB7+7Lq8Gc6Upv/ggFZknixZrv7g==
   dependencies:
     "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
     "@uniswap/lib" "^4.0.1-alpha"
