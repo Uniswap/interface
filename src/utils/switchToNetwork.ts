@@ -16,8 +16,8 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
   if (!library?.provider?.request) {
     return
   }
-  if (!chainId && library?.getNetwork) {
-    ;({ chainId } = await library.getNetwork())
+  if (!chainId) {
+    ;({ chainId } = await library.provider.request({ method: 'eth_chainId' }))
   }
   const formattedChainId = hexStripZeros(BigNumber.from(chainId).toHexString())
   try {
