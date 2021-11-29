@@ -9,7 +9,23 @@ on:
         required: true
 
 jobs:
+  prepare:
+    runs-on: ubuntu-18.04
+    outputs:
+      version_tag: ${{ steps.tag.outputs.value }}
+    steps:
+      - name: Format version tag
+        shell: bash
+        id: version_tag
+        env:
+          INPUT_TAG: ${{ github.event.inputs.version }}
+        run: |
+          TAG=${INPUT_TAG#v}
+          echo "::set-output name=value::v$TAG" 
+
   build:
+    needs:
+      - prepare
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -50,9 +66,11 @@ jobs:
 
   docker:
     needs:
+      - prepare
       - build
     env:
       SERVICE: dmm-interface
+      VERSION_TAG: ${{ needs.prepare.outputs.version_tag }}
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -87,11 +105,11 @@ jobs:
           labels: |
             org.label-schema.schema-version=1.0
             org.label-schema.vcs-ref=${{ github.sha }}
-            org.label-schema.version=v${{ github.event.inputs.version }}
+            org.label-schema.version=${{ env.VERSION_TAG }}
             org.label-schema.name=${{ env.SERVICE }}
           tags: |
             kybernetwork/${{ env.SERVICE }}:latest
-            kybernetwork/${{ env.SERVICE }}:v${{ github.event.inputs.version }}
+            kybernetwork/${{ env.SERVICE }}:${{ env.VERSION_TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -130,9 +148,12 @@ jobs:
 
   release:
     needs:
+      - prepare
       - docker
       - upload-gcs
     runs-on: ubuntu-18.04
+    env:
+      VERSION_TAG: ${{ needs.prepare.outputs.version_tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -143,16 +164,14 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
       
       - name: Create tag
-        env: 
-          VERSION: ${{ github.event.inputs.version }}
         run: |
-          git tag --annotate --message "DMM Interface - v$VERSION" "$VERSION"
-          git push origin "refs/tags/$VERSION"
+          git tag --annotate --message "DMM Interface - $VERSION_TAG" "$VERSION_TAG"
+          git push origin "refs/tags/$VERSION_TAG"
 
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GH_PAT }}
-          automatic_release_tag: ${{ github.event.inputs.version }}
+          automatic_release_tag: ${{ env.VERSION_TAG }}
           prerelease: false 
-          title: "DMM Interface - v${{ github.event.inputs.version }}"
+          title: "DMM Interface - ${{ env.VERSION_TAG }}"
