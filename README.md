@@ -26,8 +26,8 @@ Before the code will compile you need to generate types for the smart contracts 
 We do not check in Flipper into source. To prevent `pod install` from adding Flipper, set an environment variable in your `.bash_profile` or `.zshrc`:
 
 ```
-# To disable flipper inclusion
-export GITHUB_WORKFLOW=1
+# To enable flipper inclusion
+export USE_FLIPPER=1
 ```
 
 Run `yarn` to install packages, then run `pod install` in the `/ios` directory. 

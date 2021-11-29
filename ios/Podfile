@@ -33,7 +33,7 @@ target 'Uniswap' do
   # Pinning fix for command line build
   # https://github.com/facebook/react-native/issues/31480#issuecomment-915583038
   
-  if !ENV['GITHUB_WORKFLOW']
+  if ENV['USE_FLIPPER']
     use_flipper!({'Flipper-Folly' => '2.6.9'})
   end
 
