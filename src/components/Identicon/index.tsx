@@ -31,7 +31,8 @@ export default function Identicon() {
       const current = ref.current
       current?.appendChild(icon)
       return () => {
-        current?.removeChild(icon)
+        // removeChild is unsafe: icon may no longer be a child of current due to rerenders
+        icon.remove()
       }
     }
     return
