@@ -1,9 +1,15 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { TransactionReceipt } from '@ethersproject/abstract-provider'
+import ethers from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
+
 import { useActiveWeb3React } from '../../hooks'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
+import { AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC } from 'constants/index'
+import { getFullDisplayBalance } from 'utils/formatBalance'
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -39,6 +45,52 @@ export default function Updater(): null {
   // show popup on confirm
   const addPopup = useAddPopup()
 
+  const parseTransactionSummary = useCallback(
+    (receipt: TransactionReceipt): string | undefined => {
+      let log = undefined
+
+      for (let i = 0; i < receipt.logs.length; i++) {
+        if (receipt.logs[i].topics.includes(AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC)) {
+          log = receipt.logs[i]
+          break
+        }
+      }
+
+      // No event log includes Swapped event topic
+      if (!log) {
+        return transactions[receipt.transactionHash]?.summary
+      }
+
+      // Parse summary message for Swapped event
+      if (!transactions[receipt.transactionHash] || !transactions[receipt.transactionHash]?.arbitrary) {
+        return transactions[receipt.transactionHash]?.summary
+      }
+
+      const inputSymbol = transactions[receipt.transactionHash]?.arbitrary?.inputSymbol
+      const outputSymbol = transactions[receipt.transactionHash]?.arbitrary?.outputSymbol
+      const inputDecimals = transactions[receipt.transactionHash]?.arbitrary?.inputDecimals
+      const outputDecimals = transactions[receipt.transactionHash]?.arbitrary?.outputDecimals
+      const withRecipient = transactions[receipt.transactionHash]?.arbitrary?.withRecipient
+
+      if (!inputSymbol || !outputSymbol || !inputDecimals || !outputDecimals) {
+        return transactions[receipt.transactionHash]?.summary
+      }
+
+      const decodedValues = ethers.utils.defaultAbiCoder.decode(
+        ['address', 'address', 'address', 'address', 'uint256', 'uint256'],
+        log.data
+      )
+
+      const inputAmount = getFullDisplayBalance(BigNumber.from(decodedValues[4].toString()), inputDecimals, 3)
+      const outputAmount = getFullDisplayBalance(BigNumber.from(decodedValues[5].toString()), outputDecimals, 3)
+
+      const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+
+      return withRecipient ? `${base} ${withRecipient}` : base
+    },
+    [transactions]
+  )
+
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
 
@@ -71,7 +123,7 @@ export default function Updater(): null {
                   txn: {
                     hash,
                     success: receipt.status === 1,
-                    summary: transactions[hash]?.summary
+                    summary: parseTransactionSummary(receipt)
                   }
                 },
                 hash
@@ -84,7 +136,7 @@ export default function Updater(): null {
             console.error(`failed to check transaction hash: ${hash}`, error)
           })
       })
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup])
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, parseTransactionSummary])
 
   return null
 }

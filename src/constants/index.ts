@@ -905,3 +905,6 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
 }
 
 export const MAX_ALLOW_APY = 2000
+
+export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
+  '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'

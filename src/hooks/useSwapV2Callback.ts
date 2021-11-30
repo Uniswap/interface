@@ -260,22 +260,27 @@ export function useSwapV2Callback(
                 return contract.callStatic[methodName](...args, options)
                   .then(result => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
+                    return {
+                      call,
+                      error: new Error(
+                        'estimatedCalls exception: Unexpected issue with estimating the gas. Please try again.'
+                      )
+                    }
                   })
                   .catch(callError => {
                     console.debug('Call threw error', call, callError)
                     let errorMessage: string
                     const reason = callError.reason || callError.data?.message || callError.message
-                    switch (reason) {
-                      case 'execution reverted: DmmExchangeRouter: INSUFFICIENT_OUTPUT_AMOUNT':
-                      case 'execution reverted: DmmExchangeRouter: EXCESSIVE_INPUT_AMOUNT':
-                        errorMessage =
-                          'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
-                        break
-                      default:
-                        errorMessage = `The transaction cannot succeed due to error: ${reason}. This is probably an issue with one of the tokens you are swapping.`
-                    }
-                    return { call, error: new Error(errorMessage) }
+                    // switch (reason) {
+                    //   case 'execution reverted: DmmExchangeRouter: INSUFFICIENT_OUTPUT_AMOUNT':
+                    //   case 'execution reverted: DmmExchangeRouter: EXCESSIVE_INPUT_AMOUNT':
+                    //     errorMessage =
+                    //       'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
+                    //     break
+                    //   default:
+                    //     errorMessage = `The transaction cannot succeed due to error: ${reason}. This is probably an issue with one of the tokens you are swapping.`
+                    // }
+                    return { call, error: new Error('estimatedCalls exception: ' + reason) }
                   })
               })
           })
@@ -290,7 +295,9 @@ export function useSwapV2Callback(
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
           if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-          throw new Error('Unexpected error. Please contact support: none of the calls threw an error')
+          throw new Error(
+            'gasEstimate not found: Unexpected error. Please contact support: none of the calls threw an error'
+          )
         }
 
         const {
@@ -314,15 +321,22 @@ export function useSwapV2Callback(
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
             const withRecipient =
               recipient === account
-                ? base
-                : `${base} to ${
+                ? undefined
+                : `to ${
                     recipientAddressOrName && isAddress(recipientAddressOrName)
                       ? shortenAddress(recipientAddressOrName)
                       : recipientAddressOrName
                   }`
 
             addTransaction(response, {
-              summary: withRecipient
+              summary: `${base} ${withRecipient}`,
+              arbitrary: {
+                inputSymbol,
+                outputSymbol,
+                inputDecimals: trade.inputAmount.currency.decimals,
+                outputDecimals: trade.outputAmount.currency.decimals,
+                withRecipient
+              }
             })
 
             return response.hash

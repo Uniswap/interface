@@ -429,10 +429,12 @@ msgstr "새 풀을 생성하거나 다른 토큰 쌍을 선택하시면 현재 �
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Current Price"
 msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Current Price:"
 msgstr ""
 

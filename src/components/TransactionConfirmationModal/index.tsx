@@ -1,5 +1,5 @@
 import { ChainId, Currency, Token } from '@dynamic-amm/sdk'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Trans } from '@lingui/macro'
 import Modal from '../Modal'
@@ -8,6 +8,7 @@ import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { RowBetween, RowFixed } from '../Row'
 import { AlertTriangle, ArrowUpCircle } from 'react-feather'
+import { ReactComponent as Alert } from '../../assets/images/alert.svg'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
@@ -15,6 +16,9 @@ import MetaMaskLogo from '../../assets/images/metamask.png'
 
 import { getEtherscanLink, getEtherscanLinkText, getTokenLogoURL } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
+
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { errorFriendly } from 'utils/dmm'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -39,7 +43,6 @@ const StyledLogo = styled.img`
   width: 16px;
   margin-left: 6px;
 `
-
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
   return (
     <Wrapper>
@@ -180,8 +183,25 @@ export function ConfirmationModalContent({
   )
 }
 
+const ErrorDetail = styled(Section)`
+  padding: 12px;
+  border-radius: 4px;
+  margin-top: 12px;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => `${theme.bg12}66`};
+  font-size: 10px;
+  width: 100%;
+  text-align: center;
+  line-height: 16px;
+`
+
+const StyledAlert = styled(Alert)`
+  height: 108px;
+  width: 108px;
+`
 export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
   const theme = useContext(ThemeContext)
+  const [showDetail, setShowDetail] = useState<boolean>(false)
   return (
     <Wrapper>
       <Section>
@@ -191,13 +211,32 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
-          <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
-          <Text fontWeight={500} fontSize={16} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
-            {message}
-            {message.includes('minTotalAmountOut') &&
-              ' Try to refresh the exchange rate or increase the Slippage tolerance in Settings'}
+        <AutoColumn style={{ marginTop: 20 }} gap="8px" justify="center">
+          <StyledAlert />
+          <Text
+            fontWeight={500}
+            fontSize={16}
+            color={theme.red}
+            lineHeight={'24px'}
+            style={{ textAlign: 'center', width: '85%' }}
+          >
+            {errorFriendly(message)}
+            {/* {message.includes('minTotalAmountOut') &&
+              ' Try to refresh the exchange rate or increase the Slippage tolerance in Settings'} */}
           </Text>
+          {message != errorFriendly(message) && (
+            <AutoColumn justify="center" style={{ width: '100%' }}>
+              <Text
+                color={theme.primary1}
+                fontSize="14px"
+                sx={{ cursor: `pointer` }}
+                onClick={() => setShowDetail(!showDetail)}
+              >
+                Show more details
+              </Text>
+              {showDetail && <ErrorDetail>{message}</ErrorDetail>}
+            </AutoColumn>
+          )}
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">

@@ -429,10 +429,12 @@ msgstr "Mevcut havuzları görüntülemek için yeni bir havuz oluşturun veya b
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Current Price"
 msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Current Price:"
 msgstr ""
 

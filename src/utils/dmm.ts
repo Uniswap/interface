@@ -432,3 +432,20 @@ export function checkIsFarmingPool(address: string, chainId?: ChainId): boolean 
 
   return farmingPools.includes(address) || farmingPools.includes(address.toLowerCase())
 }
+
+export function errorFriendly(text: string): string {
+  const error = text.toLowerCase()
+  if (error.includes('router: expired')) {
+    return 'An error occurred. Refresh the page and try again '
+  } else if (
+    error.includes('mintotalamountout') ||
+    error.includes('err_limit_out') ||
+    error.includes('return amount is not enough') ||
+    error.includes('code=call_exception') ||
+    error.includes('none of the calls threw an error')
+  ) {
+    return 'An error occurred. Try refreshing the price rate or increase slippage tolerance'
+  } else if (error.includes('header not found') || error.includes('swap failed') || error.includes('json-rpc error')) {
+    return 'An error occurred. Refresh the page and try again. If the issue still persists, it might be an issue with your RPC node settings in Metamask.'
+  } else return text
+}

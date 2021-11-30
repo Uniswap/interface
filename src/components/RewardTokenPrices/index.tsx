@@ -7,8 +7,9 @@ import { KNC, ZERO_ADDRESS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useThrottle from 'hooks/useThrottle'
 import { useRewardTokenPrices } from 'state/farms/hooks'
-import { formattedNum, getTokenLogoURL } from 'utils'
+import { formattedNum } from 'utils'
 import { useRewardTokensFullInfo } from 'utils/dmm'
+import CurrencyLogo from 'components/CurrencyLogo'
 
 const RewardTokenPricesWrapper = styled.div`
   position: relative;
@@ -57,15 +58,10 @@ const TokenWrapper = styled.div<{ isFirstItem?: boolean; isLastItem?: boolean }>
 `
 
 const TokenSymbol = styled.span`
+  margin-left: 4px;
   font-size: 14px;
   font-weight: 400;
   margin-right: 4px;
-`
-
-const StyledImg = styled.img`
-  margin-right: 4px;
-  border-radius: 50%;
-  object-fit: contain;
 `
 
 const RewardTokenPrices = () => {
@@ -135,7 +131,7 @@ const RewardTokenPrices = () => {
                 isFirstItem={index === 0}
                 isLastItem={index === rewardTokens?.length - 1}
               >
-                <StyledImg src={`${getTokenLogoURL(token.address, chainId)}`} alt="logo" width="20px" height="20px" />
+                <CurrencyLogo currency={token} size="20px" />
                 <TokenSymbol>{token.symbol}:</TokenSymbol>
                 <span>
                   {rewardTokenPrices[index] ? formattedNum(rewardTokenPrices[index]?.toString(), true) : 'N/A'}
