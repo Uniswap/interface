@@ -2,7 +2,7 @@ import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useState } from 'react'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -163,9 +163,9 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
               </TextPreset.LargeHeader>
               {!claimConfirmed && (
-                <RebassText fontSize={36} color={'#ff007a'} fontWeight={800}>
+                <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
-                </RebassText>
+                </Text>
               )}
               {parsedAddress && (
                 <TextPreset.LargeHeader fontWeight={600} color="black">

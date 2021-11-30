@@ -5,7 +5,7 @@ import { CHAIN_INFO, L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import { ReactNode, useContext } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
@@ -67,15 +67,15 @@ function ConfirmationPendingContent({
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
-          <RebassText fontWeight={500} fontSize={20} textAlign="center">
+          <Text fontWeight={500} fontSize={20} textAlign="center">
             <Trans>Waiting For Confirmation</Trans>
-          </RebassText>
-          <RebassText fontWeight={400} fontSize={16} textAlign="center">
+          </Text>
+          <Text fontWeight={400} fontSize={16} textAlign="center">
             {pendingText}
-          </RebassText>
-          <RebassText fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
             <Trans>Confirm this transaction in your wallet</Trans>
-          </RebassText>
+          </Text>
         </AutoColumn>
       </AutoColumn>
     </Wrapper>
@@ -113,14 +113,14 @@ function TransactionSubmittedContent({
           <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
-          <RebassText fontWeight={500} fontSize={20} textAlign="center">
+          <Text fontWeight={500} fontSize={20} textAlign="center">
             <Trans>Transaction Submitted</Trans>
-          </RebassText>
+          </Text>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <RebassText fontWeight={500} fontSize={14} color={theme.primary1}>
+              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                 <Trans>View on Explorer</Trans>
-              </RebassText>
+              </Text>
             </ExternalLink>
           )}
           {currencyToAdd && library?.provider?.isMetaMask && (
@@ -140,9 +140,9 @@ function TransactionSubmittedContent({
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-            <RebassText fontWeight={500} fontSize={20}>
+            <Text fontWeight={500} fontSize={20}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </RebassText>
+            </Text>
           </ButtonPrimary>
         </AutoColumn>
       </Section>
@@ -165,9 +165,9 @@ export function ConfirmationModalContent({
     <Wrapper>
       <Section>
         <RowBetween>
-          <RebassText fontWeight={500} fontSize={16}>
+          <Text fontWeight={500} fontSize={16}>
             {title}
-          </RebassText>
+          </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         {topContent()}
@@ -183,21 +183,21 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
     <Wrapper>
       <Section>
         <RowBetween>
-          <RebassText fontWeight={500} fontSize={20}>
+          <Text fontWeight={500} fontSize={20}>
             <Trans>Error</Trans>
-          </RebassText>
+          </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
           <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
-          <RebassText
+          <Text
             fontWeight={500}
             fontSize={16}
             color={theme.red1}
             style={{ textAlign: 'center', width: '85%', wordBreak: 'break-word' }}
           >
             {message}
-          </RebassText>
+          </Text>
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
@@ -263,7 +263,7 @@ function L2Content({
           )}
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
-          <RebassText fontWeight={500} fontSize={20} textAlign="center">
+          <Text fontWeight={500} fontSize={20} textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
             ) : !confirmed ? (
@@ -273,20 +273,20 @@ function L2Content({
             ) : (
               <Trans>Error</Trans>
             )}
-          </RebassText>
-          <RebassText fontWeight={400} fontSize={16} textAlign="center">
+          </Text>
+          <Text fontWeight={400} fontSize={16} textAlign="center">
             {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
-          </RebassText>
+          </Text>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <RebassText fontWeight={500} fontSize={14} color={theme.primary1}>
+              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                 <Trans>View on Explorer</Trans>
-              </RebassText>
+              </Text>
             </ExternalLink>
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <RebassText color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
+          <Text color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
@@ -297,11 +297,11 @@ function L2Content({
                 </span>
               </div>
             )}
-          </RebassText>
+          </Text>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
-            <RebassText fontWeight={500} fontSize={20}>
+            <Text fontWeight={500} fontSize={20}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </RebassText>
+            </Text>
           </ButtonPrimary>
         </AutoColumn>
       </Section>

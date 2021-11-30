@@ -5,7 +5,7 @@ import JSBI from 'jsbi'
 import { useContext, useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
@@ -195,14 +195,14 @@ export default function Pool() {
                     <Trans>Create a pair</Trans>
                   </ResponsiveButtonSecondary>
                   <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pool/v2/find" padding="6px 8px">
-                    <RebassText fontWeight={500} fontSize={16}>
+                    <Text fontWeight={500} fontSize={16}>
                       <Trans>Import Pool</Trans>
-                    </RebassText>
+                    </Text>
                   </ResponsiveButtonPrimary>
                   <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
-                    <RebassText fontWeight={500} fontSize={16}>
+                    <Text fontWeight={500} fontSize={16}>
                       <Trans>Add V2 Liquidity</Trans>
-                    </RebassText>
+                    </Text>
                   </ResponsiveButtonPrimary>
                 </ButtonRow>
               </TitleRow>

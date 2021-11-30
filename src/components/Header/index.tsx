@@ -5,7 +5,7 @@ import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
@@ -156,7 +156,7 @@ const UNIWrapper = styled.span`
   }
 `
 
-const BalanceText = styled(RebassText)`
+const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};

@@ -5,7 +5,7 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 import { ExternalLink, TextPreset } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -34,20 +34,20 @@ export const ProposalSubmissionModal = ({
       ) : (
         <SubmittedView onDismiss={onDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <RebassText fontWeight={500} fontSize={20} textAlign="center">
+            <Text fontWeight={500} fontSize={20} textAlign="center">
               <Trans>Proposal Submitted</Trans>
-            </RebassText>
+            </Text>
             {hash && (
               <ExternalLink href={getExplorerLink(1, hash, ExplorerDataType.TRANSACTION)}>
-                <RebassText fontWeight={500} fontSize={14} color={theme.primary1}>
+                <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                   <Trans>View on Etherscan</Trans>
-                </RebassText>
+                </Text>
               </ExternalLink>
             )}
             <ButtonPrimary as={Link} to="/vote" onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-              <RebassText fontWeight={500} fontSize={20}>
+              <Text fontWeight={500} fontSize={20}>
                 <Trans>Return</Trans>
-              </RebassText>
+              </Text>
             </ButtonPrimary>
           </AutoColumn>
         </SubmittedView>

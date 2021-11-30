@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Price } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useCallback, useContext } from 'react'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { TextPreset } from 'theme'
 
@@ -45,9 +45,9 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   return (
     <StyledPriceContainer onClick={flipPrice} title={text}>
-      <RebassText fontWeight={500} fontSize={14} color={theme.text1}>
+      <Text fontWeight={500} fontSize={14} color={theme.text1}>
         {text}
-      </RebassText>{' '}
+      </Text>{' '}
       {usdcPrice && (
         <TextPreset.DarkGray>
           <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>

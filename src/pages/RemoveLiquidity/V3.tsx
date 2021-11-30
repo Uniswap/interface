@@ -25,7 +25,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
@@ -204,24 +204,24 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     return (
       <AutoColumn gap={'sm'} style={{ padding: '16px' }}>
         <RowBetween align="flex-end">
-          <RebassText fontSize={16} fontWeight={500}>
+          <Text fontSize={16} fontWeight={500}>
             <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
-          </RebassText>
+          </Text>
           <RowFixed>
-            <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
+            <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
               {liquidityValue0 && <FormattedCurrencyAmount currencyAmount={liquidityValue0} />}
-            </RebassText>
+            </Text>
             <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
           </RowFixed>
         </RowBetween>
         <RowBetween align="flex-end">
-          <RebassText fontSize={16} fontWeight={500}>
+          <Text fontSize={16} fontWeight={500}>
             <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
-          </RebassText>
+          </Text>
           <RowFixed>
-            <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
+            <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
               {liquidityValue1 && <FormattedCurrencyAmount currencyAmount={liquidityValue1} />}
-            </RebassText>
+            </Text>
             <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
           </RowFixed>
         </RowBetween>
@@ -231,24 +231,24 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <Trans>You will also collect fees earned from this position.</Trans>
             </TextPreset.Italic>
             <RowBetween>
-              <RebassText fontSize={16} fontWeight={500}>
+              <Text fontSize={16} fontWeight={500}>
                 <Trans>{feeValue0?.currency?.symbol} Fees Earned:</Trans>
-              </RebassText>
+              </Text>
               <RowFixed>
-                <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                   {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
-                </RebassText>
+                </Text>
                 <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
               </RowFixed>
             </RowBetween>
             <RowBetween>
-              <RebassText fontSize={16} fontWeight={500}>
+              <Text fontSize={16} fontWeight={500}>
                 <Trans>{feeValue1?.currency?.symbol} Fees Earned:</Trans>
-              </RebassText>
+              </Text>
               <RowFixed>
-                <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                   {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
-                </RebassText>
+                </Text>
                 <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
               </RowFixed>
             </RowBetween>
@@ -340,24 +340,24 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <LightCard>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <RebassText fontSize={16} fontWeight={500}>
+                    <Text fontSize={16} fontWeight={500}>
                       <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
-                    </RebassText>
+                    </Text>
                     <RowFixed>
-                      <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {liquidityValue0 && <FormattedCurrencyAmount currencyAmount={liquidityValue0} />}
-                      </RebassText>
+                      </Text>
                       <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
                     </RowFixed>
                   </RowBetween>
                   <RowBetween>
-                    <RebassText fontSize={16} fontWeight={500}>
+                    <Text fontSize={16} fontWeight={500}>
                       <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
-                    </RebassText>
+                    </Text>
                     <RowFixed>
-                      <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {liquidityValue1 && <FormattedCurrencyAmount currencyAmount={liquidityValue1} />}
-                      </RebassText>
+                      </Text>
                       <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
                     </RowFixed>
                   </RowBetween>
@@ -365,24 +365,24 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     <>
                       <Break />
                       <RowBetween>
-                        <RebassText fontSize={16} fontWeight={500}>
+                        <Text fontSize={16} fontWeight={500}>
                           <Trans>{feeValue0?.currency?.symbol} Fees Earned:</Trans>
-                        </RebassText>
+                        </Text>
                         <RowFixed>
-                          <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                             {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
-                          </RebassText>
+                          </Text>
                           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
                         </RowFixed>
                       </RowBetween>
                       <RowBetween>
-                        <RebassText fontSize={16} fontWeight={500}>
+                        <Text fontSize={16} fontWeight={500}>
                           <Trans>{feeValue1?.currency?.symbol} Fees Earned:</Trans>
-                        </RebassText>
+                        </Text>
                         <RowFixed>
-                          <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                             {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
-                          </RebassText>
+                          </Text>
                           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
                         </RowFixed>
                       </RowBetween>

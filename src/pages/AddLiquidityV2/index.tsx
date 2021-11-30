@@ -8,7 +8,7 @@ import { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -219,9 +219,9 @@ export default function AddLiquidity({
       <AutoColumn gap="20px">
         <LightCard mt="20px" $borderRadius="20px">
           <RowFlat>
-            <RebassText fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
+            <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
               {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
-            </RebassText>
+            </Text>
             <DoubleCurrencyLogo
               currency0={currencies[Field.CURRENCY_A]}
               currency1={currencies[Field.CURRENCY_B]}
@@ -233,9 +233,9 @@ export default function AddLiquidity({
     ) : (
       <AutoColumn gap="20px">
         <RowFlat style={{ marginTop: '20px' }}>
-          <RebassText fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
+          <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
-          </RebassText>
+          </Text>
           <DoubleCurrencyLogo
             currency0={currencies[Field.CURRENCY_A]}
             currency1={currencies[Field.CURRENCY_B]}
@@ -243,9 +243,9 @@ export default function AddLiquidity({
           />
         </RowFlat>
         <Row>
-          <RebassText fontSize="24px">
+          <Text fontSize="24px">
             {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
-          </RebassText>
+          </Text>
         </Row>
         <TextPreset.Italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
           <Trans>
@@ -482,9 +482,9 @@ export default function AddLiquidity({
                   disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                   error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                 >
-                  <RebassText fontSize={20} fontWeight={500}>
+                  <Text fontSize={20} fontWeight={500}>
                     {error ?? <Trans>Supply</Trans>}
-                  </RebassText>
+                  </Text>
                 </ButtonError>
               </AutoColumn>
             )}

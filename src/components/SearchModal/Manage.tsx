@@ -4,7 +4,7 @@ import { TokenList } from '@uniswap/token-lists'
 import { RowBetween } from 'components/Row'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { CloseIcon } from 'theme'
 
@@ -64,9 +64,9 @@ export default function Manage({
       <PaddedColumn>
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.search)} />
-          <RebassText fontWeight={500} fontSize={20}>
+          <Text fontWeight={500} fontSize={20}>
             <Trans>Manage</Trans>
-          </RebassText>
+          </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>

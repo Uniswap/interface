@@ -3,7 +3,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode } from 'react'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
@@ -28,9 +28,9 @@ export default function SwapModalFooter({
           style={{ margin: '10px 0 0 0' }}
           id="confirm-swap-or-send"
         >
-          <RebassText fontSize={20} fontWeight={500}>
+          <Text fontSize={20} fontWeight={500}>
             <Trans>Confirm Swap</Trans>
-          </RebassText>
+          </Text>
         </ButtonError>
 
         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}

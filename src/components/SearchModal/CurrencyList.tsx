@@ -5,7 +5,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
@@ -28,7 +28,7 @@ function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
 }
 
-const StyledBalanceText = styled(RebassText)`
+const StyledBalanceText = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   max-width: 5rem;
@@ -132,9 +132,9 @@ function CurrencyRow({
     >
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
-        <RebassText title={currency.name} fontWeight={500}>
+        <Text title={currency.name} fontWeight={500}>
           {currency.symbol}
-        </RebassText>
+        </Text>
         <TextPreset.DarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
           {!currency.isNative && !isOnSelectedList && customAdded ? (
             <Trans>{currency.name} • Added by user</Trans>

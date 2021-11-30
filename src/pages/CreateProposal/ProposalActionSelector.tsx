@@ -5,7 +5,7 @@ import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styleds'
 import React, { useCallback } from 'react'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { CloseIcon } from 'theme'
 
@@ -102,25 +102,25 @@ export function ProposalActionSelectorModal({
       <ContentWrapper>
         <PaddedColumn gap="16px">
           <RowBetween>
-            <RebassText fontWeight={500} fontSize={16}>
+            <Text fontWeight={500} fontSize={16}>
               <Trans>Select an action</Trans>
-            </RebassText>
+            </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         </PaddedColumn>
         <Separator />
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.TRANSFER_TOKEN)}>
           <Column>
-            <RebassText fontWeight={500}>
+            <Text fontWeight={500}>
               <Trans>Transfer Token</Trans>
-            </RebassText>
+            </Text>
           </Column>
         </MenuItem>
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.APPROVE_TOKEN)}>
           <Column>
-            <RebassText fontWeight={500}>
+            <Text fontWeight={500}>
               <Trans>Approve Token</Trans>
-            </RebassText>
+            </Text>
           </Column>
         </MenuItem>
       </ContentWrapper>

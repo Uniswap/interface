@@ -9,7 +9,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import {
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
@@ -465,7 +465,7 @@ export default function AddLiquidity({
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <RebassText fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</RebassText>
+          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -496,9 +496,9 @@ export default function AddLiquidity({
               )}
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <RebassText fontWeight={500} fontSize={20}>
+                  <Text fontWeight={500} fontSize={20}>
                     <Trans>Add</Trans>
-                  </RebassText>
+                  </Text>
                 </ButtonPrimary>
               )}
             />

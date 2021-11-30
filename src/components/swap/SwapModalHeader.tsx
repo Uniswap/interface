@@ -4,7 +4,7 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
@@ -72,9 +72,9 @@ export default function SwapModalHeader({
           <RowBetween align="center">
             <RowFixed gap={'0px'}>
               <CurrencyLogo currency={trade.inputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
-              <RebassText fontSize={20} fontWeight={500}>
+              <Text fontSize={20} fontWeight={500}>
                 {trade.inputAmount.currency.symbol}
-              </RebassText>
+              </Text>
             </RowFixed>
             <RowFixed gap={'0px'}>
               <TruncatedText
@@ -107,9 +107,9 @@ export default function SwapModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap={'0px'}>
               <CurrencyLogo currency={trade.outputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
-              <RebassText fontSize={20} fontWeight={500}>
+              <Text fontSize={20} fontWeight={500}>
                 {trade.outputAmount.currency.symbol}
-              </RebassText>
+              </Text>
             </RowFixed>
             <RowFixed gap={'0px'}>
               <TruncatedText fontSize={24} fontWeight={500}>

@@ -7,7 +7,7 @@ import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -293,28 +293,28 @@ export default function RemoveLiquidity({
     return (
       <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
         <RowBetween align="flex-end">
-          <RebassText fontSize={24} fontWeight={500}>
+          <Text fontSize={24} fontWeight={500}>
             {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
-          </RebassText>
+          </Text>
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyA} size={'24px'} />
-            <RebassText fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {currencyA?.symbol}
-            </RebassText>
+            </Text>
           </RowFixed>
         </RowBetween>
         <RowFixed>
           <Plus size="16" color={theme.text2} />
         </RowFixed>
         <RowBetween align="flex-end">
-          <RebassText fontSize={24} fontWeight={500}>
+          <Text fontSize={24} fontWeight={500}>
             {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
-          </RebassText>
+          </Text>
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyB} size={'24px'} />
-            <RebassText fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {currencyB?.symbol}
-            </RebassText>
+            </Text>
           </RowFixed>
         </RowBetween>
 
@@ -332,40 +332,40 @@ export default function RemoveLiquidity({
     return (
       <>
         <RowBetween>
-          <RebassText color={theme.text2} fontWeight={500} fontSize={16}>
+          <Text color={theme.text2} fontWeight={500} fontSize={16}>
             <Trans>
               UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
             </Trans>
-          </RebassText>
+          </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
-            <RebassText fontWeight={500} fontSize={16}>
+            <Text fontWeight={500} fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
-            </RebassText>
+            </Text>
           </RowFixed>
         </RowBetween>
         {pair && (
           <>
             <RowBetween>
-              <RebassText color={theme.text2} fontWeight={500} fontSize={16}>
+              <Text color={theme.text2} fontWeight={500} fontSize={16}>
                 <Trans>Price</Trans>
-              </RebassText>
-              <RebassText fontWeight={500} fontSize={16} color={theme.text1}>
+              </Text>
+              <Text fontWeight={500} fontSize={16} color={theme.text1}>
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
-              </RebassText>
+              </Text>
             </RowBetween>
             <RowBetween>
               <div />
-              <RebassText fontWeight={500} fontSize={16} color={theme.text1}>
+              <Text fontWeight={500} fontSize={16} color={theme.text1}>
                 1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
-              </RebassText>
+              </Text>
             </RowBetween>
           </>
         )}
         <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
-          <RebassText fontWeight={500} fontSize={20}>
+          <Text fontWeight={500} fontSize={20}>
             <Trans>Confirm</Trans>
-          </RebassText>
+          </Text>
         </ButtonPrimary>
       </>
     )
@@ -461,9 +461,9 @@ export default function RemoveLiquidity({
             <LightCard>
               <AutoColumn gap="20px">
                 <RowBetween>
-                  <RebassText fontWeight={500}>
+                  <Text fontWeight={500}>
                     <Trans>Remove Amount</Trans>
-                  </RebassText>
+                  </Text>
                   <ClickableText
                     fontWeight={500}
                     onClick={() => {
@@ -474,9 +474,9 @@ export default function RemoveLiquidity({
                   </ClickableText>
                 </RowBetween>
                 <Row style={{ alignItems: 'flex-end' }}>
-                  <RebassText fontSize={72} fontWeight={500}>
+                  <Text fontSize={72} fontWeight={500}>
                     {formattedAmounts[Field.LIQUIDITY_PERCENT]}%
-                  </RebassText>
+                  </Text>
                 </Row>
                 {!showDetailed && (
                   <>
@@ -507,25 +507,25 @@ export default function RemoveLiquidity({
                 <LightCard>
                   <AutoColumn gap="10px">
                     <RowBetween>
-                      <RebassText fontSize={24} fontWeight={500}>
+                      <Text fontSize={24} fontWeight={500}>
                         {formattedAmounts[Field.CURRENCY_A] || '-'}
-                      </RebassText>
+                      </Text>
                       <RowFixed>
                         <CurrencyLogo currency={currencyA} style={{ marginRight: '12px' }} />
-                        <RebassText fontSize={24} fontWeight={500} id="remove-liquidity-tokena-symbol">
+                        <Text fontSize={24} fontWeight={500} id="remove-liquidity-tokena-symbol">
                           {currencyA?.symbol}
-                        </RebassText>
+                        </Text>
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
-                      <RebassText fontSize={24} fontWeight={500}>
+                      <Text fontSize={24} fontWeight={500}>
                         {formattedAmounts[Field.CURRENCY_B] || '-'}
-                      </RebassText>
+                      </Text>
                       <RowFixed>
                         <CurrencyLogo currency={currencyB} style={{ marginRight: '12px' }} />
-                        <RebassText fontSize={24} fontWeight={500} id="remove-liquidity-tokenb-symbol">
+                        <Text fontSize={24} fontWeight={500} id="remove-liquidity-tokenb-symbol">
                           {currencyB?.symbol}
-                        </RebassText>
+                        </Text>
                       </RowFixed>
                     </RowBetween>
                     {chainId && (oneCurrencyIsWETH || oneCurrencyIsETH) ? (
@@ -645,9 +645,9 @@ export default function RemoveLiquidity({
                     disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
-                    <RebassText fontSize={16} fontWeight={500}>
+                    <Text fontSize={16} fontWeight={500}>
                       {error || <Trans>Remove</Trans>}
-                    </RebassText>
+                    </Text>
                   </ButtonError>
                 </RowBetween>
               )}

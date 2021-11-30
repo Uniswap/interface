@@ -6,7 +6,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -144,22 +144,22 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
-              <RebassText fontWeight={500} fontSize={20}>
+              <Text fontWeight={500} fontSize={20}>
                 <Trans>Are you sure?</Trans>
-              </RebassText>
+              </Text>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <RebassText fontWeight={500} fontSize={20}>
+              <Text fontWeight={500} fontSize={20}>
                 <Trans>
                   Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
                   in bad rates and lost funds.
                 </Trans>
-              </RebassText>
-              <RebassText fontWeight={600} fontSize={20}>
+              </Text>
+              <Text fontWeight={600} fontSize={20}>
                 <Trans>ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.</Trans>
-              </RebassText>
+              </Text>
               <ButtonError
                 error={true}
                 padding={'12px'}
@@ -171,9 +171,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   }
                 }}
               >
-                <RebassText fontSize={20} fontWeight={500} id="confirm-expert-mode">
+                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
                   <Trans>Turn On Expert Mode</Trans>
-                </RebassText>
+                </Text>
               </ButtonError>
             </AutoColumn>
           </AutoColumn>
@@ -192,13 +192,13 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
       {open && (
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <RebassText fontWeight={600} fontSize={14}>
+            <Text fontWeight={600} fontSize={14}>
               <Trans>Transaction Settings</Trans>
-            </RebassText>
+            </Text>
             <TransactionSettings placeholderSlippage={placeholderSlippage} />
-            <RebassText fontWeight={600} fontSize={14}>
+            <Text fontWeight={600} fontSize={14}>
               <Trans>Interface Settings</Trans>
-            </RebassText>
+            </Text>
 
             {chainId === SupportedChainId.MAINNET && (
               <RowBetween>

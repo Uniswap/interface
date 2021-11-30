@@ -10,7 +10,7 @@ import { Edit } from 'react-feather'
 import ReactGA from 'react-ga'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { ExtendedEther } from '../../constants/tokens'
@@ -177,9 +177,9 @@ export function CurrencySearch({
     <ContentWrapper>
       <PaddedColumn gap="16px">
         <RowBetween>
-          <RebassText fontWeight={500} fontSize={16}>
+          <Text fontWeight={500} fontSize={16}>
             <Trans>Select a token</Trans>
-          </RebassText>
+          </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <Row>

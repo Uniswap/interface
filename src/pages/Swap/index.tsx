@@ -15,7 +15,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { V3TradeState } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
@@ -609,7 +609,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       }
                       error={isValid && priceImpactSeverity > 2}
                     >
-                      <RebassText fontSize={16} fontWeight={500}>
+                      <Text fontSize={16} fontWeight={500}>
                         {priceImpactTooHigh ? (
                           <Trans>High Price Impact</Trans>
                         ) : priceImpactSeverity > 2 ? (
@@ -617,7 +617,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         ) : (
                           <Trans>Swap</Trans>
                         )}
-                      </RebassText>
+                      </Text>
                     </ButtonError>
                   </AutoColumn>
                 </AutoRow>
@@ -640,7 +640,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
-                  <RebassText fontSize={20} fontWeight={500}>
+                  <Text fontSize={20} fontWeight={500}>
                     {swapInputError ? (
                       swapInputError
                     ) : priceImpactTooHigh ? (
@@ -650,7 +650,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     ) : (
                       <Trans>Swap</Trans>
                     )}
-                  </RebassText>
+                  </Text>
                 </ButtonError>
               )}
               {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}

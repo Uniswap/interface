@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Text as RebassText, TextProps as TextPropsOriginal } from 'rebass'
+import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
   createGlobalStyle,
   css,
@@ -149,10 +149,13 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(RebassText)<{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
+/**
+ * Preset styles of the Rebass Text component
+ */
 export const TextPreset = {
   Main(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text2'} {...props} />

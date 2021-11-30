@@ -22,7 +22,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } from 'state/mint/v3/hooks'
@@ -80,25 +80,25 @@ function LiquidityInfo({
       <RowBetween>
         <RowFixed>
           <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency0} />
-          <RebassText fontSize={16} fontWeight={500}>
+          <Text fontSize={16} fontWeight={500}>
             {currency0.symbol}
-          </RebassText>
+          </Text>
         </RowFixed>
-        <RebassText fontSize={16} fontWeight={500}>
+        <Text fontSize={16} fontWeight={500}>
           <FormattedCurrencyAmount currencyAmount={token0Amount} />
-        </RebassText>
+        </Text>
       </RowBetween>
       <RowBetween>
         <RowFixed>
           <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency1} />
-          <RebassText fontSize={16} fontWeight={500}>
+          <Text fontSize={16} fontWeight={500}>
             {currency1.symbol}
-          </RebassText>
+          </Text>
         </RowFixed>
 
-        <RebassText fontSize={16} fontWeight={500}>
+        <Text fontSize={16} fontWeight={500}>
           <FormattedCurrencyAmount currencyAmount={token1Amount} />
-        </RebassText>
+        </Text>
       </RowBetween>
     </AutoColumn>
   )

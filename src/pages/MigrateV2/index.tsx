@@ -8,7 +8,7 @@ import MigrateV2PositionCard from 'components/PositionCard/V2'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useContext, useMemo } from 'react'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
 import { LightCard } from '../../components/Card'
@@ -170,14 +170,14 @@ export default function MigrateV2() {
           )}
 
           <AutoColumn justify={'center'} gap="md">
-            <RebassText textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
+            <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
               <Trans>
                 Don’t see one of your v2 positions?{' '}
                 <StyledInternalLink id="import-pool-link" to={'/find?origin=/migrate/v2'}>
                   Import it.
                 </StyledInternalLink>
               </Trans>
-            </RebassText>
+            </Text>
           </AutoColumn>
         </AutoColumn>
       </BodyWrapper>
