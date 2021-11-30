@@ -43,9 +43,9 @@ export const getNetworkById = (chainId: ChainId, networkList: NetworksList[]) =>
   return undefined
 }
 
-const isNetDisabled = (optionChainId: ChainId, value: ChainId) => {
+export const isNetworkDisabled = (optionChainId: ChainId, selectedNetworkChainId: ChainId) => {
   return (
-    value === optionChainId ||
+    selectedNetworkChainId === optionChainId ||
     getNetworkInfo(optionChainId).tag === 'coming soon' ||
     !getNetworkInfo(optionChainId).partnerChainId
   )
@@ -66,7 +66,7 @@ export const createNetworkOptionsList = ({
   return {
     preset: preset,
     active: selectedNetChainId === activeChainId,
-    disabled: isNetDisabled(chainId, selectedNetChainId),
+    disabled: isNetworkDisabled(chainId, selectedNetChainId),
     onClick: () => setChainId(chainId)
   }
 }

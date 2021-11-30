@@ -7,6 +7,7 @@ import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useCloseModals } from '../../state/application/hooks'
 import { NetworkSwitcher, networkOptionsPreset, NetworksList, NetworkOptionsPreset } from '../NetworkSwitcher'
+import { createNetworksList } from '../../utils/networksList'
 
 interface NetworkSwitcherPopoverProps {
   children: ReactNode
@@ -18,7 +19,7 @@ const TESTNETS = [4, 46211]
 
 export default function NetworkSwitcherPopover({ children, modal, placement }: NetworkSwitcherPopoverProps) {
   const closeModals = useCloseModals()
-  const { connector, chainId } = useActiveWeb3React()
+  const { connector, chainId, account } = useActiveWeb3React()
   const networkSwitcherPopoverOpen = useModalOpen(modal)
 
   const { selectEthereum, selectNetwork } = useNetworkSwitch({
@@ -33,6 +34,10 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
 
   const isNetDisabled = (networkId: ChainId) => {
     return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId
+  }
+
+  const setChainId = (chainId: ChainId) => {
+    return chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
   }
 
   function getNetworkOptionsPreset(network: NetworkOptionsPreset) {
@@ -59,10 +64,19 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
       }
       return taggedArray
     }, [])
+  console.log({ taggedNetworksList })
+
+  const selectorNetworkList = createNetworksList({
+    networkOptionsPreset: networkOptionsPreset,
+    selectedNetworkChainId: chainId ? chainId : -1,
+    setChainId: setChainId,
+    activeChainId: !!account ? chainId : -1,
+    isNetworkDisabled: isNetDisabled
+  })
 
   return (
     <NetworkSwitcher
-      networksList={taggedNetworksList}
+      networksList={selectorNetworkList}
       show={networkSwitcherPopoverOpen}
       onOuterClick={closeModals}
       placement={placement}

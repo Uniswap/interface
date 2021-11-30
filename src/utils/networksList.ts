@@ -42,13 +42,13 @@ export const createNetworkOptions = ({
   setChainId: (chainId: ChainId) => void
   activeChainId: ChainId | undefined
   networkPreset: NetworkOptionsPreset
-  isNetworkDisabled: (chainId: ChainId, selectedNetworkChainId: ChainId) => boolean
+  isNetworkDisabled: (optionChainId: ChainId, selectedNetworkChainId: ChainId) => boolean
 }): NetworkOptions => {
   const { chainId } = networkPreset
   return {
     preset: networkPreset,
     active: selectedNetworkChainId === activeChainId,
-    disabled: isNetworkDisabled(chainId, selectedNetworkChainId),
+    disabled: isNetworkDisabled(networkPreset.chainId, selectedNetworkChainId),
     onClick: () => setChainId(chainId)
   }
 }
@@ -64,7 +64,7 @@ export const createNetworksList = ({
   selectedNetworkChainId: ChainId
   setChainId: (chainId: ChainId) => void
   activeChainId: ChainId | undefined
-  isNetworkDisabled: () => boolean
+  isNetworkDisabled: (optionChainId: ChainId, selectedNetworkChainId: ChainId) => boolean
 }): NetworksList[] => {
   // const changed = networkOptionsPreset.map(item => {
   //   if (item.tag === 'coming soon') {
@@ -72,7 +72,7 @@ export const createNetworksList = ({
   //   }
   //   return item
   // })
-  return networkOptionsPreset.reduce<NetworksList[]>((taggedArray, currentNet) => {
+  return networkOptionsPreset.reduce<NetworksList[]>((taggedNetworkList, currentNet) => {
     const tag = currentNet.tag ? currentNet.tag : ''
     const networkPreset: NetworkOptionsPreset = currentNet
     const enhancedNetworkOptions = createNetworkOptions({
@@ -84,13 +84,13 @@ export const createNetworksList = ({
     })
 
     // check if tag exist and if not create array
-    const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
+    const tagArrIndex = taggedNetworkList.findIndex(existingTagArr => existingTagArr.tag === tag)
     if (tagArrIndex > -1) {
-      taggedArray[tagArrIndex].networks.push(enhancedNetworkOptions)
+      taggedNetworkList[tagArrIndex].networks.push(enhancedNetworkOptions)
     } else {
-      taggedArray.push({ tag, networks: [enhancedNetworkOptions] })
+      taggedNetworkList.push({ tag, networks: [enhancedNetworkOptions] })
     }
 
-    return taggedArray
+    return taggedNetworkList
   }, [])
 }

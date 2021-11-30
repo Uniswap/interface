@@ -12,7 +12,7 @@ import { BridgeModal } from './BridgeModals/BridgeModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
-import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
+import { NetworkSwitcher as NetworkSwitcherPopover, networkOptionsPreset } from '../../components/NetworkSwitcher'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useBridgeService } from '../../contexts/BridgeServiceProvider'
@@ -21,11 +21,12 @@ import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal, useBridgeTxsFil
 
 import { SHOW_TESTNETS } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { BridgeStep, getNetworkById, createEnhancedNetsArray } from './utils'
+import { BridgeStep, getNetworkById, isNetworkDisabled } from './utils'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
 import { useChains } from '../../hooks/useChains'
+import { createNetworksList } from '../../utils/networksList'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -179,15 +180,30 @@ export default function Bridge() {
     setStep(BridgeStep.Success)
   }, [bridgeService, collectableTx])
 
-  const fromNetsList = createEnhancedNetsArray({
-    selectedNetChainId: fromNetwork.chainId,
+  // const fromNetsList = createEnhancedNetsArray({
+  //   selectedNetChainId: fromNetwork.chainId,
+  //   setChainId: onFromNetworkChange,
+  //   activeChainId: !!account ? chainId : -1
+  // })
+  // const toNetsList = createEnhancedNetsArray({
+  //   selectedNetChainId: toNetwork.chainId,
+  //   setChainId: onToNetworkChange,
+  //   activeChainId: !!account ? chainId : -1
+  // })
+
+  const fromNetworkList = createNetworksList({
+    networkOptionsPreset: networkOptionsPreset,
+    selectedNetworkChainId: fromNetwork.chainId,
     setChainId: onFromNetworkChange,
-    activeChainId: !!account ? chainId : -1
+    activeChainId: !!account ? chainId : -1,
+    isNetworkDisabled: isNetworkDisabled
   })
-  const toNetsList = createEnhancedNetsArray({
-    selectedNetChainId: toNetwork.chainId,
+  const toNetworkList = createNetworksList({
+    networkOptionsPreset: networkOptionsPreset,
+    selectedNetworkChainId: toNetwork.chainId,
     setChainId: onToNetworkChange,
-    activeChainId: !!account ? chainId : -1
+    activeChainId: !!account ? chainId : -1,
+    isNetworkDisabled: isNetworkDisabled
   })
 
   return (
@@ -207,12 +223,12 @@ export default function Bridge() {
           <AssetWrapper ref={fromPanelRef}>
             <AssetSelector
               label="from"
-              selectedNetwork={getNetworkById(fromNetwork.chainId, fromNetsList)}
+              selectedNetwork={getNetworkById(fromNetwork.chainId, fromNetworkList)}
               onClick={SHOW_TESTNETS ? () => setShowFromList(val => !val) : () => null}
               disabled={SHOW_TESTNETS ? isCollecting : true}
             />
             <NetworkSwitcherPopover
-              networksList={fromNetsList}
+              networksList={fromNetworkList}
               showWalletConnector={false}
               parentRef={fromPanelRef}
               show={SHOW_TESTNETS ? showFromList : false}
@@ -226,12 +242,12 @@ export default function Bridge() {
           <AssetWrapper ref={toPanelRef}>
             <AssetSelector
               label="to"
-              selectedNetwork={getNetworkById(toNetwork.chainId, toNetsList)}
+              selectedNetwork={getNetworkById(toNetwork.chainId, toNetworkList)}
               onClick={SHOW_TESTNETS ? () => setShowToList(val => !val) : () => null}
               disabled={SHOW_TESTNETS ? isCollecting : true}
             />
             <NetworkSwitcherPopover
-              networksList={toNetsList}
+              networksList={toNetworkList}
               showWalletConnector={false}
               parentRef={toPanelRef}
               show={SHOW_TESTNETS ? showToList : false}
