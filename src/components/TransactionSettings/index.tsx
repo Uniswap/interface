@@ -8,7 +8,7 @@ import { useContext, useState } from 'react'
 import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
@@ -160,9 +160,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
         <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+          <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
             <Trans>Slippage tolerance</Trans>
-          </TYPE.black>
+          </ThemedText.Black>
           <QuestionHelper
             text={
               <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
@@ -229,9 +229,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
       {showCustomDeadlineRow && (
         <AutoColumn gap="sm">
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <ThemedText.Black fontSize={14} fontWeight={400} color={theme.text2}>
               <Trans>Transaction deadline</Trans>
-            </TYPE.black>
+            </ThemedText.Black>
             <QuestionHelper
               text={<Trans>Your transaction will revert if it is pending for more than this period of time.</Trans>}
             />
@@ -255,9 +255,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
                 color={deadlineError ? 'red' : ''}
               />
             </OptionCustom>
-            <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
+            <ThemedText.Body style={{ paddingLeft: '8px' }} fontSize={14}>
               <Trans>minutes</Trans>
-            </TYPE.body>
+            </ThemedText.Body>
           </RowFixed>
         </AutoColumn>
       )}

@@ -20,7 +20,7 @@ import { ProposalData } from 'state/governance/hooks'
 import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import { useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, TYPE } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -77,7 +77,7 @@ const WrapSmall = styled(RowBetween)`
   `};
 `
 
-const TextButton = styled(TYPE.main)`
+const TextButton = styled(ThemedText.Main)`
   color: ${({ theme }) => theme.primary1};
   :hover {
     cursor: pointer;
@@ -135,26 +135,26 @@ export default function Landing() {
             <CardSection>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white fontWeight={600}>
+                  <ThemedText.White fontWeight={600}>
                     <Trans>Uniswap Governance</Trans>
-                  </TYPE.white>
+                  </ThemedText.White>
                 </RowBetween>
                 <RowBetween>
-                  <TYPE.white fontSize={14}>
+                  <ThemedText.White fontSize={14}>
                     <Trans>
                       UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself
                       or delegate your votes to a third party.
                     </Trans>
-                  </TYPE.white>
+                  </ThemedText.White>
                 </RowBetween>
                 <ExternalLink
                   style={{ color: 'white', textDecoration: 'underline' }}
                   href="https://uniswap.org/blog/uni"
                   target="_blank"
                 >
-                  <TYPE.white fontSize={14}>
+                  <ThemedText.White fontSize={14}>
                     <Trans>Read more about Uniswap governance</Trans>
-                  </TYPE.white>
+                  </ThemedText.White>
                 </ExternalLink>
               </AutoColumn>
             </CardSection>
@@ -164,9 +164,9 @@ export default function Landing() {
         </TopSection>
         <TopSection gap="2px">
           <WrapSmall>
-            <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
+            <ThemedText.MediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
               <Trans>Proposals</Trans>
-            </TYPE.mediumHeader>
+            </ThemedText.MediumHeader>
             <AutoRow gap="6px" justify="flex-end">
               {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
               {showUnlockVoting ? (
@@ -179,20 +179,20 @@ export default function Landing() {
                   <Trans>Unlock Voting</Trans>
                 </ButtonPrimary>
               ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-                <TYPE.body fontWeight={500} mr="6px">
+                <ThemedText.Body fontWeight={500} mr="6px">
                   <Trans>
                     <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
                   </Trans>
-                </TYPE.body>
+                </ThemedText.Body>
               ) : uniBalance &&
                 userDelegatee &&
                 userDelegatee !== ZERO_ADDRESS &&
                 JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
-                <TYPE.body fontWeight={500} mr="6px">
+                <ThemedText.Body fontWeight={500} mr="6px">
                   <Trans>
                     <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
                   </Trans>
-                </TYPE.body>
+                </ThemedText.Body>
               ) : (
                 ''
               )}
@@ -211,9 +211,9 @@ export default function Landing() {
               <div />
               {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
                 <RowFixed>
-                  <TYPE.body fontWeight={500} mr="4px">
+                  <ThemedText.Body fontWeight={500} mr="4px">
                     <Trans>Delegated to:</Trans>
-                  </TYPE.body>
+                  </ThemedText.Body>
                   <AddressButton>
                     <StyledExternalLink
                       href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
@@ -247,9 +247,9 @@ export default function Landing() {
               )
             })}
         </TopSection>
-        <TYPE.subHeader color="text3">
+        <ThemedText.SubHeader color="text3">
           <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
-        </TYPE.subHeader>
+        </ThemedText.SubHeader>
       </PageWrapper>
       <SwitchLocaleLink />
     </>

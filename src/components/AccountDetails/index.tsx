@@ -10,7 +10,7 @@ import { injected, portis, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { clearAllTransactions } from '../../state/transactions/actions'
-import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
 import { shortenAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonSecondary } from '../Button'
@@ -378,9 +378,9 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
-            <TYPE.body>
+            <ThemedText.Body>
               <Trans>Recent Transactions</Trans>
-            </TYPE.body>
+            </ThemedText.Body>
             <LinkStyledButton onClick={clearAllTransactionsCallback}>
               <Trans>(clear all)</Trans>
             </LinkStyledButton>
@@ -390,9 +390,9 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>
+          <ThemedText.Body color={theme.text1}>
             <Trans>Your transactions will appear here...</Trans>
-          </TYPE.body>
+          </ThemedText.Body>
         </LowerSection>
       )}
     </>
