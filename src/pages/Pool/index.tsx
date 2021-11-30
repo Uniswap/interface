@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { HideSmall, TYPE } from 'theme'
+import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import CTACards from './CTACards'
@@ -199,9 +199,9 @@ export default function Pool() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <TYPE.body fontSize={'20px'}>
+              <ThemedText.Body fontSize={'20px'}>
                 <Trans>Pools Overview</Trans>
-              </TYPE.body>
+              </ThemedText.Body>
               <ButtonRow>
                 {showV2Features && (
                   <Menu
@@ -209,10 +209,10 @@ export default function Pool() {
                     flyoutAlignment={FlyoutAlignment.LEFT}
                     ToggleUI={(props: any) => (
                       <MoreOptionsButton {...props}>
-                        <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
+                        <ThemedText.Body style={{ alignItems: 'center', display: 'flex' }}>
                           <Trans>More</Trans>
                           <ChevronDown size={15} />
-                        </TYPE.body>
+                        </ThemedText.Body>
                       </MoreOptionsButton>
                     )}
                   />
@@ -249,12 +249,12 @@ export default function Pool() {
                 <PositionList positions={filteredPositions} />
               ) : (
                 <NoLiquidity>
-                  <TYPE.body color={theme.text3} textAlign="center">
+                  <ThemedText.Body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
                       <Trans>Your V3 liquidity positions will appear here.</Trans>
                     </div>
-                  </TYPE.body>
+                  </ThemedText.Body>
                   {showConnectAWallet && (
                     <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
                       <Trans>Connect a wallet</Trans>
@@ -306,9 +306,9 @@ export default function Pool() {
               {closedPositions.length > 0 ? (
                 <ShowInactiveToggle>
                   <label>
-                    <TYPE.body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
+                    <ThemedText.Body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
                       <Trans>Show closed positions</Trans>
-                    </TYPE.body>
+                    </ThemedText.Body>
                   </label>
                   <input
                     type="checkbox"

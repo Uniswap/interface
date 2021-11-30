@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-15 01:28\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -47,7 +47,7 @@ msgstr "(prevzem)"
 msgid "(clear all)"
 msgstr "(počisti vse)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(uredi)"
 
@@ -61,18 +61,6 @@ msgstr "- Odstrani prejemnika"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / teden"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0,05 % provizije"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0,3 % provizije"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% provizije"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75 %"
 msgid "<0/> All Proposals"
 msgstr "<0/> Vse pobude"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> glasov"
 
@@ -127,7 +115,7 @@ msgstr "<0>Odklenite glasovanje</0>, če se želite pripraviti na naslednjo pobu
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Dobrodošli v ekipi Samorog :) <1> 🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Za predložitev predlogov potrebujete vsaj 0,25 % celotne zaloge UNI."
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Aktiven"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Dodaj"
@@ -231,10 +218,6 @@ msgstr "Znesek"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Pri poskusu izvedbe te zamenjave je prišlo do napake. Morda boste morali povečati toleranco do zdrsa. Če to ne deluje, je morda težava v nezdružljivosti z žetonom, s katerim trgujete. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Analitika"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "Dobroimetje:"
 msgid "Balance: {0} {1}"
 msgstr "Dobroimetje: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Primerno za redko uporabljane pare."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Primerno za večino parov."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Primerno za stabilne pare."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Primerno za zelo stabilne pare."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -344,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Z dodajanjem tega seznama zaupate pravilnosti podatkov. Vsakdo lahko ustvari seznam; ustvari lahko tudi ponarejeno različico obstoječega seznama ali pa seznam, ki naj bi pripadal resničnemu projektu, ki nima uradnega seznama."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "S tem ko povežete denarnico, se strinjate s <0>pogoji storitev Uniswap Labs</0> in potrjujete, da ste prebrali in razumeli <1>zavrnitev odgovornosti protokola Uniswap</1>."
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "S tem ko povežete denarnico, se strinjate s <0>pogoji storitve Uniswap Labs</0> in potrjujete, da ste prebrali in razumeli <1>izjavo o omejitvi odgovornosti</1> protokola Uniswap."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -446,10 +430,6 @@ msgstr "Zapri"
 msgid "Closed"
 msgstr "Zaprto"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Koda"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Prevzemi"
@@ -491,10 +471,6 @@ msgstr "Pogoste osnove"
 msgid "Confirm"
 msgstr "Potrdi"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Potrdi tvorbo"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Potrdi polog"
@@ -516,6 +492,7 @@ msgstr "Odobrite to transakcijo in svoji denarnici"
 msgid "Confirm transaction in wallet"
 msgstr "V denarnici potrdite transakcijo"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -530,15 +507,11 @@ msgstr "V denarnici potrdite transakcijo"
 msgid "Connect Wallet"
 msgstr "Poveži denarnico"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "Poveži denarnico"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
-msgstr "Povežite z denarnico"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
@@ -565,16 +538,12 @@ msgstr "Kopirano"
 msgid "Copy Address"
 msgstr "Kopiraj naslov"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Ustvari"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Ustvari sklad & položi likvidnost"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Ustvari pobudo"
 
@@ -628,7 +597,7 @@ msgstr "Glasovni zastopnikov"
 msgid "Delegate voting power to {0}"
 msgstr "Prenesi pravico glasovanja na zastopnika {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Zastopnik:"
 
@@ -838,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Poiščite podporo na Discordu"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Center za pomoč"
 
@@ -849,6 +819,10 @@ msgstr "Skrij"
 msgid "High Price Impact"
 msgstr "Visok vpliv na ceno"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "Kako ta aplikacija uporablja API-je"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -858,6 +832,7 @@ msgstr "Razumem"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Če kupite žeton s tega seznama, ga morda ne boste mogli več prodati."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -959,6 +934,16 @@ msgstr "Več o tem"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Naučite se vse o polaganju likvidnosti"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "Več o tem"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "Pravna obvestila in zasebnost"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1125,7 +1110,7 @@ msgstr "Ne najdem nobene likvidnosti V2."
 msgid "No active pools"
 msgstr "Ni aktivnih skladov"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Ni podatkov"
 
@@ -1149,7 +1134,7 @@ msgstr "Ni predlogov."
 msgid "No results found."
 msgstr "Ni rezultatov."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Ni ustvarjeno"
 
@@ -1328,7 +1313,7 @@ msgstr "Pobuda predložena"
 msgid "Proposal Title"
 msgstr "Naslov pobude"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Pobude"
 
@@ -1344,6 +1329,10 @@ msgstr "Predlagani ukrep"
 msgid "Proposer"
 msgstr "Pobudnik"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "Izjava o omejitvi odgovornosti za protokol"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "V čakalni vrsti"
@@ -1356,7 +1345,7 @@ msgstr "Tečaji"
 msgid "Read more about UNI"
 msgstr "Preberite več o UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Preberite več o Uniswapovem upravljanju"
 
@@ -1414,6 +1403,10 @@ msgstr "Odstranitev {0} {1} in {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Odstranitev {0} {1} in{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Predlagajte funkcionalnosti"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1452,7 +1445,7 @@ msgstr "Izberite dejanje"
 msgid "Selected Range"
 msgstr "Izbrani razpon"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Sebi"
 
@@ -1535,8 +1528,8 @@ msgid "Supply"
 msgstr "Položi"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "Polog {0} {1} in{2} {3}"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Polog {0} {1} in {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1578,7 +1571,27 @@ msgstr "Odstotek, ki ga boste služili s provizijami."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Uniswapovi stalnici x*y = k s menjavo ni bilo zadoščeno. To običajno pomeni, da eden od žetonov, ki jih menjate, vključuje obnašanje po meri pri prenosih."
+msgstr "Pri tej menjavi ni bilo zadoščeno Uniswapovi stalnici x*y = k. To običajno pomeni, da ima eden od žetonov, ki jih menjate, pri prenosih vgrajeno posebno obnašanje."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "Aplikacija pridobi podatke verige blokov iz gostujoče storitve The Graph."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "Aplikacija pridobi podatke in verige in zgradi pogodbene klice z API-jem Infura."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "Aplikacija pridobi optimalno pot trgovanja s strežnika Uniswap Labs."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "Aplikacija z namenom prihodnjih izboljšav beleži anonimizirano statistiko uporabe."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "Aplikacija na varen način prebere naslov vaše denarnice in ga deli s TRM Labs Inc. zaradi ocene tveganja in skladnosti z zakoni."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1620,13 +1633,13 @@ msgstr "Podatkov o likvidnosti ni."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "To so žetoni, ki so pogosto v parih z drugimi žetoni."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "Ta aplikacija uporablja naslednje API-je tretjih oseb:"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Ta sklad je treba inicializirati, preden lahko dodate likvidnost. Za inicializacijo izberite začetno ceno za sklad. Nato vnesite svoj cenovni razpon likvidnosti in znesek depozita. Provizije za plin (gas) bodo zaradi inicializacijske transakcije višje kot običajno."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Ta sklad mora biti inicializiran na {0}, preden lahko dodate likvidnost. Za inicializacijo izberite začetno ceno za sklad. Nato vnesite svoj cenovni razpon likvidnosti in znesek depozita."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1635,6 +1648,10 @@ msgstr "Ta pot je optimalna ob upoštevanju razcepljenih in veriženih poti ter 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Tega žetona ni na nobenem od omogočenih seznamov žetonov. Prepričajte se, da je to res žeton, s katerim želite trgovati."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Ta žeton ni podprt v aplikaciji Uniswap Labs"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1664,8 +1681,12 @@ msgid "To (at least)"
 msgstr "Za (vsaj)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Če želite začeti trgovati na {0}, najprej premostite svoja sredstva s sloja 1 (L1) na sloj 2 (L2). Prosimo, da to obravnavate kot različico beta in se pred uporabo {1} seznanite s tveganji."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Če želite začeti trgovati na {0}, najprej prenesite svoja sredstva iz L1 v L2. Prosimo, da to smatrate za beta-verzijo in se pred uporabo {1} poučite o tveganjih."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Žeton ni podprt"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1751,7 +1772,7 @@ msgstr "UNI v obtoku:"
 msgid "UNI price:"
 msgstr "Cena UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Žetoni UNI predstavljajo delež glasovalnih pravic pri upravljanju sistema Uniswap. Za vsak predlog lahko glasujete sami ali pa svoje glasove prenesete na izbranega zastopnika."
 
@@ -1792,9 +1813,13 @@ msgstr "Nepričakovana napaka. Porabe plina za menjavo ni bilo mogoče oceniti."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Nepričakovana težava pri ocenjevanju porabe plina. Prosimo, poskusite ponovno."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswapovo upravljanje"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Pogoji storitve Uniswap Labs"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1816,7 +1841,7 @@ msgstr "Uniswapova pogodba za migracijo↗"
 msgid "Uniswap on {0}"
 msgstr "Uniswap na {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Neznan vir"
 
@@ -1824,12 +1849,12 @@ msgstr "Neznan vir"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Neznana napaka {0}. Poskusite povečati toleranco do zdrsa. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Odkleni glasove"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Odkleni glasovanje"
 
@@ -1859,7 +1884,7 @@ msgstr "Odvij"
 msgid "Unwrap <0/> to ETH"
 msgstr "Odvij <0/> v ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Posodobi pooblastilo"
 
@@ -1988,6 +2013,10 @@ msgstr "Glasovanje se je končalo {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "Glasovanje se konča okrog {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "Glasovanje se začne okrog {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2235,7 +2264,7 @@ msgstr "minut"
 msgid "via {0}"
 msgstr "preko {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "prek seznama žetonov {0}"
 
@@ -2338,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Dodal uporabnik"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2352,7 +2382,7 @@ msgstr "{0} %"
 msgid "{0}% fee tier"
 msgstr "Nivo provizij {0} %"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% izberi"
 

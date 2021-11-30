@@ -10,7 +10,7 @@ import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
 import Row, { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
@@ -136,7 +136,7 @@ export function AddRemoveTabs({
         >
           <StyledArrowLeft stroke={theme.text2} />
         </StyledHistoryLink>
-        <TYPE.mediumHeader
+        <ThemedText.MediumHeader
           fontWeight={500}
           fontSize={20}
           style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
@@ -148,7 +148,7 @@ export function AddRemoveTabs({
           ) : (
             <Trans>Remove Liquidity</Trans>
           )}
-        </TYPE.mediumHeader>
+        </ThemedText.MediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
         <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>

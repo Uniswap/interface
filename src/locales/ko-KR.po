@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-14 18:06\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -47,7 +47,7 @@ msgstr "(청구)"
 msgid "(clear all)"
 msgstr "(모두 지우기)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(편집)"
 
@@ -61,18 +61,6 @@ msgstr "- 받는 사람 제거"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / 주"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0.05 % 수수료"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0.3 % 수수료"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1 % 수수료"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75 %"
 msgid "<0/> All Proposals"
 msgstr "<0/> 모든 제안"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> 투표"
 
@@ -127,7 +115,7 @@ msgstr "<0> 투표 잠금 해제</0> 다음 제안을 준비합니다."
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Unicorn 팀에 오신 것을 환영합니다. :) <1> 🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "제안서를 제출하려면 총 UNI 공급량의 최소 0.25 %가 필요합니다."
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "활성"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "추가"
@@ -231,10 +218,6 @@ msgstr "금액"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "분석"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "잔액:"
 msgid "Balance: {0} {1}"
 msgstr "잔액 : {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "이국적인 쌍에 가장 적합합니다."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "대부분의 쌍에 가장 적합합니다."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "안정적인 쌍에 가장 적합합니다."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "매우 안정적인 쌍에 가장 적합합니다."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -344,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시적으로 신뢰하게 됩니다. 기존 목록의 가짜 버전 및 목록이 없는 프로젝트를 나타낸다고 주장하는 목록을 만드는 등 누구나 목록을 만들 수 있습니다."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "지갑을 연결하면 Uniswap Labs의 <0> 서비스 약관</0>에 동의하고 <1>Uniswap 프로토콜 면책 조항</1>을 읽고 이해했음을 인정하는 것입니다."
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "지갑을 연결하면 Uniswap Labs의 <0>서비스 약관</0> <1>프로토콜 면책 조항</1>읽고 이해했음을 인정합니다."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -446,10 +430,6 @@ msgstr "닫기"
 msgid "Closed"
 msgstr "닫힘"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "코드"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "수집"
@@ -491,10 +471,6 @@ msgstr "공통 기준"
 msgid "Confirm"
 msgstr "확인"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "생성 확인"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "공급 확인"
@@ -516,6 +492,7 @@ msgstr "지갑에서 이 거래를 확인하세요"
 msgid "Confirm transaction in wallet"
 msgstr "지갑에서 거래 확인"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -530,15 +507,11 @@ msgstr "지갑에서 거래 확인"
 msgid "Connect Wallet"
 msgstr "지갑 연결"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "지갑 연결"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
-msgstr "지갑에 연결"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
@@ -565,16 +538,12 @@ msgstr "복사 됨"
 msgid "Copy Address"
 msgstr "주소 복사"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "창조하다"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "풀 생성 및 공급"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "제안 생성"
 
@@ -628,7 +597,7 @@ msgstr "위임 투표"
 msgid "Delegate voting power to {0}"
 msgstr "투표권을 {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "위임 대상 :"
 
@@ -838,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Discord에서 지원 받기"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "지원 센터"
 
@@ -849,6 +819,10 @@ msgstr "숨는 장소"
 msgid "High Price Impact"
 msgstr "높은 가격 영향"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "이 앱이 API를 사용하는 방법"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -858,6 +832,7 @@ msgstr "알겠습니다"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "이 목록에서 토큰을 구매하면, 다시 판매하지 못할 수 있습니다."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -959,6 +934,16 @@ msgstr "더 알아보기"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "유동성 제공에 대해 알아보기"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "더 알아보기"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "법률 및 개인 정보 보호"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1125,7 +1110,7 @@ msgstr "V2 유동성이 없습니다."
 msgid "No active pools"
 msgstr "활성 풀 없음"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "데이터 없음"
 
@@ -1149,7 +1134,7 @@ msgstr "제안이 없습니다."
 msgid "No results found."
 msgstr "결과가 없습니다."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "생성되지 않음"
 
@@ -1328,7 +1313,7 @@ msgstr "제출 된 제안"
 msgid "Proposal Title"
 msgstr "제안 제목"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "제안"
 
@@ -1344,6 +1329,10 @@ msgstr "제안 된 조치"
 msgid "Proposer"
 msgstr "제안자"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "프로토콜 면책 조항"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "대기 중"
@@ -1356,7 +1345,7 @@ msgstr "요율"
 msgid "Read more about UNI"
 msgstr "UNI에 대해 자세히 알아보기"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Uniswap 거버넌스에 대해 자세히 알아보기"
 
@@ -1414,6 +1403,10 @@ msgstr "{0} {1} 및 {2} {3} 제거 중"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "{0} {1} 및{2} {3}제거"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "기능 요청"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1452,7 +1445,7 @@ msgstr "작업 선택"
 msgid "Selected Range"
 msgstr "선택한 범위"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "본인"
 
@@ -1535,8 +1528,8 @@ msgid "Supply"
 msgstr "공급"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "{0} {1} 및{2} {3}공급"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "{0} {1} 및 {2} {3} 공급 중"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1580,6 +1573,26 @@ msgstr "수수료로받을 수있는 %입니다."
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap 불변 x * y = k가 스왑에 의해 충족되지 않았습니다. 이는 일반적으로 스와핑하는 토큰 중 하나가 이체시 사용자 지정 동작을 통합함을 의미합니다."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "앱은 Graph의 호스팅 서비스에서 블록체인 데이터를 가져옵니다."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "앱은 온체인 데이터를 가져오고 Infura API를 사용하여 계약 호출을 구성합니다."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "앱은 Uniswap Labs 서버에서 최적의 무역 경로를 가져옵니다."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "앱은 시간이 지남에 따라 개선하기 위해 익명화된 사용 통계를 기록합니다."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "앱은 위험 및 규정 준수를 위해 지갑 주소를 안전하게 수집하고 TRM Labs Inc.와 공유합니다."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "입력 토큰을 이체할 수 없습니다. 입력 토큰에 문제가 있을 수 있습니다."
@@ -1620,13 +1633,13 @@ msgstr "유동성 데이터가 없습니다."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "이러한 토큰은 일반적으로 다른 토큰과 쌍을 이룹니다."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "이 앱은 다음 타사 API를 사용합니다."
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "유동성을 추가하려면 이 풀을 초기화해야 합니다. 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오. 초기화 트랜잭션으로 인해 가스 요금이 평소보다 높아집니다."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "유동성을 추가하려면 이 풀을 {0} 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1635,6 +1648,10 @@ msgstr "이 경로는 분할 경로, 다중 홉 및 가스 비용을 고려하�
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "이 토큰은 활성 토큰 목록에 표시되지 않습니다. 이것이 거래하려는 토큰인지 확인하십시오."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "이 토큰은 Uniswap Labs 앱에서 지원되지 않습니다."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1664,8 +1681,12 @@ msgid "To (at least)"
 msgstr "스왑 후(최소)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "{0}에서 거래를 시작하려면 먼저 자산을 L1에서 L2로 연결하십시오. {1}을 사용하기 전에 위험에 대해 알아보십시오."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "지원되지 않는 토큰"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1751,7 +1772,7 @@ msgstr "유통중인 UNI :"
 msgid "UNI price:"
 msgstr "UNI 가격 :"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅니다. 각 제안에 대해 직접 투표하거나 제3자에게 투표를 위임할 수 있습니다."
 
@@ -1792,9 +1813,13 @@ msgstr "예기치 않은 오류. 스왑을 위한 가스를 추정할 수 없습
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "가스 추정에 예상치 못한 문제가 있습니다. 다시 시도해 주세요."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap 거버넌스"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Uniswap Labs 서비스 약관"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1816,7 +1841,7 @@ msgstr "Uniswap 마이그레이션 계약 ↗"
 msgid "Uniswap on {0}"
 msgstr "{0}Uniswap"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "알 수 없는 출처"
 
@@ -1824,12 +1849,12 @@ msgstr "알 수 없는 출처"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "알 수 없는 오류 {0}. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "투표 잠금 해제"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "투표 잠금 해제"
 
@@ -1859,7 +1884,7 @@ msgstr "언랩"
 msgid "Unwrap <0/> to ETH"
 msgstr "<0/>을 ETH로 풀기"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "위임 업데이트"
 
@@ -1988,6 +2013,10 @@ msgstr "투표 종료 {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "투표는 대략 {0}에 끝납니다"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "투표 시작 약 {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2235,7 +2264,7 @@ msgstr "분"
 msgid "via {0}"
 msgstr "{0} 경유"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "{0} 토큰 목록을 통해"
 
@@ -2338,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • 사용자가 추가"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2352,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% 수수료 등급"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% 선택"
 

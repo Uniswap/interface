@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-14 18:06\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -47,7 +47,7 @@ msgstr "(مطالبة)"
 msgid "(clear all)"
 msgstr "(مسح الكل)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(تعديل)"
 
@@ -61,18 +61,6 @@ msgstr "- إزالة المستلم"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / أسبوع"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "رسم 0.05٪"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "رسم 0.3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "رسم 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> جميع المقترحات"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> الأصوات"
 
@@ -127,7 +115,7 @@ msgstr "<0>افتح التصويت </0> للتحضير للاقتراح التا
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>مرحبًا بكم في فريق:) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "مطلوب حد أدنى قدره 0.25٪ من إجمالي إمداد UNI لتقديم العروض"
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "نشط"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "إضافة"
@@ -231,10 +218,6 @@ msgstr "المبلغ"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "حدث خطأ أثناء محاولة تنفيذ هذا التبادل. قد تحتاج إلى زيادة تحملك للانزلاق. إذا لم يفلح ذلك ، فقد يكون هناك عدم توافق مع الرمز الذي تتداوله. ملاحظة: رسوم النقل وإعادة الرموز المميزة غير متوافقة مع Uniswap V3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "التحليلات"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "الرصيد:"
 msgid "Balance: {0} {1}"
 msgstr "التوازن: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "الأفضل للأزواج الغريبة."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "الأفضل لمعظم الأزواج."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "الأفضل للأزواج مستقرة."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "الأفضل للأزواج المستقرة جدًا."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -344,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "بإضافة هذه القائمة فإنك تثق ضمنًا بأن البيانات صحيحة. ويمكن لأي شخص أن ينشئ قائمة، بما في ذلك إنشاء صيغ مزيفة من القوائم القائمة والقوائم التي تزعم أنها تمثل مشاريع لا تملك قائمة."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "عند توصيل محفظة، فإنك توافق على <0>شروط خدمة</0> Uniswap Labs، وتقر بأنك قرأت وفهمت <1>إخلاء مسؤولية بروتوكول Uniswap</1>."
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "من خلال ربط المحفظة ، فإنك توافق على شروط الخدمة</0> <0>وتقر بأنك قد قرأت وفهمت إخلاء مسؤولية بروتوكول <1></1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -446,10 +430,6 @@ msgstr "إغلاق"
 msgid "Closed"
 msgstr "مغلق"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "الكود"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "اجمع"
@@ -491,10 +471,6 @@ msgstr "القواعد المشتركة"
 msgid "Confirm"
 msgstr "تأكيد"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "تأكيد إنشاء"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "تأكيد الإمداد"
@@ -516,6 +492,7 @@ msgstr "تأكيد هذه المعاملة في محفظتك"
 msgid "Confirm transaction in wallet"
 msgstr "تأكيد المعاملة في المحفظة"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -530,15 +507,11 @@ msgstr "تأكيد المعاملة في المحفظة"
 msgid "Connect Wallet"
 msgstr "توصيل المحفظة"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "توصيل محفظة"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
-msgstr "توصيل بالمحفظة"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
@@ -565,16 +538,12 @@ msgstr "تم النسخ"
 msgid "Copy Address"
 msgstr "نسخ العنوان"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "يخلق"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "إنشاء مجموعة وإمدادات"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "إنشاء اقتراح"
 
@@ -628,7 +597,7 @@ msgstr "أصوات التفويض"
 msgid "Delegate voting power to {0}"
 msgstr "تفويض سلطة التصويت إلى {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "مفوض إلى:"
 
@@ -838,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "احصل على الدعم على Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "مركز المساعدة"
 
@@ -849,6 +819,10 @@ msgstr "يخفي"
 msgid "High Price Impact"
 msgstr "تأثير ارتفاع السعر"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "كيف يستخدم هذا التطبيق واجهات برمجة التطبيقات"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -858,6 +832,7 @@ msgstr "أنا أفهم"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "إذا قمت بشراء الرمز المميز من هذه القائمة، قد لا تتمكن من بيعه مرة أخرى."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -959,6 +934,16 @@ msgstr "يتعلم أكثر"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "تعرف على توفير السيولة"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "يتعلم أكثر"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "الشؤون القانونية والخصوصية"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1125,7 +1110,7 @@ msgstr "لم يتم العثور على سيولة V2."
 msgid "No active pools"
 msgstr "لا توجد محموعات نشطة"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "لايوجد بيانات"
 
@@ -1149,7 +1134,7 @@ msgstr "لا توجد مقترحات."
 msgid "No results found."
 msgstr "لا توجد نتائج."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "لم يتم إنشاؤه"
 
@@ -1328,7 +1313,7 @@ msgstr "تم تقديم الاقتراح"
 msgid "Proposal Title"
 msgstr "عنوان الاقتراح"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "مقترحات"
 
@@ -1344,6 +1329,10 @@ msgstr "الإجراء المقترح"
 msgid "Proposer"
 msgstr "المقترح"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "إخلاء مسؤولية البروتوكول"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "في قائمة الانتظار"
@@ -1356,7 +1345,7 @@ msgstr "الأسعار"
 msgid "Read more about UNI"
 msgstr "اقرأ المزيد عن UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "اقرأ المزيد عن إدارة Uniswap"
 
@@ -1414,6 +1403,10 @@ msgstr "إزالة {0} {1} و {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "إزالة {0} {1} و{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "طلب الميزات"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1452,7 +1445,7 @@ msgstr "حدد إجراء"
 msgid "Selected Range"
 msgstr "نطاق محدد"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "نفسه"
 
@@ -1535,8 +1528,8 @@ msgid "Supply"
 msgstr "الإمداد"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "توريد {0} {1} و{2} {3}"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "إمداد {0} {1} و {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1580,6 +1573,26 @@ msgstr "النسبة التي ستكسبها في الرسوم."
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "الثابت Uniswap x*y=k لم يكن راضيًا عن المبادلة. يعني هذا عادةً أن أحد الرموز التي تقوم بتبادلها يتضمن سلوكًا مخصصًا عند النقل."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "يجلب التطبيق بيانات blockchain من خدمة The Graph المستضافة."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "يجلب التطبيق البيانات على السلسلة وينشئ مكالمات تعاقدية باستخدام واجهة برمجة تطبيقات Infura."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "يجلب التطبيق المسار التجاري الأمثل من خادم Uniswap Labs."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "يسجل التطبيق إحصاءات الاستخدام مجهولة المصدر من أجل التحسين بمرور الوقت."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "يجمع التطبيق عنوان محفظتك بأمان ويشاركه مع TRM Labs Inc. لأسباب تتعلق بالمخاطر والامتثال."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "لا يمكن نقل رمز الإدخال. قد تكون هناك مشكلة في رمز الإدخال."
@@ -1620,13 +1633,13 @@ msgstr "لا توجد بيانات سيولة."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "هذه الرموز عادة ما تقترن مع رموز أخرى."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "يستخدم هذا التطبيق واجهات برمجة التطبيقات الخارجية التالية:"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "يجب تهيئة هذا المستودع قبل أن تتمكن من إضافة السيولة. للتهيئة ، حدد سعر البداية للمجمع. ثم أدخل نطاق سعر السيولة ومبلغ الإيداع. ستكون رسوم الغاز أعلى من المعتاد بسبب معاملة التهيئة."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "يجب تهيئة هذا المستودع على {0} قبل أن تتمكن من إضافة السيولة. للتهيئة ، حدد سعر البداية للمجمع. ثم أدخل نطاق سعر السيولة ومبلغ الإيداع."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1635,6 +1648,10 @@ msgstr "يعمل هذا المسار على تحسين سعرك من خلال ا
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "لا يظهر هذا الرمز في قائمة (قوائم) الرموز النشطة. تأكد من أن هذا هو الرمز الذي تريد تداوله."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "هذا الرمز المميز غير مدعوم في تطبيق Uniswap Labs"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1664,8 +1681,12 @@ msgid "To (at least)"
 msgstr "إلى (على الأقل)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "لبدء التداول على {0}، قم أولاً بتوصيل أصولك من L1 إلى L2. يرجى التعامل مع هذا كإصدار تجريبي والتعرف على المخاطر قبل استخدام {1}."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "رمز غير مدعوم"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1751,7 +1772,7 @@ msgstr "UNI المتداول:"
 msgid "UNI price:"
 msgstr "سعر UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "تمثل رموز UNI حصص التصويت في حوكمة Uniswap. يمكنك التصويت على كل اقتراح بنفسك أو تفويض أصواتك لطرف ثالث."
 
@@ -1792,9 +1813,13 @@ msgstr "خطأ غير متوقع. لا يمكن تقدير الغاز للمبا
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "مشكلة غير متوقعة في تقدير الغاز. حاول مرة اخرى."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "إدارة Uniswitp"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "شروط خدمة Uniswap Labs"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1816,7 +1841,7 @@ msgstr "عقد ترحيل Uniswap ↗"
 msgid "Uniswap on {0}"
 msgstr "Uniswap على {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "مصدر مجهول"
 
@@ -1824,12 +1849,12 @@ msgstr "مصدر مجهول"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "خطأ غير معروف{0}. حاول زيادة تحملك للانزلاق. ملاحظة: رسوم النقل وإعادة الرموز المميزة غير متوافقة مع Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "فتح الأصوات"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "فتح التصويت"
 
@@ -1859,7 +1884,7 @@ msgstr "Unwrap"
 msgid "Unwrap <0/> to ETH"
 msgstr "قم بفك التفاف <0 /> إلى ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "تحديث التفويض"
 
@@ -1988,6 +2013,10 @@ msgstr "انتهى التصويت {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "التصويت ينتهي تقريبًا {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "يبدأ التصويت تقريبًا {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2235,7 +2264,7 @@ msgstr "دقائق"
 msgid "via {0}"
 msgstr "عبر {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "عبر قائمة الرموز {0}"
 
@@ -2338,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • أضيفت من قبل المستخدم"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2352,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}٪ فئة الرسوم"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}٪ حدد"
 
