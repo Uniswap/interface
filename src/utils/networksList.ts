@@ -1,20 +1,8 @@
 import { ChainId } from '@swapr/sdk'
-import {
-  NetworksList,
-  NetworkOptionsPreset,
-  networkOptionsPreset,
-  NetworkOptions
-} from '../../components/NetworkSwitcher'
-import { NETWORK_DETAIL } from '../../constants'
+import { NetworkOptions, NetworkOptionsPreset, NetworksList } from '../components/NetworkSwitcher'
+import { NETWORK_DETAIL } from '../constants'
 
-export enum BridgeStep {
-  Initial,
-  Collect,
-  Success,
-  Transfer
-}
-
-export const getNetworkInfo = (chainId: ChainId) => {
+export const getNetworkInfo = (networkOptionsPreset: NetworkOptionsPreset[], chainId: ChainId) => {
   const network = networkOptionsPreset.find(net => {
     return net.chainId === chainId
   })
@@ -43,42 +31,40 @@ export const getNetworkById = (chainId: ChainId, networkList: NetworksList[]) =>
   return undefined
 }
 
-const isNetDisabled = (optionChainId: ChainId, value: ChainId) => {
-  return (
-    value === optionChainId ||
-    getNetworkInfo(optionChainId).tag === 'coming soon' ||
-    !getNetworkInfo(optionChainId).partnerChainId
-  )
-}
-
-export const createNetworkOptionsList = ({
-  selectedNetChainId,
+export const createNetworkOptions = ({
+  selectedNetworkChainId,
   setChainId,
   activeChainId,
-  preset
+  networkPreset,
+  isNetworkDisabled
 }: {
-  selectedNetChainId: ChainId
+  selectedNetworkChainId: ChainId
   setChainId: (chainId: ChainId) => void
   activeChainId: ChainId | undefined
-  preset: NetworkOptionsPreset
+  networkPreset: NetworkOptionsPreset
+  isNetworkDisabled: (chainId: ChainId, selectedNetworkChainId: ChainId) => boolean
 }): NetworkOptions => {
-  const { chainId } = preset
+  const { chainId } = networkPreset
   return {
-    preset: preset,
-    active: selectedNetChainId === activeChainId,
-    disabled: isNetDisabled(chainId, selectedNetChainId),
+    preset: networkPreset,
+    active: selectedNetworkChainId === activeChainId,
+    disabled: isNetworkDisabled(chainId, selectedNetworkChainId),
     onClick: () => setChainId(chainId)
   }
 }
 
-export const createEnhancedNetsArray = ({
-  selectedNetChainId,
+export const createNetworksList = ({
+  networkOptionsPreset,
+  selectedNetworkChainId,
   setChainId,
-  activeChainId
+  activeChainId,
+  isNetworkDisabled
 }: {
-  selectedNetChainId: ChainId
+  networkOptionsPreset: NetworkOptionsPreset[]
+  selectedNetworkChainId: ChainId
   setChainId: (chainId: ChainId) => void
   activeChainId: ChainId | undefined
+  isNetworkDisabled: () => boolean
 }): NetworksList[] => {
   // const changed = networkOptionsPreset.map(item => {
   //   if (item.tag === 'coming soon') {
@@ -88,15 +74,21 @@ export const createEnhancedNetsArray = ({
   // })
   return networkOptionsPreset.reduce<NetworksList[]>((taggedArray, currentNet) => {
     const tag = currentNet.tag ? currentNet.tag : ''
-    const preset: NetworkOptionsPreset = currentNet
-    const enhancedNet = createNetworkOptionsList({ selectedNetChainId, setChainId, activeChainId, preset })
+    const networkPreset: NetworkOptionsPreset = currentNet
+    const enhancedNetworkOptions = createNetworkOptions({
+      selectedNetworkChainId,
+      setChainId,
+      activeChainId,
+      networkPreset,
+      isNetworkDisabled
+    })
 
     // check if tag exist and if not create array
     const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
     if (tagArrIndex > -1) {
-      taggedArray[tagArrIndex].networks.push(enhancedNet)
+      taggedArray[tagArrIndex].networks.push(enhancedNetworkOptions)
     } else {
-      taggedArray.push({ tag, networks: [enhancedNet] })
+      taggedArray.push({ tag, networks: [enhancedNetworkOptions] })
     }
 
     return taggedArray

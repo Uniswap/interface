@@ -16,29 +16,36 @@ export interface EthereumOptionPopoverProps {
   show: boolean
 }
 
-export type NetworkSwitcherOptionsPreset = {
-  [K in ChainId]?: NetworkOptionProps
-}
+// export type NetworkSwitcherOptionsPreset = {
+//   [K in ChainId]?: NetworkOptionProps
+// }
 
-export type NetworkOptionProps = {
-  onClick?: any
-  header: React.ReactNode
-  logoSrc?: string
-  active?: boolean
-  disabled?: boolean
-  comingSoon?: boolean
-  chainId?: ChainId
-}
+// export type NetworkOptionProps = {
+//   onClick?: any
+//   header: React.ReactNode
+//   logoSrc?: string
+//   active?: boolean
+//   disabled?: boolean
+//   comingSoon?: boolean
+//   chainId?: ChainId
+// }
 
 export type NetworkOptionsPreset = {
   chainId: ChainId
-  name: string
+  name: React.ReactNode
   logoSrc: string
   color: string
   tag?: string
 }
 
+export type NetworkOptions = {
+  preset: NetworkOptionsPreset
+  onClick?: any
+  active?: boolean
+  disabled?: boolean
+}
+
 export type NetworksList = {
   tag: string
-  networks: NetworkOptionProps[]
+  networks: NetworkOptions[]
 }

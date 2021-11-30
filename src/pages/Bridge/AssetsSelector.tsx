@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import TriangleIcon from '../../assets/svg/triangle.svg'
-import { NetworkOptionProps } from '../../components/NetworkSwitcher'
+import { NetworkOptions } from '../../components/NetworkSwitcher'
 import { RowBetween } from '../../components/Row'
 import { TagSuccess } from '../../components/Tag'
 
@@ -70,7 +70,7 @@ const AssetName = styled.p<{ disabled: boolean }>`
 
 interface AssetSelectorProps {
   label: string
-  selectedNetwork?: Partial<NetworkOptionProps>
+  selectedNetwork?: Partial<NetworkOptions>
   onClick: () => void
   disabled?: boolean
 }
@@ -80,12 +80,12 @@ export const AssetSelector = ({ label, selectedNetwork, onClick, disabled = fals
     <Section disabled={disabled} onClick={disabled ? undefined : onClick}>
       <Row>
         <IconWrapper>
-          <img src={selectedNetwork?.logoSrc} alt={`${selectedNetwork?.header} logo`} />
+          <img src={selectedNetwork?.preset?.logoSrc} alt={`${selectedNetwork?.preset?.name} logo`} />
         </IconWrapper>
         {selectedNetwork?.active && <TagSuccess>Connected</TagSuccess>}
       </Row>
       <SmallLabel>{label}</SmallLabel>
-      <AssetName disabled={disabled}>{selectedNetwork?.header}</AssetName>
+      <AssetName disabled={disabled}>{selectedNetwork?.preset?.name}</AssetName>
     </Section>
   )
 }
