@@ -4,7 +4,7 @@ import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation } from 'react-router'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
@@ -22,7 +22,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
-import { TYPE } from '../../theme'
+import { TextPreset } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
@@ -84,13 +84,13 @@ export default function PoolFinder() {
 
   const prerequisiteMessage = (
     <LightCard padding="45px 10px">
-      <Text textAlign="center">
+      <RebassText textAlign="center">
         {!account ? (
           <Trans>Connect to a wallet to find pools</Trans>
         ) : (
           <Trans>Select a token to find your v2 liquidity.</Trans>
         )}
-      </Text>
+      </RebassText>
     </LightCard>
   )
 
@@ -101,11 +101,11 @@ export default function PoolFinder() {
         <AutoColumn style={{ padding: '1rem' }} gap="md">
           <BlueCard>
             <AutoColumn gap="10px">
-              <TYPE.link fontWeight={400} color={'primaryText1'}>
+              <TextPreset.Link fontWeight={400} color={'primaryText1'}>
                 <Trans>
                   <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                 </Trans>
-              </TYPE.link>
+              </TextPreset.Link>
             </AutoColumn>
           </BlueCard>
           <ButtonDropdownLight
@@ -117,14 +117,14 @@ export default function PoolFinder() {
             {currency0 ? (
               <Row>
                 <CurrencyLogo currency={currency0} />
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                <RebassText fontWeight={500} fontSize={20} marginLeft={'12px'}>
                   {currency0.symbol}
-                </Text>
+                </RebassText>
               </Row>
             ) : (
-              <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+              <RebassText fontWeight={500} fontSize={20} marginLeft={'12px'}>
                 <Trans>Select a token</Trans>
-              </Text>
+              </RebassText>
             )}
           </ButtonDropdownLight>
 
@@ -141,14 +141,14 @@ export default function PoolFinder() {
             {currency1 ? (
               <Row>
                 <CurrencyLogo currency={currency1} />
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                <RebassText fontWeight={500} fontSize={20} marginLeft={'12px'}>
                   {currency1.symbol}
-                </Text>
+                </RebassText>
               </Row>
             ) : (
-              <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+              <RebassText fontWeight={500} fontSize={20} marginLeft={'12px'}>
                 <Trans>Select a token</Trans>
-              </Text>
+              </RebassText>
             )}
           </ButtonDropdownLight>
 
@@ -156,13 +156,13 @@ export default function PoolFinder() {
             <ColumnCenter
               style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
             >
-              <Text textAlign="center" fontWeight={500}>
+              <RebassText textAlign="center" fontWeight={500}>
                 <Trans>Pool Found!</Trans>
-              </Text>
+              </RebassText>
               <StyledInternalLink to={`/pool/v2`}>
-                <Text textAlign="center">
+                <RebassText textAlign="center">
                   <Trans>Manage this pool.</Trans>
-                </Text>
+                </RebassText>
               </StyledInternalLink>
             </ColumnCenter>
           )}
@@ -174,13 +174,13 @@ export default function PoolFinder() {
               ) : (
                 <LightCard padding="45px 10px">
                   <AutoColumn gap="sm" justify="center">
-                    <Text textAlign="center">
+                    <RebassText textAlign="center">
                       <Trans>You don’t have liquidity in this pool yet.</Trans>
-                    </Text>
+                    </RebassText>
                     <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                      <Text textAlign="center">
+                      <RebassText textAlign="center">
                         <Trans>Add liquidity.</Trans>
-                      </Text>
+                      </RebassText>
                     </StyledInternalLink>
                   </AutoColumn>
                 </LightCard>
@@ -188,9 +188,9 @@ export default function PoolFinder() {
             ) : validPairNoLiquidity ? (
               <LightCard padding="45px 10px">
                 <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center">
+                  <RebassText textAlign="center">
                     <Trans>No pool found.</Trans>
-                  </Text>
+                  </RebassText>
                   <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
                     <Trans>Create pool.</Trans>
                   </StyledInternalLink>
@@ -199,18 +199,18 @@ export default function PoolFinder() {
             ) : pairState === PairState.INVALID ? (
               <LightCard padding="45px 10px">
                 <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center" fontWeight={500}>
+                  <RebassText textAlign="center" fontWeight={500}>
                     <Trans>Invalid pair.</Trans>
-                  </Text>
+                  </RebassText>
                 </AutoColumn>
               </LightCard>
             ) : pairState === PairState.LOADING ? (
               <LightCard padding="45px 10px">
                 <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center">
+                  <RebassText textAlign="center">
                     <Trans>Loading</Trans>
                     <Dots />
-                  </Text>
+                  </RebassText>
                 </AutoColumn>
               </LightCard>
             ) : null

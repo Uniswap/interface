@@ -6,7 +6,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import styled from 'styled-components/macro'
 import { currencyId } from 'utils/currencyId'
 
@@ -47,9 +47,9 @@ export default function CommonBases({
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
       <AutoRow>
-        <Text fontWeight={500} fontSize={14}>
+        <RebassText fontWeight={500} fontSize={14}>
           <Trans>Common bases</Trans>
-        </Text>
+        </RebassText>
         <QuestionHelper text={<Trans>These tokens are commonly paired with other tokens.</Trans>} />
       </AutoRow>
       <AutoRow gap="4px">
@@ -62,9 +62,9 @@ export default function CommonBases({
               key={currencyId(currency)}
             >
               <CurrencyLogoFromList currency={currency} />
-              <Text fontWeight={500} fontSize={16}>
+              <RebassText fontWeight={500} fontSize={16}>
                 {currency.symbol}
-              </Text>
+              </RebassText>
             </BaseWrapper>
           )
         })}

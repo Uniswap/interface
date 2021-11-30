@@ -15,7 +15,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import { V3TradeState } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
@@ -59,7 +59,7 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, TextPreset } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -468,7 +468,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       <AutoRouterLogo />
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
                         {trade instanceof V3Trade && trade.swaps.length > 1 && (
-                          <TYPE.blue fontSize={14}>{trade.swaps.length} routes</TYPE.blue>
+                          <TextPreset.Blue fontSize={14}>{trade.swaps.length} routes</TextPreset.Blue>
                         )}
                       </LoadingOpacityContainer>
                     </AutoRow>
@@ -506,9 +506,9 @@ export default function Swap({ history }: RouteComponentProps) {
             <div>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
-                  <TYPE.main mb="4px">
+                  <TextPreset.Main mb="4px">
                     <Trans>Unsupported Asset</Trans>
-                  </TYPE.main>
+                  </TextPreset.Main>
                 </ButtonPrimary>
               ) : !account ? (
                 <ButtonLight onClick={toggleWalletModal}>
@@ -525,17 +525,17 @@ export default function Swap({ history }: RouteComponentProps) {
                 </ButtonPrimary>
               ) : routeIsSyncing || routeIsLoading ? (
                 <GreyCard style={{ textAlign: 'center' }}>
-                  <TYPE.main mb="4px">
+                  <TextPreset.Main mb="4px">
                     <Dots>
                       <Trans>Loading</Trans>
                     </Dots>
-                  </TYPE.main>
+                  </TextPreset.Main>
                 </GreyCard>
               ) : routeNotFound && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
-                  <TYPE.main mb="4px">
+                  <TextPreset.Main mb="4px">
                     <Trans>Insufficient liquidity for this trade.</Trans>
-                  </TYPE.main>
+                  </TextPreset.Main>
                 </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
@@ -609,7 +609,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       }
                       error={isValid && priceImpactSeverity > 2}
                     >
-                      <Text fontSize={16} fontWeight={500}>
+                      <RebassText fontSize={16} fontWeight={500}>
                         {priceImpactTooHigh ? (
                           <Trans>High Price Impact</Trans>
                         ) : priceImpactSeverity > 2 ? (
@@ -617,7 +617,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         ) : (
                           <Trans>Swap</Trans>
                         )}
-                      </Text>
+                      </RebassText>
                     </ButtonError>
                   </AutoColumn>
                 </AutoRow>
@@ -640,7 +640,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
-                  <Text fontSize={20} fontWeight={500}>
+                  <RebassText fontSize={20} fontWeight={500}>
                     {swapInputError ? (
                       swapInputError
                     ) : priceImpactTooHigh ? (
@@ -650,7 +650,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     ) : (
                       <Trans>Swap</Trans>
                     )}
-                  </Text>
+                  </RebassText>
                 </ButtonError>
               )}
               {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}

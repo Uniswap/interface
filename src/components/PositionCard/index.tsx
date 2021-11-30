@@ -6,7 +6,7 @@ import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { BIG_INT_ZERO } from '../../constants/misc'
@@ -14,7 +14,7 @@ import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, TextPreset } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
@@ -82,56 +82,56 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontWeight={500} fontSize={16}>
+                <RebassText fontWeight={500} fontSize={16}>
                   <Trans>Your position</Trans>
-                </Text>
+                </RebassText>
               </RowFixed>
             </FixedHeightRow>
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
               <RowFixed>
                 <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-                <Text fontWeight={500} fontSize={20}>
+                <RebassText fontWeight={500} fontSize={20}>
                   {currency0.symbol}/{currency1.symbol}
-                </Text>
+                </RebassText>
               </RowFixed>
               <RowFixed>
-                <Text fontWeight={500} fontSize={20}>
+                <RebassText fontWeight={500} fontSize={20}>
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
-                </Text>
+                </RebassText>
               </RowFixed>
             </FixedHeightRow>
             <AutoColumn gap="4px">
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <RebassText fontSize={16} fontWeight={500}>
                   <Trans>Your pool share:</Trans>
-                </Text>
-                <Text fontSize={16} fontWeight={500}>
+                </RebassText>
+                <RebassText fontSize={16} fontWeight={500}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
-                </Text>
+                </RebassText>
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <RebassText fontSize={16} fontWeight={500}>
                   {currency0.symbol}:
-                </Text>
+                </RebassText>
                 {token0Deposited ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
                       {token0Deposited?.toSignificant(6)}
-                    </Text>
+                    </RebassText>
                   </RowFixed>
                 ) : (
                   '-'
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <RebassText fontSize={16} fontWeight={500}>
                   {currency1.symbol}:
-                </Text>
+                </RebassText>
                 {token1Deposited ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
                       {token1Deposited?.toSignificant(6)}
-                    </Text>
+                    </RebassText>
                   </RowFixed>
                 ) : (
                   '-'
@@ -142,7 +142,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
         </GreyCard>
       ) : (
         <LightCard>
-          <TYPE.subHeader style={{ textAlign: 'center' }}>
+          <TextPreset.SubHeader style={{ textAlign: 'center' }}>
             <span role="img" aria-label="wizard-icon">
               ⭐️
             </span>{' '}
@@ -150,7 +150,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
               By adding liquidity you&apos;ll earn 0.3% of all trades on this pair proportional to your share of the
               pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
             </Trans>{' '}
-          </TYPE.subHeader>
+          </TextPreset.SubHeader>
         </LightCard>
       )}
     </>
@@ -199,7 +199,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
         <FixedHeightRow>
           <AutoRow gap="8px" style={{ marginLeft: '8px' }}>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={20}>
+            <RebassText fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
                   <Trans>Loading</Trans>
@@ -207,7 +207,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               ) : (
                 `${currency0.symbol}/${currency1.symbol}`
               )}
-            </Text>
+            </RebassText>
           </AutoRow>
           <RowFixed gap="8px" style={{ marginRight: '4px' }}>
             <ButtonEmpty padding="6px 8px" $borderRadius="12px" width="100%" onClick={() => setShowMore(!showMore)}>
@@ -229,34 +229,34 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
         {showMore && (
           <AutoColumn gap="8px">
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+              <RebassText fontSize={16} fontWeight={500}>
                 <Trans>Your total pool tokens:</Trans>
-              </Text>
-              <Text fontSize={16} fontWeight={500}>
+              </RebassText>
+              <RebassText fontSize={16} fontWeight={500}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
-              </Text>
+              </RebassText>
             </FixedHeightRow>
             {stakedBalance && (
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <RebassText fontSize={16} fontWeight={500}>
                   <Trans>Pool tokens in rewards pool:</Trans>
-                </Text>
-                <Text fontSize={16} fontWeight={500}>
+                </RebassText>
+                <RebassText fontSize={16} fontWeight={500}>
                   {stakedBalance.toSignificant(4)}
-                </Text>
+                </RebassText>
               </FixedHeightRow>
             )}
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
+                <RebassText fontSize={16} fontWeight={500}>
                   <Trans>Pooled {currency0.symbol}:</Trans>
-                </Text>
+                </RebassText>
               </RowFixed>
               {token0Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
                     {token0Deposited?.toSignificant(6)}
-                  </Text>
+                  </RebassText>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
               ) : (
@@ -266,15 +266,15 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
+                <RebassText fontSize={16} fontWeight={500}>
                   <Trans>Pooled {currency1.symbol}:</Trans>
-                </Text>
+                </RebassText>
               </RowFixed>
               {token1Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <RebassText fontSize={16} fontWeight={500} marginLeft={'6px'}>
                     {token1Deposited?.toSignificant(6)}
-                  </Text>
+                  </RebassText>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>
               ) : (
@@ -283,10 +283,10 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
 
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+              <RebassText fontSize={16} fontWeight={500}>
                 <Trans>Your pool share:</Trans>
-              </Text>
-              <Text fontSize={16} fontWeight={500}>
+              </RebassText>
+              <RebassText fontSize={16} fontWeight={500}>
                 {poolTokenPercentage ? (
                   <Trans>
                     {poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2)} %
@@ -294,7 +294,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 ) : (
                   '-'
                 )}
-              </Text>
+              </RebassText>
             </FixedHeightRow>
 
             <ButtonSecondary padding="8px" $borderRadius="8px">

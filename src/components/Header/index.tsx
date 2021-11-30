@@ -5,7 +5,7 @@ import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
@@ -15,7 +15,7 @@ import styled from 'styled-components/macro'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, TextPreset } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
@@ -156,7 +156,7 @@ const UNIWrapper = styled.span`
   }
 `
 
-const BalanceText = styled(Text)`
+const BalanceText = styled(RebassText)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
@@ -309,7 +309,7 @@ export default function Header() {
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <TYPE.white padding="0 2px">
+                <TextPreset.White padding="0 2px">
                   {claimTxn && !claimTxn?.receipt ? (
                     <Dots>
                       <Trans>Claiming UNI</Trans>
@@ -317,7 +317,7 @@ export default function Header() {
                   ) : (
                     <Trans>Claim UNI</Trans>
                   )}
-                </TYPE.white>
+                </TextPreset.White>
               </UNIAmount>
               <CardNoise />
             </UNIWrapper>

@@ -8,7 +8,7 @@ import MigrateV2PositionCard from 'components/PositionCard/V2'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useContext, useMemo } from 'react'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
 import { LightCard } from '../../components/Card'
@@ -20,13 +20,13 @@ import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { BackArrow, StyledInternalLink, TYPE } from '../../theme'
+import { BackArrow, StyledInternalLink, TextPreset } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
     <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
-      <TYPE.body>{message}</TYPE.body>
+      <TextPreset.Body>{message}</TextPreset.Body>
     </AutoColumn>
   )
 }
@@ -117,34 +117,34 @@ export default function MigrateV2() {
         <AutoColumn gap="16px">
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrow to="/pool/v2" />
-            <TYPE.mediumHeader>
+            <TextPreset.MediumHeader>
               <Trans>Migrate V2 Liquidity</Trans>
-            </TYPE.mediumHeader>
+            </TextPreset.MediumHeader>
             <div>
               <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
             </div>
           </AutoRow>
 
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
+          <TextPreset.Body style={{ marginBottom: 8, fontWeight: 400 }}>
             <Trans>
               For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
               Uniswap V3.
             </Trans>
-          </TYPE.body>
+          </TextPreset.Body>
 
           {!account ? (
             <LightCard padding="40px">
-              <TYPE.body color={theme.text3} textAlign="center">
+              <TextPreset.Body color={theme.text3} textAlign="center">
                 <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
-              </TYPE.body>
+              </TextPreset.Body>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <TYPE.body color={theme.text3} textAlign="center">
+              <TextPreset.Body color={theme.text3} textAlign="center">
                 <Dots>
                   <Trans>Loading</Trans>
                 </Dots>
-              </TYPE.body>
+              </TextPreset.Body>
             </LightCard>
           ) : v2Pairs.filter(([, pair]) => !!pair).length > 0 ? (
             <>
@@ -170,14 +170,14 @@ export default function MigrateV2() {
           )}
 
           <AutoColumn justify={'center'} gap="md">
-            <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
+            <RebassText textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
               <Trans>
                 Don’t see one of your v2 positions?{' '}
                 <StyledInternalLink id="import-pool-link" to={'/find?origin=/migrate/v2'}>
                   Import it.
                 </StyledInternalLink>
               </Trans>
-            </Text>
+            </RebassText>
           </AutoColumn>
         </AutoColumn>
       </BodyWrapper>

@@ -2,7 +2,7 @@ import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useState } from 'react'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import styled from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -11,7 +11,7 @@ import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
-import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE, UniTokenAnimated } from '../../theme'
+import { CloseIcon, CustomLightSpinner, ExternalLink, TextPreset, UniTokenAnimated } from '../../theme'
 import { shortenAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import AddressInputPanel from '../AddressInputPanel'
@@ -105,29 +105,29 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={500}>
+                <TextPreset.White fontWeight={500}>
                   <Trans>Claim UNI Token</Trans>
-                </TYPE.white>
+                </TextPreset.White>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
-              <TYPE.white fontWeight={700} fontSize={36}>
+              <TextPreset.White fontWeight={700} fontSize={36}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
-              </TYPE.white>
+              </TextPreset.White>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <TYPE.subHeader fontWeight={500}>
+            <TextPreset.SubHeader fontWeight={500}>
               <Trans>
                 Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
                 submission.
               </Trans>
-            </TYPE.subHeader>
+            </TextPreset.SubHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && (
-              <TYPE.error error={true}>
+              <TextPreset.Error error={true}>
                 <Trans>Address has no available claim</Trans>
-              </TYPE.error>
+              </TextPreset.Error>
             )}
             <ButtonPrimary
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
@@ -159,23 +159,23 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TYPE.largeHeader fontWeight={600} color="black">
+              <TextPreset.LargeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
-              </TYPE.largeHeader>
+              </TextPreset.LargeHeader>
               {!claimConfirmed && (
-                <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
+                <RebassText fontSize={36} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
-                </Text>
+                </RebassText>
               )}
               {parsedAddress && (
-                <TYPE.largeHeader fontWeight={600} color="black">
+                <TextPreset.LargeHeader fontWeight={600} color="black">
                   <Trans>for {shortenAddress(parsedAddress)}</Trans>
-                </TYPE.largeHeader>
+                </TextPreset.LargeHeader>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <TYPE.subHeader fontWeight={500} color="black">
+                <TextPreset.SubHeader fontWeight={500} color="black">
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>
@@ -183,13 +183,13 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                   <span role="img" aria-label="party-hat">
                     🎉
                   </span>
-                </TYPE.subHeader>
+                </TextPreset.SubHeader>
               </>
             )}
             {attempting && !hash && (
-              <TYPE.subHeader color="black">
+              <TextPreset.SubHeader color="black">
                 <Trans>Confirm this transaction in your wallet</Trans>
-              </TYPE.subHeader>
+              </TextPreset.SubHeader>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>

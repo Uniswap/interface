@@ -8,7 +8,7 @@ import { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -35,7 +35,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { TextPreset } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
@@ -219,9 +219,9 @@ export default function AddLiquidity({
       <AutoColumn gap="20px">
         <LightCard mt="20px" $borderRadius="20px">
           <RowFlat>
-            <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
+            <RebassText fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
               {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
-            </Text>
+            </RebassText>
             <DoubleCurrencyLogo
               currency0={currencies[Field.CURRENCY_A]}
               currency1={currencies[Field.CURRENCY_B]}
@@ -233,9 +233,9 @@ export default function AddLiquidity({
     ) : (
       <AutoColumn gap="20px">
         <RowFlat style={{ marginTop: '20px' }}>
-          <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
+          <RebassText fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
-          </Text>
+          </RebassText>
           <DoubleCurrencyLogo
             currency0={currencies[Field.CURRENCY_A]}
             currency1={currencies[Field.CURRENCY_B]}
@@ -243,16 +243,16 @@ export default function AddLiquidity({
           />
         </RowFlat>
         <Row>
-          <Text fontSize="24px">
+          <RebassText fontSize="24px">
             {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
-          </Text>
+          </RebassText>
         </Row>
-        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+        <TextPreset.Italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </TYPE.italic>
+        </TextPreset.Italic>
       </AutoColumn>
     )
   }
@@ -344,15 +344,15 @@ export default function AddLiquidity({
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={600} color={'primaryText1'}>
+                      <TextPreset.Link fontWeight={600} color={'primaryText1'}>
                         <Trans>You are the first liquidity provider.</Trans>
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      </TextPreset.Link>
+                      <TextPreset.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      </TextPreset.Link>
+                      <TextPreset.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
-                      </TYPE.link>
+                      </TextPreset.Link>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -360,7 +360,7 @@ export default function AddLiquidity({
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      <TextPreset.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -369,7 +369,7 @@ export default function AddLiquidity({
                           automatically earn fees proportional to your share of the pool, and can be redeemed at any
                           time.
                         </Trans>
-                      </TYPE.link>
+                      </TextPreset.Link>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -405,13 +405,13 @@ export default function AddLiquidity({
               <>
                 <LightCard padding="0px" $borderRadius={'20px'}>
                   <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
+                    <TextPreset.SubHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? (
                         <Trans>Initial prices and pool share</Trans>
                       ) : (
                         <Trans>Prices and pool share</Trans>
                       )}
-                    </TYPE.subHeader>
+                    </TextPreset.SubHeader>
                   </RowBetween>{' '}
                   <LightCard padding="1rem" $borderRadius={'20px'}>
                     <PoolPriceBar
@@ -427,9 +427,9 @@ export default function AddLiquidity({
 
             {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
-                <TYPE.main mb="4px">
+                <TextPreset.Main mb="4px">
                   <Trans>Unsupported Asset</Trans>
-                </TYPE.main>
+                </TextPreset.Main>
               </ButtonPrimary>
             ) : !account ? (
               <ButtonLight onClick={toggleWalletModal}>
@@ -482,9 +482,9 @@ export default function AddLiquidity({
                   disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                   error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                 >
-                  <Text fontSize={20} fontWeight={500}>
+                  <RebassText fontSize={20} fontWeight={500}>
                     {error ?? <Trans>Supply</Trans>}
-                  </Text>
+                  </RebassText>
                 </ButtonError>
               </AutoColumn>
             )}

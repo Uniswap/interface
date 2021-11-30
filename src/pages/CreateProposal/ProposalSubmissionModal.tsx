@@ -5,9 +5,9 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
-import { ExternalLink, TYPE } from 'theme'
+import { ExternalLink, TextPreset } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export const ProposalSubmissionModal = ({
@@ -26,28 +26,28 @@ export const ProposalSubmissionModal = ({
       {!hash ? (
         <LoadingView onDismiss={onDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>
+            <TextPreset.LargeHeader>
               <Trans>Submitting Proposal</Trans>
-            </TYPE.largeHeader>
+            </TextPreset.LargeHeader>
           </AutoColumn>
         </LoadingView>
       ) : (
         <SubmittedView onDismiss={onDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <Text fontWeight={500} fontSize={20} textAlign="center">
+            <RebassText fontWeight={500} fontSize={20} textAlign="center">
               <Trans>Proposal Submitted</Trans>
-            </Text>
+            </RebassText>
             {hash && (
               <ExternalLink href={getExplorerLink(1, hash, ExplorerDataType.TRANSACTION)}>
-                <Text fontWeight={500} fontSize={14} color={theme.primary1}>
+                <RebassText fontWeight={500} fontSize={14} color={theme.primary1}>
                   <Trans>View on Etherscan</Trans>
-                </Text>
+                </RebassText>
               </ExternalLink>
             )}
             <ButtonPrimary as={Link} to="/vote" onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-              <Text fontWeight={500} fontSize={20}>
+              <RebassText fontWeight={500} fontSize={20}>
                 <Trans>Return</Trans>
-              </Text>
+              </RebassText>
             </ButtonPrimary>
           </AutoColumn>
         </SubmittedView>

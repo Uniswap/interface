@@ -10,13 +10,13 @@ import { Edit } from 'react-feather'
 import ReactGA from 'react-ga'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { ExtendedEther } from '../../constants/tokens'
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ButtonText, CloseIcon, IconWrapper, TYPE } from '../../theme'
+import { ButtonText, CloseIcon, IconWrapper, TextPreset } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
@@ -177,9 +177,9 @@ export function CurrencySearch({
     <ContentWrapper>
       <PaddedColumn gap="16px">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
+          <RebassText fontWeight={500} fontSize={16}>
             <Trans>Select a token</Trans>
-          </Text>
+          </RebassText>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <Row>
@@ -224,9 +224,9 @@ export function CurrencySearch({
         </div>
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
-          <TYPE.main color={theme.text3} textAlign="center" mb="20px">
+          <TextPreset.Main color={theme.text3} textAlign="center" mb="20px">
             <Trans>No results found.</Trans>
-          </TYPE.main>
+          </TextPreset.Main>
         </Column>
       )}
       <Footer>
@@ -236,9 +236,9 @@ export function CurrencySearch({
               <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.primaryText1}>
+              <TextPreset.Main color={theme.primaryText1}>
                 <Trans>Manage Token Lists</Trans>
-              </TYPE.main>
+              </TextPreset.Main>
             </RowFixed>
           </ButtonText>
         </Row>

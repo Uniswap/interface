@@ -3,7 +3,7 @@ import { Token } from '@uniswap/sdk-core'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { useColor } from '../../hooks/useColor'
@@ -45,7 +45,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
         <FixedHeightRow>
           <AutoRow gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={20}>
+            <RebassText fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
                   <Trans>Loading</Trans>
@@ -53,7 +53,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
               ) : (
                 `${currency0.symbol}/${currency1.symbol}`
               )}
-            </Text>
+            </RebassText>
 
             <Badge variant={BadgeVariant.WARNING}>Sushi</Badge>
           </AutoRow>

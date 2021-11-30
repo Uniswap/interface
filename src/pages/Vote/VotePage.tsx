@@ -38,7 +38,7 @@ import {
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, StyledInternalLink, TextPreset } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
@@ -249,27 +249,27 @@ export default function VotePage({
             {proposalData && <ProposalStatus status={proposalData.status} />}
           </RowBetween>
           <AutoColumn gap="10px" style={{ width: '100%' }}>
-            <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
+            <TextPreset.LargeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TextPreset.LargeHeader>
             <RowBetween>
-              <TYPE.main>
+              <TextPreset.Main>
                 {startDate && startDate > now ? (
                   <Trans>Voting starts approximately {startDate.toLocaleString(locale, dateFormat)}</Trans>
                 ) : null}
-              </TYPE.main>
+              </TextPreset.Main>
             </RowBetween>
             <RowBetween>
-              <TYPE.main>
+              <TextPreset.Main>
                 {endDate &&
                   (endDate < now ? (
                     <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
                   ) : (
                     <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
                   ))}
-              </TYPE.main>
+              </TextPreset.Main>
             </RowBetween>
             {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
               <GreyCard>
-                <TYPE.black>
+                <TextPreset.Black>
                   <Trans>
                     Only UNI votes that were self delegated or delegated to another address before block{' '}
                     {proposalData.startBlock} are eligible for voting.{' '}
@@ -282,7 +282,7 @@ export default function VotePage({
                       </Trans>
                     </span>
                   )}
-                </TYPE.black>
+                </TextPreset.Black>
               </GreyCard>
             )}
           </AutoColumn>
@@ -317,12 +317,12 @@ export default function VotePage({
               <CardSection>
                 <AutoColumn gap="md">
                   <WrapSmall>
-                    <TYPE.black fontWeight={600}>
+                    <TextPreset.Black fontWeight={600}>
                       <Trans>For</Trans>
-                    </TYPE.black>
-                    <TYPE.black fontWeight={600}>
+                    </TextPreset.Black>
+                    <TextPreset.Black fontWeight={600}>
                       {proposalData?.forCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </TYPE.black>
+                    </TextPreset.Black>
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
@@ -334,12 +334,12 @@ export default function VotePage({
               <CardSection>
                 <AutoColumn gap="md">
                   <WrapSmall>
-                    <TYPE.black fontWeight={600}>
+                    <TextPreset.Black fontWeight={600}>
                       <Trans>Against</Trans>
-                    </TYPE.black>
-                    <TYPE.black fontWeight={600}>
+                    </TextPreset.Black>
+                    <TextPreset.Black fontWeight={600}>
                       {proposalData?.againstCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </TYPE.black>
+                    </TextPreset.Black>
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
@@ -349,9 +349,9 @@ export default function VotePage({
             </StyledDataCard>
           </CardWrapper>
           <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
+            <TextPreset.MediumHeader fontWeight={600}>
               <Trans>Details</Trans>
-            </TYPE.mediumHeader>
+            </TextPreset.MediumHeader>
             {proposalData?.details?.map((d, i) => {
               return (
                 <DetailText key={i}>
@@ -370,17 +370,17 @@ export default function VotePage({
             })}
           </AutoColumn>
           <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
+            <TextPreset.MediumHeader fontWeight={600}>
               <Trans>Description</Trans>
-            </TYPE.mediumHeader>
+            </TextPreset.MediumHeader>
             <MarkDownWrapper>
               <ReactMarkdown source={proposalData?.description} />
             </MarkDownWrapper>
           </AutoColumn>
           <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
+            <TextPreset.MediumHeader fontWeight={600}>
               <Trans>Proposer</Trans>
-            </TYPE.mediumHeader>
+            </TextPreset.MediumHeader>
             <ProposerAddressLink
               href={
                 proposalData?.proposer && chainId

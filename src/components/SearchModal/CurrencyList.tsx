@@ -5,7 +5,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import styled from 'styled-components/macro'
 
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
@@ -14,7 +14,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useCombinedActiveList } from '../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { TYPE } from '../../theme'
+import { TextPreset } from '../../theme'
 import { isTokenOnList } from '../../utils'
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
@@ -28,7 +28,7 @@ function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
 }
 
-const StyledBalanceText = styled(Text)`
+const StyledBalanceText = styled(RebassText)`
   white-space: nowrap;
   overflow: hidden;
   max-width: 5rem;
@@ -132,16 +132,16 @@ function CurrencyRow({
     >
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
-        <Text title={currency.name} fontWeight={500}>
+        <RebassText title={currency.name} fontWeight={500}>
           {currency.symbol}
-        </Text>
-        <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
+        </RebassText>
+        <TextPreset.DarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
           {!currency.isNative && !isOnSelectedList && customAdded ? (
             <Trans>{currency.name} • Added by user</Trans>
           ) : (
             currency.name
           )}
-        </TYPE.darkGray>
+        </TextPreset.DarkGray>
       </Column>
       <TokenTags currency={currency} />
       {showCurrencyAmount && (
@@ -167,9 +167,9 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
         <RowBetween>
           <RowFixed>
             <TokenListLogoWrapper src={TokenListLogo} />
-            <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
+            <TextPreset.Main ml="6px" fontSize="12px" color={theme.text1}>
               <Trans>Expanded results from inactive Token Lists</Trans>
-            </TYPE.main>
+            </TextPreset.Main>
           </RowFixed>
           <QuestionHelper
             text={

@@ -6,14 +6,14 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
-import { Text } from 'rebass'
+import { Text as RebassText } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { TextPreset } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -144,22 +144,22 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
-              <Text fontWeight={500} fontSize={20}>
+              <RebassText fontWeight={500} fontSize={20}>
                 <Trans>Are you sure?</Trans>
-              </Text>
+              </RebassText>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <Text fontWeight={500} fontSize={20}>
+              <RebassText fontWeight={500} fontSize={20}>
                 <Trans>
                   Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
                   in bad rates and lost funds.
                 </Trans>
-              </Text>
-              <Text fontWeight={600} fontSize={20}>
+              </RebassText>
+              <RebassText fontWeight={600} fontSize={20}>
                 <Trans>ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.</Trans>
-              </Text>
+              </RebassText>
               <ButtonError
                 error={true}
                 padding={'12px'}
@@ -171,9 +171,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   }
                 }}
               >
-                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
+                <RebassText fontSize={20} fontWeight={500} id="confirm-expert-mode">
                   <Trans>Turn On Expert Mode</Trans>
-                </Text>
+                </RebassText>
               </ButtonError>
             </AutoColumn>
           </AutoColumn>
@@ -192,20 +192,20 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
       {open && (
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14}>
+            <RebassText fontWeight={600} fontSize={14}>
               <Trans>Transaction Settings</Trans>
-            </Text>
+            </RebassText>
             <TransactionSettings placeholderSlippage={placeholderSlippage} />
-            <Text fontWeight={600} fontSize={14}>
+            <RebassText fontWeight={600} fontSize={14}>
               <Trans>Interface Settings</Trans>
-            </Text>
+            </RebassText>
 
             {chainId === SupportedChainId.MAINNET && (
               <RowBetween>
                 <RowFixed>
-                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <TextPreset.Black fontWeight={400} fontSize={14} color={theme.text2}>
                     <Trans>Auto Router</Trans>
-                  </TYPE.black>
+                  </TextPreset.Black>
                   <QuestionHelper
                     text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
                   />
@@ -226,9 +226,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
             <RowBetween>
               <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                <TextPreset.Black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Expert Mode</Trans>
-                </TYPE.black>
+                </TextPreset.Black>
                 <QuestionHelper
                   text={
                     <Trans>Allow high price impact trades and skip the confirm screen. Use at your own risk.</Trans>
