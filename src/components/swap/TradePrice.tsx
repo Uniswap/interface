@@ -4,7 +4,7 @@ import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useCallback, useContext } from 'react'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { TextPreset } from 'theme'
+import { ThemedText } from 'theme'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
@@ -49,9 +49,9 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
         {text}
       </Text>{' '}
       {usdcPrice && (
-        <TextPreset.DarkGray>
+        <ThemedText.DarkGray>
           <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>
-        </TextPreset.DarkGray>
+        </ThemedText.DarkGray>
       )}
     </StyledPriceContainer>
   )

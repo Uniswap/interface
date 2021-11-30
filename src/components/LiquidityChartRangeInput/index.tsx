@@ -14,7 +14,7 @@ import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 
-import { TextPreset } from '../../theme'
+import { ThemedText } from '../../theme'
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
 import { ZoomLevels } from './types'
@@ -58,9 +58,9 @@ function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
     <ColumnCenter style={{ height: '100%', justifyContent: 'center' }}>
       {icon}
       {message && (
-        <TextPreset.MediumHeader padding={10} marginTop="20px" textAlign="center">
+        <ThemedText.MediumHeader padding={10} marginTop="20px" textAlign="center">
           {message}
-        </TextPreset.MediumHeader>
+        </ThemedText.MediumHeader>
       )}
     </ColumnCenter>
   )

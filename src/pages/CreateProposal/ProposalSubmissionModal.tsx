@@ -7,7 +7,7 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
-import { ExternalLink, TextPreset } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export const ProposalSubmissionModal = ({
@@ -26,9 +26,9 @@ export const ProposalSubmissionModal = ({
       {!hash ? (
         <LoadingView onDismiss={onDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TextPreset.LargeHeader>
+            <ThemedText.LargeHeader>
               <Trans>Submitting Proposal</Trans>
-            </TextPreset.LargeHeader>
+            </ThemedText.LargeHeader>
           </AutoColumn>
         </LoadingView>
       ) : (

@@ -18,7 +18,7 @@ import useTheme from '../../hooks/useTheme'
 import useToggle from '../../hooks/useToggle'
 import { acceptListUpdate, disableList, enableList, removeList } from '../../state/lists/actions'
 import { useActiveListUrls, useAllLists, useIsListActive } from '../../state/lists/hooks'
-import { ExternalLink, IconWrapper, LinkStyledButton, TextPreset } from '../../theme'
+import { ExternalLink, IconWrapper, LinkStyledButton, ThemedText } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
@@ -75,7 +75,7 @@ const StyledTitleText = styled.div<{ active: boolean }>`
   color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
 `
 
-const StyledListUrlText = styled(TextPreset.Main)<{ active: boolean }>`
+const StyledListUrlText = styled(ThemedText.Main)<{ active: boolean }>`
   font-size: 12px;
   color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
 `
@@ -361,9 +361,9 @@ export function ManageLists({
           />
         </Row>
         {addError ? (
-          <TextPreset.Error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
+          <ThemedText.Error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
             {addError}
-          </TextPreset.Error>
+          </ThemedText.Error>
         ) : null}
       </PaddedColumn>
       {tempList && (
@@ -373,10 +373,10 @@ export function ManageLists({
               <RowFixed>
                 {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
                 <AutoColumn gap="4px" style={{ marginLeft: '20px' }}>
-                  <TextPreset.Body fontWeight={600}>{tempList.name}</TextPreset.Body>
-                  <TextPreset.Main fontSize={'12px'}>
+                  <ThemedText.Body fontWeight={600}>{tempList.name}</ThemedText.Body>
+                  <ThemedText.Main fontSize={'12px'}>
                     <Trans>{tempList.tokens.length} tokens</Trans>
-                  </TextPreset.Main>
+                  </ThemedText.Main>
                 </AutoColumn>
               </RowFixed>
               {isImported ? (
@@ -384,9 +384,9 @@ export function ManageLists({
                   <IconWrapper stroke={theme.text2} size="16px" marginRight={'10px'}>
                     <CheckCircle />
                   </IconWrapper>
-                  <TextPreset.Body color={theme.text2}>
+                  <ThemedText.Body color={theme.text2}>
                     <Trans>Loaded</Trans>
-                  </TextPreset.Body>
+                  </ThemedText.Body>
                 </RowFixed>
               ) : (
                 <ButtonPrimary

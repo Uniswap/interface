@@ -13,7 +13,7 @@ import { useModalOpen, useToggleSelfClaimModal } from '../../state/application/h
 import { ApplicationModal } from '../../state/application/reducer'
 import { useClaimCallback, useUserClaimData, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
-import { CloseIcon, CustomLightSpinner, ExternalLink, TextPreset, UniTokenAnimated } from '../../theme'
+import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -100,63 +100,63 @@ export default function ClaimModal() {
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <TextPreset.White fontWeight={500}>
+                <ThemedText.White fontWeight={500}>
                   <Trans>Claim UNI</Trans>
-                </TextPreset.White>
+                </ThemedText.White>
                 <CloseIcon onClick={toggleClaimModal} style={{ zIndex: 99 }} color="white" />
               </RowBetween>
-              <TextPreset.White fontWeight={700} fontSize={36}>
+              <ThemedText.White fontWeight={700} fontSize={36}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
-              </TextPreset.White>
+              </ThemedText.White>
             </CardSection>
             <Break />
             <CardSection gap="sm">
               {userClaimData?.flags?.isSOCKS && (
                 <RowBetween>
-                  <TextPreset.SubHeader color="white">SOCKS</TextPreset.SubHeader>
-                  <TextPreset.SubHeader color="white">
+                  <ThemedText.SubHeader color="white">SOCKS</ThemedText.SubHeader>
+                  <ThemedText.SubHeader color="white">
                     <Trans>{SOCKS_AMOUNT} UNI</Trans>
-                  </TextPreset.SubHeader>
+                  </ThemedText.SubHeader>
                 </RowBetween>
               )}
               {userClaimData?.flags?.isLP &&
                 unclaimedAmount &&
                 JSBI.greaterThanOrEqual(unclaimedAmount.quotient, nonLPAmount) && (
                   <RowBetween>
-                    <TextPreset.SubHeader color="white">
+                    <ThemedText.SubHeader color="white">
                       <Trans>Liquidity</Trans>
-                    </TextPreset.SubHeader>
-                    <TextPreset.SubHeader color="white">
+                    </ThemedText.SubHeader>
+                    <ThemedText.SubHeader color="white">
                       <Trans>
                         {unclaimedAmount
                           .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
                           .toFixed(0, { groupSeparator: ',' })}{' '}
                         UNI
                       </Trans>
-                    </TextPreset.SubHeader>
+                    </ThemedText.SubHeader>
                   </RowBetween>
                 )}
               {userClaimData?.flags?.isUser && (
                 <RowBetween>
-                  <TextPreset.SubHeader color="white">
+                  <ThemedText.SubHeader color="white">
                     <Trans>User</Trans>
-                  </TextPreset.SubHeader>
-                  <TextPreset.SubHeader color="white">
+                  </ThemedText.SubHeader>
+                  <ThemedText.SubHeader color="white">
                     <Trans>{USER_AMOUNT} UNI</Trans>
-                  </TextPreset.SubHeader>
+                  </ThemedText.SubHeader>
                 </RowBetween>
               )}
             </CardSection>
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <TextPreset.SubHeader fontWeight={500}>
+            <ThemedText.SubHeader fontWeight={500}>
               <Trans>
                 As a member of the Uniswap community you may claim UNI to be used for voting and governance.
                 <br />
                 <br />
                 <ExternalLink href="https://uniswap.org/blog/uni">Read more about UNI</ExternalLink>
               </Trans>
-            </TextPreset.SubHeader>
+            </ThemedText.SubHeader>
             <ButtonPrimary
               disabled={!isAddress(account ?? '')}
               padding="16px 16px"
@@ -187,9 +187,9 @@ export default function ClaimModal() {
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TextPreset.LargeHeader fontWeight={600} color="black">
+              <ThemedText.LargeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed!</Trans> : <Trans>Claiming</Trans>}
-              </TextPreset.LargeHeader>
+              </ThemedText.LargeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
@@ -198,7 +198,7 @@ export default function ClaimModal() {
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <TextPreset.SubHeader fontWeight={500} color="black">
+                <ThemedText.SubHeader fontWeight={500} color="black">
                   <Trans>
                     <span role="img" aria-label="party-hat">
                       🎉{' '}
@@ -208,13 +208,13 @@ export default function ClaimModal() {
                       🎉
                     </span>
                   </Trans>
-                </TextPreset.SubHeader>
+                </ThemedText.SubHeader>
               </>
             )}
             {attempting && !claimSubmitted && (
-              <TextPreset.SubHeader color="black">
+              <ThemedText.SubHeader color="black">
                 <Trans>Confirm this transaction in your wallet</Trans>
-              </TextPreset.SubHeader>
+              </ThemedText.SubHeader>
             )}
             {attempting && claimSubmitted && !claimConfirmed && chainId && claimTxn?.hash && (
               <ExternalLink

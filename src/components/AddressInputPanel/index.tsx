@@ -6,7 +6,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink, TextPreset } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
@@ -108,9 +108,9 @@ export default function AddressInputPanel({
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
-              <TextPreset.Black color={theme.text2} fontWeight={500} fontSize={14}>
+              <ThemedText.Black color={theme.text2} fontWeight={500} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
-              </TextPreset.Black>
+              </ThemedText.Black>
               {address && chainId && (
                 <ExternalLink
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}

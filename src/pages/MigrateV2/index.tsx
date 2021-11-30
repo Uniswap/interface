@@ -20,13 +20,13 @@ import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { BackArrow, StyledInternalLink, TextPreset } from '../../theme'
+import { BackArrow, StyledInternalLink, ThemedText } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
     <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
-      <TextPreset.Body>{message}</TextPreset.Body>
+      <ThemedText.Body>{message}</ThemedText.Body>
     </AutoColumn>
   )
 }
@@ -117,34 +117,34 @@ export default function MigrateV2() {
         <AutoColumn gap="16px">
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrow to="/pool/v2" />
-            <TextPreset.MediumHeader>
+            <ThemedText.MediumHeader>
               <Trans>Migrate V2 Liquidity</Trans>
-            </TextPreset.MediumHeader>
+            </ThemedText.MediumHeader>
             <div>
               <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
             </div>
           </AutoRow>
 
-          <TextPreset.Body style={{ marginBottom: 8, fontWeight: 400 }}>
+          <ThemedText.Body style={{ marginBottom: 8, fontWeight: 400 }}>
             <Trans>
               For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
               Uniswap V3.
             </Trans>
-          </TextPreset.Body>
+          </ThemedText.Body>
 
           {!account ? (
             <LightCard padding="40px">
-              <TextPreset.Body color={theme.text3} textAlign="center">
+              <ThemedText.Body color={theme.text3} textAlign="center">
                 <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
-              </TextPreset.Body>
+              </ThemedText.Body>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <TextPreset.Body color={theme.text3} textAlign="center">
+              <ThemedText.Body color={theme.text3} textAlign="center">
                 <Dots>
                   <Trans>Loading</Trans>
                 </Dots>
-              </TextPreset.Body>
+              </ThemedText.Body>
             </LightCard>
           ) : v2Pairs.filter(([, pair]) => !!pair).length > 0 ? (
             <>

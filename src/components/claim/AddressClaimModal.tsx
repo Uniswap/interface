@@ -11,7 +11,7 @@ import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
-import { CloseIcon, CustomLightSpinner, ExternalLink, TextPreset, UniTokenAnimated } from '../../theme'
+import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from '../../theme'
 import { shortenAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import AddressInputPanel from '../AddressInputPanel'
@@ -105,29 +105,29 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <TextPreset.White fontWeight={500}>
+                <ThemedText.White fontWeight={500}>
                   <Trans>Claim UNI Token</Trans>
-                </TextPreset.White>
+                </ThemedText.White>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
-              <TextPreset.White fontWeight={700} fontSize={36}>
+              <ThemedText.White fontWeight={700} fontSize={36}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
-              </TextPreset.White>
+              </ThemedText.White>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <TextPreset.SubHeader fontWeight={500}>
+            <ThemedText.SubHeader fontWeight={500}>
               <Trans>
                 Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
                 submission.
               </Trans>
-            </TextPreset.SubHeader>
+            </ThemedText.SubHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && (
-              <TextPreset.Error error={true}>
+              <ThemedText.Error error={true}>
                 <Trans>Address has no available claim</Trans>
-              </TextPreset.Error>
+              </ThemedText.Error>
             )}
             <ButtonPrimary
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
@@ -159,23 +159,23 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TextPreset.LargeHeader fontWeight={600} color="black">
+              <ThemedText.LargeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
-              </TextPreset.LargeHeader>
+              </ThemedText.LargeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}
               {parsedAddress && (
-                <TextPreset.LargeHeader fontWeight={600} color="black">
+                <ThemedText.LargeHeader fontWeight={600} color="black">
                   <Trans>for {shortenAddress(parsedAddress)}</Trans>
-                </TextPreset.LargeHeader>
+                </ThemedText.LargeHeader>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <TextPreset.SubHeader fontWeight={500} color="black">
+                <ThemedText.SubHeader fontWeight={500} color="black">
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>
@@ -183,13 +183,13 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                   <span role="img" aria-label="party-hat">
                     🎉
                   </span>
-                </TextPreset.SubHeader>
+                </ThemedText.SubHeader>
               </>
             )}
             {attempting && !hash && (
-              <TextPreset.SubHeader color="black">
+              <ThemedText.SubHeader color="black">
                 <Trans>Confirm this transaction in your wallet</Trans>
-              </TextPreset.SubHeader>
+              </ThemedText.SubHeader>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>

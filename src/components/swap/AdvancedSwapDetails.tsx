@@ -6,7 +6,7 @@ import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components/macro'
 
-import { TextPreset } from '../../theme'
+import { ThemedText } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
@@ -56,55 +56,55 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       </TransactionDetailsLabel>
       <RowBetween>
         <RowFixed>
-          <TextPreset.SubHeader color={theme.text1}>
+          <ThemedText.SubHeader color={theme.text1}>
             <Trans>Liquidity Provider Fee</Trans>
-          </TextPreset.SubHeader>
+          </ThemedText.SubHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-          <TextPreset.Black textAlign="right" fontSize={14}>
+          <ThemedText.Black textAlign="right" fontSize={14}>
             {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
-          </TextPreset.Black>
+          </ThemedText.Black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TextPreset.SubHeader color={theme.text1}>
+          <ThemedText.SubHeader color={theme.text1}>
             <Trans>Price Impact</Trans>
-          </TextPreset.SubHeader>
+          </ThemedText.SubHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-          <TextPreset.Black textAlign="right" fontSize={14}>
+          <ThemedText.Black textAlign="right" fontSize={14}>
             <FormattedPriceImpact priceImpact={priceImpact} />
-          </TextPreset.Black>
+          </ThemedText.Black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TextPreset.SubHeader color={theme.text1}>
+          <ThemedText.SubHeader color={theme.text1}>
             <Trans>Allowed Slippage</Trans>
-          </TextPreset.SubHeader>
+          </ThemedText.SubHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={45}>
-          <TextPreset.Black textAlign="right" fontSize={14}>
+          <ThemedText.Black textAlign="right" fontSize={14}>
             {allowedSlippage.toFixed(2)}%
-          </TextPreset.Black>
+          </ThemedText.Black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TextPreset.SubHeader color={theme.text1}>
+          <ThemedText.SubHeader color={theme.text1}>
             {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
-          </TextPreset.SubHeader>
+          </ThemedText.SubHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-          <TextPreset.Black textAlign="right" fontSize={14}>
+          <ThemedText.Black textAlign="right" fontSize={14}>
             {trade.tradeType === TradeType.EXACT_INPUT
               ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
-          </TextPreset.Black>
+          </ThemedText.Black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
     </AutoColumn>

@@ -16,7 +16,7 @@ import { useAppDispatch } from 'state/hooks'
 import { enableList, removeList } from 'state/lists/actions'
 import { useAllLists } from 'state/lists/hooks'
 import styled from 'styled-components/macro'
-import { CloseIcon, TextPreset } from 'theme'
+import { CloseIcon, ThemedText } from 'theme'
 
 import { ExternalLink } from '../../theme'
 import { CurrencyModalView } from './CurrencySearchModal'
@@ -81,9 +81,9 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.manage)} />
-          <TextPreset.MediumHeader>
+          <ThemedText.MediumHeader>
             <Trans>Import List</Trans>
-          </TextPreset.MediumHeader>
+          </ThemedText.MediumHeader>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>
@@ -96,18 +96,18 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 {list.logoURI && <ListLogo logoURI={list.logoURI} size="40px" />}
                 <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
                   <RowFixed>
-                    <TextPreset.Body fontWeight={600} mr="6px">
+                    <ThemedText.Body fontWeight={600} mr="6px">
                       {list.name}
-                    </TextPreset.Body>
+                    </ThemedText.Body>
                     <TextDot />
-                    <TextPreset.Main fontSize={'16px'} ml="6px">
+                    <ThemedText.Main fontSize={'16px'} ml="6px">
                       <Trans>{list.tokens.length} tokens</Trans>
-                    </TextPreset.Main>
+                    </ThemedText.Main>
                   </RowFixed>
                   <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
-                    <TextPreset.Main fontSize={'12px'} color={theme.blue1}>
+                    <ThemedText.Main fontSize={'12px'} color={theme.blue1}>
                       {listURL}
-                    </TextPreset.Main>
+                    </ThemedText.Main>
                   </ExternalLink>
                 </AutoColumn>
               </RowFixed>
@@ -116,22 +116,22 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
           <Card style={{ backgroundColor: transparentize(0.8, theme.red1) }}>
             <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <AlertTriangle stroke={theme.red1} size={32} />
-              <TextPreset.Body fontWeight={500} fontSize={20} color={theme.red1}>
+              <ThemedText.Body fontWeight={500} fontSize={20} color={theme.red1}>
                 <Trans>Import at your own risk</Trans>
-              </TextPreset.Body>
+              </ThemedText.Body>
             </AutoColumn>
 
             <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
-              <TextPreset.Body fontWeight={500} color={theme.red1}>
+              <ThemedText.Body fontWeight={500} color={theme.red1}>
                 <Trans>
                   By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
                   including creating fake versions of existing lists and lists that claim to represent projects that do
                   not have one.
                 </Trans>
-              </TextPreset.Body>
-              <TextPreset.Body fontWeight={600} color={theme.red1}>
+              </ThemedText.Body>
+              <ThemedText.Body fontWeight={600} color={theme.red1}>
                 <Trans>If you purchase a token from this list, you may not be able to sell it back.</Trans>
-              </TextPreset.Body>
+              </ThemedText.Body>
             </AutoColumn>
             <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
               <Checkbox
@@ -140,9 +140,9 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 checked={confirmed}
                 onChange={() => setConfirmed(!confirmed)}
               />
-              <TextPreset.Body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
+              <ThemedText.Body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
                 <Trans>I understand</Trans>
-              </TextPreset.Body>
+              </ThemedText.Body>
             </AutoRow>
           </Card>
 
@@ -156,9 +156,9 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
             <Trans>Import</Trans>
           </ButtonPrimary>
           {addError ? (
-            <TextPreset.Error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
+            <ThemedText.Error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
               {addError}
-            </TextPreset.Error>
+            </ThemedText.Error>
           ) : null}
         </AutoColumn>
         {/* </Card> */}

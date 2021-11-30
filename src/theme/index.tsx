@@ -156,7 +156,7 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
 /**
  * Preset styles of the Rebass Text component
  */
-export const TextPreset = {
+export const ThemedText = {
   Main(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text2'} {...props} />
   },

@@ -11,7 +11,7 @@ import { RowBetween } from '../../components/Row'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { ExternalLink, TextPreset } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import { Countdown } from './Countdown'
 
 const PageWrapper = styled(AutoColumn)`
@@ -63,25 +63,25 @@ export default function Earn() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TextPreset.White fontWeight={600}>
+                <ThemedText.White fontWeight={600}>
                   <Trans>Uniswap liquidity mining</Trans>
-                </TextPreset.White>
+                </ThemedText.White>
               </RowBetween>
               <RowBetween>
-                <TextPreset.White fontSize={14}>
+                <ThemedText.White fontSize={14}>
                   <Trans>
                     Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
                   </Trans>
-                </TextPreset.White>
+                </ThemedText.White>
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 href="https://uniswap.org/blog/uni/"
                 target="_blank"
               >
-                <TextPreset.White fontSize={14}>
+                <ThemedText.White fontSize={14}>
                   <Trans>Read more about UNI</Trans>
-                </TextPreset.White>
+                </ThemedText.White>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -92,9 +92,9 @@ export default function Earn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <TextPreset.MediumHeader style={{ marginTop: '0.5rem' }}>
+          <ThemedText.MediumHeader style={{ marginTop: '0.5rem' }}>
             <Trans>Participating pools</Trans>
-          </TextPreset.MediumHeader>
+          </ThemedText.MediumHeader>
           <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
         </DataRow>
 

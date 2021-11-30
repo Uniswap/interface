@@ -4,7 +4,7 @@ import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
 
 import store, { AppState } from '../../state'
-import { ExternalLink, TextPreset } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import { userAgent } from '../../utils/userAgent'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
@@ -77,13 +77,13 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
           <BodyWrapper>
             <AutoColumn gap={'md'}>
               <SomethingWentWrongWrapper>
-                <TextPreset.Label fontSize={24} fontWeight={600}>
+                <ThemedText.Label fontSize={24} fontWeight={600}>
                   <Trans>Something went wrong</Trans>
-                </TextPreset.Label>
+                </ThemedText.Label>
               </SomethingWentWrongWrapper>
               <CodeBlockWrapper>
                 <code>
-                  <TextPreset.Main fontSize={10}>{error.stack}</TextPreset.Main>
+                  <ThemedText.Main fontSize={10}>{error.stack}</ThemedText.Main>
                 </code>
               </CodeBlockWrapper>
               {IS_UNISWAP ? (
@@ -96,18 +96,18 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                       )}`}
                       target="_blank"
                     >
-                      <TextPreset.Link fontSize={16}>
+                      <ThemedText.Link fontSize={16}>
                         <Trans>Create an issue on GitHub</Trans>
                         <span>↗</span>
-                      </TextPreset.Link>
+                      </ThemedText.Link>
                     </ExternalLink>
                   </LinkWrapper>
                   <LinkWrapper>
                     <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
-                      <TextPreset.Link fontSize={16}>
+                      <ThemedText.Link fontSize={16}>
                         <Trans>Get support on Discord</Trans>
                         <span>↗</span>
-                      </TextPreset.Link>
+                      </ThemedText.Link>
                     </ExternalLink>
                   </LinkWrapper>
                 </AutoRow>

@@ -3,7 +3,7 @@ import { Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AlertCircle, ArrowLeft } from 'react-feather'
 import styled from 'styled-components/macro'
-import { CloseIcon, TextPreset } from 'theme'
+import { CloseIcon, ThemedText } from 'theme'
 
 import TokenImportCard from './TokenImportCard'
 
@@ -22,7 +22,7 @@ const Button = styled(ButtonPrimary)`
 const Content = styled.div`
   padding: 1em;
 `
-const Copy = styled(TextPreset.Body)`
+const Copy = styled(ThemedText.Body)`
   text-align: center;
   margin: 0 2em 1em !important;
   font-weight: 400;
@@ -51,9 +51,9 @@ const BlockedToken = ({ onBack, onDismiss, blockedTokens }: BlockedTokenProps) =
   <Wrapper>
     <Header>
       {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
-      <TextPreset.MediumHeader>
+      <ThemedText.MediumHeader>
         <Trans>Token not supported</Trans>
-      </TextPreset.MediumHeader>
+      </ThemedText.MediumHeader>
       {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div />}
     </Header>
     <Icon />
