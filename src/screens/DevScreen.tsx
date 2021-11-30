@@ -1,9 +1,11 @@
+import { CompositeScreenProps } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { utils } from 'ethers'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
+import { DevStackParamList, HomeStackParamList, SwapStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -18,10 +20,15 @@ import { useGasFee } from 'src/features/gas/useGasFee'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { RootStackParamList } from 'src/screens/navTypes'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<RootStackParamList, Screens.Home>
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<HomeStackParamList, Screens.Home>,
+  CompositeScreenProps<
+    NativeStackScreenProps<SwapStackParamList, Screens.Swap>,
+    NativeStackScreenProps<DevStackParamList, Screens.Dev>
+  >
+>
 
 export function DevScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()

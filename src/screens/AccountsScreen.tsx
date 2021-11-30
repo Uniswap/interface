@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
+import { HomeStackParamList } from 'src/app/navigation/types'
 import Plus from 'src/assets/icons/plus.svg'
 import { AccountCard } from 'src/components/accounts/AccountCard'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -12,12 +13,11 @@ import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
-import { RootStackParamList } from 'src/screens/navTypes'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { logger } from 'src/utils/logger'
 
-type Props = NativeStackScreenProps<RootStackParamList, Screens.Accounts>
+type Props = NativeStackScreenProps<HomeStackParamList, Screens.Accounts>
 
 export function AccountsScreen({ navigation }: Props) {
   const [isEditMode, setIsEditMode] = useState(false)

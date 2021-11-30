@@ -3,16 +3,16 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
+import { HomeStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
-import { RootStackParamList } from 'src/screens/navTypes'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<RootStackParamList, Screens.TokenDetails>
+type Props = NativeStackScreenProps<HomeStackParamList, Screens.TokenDetails>
 
 interface TokenDetailsHeaderProps {
   currency: Currency

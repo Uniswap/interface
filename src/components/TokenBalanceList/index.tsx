@@ -14,7 +14,10 @@ interface TokenBalanceListProps {
 }
 
 export function TokenBalanceList({ loading, balances, onPressToken }: TokenBalanceListProps) {
-  if (loading) {
+  // TODO: Sum balances across tokens to display total portfolio value for <PriceChart>
+  const ethBalance = balances.length > 0 ? balances[0] : undefined
+
+  if (loading || !ethBalance) {
     return (
       <Box flex={1} width="100%" alignItems="center">
         <ActivityIndicator color="grey" animating={loading} />
@@ -28,8 +31,6 @@ export function TokenBalanceList({ loading, balances, onPressToken }: TokenBalan
   const key = (balance: CurrencyAmount<Currency>) =>
     balance.currency.isNative ? NULL_ADDRESS : balance.currency.address
 
-  // TODO: Sum balances across tokens to display total portfolio value for <PriceChart>
-  const ethBalance = balances[0]
   return (
     <Box flex={1}>
       <FlatList

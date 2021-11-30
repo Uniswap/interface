@@ -6,7 +6,7 @@ import { Header } from 'src/features/swap/Header'
 import { SwapForm } from 'src/features/swap/SwapForm'
 import { initialSwapFormState, swapFormReducer } from 'src/features/swap/swapFormSlice'
 import { RootStackParamList } from 'src/screens/navTypes'
-import { Screens } from 'src/screens/Screens'
+import { Screens } from 'src/screens/src/app/navigation/navTypes'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Swap>
 

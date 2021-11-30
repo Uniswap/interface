@@ -13,3 +13,9 @@ export enum Screens {
   Transfer = 'Transfer',
   Welcome = 'Welcome',
 }
+
+export enum Tabs {
+  Dev = 'DevTab',
+  Home = 'HomeTab',
+  Swap = 'SwapTab',
+}

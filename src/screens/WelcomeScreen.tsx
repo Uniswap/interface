@@ -2,16 +2,16 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
+import { HomeStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { unlockWallet } from 'src/features/wallet/walletSlice'
-import { RootStackParamList } from 'src/screens/navTypes'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<RootStackParamList, Screens.Welcome>
+type Props = NativeStackScreenProps<HomeStackParamList, Screens.Welcome>
 
 export function WelcomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()

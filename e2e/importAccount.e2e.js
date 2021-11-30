@@ -16,8 +16,6 @@ describe('Import Account', () => {
   })
 
   it('imports readonly account', async () => {
-    // TODO: remove home button tap once welcome screen is home screen
-    await element(by.id('dev_screen/Home')).tap()
     await element(by.id('account_header/manage/button')).tap()
     await element(by.id('accounts/add/button')).tap()
     await element(by.id('import_account_form/address/field')).typeText(READONLY_PUBLIC_ADDRESS)
@@ -27,8 +25,6 @@ describe('Import Account', () => {
   })
 
   it('imports local account', async () => {
-    // TODO: remove home button tap once welcome screen is home screen
-    await element(by.id('dev_screen/Home')).tap()
     await element(by.id('account_header/manage/button')).tap()
     await element(by.id('accounts/add/button')).tap()
     await element(by.id('import_account_form/mnemonic/field')).typeText(

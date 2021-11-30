@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { SwapStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
@@ -8,10 +9,9 @@ import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { TooltipButton } from 'src/components/tooltip/TooltipButton'
-import { RootStackParamList } from 'src/screens/navTypes'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<RootStackParamList, Screens.SwapConfig>
+type Props = NativeStackScreenProps<SwapStackParamList, Screens.SwapConfig>
 
 export function SwapConfigScreen({}: Props) {
   // TODO this will be the where the fees + settings for swaps live

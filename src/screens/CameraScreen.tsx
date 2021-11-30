@@ -4,13 +4,13 @@ import { StyleSheet, Text, useWindowDimensions, View, ViewStyle } from 'react-na
 import 'react-native-reanimated'
 import { runOnJS } from 'react-native-reanimated'
 import { Camera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera'
+import { HomeStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { Bounds, extractSeedPhraseFromOCR, OcrObject } from 'src/features/import/scanUtils'
-import { RootStackParamList } from 'src/screens/navTypes'
 import { Screens } from 'src/screens/Screens'
 import { scanOCR } from 'vision-camera-ocr'
 
-type Props = NativeStackScreenProps<RootStackParamList, Screens.Camera>
+type Props = NativeStackScreenProps<HomeStackParamList, Screens.Camera>
 
 const SAMPLE_SEED = [
   'abacus',
