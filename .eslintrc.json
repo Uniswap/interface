@@ -8,13 +8,13 @@
       "jsx": true
     }
   },
-  "ignorePatterns": ["node_modules/**/*"],
   "settings": {
     "react": {
       "version": "detect"
     }
   },
   "extends": [
+    "react-app",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
