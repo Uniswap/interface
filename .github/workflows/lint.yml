@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run linters w/ autofix
+      - name: Run eslint w/ autofix
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.repository_owner }}
         uses: wearerequired/lint-action@36c7e6689e80d785d27a22f71d970f3a3b4fcb70
         with:
