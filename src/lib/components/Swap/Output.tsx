@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useUpdateAtom } from 'jotai/utils'
 import useColor, { prefetchColor } from 'lib/hooks/useColor'
@@ -12,6 +13,8 @@ import Column from '../Column'
 import Row from '../Row'
 import { inputAtom, outputAtom } from './state'
 import TokenInput from './TokenInput'
+
+export const colorAtom = atom<string | undefined>(undefined)
 
 const BookIcon = icon(Book)
 
@@ -37,15 +40,11 @@ export default function Output({ children }: { children: ReactNode }) {
   const setToken = useUpdateAtom(pickAtom(outputAtom, 'token'))
   const balance = 123.45
 
-  const color = useColor(output.token)
+  const overrideColor = useAtomValue(colorAtom)
+  const dynamicColor = useColor(output.token)
   prefetchColor(input.token) // extract eagerly in case of reversal
-
-  const hasColor = useMemo(() => {
-    if (color) {
-      return true
-    }
-    return output.token ? null : false
-  }, [color, output.token])
+  const color = overrideColor || dynamicColor
+  const hasColor = output.token ? Boolean(color) || null : false
 
   const change = useMemo(() => {
     if (input.usdc && output.usdc) {

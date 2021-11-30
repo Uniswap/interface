@@ -1,17 +1,26 @@
 import { useUpdateAtom } from 'jotai/utils'
 import { DAI, ETH } from 'lib/mocks'
 import { useEffect } from 'react'
-import { useSelect } from 'react-cosmos/fixture'
+import { useSelect, useValue } from 'react-cosmos/fixture'
 
 import Swap from '.'
+import { colorAtom } from './Output'
 import { Field, inputAtom, outputAtom, State, stateAtom, swapAtom } from './state'
+
+const validateColor = (() => {
+  const validator = document.createElement('div').style
+  return (color: string) => {
+    validator.color = ''
+    validator.color = color
+    return validator.color !== ''
+  }
+})()
 
 function Fixture() {
   const setInput = useUpdateAtom(inputAtom)
   const setOutput = useUpdateAtom(outputAtom)
   const setState = useUpdateAtom(stateAtom)
   const setSwap = useUpdateAtom(swapAtom)
-
   const [state] = useSelect('state', {
     options: ['EMPTY', 'LOADING', 'TOKEN APPROVAL', 'BALANCE INSUFFICIENT', 'LOADED'],
   })
@@ -49,6 +58,15 @@ function Fixture() {
         break
     }
   }, [setInput, setOutput, setState, setSwap, state])
+
+  const setColor = useUpdateAtom(colorAtom)
+  const [color] = useValue('token color', { defaultValue: '' })
+  useEffect(() => {
+    if (!color || validateColor(color)) {
+      setColor(color)
+    }
+  }, [color, setColor])
+
   return <Swap />
 }
 
