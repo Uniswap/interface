@@ -28,6 +28,12 @@ export const textVariants = {
     lineHeight: 26,
     color: 'mainForeground',
   },
+  bodyLg: {
+    fontFamily: fontFamily.sansSerif.regular,
+    fontSize: 18,
+    lineHeight: 24,
+    color: 'mainForeground',
+  },
   body: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 16,

@@ -36,8 +36,6 @@ async function _transferToken(
   const provider = providerManager.getProvider(ChainId.RINKEBY)
   const walletAccount = accountManager.getAccount(account.address)
 
-  if (!walletAccount) throw Error('No active account')
-
   // TODO check balance?
   // TODO handle non ETH sending by checking tokenAddress
   const currentGasPrice = await provider.getGasPrice()

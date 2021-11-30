@@ -1,6 +1,7 @@
 import {
   color as restyleColor,
   ColorProps,
+  createBox,
   createRestyleComponent,
   createVariant,
   VariantProps,
@@ -12,13 +13,15 @@ import { Text } from 'src/components/Text'
 import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
+const PressableBox = createBox(Pressable)
+
 const BaseButton = createRestyleComponent<
   VariantProps<Theme, 'buttonVariants'> &
     ColorProps<Theme> &
-    PressableProps &
-    ComponentProps<typeof Box>,
+    ComponentProps<typeof Box> &
+    PressableProps,
   Theme
->([restyleColor, createVariant({ themeKey: 'buttonVariants' })], Pressable)
+>([restyleColor, createVariant({ themeKey: 'buttonVariants' })], PressableBox)
 
 export type ButtonProps = {
   label?: string

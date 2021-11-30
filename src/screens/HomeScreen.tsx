@@ -37,7 +37,7 @@ export function HomeScreen({ navigation }: Props) {
   if (!activeAccount)
     return (
       <Screen>
-        <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
+        <AccountHeader />
       </Screen>
     )
 
@@ -56,9 +56,9 @@ export function HomeScreen({ navigation }: Props) {
       </GradientBackground>
       <Box height="100%" width="100%" position="absolute" my="xl">
         <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-          <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
+          <AccountHeader />
           <Box flexDirection="row" mr="md">
-            <Button>
+            <Button mr="md">
               <Settings height={24} width={24} />
             </Button>
             <Button onPress={() => navigation.navigate(Screens.Notifications)}>

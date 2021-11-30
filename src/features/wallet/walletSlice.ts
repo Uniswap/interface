@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AccountStub } from 'src/features/wallet/accounts/types'
-import { normalizeAddress } from 'src/utils/addresses'
+import { areAddressesEqual, normalizeAddress } from 'src/utils/addresses'
 
 interface Wallet {
   isUnlocked: boolean
@@ -23,10 +23,25 @@ const slice = createSlice({
       const id = normalizeAddress(address)
       state.accounts[id] = action.payload
     },
-    removeAccount: (state, action: PayloadAction<{ address: Address }>) => {
-      const { address } = action.payload
+    removeAccount: (state, action: PayloadAction<Address>) => {
+      const address = action.payload
       const id = normalizeAddress(address)
+      if (!state.accounts[id]) throw new Error(`Cannot remove missing account ${id}`)
       delete state.accounts[id]
+      // If removed account was active, activate first one
+      if (state.activeAccount && areAddressesEqual(state.activeAccount.address, address)) {
+        const firstAccountId = Object.keys(state.accounts)[0]
+        state.activeAccount = state.accounts[firstAccountId]
+      }
+    },
+    editAccount: (
+      state,
+      action: PayloadAction<{ address: Address; updatedAccount: AccountStub }>
+    ) => {
+      const { address, updatedAccount } = action.payload
+      const id = normalizeAddress(address)
+      if (!state.accounts[id]) throw new Error(`Cannot edit missing account ${id}`)
+      state.accounts[id] = updatedAccount
     },
     activateAccount: (state, action: PayloadAction<Address>) => {
       const address = action.payload
@@ -41,7 +56,13 @@ const slice = createSlice({
   },
 })
 
-export const { addAccount, removeAccount, activateAccount, unlockWallet, resetWallet } =
-  slice.actions
+export const {
+  addAccount,
+  removeAccount,
+  editAccount,
+  activateAccount,
+  unlockWallet,
+  resetWallet,
+} = slice.actions
 
 export const walletReducer = slice.reducer

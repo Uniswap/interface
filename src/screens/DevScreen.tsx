@@ -18,7 +18,7 @@ import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/hooks'
 import { useGasFee } from 'src/features/gas/useGasFee'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
-import { createAccountActions } from 'src/features/wallet/createAccount'
+import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 

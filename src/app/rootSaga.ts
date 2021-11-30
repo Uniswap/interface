@@ -25,7 +25,13 @@ import {
   createAccountReducer,
   createAccountSaga,
   createAccountSagaName,
-} from 'src/features/wallet/createAccount'
+} from 'src/features/wallet/createAccountSaga'
+import {
+  editAccountActions,
+  editAccountReducer,
+  editAccountSaga,
+  editAccountSagaName,
+} from 'src/features/wallet/editAccountSaga'
 import { SagaActions, SagaState } from 'src/utils/saga'
 
 // All regular sagas must be included here
@@ -47,6 +53,12 @@ export const monitoredSagas: {
     wrappedSaga: createAccountSaga,
     reducer: createAccountReducer,
     actions: createAccountActions,
+  },
+  [editAccountSagaName]: {
+    name: editAccountSagaName,
+    wrappedSaga: editAccountSaga,
+    reducer: editAccountReducer,
+    actions: editAccountActions,
   },
   [fetchBalancesSagaName]: {
     name: fetchBalancesSagaName,

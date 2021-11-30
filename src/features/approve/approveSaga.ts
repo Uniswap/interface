@@ -22,8 +22,6 @@ export function* maybeApprove(params: ApproveParams) {
   const accountManager = yield* call(getWalletAccounts)
   const providerManager = yield* call(getWalletProviders)
   const walletAccount = accountManager.getAccount(account.address)
-
-  if (!walletAccount) throw new Error('No account for specified address')
   if (walletAccount.type === AccountType.readonly) throw new Error('Account must support signing')
 
   const provider = providerManager.getProvider(chainId)

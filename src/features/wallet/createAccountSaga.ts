@@ -24,7 +24,7 @@ export function* createAccount() {
   })
   yield* put(addAccount({ type, address, name }))
   yield* put(activateAccount(address))
-  logger.info('createAccount', '', 'New account created:', address)
+  logger.info('createAccountSaga', '', 'New account created:', address)
 }
 
 export const {

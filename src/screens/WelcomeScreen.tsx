@@ -7,7 +7,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { createAccountActions } from 'src/features/wallet/createAccount'
+import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { unlockWallet } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 

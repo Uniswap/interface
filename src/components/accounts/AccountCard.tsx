@@ -11,31 +11,40 @@ interface Props {
   account: AccountStub
   isActive?: boolean
   isEditable?: boolean
+  onPress?: (address: Address) => void
   onRemove?: (address: Address) => void
 }
 
-export function AccountCard({ account: { address, name }, isActive, isEditable, onRemove }: Props) {
+export function AccountCard({
+  account: { address, name },
+  isActive,
+  isEditable,
+  onPress,
+  onRemove,
+}: Props) {
   return (
-    <Box
-      flexDirection="row"
-      alignItems="center"
-      p="md"
-      mb="md"
-      backgroundColor="white"
-      borderColor={isActive ? 'primary1' : 'white'}
-      borderRadius="lg"
-      borderWidth={1}
-      testID={`account_item/${address.toLowerCase()}`}>
-      {isEditable && onRemove && (
-        <Button variant="text" onPress={() => onRemove(address)} mr="sm">
-          <DashCircle backgroundColor="red" size={24} />
-        </Button>
-      )}
-      <Identicon address={address} size={50} mr="md" />
-      <Box>
-        <Text variant="h3">$2,243.22</Text>
-        <Text variant="body">{name || shortenAddress(address)}</Text>
+    <Button onPress={onPress ? () => onPress(address) : undefined} width="100%" mb="md">
+      <Box
+        width="100%"
+        flexDirection="row"
+        p="md"
+        alignItems="center"
+        backgroundColor="white"
+        borderColor={isActive ? 'primary1' : 'white'}
+        borderRadius="lg"
+        borderWidth={1}
+        testID={`account_item/${address.toLowerCase()}`}>
+        {isEditable && onRemove && (
+          <Button onPress={() => onRemove(address)} mr="sm">
+            <DashCircle backgroundColor="red" size={24} />
+          </Button>
+        )}
+        <Identicon address={address} size={50} mr="md" />
+        <Box>
+          <Text variant="h3">$2,243.22</Text>
+          <Text variant="body">{name || shortenAddress(address)}</Text>
+        </Box>
       </Box>
-    </Box>
+    </Button>
   )
 }

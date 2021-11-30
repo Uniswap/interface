@@ -17,7 +17,7 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 const initialValues = {
   addressOrENS: '',
 
-  // hidden field. filled by ENS resovler hook to share in form context
+  // hidden field. filled by ENS resolver hook to share in form context
   resolvedAddress: null,
 }
 

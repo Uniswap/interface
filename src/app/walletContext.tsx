@@ -62,7 +62,7 @@ export function useWalletAccounts(): AccountManager {
 }
 
 export function useWalletAccount(address: string) {
-  return useWalletAccounts().getAccount(address)
+  return useWalletAccounts().tryGetAccount(address)
 }
 
 export function* getWalletAccounts() {

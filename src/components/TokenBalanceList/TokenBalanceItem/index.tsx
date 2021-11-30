@@ -43,7 +43,7 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
     : '-'
 
   return (
-    <Button onPress={() => onPressToken(currencyAmount)} flexDirection="row">
+    <Button onPress={() => onPressToken(currencyAmount)} flexDirection="row" py="md">
       <Box flex={1} flexDirection="row" justifyContent="space-between" mx="md">
         <Box flexDirection="row">
           <CurrencyLogo currency={currency} size={40} />

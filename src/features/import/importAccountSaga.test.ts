@@ -49,8 +49,8 @@ describe(importAccount, () => {
 
     // assert on account created
     expect(accountManager.listAccounts().length).toEqual(1)
-    expect(accountManager.getAccount(SAMPLE_SEED_ADDRESS)?.address).toEqual(SAMPLE_SEED_ADDRESS)
-    expect(accountManager.getAccount(SAMPLE_SEED_ADDRESS)?.signer instanceof Wallet).toBeTruthy()
+    expect(accountManager.getAccount(SAMPLE_SEED_ADDRESS).address).toEqual(SAMPLE_SEED_ADDRESS)
+    expect(accountManager.getAccount(SAMPLE_SEED_ADDRESS).signer instanceof Wallet).toBeTruthy()
     // assert on dispatched actions
     expect(dispatched).toEqual([
       addAccount({ type: AccountType.local, address: SAMPLE_SEED_ADDRESS, name: 'WALLET' }),
@@ -81,8 +81,8 @@ describe(importAccount, () => {
 
     // assert on account created
     expect(accountManager.listAccounts().length).toEqual(1)
-    expect(accountManager.getAccount(NULL_ADDRESS)?.address).toEqual(NULL_ADDRESS)
-    expect(accountManager.getAccount(NULL_ADDRESS)?.signer instanceof VoidSigner).toBeTruthy()
+    expect(accountManager.getAccount(NULL_ADDRESS).address).toEqual(NULL_ADDRESS)
+    expect(accountManager.getAccount(NULL_ADDRESS).signer instanceof VoidSigner).toBeTruthy()
     // assert on dispatched actions
     expect(dispatched).toEqual([
       addAccount({ type: AccountType.readonly, address: NULL_ADDRESS, name: 'READONLY' }),

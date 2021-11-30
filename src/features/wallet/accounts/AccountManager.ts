@@ -27,13 +27,19 @@ export class AccountManager {
     delete this._accounts[id]
   }
 
-  getAccount(address: Address) {
+  tryGetAccount(address: Address) {
     const id = normalizeAddress(address)
     if (!this._accounts[id]) {
       logger.warn('AccountManager', 'getAccount', 'Attempting to get missing account', address)
       return null
     }
     return this._accounts[id]
+  }
+
+  getAccount(address: Address) {
+    const account = this.tryGetAccount(address)
+    if (!account) throw new Error(`Attempting to get missing account: ${address}`)
+    return account
   }
 
   listAccounts() {
