@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { Token } from 'lib/types'
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 
@@ -46,7 +46,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
       <Column gap={0.75}>
         <Header title={<Trans>Select a token</Trans>} />
         <Row padded grow>
-          <TYPE.body1 color={search ? 'primary' : 'secondary'}>
+          <ThemedText.Body1 color={search ? 'primary' : 'secondary'}>
             <SearchInput
               value={search}
               onChange={setSearch}
@@ -54,7 +54,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
               onKeyDown={onKeyDown}
               ref={input}
             />
-          </TYPE.body1>
+          </ThemedText.Body1>
         </Row>
         {baseTokens && (
           <>

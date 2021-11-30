@@ -1,4 +1,4 @@
-export default {
+const linguiConfig = {
   catalogs: [
     {
       path: '<rootDir>/src/locales/{locale}',
@@ -54,3 +54,5 @@ export default {
   sourceLocale: 'en-US',
   pseudoLocale: 'pseudo',
 }
+
+export default linguiConfig

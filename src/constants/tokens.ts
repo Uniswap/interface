@@ -45,6 +45,13 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const USDT = new Token(
   SupportedChainId.MAINNET,
   '0xdAC17F958D2ee523a2206206994597C13D831ec7',
@@ -128,6 +135,27 @@ export const ETH2X_FLI = new Token(
   18,
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
+)
+export const sETH2 = new Token(
+  SupportedChainId.MAINNET,
+  '0xFe2e637202056d30016725477c5da089Ab0A043A',
+  18,
+  'sETH2',
+  'StakeWise Staked ETH2'
+)
+export const rETH2 = new Token(
+  SupportedChainId.MAINNET,
+  '0x20BC832ca081b91433ff6c17f85701B6e92486c5',
+  18,
+  'rETH2',
+  'StakeWise Reward ETH2'
+)
+export const SWISE = new Token(
+  SupportedChainId.MAINNET,
+  '0x48C3399719B582dD63eB5AADf12A40B4C3f52FA2',
+  18,
+  'SWISE',
+  'StakeWise'
 )
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),

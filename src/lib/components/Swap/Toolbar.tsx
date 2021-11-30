@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import styled, { icon, OriginalProvider } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { useMemo, useState } from 'react'
 import { Info } from 'react-feather'
 
@@ -29,9 +29,9 @@ function DetailsTooltip() {
     <Tooltip icon={InfoIcon} placement="bottom">
       <OriginalProvider>
         <Column gap={0.75}>
-          <TYPE.subhead2>
+          <ThemedText.Subhead2>
             <Trans>Transaction details</Trans>
-          </TYPE.subhead2>
+          </ThemedText.Subhead2>
           <Rule />
           <Details />
         </Column>
@@ -63,7 +63,7 @@ export default function Toolbar() {
   return (
     <>
       <Rule />
-      <TYPE.caption>
+      <ThemedText.Caption>
         <Row justify="flex-start" gap={0.5}>
           {swap && <DetailsTooltip />}
           {loaded ? (
@@ -74,7 +74,7 @@ export default function Toolbar() {
             'Powered by Uniswap'
           )}
         </Row>
-      </TYPE.caption>
+      </ThemedText.Caption>
     </>
   )
 }

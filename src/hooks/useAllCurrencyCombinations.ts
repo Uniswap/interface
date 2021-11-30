@@ -2,15 +2,14 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 
 import { ADDITIONAL_BASES, BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants/routing'
-import { useActiveWeb3React } from './web3'
 
 export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Currency): [Token, Token][] {
-  const { chainId } = useActiveWeb3React()
+  const chainId = currencyA?.chainId
 
   const [tokenA, tokenB] = chainId ? [currencyA?.wrapped, currencyB?.wrapped] : [undefined, undefined]
 
   const bases: Token[] = useMemo(() => {
-    if (!chainId) return []
+    if (!chainId || chainId !== tokenB?.chainId) return []
 
     const common = BASES_TO_CHECK_TRADES_AGAINST[chainId] ?? []
     const additionalA = tokenA ? ADDITIONAL_BASES[chainId]?.[tokenA.address] ?? [] : []
@@ -49,7 +48,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
               const firstIndexInOtherPairs = otherPairs.findIndex(([t0Other, t1Other]) => {
                 return (t0.equals(t0Other) && t1.equals(t1Other)) || (t0.equals(t1Other) && t1.equals(t0Other))
               })
-              // only accept the first occurence of the same 2 tokens
+              // only accept the first occurrence of the same 2 tokens
               return firstIndexInOtherPairs === i
             })
             // optionally filter out some pairs for tokens with custom bases defined

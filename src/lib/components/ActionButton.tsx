@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import styled, { Color, icon, keyframes, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { transparentize } from 'polished'
 import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -57,7 +57,7 @@ export function DisabledButton({ children }: { children: ReactNode }) {
   return (
     <Overlay>
       <StyledDisabledButton disabled>
-        <TYPE.buttonLarge>{children}</TYPE.buttonLarge>
+        <ThemedText.ButtonLarge>{children}</ThemedText.ButtonLarge>
       </StyledDisabledButton>
     </Overlay>
   )
@@ -145,9 +145,9 @@ export function LoadingButton() {
   return (
     <Overlay>
       <StyledLoadingButton ref={setRef} {...rect} disabled>
-        <TYPE.buttonLarge>
+        <ThemedText.ButtonLarge>
           <Trans>Loading…</Trans>
-        </TYPE.buttonLarge>
+        </ThemedText.ButtonLarge>
       </StyledLoadingButton>
     </Overlay>
   )
@@ -182,7 +182,7 @@ export function ApprovalButton({ color, onClick, children }: ActionButtonProps) 
       <ApprovalRow>
         <Row gap={0.5}>
           <AlertIcon />
-          <TYPE.subhead2>{children}</TYPE.subhead2>
+          <ThemedText.Subhead2>{children}</ThemedText.Subhead2>
         </Row>
         <StyledApprovalButton color={color} onClick={onClick}>
           <Trans>Approve</Trans>
@@ -196,7 +196,7 @@ export default function ActionButton({ color, onClick, children }: ActionButtonP
   return (
     <Overlay>
       <StyledActionButton color={color} onClick={onClick}>
-        <TYPE.buttonLarge color="contrast">{children}</TYPE.buttonLarge>
+        <ThemedText.ButtonLarge color="contrast">{children}</ThemedText.ButtonLarge>
       </StyledActionButton>
     </Overlay>
   )

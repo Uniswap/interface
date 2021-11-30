@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-14 18:06\n"
+"PO-Revision-Date: 2021-11-19 16:06\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -47,7 +47,7 @@ msgstr "(claim)"
 msgid "(clear all)"
 msgstr "(clear all)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(edit)"
 
@@ -61,18 +61,6 @@ msgstr "- Poista vastaanottaja"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / viikko"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0,05 %:n maksu"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0,3 %:n maksu"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1 %:n maksu"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Kaikki ehdotukset"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Äänet"
 
@@ -127,7 +115,7 @@ msgstr "<0>Vapauta äänestys</0> valmistautuaksesi seuraavaan ehdotukseen."
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Tervetuloa Team Unicorniin :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Ehdotusten jättämiseen vaaditaan vähintään 0,25 prosentin kynnysarvo UNI: n kokonaismäärästä"
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Lisää"
@@ -231,10 +218,6 @@ msgstr "Määrä"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tapahtui virhe yritettäessä suorittaa tämä vaihto. Saatat joutua lisäämään luistonsietokykyäsi. Jos se ei toimi, kaupankäynnin kohteena olevan tunnuksen kanssa saattaa olla ristiriita. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Uniswap V3: n kanssa."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Analytiikka"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "Saldo:"
 msgid "Balance: {0} {1}"
 msgstr "Saldo: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Paras eksoottisille pareille."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Paras useimmille pareille."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Paras vakaille pareille."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Paras erittäin vakaille pareille."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -344,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Lisäämällä tämän luettelon luotat ehdottomasti siihen, että tiedot ovat oikein. Kuka tahansa voi luoda luettelon ja luoda myös väärennettyjä versioita olemassa olevista luetteloista ja luetteloista, jotka väittävät edustavansa hankkeita, joilla ei sellaista ole."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Yhdistämällä lompakon hyväksyt Uniswap Labsin <0>käyttöehdot</0> ja vahvistat, että olet lukenut ja ymmärtänyt <1>Uniswap-protokollan vastuuvapauslausekkeen</1>."
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "Yhdistämällä lompakon hyväksyt Uniswap Labsin <0>-palveluehdot</0> ja vahvistat lukeneesi ja ymmärtäväsi Uniswap <1>-protokollan vastuuvapauslausekkeen</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -412,7 +396,7 @@ msgstr "UNI lunastettu!"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "Väitetty!"
+msgstr "Lunastettu!"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -445,10 +429,6 @@ msgstr "Sulje"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "Suljettu"
-
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Koodi"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
@@ -491,10 +471,6 @@ msgstr "Yleiset baset"
 msgid "Confirm"
 msgstr "Vahvista"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Vahvista Luo"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Vahvista tarjonta"
@@ -514,8 +490,9 @@ msgstr "Vahvista lompakkosi tapahtuma"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Confirm transaction in wallet"
-msgstr "Vahvista tapahtuma lompakossa"
+msgstr "Vahvista transaktio lompakossa"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -530,15 +507,11 @@ msgstr "Vahvista tapahtuma lompakossa"
 msgid "Connect Wallet"
 msgstr "Yhdistä lompakko"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "Yhdistä lompakko"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
-msgstr "Yhdistä lompakkoon"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
@@ -565,16 +538,12 @@ msgstr "Kopioitu"
 msgid "Copy Address"
 msgstr "Kopioi osoite"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Luoda"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Luo pooli ja tarjonta"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Luo ehdotus"
 
@@ -628,7 +597,7 @@ msgstr "Delegoi äänet"
 msgid "Delegate voting power to {0}"
 msgstr "Siirrä äänioikeus {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Delegoitu henkilölle:"
 
@@ -713,7 +682,7 @@ msgstr "Ansaitut UNI-rahakkeet edustavat äänioikeusosakkeita Uniswapin hallinn
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
-msgstr "Muokata"
+msgstr "Muokkaa"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Efficiency Comparison"
@@ -806,7 +775,7 @@ msgstr "Palkkiotaso"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Fee tier"
-msgstr "Maksutaso"
+msgstr "Palkkiotaso"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -838,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Hae apua Discordista"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Ohjekeskus"
 
@@ -849,6 +819,10 @@ msgstr "Piilottaa"
 msgid "High Price Impact"
 msgstr "Korkea hintavaikutus"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "Kuinka tämä sovellus käyttää sovellusliittymiä"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -858,6 +832,7 @@ msgstr "Ymmärrän"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Jos ostat rahakkeen tästä luettelosta, et ehkä pysty myymään sitä takaisin."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -959,6 +934,16 @@ msgstr "Lue lisää"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Lisätietoja likviditeetin tarjoamisesta"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "Lue lisää"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "Laki ja yksityisyys"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1125,7 +1110,7 @@ msgstr "V2-likviditeettiä ei löytynyt."
 msgid "No active pools"
 msgstr "Ei aktiivisia pooleja"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Ei dataa"
 
@@ -1149,7 +1134,7 @@ msgstr "Ehdotuksia ei löytynyt."
 msgid "No results found."
 msgstr "Tuloksia ei löytynyt."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Ei luotu"
 
@@ -1328,7 +1313,7 @@ msgstr "Ehdotus lähetetty"
 msgid "Proposal Title"
 msgstr "Ehdotuksen otsikko"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Ehdotukset"
 
@@ -1344,6 +1329,10 @@ msgstr "Ehdotettu toimi"
 msgid "Proposer"
 msgstr "Ehdottaja"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "Protokollan vastuuvapauslauseke"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Jonossa"
@@ -1356,7 +1345,7 @@ msgstr "Kurssit"
 msgid "Read more about UNI"
 msgstr "Lue lisää UNIsta"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Lue lisää Uniswapin hallinnosta"
 
@@ -1414,6 +1403,10 @@ msgstr "Poistetaan {0} {1} ja {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Irrottaminen {0} {1} ja{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Pyydä ominaisuuksia"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1452,7 +1445,7 @@ msgstr "Valitse toiminto"
 msgid "Selected Range"
 msgstr "Valittu vaihteluväli"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Itse"
 
@@ -1535,8 +1528,8 @@ msgid "Supply"
 msgstr "Tarjonta"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "Toimitetaan {0} {1} ja{2} {3}"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Toimitetaan {0} {1} ja {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1580,6 +1573,26 @@ msgstr "% Ansaitset palkkioita."
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Vaihto ei tyydyttänyt Uniswap-invarianttia x*y=k. Tämä tarkoittaa yleensä sitä, että yksi vaihtamistasi rahakkeista käyttäytyy mukautetusti siirron yhteydessä."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "Sovellus hakee lohkoketjutiedot The Graphin isännöidyltä palvelulta."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "Sovellus hakee ketjun tietoja ja muodostaa sopimuskutsuja Infura API:lla."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "Sovellus hakee optimaalisen kauppareitin Uniswap Labs -palvelimelta."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "Sovellus kirjaa anonymisoituja käyttötilastoja parantaakseen ajan myötä."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "Sovellus kerää turvallisesti lompakkosi osoitteesi ja jakaa sen TRM Labs Inc:n kanssa riskien ja vaatimustenmukaisuuden vuoksi."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Syöterahaketta ei voida siirtää. Syöterahakkeessa voi olla ongelma."
@@ -1620,13 +1633,13 @@ msgstr "Likviditeettitietoja ei ole."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Näitä rahakkeita liitetään usein muihin rahakkeisiin."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "Tämä sovellus käyttää seuraavia kolmannen osapuolen sovellusliittymiä:"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Tämä pooli on alustettava, ennen kuin voit lisätä likviditeettiä. Alusta valitsemalla altaan aloitushinta. Syötä sitten likviditeetin hintaluokka ja talletussumma. Kaasumaksut ovat tavallista korkeampia alustustapahtuman takia."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Tämä pooli on alustettava arvoon {0} ennen kuin voit lisätä likviditeettiä. Alusta valitsemalla altaan aloitushinta. Syötä sitten likviditeetin hintaluokka ja talletussumma."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1635,6 +1648,10 @@ msgstr "Tämä reitti optimoi hintasi ottamalla huomioon jaetut reitit, useita h
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Tätä rahaketta ei näy aktiivisissa rahakeluetteloissa. Varmista, että tämä on rahake, jonka haluat vaihtaa."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Uniswap Labs -sovellus ei tue tätä tunnusta"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1664,8 +1681,12 @@ msgid "To (at least)"
 msgstr "Mihin (ainakin)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Jos haluat aloittaa kaupankäynnin {0}, yhdistä ensin omaisuutesi L1: stä L2: een. Käsittele tätä beetaversiona ja tutustu riskeihin ennen käyttöä {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Voit aloittaa kaupankäynnin {0}yhdistämällä ensin omaisuutesi L1:stä L2:een. Käsittele tätä betaversiona ja ota selvää riskeistä ennen kuin käytät {1}."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Tunnusta ei tueta"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1751,7 +1772,7 @@ msgstr "Liikkeessä oleva UNI:"
 msgid "UNI price:"
 msgstr "UNI:n hinta:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "UNI-rahakkeet edustavat Uniswapin hallinnon äänestysosakkeita. Voit äänestää jokaisesta ehdotuksesta itse tai delegoida äänesi kolmannelle osapuolelle."
 
@@ -1792,9 +1813,13 @@ msgstr "Odottamaton virhe. Vaihdon kaasua ei voitu arvioida."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Odottamaton ongelma kaasun arvioinnissa. Yritä uudelleen."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswapin hallinto"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Uniswap Labsin käyttöehdot"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1816,7 +1841,7 @@ msgstr "Uniswapin siirtosopimus ↗"
 msgid "Uniswap on {0}"
 msgstr "Peruuta {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Tuntematon lähde"
 
@@ -1824,12 +1849,12 @@ msgstr "Tuntematon lähde"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tuntematon virhe{0}. Yritä lisätä liukastumissietokykyäsi. Huomaa: siirto- ja uudelleenkorotusmaksut eivät ole yhteensopivia Uniswap V3: n kanssa."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Vapauta äänet"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Vapauta äänestys"
 
@@ -1859,7 +1884,7 @@ msgstr "Unwrap"
 msgid "Unwrap <0/> to ETH"
 msgstr "Pura <0/> ETH: ksi"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Päivitä delegointi"
 
@@ -1988,6 +2013,10 @@ msgstr "Äänestys päättynyt {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "Äänestys päättyy noin {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "Äänestys alkaa noin {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2235,7 +2264,7 @@ msgstr "minuuttia"
 msgid "via {0}"
 msgstr "kohteen {0} kautta"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "rahakeluettelon {0} kautta"
 
@@ -2338,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Käyttäjän lisäämä"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2352,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}%: n palkkataso"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% valitse"
 

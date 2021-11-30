@@ -5,8 +5,6 @@ import { ETH } from 'lib/mocks'
 import { Token } from 'lib/types'
 import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/utils/atoms'
 
-import Settings from './Settings'
-
 /** Max slippage, as a percentage. */
 export enum MaxSlippage {
   P01 = 0.1,

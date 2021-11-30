@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
 import styled, { Theme } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { Token } from 'lib/types'
 import {
   CSSProperties,
@@ -71,18 +71,18 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
       onKeyDown={onEvent}
       ref={ref}
     >
-      <TYPE.body1>
+      <ThemedText.Body1>
         <Row>
           <Row gap={0.5}>
             <TokenImg src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />
             <Column flex align="flex-start">
-              <TYPE.subhead1>{value.symbol}</TYPE.subhead1>
-              <TYPE.caption color="secondary">{value.name}</TYPE.caption>
+              <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
+              <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
             </Column>
           </Row>
           1.234
         </Row>
-      </TYPE.body1>
+      </ThemedText.Body1>
     </TokenButton>
   )
 }

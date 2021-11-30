@@ -19,11 +19,7 @@ interface FeeTierDistribution {
   largestUsageFeeTier?: FeeAmount | undefined
 
   // distributions as percentages of overall liquidity
-  distributions?: {
-    [FeeAmount.LOW]: number | undefined
-    [FeeAmount.MEDIUM]: number | undefined
-    [FeeAmount.HIGH]: number | undefined
-  }
+  distributions?: Record<FeeAmount, number | undefined>
 }
 
 export function useFeeTierDistribution(
@@ -36,6 +32,7 @@ export function useFeeTierDistribution(
   )
 
   // fetch all pool states to determine pool state
+  const [poolStateVeryLow] = usePool(currencyA, currencyB, FeeAmount.LOWEST)
   const [poolStateLow] = usePool(currencyA, currencyB, FeeAmount.LOW)
   const [poolStateMedium] = usePool(currencyA, currencyB, FeeAmount.MEDIUM)
   const [poolStateHigh] = usePool(currencyA, currencyB, FeeAmount.HIGH)
@@ -58,10 +55,13 @@ export function useFeeTierDistribution(
       !isLoading &&
       !isError &&
       distributions &&
+      poolStateVeryLow !== PoolState.LOADING &&
       poolStateLow !== PoolState.LOADING &&
       poolStateMedium !== PoolState.LOADING &&
       poolStateHigh !== PoolState.LOADING
         ? {
+            [FeeAmount.LOWEST]:
+              poolStateVeryLow === PoolState.EXISTS ? (distributions[FeeAmount.LOWEST] ?? 0) * 100 : undefined,
             [FeeAmount.LOW]: poolStateLow === PoolState.EXISTS ? (distributions[FeeAmount.LOW] ?? 0) * 100 : undefined,
             [FeeAmount.MEDIUM]:
               poolStateMedium === PoolState.EXISTS ? (distributions[FeeAmount.MEDIUM] ?? 0) * 100 : undefined,
@@ -76,7 +76,17 @@ export function useFeeTierDistribution(
       distributions: percentages,
       largestUsageFeeTier: largestUsageFeeTier === -1 ? undefined : largestUsageFeeTier,
     }
-  }, [isLoading, isFetching, isUninitialized, isError, distributions, poolStateLow, poolStateMedium, poolStateHigh])
+  }, [
+    isLoading,
+    isFetching,
+    isUninitialized,
+    isError,
+    distributions,
+    poolStateVeryLow,
+    poolStateLow,
+    poolStateMedium,
+    poolStateHigh,
+  ])
 }
 
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
@@ -124,10 +134,11 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         return acc
       },
       {
+        [FeeAmount.LOWEST]: [undefined, undefined],
         [FeeAmount.LOW]: [undefined, undefined],
         [FeeAmount.MEDIUM]: [undefined, undefined],
         [FeeAmount.HIGH]: [undefined, undefined],
-      }
+      } as Record<FeeAmount, [number | undefined, number | undefined]>
     )
 
     // sum total tvl for token0 and token1
@@ -144,7 +155,13 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     const mean = (tvl0: number | undefined, sumTvl0: number, tvl1: number | undefined, sumTvl1: number) =>
       tvl0 === undefined && tvl1 === undefined ? undefined : ((tvl0 ?? 0) + (tvl1 ?? 0)) / (sumTvl0 + sumTvl1) || 0
 
-    const distributions = {
+    const distributions: Record<FeeAmount, number | undefined> = {
+      [FeeAmount.LOWEST]: mean(
+        tvlByFeeTier[FeeAmount.LOWEST][0],
+        sumToken0Tvl,
+        tvlByFeeTier[FeeAmount.LOWEST][1],
+        sumToken1Tvl
+      ),
       [FeeAmount.LOW]: mean(tvlByFeeTier[FeeAmount.LOW][0], sumToken0Tvl, tvlByFeeTier[FeeAmount.LOW][1], sumToken1Tvl),
       [FeeAmount.MEDIUM]: mean(
         tvlByFeeTier[FeeAmount.MEDIUM][0],

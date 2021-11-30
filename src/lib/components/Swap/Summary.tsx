@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import styled, { icon } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { useMemo, useState } from 'react'
 import { ArrowRight, Info } from 'react-feather'
 
@@ -48,7 +48,7 @@ export default function Summary({ input, output }: SummaryProps) {
   }, [change])
 
   return (
-    <TYPE.body2>
+    <ThemedText.Body2>
       <Row gap={1}>
         <Column gap={0.25}>
           <Row gap={0.5} justify="flex-start">
@@ -57,7 +57,9 @@ export default function Summary({ input, output }: SummaryProps) {
           </Row>
           {input.usdc && (
             <Row justify="flex-start">
-              <TYPE.caption color="secondary">~ {input.usdc && `$${input.usdc.toLocaleString('en')}`}</TYPE.caption>
+              <ThemedText.Caption color="secondary">
+                ~ {input.usdc && `$${input.usdc.toLocaleString('en')}`}
+              </ThemedText.Caption>
             </Row>
           )}
         </Column>
@@ -69,13 +71,17 @@ export default function Summary({ input, output }: SummaryProps) {
           </Row>
           {output.usdc && (
             <Row justify="flex-start">
-              <TYPE.caption color="secondary">~ {output.usdc && `$${output.usdc.toLocaleString('en')}`}</TYPE.caption>
-              {change && <TYPE.caption color={change < 0 ? 'error' : 'success'}>&emsp;{percent}</TYPE.caption>}
+              <ThemedText.Caption color="secondary">
+                ~ {output.usdc && `$${output.usdc.toLocaleString('en')}`}
+              </ThemedText.Caption>
+              {change && (
+                <ThemedText.Caption color={change < 0 ? 'error' : 'success'}>&emsp;{percent}</ThemedText.Caption>
+              )}
             </Row>
           )}
         </Column>
       </Row>
-    </TYPE.body2>
+    </ThemedText.Body2>
   )
 }
 
@@ -105,22 +111,22 @@ export function SummaryDialog() {
       <SummaryColumn gap={0.75} padded scrollable>
         <Column gap={0.75} flex>
           <Summary input={input} output={output} />
-          <TYPE.caption>
+          <ThemedText.Caption>
             1 {input.token.symbol} = {price} {output.token.symbol}
-          </TYPE.caption>
+          </ThemedText.Caption>
         </Column>
         <Rule />
         <Column gap={0.75}>
           <Row justify="flex-start" gap={0.5}>
             <InfoIcon />
-            <TYPE.subhead2 color="secondary">
+            <ThemedText.Subhead2 color="secondary">
               <Trans>Transaction details</Trans>
-            </TYPE.subhead2>
+            </ThemedText.Subhead2>
           </Row>
           <Details />
         </Column>
         <Rule />
-        <TYPE.caption color="secondary">
+        <ThemedText.Caption color="secondary">
           <Trans>Output is estimated.</Trans>&emsp;
           {swap?.minimumReceived && (
             <Trans>
@@ -132,7 +138,7 @@ export function SummaryDialog() {
               You will send at most {swap.maximumSent} {input.token.symbol} or the transaction will revert.
             </Trans>
           )}
-        </TYPE.caption>
+        </ThemedText.Caption>
         {price === confirmedPrice ? (
           <ActionButton onClick={() => void 0}>
             <Trans>Confirm</Trans>

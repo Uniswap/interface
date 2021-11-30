@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import useInterval from 'lib/hooks/useInterval'
 import styled, { icon } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { useState } from 'react'
 import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Clock, Info } from 'react-feather'
 
@@ -89,13 +89,13 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
       <Header>{transaction.status ? <SuccessIcon /> : <SpinnerIcon />}</Header>
       <Column gap={1}>
         <Column gap={0.75} flex>
-          <TYPE.subhead1>
+          <ThemedText.Subhead1>
             {transaction.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>}
-          </TYPE.subhead1>
+          </ThemedText.Subhead1>
           <Summary input={transaction.input} output={transaction.output} />
           <FlexRule />
         </Column>
-        <TYPE.subhead2 color="secondary">
+        <ThemedText.Subhead2 color="secondary">
           <Row>
             <Row gap={0.5}>
               <ElapsedIcon />
@@ -105,7 +105,7 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
               <Trans>View on Etherscan</Trans>
             </EtherscanA>
           </Row>
-        </TYPE.subhead2>
+        </ThemedText.Subhead2>
         <ActionButton onClick={onClose}>
           <Trans>Close</Trans>
         </ActionButton>
@@ -123,28 +123,28 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
       </Header>
       <Column gap={1}>
         <Column gap={0.75}>
-          <TYPE.subhead1>
+          <ThemedText.Subhead1>
             <Trans>Something went wrong.</Trans>
-          </TYPE.subhead1>
-          <TYPE.body2>
+          </ThemedText.Subhead1>
+          <ThemedText.Body2>
             <Trans>Try increasing your slippage tolerance</Trans>
-          </TYPE.body2>
-          <TYPE.body2 fontWeight="200" lineHeight={1.25}>
+          </ThemedText.Body2>
+          <ThemedText.Body2 fontWeight="200" lineHeight={1.25}>
             <Trans>Note: Fee on transfer and rebase tokens are incompatible with Uniswap V3.</Trans>
-          </TYPE.body2>
+          </ThemedText.Body2>
           <Rule />
         </Column>
         <Row>
           <Row gap={0.5}>
             <InfoIcon />
-            <TYPE.subhead2 color="secondary">
+            <ThemedText.Subhead2 color="secondary">
               <Trans>Error details</Trans>
-            </TYPE.subhead2>
+            </ThemedText.Subhead2>
           </Row>
           <Button onClick={() => setOpen(!open)}>{open ? <DownIcon /> : <UpIcon />}</Button>
         </Row>
         <ErrorColumn maximized={open}>
-          <TYPE.code>{error.message}</TYPE.code>
+          <ThemedText.Code>{error.message}</ThemedText.Code>
           <Break />
           <ActionButton color="error" onClick={onClose}>
             <Trans>Dismiss</Trans>

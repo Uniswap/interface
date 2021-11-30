@@ -16,7 +16,7 @@ import styled from 'styled-components/macro'
 import { ExtendedEther } from '../../constants/tokens'
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ButtonText, CloseIcon, IconWrapper, TYPE } from '../../theme'
+import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
@@ -224,9 +224,9 @@ export function CurrencySearch({
         </div>
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
-          <TYPE.main color={theme.text3} textAlign="center" mb="20px">
+          <ThemedText.Main color={theme.text3} textAlign="center" mb="20px">
             <Trans>No results found.</Trans>
-          </TYPE.main>
+          </ThemedText.Main>
         </Column>
       )}
       <Footer>
@@ -236,9 +236,9 @@ export function CurrencySearch({
               <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.primaryText1}>
+              <ThemedText.Main color={theme.primaryText1}>
                 <Trans>Manage Token Lists</Trans>
-              </TYPE.main>
+              </ThemedText.Main>
             </RowFixed>
           </ButtonText>
         </Row>

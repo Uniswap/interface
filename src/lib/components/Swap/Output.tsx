@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai/utils'
 import { useUpdateAtom } from 'jotai/utils'
 import useColor, { prefetchColor } from 'lib/hooks/useColor'
 import styled, { DynamicProvider as DynamicThemeProvider, icon, Theme } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { pickAtom } from 'lib/utils/atoms'
 import { ReactNode, useMemo } from 'react'
 import { Book } from 'react-feather'
@@ -65,12 +65,12 @@ export default function Output({ children }: { children: ReactNode }) {
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
         <Row>
-          <TYPE.subhead2>
+          <ThemedText.Subhead2>
             <Trans>For</Trans>
-          </TYPE.subhead2>
+          </ThemedText.Subhead2>
         </Row>
         <TokenInput input={output} onChangeInput={setValue} onChangeToken={setToken}>
-          <TYPE.body2 color="secondary">
+          <ThemedText.Body2 color="secondary">
             <Row>
               {usdc}
               {balance && (
@@ -82,7 +82,7 @@ export default function Output({ children }: { children: ReactNode }) {
                 </Row>
               )}
             </Row>
-          </TYPE.body2>
+          </ThemedText.Body2>
         </TokenInput>
         {children}
       </OutputColumn>

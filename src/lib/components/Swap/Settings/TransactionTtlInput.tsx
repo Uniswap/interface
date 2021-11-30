@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { useRef } from 'react'
 
 import Column from '../../Column'
@@ -20,12 +20,12 @@ export default function TransactionTtlInput() {
     <Column gap={0.75}>
       <Label name={<Trans>Transaction Deadline</Trans>} tooltip={tooltip} />
       <Value onClick={() => input.current?.focus()} cursor="text">
-        <TYPE.subhead2>
+        <ThemedText.Subhead2>
           <IntegerInput value={transactionTtl} onChange={(value) => setTransactionTtl(value ?? 0)} ref={input} />
-        </TYPE.subhead2>
-        <TYPE.subhead2>
+        </ThemedText.Subhead2>
+        <ThemedText.Subhead2>
           <Trans>Minutes</Trans>
-        </TYPE.subhead2>
+        </ThemedText.Subhead2>
       </Value>
     </Column>
   )

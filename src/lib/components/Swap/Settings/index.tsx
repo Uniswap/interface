@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useResetAtom } from 'jotai/utils'
 import { icon } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { useState } from 'react'
 import { Settings as SettingsSvg } from 'react-feather'
 
@@ -22,11 +22,11 @@ export function SettingsDialog() {
   return (
     <>
       <Header title={<Trans>Settings</Trans>} ruled>
-        <TYPE.subhead2>
+        <ThemedText.Subhead2>
           <TextButton onClick={resetSettings}>
             <Trans>Reset</Trans>
           </TextButton>
-        </TYPE.subhead2>
+        </ThemedText.Subhead2>
       </Header>
       <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded scrollable>
         <BoundaryProvider value={boundary}>

@@ -18,13 +18,13 @@ export enum ApplicationModal {
   VOTE,
   POOL_OVERVIEW_OPTIONS,
   NETWORK_SELECTOR,
+  PRIVACY_POLICY,
 }
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
-  readonly chainConnectivityWarning: boolean
   readonly chainId: number | null
   readonly implements3085: boolean
   readonly openModal: ApplicationModal | null
@@ -33,7 +33,6 @@ export interface ApplicationState {
 
 const initialState: ApplicationState = {
   blockNumber: {},
-  chainConnectivityWarning: false,
   chainId: null,
   implements3085: false,
   openModal: null,
@@ -79,19 +78,9 @@ const applicationSlice = createSlice({
     setImplements3085(state, { payload: { implements3085 } }) {
       state.implements3085 = implements3085
     },
-    setChainConnectivityWarning(state, { payload: { warn } }) {
-      state.chainConnectivityWarning = warn
-    },
   },
 })
 
-export const {
-  updateChainId,
-  updateBlockNumber,
-  setOpenModal,
-  addPopup,
-  removePopup,
-  setImplements3085,
-  setChainConnectivityWarning,
-} = applicationSlice.actions
+export const { updateChainId, updateBlockNumber, setOpenModal, addPopup, removePopup, setImplements3085 } =
+  applicationSlice.actions
 export default applicationSlice.reducer

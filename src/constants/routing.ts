@@ -13,8 +13,13 @@ import {
   FRAX,
   FXS,
   renBTC,
+  rETH2,
+  sETH2,
+  SWISE,
   TRIBE,
   USDC,
+  USDC_ARBITRUM,
+  USDC_OPTIMISM,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_OPTIMISM,
@@ -51,6 +56,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
     '0xF16E4d813f4DcfDe4c5b44f305c908742De84eF0': [ETH2X_FLI],
+    [rETH2.address]: [sETH2],
+    [SWISE.address]: [sETH2],
     [FEI.address]: [TRIBE],
     [TRIBE.address]: [FEI],
     [FRAX.address]: [FXS],
@@ -94,6 +101,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.ARBITRUM_ONE]: [
     ExtendedEther.onChain(SupportedChainId.ARBITRUM_ONE),
     DAI_ARBITRUM_ONE,
+    USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WETH9_EXTENDED[SupportedChainId.ARBITRUM_ONE],
@@ -105,14 +113,11 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.OPTIMISM]: [
     ExtendedEther.onChain(SupportedChainId.OPTIMISM),
     DAI_OPTIMISM,
+    USDC_OPTIMISM,
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
-    WETH9_EXTENDED[SupportedChainId.OPTIMISM],
   ],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [
-    ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN),
-    WETH9_EXTENDED[SupportedChainId.OPTIMISTIC_KOVAN],
-  ],
+  [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
