@@ -132,7 +132,7 @@ export const IntegerInput = forwardRef(function IntegerInput(props: NumericInput
   return <NumericInput pattern="^[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
 })
 
-const decimalRegexp = /^\d*(?:[\.])?\d*$/
+const decimalRegexp = /^\d*(?:[.])?\d*$/
 const decimalEnforcer = (nextUserInput: string) => {
   if (nextUserInput === '') {
     return undefined

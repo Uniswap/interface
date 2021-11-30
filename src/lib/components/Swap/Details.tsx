@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { ReactNode } from 'react'
 
 import Column from '../Column'
@@ -9,9 +9,9 @@ import { swapAtom } from './state'
 
 function Detail({ children }: { children: ReactNode }) {
   return (
-    <TYPE.caption>
+    <ThemedText.Caption>
       <Row gap={2}>{children}</Row>
-    </TYPE.caption>
+    </ThemedText.Caption>
   )
 }
 

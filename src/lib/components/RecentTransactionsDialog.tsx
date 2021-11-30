@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled, { icon } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { Token } from 'lib/types'
 import { useMemo, useState } from 'react'
 import { AlertTriangle, ArrowRight, CheckCircle, Trash2 } from 'react-feather'
@@ -12,7 +12,7 @@ import { Header } from './Dialog'
 import Row from './Row'
 import SpinnerIcon from './SpinnerIcon'
 
-interface TokenAmount {
+interface ITokenAmount {
   value: number
   token: Token
 }
@@ -23,14 +23,14 @@ export enum TransactionStatus {
   PENDING,
 }
 
-interface Transaction {
-  input: TokenAmount
-  output: TokenAmount
+interface ITransaction {
+  input: ITokenAmount
+  output: ITokenAmount
   status: TransactionStatus
 }
 
 // TODO: integrate with web3-react context
-export const mockTxs: Transaction[] = [
+export const mockTxs: ITransaction[] = [
   {
     input: { value: 4170.15, token: USDC },
     output: { value: 4167.44, token: DAI },
@@ -67,18 +67,18 @@ const TokenImg = styled.img`
   width: 1em;
 `
 
-function TokenAmount({ value: { value, token } }: { value: TokenAmount }) {
+function TokenAmount({ value: { value, token } }: { value: ITokenAmount }) {
   return (
     <Row gap={0.375}>
       <TokenImg src={token.logoURI} />
-      <TYPE.body2>
+      <ThemedText.Body2>
         {value.toLocaleString('en')} {token.symbol}
-      </TYPE.body2>
+      </ThemedText.Body2>
     </Row>
   )
 }
 
-function Transaction({ tx }: { tx: Transaction }) {
+function Transaction({ tx }: { tx: ITransaction }) {
   const Status = useMemo(() => {
     switch (tx.status) {
       case TransactionStatus.SUCCESS:

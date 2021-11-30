@@ -1,5 +1,5 @@
 import styled, { Theme } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { ReactNode } from 'react'
 import { AnyStyledComponent } from 'styled-components'
 
@@ -31,10 +31,10 @@ interface LabelProps {
 export default function Label({ name, tooltip }: LabelProps) {
   return (
     <Row gap={0.5} justify="flex-start">
-      <TYPE.subhead2 userSelect="none">{name}</TYPE.subhead2>
+      <ThemedText.Subhead2 userSelect="none">{name}</ThemedText.Subhead2>
       {tooltip && (
         <Tooltip placement="top" contained>
-          <TYPE.caption>{tooltip}</TYPE.caption>
+          <ThemedText.Caption>{tooltip}</ThemedText.Caption>
         </Tooltip>
       )}
     </Row>

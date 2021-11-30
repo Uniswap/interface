@@ -1,6 +1,6 @@
 import Logo from 'lib/assets/Logo'
 import styled from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { ReactElement, ReactNode } from 'react'
 
 import Row from './Row'
@@ -39,7 +39,7 @@ export default function Header({ title, logo, children }: HeaderProps) {
             <StyledLogo />
           </a>
         )}
-        {title && <TYPE.subhead1 userSelect="none">{title}</TYPE.subhead1>}
+        {title && <ThemedText.Subhead1 userSelect="none">{title}</ThemedText.Subhead1>}
       </Row>
       <Row gap={0.5}>{children}</Row>
     </HeaderRow>

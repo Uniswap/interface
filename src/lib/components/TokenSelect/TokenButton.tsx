@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import styled, { icon, Theme } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { Token } from 'lib/types'
 import { transparentize } from 'polished'
 import { ChevronDown } from 'react-feather'
@@ -44,7 +44,7 @@ interface TokenOptionProps {
 export default function TokenButton({ value, disabled, onClick }: TokenOptionProps) {
   return (
     <StyledTokenButton onClick={onClick} empty={!value}>
-      <TYPE.buttonLarge color="contrast">
+      <ThemedText.ButtonLarge color="contrast">
         <TokenButtonRow gap={0.4}>
           {value ? (
             <>
@@ -56,7 +56,7 @@ export default function TokenButton({ value, disabled, onClick }: TokenOptionPro
           )}
           <ChevronDownIcon />
         </TokenButtonRow>
-      </TYPE.buttonLarge>
+      </ThemedText.ButtonLarge>
     </StyledTokenButton>
   )
 }

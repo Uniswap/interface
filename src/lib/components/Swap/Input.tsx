@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import { useUpdateAtom } from 'jotai/utils'
 import styled, { icon } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { pickAtom } from 'lib/utils/atoms'
 import { ReactNode } from 'react'
 import { Book } from 'react-feather'
@@ -30,9 +30,9 @@ export default function Input({ children }: { children: ReactNode }) {
   return (
     <InputColumn gap={0.5}>
       <Row>
-        <TYPE.subhead2 color="secondary">
+        <ThemedText.Subhead2 color="secondary">
           <Trans>Trading</Trans>
-        </TYPE.subhead2>
+        </ThemedText.Subhead2>
       </Row>
       <TokenInput
         input={input}
@@ -40,7 +40,7 @@ export default function Input({ children }: { children: ReactNode }) {
         onChangeInput={setValue}
         onChangeToken={setToken}
       >
-        <TYPE.body2 color="secondary">
+        <ThemedText.Body2 color="secondary">
           <Row>
             {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}
             {balance && (
@@ -55,7 +55,7 @@ export default function Input({ children }: { children: ReactNode }) {
               </Row>
             )}
           </Row>
-        </TYPE.body2>
+        </ThemedText.Body2>
       </TokenInput>
       <Row />
       {children}

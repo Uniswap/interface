@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { icon } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { ReactNode, useCallback, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
 
@@ -31,12 +31,12 @@ interface OptionProps<T> {
 function Option<T>({ value, children, selected, cursor, onSelect }: OptionProps<T>) {
   return (
     <Value selected={selected} onClick={() => onSelect(value)} cursor={cursor}>
-      <TYPE.subhead2>
+      <ThemedText.Subhead2>
         <Row>
           {children ? children : `${value}%`}
           {selected && <SelectedIcon />}
         </Row>
-      </TYPE.subhead2>
+      </ThemedText.Subhead2>
     </Value>
   )
 }

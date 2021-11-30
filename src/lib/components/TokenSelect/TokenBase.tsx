@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
 import styled from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { Token } from 'lib/types'
 
 import Button from '../Button'
@@ -32,12 +32,12 @@ interface TokenBaseProps {
 export default function TokenBase({ value, onClick }: TokenBaseProps) {
   return (
     <TokenButton onClick={() => onClick(value)} onMouseDown={() => prefetchColor(value)}>
-      <TYPE.buttonMedium>
+      <ThemedText.ButtonMedium>
         <Row gap={0.5}>
           <TokenImg src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />
           {value.symbol}
         </Row>
-      </TYPE.buttonMedium>
+      </ThemedText.ButtonMedium>
     </TokenButton>
   )
 }

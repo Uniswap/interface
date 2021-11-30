@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 import styled, { Theme } from 'lib/theme'
-import TYPE from 'lib/theme/type'
+import * as ThemedText from 'lib/theme/text'
 import { transparentize } from 'polished'
 import { KeyboardEvent, useCallback } from 'react'
 
@@ -83,7 +83,7 @@ export default function Toggle({ checked, onToggle }: ToggleProps) {
     [onToggle]
   )
   return (
-    <TYPE.buttonMedium>
+    <ThemedText.ButtonMedium>
       <Input
         type="checkbox"
         checked={checked}
@@ -91,6 +91,6 @@ export default function Toggle({ checked, onToggle }: ToggleProps) {
         onChange={() => onToggle()}
         onKeyDown={onKeyDown}
       />
-    </TYPE.buttonMedium>
+    </ThemedText.ButtonMedium>
   )
 }
