@@ -15,9 +15,10 @@ import { shortenAddress } from 'src/utils/addresses'
 
 type AccountHeaderProps = PropsWithChildren<{
   onPress?: () => void
+  chevronDirection?: 'n' | 's'
 }>
 
-export function AccountHeader({ children, onPress }: AccountHeaderProps) {
+export function AccountHeader({ children, onPress, chevronDirection }: AccountHeaderProps) {
   // TODO: get ENS Name
   const activeAccount = useActiveAccount()
 
@@ -43,7 +44,13 @@ export function AccountHeader({ children, onPress }: AccountHeaderProps) {
         <Text variant="h3" textAlign="left">
           {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}
         </Text>
-        <Chevron color="gray200" height="9" width="18" direction="s" ml="sm" />
+        <Chevron
+          color="gray200"
+          height="9"
+          width="18"
+          direction={chevronDirection ?? 's'}
+          ml="sm"
+        />
       </Button>
       <Box flexDirection="row" alignItems="center" justifyContent="flex-end">
         {children}

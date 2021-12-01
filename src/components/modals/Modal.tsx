@@ -1,23 +1,35 @@
+import { ResponsiveValue } from '@shopify/restyle'
 import React from 'react'
 import { Modal as BaseModal, ModalProps, StyleSheet, View } from 'react-native'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { Box } from 'src/components/layout/Box'
-import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
+import { Theme } from 'src/styles/theme'
 
 interface Props extends ModalProps {
   title: string
   hide?: () => void
+  position?: 'top' | 'center' | 'bottom'
 }
 
-export function Modal({ title, hide, children, ...rest }: React.PropsWithChildren<Props>) {
+export function Modal({
+  title,
+  hide,
+  children,
+  position,
+  ...rest
+}: React.PropsWithChildren<Props>) {
+  let justifyContent: ResponsiveValue<'center' | 'flex-start' | 'flex-end', Theme> = 'center'
+  if (position === 'top') justifyContent = 'flex-start'
+  if (position === 'bottom') justifyContent = 'flex-end'
+
   return (
     <BaseModal
       animationType="slide"
       transparent={true}
       presentationStyle="overFullScreen"
       {...rest}>
-      <CenterBox flexGrow={1}>
+      <Box alignItems="center" justifyContent={justifyContent} flexGrow={1}>
         <Box style={style.modalBox} backgroundColor="mainBackground">
           <Text variant="h3" px="md" mb="sm">
             {title}
@@ -29,7 +41,7 @@ export function Modal({ title, hide, children, ...rest }: React.PropsWithChildre
           )}
           {children}
         </Box>
-      </CenterBox>
+      </Box>
     </BaseModal>
   )
 }

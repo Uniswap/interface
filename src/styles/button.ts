@@ -1,9 +1,5 @@
 export const buttonVariants = {
-  defaults: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  defaults: {},
   primary: {
     alignSelf: 'stretch',
     backgroundColor: 'green',
