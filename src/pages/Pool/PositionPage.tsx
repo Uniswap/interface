@@ -1,50 +1,50 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-
-import { PoolState, usePool } from 'hooks/usePools'
-import { useToken } from 'hooks/Tokens'
-import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Link, RouteComponentProps } from 'react-router-dom'
-import { unwrappedToken } from 'utils/unwrappedToken'
-import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
-import { LoadingRows } from './styleds'
-import styled from 'styled-components/macro'
-import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed } from 'components/Row'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
-import Badge from 'components/Badge'
-import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
-import { DarkCard, LightCard } from 'components/Card'
-import CurrencyLogo from 'components/CurrencyLogo'
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import Badge from 'components/Badge'
+import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
+import { DarkCard, LightCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import Loader from 'components/Loader'
+import { RowBetween, RowFixed } from 'components/Row'
+import { Dots } from 'components/swap/styleds'
+import Toggle from 'components/Toggle'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { useToken } from 'hooks/Tokens'
+import { useV3NFTPositionManagerContract } from 'hooks/useContract'
+import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
+import { PoolState, usePool } from 'hooks/usePools'
+import useUSDCPrice from 'hooks/useUSDCPrice'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import ReactGA from 'react-ga'
+import { Link, RouteComponentProps } from 'react-router-dom'
+import { Bound } from 'state/mint/v3/actions'
+import { useSingleCallResult } from 'state/multicall/hooks'
+import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
+import styled from 'styled-components/macro'
+import { ExternalLink, HideExtraSmall, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { useV3PositionFees } from 'hooks/useV3PositionFees'
-import { BigNumber } from '@ethersproject/bignumber'
-import { Token, Currency, CurrencyAmount, Percent, Fraction, Price } from '@uniswap/sdk-core'
-import { useActiveWeb3React } from 'hooks/web3'
-import { useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import ReactGA from 'react-ga'
-import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { TransactionResponse } from '@ethersproject/providers'
-import { Dots } from 'components/swap/styleds'
-import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
-import useTheme from '../../hooks/useTheme'
-import RateToggle from '../../components/RateToggle'
-import { useSingleCallResult } from 'state/multicall/hooks'
-import RangeBadge from '../../components/Badge/RangeBadge'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import useUSDCPrice from 'hooks/useUSDCPrice'
-import Loader from 'components/Loader'
-import Toggle from 'components/Toggle'
-import { Bound } from 'state/mint/v3/actions'
-import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { formatTickPrice } from 'utils/formatTickPrice'
-import { SupportedChainId } from 'constants/chains'
+import { unwrappedToken } from 'utils/unwrappedToken'
+
+import RangeBadge from '../../components/Badge/RangeBadge'
+import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
+import RateToggle from '../../components/RateToggle'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
+import useTheme from '../../hooks/useTheme'
+import { TransactionType } from '../../state/transactions/actions'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { LoadingRows } from './styleds'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -79,7 +79,7 @@ const BadgeText = styled.div`
 // responsive text
 // disable the warning because we don't use the end prop, we just want to filter it out
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Label = styled(({ end, ...props }) => <TYPE.label {...props} />)<{ end?: boolean }>`
+const Label = styled(({ end, ...props }) => <ThemedText.Label {...props} />)<{ end?: boolean }>`
   display: flex;
   font-size: 16px;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
@@ -94,7 +94,7 @@ const ExtentsText = styled.span`
   font-weight: 500;
 `
 
-const HoverText = styled(TYPE.main)`
+const HoverText = styled(ThemedText.Main)`
   text-decoration: none;
   color: ${({ theme }) => theme.text3};
   :hover {
@@ -164,9 +164,9 @@ function CurrentPriceCard({
         <ExtentsText>
           <Trans>Current price</Trans>
         </ExtentsText>
-        <TYPE.mediumHeader textAlign="center">
+        <ThemedText.MediumHeader textAlign="center">
           {(inverted ? pool.token1Price : pool.token0Price).toSignificant(6)}{' '}
-        </TYPE.mediumHeader>
+        </ThemedText.MediumHeader>
         <ExtentsText>
           <Trans>
             {currencyQuote?.symbol} per {currencyBase?.symbol}
@@ -185,7 +185,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
       <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.TOKEN)}>
         <RowFixed>
           <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-          <TYPE.main>{currency?.symbol} ↗</TYPE.main>
+          <ThemedText.Main>{currency?.symbol} ↗</ThemedText.Main>
         </RowFixed>
       </ExternalLink>
     )
@@ -194,7 +194,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
   return (
     <RowFixed>
       <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-      <TYPE.main>{currency?.symbol}</TYPE.main>
+      <ThemedText.Main>{currency?.symbol}</ThemedText.Main>
     </RowFixed>
   )
 }
@@ -442,7 +442,7 @@ export function PositionPage({
       .then((estimate) => {
         const newTxn = {
           ...txn,
-          gasLimit: calculateGasMargin(chainId, estimate),
+          gasLimit: calculateGasMargin(estimate),
         }
 
         return library
@@ -459,7 +459,9 @@ export function PositionPage({
             })
 
             addTransaction(response, {
-              summary: `Collect ${feeValue0.currency.symbol}/${feeValue1.currency.symbol} fees`,
+              type: TransactionType.COLLECT_FEES,
+              currencyId0: currencyId(feeValue0.currency),
+              currencyId1: currencyId(feeValue1.currency),
             })
           })
       })
@@ -488,22 +490,22 @@ export function PositionPage({
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo currency={feeValueUpper?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                <TYPE.main>{feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}</TYPE.main>
+                <ThemedText.Main>{feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}</ThemedText.Main>
               </RowFixed>
-              <TYPE.main>{feeValueUpper?.currency?.symbol}</TYPE.main>
+              <ThemedText.Main>{feeValueUpper?.currency?.symbol}</ThemedText.Main>
             </RowBetween>
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo currency={feeValueLower?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                <TYPE.main>{feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}</TYPE.main>
+                <ThemedText.Main>{feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}</ThemedText.Main>
               </RowFixed>
-              <TYPE.main>{feeValueLower?.currency?.symbol}</TYPE.main>
+              <ThemedText.Main>{feeValueLower?.currency?.symbol}</ThemedText.Main>
             </RowBetween>
           </AutoColumn>
         </LightCard>
-        <TYPE.italic>
+        <ThemedText.Italic>
           <Trans>Collecting fees will withdraw currently available fees for you.</Trans>
-        </TYPE.italic>
+        </ThemedText.Italic>
         <ButtonPrimary onClick={collect}>
           <Trans>Collect</Trans>
         </ButtonPrimary>
@@ -511,15 +513,13 @@ export function PositionPage({
     )
   }
 
-  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const showCollectAsWeth = Boolean(
     ownsNFT &&
       (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
       currency0 &&
       currency1 &&
       (currency0.isNative || currency1.isNative) &&
-      !collectMigrationHash &&
-      !onOptimisticChain
+      !collectMigrationHash
   )
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
@@ -564,9 +564,9 @@ export function PositionPage({
             <ResponsiveRow>
               <RowFixed>
                 <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
-                <TYPE.label fontSize={'24px'} mr="10px">
+                <ThemedText.Label fontSize={'24px'} mr="10px">
                   &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
-                </TYPE.label>
+                </ThemedText.Label>
                 <Badge style={{ marginRight: '8px' }}>
                   <BadgeText>
                     <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
@@ -646,13 +646,13 @@ export function PositionPage({
                       <Trans>Liquidity</Trans>
                     </Label>
                     {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
-                      <TYPE.largeHeader fontSize="36px" fontWeight={500}>
+                      <ThemedText.LargeHeader fontSize="36px" fontWeight={500}>
                         <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
-                      </TYPE.largeHeader>
+                      </ThemedText.LargeHeader>
                     ) : (
-                      <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
+                      <ThemedText.LargeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
                         <Trans>$-</Trans>
-                      </TYPE.largeHeader>
+                      </ThemedText.LargeHeader>
                     )}
                   </AutoColumn>
                   <LightCard padding="12px 16px">
@@ -660,14 +660,14 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                         <RowFixed>
-                          <TYPE.main>
+                          <ThemedText.Main>
                             {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
-                          </TYPE.main>
+                          </ThemedText.Main>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
-                              <TYPE.main fontSize={11}>
+                              <ThemedText.Main fontSize={11}>
                                 <Trans>{inverted ? ratio : 100 - ratio}%</Trans>
-                              </TYPE.main>
+                              </ThemedText.Main>
                             </Badge>
                           ) : null}
                         </RowFixed>
@@ -675,14 +675,14 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyBase} />
                         <RowFixed>
-                          <TYPE.main>
+                          <ThemedText.Main>
                             {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
-                          </TYPE.main>
+                          </ThemedText.Main>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
-                              <TYPE.main color={theme.text2} fontSize={11}>
+                              <ThemedText.Main color={theme.text2} fontSize={11}>
                                 <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
-                              </TYPE.main>
+                              </ThemedText.Main>
                             </Badge>
                           ) : null}
                         </RowFixed>
@@ -700,13 +700,13 @@ export function PositionPage({
                           <Trans>Unclaimed fees</Trans>
                         </Label>
                         {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
-                          <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
+                          <ThemedText.LargeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
                             <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans>
-                          </TYPE.largeHeader>
+                          </ThemedText.LargeHeader>
                         ) : (
-                          <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
+                          <ThemedText.LargeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
                             <Trans>$-</Trans>
-                          </TYPE.largeHeader>
+                          </ThemedText.LargeHeader>
                         )}
                       </AutoColumn>
                       {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
@@ -719,21 +719,21 @@ export function PositionPage({
                           onClick={() => setShowConfirm(true)}
                         >
                           {!!collectMigrationHash && !isCollectPending ? (
-                            <TYPE.main color={theme.text1}>
+                            <ThemedText.Main color={theme.text1}>
                               <Trans> Collected</Trans>
-                            </TYPE.main>
+                            </ThemedText.Main>
                           ) : isCollectPending || collecting ? (
-                            <TYPE.main color={theme.text1}>
+                            <ThemedText.Main color={theme.text1}>
                               {' '}
                               <Dots>
                                 <Trans>Collecting</Trans>
                               </Dots>
-                            </TYPE.main>
+                            </ThemedText.Main>
                           ) : (
                             <>
-                              <TYPE.main color={theme.white}>
+                              <ThemedText.Main color={theme.white}>
                                 <Trans>Collect fees</Trans>
-                              </TYPE.main>
+                              </ThemedText.Main>
                             </>
                           )}
                         </ButtonConfirmed>
@@ -749,10 +749,12 @@ export function PositionPage({
                             size={'20px'}
                             style={{ marginRight: '0.5rem' }}
                           />
-                          <TYPE.main>{feeValueUpper?.currency?.symbol}</TYPE.main>
+                          <ThemedText.Main>{feeValueUpper?.currency?.symbol}</ThemedText.Main>
                         </RowFixed>
                         <RowFixed>
-                          <TYPE.main>{feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}</TYPE.main>
+                          <ThemedText.Main>
+                            {feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}
+                          </ThemedText.Main>
                         </RowFixed>
                       </RowBetween>
                       <RowBetween>
@@ -762,10 +764,12 @@ export function PositionPage({
                             size={'20px'}
                             style={{ marginRight: '0.5rem' }}
                           />
-                          <TYPE.main>{feeValueLower?.currency?.symbol}</TYPE.main>
+                          <ThemedText.Main>{feeValueLower?.currency?.symbol}</ThemedText.Main>
                         </RowFixed>
                         <RowFixed>
-                          <TYPE.main>{feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}</TYPE.main>
+                          <ThemedText.Main>
+                            {feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}
+                          </ThemedText.Main>
                         </RowFixed>
                       </RowBetween>
                     </AutoColumn>
@@ -773,9 +777,9 @@ export function PositionPage({
                   {showCollectAsWeth && (
                     <AutoColumn gap="md">
                       <RowBetween>
-                        <TYPE.main>
+                        <ThemedText.Main>
                           <Trans>Collect as WETH</Trans>
-                        </TYPE.main>
+                        </ThemedText.Main>
                         <Toggle
                           id="receive-as-weth"
                           isActive={receiveWETH}
@@ -819,9 +823,9 @@ export function PositionPage({
                     <ExtentsText>
                       <Trans>Min price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">
+                    <ThemedText.MediumHeader textAlign="center">
                       {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
-                    </TYPE.mediumHeader>
+                    </ThemedText.MediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>
@@ -830,9 +834,9 @@ export function PositionPage({
                     </ExtentsText>
 
                     {inRange && (
-                      <TYPE.small color={theme.text3}>
+                      <ThemedText.Small color={theme.text3}>
                         <Trans>Your position will be 100% {currencyBase?.symbol} at this price.</Trans>
-                      </TYPE.small>
+                      </ThemedText.Small>
                     )}
                   </AutoColumn>
                 </LightCard>
@@ -843,9 +847,9 @@ export function PositionPage({
                     <ExtentsText>
                       <Trans>Max price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">
+                    <ThemedText.MediumHeader textAlign="center">
                       {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
-                    </TYPE.mediumHeader>
+                    </ThemedText.MediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>
@@ -854,9 +858,9 @@ export function PositionPage({
                     </ExtentsText>
 
                     {inRange && (
-                      <TYPE.small color={theme.text3}>
+                      <ThemedText.Small color={theme.text3}>
                         <Trans>Your position will be 100% {currencyQuote?.symbol} at this price.</Trans>
-                      </TYPE.small>
+                      </ThemedText.Small>
                     )}
                   </AutoColumn>
                 </LightCard>

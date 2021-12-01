@@ -1,13 +1,14 @@
-import { useState, useCallback, useEffect, ReactNode } from 'react'
-import { OutlineCard } from 'components/Card'
-import { Input as NumericalInput } from '../NumericalInput'
-import styled, { keyframes } from 'styled-components/macro'
-import { TYPE } from 'theme'
-import { AutoColumn } from 'components/Column'
-import { ButtonGray } from 'components/Button'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from '@lingui/macro'
-import { Plus, Minus } from 'react-feather'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { ButtonGray } from 'components/Button'
+import { OutlineCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { Minus, Plus } from 'react-feather'
+import styled, { keyframes } from 'styled-components/macro'
+import { ThemedText } from 'theme'
+
+import { Input as NumericalInput } from '../NumericalInput'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -56,13 +57,13 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   `};
 `
 
-const InputTitle = styled(TYPE.small)`
+const InputTitle = styled(ThemedText.Small)`
   color: ${({ theme }) => theme.text2};
   font-size: 12px;
   font-weight: 500;
 `
 
-const ButtonLabel = styled(TYPE.white)<{ disabled: boolean }>`
+const ButtonLabel = styled(ThemedText.White)<{ disabled: boolean }>`
   color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.text1)} !important;
 `
 

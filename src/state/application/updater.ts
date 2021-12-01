@@ -1,15 +1,21 @@
+import useDebounce from 'hooks/useDebounce'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useEffect, useState } from 'react'
 import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
-import useDebounce from '../../hooks/useDebounce'
-import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { updateBlockNumber, updateChainId } from './actions'
+import { switchToNetwork } from 'utils/switchToNetwork'
+
+import { setImplements3085, updateBlockNumber, updateChainId } from './reducer'
 
 function useQueryCacheInvalidator() {
-  const chainId = useAppSelector((state) => state.application.chainId)
   const dispatch = useAppDispatch()
+
+  // subscribe to `chainId` changes in the redux store rather than Web3
+  // this will ensure that when `invalidateTags` is called, the latest
+  // `chainId` is available in redux to build the subgraph url
+  const chainId = useAppSelector((state) => state.application.chainId)
 
   useEffect(() => {
     dispatch(api.util.invalidateTags([CHAIN_TAG]))
@@ -17,9 +23,8 @@ function useQueryCacheInvalidator() {
 }
 
 export default function Updater(): null {
-  const { library, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
-
   const windowVisible = useIsWindowVisible()
 
   const [state, setState] = useState<{ chainId: number | undefined; blockNumber: number | null }>({
@@ -71,6 +76,20 @@ export default function Updater(): null {
       updateChainId({ chainId: debouncedState.chainId ? supportedChainId(debouncedState.chainId) ?? null : null })
     )
   }, [dispatch, debouncedState.chainId])
+
+  const implements3085 = useAppSelector((state) => state.application.implements3085)
+
+  useEffect(() => {
+    if (!library?.provider?.request) {
+      dispatch(setImplements3085({ implements3085: false }))
+    } else if (account && !implements3085) {
+      switchToNetwork({ library })
+        .then((x) => x ?? dispatch(setImplements3085({ implements3085: true })))
+        .catch(() => dispatch(setImplements3085({ implements3085: false })))
+    } else if (!account && implements3085) {
+      dispatch(setImplements3085({ implements3085: false }))
+    }
+  }, [account, dispatch, implements3085, library])
 
   return null
 }

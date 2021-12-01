@@ -1,11 +1,27 @@
 import { TokenList } from '@uniswap/token-lists'
-import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
-import Ajv from 'ajv'
+import { ValidateFunction } from 'ajv'
+
 import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './parseENSAddress'
 import uriToHttp from './uriToHttp'
 
-const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
+// lazily get the validator the first time it is used
+const getTokenListValidator = (() => {
+  let tokenListValidator: Promise<ValidateFunction>
+  return () => {
+    if (!tokenListValidator) {
+      tokenListValidator = new Promise<ValidateFunction>(async (resolve) => {
+        const [ajv, schema] = await Promise.all([
+          import('ajv'),
+          import('@uniswap/token-lists/src/tokenlist.schema.json'),
+        ])
+        const validator = new ajv.default({ allErrors: true }).compile(schema)
+        resolve(validator)
+      })
+    }
+    return tokenListValidator
+  }
+})()
 
 /**
  * Contains the logic for resolving a list URL to a validated token list
@@ -16,6 +32,7 @@ export default async function getTokenList(
   listUrl: string,
   resolveENSContentHash: (ensName: string) => Promise<string>
 ): Promise<TokenList> {
+  const tokenListValidator = getTokenListValidator()
   const parsedENS = parseENSAddress(listUrl)
   let urls: string[]
   if (parsedENS) {
@@ -54,10 +71,10 @@ export default async function getTokenList(
       continue
     }
 
-    const json = await response.json()
-    if (!tokenListValidator(json)) {
+    const [json, validator] = await Promise.all([response.json(), tokenListValidator])
+    if (!validator(json)) {
       const validationErrors: string =
-        tokenListValidator.errors?.reduce<string>((memo, error) => {
+        validator.errors?.reduce<string>((memo, error) => {
           const add = `${error.dataPath} ${error.message ?? ''}`
           return memo.length > 0 ? `${memo}; ${add}` : `${add}`
         }, '') ?? 'unknown error'

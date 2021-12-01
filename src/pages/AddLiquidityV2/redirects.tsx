@@ -1,4 +1,5 @@
 import { Redirect, RouteComponentProps } from 'react-router-dom'
+
 import AddLiquidityV2 from './index'
 
 export function RedirectDuplicateTokenIdsV2(props: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {

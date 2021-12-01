@@ -1,11 +1,12 @@
-import { useBlockNumber } from '../application/hooks'
 import { useEffect, useMemo } from 'react'
+
 import { useActiveWeb3React } from '../../hooks/web3'
+import { useBlockNumber } from '../application/hooks'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addListener, removeListener } from './slice'
 import { EventFilter, filterToKey, Log } from './utils'
 
-enum LogsState {
+export enum LogsState {
   // The filter is invalid
   INVALID,
   // The logs are being loaded
@@ -26,6 +27,7 @@ export interface UseLogsResult {
 /**
  * Returns the logs for the given filter as of the latest block, re-fetching from the library every block.
  * @param filter The logs filter, without `blockHash`, `fromBlock` or `toBlock` defined.
+ * The filter parameter should _always_ be memoized, or else will trigger constant refetching
  */
 export function useLogs(filter: EventFilter | undefined): UseLogsResult {
   const { chainId } = useActiveWeb3React()

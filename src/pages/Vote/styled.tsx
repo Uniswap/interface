@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import styled, { DefaultTheme } from 'styled-components/macro'
+
 import { ProposalState } from '../../state/governance/hooks'
 
 const handleColorType = (status: ProposalState, theme: DefaultTheme) => {
@@ -53,6 +54,8 @@ const StyledProposalContainer = styled.span<{ status: ProposalState }>`
   width: fit-content;
   justify-self: flex-end;
   text-transform: uppercase;
+  flex: 0 0 100px;
+  text-align: center;
 `
 
 export function ProposalStatus({ status }: { status: ProposalState }) {

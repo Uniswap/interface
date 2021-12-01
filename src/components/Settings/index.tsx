@@ -1,14 +1,19 @@
+// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
+
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { ApplicationModal } from '../../state/application/reducer'
+import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
+import { ThemedText } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -16,7 +21,6 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
-import { Percent } from '@uniswap/sdk-core'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -115,6 +119,8 @@ const ModalContentWrapper = styled.div`
 `
 
 export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
+  const { chainId } = useActiveWeb3React()
+
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
@@ -123,7 +129,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
-  const [singleHopOnly, setSingleHopOnly] = useUserSingleHopOnly()
+  const [clientSideRouter, setClientSideRouter] = useClientSideRouter()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -173,7 +179,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
+      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label={t`Transaction Settings`}>
         <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>
@@ -193,11 +199,36 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <Text fontWeight={600} fontSize={14}>
               <Trans>Interface Settings</Trans>
             </Text>
+
+            {chainId === SupportedChainId.MAINNET && (
+              <RowBetween>
+                <RowFixed>
+                  <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
+                    <Trans>Auto Router</Trans>
+                  </ThemedText.Black>
+                  <QuestionHelper
+                    text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
+                  />
+                </RowFixed>
+                <Toggle
+                  id="toggle-optimized-router-button"
+                  isActive={!clientSideRouter}
+                  toggle={() => {
+                    ReactGA.event({
+                      category: 'Routing',
+                      action: clientSideRouter ? 'enable routing API' : 'disable routing API',
+                    })
+                    setClientSideRouter(!clientSideRouter)
+                  }}
+                />
+              </RowBetween>
+            )}
+
             <RowBetween>
               <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Toggle Expert Mode</Trans>
-                </TYPE.black>
+                <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Expert Mode</Trans>
+                </ThemedText.Black>
                 <QuestionHelper
                   text={
                     <Trans>Allow high price impact trades and skip the confirm screen. Use at your own risk.</Trans>
@@ -218,25 +249,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                         setShowConfirmation(true)
                       }
                 }
-              />
-            </RowBetween>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Disable Multihops</Trans>
-                </TYPE.black>
-                <QuestionHelper text={<Trans>Restricts swaps to direct pairs only.</Trans>} />
-              </RowFixed>
-              <Toggle
-                id="toggle-disable-multihop-button"
-                isActive={singleHopOnly}
-                toggle={() => {
-                  ReactGA.event({
-                    category: 'Routing',
-                    action: singleHopOnly ? 'disable single hop' : 'enable single hop',
-                  })
-                  setSingleHopOnly(!singleHopOnly)
-                }}
               />
             </RowBetween>
           </AutoColumn>

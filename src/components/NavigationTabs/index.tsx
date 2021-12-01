@@ -1,20 +1,19 @@
-import styled from 'styled-components/macro'
-import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
-import { NavLink, Link as HistoryLink, useLocation } from 'react-router-dom'
 import { Percent } from '@uniswap/sdk-core'
-
+import useTheme from 'hooks/useTheme'
+import { darken } from 'polished'
+import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
-import Row, { RowBetween } from '../Row'
-import SettingsTab from '../Settings'
-
+import { Link as HistoryLink, NavLink, useLocation } from 'react-router-dom'
+import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
-import { TYPE } from 'theme'
-import useTheme from 'hooks/useTheme'
-import { ReactNode } from 'react'
-import { Box } from 'rebass'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+
+import Row, { RowBetween } from '../Row'
+import SettingsTab from '../Settings'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -85,11 +84,11 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
         <HistoryLink to={origin}>
           <StyledArrowLeft />
         </HistoryLink>
-        <ActiveText>
+        <ActiveText style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
           <Trans>Import V2 Pool</Trans>
         </ActiveText>
       </RowBetween>
@@ -137,7 +136,7 @@ export function AddRemoveTabs({
         >
           <StyledArrowLeft stroke={theme.text2} />
         </StyledHistoryLink>
-        <TYPE.mediumHeader
+        <ThemedText.MediumHeader
           fontWeight={500}
           fontSize={20}
           style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
@@ -149,7 +148,7 @@ export function AddRemoveTabs({
           ) : (
             <Trans>Remove Liquidity</Trans>
           )}
-        </TYPE.mediumHeader>
+        </ThemedText.MediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
         <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>

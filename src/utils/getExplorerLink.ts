@@ -27,14 +27,14 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
   if (chainId === SupportedChainId.ARBITRUM_ONE) {
     switch (type) {
       case ExplorerDataType.TRANSACTION:
-        return `https://explorer.arbitrum.io/tx/${data}`
+        return `https://arbiscan.io/tx/${data}`
       case ExplorerDataType.ADDRESS:
       case ExplorerDataType.TOKEN:
-        return `https://explorer.arbitrum.io/address/${data}`
+        return `https://arbiscan.io/address/${data}`
       case ExplorerDataType.BLOCK:
-        return `https://explorer.arbitrum.io/block/${data}`
+        return `https://arbiscan.io/block/${data}`
       default:
-        return `https://explorer.arbitrum.io/`
+        return `https://arbiscan.io/`
     }
   }
 
@@ -62,6 +62,9 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       return `${prefix}/token/${data}`
 
     case ExplorerDataType.BLOCK:
+      if (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN) {
+        return `${prefix}/tx/${data}`
+      }
       return `${prefix}/block/${data}`
 
     case ExplorerDataType.ADDRESS:

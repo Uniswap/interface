@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro'
+
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 

@@ -1,14 +1,20 @@
 import { Trans } from '@lingui/macro'
-import { Text } from 'rebass'
 import { Currency } from '@uniswap/sdk-core'
+import { AutoColumn } from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import QuestionHelper from 'components/QuestionHelper'
+import { AutoRow } from 'components/Row'
+import { COMMON_BASES } from 'constants/routing'
+import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
+import { currencyId } from 'utils/currencyId'
 
-import { COMMON_BASES } from '../../constants/routing'
-import { currencyId } from '../../utils/currencyId'
-import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
-import { AutoRow } from '../Row'
-import CurrencyLogo from '../CurrencyLogo'
+const MobileWrapper = styled(AutoColumn)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+  `};
+`
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -39,7 +45,7 @@ export default function CommonBases({
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
 
   return bases.length > 0 ? (
-    <AutoColumn gap="md">
+    <MobileWrapper gap="md">
       <AutoRow>
         <Text fontWeight={500} fontSize={14}>
           <Trans>Common bases</Trans>
@@ -55,7 +61,7 @@ export default function CommonBases({
               disable={isSelected}
               key={currencyId(currency)}
             >
-              <CurrencyLogo currency={currency} style={{ marginRight: 8 }} />
+              <CurrencyLogoFromList currency={currency} />
               <Text fontWeight={500} fontSize={16}>
                 {currency.symbol}
               </Text>
@@ -63,6 +69,13 @@ export default function CommonBases({
           )
         })}
       </AutoRow>
-    </AutoColumn>
+    </MobileWrapper>
   ) : null
+}
+
+/** helper component to retrieve a base currency from the active token lists */
+function CurrencyLogoFromList({ currency }: { currency: Currency }) {
+  const token = useTokenInfoFromActiveList(currency)
+
+  return <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
 }

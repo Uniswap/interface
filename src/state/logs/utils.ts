@@ -6,6 +6,9 @@ export interface EventFilter {
 export interface Log {
   topics: Array<string>
   data: string
+  transactionIndex: number
+  logIndex: number
+  blockNumber: number
 }
 
 /**
@@ -26,6 +29,7 @@ export function keyToFilter(key: string): EventFilter {
   const pcs = key.split(':')
   const address = pcs[0]
   const topics = pcs[1].split('-').map((topic) => {
+    if (topic === '\0') return null
     const parts = topic.split(';')
     if (parts.length === 1) return parts[0]
     return parts

@@ -1,34 +1,33 @@
-import { useCallback, useState } from 'react'
-import { AutoColumn } from '../../components/Column'
-import styled from 'styled-components/macro'
-import { Link } from 'react-router-dom'
+import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
+import { useCallback, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router-dom'
-import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import { useCurrency } from '../../hooks/Tokens'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { TYPE } from '../../theme'
-
-import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
-import StakingModal from '../../components/earn/StakingModal'
-import { useStakingInfo } from '../../state/stake/hooks'
-import UnstakingModal from '../../components/earn/UnstakingModal'
-import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
-import { useTokenBalance } from '../../state/wallet/hooks'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useColor } from '../../hooks/useColor'
+import styled from 'styled-components/macro'
 import { CountUp } from 'use-count-up'
 
-import { currencyId } from '../../utils/currencyId'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { useV2Pair } from '../../hooks/useV2Pairs'
+import { ButtonEmpty, ButtonPrimary } from '../../components/Button'
+import { AutoColumn } from '../../components/Column'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
+import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
+import StakingModal from '../../components/earn/StakingModal'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import UnstakingModal from '../../components/earn/UnstakingModal'
+import { RowBetween } from '../../components/Row'
+import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants/misc'
+import { useCurrency } from '../../hooks/Tokens'
+import { useColor } from '../../hooks/useColor'
 import usePrevious from '../../hooks/usePrevious'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
-import { BIG_INT_ZERO, BIG_INT_SECONDS_IN_WEEK } from '../../constants/misc'
-import { Trans } from '@lingui/macro'
+import { useV2Pair } from '../../hooks/useV2Pairs'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { useStakingInfo } from '../../state/stake/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
+import { ThemedText } from '../../theme'
+import { currencyId } from '../../utils/currencyId'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -156,33 +155,33 @@ export default function Manage({
   return (
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
-        <TYPE.mediumHeader style={{ margin: 0 }}>
+        <ThemedText.MediumHeader style={{ margin: 0 }}>
           <Trans>
             {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
           </Trans>
-        </TYPE.mediumHeader>
+        </ThemedText.MediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
 
       <DataRow style={{ gap: '24px' }}>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>
+            <ThemedText.Body style={{ margin: 0 }}>
               <Trans>Total deposits</Trans>
-            </TYPE.body>
-            <TYPE.body fontSize={24} fontWeight={500}>
+            </ThemedText.Body>
+            <ThemedText.Body fontSize={24} fontWeight={500}>
               {valueOfTotalStakedAmountInUSDC
                 ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
                 : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
-            </TYPE.body>
+            </ThemedText.Body>
           </AutoColumn>
         </PoolData>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>
+            <ThemedText.Body style={{ margin: 0 }}>
               <Trans>Pool Rate</Trans>
-            </TYPE.body>
-            <TYPE.body fontSize={24} fontWeight={500}>
+            </ThemedText.Body>
+            <ThemedText.Body fontSize={24} fontWeight={500}>
               {stakingInfo?.active ? (
                 <Trans>
                   {stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
@@ -191,7 +190,7 @@ export default function Manage({
               ) : (
                 <Trans>0 UNI / week</Trans>
               )}
-            </TYPE.body>
+            </ThemedText.Body>
           </AutoColumn>
         </PoolData>
       </DataRow>
@@ -203,17 +202,17 @@ export default function Manage({
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>
+                <ThemedText.White fontWeight={600}>
                   <Trans>Step 1. Get UNI-V2 Liquidity tokens</Trans>
-                </TYPE.white>
+                </ThemedText.White>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
-                <TYPE.white fontSize={14}>
+                <ThemedText.White fontSize={14}>
                   <Trans>
                     UNI-V2 LP tokens are required. Once you&apos;ve added liquidity to the {currencyA?.symbol}-
                     {currencyB?.symbol} pool you can stake your liquidity tokens on this page.
                   </Trans>
-                </TYPE.white>
+                </ThemedText.White>
               </RowBetween>
               <ButtonPrimary
                 padding="8px"
@@ -262,19 +261,19 @@ export default function Manage({
               <CardNoise />
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white fontWeight={600}>
+                  <ThemedText.White fontWeight={600}>
                     <Trans>Your liquidity deposits</Trans>
-                  </TYPE.white>
+                  </ThemedText.White>
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline' }}>
-                  <TYPE.white fontSize={36} fontWeight={600}>
+                  <ThemedText.White fontSize={36} fontWeight={600}>
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
-                  </TYPE.white>
-                  <TYPE.white>
+                  </ThemedText.White>
+                  <ThemedText.White>
                     <Trans>
                       UNI-V2 {currencyA?.symbol}-{currencyB?.symbol}
                     </Trans>
-                  </TYPE.white>
+                  </ThemedText.White>
                 </RowBetween>
               </AutoColumn>
             </CardSection>
@@ -285,9 +284,9 @@ export default function Manage({
             <AutoColumn gap="sm">
               <RowBetween>
                 <div>
-                  <TYPE.black>
+                  <ThemedText.Black>
                     <Trans>Your unclaimed UNI</Trans>
-                  </TYPE.black>
+                  </ThemedText.Black>
                 </div>
                 {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.quotient) && (
                   <ButtonEmpty
@@ -301,7 +300,7 @@ export default function Manage({
                 )}
               </RowBetween>
               <RowBetween style={{ alignItems: 'baseline' }}>
-                <TYPE.largeHeader fontSize={36} fontWeight={600}>
+                <ThemedText.LargeHeader fontSize={36} fontWeight={600}>
                   <CountUp
                     key={countUpAmount}
                     isCounting
@@ -311,8 +310,8 @@ export default function Manage({
                     thousandsSeparator={','}
                     duration={1}
                   />
-                </TYPE.largeHeader>
-                <TYPE.black fontSize={16} fontWeight={500}>
+                </ThemedText.LargeHeader>
+                <ThemedText.Black fontSize={16} fontWeight={500}>
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                     ⚡
                   </span>
@@ -325,17 +324,17 @@ export default function Manage({
                   ) : (
                     <Trans>0 UNI / week</Trans>
                   )}
-                </TYPE.black>
+                </ThemedText.Black>
               </RowBetween>
             </AutoColumn>
           </StyledBottomCard>
         </BottomSection>
-        <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
+        <ThemedText.Main style={{ textAlign: 'center' }} fontSize={14}>
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
           <Trans>When you withdraw, the contract will automagically claim UNI on your behalf!</Trans>
-        </TYPE.main>
+        </ThemedText.Main>
 
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
@@ -364,9 +363,9 @@ export default function Manage({
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <TYPE.main>
+          <ThemedText.Main>
             <Trans>{userLiquidityUnstaked.toSignificant(6)} UNI-V2 LP tokens available</Trans>
-          </TYPE.main>
+          </ThemedText.Main>
         )}
       </PositionInfo>
     </PageWrapper>

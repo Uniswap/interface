@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
-import { ApplicationModal, setOpenModal } from '../../state/application/actions'
+
+import { ApplicationModal, setOpenModal } from '../../state/application/reducer'
 
 // Redirects to swap but only replace the pathname
 export function RedirectPathToSwapOnly({ location }: RouteComponentProps) {

@@ -1,21 +1,24 @@
-import { useState } from 'react'
-import styled from 'styled-components/macro'
-import { TYPE, CloseIcon, ExternalLink } from 'theme'
+import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import { ButtonEmpty } from 'components/Button'
-import Modal from 'components/Modal'
 import Card, { OutlineCard } from 'components/Card'
-import { RowBetween, AutoRow } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
+import Modal from 'components/Modal'
+import { AutoRow, RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks/web3'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { useState } from 'react'
+import styled from 'styled-components/macro'
+import { CloseIcon, ExternalLink, ThemedText, Z_INDEX } from 'theme'
+
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { Trans } from '@lingui/macro'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
   padding-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: -2rem;
   width: 100%;
   max-width: 400px;
@@ -23,14 +26,18 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   border-bottom-right-radius: 20px;
   color: ${({ theme }) => theme.text2};
   background-color: ${({ theme }) => theme.advancedBG};
-  z-index: -1;
+  z-index: ${Z_INDEX.deprecated_zero};
 
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
   transition: transform 300ms ease-in-out;
   text-align: center;
 `
 
-const AddressText = styled(TYPE.blue)`
+const StyledButtonEmpty = styled(ButtonEmpty)`
+  text-decoration: none;
+`
+
+const AddressText = styled(ThemedText.Blue)`
   font-size: 12px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -43,7 +50,7 @@ export default function UnsupportedCurrencyFooter({
   currencies,
 }: {
   show: boolean
-  currencies: (Currency | undefined)[]
+  currencies: (Currency | undefined | null)[]
 }) {
   const { chainId } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
@@ -55,7 +62,7 @@ export default function UnsupportedCurrencyFooter({
         })
       : []
 
-  const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
+  const unsupportedTokens = useUnsupportedTokens()
 
   return (
     <DetailsFooter show={show}>
@@ -63,9 +70,9 @@ export default function UnsupportedCurrencyFooter({
         <Card padding="2rem">
           <AutoColumn gap="lg">
             <RowBetween>
-              <TYPE.mediumHeader>
+              <ThemedText.MediumHeader>
                 <Trans>Unsupported Assets</Trans>
-              </TYPE.mediumHeader>
+              </ThemedText.MediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
             {tokens.map((token) => {
@@ -77,7 +84,7 @@ export default function UnsupportedCurrencyFooter({
                     <AutoColumn gap="10px">
                       <AutoRow gap="5px" align="center">
                         <CurrencyLogo currency={token} size={'24px'} />
-                        <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
+                        <ThemedText.Body fontWeight={500}>{token.symbol}</ThemedText.Body>
                       </AutoRow>
                       {chainId && (
                         <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
@@ -90,21 +97,21 @@ export default function UnsupportedCurrencyFooter({
               )
             })}
             <AutoColumn gap="lg">
-              <TYPE.body fontWeight={500}>
+              <ThemedText.Body fontWeight={500}>
                 <Trans>
                   Some assets are not available through this interface because they may not work well with the smart
                   contracts or we are unable to allow trading for legal reasons.
                 </Trans>
-              </TYPE.body>
+              </ThemedText.Body>
             </AutoColumn>
           </AutoColumn>
         </Card>
       </Modal>
-      <ButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
-        <TYPE.blue>
+      <StyledButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
+        <ThemedText.Blue>
           <Trans>Read more about unsupported assets</Trans>
-        </TYPE.blue>
-      </ButtonEmpty>
+        </ThemedText.Blue>
+      </StyledButtonEmpty>
     </DetailsFooter>
   )
 }

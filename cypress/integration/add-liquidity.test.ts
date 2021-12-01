@@ -1,4 +1,5 @@
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
+
 import { aliasQuery, hasQuery } from '../utils/graphql-test-utils'
 
 describe('Add Liquidity', () => {
@@ -57,7 +58,7 @@ describe('Add Liquidity', () => {
       cy.wait('@feeTierDistributionQuery')
 
       cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.3% fee tier')
-      cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '70%')
+      cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '40%')
     })
   })
 })

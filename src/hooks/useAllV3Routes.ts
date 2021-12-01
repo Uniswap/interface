@@ -1,9 +1,21 @@
 import { Currency } from '@uniswap/sdk-core'
 import { Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
-import { useUserSingleHopOnly } from '../state/user/hooks'
-import { useActiveWeb3React } from './web3'
+
 import { useV3SwapPools } from './useV3SwapPools'
+import { useActiveWeb3React } from './web3'
+
+/**
+ * Returns true if poolA is equivalent to poolB
+ * @param poolA one of the two pools
+ * @param poolB the other pool
+ */
+function poolEquals(poolA: Pool, poolB: Pool): boolean {
+  return (
+    poolA === poolB ||
+    (poolA.token0.equals(poolB.token0) && poolA.token1.equals(poolB.token1) && poolA.fee === poolB.fee)
+  )
+}
 
 function computeAllRoutes(
   currencyIn: Currency,
@@ -20,7 +32,7 @@ function computeAllRoutes(
   if (!tokenIn || !tokenOut) throw new Error('Missing tokenIn/tokenOut')
 
   for (const pool of pools) {
-    if (currentPath.indexOf(pool) !== -1 || !pool.involvesToken(tokenIn)) continue
+    if (!pool.involvesToken(tokenIn) || currentPath.find((pathPool) => poolEquals(pool, pathPool))) continue
 
     const outputToken = pool.token0.equals(tokenIn) ? pool.token1 : pool.token0
     if (outputToken.equals(tokenOut)) {
@@ -54,12 +66,10 @@ export function useAllV3Routes(
   const { chainId } = useActiveWeb3React()
   const { pools, loading: poolsLoading } = useV3SwapPools(currencyIn, currencyOut)
 
-  const [singleHopOnly] = useUserSingleHopOnly()
-
   return useMemo(() => {
     if (poolsLoading || !chainId || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [] }
 
-    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, singleHopOnly ? 1 : 2)
+    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, 2)
     return { loading: false, routes }
-  }, [chainId, currencyIn, currencyOut, pools, poolsLoading, singleHopOnly])
+  }, [chainId, currencyIn, currencyOut, pools, poolsLoading])
 }

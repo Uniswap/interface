@@ -1,13 +1,15 @@
-import JSBI from 'jsbi'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
+
 import { UNI } from '../../constants/tokens'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useSingleCallResult } from '../multicall/hooks'
-import { isAddress } from '../../utils'
+import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
 
 interface UserClaimData {
@@ -162,11 +164,12 @@ export function useClaimCallback(account: string | null | undefined): {
 
     return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
-        .claim(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
+        .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Claimed ${unclaimedAmount?.toSignificant(4)} UNI`,
-            claim: { recipient: account },
+            type: TransactionType.CLAIM,
+            recipient: account,
+            uniAmountRaw: unclaimedAmount?.quotient.toString(),
           })
           return response.hash
         })

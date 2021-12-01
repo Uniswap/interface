@@ -2,27 +2,31 @@
 <html translate="no">
   <head>
     <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
+      Only files inside the `public` folder can be referenced from the HTML.
+    -->
     <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#ff007a" />
     <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
+
     <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
+    <link rel="preconnect" href="https://www.google-analytics.com/">
+
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin>
 
     <style>
         * {
@@ -30,9 +34,23 @@
             box-sizing: border-box;
         }
 
+        /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+        @font-face {
+            font-family: 'Inter custom';
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: block;
+            font-named-instance: 'Regular';
+            src: url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format("woff2 supports variations(gvar)"),
+                url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format("woff2-variations"),
+                url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format("woff2");
+        }
+
         @supports (font-variation-settings: normal) {
             * {
-                font-family: 'Inter var', sans-serif;
+                font-family: 'Inter custom', sans-serif;
             }
         }
 
@@ -83,8 +101,6 @@
             }
         }
     </style>
-
-    <title>Uniswap Interface</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -92,7 +108,7 @@
     <!-- The root is the container of the app -->
     <div id="root">
       <!-- Triggers the font to load immediately and then is replaced by the app -->
-      <div style="visibility: hidden">X</div>
+      <div>&emsp;</div>
     </div>
 
     <div id="background-radial-gradient"></div>

@@ -1,5 +1,6 @@
-import { Bound } from '../state/mint/v3/actions'
 import { Price, Token } from '@uniswap/sdk-core'
+
+import { Bound } from '../state/mint/v3/actions'
 import { formatPrice } from './formatCurrencyAmount'
 
 export function formatTickPrice(

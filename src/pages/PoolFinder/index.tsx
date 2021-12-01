@@ -1,10 +1,14 @@
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
+import { useLocation } from 'react-router'
 import { Text } from 'rebass'
+
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
+import { BlueCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { FindPoolTabs } from '../../components/NavigationTabs'
@@ -18,13 +22,10 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
+import { ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
-import { BlueCard } from '../../components/Card'
-import { TYPE } from '../../theme'
-import { useLocation } from 'react-router'
-import { Trans } from '@lingui/macro'
 
 enum Fields {
   TOKEN0 = 0,
@@ -100,11 +101,11 @@ export default function PoolFinder() {
         <AutoColumn style={{ padding: '1rem' }} gap="md">
           <BlueCard>
             <AutoColumn gap="10px">
-              <TYPE.link fontWeight={400} color={'primaryText1'}>
+              <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                 <Trans>
                   <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                 </Trans>
-              </TYPE.link>
+              </ThemedText.Link>
             </AutoColumn>
           </BlueCard>
           <ButtonDropdownLight

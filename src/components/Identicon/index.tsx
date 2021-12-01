@@ -1,29 +1,49 @@
-import { useEffect, useRef } from 'react'
-
+import jazzicon from '@metamask/jazzicon'
+import useENSAvatar from 'hooks/useENSAvatar'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks/web3'
-import Jazzicon from '@metamask/jazzicon'
 
-const StyledIdenticonContainer = styled.div`
+const StyledIdenticon = styled.div`
   height: 1rem;
   width: 1rem;
   border-radius: 1.125rem;
   background-color: ${({ theme }) => theme.bg4};
+  font-size: initial;
+`
+
+const StyledAvatar = styled.img`
+  height: inherit;
+  width: inherit;
+  border-radius: inherit;
 `
 
 export default function Identicon() {
-  const ref = useRef<HTMLDivElement>()
-
   const { account } = useActiveWeb3React()
+  const { avatar } = useENSAvatar(account ?? undefined)
+  const [fetchable, setFetchable] = useState(true)
 
-  useEffect(() => {
-    if (account && ref.current) {
-      ref.current.innerHTML = ''
-      ref.current.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
+  const icon = useMemo(() => account && jazzicon(16, parseInt(account.slice(2, 10), 16)), [account])
+  const iconRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const current = iconRef.current
+    if (icon) {
+      current?.appendChild(icon)
+      return () => {
+        current?.removeChild(icon)
+      }
     }
-  }, [account])
+    return
+  }, [icon, iconRef])
 
-  // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-  return <StyledIdenticonContainer ref={ref as any} />
+  return (
+    <StyledIdenticon>
+      {avatar && fetchable ? (
+        <StyledAvatar alt="avatar" src={avatar} onError={() => setFetchable(false)}></StyledAvatar>
+      ) : (
+        <span ref={iconRef} />
+      )}
+    </StyledIdenticon>
+  )
 }

@@ -8,20 +8,44 @@
       "jsx": true
     }
   },
-  "ignorePatterns": ["node_modules/**/*"],
   "settings": {
     "react": {
       "version": "detect"
     }
   },
+  "ignorePatterns": [
+    "src/types/v3",
+    "src/abis/types",
+    "src/locales/**/*.js",
+    "src/locales/**/en-US.po",
+    "src/state/data/generated.ts",
+    "node_modules",
+    "coverage",
+    "build",
+    "dist",
+    ".DS_Store",
+    ".env.local",
+    ".env.development.local",
+    ".env.test.local",
+    ".env.production.local",
+    ".idea/",
+    ".vscode/",
+    "package-lock.json",
+    "yarn.lock"
+  ],
   "extends": [
+    "react-app",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
+  "plugins": ["simple-import-sort", "unused-imports"],
   "rules": {
+    "unused-imports/no-unused-imports": "error",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
     "prettier/prettier": "error",
     "@typescript-eslint/no-explicit-any": "off",
@@ -29,16 +53,38 @@
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/react-in-jsx-scope": "off",
+    "object-shorthand": ["error", "always"],
     "no-restricted-imports": [
       "error",
       {
         "paths": [
           {
+            "name": "lodash",
+            "message": "Please import from 'lodash/module' directly to support tree-shaking."
+          },
+          {
+            "name": "ethers",
+            "message": "Please import from '@ethersproject/module' directly to support tree-shaking."
+          },
+          {
             "name": "styled-components",
             "message": "Please import from styled-components/macro."
+          },
+          {
+            "name": "@lingui/macro",
+            "importNames": ["t"],
+            "message": "Please use <Trans> instead of t."
           }
         ],
-        "patterns": ["!styled-components/macro"]
+        "patterns": [
+          {
+            "group": ["**/dist"],
+            "message": "Do not import from dist/ - this is an implementation detail, and breaks tree-shaking."
+          },
+          {
+            "group": ["!styled-components/macro"]
+          }
+        ]
       }
     ]
   }
