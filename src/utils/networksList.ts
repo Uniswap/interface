@@ -1,13 +1,15 @@
 import { ChainId } from '@swapr/sdk'
-import { NetworkOptions, NetworkOptionsPreset, NetworksList } from '../components/NetworkSwitcher'
-import { NETWORK_DETAIL } from '../constants'
+import { NetworkOptions, networkOptionsPreset, NetworkOptionsPreset, NetworksList } from '../components/NetworkSwitcher'
+import { NETWORK_DETAIL, SHOW_TESTNETS, TESTNETS } from '../constants'
 
-export const getNetworkInfo = (networkOptionsPreset: NetworkOptionsPreset[], chainId: ChainId) => {
-  const network = networkOptionsPreset.find(net => {
+export const getNetworkInfo = (chainId: ChainId, customPreset: NetworkOptionsPreset[] = networkOptionsPreset) => {
+  const network = customPreset.find(net => {
     return net.chainId === chainId
   })
   return {
-    name: NETWORK_DETAIL[chainId].chainName,
+    name: network?.name,
+    logoSrc: network?.logoSrc,
+    tag: network?.tag,
     isArbitrum: NETWORK_DETAIL[chainId].isArbitrum,
     partnerChainId: NETWORK_DETAIL[chainId].partnerChainId,
     rpcUrl: NETWORK_DETAIL[chainId].rpcUrls,
@@ -16,9 +18,7 @@ export const getNetworkInfo = (networkOptionsPreset: NetworkOptionsPreset[], cha
       name: NETWORK_DETAIL[chainId].nativeCurrency.name,
       symbol: NETWORK_DETAIL[chainId].nativeCurrency.symbol,
       decimals: NETWORK_DETAIL[chainId].nativeCurrency.decimals
-    },
-    logoSrc: network?.logoSrc,
-    tag: network?.tag
+    }
   }
 }
 
@@ -68,34 +68,37 @@ export const createNetworksList = ({
   isNetworkDisabled: (optionChainId: ChainId, selectedNetworkChainId: ChainId) => boolean
   removeSpecifiedTag?: string
 }): NetworksList[] => {
-  let networkPreset = networkOptionsPreset
+  let networks = networkOptionsPreset
+
   if (removeSpecifiedTag) {
-    networkPreset = networkOptionsPreset.map(item => {
+    networks = networkOptionsPreset.map(item => {
       if (item.tag === removeSpecifiedTag) {
         return { ...item, tag: '' }
       }
       return item
     })
   }
-  return networkPreset.reduce<NetworksList[]>((taggedNetworkList, currentNet) => {
-    const tag = currentNet.tag ? currentNet.tag : ''
-    const networkPreset: NetworkOptionsPreset = currentNet
-    const enhancedNetworkOptions = createNetworkOptions({
-      selectedNetworkChainId,
-      setChainId,
-      activeChainId,
-      networkPreset,
-      isNetworkDisabled
-    })
 
-    // check if tag exist and if not create array
-    const tagArrIndex = taggedNetworkList.findIndex(existingTagArr => existingTagArr.tag === tag)
-    if (tagArrIndex > -1) {
-      taggedNetworkList[tagArrIndex].networks.push(enhancedNetworkOptions)
-    } else {
-      taggedNetworkList.push({ tag, networks: [enhancedNetworkOptions] })
-    }
+  return networks
+    .filter(network => SHOW_TESTNETS || !TESTNETS.includes(network.chainId))
+    .reduce<NetworksList[]>((taggedList, currentNet) => {
+      const tag = currentNet.tag ? currentNet.tag : ''
+      const networkPreset = currentNet
+      const enhancedNetworkOptions = createNetworkOptions({
+        selectedNetworkChainId,
+        setChainId,
+        activeChainId,
+        networkPreset,
+        isNetworkDisabled
+      })
 
-    return taggedNetworkList
-  }, [])
+      // check if tag exist and if not create array
+      const tagArrIndex = taggedList.findIndex(existingTagArr => existingTagArr.tag === tag)
+      if (tagArrIndex > -1) {
+        taggedList[tagArrIndex].networks.push(enhancedNetworkOptions)
+      } else {
+        taggedList.push({ tag, networks: [enhancedNetworkOptions] })
+      }
+      return taggedList
+    }, [])
 }

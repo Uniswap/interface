@@ -15,7 +15,7 @@ interface NetworkSwitcherPopoverProps {
   placement?: Placement
 }
 
-const TESTNETS = [4, 46211]
+const TESTNETS = [4, 421611]
 
 export default function NetworkSwitcherPopover({ children, modal, placement }: NetworkSwitcherPopoverProps) {
   const closeModals = useCloseModals()
@@ -67,7 +67,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
     selectedNetworkChainId: chainId ? chainId : -1,
     setChainId: chainId === ChainId.MAINNET ? selectEthereum : (chainId: ChainId) => selectNetwork(chainId),
     activeChainId: !!account ? chainId : -1,
-    isNetworkDisabled: isNetworkDisabled,
+    isNetworkDisabled,
     removeSpecifiedTag: 'coming soon'
   })
 

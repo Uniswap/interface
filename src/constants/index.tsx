@@ -378,4 +378,5 @@ export const OLD_SWPR: { [key: number]: Token } = {
   )
 }
 
-export const SHOW_TESTNETS = true
+export const TESTNETS = [4, 421611]
+export const SHOW_TESTNETS = false
