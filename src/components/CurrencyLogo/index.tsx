@@ -18,7 +18,21 @@ interface CurrencyLogoProps {
   size?: number
 }
 
-export function CurrencyLogo({ currency, size = DEFAULT_SIZE }: CurrencyLogoProps) {
+export function CurrencyLogo(props: CurrencyLogoProps) {
+  const { size, currency } = props
+  const currencyLogoSize = (size ?? DEFAULT_SIZE) - 4
+  const networkSize = currencyLogoSize / 2.5
+  return (
+    <Box height={size} width={size}>
+      <CurrencyLogoOnly size={currencyLogoSize} currency={currency} />
+      <Box position="absolute" bottom={0} right={0}>
+        <NetworkLogo chainId={currency.chainId} size={networkSize} />
+      </Box>
+    </Box>
+  )
+}
+
+function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
   const srcs: string[] = getCurrencyLogoSrcs(currency)
 
   if (currency?.isNative) {
@@ -46,17 +60,4 @@ export function CurrencyLogo({ currency, size = DEFAULT_SIZE }: CurrencyLogoProp
   }
 
   return null
-}
-
-export function CurrencyAndNetworkLogo(props: CurrencyLogoProps) {
-  const size = props.size ?? DEFAULT_SIZE
-  const networkSize = size / 2
-  return (
-    <Box height={size + networkSize / 2} width={size + networkSize / 2}>
-      <CurrencyLogo {...props} />
-      <Box position="absolute" bottom={0} right={0}>
-        <NetworkLogo chainId={props.currency.chainId} size={networkSize} />
-      </Box>
-    </Box>
-  )
 }

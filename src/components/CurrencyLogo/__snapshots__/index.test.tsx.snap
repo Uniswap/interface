@@ -6,8 +6,8 @@ exports[`renders a currency logo with network logo 1`] = `
     Array [
       Object {
         "display": "flex",
-        "height": 25,
-        "width": 25,
+        "height": 20,
+        "width": 20,
       },
     ]
   }
@@ -33,8 +33,8 @@ exports[`renders a currency logo without network logo 1`] = `
     Array [
       Object {
         "display": "flex",
-        "height": 25,
-        "width": 25,
+        "height": 20,
+        "width": 20,
       },
     ]
   }
@@ -49,9 +49,9 @@ exports[`renders a currency logo without network logo 1`] = `
     }
     style={
       Object {
-        "borderRadius": 10,
-        "height": 20,
-        "width": 20,
+        "borderRadius": 8,
+        "height": 16,
+        "width": 16,
       }
     }
   />

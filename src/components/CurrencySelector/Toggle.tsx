@@ -8,7 +8,7 @@ interface ToggleProps {
 
 export function Toggle({ children, filled, onToggle }: PropsWithChildren<ToggleProps>) {
   return (
-    <Button variant="pill" onPress={onToggle} bg={filled ? 'blue' : 'gray100'} borderRadius="lg">
+    <Button p="sm" onPress={onToggle} bg={filled ? 'blue' : 'gray100'} borderRadius="full">
       {children}
     </Button>
   )

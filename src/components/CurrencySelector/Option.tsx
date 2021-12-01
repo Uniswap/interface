@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { Pressable } from 'react-native'
-import { CurrencyAndNetworkLogo } from 'src/components/CurrencyLogo'
+import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 
@@ -16,7 +16,7 @@ export function Option({ currency, onPress }: OptionProps) {
       <Box flexDirection="row" justifyContent="space-between" alignItems="center" width="100%">
         <Box flexDirection="row">
           <Box>
-            <CurrencyAndNetworkLogo currency={currency} size={20} />
+            <CurrencyLogo currency={currency} size={20} />
           </Box>
           <Box marginHorizontal="md" alignItems="flex-start" flexDirection="row">
             <Text variant="body">{currency.symbol}</Text>
