@@ -19,7 +19,7 @@ const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
  * Return a guess of the gas cost used in computing slippage tolerance for a given trade
  * @param trade the trade for which to _guess_ the amount of gas it would cost to execute
  */
-function guesstimateGas(
+export function guesstimateGas(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
 ): number | undefined {
   if (trade instanceof V2Trade) {

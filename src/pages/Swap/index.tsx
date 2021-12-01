@@ -435,6 +435,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 setShowInverted={setShowInverted}
                 gasUseEstimateUSD={gasUseEstimateUSD}
                 allowedSlippage={allowedSlippage}
+                swapInputError={swapInputError}
               />
             )}
             <div>
@@ -569,12 +570,12 @@ export default function Swap({ history }: RouteComponentProps) {
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {swapInputError ? (
-                      swapInputError
-                    ) : priceImpactTooHigh && trade ? (
+                    {priceImpactTooHigh && trade ? (
                       <Trans>Price Impact Too High</Trans>
                     ) : trade && priceImpactSeverity > 2 ? (
                       <Trans>Swap Anyway</Trans>
+                    ) : trade && swapInputError ? (
+                      swapInputError
                     ) : (
                       <Trans>Swap</Trans>
                     )}

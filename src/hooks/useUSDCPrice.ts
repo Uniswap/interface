@@ -1,16 +1,20 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { V3TradeState } from 'state/routing/types'
 import { tryParseAmount } from 'state/swap/hooks'
 
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC, USDC_ARBITRUM } from '../constants/tokens'
+import { useCurrency } from './Tokens'
 import { useBestV2Trade } from './useBestV2Trade'
+import { useBestV3Trade } from './useBestV3Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import { useActiveWeb3React } from './web3'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
+export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
   [SupportedChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
   [SupportedChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
@@ -88,5 +92,32 @@ export function useStablecoinAmountFromFiatValue(fiatValue: string | null | unde
     return tryParseAmount(parsedForDecimals, stablecoin)
   } catch (error) {
     return undefined
+  }
+}
+
+/**
+ * Get gas cost estimate for a dummy ETH / Stable v3 trade
+ * @returns Estimate in form of stablecoin amount or null
+ */
+export function useDefaultGasCostEstimate(): {
+  cost: CurrencyAmount<Token> | null
+  loading: boolean
+  syncing: boolean
+} {
+  const { chainId } = useActiveWeb3React()
+  const stablecoin = chainId ? STABLECOIN_AMOUNT_OUT[chainId]?.currency : undefined
+  const ether = useCurrency('ETH')
+  const dummyEthAmount = ether ? CurrencyAmount.fromRawAmount(ether, JSBI.BigInt(1)) : undefined
+  const trade = useBestV3Trade(TradeType.EXACT_INPUT, dummyEthAmount ?? undefined, stablecoin)
+
+  const [routeIsLoading, routeIsSyncing] = useMemo(
+    () => [!trade.trade?.swaps, V3TradeState.LOADING === trade.state, V3TradeState.SYNCING === trade.state],
+    [trade]
+  )
+
+  return {
+    cost: trade?.gasUseEstimateUSD,
+    loading: routeIsLoading,
+    syncing: routeIsSyncing,
   }
 }
