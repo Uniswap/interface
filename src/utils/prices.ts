@@ -1,12 +1,14 @@
-import JSBI from 'jsbi'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import JSBI from 'jsbi'
+
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
   ALLOWED_PRICE_IMPACT_MEDIUM,
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
+  ZERO_PERCENT,
 } from '../constants/misc'
 
 const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
@@ -28,13 +30,24 @@ export function computeRealizedLPFeePercent(
       )
     )
   } else {
-    percent = ONE_HUNDRED_PERCENT.subtract(
-      trade.route.pools.reduce<Percent>(
-        (currentFee: Percent, pool): Percent =>
-          currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
-        ONE_HUNDRED_PERCENT
+    //TODO(judo): validate this
+    percent = ZERO_PERCENT
+    for (const swap of trade.swaps) {
+      const { numerator, denominator } = swap.inputAmount.divide(trade.inputAmount)
+      const overallPercent = new Percent(numerator, denominator)
+
+      const routeRealizedLPFeePercent = overallPercent.multiply(
+        ONE_HUNDRED_PERCENT.subtract(
+          swap.route.pools.reduce<Percent>(
+            (currentFee: Percent, pool): Percent =>
+              currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
+            ONE_HUNDRED_PERCENT
+          )
+        )
       )
-    )
+
+      percent = percent.add(routeRealizedLPFeePercent)
+    }
   }
 
   return new Percent(percent.numerator, percent.denominator)

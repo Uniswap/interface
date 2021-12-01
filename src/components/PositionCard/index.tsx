@@ -1,32 +1,30 @@
-import JSBI from 'jsbi'
-import { Percent, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
+import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { Trans } from '@lingui/macro'
 
+import { BIG_INT_ZERO } from '../../constants/misc'
+import { useColor } from '../../hooks/useColor'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/unwrappedToken'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty } from '../Button'
-import { transparentize } from 'polished'
-import { CardNoise } from '../earn/styled'
-
-import { useColor } from '../../hooks/useColor'
-
+import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
 import { GreyCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { RowBetween, RowFixed, AutoRow } from '../Row'
+import { CardNoise } from '../earn/styled'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO } from '../../constants/misc'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -144,7 +142,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
         </GreyCard>
       ) : (
         <LightCard>
-          <TYPE.subHeader style={{ textAlign: 'center' }}>
+          <ThemedText.SubHeader style={{ textAlign: 'center' }}>
             <span role="img" aria-label="wizard-icon">
               ⭐️
             </span>{' '}
@@ -152,7 +150,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
               By adding liquidity you&apos;ll earn 0.3% of all trades on this pair proportional to your share of the
               pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
             </Trans>{' '}
-          </TYPE.subHeader>
+          </ThemedText.SubHeader>
         </LightCard>
       )}
     </>

@@ -1,4 +1,5 @@
-import { WETH9, Token, Ether } from '@uniswap/sdk-core'
+import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
+
 import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
@@ -16,6 +17,20 @@ export const DAI = new Token(
   'DAI',
   'Dai Stablecoin'
 )
+export const DAI_ARBITRUM_ONE = new Token(
+  SupportedChainId.ARBITRUM_ONE,
+  '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  18,
+  'DAI',
+  'Dai stable coin'
+)
+export const DAI_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  18,
+  'DAI',
+  'Dai stable coin'
+)
 export const USDC = new Token(
   SupportedChainId.MAINNET,
   '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -25,17 +40,17 @@ export const USDC = new Token(
 )
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
-  '0xe865dF68133fcEd7c2285ff3896B406CAfAa2dB8',
+  '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
   6,
   'USDC',
   'USD//C'
 )
-export const DAI_OPTIMISM = new Token(
+export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
-  '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-  18,
-  'DAI',
-  'Dai stable coin'
+  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  6,
+  'USDC',
+  'USD//C'
 )
 export const USDT = new Token(
   SupportedChainId.MAINNET,
@@ -44,9 +59,37 @@ export const USDT = new Token(
   'USDT',
   'Tether USD'
 )
+export const USDT_ARBITRUM_ONE = new Token(
+  SupportedChainId.ARBITRUM_ONE,
+  '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+  6,
+  'USDT',
+  'Tether USD'
+)
+export const USDT_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+  6,
+  'USDT',
+  'Tether USD'
+)
 export const WBTC = new Token(
   SupportedChainId.MAINNET,
   '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+  8,
+  'WBTC',
+  'Wrapped BTC'
+)
+export const WBTC_ARBITRUM_ONE = new Token(
+  SupportedChainId.ARBITRUM_ONE,
+  '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
+  8,
+  'WBTC',
+  'Wrapped BTC'
+)
+export const WBTC_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x68f180fcCe6836688e9084f035309E29Bf0A2095',
   8,
   'WBTC',
   'Wrapped BTC'
@@ -86,13 +129,6 @@ export const renBTC = new Token(
   'renBTC',
   'renBTC'
 )
-export const UMA = new Token(
-  SupportedChainId.MAINNET,
-  '0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828',
-  18,
-  'UMA',
-  'UMA Voting Token v1'
-)
 export const ETH2X_FLI = new Token(
   SupportedChainId.MAINNET,
   '0xAa6E8127831c9DE45ae56bB1b0d4D4Da6e5665BD',
@@ -100,20 +136,26 @@ export const ETH2X_FLI = new Token(
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
 )
-// Mirror Protocol compat.
-export const UST = new Token(
+export const sETH2 = new Token(
   SupportedChainId.MAINNET,
-  '0xa47c8bf37f92abed4a126bda807a7b7498661acd',
+  '0xFe2e637202056d30016725477c5da089Ab0A043A',
   18,
-  'UST',
-  'Wrapped UST'
+  'sETH2',
+  'StakeWise Staked ETH2'
 )
-export const MIR = new Token(
+export const rETH2 = new Token(
   SupportedChainId.MAINNET,
-  '0x09a3ecafa817268f77be1283176b946c4ff2e608',
+  '0x20BC832ca081b91433ff6c17f85701B6e92486c5',
   18,
-  'MIR',
-  'Wrapped MIR'
+  'rETH2',
+  'StakeWise Reward ETH2'
+)
+export const SWISE = new Token(
+  SupportedChainId.MAINNET,
+  '0x48C3399719B582dD63eB5AADf12A40B4C3f52FA2',
+  18,
+  'SWISE',
+  'StakeWise'
 )
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),

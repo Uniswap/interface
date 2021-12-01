@@ -1,14 +1,14 @@
-import React, { useContext } from 'react'
-import { ThemeContext } from 'styled-components/macro'
-import { Text } from 'rebass'
-import { ExternalLink, TYPE } from 'theme'
+import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Trans } from '@lingui/macro'
+import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components/macro'
+import { ExternalLink, ThemedText } from 'theme'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export const ProposalSubmissionModal = ({
   isOpen,
@@ -26,9 +26,9 @@ export const ProposalSubmissionModal = ({
       {!hash ? (
         <LoadingView onDismiss={onDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>
+            <ThemedText.LargeHeader>
               <Trans>Submitting Proposal</Trans>
-            </TYPE.largeHeader>
+            </ThemedText.LargeHeader>
           </AutoColumn>
         </LoadingView>
       ) : (

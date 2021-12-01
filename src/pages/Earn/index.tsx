@@ -1,17 +1,18 @@
-import JSBI from 'jsbi'
-import { AutoColumn } from '../../components/Column'
-import styled from 'styled-components/macro'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { TYPE, ExternalLink } from '../../theme'
-import PoolCard from '../../components/earn/PoolCard'
-import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { Countdown } from './Countdown'
-import Loader from '../../components/Loader'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { BIG_INT_ZERO } from '../../constants/misc'
-import { OutlineCard } from '../../components/Card'
 import { Trans } from '@lingui/macro'
+import JSBI from 'jsbi'
+import styled from 'styled-components/macro'
+
+import { OutlineCard } from '../../components/Card'
+import { AutoColumn } from '../../components/Column'
+import PoolCard from '../../components/earn/PoolCard'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import Loader from '../../components/Loader'
+import { RowBetween } from '../../components/Row'
+import { BIG_INT_ZERO } from '../../constants/misc'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { ExternalLink, ThemedText } from '../../theme'
+import { Countdown } from './Countdown'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -62,25 +63,25 @@ export default function Earn() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>
+                <ThemedText.White fontWeight={600}>
                   <Trans>Uniswap liquidity mining</Trans>
-                </TYPE.white>
+                </ThemedText.White>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
+                <ThemedText.White fontSize={14}>
                   <Trans>
                     Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
                   </Trans>
-                </TYPE.white>
+                </ThemedText.White>
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 href="https://uniswap.org/blog/uni/"
                 target="_blank"
               >
-                <TYPE.white fontSize={14}>
+                <ThemedText.White fontSize={14}>
                   <Trans>Read more about UNI</Trans>
-                </TYPE.white>
+                </ThemedText.White>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -91,9 +92,9 @@ export default function Earn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
+          <ThemedText.MediumHeader style={{ marginTop: '0.5rem' }}>
             <Trans>Participating pools</Trans>
-          </TYPE.mediumHeader>
+          </ThemedText.MediumHeader>
           <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
         </DataRow>
 

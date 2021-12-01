@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
 import { area, curveStepAfter, ScaleLinear } from 'd3'
+import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
+
 import { ChartEntry } from './types'
-import inRange from 'lodash/inRange'
 
 const Path = styled.path<{ fill: string | undefined }>`
   opacity: 0.5;
@@ -35,7 +35,10 @@ export const Area = ({
             .x((d: unknown) => xScale(xValue(d as ChartEntry)))
             .y1((d: unknown) => yScale(yValue(d as ChartEntry)))
             .y0(yScale(0))(
-            series.filter((d) => inRange(xScale(xValue(d)), 0, innerWidth)) as Iterable<[number, number]>
+            series.filter((d) => {
+              const value = xScale(xValue(d))
+              return value > 0 && value <= window.innerWidth
+            }) as Iterable<[number, number]>
           ) ?? undefined
         }
       />

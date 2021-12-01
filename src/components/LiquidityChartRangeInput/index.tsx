@@ -1,37 +1,47 @@
-import React, { ReactNode, useCallback, useMemo } from 'react'
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Loader'
+import { format } from 'd3'
 import { useColor } from 'hooks/useColor'
 import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
-import { BarChart2, Inbox, CloudOff } from 'react-feather'
+import React, { ReactNode, useCallback, useMemo } from 'react'
+import { BarChart2, CloudOff, Inbox } from 'react-feather'
+import ReactGA from 'react-ga'
 import { batch } from 'react-redux'
+import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
-import { TYPE } from '../../theme'
+
+import { ThemedText } from '../../theme'
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
-import { format } from 'd3'
-import { Bound } from 'state/mint/v3/actions'
-import { FeeAmount } from '@uniswap/v3-sdk'
-import ReactGA from 'react-ga'
 import { ZoomLevels } from './types'
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
+  [FeeAmount.LOWEST]: {
+    initialMin: 0.999,
+    initialMax: 1.001,
+    min: 0.00001,
+    max: 1.5,
+  },
   [FeeAmount.LOW]: {
-    initial: 0.002,
-    min: 0.001,
-    max: 2,
+    initialMin: 0.999,
+    initialMax: 1.001,
+    min: 0.00001,
+    max: 1.5,
   },
   [FeeAmount.MEDIUM]: {
-    initial: 0.3,
-    min: 0.01,
+    initialMin: 0.5,
+    initialMax: 2,
+    min: 0.00001,
     max: 20,
   },
   [FeeAmount.HIGH]: {
-    initial: 0.3,
-    min: 0.01,
+    initialMin: 0.5,
+    initialMax: 2,
+    min: 0.00001,
     max: 20,
   },
 }
@@ -48,9 +58,9 @@ function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
     <ColumnCenter style={{ height: '100%', justifyContent: 'center' }}>
       {icon}
       {message && (
-        <TYPE.mediumHeader padding={10} marginTop="20px">
+        <ThemedText.MediumHeader padding={10} marginTop="20px" textAlign="center">
           {message}
-        </TYPE.mediumHeader>
+        </ThemedText.MediumHeader>
       )}
     </ColumnCenter>
   )
@@ -84,6 +94,8 @@ export default function LiquidityChartRangeInput({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
+  const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
+
   const { isLoading, isUninitialized, isError, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
@@ -91,14 +103,9 @@ export default function LiquidityChartRangeInput({
   })
 
   const onBrushDomainChangeEnded = useCallback(
-    (domain) => {
+    (domain, mode) => {
       let leftRangeValue = Number(domain[0])
       const rightRangeValue = Number(domain[1])
-
-      ReactGA.event({
-        category: 'Liquidity',
-        action: 'Chart brushed',
-      })
 
       if (leftRangeValue <= 0) {
         leftRangeValue = 1 / 10 ** 6
@@ -106,38 +113,48 @@ export default function LiquidityChartRangeInput({
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
-        rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
+        if (
+          (!ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] || mode === 'handle' || mode === 'reset') &&
+          leftRangeValue > 0
+        ) {
+          onLeftRangeInput(leftRangeValue.toFixed(6))
+        }
+
+        if ((!ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] || mode === 'reset') && rightRangeValue > 0) {
+          // todo: remove this check. Upper bound for large numbers
+          // sometimes fails to parse to tick.
+          if (rightRangeValue < 1e35) {
+            onRightRangeInput(rightRangeValue.toFixed(6))
+          }
+        }
       })
     },
-    [onLeftRangeInput, onRightRangeInput]
+    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit]
   )
 
   interactive = interactive && Boolean(formattedData?.length)
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
-    const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
-
     const leftPrice = isSorted ? priceLower : priceUpper?.invert()
     const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
     return leftPrice && rightPrice
-      ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+      ? [parseFloat(leftPrice?.toSignificant(6)), parseFloat(rightPrice?.toSignificant(6))]
       : undefined
-  }, [currencyA, currencyB, priceLower, priceUpper])
+  }, [isSorted, priceLower, priceUpper])
 
   const brushLabelValue = useCallback(
     (d: 'w' | 'e', x: number) => {
       if (!price) return ''
 
-      if (d === 'w' && ticksAtLimit[Bound.LOWER]) return '0'
-      if (d === 'e' && ticksAtLimit[Bound.UPPER]) return '∞'
+      if (d === 'w' && ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]) return '0'
+      if (d === 'e' && ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]) return '∞'
 
-      const percent = (((x < price ? -1 : 1) * (Math.max(x, price) - Math.min(x, price))) / Math.min(x, price)) * 100
+      const percent = (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100
 
       return price ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
     },
-    [price, ticksAtLimit]
+    [isSorted, price, ticksAtLimit]
   )
 
   if (isError) {
@@ -189,6 +206,7 @@ export default function LiquidityChartRangeInput({
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
             zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
+            ticksAtLimit={ticksAtLimit}
           />
         </ChartWrapper>
       )}

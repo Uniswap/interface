@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useRef } from 'react'
 import { ButtonGray } from 'components/Button'
-import styled from 'styled-components/macro'
-import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform } from 'd3'
+import { ScaleLinear, select, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { RefreshCcw, ZoomIn, ZoomOut } from 'react-feather'
+import styled from 'styled-components/macro'
+
 import { ZoomLevels } from './types'
 
 const Wrapper = styled.div<{ count: number }>`
@@ -26,26 +27,37 @@ const Button = styled(ButtonGray)`
   padding: 4px;
 `
 
+export const ZoomOverlay = styled.rect`
+  fill: transparent;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+`
+
 export default function Zoom({
   svg,
   xScale,
   setZoom,
-  innerWidth,
-  innerHeight,
-  showClear,
+  width,
+  height,
+  resetBrush,
+  showResetButton,
   zoomLevels,
 }: {
-  svg: SVGSVGElement | null
+  svg: SVGElement | null
   xScale: ScaleLinear<number, number>
   setZoom: (transform: ZoomTransform) => void
-  innerWidth: number
-  innerHeight: number
-  showClear: boolean
+  width: number
+  height: number
+  resetBrush: () => void
+  showResetButton: boolean
   zoomLevels: ZoomLevels
 }) {
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>()
 
-  const [zoomIn, zoomOut, reset] = useMemo(
+  const [zoomIn, zoomOut, zoomInitial, zoomReset] = useMemo(
     () => [
       () =>
         svg &&
@@ -64,36 +76,47 @@ export default function Zoom({
         zoomBehavior.current &&
         select(svg as Element)
           .transition()
-          .call(zoomBehavior.current.scaleTo, 1),
+          .call(zoomBehavior.current.scaleTo, 0.5),
+      () =>
+        svg &&
+        zoomBehavior.current &&
+        select(svg as Element)
+          .call(zoomBehavior.current.transform, zoomIdentity.translate(0, 0).scale(1))
+          .transition()
+          .call(zoomBehavior.current.scaleTo, 0.5),
     ],
-    [svg, zoomBehavior]
+    [svg]
   )
 
   useEffect(() => {
     if (!svg) return
 
-    // zoom
     zoomBehavior.current = zoom()
       .scaleExtent([zoomLevels.min, zoomLevels.max])
-      .translateExtent([
-        [0, 0],
-        [innerWidth, innerHeight],
-      ])
       .extent([
         [0, 0],
-        [innerWidth, innerHeight],
+        [width, height],
       ])
       .on('zoom', ({ transform }: { transform: ZoomTransform }) => setZoom(transform))
 
-    select(svg as Element)
-      .call(zoomBehavior.current)
-      .on('mousedown.zoom', null)
-  }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior, zoomLevels.max, zoomLevels.min])
+    select(svg as Element).call(zoomBehavior.current)
+  }, [height, width, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min])
+
+  useEffect(() => {
+    // reset zoom to initial on zoomLevel change
+    zoomInitial()
+  }, [zoomInitial, zoomLevels])
 
   return (
-    <Wrapper count={showClear ? 3 : 2}>
-      {showClear && (
-        <Button onClick={reset} disabled={false}>
+    <Wrapper count={showResetButton ? 3 : 2}>
+      {showResetButton && (
+        <Button
+          onClick={() => {
+            resetBrush()
+            zoomReset()
+          }}
+          disabled={false}
+        >
           <RefreshCcw size={16} />
         </Button>
       )}

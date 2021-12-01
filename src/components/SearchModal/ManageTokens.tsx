@@ -1,22 +1,22 @@
-import { useRef, RefObject, useCallback, useState, useMemo } from 'react'
-import Column from 'components/Column'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { PaddedColumn, Separator, SearchInput } from './styleds'
-import Row, { RowBetween, RowFixed } from 'components/Row'
-import { TYPE, ExternalLinkIcon, TrashIcon, ButtonText, ExternalLink } from 'theme'
-import { useToken } from 'hooks/Tokens'
-import styled from 'styled-components/macro'
-import { useUserAddedTokens, useRemoveUserAddedToken } from 'state/user/hooks'
-import { Token } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { isAddress } from 'utils'
-import { useActiveWeb3React } from 'hooks/web3'
-import Card from 'components/Card'
-import ImportRow from './ImportRow'
-import useTheme from '../../hooks/useTheme'
 import { Trans } from '@lingui/macro'
+import { Token } from '@uniswap/sdk-core'
+import Card from 'components/Card'
+import Column from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import Row, { RowBetween, RowFixed } from 'components/Row'
+import { useToken } from 'hooks/Tokens'
+import { useActiveWeb3React } from 'hooks/web3'
+import { RefObject, useCallback, useMemo, useRef, useState } from 'react'
+import { useRemoveUserAddedToken, useUserAddedTokens } from 'state/user/hooks'
+import styled from 'styled-components/macro'
+import { ButtonText, ExternalLink, ExternalLinkIcon, ThemedText, TrashIcon } from 'theme'
+import { isAddress } from 'utils'
 
+import useTheme from '../../hooks/useTheme'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { CurrencyModalView } from './CurrencySearchModal'
+import ImportRow from './ImportRow'
+import { PaddedColumn, SearchInput, Separator } from './styleds'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -81,9 +81,9 @@ export default function ManageTokens({
           <RowFixed>
             <CurrencyLogo currency={token} size={'20px'} />
             <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
-              <TYPE.main ml={'10px'} fontWeight={600}>
+              <ThemedText.Main ml={'10px'} fontWeight={600}>
                 {token.symbol}
-              </TYPE.main>
+              </ThemedText.Main>
             </ExternalLink>
           </RowFixed>
           <RowFixed>
@@ -111,9 +111,9 @@ export default function ManageTokens({
             />
           </Row>
           {searchQuery !== '' && !isAddressSearch && (
-            <TYPE.error error={true}>
+            <ThemedText.Error error={true}>
               <Trans>Enter valid token address</Trans>
-            </TYPE.error>
+            </ThemedText.Error>
           )}
           {searchToken && (
             <Card backgroundColor={theme.bg2} padding="10px 0">
@@ -129,14 +129,14 @@ export default function ManageTokens({
         <Separator />
         <PaddedColumn gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
           <RowBetween>
-            <TYPE.main fontWeight={600}>
+            <ThemedText.Main fontWeight={600}>
               <Trans>{userAddedTokens?.length} Custom Tokens</Trans>
-            </TYPE.main>
+            </ThemedText.Main>
             {userAddedTokens.length > 0 && (
               <ButtonText onClick={handleRemoveAll}>
-                <TYPE.blue>
+                <ThemedText.Blue>
                   <Trans>Clear all</Trans>
-                </TYPE.blue>
+                </ThemedText.Blue>
               </ButtonText>
             )}
           </RowBetween>
@@ -144,9 +144,9 @@ export default function ManageTokens({
         </PaddedColumn>
       </Column>
       <Footer>
-        <TYPE.darkGray>
+        <ThemedText.DarkGray>
           <Trans>Tip: Custom tokens are stored locally in your browser</Trans>
-        </TYPE.darkGray>
+        </ThemedText.DarkGray>
       </Footer>
     </Wrapper>
   )

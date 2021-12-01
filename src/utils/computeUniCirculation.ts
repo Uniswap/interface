@@ -1,6 +1,7 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
+
 import { STAKING_GENESIS } from '../state/stake/hooks'
 
 const STAKING_END = STAKING_GENESIS + 60 * 60 * 24 * 60

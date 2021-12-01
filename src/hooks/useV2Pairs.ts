@@ -1,10 +1,11 @@
+import { Interface } from '@ethersproject/abi'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { Interface } from '@ethersproject/abi'
+
 import { V2_FACTORY_ADDRESSES } from '../constants/addresses'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 

@@ -1,27 +1,28 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { LightGreyCard } from 'components/Card'
+import QuestionHelper from 'components/QuestionHelper'
+import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
+
+import TokenListLogo from '../../assets/svg/tokenlist.svg'
+import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useCombinedActiveList } from '../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { TYPE } from '../../theme'
-import { useIsUserAddedToken } from '../../hooks/Tokens'
-import Column from '../Column'
-import { RowFixed, RowBetween } from '../Row'
-import CurrencyLogo from '../CurrencyLogo'
-import { MouseoverTooltip } from '../Tooltip'
-import { MenuItem } from './styleds'
-import Loader from '../Loader'
+import { ThemedText } from '../../theme'
 import { isTokenOnList } from '../../utils'
+import Column from '../Column'
+import CurrencyLogo from '../CurrencyLogo'
+import Loader from '../Loader'
+import { RowBetween, RowFixed } from '../Row'
+import { MouseoverTooltip } from '../Tooltip'
 import ImportRow from './ImportRow'
-import { LightGreyCard } from 'components/Card'
-import TokenListLogo from '../../assets/svg/tokenlist.svg'
-import QuestionHelper from 'components/QuestionHelper'
-import useTheme from 'hooks/useTheme'
+import { MenuItem } from './styleds'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
@@ -134,13 +135,13 @@ function CurrencyRow({
         <Text title={currency.name} fontWeight={500}>
           {currency.symbol}
         </Text>
-        <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
+        <ThemedText.DarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
           {!currency.isNative && !isOnSelectedList && customAdded ? (
             <Trans>{currency.name} • Added by user</Trans>
           ) : (
             currency.name
           )}
-        </TYPE.darkGray>
+        </ThemedText.DarkGray>
       </Column>
       <TokenTags currency={currency} />
       {showCurrencyAmount && (
@@ -166,9 +167,9 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
         <RowBetween>
           <RowFixed>
             <TokenListLogoWrapper src={TokenListLogo} />
-            <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
+            <ThemedText.Main ml="6px" fontSize="12px" color={theme.text1}>
               <Trans>Expanded results from inactive Token Lists</Trans>
-            </TYPE.main>
+            </ThemedText.Main>
           </RowFixed>
           <QuestionHelper
             text={

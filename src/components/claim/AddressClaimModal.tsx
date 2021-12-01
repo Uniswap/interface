@@ -1,26 +1,27 @@
+import { isAddress } from '@ethersproject/address'
+import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useState } from 'react'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import Modal from '../Modal'
-import { AutoColumn, ColumnCenter } from '../Column'
-import styled from 'styled-components/macro'
-import { DataCard, CardSection, Break } from '../earn/styled'
-import { RowBetween } from '../Row'
-import { TYPE, ExternalLink, CloseIcon, CustomLightSpinner, UniTokenAnimated } from '../../theme'
-import { ButtonPrimary } from '../Button'
-import { useClaimCallback, useUserUnclaimedAmount, useUserHasAvailableClaim } from '../../state/claim/hooks'
-import tokenLogo from '../../assets/images/token-logo.png'
-import Circle from '../../assets/images/blue-loader.svg'
 import { Text } from 'rebass'
-import AddressInputPanel from '../AddressInputPanel'
+import styled from 'styled-components/macro'
+
+import Circle from '../../assets/images/blue-loader.svg'
+import tokenLogo from '../../assets/images/token-logo.png'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { isAddress } from 'ethers/lib/utils'
-import Confetti from '../Confetti'
-import { CardNoise, CardBGImage, CardBGImageSmaller } from '../earn/styled'
+import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from '../../theme'
 import { shortenAddress } from '../../utils'
-import { Trans } from '@lingui/macro'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import AddressInputPanel from '../AddressInputPanel'
+import { ButtonPrimary } from '../Button'
+import { AutoColumn, ColumnCenter } from '../Column'
+import Confetti from '../Confetti'
+import { Break, CardSection, DataCard } from '../earn/styled'
+import { CardBGImage, CardBGImageSmaller, CardNoise } from '../earn/styled'
+import Modal from '../Modal'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -104,29 +105,29 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={500}>
+                <ThemedText.White fontWeight={500}>
                   <Trans>Claim UNI Token</Trans>
-                </TYPE.white>
+                </ThemedText.White>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
-              <TYPE.white fontWeight={700} fontSize={36}>
+              <ThemedText.White fontWeight={700} fontSize={36}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
-              </TYPE.white>
+              </ThemedText.White>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <TYPE.subHeader fontWeight={500}>
+            <ThemedText.SubHeader fontWeight={500}>
               <Trans>
                 Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
                 submission.
               </Trans>
-            </TYPE.subHeader>
+            </ThemedText.SubHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && (
-              <TYPE.error error={true}>
+              <ThemedText.Error error={true}>
                 <Trans>Address has no available claim</Trans>
-              </TYPE.error>
+              </ThemedText.Error>
             )}
             <ButtonPrimary
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
@@ -158,23 +159,23 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TYPE.largeHeader fontWeight={600} color="black">
+              <ThemedText.LargeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
-              </TYPE.largeHeader>
+              </ThemedText.LargeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}
               {parsedAddress && (
-                <TYPE.largeHeader fontWeight={600} color="black">
+                <ThemedText.LargeHeader fontWeight={600} color="black">
                   <Trans>for {shortenAddress(parsedAddress)}</Trans>
-                </TYPE.largeHeader>
+                </ThemedText.LargeHeader>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <TYPE.subHeader fontWeight={500} color="black">
+                <ThemedText.SubHeader fontWeight={500} color="black">
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>
@@ -182,13 +183,13 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                   <span role="img" aria-label="party-hat">
                     🎉
                   </span>
-                </TYPE.subHeader>
+                </ThemedText.SubHeader>
               </>
             )}
             {attempting && !hash && (
-              <TYPE.subHeader color="black">
+              <ThemedText.SubHeader color="black">
                 <Trans>Confirm this transaction in your wallet</Trans>
-              </TYPE.subHeader>
+              </ThemedText.SubHeader>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>

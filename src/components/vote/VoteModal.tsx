@@ -1,19 +1,20 @@
-import { useState, useContext } from 'react'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
-
-import Modal from '../Modal'
-import { AutoColumn, ColumnCenter } from '../Column'
-import styled, { ThemeContext } from 'styled-components/macro'
-import { RowBetween } from '../Row'
-import { TYPE, CustomLightSpinner } from '../../theme'
-import { X, ArrowUpCircle } from 'react-feather'
-import { ButtonPrimary } from '../Button'
-import Circle from '../../assets/images/blue-loader.svg'
-import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
-import { ExternalLink } from '../../theme/components'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { Trans } from '@lingui/macro'
+import { useContext, useState } from 'react'
+import { ArrowUpCircle, X } from 'react-feather'
+import styled, { ThemeContext } from 'styled-components/macro'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+
+import Circle from '../../assets/images/blue-loader.svg'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
+import { VoteOption } from '../../state/governance/types'
+import { CustomLightSpinner, ThemedText } from '../../theme'
+import { ExternalLink } from '../../theme'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { ButtonPrimary } from '../Button'
+import { AutoColumn, ColumnCenter } from '../Column'
+import Modal from '../Modal'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -38,17 +39,13 @@ const ConfirmedIcon = styled(ColumnCenter)`
 interface VoteModalProps {
   isOpen: boolean
   onDismiss: () => void
-  support: boolean // if user is for or against proposal
+  voteOption: VoteOption | undefined
   proposalId: string | undefined // id for the proposal to vote on
 }
 
-export default function VoteModal({ isOpen, onDismiss, proposalId, support }: VoteModalProps) {
+export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }: VoteModalProps) {
   const { chainId } = useActiveWeb3React()
-  const {
-    voteCallback,
-  }: {
-    voteCallback: (proposalId: string | undefined, support: boolean) => Promise<string> | undefined
-  } = useVoteCallback()
+  const { voteCallback } = useVoteCallback()
   const { votes: availableVotes } = useUserVotes()
 
   // monitor call to help UI loading state
@@ -69,10 +66,10 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!voteCallback) return
+    if (!voteCallback || voteOption === undefined) return
 
     // try delegation and store hash
-    const hash = await voteCallback(proposalId, support)?.catch((error) => {
+    const hash = await voteCallback(proposalId, voteOption)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -88,26 +85,30 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <TYPE.mediumHeader fontWeight={500}>
-                {support ? (
+              <ThemedText.MediumHeader fontWeight={500}>
+                {voteOption === VoteOption.Against ? (
+                  <Trans>Vote against proposal {proposalId}</Trans>
+                ) : voteOption === VoteOption.For ? (
                   <Trans>Vote for proposal {proposalId}</Trans>
                 ) : (
-                  <Trans>Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote to abstain on proposal {proposalId}</Trans>
                 )}
-              </TYPE.mediumHeader>
+              </ThemedText.MediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
-            <TYPE.largeHeader>
+            <ThemedText.LargeHeader>
               <Trans>{formatCurrencyAmount(availableVotes, 4)} Votes</Trans>
-            </TYPE.largeHeader>
+            </ThemedText.LargeHeader>
             <ButtonPrimary onClick={onVote}>
-              <TYPE.mediumHeader color="white">
-                {support ? (
+              <ThemedText.MediumHeader color="white">
+                {voteOption === VoteOption.Against ? (
+                  <Trans>Vote against proposal {proposalId}</Trans>
+                ) : voteOption === VoteOption.For ? (
                   <Trans>Vote for proposal {proposalId}</Trans>
                 ) : (
-                  <Trans>Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote to abstain on proposal {proposalId}</Trans>
                 )}
-              </TYPE.mediumHeader>
+              </ThemedText.MediumHeader>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -123,13 +124,13 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TYPE.largeHeader>
+              <ThemedText.LargeHeader>
                 <Trans>Submitting Vote</Trans>
-              </TYPE.largeHeader>
+              </ThemedText.LargeHeader>
             </AutoColumn>
-            <TYPE.subHeader>
+            <ThemedText.SubHeader>
               <Trans>Confirm this transaction in your wallet</Trans>
-            </TYPE.subHeader>
+            </ThemedText.SubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
       )}
@@ -144,18 +145,18 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TYPE.largeHeader>
+              <ThemedText.LargeHeader>
                 <Trans>Transaction Submitted</Trans>
-              </TYPE.largeHeader>
+              </ThemedText.LargeHeader>
             </AutoColumn>
             {chainId && (
               <ExternalLink
                 href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
                 style={{ marginLeft: '4px' }}
               >
-                <TYPE.subHeader>
+                <ThemedText.SubHeader>
                   <Trans>View transaction on Explorer</Trans>
-                </TYPE.subHeader>
+                </ThemedText.SubHeader>
               </ExternalLink>
             )}
           </AutoColumn>

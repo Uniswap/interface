@@ -1,8 +1,9 @@
-import { useSingleCallResult, useSingleContractMultipleData, Result } from 'state/multicall/hooks'
-import { useMemo } from 'react'
-import { PositionDetails } from 'types/position'
-import { useV3NFTPositionManagerContract } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useMemo } from 'react'
+import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+import { PositionDetails } from 'types/position'
+
+import { useV3NFTPositionManagerContract } from './useContract'
 
 interface UseV3PositionsResults {
   loading: boolean

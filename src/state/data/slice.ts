@@ -1,4 +1,4 @@
-import { BaseQueryApi, BaseQueryFn } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
+import { BaseQueryFn } from '@reduxjs/toolkit/query'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { SupportedChainId } from 'constants/chains'
 import { DocumentNode } from 'graphql'
@@ -8,8 +8,11 @@ import { AppState } from 'state'
 // List of supported subgraphs. Note that the app currently only support one active subgraph at a time
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [SupportedChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
-  [SupportedChainId.ARBITRUM_ONE]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one',
-  [SupportedChainId.OPTIMISM]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism',
+  [SupportedChainId.RINKEBY]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+
+  [SupportedChainId.ARBITRUM_ONE]: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
+
+  [SupportedChainId.OPTIMISM]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism-dev',
 }
 
 export const api = createApi({
@@ -79,7 +82,7 @@ function graphqlRequestBaseQuery(): BaseQueryFn<
   Pick<ClientError, 'name' | 'message' | 'stack'>,
   Partial<Pick<ClientError, 'request' | 'response'>>
 > {
-  return async ({ document, variables }, { getState }: BaseQueryApi) => {
+  return async ({ document, variables }, { getState }) => {
     try {
       const chainId = (getState() as AppState).application.chainId
 

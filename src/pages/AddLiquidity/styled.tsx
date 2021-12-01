@@ -1,8 +1,8 @@
-import styled from 'styled-components/macro'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import Input from 'components/NumericalInput'
 import { BodyWrapper } from 'pages/AppBody'
+import styled from 'styled-components/macro'
 
 export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
   max-width: ${({ wide }) => (wide ? '880px' : '480px')};
@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
   padding: 26px 16px;
   min-width: 480px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 400px;
   `};
 
@@ -33,10 +33,14 @@ export const ScrollablePage = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    max-width: 480px;
+    margin: 0 auto;
+  `};
 `
 
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
-  opacity: ${({ disabled }) => (disabled ? '0.3' : '1')};
+  opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
 `
 

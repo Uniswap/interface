@@ -1,3 +1,5 @@
+import { Bound } from 'state/mint/v3/actions'
+
 export interface ChartEntry {
   activeLiquidity: number
   price0: number
@@ -16,7 +18,8 @@ export interface Margins {
 }
 
 export interface ZoomLevels {
-  initial: number
+  initialMin: number
+  initialMax: number
   min: number
   max: number
 }
@@ -29,6 +32,7 @@ export interface LiquidityChartRangeInputProps {
     series: ChartEntry[]
     current: number
   }
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 
   styles: {
     area: {
@@ -51,7 +55,7 @@ export interface LiquidityChartRangeInputProps {
 
   brushLabels: (d: 'w' | 'e', x: number) => string
   brushDomain: [number, number] | undefined
-  onBrushDomainChange: (domain: [number, number]) => void
+  onBrushDomainChange: (domain: [number, number], mode: string | undefined) => void
 
   zoomLevels: ZoomLevels
 }

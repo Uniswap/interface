@@ -1,29 +1,31 @@
-import { Currency, Token } from '@uniswap/sdk-core'
-import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import ReactGA from 'react-ga'
+// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { Currency, Token } from '@uniswap/sdk-core'
+import useDebounce from 'hooks/useDebounce'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useTheme from 'hooks/useTheme'
+import useToggle from 'hooks/useToggle'
+import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Edit } from 'react-feather'
+import ReactGA from 'react-ga'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import styled from 'styled-components/macro'
+
 import { ExtendedEther } from '../../constants/tokens'
+import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useAllTokens, useToken, useIsUserAddedToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
-import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
+import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import { filterTokens, useSortedTokensByQuery } from './filtering'
+import ImportRow from './ImportRow'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import styled from 'styled-components/macro'
-import useToggle from 'hooks/useToggle'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import useTheme from 'hooks/useTheme'
-import ImportRow from './ImportRow'
-import { Edit } from 'react-feather'
-import useDebounce from 'hooks/useDebounce'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -222,9 +224,9 @@ export function CurrencySearch({
         </div>
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
-          <TYPE.main color={theme.text3} textAlign="center" mb="20px">
+          <ThemedText.Main color={theme.text3} textAlign="center" mb="20px">
             <Trans>No results found.</Trans>
-          </TYPE.main>
+          </ThemedText.Main>
         </Column>
       )}
       <Footer>
@@ -234,9 +236,9 @@ export function CurrencySearch({
               <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.primaryText1}>
+              <ThemedText.Main color={theme.primaryText1}>
                 <Trans>Manage Token Lists</Trans>
-              </TYPE.main>
+              </ThemedText.Main>
             </RowFixed>
           </ButtonText>
         </Row>

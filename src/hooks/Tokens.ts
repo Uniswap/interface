@@ -1,7 +1,9 @@
+import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { arrayify } from 'ethers/lib/utils'
+import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useMemo } from 'react'
+
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
 import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
 import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
@@ -10,9 +12,8 @@ import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
-
-import { useActiveWeb3React } from './web3'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { useActiveWeb3React } from './web3'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -56,9 +57,56 @@ export function useAllTokens(): { [address: string]: Token } {
   return useTokensFromMap(allTokens, true)
 }
 
+type BridgeInfo = Record<
+  SupportedChainId,
+  {
+    tokenAddress: string
+    originBridgeAddress: string
+    destBridgeAddress: string
+  }
+>
+
 export function useUnsupportedTokens(): { [address: string]: Token } {
+  const { chainId } = useActiveWeb3React()
+  const listsByUrl = useAllLists()
   const unsupportedTokensMap = useUnsupportedTokenList()
-  return useTokensFromMap(unsupportedTokensMap, false)
+  const unsupportedTokens = useTokensFromMap(unsupportedTokensMap, false)
+
+  // checks the default L2 lists to see if `bridgeInfo` has an L1 address value that is unsupported
+  const l2InferredBlockedTokens: typeof unsupportedTokens = useMemo(() => {
+    if (!chainId || !L2_CHAIN_IDS.includes(chainId)) {
+      return {}
+    }
+
+    if (!listsByUrl) {
+      return {}
+    }
+
+    const listUrl = CHAIN_INFO[chainId as SupportedL2ChainId].defaultListUrl
+    const { current: list } = listsByUrl[listUrl]
+    if (!list) {
+      return {}
+    }
+
+    const unsupportedSet = new Set(Object.keys(unsupportedTokens))
+
+    return list.tokens.reduce((acc, tokenInfo) => {
+      const bridgeInfo = tokenInfo.extensions?.bridgeInfo as unknown as BridgeInfo
+      if (
+        bridgeInfo &&
+        bridgeInfo[SupportedChainId.MAINNET] &&
+        bridgeInfo[SupportedChainId.MAINNET].tokenAddress &&
+        unsupportedSet.has(bridgeInfo[SupportedChainId.MAINNET].tokenAddress)
+      ) {
+        const address = bridgeInfo[SupportedChainId.MAINNET].tokenAddress
+        // don't rely on decimals--it's possible that a token could be bridged w/ different decimals on the L2
+        return { ...acc, [address]: new Token(SupportedChainId.MAINNET, address, tokenInfo.decimals) }
+      }
+      return acc
+    }, {})
+  }, [chainId, listsByUrl, unsupportedTokens])
+
+  return { ...unsupportedTokens, ...l2InferredBlockedTokens }
 }
 
 export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
@@ -76,7 +124,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
       if (!list) continue
       for (const tokenInfo of list.tokens) {
         if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
-          const wrapped = new WrappedTokenInfo(tokenInfo, list)
+          const wrapped: WrappedTokenInfo = new WrappedTokenInfo(tokenInfo, list)
           if (!(wrapped.address in activeTokens) && !addressSet[wrapped.address]) {
             addressSet[wrapped.address] = true
             result.push(wrapped)
@@ -123,9 +171,9 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 }
 
 // undefined if invalid or does not exist
-// null if loading
+// null if loading or null was passed
 // otherwise returns the token
-export function useToken(tokenAddress?: string): Token | undefined | null {
+export function useToken(tokenAddress?: string | null): Token | undefined | null {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
@@ -148,6 +196,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 
   return useMemo(() => {
     if (token) return token
+    if (tokenAddress === null) return null
     if (!chainId || !address) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
     if (decimals.result) {
@@ -169,18 +218,27 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     symbol.result,
     symbolBytes32.result,
     token,
+    tokenAddress,
     tokenName.loading,
     tokenName.result,
     tokenNameBytes32.result,
   ])
 }
 
-export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
+export function useCurrency(currencyId: string | null | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
   const isETH = currencyId?.toUpperCase() === 'ETH'
   const token = useToken(isETH ? undefined : currencyId)
-  const extendedEther = useMemo(() => (chainId ? ExtendedEther.onChain(chainId) : undefined), [chainId])
+  const extendedEther = useMemo(
+    () =>
+      chainId
+        ? ExtendedEther.onChain(chainId)
+        : // display mainnet when not connected
+          ExtendedEther.onChain(SupportedChainId.MAINNET),
+    [chainId]
+  )
   const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
-  if (weth?.address?.toLowerCase() === currencyId?.toLowerCase()) return weth
+  if (currencyId === null || currencyId === undefined) return currencyId
+  if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
   return isETH ? extendedEther : token
 }

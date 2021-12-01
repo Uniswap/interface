@@ -1,5 +1,6 @@
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useTokenContract } from './useContract'
 

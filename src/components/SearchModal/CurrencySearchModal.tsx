@@ -1,14 +1,15 @@
 import { Currency, Token } from '@uniswap/sdk-core'
+import { TokenList } from '@uniswap/token-lists'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
+
 import useLast from '../../hooks/useLast'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
-import { ImportToken } from './ImportToken'
-import usePrevious from 'hooks/usePrevious'
-import Manage from './Manage'
-import { TokenList } from '@uniswap/token-lists'
 import { ImportList } from './ImportList'
+import { ImportToken } from './ImportToken'
+import Manage from './Manage'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -65,12 +66,19 @@ export default function CurrencySearchModal({
   const [importList, setImportList] = useState<TokenList | undefined>()
   const [listURL, setListUrl] = useState<string | undefined>()
 
+  const showImportView = useCallback(() => setModalView(CurrencyModalView.importToken), [setModalView])
+  const showManageView = useCallback(() => setModalView(CurrencyModalView.manage), [setModalView])
+  const handleBackImport = useCallback(
+    () => setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search),
+    [setModalView, prevView]
+  )
+
   // change min height if not searching
   const minHeight = modalView === CurrencyModalView.importToken || modalView === CurrencyModalView.importList ? 40 : 80
-
-  return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
-      {modalView === CurrencyModalView.search ? (
+  let content = null
+  switch (modalView) {
+    case CurrencyModalView.search:
+      content = (
         <CurrencySearch
           isOpen={isOpen}
           onDismiss={onDismiss}
@@ -80,23 +88,32 @@ export default function CurrencySearchModal({
           showCommonBases={showCommonBases}
           showCurrencyAmount={showCurrencyAmount}
           disableNonToken={disableNonToken}
-          showImportView={() => setModalView(CurrencyModalView.importToken)}
+          showImportView={showImportView}
           setImportToken={setImportToken}
-          showManageView={() => setModalView(CurrencyModalView.manage)}
+          showManageView={showManageView}
         />
-      ) : modalView === CurrencyModalView.importToken && importToken ? (
-        <ImportToken
-          tokens={[importToken]}
-          onDismiss={onDismiss}
-          list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-          onBack={() =>
-            setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search)
-          }
-          handleCurrencySelect={handleCurrencySelect}
-        />
-      ) : modalView === CurrencyModalView.importList && importList && listURL ? (
-        <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
-      ) : modalView === CurrencyModalView.manage ? (
+      )
+      break
+    case CurrencyModalView.importToken:
+      if (importToken) {
+        content = (
+          <ImportToken
+            tokens={[importToken]}
+            onDismiss={onDismiss}
+            list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
+            onBack={handleBackImport}
+            handleCurrencySelect={handleCurrencySelect}
+          />
+        )
+      }
+      break
+    case CurrencyModalView.importList:
+      if (importList && listURL) {
+        content = <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
+      }
+      break
+    case CurrencyModalView.manage:
+      content = (
         <Manage
           onDismiss={onDismiss}
           setModalView={setModalView}
@@ -104,9 +121,12 @@ export default function CurrencySearchModal({
           setImportList={setImportList}
           setListUrl={setListUrl}
         />
-      ) : (
-        ''
-      )}
+      )
+      break
+  }
+  return (
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
+      {content}
     </Modal>
   )
 }

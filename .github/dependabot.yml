@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    # Files stored in repository root
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "@uniswap/token-lists"
+      - dependency-name: "@uniswap/default-token-list"
