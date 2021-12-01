@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { L2_CHAIN_IDS } from 'constants/chains'
@@ -34,7 +34,8 @@ const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 
 export default function useSwapSlippageTolerance(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined,
+  gasCostUSD: CurrencyAmount<Token> | null // dollar amount in active chains stabelcoin
 ): Percent {
   const { chainId } = useActiveWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
@@ -45,6 +46,9 @@ export default function useSwapSlippageTolerance(
   const ether = useCurrency('ETH')
   const etherPrice = useUSDCPrice(ether ?? undefined)
 
+  // if using api trade and have valid gas estimate from api, use it
+  const useGasCostFromRouter = Boolean(trade instanceof V3Trade && gasCostUSD !== null)
+
   const defaultSlippageTolerance = useMemo(() => {
     if (!trade || onL2) return ONE_TENTHS_PERCENT
 
@@ -53,10 +57,14 @@ export default function useSwapSlippageTolerance(
     const dollarGasCost =
       ether && ethGasCost && etherPrice ? etherPrice.quote(CurrencyAmount.fromRawAmount(ether, ethGasCost)) : undefined
 
-    if (outputDollarValue && dollarGasCost) {
+    // if valid estimate from api and using api trade, use gas estimate from api
+    // if not, use local heuristic
+    const dollarCostToUse = useGasCostFromRouter && gasCostUSD ? gasCostUSD : dollarGasCost
+
+    if (outputDollarValue && dollarCostToUse) {
       // the rationale is that a user will not want their trade to fail for a loss due to slippage that is less than
       // the cost of the gas of the failed transaction
-      const fraction = dollarGasCost.asFraction.divide(outputDollarValue.asFraction)
+      const fraction = dollarCostToUse.asFraction.divide(outputDollarValue.asFraction)
       const result = new Percent(fraction.numerator, fraction.denominator)
       if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) return MAX_AUTO_SLIPPAGE_TOLERANCE
       if (result.lessThan(MIN_AUTO_SLIPPAGE_TOLERANCE)) return MIN_AUTO_SLIPPAGE_TOLERANCE
@@ -65,7 +73,7 @@ export default function useSwapSlippageTolerance(
 
     if (trade instanceof V2Trade) return V2_SWAP_DEFAULT_SLIPPAGE
     return V3_SWAP_DEFAULT_SLIPPAGE
-  }, [ethGasPrice, ether, etherPrice, gasEstimate, onL2, outputDollarValue, trade])
+  }, [trade, onL2, ethGasPrice, gasEstimate, ether, etherPrice, useGasCostFromRouter, gasCostUSD, outputDollarValue])
 
   return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
 }

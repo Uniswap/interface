@@ -9,18 +9,10 @@ import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/R
 import { AutoRow, RowBetween } from 'components/Row'
 import { Version } from 'hooks/useToggledVersion'
 import { memo } from 'react'
-import { useRoutingAPIEnabled } from 'state/user/hooks'
-import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { getTradeVersion } from 'utils/getTradeVersion'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
-
-const Separator = styled.div`
-  border-top: 1px solid ${({ theme }) => theme.bg2};
-  height: 1px;
-  width: 100%;
-`
 
 const V2_DEFAULT_FEE_TIER = 3000
 
@@ -31,8 +23,6 @@ export default memo(function SwapRoute({
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   syncing: boolean
 }) {
-  const routingAPIEnabled = useRoutingAPIEnabled()
-
   return (
     <AutoColumn gap="12px">
       <RowBetween>
@@ -52,7 +42,6 @@ export default memo(function SwapRoute({
           </Badge>
         )}
       </RowBetween>
-      <Separator />
       {syncing ? (
         <LoadingRows>
           <div style={{ width: '400px', height: '30px' }} />
@@ -63,11 +52,6 @@ export default memo(function SwapRoute({
           currencyOut={trade.outputAmount.currency}
           routes={getTokenPath(trade)}
         />
-      )}
-      {routingAPIEnabled && (
-        <TYPE.main fontSize={12} width={400}>
-          <Trans>This route optimizes your price by considering split routes, multiple hops, and gas costs.</Trans>
-        </TYPE.main>
       )}
     </AutoColumn>
   )

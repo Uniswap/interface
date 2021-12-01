@@ -133,9 +133,9 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   margin-top: 8px;
 `
 
-export const TransactionDetailsLabel = styled(TYPE.black)`
-  border-bottom: 1px solid ${({ theme }) => theme.bg2};
-  padding-bottom: 0.5rem;
+export const TransactionDetailsLabel = styled(TYPE.black)<{ hideBorder?: boolean }>`
+  border-bottom: 1px solid ${({ theme, hideBorder }) => (hideBorder ? 'transparent' : theme.bg2)};
+  padding-bottom: ${({ hideBorder }) => (hideBorder ? 0 : '0.5rem')};
 `
 
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`

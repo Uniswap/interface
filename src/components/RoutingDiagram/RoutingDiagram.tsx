@@ -77,9 +77,9 @@ export default function RoutingDiagram({
     <Wrapper>
       {routes.map(({ percent, path }, index) => (
         <RouteContainerRow key={index}>
-          <CurrencyLogo currency={tokenIn} />
+          <CurrencyLogo currency={tokenIn} size={'16px'} />
           <Route percent={percent} path={path} />
-          <CurrencyLogo currency={tokenOut} />
+          <CurrencyLogo currency={tokenOut} size={'16px'} />
         </RouteContainerRow>
       ))}
     </Wrapper>
@@ -114,7 +114,7 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
   return (
     <PoolBadge>
       <Box margin="0 5px 0 10px">
-        <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
+        <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={16} />
       </Box>
       <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>
     </PoolBadge>

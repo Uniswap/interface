@@ -46,7 +46,7 @@ const FixedContainer = styled.div`
 
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
+  border: 1px solid transparent;
   background-color: ${({ theme }) => theme.bg1};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   :focus,
@@ -73,7 +73,7 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: 0 8px;
   justify-content: space-between;
-  margin-right: ${({ hideInput }) => (hideInput ? '0' : '12px')};
+  margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
@@ -149,7 +149,8 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
 `
 
 const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
-  ${loadingOpacityMixin}
+  ${loadingOpacityMixin};
+  text-align: left;
 `
 
 interface CurrencyInputPanelProps {
@@ -220,6 +221,14 @@ export default function CurrencyInputPanel({
       )}
       <Container hideInput={hideInput}>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
+          {!hideInput && (
+            <StyledNumericalInput
+              className="token-amount-input"
+              value={value}
+              onUserInput={onUserInput}
+              $loading={loading}
+            />
+          )}
           <CurrencySelect
             visible={currency !== undefined}
             selected={!!currency}
@@ -257,24 +266,19 @@ export default function CurrencyInputPanel({
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
           </CurrencySelect>
-          {!hideInput && (
-            <StyledNumericalInput
-              className="token-amount-input"
-              value={value}
-              onUserInput={onUserInput}
-              $loading={loading}
-            />
-          )}
         </InputRow>
         {!hideInput && !hideBalance && (
           <FiatRow>
             <RowBetween>
+              <LoadingOpacityContainer $loading={loading}>
+                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+              </LoadingOpacityContainer>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
                   <TYPE.body
                     onClick={onMax}
-                    color={theme.text2}
-                    fontWeight={400}
+                    color={theme.text3}
+                    fontWeight={500}
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
@@ -282,9 +286,7 @@ export default function CurrencyInputPanel({
                       renderBalance ? (
                         renderBalance(selectedCurrencyBalance)
                       ) : (
-                        <Trans>
-                          Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)} {currency.symbol}
-                        </Trans>
+                        <Trans>Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)}</Trans>
                       )
                     ) : null}
                   </TYPE.body>
@@ -297,9 +299,6 @@ export default function CurrencyInputPanel({
               ) : (
                 <span />
               )}
-              <LoadingOpacityContainer $loading={loading}>
-                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
-              </LoadingOpacityContainer>
             </RowBetween>
           </FiatRow>
         )}

@@ -1,12 +1,13 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
+import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 
-import { V3TradeState } from './types'
+import { GetQuoteResult, V3TradeState } from './types'
 import { computeRoutes } from './utils'
 
 function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
@@ -59,7 +60,11 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
+): {
+  state: V3TradeState
+  trade: Trade<Currency, Currency, TTradeType> | null
+  gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chains stabelcoin
+} {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -80,18 +85,21 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnFocus: true,
   })
 
-  const quoteResult = useFreshData(data, Number(data?.blockNumber) || 0)
+  const quoteResult: GetQuoteResult | undefined = useFreshData(data, Number(data?.blockNumber) || 0)
 
   const routes = useMemo(
     () => computeRoutes(currencyIn, currencyOut, quoteResult),
     [currencyIn, currencyOut, quoteResult]
   )
 
+  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
+
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
+        gasUseEstimateUSD,
       }
     }
 
@@ -100,6 +108,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: V3TradeState.LOADING,
         trade: null,
+        gasUseEstimateUSD,
       }
     }
 
@@ -116,6 +125,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
+        gasUseEstimateUSD,
       }
     }
 
@@ -128,6 +138,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       // always return VALID regardless of isFetching status
       state: V3TradeState.VALID,
       trade,
+      gasUseEstimateUSD,
     }
-  }, [currencyIn, currencyOut, isLoading, quoteResult, isError, routes, queryArgs, tradeType])
+  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, routes, queryArgs, gasUseEstimateUSD])
 }

@@ -2,22 +2,18 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
-import { AutoRouterLogo } from 'components/swap/RouterLabel'
-import SwapRoute from 'components/swap/SwapRoute'
-import TradePrice from 'components/swap/TradePrice'
+import SwapDetailsInline from 'components/swap/SwapDetailsInline'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { V3TradeState } from 'state/routing/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import { ThemeContext } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -26,16 +22,10 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
-import Row, { AutoRow, RowFixed } from '../../components/Row'
+import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import {
-  ArrowWrapper,
-  Dots,
-  ResponsiveTooltipContainer,
-  SwapCallbackError,
-  Wrapper,
-} from '../../components/swap/styleds'
+import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -65,16 +55,6 @@ import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-
-const StyledInfo = styled(Info)`
-  height: 16px;
-  width: 16px;
-  margin-left: 4px;
-  color: ${({ theme }) => theme.text3};
-  :hover {
-    color: ${({ theme }) => theme.text1};
-  }
-`
 
 export default function Swap({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
@@ -116,7 +96,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v3Trade: { state: v3TradeState },
+    v3Trade: { state: v3TradeState, gasUseEstimateUSD },
     bestTrade: trade,
     allowedSlippage,
     currencyBalances,
@@ -379,6 +359,7 @@ export default function Swap({ history }: RouteComponentProps) {
             originalTrade={tradeToConfirm}
             onAcceptChanges={handleAcceptChanges}
             attemptingTxn={attemptingTxn}
+            gasUseEstimateUSD={gasUseEstimateUSD}
             txHash={txHash}
             recipient={recipient}
             allowedSlippage={allowedSlippage}
@@ -445,64 +426,17 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
-
-            {!showWrap && trade && (
-              <Row justify={!trade ? 'center' : 'space-between'}>
-                <RowFixed style={{ position: 'relative' }}>
-                  <MouseoverTooltipContent
-                    wrap={false}
-                    content={
-                      <ResponsiveTooltipContainer>
-                        <SwapRoute trade={trade} syncing={routeIsSyncing} />
-                      </ResponsiveTooltipContainer>
-                    }
-                    placement="bottom"
-                    onOpen={() =>
-                      ReactGA.event({
-                        category: 'Swap',
-                        action: 'Router Tooltip Open',
-                      })
-                    }
-                  >
-                    <AutoRow gap="4px" width="auto">
-                      <AutoRouterLogo />
-                      <LoadingOpacityContainer $loading={routeIsSyncing}>
-                        {trade instanceof V3Trade && trade.swaps.length > 1 && (
-                          <TYPE.blue fontSize={14}>{trade.swaps.length} routes</TYPE.blue>
-                        )}
-                      </LoadingOpacityContainer>
-                    </AutoRow>
-                  </MouseoverTooltipContent>
-                </RowFixed>
-                <RowFixed>
-                  <LoadingOpacityContainer $loading={routeIsSyncing}>
-                    <TradePrice
-                      price={trade.executionPrice}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                    />
-                  </LoadingOpacityContainer>
-                  <MouseoverTooltipContent
-                    wrap={false}
-                    content={
-                      <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                        <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={routeIsSyncing} />
-                      </ResponsiveTooltipContainer>
-                    }
-                    placement="bottom"
-                    onOpen={() =>
-                      ReactGA.event({
-                        category: 'Swap',
-                        action: 'Transaction Details Tooltip Open',
-                      })
-                    }
-                  >
-                    <StyledInfo />
-                  </MouseoverTooltipContent>
-                </RowFixed>
-              </Row>
+            {!showWrap && (
+              <SwapDetailsInline
+                trade={trade}
+                syncing={routeIsSyncing}
+                loading={routeIsLoading}
+                showInverted={showInverted}
+                setShowInverted={setShowInverted}
+                gasUseEstimateUSD={gasUseEstimateUSD}
+                allowedSlippage={allowedSlippage}
+              />
             )}
-
             <div>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
@@ -523,15 +457,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       <Trans>Unwrap</Trans>
                     ) : null)}
                 </ButtonPrimary>
-              ) : routeIsSyncing || routeIsLoading ? (
-                <GreyCard style={{ textAlign: 'center' }}>
-                  <TYPE.main mb="4px">
-                    <Dots>
-                      <Trans>Loading</Trans>
-                    </Dots>
-                  </TYPE.main>
-                </GreyCard>
-              ) : routeNotFound && userHasSpecifiedInputOutput ? (
+              ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
                     <Trans>Insufficient liquidity for this trade.</Trans>
@@ -604,6 +530,8 @@ export default function Swap({ history }: RouteComponentProps) {
                       id="swap-button"
                       disabled={
                         !isValid ||
+                        routeIsSyncing ||
+                        routeIsLoading ||
                         (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED) ||
                         priceImpactTooHigh
                       }
@@ -612,7 +540,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       <Text fontSize={16} fontWeight={500}>
                         {priceImpactTooHigh ? (
                           <Trans>High Price Impact</Trans>
-                        ) : priceImpactSeverity > 2 ? (
+                        ) : trade && priceImpactSeverity > 2 ? (
                           <Trans>Swap Anyway</Trans>
                         ) : (
                           <Trans>Swap</Trans>
@@ -637,15 +565,15 @@ export default function Swap({ history }: RouteComponentProps) {
                     }
                   }}
                   id="swap-button"
-                  disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
+                  disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError}
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
                     {swapInputError ? (
                       swapInputError
-                    ) : priceImpactTooHigh ? (
+                    ) : priceImpactTooHigh && trade ? (
                       <Trans>Price Impact Too High</Trans>
-                    ) : priceImpactSeverity > 2 ? (
+                    ) : trade && priceImpactSeverity > 2 ? (
                       <Trans>Swap Anyway</Trans>
                     ) : (
                       <Trans>Swap</Trans>

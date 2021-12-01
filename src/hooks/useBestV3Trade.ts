@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
 import { V3TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
@@ -22,6 +22,7 @@ export function useBestV3Trade(
 ): {
   state: V3TradeState
   trade: Trade<Currency, Currency, typeof tradeType> | null
+  gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
 } {
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
@@ -57,9 +58,11 @@ export function useBestV3Trade(
     useFallback ? debouncedOtherCurrency : undefined
   )
 
+  // only return gas estimate from api if routing api trade is used
   return {
     ...(useFallback ? bestV3Trade : routingAPITrade),
     ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
     ...(isLoading ? { state: V3TradeState.LOADING } : {}),
+    gasUseEstimateUSD: useFallback ? null : routingAPITrade.gasUseEstimateUSD,
   }
 }

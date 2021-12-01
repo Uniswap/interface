@@ -1,6 +1,6 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TWO_PERCENT } from 'constants/misc'
@@ -126,6 +126,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   v3Trade: {
     trade: V3Trade<Currency, Currency, TradeType> | null
     state: V3TradeState
+    gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chains stabelcoin
   }
   bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
@@ -217,7 +218,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     }
   }
 
-  const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
+  const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined, v3Trade.gasUseEstimateUSD)
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]

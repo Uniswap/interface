@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
@@ -19,6 +19,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
+import GasEstimateBadge from './GasEstimateBadge'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
 const ArrowWrapper = styled.div`
@@ -41,6 +42,7 @@ const ArrowWrapper = styled.div`
 
 export default function SwapModalHeader({
   trade,
+  gasUseEstimateUSD,
   allowedSlippage,
   recipient,
   showAcceptChanges,
@@ -49,6 +51,7 @@ export default function SwapModalHeader({
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   recipient: string | null
+  gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
@@ -59,23 +62,14 @@ export default function SwapModalHeader({
   const fiatValueInput = useUSDCValue(trade.inputAmount)
   const fiatValueOutput = useUSDCValue(trade.outputAmount)
 
+  // only show gas estimate on V3Trade at the moment
+  const showGasEstimate = Boolean(trade instanceof V3Trade && gasUseEstimateUSD !== null)
+
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
         <AutoColumn gap={'8px'}>
-          <RowBetween>
-            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-              <Trans>From</Trans>
-            </TYPE.body>
-            <FiatValue fiatValue={fiatValueInput} />
-          </RowBetween>
           <RowBetween align="center">
-            <RowFixed gap={'0px'}>
-              <CurrencyLogo currency={trade.inputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
-              <Text fontSize={20} fontWeight={500}>
-                {trade.inputAmount.currency.symbol}
-              </Text>
-            </RowFixed>
             <RowFixed gap={'0px'}>
               <TruncatedText
                 fontSize={24}
@@ -85,6 +79,15 @@ export default function SwapModalHeader({
                 {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
+            <RowFixed gap={'0px'}>
+              <CurrencyLogo currency={trade.inputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
+              <Text fontSize={20} fontWeight={500}>
+                {trade.inputAmount.currency.symbol}
+              </Text>
+            </RowFixed>
+          </RowBetween>
+          <RowBetween>
+            <FiatValue fiatValue={fiatValueInput} />
           </RowBetween>
         </AutoColumn>
       </LightCard>
@@ -93,10 +96,20 @@ export default function SwapModalHeader({
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
         <AutoColumn gap={'8px'}>
+          <RowBetween align="flex-end">
+            <RowFixed gap={'0px'}>
+              <TruncatedText fontSize={24} fontWeight={500}>
+                {trade.outputAmount.toSignificant(6)}
+              </TruncatedText>
+            </RowFixed>
+            <RowFixed gap={'0px'}>
+              <CurrencyLogo currency={trade.outputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
+              <Text fontSize={20} fontWeight={500}>
+                {trade.outputAmount.currency.symbol}
+              </Text>
+            </RowFixed>
+          </RowBetween>
           <RowBetween>
-            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-              <Trans>To</Trans>
-            </TYPE.body>
             <TYPE.body fontSize={14} color={theme.text3}>
               <FiatValue
                 fiatValue={fiatValueOutput}
@@ -104,32 +117,17 @@ export default function SwapModalHeader({
               />
             </TYPE.body>
           </RowBetween>
-          <RowBetween align="flex-end">
-            <RowFixed gap={'0px'}>
-              <CurrencyLogo currency={trade.outputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
-              <Text fontSize={20} fontWeight={500}>
-                {trade.outputAmount.currency.symbol}
-              </Text>
-            </RowFixed>
-            <RowFixed gap={'0px'}>
-              <TruncatedText fontSize={24} fontWeight={500}>
-                {trade.outputAmount.toSignificant(6)}
-              </TruncatedText>
-            </RowFixed>
-          </RowBetween>
         </AutoColumn>
       </LightCard>
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
-        <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-          <Trans>Price</Trans>
-        </TYPE.body>
         <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
+        {showGasEstimate && !!gasUseEstimateUSD ? (
+          <GasEstimateBadge gasUseEstimateUSD={gasUseEstimateUSD} loading={false} />
+        ) : null}
       </RowBetween>
-
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />
+        <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} hideRouteDiagram={true} />
       </LightCard>
-
       {showAcceptChanges ? (
         <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
           <RowBetween>

@@ -4,7 +4,7 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
-import { ThemeContext } from 'styled-components/macro'
+import styled, { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
@@ -12,11 +12,19 @@ import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { TransactionDetailsLabel } from './styleds'
+import SwapRoute from './SwapRoute'
+
+const Separator = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.bg2};
+`
 
 interface AdvancedSwapDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   syncing?: boolean
+  hideRouteDiagram?: boolean
 }
 
 function TextWithLoadingPlaceholder({
@@ -37,7 +45,12 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({
+  trade,
+  allowedSlippage,
+  syncing = false,
+  hideRouteDiagram = false,
+}: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
   const { realizedLPFee, priceImpact } = useMemo(() => {
@@ -51,9 +64,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
 
   return !trade ? null : (
     <AutoColumn gap="8px">
-      <TransactionDetailsLabel fontWeight={500} fontSize={14}>
+      <TransactionDetailsLabel fontWeight={500} fontSize={14} hideBorder={hideRouteDiagram}>
         <Trans>Transaction Details</Trans>
       </TransactionDetailsLabel>
+      {hideRouteDiagram ? null : <SwapRoute trade={trade} syncing={syncing} />}
+      <Separator />
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
@@ -66,7 +81,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
-
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
@@ -79,7 +93,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
-
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
@@ -92,7 +105,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
-
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>

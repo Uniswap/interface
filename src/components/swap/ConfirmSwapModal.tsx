@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -32,6 +32,7 @@ function tradeMeaningfullyDiffers(
 
 export default function ConfirmSwapModal({
   trade,
+  gasUseEstimateUSD,
   originalTrade,
   onAcceptChanges,
   allowedSlippage,
@@ -49,6 +50,7 @@ export default function ConfirmSwapModal({
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
+  gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
   allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
@@ -72,13 +74,14 @@ export default function ConfirmSwapModal({
     return trade ? (
       <SwapModalHeader
         trade={trade}
+        gasUseEstimateUSD={gasUseEstimateUSD}
         allowedSlippage={allowedSlippage}
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, gasUseEstimateUSD, trade])
 
   const modalBottom = useCallback(() => {
     return trade ? (
