@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { Token } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'
 
@@ -15,34 +15,44 @@ const DEFAULT_QUERY_PARAMS = {
   // minSplits: '5',
 }
 
-type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
-
 async function getClientSideQuote({
-  tokenIn,
-  tokenOut,
+  tokenInAddress,
+  tokenInChainId,
+  tokenInDecimals,
+  tokenInSymbol,
+  tokenOutAddress,
+  tokenOutChainId,
+  tokenOutDecimals,
+  tokenOutSymbol,
   amount,
   type,
 }: {
-  tokenIn: SerializableToken
-  tokenOut: SerializableToken
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
   amount: string
   type: 'exactIn' | 'exactOut'
 }) {
   return (await import('./clientSideSmartOrderRouter')).getQuote(
     {
       type,
-      chainId: tokenIn.chainId,
+      chainId: tokenInChainId,
       tokenIn: {
-        address: tokenIn.address,
-        chainId: tokenIn.chainId,
-        decimals: tokenIn.decimals,
-        symbol: tokenIn.symbol,
+        address: tokenInAddress,
+        chainId: tokenInChainId,
+        decimals: tokenInDecimals,
+        symbol: tokenInSymbol,
       },
       tokenOut: {
-        address: tokenOut.address,
-        chainId: tokenOut.chainId,
-        decimals: tokenOut.decimals,
-        symbol: tokenOut.symbol,
+        address: tokenOutAddress,
+        chainId: tokenOutChainId,
+        decimals: tokenOutDecimals,
+        symbol: tokenOutSymbol,
       },
       amount,
     },
@@ -59,15 +69,22 @@ export const routingApi = createApi({
     getQuote: build.query<
       GetQuoteResult,
       {
-        tokenIn: SerializableToken
-        tokenOut: SerializableToken
+        tokenInAddress: string
+        tokenInChainId: ChainId
+        tokenInDecimals: number
+        tokenInSymbol?: string
+        tokenOutAddress: string
+        tokenOutChainId: ChainId
+        tokenOutDecimals: number
+        tokenOutSymbol?: string
         amount: string
         useClientSideRouter: boolean // included in key to invalidate on change
         type: 'exactIn' | 'exactOut'
       }
     >({
       async queryFn(args, _api, _extraOptions, fetch) {
-        const { tokenIn, tokenOut, amount, useClientSideRouter, type } = args
+        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, useClientSideRouter, type } =
+          args
 
         let result
 
@@ -77,10 +94,10 @@ export const routingApi = createApi({
           } else {
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
-              tokenInAddress: tokenIn.address,
-              tokenInChainId: tokenIn.chainId,
-              tokenOutAddress: tokenOut.address,
-              tokenOutChainId: tokenOut.chainId,
+              tokenInAddress,
+              tokenInChainId,
+              tokenOutAddress,
+              tokenOutChainId,
               amount,
               type,
             })

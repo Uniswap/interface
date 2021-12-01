@@ -4913,10 +4913,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^2.0.0-beta.14":
-  version "2.0.0-beta.14"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.0.0-beta.14.tgz#6b31069facbef9f28865e9b8f3b820d72cfbece3"
-  integrity sha512-hC0pumiJLBNDC0PPyW53hMKN6kIYlSKY2BO/BHXpl0SstdNEkwIfYvyKdnQfBNfES8kwsyKFNzicPTzzBTwT+w==
+"@uniswap/smart-order-router@^2.0.0-beta.16":
+  version "2.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.0.0-beta.16.tgz#92ca59e51cc846bcf618e823445918e8701f6c8b"
+  integrity sha512-69TuofwWq55f3E4oAMZfgJBfD/9Dac9BIixy4AYCTrP+0Dosd/CkKWwBSsJ6W5H7338xtwj+Z9KKMnvQyAXR8Q==
   dependencies:
     "@bitauth/libauth" "^1.17.1"
     "@ethersproject/bignumber" "^5.1.1"

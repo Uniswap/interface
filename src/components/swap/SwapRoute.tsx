@@ -55,24 +55,29 @@ export default memo(function SwapRoute({
           routes={routes}
         />
       )}
-      {autoRouterSupported && (
-        <TYPE.main fontSize={12} width={400}>
-          {/* could not get <Plural> to render `one` correctly. */}
-          {routes.length === 1 ? (
-            hasV2Routes && hasV3Routes ? (
-              <Trans>Best route via 1 hop on Uniswap V2 and V3</Trans>
+      {autoRouterSupported &&
+        (syncing ? (
+          <LoadingRows>
+            <div style={{ width: '250px', height: '15px' }} />
+          </LoadingRows>
+        ) : (
+          <TYPE.main fontSize={12} width={400}>
+            {/* could not get <Plural> to render `one` correctly. */}
+            {routes.length === 1 ? (
+              hasV2Routes && hasV3Routes ? (
+                <Trans>Best route via 1 hop on Uniswap V2 and V3</Trans>
+              ) : (
+                <Trans>Best route via 1 hop on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
+              )
+            ) : hasV2Routes && hasV3Routes ? (
+              <Trans>Best route via {routes.length} hops on Uniswap V2 and V3</Trans>
             ) : (
-              <Trans>Best route via 1 hop on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
-            )
-          ) : hasV2Routes && hasV3Routes ? (
-            <Trans>Best route via {routes.length} hops on Uniswap V2 and V3</Trans>
-          ) : (
-            <Trans>
-              Best route via {routes.length} hops on Uniswap {hasV2Routes ? 'V2' : 'V3'}
-            </Trans>
-          )}
-        </TYPE.main>
-      )}
+              <Trans>
+                Best route via {routes.length} hops on Uniswap {hasV2Routes ? 'V2' : 'V3'}
+              </Trans>
+            )}
+          </TYPE.main>
+        ))}
     </AutoColumn>
   )
 })

@@ -1,6 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
@@ -9,17 +9,6 @@ import { useClientSideRouter } from 'state/user/hooks'
 
 import { TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
-
-/**
- * Picks required properties of a `Token` to make it serializable
- * Required to pass token data in the redux store
- */
-const tokenToSerializable = ({ address, chainId, symbol, decimals }: Token) => ({
-  address,
-  chainId,
-  symbol,
-  decimals,
-})
 
 function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
   const localBlockNumber = useBlockNumber()
@@ -55,8 +44,14 @@ function useRoutingAPIArguments({
 
   return {
     amount: amount.quotient.toString(),
-    tokenIn: tokenToSerializable(tokenIn.wrapped),
-    tokenOut: tokenToSerializable(tokenOut.wrapped),
+    tokenInAddress: tokenIn.wrapped.address,
+    tokenInChainId: tokenIn.wrapped.chainId,
+    tokenInDecimals: tokenIn.wrapped.decimals,
+    tokenInSymbol: tokenIn.wrapped.symbol,
+    tokenOutAddress: tokenOut.wrapped.address,
+    tokenOutChainId: tokenOut.wrapped.chainId,
+    tokenOutDecimals: tokenOut.wrapped.decimals,
+    tokenOutSymbol: tokenOut.wrapped.symbol,
     useClientSideRouter: clientSideRouter,
     type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
   }
@@ -89,7 +84,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   })
 
   const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
-    pollingInterval: ms`10s`,
+    pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
 
