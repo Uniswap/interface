@@ -5,6 +5,7 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
+import useUSDCPrice from 'src/features/prices/useUSDCPrice'
 import { formatCurrencyAmount } from 'src/utils/format'
 
 // TODO(#89): use date manipulation util
@@ -19,28 +20,27 @@ interface TokenBalanceItemProps {
 export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceItemProps) {
   const { currency } = currencyAmount
 
+  const currentPrice = useUSDCPrice(currency)
   const { prices } = useHourlyTokenPrices({
     token: currency.wrapped,
     timestamp: YESTERDAY,
   })
 
   const percentChange = (function () {
-    if (!prices || prices?.length === 0) return null
+    if (!prices || prices?.length === 0 || !currentPrice) return null
 
     const startPrice = prices[prices.length - 1].close
-    const closePrice = prices[0].close
+    // TODO: process as `Price`
+    const closePrice = parseFloat(currentPrice.toSignificant(6))
 
     if (startPrice === 0 && closePrice === 0) return null
 
     return ((closePrice - startPrice) / startPrice) * 100
   })()
 
-  // TODO: get current price from chain.  Also, not all tokens have data from the Graph
+  // TODO: not all tokens have data from the Graph
   // Note that for ETH, this gets WETH price.
-  const currentPrice = prices && prices?.[0]?.close > 0 && prices[0].close
-  const balance = currentPrice
-    ? `$${(currentPrice * parseFloat(currencyAmount.toSignificant(6))).toFixed(2)}`
-    : '-'
+  const balance = currentPrice ? `$${currentPrice.quote(currencyAmount).toFixed(2)}` : '-'
 
   return (
     <Button onPress={() => onPressToken(currencyAmount)} flexDirection="row" py="md">

@@ -5,10 +5,10 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { useTokenContract } from 'src/features/contracts/useContract'
+import { useQuote } from 'src/features/prices/useQuote'
 import { CurrencyField, swapFormActions, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { swapActions } from 'src/features/swap/swapSaga'
 import { QuoteResult } from 'src/features/swap/types'
-import { useQuote } from 'src/features/swap/useQuote'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { SagaState, SagaStatus } from 'src/utils/saga'
@@ -31,7 +31,8 @@ export function useDerivedSwapInfo(state: SwapFormState) {
 
   const isExactIn = exactCurrencyField === CurrencyField.INPUT
 
-  const currencyAmount = tryParseAmount(exactAmount, isExactIn ? currencyIn : currencyOut)
+  const amountSpecified = tryParseAmount(exactAmount, isExactIn ? currencyIn : currencyOut)
+  const otherCurrency = isExactIn ? currencyOut : currencyIn
 
   // TODO: transform quoteResult to `Trade` with callData
   const {
@@ -39,21 +40,20 @@ export function useDerivedSwapInfo(state: SwapFormState) {
     error: quoteError,
     data: quoteResult,
   } = useQuote({
-    currencyAmount,
-    currencyIn,
-    currencyOut,
+    amountSpecified,
+    otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
   })
 
   const currencyAmounts = {
     [CurrencyField.INPUT]: isExactIn
-      ? currencyAmount
+      ? amountSpecified
       : // TODO: better handle quote not read
       currencyIn && quoteResult?.quote
       ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
       : null,
     [CurrencyField.OUTPUT]: !isExactIn
-      ? currencyAmount
+      ? amountSpecified
       : // TODO: better handle quote not ready
       currencyOut && quoteResult?.quote
       ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)

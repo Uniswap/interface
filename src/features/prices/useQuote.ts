@@ -9,9 +9,8 @@ import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from '../../constants/
 const ROUTING_API_BASE_URL = 'https://api.uniswap.org/v1'
 
 interface QuoteParams {
-  currencyAmount: CurrencyAmount<Currency> | null | undefined
-  currencyIn: Currency | null | undefined
-  currencyOut: Currency | null | undefined
+  amountSpecified: CurrencyAmount<Currency> | null | undefined
+  otherCurrency: Currency | null | undefined
   tradeType: TradeType
 }
 
@@ -22,13 +21,23 @@ interface QuoteParams {
 export function useQuote(params: QuoteParams) {
   const recipient = useActiveAccount()
 
-  const { currencyAmount, tradeType, currencyIn, currencyOut } = params
-  const { address: tokenInAddress, chainId: tokenInChainId } = currencyIn?.wrapped || {}
-  const { address: tokenOutAddress, chainId: tokenOutChainId } = currencyOut?.wrapped || {}
+  const { amountSpecified, tradeType, otherCurrency } = params
+
+  // tokenIn
+  const { address: tokenInAddress, chainId: tokenInChainId } =
+    (tradeType === TradeType.EXACT_INPUT
+      ? amountSpecified?.currency.wrapped
+      : otherCurrency?.wrapped) || {}
+
+  // tokenOut
+  const { address: tokenOutAddress, chainId: tokenOutChainId } =
+    (tradeType === TradeType.EXACT_OUTPUT
+      ? amountSpecified?.currency.wrapped
+      : otherCurrency?.wrapped) || {}
 
   // builds a unique key to represent the quote in the cache
   const key = [
-    currencyAmount?.toExact(),
+    amountSpecified?.toExact(),
     tradeType,
     tokenInAddress,
     tokenOutAddress,
@@ -40,7 +49,7 @@ export function useQuote(params: QuoteParams) {
     ['swap', key],
     async () => {
       if (
-        !currencyAmount ||
+        !amountSpecified ||
         !tokenInAddress ||
         !tokenOutAddress ||
         !tokenInChainId ||
@@ -59,7 +68,7 @@ export function useQuote(params: QuoteParams) {
         tokenOutChainId,
         tokenInAddress,
         tokenOutAddress,
-        amount: currencyAmount.quotient.toString(),
+        amount: amountSpecified.quotient.toString(),
         type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
         protocols: 'v3',
         ...(recipient
@@ -73,6 +82,7 @@ export function useQuote(params: QuoteParams) {
 
       const response = await fetch(
         `${ROUTING_API_BASE_URL}/quote?${queryParams}`,
+        // TODO remove once routing api officially supports mobile
         // config.debug ?
         {
           // spoof origin to go around server permissions
@@ -92,7 +102,8 @@ export function useQuote(params: QuoteParams) {
       return response.json()
     },
     {
-      enabled: Boolean(currencyAmount && currencyIn && currencyOut),
+      enabled: Boolean(amountSpecified && otherCurrency),
+      // TODO: re-enable once ready
       // refetchInterval: 50000,
     }
   )
