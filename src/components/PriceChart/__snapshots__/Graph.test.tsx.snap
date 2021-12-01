@@ -67,7 +67,7 @@ exports[`renders correctly 1`] = `
         style={
           Object {
             "color": "#DA2D2B",
-            "fontFamily": "UniswapSansBeta3-Semibold",
+            "fontFamily": "UniswapSansBeta3-Medium",
             "fontSize": 20,
             "lineHeight": 26,
           }

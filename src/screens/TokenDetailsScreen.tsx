@@ -7,9 +7,11 @@ import { HomeStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
+import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
+import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<HomeStackParamList, Screens.TokenDetails>
@@ -22,7 +24,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
 
   return (
-    <Box my="md" alignItems="center" justifyContent="space-between" flexDirection="row">
+    <CenterBox flexDirection="row" my="md" justifyContent="space-between">
       <BackButton ml="lg" size={30} />
       <Box alignItems="center" flexDirection="row">
         <CurrencyLogo currency={currency} size={30} />
@@ -31,7 +33,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
         </Text>
       </Box>
       <Box width={40} height={40} mr="lg" />
-    </Box>
+    </CenterBox>
   )
 }
 
@@ -47,10 +49,10 @@ export function TokenDetailsScreen({ route }: Props) {
       <ScrollView>
         <PriceChart token={currency.wrapped} />
         <Box mx="lg" mt="xl">
-          <Text variant="h3" mb="sm">
-            {t`About this token`}
+          <Text variant="h4" color="gray200">
+            {t('Your balance')}
           </Text>
-          <Text variant="body">{currency.name ?? t`Unknown name`}</Text>
+          <TokenBalanceItem currencyAmount={currencyAmount} />
         </Box>
       </ScrollView>
     </Screen>

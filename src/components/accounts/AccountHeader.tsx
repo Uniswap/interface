@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useTheme } from '@shopify/restyle'
 import React, { PropsWithChildren, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HomeStackParamList } from 'src/app/navigation/types'
@@ -11,6 +12,7 @@ import { Text } from 'src/components/Text'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 
 type AccountHeaderProps = PropsWithChildren<{
@@ -32,20 +34,21 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
   }, [onPress, navigation])
 
   const { t } = useTranslation()
+  const theme = useTheme<Theme>()
 
   return (
-    <Box flexDirection="row" alignItems="center" justifyContent="space-between" margin="md">
+    <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="sm" my="sm">
       <Button
         flexDirection="row"
         alignItems="center"
         onPress={onPressAccount}
         testID="account_header/manage/button">
         <Identicon address={activeAccount?.address ?? NULL_ADDRESS} mr="sm" size={30} />
-        <Text variant="h3" textAlign="left">
+        <Text variant="h4">
           {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}
         </Text>
         <Chevron
-          color="gray200"
+          color={theme.colors.gray200}
           height="9"
           width="18"
           direction={chevronDirection ?? 's'}

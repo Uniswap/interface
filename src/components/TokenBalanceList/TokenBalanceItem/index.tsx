@@ -14,7 +14,7 @@ const YESTERDAY = Math.round(d.setDate(d.getDate() - 1))
 
 interface TokenBalanceItemProps {
   currencyAmount: CurrencyAmount<Currency>
-  onPressToken: (currencyAmount: CurrencyAmount<Currency>) => void
+  onPressToken?: (currencyAmount: CurrencyAmount<Currency>) => void
 }
 
 export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceItemProps) {
@@ -42,26 +42,26 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
   // Note that for ETH, this gets WETH price.
   const balance = currentPrice ? `$${currentPrice.quote(currencyAmount).toFixed(2)}` : '-'
 
+  const onPress = () => {
+    onPressToken?.(currencyAmount)
+  }
+
   return (
-    <Button onPress={() => onPressToken(currencyAmount)} flexDirection="row" py="md">
-      <Box flex={1} flexDirection="row" justifyContent="space-between" mx="md">
+    <Button onPress={onPress} flexDirection="row">
+      <Box flex={1} flexDirection="row" justifyContent="space-between" py="md">
         <Box flexDirection="row">
-          <CurrencyLogo currency={currency} size={40} />
+          <CurrencyLogo currency={currency} size={35} />
           <Box mx="md" alignItems="flex-start">
-            <Text fontSize={20} fontWeight="500">
-              {currency.symbol}
-            </Text>
-            <Text fontSize={14} fontWeight="400" color="gray400">{`${formatCurrencyAmount(
-              currencyAmount
-            )} ${currency.symbol}`}</Text>
+            <Text variant="h4">{currency.symbol}</Text>
+            <Text variant="bodySm" color="gray400">{`${formatCurrencyAmount(currencyAmount)} ${
+              currency.symbol
+            }`}</Text>
           </Box>
         </Box>
         <Box alignItems="flex-end">
-          <Text fontSize={20} fontWeight="400">
-            {balance}
-          </Text>
+          <Text variant="h4">{balance}</Text>
           <Text
-            fontSize={14}
+            variant="bodySm"
             color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>
             {percentChange ? `${percentChange.toFixed(1)}%` : '-'}
           </Text>

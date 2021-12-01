@@ -11,21 +11,31 @@ export const fontFamily = {
 
 export const textVariants = {
   h1: {
-    fontFamily: fontFamily.sansSerif.semibold,
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 34,
     lineHeight: 42.5,
     color: 'mainForeground',
   },
   h2: {
-    fontFamily: fontFamily.sansSerif.semibold,
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 28,
     lineHeight: 36,
     color: 'mainForeground',
   },
   h3: {
-    fontFamily: fontFamily.sansSerif.semibold,
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 20,
     lineHeight: 26,
+    color: 'mainForeground',
+  },
+  h4: {
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 18,
+    color: 'mainForeground',
+  },
+  h5: {
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 14,
     color: 'mainForeground',
   },
   bodyLg: {
@@ -42,20 +52,13 @@ export const textVariants = {
   },
   bodySm: {
     fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 12,
-    lineHeight: 20,
+    fontSize: 13,
     color: 'mainForeground',
   },
   buttonLabel: {
     fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 14,
     lineHeight: 24,
-    color: 'mainForeground',
-  },
-  homeBalanceLabel: {
-    fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 45,
-    lineHeight: 45,
     color: 'mainForeground',
   },
 }

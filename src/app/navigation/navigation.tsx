@@ -60,48 +60,52 @@ export function TabNavigator() {
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen
-        name={Screens.Home}
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name={Screens.TokenDetails}
-        component={TokenDetailsScreen}
-        options={{ headerShown: false }}
-      />
-      {/* TODO: reorganize account screens */}
-      <HomeStack.Screen
-        name={Screens.Accounts}
-        component={AccountsScreen}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name={Screens.ImportAccount}
-        component={ImportAccountScreen}
-        options={{ title: 'Uniswap | Import' }}
-      />
-      <HomeStack.Screen
-        name={Screens.Notifications}
-        component={NotificationsScreen}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name={Screens.Camera}
-        component={CameraScreen}
-        options={{ title: 'Uniswap | Camera' }}
-      />
-      <HomeStack.Screen
-        name={Screens.SeedPhrase}
-        component={SeedPhraseScreen}
-        options={{ title: 'Uniswap | Seed Phrase' }}
-      />
-      {/* TODO: Welcome still needed? */}
-      <HomeStack.Screen
-        name={Screens.Welcome}
-        component={WelcomeScreen}
-        options={{ title: 'Uniswap | Welcome' }}
-      />
+      <HomeStack.Group>
+        <HomeStack.Screen
+          name={Screens.Home}
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <HomeStack.Screen
+          name={Screens.TokenDetails}
+          component={TokenDetailsScreen}
+          options={{ headerShown: false }}
+        />
+      </HomeStack.Group>
+      <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
+        {/* TODO: reorganize account screens */}
+        <HomeStack.Screen
+          name={Screens.Accounts}
+          component={AccountsScreen}
+          options={{ headerShown: false }}
+        />
+        <HomeStack.Screen
+          name={Screens.ImportAccount}
+          component={ImportAccountScreen}
+          options={{ title: 'Uniswap | Import' }}
+        />
+        <HomeStack.Screen
+          name={Screens.Notifications}
+          component={NotificationsScreen}
+          options={{ headerShown: false }}
+        />
+        <HomeStack.Screen
+          name={Screens.Camera}
+          component={CameraScreen}
+          options={{ title: 'Uniswap | Camera' }}
+        />
+        <HomeStack.Screen
+          name={Screens.SeedPhrase}
+          component={SeedPhraseScreen}
+          options={{ title: 'Uniswap | Seed Phrase' }}
+        />
+        {/* TODO: Welcome still needed? */}
+        <HomeStack.Screen
+          name={Screens.Welcome}
+          component={WelcomeScreen}
+          options={{ title: 'Uniswap | Welcome' }}
+        />
+      </HomeStack.Group>
     </HomeStack.Navigator>
   )
 }
