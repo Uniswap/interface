@@ -1,16 +1,14 @@
 import { Trans } from '@lingui/macro'
+import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
-import Badge from 'components/Badge'
+import { Pair } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
-import { Version } from 'hooks/useToggledVersion'
+import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { memo } from 'react'
 import { TYPE } from 'theme'
-import { getTradeVersion } from 'utils/getTradeVersion'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
@@ -20,9 +18,16 @@ export default memo(function SwapRoute({
   trade,
   syncing,
 }: {
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
+  trade: Trade<Currency, Currency, TradeType>
   syncing: boolean
 }) {
+  const autoRouterSupported = useAutoRouterSupported()
+
+  const routes = getTokenPath(trade)
+
+  const hasV2Routes = routes.some((r) => r.protocol === Protocol.V2)
+  const hasV3Routes = routes.some((r) => r.protocol === Protocol.V3)
+
   return (
     <AutoColumn gap="12px">
       <RowBetween>
@@ -30,17 +35,6 @@ export default memo(function SwapRoute({
           <AutoRouterLogo />
           <AutoRouterLabel />
         </AutoRow>
-        {syncing ? (
-          <LoadingRows>
-            <div style={{ width: '30px', height: '24px' }} />
-          </LoadingRows>
-        ) : (
-          <Badge>
-            <TYPE.black fontSize={12}>
-              {getTradeVersion(trade) === Version.v2 ? <Trans>V2</Trans> : <Trans>V3</Trans>}
-            </TYPE.black>
-          </Badge>
-        )}
       </RowBetween>
       {syncing ? (
         <LoadingRows>
@@ -50,27 +44,38 @@ export default memo(function SwapRoute({
         <RoutingDiagram
           currencyIn={trade.inputAmount.currency}
           currencyOut={trade.outputAmount.currency}
-          routes={getTokenPath(trade)}
+          routes={routes}
         />
       )}
+      {autoRouterSupported &&
+        (syncing ? (
+          <LoadingRows>
+            <div style={{ width: '250px', height: '15px' }} />
+          </LoadingRows>
+        ) : (
+          <TYPE.main fontSize={12} width={400}>
+            {/* could not get <Plural> to render `one` correctly. */}
+            {routes.length === 1 ? (
+              hasV2Routes && hasV3Routes ? (
+                <Trans>Best trade via one route on Uniswap V2 and V3</Trans>
+              ) : (
+                <Trans>Best trade via one route on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
+              )
+            ) : hasV2Routes && hasV3Routes ? (
+              <Trans>Best trade via {routes.length} routes on Uniswap V2 and V3</Trans>
+            ) : (
+              <Trans>
+                Best trade via {routes.length} routes on Uniswap {hasV2Routes ? 'V2' : 'V3'}
+              </Trans>
+            )}
+          </TYPE.main>
+        ))}
     </AutoColumn>
   )
 })
 
-function getTokenPath(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
-): RoutingDiagramEntry[] {
-  // convert V2 path to a list of routes
-  if (trade instanceof V2Trade) {
-    const { path: tokenPath } = (trade as V2Trade<Currency, Currency, TradeType>).route
-    const path = []
-    for (let i = 1; i < tokenPath.length; i++) {
-      path.push([tokenPath[i - 1], tokenPath[i], V2_DEFAULT_FEE_TIER] as RoutingDiagramEntry['path'][0])
-    }
-    return [{ percent: new Percent(100, 100), path }]
-  }
-
-  return trade.swaps.map(({ route: { tokenPath, pools }, inputAmount, outputAmount }) => {
+function getTokenPath(trade: Trade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
+  return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
     const portion =
       trade.tradeType === TradeType.EXACT_INPUT
         ? inputAmount.divide(trade.inputAmount)
@@ -78,18 +83,25 @@ function getTokenPath(
 
     const percent = new Percent(portion.numerator, portion.denominator)
 
-    const path: [Currency, Currency, FeeAmount][] = []
+    const path: RoutingDiagramEntry['path'] = []
     for (let i = 0; i < pools.length; i++) {
       const nextPool = pools[i]
       const tokenIn = tokenPath[i]
       const tokenOut = tokenPath[i + 1]
 
-      path.push([tokenIn, tokenOut, nextPool.fee])
+      const entry: RoutingDiagramEntry['path'][0] = [
+        tokenIn,
+        tokenOut,
+        nextPool instanceof Pair ? V2_DEFAULT_FEE_TIER : nextPool.fee,
+      ]
+
+      path.push(entry)
     }
 
     return {
       percent,
       path,
+      protocol,
     }
   })
 }

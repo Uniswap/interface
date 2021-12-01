@@ -30,6 +30,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
+  // TODO(#2808): remove dependency on useBestV2Trade
   const v2USDCTrade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountOut, currency, {
     maxHops: 2,
   })
@@ -50,7 +51,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
       const { numerator, denominator } = v2USDCTrade.route.midPrice
       return new Price(currency, stablecoin, denominator, numerator)
     } else if (v3USDCTrade.trade) {
-      const { numerator, denominator } = v3USDCTrade.trade.route.midPrice
+      const { numerator, denominator } = v3USDCTrade.trade.routes[0].midPrice
       return new Price(currency, stablecoin, denominator, numerator)
     }
 

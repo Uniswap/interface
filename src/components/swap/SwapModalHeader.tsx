@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useContext, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -48,7 +47,7 @@ export default function SwapModalHeader({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
+  trade: Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   recipient: string | null
   gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
@@ -62,8 +61,7 @@ export default function SwapModalHeader({
   const fiatValueInput = useUSDCValue(trade.inputAmount)
   const fiatValueOutput = useUSDCValue(trade.outputAmount)
 
-  // only show gas estimate on V3Trade at the moment
-  const showGasEstimate = Boolean(trade instanceof V3Trade && gasUseEstimateUSD !== null)
+  const showGasEstimate = gasUseEstimateUSD !== null
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>

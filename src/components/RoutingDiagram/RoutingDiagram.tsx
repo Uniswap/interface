@@ -1,3 +1,4 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
@@ -8,18 +9,20 @@ import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
+import { Z_INDEX } from 'theme'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 
 export interface RoutingDiagramEntry {
   percent: Percent
   path: [Currency, Currency, FeeAmount][]
+  protocol: Protocol
 }
 
 const Wrapper = styled(Box)`
   align-items: center;
   background-color: ${({ theme }) => theme.bg0};
-  width: 400px;
+  width: 430px;
 `
 
 const RouteContainerRow = styled(Row)`
@@ -58,7 +61,27 @@ const DotColor = styled(DotLine)`
 
 const OpaqueBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.bg2};
-  z-index: 2;
+  border-radius: 8px;
+  display: grid;
+  font-size: 12px;
+  grid-gap: 4px;
+  grid-auto-flow: column;
+  justify-content: start;
+  padding: 4px 6px 4px 4px;
+  z-index: ${Z_INDEX.sticky};
+`
+
+const ProtocolBadge = styled(Badge)`
+  background-color: ${({ theme }) => theme.bg3};
+  border-radius: 4px;
+  color: ${({ theme }) => theme.text2};
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: ${Z_INDEX.sticky + 1};
+`
+
+const BadgeText = styled(TYPE.small)`
+  word-break: normal;
 `
 
 export default function RoutingDiagram({
@@ -75,10 +98,10 @@ export default function RoutingDiagram({
 
   return (
     <Wrapper>
-      {routes.map(({ percent, path }, index) => (
+      {routes.map((entry, index) => (
         <RouteContainerRow key={index}>
           <CurrencyLogo currency={tokenIn} size={'16px'} />
-          <Route percent={percent} path={path} />
+          <Route entry={entry} />
           <CurrencyLogo currency={tokenOut} size={'16px'} />
         </RouteContainerRow>
       ))}
@@ -86,16 +109,19 @@ export default function RoutingDiagram({
   )
 }
 
-function Route({ percent, path }: { percent: RoutingDiagramEntry['percent']; path: RoutingDiagramEntry['path'] }) {
+function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEntry }) {
   return (
     <RouteRow>
       <DottedLine>
         <DotColor />
       </DottedLine>
       <OpaqueBadge>
-        <TYPE.small fontSize={12} style={{ wordBreak: 'normal' }}>
+        <ProtocolBadge>
+          <BadgeText fontSize={11}>{protocol.toUpperCase()}</BadgeText>
+        </ProtocolBadge>
+        <BadgeText fontSize={12} style={{ minWidth: 'auto' }}>
           {percent.toSignificant(2)}%
-        </TYPE.small>
+        </BadgeText>
       </OpaqueBadge>
 
       <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>

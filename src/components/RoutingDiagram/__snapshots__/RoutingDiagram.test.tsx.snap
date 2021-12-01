@@ -3,7 +3,7 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 dMRWaC css-vurnku"
   >
     <div
       class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
@@ -22,11 +22,20 @@ exports[`renders multi route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"
+            >
+              V2
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            style="min-width: auto;"
           >
             75%
           </div>
@@ -71,11 +80,20 @@ exports[`renders multi route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"
+            >
+              V3
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            style="min-width: auto;"
           >
             25%
           </div>
@@ -124,7 +142,7 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 dMRWaC css-vurnku"
   >
     <div
       class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
@@ -143,11 +161,20 @@ exports[`renders single route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"
+            >
+              V3
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            style="min-width: auto;"
           >
             100%
           </div>
@@ -182,7 +209,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 dMRWaC css-vurnku"
   />
 </DocumentFragment>
 `;

@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsInline from 'components/swap/SwapDetailsInline'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -12,7 +11,7 @@ import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { V3TradeState } from 'state/routing/types'
+import { TradeState } from 'state/routing/types'
 import { ThemeContext } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -51,7 +50,6 @@ import {
 import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
-import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
@@ -96,14 +94,13 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v3Trade: { state: v3TradeState, gasUseEstimateUSD },
-    bestTrade: trade,
+    trade: { state: tradeState, trade, gasUseEstimateUSD },
     allowedSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo(toggledVersion)
+  } = useDerivedSwapInfo()
 
   const {
     wrapType,
@@ -128,12 +125,8 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
-    () => [
-      trade instanceof V3Trade ? !trade?.swaps : !trade?.route,
-      V3TradeState.LOADING === v3TradeState,
-      V3TradeState.SYNCING === v3TradeState,
-    ],
-    [trade, v3TradeState]
+    () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
+    [trade, tradeState]
   )
 
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
@@ -166,7 +159,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+    tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
@@ -258,12 +251,7 @@ export default function Swap({ history }: RouteComponentProps) {
               : (recipientAddress ?? recipient) === account
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
-          label: [
-            trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol,
-            getTradeVersion(trade),
-            'MH',
-          ].join('/'),
+          label: [trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join('/'),
         })
       })
       .catch((error) => {

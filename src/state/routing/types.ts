@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 
-export enum V3TradeState {
+export enum TradeState {
   LOADING,
   INVALID,
   NO_ROUTE_FOUND,
@@ -10,9 +10,8 @@ export enum V3TradeState {
 
 export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 
-export type PoolInRoute = {
+export type V3PoolInRoute = {
   type: 'v3-pool'
-  address: string
   tokenIn: TokenInRoute
   tokenOut: TokenInRoute
   sqrtRatioX96: string
@@ -21,6 +20,28 @@ export type PoolInRoute = {
   fee: string
   amountIn?: string
   amountOut?: string
+
+  // no used in the interface
+  address?: string
+}
+
+export type V2Reserve = {
+  token: TokenInRoute
+  quotient: string
+}
+
+export type V2PoolInRoute = {
+  type: 'v2-pool'
+  tokenIn: TokenInRoute
+  tokenOut: TokenInRoute
+  reserve0: V2Reserve
+  reserve1: V2Reserve
+  amountIn?: string
+  amountOut?: string
+
+  // no used in the interface
+  // avoid returning it from the client-side smart-order-router
+  address?: string
 }
 
 export interface GetQuoteResult {
@@ -38,6 +59,6 @@ export interface GetQuoteResult {
   quoteDecimals: string
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
-  route: PoolInRoute[][]
+  route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
   routeString: string
 }
