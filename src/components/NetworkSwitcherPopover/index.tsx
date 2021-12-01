@@ -32,19 +32,15 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
     }
   }, [chainId, closeModals])
 
-  const isNetDisabled = (networkId: ChainId) => {
+  const isNetworkDisabled = (networkId: ChainId) => {
     return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId
-  }
-
-  const setChainId = (chainId: ChainId) => {
-    return chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
   }
 
   function getNetworkOptionsPreset(network: NetworkOptionsPreset) {
     const { chainId } = network
     return {
       preset: network,
-      disabled: isNetDisabled(chainId),
+      disabled: isNetworkDisabled(chainId),
       onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
     }
   }
@@ -69,9 +65,10 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   const selectorNetworkList = createNetworksList({
     networkOptionsPreset: networkOptionsPreset,
     selectedNetworkChainId: chainId ? chainId : -1,
-    setChainId: setChainId,
+    setChainId: chainId === ChainId.MAINNET ? selectEthereum : (chainId: ChainId) => selectNetwork(chainId),
     activeChainId: !!account ? chainId : -1,
-    isNetworkDisabled: isNetDisabled
+    isNetworkDisabled: isNetworkDisabled,
+    removeSpecifiedTag: 'coming soon'
   })
 
   return (

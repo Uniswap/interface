@@ -196,14 +196,14 @@ export default function Bridge() {
     selectedNetworkChainId: fromNetwork.chainId,
     setChainId: onFromNetworkChange,
     activeChainId: !!account ? chainId : -1,
-    isNetworkDisabled: isNetworkDisabled
+    isNetworkDisabled
   })
   const toNetworkList = createNetworksList({
     networkOptionsPreset: networkOptionsPreset,
     selectedNetworkChainId: toNetwork.chainId,
     setChainId: onToNetworkChange,
     activeChainId: !!account ? chainId : -1,
-    isNetworkDisabled: isNetworkDisabled
+    isNetworkDisabled
   })
 
   return (
