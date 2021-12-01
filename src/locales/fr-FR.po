@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -47,7 +47,7 @@ msgstr "(Réclamer)"
 msgid "(clear all)"
 msgstr "(tout effacer)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(modifier)"
 
@@ -61,18 +61,6 @@ msgstr "- Supprimer le destinataire"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / semaine"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "Frais de 0,05 %"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "Frais de 0,3 %"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "Frais de 1 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Toutes les propositions"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Votes"
 
@@ -127,7 +115,7 @@ msgstr "<0>Débloquer le vote</0> pour se préparer à la prochaine proposition.
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Bienvenue dans l'équipe des Licornes :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Un seuil minimum de 0,25% de l'offre totale d'UNI est requis pour soumettre des propositions"
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Actif"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Ajouter"
@@ -231,10 +218,6 @@ msgstr "Montant"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Une erreur s'est produite lors de la tentative d'exécution de cet échange. Vous devrez peut-être augmenter votre tolérance au slippage. Si cela ne fonctionne pas, il peut y avoir une incompatibilité avec le token que vous échangez. Remarque : les frais sur les token de transfert et de rebase sont incompatibles avec Uniswap V3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Métriques"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "Solde :"
 msgid "Balance: {0} {1}"
 msgstr "Solde : {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Idéal pour les paires exotiques."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Idéal pour la plupart des paires."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Idéal pour des paires stables."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Idéal pour les paires très stables."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -446,10 +430,6 @@ msgstr "Fermer"
 msgid "Closed"
 msgstr "Fermé"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Code"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Collecter"
@@ -490,10 +470,6 @@ msgstr "Bases communes"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Valider"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Confirmer la création"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -562,16 +538,12 @@ msgstr "Copié"
 msgid "Copy Address"
 msgstr "Copier l'adresse"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Créer"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Créer un Pool & Approvisionner"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Créer une Proposition"
 
@@ -625,7 +597,7 @@ msgstr "Votes délégués"
 msgid "Delegate voting power to {0}"
 msgstr "Déléguer le droit de vote à {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Délégué à :"
 
@@ -835,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Obtenez de l'aide sur Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Centre d'aide"
 
@@ -1137,7 +1110,7 @@ msgstr "Aucune liquidité V2 trouvée."
 msgid "No active pools"
 msgstr "Aucun pool actif"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Pas de données"
 
@@ -1161,7 +1134,7 @@ msgstr "Aucune proposition trouvée."
 msgid "No results found."
 msgstr "Aucun résultat trouvé."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Non créé"
 
@@ -1340,7 +1313,7 @@ msgstr "Proposition Soumise"
 msgid "Proposal Title"
 msgstr "Titre de la proposition"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Propositions"
 
@@ -1372,7 +1345,7 @@ msgstr "Tarifs"
 msgid "Read more about UNI"
 msgstr "En savoir plus sur UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "En savoir plus sur la gouvernance d'Uniswap"
 
@@ -1430,6 +1403,10 @@ msgstr "Suppression de {0} {1} et {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Supprimer {0} {1} et{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Demander des fonctionnalités"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1468,7 +1445,7 @@ msgstr "Sélectionnez une action"
 msgid "Selected Range"
 msgstr "Fourchette sélectionnée"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Soi-même"
 
@@ -1551,8 +1528,8 @@ msgid "Supply"
 msgstr "Approvisionnement"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "Alimentation {0} {1} et{2} {3}"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Approvisionnement {0} {1} et {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1664,10 +1641,6 @@ msgstr "Cette application utilise les API tierces suivantes :"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Ce pool doit être initialisé avant de pouvoir ajouter des liquidités. Pour initialiser, sélectionnez un prix de départ pour le pool. Ensuite, entrez votre fourchette de prix de liquidité et le montant du dépôt. Les frais de gaz seront plus élevés que d'habitude en raison de la transaction d'initialisation."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Ce pool doit être initialisé à {0} avant de pouvoir ajouter de la liquidité. Pour initialiser, sélectionnez un prix de départ pour le pool. Ensuite, entrez votre fourchette de prix de liquidité et le montant du dépôt."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "Cet itinéraire optimise votre prix en tenant compte des itinéraires fractionnés, des sauts multiples et des coûts de gaz."
@@ -1708,8 +1681,8 @@ msgid "To (at least)"
 msgstr "Vers (au moins)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Pour commencer à trader à {0}, commencez par relier vos actifs de L1 à L2. Veuillez considérer ceci comme une version bêta et vous renseigner sur les risques avant d'utiliser {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Pour commencer à trader sur {0}, commencez par relier vos actifs de L1 à L2. Veuillez considérer ceci comme une version bêta et connaître les risques avant d'utiliser {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1799,7 +1772,7 @@ msgstr "UNI en circulation :"
 msgid "UNI price:"
 msgstr "Prix UNI :"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Les jetons UNI représentent les parts de vote dans la gouvernance d'Uniswap. Vous pouvez voter sur chaque proposition vous-même ou déléguer vos votes à un tiers."
 
@@ -1840,7 +1813,7 @@ msgstr "Erreur inattendue. Impossible d'estimer le gaz pour l'échange."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Problème inattendu avec l'estimation du gaz. Veuillez réessayer."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Gouvernance Uniswap"
 
@@ -1876,12 +1849,12 @@ msgstr "Source inconnue"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Erreur inconnue{0}. Essayez d'augmenter votre tolérance au glissement. Remarque : les frais sur les tokens de transfert et de rebase sont incompatibles avec Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Débloquer les votes"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Débloquer le vote"
 
@@ -1911,7 +1884,7 @@ msgstr "Unwrap"
 msgid "Unwrap <0/> to ETH"
 msgstr "Déballer <0/> en ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Mettre à jour la délégation"
 
@@ -2394,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Ajouté par l'utilisateur"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2408,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "Palier de frais de {0}%"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% sélectionner"
 

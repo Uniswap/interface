@@ -2,9 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
-import { DateTime } from 'luxon/src/luxon'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
@@ -38,7 +38,7 @@ import {
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, StyledInternalLink, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
@@ -127,14 +127,17 @@ function getDateFromBlock(
   currentBlock: number | undefined,
   averageBlockTimeInSeconds: number | undefined,
   currentTimestamp: BigNumber | undefined
-): DateTime | undefined {
-  return targetBlock && currentBlock && averageBlockTimeInSeconds && currentTimestamp
-    ? DateTime.fromSeconds(
-        currentTimestamp
-          .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlock - currentBlock)))
-          .toNumber()
-      )
-    : undefined
+): Date | undefined {
+  if (targetBlock && currentBlock && averageBlockTimeInSeconds && currentTimestamp) {
+    const date = new Date()
+    date.setTime(
+      currentTimestamp
+        .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlock - currentBlock)))
+        .toNumber() * 1000
+    )
+    return date
+  }
+  return undefined
 }
 
 export default function VotePage({
@@ -161,19 +164,28 @@ export default function VotePage({
   // get and format date from data
   const currentTimestamp = useCurrentBlockTimestamp()
   const currentBlock = useBlockNumber()
-  const startDate: DateTime | undefined = getDateFromBlock(
+  const startDate = getDateFromBlock(
     proposalData?.startBlock,
     currentBlock,
     (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
     currentTimestamp
   )
-  const endDate: DateTime | undefined = getDateFromBlock(
+  const endDate = getDateFromBlock(
     proposalData?.endBlock,
     currentBlock,
     (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
     currentTimestamp
   )
-  const now: DateTime = DateTime.local()
+  const now = new Date()
+  const locale = useActiveLocale()
+  const dateFormat: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZoneName: 'short',
+  }
 
   // get total votes and format percentages for UI
   const totalVotes: number | undefined = proposalData ? proposalData.forCount + proposalData.againstCount : undefined
@@ -237,28 +249,27 @@ export default function VotePage({
             {proposalData && <ProposalStatus status={proposalData.status} />}
           </RowBetween>
           <AutoColumn gap="10px" style={{ width: '100%' }}>
-            <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
+            <ThemedText.LargeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</ThemedText.LargeHeader>
             <RowBetween>
-              <TYPE.main>
+              <ThemedText.Main>
                 {startDate && startDate > now ? (
-                  <Trans>
-                    Voting starts approximately {startDate && startDate.toLocaleString(DateTime.DATETIME_FULL)}
-                  </Trans>
+                  <Trans>Voting starts approximately {startDate.toLocaleString(locale, dateFormat)}</Trans>
                 ) : null}
-              </TYPE.main>
+              </ThemedText.Main>
             </RowBetween>
             <RowBetween>
-              <TYPE.main>
-                {endDate && endDate < now ? (
-                  <Trans>Voting ended {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-                ) : (
-                  <Trans>Voting ends approximately {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-                )}
-              </TYPE.main>
+              <ThemedText.Main>
+                {endDate &&
+                  (endDate < now ? (
+                    <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                  ) : (
+                    <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                  ))}
+              </ThemedText.Main>
             </RowBetween>
             {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
               <GreyCard>
-                <TYPE.black>
+                <ThemedText.Black>
                   <Trans>
                     Only UNI votes that were self delegated or delegated to another address before block{' '}
                     {proposalData.startBlock} are eligible for voting.{' '}
@@ -271,7 +282,7 @@ export default function VotePage({
                       </Trans>
                     </span>
                   )}
-                </TYPE.black>
+                </ThemedText.Black>
               </GreyCard>
             )}
           </AutoColumn>
@@ -306,12 +317,12 @@ export default function VotePage({
               <CardSection>
                 <AutoColumn gap="md">
                   <WrapSmall>
-                    <TYPE.black fontWeight={600}>
+                    <ThemedText.Black fontWeight={600}>
                       <Trans>For</Trans>
-                    </TYPE.black>
-                    <TYPE.black fontWeight={600}>
+                    </ThemedText.Black>
+                    <ThemedText.Black fontWeight={600}>
                       {proposalData?.forCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </TYPE.black>
+                    </ThemedText.Black>
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
@@ -323,12 +334,12 @@ export default function VotePage({
               <CardSection>
                 <AutoColumn gap="md">
                   <WrapSmall>
-                    <TYPE.black fontWeight={600}>
+                    <ThemedText.Black fontWeight={600}>
                       <Trans>Against</Trans>
-                    </TYPE.black>
-                    <TYPE.black fontWeight={600}>
+                    </ThemedText.Black>
+                    <ThemedText.Black fontWeight={600}>
                       {proposalData?.againstCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </TYPE.black>
+                    </ThemedText.Black>
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
@@ -338,9 +349,9 @@ export default function VotePage({
             </StyledDataCard>
           </CardWrapper>
           <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
+            <ThemedText.MediumHeader fontWeight={600}>
               <Trans>Details</Trans>
-            </TYPE.mediumHeader>
+            </ThemedText.MediumHeader>
             {proposalData?.details?.map((d, i) => {
               return (
                 <DetailText key={i}>
@@ -359,17 +370,17 @@ export default function VotePage({
             })}
           </AutoColumn>
           <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
+            <ThemedText.MediumHeader fontWeight={600}>
               <Trans>Description</Trans>
-            </TYPE.mediumHeader>
+            </ThemedText.MediumHeader>
             <MarkDownWrapper>
               <ReactMarkdown source={proposalData?.description} />
             </MarkDownWrapper>
           </AutoColumn>
           <AutoColumn gap="md">
-            <TYPE.mediumHeader fontWeight={600}>
+            <ThemedText.MediumHeader fontWeight={600}>
               <Trans>Proposer</Trans>
-            </TYPE.mediumHeader>
+            </ThemedText.MediumHeader>
             <ProposerAddressLink
               href={
                 proposalData?.proposer && chainId

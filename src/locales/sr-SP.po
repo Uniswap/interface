@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -47,7 +47,7 @@ msgstr "(потраживање)"
 msgid "(clear all)"
 msgstr "(обриши све)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(уреди)"
 
@@ -61,18 +61,6 @@ msgstr "- Уклоните примаоца"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 УНИ / недељно"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0,05% накнада"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0,3% накнада"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% накнада"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Сви предлози"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Гласови"
 
@@ -127,7 +115,7 @@ msgstr "<0> Откључајте гласање</0> да се припреми �
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Добродошли у тим Unicorn :) <1> 🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "За подношење предлога потребан је минимални праг од 0,25% укупне УНИ понуде"
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Активно"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Додати"
@@ -231,10 +218,6 @@ msgstr "Износ"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ћете морати повећати толеранцију клизања. Ако то не успе, можда постоји некомпатибилност са токеном којим тргујете. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Аналитика"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "Стање:"
 msgid "Balance: {0} {1}"
 msgstr "Стање: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Најбоље за егзотичне парове."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Најбоље за већину парова."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Најбоље за стабилне парове."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Најбоље за веома стабилне парове."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -446,10 +430,6 @@ msgstr "Затвори"
 msgid "Closed"
 msgstr "Затворено"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Код"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Сакупи"
@@ -490,10 +470,6 @@ msgstr "Заједничке основе"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Потврди"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Потврдите Створи"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -562,16 +538,12 @@ msgstr "Копирано"
 msgid "Copy Address"
 msgstr "Копирај адресу"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Креирај"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Направите Фонд & Снабдевање"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Направите предлог"
 
@@ -625,7 +597,7 @@ msgstr "Делегирајте гласове"
 msgid "Delegate voting power to {0}"
 msgstr "Делегирајте гласачку моћ на {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Делегирано за:"
 
@@ -835,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Затражите подршку на Discord-у"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Центар за помоћ"
 
@@ -1137,7 +1110,7 @@ msgstr "Није пронађена ликвидност V2."
 msgid "No active pools"
 msgstr "Нема активних фондова"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Нема података"
 
@@ -1161,7 +1134,7 @@ msgstr "Није пронађен ниједан предлог."
 msgid "No results found."
 msgstr "Нема резултата."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Није створено"
 
@@ -1340,7 +1313,7 @@ msgstr "Предлог поднет"
 msgid "Proposal Title"
 msgstr "Наслов предлога"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Предлози"
 
@@ -1372,7 +1345,7 @@ msgstr "Стопе"
 msgid "Read more about UNI"
 msgstr "Прочитајте више о UNI-ју"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Прочитајте више о управљању Uniswap-ом"
 
@@ -1430,6 +1403,10 @@ msgstr "Уклањање {0} {1} и {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Уклањање {0} {1} и{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Рекуест Феатурес"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1468,7 +1445,7 @@ msgstr "Изаберите радњу"
 msgid "Selected Range"
 msgstr "Изабрани опсег"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Сопствени"
 
@@ -1551,8 +1528,8 @@ msgid "Supply"
 msgstr "Снабдевање"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "Снабдевање {0} {1} и{2} {3}"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Снабдевање {0} {1} и {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1664,10 +1641,6 @@ msgstr "Ova aplikacija koristi sledeće API-je treće strane:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Овај фонд мора бити иницијализован да бисте могли да додате ликвидност. Да бисте иницијализирали, одаберите почетну цену за базен. Затим унесите опсег цена ликвидности и износ депозита. Накнаде за плин биће веће него обично због трансакције иницијализације."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Овај фонд мора бити иницијализован на {0} да бисте могли да додате ликвидност. Да бисте иницијализирали, одаберите почетну цену за базен. Затим унесите опсег цена ликвидности и износ депозита."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "Ова рута оптимизује вашу цену узимајући у обзир подељене руте, више прескакања и трошкове гаса."
@@ -1708,8 +1681,8 @@ msgid "To (at least)"
 msgstr "До (најмање)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Да бисте започели трговање на {0}, прво премостите своју имовину са Л1 на Л2. Молимо вас да ово третирате као бета издање и сазнате о ризицима пре коришћења {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Да бисте започели трговање на {0}, прво премостите своју имовину са Л1 на Л2. Третирајте ово као бета издање и сазнајте више о ризицима пре употребе {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1799,7 +1772,7 @@ msgstr "UNI у оптицају:"
 msgid "UNI price:"
 msgstr "UNI цена:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "UNI токени представљају акције са правом гласа у управљању Uniswap-ом. Можете сами гласати за сваки предлог или пренети своје гласове трећој страни."
 
@@ -1840,7 +1813,7 @@ msgstr "Неочекивана грешка. Није могуће процен�
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Неочекивани проблем са проценом гаса. Молим вас, покушајте поново."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap управљање"
 
@@ -1876,12 +1849,12 @@ msgstr "Непознат извор"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Непозната грешка{0}. Покушајте повећати толеранцију клизања. Напомена: накнада за токене за пренос и поновну надоградњу није компатибилна са Унисвап В3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Откључај гласове"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Откључај гласање"
 
@@ -1911,7 +1884,7 @@ msgstr "Одмотај"
 msgid "Unwrap <0/> to ETH"
 msgstr "Одмотајте <0/> на ЕТХ"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Ажурирање делегације"
 
@@ -2394,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Додао корисник"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2408,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "Накнада од {0}"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% изабрано"
 

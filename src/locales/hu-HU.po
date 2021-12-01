@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -47,7 +47,7 @@ msgstr "(követel)"
 msgid "(clear all)"
 msgstr "(összes törlése)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(szerkesztés)"
 
@@ -61,18 +61,6 @@ msgstr "- Távolítsa el a címzettet"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / hét"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0,05% díj"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0,3% díj"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% díj"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0 /> Minden javaslat"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0 /> Szavazatok"
 
@@ -127,7 +115,7 @@ msgstr "<0> Szavazás feloldása</0> a következő javaslatra való felkészül�
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Üdvözöljük az Unicorn csapatában :) <1> 🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "A pályázatok benyújtásához az UNI teljes kínálatának minimum 0,25% -a szükséges"
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Aktív"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Hozzáadás"
@@ -231,10 +218,6 @@ msgstr "Összeg"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Analitika"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "Egyenleg:"
 msgid "Balance: {0} {1}"
 msgstr "Egyenleg: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Legjobb egzotikus párok számára."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Legjobb a legtöbb pár számára."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Legjobb stabil párokhoz."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "A legjobb nagyon stabil párok számára."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -446,10 +430,6 @@ msgstr "Bezárás"
 msgid "Closed"
 msgstr "Zárva"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Kód"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Begyűjtés"
@@ -490,10 +470,6 @@ msgstr "Közös alapok"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Megerősítés"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Erősítse meg a létrehozást"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -562,16 +538,12 @@ msgstr "Másolva"
 msgid "Copy Address"
 msgstr "Cím másolása"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Teremt"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Pool és kínálat létrehozása"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Javaslat létrehozása"
 
@@ -625,7 +597,7 @@ msgstr "Szavazatok delegálása"
 msgid "Delegate voting power to {0}"
 msgstr "Delegálja a szavazati jogot {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Delegálva:"
 
@@ -836,6 +808,7 @@ msgid "Get support on Discord"
 msgstr "Kérjen támogatást a Discordon"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Segítség Központ"
 
@@ -1138,7 +1111,7 @@ msgstr "V2 likviditás nem található."
 msgid "No active pools"
 msgstr "Nincs aktív pool"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Nincs adat"
 
@@ -1162,7 +1135,7 @@ msgstr "Nem található javaslat."
 msgid "No results found."
 msgstr "Nincs találat."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Nincs létrehozva"
 
@@ -1341,7 +1314,7 @@ msgstr "Javaslat benyújtva"
 msgid "Proposal Title"
 msgstr "A javaslat címe"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Javaslatok"
 
@@ -1373,7 +1346,7 @@ msgstr "Árfolyamok"
 msgid "Read more about UNI"
 msgstr "További információk az UNI-ról"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "További információk az Uniswap irányításáról"
 
@@ -1431,6 +1404,10 @@ msgstr "{0} {1} és {2} {3} eltávolítása"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "{0} {1} és{2} {3}eltávolítása"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Funkciók kérése"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1469,7 +1446,7 @@ msgstr "Válasszon ki egy műveletet"
 msgid "Selected Range"
 msgstr "Kiválasztott tartomány"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Saját"
 
@@ -1552,8 +1529,8 @@ msgid "Supply"
 msgstr "Kínálat"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "{0} {1} és{2} {3}ellátása"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "{0} {1} és {2} {3} kínálása"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1665,10 +1642,6 @@ msgstr "Ez az alkalmazás a következő harmadik féltől származó API-kat has
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Ezt a készletet inicializálni kell a likviditás növelése előtt. Az inicializáláshoz válassza ki a készlet kikiáltási árát. Ezután adja meg likviditási ártartományát és betéti összegét. Az inicializálási tranzakció miatt a gázdíjak a szokásosnál magasabbak lesznek."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "{0} on kell inicializálni, mielőtt hozzáadhatná a likviditást. Az inicializáláshoz válassza ki a készlet kikiáltási árát. Ezután adja meg likviditási ártartományát és betéti összegét."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "Ez az útvonal optimalizálja az árát, figyelembe véve a megosztott útvonalakat, a több ugrást és a gázköltségeket."
@@ -1709,8 +1682,8 @@ msgid "To (at least)"
 msgstr "(Legalább)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "{0}-n történő kereskedés megkezdéséhez először kösse össze eszközeit L1 -ről L2 -re. Kérjük, kezelje ezt béta kiadásként, és ismerje meg a kockázatokat, mielőtt használná {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "{0}kezdje meg a kereskedést, először hidalja át eszközeit L1-ről L2-re. Kérjük, kezelje ezt béta kiadásként, és az {1}használata előtt tájékozódjon a kockázatokról."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1800,7 +1773,7 @@ msgstr "Forgalomban lévő UNI:"
 msgid "UNI price:"
 msgstr "UNI ár:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Az UNI tokenek szavazati részvényeket képviselnek az Uniswap irányításában. Az egyes javaslatokról saját maga is szavazhat, vagy szavazatait átruházhatja egy harmadik félre."
 
@@ -1841,7 +1814,7 @@ msgstr "Váratlan hiba. Nem sikerült megbecsülni a cseréhez szükséges gázt
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Váratlan probléma a gáz becslésével. Kérlek próbáld újra."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap irányítás"
 
@@ -1877,12 +1850,12 @@ msgstr "Ismeretlen forrás"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ismeretlen hiba{0}. Próbálja meg növelni a csúszástűrést. Megjegyzés: az átutalási és újbóli alapkivonási díjak nem kompatibilisek az Uniswap V3 -mal."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Szavazatok feloldása"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Szavazás feloldása"
 
@@ -1912,7 +1885,7 @@ msgstr "Kicsomagolás"
 msgid "Unwrap <0/> to ETH"
 msgstr "Csomagolja ki a (z) <0/> gombot ETH -ra"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Delegálás frissítése"
 
@@ -2396,6 +2369,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • felhasználó hozzáadta"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2410,7 +2384,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% -os díjszint"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% választ"
 

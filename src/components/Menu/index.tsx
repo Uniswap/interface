@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { L2_CHAIN_IDS } from 'constants/chains'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
@@ -10,13 +10,13 @@ import {
   BookOpen,
   Check,
   ChevronLeft,
-  Code,
+  Coffee,
   FileText,
   Globe,
+  HelpCircle,
   Info,
   MessageCircle,
   Moon,
-  PieChart,
   Sun,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -179,8 +179,6 @@ const ToggleMenuItem = styled.button`
   }
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
-
 function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
   const { to, onClick } = useLocationLinkProps(locale)
 
@@ -219,7 +217,6 @@ export default function Menu() {
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
@@ -252,29 +249,23 @@ export default function Menu() {
                       </div>
                       <Info opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://docs.uniswap.org/">
+                    <MenuItem href="https://help.uniswap.org/">
                       <div>
-                        <Trans>Docs</Trans>
+                        <Trans>Help Center</Trans>
                       </div>
-                      <BookOpen opacity={0.6} size={16} />
+                      <HelpCircle opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href={CODE_LINK}>
+                    <MenuItem href="https://uniswap.canny.io/feature-requests">
                       <div>
-                        <Trans>Code</Trans>
+                        <Trans>Request Features</Trans>
                       </div>
-                      <Code opacity={0.6} size={16} />
+                      <Coffee opacity={0.6} size={16} />
                     </MenuItem>
                     <MenuItem href="https://discord.gg/FCfyBSbCU5">
                       <div>
                         <Trans>Discord</Trans>
                       </div>
                       <MessageCircle opacity={0.6} size={16} />
-                    </MenuItem>
-                    <MenuItem href={infoLink}>
-                      <div>
-                        <Trans>Analytics</Trans>
-                      </div>
-                      <PieChart opacity={0.6} size={16} />
                     </MenuItem>
                     <ToggleMenuItem onClick={() => setMenu('lang')}>
                       <div>
@@ -286,6 +277,12 @@ export default function Menu() {
                       <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
                       {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
                     </ToggleMenuItem>
+                    <MenuItem href="https://docs.uniswap.org/">
+                      <div>
+                        <Trans>Docs</Trans>
+                      </div>
+                      <BookOpen opacity={0.6} size={16} />
+                    </MenuItem>
                     <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
                       <div>
                         <Trans>Legal & Privacy</Trans>

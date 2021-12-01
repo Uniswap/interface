@@ -16,7 +16,6 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
-import { SupportedChainId } from 'constants/chains'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTheme from 'hooks/useTheme'
@@ -30,7 +29,7 @@ import { Text } from 'rebass'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WETH9_EXTENDED } from '../../constants/tokens'
@@ -140,7 +139,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       .then((estimate) => {
         const newTxn = {
           ...txn,
-          gasLimit: calculateGasMargin(chainId, estimate),
+          gasLimit: calculateGasMargin(estimate),
         }
 
         return library
@@ -228,9 +227,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         </RowBetween>
         {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
           <>
-            <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'8px 0 0 0'}>
+            <ThemedText.Italic fontSize={12} color={theme.text2} textAlign="left" padding={'8px 0 0 0'}>
               <Trans>You will also collect fees earned from this position.</Trans>
-            </TYPE.italic>
+            </ThemedText.Italic>
             <RowBetween>
               <Text fontSize={16} fontWeight={500}>
                 <Trans>{feeValue0?.currency?.symbol} Fees Earned:</Trans>
@@ -262,10 +261,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     )
   }
 
-  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const showCollectAsWeth = Boolean(
-    !onOptimisticChain &&
-      liquidityValue0?.currency &&
+    liquidityValue0?.currency &&
       liquidityValue1?.currency &&
       (liquidityValue0.currency.isNative ||
         liquidityValue1.currency.isNative ||
@@ -306,18 +303,18 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     size={20}
                     margin={true}
                   />
-                  <TYPE.label
+                  <ThemedText.Label
                     ml="10px"
                     fontSize="20px"
-                  >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</TYPE.label>
+                  >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</ThemedText.Label>
                 </RowFixed>
                 <RangeBadge removed={removed} inRange={!outOfRange} />
               </RowBetween>
               <LightCard>
                 <AutoColumn gap="md">
-                  <TYPE.main fontWeight={400}>
+                  <ThemedText.Main fontWeight={400}>
                     <Trans>Amount</Trans>
-                  </TYPE.main>
+                  </ThemedText.Main>
                   <RowBetween>
                     <ResponsiveHeaderText>
                       <Trans>{percentForSlider}%</Trans>
@@ -396,9 +393,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
               {showCollectAsWeth && (
                 <RowBetween>
-                  <TYPE.main>
+                  <ThemedText.Main>
                     <Trans>Collect as WETH</Trans>
-                  </TYPE.main>
+                  </ThemedText.Main>
                   <Toggle
                     id="receive-as-weth"
                     isActive={receiveWETH}

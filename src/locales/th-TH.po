@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -47,7 +47,7 @@ msgstr "(เรียกร้อง)"
 msgid "(clear all)"
 msgstr "(ลบทั้งหมด)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(แก้ไข)"
 
@@ -61,18 +61,6 @@ msgstr "- ลบผู้รับ"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / สัปดาห์"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "ค่าธรรมเนียม 0.05%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "ค่าธรรมเนียม 0.3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "ค่าธรรมเนียม 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> ข้อเสนอทั้งหมด"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> โหวต"
 
@@ -127,7 +115,7 @@ msgstr "<0>ปลดล็อกการโหวต</0> เพื่อเต�
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉</0> ยินดีต้อนรับสู่ทีมยูนิคอร์น :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "เกณฑ์ขั้นต่ำ 0.25% ของอุปทาน UNI ทั้งหมดจะต้องส่งข้อเสนอ"
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "คล่องแคล่ว"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "เพิ่ม"
@@ -231,10 +218,6 @@ msgstr "จำนวน"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "การวิเคราะห์"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "สมดุล:"
 msgid "Balance: {0} {1}"
 msgstr "ยอดคงเหลือ: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "ดีที่สุดสำหรับคู่ที่แปลกใหม่"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "ดีที่สุดสำหรับคู่ส่วนใหญ่"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "ดีที่สุดสำหรับคู่ที่มั่นคง"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "ดีที่สุดสำหรับคู่ที่มีเสถียรภาพมาก"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -446,10 +430,6 @@ msgstr "ปิด I"
 msgid "Closed"
 msgstr "ปิด"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "รหัส"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "เก็บรวบรวม"
@@ -490,10 +470,6 @@ msgstr "ฐานทั่วไป"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "ยืนยัน"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "ยืนยันการสร้าง"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -562,16 +538,12 @@ msgstr "คัดลอกแล้ว"
 msgid "Copy Address"
 msgstr "คัดลอกที่อยู่"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "สร้าง"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "สร้างพูลและซัพพลาย"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "สร้างข้อเสนอ"
 
@@ -625,7 +597,7 @@ msgstr "โหวตตัวแทน"
 msgid "Delegate voting power to {0}"
 msgstr "มอบอำนาจการลงคะแนนเป็น {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "มอบหมายให้:"
 
@@ -835,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "รับการสนับสนุนบน Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "ศูนย์ช่วยเหลือ"
 
@@ -1137,7 +1110,7 @@ msgstr "ไม่พบสภาพคล่อง V2"
 msgid "No active pools"
 msgstr "ไม่มีสระว่ายน้ำที่ใช้งาน"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "ไม่มีข้อมูล"
 
@@ -1161,7 +1134,7 @@ msgstr "ไม่พบข้อเสนอ"
 msgid "No results found."
 msgstr "ไม่พบผลลัพธ์."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "ไม่ได้สร้าง"
 
@@ -1340,7 +1313,7 @@ msgstr "ส่งข้อเสนอแล้ว"
 msgid "Proposal Title"
 msgstr "ชื่อข้อเสนอ"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "ข้อเสนอ"
 
@@ -1372,7 +1345,7 @@ msgstr "ราคา"
 msgid "Read more about UNI"
 msgstr "อ่านเพิ่มเติมเกี่ยวกับ UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "อ่านเพิ่มเติมเกี่ยวกับการกำกับดูแล Uniswap"
 
@@ -1430,6 +1403,10 @@ msgstr "กำลังลบ {0} {1} และ {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "กำลังลบ {0} {1} และ{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "ขอคุณสมบัติ"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1468,7 +1445,7 @@ msgstr "เลือกการดำเนินการ"
 msgid "Selected Range"
 msgstr "ช่วงที่เลือก"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "ตัวเอง"
 
@@ -1551,8 +1528,8 @@ msgid "Supply"
 msgstr "จัดหา"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "จัดหา {0} {1} และ{2} {3}"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "การจัดหา {0} {1} และ {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1664,10 +1641,6 @@ msgstr "แอพนี้ใช้ API บุคคลที่สามต่�
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "ต้องเริ่มต้นกลุ่มนี้ก่อนจึงจะสามารถเพิ่มสภาพคล่องได้ ในการเริ่มต้น เลือกราคาเริ่มต้นสำหรับพูล จากนั้นป้อนช่วงราคาสภาพคล่องและจำนวนเงินฝาก ค่าธรรมเนียมก๊าซจะสูงกว่าปกติเนื่องจากการทำธุรกรรมเริ่มต้น"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "พูลนี้ต้องเริ่มต้นในวันที่ {0} ก่อนที่คุณจะสามารถเพิ่มสภาพคล่องได้ ในการเริ่มต้น เลือกราคาเริ่มต้นสำหรับพูล จากนั้นป้อนช่วงราคาสภาพคล่องและจำนวนเงินฝาก"
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "เส้นทางนี้ปรับราคาของคุณให้เหมาะสมโดยพิจารณาจากเส้นทางแยก การกระโดดหลายครั้ง และค่าน้ำมัน"
@@ -1708,8 +1681,8 @@ msgid "To (at least)"
 msgstr "ถึง (อย่างน้อย)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "ในการเริ่มต้นซื้อขายในวันที่ {0}แรกให้เชื่อมโยงสินทรัพย์ของคุณจาก L1 ถึง L2 โปรดถือว่าเป็นรุ่นเบต้าและเรียนรู้เกี่ยวกับความเสี่ยงก่อนใช้ {1}"
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "ในการเริ่มต้นซื้อขายบน {0}แรกให้เชื่อมโยงสินทรัพย์ของคุณจาก L1 ถึง L2 โปรดถือว่าเป็นรุ่นเบต้าและเรียนรู้เกี่ยวกับความเสี่ยงก่อนใช้ {1}"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1799,7 +1772,7 @@ msgstr "UNI หมุนเวียน:"
 msgid "UNI price:"
 msgstr "ราคายูนิ:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "โทเค็นของ UNI เป็นตัวแทนของการลงคะแนนเสียงในการกำกับดูแล Uniswap คุณสามารถลงคะแนนในแต่ละข้อเสนอด้วยตัวเองหรือมอบสิทธิ์การโหวตของคุณให้กับบุคคลที่สาม"
 
@@ -1840,7 +1813,7 @@ msgstr "ข้อผิดพลาดที่ไม่คาดคิด ไ�
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "ปัญหาที่ไม่คาดคิดกับการประมาณค่าก๊าซ กรุณาลองอีกครั้ง."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "การกำกับดูแล Uniswap"
 
@@ -1876,12 +1849,12 @@ msgstr "ไม่ทราบแหล่งที่มา"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "ข้อผิดพลาดที่ไม่รู้จัก{0}ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "ปลดล็อกการโหวต"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "ปลดล็อกการโหวต"
 
@@ -1911,7 +1884,7 @@ msgstr "แกะ"
 msgid "Unwrap <0/> to ETH"
 msgstr "แกะ <0/> ไปยัง ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "อัพเดทคณะผู้แทน"
 
@@ -2394,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • เพิ่มโดย user"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2408,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "ระดับค่าธรรมเนียม {0}"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "เลือก {0}"
 

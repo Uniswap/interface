@@ -42,7 +42,7 @@ function useMonitoringEventCallback() {
       try {
         push(ref(db, 'trm'), {
           chainId,
-          origin: location.origin,
+          origin: window.location.origin,
           timestamp: Date.now(),
           tx: transactionResponse,
           type,

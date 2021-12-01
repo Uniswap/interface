@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -47,7 +47,7 @@ msgstr "(chukua)"
 msgid "(clear all)"
 msgstr "(futa zote)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(rekebisha)"
 
@@ -61,18 +61,6 @@ msgstr "- Ondoa mpokeaji"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / wiki"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "makato 0.05%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "makato 0.3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "makato 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -90,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Mapendekezo Yote"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Kura"
 
@@ -127,7 +115,7 @@ msgstr "<0>Kufungua upigaji kura</0> kujiandaa kwa pendekezo linalofuata."
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Karibu kwenye timu ya Unicorn :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Kiwangu cha chini cha 0.25% ya jumla ya usambazaji wa UNI inahitajika kuwasilisha mapendekezo"
 
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Inatumika"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Ongeza"
@@ -231,10 +218,6 @@ msgstr "Kiasi"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Takwimu"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "Kiasi:"
 msgid "Balance: {0} {1}"
 msgstr "Kiasi: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Bora kwa pair maalum."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Bora kwa pair nyingi."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Bora kwa pair thabiti."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Bora kwa jozi imara sana."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -446,10 +430,6 @@ msgstr "Funga"
 msgid "Closed"
 msgstr "Imefungwa"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Code"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Kusanya"
@@ -490,10 +470,6 @@ msgstr "Besi za kawaida"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Kubali"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Thibitisha Unda"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -562,16 +538,12 @@ msgstr "Imenakiliwa"
 msgid "Copy Address"
 msgstr "Nakili Anwani"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Unda"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Unda Dimbwi na Ugavi"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Unda Pendekezo"
 
@@ -625,7 +597,7 @@ msgstr "Shiriki Kura"
 msgid "Delegate voting power to {0}"
 msgstr "Kabidhi nguvu ya kupiga kura kwa {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Imekabidhiwa kwa:"
 
@@ -835,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Pata usaidizi juu ya Ugomvi"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Kituo cha Usaidizi"
 
@@ -1137,7 +1110,7 @@ msgstr "Hakuna V2 Liquidity iliyopatikana."
 msgid "No active pools"
 msgstr "Hakuna mabwawa ya kazi"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Hakuna data"
 
@@ -1161,7 +1134,7 @@ msgstr "Hakuna mapendekezo yaliyopatikana."
 msgid "No results found."
 msgstr "Hakuna matokeo yaliyopatikana."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Haijaundwa"
 
@@ -1340,7 +1313,7 @@ msgstr "Pendekezo limewasilishwa"
 msgid "Proposal Title"
 msgstr "Kichwa cha Pendekezo"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Mapendekezo"
 
@@ -1372,7 +1345,7 @@ msgstr "Viwango"
 msgid "Read more about UNI"
 msgstr "Soma zaidi kuhusu UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Soma zaidi kuhusu Uniswap utawala"
 
@@ -1430,6 +1403,10 @@ msgstr "Kuondoa {0} {1} na {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Kuondoa {0} {1} na{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Omba Vipengele"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1468,7 +1445,7 @@ msgstr "Chagua kitendo"
 msgid "Selected Range"
 msgstr "Masafa yaliyochaguliwa"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Binafsi"
 
@@ -1551,8 +1528,8 @@ msgid "Supply"
 msgstr "Ugavi"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "Kusambaza {0} {1} na{2} {3}"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Kusambaza {0} {1} na {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1664,10 +1641,6 @@ msgstr "Programu hii hutumia API za wahusika wengine zifuatazo:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Bwawa hili lazima lianzishwe kabla ya kuongeza ukwasi. Ili kuanzisha, chagua bei ya kuanzia ya bwawa. Kisha, ingiza anuwai ya bei ya ukwasi na kiwango cha amana. Ada ya gesi itakuwa kubwa kuliko kawaida kwa sababu ya shughuli za uanzishaji."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Bwawa hili lazima lianzishwe kwa {0} kabla ya kuongeza ukwasi. Ili kuanzisha, chagua bei ya kuanzia ya bwawa. Kisha, ingiza anuwai ya bei ya ukwasi na kiwango cha amana."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "Njia hii inaboresha bei yako kwa kuzingatia njia zilizogawanyika, hops nyingi, na gharama za gesi."
@@ -1708,8 +1681,8 @@ msgid "To (at least)"
 msgstr "Kwa (angalau)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Kuanza biashara kwenye {0}, kwanza gumbua mali zako kutoka L1 hadi L2. Tafadhali chukua hii kama kutolewa kwa beta na ujifunze juu ya hatari kabla ya kutumia {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Ili kuanza kufanya biashara kwenye {0}, kwanza unganisha mali yako kutoka L1 hadi L2. Tafadhali chukulia hili kama toleo la beta na ujifunze kuhusu hatari kabla ya kutumia {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1799,7 +1772,7 @@ msgstr "UNI katika mzunguko:"
 msgid "UNI price:"
 msgstr "Bei ya UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Ishara za UNI zinawakilisha hisa za kupiga kura katika utawala wa Uniswap. Unaweza kupiga kura kwa kila pendekezo mwenyewe au kupeana kura zako kwa mtu wa tatu."
 
@@ -1840,7 +1813,7 @@ msgstr "Hitilafu isiyotarajiwa. Haikuweza kukadiria gesi kwa ubadilishaji."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Suala lisilotarajiwa na kukadiria gesi. Tafadhali jaribu tena."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Utawala usiobadilika"
 
@@ -1876,12 +1849,12 @@ msgstr "Chanzo kisichojulikana"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hitilafu isiyojulikana{0}. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Fungua Kura"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Fungua Upigaji Kura"
 
@@ -1911,7 +1884,7 @@ msgstr "Unwrap"
 msgid "Unwrap <0/> to ETH"
 msgstr "Unwrap <0 /> hadi ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Sasisha Ujumbe"
 
@@ -2394,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Imeongezwa na mtumiaji"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2408,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "Kiwango cha ada ya {0}"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "Chagua {0}"
 

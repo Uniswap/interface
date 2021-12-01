@@ -16,10 +16,9 @@ describe('application reducer', () => {
   beforeEach(() => {
     store = createStore(reducer, {
       blockNumber: {
-        [1]: 3,
+        1: 3,
       },
       chainId: null,
-      chainConnectivityWarning: false,
       implements3085: false,
       openModal: null,
       popupList: [],
@@ -84,8 +83,8 @@ describe('application reducer', () => {
     it('works with non-set chains', () => {
       store.dispatch(updateBlockNumber({ chainId: 3, blockNumber: 2 }))
       expect(store.getState().blockNumber).toEqual({
-        [1]: 3,
-        [3]: 2,
+        1: 3,
+        3: 2,
       })
     })
   })
