@@ -16,3 +16,11 @@ export function getCurrencyLogoSrcs(currency: Currency) {
   }
   return []
 }
+
+export function maybeReplaceIPFSScheme(uri: string) {
+  return {
+    uri: uri.includes('ipfs://')
+      ? `https://cloudflare-ipfs.com/ipfs/${uri.replace('ipfs://', '')}`
+      : uri,
+  }
+}

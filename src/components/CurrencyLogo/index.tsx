@@ -1,19 +1,24 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { Image } from 'react-native'
 import { SvgUri } from 'react-native-svg'
 import { ETHEREUM_LOGO } from 'src/assets'
-import { getCurrencyLogoSrcs } from 'src/components/CurrencyLogo/utils'
+import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import { style } from 'src/components/CurrencyLogo/styles'
+import { getCurrencyLogoSrcs, maybeReplaceIPFSScheme } from 'src/components/CurrencyLogo/utils'
+import { Box } from 'src/components/layout/Box'
 
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+
+const DEFAULT_SIZE = 40
 
 interface CurrencyLogoProps {
   currency: Currency
   size?: number
 }
 
-export function CurrencyLogo({ currency, size = 40 }: CurrencyLogoProps) {
+export function CurrencyLogo({ currency, size = DEFAULT_SIZE }: CurrencyLogoProps) {
   const srcs: string[] = getCurrencyLogoSrcs(currency)
 
   if (currency?.isNative) {
@@ -43,14 +48,15 @@ export function CurrencyLogo({ currency, size = 40 }: CurrencyLogoProps) {
   return null
 }
 
-function maybeReplaceIPFSScheme(uri: string) {
-  return {
-    uri: uri.includes('ipfs://')
-      ? `https://cloudflare-ipfs.com/ipfs/${uri.replace('ipfs://', '')}`
-      : uri,
-  }
+export function CurrencyAndNetworkLogo(props: CurrencyLogoProps) {
+  const size = props.size ?? DEFAULT_SIZE
+  const networkSize = size / 2
+  return (
+    <Box height={size + networkSize / 2} width={size + networkSize / 2}>
+      <CurrencyLogo {...props} />
+      <Box position="absolute" bottom={0} right={0}>
+        <NetworkLogo chainId={props.currency.chainId} size={networkSize} />
+      </Box>
+    </Box>
+  )
 }
-
-const style = StyleSheet.create({
-  image: { resizeMode: 'cover' },
-})
