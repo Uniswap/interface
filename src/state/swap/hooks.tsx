@@ -170,7 +170,7 @@ export function useDerivedSwapInfo(): {
     }
   }
 
-  const allowedSlippage = useSwapSlippageTolerance(trade.trade ?? undefined, v3Trade.gasUseEstimateUSD)
+  const allowedSlippage = useSwapSlippageTolerance(trade.trade ?? undefined, trade.gasUseEstimateUSD)
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]

@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
@@ -85,7 +84,7 @@ const Spinner = styled.div`
 `
 
 interface SwapDetailsInlineProps {
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  trade: Trade<Currency, Currency, TradeType> | undefined
   syncing: boolean
   loading: boolean
   showInverted: boolean
@@ -107,8 +106,7 @@ export default function SwapDetailsInline({
   allowedSlippage,
   swapInputError,
 }: SwapDetailsInlineProps) {
-  // only show gas estimate if v3 trade is being used and estimate returned
-  const showGasEstimate = Boolean(trade instanceof V3Trade && gasUseEstimateUSD !== null)
+  const showGasEstimate = Boolean(gasUseEstimateUSD !== null)
 
   // only show the loading and or default gas state if on mainnet
   // until router api supports gas estimates trades on other networks
