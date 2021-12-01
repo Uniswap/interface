@@ -65,15 +65,15 @@ export default memo(function SwapRoute({
             {/* could not get <Plural> to render `one` correctly. */}
             {routes.length === 1 ? (
               hasV2Routes && hasV3Routes ? (
-                <Trans>Best route via 1 hop on Uniswap V2 and V3</Trans>
+                <Trans>Best trade via one route on Uniswap V2 and V3</Trans>
               ) : (
-                <Trans>Best route via 1 hop on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
+                <Trans>Best trade via one route on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
               )
             ) : hasV2Routes && hasV3Routes ? (
-              <Trans>Best route via {routes.length} hops on Uniswap V2 and V3</Trans>
+              <Trans>Best trade via {routes.length} routes on Uniswap V2 and V3</Trans>
             ) : (
               <Trans>
-                Best route via {routes.length} hops on Uniswap {hasV2Routes ? 'V2' : 'V3'}
+                Best trade via {routes.length} routes on Uniswap {hasV2Routes ? 'V2' : 'V3'}
               </Trans>
             )}
           </TYPE.main>
