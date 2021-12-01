@@ -30,9 +30,10 @@ export interface WidgetProps {
   theme?: Partial<Theme>
   locale?: SupportedLocale
   provider?: EthProvider
+  className?: string
 }
 
-export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provider }: WidgetProps) {
+export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provider, className }: WidgetProps) {
   const [, setProvider] = useAtom(providerAtom)
   useEffect(() => {
     setProvider(provider)
@@ -42,7 +43,7 @@ export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provi
     <AtomProvider>
       <ThemeProvider theme={theme}>
         <I18nProvider locale={locale}>
-          <WidgetWrapper>
+          <WidgetWrapper className={className} /* required for styled-components */>
             <div ref={setDialog} />
             <DialogProvider value={dialog}>{children}</DialogProvider>
           </WidgetWrapper>

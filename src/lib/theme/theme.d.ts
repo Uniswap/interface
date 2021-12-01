@@ -28,7 +28,7 @@ export interface Attributes {
   borderRadius: number // em
 }
 
-export interface Theme extends Colors, Attributes {
+export interface Theme extends Record<string, unknown>, Attributes, Partial<Colors> {
   light: Colors
   dark: Colors
 }
