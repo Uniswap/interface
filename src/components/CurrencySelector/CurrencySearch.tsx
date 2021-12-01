@@ -10,17 +10,19 @@ import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
+import { useAllTokens } from 'src/features/tokens/useTokens'
 
-interface DropdownProps {
-  currencies: Partial<Record<ChainId, Record<string, Currency>>>
+interface CurrencySearchProps {
   onSelectCurrency: (currency: Currency) => void
 }
 
-export function DropdownWithSearch({ currencies, onSelectCurrency }: DropdownProps) {
+export function CurrencySearch({ onSelectCurrency }: CurrencySearchProps) {
   const [chainFilter, setChainFilter] = useState<ChainId | null>(null)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
 
   const { t } = useTranslation()
+
+  const currencies = useAllTokens()
 
   const filteredCurrencies = useMemo(
     () => filter(currencies, chainFilter, searchFilter),
@@ -38,8 +40,8 @@ export function DropdownWithSearch({ currencies, onSelectCurrency }: DropdownPro
   const onChangeText = (newSearchFilter: string) => setSearchFilter(newSearchFilter)
 
   return (
-    <CenterBox flex={1}>
-      <Box>
+    <CenterBox flex={1} px="md">
+      <Box m="md">
         <TextInput
           onChangeText={onChangeText}
           placeholder="Search token symbols or address"

@@ -2,6 +2,7 @@ export enum Screens {
   Accounts = 'Accounts',
   Balances = 'Balances',
   Camera = 'Camera',
+  CurrencySelector = 'CurrencySelector',
   Dev = 'Dev',
   Home = 'Home',
   ImportAccount = 'ImportAccount',

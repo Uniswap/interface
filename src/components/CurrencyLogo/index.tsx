@@ -26,14 +26,29 @@ export function CurrencyLogo({ currency, size = 40 }: CurrencyLogoProps) {
   }
 
   // TODO(#95): Currently just uses the first URL in the source because unclear when we want to use a different one
-  return srcs.length > 0 && srcs[0].toLowerCase().includes('.svg') ? (
-    <SvgUri width={size} height={size} uri={srcs[0]} />
-  ) : (
-    <Image
-      style={{ width: size, height: size, borderRadius: size / 2 }}
-      source={srcs.map((s) => ({ uri: s }))}
-    />
-  )
+
+  if (srcs.length > 0) {
+    const src = srcs[0].toLowerCase()
+    if (src.includes('.svg')) {
+      return <SvgUri width={size} height={size} uri={srcs[0]} />
+    }
+    return (
+      <Image
+        style={{ width: size, height: size, borderRadius: size / 2 }}
+        source={srcs.map(maybeReplaceIPFSScheme)}
+      />
+    )
+  }
+
+  return null
+}
+
+function maybeReplaceIPFSScheme(uri: string) {
+  return {
+    uri: uri.includes('ipfs://')
+      ? `https://cloudflare-ipfs.com/ipfs/${uri.replace('ipfs://', '')}`
+      : uri,
+  }
 }
 
 const style = StyleSheet.create({

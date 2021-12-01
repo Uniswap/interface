@@ -14,6 +14,7 @@ import { config } from 'src/config'
 import { AccountsScreen } from 'src/screens/AccountsScreen'
 import { BalancesScreen } from 'src/screens/BalancesScreen'
 import { CameraScreen } from 'src/screens/CameraScreen'
+import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
@@ -122,6 +123,11 @@ function SwapStackScreen() {
         name={Screens.Transfer}
         component={TransferTokenScreen}
         options={{ title: 'Uniswap | Send' }}
+      />
+      <SwapStack.Screen
+        name={Screens.CurrencySelector}
+        component={CurrencySelectorScreen}
+        options={{ title: 'Select Currency', presentation: 'modal' }}
       />
     </SwapStack.Navigator>
   )

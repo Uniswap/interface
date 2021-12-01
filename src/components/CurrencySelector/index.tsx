@@ -1,54 +1,38 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { ComponentProps, useState } from 'react'
+import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppNavigation } from 'src/app/navigation/types'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { DropdownWithSearch } from 'src/components/CurrencySelector/Dropdown'
+import { CurrencySearch } from 'src/components/CurrencySelector/CurrencySearch'
 import { Toggle } from 'src/components/CurrencySelector/Toggle'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
-import { Modal } from 'src/components/modals/Modal'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
+import { Screens } from 'src/screens/Screens'
 
 interface CurrencySelectorProps {
-  currencies: Partial<Record<ChainId, Record<string, Currency>>>
-  onSelectCurrency: ComponentProps<typeof DropdownWithSearch>['onSelectCurrency']
+  onSelectCurrency: ComponentProps<typeof CurrencySearch>['onSelectCurrency']
   selectedCurrency: Currency | null | undefined
   // TODO:
   //  - otherSelectCurrency (to hide)
 }
 
-export function CurrencySelector({
-  onSelectCurrency,
-  currencies,
-  selectedCurrency,
-}: CurrencySelectorProps) {
-  const [modalVisible, setModalVisible] = useState(false)
+export function CurrencySelector({ onSelectCurrency, selectedCurrency }: CurrencySelectorProps) {
+  const navigation = useAppNavigation()
 
   const { t } = useTranslation()
 
-  const hideModal = () => setModalVisible(false)
+  const selectCurrency = () => {
+    navigation.navigate(Screens.CurrencySelector, {
+      onSelectCurrency,
+    })
+  }
 
   return (
     <Box>
-      <Modal
-        title={t`Select input`}
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        hide={hideModal}
-        onRequestClose={hideModal}>
-        <DropdownWithSearch
-          currencies={currencies}
-          onSelectCurrency={(currency: Currency) => {
-            onSelectCurrency(currency)
-            hideModal()
-          }}
-        />
-      </Modal>
       <Toggle
         onToggle={() => {
-          setModalVisible(!modalVisible)
+          selectCurrency()
         }}
         filled={!selectedCurrency}>
         {selectedCurrency ? (

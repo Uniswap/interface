@@ -16,7 +16,7 @@ import { logger } from 'src/utils/logger'
 // Relies on getTokenList util to do the actual fetching
 export function useFetchListCallback(
   chainId: ChainId
-): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
+): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList | null> {
   const dispatch = useAppDispatch()
 
   const provider = useWalletProvider(chainId)
@@ -49,7 +49,7 @@ export function useFetchListCallback(
             dispatch(
               fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message })
             )
-          throw error
+          return null
         })
     },
     [dispatch, ensResolver]

@@ -128,7 +128,7 @@ export class ProviderManager {
           return provider
         }
         // Otherwise wait a bit and then try again
-        await sleep(1000)
+        await sleep(2000)
       }
       throw new Error('Unable to sync after 3 attempts')
     } catch (error) {

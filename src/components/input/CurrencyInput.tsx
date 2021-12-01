@@ -8,7 +8,6 @@ import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useEthBalance } from 'src/features/balances/hooks'
-import { useAllTokens } from 'src/features/tokens/useTokens'
 import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount } from 'src/utils/format'
@@ -31,9 +30,6 @@ export function CurrencyInput(props: CurrencyInputProps) {
   // TODO: support any token balance
   const ethBalance = useEthBalance(currency?.chainId ?? ChainId.MAINNET)
 
-  // TODO smarter
-  const allTokens = useAllTokens()
-
   return (
     <Box alignItems="center" py="md" pr="md" my="md" borderRadius="md" {...transformedProps}>
       <Box flexDirection="row">
@@ -46,7 +42,6 @@ export function CurrencyInput(props: CurrencyInputProps) {
           style={styles.amountInput}
         />
         <CurrencySelector
-          currencies={allTokens}
           onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
           selectedCurrency={currency}
         />
