@@ -1,9 +1,11 @@
+import { ChainId } from '@swapr/sdk'
 import React from 'react'
 import styled from 'styled-components'
 import TriangleIcon from '../../assets/svg/triangle.svg'
-import { NetworkOptions } from '../../components/NetworkSwitcher'
+import { NetworksList } from '../../components/NetworkSwitcher'
 import { RowBetween } from '../../components/Row'
 import { TagSuccess } from '../../components/Tag'
+import { getNetworkById, getNetworkInfo } from './utils'
 
 const Section = styled.button<{ disabled: boolean }>`
   display: flex;
@@ -70,22 +72,25 @@ const AssetName = styled.p<{ disabled: boolean }>`
 
 interface AssetSelectorProps {
   label: string
-  selectedNetwork?: Partial<NetworkOptions>
+  chainId: ChainId
+  networksList: NetworksList[]
   onClick: () => void
   disabled?: boolean
 }
 
-export const AssetSelector = ({ label, selectedNetwork, onClick, disabled = false }: AssetSelectorProps) => {
+export const AssetSelector = ({ label, chainId = 1, networksList, onClick, disabled = false }: AssetSelectorProps) => {
+  const { logoSrc, name } = getNetworkInfo(chainId)
+  const selectedNetwork = getNetworkById(chainId, networksList)
   return (
     <Section disabled={disabled} onClick={disabled ? undefined : onClick}>
       <Row>
         <IconWrapper>
-          <img src={selectedNetwork?.preset?.logoSrc} alt={`${selectedNetwork?.preset?.name} logo`} />
+          <img src={logoSrc} alt={`${name} logo`} />
         </IconWrapper>
         {selectedNetwork?.active && <TagSuccess>Connected</TagSuccess>}
       </Row>
       <SmallLabel>{label}</SmallLabel>
-      <AssetName disabled={disabled}>{selectedNetwork?.preset?.name}</AssetName>
+      <AssetName disabled={disabled}>{name}</AssetName>
     </Section>
   )
 }

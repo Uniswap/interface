@@ -21,7 +21,7 @@ import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal, useBridgeTxsFil
 
 import { SHOW_TESTNETS } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { BridgeStep, getNetworkById, isNetworkDisabled } from './utils'
+import { BridgeStep, isNetworkDisabled } from './utils'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
@@ -223,7 +223,8 @@ export default function Bridge() {
           <AssetWrapper ref={fromPanelRef}>
             <AssetSelector
               label="from"
-              selectedNetwork={getNetworkById(fromNetwork.chainId, fromNetworkList)}
+              chainId={fromNetwork.chainId}
+              networksList={fromNetworkList}
               onClick={SHOW_TESTNETS ? () => setShowFromList(val => !val) : () => null}
               disabled={SHOW_TESTNETS ? isCollecting : true}
             />
@@ -242,7 +243,8 @@ export default function Bridge() {
           <AssetWrapper ref={toPanelRef}>
             <AssetSelector
               label="to"
-              selectedNetwork={getNetworkById(toNetwork.chainId, toNetworkList)}
+              chainId={toNetwork.chainId}
+              networksList={toNetworkList}
               onClick={SHOW_TESTNETS ? () => setShowToList(val => !val) : () => null}
               disabled={SHOW_TESTNETS ? isCollecting : true}
             />

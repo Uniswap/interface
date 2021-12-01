@@ -278,7 +278,7 @@ export interface NetworkDetails {
 export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
   [ChainId.MAINNET]: {
     chainId: `0x${ChainId.MAINNET.toString(16)}`,
-    chainName: 'Ethereum mainnet',
+    chainName: 'Ethereum',
     nativeCurrency: {
       name: Currency.ETHER.name || 'Ether',
       symbol: Currency.ETHER.symbol || 'ETH',
@@ -379,4 +379,4 @@ export const OLD_SWPR: { [key: number]: Token } = {
 }
 
 export const TESTNETS = [4, 421611]
-export const SHOW_TESTNETS = false
+export const SHOW_TESTNETS = true
