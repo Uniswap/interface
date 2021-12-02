@@ -274,6 +274,7 @@ export const SwapFormActions = styled.div`
 
 export const KyberTag = styled.div`
   position: absolute;
+  align-items: center;
   display: flex;
   top: 28px;
   left: 6px;

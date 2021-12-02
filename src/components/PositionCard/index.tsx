@@ -598,12 +598,12 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
         <Flex justifyContent="flex-end">
           <ButtonLight
             padding="6px"
-            style={{ fontSize: '14x', marginRight: '8px', borderRadius: '4px' }}
+            style={{ fontSize: '14px', marginRight: '8px', borderRadius: '4px' }}
             width="60px"
             as={Link}
             to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
           >
-            + Add
+            <Trans>+ Add</Trans>
           </ButtonLight>
 
           <RemoveBtn
@@ -611,6 +611,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
             style={{
               padding: '6px',
               borderRadius: '4px',
+              fontSize: '14px',
               color: theme.subText
             }}
             as={Link}

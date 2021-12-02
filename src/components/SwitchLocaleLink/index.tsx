@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { useLocation } from 'react-router'
 import styled from 'styled-components'
-import { Trans } from '@lingui/macro'
 import { stringify } from 'qs'
 
 import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from 'constants/locales'
@@ -42,9 +41,7 @@ export function SwitchLocaleLink() {
 
     return (
       <Container>
-        <Trans>
-          KyberSwap available in: {<StyledInternalLink to={target}>{LOCALE_LABEL[targetLocale]}</StyledInternalLink>}
-        </Trans>
+        KyberSwap available in: {<StyledInternalLink to={target}>{LOCALE_LABEL[targetLocale]}</StyledInternalLink>}
       </Container>
     )
   }

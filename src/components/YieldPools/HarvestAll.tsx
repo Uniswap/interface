@@ -34,7 +34,7 @@ const HarvestAll = ({ totalRewards, onHarvestAll }: { totalRewards: Reward[]; on
     <Flex width="fit-content" backgroundColor={theme.bg11} style={{ borderRadius: '0.25rem' }}>
       <Tag ref={ref as any}>
         <RowBetween
-          style={{ position: 'relative', cursor: canHarvestAll ? 'pointer' : 'unset' }}
+          style={{ position: 'relative', cursor: canHarvestAll ? 'pointer' : 'unset', width: 'max-content' }}
           onClick={toggleRewardDetail}
         >
           <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>

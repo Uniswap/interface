@@ -370,11 +370,19 @@ export default function Swap({ history }: RouteComponentProps) {
                         <InfoHelper
                           text={
                             <Text>
-                              <Trans>The amount you save compared to {tradeComparer.comparedDex.name}.</Trans>{' '}
-                              <Text color={theme.primary} fontWeight={500} as="span">
-                                KyberSwap
-                              </Text>{' '}
-                              gets you the best token rates
+                              <Trans>
+                                The amount you save compared to{' '}
+                                <Text as="span" color={theme.warning}>
+                                  {tradeComparer.comparedDex.name}
+                                </Text>
+                                .
+                              </Trans>{' '}
+                              <Trans>
+                                <Text color={theme.primary} fontWeight={500} as="span">
+                                  KyberSwap
+                                </Text>{' '}
+                                gets you the best token rates
+                              </Trans>
                             </Text>
                           }
                           size={14}

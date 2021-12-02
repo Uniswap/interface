@@ -33,7 +33,7 @@ const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 const ClickableText = styled(Text)`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.text6};
+  color: ${({ theme }) => theme.subText};
   &:hover {
     cursor: pointer;
     opacity: 0.6;

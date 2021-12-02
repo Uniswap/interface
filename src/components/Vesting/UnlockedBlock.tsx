@@ -26,7 +26,10 @@ const UnlockedBlock = ({ info, onClaimAll }: { info: any; onClaimAll?: () => voi
   return (
     <Flex width="fit-content" backgroundColor={theme.bg12} style={{ borderRadius: '4px' }}>
       <Tag>
-        <RowBetween style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setOpen(prev => !prev)}>
+        <RowBetween
+          style={{ position: 'relative', cursor: 'pointer', width: 'max-content' }}
+          onClick={() => setOpen(prev => !prev)}
+        >
           <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
             <Trans>Unlocked</Trans>:
           </TYPE.body>

@@ -81,6 +81,7 @@ const NavMenuItem = styled(NavLink)`
   padding: 0.5rem 0.5rem;
   text-decoration: none;
   display: flex;
+  font-weight: 500;
   align-items: center;
   color: ${({ theme }) => theme.text2};
   :hover {
@@ -96,6 +97,7 @@ const MenuItem = styled(ExternalLink)`
   flex: 1;
   padding: 0.5rem 0.5rem;
   display: flex;
+  font-weight: 500;
   align-items: center;
   color: ${({ theme }) => theme.text2};
   :hover {

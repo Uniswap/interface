@@ -6,6 +6,7 @@ import Announcement from 'components/Icons/Announcement'
 import { ExternalLink } from 'theme'
 import { useMedia } from 'react-use'
 import { useRebrandingAnnouncement, useToggleRebrandingAnnouncement } from 'state/user/hooks'
+import { Trans } from '@lingui/macro'
 
 const BannerWrapper = styled.div`
   width: 100%;
@@ -57,13 +58,15 @@ function KyberSwapAnounce() {
       {!below768 && <div />}
       <Content>
         {!below768 && <Announcement />}
-        <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff">
-          dmm.exchange is now <b>KyberSwap.com</b>! Click{' '}
-          <ExternalLink href=" https://blog.kyber.network/dmm-is-now-kyberswap-com-on-a-mission-to-provide-the-best-trading-and-earning-experience-in-defi-7664fa29f458">
-            here
-          </ExternalLink>{' '}
-          to learn more.
-        </Text>
+        <Trans>
+          <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff">
+            dmm.exchange is now <b>KyberSwap.com</b>! Click{' '}
+            <ExternalLink href=" https://blog.kyber.network/dmm-is-now-kyberswap-com-on-a-mission-to-provide-the-best-trading-and-earning-experience-in-defi-7664fa29f458">
+              here
+            </ExternalLink>{' '}
+            to learn more.
+          </Text>
+        </Trans>
       </Content>
 
       <StyledClose size={28} onClick={() => toggleRebrandingAnnouncement()} />

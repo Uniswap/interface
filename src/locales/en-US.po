@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/PositionCard/index.tsx
+msgid "+ Add"
+msgstr "+ Add"
+
 #: src/pages/SwapV2/index.tsx
 msgid "+ Add Recipient (optional)"
 msgstr "+ Add Recipient (optional)"
@@ -46,6 +50,10 @@ msgstr "24H Trading Volume"
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 
+#: src/pages/SwapV2/index.tsx
+msgid "<0>KyberSwap</0> gets you the best token rates"
+msgstr "<0>KyberSwap</0> gets you the best token rates"
+
 #: src/pages/About/index.tsx
 msgid "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
 msgstr "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
@@ -53,6 +61,10 @@ msgstr "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
 msgstr "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
+
+#: src/components/Header/KyberSwapAnnounce.tsx
+msgid "<0>dmm.exchange is now <1>KyberSwap.com</1>! Click <2>here</2> to learn more.</0>"
+msgstr "<0>dmm.exchange is now <1>KyberSwap.com</1>! Click <2>here</2> to learn more.</0>"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -176,6 +188,14 @@ msgstr "Analytics"
 msgid "Analytics ↗"
 msgstr "Analytics ↗"
 
+#: src/pages/About/index.tsx
+msgid "Anyone can access this liquidity from KyberSwap for their own use case e.g. Dapps, Aggregators."
+msgstr "Anyone can access this liquidity from KyberSwap for their own use case e.g. Dapps, Aggregators."
+
+#: src/pages/About/index.tsx
+msgid "Anyone can provide liquidity to KyberSwap by depositing tokens e.g. Traders, Token Teams."
+msgstr "Anyone can provide liquidity to KyberSwap by depositing tokens e.g. Traders, Token Teams."
+
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
@@ -235,6 +255,10 @@ msgstr "Balance"
 #: src/components/YieldPools/ListItem.tsx
 msgid "Balance: {0} {1}-{2} LP"
 msgstr "Balance: {0} {1}-{2} LP"
+
+#: src/pages/About/index.tsx
+msgid "Best price guaranteed"
+msgstr "Best price guaranteed"
 
 #: src/components/Header/index.tsx
 msgid "Bridge Assets"
@@ -405,6 +429,10 @@ msgstr "Copy Address"
 msgid "Create"
 msgstr "Create"
 
+#: src/pages/About/index.tsx
+msgid "Create New Pool"
+msgstr "Create New Pool"
+
 #: src/components/NavigationTabs/index.tsx
 msgid "Create a new pool"
 msgstr "Create a new pool"
@@ -461,6 +489,10 @@ msgstr "Deposit your tokens and farm attractive rewards. We collaborate with pro
 #: src/components/YieldPools/ListItem.tsx
 msgid "Deposit: {0} {1}-{2} LP"
 msgstr "Deposit: {0} {1}-{2} LP"
+
+#: src/components/Vesting/index.tsx
+msgid "Details"
+msgstr "Details"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
@@ -632,6 +664,10 @@ msgstr "Fees are adjusted dynamically according to market conditions to maximise
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "Find a token by searching for its name or symbol or by pasting its address below."
+
+#: src/pages/About/index.tsx
+msgid "For everyone"
+msgstr "For everyone"
 
 #: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
@@ -832,10 +868,6 @@ msgstr "Invalid pair."
 msgid "Invalid recipient"
 msgstr "Invalid recipient"
 
-#: src/components/SwitchLocaleLink/index.tsx
-msgid "KyberSwap available in: <0>{0}</0>"
-msgstr "KyberSwap available in: <0>{0}</0>"
-
 #: src/pages/About/index.tsx
 msgid "KyberSwap is DeFi’s first dynamic market maker, providing the best token rates for traders and maximizing returns for liquidity providers, in one decentralized platform"
 msgstr "KyberSwap is DeFi’s first dynamic market maker, providing the best token rates for traders and maximizing returns for liquidity providers, in one decentralized platform"
@@ -902,6 +934,10 @@ msgstr "Locked Rewards"
 #: src/components/swapv2/TradeTypeSelection.tsx
 msgid "Lowest Gas"
 msgstr "Lowest Gas"
+
+#: src/pages/About/index.tsx
+msgid "Lowest possible slippage"
+msgstr "Lowest possible slippage"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
@@ -1350,6 +1386,14 @@ msgstr "Route"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Routing through these tokens resulted in the best price for your trade."
 
+#: src/pages/About/index.tsx
+msgid "Save time & effort"
+msgstr "Save time & effort"
+
+#: src/pages/About/index.tsx
+msgid "Seamless liquidity."
+msgstr "Seamless liquidity."
+
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
 msgstr "Search by pool address"
@@ -1506,8 +1550,8 @@ msgid "Terms of Use"
 msgstr "Terms of Use"
 
 #: src/pages/SwapV2/index.tsx
-msgid "The amount you save compared to {0}."
-msgstr "The amount you save compared to {0}."
+msgid "The amount you save compared to <0>{0}</0>."
+msgstr "The amount you save compared to <0>{0}</0>."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -1543,6 +1587,10 @@ msgstr "These tokens are commonly paired with other tokens."
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+
+#: src/pages/About/index.tsx
+msgid "Thousands of users and multiple decentralized applications are already providing and using our liquidity."
+msgstr "Thousands of users and multiple decentralized applications are already providing and using our liquidity."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"

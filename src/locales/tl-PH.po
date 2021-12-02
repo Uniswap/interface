@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/PositionCard/index.tsx
+msgid "+ Add"
+msgstr ""
+
 #: src/pages/SwapV2/index.tsx
 msgid "+ Add Recipient (optional)"
 msgstr ""
@@ -46,12 +50,20 @@ msgstr ""
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr ""
 
+#: src/pages/SwapV2/index.tsx
+msgid "<0>KyberSwap</0> gets you the best token rates"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
 msgstr ""
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
+msgstr ""
+
+#: src/components/Header/KyberSwapAnnounce.tsx
+msgid "<0>dmm.exchange is now <1>KyberSwap.com</1>! Click <2>here</2> to learn more.</0>"
 msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -176,6 +188,14 @@ msgstr ""
 msgid "Analytics ↗"
 msgstr ""
 
+#: src/pages/About/index.tsx
+msgid "Anyone can access this liquidity from KyberSwap for their own use case e.g. Dapps, Aggregators."
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Anyone can provide liquidity to KyberSwap by depositing tokens e.g. Traders, Token Teams."
+msgstr ""
+
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
@@ -234,6 +254,10 @@ msgstr ""
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Balance: {0} {1}-{2} LP"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Best price guaranteed"
 msgstr ""
 
 #: src/components/Header/index.tsx
@@ -405,6 +429,10 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
+#: src/pages/About/index.tsx
+msgid "Create New Pool"
+msgstr ""
+
 #: src/components/NavigationTabs/index.tsx
 msgid "Create a new pool"
 msgstr ""
@@ -460,6 +488,10 @@ msgstr ""
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Deposit: {0} {1}-{2} LP"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "Details"
 msgstr ""
 
 #: src/components/AccountDetails/index.tsx
@@ -631,6 +663,10 @@ msgstr ""
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "For everyone"
 msgstr ""
 
 #: src/components/Menu/index.tsx
@@ -832,10 +868,6 @@ msgstr ""
 msgid "Invalid recipient"
 msgstr ""
 
-#: src/components/SwitchLocaleLink/index.tsx
-msgid "KyberSwap available in: <0>{0}</0>"
-msgstr ""
-
 #: src/pages/About/index.tsx
 msgid "KyberSwap is DeFi’s first dynamic market maker, providing the best token rates for traders and maximizing returns for liquidity providers, in one decentralized platform"
 msgstr ""
@@ -901,6 +933,10 @@ msgstr ""
 
 #: src/components/swapv2/TradeTypeSelection.tsx
 msgid "Lowest Gas"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Lowest possible slippage"
 msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
@@ -1350,6 +1386,14 @@ msgstr ""
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr ""
 
+#: src/pages/About/index.tsx
+msgid "Save time & effort"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Seamless liquidity."
+msgstr ""
+
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
 msgstr ""
@@ -1506,7 +1550,7 @@ msgid "Terms of Use"
 msgstr ""
 
 #: src/pages/SwapV2/index.tsx
-msgid "The amount you save compared to {0}."
+msgid "The amount you save compared to <0>{0}</0>."
 msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -1542,6 +1586,10 @@ msgstr ""
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Thousands of users and multiple decentralized applications are already providing and using our liquidity."
 msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx

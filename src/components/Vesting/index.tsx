@@ -141,7 +141,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
               style={{ margin: '0.25rem 0.25rem 0.25rem 1rem', cursor: 'pointer' }}
               onClick={() => setOpen(open !== 0 ? 0 : -1)}
             >
-              Details
+              <Trans>Details</Trans>
             </TYPE.body>
 
             <span onClick={() => setOpen(open !== 0 ? 0 : -1)}>

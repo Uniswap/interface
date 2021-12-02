@@ -419,16 +419,22 @@ function About() {
 
               <Flex marginTop="20px" alignItems="center">
                 <BestPrice />
-                <Text marginLeft="12px">Best price guaranteed</Text>
+                <Text marginLeft="12px">
+                  <Trans>Best price guaranteed</Trans>
+                </Text>
               </Flex>
               <Flex marginTop="20px" alignItems="center">
                 <LowestSlippage />
-                <Text marginLeft="12px">Lowest possible slippage</Text>
+                <Text marginLeft="12px">
+                  <Trans>Lowest possible slippage</Trans>
+                </Text>
               </Flex>
 
               <Flex marginTop="20px" alignItems="center">
                 <Clock />
-                <Text marginLeft="12px">Save time & effort</Text>
+                <Text marginLeft="12px">
+                  <Trans>Save time & effort</Trans>
+                </Text>
               </Flex>
 
               {above500 && (
@@ -567,21 +573,25 @@ function About() {
           >
             <Flex flex={1} flexDirection="column">
               <Text fontWeight="500" fontSize={['28px', '36px']}>
-                Seamless liquidity.
+                <Trans>Seamless liquidity.</Trans>
               </Text>
               <Text fontWeight="500" fontSize={['28px', '36px']}>
-                For everyone
+                <Trans>For everyone</Trans>
               </Text>
 
               <Text color={theme.subText} marginTop={['40px', '48px']} lineHeight={1.5}>
-                Anyone can provide liquidity to KyberSwap by depositing tokens e.g. Traders, Token Teams.
+                <Trans>Anyone can provide liquidity to KyberSwap by depositing tokens e.g. Traders, Token Teams.</Trans>
               </Text>
               <Text color={theme.subText} marginTop="24px" lineHeight={1.5}>
-                Anyone can access this liquidity from KyberSwap for their own use case e.g. Dapps, Aggregators.
+                <Trans>
+                  Anyone can access this liquidity from KyberSwap for their own use case e.g. Dapps, Aggregators.
+                </Trans>
               </Text>
               <Text color={theme.subText} marginTop="24px" lineHeight={1.5}>
-                Thousands of users and multiple decentralized applications are already providing and using our
-                liquidity.
+                <Trans>
+                  Thousands of users and multiple decentralized applications are already providing and using our
+                  liquidity.
+                </Trans>
               </Text>
 
               <Flex marginTop="20px" alignItems="center">
@@ -616,7 +626,9 @@ function About() {
           >
             <BtnPrimary as={Link} to="/create">
               <Plus />
-              <Text marginLeft="8px">Create New Pool</Text>
+              <Text marginLeft="8px">
+                <Trans>Create New Pool</Trans>
+              </Text>
             </BtnPrimary>
             <Flex sx={{ gap: above768 ? '24px' : '16px' }} maxWidth="456px">
               <BtnOutlined as={ExternalLink} href="https://forms.gle/gLiNsi7iUzHws2BY8">
