@@ -56,7 +56,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
             />
           </ThemedText.Body1>
         </Row>
-        {baseTokens && (
+        {Boolean(baseTokens.length) && (
           <>
             <Row gap={0.25} justify="flex-start" flex padded>
               {baseTokens.map((token) => (
