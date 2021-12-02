@@ -51,7 +51,7 @@ const light: Colors = {
   primary: '#000000',
   secondary: '#565A69',
   hint: '#888D9B',
-  contrast: '#000000',
+  onInteractive: '#000000',
 
   // state
   active: '#2172E5',
@@ -73,7 +73,7 @@ const dark: Colors = {
   primary: '#FFFFFF',
   secondary: '#888D9B',
   hint: '#6C7284',
-  contrast: '#FFFFFF',
+  onInteractive: '#FFFFFF',
 
   // state
   active: '#2172E5',
@@ -99,7 +99,7 @@ export function getDynamicTheme(color: string, theme: Theme): Theme {
     primary: transparentize(0.4, primary),
     secondary: transparentize(0.46, primary),
     hint: transparentize(0.76, primary),
-    contrast: readableColor(interactive),
+    onInteractive: readableColor(interactive),
   }
 }
 

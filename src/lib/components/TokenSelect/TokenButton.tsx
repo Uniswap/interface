@@ -31,7 +31,7 @@ const TokenImg = styled.img<{ disabled?: boolean }>`
   width: 1.2em;
 `
 
-const ChevronDownIcon = styled(icon(ChevronDown, { color: 'contrast' }))`
+const ChevronDownIcon = styled(icon(ChevronDown, { color: 'onInteractive' }))`
   stroke-width: 3;
 `
 
@@ -44,7 +44,7 @@ interface TokenOptionProps {
 export default function TokenButton({ value, disabled, onClick }: TokenOptionProps) {
   return (
     <StyledTokenButton onClick={onClick} empty={!value}>
-      <ThemedText.ButtonLarge color="contrast">
+      <ThemedText.ButtonLarge color="onInteractive">
         <TokenButtonRow gap={0.4}>
           {value ? (
             <>

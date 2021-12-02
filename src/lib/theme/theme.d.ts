@@ -13,7 +13,7 @@ export interface Colors {
   primary: Color
   secondary: Color
   hint: Color
-  contrast: Color // white or black
+  onInteractive: Color
 
   // state
   active: Color

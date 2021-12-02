@@ -171,7 +171,7 @@ const ApprovalRow = styled(Row)`
 
 const StyledApprovalButton = styled(StyledButton)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
-  color: ${({ theme }) => theme.contrast};
+  color: ${({ theme }) => theme.onInteractive};
   height: 100%;
   padding: 0 1em;
 `
@@ -196,7 +196,7 @@ export default function ActionButton({ color, onClick, children }: ActionButtonP
   return (
     <Overlay>
       <StyledActionButton color={color} onClick={onClick}>
-        <ThemedText.ButtonLarge color="contrast">{children}</ThemedText.ButtonLarge>
+        <ThemedText.ButtonLarge color="onInteractive">{children}</ThemedText.ButtonLarge>
       </StyledActionButton>
     </Overlay>
   )
