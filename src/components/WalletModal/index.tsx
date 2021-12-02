@@ -19,7 +19,7 @@ import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
 import Card, { LightCard } from '../Card'
@@ -344,9 +344,9 @@ export default function WalletModal({
               <ArrowLeft />
             </HoverText>
             <Row justify="center">
-              <TYPE.mediumHeader>
+              <ThemedText.MediumHeader>
                 <Trans>Legal & Privacy</Trans>
-              </TYPE.mediumHeader>
+              </ThemedText.MediumHeader>
             </Row>
           </HeaderRow>
           <PrivacyPolicy />
@@ -392,23 +392,23 @@ export default function WalletModal({
           <AutoColumn gap="16px">
             <LightCard>
               <AutoRow style={{ flexWrap: 'nowrap' }}>
-                <TYPE.black fontSize={14}>
+                <ThemedText.Black fontSize={14}>
                   <Trans>
                     By connecting a wallet, you agree to Uniswap Labs’{' '}
                     <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
                     acknowledge that you have read and understand the Uniswap{' '}
                     <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
                   </Trans>
-                </TYPE.black>
+                </ThemedText.Black>
               </AutoRow>
             </LightCard>
             <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <TYPE.white fontSize={14}>
+                  <ThemedText.White fontSize={14}>
                     <Trans>How this app uses APIs</Trans>
-                  </TYPE.white>
+                  </ThemedText.White>
                 </AutoRow>
                 <ArrowRight size={16} />
               </RowBetween>

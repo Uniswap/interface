@@ -11,7 +11,7 @@ import { Version } from 'hooks/useToggledVersion'
 import { memo } from 'react'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 import { getTradeVersion } from 'utils/getTradeVersion'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
@@ -46,9 +46,9 @@ export default memo(function SwapRoute({
           </LoadingRows>
         ) : (
           <Badge>
-            <TYPE.black fontSize={12}>
+            <ThemedText.Black fontSize={12}>
               {getTradeVersion(trade) === Version.v2 ? <Trans>V2</Trans> : <Trans>V3</Trans>}
-            </TYPE.black>
+            </ThemedText.Black>
           </Badge>
         )}
       </RowBetween>
@@ -65,9 +65,9 @@ export default memo(function SwapRoute({
         />
       )}
       {routingAPIEnabled && (
-        <TYPE.main fontSize={12} width={400}>
+        <ThemedText.Main fontSize={12} width={400}>
           <Trans>This route optimizes your price by considering split routes, multiple hops, and gas costs.</Trans>
-        </TYPE.main>
+        </ThemedText.Main>
       )}
     </AutoColumn>
   )

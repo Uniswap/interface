@@ -14,7 +14,7 @@ import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTotalUniEarned } from '../../state/stake/hooks'
 import { useAggregateUniBalance, useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, StyledInternalLink, TYPE, UniTokenAnimated } from '../../theme'
+import { ExternalLink, StyledInternalLink, ThemedText, UniTokenAnimated } from '../../theme'
 import { computeUniCirculation } from '../../utils/computeUniCirculation'
 import { AutoColumn } from '../Column'
 import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
@@ -70,9 +70,9 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
         <CardNoise />
         <CardSection gap="md">
           <RowBetween>
-            <TYPE.white color="white">
+            <ThemedText.White color="white">
               <Trans>Your UNI Breakdown</Trans>
-            </TYPE.white>
+            </ThemedText.White>
             <StyledClose stroke="white" onClick={() => setShowUniBalanceModal(false)} />
           </RowBetween>
         </CardSection>
@@ -82,29 +82,29 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
             <CardSection gap="sm">
               <AutoColumn gap="md" justify="center">
                 <UniTokenAnimated width="48px" src={tokenLogo} />{' '}
-                <TYPE.white fontSize={48} fontWeight={600} color="white">
+                <ThemedText.White fontSize={48} fontWeight={600} color="white">
                   {total?.toFixed(2, { groupSeparator: ',' })}
-                </TYPE.white>
+                </ThemedText.White>
               </AutoColumn>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white color="white">
+                  <ThemedText.White color="white">
                     <Trans>Balance:</Trans>
-                  </TYPE.white>
-                  <TYPE.white color="white">{uniBalance?.toFixed(2, { groupSeparator: ',' })}</TYPE.white>
+                  </ThemedText.White>
+                  <ThemedText.White color="white">{uniBalance?.toFixed(2, { groupSeparator: ',' })}</ThemedText.White>
                 </RowBetween>
                 <RowBetween>
-                  <TYPE.white color="white">
+                  <ThemedText.White color="white">
                     <Trans>Unclaimed:</Trans>
-                  </TYPE.white>
-                  <TYPE.white color="white">
+                  </ThemedText.White>
+                  <ThemedText.White color="white">
                     {uniToClaim?.toFixed(4, { groupSeparator: ',' })}{' '}
                     {uniToClaim && uniToClaim.greaterThan('0') && (
                       <StyledInternalLink onClick={() => setShowUniBalanceModal(false)} to="/uni">
                         <Trans>(claim)</Trans>
                       </StyledInternalLink>
                     )}
-                  </TYPE.white>
+                  </ThemedText.White>
                 </RowBetween>
               </AutoColumn>
             </CardSection>
@@ -114,22 +114,22 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
         <CardSection gap="sm">
           <AutoColumn gap="md">
             <RowBetween>
-              <TYPE.white color="white">
+              <ThemedText.White color="white">
                 <Trans>UNI price:</Trans>
-              </TYPE.white>
-              <TYPE.white color="white">${uniPrice?.toFixed(2) ?? '-'}</TYPE.white>
+              </ThemedText.White>
+              <ThemedText.White color="white">${uniPrice?.toFixed(2) ?? '-'}</ThemedText.White>
             </RowBetween>
             <RowBetween>
-              <TYPE.white color="white">
+              <ThemedText.White color="white">
                 <Trans>UNI in circulation:</Trans>
-              </TYPE.white>
-              <TYPE.white color="white">{circulation?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
+              </ThemedText.White>
+              <ThemedText.White color="white">{circulation?.toFixed(0, { groupSeparator: ',' })}</ThemedText.White>
             </RowBetween>
             <RowBetween>
-              <TYPE.white color="white">
+              <ThemedText.White color="white">
                 <Trans>Total Supply</Trans>
-              </TYPE.white>
-              <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
+              </ThemedText.White>
+              <ThemedText.White color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' })}</ThemedText.White>
             </RowBetween>
             {uni && uni.chainId === 1 ? (
               <ExternalLink href={`${infoLink}/token/${uni.address}`}>

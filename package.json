@@ -152,12 +152,6 @@
     "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
     "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos"
   },
-  "eslintConfig": {
-    "extends": "react-app",
-    "ignorePatterns": [
-      "node_modules"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",

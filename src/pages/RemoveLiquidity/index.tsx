@@ -36,7 +36,7 @@ import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../s
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { StyledInternalLink, TYPE } from '../../theme'
+import { StyledInternalLink, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
@@ -318,12 +318,12 @@ export default function RemoveLiquidity({
           </RowFixed>
         </RowBetween>
 
-        <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
+        <ThemedText.Italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </TYPE.italic>
+        </ThemedText.Italic>
       </AutoColumn>
     )
   }
@@ -450,12 +450,12 @@ export default function RemoveLiquidity({
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <TYPE.link fontWeight={400} color={'primaryText1'}>
+                <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                   <Trans>
                     <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
                     rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
                   </Trans>
-                </TYPE.link>
+                </ThemedText.Link>
               </AutoColumn>
             </BlueCard>
             <LightCard>
