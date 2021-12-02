@@ -24,7 +24,7 @@ jobs:
       - name: Yarn Cache
         uses: actions/cache@v2
         with:
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock) }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
           path: |
             .yarn/
             node_modules/
