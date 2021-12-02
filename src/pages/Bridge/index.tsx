@@ -180,29 +180,18 @@ export default function Bridge() {
     setStep(BridgeStep.Success)
   }, [bridgeService, collectableTx])
 
-  // const fromNetsList = createEnhancedNetsArray({
-  //   selectedNetChainId: fromNetwork.chainId,
-  //   setChainId: onFromNetworkChange,
-  //   activeChainId: !!account ? chainId : -1
-  // })
-  // const toNetsList = createEnhancedNetsArray({
-  //   selectedNetChainId: toNetwork.chainId,
-  //   setChainId: onToNetworkChange,
-  //   activeChainId: !!account ? chainId : -1
-  // })
-
   const fromNetworkList = createNetworksList({
     networkOptionsPreset: networkOptionsPreset,
     selectedNetworkChainId: fromNetwork.chainId,
-    setChainId: onFromNetworkChange,
     activeChainId: !!account ? chainId : -1,
+    onNetworkChange: onFromNetworkChange,
     isNetworkDisabled
   })
   const toNetworkList = createNetworksList({
     networkOptionsPreset: networkOptionsPreset,
     selectedNetworkChainId: toNetwork.chainId,
-    setChainId: onToNetworkChange,
     activeChainId: !!account ? chainId : -1,
+    onNetworkChange: onToNetworkChange,
     isNetworkDisabled
   })
 

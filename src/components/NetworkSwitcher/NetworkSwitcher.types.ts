@@ -40,9 +40,9 @@ export type NetworkOptionsPreset = {
 
 export type NetworkOptions = {
   preset: NetworkOptionsPreset
-  onClick?: any
   active?: boolean
   disabled?: boolean
+  onClick?: any
 }
 
 export type NetworksList = {

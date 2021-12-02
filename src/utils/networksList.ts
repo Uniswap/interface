@@ -32,16 +32,16 @@ export const getNetworkById = (chainId: ChainId, networkList: NetworksList[]) =>
 }
 
 export const createNetworkOptions = ({
-  selectedNetworkChainId,
-  setChainId,
-  activeChainId,
   networkPreset,
+  selectedNetworkChainId,
+  activeChainId,
+  onNetworkChange,
   isNetworkDisabled
 }: {
-  selectedNetworkChainId: ChainId
-  setChainId: (chainId: ChainId) => void
-  activeChainId: ChainId | undefined
   networkPreset: NetworkOptionsPreset
+  selectedNetworkChainId: ChainId
+  activeChainId: ChainId | undefined
+  onNetworkChange: (chainId: ChainId) => void
   isNetworkDisabled: (optionChainId: ChainId, selectedNetworkChainId: ChainId) => boolean
 }): NetworkOptions => {
   const { chainId } = networkPreset
@@ -49,22 +49,22 @@ export const createNetworkOptions = ({
     preset: networkPreset,
     active: selectedNetworkChainId === activeChainId,
     disabled: isNetworkDisabled(networkPreset.chainId, selectedNetworkChainId),
-    onClick: () => setChainId(chainId)
+    onClick: () => onNetworkChange(chainId)
   }
 }
 
 export const createNetworksList = ({
   networkOptionsPreset,
   selectedNetworkChainId,
-  setChainId,
   activeChainId,
+  onNetworkChange,
   isNetworkDisabled,
   removeSpecifiedTag
 }: {
   networkOptionsPreset: NetworkOptionsPreset[]
   selectedNetworkChainId: ChainId
-  setChainId: (chainId: ChainId) => void
   activeChainId: ChainId | undefined
+  onNetworkChange: (chainId: ChainId) => void
   isNetworkDisabled: (optionChainId: ChainId, selectedNetworkChainId: ChainId) => boolean
   removeSpecifiedTag?: string
 }): NetworksList[] => {
@@ -85,10 +85,10 @@ export const createNetworksList = ({
       const tag = currentNet.tag ? currentNet.tag : ''
       const networkPreset = currentNet
       const enhancedNetworkOptions = createNetworkOptions({
-        selectedNetworkChainId,
-        setChainId,
-        activeChainId,
         networkPreset,
+        selectedNetworkChainId,
+        activeChainId,
+        onNetworkChange,
         isNetworkDisabled
       })
 
