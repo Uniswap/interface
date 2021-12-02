@@ -29,6 +29,9 @@ export const SWITCH_NETWORK_PARAMS: {
   },
   [ChainId.FANTOM]: {
     chainId: '0xFA'
+  },
+  [ChainId.CRONOS]: {
+    chainId: '0x19'
   }
 }
 
@@ -99,6 +102,17 @@ export const ADD_NETWORK_PARAMS: {
     },
     rpcUrls: ['https://rpcapi.fantom.network'],
     blockExplorerUrls: ['https://ftmscan.com']
+  },
+  [ChainId.CRONOS]: {
+    chainId: '0x19',
+    chainName: 'Cronos',
+    nativeCurrency: {
+      name: 'CRO',
+      symbol: 'CRO',
+      decimals: 18
+    },
+    rpcUrls: ['https://evm-cronos.crypto.org'],
+    blockExplorerUrls: ['https://cronos.crypto.org/explorer']
   }
 }
 

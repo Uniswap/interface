@@ -26,7 +26,9 @@ const EXCHANGE_SUBGRAPH_URLS = {
   fantom: [
     'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-ftm'
     // 'https://fantom-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-ftm'
-  ]
+  ],
+  cronosTestnet: ['https://testnet-cronos-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-cronos-testnet'],
+  cronos: []
 }
 
 export function getExchangeSubgraphUrls(networkId: ChainId): string[] {
@@ -68,6 +70,10 @@ export function getExchangeSubgraphUrls(networkId: ChainId): string[] {
       return EXCHANGE_SUBGRAPH_URLS.avalancheTestnet
     case ChainId.FANTOM:
       return EXCHANGE_SUBGRAPH_URLS.fantom
+    case ChainId.CRONOSTESTNET:
+      return EXCHANGE_SUBGRAPH_URLS.cronosTestnet
+    case ChainId.CRONOS:
+      return EXCHANGE_SUBGRAPH_URLS.cronos
     default:
       return EXCHANGE_SUBGRAPH_URLS.mainnet
   }
@@ -132,7 +138,9 @@ export const getExchangeSubgraphClients = async () => {
     ChainId.BSCTESTNET,
     ChainId.AVAXMAINNET,
     ChainId.AVAXTESTNET,
-    ChainId.FANTOM
+    ChainId.FANTOM,
+    ChainId.CRONOSTESTNET,
+    ChainId.CRONOS
   ]
   const promises = chainIds.map(chainId => getExchangeSubgraphClient(chainId))
 

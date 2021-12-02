@@ -7,6 +7,7 @@ import MaticLogo from '../../assets/networks/polygon-network.png'
 import BnbLogo from '../../assets/images/bnb-logo.png'
 import AvaxLogo from '../../assets/networks/avax-network.png'
 import FtmLogo from '../../assets/networks/fantom-network.png'
+import CronosLogo from '../../assets/networks/cronos-network.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { useActiveWeb3React } from 'hooks'
 import Logo from '../Logo'
@@ -40,7 +41,9 @@ const logo: { readonly [chainId in ChainId]?: string } = {
   [ChainId.BSCMAINNET]: BnbLogo,
   [ChainId.AVAXTESTNET]: AvaxLogo,
   [ChainId.AVAXMAINNET]: AvaxLogo,
-  [ChainId.FANTOM]: FtmLogo
+  [ChainId.FANTOM]: FtmLogo,
+  [ChainId.CRONOSTESTNET]: CronosLogo,
+  [ChainId.CRONOS]: CronosLogo
 }
 
 export default function CurrencyLogo({

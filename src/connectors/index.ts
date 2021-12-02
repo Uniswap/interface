@@ -33,7 +33,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114, 250]
+  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114, 250, 25, 338]
 })
 
 const SUPPORTED_CHAIN_IDS: ChainId[] = [
@@ -45,7 +45,9 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.BSCMAINNET,
   ChainId.AVAXTESTNET,
   ChainId.AVAXTESTNET,
-  ChainId.FANTOM
+  ChainId.FANTOM,
+  ChainId.CRONOSTESTNET,
+  ChainId.CRONOS
 ]
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
@@ -61,7 +63,9 @@ export const NETWORK_URLS: {
   [ChainId.BSCMAINNET]: `https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm-interface`,
   [ChainId.AVAXTESTNET]: `https://api.avax-test.network/ext/bc/C/rpc`,
   [ChainId.AVAXMAINNET]: `https://avalanche.knstats.com/v1/mainnet/geth?appId=dev-dmm`,
-  [ChainId.FANTOM]: `https://rpcapi.fantom.network `
+  [ChainId.FANTOM]: `https://rpcapi.fantom.network`,
+  [ChainId.CRONOSTESTNET]: `https://cronos-testnet-3.crypto.org:8545`,
+  [ChainId.CRONOS]: `https://evm-cronos.crypto.org`
 }
 
 export const walletconnect = new WalletConnectConnector({

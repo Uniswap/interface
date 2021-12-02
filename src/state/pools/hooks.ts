@@ -142,6 +142,16 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
     }
   }
 
+  if (chainId === ChainId.CRONOS) {
+    if (data?.token0?.id === '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23') {
+      data.token0 = { ...data.token0, name: 'CRO (Wrapped)', symbol: 'CRO' }
+    }
+
+    if (data?.token1?.id === '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23') {
+      data.token1 = { ...data.token1, name: 'CRO (Wrapped)', symbol: 'CRO' }
+    }
+  }
+
   return data
 }
 

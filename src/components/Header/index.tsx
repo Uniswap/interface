@@ -294,6 +294,10 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/AVAX`
     case ChainId.FANTOM:
       return `/pools/FTM`
+    case ChainId.CRONOSTESTNET:
+      return `/pools/CRO`
+    case ChainId.CRONOS:
+      return `/pools/CRO`
     default:
       return '/pools/ETH'
   }
@@ -400,11 +404,15 @@ export default function Header() {
                   ? `ETH`
                   : chainId && [137, 80001].includes(chainId)
                   ? `MATIC`
+                  : chainId && [56, 97].includes(chainId)
+                  ? `BNB`
                   : chainId && [43113, 43114].includes(chainId)
                   ? `AVAX`
                   : chainId && [250].includes(chainId)
                   ? `FTM`
-                  : `BNB`}
+                  : chainId && [25, 338].includes(chainId)
+                  ? `CRO`
+                  : `ETH`}
               </BalanceText>
             ) : null}
             <Web3Status />

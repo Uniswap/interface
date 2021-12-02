@@ -82,6 +82,12 @@ function getEtherscanDomain(chainId: ChainId): string {
       return 'https://snowtrace.io'
     case ChainId.FANTOM:
       return 'https://ftmscan.com'
+    case ChainId.CRONOSTESTNET:
+      return 'https://cronos.crypto.org/explorer/testnet3'
+    case ChainId.CRONOS:
+      return 'https://cronos.crypto.org/explorer'
+    default:
+      return ''
   }
 }
 
@@ -123,6 +129,10 @@ export function getEtherscanLinkText(chainId: ChainId): string {
 
   if ([ChainId.FANTOM].includes(chainId)) {
     return 'View on Ftmscan'
+  }
+
+  if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId)) {
+    return 'View on Explorer'
   }
 
   return 'View on Etherscan'
@@ -484,6 +494,10 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
         return 'AVAX'
       case ChainId.FANTOM:
         return 'FTM'
+      case ChainId.CRONOSTESTNET:
+        return 'CRO'
+      case ChainId.CRONOS:
+        return 'CRO'
       default:
         return 'ETH'
     }
