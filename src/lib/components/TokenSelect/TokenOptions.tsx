@@ -1,9 +1,11 @@
 import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
 import styled, { Theme } from 'lib/theme'
+import scrollable from 'lib/theme/scrollable'
 import * as ThemedText from 'lib/theme/text'
 import { Token } from 'lib/types'
-import {
+import React, {
+  ComponentClass,
   CSSProperties,
   forwardRef,
   KeyboardEvent,
@@ -16,7 +18,7 @@ import {
   useState,
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { areEqual, FixedSizeList } from 'react-window'
+import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
 
 import Button from '../Button'
 import Column from '../Column'
@@ -36,6 +38,24 @@ const TokenImg = styled.img`
   border-radius: 100%;
   height: 1.25em;
   width: 1.25em;
+`
+
+interface FixedSizeTokenList extends FixedSizeList<Token[]>, ComponentClass<FixedSizeListProps<Token[]>> {}
+const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)`
+  ${scrollable}
+
+  @supports selector(::-webkit-scrollbar-thumb) {
+    overflow-y: overlay !important;
+
+    ::-webkit-scrollbar-thumb {
+      border: none;
+      border-right: 0.75em solid transparent;
+    }
+
+    ${TokenButton} {
+      padding-right: 2em;
+    }
+  }
 `
 
 interface TokenOptionProps {
@@ -183,17 +203,18 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
     >
       <AutoSizer disableWidth>
         {({ height }) => (
-          <FixedSizeList
+          <TokenList
             height={height}
             width="100%"
             itemCount={tokens.length}
             itemData={tokens}
             itemKey={itemKey}
             itemSize={56}
+            className="scrollbar"
             ref={list}
           >
             {ItemRow}
-          </FixedSizeList>
+          </TokenList>
         )}
       </AutoSizer>
     </TokenOptionsColumn>

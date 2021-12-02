@@ -9,6 +9,7 @@ import styled, {
   css as styledCss,
   keyframes as styledKeyframes,
   ThemedBaseStyledInterface,
+  ThemedCssFunction,
   ThemeProvider as StyledProvider,
   ThemeProviderComponent,
   useTheme as useStyled,
@@ -20,7 +21,7 @@ export type { Colors, Theme } from './theme'
 export type Color = keyof Colors
 
 export default styled as unknown as ThemedBaseStyledInterface<Theme>
-export const css = styledCss
+export const css = styledCss as unknown as ThemedCssFunction<Theme>
 export const keyframes = styledKeyframes
 export const useTheme = useStyled as unknown as () => Theme
 
