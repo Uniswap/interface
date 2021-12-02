@@ -1,0 +1,41 @@
+name: Deploy Site
+
+on:
+  push:
+    branches: [main]
+
+env:
+  REACT_APP_RAMP_KEY: ${{ secrets.REACT_APP_RAMP_KEY }}
+  REACT_APP_SENTRY_RELEASE: gh-${{ github.sha }}
+  REACT_APP_SENTRY_ENVIRONMENT: production
+  GIT_COMMIT_SHA: ${{ github.sha }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+jobs:
+  deploy-dist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          always-auth: true
+          node-version: '16'
+      - name: Yarn Cache
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock) }}
+          path: |
+            .yarn/
+            node_modules/
+          restore-keys: |
+            ${{ runner.os }}-modules-
+      - run: yarn install
+      - run: yarn build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.DIST_DEPLOY_KEY }}
+          external_repository: ${{ github.repository }}-dist
+          publish_branch: master
+          publish_dir: ./build/
