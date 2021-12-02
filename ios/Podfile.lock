@@ -2,20 +2,19 @@ PODS:
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.2)
-  - ExpoModulesCore (0.2.0):
-    - ExpoModulesCore/Core (= 0.2.0)
-    - ExpoModulesCore/Interfaces (= 0.2.0)
-    - UMCore
-  - ExpoModulesCore/Core (0.2.0):
-    - UMCore
-  - ExpoModulesCore/Interfaces (0.2.0):
-    - ExpoModulesCore/Core
-    - UMCore
-  - EXSecureStore (10.2.0):
-    - UMCore
-  - EXSplashScreen (0.11.4):
+  - EXApplication (4.0.0):
+    - ExpoModulesCore
+  - EXClipboard (2.0.3):
+    - ExpoModulesCore
+  - Expo (43.0.3):
+    - ExpoModulesCore
+  - ExpoModulesCore (0.4.8):
     - React-Core
-    - UMCore
+  - EXSecureStore (11.0.3):
+    - ExpoModulesCore
+  - EXSplashScreen (0.13.5):
+    - ExpoModulesCore
+    - React-Core
   - FBLazyVector (0.66.0)
   - FBReactNativeSpec (0.66.0):
     - RCT-Folly (= 2021.06.28.00-v2)
@@ -454,14 +453,6 @@ PODS:
   - Sentry (7.3.0):
     - Sentry/Core (= 7.3.0)
   - Sentry/Core (7.3.0)
-  - UMAppLoader (2.2.0)
-  - UMCore (7.1.2)
-  - UMReactNativeAdapter (6.3.9):
-    - ExpoModulesCore
-    - React-Core
-    - UMCore
-  - UMTaskManagerInterface (6.2.0):
-    - UMCore
   - vision-camera-ocr (0.1.0):
     - GoogleMLKit/TextRecognition
     - React-Core
@@ -475,6 +466,9 @@ DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - "EthersRS (from `../node_modules/@cmcewen/ethers-rs-mobile`)"
+  - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXClipboard (from `../node_modules/expo-clipboard/ios`)
+  - Expo (from `../node_modules/expo/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
   - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
@@ -518,10 +512,6 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
-  - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
-  - "UMCore (from `../node_modules/@unimodules/core/ios`)"
-  - "UMReactNativeAdapter (from `../node_modules/@unimodules/react-native-adapter/ios`)"
-  - UMTaskManagerInterface (from `../node_modules/unimodules-task-manager-interface/ios`)
   - vision-camera-ocr (from `../node_modules/vision-camera-ocr`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -558,6 +548,12 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EthersRS:
     :path: "../node_modules/@cmcewen/ethers-rs-mobile"
+  EXApplication:
+    :path: "../node_modules/expo-application/ios"
+  EXClipboard:
+    :path: "../node_modules/expo-clipboard/ios"
+  Expo:
+    :path: "../node_modules/expo/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core/ios"
   EXSecureStore:
@@ -640,14 +636,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  UMAppLoader:
-    :path: "../node_modules/unimodules-app-loader/ios"
-  UMCore:
-    :path: "../node_modules/@unimodules/core/ios"
-  UMReactNativeAdapter:
-    :path: "../node_modules/@unimodules/react-native-adapter/ios"
-  UMTaskManagerInterface:
-    :path: "../node_modules/unimodules-task-manager-interface/ios"
   vision-camera-ocr:
     :path: "../node_modules/vision-camera-ocr"
   VisionCamera:
@@ -659,9 +647,12 @@ SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   EthersRS: 8c9242d94dc8e8ee4ae54123556414458e7e578c
-  ExpoModulesCore: 2734852616127a6c1fc23012197890a6f3763dc7
-  EXSecureStore: 1aa80d49a3a101418bbd2675e2a0d32dceea10c2
-  EXSplashScreen: 847e0d8026731c1090bf269ede3e15ac87d88958
+  EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
+  EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
+  Expo: 5316c3ecdc34eb0cad340d01dc8beec97c7e879e
+  ExpoModulesCore: a9a9bf32b2da35cd9b7299c80790c03a91ac7d15
+  EXSecureStore: 919bf7c28472862020d2cd7b59b69aae160b5d40
+  EXSplashScreen: 57f329dbf25c5c12800feed79068a056453dc772
   FBLazyVector: 6816ca39e1cc8beffd2a96783f518296789d1c48
   FBReactNativeSpec: 3b1e86618e902743fde35b40cf9ebd100fd655b7
   Firebase: 629510f1a9ddb235f3a7c5c8ceb23ba887f0f814
@@ -722,14 +713,10 @@ SPEC CHECKSUMS:
   RNSentry: 49abc89b0190b4c8afe0fa5d065f98e36cb53233
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   Sentry: 9a4e621430e2dae4477d791f2f7e905720b6efbf
-  UMAppLoader: 21af63390e55c82e037fb9752d93114a80ecf16e
-  UMCore: ce3a4faa010239063b8343895b29a6d97b01069d
-  UMReactNativeAdapter: d03cefd0e4e4179ab8c490408589f1c8a6c8b785
-  UMTaskManagerInterface: 2be431101b73604e64fbfffcf759336f9d8fccbb
   vision-camera-ocr: 4a70ae5bbc6a8ed83b607bfb27bf1ccfbe7fc25d
   VisionCamera: 41b059e8993e263efbac83eebb953ba6121c8e85
   Yoga: c11abbf5809216c91fcd62f5571078b83d9b6720
 
-PODFILE CHECKSUM: badc8a076f03bba364d5a40174316849636b3aef
+PODFILE CHECKSUM: c22392b13f3e5d13e19dcb4017e29d8f22015864
 
 COCOAPODS: 1.11.2

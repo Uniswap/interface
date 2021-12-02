@@ -19,6 +19,9 @@ jest.mock('redux-persist', () => {
 // Mock vision lib due to native deps
 jest.mock('react-native-vision-camera', () => {})
 
+// Mock expo clipboard lib due to native deps
+jest.mock('expo-clipboard', () => {})
+
 // Setup Async Storage mocking: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest/
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage)
 

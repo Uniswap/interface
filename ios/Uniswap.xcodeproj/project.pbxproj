@@ -11,6 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
 		323758D670BD4239A88ED592 /* UniswapSansBeta3-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */; };
 		4C3A060B4EC54191B2D05291 /* UniswapSansBeta3-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */; };
 		6172F2D35A4C3AA820D92908 /* libPods-Uniswap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-Uniswap.a */; };
@@ -18,6 +19,7 @@
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
 		7EF68E3733C33B6898317E18 /* libPods-Uniswap-UniswapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-Uniswap-UniswapTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
 		A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */; };
 		A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */; };
 		A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */; };
@@ -46,6 +48,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Uniswap/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Uniswap/main.m; sourceTree = "<group>"; };
 		1D0AE47A65C8663E3B452821 /* Pods-Uniswap-UniswapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.release.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.release.xcconfig"; sourceTree = "<group>"; };
+		4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		6423831EA8574132BED9D8CC /* libPods-Uniswap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-Uniswap-UniswapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Medium.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Medium.otf"; sourceTree = "<group>"; };
@@ -60,6 +63,7 @@
 		ABFE59519B596E51CEFDCCC0 /* libPods-Uniswap-UniswapTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap-UniswapTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Uniswap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		C0A881CF5CF3F2B244570E2A /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
+		C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap-UniswapTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		D00AAFFCFCFDA5787532823F /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
 		D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Regular.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Regular.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -131,6 +135,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		47914D9EE3A4DE926EFC5089 /* UniswapTests */ = {
+			isa = PBXGroup;
+			children = (
+				C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */,
+			);
+			name = UniswapTests;
+			sourceTree = "<group>";
+		};
+		5754C6A1B51170788A63F6F3 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				9759A762F61D6B2F01C79DBF /* Uniswap */,
+				47914D9EE3A4DE926EFC5089 /* UniswapTests */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -148,6 +169,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				E233CBF5F47BEE60B243DCF8 /* Pods */,
 				C2C18ECBEF5A4489BF3A314C /* Resources */,
+				5754C6A1B51170788A63F6F3 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -161,6 +183,14 @@
 				00E356EE1AD99517003FC87E /* UniswapTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9759A762F61D6B2F01C79DBF /* Uniswap */ = {
+			isa = PBXGroup;
+			children = (
+				4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */,
+			);
+			name = Uniswap;
 			sourceTree = "<group>";
 		};
 		C2C18ECBEF5A4489BF3A314C /* Resources */ = {
@@ -424,6 +454,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* UniswapTests.m in Sources */,
+				8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +467,7 @@
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */,
 				A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */,
+				1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
