@@ -153,56 +153,53 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
-/**
- * Preset styles of the Rebass Text component
- */
-export const ThemedText = {
-  Main(props: TextProps) {
+export const TYPE = {
+  main(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text2'} {...props} />
   },
-  Link(props: TextProps) {
+  link(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
   },
-  Label(props: TextProps) {
+  label(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />
   },
-  Black(props: TextProps) {
+  black(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text1'} {...props} />
   },
-  White(props: TextProps) {
+  white(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'white'} {...props} />
   },
-  Body(props: TextProps) {
+  body(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
   },
-  LargeHeader(props: TextProps) {
+  largeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
   },
-  MediumHeader(props: TextProps) {
+  mediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={20} {...props} />
   },
-  SubHeader(props: TextProps) {
+  subHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
   },
-  Small(props: TextProps) {
+  small(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
   },
-  Blue(props: TextProps) {
+  blue(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
   },
-  Yellow(props: TextProps) {
+  yellow(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'yellow3'} {...props} />
   },
-  DarkGray(props: TextProps) {
+  darkGray(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text3'} {...props} />
   },
-  Gray(props: TextProps) {
+  gray(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
   },
-  Italic(props: TextProps) {
+  italic(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
   },
-  Error({ error, ...props }: { error: boolean } & TextProps) {
+  error({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
   },
 }

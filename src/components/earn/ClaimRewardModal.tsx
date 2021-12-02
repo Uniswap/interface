@@ -8,7 +8,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { StakingInfo } from '../../state/stake/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { CloseIcon, ThemedText } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -74,24 +74,24 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <ThemedText.MediumHeader>
+            <TYPE.mediumHeader>
               <Trans>Claim</Trans>
-            </ThemedText.MediumHeader>
+            </TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.Body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={36}>
                 {stakingInfo?.earnedAmount?.toSignificant(6)}
-              </ThemedText.Body>
-              <ThemedText.Body>
+              </TYPE.body>
+              <TYPE.body>
                 <Trans>Unclaimed UNI</Trans>
-              </ThemedText.Body>
+              </TYPE.body>
             </AutoColumn>
           )}
-          <ThemedText.SubHeader style={{ textAlign: 'center' }}>
+          <TYPE.subHeader style={{ textAlign: 'center' }}>
             <Trans>When you claim without withdrawing your liquidity remains in the mining pool.</Trans>
-          </ThemedText.SubHeader>
+          </TYPE.subHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
             {error ?? <Trans>Claim</Trans>}
           </ButtonError>
@@ -100,21 +100,21 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.Body fontSize={20}>
+            <TYPE.body fontSize={20}>
               <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
-            </ThemedText.Body>
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <TYPE.largeHeader>
               <Trans>Transaction Submitted</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Body fontSize={20}>
+            </TYPE.largeHeader>
+            <TYPE.body fontSize={20}>
               <Trans>Claimed UNI!</Trans>
-            </ThemedText.Body>
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

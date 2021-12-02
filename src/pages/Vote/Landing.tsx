@@ -20,7 +20,7 @@ import { ProposalData } from 'state/governance/hooks'
 import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import { useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -40,8 +40,8 @@ const Proposal = styled(Button)`
   width: 100%;
   margin-top: 1rem;
   border-radius: 12px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 48px 1fr 120px;
   align-items: center;
   text-align: left;
   outline: none;
@@ -59,16 +59,10 @@ const Proposal = styled(Button)`
 
 const ProposalNumber = styled.span`
   opacity: 0.6;
-  flex: 0 0 40px;
 `
 
 const ProposalTitle = styled.span`
   font-weight: 600;
-  flex: 1;
-  max-width: 420px;
-  white-space: initial;
-  word-wrap: break-word;
-  padding-right: 10px;
 `
 
 const VoteCard = styled(DataCard)`
@@ -83,7 +77,7 @@ const WrapSmall = styled(RowBetween)`
   `};
 `
 
-const TextButton = styled(ThemedText.Main)`
+const TextButton = styled(TYPE.main)`
   color: ${({ theme }) => theme.primary1};
   :hover {
     cursor: pointer;
@@ -141,26 +135,26 @@ export default function Landing() {
             <CardSection>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <ThemedText.White fontWeight={600}>
+                  <TYPE.white fontWeight={600}>
                     <Trans>Uniswap Governance</Trans>
-                  </ThemedText.White>
+                  </TYPE.white>
                 </RowBetween>
                 <RowBetween>
-                  <ThemedText.White fontSize={14}>
+                  <TYPE.white fontSize={14}>
                     <Trans>
                       UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself
                       or delegate your votes to a third party.
                     </Trans>
-                  </ThemedText.White>
+                  </TYPE.white>
                 </RowBetween>
                 <ExternalLink
                   style={{ color: 'white', textDecoration: 'underline' }}
                   href="https://uniswap.org/blog/uni"
                   target="_blank"
                 >
-                  <ThemedText.White fontSize={14}>
+                  <TYPE.white fontSize={14}>
                     <Trans>Read more about Uniswap governance</Trans>
-                  </ThemedText.White>
+                  </TYPE.white>
                 </ExternalLink>
               </AutoColumn>
             </CardSection>
@@ -170,9 +164,9 @@ export default function Landing() {
         </TopSection>
         <TopSection gap="2px">
           <WrapSmall>
-            <ThemedText.MediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
+            <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
               <Trans>Proposals</Trans>
-            </ThemedText.MediumHeader>
+            </TYPE.mediumHeader>
             <AutoRow gap="6px" justify="flex-end">
               {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
               {showUnlockVoting ? (
@@ -185,20 +179,20 @@ export default function Landing() {
                   <Trans>Unlock Voting</Trans>
                 </ButtonPrimary>
               ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-                <ThemedText.Body fontWeight={500} mr="6px">
+                <TYPE.body fontWeight={500} mr="6px">
                   <Trans>
                     <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
                   </Trans>
-                </ThemedText.Body>
+                </TYPE.body>
               ) : uniBalance &&
                 userDelegatee &&
                 userDelegatee !== ZERO_ADDRESS &&
                 JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
-                <ThemedText.Body fontWeight={500} mr="6px">
+                <TYPE.body fontWeight={500} mr="6px">
                   <Trans>
                     <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
                   </Trans>
-                </ThemedText.Body>
+                </TYPE.body>
               ) : (
                 ''
               )}
@@ -217,9 +211,9 @@ export default function Landing() {
               <div />
               {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
                 <RowFixed>
-                  <ThemedText.Body fontWeight={500} mr="4px">
+                  <TYPE.body fontWeight={500} mr="4px">
                     <Trans>Delegated to:</Trans>
-                  </ThemedText.Body>
+                  </TYPE.body>
                   <AddressButton>
                     <StyledExternalLink
                       href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
@@ -253,9 +247,9 @@ export default function Landing() {
               )
             })}
         </TopSection>
-        <ThemedText.SubHeader color="text3">
+        <TYPE.subHeader color="text3">
           <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
-        </ThemedText.SubHeader>
+        </TYPE.subHeader>
       </PageWrapper>
       <SwitchLocaleLink />
     </>

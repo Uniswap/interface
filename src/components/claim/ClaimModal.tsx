@@ -13,7 +13,7 @@ import { useModalOpen, useToggleSelfClaimModal } from '../../state/application/h
 import { ApplicationModal } from '../../state/application/reducer'
 import { useClaimCallback, useUserClaimData, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
-import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from '../../theme'
+import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE, UniTokenAnimated } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -100,63 +100,63 @@ export default function ClaimModal() {
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <ThemedText.White fontWeight={500}>
+                <TYPE.white fontWeight={500}>
                   <Trans>Claim UNI</Trans>
-                </ThemedText.White>
+                </TYPE.white>
                 <CloseIcon onClick={toggleClaimModal} style={{ zIndex: 99 }} color="white" />
               </RowBetween>
-              <ThemedText.White fontWeight={700} fontSize={36}>
+              <TYPE.white fontWeight={700} fontSize={36}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
-              </ThemedText.White>
+              </TYPE.white>
             </CardSection>
             <Break />
             <CardSection gap="sm">
               {userClaimData?.flags?.isSOCKS && (
                 <RowBetween>
-                  <ThemedText.SubHeader color="white">SOCKS</ThemedText.SubHeader>
-                  <ThemedText.SubHeader color="white">
+                  <TYPE.subHeader color="white">SOCKS</TYPE.subHeader>
+                  <TYPE.subHeader color="white">
                     <Trans>{SOCKS_AMOUNT} UNI</Trans>
-                  </ThemedText.SubHeader>
+                  </TYPE.subHeader>
                 </RowBetween>
               )}
               {userClaimData?.flags?.isLP &&
                 unclaimedAmount &&
                 JSBI.greaterThanOrEqual(unclaimedAmount.quotient, nonLPAmount) && (
                   <RowBetween>
-                    <ThemedText.SubHeader color="white">
+                    <TYPE.subHeader color="white">
                       <Trans>Liquidity</Trans>
-                    </ThemedText.SubHeader>
-                    <ThemedText.SubHeader color="white">
+                    </TYPE.subHeader>
+                    <TYPE.subHeader color="white">
                       <Trans>
                         {unclaimedAmount
                           .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
                           .toFixed(0, { groupSeparator: ',' })}{' '}
                         UNI
                       </Trans>
-                    </ThemedText.SubHeader>
+                    </TYPE.subHeader>
                   </RowBetween>
                 )}
               {userClaimData?.flags?.isUser && (
                 <RowBetween>
-                  <ThemedText.SubHeader color="white">
+                  <TYPE.subHeader color="white">
                     <Trans>User</Trans>
-                  </ThemedText.SubHeader>
-                  <ThemedText.SubHeader color="white">
+                  </TYPE.subHeader>
+                  <TYPE.subHeader color="white">
                     <Trans>{USER_AMOUNT} UNI</Trans>
-                  </ThemedText.SubHeader>
+                  </TYPE.subHeader>
                 </RowBetween>
               )}
             </CardSection>
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <ThemedText.SubHeader fontWeight={500}>
+            <TYPE.subHeader fontWeight={500}>
               <Trans>
                 As a member of the Uniswap community you may claim UNI to be used for voting and governance.
                 <br />
                 <br />
                 <ExternalLink href="https://uniswap.org/blog/uni">Read more about UNI</ExternalLink>
               </Trans>
-            </ThemedText.SubHeader>
+            </TYPE.subHeader>
             <ButtonPrimary
               disabled={!isAddress(account ?? '')}
               padding="16px 16px"
@@ -187,9 +187,9 @@ export default function ClaimModal() {
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <ThemedText.LargeHeader fontWeight={600} color="black">
+              <TYPE.largeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed!</Trans> : <Trans>Claiming</Trans>}
-              </ThemedText.LargeHeader>
+              </TYPE.largeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
@@ -198,7 +198,7 @@ export default function ClaimModal() {
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <ThemedText.SubHeader fontWeight={500} color="black">
+                <TYPE.subHeader fontWeight={500} color="black">
                   <Trans>
                     <span role="img" aria-label="party-hat">
                       🎉{' '}
@@ -208,13 +208,13 @@ export default function ClaimModal() {
                       🎉
                     </span>
                   </Trans>
-                </ThemedText.SubHeader>
+                </TYPE.subHeader>
               </>
             )}
             {attempting && !claimSubmitted && (
-              <ThemedText.SubHeader color="black">
+              <TYPE.subHeader color="black">
                 <Trans>Confirm this transaction in your wallet</Trans>
-              </ThemedText.SubHeader>
+              </TYPE.subHeader>
             )}
             {attempting && claimSubmitted && !claimConfirmed && chainId && claimTxn?.hash && (
               <ExternalLink

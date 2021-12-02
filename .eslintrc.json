@@ -8,33 +8,13 @@
       "jsx": true
     }
   },
+  "ignorePatterns": ["node_modules/**/*"],
   "settings": {
     "react": {
       "version": "detect"
     }
   },
-  "ignorePatterns": [
-    "src/types/v3",
-    "src/abis/types",
-    "src/locales/**/*.js",
-    "src/locales/**/en-US.po",
-    "src/state/data/generated.ts",
-    "node_modules",
-    "coverage",
-    "build",
-    "dist",
-    ".DS_Store",
-    ".env.local",
-    ".env.development.local",
-    ".env.test.local",
-    ".env.production.local",
-    ".idea/",
-    ".vscode/",
-    "package-lock.json",
-    "yarn.lock"
-  ],
   "extends": [
-    "react-app",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",

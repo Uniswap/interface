@@ -6,7 +6,7 @@ import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import styled, { keyframes } from 'styled-components/macro'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
@@ -25,7 +25,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
     display: none;
   `}
 `
-const StyledPollingNumber = styled(ThemedText.Small)<{ breathe: boolean; hovering: boolean }>`
+const StyledPollingNumber = styled(TYPE.small)<{ breathe: boolean; hovering: boolean }>`
   transition: opacity 0.25s ease;
   opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
   :hover {

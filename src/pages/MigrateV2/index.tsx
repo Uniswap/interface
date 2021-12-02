@@ -20,13 +20,13 @@ import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { BackArrow, StyledInternalLink, ThemedText } from '../../theme'
+import { BackArrow, StyledInternalLink, TYPE } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
     <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
-      <ThemedText.Body>{message}</ThemedText.Body>
+      <TYPE.body>{message}</TYPE.body>
     </AutoColumn>
   )
 }
@@ -117,34 +117,34 @@ export default function MigrateV2() {
         <AutoColumn gap="16px">
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrow to="/pool/v2" />
-            <ThemedText.MediumHeader>
+            <TYPE.mediumHeader>
               <Trans>Migrate V2 Liquidity</Trans>
-            </ThemedText.MediumHeader>
+            </TYPE.mediumHeader>
             <div>
               <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
             </div>
           </AutoRow>
 
-          <ThemedText.Body style={{ marginBottom: 8, fontWeight: 400 }}>
+          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
             <Trans>
               For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
               Uniswap V3.
             </Trans>
-          </ThemedText.Body>
+          </TYPE.body>
 
           {!account ? (
             <LightCard padding="40px">
-              <ThemedText.Body color={theme.text3} textAlign="center">
+              <TYPE.body color={theme.text3} textAlign="center">
                 <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
-              </ThemedText.Body>
+              </TYPE.body>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <ThemedText.Body color={theme.text3} textAlign="center">
+              <TYPE.body color={theme.text3} textAlign="center">
                 <Dots>
                   <Trans>Loading</Trans>
                 </Dots>
-              </ThemedText.Body>
+              </TYPE.body>
             </LightCard>
           ) : v2Pairs.filter(([, pair]) => !!pair).length > 0 ? (
             <>

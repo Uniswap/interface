@@ -8,7 +8,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { StakingInfo } from '../../state/stake/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { CloseIcon, ThemedText } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
@@ -76,34 +76,34 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <ThemedText.MediumHeader>
+            <TYPE.mediumHeader>
               <Trans>Withdraw</Trans>
-            </ThemedText.MediumHeader>
+            </TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOndismiss} />
           </RowBetween>
           {stakingInfo?.stakedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.Body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
-              </ThemedText.Body>
-              <ThemedText.Body>
+              </TYPE.body>
+              <TYPE.body>
                 <Trans>Deposited liquidity:</Trans>
-              </ThemedText.Body>
+              </TYPE.body>
             </AutoColumn>
           )}
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.Body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
-              </ThemedText.Body>
-              <ThemedText.Body>
+              </TYPE.body>
+              <TYPE.body>
                 <Trans>Unclaimed UNI</Trans>
-              </ThemedText.Body>
+              </TYPE.body>
             </AutoColumn>
           )}
-          <ThemedText.SubHeader style={{ textAlign: 'center' }}>
+          <TYPE.subHeader style={{ textAlign: 'center' }}>
             <Trans>When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool.</Trans>
-          </ThemedText.SubHeader>
+          </TYPE.subHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onWithdraw}>
             {error ?? <Trans>Withdraw & Claim</Trans>}
           </ButtonError>
@@ -112,27 +112,27 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.Body fontSize={20}>
+            <TYPE.body fontSize={20}>
               <Trans>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body fontSize={20}>
+            </TYPE.body>
+            <TYPE.body fontSize={20}>
               <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} UNI</Trans>
-            </ThemedText.Body>
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <TYPE.largeHeader>
               <Trans>Transaction Submitted</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Body fontSize={20}>
+            </TYPE.largeHeader>
+            <TYPE.body fontSize={20}>
               <Trans>Withdrew UNI-V2!</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body fontSize={20}>
+            </TYPE.body>
+            <TYPE.body fontSize={20}>
               <Trans>Claimed UNI!</Trans>
-            </ThemedText.Body>
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

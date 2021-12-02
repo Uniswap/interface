@@ -10,7 +10,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { transparentize } from 'polished'
 import { AlertCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
@@ -19,7 +19,7 @@ const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
   width: fit-content;
 `
 
-const AddressText = styled(ThemedText.Blue)`
+const AddressText = styled(TYPE.blue)`
   font-size: 12px;
   word-break: break-all;
 
@@ -39,12 +39,12 @@ const TokenImportCard = ({ list, token }: TokenImportCardProps) => {
       <AutoColumn gap="10px" justify="center">
         <CurrencyLogo currency={token} size={'32px'} />
         <AutoColumn gap="4px" justify="center">
-          <ThemedText.Body ml="8px" mr="8px" fontWeight={500} fontSize={20}>
+          <TYPE.body ml="8px" mr="8px" fontWeight={500} fontSize={20}>
             {token.symbol}
-          </ThemedText.Body>
-          <ThemedText.DarkGray fontWeight={400} fontSize={14}>
+          </TYPE.body>
+          <TYPE.darkGray fontWeight={400} fontSize={14}>
             {token.name}
-          </ThemedText.DarkGray>
+          </TYPE.darkGray>
         </AutoColumn>
         {chainId && (
           <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
@@ -54,17 +54,17 @@ const TokenImportCard = ({ list, token }: TokenImportCardProps) => {
         {list !== undefined ? (
           <RowFixed>
             {list.logoURI && <ListLogo logoURI={list.logoURI} size="16px" />}
-            <ThemedText.Small ml="6px" fontSize={14} color={theme.text3}>
+            <TYPE.small ml="6px" fontSize={14} color={theme.text3}>
               <Trans>via {list.name} token list</Trans>
-            </ThemedText.Small>
+            </TYPE.small>
           </RowFixed>
         ) : (
           <WarningWrapper $borderRadius="4px" padding="4px" highWarning={true}>
             <RowFixed>
               <AlertCircle stroke={theme.red1} size="10px" />
-              <ThemedText.Body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
+              <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
                 <Trans>Unknown Source</Trans>
-              </ThemedText.Body>
+              </TYPE.body>
             </RowFixed>
           </WarningWrapper>
         )}

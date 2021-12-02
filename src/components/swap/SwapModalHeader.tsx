@@ -8,7 +8,7 @@ import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
-import { ThemedText } from '../../theme'
+import { TYPE } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { ButtonPrimary } from '../Button'
@@ -64,9 +64,9 @@ export default function SwapModalHeader({
       <LightCard padding="0.75rem 1rem">
         <AutoColumn gap={'8px'}>
           <RowBetween>
-            <ThemedText.Body color={theme.text3} fontWeight={500} fontSize={14}>
+            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
               <Trans>From</Trans>
-            </ThemedText.Body>
+            </TYPE.body>
             <FiatValue fiatValue={fiatValueInput} />
           </RowBetween>
           <RowBetween align="center">
@@ -94,15 +94,15 @@ export default function SwapModalHeader({
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
         <AutoColumn gap={'8px'}>
           <RowBetween>
-            <ThemedText.Body color={theme.text3} fontWeight={500} fontSize={14}>
+            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
               <Trans>To</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body fontSize={14} color={theme.text3}>
+            </TYPE.body>
+            <TYPE.body fontSize={14} color={theme.text3}>
               <FiatValue
                 fiatValue={fiatValueOutput}
                 priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
               />
-            </ThemedText.Body>
+            </TYPE.body>
           </RowBetween>
           <RowBetween align="flex-end">
             <RowFixed gap={'0px'}>
@@ -120,9 +120,9 @@ export default function SwapModalHeader({
         </AutoColumn>
       </LightCard>
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
-        <ThemedText.Body color={theme.text2} fontWeight={500} fontSize={14}>
+        <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
           <Trans>Price</Trans>
-        </ThemedText.Body>
+        </TYPE.body>
         <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
       </RowBetween>
 
@@ -135,9 +135,9 @@ export default function SwapModalHeader({
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.Main color={theme.primary1}>
+              <TYPE.main color={theme.primary1}>
                 <Trans>Price Updated</Trans>
-              </ThemedText.Main>
+              </TYPE.main>
             </RowFixed>
             <ButtonPrimary
               style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
@@ -151,7 +151,7 @@ export default function SwapModalHeader({
 
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
-          <ThemedText.Italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
               Output is estimated. You will receive at least{' '}
               <b>
@@ -159,9 +159,9 @@ export default function SwapModalHeader({
               </b>{' '}
               or the transaction will revert.
             </Trans>
-          </ThemedText.Italic>
+          </TYPE.italic>
         ) : (
-          <ThemedText.Italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
               Input is estimated. You will sell at most{' '}
               <b>
@@ -169,17 +169,17 @@ export default function SwapModalHeader({
               </b>{' '}
               or the transaction will revert.
             </Trans>
-          </ThemedText.Italic>
+          </TYPE.italic>
         )}
       </AutoColumn>
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
-          <ThemedText.Main>
+          <TYPE.main>
             <Trans>
               Output will be sent to{' '}
               <b title={recipient}>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
             </Trans>
-          </ThemedText.Main>
+          </TYPE.main>
         </AutoColumn>
       ) : null}
     </AutoColumn>

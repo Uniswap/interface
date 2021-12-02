@@ -4,7 +4,7 @@ import { AutoRow } from 'components/Row'
 import React from 'react'
 import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { TYPE } from 'theme'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
   padding: '8px',
@@ -26,9 +26,9 @@ export default function PresetsButtons({ setFullRange }: { setFullRange: () => v
           })
         }}
       >
-        <ThemedText.Body fontSize={12}>
+        <TYPE.body fontSize={12}>
           <Trans>Full Range</Trans>
-        </ThemedText.Body>
+        </TYPE.body>
       </Button>
     </AutoRow>
   )
