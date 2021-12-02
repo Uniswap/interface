@@ -1,6 +1,5 @@
 import Logo from 'lib/assets/Logo'
-import styled from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { ThemedText } from 'lib/theme'
 import { ReactElement, ReactNode } from 'react'
 
 import Row from './Row'

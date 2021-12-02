@@ -1,6 +1,5 @@
 import { t } from '@lingui/macro'
-import styled, { Theme } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { Theme, ThemedText } from 'lib/theme'
 import { transparentize } from 'polished'
 import { KeyboardEvent, useCallback } from 'react'
 

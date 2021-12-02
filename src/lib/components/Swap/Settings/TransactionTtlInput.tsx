@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import * as ThemedText from 'lib/theme/text'
+import { ThemedText } from 'lib/theme'
 import { useRef } from 'react'
 
 import Column from '../../Column'

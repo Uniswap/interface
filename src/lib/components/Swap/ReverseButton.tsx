@@ -1,6 +1,5 @@
 import { useAtom } from 'jotai'
-import styled, { icon } from 'lib/theme'
-import Layer from 'lib/theme/layer'
+import styled, { icon, Layer } from 'lib/theme'
 import { useCallback } from 'react'
 import { ArrowDown, ArrowUp } from 'react-feather'
 

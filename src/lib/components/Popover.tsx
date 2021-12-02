@@ -1,6 +1,5 @@
 import { Options, Placement } from '@popperjs/core'
-import styled from 'lib/theme'
-import Layer from 'lib/theme/layer'
+import styled, { Layer } from 'lib/theme'
 import maxSize from 'popper-max-size-modifier'
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'

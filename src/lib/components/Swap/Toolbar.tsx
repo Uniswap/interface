@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import styled, { icon, OriginalProvider } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { icon, ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
 import { Info } from 'react-feather'
 
@@ -27,7 +26,7 @@ const Ratio = styled(TextButton)`
 function DetailsTooltip() {
   return (
     <Tooltip icon={InfoIcon} placement="bottom">
-      <OriginalProvider>
+      <ThemeProvider>
         <Column gap={0.75}>
           <ThemedText.Subhead2>
             <Trans>Transaction details</Trans>
@@ -35,7 +34,7 @@ function DetailsTooltip() {
           <Rule />
           <Details />
         </Column>
-      </OriginalProvider>
+      </ThemeProvider>
     </Tooltip>
   )
 }

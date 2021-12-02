@@ -1,5 +1,4 @@
-import styled, { Theme } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { Theme, ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 import { AnyStyledComponent } from 'styled-components'
 

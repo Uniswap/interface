@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import * as ThemedText from 'lib/theme/text'
+import { ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 
 import Column from '../Column'

@@ -1,6 +1,7 @@
 import { Text, TextProps as TextPropsWithCss } from 'rebass'
 
-import styled, { Color, Theme } from '.'
+import styled from './styled'
+import { Color, Theme } from './theme'
 
 type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { userSelect?: 'none'; color?: Color }
 

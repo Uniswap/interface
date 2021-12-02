@@ -1,6 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import styled, { icon, Theme } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { icon, Theme, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { transparentize } from 'polished'
 import { ChevronDown } from 'react-feather'

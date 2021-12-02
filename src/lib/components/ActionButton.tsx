@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
-import styled, { Color, icon, keyframes, Theme } from 'lib/theme'
-import Layer from 'lib/theme/layer'
-import * as ThemedText from 'lib/theme/text'
+import styled, { Color, icon, keyframes, Layer, Theme, ThemedText } from 'lib/theme'
 import { transparentize } from 'polished'
 import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'

@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useResetAtom } from 'jotai/utils'
-import { icon } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import { icon, ThemedText } from 'lib/theme'
 import { useState } from 'react'
 import { Settings as SettingsSvg } from 'react-feather'
 

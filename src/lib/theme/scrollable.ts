@@ -1,6 +1,6 @@
-import { css } from 'lib/theme'
+import { css } from './styled'
 
-export default css`
+export const scrollable = css`
   overflow-y: scroll;
 
   ::-webkit-scrollbar {

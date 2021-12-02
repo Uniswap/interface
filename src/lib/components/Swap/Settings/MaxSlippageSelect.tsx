@@ -1,7 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import { icon } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import { icon, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
 

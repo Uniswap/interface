@@ -1,8 +1,6 @@
 import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
-import styled, { Theme } from 'lib/theme'
-import scrollable from 'lib/theme/scrollable'
-import * as ThemedText from 'lib/theme/text'
+import styled, { scrollable, Theme, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import React, {
   ComponentClass,

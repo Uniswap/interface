@@ -1,7 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
-import styled from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 

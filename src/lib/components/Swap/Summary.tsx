@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import styled, { icon } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { icon, ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 import { ArrowRight, Info } from 'react-feather'
 

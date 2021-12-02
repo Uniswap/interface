@@ -1,10 +1,8 @@
-import { getDynamicTheme, Theme, useTheme } from 'lib/theme'
+import { useTheme } from 'lib/theme'
 import { Token } from 'lib/types'
 import uriToHttp from 'lib/utils/uriToHttp'
 import Vibrant from 'node-vibrant/lib/bundle'
-import { shade, tint } from 'polished'
 import { useLayoutEffect, useState } from 'react'
-import { hex } from 'wcag-contrast'
 
 const colors = new Map<string, string>()
 
@@ -49,19 +47,6 @@ async function getColorFromUriPath(uri: string): Promise<string | undefined> {
   return
 }
 
-function getAccessibleColor(color: string, theme: Theme) {
-  const dynamic = getDynamicTheme(color, theme)
-  const { darkMode } = dynamic
-  let { primary } = dynamic
-  let AAscore = hex(color, primary)
-  while (AAscore < 3) {
-    color = darkMode ? tint(0.005, color) : shade(0.005, color)
-    primary = getDynamicTheme(color, theme).primary
-    AAscore = hex(color, primary)
-  }
-  return color
-}
-
 export function prefetchColor(token?: Token) {
   if (token) {
     getColorFromToken(token)
@@ -78,7 +63,6 @@ export default function useColor(token?: Token) {
     if (token) {
       getColorFromToken(token, (color) => {
         if (!stale && color) {
-          color = getAccessibleColor(color, theme)
           setColor(color)
         }
       })

@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
-import styled from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 
 import Button from '../Button'

@@ -3,7 +3,7 @@ import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider, useAtom } from 'jotai'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { providerAtom } from 'lib/state'
-import styled, { Provider as ThemeProvider, Theme } from 'lib/theme'
+import styled, { Theme, ThemeProvider } from 'lib/theme'
 import { ReactNode, useEffect, useState } from 'react'
 
 import { Provider as DialogProvider } from './Dialog'

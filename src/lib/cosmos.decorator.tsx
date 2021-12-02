@@ -2,7 +2,7 @@ import { Provider } from '@ethersproject/abstract-provider'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import styled, { getDefaultTheme } from 'lib/theme'
+import styled, { defaultTheme } from 'lib/theme'
 import { ReactNode } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
 import { createGlobalStyle } from 'styled-components'
@@ -28,7 +28,7 @@ export const providerAtom = atom<Provider | undefined>(undefined)
 export default function WidgetDecorator({ children }: { children: ReactNode }) {
   const [height] = useValue('height', { defaultValue: 340 })
   const [width] = useValue('width', { defaultValue: 272 })
-  const [theme] = useValue('theme', { defaultValue: getDefaultTheme() })
+  const [theme] = useValue('theme', { defaultValue: defaultTheme })
   const [locale] = useSelect('locale', { defaultValue: DEFAULT_LOCALE, options: ['pseudo', ...SUPPORTED_LOCALES] })
   const provider = useAtomValue(providerAtom)
   return (

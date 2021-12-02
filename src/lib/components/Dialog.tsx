@@ -1,7 +1,6 @@
 import 'wicg-inert'
 
-import styled, { Color, icon, OriginalProvider as OriginalThemeProvider, Theme } from 'lib/theme'
-import Layer from 'lib/theme/layer'
+import styled, { Color, icon, Layer, Theme, ThemeProvider } from 'lib/theme'
 import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
@@ -105,11 +104,11 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
   return (
     modal &&
     createPortal(
-      <OriginalThemeProvider>
+      <ThemeProvider>
         <Modal color={color}>
           <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
         </Modal>
-      </OriginalThemeProvider>,
+      </ThemeProvider>,
       modal
     )
   )
