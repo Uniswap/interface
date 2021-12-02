@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import { switchToNetwork } from 'utils/switchToNetwork'
 
+import { useSupportedChainIdOnly } from './hooks'
 import { setImplements3085, updateBlockNumber, updateChainId } from './reducer'
 
 function useQueryCacheInvalidator() {
@@ -78,6 +79,8 @@ export default function Updater(): null {
   }, [dispatch, debouncedState.chainId])
 
   const implements3085 = useAppSelector((state) => state.application.implements3085)
+
+  useSupportedChainIdOnly({ chainId, implements3085, library })
 
   useEffect(() => {
     if (!library?.provider?.request) {

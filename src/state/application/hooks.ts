@@ -1,6 +1,9 @@
+import { Web3Provider } from '@ethersproject/providers'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { switchToNetwork } from 'utils/switchToNetwork'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 import { AppState } from '../index'
@@ -82,4 +85,18 @@ export function useRemovePopup(): (key: string) => void {
 export function useActivePopups(): AppState['application']['popupList'] {
   const list = useAppSelector((state: AppState) => state.application.popupList)
   return useMemo(() => list.filter((item) => item.show), [list])
+}
+
+interface SupportedChainIdOnlyArgs {
+  chainId: number | undefined
+  implements3085: boolean
+  library: Web3Provider | undefined
+}
+export function useSupportedChainIdOnly({ chainId, implements3085, library }: SupportedChainIdOnlyArgs): void {
+  useEffect(() => {
+    const chainIdSupported = chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
+    if (implements3085 && chainId && !chainIdSupported && library) {
+      switchToNetwork({ chainId: SupportedChainId.MAINNET, library })
+    }
+  }, [chainId, library, implements3085])
 }
