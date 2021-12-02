@@ -7,9 +7,10 @@ export const getNetworkInfo = (chainId: ChainId, customPreset: NetworkOptionsPre
     return net.chainId === chainId
   })
   return {
-    name: network?.name,
-    logoSrc: network?.logoSrc,
-    tag: network?.tag,
+    name: network ? network.name : '',
+    logoSrc: network ? network.logoSrc : '',
+    color: network ? network.color : '',
+    tag: network ? network.tag : '',
     isArbitrum: NETWORK_DETAIL[chainId].isArbitrum,
     partnerChainId: NETWORK_DETAIL[chainId].partnerChainId,
     rpcUrl: NETWORK_DETAIL[chainId].rpcUrls,
@@ -29,6 +30,23 @@ export const getNetworkById = (chainId: ChainId, networkList: NetworksList[]) =>
     }
   }
   return undefined
+}
+
+export const getNetworkOptions = ({
+  chainId,
+  networkList
+}: {
+  chainId: ChainId
+  networkList: NetworksList[]
+}): Partial<NetworkOptions> => {
+  const { name, logoSrc, color, tag } = getNetworkInfo(chainId)
+  const selectedNetwork = getNetworkById(chainId, networkList)
+
+  return {
+    preset: { chainId, name, logoSrc, color, tag },
+    active: selectedNetwork?.active,
+    disabled: selectedNetwork?.disabled
+  }
 }
 
 export const createNetworkOptions = ({

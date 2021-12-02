@@ -26,7 +26,7 @@ import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
 import { useChains } from '../../hooks/useChains'
-import { createNetworksList } from '../../utils/networksList'
+import { createNetworksList, getNetworkOptions } from '../../utils/networksList'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -212,10 +212,9 @@ export default function Bridge() {
           <AssetWrapper ref={fromPanelRef}>
             <AssetSelector
               label="from"
-              chainId={fromNetwork.chainId}
-              networksList={fromNetworkList}
               onClick={SHOW_TESTNETS ? () => setShowFromList(val => !val) : () => null}
               disabled={SHOW_TESTNETS ? isCollecting : true}
+              networkOption={getNetworkOptions({ chainId: fromNetwork.chainId, networkList: fromNetworkList })}
             />
             <NetworkSwitcherPopover
               networksList={fromNetworkList}
@@ -232,10 +231,9 @@ export default function Bridge() {
           <AssetWrapper ref={toPanelRef}>
             <AssetSelector
               label="to"
-              chainId={toNetwork.chainId}
-              networksList={toNetworkList}
               onClick={SHOW_TESTNETS ? () => setShowToList(val => !val) : () => null}
               disabled={SHOW_TESTNETS ? isCollecting : true}
+              networkOption={getNetworkOptions({ chainId: toNetwork.chainId, networkList: toNetworkList })}
             />
             <NetworkSwitcherPopover
               networksList={toNetworkList}
