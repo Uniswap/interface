@@ -1,34 +1,35 @@
-export type Color = string
-
 export interface Colors {
   // surface
-  accent: Color
-  container: Color
-  module: Color
-  interactive: Color
-  outline: Color
-  dialog: Color
+  accent: string
+  container: string
+  module: string
+  interactive: string
+  outline: string
+  dialog: string
 
   // text
-  primary: Color
-  secondary: Color
-  hint: Color
-  onInteractive: Color
+  primary: string
+  secondary: string
+  hint: string
+  onInteractive: string
 
   // state
-  active: Color
-  success: Color
-  warning: Color
-  error: Color
+  active: string
+  success: string
+  warning: string
+  error: string
 }
+
+export type Color = keyof Omit<Colors, 'onHover'>
 
 export interface Attributes {
   darkMode: boolean
   fontFamily: string
   borderRadius: number // em
+  onHover: (color: string) => string
 }
 
-export interface Theme extends Record<string, unknown>, Attributes, Partial<Colors> {
+export interface Theme extends Record<string, unknown>, Attributes, Colors {
   light: Colors
   dark: Colors
 }

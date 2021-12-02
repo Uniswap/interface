@@ -1,11 +1,11 @@
 import merge from 'lodash/merge'
+import { mix } from 'polished'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 
 import styled, { ThemedProvider } from './styled'
 import { Colors, Theme } from './theme'
 
-export type { Colors, Theme } from './theme'
-export type Color = keyof Colors
+export type { Color, Colors, Theme } from './theme'
 
 export default styled
 export * from './dynamic'
@@ -63,6 +63,8 @@ export const defaultTheme: Theme = {
   darkMode: true,
   fontFamily: '"Inter var", sans-serif',
   borderRadius: 1,
+  onHover: mix(0.24, '#000000'), // hovered elements get a 24% primary text overlay
+  ...dark,
   light,
   dark,
 }

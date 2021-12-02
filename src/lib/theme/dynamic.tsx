@@ -1,4 +1,4 @@
-import { shade, tint, transparentize } from 'polished'
+import { darken, lighten, opacify, transparentize } from 'polished'
 import { readableColor } from 'polished'
 import { ReactNode, useMemo } from 'react'
 import { hex } from 'wcag-contrast'
@@ -7,7 +7,6 @@ import { ThemedProvider, useTheme } from './styled'
 import { Colors, Theme } from './theme'
 
 export type { Colors, Theme } from './theme'
-export type Color = keyof Colors
 
 type DynamicColors = Pick<Colors, 'interactive' | 'outline' | 'primary' | 'secondary' | 'onInteractive'>
 
@@ -36,15 +35,13 @@ const dark: DynamicColors = {
   onInteractive: black,
 }
 
-export function getDynamicTheme(theme: Theme, color: string) {
+export function getDynamicTheme(theme: Theme, color: string): Theme & DynamicColors {
   const darkMode = JSON.parse(readableColor(color, 'false', 'true', false))
   return {
     ...theme,
     darkMode,
-
-    // surface
     module: color,
-
+    onHover: opacify(0.25), // hovered elements increase opacity by 25%
     ...(darkMode ? dark : light),
   }
 }
@@ -52,10 +49,10 @@ export function getDynamicTheme(theme: Theme, color: string) {
 function getAccessibleColor(theme: Theme, color: string) {
   const dynamic = getDynamicTheme(theme, color)
   const { darkMode } = dynamic
-  let { primary } = dynamic
+  let primary = dynamic[darkMode ? 'dark' : 'light'].primary
   let AAscore = hex(color, primary)
   while (AAscore < 3) {
-    color = darkMode ? tint(0.005, color) : shade(0.005, color)
+    color = darkMode ? lighten(0.005, color) : darken(0.005, color)
     primary = getDynamicTheme(theme, color).primary
     AAscore = hex(color, primary)
   }
