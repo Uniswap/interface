@@ -50,7 +50,7 @@ const environment = window.location.hostname.includes('app-staging')
   ? 'staging'
   : window.location.hostname.includes('ubeswap.org')
   ? 'production'
-  : process.env.REACT_APP_VERCEL_ENV ?? null
+  : process.env.REACT_APP_SENTRY_ENVIRONMENT ?? process.env.REACT_APP_VERCEL_ENV ?? null
 
 // google analytics
 const analyticsEnv: 'staging' | 'production' | null = environment
