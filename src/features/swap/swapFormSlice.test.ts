@@ -8,7 +8,7 @@ import {
   switchCurrencySides,
 } from './swapFormSlice'
 
-const chainId = ChainId.MAINNET
+const chainId = ChainId.RINKEBY
 
 test('should return the initial state', () => {
   expect(swapFormReducer(undefined, {} as any)).toEqual(initialSwapFormState)

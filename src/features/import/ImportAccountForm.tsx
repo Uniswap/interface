@@ -13,6 +13,7 @@ import { SagaStatus } from 'src/utils/saga'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 const initialValues = {
+  // default mnemonic helpful during development
   mnemonic: '',
 }
 

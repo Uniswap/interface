@@ -42,9 +42,11 @@ export function* approveAndSwap(params: SwapParams) {
       ...(!value || isZero(value) ? {} : { value }),
     }
 
-    // Signer.sendTransaction populates fields (gas, nonce, chainId, etc.), signs and sends
-    // TODO use provider to send signed tx (populate field before sending
-    const transactionResponse = yield* call([signer, signer.sendTransaction], transaction)
+    const tx = yield* call([signer, signer.populateTransaction], transaction)
+    const signedTx = yield* call([signer, signer.signTransaction], tx)
+
+    const transactionResponse = yield* call([provider, provider.sendTransaction], signedTx)
+
     logger.debug(
       'swapSaga',
       'approveAndSwap',

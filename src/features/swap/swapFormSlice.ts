@@ -25,7 +25,7 @@ export const initialSwapFormState: Readonly<SwapFormState> = {
   exactAmount: '',
   [CurrencyField.INPUT]: {
     address: 'ETH',
-    chainId: ChainId.MAINNET,
+    chainId: ChainId.RINKEBY,
   },
   [CurrencyField.OUTPUT]: null,
 }

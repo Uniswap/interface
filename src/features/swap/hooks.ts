@@ -11,6 +11,7 @@ import { swapActions } from 'src/features/swap/swapSaga'
 import { QuoteResult } from 'src/features/swap/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
 import { tryParseAmount } from 'src/utils/tryParseAmount'
 
@@ -137,7 +138,11 @@ export function useSwapCallback(
     if (!account || !amount || !chainId || !methodParameters || !tokenContract) {
       return {
         swapCallback: () => {
-          throw new Error('Missing parameters')
+          logger.error(
+            'hooks',
+            'useSwapCallback',
+            'Missing swapCallback parameters. Is the provider enabled?'
+          )
         },
         swapState: null,
       }

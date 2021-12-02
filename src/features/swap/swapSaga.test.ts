@@ -29,7 +29,7 @@ class MockSigner {
   }
 
   async signTransaction() {
-    return ''
+    return '0x123'
   }
 
   connect() {
@@ -38,6 +38,10 @@ class MockSigner {
 
   async sendTransaction() {
     return mockTransactionResponse as unknown as providers.TransactionResponse
+  }
+
+  populateTransaction(tx: providers.TransactionRequest) {
+    return tx
   }
 }
 
@@ -78,6 +82,15 @@ const methodParameters: MethodParameters = {
 }
 
 const swapParams: SwapParams = { ...approveParams, chainId: ChainId.RINKEBY, methodParameters }
+const transaction = {
+  from: account.address,
+  to: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
+  data: '0x01',
+}
+const transactionWithValue = {
+  ...transaction,
+  value: '0x02',
+}
 
 describe(approveAndSwap, () => {
   it('errors out when approval fails', () => {
@@ -101,11 +114,11 @@ describe(approveAndSwap, () => {
       .next(providerManager)
       .call(maybeApprove, swapParams)
       .next(/*approved=*/ true)
-      .call([account.signer, account.signer.sendTransaction], {
-        from: account.address,
-        to: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
-        data: '0x01',
-      })
+      .call([account.signer, account.signer.populateTransaction], transaction)
+      .next(transaction)
+      .call([account.signer, account.signer.signTransaction], transaction)
+      .next('0x123')
+      .call([provider, provider.sendTransaction], '0x123')
       .next(mockTransactionResponse)
       .call(mockTransactionResponse.wait)
       .next({ transactionHash: '0x123456' })
@@ -123,12 +136,11 @@ describe(approveAndSwap, () => {
       .next(providerManager)
       .call(maybeApprove, params)
       .next(/*approved=*/ true)
-      .call([account.signer, account.signer.sendTransaction], {
-        from: account.address,
-        to: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
-        data: '0x01',
-        value: '0x02',
-      })
+      .call([account.signer, account.signer.populateTransaction], transactionWithValue)
+      .next(transactionWithValue)
+      .call([account.signer, account.signer.signTransaction], transactionWithValue)
+      .next('0x123')
+      .call([provider, provider.sendTransaction], '0x123')
       .next(mockTransactionResponse)
       .call(mockTransactionResponse.wait)
       .next({ transactionHash: '0x123456' })
