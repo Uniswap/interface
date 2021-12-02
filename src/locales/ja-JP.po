@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-11-30 02:11\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -309,7 +309,7 @@ msgstr "安定的なペアに最適"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
-msgstr "非常に安定したペアに最適です。"
+msgstr "非常に安定したペアに最適"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -329,7 +329,7 @@ msgstr "このリストを追加することで、データが正しいことを
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "財布を接続することにより、あなたはUniswap Labsのに同意 <0>サービス規約</0> 、あなたが読んでUniswap理解していることを認める <1>プロトコル免責事項</1>。"
+msgstr "ウォレットを接続することにより、あなたはUniswap Labsのに <0>サービス規約</0>に同意し、あなたがUniswap<1>プロトコル免責事項</1>を読み、理解していることに同意するものとします。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -1541,7 +1541,7 @@ msgstr "スワップ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr "<0/> を <1/>に正確にスワップする"
+msgstr "<0/> を <1/>にスワップ"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1550,7 +1550,7 @@ msgstr "問題発生の可能性があるが、スワップする"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr "正確に<0/>を<1/>に交換します"
+msgstr "<0/>を<1/>にスワップ"
 
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
