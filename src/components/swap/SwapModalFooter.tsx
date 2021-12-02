@@ -59,7 +59,7 @@ export default function SwapModalFooter({
           <Text
             fontWeight={500}
             fontSize={14}
-            color={theme.text1}
+            color={theme.text}
             style={{
               justifyContent: 'center',
               alignItems: 'center',

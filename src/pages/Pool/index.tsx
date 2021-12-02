@@ -1,6 +1,5 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { t, Trans } from '@lingui/macro'
 
@@ -11,9 +10,8 @@ import FullPositionCard from 'components/PositionCard'
 import { DataCard, CardNoise, CardBGImage } from 'components/earn/styled'
 import Card from 'components/Card'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { ButtonOutlined } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { AutoRow, RowBetween } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import { StyledInternalLink, TYPE, HideSmall } from '../../theme'
 import { useActiveWeb3React } from 'hooks'
@@ -22,26 +20,22 @@ import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
 import { useToV2LiquidityTokens, useLiquidityPositionTokenPairs } from 'state/user/hooks'
 import { useStakingInfo } from 'state/stake/hooks'
 import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
+import useDebounce from 'hooks/useDebounce'
+import Search from 'components/Search'
 
 export const PageWrapper = styled(AutoColumn)`
-  padding: 12px 16px 100px;
+  padding: 16px 0 100px;
   width: 100%;
+  max-width: 1008px;
+  margin: auto;
 
-  @media only screen and (min-width: 768px) {
-    padding: 16px 16px 100px;
-  }
-
-  @media only screen and (min-width: 1000px) {
-    padding: 16px 32px 100px;
-  }
-
-  @media only screen and (min-width: 1366px) {
-    padding: 16px 215px 50px;
-  }
-
-  @media only screen and (min-width: 1440px) {
-    padding: 16px 252px 50px;
-  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    max-width: 664px;
+  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 12px 0 100px;
+    max-width: 350px;
+  `};
 `
 
 const VoteCard = styled(DataCard)`
@@ -67,15 +61,6 @@ const TitleRow = styled(RowBetween)`
   `};
 `
 
-const ButtonRow = styled(RowFixed)`
-  gap: 8px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-  `};
-`
-
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.text4};
   padding: 16px 12px;
@@ -86,9 +71,25 @@ const EmptyProposals = styled.div`
   align-items: center;
 `
 
+const PositionCardGrid = styled.div`
+  display: grid;
+  grid-template-columns: minmax(320px, auto) minmax(320px, auto) minmax(320px, auto);
+  gap: 24px;
+  max-width: 1008px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: 1fr 1fr;
+    max-width: 664px;
+  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-template-columns: 1fr;
+    max-width: 350px;
+  `};
+`
+
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
 
   const liquidityPositionTokenPairs = useLiquidityPositionTokenPairs()
 
@@ -134,6 +135,9 @@ export default function Pool() {
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
   // const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
+  const [searchText, setSearchText] = useState('')
+  const debouncedSearchText = useDebounce(searchText.trim().toLowerCase(), 200)
+
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
   const stakingInfosWithBalance = stakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
@@ -141,6 +145,11 @@ export default function Pool() {
   // // remove any pairs that also are included in pairs with stake in mining pool
   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
     return (
+      (debouncedSearchText
+        ? v2Pair.token0.symbol?.toLowerCase().includes(debouncedSearchText) ||
+          v2Pair.token1.symbol?.toLowerCase().includes(debouncedSearchText) ||
+          v2Pair.address.toLowerCase() === debouncedSearchText
+        : true) &&
       stakingPairs
         ?.map(stakingPair => stakingPair[1])
         .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
@@ -157,20 +166,6 @@ export default function Pool() {
     transformedUserLiquidityPositions[position.pool.id] = position
   })
 
-  let newPoolLink = `/create/`
-  if (chainId) {
-    newPoolLink += [1, 3, 4, 5, 42].includes(chainId)
-      ? 'ETH'
-      : [80001, 137].includes(chainId)
-      ? 'MATIC'
-      : [56, 97].includes(chainId)
-      ? 'BNB'
-      : [43113, 43114].includes(chainId)
-      ? 'AVAX'
-      : [250].includes(chainId)
-      ? 'FTM'
-      : ''
-  }
   return (
     <>
       <PageWrapper>
@@ -186,7 +181,7 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <AutoRow>
               <InstructionText>
-                <Trans>Here you can view all your liquidity positions and remove/add more liquidity.</Trans>
+                <Trans>Here you can view all your liquidity positions and add/remove more liquidity.</Trans>
               </InstructionText>
             </AutoRow>
 
@@ -196,16 +191,12 @@ export default function Pool() {
                   <Trans>My Liquidity Pools</Trans>
                 </TYPE.mediumHeader>
               </HideSmall>
-              <ButtonRow>
-                <ButtonOutlined width="148px" padding="12px 18px" as={Link} to={newPoolLink} style={{ float: 'right' }}>
-                  <Trans>+ Create New Pool</Trans>
-                </ButtonOutlined>
-                {/* <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
-                  <Text fontWeight={500} fontSize={16}>
-                    Add Liquidity
-                  </Text>
-                </ResponsiveButtonPrimary> */}
-              </ButtonRow>
+
+              <Search
+                searchValue={searchText}
+                setSearchValue={setSearchText}
+                placeholder={t`Search by tokens or pool address`}
+              />
             </TitleRow>
 
             {!account ? (
@@ -223,7 +214,7 @@ export default function Pool() {
                 </TYPE.body>
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
-              <>
+              <PositionCardGrid>
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard
                     key={v2Pair.liquidityToken.address}
@@ -242,7 +233,7 @@ export default function Pool() {
                       />
                     )
                 )}
-              </>
+              </PositionCardGrid>
             ) : (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">

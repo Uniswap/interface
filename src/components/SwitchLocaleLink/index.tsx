@@ -43,7 +43,7 @@ export function SwitchLocaleLink() {
     return (
       <Container>
         <Trans>
-          DMM Exchange available in: {<StyledInternalLink to={target}>{LOCALE_LABEL[targetLocale]}</StyledInternalLink>}
+          KyberSwap available in: {<StyledInternalLink to={target}>{LOCALE_LABEL[targetLocale]}</StyledInternalLink>}
         </Trans>
       </Container>
     )

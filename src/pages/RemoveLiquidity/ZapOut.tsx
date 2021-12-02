@@ -685,7 +685,7 @@ export default function ZapOut({
 
               {pair && (
                 <DetailWrapper>
-                  <DetailBox style={{ paddingBottom: '12px', borderBottom: `1px dashed ${theme.border4}` }}>
+                  <DetailBox style={{ paddingBottom: '12px', borderBottom: `1px dashed ${theme.border}` }}>
                     <AutoColumn gap="8px">
                       <TYPE.subHeader fontWeight={500} fontSize={12} color={theme.subText}>
                         <UppercaseText>
@@ -768,7 +768,7 @@ export default function ZapOut({
                         userLiquidity.equalTo('0') ||
                         (priceImpactSeverity > 3 && !expertMode)
                       }
-                      mr="0.5rem"
+                      margin="0 1rem 0 0"
                       fontWeight={500}
                       fontSize={16}
                       padding="16px"
@@ -784,7 +784,7 @@ export default function ZapOut({
                       )}
                     </ButtonConfirmed>
                     <ButtonError
-                      padding="16px"
+                      padding="16px 6px"
                       onClick={() => {
                         setShowConfirm(true)
                       }}

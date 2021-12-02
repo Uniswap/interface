@@ -11,10 +11,6 @@ if [[ "$TRAVIS_BRANCH" == "develop" ]]; then
   echo "Start build prod"
   yarn build-production || true
   echo "Finish build prod"
-elif [[ "$TRAVIS_BRANCH" == "staging" ]]; then
-  echo "Start running build-staging"
-  yarn build-staging
-  echo "Finished running build-staging"
 elif [[ "$TRAVIS_BRANCH" == "main" ]]; then
   echo "Start running build"
   yarn build-production

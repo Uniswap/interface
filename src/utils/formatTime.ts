@@ -9,15 +9,15 @@ export const getFormattedTimeFromSecond = (numberOfSeconds: number) => {
   let formattedEstimatedRemainingTime = ''
 
   if (estimatedRemainingDays) {
-    formattedEstimatedRemainingTime += `${estimatedRemainingDays}d `
+    formattedEstimatedRemainingTime += `${estimatedRemainingDays}D `
   }
 
   if (hour) {
-    formattedEstimatedRemainingTime += `${hour}hr `
+    formattedEstimatedRemainingTime += `${hour}H `
   }
 
   if (minute) {
-    formattedEstimatedRemainingTime += `${minute}m`
+    formattedEstimatedRemainingTime += `${minute}M`
   }
 
   return formattedEstimatedRemainingTime

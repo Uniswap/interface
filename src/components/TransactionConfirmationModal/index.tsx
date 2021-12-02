@@ -7,7 +7,7 @@ import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { RowBetween, RowFixed } from '../Row'
-import { AlertTriangle, ArrowUpCircle } from 'react-feather'
+import { ArrowUpCircle } from 'react-feather'
 import { ReactComponent as Alert } from '../../assets/images/alert.svg'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -17,7 +17,6 @@ import MetaMaskLogo from '../../assets/images/metamask.png'
 import { getEtherscanLink, getEtherscanLinkText, getTokenLogoURL } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { errorFriendly } from 'utils/dmm'
 
 const Wrapper = styled.div`
@@ -130,7 +129,7 @@ function TransactionSubmittedContent({
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <ConfirmedIcon>
-          <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
+          <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary} />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20}>
@@ -138,7 +137,7 @@ function TransactionSubmittedContent({
           </Text>
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
-              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
+              <Text fontWeight={500} fontSize={14} color={theme.primary}>
                 {getEtherscanLinkText(chainId)}
               </Text>
             </ExternalLink>
@@ -187,7 +186,7 @@ const ErrorDetail = styled(Section)`
   padding: 12px;
   border-radius: 4px;
   margin-top: 12px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => `${theme.bg12}66`};
   font-size: 10px;
   width: 100%;
@@ -224,10 +223,10 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
             {/* {message.includes('minTotalAmountOut') &&
               ' Try to refresh the exchange rate or increase the Slippage tolerance in Settings'} */}
           </Text>
-          {message != errorFriendly(message) && (
+          {message !== errorFriendly(message) && (
             <AutoColumn justify="center" style={{ width: '100%' }}>
               <Text
-                color={theme.primary1}
+                color={theme.primary}
                 fontSize="14px"
                 sx={{ cursor: `pointer` }}
                 onClick={() => setShowDetail(!showDetail)}

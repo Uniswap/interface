@@ -1,27 +1,37 @@
 import { Currency, TradeType } from '@dynamic-amm/sdk'
 import React, { useContext, useState } from 'react'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { Aggregator } from '../../utils/aggregator'
 import { formattedNum } from '../../utils'
-import TradePrice from './TradePrice'
+import { Text } from 'rebass'
+import { ChevronUp, Eye } from 'react-feather'
+import Divider from 'components/Divider'
+import { ButtonEmpty } from 'components/Button'
+import InfoHelper from 'components/InfoHelper'
+
+const IconWrapper = styled.div<{ show: boolean }>`
+  padding: 0 8px;
+  transform: rotate(${({ show }) => (show ? '0deg' : '180deg')});
+  transition: transform 300ms;
+`
 
 interface TradeSummaryProps {
   trade: Aggregator
   allowedSlippage: number
+  toggleRoute: () => void
 }
 
-function TradeSummary({ trade, allowedSlippage }: TradeSummaryProps) {
+function TradeSummary({ trade, allowedSlippage, toggleRoute }: TradeSummaryProps) {
   const theme = useContext(ThemeContext)
-  const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [show, setShow] = useState(false)
 
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
@@ -30,42 +40,79 @@ function TradeSummary({ trade, allowedSlippage }: TradeSummaryProps) {
   const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
   return (
     <>
-      <AutoColumn style={{ padding: '0 20px' }} gap="0.375rem">
-        <RowBetween>
-          <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-            {t`Price`}
-          </TYPE.black>
-          <TradePrice price={trade?.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
+      <AutoColumn gap="0.75rem">
+        <RowBetween style={{ cursor: 'pointer' }} onClick={() => setShow(prev => !prev)} role="button">
+          <Text fontSize={12} fontWeight={500} color={theme.text}>
+            <Trans>MORE INFORMATION</Trans>
+          </Text>
+          <IconWrapper show={show}>
+            <ChevronUp size={16} color={theme.text} />
+          </IconWrapper>
         </RowBetween>
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {isExactIn ? t`Minimum received` : t`Maximum sold`}
-            </TYPE.black>
-            <QuestionHelper
-              text={t`Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.`}
-            />
-          </RowFixed>
-          <RowFixed>
-            <TYPE.black color={theme.text1} fontSize={14}>
-              {isExactIn
-                ? !!slippageAdjustedAmounts[Field.OUTPUT]
-                  ? `${formattedNum(slippageAdjustedAmounts[Field.OUTPUT]!.toSignificant(10))} ${nativeOutput?.symbol}`
-                  : '-'
-                : !!slippageAdjustedAmounts[Field.INPUT]
-                ? `${formattedNum(slippageAdjustedAmounts[Field.INPUT]!.toSignificant(10))} ${nativeInput?.symbol}`
-                : '-'}
-            </TYPE.black>
-          </RowFixed>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-            <Trans>Estimated cost</Trans>
-          </TYPE.black>
-          <TYPE.black color={theme.text1} fontSize={14}>
-            {formattedNum(trade.gasUsd?.toString(), true)}
-          </TYPE.black>
-        </RowBetween>
+        {show && (
+          <>
+            <Divider />
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
+                  {isExactIn ? t`Minimum Received` : t`Maximum Sold`}
+                </TYPE.black>
+                <InfoHelper size={14} text={t`Minimum amount you will receive or your transaction will revert`} />
+              </RowFixed>
+              <RowFixed>
+                <TYPE.black color={theme.text} fontSize={12}>
+                  {isExactIn
+                    ? !!slippageAdjustedAmounts[Field.OUTPUT]
+                      ? `${formattedNum(slippageAdjustedAmounts[Field.OUTPUT]!.toSignificant(10))} ${
+                          nativeOutput?.symbol
+                        }`
+                      : '-'
+                    : !!slippageAdjustedAmounts[Field.INPUT]
+                    ? `${formattedNum(slippageAdjustedAmounts[Field.INPUT]!.toSignificant(10))} ${nativeInput?.symbol}`
+                    : '-'}
+                </TYPE.black>
+              </RowFixed>
+            </RowBetween>
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
+                  <Trans>Gas Fee</Trans>
+                </TYPE.black>
+
+                <InfoHelper size={14} text={t`Estimated network fee for your transaction`} />
+              </RowFixed>
+              <TYPE.black color={theme.text} fontSize={12}>
+                {formattedNum(trade.gasUsd?.toString(), true)}
+              </TYPE.black>
+            </RowBetween>
+
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
+                  <Trans>Price Impact</Trans>
+                </TYPE.black>
+                <InfoHelper size={14} text={t`Estimated change in price due to the size of your transaction`} />
+              </RowFixed>
+              <TYPE.black fontSize={12} color={trade.priceImpact > 5 ? theme.red : theme.text}>
+                {trade.priceImpact > 0.01 ? trade.priceImpact.toFixed(3) : '< 0.01'}%
+              </TYPE.black>
+            </RowBetween>
+
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
+                  <Trans>Route</Trans>
+                </TYPE.black>
+              </RowFixed>
+              <ButtonEmpty padding="0" width="max-content" onClick={toggleRoute}>
+                <Text fontSize={12} marginRight="4px">
+                  <Trans>View your trade route</Trans>
+                </Text>
+                <Eye size={16} />
+              </ButtonEmpty>
+            </RowBetween>
+          </>
+        )}
       </AutoColumn>
     </>
   )
@@ -73,16 +120,17 @@ function TradeSummary({ trade, allowedSlippage }: TradeSummaryProps) {
 
 export interface AdvancedSwapDetailsProps {
   trade?: Aggregator
+  toggleRoute: () => void
 }
 
-export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade, toggleRoute }: AdvancedSwapDetailsProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
 
   return (
     <AutoColumn gap="md">
       {trade && (
         <>
-          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
+          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} toggleRoute={toggleRoute} />
         </>
       )}
     </AutoColumn>

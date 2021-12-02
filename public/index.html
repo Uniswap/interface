@@ -2,17 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
-    <link rel="apple-touch-icon" sizes="any" href="%PUBLIC_URL%/logo.svg" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico?version=v" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon.png?version=v" />
+    <link rel="apple-touch-icon" sizes="any" href="%PUBLIC_URL%/logo.svg?version=v" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#08a1e7" />
     <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
     <meta
       name="description"
-      content="KyberDMM is DeFi’s first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. KyberDMM is the first major protocol in Kyber’s liquidity hub."
+      content="KyberSwap is DeFi’s first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. KyberSwap is the first major protocol in Kyber’s liquidity hub."
     />
+
+    <meta property="og:image" content="/og-image.jpg" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -28,10 +30,14 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-    <title>KyberDMM - Swap tokens at the best rates</title>
+    <title>KyberSwap - Swap and earn tokens at the best rates</title>
   </head>
+
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
@@ -57,6 +63,7 @@
 
       .preloadhtml-logo {
         transition: transform 0.3s ease;
+
         :hover {
           transform: rotate(-5deg);
         }
@@ -71,15 +78,18 @@
 
       .preloadhtml-header-link-item {
         padding: 10px 12px;
+        width: max-content;
       }
 
       @keyframes pulse {
         0% {
           transform: scale(1);
         }
+
         60% {
           transform: scale(1.1);
         }
+
         100% {
           transform: scale(1);
         }
@@ -88,10 +98,10 @@
     <div class="preloadhtml">
       <div class="preloadhtml-header">
         <div>
-          <img width="100px" height="44px" src="/logo.svg" alt="DmmLogo" />
+          <img style="margin-top:1px;" width="140px" src="/logo-dark.svg" alt="DmmLogo" />
         </div>
         <div class="preloadhtml-header-link">
-          <div style="color: #fff; font-weight: 500;" class="preloadhtml-header-link-item">Swap</div>
+          <div style="color: #31CB9E; font-weight: 500;" class="preloadhtml-header-link-item">Swap</div>
           <div class="preloadhtml-header-link-item">Pools</div>
           <div class="preloadhtml-header-link-item">My Pools</div>
           <div class="preloadhtml-header-link-item" style="position: relative; margin-right: 16px;">
@@ -108,15 +118,14 @@
             </div>
           </div>
           <div class="preloadhtml-header-link-item">Analytics</div>
-          <div class="preloadhtml-header-link-item">Migrate Liquidity</div>
           <div class="preloadhtml-header-link-item">About</div>
         </div>
       </div>
       <div style="margin-top: 100px; display: flex;">
         <img
           style="animation: pulse 800ms linear infinite; margin: auto; "
-          width="120px"
-          src="/logo.svg"
+          width="160px"
+          src="/logo-dark.svg"
           alt="DmmLogo"
         />
       </div>

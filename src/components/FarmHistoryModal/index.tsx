@@ -22,15 +22,19 @@ const Wrapper = styled.div`
   padding: 28px 34px 40px;
   max-height: 80vh;
   .title {
-    padding-bottom: 15px;
-    border-bottom: 1px solid #5b676d;
-    margin-bottom: 15px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid ${({ theme }) => theme.border};
+    margin-bottom: 16px;
     font-size: 18px;
     text-align: center;
   }
   .break-word {
     word-break: break-word;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    padding 16px 16px 40px;
+  `}
 `
 const Row = styled.div`
   display: grid;

@@ -1,15 +1,15 @@
 {
-  "short_name": "DmmExchange",
-  "name": "DmmExchange",
+  "short_name": "KyberSwap",
+  "name": "KyberSwap",
   "icons": [
     {
-      "src": "./favicon.svg",
+      "src": "./favicon.svg?version=v",
       "sizes": "any",
       "purpose": "any maskable"
     }
   ],
   "orientation": "portrait",
   "display": "standalone",
-  "theme_color": "#4285f4",
+  "theme_color": "#31cb9e",
   "background_color": "#fff"
 }

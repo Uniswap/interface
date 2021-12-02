@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
-import { Text } from 'rebass'
+import { Text, Flex } from 'rebass'
 import { X } from 'react-feather'
 
 import QuestionHelper from '../QuestionHelper'
@@ -15,7 +15,7 @@ import useTheme from 'hooks/useTheme'
 import { useModalOpen, useToggleTransactionSettingsMenu } from 'state/application/hooks'
 import Toggle from 'components/Toggle'
 import Modal from 'components/Modal'
-import { ButtonError } from 'components/Button'
+import { ButtonPrimary, ButtonOutlined } from 'components/Button'
 import { ApplicationModal } from 'state/application/actions'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
@@ -32,8 +32,9 @@ enum DeadlineError {
 }
 
 const FancyButton = styled.button`
-  color: ${({ theme }) => theme.text1};
-  align-items: center;
+  color: ${({ theme }) => theme.text};
+  padding: 0;
+  text-align: center;
   height: 2rem;
   border-radius: 36px;
   font-size: 1rem;
@@ -46,17 +47,17 @@ const FancyButton = styled.button`
     border: 1px solid ${({ theme }) => theme.bg4};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.primary};
   }
 `
 
 const Option = styled(FancyButton)<{ active: boolean }>`
-  margin-right: 8px;
+  margin-right: 6px;
   :hover {
     cursor: pointer;
   }
-  background-color: ${({ active, theme }) => active && theme.primary1};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
+  background-color: ${({ active, theme }) => active && theme.primary};
+  color: ${({ active, theme }) => (active ? theme.white : theme.text)};
 `
 
 const Input = styled.input`
@@ -68,19 +69,20 @@ const Input = styled.input`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
+  color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text)};
   text-align: right;
 `
 
 const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }>`
   height: 2rem;
   position: relative;
+  min-width: 6rem;
   padding: 0 0.75rem;
   flex: 1;
-  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
+  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary}`};
   :hover {
     border: ${({ theme, active, warning }) =>
-      active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)}`};
+      active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary)}`};
   }
 
   input {
@@ -94,35 +96,28 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
 const SlippageEmojiContainer = styled.span`
   color: #f3841e;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;  
+    display: none;
   `}
 `
 
 const StyledCloseIcon = styled(X)`
-  height: 20px;
-  width: 20px;
+  height: 28px;
+  width: 28px;
   :hover {
     cursor: pointer;
   }
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.text};
   }
-`
-
-const Break = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.bg3};
 `
 
 const ModalContentWrapper = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 0;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 20px;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px 24px 28px;
+  background-color: ${({ theme }) => theme.background};
 `
 
 const StyledMenuButton = styled.button`
@@ -160,7 +155,7 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 20.125rem;
+  min-width: 322px;
   background-color: ${({ theme }) => theme.tableHeader};
   filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.36));
   border-radius: 8px;
@@ -175,8 +170,22 @@ const MenuFlyout = styled.span`
 
 const MenuFlyoutTitle = styled.div`
   padding-bottom: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.border4};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
   color: ${({ theme }) => theme.text};
+`
+
+const StyledInput = styled.input`
+  margin-top: 24px;
+  background: ${({ theme }) => theme.buttonBlack};
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 16px;
+  outline: none;
+  color: ${({ theme }) => theme.text};
+  border: none;
+  &:placeholder {
+    color: ${({ theme }) => theme.disableText};
+  }
 `
 
 export interface SlippageTabsProps {
@@ -243,7 +252,7 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
       <AutoColumn gap="sm">
         <RowFixed>
           <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
-            <Trans>Slippage tolerance</Trans>
+            <Trans>Max Slippage</Trans>
           </TYPE.black>
           <QuestionHelper
             text={t`Transaction will revert if there is an adverse rate change that is higher than this %`}
@@ -363,45 +372,74 @@ export default function TransactionSettings() {
   const showTooltip = useCallback(() => setIsShowTooltip(true), [setIsShowTooltip])
   const hideTooltip = useCallback(() => setIsShowTooltip(false), [setIsShowTooltip])
 
+  const [confirmText, setConfirmText] = useState('')
+
   return (
     <>
-      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
+      <Modal
+        isOpen={showConfirmation}
+        onDismiss={() => {
+          setConfirmText('')
+          setShowConfirmation(false)
+        }}
+        maxHeight={100}
+      >
         <ModalContentWrapper>
-          <AutoColumn gap="lg">
-            <RowBetween style={{ padding: '0 2rem' }}>
-              <div />
-              <Text fontWeight={500} fontSize={20}>
-                <Trans>Please Confirm</Trans>
-              </Text>
-              <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
-            </RowBetween>
-            <Break />
-            <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <Text fontWeight={500} fontSize={20}>
-                <Trans>
-                  In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades
-                  that often result in bad rates.
-                </Trans>
-              </Text>
-              <Text fontWeight={600} fontSize={20}>
-                <Trans>ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS</Trans>
-              </Text>
-              <ButtonError
-                error={true}
-                padding={'12px'}
-                onClick={() => {
-                  if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
-                    toggleExpertMode()
-                    setShowConfirmation(false)
-                  }
-                }}
-              >
-                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
-                  <Trans>Turn On Advanced Mode</Trans>
-                </Text>
-              </ButtonError>
-            </AutoColumn>
-          </AutoColumn>
+          <Flex alignItems="center" justifyContent="space-between">
+            <Text fontSize="20px" fontWeight={500}>
+              <Trans>Are you sure?</Trans>
+            </Text>
+
+            <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
+          </Flex>
+
+          <Text marginTop="28px">
+            <Trans>
+              <Text color={theme.warning} as="span" fontWeight="500">
+                Advanced Mode
+              </Text>{' '}
+              turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates
+              and lost funds.
+            </Trans>
+          </Text>
+
+          <Text marginTop="24px">
+            <Trans>Please type the word 'confirm' below to enable Advanced Mode</Trans>
+          </Text>
+
+          <StyledInput placeholder="Confirm" value={confirmText} onChange={e => setConfirmText(e.target.value)} />
+
+          <Text color={theme.disableText} marginTop="8px" fontSize="10px">
+            <Trans>Use this mode if you are aware of the risks</Trans>
+          </Text>
+
+          <Flex sx={{ gap: '12px' }} marginTop="28px">
+            <ButtonPrimary
+              style={{
+                border: 'none',
+                background: theme.warning,
+                fontSize: '18px'
+              }}
+              onClick={() => {
+                if (confirmText.trim().toLowerCase() === 'confirm') {
+                  toggleExpertMode()
+                  setConfirmText('')
+                  setShowConfirmation(false)
+                }
+              }}
+            >
+              <Trans>Confirm</Trans>
+            </ButtonPrimary>
+            <ButtonOutlined
+              onClick={() => {
+                setConfirmText('')
+                setShowConfirmation(false)
+              }}
+              style={{ fontSize: '18px' }}
+            >
+              <Trans>Cancel</Trans>
+            </ButtonOutlined>
+          </Flex>
         </ModalContentWrapper>
       </Modal>
 
@@ -417,7 +455,7 @@ export default function TransactionSettings() {
 
         {open && (
           <MenuFlyout>
-            <AutoColumn gap="16px" style={{ padding: '20px' }}>
+            <AutoColumn gap="16px" style={{ padding: '16px' }}>
               <MenuFlyoutTitle>
                 <Text fontWeight={500} fontSize={16} color={theme.text}>
                   <Trans>Advanced Settings</Trans>

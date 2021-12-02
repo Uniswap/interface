@@ -39,8 +39,7 @@ export const GlobalDataItem = styled.div`
   align-items: center;
   padding: 8px 16px;
   border-radius: 5px;
-  border: dashed 1px ${({ theme }) => theme.border};
-  background-color: ${({ theme }) => theme.advancedBG};
+  background-color: ${({ theme }) => theme.background};
 `
 
 export const GlobalDataItemTitle = styled.span`
@@ -51,7 +50,7 @@ export const GlobalDataItemTitle = styled.span`
 export const GlobalDataItemValue = styled.span`
   font-size: 18px;
   font-weight: 500;
-  color: ${({ theme }) => theme.blue};
+  color: ${({ theme }) => theme.primary};
 `
 
 export const AddLiquidityInstructionContainer = styled.div`
@@ -63,13 +62,13 @@ export const AddLiquidityInstructionContainer = styled.div`
 
 export const AddLiquidityTitle = styled.span`
   font-size: 14px;
-  color: ${({ theme }) => theme.blue};
+  color: ${({ theme }) => theme.primary};
   margin-right: 0.5rem;
 `
 
 export const AddLiquidityInstructionText = styled.span`
   font-size: 14px;
-  color: ${({ theme }) => theme.text11};
+  color: ${({ theme }) => theme.text};
 `
 
 export const ToolbarWrapper = styled.div`
@@ -93,6 +92,7 @@ export const CurrencyWrapper = styled.div`
 
 export const SearchWrapper = styled(Flex)`
   align-items: center;
+  gap: 12px;
 `
 
 export const SelectPairInstructionWrapper = styled.div`

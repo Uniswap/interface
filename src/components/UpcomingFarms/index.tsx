@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 import RainMakerBannel from 'assets/images/rain-maker.png'
 import RainMakerMobileBanner from 'assets/images/rain-maker-mobile.png'
 import { UPCOMING_POOLS } from 'constants/upcoming-pools'
-import { AdContainer, ClickableText } from 'components/YieldPools/styleds'
+import { AdContainer, ClickableText, LearnMoreBtn } from 'components/YieldPools/styleds'
 import NoFarms from './NoFarms'
 import ListItem from './ListItem'
 import { TableWrapper, TableHeader, RowsWrapper } from './styled'
@@ -57,6 +57,10 @@ const UpcomingFarms = ({ setActiveTab }: { setActiveTab: (activeTab: number) => 
   return (
     <>
       <AdContainer>
+        <LearnMoreBtn href="https://docs.kyberswap.com/guides/yield-farming" target="_blank" rel="noopener noreferrer">
+          <Trans>Learn more</Trans> -&gt;
+        </LearnMoreBtn>
+
         <img src={lgBreakpoint ? RainMakerBannel : RainMakerMobileBanner} alt="RainMaker" width="100%" />
       </AdContainer>
 

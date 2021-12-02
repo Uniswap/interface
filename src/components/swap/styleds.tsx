@@ -33,15 +33,15 @@ export const BottomGrouping = styled.div`
   margin-top: 2rem;
 `
 
-export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
+export const ErrorText = styled(Text) <{ severity?: 0 | 1 | 2 | 3 | 4 }>`
   color: ${({ theme, severity }) =>
     severity === 3 || severity === 4
       ? theme.red1
       : severity === 2
-      ? theme.yellow2
-      : severity === 1
-      ? theme.text1
-      : theme.green1};
+        ? theme.yellow2
+        : severity === 1
+          ? theme.text
+          : theme.green1};
 `
 
 export const StyledBalanceMaxMini = styled.button`
@@ -139,8 +139,8 @@ export function SwapCallbackError({ error }: { error: string }) {
 }
 
 export const SwapShowAcceptChanges = styled(AutoColumn)`
-  background-color: ${({ theme }) => transparentize(0.9, theme.primary1)};
-  color: ${({ theme }) => theme.primary1};
+  background-color: ${({ theme }) => transparentize(0.9, theme.primary)};
+  color: ${({ theme }) => theme.primary};
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;

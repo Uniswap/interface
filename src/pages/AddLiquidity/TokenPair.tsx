@@ -16,7 +16,7 @@ import TransactionConfirmationModal, {
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES } from '../../constants'
+import { ROUTER_ADDRESSES, AMP_HINT } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -328,6 +328,7 @@ const TokenPair = ({
         onAdd={onAdd}
         poolTokenPercentage={poolTokenPercentage}
         amplification={ampConvertedInBps}
+        estimatedUsd={[estimatedUsdCurrencyA, estimatedUsdCurrencyB]}
       />
     )
   }
@@ -514,7 +515,7 @@ const TokenPair = ({
             {currencies[independentField] && currencies[dependentField] && pairState !== PairState.INVALID && (
               <Section borderRadius={'20px'} marginBottom="28px">
                 <ToggleComponent title={t`Pool Information`}>
-                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border4}`, gap: '1rem' }}>
+                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border}`, gap: '1rem' }}>
                     {!noLiquidity && (
                       <CurrentPriceWrapper>
                         <TYPE.subHeader fontWeight={500} fontSize={12} color={theme.subText}>
@@ -540,15 +541,13 @@ const TokenPair = ({
                     </PoolRatioWrapper>
                   </AutoRow>
 
-                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border4}`, gap: '1rem' }}>
+                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border}`, gap: '1rem' }}>
                     <AutoColumn style={{ flex: '1' }}>
                       <AutoRow>
                         <Text fontWeight={500} fontSize={12} color={theme.subText}>
                           AMP
                         </Text>
-                        <QuestionHelper
-                          text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
-                        />
+                        <QuestionHelper text={AMP_HINT} />
                       </AutoRow>
                       <Text fontWeight={400} fontSize={14} color={theme.text}>
                         {!!pair ? <>{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</> : ''}
@@ -629,7 +628,7 @@ const TokenPair = ({
                           {approvalA === ApprovalState.PENDING ? (
                             <Dots>Approving {nativeA?.symbol}</Dots>
                           ) : (
-                            'Approve ' + nativeB?.symbol
+                            'Approve ' + nativeA?.symbol
                           )}
                         </ButtonPrimary>
                       )}

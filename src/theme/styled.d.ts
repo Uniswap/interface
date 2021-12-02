@@ -8,12 +8,11 @@ export interface Colors {
 
   // text
   text: Color
+  textReverse: Color
   subText: Color
-  text1: Color
   text2: Color
   text3: Color
   text4: Color
-  text5: Color
   text6: Color
   text7: Color
   text8: Color
@@ -46,6 +45,7 @@ export interface Colors {
   bg17: Color
   bg18: Color
   bg19: Color
+  bg20: Color
   buttonBlack: Color
   buttonGray: Color
   poweredByText: Color
@@ -55,13 +55,12 @@ export interface Colors {
   advancedBorder: Color
 
   //blues
-  primary1: Color
+  primary: Color
   primary2: Color
   primary3: Color
   primary4: Color
   primary5: Color
 
-  primaryText1: Color
   primaryText2: Color
 
   // pinks
@@ -72,9 +71,7 @@ export interface Colors {
 
   // border colors
   border: Color
-  border2: Color
-  border3: Color
-  border4: Color
+  btnOutline: Color
 
   // table colors
   oddRow: Color
@@ -94,6 +91,8 @@ export interface Colors {
   lightBlue: Color
   darkBlue: Color
   blue: Color
+  lightGreen: Color
+  apr: Color
 }
 
 export interface Grids {

@@ -7,8 +7,6 @@ const InfoCard = styled.button<{ active?: boolean }>`
   outline: none;
   border: none;
   border-radius: 8px;
-  width: 48%;
-  margin: 0 4% 20px 0;
   text-transform: uppercase;
   &:nth-child(2n) {
     margin-right: 0;
@@ -55,13 +53,13 @@ const StyledLink = styled(ExternalLink)`
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : ({ theme }) => theme.text1)};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary : ({ theme }) => theme.text)};
   font-size: 14px;
   font-weight: 500;
 `
 
 const SubHeader = styled.div`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text};
   margin-top: 10px;
   font-size: 12px;
 `

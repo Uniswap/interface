@@ -9,7 +9,6 @@ import { useBlockNumber, useFarmHistoryModalToggle } from 'state/application/hoo
 import { AVERAGE_BLOCK_TIME_IN_SECS } from '../../constants'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
-import HistoryImg from 'assets/svg/history.svg'
 import {
   PageWrapper,
   TopBar,
@@ -19,7 +18,8 @@ import {
   PoolTitleContainer,
   UpcomingPoolsWrapper,
   NewText,
-  HistoryButton
+  HistoryButton,
+  Divider
 } from '../../components/YieldPools/styleds'
 import Vesting from 'components/Vesting'
 import FarmHistoryModal from 'components/FarmHistoryModal'
@@ -29,6 +29,8 @@ import YieldPools from 'components/YieldPools'
 import RewardTokenPrices from 'components/RewardTokenPrices'
 import { Text } from 'rebass'
 import UpcomingFarms from 'components/UpcomingFarms'
+import History from 'components/Icons/History'
+import { UPCOMING_POOLS } from 'constants/upcoming-pools'
 
 const Farms = () => {
   const { chainId } = useActiveWeb3React()
@@ -66,13 +68,16 @@ const Farms = () => {
     })
 
   const renderTabContent = () => {
-    return activeTab === 0 ? (
-      <YieldPools loading={loading} setActiveTab={setActiveTab} />
-    ) : activeTab === 1 ? (
-      <Vesting loading={vestingLoading} />
-    ) : (
-      <UpcomingFarms setActiveTab={setActiveTab} />
-    )
+    switch (activeTab) {
+      case 0:
+        return <YieldPools loading={loading} active />
+      case 2:
+        return <UpcomingFarms setActiveTab={setActiveTab} />
+      case 1:
+        return <YieldPools loading={loading} active={false} />
+      default:
+        return <Vesting loading={vestingLoading} />
+    }
   }
 
   return (
@@ -81,7 +86,7 @@ const Farms = () => {
         <TopBar>
           <RewardTokenPrices />
           <HistoryButton onClick={toggleFarmHistoryModal} style={{ marginLeft: '16px' }}>
-            <img src={HistoryImg} alt="HistoryImg" />
+            <History />
             <Trans>History</Trans>
           </HistoryButton>
         </TopBar>
@@ -90,27 +95,40 @@ const Farms = () => {
           <TabWrapper>
             <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
               <PoolTitleContainer>
-                <span style={{ marginRight: '4px' }}>
-                  <Trans>All Farms</Trans>
+                <span>
+                  <Trans>Active</Trans>
                 </span>
-                {loading && <Loader />}
+                {loading && <Loader style={{ marginLeft: '4px' }} />}
               </PoolTitleContainer>
             </Tab>
             <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
               <PoolTitleContainer>
-                <Text marginRight="0.25rem">
-                  <Trans>Vesting</Trans>
-                </Text>
-                {vestingLoading && <Loader />}
+                <span>
+                  <Trans>Ended</Trans>
+                </span>
               </PoolTitleContainer>
             </Tab>
+
             <Tab onClick={() => setActiveTab(2)} isActive={activeTab === 2}>
               <UpcomingPoolsWrapper>
-                <Trans>Upcoming Farms</Trans>
-                <NewText>
-                  <Trans>New</Trans>
-                </NewText>
+                <Trans>Upcoming</Trans>
+                {UPCOMING_POOLS.length > 0 && (
+                  <NewText>
+                    <Trans>New</Trans>
+                  </NewText>
+                )}
               </UpcomingPoolsWrapper>
+            </Tab>
+
+            <Divider />
+
+            <Tab onClick={() => setActiveTab(3)} isActive={activeTab === 3}>
+              <PoolTitleContainer>
+                <Text>
+                  <Trans>My Vesting</Trans>
+                </Text>
+                {vestingLoading && <Loader style={{ marginLeft: '4px' }} />}
+              </PoolTitleContainer>
             </Tab>
           </TabWrapper>
         </TabContainer>

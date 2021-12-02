@@ -84,13 +84,13 @@ export const PoolName = styled.div`
 export const FirstColumn = styled(AutoColumn)`
   grid-auto-rows: min-content;
   padding-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.border4};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
   gap: 1rem;
 
   @media only screen and (min-width: 768px) {
     padding-right: 24px;
     padding-bottom: 0;
-    border-right: 1px solid ${({ theme }) => theme.border4};
+    border-right: 1px solid ${({ theme }) => theme.border};
     border-bottom: none;
   }
 `
@@ -119,7 +119,7 @@ export const ActiveText = styled.div`
 
 export const Section = styled(Card)`
   padding: 16px 12px;
-  border: 1px solid ${({ theme }) => theme.border4};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 4px;
 
   @media only screen and (min-width: 768px) {
@@ -133,7 +133,7 @@ export const CurrentPriceWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  border-bottom: 1px dashed ${({ theme }) => theme.border4};
+  border-bottom: 1px dashed ${({ theme }) => theme.border};
   padding-bottom: 8px;
 `
 
@@ -173,7 +173,7 @@ export const Warning = styled.div`
 
 export const DetailWrapper = styled(AutoColumn)`
   padding: 1rem 1rem 12px;
-  border: 1px solid ${({ theme }) => theme.border4};
+  border: 1px solid ${({ theme }) => theme.border};
   margin: 24px 0 28px;
   border-radius: 4px;
 `

@@ -1,0 +1,1966 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-11-30 09:01+0700\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: tl-PH\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/SwapV2/index.tsx
+msgid "+ Add Recipient (optional)"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+msgid "+ Add a send (optional)"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+#: src/pages/Pools/index.tsx
+msgid "+ Create New Pool"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "- Remove"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "- Remove Recipient"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+msgid "- Remove send"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "24H Trading Volume"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "AMP"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "AMP Liquidity"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity."
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
+msgid "APR"
+msgstr ""
+
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+msgid "About"
+msgstr ""
+
+#: src/components/WalletModal/index.tsx
+#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+msgid "Accept"
+msgstr ""
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "Accept update"
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+msgid "Account"
+msgstr ""
+
+#: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Yield/index.tsx
+msgid "Active"
+msgstr ""
+
+#: src/components/PoolPriceBar/index.tsx
+msgid "Active Price Range"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Add Liquidity"
+msgstr ""
+
+#: src/components/PoolList/index.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Add liquidity"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
+msgstr ""
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Add liquidity for single token {0} with amount of {1}"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "Add liquidity:"
+msgstr ""
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Add {0} to Metamask"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Mode"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced mode is on!"
+msgstr ""
+
+#: src/components/Header/URLWarning.tsx
+msgid "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
+msgstr ""
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Amount"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Amplified Liquidity Pools"
+msgstr ""
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "An update is available for the token list \"{0}\" ({1} to {2})."
+msgstr ""
+
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+msgid "Analytics"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Analytics ↗"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Approve"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Approve {0}"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Approved"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Approving"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Are you sure?"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+msgid "Available for yield farming"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "BONUS REWARDS"
+msgstr ""
+
+#: src/components/WalletModal/index.tsx
+msgid "Back"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Balance"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Balance: {0} {1}-{2} LP"
+msgstr ""
+
+#: src/components/Header/index.tsx
+msgid "Bridge Assets"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Bug Bounty"
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
+msgstr ""
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "CLAIM"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "CLAIMED"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Calculating best route"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Cancel"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Chains"
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+msgid "Change"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Checking allowance..."
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "Claim"
+msgstr ""
+
+#: src/components/Vesting/UnlockedBlock.tsx
+msgid "Claim All"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "Claimed Rewards"
+msgstr ""
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Clear all"
+msgstr ""
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Close"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Code Audited"
+msgstr ""
+
+#: src/components/UpcomingFarms/StartingIn.tsx
+msgid "Coming soon"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Committed to Security"
+msgstr ""
+
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Confirm"
+msgstr ""
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/ConfirmSwapModal.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr ""
+
+#: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm this transaction in your wallet"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Connect Wallet"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Connect to a wallet to find pools"
+msgstr ""
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+msgid "Connect to a wallet to view your liquidity."
+msgstr ""
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks_sushi.ts
+#: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
+msgid "Connect wallet"
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+msgid "Connected with {name}"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Contact Us"
+msgstr ""
+
+#: src/constants/messages.ts
+msgid "Contract not found! Please reload and try again."
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the KyberSwap and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address."
+msgstr ""
+
+#: src/components/AccountDetails/Copy.tsx
+msgid "Copied"
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+#: src/components/AccountDetails/index.tsx
+msgid "Copy Address"
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "Create"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Create a new pool"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "Create a new pool or select another pair of tokens to view the available pools."
+msgstr ""
+
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Current Price"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Current Price:"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
+msgstr ""
+
+#: src/components/YieldPools/index.tsx
+msgid "Currently there are no Farms."
+msgstr ""
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Custom"
+msgstr ""
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "DEPOSIT"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "DEXs"
+msgstr ""
+
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Deposit: {0} {1}-{2} LP"
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+msgid "Disconnect"
+msgstr ""
+
+#: src/components/Popups/ListUpdatePopup.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Dismiss"
+msgstr ""
+
+#: src/components/Menu/index.tsx
+#: src/pages/About/index.tsx
+#: src/pages/About/index.tsx
+msgid "Docs"
+msgstr ""
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+msgid "Don't see a pool you joined?"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "Duration: {duration}"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+msgid "Dynamic Fee Range"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Dynamic Fees"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Earn fees and rewards by depositing your tokens into our pools."
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Earn more with your crypto assets"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enables high slippage trades. Use at your own risk."
+msgstr ""
+
+#: src/pages/Yield/index.tsx
+msgid "Ended"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
+msgid "Ending In"
+msgstr ""
+
+#: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
+msgid "Enter a recipient"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+msgid "Enter amp (>=1)"
+msgstr ""
+
+#: src/hooks/useWrapCallback.ts
+#: src/hooks/useWrapCallback.ts
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks_sushi.ts
+#: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
+msgid "Enter an amount"
+msgstr ""
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Enter valid token address"
+msgstr ""
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Error"
+msgstr ""
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Error connecting."
+msgstr ""
+
+#: src/components/WalletModal/index.tsx
+msgid "Error connecting. Try refreshing the page."
+msgstr ""
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Estimated Refund"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Estimated change in price due to the size of your transaction"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Estimated network fee for your transaction"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/YieldPools/index.tsx
+msgid "Estimated return based on yearly fees of the pool"
+msgstr ""
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "FOR LIQUIDITY PROVIDERS"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "FOR TRADERS"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "FULL UNLOCK"
+msgstr ""
+
+#: src/components/Header/index.tsx
+msgid "Farm"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+msgid "Fee (24h)"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+msgid "Fee Range"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Fees (24H)"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+msgid "Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers."
+msgstr ""
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Find a token by searching for its name or symbol or by pasting its address below."
+msgstr ""
+
+#: src/components/Menu/index.tsx
+#: src/pages/About/index.tsx
+msgid "Forum"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "From"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "From (estimated)"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "Fully Vested"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Gas Fee"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Get pool info"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Get {0}-{1} LP ↗"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Github"
+msgstr ""
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "HARVEST"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "HIGHER RETURNS"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Harvest"
+msgstr ""
+
+#: src/components/YieldPools/HarvestAll.tsx
+msgid "Harvest All"
+msgstr ""
+
+#: src/pages/Pool/index.tsx
+msgid "Here you can view all your liquidity positions and add/remove more liquidity."
+msgstr ""
+
+#: src/components/FarmHistoryModal/index.tsx
+#: src/pages/Yield/index.tsx
+msgid "History"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "I understand"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "If you purchase a token from this list, you may not be able to sell it back."
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Import"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import List"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import Pool"
+msgstr ""
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Import Token"
+msgstr ""
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Import Tokens"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import at your own risk"
+msgstr ""
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+msgid "Import it."
+msgstr ""
+
+#: src/components/WalletModal/index.tsx
+msgid "Import your Wallet"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Includes DEX aggregation"
+msgstr ""
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Information"
+msgstr ""
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Initializing..."
+msgstr ""
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+msgid "Input is estimated. You will sell at most"
+msgstr ""
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Insufficient Liquidity in the Liquidity Pool to Swap"
+msgstr ""
+
+#: src/hooks/useWrapCallback.ts
+msgid "Insufficient W{0} balance"
+msgstr ""
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
+msgid "Insufficient balance"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Insufficient liquidity available. Please reload page and try again"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Insufficient liquidity available. Please reload page and try again!"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr ""
+
+#: src/hooks/useWrapCallback.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
+msgid "Insufficient {0} balance"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Insured by"
+msgstr ""
+
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
+msgid "Invalid amount"
+msgstr ""
+
+#: src/state/mint/hooks_for_migration.ts
+msgid "Invalid pair"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "Invalid pair."
+msgstr ""
+
+#: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
+msgid "Invalid recipient"
+msgstr ""
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "KyberSwap available in: <0>{0}</0>"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "KyberSwap is DeFi’s first dynamic market maker, providing the best token rates for traders and maximizing returns for liquidity providers, in one decentralized platform"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "LOCKED"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "LOWER SLIPPAGE"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "LP Tokens Removed"
+msgstr ""
+
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr ""
+
+#: src/pages/About/index.tsx
+#: src/pages/About/index.tsx
+#: src/pages/About/index.tsx
+msgid "Learn More"
+msgstr ""
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+#: src/components/YieldPools/index.tsx
+msgid "Learn more"
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Liquidity Provider Fee"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "List your tokens permissionlessly"
+msgstr ""
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr ""
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Loaded"
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Loading"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "Locked Rewards"
+msgstr ""
+
+#: src/components/swapv2/TradeTypeSelection.tsx
+msgid "Lowest Gas"
+msgstr ""
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "MORE INFORMATION"
+msgstr ""
+
+#: src/components/Header/URLWarning.tsx
+msgid "Make sure the URL is<0>KyberSwap.com</0>"
+msgstr ""
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Manage"
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+msgid "Manage Liquidity in Rewards Pool"
+msgstr ""
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Manage Token Lists"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "Manage this pool."
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Manage your pools."
+msgstr ""
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Max"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Max APR Available"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Max Slippage"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Max Slippage:"
+msgstr ""
+
+#: src/components/swapv2/TradeTypeSelection.tsx
+msgid "Maximum Return"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "Maximum Sold"
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Maximum sold"
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/V1.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Migrate"
+msgstr ""
+
+#: src/components/Menu/index.tsx
+#: src/components/NavigationTabs/index.tsx
+msgid "Migrate Liquidity"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "Minimum Received"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Minimum amount you will receive or your transaction will revert"
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Minimum received"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
+msgid "My Deposit"
+msgstr ""
+
+#: src/pages/Pool/index.tsx
+msgid "My Liquidity Pools"
+msgstr ""
+
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+msgid "My Pools"
+msgstr ""
+
+#: src/pages/Pool/lp.tsx
+msgid "My Pools on External Platforms"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
+msgid "My Rewards"
+msgstr ""
+
+#: src/components/YieldPools/index.tsx
+msgid "My Total Rewards"
+msgstr ""
+
+#: src/pages/Yield/index.tsx
+msgid "My Vesting"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "My liquidity"
+msgstr ""
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Network"
+msgstr ""
+
+#: src/components/Header/index.tsx
+#: src/pages/Yield/index.tsx
+msgid "New"
+msgstr ""
+
+#: src/components/YieldPools/index.tsx
+msgid "No Farms found"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "No KYC or sign-ups required"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "No extra deposit or withdrawal fees"
+msgstr ""
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+msgid "No liquidity found."
+msgstr ""
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "No records found."
+msgstr ""
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "No results found."
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "No vesting schedule!"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "No {type} pool found."
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "Note: There are existing pools for this token pair. Please check"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Note: {warningToken} is now <10% of the pool. Pool might become inactive if {warningToken} reaches 0%"
+msgstr ""
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr ""
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr ""
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr ""
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "On-chain & Open Source"
+msgstr ""
+
+#: src/components/YieldPools/index.tsx
+msgid "Once a farm has ended, you will continue to receive returns through LP Fees"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "One token is close to 0% in the pool ratio. Pool might go inactive."
+msgstr ""
+
+#: src/components/Web3ReactManager/index.tsx
+msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
+msgstr ""
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
+msgstr ""
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+msgid "Output is estimated. You will receive at least"
+msgstr ""
+
+#: src/components/WalletModal/index.tsx
+msgid "Please connect to the appropriate network."
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Please type the word 'confirm' below to enable Advanced Mode"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Pool"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Pool Address"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Pool Found!"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Pool Info"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Pool Information"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Pool Ratio"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Pool share"
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+msgid "Pool tokens in rewards pool:"
+msgstr ""
+
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Pooled {0}"
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+msgid "Pooled {0}:"
+msgstr ""
+
+#: src/components/Header/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Pools"
+msgstr ""
+
+#: src/components/YieldPools/index.tsx
+msgid "Pools | AMP"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr ""
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Powered by"
+msgstr ""
+
+#: src/components/Settings/index.tsx
+msgid "Preferences"
+msgstr ""
+
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Price Impact"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+msgid "Price Impact High"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+msgid "Price Impact Too High"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "Price Impact is High"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "Price Impact is Very High"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+msgid "Price Range"
+msgstr ""
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Price impact is high"
+msgstr ""
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Price impact is too high"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+msgid "Price:"
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "Prices and Pool share"
+msgstr ""
+
+#: src/components/WalletModal/index.tsx
+msgid "Privacy Policy"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Rainmaker Yield Farming"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Ratio"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "Receive liquidity pool tokens representing your position and earn fees proportional to your pool share. Fees are automatically claimed when you withdraw your liquidity."
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+msgid "Recent Transactions"
+msgstr ""
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr ""
+
+#: src/components/PositionCard/V1.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Remove"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Remove Anyway"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Remove Liquidity"
+msgstr ""
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Remove list"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
+msgstr ""
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+msgid "Removing {0} {1} and {2} {3}"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Reward"
+msgstr ""
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+#: src/components/YieldPools/HarvestAll.tsx
+msgid "Rewards"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "Rewards: {0} {1}"
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "Route"
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Routing through these tokens resulted in the best price for your trade."
+msgstr ""
+
+#: src/components/Search/index.tsx
+msgid "Search by pool address"
+msgstr ""
+
+#: src/components/YieldPools/index.tsx
+#: src/pages/Pool/index.tsx
+msgid "Search by tokens or pool address"
+msgstr ""
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Search name or paste address"
+msgstr ""
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select Max"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+#: src/pages/Pools/index.tsx
+msgid "Select Pair"
+msgstr ""
+
+#: src/components/NetworkModal/index.tsx
+msgid "Select a Network"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "Select a Token"
+msgstr ""
+
+#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/PoolsCurrencyInputPanel/index.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
+#: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
+msgid "Select a token"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Select a token to find your liquidity."
+msgstr ""
+
+#: src/components/PoolPriceBar/index.tsx
+msgid "Share of Pool"
+msgstr ""
+
+#: src/components/PoolList/index.tsx
+msgid "Show More Pools"
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr ""
+
+#: src/components/LiquidityProviderMode/index.tsx
+msgid "Single Token"
+msgstr ""
+
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+msgid "Something went wrong"
+msgstr ""
+
+#: src/components/YieldPools/index.tsx
+msgid "Staked Only"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
+msgid "Staked TVL"
+msgstr ""
+
+#: src/constants/index.ts
+msgid "Stands for amplification factor. Each pool can have its own AMP. Pools with a higher AMP provide higher capital efficiency within a particular price range"
+msgstr ""
+
+#: src/constants/index.ts
+msgid "Stands for amplification factor. Pools with a higher AMP provide higher capital efficiency within a particular price range. We recommend higher AMP for stable token pairs and lower AMP for volatile token pairs"
+msgstr ""
+
+#: src/pages/About/index.tsx
+#: src/pages/About/index.tsx
+msgid "Start Earning"
+msgstr ""
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Starting In"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Supply"
+msgstr ""
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Supply Anyway"
+msgstr ""
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Swap"
+msgstr ""
+
+#: src/components/swap/SwapModalFooter.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Swap Anyway"
+msgstr ""
+
+#: src/components/Menu/index.tsx
+msgid "Swap Legacy"
+msgstr ""
+
+#: src/pages/About/index.tsx
+#: src/pages/About/index.tsx
+#: src/pages/About/index.tsx
+msgid "Swap Now"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Swap your tokens at the best rates. No limits"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "TOTAL HARVESTED REWARDS"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "TVL From DEXs"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "TVL equivalent compared to AMMs"
+msgstr ""
+
+#: src/components/Menu/index.tsx
+msgid "Terms"
+msgstr ""
+
+#: src/components/WalletModal/index.tsx
+msgid "Terms of Use"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "The amount you save compared to {0}."
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+msgid "The price is deviating quite a lot from that market price, please be careful!"
+msgstr ""
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "The token list \"{0}\" has been updated to <0>{1}</0>."
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "There are no pools for this token pair."
+msgstr ""
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+msgid "There is no existing pool for this token pair. You will be creating a new pool with AMP=1 and migrating tokens from Sushiswap to KyberSwap."
+msgstr ""
+
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "There is no existing pool for this token pair. You will be creating a new pool with AMP=1 and migrating tokens from Uniswap to KyberSwap."
+msgstr ""
+
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr ""
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr ""
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Tip: Custom tokens are stored locally in your browser"
+msgstr ""
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Token"
+msgstr ""
+
+#: src/components/NumericalInput/index.tsx
+msgid "Token Amount"
+msgstr ""
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Token Name"
+msgstr ""
+
+#: src/components/LiquidityProviderMode/index.tsx
+msgid "Token Pair"
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Token pool analytics →"
+msgstr ""
+
+#: src/components/SearchModal/Manage.tsx
+#: src/components/SearchModal/ManageTokens.tsx
+#: src/pages/About/index.tsx
+msgid "Tokens"
+msgstr ""
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Total AMP Liquidity"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "Total AMP Liquidity:"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Total Earnings"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Total LP Tokens"
+msgstr ""
+
+#: src/pages/About/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Total Trading Volume"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "Total Trading Volume:"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "Total Value Locked"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "Total Value Locked:"
+msgstr ""
+
+#: src/components/YieldPools/index.tsx
+msgid "Total estimated return based on yearly fees and bonus rewards of the pool"
+msgstr ""
+
+#: src/components/PoolPriceBar/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/pages/Pools/index.tsx
+msgid "Trade"
+msgstr ""
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction Submitted"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction time limit"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction will revert if it is pending for longer than the indicated time"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction will revert if there is an adverse rate change that is higher than this %"
+msgstr ""
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Try Again"
+msgstr ""
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "UNKNOWN"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "UNLOCKED"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+msgid "Unamplified Pool existed"
+msgstr ""
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "Unknown"
+msgstr ""
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Unknown Source"
+msgstr ""
+
+#: src/components/Vesting/UnlockedBlock.tsx
+msgid "Unlocked"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "Unlocked Rewards"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "Unlocked: {0} {1}"
+msgstr ""
+
+#: src/pages/Yield/index.tsx
+msgid "Upcoming"
+msgstr ""
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Update list"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Use Native Token"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Use Wrapped Token"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Use this mode if you are aware of the risks"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Use this tool to find pairs that don't automatically appear in the interface."
+msgstr ""
+
+#: src/components/PositionCard/V1.tsx
+msgid "V1"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "VESTING PERIODS"
+msgstr ""
+
+#: src/components/Vesting/Schedule.tsx
+msgid "Vesting started: {0}"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "View Farms"
+msgstr ""
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "View list"
+msgstr ""
+
+#: src/components/ModalViews/index.tsx
+msgid "View transaction on Etherscan"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "View your trade route"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Volume (24H)"
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "Volume (24h)"
+msgstr ""
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "WITHDRAW"
+msgstr ""
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting For Confirmation"
+msgstr ""
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "We adjust trading fees dynamically based on market conditions to give you the best returns."
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "We can amplify liquidity pools to provide much higher capital efficiency and better slippage for you. Deposit less tokens and still achieve better liquidity and volume."
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction."
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+#: src/components/Vesting/index.tsx
+msgid "What can KNC be used for?"
+msgstr ""
+
+#: src/pages/About/index.tsx
+msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from multiple DEXs (including KyberSwap) and identify the best trade route for you."
+msgstr ""
+
+#: src/components/Web3Status/index.tsx
+msgid "Wrong Network"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "You Save"
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "You are creating a pool"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "You don’t have liquidity in this {type} pool yet."
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "You will receive"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Your Current Position"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Your Liquidity"
+msgstr ""
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Your Pool Allocation"
+msgstr ""
+
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/components/PoolPriceBar/index.tsx
+msgid "Your Share of Pool"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Your deposit"
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your pool share:"
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your position"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your share of pool"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
+msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
+msgstr ""
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+msgid "Your total pool tokens:"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "Your trade route"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+msgid "Your transactions will appear here..."
+msgstr ""
+
+#: src/components/WalletModal/index.tsx
+msgid "and"
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "here"
+msgstr ""
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr ""
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+msgid "or the transaction will revert."
+msgstr ""
+
+#: src/components/PoolPriceBar/index.tsx
+#: src/components/PoolPriceBar/index.tsx
+msgid "per"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "pool"
+msgstr ""
+
+#: src/components/SearchModal/ImportRow.tsx
+msgid "via {0}"
+msgstr ""
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "via {0} token list"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx
+msgid "{0} Pending"
+msgstr ""
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "{0} added"
+msgstr ""
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "{0} removed"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{0} tokens"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "{0}% LP Fee + {1}% Rewards"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr ""
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "{numTokensChanged} tokens updated"
+msgstr ""
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "• Added by user"
+msgstr ""

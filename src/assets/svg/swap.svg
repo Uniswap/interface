@@ -3,8 +3,8 @@
         <g>
             <g>
                 <path d="M0 0L24 0 24 24 0 24z" transform="translate(-708 -244) rotate(-90 488 -220)"/>
-                <path stroke="#08a1e7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636c3.515 3.515 3.515 9.213 0 12.728-3.515 3.515-9.213 3.515-12.728 0-3.515-3.515-3.515-9.213 0-12.728 3.515-3.515 9.213-3.515 12.728 0M8 9L16 9" transform="translate(-708 -244) rotate(-90 488 -220)"/>
-                <path stroke="#08a1e7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 13L8 15 10 17M16 15L8 15M14 7L16 9 14 11" transform="translate(-708 -244) rotate(-90 488 -220)"/>
+                <path stroke="#31CB9E" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636c3.515 3.515 3.515 9.213 0 12.728-3.515 3.515-9.213 3.515-12.728 0-3.515-3.515-3.515-9.213 0-12.728 3.515-3.515 9.213-3.515 12.728 0M8 9L16 9" transform="translate(-708 -244) rotate(-90 488 -220)"/>
+                <path stroke="#31CB9E" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 13L8 15 10 17M16 15L8 15M14 7L16 9 14 11" transform="translate(-708 -244) rotate(-90 488 -220)"/>
             </g>
         </g>
     </g>

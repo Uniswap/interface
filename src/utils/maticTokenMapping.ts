@@ -197,6 +197,10 @@ export const getMaticTokenLogoURL = (address: string) => {
     uri = 'https://i.imgur.com/PyipL43.png'
   } else if (address?.toLowerCase() === '0xbD1463F02f61676d53fd183C2B19282BFF93D099'.toLowerCase()) {
     uri = 'https://i.imgur.com/EknGhAl.png'
+  } else if (address?.toLowerCase() === '0xc1c93D475dc82Fe72DBC7074d55f5a734F8cEEAE'.toLowerCase()) {
+    // PGX
+    uri =
+      'https://raw.githubusercontent.com/stevepegaxy/assets/master/blockchains/polygon/assets/0xc1c93D475dc82Fe72DBC7074d55f5a734F8cEEAE/logo.png'
   }
 
   if (!uri) {

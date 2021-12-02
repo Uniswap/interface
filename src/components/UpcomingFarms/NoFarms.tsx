@@ -10,7 +10,7 @@ const NoFarms = ({ setActiveTab }: { setActiveTab: (activeTab: number) => void }
       <div>
         Please check the{' '}
         <ButtonEmpty width="fit-content" padding="0" style={{ display: 'inline' }} onClick={() => setActiveTab(0)}>
-          Current Farms
+          Active Farms
         </ButtonEmpty>{' '}
         or come back later.
       </div>

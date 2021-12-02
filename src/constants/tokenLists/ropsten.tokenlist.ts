@@ -1,6 +1,6 @@
 export const ROPSTEN_TOKEN_LIST = {
-  name: 'DmmExchange Token List',
-  keywords: ['dmmexchange'],
+  name: 'KyberSwap Token List',
+  keywords: ['kyberswap', 'dmmexchange'],
   timestamp: '2020-12-12T00:00:00+00:00',
   tokens: [
     {

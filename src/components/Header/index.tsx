@@ -1,7 +1,7 @@
 import { ChainId, ETHER } from '@dynamic-amm/sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
@@ -16,6 +16,7 @@ import Web3Status from '../Web3Status'
 import { ExternalLink } from 'theme/components'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 import Web3Network from 'components/Web3Network'
+import { useIsDarkMode } from 'state/user/hooks'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -95,18 +96,11 @@ const HeaderLinks = styled(Row)`
 `
 
 const IconImage = styled.img`
-  width: 100px;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    width: 40px;
-  `};
+  width: 140px;
+  margin-top: 1px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 60px;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    width: 70px;
+    width: 114px;
   `};
 `
 
@@ -149,12 +143,6 @@ const AnalyticsWrapper = styled.span`
   }
 `
 
-const MigrateLiquidityWrapper = styled.span`
-  @media (max-width: 1250px) {
-    display: none;
-  }
-`
-
 const AboutWrapper = styled.span`
   @media (max-width: 1320px) {
     display: none;
@@ -179,7 +167,7 @@ const BalanceText = styled(Text)`
   `};
 `
 
-const Title = styled.a`
+const Title = styled(Link)`
   display: flex;
   align-items: center;
   pointer-events: auto;
@@ -195,9 +183,16 @@ const Title = styled.a`
 
 const UniIcon = styled.div`
   transition: transform 0.3s ease;
+
   :hover {
     transform: rotate(-5deg);
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    :hover {
+      transform: rotate(0);
+    }
+  `}
 `
 
 const activeClassName = 'ACTIVE'
@@ -220,12 +215,12 @@ const StyledNavLink = styled(NavLink).attrs({
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.primary};
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => darken(0.1, theme.primary)};
   }
 `
 
@@ -247,12 +242,16 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.text2};
   }
 
-  :hover,
+  :hover {
+    color: ${({ theme }) => darken(0.1, theme.primary)};
+    text-decoration: none;
+  }
+
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => theme.text2};
     text-decoration: none;
   }
 
@@ -317,12 +316,14 @@ export default function Header() {
 
   const bridgeLink = getBridgeLink()
 
+  const isDark = useIsDarkMode()
+
   return (
     <HeaderFrame>
       <HeaderRow>
-        <Title href=".">
+        <Title to="/swap">
           <UniIcon>
-            <IconImage src="/logo.svg" alt="logo" />
+            <IconImage src={isDark ? '/logo-dark.svg' : '/logo.svg'} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
@@ -369,20 +370,6 @@ export default function Header() {
               <Trans>Analytics</Trans>
             </StyledNavExternalLink>
           </AnalyticsWrapper>
-
-          {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
-            <MigrateLiquidityWrapper>
-              <StyledNavLink
-                id={`migrations-nav-link`}
-                to={'/migration'}
-                isActive={(match, { pathname }) =>
-                  Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
-                }
-              >
-                <Trans>Migrate Liquidity</Trans>
-              </StyledNavLink>
-            </MigrateLiquidityWrapper>
-          )}
 
           <AboutWrapper>
             <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>

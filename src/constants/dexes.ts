@@ -11,8 +11,8 @@ type DexList = { [key: string]: DexConfig }
 
 export const dexListConfig: DexList = {
   dmm: {
-    name: 'DMM',
-    icon: 'https://dmm.exchange/favicon.png',
+    name: 'KyberSwap',
+    icon: 'https://kyberswap.com/favicon.ico',
     chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM]
   },
   uniswap: {

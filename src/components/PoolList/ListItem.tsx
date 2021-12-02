@@ -24,7 +24,7 @@ import { setSelectedPool } from 'state/pools/actions'
 import Loader from 'components/Loader'
 import InfoHelper from 'components/InfoHelper'
 import { useActiveWeb3React } from 'hooks'
-import { MAX_ALLOW_APY } from 'constants/index'
+import { MAX_ALLOW_APY, AMP_HINT } from 'constants/index'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -106,8 +106,8 @@ const PoolAddressContainer = styled(Flex)`
   align-items: center;
 `
 
-const APY = styled(DataText)`
-  color: ${({ theme }) => theme.text12};
+const APR = styled(DataText)`
+  color: ${({ theme }) => theme.apr};
 `
 
 interface ListItemProps {
@@ -274,18 +274,17 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
             <span>
               <Trans>AMP</Trans>
             </span>
-            <InfoHelper
-              text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
-              size={12}
-            />
+            <InfoHelper text={AMP_HINT} size={12} />
           </DataTitle>
           <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
         </GridItem>
         <GridItem>
           <DataTitle>
-            <Trans>APY</Trans>
+            <Trans>APR</Trans>
+            <InfoHelper text={t`Estimated return based on yearly fees of the pool`} size={12} />
           </DataTitle>
-          <APY>{!subgraphPoolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}</APY>
+
+          <APR>{!subgraphPoolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}</APR>
         </GridItem>
 
         <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
@@ -408,7 +407,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
       <DataText grid-area="amp-liq">{!subgraphPoolData ? <Loader /> : ampLiquidity}</DataText>
       <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
       {/* <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText> */}
-      <APY>{!subgraphPoolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}</APY>
+      <APR>{!subgraphPoolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}</APR>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>

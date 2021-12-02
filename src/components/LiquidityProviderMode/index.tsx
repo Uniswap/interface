@@ -11,12 +11,12 @@ const TabContainer = styled.div`
   background-color: ${({ theme }) => theme.buttonBlack};
 `
 
-const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
+const Tab = styled(ButtonEmpty) <{ isActive?: boolean; isLeft?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: ${({ theme, isActive }) => (isActive ? theme.primary1 : theme.buttonBlack)};
+  background-color: ${({ theme, isActive }) => (isActive ? theme.primary : theme.buttonBlack)};
   padding: 8px;
   font-size: 14px;
   font-weight: 500;
@@ -31,7 +31,7 @@ const TabText = styled.div<{ isActive: boolean }>`
   display: flex;
   align-items: center;
   gap: 2px;
-  color: ${({ theme, isActive }) => (isActive ? 'white' : theme.subText)};
+  color: ${({ theme, isActive }) => (isActive ? theme.textReverse : theme.subText)};
 `
 
 const LiquidityProviderMode = ({

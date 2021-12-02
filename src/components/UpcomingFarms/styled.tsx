@@ -52,7 +52,7 @@ export const TableRow = styled.div<{ isLastItem?: boolean }>`
   position: relative;
   background-color: ${({ theme }) => theme.background};
   border: 1px solid transparent;
-  border-bottom: ${({ theme, isLastItem }) => (isLastItem ? 'none' : `1px solid ${theme.border4}`)};
+  border-bottom: ${({ theme, isLastItem }) => (isLastItem ? 'none' : `1px solid ${theme.border}`)};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-gap: 1rem;
@@ -128,7 +128,7 @@ export const StyledItemCard = styled.div<{ isLastItem?: boolean }>`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 4px;
-  border: ${({ theme }) => `1px solid ${theme.border3}`};
+  border: ${({ theme }) => `1px solid ${theme.border}`};
   border-radius: 8px;
   margin-bottom: ${({ isLastItem }) => (isLastItem ? '0' : '24px')};
   padding: 8px 20px 4px 20px;

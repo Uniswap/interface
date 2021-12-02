@@ -135,7 +135,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
         {totalUSD > 0 && (
           <>
             <TYPE.body
-              color={'#08a1e7'}
+              color={theme.primary}
               fontWeight={'normal'}
               fontSize={14}
               style={{ margin: '0.25rem 0.25rem 0.25rem 1rem', cursor: 'pointer' }}
@@ -146,9 +146,9 @@ const Vesting = ({ loading }: { loading: boolean }) => {
 
             <span onClick={() => setOpen(open !== 0 ? 0 : -1)}>
               {open === 0 ? (
-                <ChevronUp size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
+                <ChevronUp size="16" color={theme.primary} style={{ marginTop: '0.25rem' }} />
               ) : (
-                <ChevronDown size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
+                <ChevronDown size="16" color={theme.primary} style={{ marginTop: '0.25rem' }} />
               )}
             </span>
           </>
@@ -187,9 +187,9 @@ const Vesting = ({ loading }: { loading: boolean }) => {
         {lockedUSD > 0 && (
           <>
             {open === 1 ? (
-              <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+              <ChevronUp size="14" color={theme.primary} style={{ margin: '0.15rem 0 0 0.25rem' }} />
             ) : (
-              <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+              <ChevronDown size="14" color={theme.primary} style={{ margin: '0.15rem 0 0 0.25rem' }} />
             )}
           </>
         )}
@@ -197,7 +197,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
       {open === 1 && (
         <MenuFlyout>
           {Object.keys(info).map(k => (
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={16} key={k}>
               {fixedFormatting(info[k].totalAmount.sub(info[k].unlockedAmount), 18)} {k}
             </TYPE.body>
           ))}
@@ -224,9 +224,9 @@ const Vesting = ({ loading }: { loading: boolean }) => {
         {claimedUSD > 0 && (
           <>
             {open === 2 ? (
-              <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+              <ChevronUp size="14" color={theme.primary} style={{ margin: '0.15rem 0 0 0.25rem' }} />
             ) : (
-              <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+              <ChevronDown size="14" color={theme.primary} style={{ margin: '0.15rem 0 0 0.25rem' }} />
             )}
           </>
         )}
@@ -235,7 +235,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
       {open === 2 && (
         <MenuFlyout>
           {Object.keys(info).map(k => (
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={16} key={k}>
               {fixedFormatting(info[k].unlockedAmount.sub(info[k].vestableAmount), 18)} {k}
             </TYPE.body>
           ))}
@@ -264,9 +264,9 @@ const Vesting = ({ loading }: { loading: boolean }) => {
             {unlockedUSD > 0 && (
               <>
                 {open === 3 ? (
-                  <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+                  <ChevronUp size="14" color={theme.primary} style={{ margin: '0.15rem 0 0 0.25rem' }} />
                 ) : (
-                  <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+                  <ChevronDown size="14" color={theme.primary} style={{ margin: '0.15rem 0 0 0.25rem' }} />
                 )}
               </>
             )}
@@ -275,7 +275,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
           {open === 3 && (
             <MenuFlyout>
               {Object.keys(info).map(k => (
-                <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+                <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={16} key={k}>
                   {fixedFormatting(info[k].vestableAmount, 18)} {k}
                 </TYPE.body>
               ))}
@@ -324,7 +324,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
           </AutoRow>
         ) : (
           <>
-            <div style={{ paddingBottom: '1rem', borderBottom: '1px solid #404b51' }}>{totalBlock}</div>
+            <div style={{ paddingBottom: '1rem', borderBottom: `1px solid ${theme.border}` }}>{totalBlock}</div>
             <AutoRow justify="space-between" marginY="1.5rem">
               {lockedBlock}
               <Seperator />

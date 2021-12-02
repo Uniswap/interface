@@ -13,7 +13,7 @@ export default {
   formatOptions: {
     lineNumbers: false
   },
-  locales: ['en-US', 'ko-KR', 'tr-TR', 'vi-VN', 'zh-CN'],
+  locales: ['en-US', 'ko-KR', 'tr-TR', 'vi-VN', 'zh-CN', 'tl-PH'],
   orderBy: 'messageId',
   rootDir: '.',
   runtimeConfigModule: ['@lingui/core', 'i18n'],

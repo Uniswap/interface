@@ -23,7 +23,7 @@ const ModalContentWrapper = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.bg19};
   filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.32));
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text};
   min-width: 180px;
   max-width: 180px;
   border-radius: 16px;
@@ -49,7 +49,7 @@ const ListItem = styled.div<{ selected?: boolean }>`
   align-items: center;
   padding: 10px 12px;
   border-radius: 4px;
-  background-color: ${({ theme, selected }) => (selected ? theme.bg8 : theme.bg12)};
+  background-color: ${({ theme, selected }) => (selected ? theme.primary : theme.bg12)};
 `
 
 const NetworkLabel = styled.span`
@@ -58,7 +58,7 @@ const NetworkLabel = styled.span`
 
 const SelectNetworkButton = styled(ButtonEmpty)`
   background-color: transparent;
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.primary};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,7 +68,7 @@ const SelectNetworkButton = styled(ButtonEmpty)`
   }
   &:hover {
     text-decoration: none;
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.primary};
     border-radius: 4px;
   }
   &:active {

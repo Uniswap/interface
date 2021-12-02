@@ -663,7 +663,7 @@ export default function TokenPair({
                   </AutoRow>
 
                   {amountsMin && (
-                    <DetailBox style={{ paddingBottom: '12px', borderBottom: `1px dashed ${theme.border4}` }}>
+                    <DetailBox style={{ paddingBottom: '12px', borderBottom: `1px dashed ${theme.border}` }}>
                       <TokenWrapper>
                         <CurrencyLogo currency={currencyA} size="16px" />
                         <TYPE.black fontWeight={400} fontSize={14}>
@@ -705,29 +705,31 @@ export default function TokenPair({
                   </ButtonLight>
                 ) : (
                   <RowBetween>
-                    <ButtonConfirmed
-                      onClick={onAttemptToApprove}
-                      confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-                      disabled={
-                        approval !== ApprovalState.NOT_APPROVED ||
-                        signatureData !== null ||
-                        !userLiquidity ||
-                        userLiquidity.equalTo('0')
-                      }
-                      mr="0.5rem"
-                      fontWeight={500}
-                      fontSize={16}
-                    >
-                      {approval === ApprovalState.PENDING ? (
-                        <Dots>
-                          <Trans>Approving</Trans>
-                        </Dots>
-                      ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                        t`Approved`
-                      ) : (
-                        t`Approve`
-                      )}
-                    </ButtonConfirmed>
+                    {!error && (
+                      <ButtonConfirmed
+                        onClick={onAttemptToApprove}
+                        confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                        disabled={
+                          approval !== ApprovalState.NOT_APPROVED ||
+                          signatureData !== null ||
+                          !userLiquidity ||
+                          userLiquidity.equalTo('0')
+                        }
+                        margin="0 1rem 0 0"
+                        fontWeight={500}
+                        fontSize={16}
+                      >
+                        {approval === ApprovalState.PENDING ? (
+                          <Dots>
+                            <Trans>Approving</Trans>
+                          </Dots>
+                        ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
+                          t`Approved`
+                        ) : (
+                          t`Approve`
+                        )}
+                      </ButtonConfirmed>
+                    )}
                     <ButtonError
                       onClick={() => {
                         setShowConfirm(true)

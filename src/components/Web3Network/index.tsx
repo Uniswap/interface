@@ -6,7 +6,6 @@ import { useModalOpen, useNetworkModalToggle } from '../../state/application/hoo
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import NetworkModal from '../NetworkModal'
 import Card from 'components/Card'
-import DropdownSVG from 'assets/svg/dropdown.svg'
 import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { ApplicationModal } from 'state/application/actions'
@@ -21,7 +20,7 @@ const NetworkSwitchContainer = styled.div`
 const NetworkCard = styled(Card)`
   position: relative;
   background-color: ${({ theme }) => theme.bg12};
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.primary};
   border-radius: 8px;
   padding: 10px 12px;
   border: 1px solid transparent;
@@ -29,7 +28,7 @@ const NetworkCard = styled(Card)`
 
   &:hover {
     text-decoration: none;
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.primary};
     border-radius: 8px;
     cursor: pointer;
   }
@@ -53,6 +52,17 @@ const NetworkLabel = styled.div`
   `};
 `
 
+const DropdownIcon = styled.div<{ open: boolean }>`
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid ${({ theme }) => theme.primary};
+
+  transform: rotate(${({ open }) => (open ? '180deg' : '0')});
+  transition: transform 300ms;
+`
+
 function Web3Network(): JSX.Element | null {
   const { chainId } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
@@ -63,7 +73,7 @@ function Web3Network(): JSX.Element | null {
   if (!chainId) return null
 
   return (
-    <NetworkCard onClick={() => toggleNetworkModal()} ref={node as any}>
+    <NetworkCard onClick={() => toggleNetworkModal()} ref={node as any} role="button">
       <NetworkSwitchContainer>
         <Row>
           <img
@@ -73,7 +83,7 @@ function Web3Network(): JSX.Element | null {
           />
           <NetworkLabel>{NETWORK_LABEL[chainId]}</NetworkLabel>
         </Row>
-        <img src={DropdownSVG} alt="Dropdown Icon" />
+        <DropdownIcon open={networkModalOpen} />
       </NetworkSwitchContainer>
       <NetworkModal />
     </NetworkCard>

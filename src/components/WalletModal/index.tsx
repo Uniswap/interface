@@ -48,7 +48,7 @@ const HeaderRow = styled.div<{ padding?: string }>`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: ${({ padding }) => padding ?? ' 3rem 2rem 0 2rem'};
   font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -67,7 +67,7 @@ const FooterRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 0 2rem 40px 2rem;
   font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -94,8 +94,10 @@ const UpperSection = styled.div`
 `
 
 const OptionGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;

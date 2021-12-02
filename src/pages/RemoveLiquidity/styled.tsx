@@ -83,13 +83,13 @@ export const PoolName = styled.div`
 export const FirstColumn = styled(AutoColumn)`
   grid-auto-rows: min-content;
   padding-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.border4};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
   gap: 20px;
 
   @media only screen and (min-width: 768px) {
     padding-right: 24px;
     padding-bottom: 0;
-    border-right: 1px solid ${({ theme }) => theme.border4};
+    border-right: 1px solid ${({ theme }) => theme.border};
     border-bottom: none;
   }
 `
@@ -106,7 +106,7 @@ export const SecondColumn = styled(AutoColumn)`
 
 export const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => `${theme.primary1}33`};
+  background-color: ${({ theme }) => `${theme.primary}33`};
   border: 1px solid transparent;
   border-radius: 3px;
   font-size: 1rem;
@@ -117,19 +117,19 @@ export const MaxButton = styled.button<{ width: string }>`
   cursor: pointer;
   margin: 0.25rem;
   overflow: hidden;
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.primary};
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.primary};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.primary};
     outline: none;
   }
 `
 
 export const DetailWrapper = styled(AutoColumn)`
   padding: 1rem 1rem 12px;
-  border: 1px solid ${({ theme }) => theme.border4};
+  border: 1px solid ${({ theme }) => theme.border};
   margin: 24px 0 28px;
   border-radius: 4px;
 `
@@ -146,7 +146,7 @@ export const TokenWrapper = styled.div`
 `
 
 export const ModalDetailWrapper = styled.div`
-  border: 1px solid ${({ theme }) => theme.border4};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 4px;
   padding: 1rem;
   margin-bottom: 28px;

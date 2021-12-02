@@ -84,8 +84,8 @@ export const portis = new PortisConnector({
 
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
-  appName: 'DmmExchange',
-  appLogoUrl: 'https://dmm.exchange/favicon.png'
+  appName: 'KyberSwap',
+  appLogoUrl: 'https://kyberswap.com/favicon.ico'
 })
 
 export const ledger = new LedgerConnector({

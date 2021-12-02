@@ -1,6 +1,8 @@
 import React from 'react'
+import useTheme from 'hooks/useTheme'
 
 const AddCircle = ({ width, height }: { width?: number; height?: number }) => {
+  const theme = useTheme()
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={width || 20} height={height || 20} viewBox="0 0 20 20">
       <g fill="none" fillRule="evenodd">
@@ -14,7 +16,7 @@ const AddCircle = ({ width, height }: { width?: number; height?: number }) => {
                     transform="translate(-1128 -265) translate(266 195) translate(.75 52) translate(859.25 16)"
                   />
                   <path
-                    stroke="#08A1E7"
+                    stroke={theme.primary}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="1.5"

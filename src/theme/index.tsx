@@ -42,13 +42,13 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text: darkMode ? '#ffffff' : '#3a3a3a',
+    text: darkMode ? '#ffffff' : '#333333',
+    textReverse: darkMode ? '#333333' : '#ffffff',
     subText: darkMode ? '#A7B6BD' : '#5C6468',
-    text1: darkMode ? '#FFFFFF' : '#3a3a3a',
+
     text2: darkMode ? '#C3C5CB' : '#565A69',
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
     text6: darkMode ? '#6d8591' : '#565A69',
     text7: darkMode ? '#c9d2d7' : '#565A69',
     text8: darkMode ? '#5c6468' : '#5c6468',
@@ -56,7 +56,7 @@ export function colors(darkMode: boolean): Colors {
     text10: darkMode ? '#00a2f7' : '#00a2f7',
     text11: darkMode ? '#f4f4f4' : '#565A69',
     text12: darkMode ? '#4aff8c' : '#0CE15B',
-    text13: darkMode ? '#f5f5f5' : '#3a3a3a',
+    text13: darkMode ? '#f5f5f5' : '#333333',
     disableText: darkMode ? '#6C7284' : '#A7B6BD',
 
     // backgrounds
@@ -78,9 +78,11 @@ export function colors(darkMode: boolean): Colors {
     bg14: darkMode ? '#40505a' : '#a9a9a9',
     bg15: darkMode ? '#1f292e' : '#f5f5f5',
     bg16: darkMode ? '#1f292e' : '#ffffff',
-    bg17: darkMode ? '#0f3242' : '#ecebeb',
+    bg17: darkMode ? '#31cb9e33' : '#31cb9e1a',
     bg18: darkMode ? '#1a4052' : '#ecebeb',
     bg19: darkMode ? '#222c31' : '#ffffff',
+    bg20: darkMode ? '#243036' : '#F5F5F5',
+
     buttonBlack: darkMode ? '#11171a' : '#f5f5f5',
     buttonGray: darkMode ? '#40444f' : '#dcdbdc',
     poweredByText: darkMode ? '#A7B6BD' : '#5C6468',
@@ -91,27 +93,24 @@ export function colors(darkMode: boolean): Colors {
     advancedBorder: darkMode ? '#303e46' : '#dcdbdc',
 
     //primary colors
-    primary1: darkMode ? '#08a1e7' : '#08a1e7',
+    primary: '#31CB9E',
     primary2: darkMode ? '#3680E7' : '#3680E7',
     primary3: darkMode ? '#4D8FEA' : '#4D8FEA',
     primary4: darkMode ? '#376bad70' : '#376bad70',
-    primary5: darkMode ? '#153d6f70' : '#08a1e7',
+    primary5: darkMode ? '#153d6f70' : '#31cb9e',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : 'white',
     primaryText2: darkMode ? '#a7b6bd' : '#13191b',
 
     // secondary colors
-    secondary1: darkMode ? '#08a1e7' : '#08a1e7',
+    secondary1: darkMode ? '#31cb9e' : '#31cb9e',
     secondary2: darkMode ? '#17000b26' : '#17000b26',
     secondary3: darkMode ? '#17000b26' : '#17000b26',
     secondary4: '#2FC99E',
 
     // border colors
-    border: darkMode ? '#4c5f69' : '#859aa5',
-    border2: darkMode ? '#404b51' : '#c2c2c2',
-    border3: darkMode ? '#40505A' : 'transparent',
-    border4: darkMode ? '#40505A' : '#C2C2C2',
+    border: darkMode ? '#40505A' : '#dcdbdc ',
+    btnOutline: darkMode ? '#31cb9e' : '#333333',
 
     // table colors
     oddRow: darkMode ? '#283339' : '#f4f4f4',
@@ -126,11 +125,13 @@ export function colors(darkMode: boolean): Colors {
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
-    blue1: '#08a1e7',
+    blue1: '#31cb9e',
     warning: '#FFAF01',
     lightBlue: '#78d5ff',
     darkBlue: '#1183b7',
-    blue: darkMode ? '#78d5ff' : '#08a1e7'
+    blue: darkMode ? '#78d5ff' : '#31cb9e',
+    lightGreen: '#98E5CE',
+    apr: '#0faaa2'
   }
 }
 
@@ -179,7 +180,7 @@ export const TYPE = {
     return <TextWrapper fontWeight={500} color={'text2'} {...props} />
   },
   link(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'primary'} {...props} />
   },
   black(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text1'} {...props} />
@@ -206,7 +207,7 @@ export const TYPE = {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
   },
   blue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'primary'} {...props} />
   },
   yellow(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'yellow1'} {...props} />
@@ -267,7 +268,7 @@ html {
 
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.bg2};
 }
 
@@ -285,7 +286,7 @@ body {
 }
 
 .staked-only-switch div {
-  background:  ${({ theme }) => theme.primary1};
+  background:  ${({ theme }) => theme.primary};
 }
 
 #language-selector {
