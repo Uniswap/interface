@@ -139,7 +139,7 @@ export default function Bridge() {
     if (isToken(bridgeCurrency)) {
       address = bridgeCurrency.address
     }
-    if (isArbitrum) {
+    if (!isArbitrum) {
       await bridgeService.deposit(typedValue, address)
     } else {
       await bridgeService.withdraw(typedValue, address)
