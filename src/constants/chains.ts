@@ -57,6 +57,7 @@ export interface L1ChainInfo {
   readonly infoLink: string
   readonly label: string
   readonly logoUrl?: string
+  readonly primaryColor?: string
   readonly rpcUrls?: string[]
   readonly subgraphUrl?: string
   readonly nativeCurrency: {
@@ -103,6 +104,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
+    primaryColor: '#627EEA',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     subgraphUrl: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   },
@@ -111,6 +113,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://rinkeby.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Rinkeby',
+    primaryColor: '#F9AC14',
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
     subgraphUrl: 'https://thegraph.com/hosted-service/subgraph/ianlapham/uniswap-v3-rinkeby',
   },
@@ -119,6 +122,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://ropsten.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ropsten',
+    primaryColor: '#FF0420',
     nativeCurrency: { name: 'Ropsten ETH', symbol: 'ropETH', decimals: 18 },
   },
   [ChainId.KOVAN]: {
@@ -126,6 +130,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://kovan.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Kovan',
+    primaryColor: '#32B830',
     nativeCurrency: { name: 'Kovan ETH', symbol: 'kovETH', decimals: 18 },
   },
   [ChainId.GOERLI]: {

@@ -41,15 +41,17 @@ export function CurrencySearch({ onSelectCurrency }: CurrencySearchProps) {
 
   return (
     <CenterBox flex={1} px="md">
-      <Box m="md">
+      <Box mb="md">
         <TextInput
           onChangeText={onChangeText}
           placeholder="Search token symbols or address"
           style={styles.input}
+          borderWidth={0}
+          backgroundColor="gray50"
         />
       </Box>
       <NetworkButtonGroup selected={chainFilter} onPress={onChainPress} />
-      <Box flex={1}>
+      <Box flex={1} mt="sm">
         {filteredCurrencies.length > 0 ? (
           <FlatList
             data={filteredCurrencies}
