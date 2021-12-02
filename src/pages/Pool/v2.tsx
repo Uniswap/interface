@@ -23,7 +23,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { ExternalLink, HideSmall, TYPE } from '../../theme'
+import { ExternalLink, HideSmall, ThemedText } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -144,26 +144,26 @@ export default function Pool() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>
+                <ThemedText.White fontWeight={600}>
                   <Trans>Liquidity provider rewards</Trans>
-                </TYPE.white>
+                </ThemedText.White>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
+                <ThemedText.White fontSize={14}>
                   <Trans>
                     Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are
                     added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
                   </Trans>
-                </TYPE.white>
+                </ThemedText.White>
               </RowBetween>
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 target="_blank"
                 href="https://uniswap.org/docs/v2/core-concepts/pools/"
               >
-                <TYPE.white fontSize={14}>
+                <ThemedText.White fontSize={14}>
                   <Trans>Read more about providing liquidity</Trans>
-                </TYPE.white>
+                </ThemedText.White>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -175,9 +175,9 @@ export default function Pool() {
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="md" style={{ width: '100%' }}>
               <Layer2Prompt>
-                <TYPE.body color={theme.text3} textAlign="center">
+                <ThemedText.Body color={theme.text3} textAlign="center">
                   <Trans>V2 is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
-                </TYPE.body>
+                </ThemedText.Body>
               </Layer2Prompt>
             </AutoColumn>
           </AutoColumn>
@@ -186,9 +186,9 @@ export default function Pool() {
             <AutoColumn gap="md" style={{ width: '100%' }}>
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
                 <HideSmall>
-                  <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                  <ThemedText.MediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
                     <Trans>Your V2 liquidity</Trans>
-                  </TYPE.mediumHeader>
+                  </ThemedText.MediumHeader>
                 </HideSmall>
                 <ButtonRow>
                   <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
@@ -209,17 +209,17 @@ export default function Pool() {
 
               {!account ? (
                 <Card padding="40px">
-                  <TYPE.body color={theme.text3} textAlign="center">
+                  <ThemedText.Body color={theme.text3} textAlign="center">
                     <Trans>Connect to a wallet to view your liquidity.</Trans>
-                  </TYPE.body>
+                  </ThemedText.Body>
                 </Card>
               ) : v2IsLoading ? (
                 <EmptyProposals>
-                  <TYPE.body color={theme.text3} textAlign="center">
+                  <ThemedText.Body color={theme.text3} textAlign="center">
                     <Dots>
                       <Trans>Loading</Trans>
                     </Dots>
-                  </TYPE.body>
+                  </ThemedText.Body>
                 </EmptyProposals>
               ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
                 <>
@@ -266,9 +266,9 @@ export default function Pool() {
                 </>
               ) : (
                 <EmptyProposals>
-                  <TYPE.body color={theme.text3} textAlign="center">
+                  <ThemedText.Body color={theme.text3} textAlign="center">
                     <Trans>No liquidity found.</Trans>
-                  </TYPE.body>
+                  </ThemedText.Body>
                 </EmptyProposals>
               )}
             </AutoColumn>

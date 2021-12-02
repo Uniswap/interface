@@ -6,8 +6,8 @@ describe('multicall updater', () => {
       expect(
         activeListeningKeys(
           {
-            [1]: {
-              ['abc']: {
+            1: {
+              abc: {
                 4: 2, // 2 listeners care about 4 block old data
                 1: 0, // 0 listeners care about 1 block old data
               },
@@ -23,8 +23,8 @@ describe('multicall updater', () => {
       expect(
         activeListeningKeys(
           {
-            [1]: {
-              ['abc']: {
+            1: {
+              abc: {
                 4: 2, // 2 listeners care about 4 block old data
                 3: 1, // 1 listener cares about 3 block old data
                 1: 0, // 0 listeners care about 1 block old data
@@ -41,12 +41,12 @@ describe('multicall updater', () => {
       expect(
         activeListeningKeys(
           {
-            [1]: {
-              ['abc']: {
+            1: {
+              abc: {
                 4: 2, // 2 listeners care about 4 block old data
                 1: 0, // 0 listeners care about 1 block old data
               },
-              ['def']: {
+              def: {
                 Infinity: 2,
               },
             },
@@ -62,12 +62,12 @@ describe('multicall updater', () => {
       expect(
         activeListeningKeys(
           {
-            [1]: {
-              ['abc']: {
+            1: {
+              abc: {
                 4: 2, // 2 listeners care about 4 block old data
                 1: 0, // 0 listeners care about 1 block old data
               },
-              ['def']: {
+              def: {
                 2: 1,
                 5: 2,
               },
@@ -84,8 +84,8 @@ describe('multicall updater', () => {
       expect(
         activeListeningKeys(
           {
-            [1]: {
-              ['abc']: {
+            1: {
+              abc: {
                 4: 2,
                 1: -1,
                 [-3]: 4,
@@ -102,8 +102,8 @@ describe('multicall updater', () => {
       expect(
         activeListeningKeys(
           {
-            [1]: {
-              ['abc']: {
+            1: {
+              abc: {
                 Infinity: 2, // 2 listeners care about any data
                 4: 2, // 2 listeners care about 4 block old data
                 1: 0, // 0 listeners care about 1 block old data
@@ -128,15 +128,15 @@ describe('multicall updater', () => {
       expect(outdatedListeningKeys({}, { abc: 2, def: 3 }, 1, 1)).toEqual(['abc', 'def'])
     })
     it('returns only outdated keys', () => {
-      expect(outdatedListeningKeys({ [1]: { abc: { data: '0x', blockNumber: 2 } } }, { abc: 1, def: 1 }, 1, 2)).toEqual(
-        ['def']
-      )
+      expect(outdatedListeningKeys({ 1: { abc: { data: '0x', blockNumber: 2 } } }, { abc: 1, def: 1 }, 1, 2)).toEqual([
+        'def',
+      ])
     })
     it('returns only keys not being fetched', () => {
       expect(
         outdatedListeningKeys(
           {
-            [1]: { abc: { data: '0x', blockNumber: 2 }, def: { fetchingBlockNumber: 2 } },
+            1: { abc: { data: '0x', blockNumber: 2 }, def: { fetchingBlockNumber: 2 } },
           },
           { abc: 1, def: 1 },
           1,
@@ -147,7 +147,7 @@ describe('multicall updater', () => {
     it('returns keys being fetched for old blocks', () => {
       expect(
         outdatedListeningKeys(
-          { [1]: { abc: { data: '0x', blockNumber: 2 }, def: { fetchingBlockNumber: 1 } } },
+          { 1: { abc: { data: '0x', blockNumber: 2 }, def: { fetchingBlockNumber: 1 } } },
           { abc: 1, def: 1 },
           1,
           2
@@ -157,7 +157,7 @@ describe('multicall updater', () => {
     it('respects blocks per fetch', () => {
       expect(
         outdatedListeningKeys(
-          { [1]: { abc: { data: '0x', blockNumber: 2 }, def: { data: '0x', fetchingBlockNumber: 1 } } },
+          { 1: { abc: { data: '0x', blockNumber: 2 }, def: { data: '0x', fetchingBlockNumber: 1 } } },
           { abc: 2, def: 2 },
           1,
           3
