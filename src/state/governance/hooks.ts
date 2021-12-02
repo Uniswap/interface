@@ -136,7 +136,7 @@ function useFormattedProposalCreatedLogs(
 
         // Bravo and one bip proposals omit newlines
         if (startBlock === BRAVO_START_BLOCK || startBlock === ONE_BIP_START_BLOCK) {
-          description = description.replace(/ {2}/g, '\n').replace(/\d\. /g, '\n$&')
+          description = description.replace(/  /g, '\n').replace(/\d\. /g, '\n$&')
         }
 
         return {

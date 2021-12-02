@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { REWARDS_DURATION_DAYS, STAKING_GENESIS } from '../../state/stake/hooks'
-import { ThemedText } from '../../theme'
+import { TYPE } from '../../theme'
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -56,7 +56,7 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   const seconds = timeRemaining
 
   return (
-    <ThemedText.Black fontWeight={400}>
+    <TYPE.black fontWeight={400}>
       {message}{' '}
       {Number.isFinite(timeRemaining) && (
         <code>
@@ -65,6 +65,6 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
             .padStart(2, '0')}`}
         </code>
       )}
-    </ThemedText.Black>
+    </TYPE.black>
   )
 }

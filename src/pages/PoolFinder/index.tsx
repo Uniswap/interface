@@ -22,7 +22,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
-import { ThemedText } from '../../theme'
+import { TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
@@ -101,11 +101,11 @@ export default function PoolFinder() {
         <AutoColumn style={{ padding: '1rem' }} gap="md">
           <BlueCard>
             <AutoColumn gap="10px">
-              <ThemedText.Link fontWeight={400} color={'primaryText1'}>
+              <TYPE.link fontWeight={400} color={'primaryText1'}>
                 <Trans>
                   <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                 </Trans>
-              </ThemedText.Link>
+              </TYPE.link>
             </AutoColumn>
           </BlueCard>
           <ButtonDropdownLight

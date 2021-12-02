@@ -80,7 +80,7 @@ function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransa
   )
 }
 
-function SubmitProposalTransactionSummary(_: { info: SubmitProposalTransactionInfo }) {
+function SubmitProposalTransactionSummary({}: { info: SubmitProposalTransactionInfo }) {
   return <Trans>Submit new proposal</Trans>
 }
 
@@ -147,13 +147,13 @@ function WrapSummary({ info: { currencyAmountRaw, unwrapped } }: { info: WrapTra
   }
 }
 
-function DepositLiquidityStakingSummary(_: { info: DepositLiquidityStakingTransactionInfo }) {
+function DepositLiquidityStakingSummary({}: { info: DepositLiquidityStakingTransactionInfo }) {
   // not worth rendering the tokens since you can should no longer deposit liquidity in the staking contracts
   // todo: deprecate and delete the code paths that allow this, show user more information
   return <Trans>Deposit liquidity</Trans>
 }
 
-function WithdrawLiquidityStakingSummary(_: { info: WithdrawLiquidityStakingTransactionInfo }) {
+function WithdrawLiquidityStakingSummary({}: { info: WithdrawLiquidityStakingTransactionInfo }) {
   return <Trans>Withdraw deposited liquidity</Trans>
 }
 

@@ -59,7 +59,7 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
-import { LinkStyledButton, ThemedText } from '../../theme'
+import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -468,7 +468,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       <AutoRouterLogo />
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
                         {trade instanceof V3Trade && trade.swaps.length > 1 && (
-                          <ThemedText.Blue fontSize={14}>{trade.swaps.length} routes</ThemedText.Blue>
+                          <TYPE.blue fontSize={14}>{trade.swaps.length} routes</TYPE.blue>
                         )}
                       </LoadingOpacityContainer>
                     </AutoRow>
@@ -506,9 +506,9 @@ export default function Swap({ history }: RouteComponentProps) {
             <div>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
-                  <ThemedText.Main mb="4px">
+                  <TYPE.main mb="4px">
                     <Trans>Unsupported Asset</Trans>
-                  </ThemedText.Main>
+                  </TYPE.main>
                 </ButtonPrimary>
               ) : !account ? (
                 <ButtonLight onClick={toggleWalletModal}>
@@ -525,17 +525,17 @@ export default function Swap({ history }: RouteComponentProps) {
                 </ButtonPrimary>
               ) : routeIsSyncing || routeIsLoading ? (
                 <GreyCard style={{ textAlign: 'center' }}>
-                  <ThemedText.Main mb="4px">
+                  <TYPE.main mb="4px">
                     <Dots>
                       <Trans>Loading</Trans>
                     </Dots>
-                  </ThemedText.Main>
+                  </TYPE.main>
                 </GreyCard>
               ) : routeNotFound && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
-                  <ThemedText.Main mb="4px">
+                  <TYPE.main mb="4px">
                     <Trans>Insufficient liquidity for this trade.</Trans>
-                  </ThemedText.Main>
+                  </TYPE.main>
                 </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>

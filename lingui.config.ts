@@ -1,4 +1,4 @@
-const linguiConfig = {
+export default {
   catalogs: [
     {
       path: '<rootDir>/src/locales/{locale}',
@@ -52,5 +52,3 @@ const linguiConfig = {
   runtimeConfigModule: ['@lingui/core', 'i18n'],
   sourceLocale: 'en-US',
 }
-
-export default linguiConfig

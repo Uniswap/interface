@@ -183,7 +183,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     }
   }, [toggledVersion, v2Trade, v3Trade.state, v3Trade.trade])
 
-  const bestTrade = isV2TradeBetter === undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
+  const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],

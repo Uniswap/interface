@@ -3,7 +3,7 @@ import { AutoColumn } from 'components/Column'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { TYPE } from 'theme'
 
 import Texture from '../../assets/images/sandtexture.webp'
 import { ExternalLink } from '../../theme'
@@ -102,7 +102,7 @@ const CTA2 = styled(ExternalLink)`
   }
 `
 
-const HeaderText = styled(ThemedText.Label)`
+const HeaderText = styled(TYPE.label)`
   align-items: center;
   display: flex;
   margin-bottom: 24px;
@@ -133,9 +133,9 @@ export default function CTACards() {
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗
           </HeaderText>
-          <ThemedText.Body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
+          <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
             <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
-          </ThemedText.Body>
+          </TYPE.body>
         </ResponsiveColumn>
       </CTA1>
       <CTA2 href={infoLink + 'pools'}>
@@ -143,9 +143,9 @@ export default function CTACards() {
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
           </HeaderText>
-          <ThemedText.Body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
+          <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
             <Trans>Explore popular pools on Uniswap Analytics.</Trans>
-          </ThemedText.Body>
+          </TYPE.body>
         </ResponsiveColumn>
       </CTA2>
     </CTASection>

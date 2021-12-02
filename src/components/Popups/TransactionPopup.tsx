@@ -4,8 +4,8 @@ import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTransaction } from '../../state/transactions/hooks'
-import { ThemedText } from '../../theme'
-import { ExternalLink } from '../../theme'
+import { TYPE } from '../../theme'
+import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { AutoColumn } from '../Column'
@@ -30,9 +30,9 @@ export default function TransactionPopup({ hash }: { hash: string }) {
         {success ? <CheckCircle color={theme.green1} size={24} /> : <AlertCircle color={theme.red1} size={24} />}
       </div>
       <AutoColumn gap="8px">
-        <ThemedText.Body fontWeight={500}>
+        <TYPE.body fontWeight={500}>
           <TransactionSummary info={tx.info} />
-        </ThemedText.Body>
+        </TYPE.body>
         {chainId && (
           <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
             View on Explorer

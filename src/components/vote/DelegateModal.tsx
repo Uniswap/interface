@@ -10,7 +10,7 @@ import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useDelegateCallback } from '../../state/governance/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ThemedText } from '../../theme'
+import { TYPE } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
@@ -95,25 +95,23 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <ThemedText.MediumHeader fontWeight={500}>{title}</ThemedText.MediumHeader>
+              <TYPE.mediumHeader fontWeight={500}>{title}</TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
-            <ThemedText.Body>
+            <TYPE.body>
               <Trans>Earned UNI tokens represent voting shares in Uniswap governance.</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body>
+            </TYPE.body>
+            <TYPE.body>
               <Trans>You can either vote on each proposal yourself or delegate your votes to a third party.</Trans>
-            </ThemedText.Body>
+            </TYPE.body>
             {usingDelegate && <AddressInputPanel value={typed} onChange={handleRecipientType} />}
             <ButtonPrimary disabled={!isAddress(parsedAddress ?? '')} onClick={onDelegate}>
-              <ThemedText.MediumHeader color="white">
+              <TYPE.mediumHeader color="white">
                 {usingDelegate ? <Trans>Delegate Votes</Trans> : <Trans>Self Delegate</Trans>}
-              </ThemedText.MediumHeader>
+              </TYPE.mediumHeader>
             </ButtonPrimary>
             <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-              <ThemedText.Blue>
-                {usingDelegate ? <Trans>Remove Delegate</Trans> : <Trans>Add Delegate +</Trans>}
-              </ThemedText.Blue>
+              <TYPE.blue>{usingDelegate ? <Trans>Remove Delegate</Trans> : <Trans>Add Delegate +</Trans>}</TYPE.blue>
             </TextButton>
           </AutoColumn>
         </ContentWrapper>
@@ -121,20 +119,20 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <TYPE.largeHeader>
               {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
-            </ThemedText.LargeHeader>
-            <ThemedText.Main fontSize={36}> {formatCurrencyAmount(uniBalance, 4)}</ThemedText.Main>
+            </TYPE.largeHeader>
+            <TYPE.main fontSize={36}> {formatCurrencyAmount(uniBalance, 4)}</TYPE.main>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <TYPE.largeHeader>
               <Trans>Transaction Submitted</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Main fontSize={36}>{formatCurrencyAmount(uniBalance, 4)}</ThemedText.Main>
+            </TYPE.largeHeader>
+            <TYPE.main fontSize={36}>{formatCurrencyAmount(uniBalance, 4)}</TYPE.main>
           </AutoColumn>
         </SubmittedView>
       )}

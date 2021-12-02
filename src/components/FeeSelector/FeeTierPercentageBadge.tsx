@@ -4,7 +4,7 @@ import Badge from 'components/Badge'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState } from 'hooks/usePools'
 import React from 'react'
-import { ThemedText } from 'theme'
+import { TYPE } from 'theme'
 
 export function FeeTierPercentageBadge({
   feeAmount,
@@ -17,7 +17,7 @@ export function FeeTierPercentageBadge({
 }) {
   return (
     <Badge>
-      <ThemedText.Label fontSize={10}>
+      <TYPE.label fontSize={10}>
         {!distributions || poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID ? (
           <Trans>Not created</Trans>
         ) : distributions[feeAmount] !== undefined ? (
@@ -25,7 +25,7 @@ export function FeeTierPercentageBadge({
         ) : (
           <Trans>No data</Trans>
         )}
-      </ThemedText.Label>
+      </TYPE.label>
     </Badge>
   )
 }

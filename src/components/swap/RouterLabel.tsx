@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { TYPE } from 'theme'
 
 import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
 import { ReactComponent as StaticRouterIcon } from '../../assets/svg/static_route.svg'
@@ -26,7 +26,7 @@ const StyledStaticRouterIcon = styled(StaticRouterIcon)`
   }
 `
 
-const StyledAutoRouterLabel = styled(ThemedText.Black)`
+const StyledAutoRouterLabel = styled(TYPE.black)`
   line-height: 1rem;
 
   /* fallback color */
@@ -51,8 +51,8 @@ export function AutoRouterLabel() {
   return routingAPIEnabled ? (
     <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
   ) : (
-    <ThemedText.Black fontSize={14}>
+    <TYPE.black fontSize={14}>
       <Trans>Trade Route</Trans>
-    </ThemedText.Black>
+    </TYPE.black>
   )
 }

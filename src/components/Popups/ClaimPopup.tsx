@@ -6,6 +6,7 @@ import ReactGA from 'react-ga'
 import styled, { keyframes } from 'styled-components/macro'
 
 import tokenLogo from '../../assets/images/token-logo.png'
+import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks/web3'
 import {
   useModalOpen,
@@ -15,8 +16,7 @@ import {
 } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ThemedText } from '../../theme'
-import { ButtonPrimary } from '../Button'
+import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { CardBGImage, CardNoise } from '../earn/styled'
 
@@ -98,10 +98,10 @@ export default function ClaimPopup() {
           <StyledClose stroke="white" onClick={toggleShowClaimPopup} />
           <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} justify="center">
             <UniToken width="48px" src={tokenLogo} />{' '}
-            <ThemedText.White style={{ marginTop: '1rem' }} fontSize={36} fontWeight={600}>
+            <TYPE.white style={{ marginTop: '1rem' }} fontSize={36} fontWeight={600}>
               {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-            </ThemedText.White>
-            <ThemedText.White style={{ paddingTop: '1.25rem', textAlign: 'center' }} fontWeight={600} color="white">
+            </TYPE.white>
+            <TYPE.white style={{ paddingTop: '1.25rem', textAlign: 'center' }} fontWeight={600} color="white">
               <span role="img" aria-label="party">
                 🎉
               </span>{' '}
@@ -109,12 +109,12 @@ export default function ClaimPopup() {
               <span role="img" aria-label="party">
                 🎉
               </span>
-            </ThemedText.White>
-            <ThemedText.SubHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
+            </TYPE.white>
+            <TYPE.subHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
               <Trans>
                 Thanks for being part of the Uniswap community <Heart size={12} />
               </Trans>
-            </ThemedText.SubHeader>
+            </TYPE.subHeader>
           </AutoColumn>
           <AutoColumn style={{ zIndex: 10 }} justify="center">
             <ButtonPrimary padding="8px" $borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>

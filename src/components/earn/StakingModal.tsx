@@ -13,7 +13,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { CloseIcon, ThemedText } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { ButtonConfirmed, ButtonError } from '../Button'
@@ -159,9 +159,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <ThemedText.MediumHeader>
+            <TYPE.mediumHeader>
               <Trans>Deposit</Trans>
-            </ThemedText.MediumHeader>
+            </TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           <CurrencyInputPanel
@@ -178,19 +178,19 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
           <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
             <div>
-              <ThemedText.Black fontWeight={600}>
+              <TYPE.black fontWeight={600}>
                 <Trans>Weekly Rewards</Trans>
-              </ThemedText.Black>
+              </TYPE.black>
             </div>
 
-            <ThemedText.Black>
+            <TYPE.black>
               <Trans>
                 {hypotheticalRewardRate
                   .multiply((60 * 60 * 24 * 7).toString())
                   .toSignificant(4, { groupSeparator: ',' })}{' '}
                 UNI / week
               </Trans>
-            </ThemedText.Black>
+            </TYPE.black>
           </HypotheticalRewardRate>
 
           <RowBetween>
@@ -216,24 +216,24 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <TYPE.largeHeader>
               <Trans>Depositing Liquidity</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Body fontSize={20}>
+            </TYPE.largeHeader>
+            <TYPE.body fontSize={20}>
               <Trans>{parsedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </ThemedText.Body>
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
       {attempting && hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <TYPE.largeHeader>
               <Trans>Transaction Submitted</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Body fontSize={20}>
+            </TYPE.largeHeader>
+            <TYPE.body fontSize={20}>
               <Trans>Deposited {parsedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </ThemedText.Body>
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

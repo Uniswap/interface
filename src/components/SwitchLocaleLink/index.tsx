@@ -5,9 +5,9 @@ import styled from 'styled-components/macro'
 
 import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/locales'
 import { navigatorLocale, useActiveLocale } from '../../hooks/useActiveLocale'
-import { StyledInternalLink, ThemedText } from '../../theme'
+import { StyledInternalLink, TYPE } from '../../theme'
 
-const Container = styled(ThemedText.Small)`
+const Container = styled(TYPE.small)`
   opacity: 0.6;
   :hover {
     opacity: 1;

@@ -1,6 +1,6 @@
 import jazzicon from '@metamask/jazzicon'
 import useENSAvatar from 'hooks/useENSAvatar'
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -20,29 +20,27 @@ const StyledAvatar = styled.img`
 `
 
 export default function Identicon() {
+  const ref = useRef<HTMLDivElement>(null)
   const { account } = useActiveWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
   const [fetchable, setFetchable] = useState(true)
 
-  const icon = useMemo(() => account && jazzicon(16, parseInt(account.slice(2, 10), 16)), [account])
-  const iconRef = useRef<HTMLDivElement>(null)
-  useLayoutEffect(() => {
-    const current = iconRef.current
-    if (icon) {
+  useEffect(() => {
+    if ((!avatar || !fetchable) && account) {
+      const icon = jazzicon(16, parseInt(account?.slice(2, 10), 16))
+      const current = ref.current
       current?.appendChild(icon)
       return () => {
         current?.removeChild(icon)
       }
     }
     return
-  }, [icon, iconRef])
+  }, [account, avatar, fetchable])
 
   return (
-    <StyledIdenticon>
-      {avatar && fetchable ? (
+    <StyledIdenticon ref={ref}>
+      {avatar && fetchable && (
         <StyledAvatar alt="avatar" src={avatar} onError={() => setFetchable(false)}></StyledAvatar>
-      ) : (
-        <span ref={iconRef} />
       )}
     </StyledIdenticon>
   )

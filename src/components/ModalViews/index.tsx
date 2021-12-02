@@ -5,7 +5,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { CloseIcon, CustomLightSpinner, ThemedText } from '../../theme'
+import { CloseIcon, CustomLightSpinner, TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -32,9 +32,9 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify={'center'}>
         {children}
-        <ThemedText.SubHeader>
+        <TYPE.subHeader>
           <Trans>Confirm this transaction in your wallet</Trans>
-        </ThemedText.SubHeader>
+        </TYPE.subHeader>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>
   )
@@ -68,9 +68,9 @@ export function SubmittedView({
             href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
             style={{ marginLeft: '4px' }}
           >
-            <ThemedText.SubHeader>
+            <TYPE.subHeader>
               <Trans>View transaction on Explorer</Trans>
-            </ThemedText.SubHeader>
+            </TYPE.subHeader>
           </ExternalLink>
         )}
       </AutoColumn>
