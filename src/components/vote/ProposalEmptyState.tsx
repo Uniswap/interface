@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { TYPE } from 'theme'
 
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.text4};
@@ -25,14 +25,14 @@ interface EmptyStateProps {
 }
 const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
   <EmptyProposals>
-    <ThemedText.Body style={{ marginBottom: '8px' }}>
+    <TYPE.body style={{ marginBottom: '8px' }}>
       <HeaderContent />
-    </ThemedText.Body>
-    <ThemedText.SubHeader>
+    </TYPE.body>
+    <TYPE.subHeader>
       <Sub>
         <SubHeaderContent />
       </Sub>
-    </ThemedText.SubHeader>
+    </TYPE.subHeader>
   </EmptyProposals>
 )
 

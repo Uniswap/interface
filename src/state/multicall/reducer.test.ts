@@ -38,9 +38,9 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callListeners: {
-          1: {
+          [1]: {
             [`${DAI_ADDRESS}-0x`]: {
-              1: 1,
+              [1]: 1,
             },
           },
         },
@@ -92,7 +92,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {},
-        callListeners: { 1: { [`${DAI_ADDRESS}-0x`]: {} } },
+        callListeners: { [1]: { [`${DAI_ADDRESS}-0x`]: {} } },
       })
     })
   })
@@ -110,7 +110,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {
+          [1]: {
             abc: {
               blockNumber: 1,
               data: '0x',
@@ -140,7 +140,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {
+          [1]: {
             abc: {
               blockNumber: 2,
               data: '0x2',
@@ -170,7 +170,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {
+          [1]: {
             abc: {
               blockNumber: 2,
               data: '0x2',
@@ -191,7 +191,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {
+          [1]: {
             [`${DAI_ADDRESS}-0x0`]: { fetchingBlockNumber: 2 },
           },
         },
@@ -215,7 +215,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {
+          [1]: {
             [`${DAI_ADDRESS}-0x0`]: { fetchingBlockNumber: 3 },
           },
         },
@@ -239,7 +239,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {
+          [1]: {
             [`${DAI_ADDRESS}-0x0`]: { fetchingBlockNumber: 2 },
           },
         },
@@ -258,7 +258,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {},
+          [1]: {},
         },
       })
     })
@@ -279,7 +279,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {
+          [1]: {
             [`${DAI_ADDRESS}-0x0`]: {
               blockNumber: 2,
               // null data indicates error
@@ -306,7 +306,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {
-          1: {
+          [1]: {
             [`${DAI_ADDRESS}-0x0`]: { fetchingBlockNumber: 3 },
           },
         },

@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { isMobile } from 'utils/userAgent'
 
 import { useModalOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
@@ -91,9 +91,9 @@ export function PrivacyPolicyModal() {
     <Modal isOpen={open} onDismiss={() => toggle()}>
       <AutoColumn gap="12px" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
-          <ThemedText.MediumHeader>
+          <TYPE.mediumHeader>
             <Trans>Legal & Privacy</Trans>
-          </ThemedText.MediumHeader>
+          </TYPE.mediumHeader>
           <HoverText onClick={() => toggle()}>
             <X size={24} />
           </HoverText>
@@ -122,9 +122,9 @@ export function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.Main fontSize={14} color={'primaryText1'}>
+                  <TYPE.main fontSize={14} color={'primaryText1'}>
                     <Trans>Uniswap Labs&apos; Terms of Service</Trans>
-                  </ThemedText.Main>
+                  </TYPE.main>
                 </AutoRow>
                 <StyledLinkOut size={20} />
               </RowBetween>
@@ -135,29 +135,29 @@ export function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.Main fontSize={14} color={'primaryText1'}>
+                  <TYPE.main fontSize={14} color={'primaryText1'}>
                     <Trans>Protocol Disclaimer</Trans>
-                  </ThemedText.Main>
+                  </TYPE.main>
                 </AutoRow>
                 <StyledLinkOut size={20} />
               </RowBetween>
             </ExternalLink>
           </StyledExternalCard>
         </AutoColumn>
-        <ThemedText.Main fontSize={14}>
+        <TYPE.main fontSize={14}>
           <Trans>This app uses the following third-party APIs:</Trans>
-        </ThemedText.Main>
+        </TYPE.main>
         <AutoColumn gap="12px">
           {EXTERNAL_APIS.map(({ name, description }, i) => (
             <DarkGreyCard key={i}>
               <AutoColumn gap="8px">
                 <AutoRow gap="4px">
                   <Info size={18} />
-                  <ThemedText.Main fontSize={14} color={'text1'}>
+                  <TYPE.main fontSize={14} color={'text1'}>
                     {name}
-                  </ThemedText.Main>
+                  </TYPE.main>
                 </AutoRow>
-                <ThemedText.Main fontSize={14}>{description}</ThemedText.Main>
+                <TYPE.main fontSize={14}>{description}</TYPE.main>
               </AutoColumn>
             </DarkGreyCard>
           ))}

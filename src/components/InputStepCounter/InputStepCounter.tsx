@@ -6,7 +6,7 @@ import { AutoColumn } from 'components/Column'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { TYPE } from 'theme'
 
 import { Input as NumericalInput } from '../NumericalInput'
 
@@ -57,13 +57,13 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   `};
 `
 
-const InputTitle = styled(ThemedText.Small)`
+const InputTitle = styled(TYPE.small)`
   color: ${({ theme }) => theme.text2};
   font-size: 12px;
   font-weight: 500;
 `
 
-const ButtonLabel = styled(ThemedText.White)<{ disabled: boolean }>`
+const ButtonLabel = styled(TYPE.white)<{ disabled: boolean }>`
   color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.text1)} !important;
 `
 

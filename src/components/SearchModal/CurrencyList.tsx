@@ -14,7 +14,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useCombinedActiveList } from '../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { ThemedText } from '../../theme'
+import { TYPE } from '../../theme'
 import { isTokenOnList } from '../../utils'
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
@@ -135,13 +135,13 @@ function CurrencyRow({
         <Text title={currency.name} fontWeight={500}>
           {currency.symbol}
         </Text>
-        <ThemedText.DarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
+        <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
           {!currency.isNative && !isOnSelectedList && customAdded ? (
             <Trans>{currency.name} • Added by user</Trans>
           ) : (
             currency.name
           )}
-        </ThemedText.DarkGray>
+        </TYPE.darkGray>
       </Column>
       <TokenTags currency={currency} />
       {showCurrencyAmount && (
@@ -167,9 +167,9 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
         <RowBetween>
           <RowFixed>
             <TokenListLogoWrapper src={TokenListLogo} />
-            <ThemedText.Main ml="6px" fontSize="12px" color={theme.text1}>
+            <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
               <Trans>Expanded results from inactive Token Lists</Trans>
-            </ThemedText.Main>
+            </TYPE.main>
           </RowFixed>
           <QuestionHelper
             text={

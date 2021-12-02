@@ -10,7 +10,7 @@ import useTheme from 'hooks/useTheme'
 import { CSSProperties } from 'react'
 import { CheckCircle } from 'react-feather'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { TYPE } from 'theme'
 
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 
@@ -67,16 +67,16 @@ export default function ImportRow({
       <CurrencyLogo currency={token} size={'24px'} style={{ opacity: dim ? '0.6' : '1' }} />
       <AutoColumn gap="4px" style={{ opacity: dim ? '0.6' : '1' }}>
         <AutoRow>
-          <ThemedText.Body fontWeight={500}>{token.symbol}</ThemedText.Body>
-          <ThemedText.DarkGray ml="8px" fontWeight={300}>
+          <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
+          <TYPE.darkGray ml="8px" fontWeight={300}>
             <NameOverflow title={token.name}>{token.name}</NameOverflow>
-          </ThemedText.DarkGray>
+          </TYPE.darkGray>
         </AutoRow>
         {list && list.logoURI && (
           <RowFixed>
-            <ThemedText.Small mr="4px" color={theme.text3}>
+            <TYPE.small mr="4px" color={theme.text3}>
               <Trans>via {list.name} </Trans>
-            </ThemedText.Small>
+            </TYPE.small>
             <ListLogo logoURI={list.logoURI} size="12px" />
           </RowFixed>
         )}
@@ -97,9 +97,9 @@ export default function ImportRow({
       ) : (
         <RowFixed style={{ minWidth: 'fit-content' }}>
           <CheckIcon />
-          <ThemedText.Main color={theme.green1}>
+          <TYPE.main color={theme.green1}>
             <Trans>Active</Trans>
-          </ThemedText.Main>
+          </TYPE.main>
         </RowFixed>
       )}
     </TokenSection>

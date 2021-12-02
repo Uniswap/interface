@@ -13,7 +13,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
-import { ThemedText } from '../../theme'
+import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -203,9 +203,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             {chainId === SupportedChainId.MAINNET && (
               <RowBetween>
                 <RowFixed>
-                  <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                     <Trans>Auto Router</Trans>
-                  </ThemedText.Black>
+                  </TYPE.black>
                   <QuestionHelper
                     text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
                   />
@@ -226,9 +226,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
             <RowBetween>
               <RowFixed>
-                <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Expert Mode</Trans>
-                </ThemedText.Black>
+                </TYPE.black>
                 <QuestionHelper
                   text={
                     <Trans>Allow high price impact trades and skip the confirm screen. Use at your own risk.</Trans>

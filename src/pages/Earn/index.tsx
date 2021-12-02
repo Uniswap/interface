@@ -11,7 +11,7 @@ import { RowBetween } from '../../components/Row'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { ExternalLink, ThemedText } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { Countdown } from './Countdown'
 
 const PageWrapper = styled(AutoColumn)`
@@ -63,25 +63,25 @@ export default function Earn() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <ThemedText.White fontWeight={600}>
+                <TYPE.white fontWeight={600}>
                   <Trans>Uniswap liquidity mining</Trans>
-                </ThemedText.White>
+                </TYPE.white>
               </RowBetween>
               <RowBetween>
-                <ThemedText.White fontSize={14}>
+                <TYPE.white fontSize={14}>
                   <Trans>
                     Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
                   </Trans>
-                </ThemedText.White>
+                </TYPE.white>
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 href="https://uniswap.org/blog/uni/"
                 target="_blank"
               >
-                <ThemedText.White fontSize={14}>
+                <TYPE.white fontSize={14}>
                   <Trans>Read more about UNI</Trans>
-                </ThemedText.White>
+                </TYPE.white>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -92,9 +92,9 @@ export default function Earn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <ThemedText.MediumHeader style={{ marginTop: '0.5rem' }}>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
             <Trans>Participating pools</Trans>
-          </ThemedText.MediumHeader>
+          </TYPE.mediumHeader>
           <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
         </DataRow>
 

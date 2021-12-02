@@ -9,7 +9,7 @@ import { useTotalSupply } from '../../hooks/useTotalSupply'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import { StakingInfo } from '../../state/stake/hooks'
-import { StyledInternalLink, ThemedText } from '../../theme'
+import { StyledInternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonPrimary } from '../Button'
@@ -115,9 +115,9 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
 
       <TopSection>
         <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-        <ThemedText.White fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+        <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
           {currency0.symbol}-{currency1.symbol}
-        </ThemedText.White>
+        </TYPE.white>
 
         <StyledInternalLink to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
           <ButtonPrimary padding="8px" $borderRadius="8px">
@@ -128,22 +128,22 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
 
       <StatContainer>
         <RowBetween>
-          <ThemedText.White>
+          <TYPE.white>
             <Trans>Total deposited</Trans>
-          </ThemedText.White>
-          <ThemedText.White>
+          </TYPE.white>
+          <TYPE.white>
             {valueOfTotalStakedAmountInUSDC ? (
               <Trans>${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}</Trans>
             ) : (
               <Trans>{valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH</Trans>
             )}
-          </ThemedText.White>
+          </TYPE.white>
         </RowBetween>
         <RowBetween>
-          <ThemedText.White>
+          <TYPE.white>
             <Trans>Pool rate</Trans>
-          </ThemedText.White>
-          <ThemedText.White>
+          </TYPE.white>
+          <TYPE.white>
             {stakingInfo ? (
               stakingInfo.active ? (
                 <Trans>
@@ -156,7 +156,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             ) : (
               '-'
             )}
-          </ThemedText.White>
+          </TYPE.white>
         </RowBetween>
       </StatContainer>
 
@@ -164,13 +164,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <>
           <Break />
           <BottomSection showBackground={true}>
-            <ThemedText.Black color={'white'} fontWeight={500}>
+            <TYPE.black color={'white'} fontWeight={500}>
               <span>
                 <Trans>Your rate</Trans>
               </span>
-            </ThemedText.Black>
+            </TYPE.black>
 
-            <ThemedText.Black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
               </span>
@@ -188,7 +188,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
               ) : (
                 '-'
               )}
-            </ThemedText.Black>
+            </TYPE.black>
           </BottomSection>
         </>
       )}

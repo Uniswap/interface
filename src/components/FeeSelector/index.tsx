@@ -14,7 +14,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Box } from 'rebass'
 import styled, { keyframes } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { TYPE } from 'theme'
 
 import { FeeOption } from './FeeOption'
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
@@ -149,18 +149,18 @@ export default function FeeSelector({
             <AutoColumn id="add-liquidity-selected-fee">
               {!feeAmount ? (
                 <>
-                  <ThemedText.Label>
+                  <TYPE.label>
                     <Trans>Fee tier</Trans>
-                  </ThemedText.Label>
-                  <ThemedText.Main fontWeight={400} fontSize="12px" textAlign="left">
+                  </TYPE.label>
+                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                     <Trans>The % you will earn in fees.</Trans>
-                  </ThemedText.Main>
+                  </TYPE.main>
                 </>
               ) : (
                 <>
-                  <ThemedText.Label className="selected-fee-label">
+                  <TYPE.label className="selected-fee-label">
                     <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}% fee tier</Trans>
-                  </ThemedText.Label>
+                  </TYPE.label>
                   <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
                     {distributions && (
                       <FeeTierPercentageBadge

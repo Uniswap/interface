@@ -13,7 +13,7 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import useTheme from '../../hooks/useTheme'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { ThemedText } from '../../theme'
+import { TYPE } from '../../theme'
 import { ButtonGray } from '../Button'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -212,9 +212,9 @@ export default function CurrencyInputPanel({
         <FixedContainer>
           <AutoColumn gap="sm" justify="center">
             <Lock />
-            <ThemedText.Label fontSize="12px" textAlign="center" padding="0 12px">
+            <TYPE.label fontSize="12px" textAlign="center" padding="0 12px">
               <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
-            </ThemedText.Label>
+            </TYPE.label>
           </AutoColumn>
         </FixedContainer>
       )}
@@ -271,7 +271,7 @@ export default function CurrencyInputPanel({
             <RowBetween>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
-                  <ThemedText.Body
+                  <TYPE.body
                     onClick={onMax}
                     color={theme.text2}
                     fontWeight={400}
@@ -287,7 +287,7 @@ export default function CurrencyInputPanel({
                         </Trans>
                       )
                     ) : null}
-                  </ThemedText.Body>
+                  </TYPE.body>
                   {showMaxButton && selectedCurrencyBalance ? (
                     <StyledBalanceMax onClick={onMax}>
                       <Trans>(Max)</Trans>
