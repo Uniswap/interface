@@ -1,5 +1,5 @@
-import { namehash } from '@ethersproject/hash'
 import { useMemo } from 'react'
+import { safeNamehash } from 'utils/safeNamehash'
 
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { isAddress } from '../utils'
@@ -15,11 +15,7 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const debouncedAddress = useDebounce(address, 200)
   const ensNodeArgument = useMemo(() => {
     if (!debouncedAddress || !isAddress(debouncedAddress)) return [undefined]
-    try {
-      return debouncedAddress ? [namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)] : [undefined]
-    } catch (error) {
-      return [undefined]
-    }
+    return [safeNamehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)]
   }, [debouncedAddress])
   const registrarContract = useENSRegistrarContract(false)
   const resolverAddress = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)

@@ -1,5 +1,5 @@
-import { namehash } from '@ethersproject/hash'
 import { useEffect, useMemo, useState } from 'react'
+import { safeNamehash } from 'utils/safeNamehash'
 import uriToHttp from 'utils/uriToHttp'
 
 import { useSingleCallResult } from '../state/multicall/hooks'
@@ -21,15 +21,12 @@ export default function useENSAvatar(
   const debouncedAddress = useDebounce(address, 200)
   const node = useMemo(() => {
     if (!debouncedAddress || !isAddress(debouncedAddress)) return undefined
-    try {
-      return debouncedAddress ? namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`) : undefined
-    } catch (error) {
-      return undefined
-    }
+    return safeNamehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)
   }, [debouncedAddress])
 
   const addressAvatar = useAvatarFromNode(node)
-  const nameAvatar = useAvatarFromNode(namehash(useENSName(address).ENSName ?? ''))
+  const ENSName = useENSName(address).ENSName
+  const nameAvatar = useAvatarFromNode(ENSName ? safeNamehash(ENSName) : undefined)
   let avatar = addressAvatar.avatar || nameAvatar.avatar
 
   const nftAvatar = useAvatarFromNFT(avatar, enforceOwnership)

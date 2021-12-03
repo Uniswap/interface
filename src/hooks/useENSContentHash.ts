@@ -1,5 +1,5 @@
-import { namehash } from '@ethersproject/hash'
 import { useMemo } from 'react'
+import { safeNamehash } from 'utils/safeNamehash'
 
 import { useSingleCallResult } from '../state/multicall/hooks'
 import isZero from '../utils/isZero'
@@ -10,12 +10,8 @@ import { useENSRegistrarContract, useENSResolverContract } from './useContract'
  */
 export default function useENSContentHash(ensName?: string | null): { loading: boolean; contenthash: string | null } {
   const ensNodeArgument = useMemo(() => {
-    if (!ensName) return [undefined]
-    try {
-      return ensName ? [namehash(ensName)] : [undefined]
-    } catch (error) {
-      return [undefined]
-    }
+    if (ensName === null) return [undefined]
+    return [safeNamehash(ensName)]
   }, [ensName])
   const registrarContract = useENSRegistrarContract(false)
   const resolverAddressResult = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
