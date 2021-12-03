@@ -341,6 +341,7 @@ const Tabs = styled.div`
   margin-top: 1.5rem;
   background: ${({ theme }) => theme.buttonBlack};
   display: flex;
+  align-items: center;
 `
 
 const TabItem = styled.div<{ active: boolean }>`
@@ -599,15 +600,15 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
           <ButtonLight
             padding="6px"
             style={{ fontSize: '14px', marginRight: '8px', borderRadius: '4px' }}
-            width="60px"
             as={Link}
             to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
           >
-            <Trans>+ Add</Trans>
+            <Text width="max-content">
+              <Trans>+ Add</Trans>
+            </Text>
           </ButtonLight>
 
           <RemoveBtn
-            width="90px"
             style={{
               padding: '6px',
               borderRadius: '4px',
@@ -617,7 +618,9 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
             as={Link}
             to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
           >
-            <Trans>- Remove</Trans>
+            <Text width="max-content">
+              <Trans>- Remove</Trans>
+            </Text>
           </RemoveBtn>
         </Flex>
       </Flex>

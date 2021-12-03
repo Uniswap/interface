@@ -1167,6 +1167,10 @@ msgstr ""
 msgid "Output is estimated. You will receive at least"
 msgstr ""
 
+#: src/components/UpcomingFarms/NoFarms.tsx
+msgid "Please check the <0>Active Farms</0> or come back later."
+msgstr ""
+
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr ""
@@ -1594,6 +1598,14 @@ msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "To"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "To (estimated)"
 msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx

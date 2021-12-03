@@ -1167,6 +1167,10 @@ msgstr "输出估计。 如果价格变化超过 {0}%，您的交易将恢复。
 msgid "Output is estimated. You will receive at least"
 msgstr "输出估计。 至少您将收到"
 
+#: src/components/UpcomingFarms/NoFarms.tsx
+msgid "Please check the <0>Active Farms</0> or come back later."
+msgstr ""
+
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr ""
@@ -1595,6 +1599,14 @@ msgstr ""
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "提示：自定义代币是本地存储在您的浏览器中"
+
+#: src/pages/SwapV2/index.tsx
+msgid "To"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "To (estimated)"
+msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Token"

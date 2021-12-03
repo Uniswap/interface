@@ -1167,6 +1167,10 @@ msgstr "예상된 가격입니다. 가격이 {0}% 이상 변경되면 거래가 
 msgid "Output is estimated. You will receive at least"
 msgstr "최소한 받을 수 있는 예상된 결과 액수입니다"
 
+#: src/components/UpcomingFarms/NoFarms.tsx
+msgid "Please check the <0>Active Farms</0> or come back later."
+msgstr ""
+
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr ""
@@ -1595,6 +1599,14 @@ msgstr ""
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "팁: 사용자 지정 토큰은 브라우저에 로컬로 저장됩니다"
+
+#: src/pages/SwapV2/index.tsx
+msgid "To"
+msgstr ""
+
+#: src/pages/SwapV2/index.tsx
+msgid "To (estimated)"
+msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Token"

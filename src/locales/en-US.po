@@ -1167,6 +1167,10 @@ msgstr "Output is estimated. If the price changes by more than {0}% your transac
 msgid "Output is estimated. You will receive at least"
 msgstr "Output is estimated. You will receive at least"
 
+#: src/components/UpcomingFarms/NoFarms.tsx
+msgid "Please check the <0>Active Farms</0> or come back later."
+msgstr "Please check the <0>Active Farms</0> or come back later."
+
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "Please connect to the appropriate network."
@@ -1595,6 +1599,14 @@ msgstr "Thousands of users and multiple decentralized applications are already p
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Tip: Custom tokens are stored locally in your browser"
+
+#: src/pages/SwapV2/index.tsx
+msgid "To"
+msgstr "To"
+
+#: src/pages/SwapV2/index.tsx
+msgid "To (estimated)"
+msgstr "To (estimated)"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Token"

@@ -1167,6 +1167,10 @@ msgstr "Đầu ra đã được ước tính. Nếu giá thay đổi hơn {0}% t
 msgid "Output is estimated. You will receive at least"
 msgstr "Đầu ra được ước tính. Bạn sẽ nhận được ít nhất"
 
+#: src/components/UpcomingFarms/NoFarms.tsx
+msgid "Please check the <0>Active Farms</0> or come back later."
+msgstr "Vui lòng kiểm tra <0>Farm đang hiệu lực</0> hoặc quay lại sau"
+
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "Vui lòng kết nối với mạng thích hợp."
@@ -1595,6 +1599,14 @@ msgstr "Hàng nghìn người dùng và rất nhiều ứng dụng phi tập tru
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Mẹo: Token tùy chỉnh được lưu trữ cục bộ trong trình duyệt của bạn"
+
+#: src/pages/SwapV2/index.tsx
+msgid "To"
+msgstr "Sang"
+
+#: src/pages/SwapV2/index.tsx
+msgid "To (estimated)"
+msgstr "Sang (ước tính)"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Token"

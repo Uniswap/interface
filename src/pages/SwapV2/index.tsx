@@ -395,7 +395,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       disabledInput
                       value={formattedAmounts[Field.OUTPUT]}
                       onUserInput={handleTypeOutput}
-                      label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
+                      label={independentField === Field.INPUT && !showWrap && trade ? t`To (estimated)` : t`To`}
                       showMaxButton={false}
                       currency={currencies[Field.OUTPUT]}
                       onCurrencySelect={handleOutputSelect}
