@@ -15,7 +15,9 @@ export * from './scrollable'
 export * from './styled'
 export * as ThemedText from './type'
 
-const light: Colors = {
+type ColorsAndHover = Colors & { onHover: Theme['onHover'] }
+
+const light: ColorsAndHover = {
   // surface
   accent: '#FF007A',
   container: '#F7F8FA',
@@ -35,9 +37,11 @@ const light: Colors = {
   success: '#27AE60',
   warning: '#F3B71E',
   error: '#FD4040',
+
+  onHover: mix(0.24, '#000000'), // hovered elements get a 24% primary text overlay
 }
 
-const dark: Colors = {
+const dark: ColorsAndHover = {
   // surface
   accent: '#2172E5',
   container: '#191B1F',
@@ -57,13 +61,14 @@ const dark: Colors = {
   success: '#27AE60',
   warning: '#F3B71E',
   error: '#FD4040',
+
+  onHover: mix(0.24, '#FFFFFF'), // hovered elements get a 24% primary text overlay
 }
 
 export const defaultTheme: Theme = {
   darkMode: true,
   fontFamily: '"Inter var", sans-serif',
   borderRadius: 1,
-  onHover: mix(0.24, '#000000'), // hovered elements get a 24% primary text overlay
   ...dark,
   light,
   dark,
