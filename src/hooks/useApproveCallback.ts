@@ -1,10 +1,12 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade } from '@uniswap/router-sdk'
+import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
+import { SWAP_ROUTER_ADDRESS, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
@@ -19,18 +21,14 @@ export enum ApprovalState {
   APPROVED = 'APPROVED',
 }
 
-// returns a variable indicating the state of the approval and a function which approves if necessary or early returns
-export function useApproveCallback(
-  amountToApprove?: CurrencyAmount<Currency>,
-  spender?: string
-): [ApprovalState, () => Promise<void>] {
-  const { account, chainId } = useActiveWeb3React()
+export function useApprovalState(amountToApprove?: CurrencyAmount<Currency>, spender?: string) {
+  const { account } = useActiveWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
 
-  // check the current approval status
-  const approvalState: ApprovalState = useMemo(() => {
+  return useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
@@ -43,6 +41,40 @@ export function useApproveCallback(
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
+}
+
+/** Returns approval state for all known swap routers */
+export function useAllApprovalStates(
+  trade: Trade<Currency, Currency, TradeType> | undefined,
+  allowedSlippage: Percent
+) {
+  const { chainId } = useActiveWeb3React()
+
+  const amountToApprove = useMemo(
+    () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
+    [trade, allowedSlippage]
+  )
+
+  const v2ApprovalState = useApprovalState(amountToApprove, chainId ? V2_ROUTER_ADDRESS[chainId] : undefined)
+  const v3ApprovalState = useApprovalState(amountToApprove, chainId ? V3_ROUTER_ADDRESS[chainId] : undefined)
+  const v2V3ApprovalState = useApprovalState(amountToApprove, chainId ? SWAP_ROUTER_ADDRESS[chainId] : undefined)
+
+  return useMemo(
+    () => ({ v2: v2ApprovalState, v3: v3ApprovalState, v2V3: v2V3ApprovalState }),
+    [v2ApprovalState, v2V3ApprovalState, v3ApprovalState]
+  )
+}
+
+// returns a variable indicating the state of the approval and a function which approves if necessary or early returns
+export function useApproveCallback(
+  amountToApprove?: CurrencyAmount<Currency>,
+  spender?: string
+): [ApprovalState, () => Promise<void>] {
+  const { chainId } = useActiveWeb3React()
+  const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+
+  // check the current approval status
+  const approvalState = useApprovalState(amountToApprove, spender)
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
@@ -102,15 +134,76 @@ export function useApproveCallback(
 
 // wraps useApproveCallback in the context of a swap
 export function useApproveCallbackFromTrade(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
+  trade:
+    | V2Trade<Currency, Currency, TradeType>
+    | V3Trade<Currency, Currency, TradeType>
+    | Trade<Currency, Currency, TradeType>
+    | undefined,
   allowedSlippage: Percent
 ) {
   const { chainId } = useActiveWeb3React()
-  // TODO set right router addresses
-  const v3SwapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [trade, allowedSlippage]
   )
-  return useApproveCallback(amountToApprove, chainId ? v3SwapRouterAddress : undefined)
+  return useApproveCallback(
+    amountToApprove,
+    chainId
+      ? trade instanceof V2Trade
+        ? V2_ROUTER_ADDRESS[chainId]
+        : trade instanceof V3Trade
+        ? V3_ROUTER_ADDRESS[chainId]
+        : SWAP_ROUTER_ADDRESS[chainId]
+      : undefined
+  )
+}
+
+/**
+ * Returns a `Trade` object for which
+ * Heuristic:
+ * - if trade contains a single v2-only trade & V2 SwapRouter is approved: use V2 SwapRouter
+ * - if trade contains only v3 & V3 SwapRouter is approved: use V3 SwapRouter
+ * - else: approve and use V2+V3 SwapRouter
+ */
+export function useApprovalOptimizedTrade(
+  trade: Trade<Currency, Currency, TradeType> | undefined,
+  allowedSlippage: Percent
+):
+  | V2Trade<Currency, Currency, TradeType>
+  | V3Trade<Currency, Currency, TradeType>
+  | Trade<Currency, Currency, TradeType>
+  | undefined {
+  const hasV2Routes = trade?.routes.some((route) => route.protocol === Protocol.V2)
+  const hasV3Routes = trade?.routes.some((route) => route.protocol === Protocol.V3)
+  const hasSplits = (trade?.routes?.length ?? 0) > 1
+
+  const approvalStates = useAllApprovalStates(trade, allowedSlippage)
+
+  return useMemo(() => {
+    if (!trade) return undefined
+    if ([approvalStates.v2, approvalStates.v3, approvalStates.v2V3].includes(ApprovalState.PENDING)) return undefined
+
+    // TODO: need to handle unknown state?
+    if (approvalStates.v2 === ApprovalState.APPROVED && hasV2Routes && !hasSplits) {
+      const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
+      const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
+      return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)
+    } else if (approvalStates.v3 === ApprovalState.APPROVED && hasV3Routes) {
+      V3Trade.createUncheckedTradeWithMultipleRoutes({
+        routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
+          route: new V3Route(
+            route.pools.filter((p) => p instanceof Pool) as Pool[],
+            inputAmount.currency,
+            outputAmount.currency
+          ),
+          inputAmount,
+          outputAmount,
+        })),
+        tradeType: trade.tradeType,
+      })
+    }
+
+    // through single protocol, but best route has splits
+    return trade
+  }, [trade, approvalStates.v2, approvalStates.v3, approvalStates.v2V3, hasV2Routes, hasSplits, hasV3Routes])
 }
