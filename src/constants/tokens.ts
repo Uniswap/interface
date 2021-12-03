@@ -17,6 +17,13 @@ export const DAI = new Token(
   'DAI',
   'Dai Stablecoin'
 )
+export const DAI_RINKEBY = new Token(
+  ChainId.RINKEBY,
+  '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735',
+  18,
+  'DAI',
+  'Dai Stablecoin'
+)
 export const DAI_ARBITRUM_ONE = new Token(
   ChainId.ARBITRUM_ONE,
   '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',

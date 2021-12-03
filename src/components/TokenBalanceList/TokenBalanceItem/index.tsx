@@ -40,7 +40,7 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
 
   // TODO: not all tokens have data from the Graph
   // Note that for ETH, this gets WETH price.
-  const balance = currentPrice ? `$${currentPrice.quote(currencyAmount).toFixed(2)}` : '-'
+  const balance = currentPrice ? currentPrice.quote(currencyAmount) : null
 
   const onPress = () => {
     onPressToken?.(currencyAmount)
@@ -59,7 +59,7 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
           </Box>
         </Box>
         <Box alignItems="flex-end">
-          <Text variant="h4">{balance}</Text>
+          <Text variant="h4">{formatCurrencyAmount(balance)}</Text>
           <Text
             variant="bodySm"
             color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>

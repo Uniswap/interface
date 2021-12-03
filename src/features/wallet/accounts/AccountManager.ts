@@ -30,7 +30,8 @@ export class AccountManager {
   tryGetAccount(address: Address) {
     const id = normalizeAddress(address)
     if (!this._accounts[id]) {
-      logger.warn('AccountManager', 'getAccount', 'Attempting to get missing account', address)
+      // TODO: reenable when redux/account manager are in sync
+      // logger.warn('AccountManager', 'getAccount', 'Attempting to get missing account', address)
       return null
     }
     return this._accounts[id]

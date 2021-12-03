@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a NetworkLabel with border 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#B8B8B8",
+        "borderColor": "transparent",
+        "borderRadius": 999999,
+        "borderWidth": 1,
+        "display": "flex",
+        "justifyContent": "center",
+        "paddingHorizontal": 16,
+        "paddingVertical": 6,
+      },
+      Object {
+        "backgroundColor": "#F9AC1410",
+        "borderColor": "#F9AC14",
+      },
+    ]
+  }
+>
+  <Image
+    height={40}
+    source={
+      Object {
+        "uri": "https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png",
+      }
+    }
+    width={40}
+  />
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#27252E",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta3-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        Object {
+          "color": "#F9AC14",
+        },
+      ]
+    }
+  >
+    Rinkeby
+  </Text>
+</View>
+`;
+
+exports[`renders a NetworkLabel without image 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#B8B8B8",
+        "borderColor": "transparent",
+        "borderRadius": 999999,
+        "borderWidth": 1,
+        "display": "flex",
+        "justifyContent": "center",
+        "paddingHorizontal": 16,
+        "paddingVertical": 6,
+      },
+      Object {
+        "backgroundColor": "#F9AC1410",
+        "borderColor": "transparent",
+      },
+    ]
+  }
+>
+  <Image
+    height={40}
+    source={
+      Object {
+        "uri": "https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png",
+      }
+    }
+    width={40}
+  />
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#27252E",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta3-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        Object {
+          "color": "#F9AC14",
+        },
+      ]
+    }
+  >
+    Rinkeby
+  </Text>
+</View>
+`;

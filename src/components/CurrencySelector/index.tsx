@@ -35,16 +35,18 @@ export function CurrencySelector({ onSelectCurrency, selectedCurrency }: Currenc
           selectCurrency()
         }}
         filled={!selectedCurrency}>
-        {selectedCurrency ? (
-          <CenterBox flexDirection="row" height={30} px="sm">
-            <CurrencyLogo currency={selectedCurrency} size={30} />
-            <Text variant="h3" color="black" ml="sm">
-              {selectedCurrency.symbol}
-            </Text>
-          </CenterBox>
-        ) : (
-          <Text variant="body" color="white">{t`Select a token`}</Text>
-        )}
+        <CenterBox px="sm" height={25}>
+          {selectedCurrency ? (
+            <CenterBox flexDirection="row">
+              <CurrencyLogo currency={selectedCurrency} size={30} />
+              <Text variant="h3" color="black" ml="sm">
+                {selectedCurrency.symbol}
+              </Text>
+            </CenterBox>
+          ) : (
+            <Text variant="body" color="white">{t`Select a token`}</Text>
+          )}
+        </CenterBox>
       </Toggle>
     </Box>
   )

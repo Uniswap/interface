@@ -4,6 +4,7 @@ import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
+import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
 import { useQuote } from 'src/features/prices/useQuote'
 import { CurrencyField, swapFormActions, SwapFormState } from 'src/features/swap/swapFormSlice'
@@ -24,11 +25,29 @@ export function useDerivedSwapInfo(state: SwapFormState) {
     [CurrencyField.OUTPUT]: partialCurrencyOut,
   } = state
 
+  const activeAccount = useActiveAccount()
+
   const currencyIn = useCurrency(partialCurrencyIn?.address, partialCurrencyIn?.chainId)
   const currencyOut = useCurrency(partialCurrencyOut?.address, partialCurrencyOut?.chainId)
 
   const currencies = { [CurrencyField.INPUT]: currencyIn, [CurrencyField.OUTPUT]: currencyOut }
-  // TODO: get token balances
+
+  const [tokenInBalance] = useTokenBalance(
+    currencyIn?.isToken ? currencyIn : undefined,
+    activeAccount?.address
+  )
+  const [tokenOutBalance] = useTokenBalance(
+    currencyOut?.isToken ? currencyOut : undefined,
+    activeAccount?.address
+  )
+  const nativeInBalance = useEthBalance(
+    currencyIn?.chainId ?? ChainId.MAINNET,
+    activeAccount?.address
+  )
+  const nativeOutBalance = useEthBalance(
+    currencyOut?.chainId ?? ChainId.MAINNET,
+    activeAccount?.address
+  )
 
   const isExactIn = exactCurrencyField === CurrencyField.INPUT
 
@@ -65,16 +84,10 @@ export function useDerivedSwapInfo(state: SwapFormState) {
     currencies,
     currencyAmounts,
     currencyBalances: {
-      [CurrencyField.INPUT]: 0, // TODO
-      [CurrencyField.OUTPUT]: 0, // TODO
+      [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
+      [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
     },
     exactCurrencyField,
-    // TODO <InputError type={SwapInputErrorType={insufficient_funds, etc.}}
-    // Interface leverages this to set the button text // act as a CTA
-    // no parsed amount yet -> enter an amount
-    // no currencies -> select a token
-    // TODO: insufficient fund is input balance < max input based on quote
-    inputError: '',
     trade: {
       quoteError,
       quoteResult,
@@ -128,7 +141,7 @@ export function useSwapCallback(
   const swapState = useAppSelector((state) => state.saga.swap)
 
   useEffect(() => {
-    if (swapState.status === SagaStatus.Success) {
+    if (swapState.status === SagaStatus.Success || swapState.status === SagaStatus.Failure) {
       onSuccess?.()
       appDispatch(swapActions.reset())
     }

@@ -7,6 +7,7 @@ import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { flex } from 'src/styles/flex'
+import { formatPrice } from 'src/utils/format'
 
 interface TokenBalanceListProps {
   loading: boolean
@@ -26,7 +27,7 @@ function TotalBalanceView({ totalBalance }: TotalBalanceViewProps) {
       <Text variant="h5" color="gray400" mb="xs">
         {t('Total balance')}
       </Text>
-      <Text variant="h1">{`$${totalBalance}`}</Text>
+      <Text variant="h1">{`${formatPrice(totalBalance)}`}</Text>
     </Box>
   )
 }

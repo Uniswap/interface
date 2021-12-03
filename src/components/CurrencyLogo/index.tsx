@@ -8,9 +8,6 @@ import { style } from 'src/components/CurrencyLogo/styles'
 import { getCurrencyLogoSrcs, maybeReplaceIPFSScheme } from 'src/components/CurrencyLogo/utils'
 import { Box } from 'src/components/layout/Box'
 
-export const getTokenLogoURL = (address: string) =>
-  `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
-
 const DEFAULT_SIZE = 40
 
 interface CurrencyLogoProps {
@@ -38,7 +35,7 @@ function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
   if (currency?.isNative) {
     return (
       <Image
-        style={{ ...style.image, width: size, height: size, borderRadius: size / 2 }}
+        style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
         source={ETHEREUM_LOGO}
       />
     )
@@ -53,7 +50,7 @@ function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
     }
     return (
       <Image
-        style={{ width: size, height: size, borderRadius: size / 2 }}
+        style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
         source={srcs.map(maybeReplaceIPFSScheme)}
       />
     )

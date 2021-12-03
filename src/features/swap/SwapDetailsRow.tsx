@@ -5,6 +5,7 @@ import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { QuoteResult } from 'src/features/swap/types'
+import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailRowProps {
   trade: QuoteResult | undefined
@@ -18,7 +19,7 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
     <Box flexDirection="row" justifyContent="space-between" alignSelf="stretch" alignItems="center">
       <Box flexDirection="row" justifyContent="center" alignItems="center">
         <InfoCircle height={20} width={20} />
-        <Text variant="body" fontWeight="500" ml="sm">
+        <Text variant="bodySm" fontWeight="500" ml="sm" color="gray400">
           {/* TODO: get actual execution price */}
           {label || '1 DAI = 0.000004 ETH ($1)'}
         </Text>
@@ -34,7 +35,7 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
             }}>
             {/*TODO(#175): better price formatting utils  */}
             <Text style={styles.gasButtonLabel} p="xs">
-              ${parseFloat(trade.gasUseEstimateUSD).toFixed(2)}
+              {formatPrice(trade.gasUseEstimateUSD)}
             </Text>
           </Button>
         </Box>

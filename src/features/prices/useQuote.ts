@@ -93,13 +93,16 @@ export function useQuote(params: QuoteParams) {
         // : undefined
       )
 
+      // routing api returns errors inside the json blob, safe to unwrap
+      const blob = await response.json()
+
       if (!response.ok) {
         throw new Error(
-          `Routing API response was not ok: ${response.status}: ${response.statusText}`
+          `Routing API response was not ok: ${response.status}: ${JSON.stringify(blob)}`
         )
       }
 
-      return response.json()
+      return blob
     },
     {
       enabled: Boolean(amountSpecified && otherCurrency),

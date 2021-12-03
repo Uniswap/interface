@@ -48,11 +48,17 @@ exports[`renders a currency logo without network logo 1`] = `
       ]
     }
     style={
-      Object {
-        "borderRadius": 8,
-        "height": 16,
-        "width": 16,
-      }
+      Array [
+        Object {
+          "backgroundColor": "slategrey",
+          "resizeMode": "cover",
+        },
+        Object {
+          "borderRadius": 8,
+          "height": 16,
+          "width": 16,
+        },
+      ]
     }
   />
   <View

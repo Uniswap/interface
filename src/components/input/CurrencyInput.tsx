@@ -6,29 +6,29 @@ import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
-import { useEthBalance } from 'src/features/balances/hooks'
+import useUSDCPrice from 'src/features/prices/useUSDCPrice'
 import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
-import { formatCurrencyAmount } from 'src/utils/format'
+import { formatCurrencyAmount, formatPrice } from 'src/utils/format'
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
 
 type CurrencyInputProps = {
   currency: Currency | null | undefined
+  currencyBalance: CurrencyAmount<Currency> | null | undefined
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   onSelectCurrency: (currency: Currency) => void
   onSetAmount: (amount: string) => void
 } & RestyleProps
 
 export function CurrencyInput(props: CurrencyInputProps) {
-  const { currency, currencyAmount, onSetAmount, onSelectCurrency, ...rest } = props
+  const { currency, currencyAmount, currencyBalance, onSetAmount, onSelectCurrency, ...rest } =
+    props
 
   const transformedProps = useRestyle(restyleFunctions, rest)
 
-  // TODO: support any token balance
-  const ethBalance = useEthBalance(currency?.chainId ?? ChainId.MAINNET)
+  const price = useUSDCPrice(currency ?? undefined)
 
   return (
     <Box alignItems="center" py="md" pr="md" my="md" borderRadius="md" {...transformedProps}>
@@ -38,7 +38,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
           placeholder="0.0"
           mr="sm"
-          value={formatCurrencyAmount(currencyAmount)}
+          value={currencyAmount?.toSignificant(6)}
           style={styles.amountInput}
         />
         <CurrencySelector
@@ -49,9 +49,9 @@ export function CurrencyInput(props: CurrencyInputProps) {
       <Box flexDirection="row">
         <Box flex={1} flexDirection="row" justifyContent="space-between">
           <Text variant="body" ml="md">
-            1,230$
+            {formatPrice(price)}
           </Text>
-          <Text variant="body">Balance: {ethBalance ?? 0}</Text>
+          <Text variant="body">{formatCurrencyAmount(currencyBalance)}</Text>
         </Box>
       </Box>
     </Box>

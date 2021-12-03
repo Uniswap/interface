@@ -1,5 +1,8 @@
 import { StyleSheet } from 'react-native'
 
 export const style = StyleSheet.create({
-  image: { resizeMode: 'cover' },
+  image: {
+    backgroundColor: 'slategrey', // TODO. Default image?
+    resizeMode: 'cover',
+  },
 })

@@ -3,6 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
+import { useWalletAccount } from 'src/app/walletContext'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -11,6 +12,9 @@ import { Box } from 'src/components/layout/Box'
 import { useDerivedSwapInfo, useSwapActionHandlers, useSwapCallback } from 'src/features/swap/hooks'
 import { SwapDetailRow } from 'src/features/swap/SwapDetailsRow'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
+import { stringifySwapInfoError, validateSwapInfo } from 'src/features/swap/validate'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { SagaStatus } from 'src/utils/saga'
 
 interface SwapFormProps {
@@ -23,14 +27,18 @@ interface SwapFormProps {
 export function SwapForm(props: SwapFormProps) {
   const { state, dispatch } = props
 
+  const activeAccount = useActiveAccount()
+  const signer = useWalletAccount(activeAccount?.address ?? '')?.signer
+
+  const derivedSwapInfo = useDerivedSwapInfo(state)
+
   const {
     currencies,
     currencyAmounts,
-    // currencyBalances,
-    exactCurrencyField,
-    // inputError,
+    currencyBalances,
     trade: { quoteResult: quote, status: quoteStatus },
-  } = useDerivedSwapInfo(state)
+  } = derivedSwapInfo
+  const swapInfoError = validateSwapInfo(derivedSwapInfo)
 
   const { onSelectCurrency, onSwitchCurrencies, onEnterExactAmount } =
     useSwapActionHandlers(dispatch)
@@ -51,32 +59,32 @@ export function SwapForm(props: SwapFormProps) {
   //   }
   // }, [])
 
-  const swapButtonDisabled = Boolean(
-    !quote || (swapState?.status && swapState.status !== SagaStatus.Success)
-  )
-
   // TODO: move to a helper function
-  let infoLabel: string = ''
-  if (!currencies[CurrencyField.INPUT] || !currencies[CurrencyField.OUTPUT]) {
-    infoLabel = t`Select currencies to continue`
-  } else if (
-    (exactCurrencyField === CurrencyField.INPUT && !currencyAmounts[CurrencyField.INPUT]) ||
-    (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT])
-  ) {
-    infoLabel = t`Select an amount to continue`
+  let errorLabel: string = ''
+  if (swapInfoError !== null) {
+    errorLabel = stringifySwapInfoError(swapInfoError, t)
   } else if (quoteStatus === 'loading') {
-    infoLabel = t`Fetching best price...`
+    errorLabel = t`Fetching best price...`
   } else if (quoteStatus === 'error') {
-    infoLabel = t`Quote error`
-  } else if (swapState?.status) {
-    if (swapState.status === SagaStatus.Success) {
-      infoLabel = t`Swap successful`
-    } else if (swapState.status === SagaStatus.Failure) {
-      infoLabel = t`Swap error`
-    } else {
-      infoLabel = t`Swapping...`
-    }
+    errorLabel = t`Quote error`
+  } else if (activeAccount && activeAccount.type === AccountType.readonly) {
+    // TODO: move check somewhere else?
+    errorLabel = t('Watched account cannot swap')
+  } else if (signer === undefined) {
+    // TODO: should never happen, but redux/account managet get out of sync
+    errorLabel = t('Signer is missing')
+  } else if (swapState?.status === SagaStatus.Failure) {
+    errorLabel = t('Swap unsuccessful')
   }
+
+  let swapStatusLabel = ''
+  if (swapState?.status === SagaStatus.Success) {
+    swapStatusLabel = t('Swap successful')
+  } else if (swapState?.status === SagaStatus.Started) {
+    swapStatusLabel = t('Swapping...')
+  }
+
+  const swapButtonDisabled = Boolean(!quote || errorLabel !== '')
 
   return (
     <Box paddingHorizontal="md" flex={1} justifyContent="space-between">
@@ -85,6 +93,7 @@ export function SwapForm(props: SwapFormProps) {
         <CurrencyInput
           currency={currencies[CurrencyField.INPUT]}
           currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+          currencyBalance={currencyBalances[CurrencyField.INPUT]}
           onSelectCurrency={(newCurrency: Currency) =>
             onSelectCurrency(CurrencyField.INPUT, newCurrency)
           }
@@ -114,6 +123,7 @@ export function SwapForm(props: SwapFormProps) {
 
         <CurrencyInput
           currency={currencies[CurrencyField.OUTPUT]}
+          currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
           currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
           onSelectCurrency={(newCurrency: Currency) =>
             onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
@@ -123,14 +133,13 @@ export function SwapForm(props: SwapFormProps) {
         />
       </Box>
       <Box>
-        <SwapDetailRow trade={quote} label={infoLabel} />
-
+        <SwapDetailRow trade={quote} label={errorLabel ?? swapStatusLabel} />
         <PrimaryButton
           alignSelf="stretch"
+          label={t`Swap`}
           onPress={swapCallback}
-          label={t('Swap')}
           disabled={swapButtonDisabled}
-          mt="md"
+          {...(swapButtonDisabled ? { bg: 'gray400' } : {})}
         />
       </Box>
     </Box>

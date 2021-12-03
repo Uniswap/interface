@@ -36,12 +36,14 @@ export function NetworkLogo({ chainId, size = 10 }: NetworkLogoProps) {
   return (
     <Box borderWidth={2} borderColor={color} borderRadius="full">
       <Image
-        style={{
-          ...style.image,
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-        }}
+        style={[
+          style.image,
+          {
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+          },
+        ]}
         source={logoSource}
       />
     </Box>

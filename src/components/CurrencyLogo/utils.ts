@@ -1,7 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
-import { getTokenLogoURL } from 'src/components/CurrencyLogo'
 import { ChainId } from 'src/constants/chains'
 import { WrappedTokenInfo } from 'src/features/tokenLists/wrappedTokenInfo'
+
+const getTokenLogoURL = (address: string) =>
+  `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
 export function getCurrencyLogoSrcs(currency: Currency) {
   if (!currency || currency.isNative) return []

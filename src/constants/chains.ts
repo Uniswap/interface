@@ -113,6 +113,8 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://rinkeby.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Rinkeby',
+    logoUrl:
+      'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
     primaryColor: '#F9AC14',
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
     subgraphUrl: 'https://thegraph.com/hosted-service/subgraph/ianlapham/uniswap-v3-rinkeby',
