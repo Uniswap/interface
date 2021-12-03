@@ -1159,6 +1159,13 @@ msgstr "哎呀！ 出现未知错误。 请刷新页面，或从其他浏览器�
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Output"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "输出估计。 如果价格变化超过 {0}%，您的交易将恢复。"
 

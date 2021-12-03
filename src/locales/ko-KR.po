@@ -1159,6 +1159,13 @@ msgstr "앗! 알 수없는 오류가 발생했습니다. 페이지를 새로고�
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Output"
+msgstr ""
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "예상된 가격입니다. 가격이 {0}% 이상 변경되면 거래가 취소됩니다."
 
