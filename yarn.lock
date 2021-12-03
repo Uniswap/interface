@@ -4574,6 +4574,11 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
+"@uniswap/redux-multicall@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.0.0.tgz#0cee4448909a788ea4700e5ede75ffeba05b5d75"
+  integrity sha512-zR6tNC3XF6JuI6PjGlZW2Hz7tTzRzzVaPJfZ01BBWBJVt/2ixJY0SH514uffD03NHYiXZA//hlPQLfw3TkIxQg==
+
 "@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.0.1.tgz#d08dd68257983af64b9a5f4d6b9cf26124b4138f"

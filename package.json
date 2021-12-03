@@ -58,6 +58,7 @@
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
+    "@uniswap/redux-multicall": "^1.0.0",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/token-lists": "^1.0.0-beta.27",
     "@uniswap/v2-core": "1.0.0",
