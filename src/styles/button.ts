@@ -1,20 +1,18 @@
-export const buttonVariants = {
-  defaults: {},
-  primary: {
-    alignSelf: 'stretch',
+export const primaryButtonVariants = {
+  defaults: {
+    backgroundColor: 'blue',
+    color: 'white',
+  },
+  green: {
     backgroundColor: 'green',
-    borderRadius: 'md',
-    letterSpacing: 'headline',
-    paddingHorizontal: 'md',
-    paddingVertical: 'sm',
+    color: 'white',
   },
-  pill: {
-    borderRadius: 'sm',
+  gray: {
+    backgroundColor: 'blueGray',
+    color: 'black',
   },
-  text: {
-    backgroundColor: 'none',
-    padding: 'xs',
+  grayTextBlue: {
+    backgroundColor: 'blueGray',
+    color: 'blue',
   },
-  // TODO: add more variants here
-  // outline: {},
 }

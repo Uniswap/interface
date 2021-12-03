@@ -2,11 +2,10 @@ import { CompositeScreenProps } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { utils } from 'ethers'
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { DevStackParamList, HomeStackParamList, SwapStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -74,43 +73,43 @@ export function DevScreen({ navigation }: Props) {
   // imports test account for easy development/testing
   useTestAccount()
 
-  const { t } = useTranslation()
-
   return (
     <Screen>
       <ScrollView>
         <Box alignItems="center">
           <Text variant="h3" textAlign="center">
-            {t('Your Account: {{addr}}', { addr: activeAccount?.address || 'none' })}
+            {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
           <Text variant="h3" mt="md" textAlign="center">
             🌀🌀Screen Stargate🌀🌀
           </Text>
           <Box flexDirection="row" alignItems="center" justifyContent="center" flexWrap="wrap">
             {Object.values(Screens).map((s) => (
-              <Button
-                variant="text"
+              <TextButton
                 testID={`dev_screen/${s}`}
-                label={s}
                 onPress={() => activateWormhole(s)}
                 m="xs"
-                key={s}
-              />
+                key={s}>
+                {s}
+              </TextButton>
             ))}
           </Box>
           <Text variant="body" mt="sm" textAlign="center">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
 
-          <Button variant="text" label={t('Create Account')} onPress={onPressCreate} mt="md" />
-          <Button variant="text" label={t('Get Balance')} onPress={onPressGetBalance} mt="sm" />
-          <Button
-            variant="text"
-            label={t('Toggle Rinkeby')}
-            onPress={onPressToggleRinkeby}
-            mt="sm"
-          />
-          <Button variant="text" label={t('Compute fee')} onPress={onPressComputeFee} mt="sm" />
+          <TextButton onPress={onPressCreate} mt="md">
+            Create Account
+          </TextButton>
+          <TextButton onPress={onPressGetBalance} mt="sm">
+            Get Balance
+          </TextButton>
+          <TextButton onPress={onPressToggleRinkeby} mt="sm">
+            Toggle Rinkeby
+          </TextButton>
+          <TextButton onPress={onPressComputeFee} mt="sm">
+            Compute fee
+          </TextButton>
           <Text textAlign="center" mt="xl">
             {`Active Chains: ${activeChains}`}
           </Text>

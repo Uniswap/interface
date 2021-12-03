@@ -288,7 +288,7 @@ exports[`renders correctly 1`] = `
         style={
           Object {
             "backgroundColor": "#FF007A",
-            "borderRadius": 10,
+            "borderRadius": 20,
             "bottom": 0,
             "display": "flex",
             "left": 0,
@@ -324,7 +324,7 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "display": "flex",
-          "padding": 5,
+          "padding": 6,
           "width": 140,
         }
       }
@@ -336,7 +336,7 @@ exports[`renders correctly 1`] = `
               "color": "#FFFFFF",
               "display": "flex",
               "fontFamily": "UniswapSansBeta3-Semibold",
-              "fontSize": 14,
+              "fontSize": 16,
               "lineHeight": 24,
               "textAlign": "center",
             },
@@ -365,7 +365,7 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "display": "flex",
-          "padding": 5,
+          "padding": 6,
           "width": 140,
         }
       }
@@ -377,7 +377,7 @@ exports[`renders correctly 1`] = `
               "color": "#E8006F",
               "display": "flex",
               "fontFamily": "UniswapSansBeta3-Semibold",
-              "fontSize": 14,
+              "fontSize": 16,
               "lineHeight": 24,
               "textAlign": "center",
             },
@@ -406,7 +406,7 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "display": "flex",
-          "padding": 5,
+          "padding": 6,
           "width": 140,
         }
       }
@@ -418,7 +418,7 @@ exports[`renders correctly 1`] = `
               "color": "#E8006F",
               "display": "flex",
               "fontFamily": "UniswapSansBeta3-Semibold",
-              "fontSize": 14,
+              "fontSize": 16,
               "lineHeight": 24,
               "textAlign": "center",
             },
@@ -447,7 +447,7 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "display": "flex",
-          "padding": 5,
+          "padding": 6,
           "width": 140,
         }
       }
@@ -459,7 +459,7 @@ exports[`renders correctly 1`] = `
               "color": "#E8006F",
               "display": "flex",
               "fontFamily": "UniswapSansBeta3-Semibold",
-              "fontSize": 14,
+              "fontSize": 16,
               "lineHeight": 24,
               "textAlign": "center",
             },
@@ -488,7 +488,7 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "display": "flex",
-          "padding": 5,
+          "padding": 6,
           "width": 140,
         }
       }
@@ -500,7 +500,7 @@ exports[`renders correctly 1`] = `
               "color": "#E8006F",
               "display": "flex",
               "fontFamily": "UniswapSansBeta3-Semibold",
-              "fontSize": 14,
+              "fontSize": 16,
               "lineHeight": 24,
               "textAlign": "center",
             },

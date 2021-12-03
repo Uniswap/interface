@@ -26,7 +26,7 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
       {trade && (
         <Box flexDirection="row">
           <Button
-            variant="pill"
+            borderRadius="xs"
             p="xs"
             style={styles.gasButton}
             onPress={() => {

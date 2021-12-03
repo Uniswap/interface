@@ -22,7 +22,7 @@ export function Header({ chainId, onPressBack }: HeaderProps) {
       <Text variant="h2">{t`Swap`}</Text>
       <Box flexDirection="row" alignContent="center" justifyContent="flex-end" flex={1}>
         {chainDescriptor && (
-          <Button variant="pill">
+          <Button borderRadius="xs">
             {chainDescriptor.logoUrl && (
               <Image source={{ uri: chainDescriptor.logoUrl }} height={40} width={40} />
             )}

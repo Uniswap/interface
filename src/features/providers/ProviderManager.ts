@@ -148,7 +148,7 @@ export class ProviderManager {
     block?: ethersProviders.Block,
     network?: ethersProviders.Network
   ) {
-    const staleTime = chainDetails.blockWaitMsBeforeWarning ?? 600000
+    const staleTime = chainDetails.blockWaitMsBeforeWarning ?? 600_000 // 10 minutes
     if (!(block && block.number && block.timestamp && network && network.chainId === chainId)) {
       return false
     }

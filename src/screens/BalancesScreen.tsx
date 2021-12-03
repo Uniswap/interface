@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -45,7 +45,7 @@ export function BalancesScreen() {
           {Object.values(accounts).map((account) => (
             <Text key={account.address}>{account.address}</Text>
           ))}
-          <Button label={t('Refresh')} onPress={onPressRefresh} mt="md" />
+          <PrimaryButton label={t('Refresh')} onPress={onPressRefresh} mt="md" />
         </Box>
       </ScrollView>
     </Screen>

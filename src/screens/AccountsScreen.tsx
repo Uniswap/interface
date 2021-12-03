@@ -7,7 +7,7 @@ import { HomeStackParamList } from 'src/app/navigation/types'
 import { AccountCard } from 'src/components/accounts/AccountCard'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { RenameAccountModal } from 'src/components/accounts/RenameAccountModal'
-import { Button } from 'src/components/buttons/Button'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
@@ -152,14 +152,14 @@ export function AccountsScreen({ navigation }: Props) {
         </Box>
       </ScrollView>
       <CenterBox flexDirection="row" px="md">
-        {/* TODO use pill button here */}
-        <Button
+        <PrimaryButton
+          variant="grayTextBlue"
           label={t('Import Wallet')}
           onPress={() => navigation.navigate(Screens.ImportAccount)}
           testID="accounts/add/button"
           mr="lg"
         />
-        <Button
+        <PrimaryButton
           label={t('Create Wallet')}
           onPress={() => navigation.navigate(Screens.ImportAccount)}
           testID="accounts/create/button"

@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { Button } from 'src/components/buttons/Button'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
 import { Box } from 'src/components/layout/Box'
 import { useDerivedSwapInfo, useSwapActionHandlers, useSwapCallback } from 'src/features/swap/hooks'
@@ -124,14 +125,10 @@ export function SwapForm(props: SwapFormProps) {
       <Box>
         <SwapDetailRow trade={quote} label={infoLabel} />
 
-        <Button
-          variant="primary"
+        <PrimaryButton
           alignSelf="stretch"
-          justifyContent="center"
-          flexDirection="row"
-          borderRadius="lg"
           onPress={swapCallback}
-          label={swapButtonDisabled ? t`Swap` : t`Swap`}
+          label={t('Swap')}
           disabled={swapButtonDisabled}
           mt="md"
         />

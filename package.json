@@ -33,7 +33,7 @@
     "@react-navigation/native-stack": "^6.1.0",
     "@reduxjs/toolkit": "^1.6.1",
     "@sentry/react-native": "^3.1.1",
-    "@shopify/restyle": "^1.5.0",
+    "@shopify/restyle": "^1.6.1",
     "@uniswap/default-token-list": "^2.0.0",
     "@uniswap/redux-multicall": "^1.0.0",
     "@uniswap/sdk-core": "^3.0.1",
