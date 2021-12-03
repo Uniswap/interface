@@ -86,7 +86,7 @@ export default function Updater(): null {
 
       const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
 
-      return withRecipient ? `${base} ${withRecipient}` : base
+      return `${base} ${withRecipient ?? ''}`
     },
     [transactions]
   )

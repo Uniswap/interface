@@ -328,7 +328,7 @@ export function useSwapV2Callback(
                   }`
 
             addTransaction(response, {
-              summary: `${base} ${withRecipient}`,
+              summary: `${base} ${withRecipient ?? ''}`,
               arbitrary: {
                 inputSymbol,
                 outputSymbol,
