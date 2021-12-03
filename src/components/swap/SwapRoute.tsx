@@ -1,76 +1,117 @@
 import { Trans } from '@lingui/macro'
 import { Protocol, Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
-import { AutoRow, RowBetween } from 'components/Row'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
-import { memo } from 'react'
-import { TYPE } from 'theme'
+import { darken } from 'polished'
+import { memo, useState } from 'react'
+import { Plus } from 'react-feather'
+import styled from 'styled-components/macro'
+import { Separator, TYPE } from 'theme'
 
+import GasEstimateBadge from './GasEstimateBadge'
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
+
+const Wrapper = styled(AutoColumn)<{ open: boolean }>`
+  padding: 8px 12px;
+  border-radius: 12px;
+  /* min-height: 40px; */
+  background-color: ${({ theme }) => darken(0.11, theme.blue4)};
+  grid-row-gap: ${({ open }) => (open ? '12px' : 0)};
+`
+
+const DropdownContent = styled.div<{ open?: boolean }>`
+  max-height: ${({ open }) => (open ? '1000px' : '0px')};
+  transition: max-height 0.2s ease-in-out;
+  overflow: hidden;
+`
+
+const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
+  margin-left: 8px;
+  transition: transform 0.1s;
+  transform: ${({ open }) => (open ? 'rotate(45deg)' : 'none')};
+  stroke: ${({ theme }) => theme.blue1};
+  cursor: pointer;
+  :hover {
+    opacity: 0.8;
+  }
+`
 
 const V2_DEFAULT_FEE_TIER = 3000
 
 export default memo(function SwapRoute({
   trade,
   syncing,
+  gasUseEstimateUSD,
 }: {
   trade: Trade<Currency, Currency, TradeType>
   syncing: boolean
+  gasUseEstimateUSD?: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
 }) {
   const autoRouterSupported = useAutoRouterSupported()
 
   const routes = getTokenPath(trade)
-
   const hasV2Routes = routes.some((r) => r.protocol === Protocol.V2)
   const hasV3Routes = routes.some((r) => r.protocol === Protocol.V3)
 
+  const [open, setOpen] = useState(false)
+
   return (
-    <AutoColumn gap="12px">
+    <Wrapper open={open}>
       <RowBetween>
         <AutoRow gap="4px" width="auto">
           <AutoRouterLogo />
           <AutoRouterLabel />
         </AutoRow>
+        <RowFixed>
+          {gasUseEstimateUSD ? <GasEstimateBadge gasUseEstimateUSD={gasUseEstimateUSD} loading={syncing} /> : null}
+          <OpenCloseIcon open={open} onClick={() => setOpen(!open)} />
+        </RowFixed>
       </RowBetween>
-      {syncing ? (
-        <LoadingRows>
-          <div style={{ width: '400px', height: '30px' }} />
-        </LoadingRows>
-      ) : (
-        <RoutingDiagram
-          currencyIn={trade.inputAmount.currency}
-          currencyOut={trade.outputAmount.currency}
-          routes={routes}
-        />
-      )}
-      {autoRouterSupported &&
-        (syncing ? (
-          <LoadingRows>
-            <div style={{ width: '250px', height: '15px' }} />
-          </LoadingRows>
-        ) : (
-          <TYPE.main fontSize={12} width={400}>
-            {/* could not get <Plural> to render `one` correctly. */}
-            {routes.length === 1 ? (
-              hasV2Routes && hasV3Routes ? (
-                <Trans>Best trade via one route on Uniswap V2 and V3</Trans>
-              ) : (
-                <Trans>Best trade via one route on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
-              )
-            ) : hasV2Routes && hasV3Routes ? (
-              <Trans>Best trade via {routes.length} routes on Uniswap V2 and V3</Trans>
+      <DropdownContent open={open}>
+        <AutoRow gap="6px" width="auto">
+          {syncing ? (
+            <LoadingRows>
+              <div style={{ width: '400px', height: '30px' }} />
+            </LoadingRows>
+          ) : (
+            <RoutingDiagram
+              currencyIn={trade.inputAmount.currency}
+              currencyOut={trade.outputAmount.currency}
+              routes={routes}
+            />
+          )}
+          <Separator />
+          {autoRouterSupported &&
+            (syncing ? (
+              <LoadingRows>
+                <div style={{ width: '250px', height: '15px' }} />
+              </LoadingRows>
             ) : (
-              <Trans>
-                Best trade via {routes.length} routes on Uniswap {hasV2Routes ? 'V2' : 'V3'}
-              </Trans>
-            )}
-          </TYPE.main>
-        ))}
-    </AutoColumn>
+              <TYPE.main fontSize={12} width={400}>
+                {/* could not get <Plural> to render `one` correctly. */}
+                {routes.length === 1 ? (
+                  hasV2Routes && hasV3Routes ? (
+                    <Trans>Best trade via one route on Uniswap V2 and V3</Trans>
+                  ) : (
+                    <Trans>Best trade via one route on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
+                  )
+                ) : hasV2Routes && hasV3Routes ? (
+                  <Trans>Best trade via {routes.length} routes on Uniswap V2 and V3</Trans>
+                ) : (
+                  <Trans>
+                    Best trade via {routes.length} routes on Uniswap {hasV2Routes ? 'V2' : 'V3'}
+                  </Trans>
+                )}
+              </TYPE.main>
+            ))}
+        </AutoRow>
+      </DropdownContent>
+    </Wrapper>
   )
 })
 

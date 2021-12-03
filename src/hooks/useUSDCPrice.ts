@@ -1,14 +1,14 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { V3TradeState } from 'state/routing/types'
+import { TradeState } from 'state/routing/types'
 import { tryParseAmount } from 'state/swap/hooks'
 
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC, USDC_ARBITRUM } from '../constants/tokens'
 import { useCurrency } from './Tokens'
+import { useBestTrade } from './useBestTrade'
 import { useBestV2Trade } from './useBestV2Trade'
-import { useBestV3Trade } from './useBestV3Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import { useActiveWeb3React } from './web3'
 
@@ -109,10 +109,10 @@ export function useDefaultGasCostEstimate(): {
   const stablecoin = chainId ? STABLECOIN_AMOUNT_OUT[chainId]?.currency : undefined
   const ether = useCurrency('ETH')
   const dummyEthAmount = ether ? CurrencyAmount.fromRawAmount(ether, JSBI.BigInt(1)) : undefined
-  const trade = useBestV3Trade(TradeType.EXACT_INPUT, dummyEthAmount ?? undefined, stablecoin)
+  const trade = useBestTrade(TradeType.EXACT_INPUT, dummyEthAmount ?? undefined, stablecoin)
 
   const [routeIsLoading, routeIsSyncing] = useMemo(
-    () => [!trade.trade?.swaps, V3TradeState.LOADING === trade.state, V3TradeState.SYNCING === trade.state],
+    () => [!trade.trade?.swaps, TradeState.LOADING === trade.state, TradeState.SYNCING === trade.state],
     [trade]
   )
 

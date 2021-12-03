@@ -21,7 +21,6 @@ export interface RoutingDiagramEntry {
 
 const Wrapper = styled(Box)`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg0};
   width: 430px;
 `
 

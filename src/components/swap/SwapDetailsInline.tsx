@@ -1,25 +1,27 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import Row, { RowFixed } from 'components/Row'
-import { MouseoverTooltipContent } from 'components/Tooltip'
+import Row, { RowBetween, RowFixed } from 'components/Row'
 import { SupportedChainId } from 'constants/chains'
 import { useDefaultGasCostEstimate } from 'hooks/useUSDCPrice'
 import { useActiveWeb3React } from 'hooks/web3'
-import { ReactNode } from 'react'
-import { Info } from 'react-feather'
-import ReactGA from 'react-ga'
-import styled, { keyframes } from 'styled-components/macro'
+import { darken } from 'polished'
+import { ReactNode, useState } from 'react'
+import { ChevronDown, Info } from 'react-feather'
+import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { TYPE } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
-import { ResponsiveTooltipContainer } from './styleds'
+import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
 
 const Wrapper = styled(Row)`
-  height: 40px;
+  width: 100%;
+  justify-content: center;
+  width: 100%;
 `
 
 const StyledInfoIcon = styled(Info)`
@@ -27,9 +29,24 @@ const StyledInfoIcon = styled(Info)`
   width: 16px;
   margin-right: 4px;
   color: ${({ theme }) => theme.text3};
+`
+
+const StyledHeaderRow = styled(RowBetween)`
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.bg1};
+  align-items: center;
+  cursor: pointer;
+  min-height: 40px;
+
   :hover {
-    color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => darken(0.01, theme.bg1)};
   }
+`
+
+const RotatingArrow = styled(ChevronDown)<{ open?: boolean }>`
+  transform: ${({ open }) => (open ? 'rotate(180deg)' : 'none')};
+  transition: transform 0.1s linear;
 `
 
 const StyledPolling = styled.div`
@@ -83,6 +100,12 @@ const Spinner = styled.div`
   top: -3px;
 `
 
+const DropdownContent = styled.div<{ open?: boolean }>`
+  max-height: ${({ open }) => (open ? '1000px' : '0px')};
+  transition: max-height 0.6s ease-in-out;
+  overflow: hidden;
+`
+
 interface SwapDetailsInlineProps {
   trade: Trade<Currency, Currency, TradeType> | undefined
   syncing: boolean
@@ -106,6 +129,8 @@ export default function SwapDetailsInline({
   allowedSlippage,
   swapInputError,
 }: SwapDetailsInlineProps) {
+  const theme = useTheme()
+
   const showGasEstimate = Boolean(gasUseEstimateUSD !== null)
 
   // only show the loading and or default gas state if on mainnet
@@ -114,55 +139,64 @@ export default function SwapDetailsInline({
   const estimatesSupported = chainId ? SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) : false
   const { cost: defaultGasCost, syncing: defaultSyncing, loading: defaultLoading } = useDefaultGasCostEstimate()
 
+  const [showDetails, setShowDetails] = useState(false)
+
   return (
-    <Wrapper justify={'space-between'} padding="4px 0">
-      <RowFixed style={{ position: 'relative' }}>
-        <MouseoverTooltipContent
-          wrap={false}
-          content={
-            trade ? (
-              <ResponsiveTooltipContainer origin="top right">
-                <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
-              </ResponsiveTooltipContainer>
-            ) : null
-          }
-          placement="bottom"
-          onOpen={() =>
-            ReactGA.event({
-              category: 'Swap',
-              action: 'Transaction Details Tooltip Open',
-            })
-          }
-        >
-          {(loading || syncing) && !(swapInputError && !trade) ? (
-            <StyledPolling>
-              <StyledPollingDot>
-                <Spinner />
-              </StyledPollingDot>
-            </StyledPolling>
-          ) : (
-            <StyledInfoIcon />
-          )}
-        </MouseoverTooltipContent>
-        {trade ? (
-          <LoadingOpacityContainer $loading={syncing}>
-            <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
-          </LoadingOpacityContainer>
-        ) : (loading || syncing) && !swapInputError ? (
-          <TYPE.main fontSize={14}>
-            <Trans>Fetching best price...</Trans>
-          </TYPE.main>
-        ) : swapInputError ? (
-          <TYPE.main fontSize={14}>{swapInputError}</TYPE.main>
-        ) : null}
-      </RowFixed>
-      {!estimatesSupported ? null : !trade ? (
-        defaultGasCost || defaultLoading || defaultSyncing ? (
-          <GasEstimateBadge gasUseEstimateUSD={defaultGasCost} loading={defaultLoading || defaultSyncing} />
-        ) : null
-      ) : !showGasEstimate || !gasUseEstimateUSD ? null : (
-        <GasEstimateBadge gasUseEstimateUSD={gasUseEstimateUSD} loading={syncing || loading} />
-      )}
+    <Wrapper>
+      <AutoColumn gap="8px" style={{ width: '100%' }}>
+        <StyledHeaderRow onClick={() => setShowDetails(!showDetails)}>
+          <RowFixed style={{ position: 'relative' }}>
+            {(loading || syncing) && !(swapInputError && !trade) ? (
+              <StyledPolling>
+                <StyledPollingDot>
+                  <Spinner />
+                </StyledPollingDot>
+              </StyledPolling>
+            ) : (
+              <StyledInfoIcon />
+            )}
+            {trade ? (
+              <LoadingOpacityContainer $loading={syncing}>
+                <TradePrice
+                  price={trade.executionPrice}
+                  showInverted={showInverted}
+                  setShowInverted={setShowInverted}
+                />
+              </LoadingOpacityContainer>
+            ) : (loading || syncing) && !swapInputError ? (
+              <TYPE.main fontSize={14}>
+                <Trans>Fetching best price...</Trans>
+              </TYPE.main>
+            ) : swapInputError ? (
+              <TYPE.main color="bg3" fontSize={14}>
+                {swapInputError}
+              </TYPE.main>
+            ) : null}
+          </RowFixed>
+          <RowFixed>
+            {showDetails ? null : !estimatesSupported ? null : !trade ? (
+              defaultGasCost || defaultLoading || defaultSyncing ? (
+                <GasEstimateBadge gasUseEstimateUSD={defaultGasCost} loading={defaultLoading || defaultSyncing} />
+              ) : null
+            ) : !showGasEstimate || !gasUseEstimateUSD ? null : (
+              <GasEstimateBadge gasUseEstimateUSD={gasUseEstimateUSD} loading={syncing || loading} />
+            )}
+            <RotatingArrow stroke={theme.text2} open={showDetails} />
+          </RowFixed>
+        </StyledHeaderRow>
+        <DropdownContent open={showDetails}>
+          <AutoColumn gap={showDetails ? '8px' : '0'}>
+            {trade ? (
+              <SwapRoute
+                trade={trade}
+                syncing={syncing}
+                gasUseEstimateUSD={showDetails ? gasUseEstimateUSD : undefined}
+              />
+            ) : null}
+            <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+          </AutoColumn>
+        </DropdownContent>
+      </AutoColumn>
     </Wrapper>
   )
 }
