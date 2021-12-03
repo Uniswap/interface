@@ -144,6 +144,11 @@ export const dexListConfig: DexList = {
     name: 'Balancer',
     icon: 'https://app.balancer.fi/favicon.ico',
     chainIds: [ChainId.MAINNET, ChainId.MATIC]
+  },
+  axial: {
+    name: 'Axial',
+    icon: 'https://assets.website-files.com/6189dee5e79d6e8f7e214eba/618bf2f3e40e777d4210a84f_favicon.ico',
+    chainIds: [ChainId.AVAXMAINNET]
   }
 }
 
@@ -172,7 +177,8 @@ export const dexIds: DexTypes = {
     polydex: 5,
     jetswap: 5,
     polycat: 2,
-    spookyswap: 3
+    spookyswap: 3,
+    axial: 3
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
@@ -189,7 +195,8 @@ export const dexTypes: DexTypes = {
     nerve: 1,
     'iron-stable': 4,
     balancer: 6,
-    synapse: 4
+    synapse: 4,
+    axial: 4
   },
   [ChainId.MAINNET]: {},
   [ChainId.BSCMAINNET]: {},
