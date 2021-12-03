@@ -671,7 +671,7 @@ function About() {
                 </Text>
 
                 <ButtonEmpty padding="0">
-                  <ExternalLink href="https://chainsecurity.com/wp-content/uploads/2021/04/ChainSecurity_KyberNetwork_DMM_Dynamic-Market-Making_Final.pdf">
+                  <ExternalLink href="https://chainsecurity.com/security-audit/kyber-network-dynamic-market-maker-dmm/">
                     <img
                       src={
                         !isDarkMode

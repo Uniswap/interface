@@ -1842,7 +1842,7 @@ msgstr "Sai Mạng"
 
 #: src/pages/SwapV2/index.tsx
 msgid "You Save"
-msgstr "Bạn Tiết Kiệm được"
+msgstr "Tiết kiệm"
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
