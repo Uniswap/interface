@@ -49,12 +49,12 @@ export const getNetworkOptions = ({
   }
 }
 
-export const createNetworkOptions = ({
+const createNetworkOptions = ({
   networkPreset,
-  selectedNetworkChainId,
-  activeChainId,
   onNetworkChange,
-  isNetworkDisabled
+  isNetworkDisabled,
+  selectedNetworkChainId,
+  activeChainId
 }: {
   networkPreset: NetworkOptionsPreset
   selectedNetworkChainId: ChainId
@@ -73,24 +73,24 @@ export const createNetworkOptions = ({
 
 export const createNetworksList = ({
   networkOptionsPreset,
-  selectedNetworkChainId,
-  activeChainId,
   onNetworkChange,
   isNetworkDisabled,
-  removeSpecifiedTag
+  selectedNetworkChainId,
+  activeChainId,
+  ignoreTags
 }: {
   networkOptionsPreset: NetworkOptionsPreset[]
-  selectedNetworkChainId: ChainId
-  activeChainId: ChainId | undefined
   onNetworkChange: (chainId: ChainId) => void
   isNetworkDisabled: (optionChainId: ChainId, selectedNetworkChainId: ChainId) => boolean
-  removeSpecifiedTag?: string
+  selectedNetworkChainId: ChainId
+  activeChainId: ChainId | undefined
+  ignoreTags?: string[]
 }): NetworksList[] => {
   let networks = networkOptionsPreset
 
-  if (removeSpecifiedTag) {
+  if (ignoreTags?.length) {
     networks = networkOptionsPreset.map(item => {
-      if (item.tag === removeSpecifiedTag) {
+      if (item.tag && ignoreTags?.includes(item.tag)) {
         return { ...item, tag: '' }
       }
       return item

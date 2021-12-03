@@ -29,26 +29,26 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
     }
   }, [activeChainId, closeModals])
 
-  const isNetworkDisabled = (networkId: ChainId) => {
-    return connector?.supportedChainIds?.indexOf(networkId) === -1 || activeChainId === networkId
+  const isNetworkDisabled = (chainId: ChainId) => {
+    return connector?.supportedChainIds?.indexOf(chainId) === -1 || activeChainId === chainId
   }
 
   function onNetworkChange(chainId: ChainId) {
     return chainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(chainId)
   }
 
-  const selectorNetworkList = createNetworksList({
-    networkOptionsPreset: networkOptionsPreset,
-    selectedNetworkChainId: activeChainId ? activeChainId : -1,
+  const networkList = createNetworksList({
+    networkOptionsPreset,
     onNetworkChange,
-    activeChainId: !!account ? activeChainId : -1,
     isNetworkDisabled,
-    removeSpecifiedTag: 'coming soon'
+    selectedNetworkChainId: activeChainId ? activeChainId : -1,
+    activeChainId: !!account ? activeChainId : -1,
+    ignoreTags: ['coming soon']
   })
 
   return (
     <NetworkSwitcher
-      networksList={selectorNetworkList}
+      networksList={networkList}
       show={networkSwitcherPopoverOpen}
       onOuterClick={closeModals}
       placement={placement}
