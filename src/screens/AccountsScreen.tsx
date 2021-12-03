@@ -1,27 +1,26 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { HomeStackParamList } from 'src/app/navigation/types'
-import Plus from 'src/assets/icons/plus.svg'
 import { AccountCard } from 'src/components/accounts/AccountCard'
-import { AccountHeader } from 'src/components/accounts/AccountHeader'
+import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
+import { RenameAccountModal } from 'src/components/accounts/RenameAccountModal'
 import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { BlueToPinkRadial } from 'src/components/gradients/BlueToPinkRadial'
-import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { TextInput } from 'src/components/input/TextInput'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
 import { Modal } from 'src/components/modals/Modal'
 import { Text } from 'src/components/Text'
+import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
+import { dimensions } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
 
 type Props = NativeStackScreenProps<HomeStackParamList, Screens.Accounts>
@@ -31,7 +30,14 @@ export function AccountsScreen({ navigation }: Props) {
 
   const { t } = useTranslation()
 
-  const accounts = useAccounts()
+  const addressToAccount = useAccounts()
+  const [signerAccounts, readOnlyAccounts] = useMemo(() => {
+    const accounts = Object.values(addressToAccount)
+    const _signerAccounts = accounts.filter((a) => a.type !== AccountType.readonly)
+    const _readOnlyAccounts = accounts.filter((a) => a.type === AccountType.readonly)
+    return [_signerAccounts, _readOnlyAccounts]
+  }, [addressToAccount])
+
   const activeAccount = useActiveAccount()
   const dispatch = useAppDispatch()
   const onPressActivate = (address: Address) => {
@@ -53,7 +59,6 @@ export function AccountsScreen({ navigation }: Props) {
   }
 
   const [pendingRenameAddress, setPendingRenameAddress] = useState<Address | null>(null)
-  const [newAccountName, setNewAccountName] = useState('')
   const onPressRename = () => {
     if (!pendingEditAddress) return
     setPendingRenameAddress(pendingEditAddress)
@@ -62,7 +67,7 @@ export function AccountsScreen({ navigation }: Props) {
   const onPressRenameCancel = () => {
     setPendingRenameAddress(null)
   }
-  const onPressRenameConfirm = () => {
+  const onPressRenameConfirm = (newAccountName: string) => {
     if (!pendingRenameAddress || !newAccountName) return
     dispatch(
       editAccountActions.trigger({
@@ -83,7 +88,7 @@ export function AccountsScreen({ navigation }: Props) {
   const onPressRemoveCancel = () => {
     setPendingRemoveAddress(null)
   }
-  const onPressConfirmRemove = () => {
+  const onPressRemoveConfirm = () => {
     if (!pendingRemoveAddress) return
     dispatch(
       editAccountActions.trigger({ type: EditAccountAction.Remove, address: pendingRemoveAddress })
@@ -91,101 +96,114 @@ export function AccountsScreen({ navigation }: Props) {
     setPendingRemoveAddress(null)
   }
 
-  const onPressHeader = () => {
-    navigation.goBack()
-  }
-
   // TODO wire up renaming action when designs are ready
   // TODO surface errors from editAccountSaga when designs are ready
 
   return (
     <Screen>
-      <GradientBackground>
-        <BlueToPinkRadial />
-      </GradientBackground>
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box>
-          <AccountHeader chevronDirection="n" onPress={onPressHeader}>
+        <Box px="lg">
+          <Box flexDirection="row" alignItems="center" justifyContent="space-between" mb="lg">
+            <Text variant="bodyLg" color="gray400">
+              {t('Switch Accounts')}
+            </Text>
             {!isEditMode ? (
-              <>
-                <Button onPress={() => setIsEditMode(true)} mr="md">
-                  <Text variant="bodyLg">{t('Manage')}</Text>
-                </Button>
-                <Button
-                  onPress={() => navigation.navigate(Screens.ImportAccount)}
-                  testID="accounts/add/button">
-                  <Plus height={14} width={14} />
-                </Button>
-              </>
+              <TextButton textVariant="bodyLg" textColor="blue" onPress={() => setIsEditMode(true)}>
+                {t('Edit')}
+              </TextButton>
             ) : (
-              <Button onPress={() => setIsEditMode(false)}>
-                <Text variant="bodyLg" color="primary1">
-                  {t('Done')}
-                </Text>
-              </Button>
+              <TextButton
+                textVariant="bodyLg"
+                textColor="blue"
+                onPress={() => setIsEditMode(false)}>
+                {t('Done')}
+              </TextButton>
             )}
-          </AccountHeader>
-          <Box p="md">
-            {Object.values(accounts).map((account) => (
+          </Box>
+          {Object.values(signerAccounts).map((account) => (
+            <Box mb="xl" key={account.address}>
               <AccountCard
                 account={account}
-                key={account.address}
                 isActive={!!activeAccount && activeAccount.address === account.address}
                 isEditable={isEditMode}
                 onPress={onPressActivate}
                 onEdit={onPressEdit}
               />
-            ))}
-          </Box>
+            </Box>
+          ))}
+          {!!readOnlyAccounts.length && (
+            <>
+              <Text variant="body" color="gray400" mb="lg">
+                {t('Watching')}
+              </Text>
+              {Object.values(readOnlyAccounts).map((account) => (
+                <Box mb="xl" key={account.address}>
+                  <AccountCard
+                    account={account}
+                    isActive={!!activeAccount && activeAccount.address === account.address}
+                    isEditable={isEditMode}
+                    onPress={onPressActivate}
+                    onEdit={onPressEdit}
+                  />
+                </Box>
+              ))}
+            </>
+          )}
         </Box>
       </ScrollView>
-      <Modal title={t('Edit Account Options')} visible={!!pendingEditAddress} position="bottom">
-        <TextButton onPress={onPressRename} textVariant="body" width="100%" py="sm">
-          {t('Rename Account')}
-        </TextButton>
-        <TextButton onPress={onPressCopyAddress} textVariant="body" width="100%" py="sm">
-          {t('Copy Address')}
-        </TextButton>
-        <TextButton onPress={onPressRemove} textVariant="body" width="100%" py="sm">
-          {t('Remove Account')}
-        </TextButton>
-        <TextButton onPress={onPressEditCancel} textVariant="body" width="100%" pt="md">
-          {t('Cancel')}
-        </TextButton>
-      </Modal>
-      <Modal title={t('Rename Account')} visible={!!pendingRenameAddress}>
-        <Text variant="bodySm" textAlign="center" mt="md">
-          {pendingRenameAddress}
-        </Text>
-        <Text variant="body" textAlign="center">
-          {t('Set a new account name')}
-        </Text>
-        <TextInput value={newAccountName} onChangeText={setNewAccountName} mt="md" />
-        <CenterBox flexDirection="row" mt="md">
-          <TextButton onPress={onPressRenameCancel} textVariant="body" mr="lg">
-            {t('Cancel')}
+      <CenterBox flexDirection="row" px="md">
+        {/* TODO use pill button here */}
+        <Button
+          label={t('Import Wallet')}
+          onPress={() => navigation.navigate(Screens.ImportAccount)}
+          testID="accounts/add/button"
+          mr="lg"
+        />
+        <Button
+          label={t('Create Wallet')}
+          onPress={() => navigation.navigate(Screens.ImportAccount)}
+          testID="accounts/create/button"
+        />
+      </CenterBox>
+      <Modal
+        visible={!!pendingEditAddress}
+        position="bottom"
+        width={dimensions.fullWidth}
+        dimBackground={true}
+        hide={onPressEditCancel}>
+        <CenterBox>
+          <Text variant="bodySm" color="gray400">
+            {t('Edit or rename your account')}
+          </Text>
+          <TextButton onPress={onPressRename} textVariant="body" width="100%" py="md">
+            {t('Rename Account')}
           </TextButton>
-          <TextButton onPress={onPressRenameConfirm} textVariant="body">
-            {t('Done')}
+          <TextButton onPress={onPressCopyAddress} textVariant="body" width="100%" py="md">
+            {t('Copy Address')}
+          </TextButton>
+          <TextButton onPress={onPressRemove} textVariant="body" width="100%" py="md">
+            {t('Remove Account')}
+          </TextButton>
+          <TextButton
+            onPress={onPressEditCancel}
+            textVariant="body"
+            textColor="blue"
+            width="100%"
+            pt="md">
+            {t('Cancel')}
           </TextButton>
         </CenterBox>
       </Modal>
-      <Modal title={t('Remove Account?')} visible={!!pendingRemoveAddress}>
-        <Text variant="body" textAlign="center">
-          {t('Are you sure you want to remove this account?')}
-        </Text>
-        <Text variant="bodySm" textAlign="center" mt="md">
-          {pendingRemoveAddress}
-        </Text>
-        <CenterBox flexDirection="row" mt="md">
-          <TextButton onPress={onPressRemoveCancel} textVariant="body" mr="lg">
-            {t('Cancel')}
-          </TextButton>
-          <TextButton onPress={onPressConfirmRemove} textVariant="body" textColor="red">
-            {t('Remove')}
-          </TextButton>
-        </CenterBox>
-      </Modal>
+      <RenameAccountModal
+        address={pendingRenameAddress}
+        onCancel={onPressRenameCancel}
+        onConfirm={onPressRenameConfirm}
+      />
+      <RemoveAccountModal
+        address={pendingRemoveAddress}
+        onCancel={onPressRemoveCancel}
+        onConfirm={onPressRemoveConfirm}
+      />
     </Screen>
   )
 }

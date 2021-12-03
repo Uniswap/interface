@@ -1,22 +1,31 @@
 import { ResponsiveValue } from '@shopify/restyle'
 import React from 'react'
 import { Modal as BaseModal, ModalProps, StyleSheet, View } from 'react-native'
+import { Button } from 'src/components/buttons/Button'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 
 interface Props extends ModalProps {
-  title: string
-  hide?: () => void
   position?: 'top' | 'center' | 'bottom'
+  title?: string
+  hide?: () => void
+  dismissable?: boolean
+  showCloseButton?: boolean
+  width?: number
+  dimBackground?: boolean
 }
 
 export function Modal({
   title,
   hide,
-  children,
+  showCloseButton,
   position,
+  width,
+  dimBackground,
+  children,
+  dismissable = true,
   ...rest
 }: React.PropsWithChildren<Props>) {
   let justifyContent: ResponsiveValue<'center' | 'flex-start' | 'flex-end', Theme> = 'center'
@@ -29,19 +38,26 @@ export function Modal({
       transparent={true}
       presentationStyle="overFullScreen"
       {...rest}>
-      <Box alignItems="center" justifyContent={justifyContent} flexGrow={1}>
-        <Box style={style.modalBox} backgroundColor="mainBackground">
-          <Text variant="h3" px="md" mb="sm">
-            {title}
-          </Text>
-          {hide && (
+      <Button
+        alignItems="center"
+        justifyContent={justifyContent}
+        flexGrow={1}
+        style={dimBackground && style.bgDimmed}
+        onPress={dismissable ? hide : undefined}>
+        <Box style={style.modalBox} backgroundColor="mainBackground" width={width}>
+          {title && (
+            <Text variant="h3" px="md" mb="sm">
+              {title}
+            </Text>
+          )}
+          {hide && showCloseButton && (
             <View style={style.closeButtonContainer}>
               <CloseButton onPress={hide} size={14} />
             </View>
           )}
           {children}
         </Box>
-      </Box>
+      </Button>
     </BaseModal>
   )
 }
@@ -50,7 +66,7 @@ const style = StyleSheet.create({
   modalBox: {
     position: 'relative',
     margin: 20,
-    borderRadius: 20,
+    borderRadius: 15,
     padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
@@ -61,6 +77,9 @@ const style = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  bgDimmed: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
   },
   closeButtonContainer: {
     position: 'absolute',

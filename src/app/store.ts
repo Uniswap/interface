@@ -51,6 +51,9 @@ export const store = configureStore({
             swapActions.trigger.type,
           ],
         },
+        invariantCheck: {
+          warnAfter: 128,
+        },
         immutableCheck: {
           warnAfter: 128,
         },

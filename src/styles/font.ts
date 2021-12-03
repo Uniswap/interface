@@ -55,6 +55,11 @@ export const textVariants = {
     fontSize: 13,
     color: 'mainForeground',
   },
+  bodyXs: {
+    fontFamily: fontFamily.sansSerif.regular,
+    fontSize: 11,
+    color: 'mainForeground',
+  },
   buttonLabel: {
     fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 14,
