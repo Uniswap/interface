@@ -12,6 +12,8 @@ import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
 import { DAI } from 'src/constants/tokens'
 import { ApproveParams, maybeApprove } from 'src/features/approve/approveSaga'
 import { ContractManager } from 'src/features/contracts/ContractManager'
+import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
+import { TransactionType } from 'src/features/transactions/types'
 import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
@@ -59,6 +61,9 @@ const approveParams: ApproveParams = {
   contract: tokenContract,
   spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
 }
+
+const transactionResponse = { hash: '0x123', wait: () => {} }
+const transactionReceipt = {}
 
 describe(maybeApprove, () => {
   it('skips approval when allowance is sufficient', () => {
@@ -111,6 +116,16 @@ describe(maybeApprove, () => {
       .call(approveParams.contract.approve, approveParams.spender, MaxUint256, {
         gasLimit: BigNumber.from(100_000).mul(GAS_INFLATION_FACTOR),
       })
+      .next(transactionResponse)
+      .call(addTransaction, transactionResponse, {
+        type: TransactionType.APPROVE,
+        tokenAddress: tokenContract.address,
+        spender: approveParams.spender,
+      })
+      .next()
+      .call(transactionResponse.wait)
+      .next(transactionReceipt)
+      .call(finalizeTransaction, transactionResponse, transactionReceipt)
       .next()
       .isDone()
   })
@@ -138,6 +153,16 @@ describe(maybeApprove, () => {
       .call(approveParams.contract.approve, approveParams.spender, approvedAmount, {
         gasLimit: BigNumber.from(120_000).mul(GAS_INFLATION_FACTOR),
       })
+      .next(transactionResponse)
+      .call(addTransaction, transactionResponse, {
+        type: TransactionType.APPROVE,
+        tokenAddress: tokenContract.address,
+        spender: approveParams.spender,
+      })
+      .next()
+      .call(transactionResponse.wait)
+      .next(transactionReceipt)
+      .call(finalizeTransaction, transactionResponse, transactionReceipt)
       .next()
       .isDone()
   })

@@ -4,6 +4,8 @@ import { Erc20 } from 'src/abis/types'
 import { getWalletAccounts, getWalletProviders } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
+import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
+import { TransactionType } from 'src/features/transactions/types'
 import { AccountStub, AccountType } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
 import { call } from 'typed-redux-saga'
@@ -63,7 +65,15 @@ export function* maybeApprove(params: ApproveParams) {
       }
     )
 
-    yield* call(response.wait)
+    yield* call(addTransaction, response, {
+      type: TransactionType.APPROVE,
+      tokenAddress: contract.address,
+      spender,
+    })
+
+    const receipt = yield* call(response.wait)
+
+    yield* call(finalizeTransaction, response, receipt)
 
     return true
   } catch (e) {
