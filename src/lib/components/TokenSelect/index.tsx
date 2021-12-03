@@ -44,7 +44,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
     <>
       <Column gap={0.75}>
         <Header title={<Trans>Select a token</Trans>} />
-        <Row padded grow>
+        <Row pad={0.75} grow>
           <ThemedText.Body1 color={search ? 'primary' : 'secondary'}>
             <SearchInput
               value={search}
@@ -57,7 +57,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
         </Row>
         {Boolean(baseTokens.length) && (
           <>
-            <Row gap={0.25} justify="flex-start" flex padded>
+            <Row pad={0.75} gap={0.25} justify="flex-start" flex>
               {baseTokens.map((token) => (
                 <TokenBase value={token} onClick={onSelect} key={token.address} />
               ))}
