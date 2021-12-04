@@ -38,7 +38,6 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
   useEffect(() => input.current?.focus(), [input])
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
-  const onKeyDown = useCallback((e) => options?.onKeyDown(e), [options])
 
   return (
     <>
@@ -50,7 +49,8 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
               value={search}
               onChange={setSearch}
               placeholder={t`Search by token name or address`}
-              onKeyDown={onKeyDown}
+              onKeyDown={options?.onKeyDown}
+              onBlur={options?.blur}
               ref={input}
             />
           </ThemedText.Body1>
@@ -73,11 +73,11 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
 
 interface TokenSelectProps {
   value?: Token
-  disabled?: boolean
+  collapsed: boolean
   onSelect: (value: Token) => void
 }
 
-export default function TokenSelect({ value, disabled, onSelect }: TokenSelectProps) {
+export default function TokenSelect({ value, collapsed, onSelect }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
   const selectAndClose = useCallback(
     (value: Token) => {
@@ -88,7 +88,7 @@ export default function TokenSelect({ value, disabled, onSelect }: TokenSelectPr
   )
   return (
     <>
-      <TokenButton value={value} disabled={disabled} onClick={() => setOpen(true)} />
+      <TokenButton value={value} collapsed={collapsed} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <TokenSelectDialog onSelect={selectAndClose} />

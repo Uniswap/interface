@@ -14,9 +14,13 @@ import TokenInput from './TokenInput'
 
 const BookIcon = icon(Book, { color: 'currentColor' })
 
-const InputColumn = styled(Column)`
+const InputColumn = styled(Column)<{ approved: boolean }>`
   padding: 0.75em;
   position: relative;
+
+  img {
+    filter: ${({ approved }) => (approved ? undefined : 'saturate(0) opacity(0.6)')};
+  }
 `
 
 export default function Input({ children }: { children: ReactNode }) {
@@ -27,18 +31,13 @@ export default function Input({ children }: { children: ReactNode }) {
   const balance = 123.45
 
   return (
-    <InputColumn gap={0.5}>
+    <InputColumn gap={0.5} approved={state !== State.TOKEN_APPROVAL}>
       <Row>
         <ThemedText.Subhead2 color="secondary">
           <Trans>Trading</Trans>
         </ThemedText.Subhead2>
       </Row>
-      <TokenInput
-        input={input}
-        disabled={state === State.TOKEN_APPROVAL}
-        onChangeInput={setValue}
-        onChangeToken={setToken}
-      >
+      <TokenInput input={input} onChangeInput={setValue} onChangeToken={setToken}>
         <ThemedText.Body2 color="secondary">
           <Row>
             {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}

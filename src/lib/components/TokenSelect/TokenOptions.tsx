@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
-import styled, { scrollable, Theme, ThemedText } from 'lib/theme'
+import styled, { scrollable, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import React, {
   ComponentClass,
@@ -18,28 +18,29 @@ import React, {
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
 
-import Button from '../Button'
+import { BaseButton } from '../Button'
 import Column from '../Column'
 import Row from '../Row'
 
-const TokenButton = styled(Button)`
+const TokenButton = styled(BaseButton)`
   border-radius: 0;
   outline: none;
   padding: 0.5em 0.75em;
 
-  :hover {
-    opacity: 1;
+  img {
+    border-radius: 100%;
+    height: 1.25em;
+    width: 1.25em;
   }
 `
 
-const TokenImg = styled.img`
-  border-radius: 100%;
-  height: 1.25em;
-  width: 1.25em;
-`
+type ItemData = Token[]
+interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
+const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{ hover: number }>`
+  ${TokenButton}[data-index='${({ hover }) => hover}'] {
+    background-color: ${({ theme }) => theme.onHover(theme.module)};
+  }
 
-interface FixedSizeTokenList extends FixedSizeList<Token[]>, ComponentClass<FixedSizeListProps<Token[]>> {}
-const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)`
   ${scrollable}
 
   @supports selector(::-webkit-scrollbar-thumb) {
@@ -92,7 +93,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
       <ThemedText.Body1>
         <Row>
           <Row gap={0.5}>
-            <TokenImg src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />
+            <img src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />
             <Column flex gap={0.125} align="flex-start">
               <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
               <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
@@ -105,7 +106,6 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
   )
 }
 
-type ItemData = Token[]
 const itemKey = (index: number, tokens: ItemData) => tokens[index]?.address
 const ItemRow = memo(function ItemRow({
   data: tokens,
@@ -120,14 +120,9 @@ const ItemRow = memo(function ItemRow({
 },
 areEqual)
 
-const TokenOptionsColumn = styled(Column)<{ hover: number; theme: Theme }>`
-  [data-index='${({ hover }) => hover}'] {
-    background-color: ${({ theme }) => theme.interactive};
-  }
-`
-
 interface TokenOptionsHandle {
   onKeyDown: (e: KeyboardEvent) => void
+  blur: () => void
 }
 
 interface TokenOptionsProps {
@@ -144,6 +139,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   useEffect(() => setHover(-1), [tokens])
 
   const list = useRef<FixedSizeList>(null)
+  const innerList = useRef<HTMLElement>(null)
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -165,9 +161,10 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
         setHover(index)
       }
     },
-    [hover, tokens, onSelect]
+    [hover, onSelect, tokens]
   )
-  useImperativeHandle(ref, () => ({ onKeyDown }), [onKeyDown])
+  const blur = useCallback(() => setHover(-1), [])
+  useImperativeHandle(ref, () => ({ onKeyDown, blur }), [blur, onKeyDown])
 
   const onClick = useCallback(({ token }: BubbledEvent) => token && onSelect(token), [onSelect])
   const onFocus = useCallback(({ index }: BubbledEvent) => {
@@ -176,6 +173,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       setFocused(true)
     }
   }, [])
+  const onBlur = useCallback(() => setFocused(false), [])
   const onMouseMove = useCallback(
     ({ index, ref }: BubbledEvent) => {
       if (index !== undefined) {
@@ -189,19 +187,19 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   )
 
   return (
-    <TokenOptionsColumn
-      hover={hover}
+    <Column
       align="unset"
       grow
       onKeyDown={onKeyDown}
       onClick={onClick}
-      onBlur={() => setFocused(false)}
+      onBlur={onBlur}
       onFocus={onFocus}
       onMouseMove={onMouseMove}
     >
       <AutoSizer disableWidth>
         {({ height }) => (
           <TokenList
+            hover={hover}
             height={height}
             width="100%"
             itemCount={tokens.length}
@@ -210,12 +208,13 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             itemSize={56}
             className="scrollbar"
             ref={list}
+            innerRef={innerList}
           >
             {ItemRow}
           </TokenList>
         )}
       </AutoSizer>
-    </TokenOptionsColumn>
+    </Column>
   )
 })
 

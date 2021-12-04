@@ -1,6 +1,6 @@
-import styled from 'lib/theme'
+import styled, { Color, Theme } from 'lib/theme'
 
-const Button = styled.button`
+export const BaseButton = styled.button`
   background-color: transparent;
   border: none;
   border-radius: 0.5em;
@@ -11,19 +11,27 @@ const Button = styled.button`
   line-height: inherit;
   margin: 0;
   padding: 0;
+`
 
-  :hover {
-    opacity: 0.7;
+export default styled(BaseButton)<{ color?: Color; theme: Theme }>`
+  background-color: ${({ color = 'interactive', theme }) => theme[color]};
+
+  :enabled:hover {
+    background-color: ${({ color = 'interactive', theme }) => theme.onHover(theme[color])};
   }
 
   :disabled {
     cursor: not-allowed;
-    opacity: 0.6;
   }
 `
 
-export default Button
+const transparentButtonWithColor = (color: Color) => styled(BaseButton)`
+  color: ${({ theme }) => theme[color]};
 
-export const TextButton = styled(Button)`
-  color: ${({ theme }) => theme.accent};
+  :hover {
+    color: ${({ theme }) => theme.onHover(theme[color])};
+  }
 `
+
+export const TextButton = transparentButtonWithColor('accent')
+export const IconButton = transparentButtonWithColor('secondary')

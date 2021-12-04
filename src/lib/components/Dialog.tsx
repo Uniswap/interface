@@ -5,7 +5,7 @@ import { createContext, ReactElement, ReactNode, useCallback, useContext, useEff
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
-import Button from './Button'
+import { IconButton } from './Button'
 import Column from './Column'
 import { default as BaseHeader } from './Header'
 import Rule from './Rule'
@@ -49,6 +49,12 @@ export function Provider({ value, children }: ProviderProps) {
 
 const OnCloseContext = createContext<() => void>(() => void 0)
 
+const XButton = styled(IconButton)`
+  :hover {
+    opacity: 0.75;
+  }
+`
+
 const XIcon = icon(X, { color: 'primary' })
 
 interface HeaderProps {
@@ -63,9 +69,9 @@ export function Header({ title, children, ruled }: HeaderProps) {
       <Column gap={0.75}>
         <BaseHeader title={title}>
           {children}
-          <Button onClick={useContext(OnCloseContext)}>
+          <XButton onClick={useContext(OnCloseContext)}>
             <XIcon />
-          </Button>
+          </XButton>
         </BaseHeader>
         {ruled && <Rule padded />}
       </Column>

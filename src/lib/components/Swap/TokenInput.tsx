@@ -1,6 +1,6 @@
 import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
-import { ReactNode } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 
 import Column from '../Column'
 import { DecimalInput } from '../Input'
@@ -14,7 +14,6 @@ const TokenInputRow = styled(Row)`
 
 interface TokenInputProps {
   input: Input
-  disabled?: boolean
   onChangeInput: (input: number | undefined) => void
   onChangeToken: (token: Token) => void
   children: ReactNode
@@ -22,18 +21,26 @@ interface TokenInputProps {
 
 export default function TokenInput({
   input: { value, token },
-  disabled,
   onChangeInput,
   onChangeToken,
   children,
 }: TokenInputProps) {
+  const [collapsed, setCollapsed] = useState(false)
+  const onInputFocus = useCallback(() => setCollapsed(true), [])
+  const onInputBlur = useCallback(() => setCollapsed(false), [])
   return (
     <Column gap={0.375}>
       <TokenInputRow>
         <ThemedText.H2>
-          <DecimalInput value={value} onChange={onChangeInput} placeholder="0.0"></DecimalInput>
+          <DecimalInput
+            value={value}
+            onFocus={onInputFocus}
+            onBlur={onInputBlur}
+            onChange={onChangeInput}
+            placeholder="0.0"
+          ></DecimalInput>
         </ThemedText.H2>
-        <TokenSelect value={token} disabled={disabled} onSelect={onChangeToken} />
+        <TokenSelect value={token} collapsed={collapsed} onSelect={onChangeToken} />
       </TokenInputRow>
       {children}
     </Column>
