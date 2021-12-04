@@ -1,18 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import { useUpdateAtom } from 'jotai/utils'
-import styled, { icon, ThemedText } from 'lib/theme'
+import styled, { ThemedText } from 'lib/theme'
 import { pickAtom } from 'lib/utils/atoms'
 import { ReactNode } from 'react'
-import { Book } from 'react-feather'
 
-import { TextButton } from '../Button'
 import Column from '../Column'
 import Row from '../Row'
 import { inputAtom, State, stateAtom } from './state'
 import TokenInput from './TokenInput'
-
-const BookIcon = icon(Book, { color: 'currentColor' })
 
 const InputColumn = styled(Column)<{ approved: boolean }>`
   padding: 0.75em;
@@ -37,19 +33,20 @@ export default function Input({ children }: { children: ReactNode }) {
           <Trans>Trading</Trans>
         </ThemedText.Subhead2>
       </Row>
-      <TokenInput input={input} onChangeInput={setValue} onChangeToken={setToken}>
+      <TokenInput
+        input={input}
+        onMax={balance ? () => setValue(balance) : undefined}
+        onChangeInput={setValue}
+        onChangeToken={setToken}
+      >
         <ThemedText.Body2 color="secondary">
           <Row>
             {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}
             {balance && (
               <Row gap={0.5}>
                 <Row gap={0.25} color={state === State.BALANCE_INSUFFICIENT ? 'error' : undefined}>
-                  <BookIcon />
-                  {balance}
+                  Balance: {balance}
                 </Row>
-                <TextButton onClick={() => setValue(balance)} disabled={!balance}>
-                  <Trans>Max</Trans>
-                </TextButton>
               </Row>
             )}
           </Row>

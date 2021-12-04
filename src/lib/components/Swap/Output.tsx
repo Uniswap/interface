@@ -3,10 +3,9 @@ import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useUpdateAtom } from 'jotai/utils'
 import useColor, { prefetchColor } from 'lib/hooks/useColor'
-import styled, { DynamicThemeProvider, icon, Theme, ThemedText } from 'lib/theme'
+import styled, { DynamicThemeProvider, Theme, ThemedText } from 'lib/theme'
 import { pickAtom } from 'lib/utils/atoms'
 import { ReactNode, useMemo } from 'react'
-import { Book } from 'react-feather'
 
 import Column from '../Column'
 import Row from '../Row'
@@ -14,8 +13,6 @@ import { inputAtom, outputAtom } from './state'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
-
-const BookIcon = icon(Book)
 
 const OutputColumn = styled(Column)<{ hasColor: boolean | null; theme: Theme }>`
   background-color: ${({ theme }) => theme.module};
@@ -74,10 +71,7 @@ export default function Output({ children }: { children: ReactNode }) {
               {usdc}
               {balance && (
                 <Row gap={0.5}>
-                  <Row gap={0.25}>
-                    <BookIcon />
-                    {balance}
-                  </Row>
+                  <Row gap={0.25}>Balance: {balance}</Row>
                 </Row>
               )}
             </Row>
