@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import styled, { ThemedText } from 'lib/theme'
+import styled, { keyframes, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
 
@@ -14,7 +14,20 @@ const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
 `
 
+const delayedFadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`
+
 const MaxButton = styled(Button)`
+  animation: ${delayedFadeIn} 0.2s linear;
   border-radius: 0.75em;
   padding: 0.5em;
 `

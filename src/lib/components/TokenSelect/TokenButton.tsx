@@ -22,7 +22,7 @@ const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
   height: 1.2em;
   max-width: ${({ collapsed }) => (collapsed ? '1.2' : '8')}em;
   overflow-x: hidden;
-  transition: max-width 0.2s;
+  transition: max-width 0.2s linear;
 `
 
 const ChevronDownIcon = styled(icon(ChevronDown, { color: 'onInteractive' }))`
