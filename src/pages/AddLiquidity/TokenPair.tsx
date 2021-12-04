@@ -298,41 +298,6 @@ const TokenPair = ({
       })
   }
 
-  const modalHeader = () => {
-    return (
-      <AutoColumn gap="5px">
-        <RowFlat style={{ marginTop: '20px' }}>
-          <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
-            {liquidityMinted?.toSignificant(6)}
-          </Text>
-        </RowFlat>
-        <Row>
-          <Text fontSize="24px">{'DMM ' + nativeA?.symbol + '/' + nativeB?.symbol + ' LP Tokens'}</Text>
-        </Row>
-        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          {`Output is estimated. If the price changes by more than ${allowedSlippage /
-            100}% your transaction will revert.`}
-        </TYPE.italic>
-      </AutoColumn>
-    )
-  }
-
-  const modalBottom = () => {
-    return (
-      <ConfirmAddModalBottom
-        pair={pair}
-        price={price}
-        currencies={currencies}
-        parsedAmounts={parsedAmounts}
-        noLiquidity={false}
-        onAdd={onAdd}
-        poolTokenPercentage={poolTokenPercentage}
-        amplification={ampConvertedInBps}
-        estimatedUsd={[estimatedUsdCurrencyA, estimatedUsdCurrencyB]}
-      />
-    )
-  }
-
   const pendingText = `Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
     nativeA?.symbol
   } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${nativeB?.symbol}`
@@ -382,6 +347,41 @@ const TokenPair = ({
   const marketPrice = marketPrices[1] && marketPrices[0] / marketPrices[1]
 
   const showSanityPriceWarning = !!(poolPrice && marketPrice && Math.abs(poolPrice - marketPrice) / marketPrice > 0.05)
+
+  const modalHeader = () => {
+    return (
+      <AutoColumn gap="5px">
+        <RowFlat style={{ marginTop: '20px' }}>
+          <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
+            {liquidityMinted?.toSignificant(6)}
+          </Text>
+        </RowFlat>
+        <Row>
+          <Text fontSize="24px">{'DMM ' + nativeA?.symbol + '/' + nativeB?.symbol + ' LP Tokens'}</Text>
+        </Row>
+        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+          {t`Output is estimated. If the price changes by more than ${allowedSlippage /
+            100}% your transaction will revert.`}
+        </TYPE.italic>
+      </AutoColumn>
+    )
+  }
+
+  const modalBottom = () => {
+    return (
+      <ConfirmAddModalBottom
+        pair={pair}
+        price={price}
+        currencies={currencies}
+        parsedAmounts={parsedAmounts}
+        noLiquidity={false}
+        onAdd={onAdd}
+        poolTokenPercentage={poolTokenPercentage}
+        amplification={ampConvertedInBps}
+        estimatedUsd={[estimatedUsdCurrencyA, estimatedUsdCurrencyB]}
+      />
+    )
+  }
 
   return (
     <Wrapper>

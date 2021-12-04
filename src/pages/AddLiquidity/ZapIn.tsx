@@ -337,6 +337,11 @@ const ZapIn = ({
     parsedAmounts[dependentField] &&
     usdPrices[1] * parseFloat((parsedAmounts[dependentField] as CurrencyAmount).toSignificant(6))
 
+  const estimatedUsdForPair: [number, number] =
+    independentField === Field.CURRENCY_A
+      ? [tokenAPoolAllocUsd || 0, tokenBPoolAllocUsd || 0]
+      : [tokenBPoolAllocUsd || 0, tokenAPoolAllocUsd || 0]
+
   const priceImpact =
     price &&
     userInCurrencyAmount &&
@@ -367,7 +372,7 @@ const ZapIn = ({
           <Text fontSize="24px">{'DMM ' + nativeA?.symbol + '/' + nativeB?.symbol + ' LP Tokens'}</Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          {`Output is estimated. If the price changes by more than ${allowedSlippage /
+          {t`Output is estimated. If the price changes by more than ${allowedSlippage /
             100}% your transaction will revert.`}
         </TYPE.italic>
       </AutoColumn>
@@ -386,7 +391,7 @@ const ZapIn = ({
         poolTokenPercentage={poolTokenPercentage}
         amplification={ampConvertedInBps}
         priceImpact={priceImpactWithoutFee}
-        estimatedUsd={[tokenAPoolAllocUsd || 0, tokenBPoolAllocUsd || 0]}
+        estimatedUsd={estimatedUsdForPair}
       />
     )
   }

@@ -473,6 +473,11 @@ export default function ZapOut({
           <Text fontSize={24} fontWeight={500}>
             {independentToken?.symbol}
           </Text>
+          {estimatedUsd && (
+            <Text color={theme.subText} marginLeft="4px" fontSize={18} fontWeight={500}>
+              (~{formattedNum(estimatedUsd.toString(), true) || undefined})
+            </Text>
+          )}
         </AutoRow>
 
         <TYPE.italic fontSize={12} fontWeight={400} color={theme.subText} textAlign="left">
@@ -649,7 +654,7 @@ export default function ZapOut({
                   showMaxButton={false}
                   currency={currencies[independentTokenField]}
                   id="zap-out-input"
-                  label={'Output'}
+                  label={t`Output`}
                   disableCurrencySelect={false}
                   showCommonBases
                   positionMax="top"
