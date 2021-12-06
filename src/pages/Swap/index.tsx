@@ -465,7 +465,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     }
                   >
                     <AutoRow gap="4px" width="auto">
-                      <AutoRouterLogo />
+                      <AutoRouterLogo animated={routeIsSyncing} />
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
                         {trade instanceof V3Trade && trade.swaps.length > 1 && (
                           <ThemedText.Blue fontSize={14}>{trade.swaps.length} routes</ThemedText.Blue>

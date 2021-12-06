@@ -4,9 +4,19 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
+import { ReactComponent as AutoRouterAnimatedIcon } from '../../assets/svg/auto_router_animated.svg'
 import { ReactComponent as StaticRouterIcon } from '../../assets/svg/static_route.svg'
 
 const StyledAutoRouterIcon = styled(AutoRouterIcon)`
+  height: 16px;
+  width: 16px;
+
+  :hover {
+    filter: brightness(1.3);
+  }
+`
+
+const StyledAutoRouterAnimatedIcon = styled(AutoRouterAnimatedIcon)`
   height: 16px;
   width: 16px;
 
@@ -39,10 +49,18 @@ const StyledAutoRouterLabel = styled(ThemedText.Black)`
   }
 `
 
-export function AutoRouterLogo() {
+export function AutoRouterLogo({ animated }: { animated?: boolean } = { animated: false }) {
   const routingAPIEnabled = useRoutingAPIEnabled()
 
-  return routingAPIEnabled ? <StyledAutoRouterIcon /> : <StyledStaticRouterIcon />
+  return routingAPIEnabled ? (
+    animated ? (
+      <StyledAutoRouterAnimatedIcon />
+    ) : (
+      <StyledAutoRouterIcon />
+    )
+  ) : (
+    <StyledStaticRouterIcon />
+  )
 }
 
 export function AutoRouterLabel() {
