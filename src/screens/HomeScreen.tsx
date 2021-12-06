@@ -13,6 +13,7 @@ import { ChainId } from 'src/constants/chains'
 import { useEthBalance, useTokenBalances } from 'src/features/balances/hooks'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionNotificationBanner } from 'src/features/transactions/Notification'
+import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
@@ -20,6 +21,10 @@ type Props = NativeStackScreenProps<HomeStackParamList, Screens.Accounts>
 
 export function HomeScreen({ navigation }: Props) {
   const currentChain = ChainId.RINKEBY // Temporarily Rinkeby, change to ChainId.MAINNET
+
+  // imports test account for easy development/testing
+  useTestAccount()
+
   const activeAccount = useActiveAccount()
   const chainIdToTokens = useAllTokens()
   const [tokenBalances, tokenBalancesLoading] = useTokenBalances(
