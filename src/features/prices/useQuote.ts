@@ -8,7 +8,7 @@ import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from '../../constants/
 
 const ROUTING_API_BASE_URL = 'https://api.uniswap.org/v1'
 
-interface QuoteParams {
+export interface UseQuoteProps {
   amountSpecified: CurrencyAmount<Currency> | null | undefined
   otherCurrency: Currency | null | undefined
   tradeType: TradeType
@@ -18,7 +18,7 @@ interface QuoteParams {
  * Fetches quote from Routing API
  * Handles caching, invalidation, polling, etc.
  */
-export function useQuote(params: QuoteParams) {
+export function useQuote(params: UseQuoteProps) {
   const recipient = useActiveAccount()
 
   const { amountSpecified, tradeType, otherCurrency } = params

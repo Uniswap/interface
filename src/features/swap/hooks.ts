@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -7,10 +7,10 @@ import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
-import { useQuote } from 'src/features/prices/useQuote'
 import { CurrencyField, swapFormActions, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { swapActions } from 'src/features/swap/swapSaga'
-import { QuoteResult } from 'src/features/swap/types'
+import { Trade } from 'src/features/swap/types'
+import { useTrade } from 'src/features/swap/useTrade'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -60,26 +60,16 @@ export function useDerivedSwapInfo(state: SwapFormState) {
   const {
     status,
     error: quoteError,
-    data: quoteResult,
-  } = useQuote({
+    trade,
+  } = useTrade({
     amountSpecified,
     otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
   })
 
   const currencyAmounts = {
-    [CurrencyField.INPUT]: isExactIn
-      ? amountSpecified
-      : // TODO: better handle quote not read
-      currencyIn && quoteResult?.quote
-      ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
-      : null,
-    [CurrencyField.OUTPUT]: !isExactIn
-      ? amountSpecified
-      : // TODO: better handle quote not ready
-      currencyOut && quoteResult?.quote
-      ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
-      : null,
+    [CurrencyField.INPUT]: trade?.inputAmount,
+    [CurrencyField.OUTPUT]: trade?.outputAmount,
   }
 
   return {
@@ -92,8 +82,8 @@ export function useDerivedSwapInfo(state: SwapFormState) {
     exactCurrencyField,
     trade: {
       quoteError,
-      quoteResult,
       status,
+      trade,
     },
   }
 }
@@ -121,7 +111,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
 
 /** Callback to submit trades and track progress */
 export function useSwapCallback(
-  trade?: QuoteResult,
+  trade?: Trade | undefined | null,
   onSuccess?: () => void
 ): {
   swapState: SagaState | null
@@ -132,13 +122,13 @@ export function useSwapCallback(
 
   const navigation = useAppNavigation()
 
-  const { amount, methodParameters } = trade || {}
-  const chainId = trade?.route[0]?.[0].tokenIn.chainId
+  const { amount, methodParameters } = trade?.quote || {}
+  const chainId = trade?.inputAmount.currency.chainId
 
   // TODO: fallback to mainnet required?
   const tokenContract = useTokenContract(
     chainId ?? ChainId.MAINNET,
-    trade?.route[0]?.[0].tokenIn.address
+    trade?.inputAmount.currency.isToken ? trade?.inputAmount.currency.wrapped.address : undefined
   )
 
   // TODO: use useSagaStatus?

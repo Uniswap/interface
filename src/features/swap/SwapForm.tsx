@@ -34,13 +34,13 @@ export function SwapForm(props: SwapFormProps) {
     currencies,
     currencyAmounts,
     currencyBalances,
-    trade: { quoteResult: quote, status: quoteStatus },
+    trade: { trade: trade, status: quoteStatus },
   } = derivedSwapInfo
   const swapInfoError = validateSwapInfo(derivedSwapInfo)
 
   const { onSelectCurrency, onSwitchCurrencies, onEnterExactAmount } =
     useSwapActionHandlers(dispatch)
-  const { swapCallback, swapState } = useSwapCallback(quote)
+  const { swapCallback, swapState } = useSwapCallback(trade)
 
   // TODO:
   // -check approval status
@@ -79,7 +79,7 @@ export function SwapForm(props: SwapFormProps) {
     swapStatusLabel = t('Swapping...')
   }
 
-  const swapButtonDisabled = Boolean(!quote || errorLabel !== '')
+  const swapButtonDisabled = Boolean(!trade || errorLabel !== '')
 
   return (
     <Box paddingHorizontal="md" flex={1} justifyContent="space-between">
@@ -128,12 +128,13 @@ export function SwapForm(props: SwapFormProps) {
         />
       </Box>
       <Box>
-        <SwapDetailRow trade={quote} label={errorLabel ?? swapStatusLabel} />
+        <SwapDetailRow trade={trade} label={errorLabel ?? swapStatusLabel} />
         <PrimaryButton
           alignSelf="stretch"
           label={t`Swap`}
           onPress={swapCallback}
           disabled={swapButtonDisabled}
+          mt="md"
           {...(swapButtonDisabled ? { bg: 'gray400' } : {})}
         />
       </Box>
