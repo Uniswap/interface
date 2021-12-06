@@ -74,7 +74,7 @@ const AssetWrapper = styled.div`
 export default function Bridge() {
   const bridgeService = useBridgeService()
   const { account } = useActiveWeb3React()
-  const { chainId, isArbitrum } = useChains()
+  const { chainId, partnerChainId, isArbitrum } = useChains()
   const bridgeSummaries = useBridgeTransactionsSummary()
   const [modalData, setModalStatus, setModalData] = useBridgeModal()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
@@ -119,14 +119,10 @@ export default function Bridge() {
     setModalData({
       symbol: '',
       typedValue: '',
-      fromChainId: 1,
-      toChainId: 42161
+      fromChainId: chainId || 1,
+      toChainId: partnerChainId || 42161
     })
-  }, [onCurrencySelection, onUserInput, setModalData, setModalStatus, setTxsFilter])
-
-  const handleCollectTab = useCallback(() => {
-    setTxsFilter(BridgeTxsFilter.COLLECTABLE)
-  }, [setTxsFilter])
+  }, [chainId, onCurrencySelection, onUserInput, partnerChainId, setModalData, setModalStatus, setTxsFilter])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -197,8 +193,8 @@ export default function Bridge() {
         collectableTxAmount={collectableTxAmount}
         isCollecting={isCollecting}
         isCollectableFilter={isCollectableFilter}
+        setTxsFilter={setTxsFilter}
         handleResetBridge={handleResetBridge}
-        handleCollectTab={handleCollectTab}
       />
       <AppBody>
         <RowBetween mb="12px">

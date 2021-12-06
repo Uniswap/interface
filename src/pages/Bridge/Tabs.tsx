@@ -2,12 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import { NumberBadge } from '../../components/NumberBadge'
 import Row from '../../components/Row'
+import { BridgeTxsFilter } from '../../state/bridge/reducer'
+
 interface TabsProps {
   collectableTxAmount: number
   isCollecting: boolean
   isCollectableFilter: boolean
   handleResetBridge: () => void
-  handleCollectTab: () => void
+  setTxsFilter: (filter: BridgeTxsFilter) => void
 }
 
 export const Tabs = ({
@@ -15,13 +17,17 @@ export const Tabs = ({
   isCollecting,
   isCollectableFilter,
   handleResetBridge,
-  handleCollectTab
+  setTxsFilter
 }: TabsProps) => {
   return (
     <TabsRow>
       <Button
         onClick={() => {
-          handleResetBridge()
+          if (isCollecting) {
+            handleResetBridge()
+            return
+          }
+          setTxsFilter(BridgeTxsFilter.RECENT)
         }}
         className={!(isCollecting || isCollectableFilter) ? 'active' : ''}
       >
@@ -29,7 +35,7 @@ export const Tabs = ({
       </Button>
       <Button
         onClick={() => {
-          handleCollectTab()
+          setTxsFilter(BridgeTxsFilter.COLLECTABLE)
         }}
         className={isCollecting || isCollectableFilter ? 'active' : ''}
         disabled={isCollecting}

@@ -5,8 +5,7 @@ import { NETWORK_DETAIL } from '../../constants'
 export enum BridgeStep {
   Initial,
   Collect,
-  Success,
-  Transfer
+  Success
 }
 
 export const createNetworkOptions = ({
