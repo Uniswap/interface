@@ -36,13 +36,6 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Setup GCloud
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.GCP_PROD_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_PROD_SA_KEY }}
-          export_default_credentials: true
-
       - name: Restore node_modules
         uses: actions/cache@v2
         with:
@@ -135,13 +128,13 @@ jobs:
       - name: Setup GCloud
         uses: google-github-actions/setup-gcloud@master
         with:
-          project_id: ${{ secrets.GCP_PROD_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_PROD_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true 
 
       - name: Upload to GCS
         env:
-          BUCKET: dmm.exchange
+          BUCKET: kyberswap.com
         run: |
           gsutil -m rsync -R $PWD/build gs://$BUCKET
           gsutil setmeta -h "Cache-Control: no-cache" gs://$BUCKET/*.html
