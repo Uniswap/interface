@@ -14,14 +14,22 @@ export const BaseButton = styled.button`
 `
 
 export default styled(BaseButton)<{ color?: Color; theme: Theme }>`
-  background-color: ${({ color = 'interactive', theme }) => theme[color]};
+  color: ${({ color, theme }) => (!color || color === 'interactive') && theme.onInteractive};
+
+  :enabled {
+    background-color: ${({ color = 'interactive', theme }) => theme[color]};
+  }
 
   :enabled:hover {
     background-color: ${({ color = 'interactive', theme }) => theme.onHover(theme[color])};
   }
 
   :disabled {
+    border: 1px solid ${({ theme }) => theme.outline};
+    color: ${({ theme }) => theme.secondary};
     cursor: not-allowed;
+    filter: saturate(0);
+    opacity: 0.32;
   }
 `
 

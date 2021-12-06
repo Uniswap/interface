@@ -7,7 +7,7 @@ interface IconOptions {
   color?: Color | 'currentColor'
 }
 
-export function icon(Icon: Icon, { color = 'secondary' }: IconOptions = {}) {
+export function icon(Icon: Icon, { color = 'currentColor' }: IconOptions = {}) {
   return styled(Icon)<{ theme: Theme }>`
     clip-path: stroke-box;
     height: 1em;

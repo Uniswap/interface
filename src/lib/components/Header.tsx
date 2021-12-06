@@ -18,7 +18,7 @@ const StyledLogo = styled(Logo)`
   width: 1em;
 
   :hover {
-    opacity: 0.7;
+    fill: ${({ theme }) => theme.onHover(theme.secondary)};
     transform: rotate(-5deg);
   }
 `

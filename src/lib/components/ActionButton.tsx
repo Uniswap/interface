@@ -6,6 +6,11 @@ import Button from './Button'
 import Column from './Column'
 import Row from './Row'
 
+// TODO(zzmp):
+// - disabled
+// - interactive color
+// - 0.2s transition to "approve"
+
 export const Overlay = styled(Column)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   bottom: 0;
@@ -42,7 +47,6 @@ const ApprovalRow = styled(Row)`
 
 const StyledApprovalButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
-  color: ${({ theme }) => theme.onInteractive};
   height: 100%;
   padding: 0 1em;
 `
@@ -62,9 +66,7 @@ export function ApprovalButton({ color, message, action, onClick }: ApprovalButt
           <AlertIcon />
           <ThemedText.Subhead2>{message}</ThemedText.Subhead2>
         </Row>
-        <StyledApprovalButton color={color} onClick={onClick}>
-          {action}
-        </StyledApprovalButton>
+        <StyledApprovalButton onClick={onClick}>{action}</StyledApprovalButton>
       </ApprovalRow>
     </Overlay>
   )

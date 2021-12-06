@@ -35,7 +35,7 @@ export default function SwapButton() {
   }, [state])
   return (
     <>
-      <ActionButton onClick={() => setOpen(true)} onUpdate={() => void 0} {...actionProps}>
+      <ActionButton color="interactive" onClick={() => setOpen(true)} onUpdate={() => void 0} {...actionProps}>
         <Trans>Review swap</Trans>
       </ActionButton>
       {open && (
