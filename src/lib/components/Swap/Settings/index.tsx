@@ -4,7 +4,7 @@ import { icon, ThemedText } from 'lib/theme'
 import { useState } from 'react'
 import { Settings as SettingsSvg } from 'react-feather'
 
-import Button, { TextButton } from '../../Button'
+import { IconButton, TextButton } from '../../Button'
 import Column from '../../Column'
 import Dialog, { Header } from '../../Dialog'
 import { BoundaryProvider } from '../../Popover'
@@ -42,9 +42,9 @@ export default function Settings() {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <Button onClick={() => setOpen(true)}>
+      <IconButton onClick={() => setOpen(true)}>
         <SettingsIcon />
-      </Button>
+      </IconButton>
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <SettingsDialog />

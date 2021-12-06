@@ -2,7 +2,7 @@ import { icon } from 'lib/theme'
 import { useMemo, useState } from 'react'
 import { Clock } from 'react-feather'
 
-import Button from './Button'
+import { IconButton } from './Button'
 import Dialog from './Dialog'
 import RecentTransactionsDialog, { mockTxs, TransactionStatus } from './RecentTransactionsDialog'
 import SpinnerIcon from './SpinnerIcon'
@@ -22,9 +22,9 @@ export default function Wallet() {
   if (Icon) {
     return (
       <>
-        <Button onClick={() => setOpen(true)}>
+        <IconButton onClick={() => setOpen(true)}>
           <Icon />
-        </Button>
+        </IconButton>
         {open && (
           <Dialog color="module" onClose={() => setOpen(false)}>
             <RecentTransactionsDialog />
