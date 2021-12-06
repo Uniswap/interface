@@ -172,7 +172,7 @@ export default function Menu() {
               <Trans>Swap Legacy</Trans>
             </NavMenuItem>
           )}
-          <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
+          <MenuItem id="link" href="https://forms.gle/gLiNsi7iUzHws2BY8">
             <Edit size={14} />
             <Trans>Contact Us</Trans>
           </MenuItem>
