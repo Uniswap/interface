@@ -9,9 +9,55 @@ on:
     branches:
       - develop
 
+env:
+  SERVICE: dmm-interface
+
 jobs:
+  prepare:
+    runs-on: ubuntu-18.04
+    outputs:
+      current_branch: ${{ steps.current_branch.outputs.value }}
+      image_name: "kybernetwork/${{ env.SERVICE }}"
+      image_tag: ${{ steps.get_tag.outputs.value }} 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Extract branch
+        shell: bash
+        id: current_branch
+        run: |
+          if [[ ! "$GITHUB_REF"  = "refs/tags/"* ]]; then
+            if [[ "$GITHUB_EVENT_NAME" = "pull_request" ]]; then
+              HEAD_REF=$(printf "%q" "$GITHUB_HEAD_REF")
+              HEAD_REF=${HEAD_REF/refs\/heads\//}
+              BRANCH=$HEAD_REF
+            else 
+              REF=$(printf "%q" "$GITHUB_REF")
+              REF_BRANCH=${REF/refs\/pull\//}
+              REF_BRANCH=${REF_BRANCH/refs\/heads\//}
+              BRANCH=$HEAD_REF
+            fi
+          else 
+            REF=$(printf "%q" "$GITHUB_REF")
+            REF_BRANCH=${REF/refs\/tags\//}
+            BRANCH=$REF_BRANCH
+          fi
+          echo "::set-output name=value::$BRANCH" 
+
+      - name: Get Docker image tag
+        id: get_tag
+        env:
+          CURRENT_BRANCH: ${{ steps.current_branch.outputs.value }}
+        run: |
+          short_sha="$(git rev-parse --short HEAD)"
+          branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
+          echo "::set-output name=value::$branch_tag-$short_sha"  
+
   build:
     runs-on: ubuntu-18.04
+    needs:
+      - prepare
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,12 +67,20 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Setup GCloud
-        uses: google-github-actions/setup-gcloud@master
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Docker login
+        uses: docker/login-action@v1
         with:
-          project_id: ${{ secrets.GCP_DEV_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_DEV_SA_KEY }}
-          export_default_credentials: true
+          username: ${{ secrets.DOCKER_USERNAME }} 
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-${{ env.SERVICE }}-buildx
 
       - name: Restore node_modules
         uses: actions/cache@v2
@@ -42,13 +96,24 @@ jobs:
           CI: false 
         run: yarn build-ropsten
       
-      - name: Deploy to GCS
-        env:
-          DEV_BUCKET: dev-dmm.knstats.com
-          TESTNET_BUCKET: testnet.dmm.exchange
+      - name: Docker build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          labels: |
+            commit=${{ github.sha }}
+            org.label-schema.schema-version=1.0
+            org.label-schema.vcs-ref=${{ github.sha }}
+            org.label-schema.version=${{ needs.prepare.outputs.image_tag }}
+            org.label-schema.name=${{ env.SERVICE }}
+          tags: |
+            ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.image_tag }}
+            ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.current_branch }} 
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Move Docker cache 
         run: |
-          gsutil -m rsync -R $PWD/build gs://$DEV_BUCKET
-          gsutil setmeta -h "Cache-Control: no-cache" gs://$DEV_BUCKET/*.html
-          
-          # Mirror 2 bucket
-          gsutil -m rsync -r -d gs://$DEV_BUCKET gs://$TESTNET_BUCKET
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
