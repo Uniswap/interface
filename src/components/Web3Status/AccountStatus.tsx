@@ -119,7 +119,7 @@ const Avatar = styled.div<StyledAvatarProps>(props => ({
   width: 32,
   borderRadius: '50%',
   marginRight: 6,
-  marginLeft: -12,
+  marginLeft: -14,
   backgroundColor: props.theme.bg1,
   backgroundSize: 'cover',
   backgroundImage: `url(${props.url})`
