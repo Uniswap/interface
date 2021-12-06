@@ -113,23 +113,15 @@ function HomeStackScreen() {
           options={{ headerShown: false }}
         />
       </HomeStack.Group>
-      <HomeStack.Group screenOptions={{ presentation: 'modal' }}>
+      <HomeStack.Group screenOptions={{ headerShown: false }}>
         {/* TODO: reorganize account screens */}
-        <HomeStack.Screen
-          name={Screens.Accounts}
-          component={AccountsScreen}
-          options={{ headerShown: false }}
-        />
+        <HomeStack.Screen name={Screens.Accounts} component={AccountsScreen} />
         <HomeStack.Screen
           name={Screens.ImportAccount}
           component={ImportAccountScreen}
           options={{ title: 'Uniswap | Import' }}
         />
-        <HomeStack.Screen
-          name={Screens.Notifications}
-          component={NotificationsScreen}
-          options={{ headerShown: false }}
-        />
+        <HomeStack.Screen name={Screens.Notifications} component={NotificationsScreen} />
         <HomeStack.Screen
           name={Screens.Camera}
           component={CameraScreen}

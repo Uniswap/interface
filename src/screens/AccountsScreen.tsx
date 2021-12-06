@@ -7,6 +7,7 @@ import { HomeStackParamList } from 'src/app/navigation/types'
 import { AccountCard } from 'src/components/accounts/AccountCard'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { RenameAccountModal } from 'src/components/accounts/RenameAccountModal'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
@@ -104,6 +105,7 @@ export function AccountsScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={flex.fill}>
         <Box px="lg">
           <Box flexDirection="row" alignItems="center" justifyContent="space-between" mb="lg">
+            <BackButton size={30} />
             <Text variant="bodyLg" color="gray400">
               {t('Switch Accounts')}
             </Text>
