@@ -124,6 +124,8 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://ropsten.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ropsten',
+    logoUrl:
+      'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
     primaryColor: '#FF0420',
     nativeCurrency: { name: 'Ropsten ETH', symbol: 'ropETH', decimals: 18 },
   },
@@ -132,6 +134,8 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://kovan.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Kovan',
+    logoUrl:
+      'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
     primaryColor: '#32B830',
     nativeCurrency: { name: 'Kovan ETH', symbol: 'kovETH', decimals: 18 },
   },
@@ -141,6 +145,8 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://goerli.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
+    logoUrl:
+      'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
     nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
   },
   [ChainId.OPTIMISM]: {
@@ -150,6 +156,9 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'OΞ',
+    logoUrl:
+      'https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/images/Profile-Logo.png',
+    primaryColor: '#ff0420',
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.optimism.io'],
     statusPage: 'https://optimism.io/status',
@@ -161,6 +170,9 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'Optimistic Kovan',
+    logoUrl:
+      'https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/images/Stylized-Logo.png',
+    primaryColor: '#ff0420',
     rpcUrls: ['https://kovan.optimism.io'],
     nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
     statusPage: 'https://optimism.io/status',
