@@ -4,7 +4,7 @@ import styled, { icon, ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 import { ArrowRight, Info } from 'react-feather'
 
-import ActionButton, { ApprovalButton } from '../ActionButton'
+import ActionButton from '../ActionButton'
 import Column from '../Column'
 import { Header } from '../Dialog'
 import Row from '../Row'
@@ -88,6 +88,8 @@ function asInput(input: Input): (Required<Pick<Input, 'token' | 'value'>> & Inpu
   return input.token && input.value ? (input as Required<Pick<Input, 'token' | 'value'>>) : undefined
 }
 
+const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
+
 export function SummaryDialog() {
   const { swap } = useAtomValue(swapAtom)
   const partialInput = useAtomValue(inputAtom)
@@ -138,15 +140,13 @@ export function SummaryDialog() {
             </Trans>
           )}
         </ThemedText.Caption>
-        {price === confirmedPrice ? (
-          <ActionButton onClick={() => void 0}>
-            <Trans>Confirm</Trans>
-          </ActionButton>
-        ) : (
-          <ApprovalButton onClick={() => confirmPrice(price)}>
-            <Trans>Price updated</Trans>
-          </ApprovalButton>
-        )}
+        <ActionButton
+          onClick={() => void 0}
+          onUpdate={() => confirmPrice(price)}
+          updated={price === confirmedPrice ? undefined : updated}
+        >
+          <Trans>Confirm</Trans>
+        </ActionButton>
       </SummaryColumn>
     </>
   )
