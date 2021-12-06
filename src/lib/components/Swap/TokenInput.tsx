@@ -59,13 +59,7 @@ export default function TokenInput({
     <Column gap={0.375}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
         <ThemedText.H2>
-          <DecimalInput
-            value={value}
-            onFocus={onFocus}
-            onChange={onChangeInput}
-            placeholder="0.0"
-            disabled={!token}
-          ></DecimalInput>
+          <DecimalInput value={value} onFocus={onFocus} onChange={onChangeInput} disabled={!token}></DecimalInput>
         </ThemedText.H2>
         {showMax && (
           <MaxButton onClick={onMax} ref={max}>

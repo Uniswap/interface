@@ -31,7 +31,7 @@ const Input = styled.input`
   }
 
   ::placeholder {
-    color: currentColor;
+    color: ${({ theme }) => theme.secondary};
   }
 `
 
