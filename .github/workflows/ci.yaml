@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - develop
+      - fix-ci
 
 env:
   SERVICE: dmm-interface
@@ -27,19 +28,19 @@ jobs:
         shell: bash
         id: current_branch
         run: |
-          if [[ ! "$GITHUB_REF"  = "refs/tags/"* ]]; then
-            if [[ "$GITHUB_EVENT_NAME" = "pull_request" ]]; then
-              HEAD_REF=$(printf "%q" "$GITHUB_HEAD_REF")
+          if [[ ! "${{ github.ref }}"  = "refs/tags/"* ]]; then
+            if [[ "${{ github.event_name }}" = "pull_request" ]]; then
+              HEAD_REF=$(printf "%q" "${{ github.head_ref }}")
               HEAD_REF=${HEAD_REF/refs\/heads\//}
               BRANCH=$HEAD_REF
             else 
-              REF=$(printf "%q" "$GITHUB_REF")
+              REF=$(printf "%q" "${{ github.ref }}")
               REF_BRANCH=${REF/refs\/pull\//}
               REF_BRANCH=${REF_BRANCH/refs\/heads\//}
-              BRANCH=$HEAD_REF
+              BRANCH=$REF_BRANCH
             fi
           else 
-            REF=$(printf "%q" "$GITHUB_REF")
+            REF=$(printf "%q" "${{ github.ref }}")
             REF_BRANCH=${REF/refs\/tags\//}
             BRANCH=$REF_BRANCH
           fi
