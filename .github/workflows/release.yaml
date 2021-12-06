@@ -12,7 +12,7 @@ jobs:
   prepare:
     runs-on: ubuntu-18.04
     outputs:
-      version_tag: ${{ steps.tag.outputs.value }}
+      version_tag: ${{ steps.version_tag.outputs.value }}
     steps:
       - name: Format version tag
         shell: bash
