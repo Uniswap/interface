@@ -119,6 +119,13 @@ export const MATIC_TOKEN_LIST = {
       decimals: 18,
       logoURI:
         'https://raw.githubusercontent.com/stevepegaxy/assets/master/blockchains/polygon/assets/0xcC1B9517460D8aE86fe576f614d091fCa65a28Fc/logo.png'
+    },
+    {
+      chainId: 137,
+      address: '0x6Fb2415463e949aF08ce50F83E94b7e008BABf07',
+      symbol: 'AUR-FEB22',
+      name: 'Aureus',
+      decimals: 18
     }
   ],
   version: {
