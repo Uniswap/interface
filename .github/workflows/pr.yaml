@@ -1,0 +1,166 @@
+name: "Auto Deploy PR"
+
+concurrency: 
+  group: pr-workflow-${{ github.ref }}-${{ github.event.action }}
+  cancel-in-progress: true
+
+on: 
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - closed
+      - synchronize
+
+env:
+  SERVICE: dmm-interface
+
+jobs:
+  prepare:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-18.04
+    outputs:
+      repo_name: ${{ github.event.repository.name }}
+      pr_number: ${{ steps.pr_number.outputs.value }}
+      image_name: "kybernetwork/${{ env.SERVICE }}"
+      image_tag: ${{ steps.get_tag.outputs.value }} 
+      repo_owner: ${{ github.repository_owner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Extract branch
+        shell: bash
+        id: current_branch
+        run: |
+          if [[ ! "$GITHUB_REF"  = "refs/tags/"* ]]; then
+            if [[ "$GITHUB_EVENT_NAME" = "pull_request" ]]; then
+              HEAD_REF=$(printf "%q" "$GITHUB_HEAD_REF")
+              HEAD_REF=${HEAD_REF/refs\/heads\//}
+              BRANCH=$HEAD_REF
+            else 
+              REF=$(printf "%q" "$GITHUB_REF")
+              REF_BRANCH=${REF/refs\/pull\//}
+              REF_BRANCH=${REF_BRANCH/refs\/heads\//}
+              BRANCH=$HEAD_REF
+            fi
+          else 
+            REF=$(printf "%q" "$GITHUB_REF")
+            REF_BRANCH=${REF/refs\/tags\//}
+            BRANCH=$REF_BRANCH
+          fi
+          echo "::set-output name=value::$BRANCH" 
+
+      - name: Get PR Number
+        id: pr_number
+        run: |
+          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "::set-output name=value::$PR_NUMBER"
+
+      - name: Get Docker image tag
+        id: get_tag
+        env:
+          CURRENT_BRANCH: ${{ steps.current_branch.outputs.value }}
+        run: |
+          short_sha="$(git rev-parse --short HEAD)"
+          branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
+          echo "::set-output name=value::$branch_tag-$short_sha"  
+
+
+  build:
+    if: github.event.action != 'closed'
+    needs:
+      - prepare
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Docker login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} 
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-${{ env.SERVICE }}-buildx
+
+      - name: Restore node_modules
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependences
+        uses: bahmutov/npm-install@HEAD
+
+      - name: Yarn Build
+        env:
+          CI: false 
+        run: yarn build-production
+        
+      - name: Docker build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          labels: |
+            commit=${{ github.sha }}
+            org.label-schema.schema-version=1.0
+            org.label-schema.vcs-ref=${{ github.sha }}
+            org.label-schema.version=${{ needs.prepare.outputs.image_tag }}
+            org.label-schema.name=${{ env.SERVICE }}
+          tags: |
+            ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.image_tag }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Move Docker cache 
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  on-pr-opened:
+    needs:
+      - prepare
+      - build
+    if: github.event.action == 'opened' || github.event.action == 'reopened' 
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Map event
+      id: map_event
+      run: |
+        echo "::set-output name=value::opened"
+
+    - name: Trigger to ADPR
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.GH_PAT }}
+        repository: kybernetwork/infra-config
+        event-type: ${{ steps.map_event.outputs.value }}
+        client-payload: ${{ toJson(needs.prepare.outputs) }}
+
+  on-pr-closed:
+    needs:
+      - prepare 
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Trigger to ADPR
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.GH_PAT }}
+        repository: kybernetwork/infra-config
+        event-type: ${{ github.event.action }}
+        client-payload: ${{ toJson(needs.prepare.outputs) }}
