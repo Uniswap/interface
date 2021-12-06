@@ -55,7 +55,8 @@ jobs:
         id: pr_number
         run: |
           PR_NUMBER=$(echo "${{ github.ref }}" | awk 'BEGIN { FS = "/" } ; { print $3 }')
-          echo "::set-output name=value::$PR_NUMBER"
+          NUMBER="${{ github.event.issue.number || github.event.number }}"
+          echo "::set-output name=value::${PR_NUMBER:-$NUMBER}"
 
       - name: Get Docker image tag
         id: get_tag
