@@ -629,7 +629,7 @@ const TokenPair = ({
                           {approvalA === ApprovalState.PENDING ? (
                             <Dots>Approving {nativeA?.symbol}</Dots>
                           ) : (
-                            'Approve ' + nativeB?.symbol
+                            'Approve ' + nativeA?.symbol
                           )}
                         </ButtonPrimary>
                       )}
