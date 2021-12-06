@@ -46,7 +46,7 @@
     "ajv-formats": "^2.1.1",
     "d3-scale": "^4.0.2",
     "d3-shape": "^3.0.1",
-    "ethers": "^5.4.7",
+    "ethers": "^5.5.2",
     "expo": "^43.0.3",
     "expo-clipboard": "^2.0.3",
     "expo-secure-store": "^11.0.3",

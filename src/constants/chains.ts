@@ -150,7 +150,7 @@ export const CHAIN_INFO: ChainInfo = {
     nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
   },
   [ChainId.OPTIMISM]: {
-    blockWaitMsBeforeWarning: 600000, // 10 minutes
+    blockWaitMsBeforeWarning: 1200000, // 20 minutes
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',

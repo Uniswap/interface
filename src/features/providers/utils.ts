@@ -12,6 +12,14 @@ export function getInfuraChainName(chainId: ChainId) {
       return 'goerli'
     case ChainId.KOVAN:
       return 'kovan'
+    case ChainId.ARBITRUM_ONE:
+      return 'arbitrum'
+    case ChainId.ARBITRUM_RINKEBY:
+      return 'arbitrum-rinkeby'
+    case ChainId.OPTIMISM:
+      return 'optimism'
+    case ChainId.OPTIMISTIC_KOVAN:
+      return 'optimism-kovan'
     default:
       throw new Error(`Unsupported eth infura chainId for ${chainId}`)
   }

@@ -16,6 +16,8 @@ const ROLL_LIST = 'https://app.tryroll.com/tokens.json'
 const SET_LIST =
   'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
+const CROSS_CHAIN_LIST =
+  'https://raw.githubusercontent.com/Uniswap/token-lists/e2a796f3f021949b986b9ac9f84a17be92498702/test/schema/example-crosschain.tokenlist.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 
@@ -34,6 +36,7 @@ const DEFAULT_LIST_OF_LISTS_TO_DISPLAY: string[] = [
   ARBITRUM_LIST,
   OPTIMISM_LIST,
   GEMINI_LIST,
+  CROSS_CHAIN_LIST,
 ]
 
 export const DEFAULT_LIST_OF_LISTS: string[] = [
@@ -42,4 +45,4 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
 ]
 
 // default lists to be 'active' aka searched across
-export const DEFAULT_ACTIVE_LIST_URLS: string[] = [GEMINI_LIST]
+export const DEFAULT_ACTIVE_LIST_URLS: string[] = [GEMINI_LIST, CROSS_CHAIN_LIST]

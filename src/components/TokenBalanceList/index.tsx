@@ -47,7 +47,9 @@ export function TokenBalanceList({ loading, balances, onPressToken }: TokenBalan
     <TokenBalanceItem currencyAmount={item} onPressToken={onPressToken} />
   )
   const key = (balance: CurrencyAmount<Currency>) =>
-    balance.currency.isNative ? NULL_ADDRESS : balance.currency.address
+    balance.currency.isNative
+      ? `${balance.currency.chainId}${NULL_ADDRESS}`
+      : `${balance.currency.chainId}${balance.currency.address}`
 
   const totalBalance = balances
     .map((currencyAmount) => {

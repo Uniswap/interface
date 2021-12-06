@@ -9,8 +9,8 @@ import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
-import { ChainId } from 'src/constants/chains'
-import { useEthBalance, useTokenBalances } from 'src/features/balances/hooks'
+import { useAllBalances } from 'src/features/balances/hooks'
+import { useActiveChainIds } from 'src/features/chains/hooks'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionNotificationBanner } from 'src/features/transactions/Notification'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
@@ -20,20 +20,12 @@ import { Screens } from 'src/screens/Screens'
 type Props = NativeStackScreenProps<HomeStackParamList, Screens.Accounts>
 
 export function HomeScreen({ navigation }: Props) {
-  const currentChain = ChainId.RINKEBY // Temporarily Rinkeby, change to ChainId.MAINNET
-
+  const currentChains = useActiveChainIds()
   // imports test account for easy development/testing
   useTestAccount()
-
   const activeAccount = useActiveAccount()
   const chainIdToTokens = useAllTokens()
-  const [tokenBalances, tokenBalancesLoading] = useTokenBalances(
-    currentChain,
-    chainIdToTokens,
-    activeAccount?.address
-  )
-
-  const ethBalance = useEthBalance(currentChain, activeAccount?.address)
+  const balances = useAllBalances(currentChains, chainIdToTokens, activeAccount?.address)
 
   const onPressToken = (currencyAmount: CurrencyAmount<Currency>) => {
     navigation.navigate(Screens.TokenDetails, { currencyAmount })
@@ -47,14 +39,6 @@ export function HomeScreen({ navigation }: Props) {
         </Box>
       </Screen>
     )
-
-  const filteredTokenBalances = tokenBalances
-    ? (Object.values(tokenBalances).filter(
-        (balance) => balance && balance.greaterThan(0)
-      ) as CurrencyAmount<Currency>[])
-    : []
-
-  const balances = ethBalance ? [ethBalance, ...filteredTokenBalances] : filteredTokenBalances
 
   return (
     <Screen>
@@ -71,7 +55,7 @@ export function HomeScreen({ navigation }: Props) {
       </Box>
       <TransactionNotificationBanner />
       <TokenBalanceList
-        loading={tokenBalancesLoading}
+        loading={balances.length === 0}
         balances={balances}
         onPressToken={onPressToken}
       />

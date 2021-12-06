@@ -1,7 +1,7 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { config } from 'src/config'
-import { ChainId, CHAIN_INFO, L1ChainInfo } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'src/constants/chains'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
 import { logger } from 'src/utils/logger'
@@ -109,7 +109,7 @@ export class ProviderManager {
     this._providers[chainId]!.blockWatcher = watcher
   }
 
-  private async initProvider(chainId: ChainId, chainDetails: L1ChainInfo) {
+  private async initProvider(chainId: ChainId, chainDetails: L1ChainInfo | L2ChainInfo) {
     try {
       logger.info(
         'ProviderManager',
@@ -120,22 +120,27 @@ export class ProviderManager {
       for (let i = 0; i < 3; i++) {
         const blockAndNetworkP = Promise.all([provider.getBlock('latest'), provider.getNetwork()])
         const blockAndNetwork = await promiseTimeout(blockAndNetworkP, 1000)
+
         if (
           blockAndNetwork &&
           this.isProviderSynced(chainId, chainDetails, blockAndNetwork[0], blockAndNetwork[1])
         ) {
-          logger.info('ProviderManager', 'initProvider', 'Provider is connected')
+          logger.info(
+            'ProviderManager',
+            'initProvider',
+            `${getInfuraChainName(chainId)} Provider is connected`
+          )
           return provider
         }
         // Otherwise wait a bit and then try again
         await sleep(2000)
       }
-      throw new Error('Unable to sync after 3 attempts')
+      throw new Error(`Unable to sync ${getInfuraChainName(chainId)} after 3 attempts`)
     } catch (error) {
       logger.error(
         'ProviderManager',
         'initProvider',
-        `Failed to connect to infura rpc provider for: ${chainId}`,
+        `Failed to connect to infura rpc provider for: ${getInfuraChainName(chainId)}`,
         error
       )
       return null
@@ -144,7 +149,7 @@ export class ProviderManager {
 
   private isProviderSynced(
     chainId: ChainId,
-    chainDetails: L1ChainInfo,
+    chainDetails: L1ChainInfo | L2ChainInfo,
     block?: ethersProviders.Block,
     network?: ethersProviders.Network
   ) {

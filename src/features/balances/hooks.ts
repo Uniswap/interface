@@ -3,7 +3,7 @@ import { utils } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20Interface } from 'src/abis/types/Erc20'
-import { ChainId } from 'src/constants/chains'
+import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { useMulticall2Contract, useTokenContract } from 'src/features/contracts/useContract'
 import {
   useMultipleContractSingleData,
@@ -12,8 +12,6 @@ import {
 } from 'src/features/multicall'
 import { ChainIdToAddressToToken } from 'src/features/tokens/types'
 import { isValidAddress } from 'src/utils/addresses'
-
-// TODO: Set to fetch every 5 blocks, can adjust this number as necessary
 
 const BLOCKS_PER_FETCH = 5
 
@@ -41,7 +39,7 @@ export function useTokenBalance(
 export function useEthBalance(
   chainId: ChainId,
   accountAddress?: Address
-): CurrencyAmount<Currency> | null {
+): CurrencyAmount<Currency> {
   const multicallContract = useMulticall2Contract(chainId)
   const result = useSingleCallResult(
     chainId,
@@ -51,56 +49,92 @@ export function useEthBalance(
     { blocksPerFetch: BLOCKS_PER_FETCH }
   )
   const value = result?.result?.[0]
-  if (!value) return null
+  if (!value) return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), 0)
   return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), value?.toString())
 }
 
 export function useTokenBalances(
-  chainId: ChainId,
+  chainIds: ChainId[],
   chainIdToTokens: ChainIdToAddressToToken,
   accountAddress?: Address
-): [{ [tokenAddress: string]: CurrencyAmount<Token> } | null | undefined, boolean] {
-  const tokenRecords = chainIdToTokens[chainId]
-  const tokens = tokenRecords ? Object.values(tokenRecords) : undefined
-  const tokenAddresses = tokens?.map((token) => token.address) ?? []
+): [ChainIdTo<Record<string, CurrencyAmount<Token>>> | null, boolean] {
   const ERC20Interface = new utils.Interface(ERC20_ABI) as Erc20Interface
+  const totalBalances = chainIds.map((chainId) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const tokenAddresses = useMemo(() => {
+      const tokenRecords = chainIdToTokens[chainId] || []
+      const tokens = Object.values(tokenRecords)
+      return tokens.map((token) => token.address)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [chainId, chainIdToTokens])
 
-  const balances = useMultipleContractSingleData(
-    chainId,
-    tokenAddresses,
-    ERC20Interface,
-    'balanceOf',
-    [accountAddress],
-    { blocksPerFetch: BLOCKS_PER_FETCH }
-  )
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useMultipleContractSingleData(
+      chainId,
+      tokenAddresses,
+      ERC20Interface,
+      'balanceOf',
+      [accountAddress],
+      { blocksPerFetch: BLOCKS_PER_FETCH }
+    )
+  })
 
   const anyLoading: boolean = useMemo(
-    () => balances.some((callState) => callState.loading),
-    [balances]
+    () => totalBalances.some((callState) => callState.some((call) => call.loading)),
+    [totalBalances]
   )
 
   return [
     useMemo(
       () =>
-        tokens?.reduce<{
-          [tokenAddress: string]: CurrencyAmount<Token>
-        }>((memo, token, i) => {
-          const value = balances?.[i]?.result?.[0]
-          const amount = value?.toString()
-          if (amount) {
-            memo[token.address] = CurrencyAmount.fromRawAmount<Token>(token, amount)
-          }
+        chainIds.reduce<{
+          [chainId: string]: { [tokenAddress: string]: CurrencyAmount<Token> }
+        }>((memo, chainId) => {
+          const tokenRecords = chainIdToTokens[chainId] || []
+          const tokens = Object.values(tokenRecords)
+          const t = tokens.reduce<{
+            [tokenAddress: string]: CurrencyAmount<Token>
+          }>((chainTokensMemo, token, i) => {
+            const value = totalBalances[chainId]?.[i]?.result?.[0]
+            const amount = value?.toString()
+            if (amount) {
+              chainTokensMemo[token.address] = CurrencyAmount.fromRawAmount<Token>(token, amount)
+            }
+            return chainTokensMemo
+          }, {})
+
+          memo[chainId] = t
           return memo
         }, {}),
-      [balances, tokens]
+      [totalBalances, chainIdToTokens, chainIds]
     ),
     anyLoading,
   ]
 }
 
-/**
- * Returns a map of the given addresses to their eventually consistent ETH balances.
- */
+/** Returns an array of all nonzero balances of tokens and ETH */
+export function useAllBalances(
+  chainIds: ChainId[],
+  chainIdToTokens: ChainIdToAddressToToken,
+  accountAddress?: Address
+): CurrencyAmount<Currency>[] {
+  const [tokenBalances] = useTokenBalances(chainIds, chainIdToTokens, accountAddress)
+
+  // Use hook in callback with guaranteed execution order
+  const ethBalances = chainIds
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    .map((chainId) => useEthBalance(chainId, accountAddress))
+    .filter((balance) => balance.greaterThan(0))
+
+  const allTokenBalances: CurrencyAmount<Currency>[] = Object.values(tokenBalances ?? {})
+    .map((chainTokenBalances) => Object.values(chainTokenBalances))
+    .flat()
+    .filter((balance) => balance && balance.greaterThan(0))
+
+  const balances = ethBalances.length > 0 ? [...ethBalances, ...allTokenBalances] : allTokenBalances
+  return balances
+}
+/* Returns a map of the given addresses to their eventually consistent ETH balances. */
 export function useEthBalances(
   chainId: ChainId,
   uncheckedAddresses?: Address[]
