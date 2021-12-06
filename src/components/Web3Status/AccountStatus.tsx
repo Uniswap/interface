@@ -60,7 +60,7 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
 const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConnected: boolean; clickable: boolean }>`
   display: flex;
   align-items: center;
-  height: 25px;
+  height: 28px;
   padding: 7px 8px;
   font-size: 12px;
   line-height: 15px;
@@ -68,7 +68,7 @@ const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConne
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #ffffff;
-  border-radius: 12px;
+  border-radius: 10px;
   background-color: ${({ theme, isConnected }) => (isConnected ? theme.dark2 : 'transparent')};
   border: none;
   outline: none;
