@@ -49,7 +49,7 @@ export function useGraphs(token: Token): GraphMetadatas | null {
 
   return useMemo(() => {
     if (isError) {
-      logger.error(
+      logger.debug(
         'PriceChart/Model',
         'useGraphs',
         'Historical prices error',
