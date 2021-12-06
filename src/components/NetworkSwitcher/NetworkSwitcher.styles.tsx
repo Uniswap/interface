@@ -16,7 +16,7 @@ export const StyledPopover = styled(Popover)`
 export const OptionGrid = styled.div`
   display: grid;
   grid-gap: 10px;
-  padding: 22px 22px 15px;
+  padding: 11px 22px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     grid-gap: 10px;
@@ -75,4 +75,14 @@ export const CloseButton = styled.button`
 
 export const Image = styled.img`
   max-width: 100%;
+`
+
+export const NetworkTagRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 12px;
+  text-transform: uppercase;
+  color: ${props => props.theme.purple3};
 `

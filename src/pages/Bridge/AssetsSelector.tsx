@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import TriangleIcon from '../../assets/svg/triangle.svg'
-import { NetworkOptionProps } from '../../components/NetworkSwitcher'
+import { NetworkOptions } from '../../components/NetworkSwitcher'
 import { RowBetween } from '../../components/Row'
 import { TagSuccess } from '../../components/Tag'
 
@@ -70,22 +70,24 @@ const AssetName = styled.p<{ disabled: boolean }>`
 
 interface AssetSelectorProps {
   label: string
-  selectedNetwork?: Partial<NetworkOptionProps>
   onClick: () => void
   disabled?: boolean
+  networkOption: Partial<NetworkOptions>
 }
 
-export const AssetSelector = ({ label, selectedNetwork, onClick, disabled = false }: AssetSelectorProps) => {
+export const AssetSelector = ({ label, onClick, disabled = false, networkOption }: AssetSelectorProps) => {
+  const { preset, active } = networkOption
+  const name = preset ? preset.name : ''
   return (
     <Section disabled={disabled} onClick={disabled ? undefined : onClick}>
       <Row>
         <IconWrapper>
-          <img src={selectedNetwork?.logoSrc} alt={`${selectedNetwork?.header} logo`} />
+          <img src={preset?.logoSrc} alt={`${preset?.name} logo`} />
         </IconWrapper>
-        {selectedNetwork?.active && <TagSuccess>Connected</TagSuccess>}
+        {active && <TagSuccess>Connected</TagSuccess>}
       </Row>
       <SmallLabel>{label}</SmallLabel>
-      <AssetName disabled={disabled}>{selectedNetwork?.header}</AssetName>
+      <AssetName disabled={disabled}>{name}</AssetName>
     </Section>
   )
 }

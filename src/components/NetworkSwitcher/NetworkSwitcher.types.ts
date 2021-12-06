@@ -5,7 +5,7 @@ export interface NetworkSwitcherProps {
   children?: ReactNode
   show: boolean
   onOuterClick: () => void
-  options: NetworkOptionProps[]
+  networksList: NetworksList[]
   placement?: Placement
   showWalletConnector?: boolean
   parentRef?: RefObject<HTMLElement>
@@ -16,15 +16,22 @@ export interface EthereumOptionPopoverProps {
   show: boolean
 }
 
-export type NetworkSwitcherOptionsPreset = {
-  [K in ChainId]?: NetworkOptionProps
+export type NetworkOptionsPreset = {
+  chainId: ChainId
+  name: React.ReactNode
+  logoSrc: string
+  color: string
+  tag?: string
 }
 
-export type NetworkOptionProps = {
-  onClick?: any
-  header: React.ReactNode
-  logoSrc?: string
+export type NetworkOptions = {
+  preset: NetworkOptionsPreset
   active?: boolean
   disabled?: boolean
-  comingSoon?: boolean
+  onClick?: any
+}
+
+export type NetworksList = {
+  tag: string
+  networks: NetworkOptions[]
 }
