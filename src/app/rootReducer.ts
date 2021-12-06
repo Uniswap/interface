@@ -6,6 +6,7 @@ import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { multicall } from 'src/features/multicall'
 import { tokenListsReducer } from 'src/features/tokenLists/reducer'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
+import { transactionReducer } from 'src/features/transactions/slice'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 
 export const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ export const rootReducer = combineReducers({
   chains: chainsReducer,
   tokenLists: tokenListsReducer,
   tokens: tokensReducer,
+  transactions: transactionReducer,
   wallet: walletReducer,
   [multicall.reducerPath]: multicall.reducer,
   saga: monitoredSagaReducers,

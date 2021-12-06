@@ -3,7 +3,7 @@ import { ChainId, ChainIdTo } from 'src/constants/chains'
 
 // data structure optimized for index access
 // TODO: hash is not sufficient
-export type TransactionState = ChainIdTo<Record<string, TransactionDetails>>
+export type TransactionState = ChainIdTo<{ [txHash: string]: TransactionDetails }>
 
 export interface TransactionDetails {
   chainId: ChainId
@@ -37,7 +37,8 @@ export enum TransactionType {
   APPROVE = 0,
   SWAP = 1,
   WRAP = 2,
-  TRANSFER = 4,
+  SEND = 3,
+  RECEIVED = 4,
 }
 
 export interface BaseTransactionInfo {
@@ -77,8 +78,13 @@ export interface WrapTransactionInfo {
   currencyAmountRaw: string
 }
 
-export interface TransferTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.TRANSFER
+export interface SendTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.SEND
+  currencyAmountRaw: string
+}
+
+export interface ReceiveTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.RECEIVED
   currencyAmountRaw: string
 }
 
@@ -87,3 +93,5 @@ export type TransactionInfo =
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | WrapTransactionInfo
+  | SendTransactionInfo
+  | ReceiveTransactionInfo

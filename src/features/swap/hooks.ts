@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppNavigation } from 'src/app/navigation/types'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
@@ -12,6 +13,7 @@ import { swapActions } from 'src/features/swap/swapSaga'
 import { QuoteResult } from 'src/features/swap/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
 import { tryParseAmount } from 'src/utils/tryParseAmount'
@@ -128,6 +130,8 @@ export function useSwapCallback(
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
 
+  const navigation = useAppNavigation()
+
   const { amount, methodParameters } = trade || {}
   const chainId = trade?.route[0]?.[0].tokenIn.chainId
 
@@ -173,8 +177,18 @@ export function useSwapCallback(
             spender: SWAP_ROUTER_ADDRESSES[chainId],
           })
         )
+        navigation.navigate(Screens.Home)
       },
       swapState,
     }
-  }, [account, amount, chainId, appDispatch, methodParameters, swapState, tokenContract])
+  }, [
+    account,
+    amount,
+    chainId,
+    methodParameters,
+    tokenContract,
+    swapState,
+    appDispatch,
+    navigation,
+  ])
 }

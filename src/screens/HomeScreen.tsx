@@ -12,6 +12,7 @@ import { TokenBalanceList } from 'src/components/TokenBalanceList'
 import { ChainId } from 'src/constants/chains'
 import { useEthBalance, useTokenBalances } from 'src/features/balances/hooks'
 import { useAllTokens } from 'src/features/tokens/useTokens'
+import { TransactionNotificationBanner } from 'src/features/transactions/Notification'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
@@ -63,6 +64,7 @@ export function HomeScreen({ navigation }: Props) {
           </Button>
         </Box>
       </Box>
+      <TransactionNotificationBanner />
       <TokenBalanceList
         loading={tokenBalancesLoading}
         balances={balances}
