@@ -1,11 +1,12 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
+import { ChainId } from 'src/constants/chains'
 import { Trade } from 'src/features/swap/types'
 import { formatExecutionPrice } from 'src/features/swap/utils'
+import { getNetworkColors } from 'src/utils/colors'
 import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailRowProps {
@@ -15,6 +16,9 @@ interface SwapDetailRowProps {
 
 export function SwapDetailRow(props: SwapDetailRowProps) {
   const { label, trade } = props
+
+  const chainId = trade?.inputAmount.currency.chainId ?? ChainId.MAINNET
+  const networkColors = getNetworkColors(chainId)
 
   return (
     <Box flexDirection="row" justifyContent="space-between" alignSelf="stretch" alignItems="center">
@@ -29,11 +33,11 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
           <Button
             borderRadius="xs"
             p="xs"
-            style={styles.gasButton}
+            style={{ backgroundColor: networkColors.background }}
             onPress={() => {
               // TODO: implement gas price setting ui
             }}>
-            <Text style={styles.gasButtonLabel} p="xs">
+            <Text style={{ color: networkColors.foreground }} p="xs">
               {formatPrice(trade.quote?.gasUseEstimateUSD?.toString())}
             </Text>
           </Button>
@@ -42,13 +46,3 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
     </Box>
   )
 }
-
-const styles = StyleSheet.create({
-  gasButton: {
-    backgroundColor: 'rgba(164, 87, 255, 0.05)',
-  },
-  gasButtonLabel: {
-    color: '#A457FF',
-  },
-  swapArrowContainer: {},
-})
