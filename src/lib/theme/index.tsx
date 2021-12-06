@@ -3,7 +3,7 @@ import { mix } from 'polished'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 
 import styled, { ThemedProvider } from './styled'
-import { Colors, Theme } from './theme'
+import { Colors, ComputedTheme, Theme } from './theme'
 
 export type { Color, Colors, Theme } from './theme'
 
@@ -15,9 +15,7 @@ export * from './scrollable'
 export * from './styled'
 export * as ThemedText from './type'
 
-type ColorsAndHover = Colors & { onHover: Theme['onHover'] }
-
-const light: ColorsAndHover = {
+export const lightTheme: Colors = {
   // surface
   accent: '#FF007A',
   container: '#F7F8FA',
@@ -41,7 +39,7 @@ const light: ColorsAndHover = {
   onHover: mix(0.24, '#000000'), // hovered elements get a 24% primary text overlay
 }
 
-const dark: ColorsAndHover = {
+export const darkTheme: Colors = {
   // surface
   accent: '#2172E5',
   container: '#191B1F',
@@ -65,28 +63,32 @@ const dark: ColorsAndHover = {
   onHover: mix(0.24, '#FFFFFF'), // hovered elements get a 24% primary text overlay
 }
 
-export const defaultTheme: Theme = {
+export const defaultTheme = {
   darkMode: true,
   fontFamily: '"Inter var", sans-serif',
-  borderRadius: 1,
-  ...dark,
-  light,
-  dark,
+  borderRadius: true,
+  ...darkTheme,
+  light: lightTheme,
+  dark: darkTheme,
 }
 
-const ThemeContext = createContext<Theme>(defaultTheme)
+const ThemeContext = createContext<ComputedTheme>({
+  ...defaultTheme,
+  borderRadius: defaultTheme.borderRadius ? 1 : 0,
+})
 
 interface ThemeProviderProps {
-  theme?: Partial<Theme>
+  theme?: Theme
   children: ReactNode
 }
 
 export function ThemeProvider({ theme, children }: ThemeProviderProps) {
   const contextTheme = useContext(ThemeContext)
-  const value: Theme = useMemo(() => {
+  const value = useMemo(() => {
     const value = merge({}, contextTheme, theme)
-    const colors: Colors = value.darkMode ? value.dark : value.light
-    return merge({}, colors, value)
+    const borderRadius = value.borderRadius ? 1 : 0
+    const colors: Partial<Colors> | undefined = value.darkMode ? value.dark : value.light
+    return merge({}, value, colors, { borderRadius })
   }, [contextTheme, theme])
   return (
     <ThemeContext.Provider value={value}>

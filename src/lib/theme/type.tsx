@@ -6,7 +6,7 @@ import { Color, Theme } from './theme'
 type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { userSelect?: 'none'; color?: Color }
 
 const TextWrapper = styled(Text)<{ userSelect?: 'none'; color?: Color; theme: Theme }>`
-  color: ${({ color = 'primary' as Color, theme }) => theme[color]};
+  color: ${({ color = 'primary', theme }) => theme[color as Color]};
   user-select: ${({ userSelect }) => userSelect};
 `
 

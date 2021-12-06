@@ -9,7 +9,7 @@ import styled, {
   useTheme as useStyled,
 } from 'styled-components/macro'
 
-import { Theme } from './theme'
+import { ComputedTheme as Theme } from './theme'
 
 export default styled as unknown as ThemedBaseStyledInterface<Theme>
 export const css = styledCss as unknown as ThemedCssFunction<Theme>

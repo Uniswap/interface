@@ -4,9 +4,7 @@ import { ReactNode, useMemo } from 'react'
 import { hex } from 'wcag-contrast'
 
 import { ThemedProvider, useTheme } from './styled'
-import { Colors, Theme } from './theme'
-
-export type { Colors, Theme } from './theme'
+import { Colors, ComputedTheme as Theme } from './theme'
 
 type DynamicColors = Pick<Colors, 'interactive' | 'outline' | 'primary' | 'secondary' | 'onInteractive'>
 
@@ -35,7 +33,7 @@ const dark: DynamicColors = {
   onInteractive: black,
 }
 
-export function getDynamicTheme(theme: Theme, color: string): Theme & DynamicColors {
+export function getDynamicTheme(theme: Theme, color: string): Theme {
   const darkMode = JSON.parse(readableColor(color, 'false', 'true', false))
   return {
     ...theme,
@@ -49,7 +47,7 @@ export function getDynamicTheme(theme: Theme, color: string): Theme & DynamicCol
 function getAccessibleColor(theme: Theme, color: string) {
   const dynamic = getDynamicTheme(theme, color)
   const { darkMode } = dynamic
-  let primary = dynamic[darkMode ? 'dark' : 'light'].primary
+  let { primary } = dynamic
   let AAscore = hex(color, primary)
   while (AAscore < 3) {
     color = darkMode ? lighten(0.005, color) : darken(0.005, color)
@@ -65,7 +63,7 @@ interface DynamicThemeProviderProps {
 }
 
 export function DynamicThemeProvider({ color, children }: DynamicThemeProviderProps) {
-  const theme = useTheme()
+  const theme = useTheme() as Theme
   const value = useMemo(() => {
     if (!color) {
       return theme
