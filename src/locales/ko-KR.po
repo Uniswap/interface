@@ -404,6 +404,7 @@ msgstr "지갑 연결"
 msgid "Connected with {name}"
 msgstr "{name}에 연결됨"
 
+#: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr ""

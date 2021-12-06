@@ -404,6 +404,7 @@ msgstr "Cüzdanı bağla"
 msgid "Connected with {name}"
 msgstr "{name} ile bağlandı"
 
+#: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr ""

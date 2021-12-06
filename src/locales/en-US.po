@@ -404,6 +404,7 @@ msgstr "Connect wallet"
 msgid "Connected with {name}"
 msgstr "Connected with {name}"
 
+#: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr "Contact Us"

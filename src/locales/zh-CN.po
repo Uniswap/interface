@@ -404,6 +404,7 @@ msgstr "连接钱包"
 msgid "Connected with {name}"
 msgstr "与 {name} 连接"
 
+#: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr ""

@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react'
-import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor, User, Triangle } from 'react-feather'
+import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor, User, Triangle, Edit } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
@@ -172,6 +172,10 @@ export default function Menu() {
               <Trans>Swap Legacy</Trans>
             </NavMenuItem>
           )}
+          <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
+            <Edit size={14} />
+            <Trans>Contact Us</Trans>
+          </MenuItem>
         </MenuFlyout>
       )}
     </StyledMenu>

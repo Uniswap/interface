@@ -404,6 +404,7 @@ msgstr "Kết nối Ví"
 msgid "Connected with {name}"
 msgstr "Đã kết nối với {name}"
 
+#: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr "Liên Hệ Chúng Tôi"
