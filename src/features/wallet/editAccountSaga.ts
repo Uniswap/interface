@@ -1,7 +1,7 @@
-import { getWalletAccounts } from 'src/app/walletContext'
-import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
-import { Account } from 'src/features/wallet/accounts/types'
+import { appSelect } from 'src/app/hooks'
+import { AccountBase } from 'src/features/wallet/accounts/types'
 import {
+  accountsSelector,
   editAccount as editInStore,
   removeAccount as removeInStore,
 } from 'src/features/wallet/walletSlice'
@@ -30,13 +30,13 @@ type EditAccountParams = RenameParams | RemoveParams
 function* editAccount(params: EditAccountParams) {
   const { type, address } = params
 
-  const manager = yield* call(getWalletAccounts)
-  const account = manager.getAccount(address)
+  const accounts = yield* appSelect(accountsSelector)
+  const account = accounts[address]
 
   if (type === EditAccountAction.Rename) {
     yield* call(renameAccount, params, account)
   } else if (type === EditAccountAction.Remove) {
-    yield* call(removeAccount, params, manager)
+    yield* call(removeAccount, params)
   } else {
     throw new Error(`Invalid edit action type: ${type}`)
   }
@@ -44,7 +44,7 @@ function* editAccount(params: EditAccountParams) {
   logger.info('editAccountSaga', 'editAccount', 'New account created:', address)
 }
 
-function* renameAccount(params: RenameParams, account: Account) {
+function* renameAccount(params: RenameParams, account: AccountBase) {
   const { address, newName } = params
   logger.info('editAccountSaga', 'renameAccount', 'Renaming account', address)
   account.name = newName
@@ -60,13 +60,9 @@ function* renameAccount(params: RenameParams, account: Account) {
   )
 }
 
-function* removeAccount(params: RemoveParams, manager: AccountManager) {
-  if (manager.listAccounts().length <= 1) throw new Error('Cannot remove last account')
-
+function* removeAccount(params: RemoveParams) {
   const { address } = params
   logger.info('editAccountSaga', 'removeAccount', 'Removing account', address)
-
-  manager.removeAccount(address)
   // TODO cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
 }

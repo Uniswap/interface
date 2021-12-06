@@ -29,3 +29,5 @@ require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
 
 // mock initProviders to avoid creating real ethers providers for each test
 jest.mock('src/features/providers/providerSaga')
+
+jest.mock('src/lib/RNEthersRs')

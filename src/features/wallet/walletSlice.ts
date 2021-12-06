@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AccountStub } from 'src/features/wallet/accounts/types'
+import type { RootState } from 'src/app/rootReducer'
+import { Account } from 'src/features/wallet/accounts/types'
 import { areAddressesEqual, normalizeAddress } from 'src/utils/addresses'
 
 interface Wallet {
   isUnlocked: boolean
-  accounts: Record<Address, AccountStub>
-  activeAccount: AccountStub | null
+  accounts: Record<Address, Account>
+  activeAccount: Account | null
 }
 
 const initialState: Wallet = {
@@ -18,7 +19,7 @@ const slice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
-    addAccount: (state, action: PayloadAction<AccountStub>) => {
+    addAccount: (state, action: PayloadAction<Account>) => {
       const { address } = action.payload
       const id = normalizeAddress(address)
       state.accounts[id] = action.payload
@@ -34,10 +35,7 @@ const slice = createSlice({
         state.activeAccount = state.accounts[firstAccountId]
       }
     },
-    editAccount: (
-      state,
-      action: PayloadAction<{ address: Address; updatedAccount: AccountStub }>
-    ) => {
+    editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
       const id = normalizeAddress(address)
       if (!state.accounts[id]) throw new Error(`Cannot edit missing account ${id}`)
@@ -55,6 +53,9 @@ const slice = createSlice({
     resetWallet: () => initialState,
   },
 })
+
+export const accountsSelector = (state: RootState) => state.wallet.accounts
+export const activeAccountSelector = (state: RootState) => state.wallet.activeAccount
 
 export const {
   addAccount,

@@ -1,17 +1,17 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { BigNumber, providers } from 'ethers'
 import { Erc20 } from 'src/abis/types'
-import { getWalletAccounts, getWalletProviders } from 'src/app/walletContext'
+import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
 import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
 import { TransactionType } from 'src/features/transactions/types'
-import { AccountStub, AccountType } from 'src/features/wallet/accounts/types'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
 import { call } from 'typed-redux-saga'
 
 export interface ApproveParams {
-  account: AccountStub
+  account: Account
   chainId: ChainId
   txAmount: string
   contract: Erc20
@@ -21,17 +21,17 @@ export interface ApproveParams {
 export function* maybeApprove(params: ApproveParams) {
   const { account, txAmount, chainId, contract, spender } = params
 
-  const accountManager = yield* call(getWalletAccounts)
-  const providerManager = yield* call(getWalletProviders)
-  const walletAccount = accountManager.getAccount(account.address)
-  if (walletAccount.type === AccountType.readonly) throw new Error('Account must support signing')
+  if (account.type === AccountType.readonly) throw new Error('Account must support signing')
 
+  const signerManager = yield* call(getSignerManager)
+  const providerManager = yield* call(getWalletProviders)
+  const signer = yield* call([signerManager, signerManager.getSignerForAccount], account)
   const provider = providerManager.getProvider(chainId)
-  const signer = yield* call([walletAccount.signer, walletAccount.signer.connect], provider)
-  const signerContract = yield* call([contract, contract.connect], signer)
+  const connectedSigner = yield* call([signer, signer.connect], provider)
+  const signerContract = yield* call([contract, contract.connect], connectedSigner)
 
   try {
-    const allowance = yield* call(signerContract.allowance, walletAccount.address, spender)
+    const allowance = yield* call(signerContract.allowance, account.address, spender)
 
     if (allowance.gt(txAmount)) {
       logger.debug('approveSaga', 'approve', 'Token allowance sufficient. Skipping approval')

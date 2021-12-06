@@ -9,18 +9,18 @@ import React, {
 import { ChainId } from 'src/constants/chains'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
-import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
+import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { logger } from 'src/utils/logger'
 import { getContext } from 'typed-redux-saga'
 
 export interface WalletContextValue {
-  accounts: AccountManager
+  signers: SignerManager
   providers: ProviderManager
   contracts: ContractManager
 }
 
 export const walletContextValue: WalletContextValue = {
-  accounts: new AccountManager(),
+  signers: new SignerManager(),
   providers: new ProviderManager(),
   contracts: new ContractManager(),
 }
@@ -57,16 +57,12 @@ export function useWalletContext(): WalletContextValue {
   return useContext(WalletContext).value
 }
 
-export function useWalletAccounts(): AccountManager {
-  return useContext(WalletContext).value.accounts
+export function useWalletSigners(): SignerManager {
+  return useContext(WalletContext).value.signers
 }
 
-export function useWalletAccount(address: string) {
-  return useWalletAccounts().tryGetAccount(address)
-}
-
-export function* getWalletAccounts() {
-  const value = yield* getContext<AccountManager>('accounts')
+export function* getSignerManager() {
+  const value = yield* getContext<SignerManager>('signers')
   return value
 }
 

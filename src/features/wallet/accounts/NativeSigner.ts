@@ -1,31 +1,37 @@
-import { providers, Signer, utils } from 'ethers'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { providers, Signer, Transaction, utils } from 'ethers'
+import { signMessageForAddress, signTransactionForAddress } from 'src/lib/RNEthersRs'
 
 // A signer that uses native keystore to access keys
 export class NativeSigner extends Signer {
-  address: Address | undefined
+  readonly address: string
 
-  async init() {
-    if (this.address) throw new Error('NativeSigner already initialized')
+  constructor(address: string, provider?: providers.Provider) {
+    super()
 
-    this.address = NULL_ADDRESS
-    throw new Error('TODO implement init')
+    this.address = address
+
+    if (provider && !providers.Provider.isProvider(provider)) {
+      throw new Error('invalid provider' + provider)
+    }
+
+    utils.defineReadOnly(this, 'provider', provider)
   }
 
-  async getAddress(): Promise<Address> {
-    if (!this.address) throw new Error('NativeSigner must be initiated before getting address')
-    return this.address.toString()
+  getAddress(): Promise<string> {
+    return Promise.resolve(this.address)
   }
 
-  async signMessage(message: utils.Bytes | string): Promise<string> {
-    throw new Error('TODO implement signMessage: ' + message)
+  signMessage(message: utils.Bytes | string): Promise<string> {
+    return signMessageForAddress(this.address, message)
   }
 
-  async signTransaction(transaction: providers.TransactionRequest): Promise<string> {
-    throw new Error('TODO implement signMessage: ' + transaction)
+  async signTransaction(transaction: providers.TransactionRequest) {
+    const tx = (await utils.resolveProperties(transaction)) as Transaction
+    // not working properly right now
+    return signTransactionForAddress(this.address, tx)
   }
 
-  connect(): Signer {
-    throw new Error('Connect method unimplemented on NativeSigner')
+  connect(provider: providers.Provider): NativeSigner {
+    return new NativeSigner(this.address, provider)
   }
 }

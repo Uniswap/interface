@@ -3,7 +3,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
-import { useWalletAccount } from 'src/app/walletContext'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -28,7 +27,6 @@ export function SwapForm(props: SwapFormProps) {
   const { state, dispatch } = props
 
   const activeAccount = useActiveAccount()
-  const signer = useWalletAccount(activeAccount?.address ?? '')?.signer
 
   const derivedSwapInfo = useDerivedSwapInfo(state)
 
@@ -70,9 +68,6 @@ export function SwapForm(props: SwapFormProps) {
   } else if (activeAccount && activeAccount.type === AccountType.readonly) {
     // TODO: move check somewhere else?
     errorLabel = t('Watched account cannot swap')
-  } else if (signer === undefined) {
-    // TODO: should never happen, but redux/account managet get out of sync
-    errorLabel = t('Signer is missing')
   } else if (swapState?.status === SagaStatus.Failure) {
     errorLabel = t('Swap unsuccessful')
   }

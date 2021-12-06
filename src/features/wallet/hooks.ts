@@ -1,10 +1,11 @@
 import { useAppSelector } from 'src/app/hooks'
-import { AccountStub } from 'src/features/wallet/accounts/types'
+import { Account } from 'src/features/wallet/accounts/types'
+import { accountsSelector, activeAccountSelector } from 'src/features/wallet/walletSlice'
 
-export function useAccounts(): Record<string, AccountStub> {
-  return useAppSelector((state) => state.wallet.accounts)
+export function useAccounts() {
+  return useAppSelector(accountsSelector)
 }
 
-export function useActiveAccount(): AccountStub | null {
-  return useAppSelector((state) => state.wallet.activeAccount)
+export function useActiveAccount(): Account | null {
+  return useAppSelector(activeAccountSelector)
 }

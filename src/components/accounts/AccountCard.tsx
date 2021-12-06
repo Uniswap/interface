@@ -6,11 +6,11 @@ import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
-import { AccountStub } from 'src/features/wallet/accounts/types'
+import { Account } from 'src/features/wallet/accounts/types'
 import { shortenAddress } from 'src/utils/addresses'
 
 interface Props {
-  account: AccountStub
+  account: Account
   isActive?: boolean
   isEditable?: boolean
   onPress?: (address: Address) => void

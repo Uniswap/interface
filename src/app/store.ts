@@ -19,7 +19,7 @@ import { swapActions } from 'src/features/swap/swapSaga'
 
 const sagaMiddleware = createSagaMiddleware({
   context: {
-    accounts: walletContextValue.accounts,
+    signers: walletContextValue.signers,
     providers: walletContextValue.providers,
     contracts: walletContextValue.contracts,
   },

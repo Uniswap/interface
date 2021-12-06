@@ -1,6 +1,4 @@
-import { VoidSigner, Wallet } from 'ethers'
-import { getWalletAccounts } from 'src/app/walletContext'
-import { ETHEREUM_DERIVATION_PATH } from 'src/constants/accounts'
+import { Wallet } from 'ethers'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import {
   ImportAccountParams,
@@ -12,44 +10,39 @@ import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
 import { normalizeMnemonic } from 'src/utils/mnemonics'
 import { createMonitoredSaga } from 'src/utils/saga'
-import { call, put } from 'typed-redux-saga'
+import { put } from 'typed-redux-saga'
 
 export function* importAccount(params: ImportAccountParams) {
-  const manager = yield* call(getWalletAccounts)
-
   let account: Account
 
   if (isImportLocalAccountParams(params)) {
-    let { name, privateKey, mnemonic, derivationPath } = params
+    let { name, privateKey, mnemonic } = params
 
     name ??= 'Imported Account'
-    const type = AccountType.local
+    let type = AccountType.local
 
     // TODO: refactor to small functions (importFromPrivateKey, importFromMnemonic, importFromAddress)
     if (privateKey) {
-      const signer = new Wallet(privateKey)
-      const address = signer.address
+      const wallet = new Wallet(privateKey)
+      const address = wallet.address
+      account = { type, privateKey, name, address }
       logger.debug('importAccountSaga', 'importAccount', address, name, type)
-      account = { type, address, name, signer }
     } else if (mnemonic) {
       const formattedMnemonic = normalizeMnemonic(mnemonic)
-      derivationPath ??= ETHEREUM_DERIVATION_PATH + '/0'
-      const signer = Wallet.fromMnemonic(formattedMnemonic, derivationPath)
-      const address = signer.address
-      account = { type, address, name, signer }
+      const wallet = Wallet.fromMnemonic(mnemonic)
+      const address = wallet.address
+      account = { type, address, name, mnemonic: formattedMnemonic }
     } else {
       throw new Error('Expected either privateKey or mnemonic to be provided.')
     }
   } else {
     let { name, address } = params as ImportReadonlyAccountParams
     name ??= 'Watched Account'
-    const signer = new VoidSigner(address)
     const type = AccountType.readonly
-    account = { type, address, name, signer }
+    account = { type, address, name }
   }
 
-  manager.addAccount(account)
-  yield* put(addAccount((({ signer: _, ...accountInfo }) => accountInfo)(account)))
+  yield* put(addAccount(account))
   yield* put(activateAccount(account.address))
   yield* put(fetchBalancesActions.trigger(account.address))
   logger.info('importAccount', '', `New ${account.type} account imported: ${account.address}`)

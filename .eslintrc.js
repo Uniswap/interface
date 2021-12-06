@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: '@react-native-community',
+  extends: ['@react-native-community', 'plugin:jest/recommended'],
   rules: {
     curly: 'off',
     'no-eval': 'error',
@@ -12,6 +12,7 @@ module.exports = {
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/no-require-imports': 'warn',
+    'jest/valid-describe': 'off',
     // TODO consider enabling these:
     // '@typescript-eslint/no-floating-promises': 'error',
     // 'import/no-self-import': 2,
@@ -31,7 +32,7 @@ module.exports = {
       },
     ],
   },
-  plugins: ['detox'],
+  plugins: ['detox', 'jest'],
   overrides: [
     {
       files: ['*.e2e.js'],

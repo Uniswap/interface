@@ -1,7 +1,7 @@
-import { AccountStub } from 'src/features/wallet/accounts/types'
+import { Account } from 'src/features/wallet/accounts/types'
 
 export interface TransferTokenParams {
-  account: AccountStub
+  account: Account
   tokenAddress: Address
   amount: string
   toAddress: Address

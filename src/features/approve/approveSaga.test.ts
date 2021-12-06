@@ -1,58 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
-import { providers, Wallet } from 'ethers'
+import { Signer } from 'ethers'
 import { testSaga } from 'redux-saga-test-plan'
-import ERC20_ABI from 'src/abis/erc20.json'
-import { Erc20 } from 'src/abis/types'
-import { getWalletAccounts, getWalletProviders } from 'src/app/walletContext'
-import { NULL_ADDRESS } from 'src/constants/accounts'
+import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
-import { DAI } from 'src/constants/tokens'
 import { ApproveParams, maybeApprove } from 'src/features/approve/approveSaga'
-import { ContractManager } from 'src/features/contracts/ContractManager'
 import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
 import { TransactionType } from 'src/features/transactions/types'
-import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
-
-class MockSigner {
-  async getAddress() {
-    return NULL_ADDRESS
-  }
-
-  async signMessage() {
-    return ''
-  }
-
-  async signTransaction() {
-    return ''
-  }
-
-  connect() {
-    return this
-  }
-}
-
-const account: Account = {
-  type: AccountType.local,
-  address: NULL_ADDRESS,
-  name: 'Test Account',
-  signer: new MockSigner() as unknown as Wallet,
-}
-
-const provider = new providers.JsonRpcProvider()
-const providerManager = {
-  getProvider: () => provider,
-}
-
-const accountManager = new AccountManager()
-accountManager.addAccount(account)
-
-const contractManager = new ContractManager()
-contractManager.getOrCreateContract(ChainId.RINKEBY, DAI.address, provider, ERC20_ABI)
-const tokenContract = contractManager.getContract(ChainId.RINKEBY, DAI.address) as Erc20
+import { account, provider, providerManager, signerManager, tokenContract } from 'src/test/fixtures'
 
 const approveParams: ApproveParams = {
   account,
@@ -62,20 +19,30 @@ const approveParams: ApproveParams = {
   spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
 }
 
+let signer: Signer
+let connectedSigner: Signer
+
 const transactionResponse = { hash: '0x123', wait: () => {} }
 const transactionReceipt = {}
 
 describe(maybeApprove, () => {
+  beforeAll(async () => {
+    signer = await signerManager.getSignerForAccount(account)
+    connectedSigner = signer.connect(provider)
+  })
+
   it('skips approval when allowance is sufficient', () => {
     testSaga(maybeApprove, approveParams)
       .next()
-      .call(getWalletAccounts)
-      .next(accountManager)
+      .call(getSignerManager)
+      .next(signerManager)
       .call(getWalletProviders)
       .next(providerManager)
-      .call([account.signer, account.signer.connect], provider)
-      .next(account.signer)
-      .call([tokenContract, tokenContract.connect], account.signer)
+      .call([signerManager, signerManager.getSignerForAccount], account)
+      .next(signer)
+      .call([signer, signer.connect], provider)
+      .next(connectedSigner)
+      .call([tokenContract, tokenContract.connect], connectedSigner)
       .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .next(BigNumber.from(approveParams.txAmount).add('1000'))
@@ -85,13 +52,15 @@ describe(maybeApprove, () => {
   it('ignores failed allowance check', () => {
     testSaga(maybeApprove, approveParams)
       .next()
-      .call(getWalletAccounts)
-      .next(accountManager)
+      .call(getSignerManager)
+      .next(signerManager)
       .call(getWalletProviders)
       .next(providerManager)
-      .call([account.signer, account.signer.connect], provider)
-      .next(account.signer)
-      .call([tokenContract, tokenContract.connect], account.signer)
+      .call([signerManager, signerManager.getSignerForAccount], account)
+      .next(signer)
+      .call([signer, signer.connect], provider)
+      .next(connectedSigner)
+      .call([tokenContract, tokenContract.connect], connectedSigner)
       .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .throw(new Error('Failed to get allowance'))
@@ -101,13 +70,15 @@ describe(maybeApprove, () => {
   it('approves maximum amount', () => {
     testSaga(maybeApprove, approveParams)
       .next()
-      .call(getWalletAccounts)
-      .next(accountManager)
+      .call(getSignerManager)
+      .next(signerManager)
       .call(getWalletProviders)
       .next(providerManager)
-      .call([account.signer, account.signer.connect], provider)
-      .next(account.signer)
-      .call([tokenContract, tokenContract.connect], account.signer)
+      .call([signerManager, signerManager.getSignerForAccount], account)
+      .next(signer)
+      .call([signer, signer.connect], provider)
+      .next(connectedSigner)
+      .call([tokenContract, tokenContract.connect], connectedSigner)
       .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .next(BigNumber.from('0'))
@@ -134,14 +105,15 @@ describe(maybeApprove, () => {
     const approvedAmount = BigNumber.from(approveParams.txAmount)
     testSaga(maybeApprove, approveParams)
       .next()
-      .call(getWalletAccounts)
-      .next(accountManager)
-
+      .call(getSignerManager)
+      .next(signerManager)
       .call(getWalletProviders)
       .next(providerManager)
-      .call([account.signer, account.signer.connect], provider)
-      .next(account.signer)
-      .call([tokenContract, tokenContract.connect], account.signer)
+      .call([signerManager, signerManager.getSignerForAccount], account)
+      .next(signer)
+      .call([signer, signer.connect], provider)
+      .next(connectedSigner)
+      .call([tokenContract, tokenContract.connect], connectedSigner)
       .next(tokenContract)
 
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
@@ -172,7 +144,7 @@ describe(maybeApprove, () => {
   // xit('skips approval when allowance is sufficient', () => {
   //   return expectSaga(approveSaga)
   //     .provide([
-  //       [call(getWalletAccounts), accountManager],
+  //       [call(getSignerManager), SignerManager],
   //       [
   //         call(tokenContract.allowance, account.address, approveParams.spender),
   //         approveParams.txAmount.add(10),

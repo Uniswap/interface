@@ -1,27 +1,17 @@
-import { utils, Wallet } from 'ethers'
-import { getWalletAccounts } from 'src/app/walletContext'
-import { ETHEREUM_DERIVATION_PATH } from 'src/constants/accounts'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
+import { generateAndStoreMnemonic, generateAndStorePrivateKey } from 'src/lib/RNEthersRs'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call, put } from 'typed-redux-saga'
 
 export function* createAccount() {
-  const manager = yield* call(getWalletAccounts)
-  const entropy = utils.randomBytes(32)
-  const mnemonic = utils.entropyToMnemonic(entropy)
-  const derivationPath = ETHEREUM_DERIVATION_PATH + '/0'
-  const signer = Wallet.fromMnemonic(mnemonic, derivationPath)
-  const address = signer.address
-  const type = AccountType.local
+  throw new Error('not currently working')
+  // eslint-disable-next-line no-unreachable
+  const mnemonicId = yield* call(generateAndStoreMnemonic)
+  const address = yield* call(generateAndStorePrivateKey, mnemonicId, 0)
+  const type = AccountType.native
   const name = 'New account'
-  manager.addAccount({
-    type,
-    address,
-    name,
-    signer,
-  })
   yield* put(addAccount({ type, address, name }))
   yield* put(activateAccount(address))
   logger.info('createAccountSaga', '', 'New account created:', address)
