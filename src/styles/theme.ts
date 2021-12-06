@@ -1,5 +1,5 @@
 import { createTheme } from '@shopify/restyle'
-import { primaryButtonVariants } from 'src/styles/button'
+import { iconButtonVariants, primaryButtonVariants } from 'src/styles/button'
 import { colorsDark, colorsLight } from 'src/styles/color'
 import { textVariants } from 'src/styles/font'
 import { borderRadii, spacing } from 'src/styles/sizing'
@@ -21,6 +21,7 @@ export const theme = createTheme({
     mainForeground: colorsLight.black,
     ...colorsLight,
   },
+  iconButtonVariants,
   primaryButtonVariants,
   spacing,
   textVariants,

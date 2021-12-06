@@ -28,14 +28,15 @@ export type HomeStackParamList = {
 }
 
 export type SwapStackParamList = {
-  [Screens.Swap]: undefined
-  [Screens.SwapConfig]: undefined
-  [Screens.Transfer]: undefined
   [Screens.CurrencySelector]: {
     onSelectCurrency: (currency: Currency) => void
     preselectedCurrencyAddress?: string
     preselectedCurrencyChainId?: ChainId
   }
+  [Screens.Swap]: undefined
+  [Screens.SwapConfig]: undefined
+  [Screens.TabNavigator]: undefined
+  [Screens.Transfer]: undefined
 }
 
 export type DevNavigationProps = NativeStackNavigationProp<DevStackParamList>

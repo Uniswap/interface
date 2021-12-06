@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
-import { TabNavigator } from 'src/app/navigation/navigation'
+import { SwapStackNavigator } from 'src/app/navigation/navigation'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
@@ -61,7 +61,7 @@ function DataUpdaters() {
 function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <NavigationContainer>
-      <TabNavigator />
+      <SwapStackNavigator />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </NavigationContainer>
   )

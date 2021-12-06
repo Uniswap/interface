@@ -10,6 +10,7 @@ export enum Screens {
   SeedPhrase = 'SeedPhrase',
   Swap = 'Swap',
   SwapConfig = 'SwapConfig',
+  TabNavigator = 'TabNavigator',
   TokenDetails = 'TokenDetails',
   Transfer = 'Transfer',
   Welcome = 'Welcome',

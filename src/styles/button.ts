@@ -16,3 +16,14 @@ export const primaryButtonVariants = {
     color: 'blue',
   },
 }
+
+export const iconButtonVariants = {
+  defaults: {},
+  primary: {
+    alignSelf: 'center',
+    borderRadius: 'md',
+    letterSpacing: 'headline',
+    paddingHorizontal: 'xl',
+    paddingVertical: 'sm',
+  },
+}
