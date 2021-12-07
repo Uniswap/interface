@@ -65,7 +65,7 @@ jobs:
         run: |
           short_sha="$(git rev-parse --short HEAD)"
           branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
-          echo "::set-output name=value::$branch_tag-$short_sha"  
+          echo "::set-output name=value::pr-$branch_tag-$short_sha"  
 
 
   build:
@@ -109,6 +109,7 @@ jobs:
       - name: Yarn Build
         env:
           CI: false 
+          REACT_APP_VERSION: ${{ github.sha }}
         run: yarn build-production
         
       - name: Docker build and push
