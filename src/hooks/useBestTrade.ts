@@ -1,6 +1,5 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { TradeState } from 'state/routing/types'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import useAutoRouterSupported from './useAutoRouterSupported'
@@ -20,8 +19,7 @@ export function useBestTrade(
   otherCurrency?: Currency
 ): {
   state: TradeState
-  trade: Trade<Currency, Currency, TradeType> | undefined
-  gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
@@ -62,6 +60,5 @@ export function useBestTrade(
     ...(useFallback ? bestV3Trade : routingAPITrade),
     ...(debouncing ? { state: TradeState.SYNCING } : {}),
     ...(isLoading ? { state: TradeState.LOADING } : {}),
-    gasUseEstimateUSD: useFallback ? null : routingAPITrade.gasUseEstimateUSD,
   }
 }

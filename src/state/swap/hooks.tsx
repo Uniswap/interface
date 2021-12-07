@@ -1,13 +1,12 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useBestTrade } from 'hooks/useBestTrade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { useCurrency } from '../../hooks/Tokens'
 import useENS from '../../hooks/useENS'
@@ -100,9 +99,8 @@ export function useDerivedSwapInfo(): {
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: ReactNode
   trade: {
-    trade: Trade<Currency, Currency, TradeType> | undefined
+    trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
     state: TradeState
-    gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chains stabelcoin
   }
   allowedSlippage: Percent
 } {
@@ -170,7 +168,7 @@ export function useDerivedSwapInfo(): {
     }
   }
 
-  const allowedSlippage = useSwapSlippageTolerance(trade.trade ?? undefined, trade.gasUseEstimateUSD)
+  const allowedSlippage = useSwapSlippageTolerance(trade.trade ?? undefined)
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]

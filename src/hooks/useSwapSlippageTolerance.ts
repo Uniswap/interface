@@ -1,9 +1,10 @@
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import { useUserSlippageToleranceWithDefault } from '../state/user/hooks'
 import { useCurrency } from './Tokens'
@@ -32,8 +33,7 @@ const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 
 export default function useSwapSlippageTolerance(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
-  gasCostUSD: CurrencyAmount<Token> | null // dollar amount in active chains stabelcoin
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 ): Percent {
   const { chainId } = useActiveWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
@@ -43,9 +43,6 @@ export default function useSwapSlippageTolerance(
   const gasEstimate = guesstimateGas(trade)
   const ether = useCurrency('ETH')
   const etherPrice = useUSDCPrice(ether ?? undefined)
-
-  // if using api trade and have valid gas estimate from api, use it
-  const useGasCostFromRouter = Boolean(gasCostUSD !== null)
 
   const defaultSlippageTolerance = useMemo(() => {
     if (!trade || onL2) return ONE_TENTHS_PERCENT
@@ -57,7 +54,7 @@ export default function useSwapSlippageTolerance(
 
     // if valid estimate from api and using api trade, use gas estimate from api
     // if not, use local heuristic
-    const dollarCostToUse = useGasCostFromRouter && gasCostUSD ? gasCostUSD : dollarGasCost
+    const dollarCostToUse = trade?.gasUseEstimateUSD ?? dollarGasCost
 
     if (outputDollarValue && dollarCostToUse) {
       // the rationale is that a user will not want their trade to fail for a loss due to slippage that is less than
@@ -71,7 +68,7 @@ export default function useSwapSlippageTolerance(
 
     if (trade instanceof V2Trade) return V2_SWAP_DEFAULT_SLIPPAGE
     return V3_SWAP_DEFAULT_SLIPPAGE
-  }, [trade, onL2, ethGasPrice, gasEstimate, ether, etherPrice, useGasCostFromRouter, gasCostUSD, outputDollarValue])
+  }, [trade, onL2, ethGasPrice, gasEstimate, ether, etherPrice, outputDollarValue])
 
   return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
 }

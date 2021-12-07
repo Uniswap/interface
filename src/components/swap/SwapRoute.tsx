@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Protocol, Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { AutoRow, RowBetween } from 'components/Row'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { darken } from 'polished'
 import { memo, useState } from 'react'
@@ -13,21 +14,13 @@ import { Plus } from 'react-feather'
 import styled from 'styled-components/macro'
 import { Separator, TYPE } from 'theme'
 
-import GasEstimateBadge from './GasEstimateBadge'
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Wrapper = styled(AutoColumn)<{ open: boolean }>`
   padding: 8px 12px;
   border-radius: 12px;
-  /* min-height: 40px; */
   background-color: ${({ theme }) => darken(0.11, theme.blue4)};
   grid-row-gap: ${({ open }) => (open ? '12px' : 0)};
-`
-
-const DropdownContent = styled.div<{ open?: boolean }>`
-  max-height: ${({ open }) => (open ? '1000px' : '0px')};
-  transition: max-height 0.2s ease-in-out;
-  overflow: hidden;
 `
 
 const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
@@ -46,11 +39,11 @@ const V2_DEFAULT_FEE_TIER = 3000
 export default memo(function SwapRoute({
   trade,
   syncing,
-  gasUseEstimateUSD,
+  fixedOpen = false,
 }: {
   trade: Trade<Currency, Currency, TradeType>
   syncing: boolean
-  gasUseEstimateUSD?: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
+  fixedOpen?: boolean // hide open and close icon, always open
 }) {
   const autoRouterSupported = useAutoRouterSupported()
 
@@ -61,18 +54,15 @@ export default memo(function SwapRoute({
   const [open, setOpen] = useState(false)
 
   return (
-    <Wrapper open={open}>
+    <Wrapper open={open || fixedOpen}>
       <RowBetween>
         <AutoRow gap="4px" width="auto">
           <AutoRouterLogo />
           <AutoRouterLabel />
         </AutoRow>
-        <RowFixed>
-          {gasUseEstimateUSD ? <GasEstimateBadge gasUseEstimateUSD={gasUseEstimateUSD} loading={syncing} /> : null}
-          <OpenCloseIcon open={open} onClick={() => setOpen(!open)} />
-        </RowFixed>
+        {fixedOpen ? null : <OpenCloseIcon open={open} onClick={() => setOpen(!open)} />}
       </RowBetween>
-      <DropdownContent open={open}>
+      <AnimatedDropdown open={open}>
         <AutoRow gap="6px" width="auto">
           {syncing ? (
             <LoadingRows>
@@ -110,7 +100,7 @@ export default memo(function SwapRoute({
               </TYPE.main>
             ))}
         </AutoRow>
-      </DropdownContent>
+      </AnimatedDropdown>
     </Wrapper>
   )
 })

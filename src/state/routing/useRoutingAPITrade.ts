@@ -1,5 +1,4 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import ms from 'ms.macro'
@@ -8,7 +7,7 @@ import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useClientSideRouter } from 'state/user/hooks'
 
-import { GetQuoteResult, TradeState } from './types'
+import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
 
 function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
@@ -70,7 +69,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   otherCurrency?: Currency
 ): {
   state: TradeState
-  trade: Trade<Currency, Currency, TTradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
   gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chains stabelcoin
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
@@ -100,6 +99,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
 
+  // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
 
   return useMemo(() => {
@@ -137,7 +137,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     }
 
-    const trade = transformRoutesToTrade(route, tradeType)
+    const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
 
     return {
       // always return VALID regardless of isFetching status

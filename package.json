@@ -173,5 +173,7 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {
+    "use-resize-observer": "^8.0.0"
+  }
 }

@@ -1,9 +1,8 @@
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Ether, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 
-import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
+import { GetQuoteResult, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**
  * Transforms a Routing API quote into an array of routes that can be used to create
@@ -57,9 +56,10 @@ export function computeRoutes(
 
 export function transformRoutesToTrade<TTradeType extends TradeType>(
   route: ReturnType<typeof computeRoutes>,
-  tradeType: TTradeType
-): Trade<Currency, Currency, TTradeType> {
-  return new Trade({
+  tradeType: TTradeType,
+  gasUseEstimateUSD?: CurrencyAmount<Token> | null
+): InterfaceTrade<Currency, Currency, TTradeType> {
+  return new InterfaceTrade({
     v2Routes:
       route
         ?.filter((r) => r.routev2 !== null)
@@ -73,6 +73,7 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         .map(({ routev3, inputAmount, outputAmount }) => ({ routev3: routev3!, inputAmount, outputAmount })) ?? [],
     tradeType,
+    gasUseEstimateUSD,
   })
 }
 

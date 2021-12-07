@@ -1,20 +1,20 @@
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
-import { SupportedChainId } from 'constants/chains'
-import { useDefaultGasCostEstimate } from 'hooks/useUSDCPrice'
-import { useActiveWeb3React } from 'hooks/web3'
+import { MouseoverTooltipContent } from 'components/Tooltip'
 import { darken } from 'polished'
 import { ReactNode, useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
+import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { TYPE } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
+import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
 
@@ -40,7 +40,7 @@ const StyledHeaderRow = styled(RowBetween)`
   min-height: 40px;
 
   :hover {
-    background-color: ${({ theme }) => darken(0.01, theme.bg1)};
+    background-color: ${({ theme }) => darken(0.015, theme.bg1)};
   }
 `
 
@@ -100,44 +100,29 @@ const Spinner = styled.div`
   top: -3px;
 `
 
-const DropdownContent = styled.div<{ open?: boolean }>`
-  max-height: ${({ open }) => (open ? '1000px' : '0px')};
-  transition: max-height 0.6s ease-in-out;
-  overflow: hidden;
-`
-
 interface SwapDetailsInlineProps {
-  trade: Trade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   syncing: boolean
   loading: boolean
   showInverted: boolean
   setShowInverted: React.Dispatch<React.SetStateAction<boolean>>
-  gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
   allowedSlippage: Percent
   swapInputError: ReactNode
 }
 
-const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [SupportedChainId.MAINNET]
-
-export default function SwapDetailsInline({
+export default function SwapDetailsDropdown({
   trade,
   syncing,
   loading,
   showInverted,
   setShowInverted,
-  gasUseEstimateUSD,
   allowedSlippage,
   swapInputError,
 }: SwapDetailsInlineProps) {
   const theme = useTheme()
 
-  const showGasEstimate = Boolean(gasUseEstimateUSD !== null)
-
-  // only show the loading and or default gas state if on mainnet
-  // until router api supports gas estimates trades on other networks
-  const { chainId } = useActiveWeb3React()
-  const estimatesSupported = chainId ? SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) : false
-  const { cost: defaultGasCost, syncing: defaultSyncing, loading: defaultLoading } = useDefaultGasCostEstimate()
+  // show default gas cost if no trade is loaded yet
+  // const { cost: defaultGasCost, syncing: defaultSyncing, loading: defaultLoading } = useDefaultGasCostEstimate()
 
   const [showDetails, setShowDetails] = useState(false)
 
@@ -153,7 +138,18 @@ export default function SwapDetailsInline({
                 </StyledPollingDot>
               </StyledPolling>
             ) : (
-              <StyledInfoIcon />
+              <MouseoverTooltipContent
+                wrap={false}
+                content={
+                  <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
+                    <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+                  </ResponsiveTooltipContainer>
+                }
+                placement="bottom"
+                disableHover={showDetails}
+              >
+                <StyledInfoIcon />
+              </MouseoverTooltipContent>
             )}
             {trade ? (
               <LoadingOpacityContainer $loading={syncing}>
@@ -174,28 +170,18 @@ export default function SwapDetailsInline({
             ) : null}
           </RowFixed>
           <RowFixed>
-            {showDetails ? null : !estimatesSupported ? null : !trade ? (
-              defaultGasCost || defaultLoading || defaultSyncing ? (
-                <GasEstimateBadge gasUseEstimateUSD={defaultGasCost} loading={defaultLoading || defaultSyncing} />
-              ) : null
-            ) : !showGasEstimate || !gasUseEstimateUSD ? null : (
-              <GasEstimateBadge gasUseEstimateUSD={gasUseEstimateUSD} loading={syncing || loading} />
+            {!trade ? null : !trade.gasUseEstimateUSD ? null : (
+              <GasEstimateBadge gasUseEstimateUSD={trade.gasUseEstimateUSD} loading={syncing || loading} />
             )}
-            <RotatingArrow stroke={theme.text2} open={showDetails} />
+            <RotatingArrow stroke={theme.text3} open={showDetails} />
           </RowFixed>
         </StyledHeaderRow>
-        <DropdownContent open={showDetails}>
+        <AnimatedDropdown open={showDetails}>
           <AutoColumn gap={showDetails ? '8px' : '0'}>
-            {trade ? (
-              <SwapRoute
-                trade={trade}
-                syncing={syncing}
-                gasUseEstimateUSD={showDetails ? gasUseEstimateUSD : undefined}
-              />
-            ) : null}
+            {trade ? <SwapRoute trade={trade} syncing={syncing} /> : null}
             <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
           </AutoColumn>
-        </DropdownContent>
+        </AnimatedDropdown>
       </AutoColumn>
     </Wrapper>
   )

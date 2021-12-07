@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -29,7 +30,6 @@ function tradeMeaningfullyDiffers(
 
 export default function ConfirmSwapModal({
   trade,
-  gasUseEstimateUSD,
   originalTrade,
   onAcceptChanges,
   allowedSlippage,
@@ -42,12 +42,11 @@ export default function ConfirmSwapModal({
   txHash,
 }: {
   isOpen: boolean
-  trade: Trade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   originalTrade: Trade<Currency, Currency, TradeType> | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
-  gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
   allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
@@ -63,14 +62,13 @@ export default function ConfirmSwapModal({
     return trade ? (
       <SwapModalHeader
         trade={trade}
-        gasUseEstimateUSD={gasUseEstimateUSD}
         allowedSlippage={allowedSlippage}
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, gasUseEstimateUSD, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
 
   const modalBottom = useCallback(() => {
     return trade ? (

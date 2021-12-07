@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import SwapDetailsInline from 'components/swap/SwapDetailsInline'
+import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
 import JSBI from 'jsbi'
@@ -94,7 +94,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    trade: { state: tradeState, trade, gasUseEstimateUSD },
+    trade: { state: tradeState, trade },
     allowedSlippage,
     currencyBalances,
     parsedAmount,
@@ -347,7 +347,6 @@ export default function Swap({ history }: RouteComponentProps) {
             originalTrade={tradeToConfirm}
             onAcceptChanges={handleAcceptChanges}
             attemptingTxn={attemptingTxn}
-            gasUseEstimateUSD={gasUseEstimateUSD}
             txHash={txHash}
             recipient={recipient}
             allowedSlippage={allowedSlippage}
@@ -415,13 +414,12 @@ export default function Swap({ history }: RouteComponentProps) {
               </>
             ) : null}
             {!showWrap && (
-              <SwapDetailsInline
+              <SwapDetailsDropdown
                 trade={trade}
                 syncing={routeIsSyncing}
                 loading={routeIsLoading}
                 showInverted={showInverted}
                 setShowInverted={setShowInverted}
-                gasUseEstimateUSD={gasUseEstimateUSD}
                 allowedSlippage={allowedSlippage}
                 swapInputError={swapInputError}
               />

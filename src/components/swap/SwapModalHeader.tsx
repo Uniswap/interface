@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useContext, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
+import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
@@ -41,16 +41,14 @@ const ArrowWrapper = styled.div`
 
 export default function SwapModalHeader({
   trade,
-  gasUseEstimateUSD,
   allowedSlippage,
   recipient,
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   recipient: string | null
-  gasUseEstimateUSD: CurrencyAmount<Token> | null // dollar amount in active chain's stabelcoin
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
@@ -60,8 +58,6 @@ export default function SwapModalHeader({
 
   const fiatValueInput = useUSDCValue(trade.inputAmount)
   const fiatValueOutput = useUSDCValue(trade.outputAmount)
-
-  const showGasEstimate = gasUseEstimateUSD !== null
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -119,8 +115,8 @@ export default function SwapModalHeader({
       </LightCard>
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
         <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
-        {showGasEstimate && !!gasUseEstimateUSD ? (
-          <GasEstimateBadge gasUseEstimateUSD={gasUseEstimateUSD} loading={false} />
+        {trade?.gasUseEstimateUSD ? (
+          <GasEstimateBadge gasUseEstimateUSD={trade.gasUseEstimateUSD} loading={false} />
         ) : null}
       </RowBetween>
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>

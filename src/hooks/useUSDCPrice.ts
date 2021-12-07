@@ -101,7 +101,7 @@ export function useStablecoinAmountFromFiatValue(fiatValue: string | null | unde
  * @returns Estimate in form of stablecoin amount or null
  */
 export function useDefaultGasCostEstimate(): {
-  cost: CurrencyAmount<Token> | null
+  cost: CurrencyAmount<Token> | null | undefined
   loading: boolean
   syncing: boolean
 } {
@@ -117,7 +117,7 @@ export function useDefaultGasCostEstimate(): {
   )
 
   return {
-    cost: trade?.gasUseEstimateUSD,
+    cost: trade?.trade?.gasUseEstimateUSD,
     loading: routeIsLoading,
     syncing: routeIsSyncing,
   }

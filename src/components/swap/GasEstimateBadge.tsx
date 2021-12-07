@@ -15,7 +15,7 @@ const GasWrapper = styled(RowFixed)`
   border-radius: 8px;
   padding: 4px 6px;
   height: 24px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text3};
   background-color: ${({ theme }) => theme.bg2};
   font-size: 14px;
   font-weight: 500;
@@ -25,9 +25,7 @@ const StyledGasIcon = styled(GasIcon)`
   margin-right: 4px;
   height: 14px;
   & > * {
-    & > * {
-      stroke: ${({ theme }) => theme.text3};
-    }
+    stroke: ${({ theme }) => theme.text3};
   }
 `
 

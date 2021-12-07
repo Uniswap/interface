@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { OutlineCard } from 'components/Card'
+import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -11,8 +11,8 @@ import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 
-const StyledCard = styled(OutlineCard)`
-  border: 1px solid ${({ theme }) => theme.bg2};
+const StyledCard = styled(Card)`
+  /* border: 1px solid ${({ theme }) => theme.bg2}; */
   padding: 12px;
 `
 
@@ -77,7 +77,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <TYPE.black textAlign="right" fontSize={14}>
-              {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
+              -{realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
             </TYPE.black>
           </TextWithLoadingPlaceholder>
         </RowBetween>
