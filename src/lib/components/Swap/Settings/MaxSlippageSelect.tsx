@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import styled, { icon, ThemedText } from 'lib/theme'
-import React, { useCallback, useRef } from 'react'
+import { ReactNode, useCallback, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
 
 import { BaseButton, TextButton } from '../../Button'
@@ -49,7 +49,7 @@ function Option<T>({ value, selected, onSelect }: OptionProps<T>) {
   )
 }
 
-function InputOption({ value, children, selected, onSelect }: OptionProps<T> & { children: ReactNode }) {
+function InputOption<T>({ value, children, selected, onSelect }: OptionProps<T> & { children: ReactNode }) {
   return (
     <StyledInputOption color="container" selected={selected} onClick={() => onSelect(value)}>
       <ThemedText.Subhead2>

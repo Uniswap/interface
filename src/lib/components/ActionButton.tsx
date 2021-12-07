@@ -79,7 +79,7 @@ export interface ActionButtonProps {
   disabled?: boolean
   updated?: { message: ReactNode; action: ReactNode }
   onClick: () => void
-  onUpdate: () => void
+  onUpdate?: () => void
   children: ReactNode
 }
 
@@ -94,7 +94,7 @@ export default function ActionButton({
   return (
     <Overlay>
       {updated ? (
-        <ApprovalButton color={color} onClick={onUpdate} {...updated} />
+        <ApprovalButton color={color} onClick={() => onUpdate?.()} {...updated} />
       ) : (
         <StyledActionButton color={color} disabled={disabled} onClick={onClick}>
           <ThemedText.ButtonLarge color="onInteractive">{children}</ThemedText.ButtonLarge>
