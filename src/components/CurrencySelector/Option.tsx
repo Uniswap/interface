@@ -18,14 +18,20 @@ export function Option({ currency, onPress }: OptionProps) {
   const colors = getNetworkColors(currency.chainId)
   return (
     <Pressable onPress={onPress}>
-      <Box flexDirection="row" justifyContent="space-between" alignItems="center" width="100%">
-        <Box flexDirection="row" alignItems="center">
-          <CurrencyLogo currency={currency} size={20} />
-
-          <Box marginHorizontal="md" alignItems="flex-start" flexDirection="row">
-            <Text variant="body">{currency.symbol}</Text>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+        width="100%"
+        my="xs"
+        px="lg">
+        <Box flexDirection="row">
+          <Box alignItems="center" justifyContent="center" flexDirection="row">
+            <CurrencyLogo currency={currency} size={40} />
+            <Text variant="h4" ml="sm">
+              {currency.symbol}
+            </Text>
           </Box>
-
           {currency.chainId !== ChainId.MAINNET && (
             <CenterBox borderRadius="md" px="xs" style={{ backgroundColor: colors?.background }}>
               <Text variant="bodySm" style={{ color: colors?.foreground }}>
@@ -35,8 +41,8 @@ export function Option({ currency, onPress }: OptionProps) {
           )}
         </Box>
         <Box alignItems="flex-end">
-          <Text variant="body">~$</Text>
-          <Text variant="bodySm">-</Text>
+          <Text variant="bodyLg">$</Text>
+          <Text variant="body">-</Text>
         </Box>
       </Box>
     </Pressable>

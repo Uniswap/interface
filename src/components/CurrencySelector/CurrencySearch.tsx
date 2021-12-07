@@ -40,18 +40,20 @@ export function CurrencySearch({ onSelectCurrency }: CurrencySearchProps) {
   const onChangeText = (newSearchFilter: string) => setSearchFilter(newSearchFilter)
 
   return (
-    <CenterBox flex={1} px="md">
-      <Box mb="md">
+    <CenterBox flex={1}>
+      <Box mb="md" mx="lg">
         <TextInput
+          borderRadius="lg"
+          mx="lg"
           onChangeText={onChangeText}
           placeholder="Search token symbols or address"
           style={styles.input}
           borderWidth={0}
           backgroundColor="gray50"
         />
+        <NetworkButtonGroup selected={chainFilter} onPress={onChainPress} />
       </Box>
-      <NetworkButtonGroup selected={chainFilter} onPress={onChainPress} />
-      <Box flex={1} mt="sm">
+      <Box flex={1}>
         {filteredCurrencies.length > 0 ? (
           <FlatList
             data={filteredCurrencies}
@@ -74,8 +76,9 @@ function getKey(currency: Currency) {
 
 const styles = StyleSheet.create({
   input: {
-    height: 48,
+    height: 50,
     minHeight: 48,
     minWidth: '100%',
+    fontSize: 17,
   },
 })

@@ -1,6 +1,6 @@
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/core'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
 import { Screens, Tabs } from 'src/screens/Screens'
 
@@ -8,11 +8,17 @@ export type RootTabParamList = {
   [Tabs.Dev]: undefined
   [Tabs.Home]: undefined
   [Tabs.Swap]: undefined
+  [Tabs.Explore]: undefined
 }
 
 export type DevStackParamList = {
   [Screens.Dev]: undefined
   [Screens.Balances]: undefined
+}
+
+export type ExploreStackParamList = {
+  [Screens.Explore]: undefined
+  [Screens.TokenDetails]: { currency: Currency }
 }
 
 export type HomeStackParamList = {
@@ -23,8 +29,9 @@ export type HomeStackParamList = {
   [Screens.ImportAccount]: undefined
   [Screens.Notifications]: undefined
   [Screens.SeedPhrase]: { seedPhrase: string[] }
-  [Screens.TokenDetails]: { currencyAmount: CurrencyAmount<Currency> }
+  [Screens.TokenDetails]: { currency: Currency }
   [Screens.Welcome]: undefined
+  [Screens.Dev]: undefined
 }
 
 export type SwapStackParamList = {

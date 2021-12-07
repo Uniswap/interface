@@ -4,7 +4,12 @@ import { utils } from 'ethers'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { DevStackParamList, HomeStackParamList, SwapStackParamList } from 'src/app/navigation/types'
+import {
+  DevStackParamList,
+  ExploreStackParamList,
+  HomeStackParamList,
+  SwapStackParamList,
+} from 'src/app/navigation/types'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -23,8 +28,11 @@ import { Screens } from 'src/screens/Screens'
 type Props = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParamList, Screens.Home>,
   CompositeScreenProps<
-    NativeStackScreenProps<SwapStackParamList, Screens.Swap>,
-    NativeStackScreenProps<DevStackParamList, Screens.Dev>
+    NativeStackScreenProps<ExploreStackParamList, Screens.Explore>,
+    CompositeScreenProps<
+      NativeStackScreenProps<SwapStackParamList, Screens.Swap>,
+      NativeStackScreenProps<DevStackParamList, Screens.Dev>
+    >
   >
 >
 

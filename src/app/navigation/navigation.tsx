@@ -4,21 +4,21 @@ import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import { View } from 'react-native'
 import {
-  DevStackParamList,
+  ExploreStackParamList,
   HomeStackParamList,
   RootTabParamList,
   SwapStackParamList,
   useAppNavigation,
 } from 'src/app/navigation/types'
-import CoffeeIcon from 'src/assets/icons/coffee.svg'
+import SearchIcon from 'src/assets/icons/search.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { AccountsScreen } from 'src/screens/AccountsScreen'
-import { BalancesScreen } from 'src/screens/BalancesScreen'
 import { CameraScreen } from 'src/screens/CameraScreen'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
+import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
@@ -35,7 +35,7 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 
 const HomeStack = createNativeStackNavigator<HomeStackParamList>()
 const SwapStack = createNativeStackNavigator<SwapStackParamList>()
-const DevStack = createNativeStackNavigator<DevStackParamList>()
+const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
 
 function SwapButton(props: BottomTabBarButtonProps) {
   return (
@@ -58,8 +58,8 @@ function TabNavigator() {
     return <WalletIcon height={30} width={30} fill={focused ? primaryColor : secondaryColor} />
   }
 
-  function DevTabIcon({ focused }: { focused: boolean }) {
-    return <CoffeeIcon height={30} width={30} stroke={focused ? primaryColor : secondaryColor} />
+  function ExploreTabIcon({ focused }: { focused: boolean }) {
+    return <SearchIcon height={25} width={34} stroke={focused ? primaryColor : secondaryColor} />
   }
 
   return (
@@ -87,9 +87,9 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name={Tabs.Dev}
-        component={DevStackScreen}
-        options={{ headerShown: false, tabBarIcon: DevTabIcon }}
+        name={Tabs.Explore}
+        component={ExploreScreenStack}
+        options={{ headerShown: false, tabBarIcon: ExploreTabIcon }}
       />
     </Tab.Navigator>
   )
@@ -135,6 +135,11 @@ function HomeStackScreen() {
           component={WelcomeScreen}
           options={{ title: 'Uniswap | Welcome' }}
         />
+        <HomeStack.Screen
+          name={Screens.Dev}
+          component={DevScreen}
+          options={{ headerShown: true }}
+        />
       </HomeStack.Group>
     </HomeStack.Navigator>
   )
@@ -175,11 +180,21 @@ export function SwapStackNavigator() {
   )
 }
 
-function DevStackScreen() {
+function ExploreScreenStack() {
   return (
-    <DevStack.Navigator>
-      <DevStack.Screen name={Screens.Dev} component={DevScreen} />
-      <DevStack.Screen name={Screens.Balances} component={BalancesScreen} />
-    </DevStack.Navigator>
+    <ExploreStack.Navigator>
+      <ExploreStack.Group>
+        <ExploreStack.Screen
+          name={Screens.Explore}
+          component={ExploreScreen}
+          options={{ headerShown: false }}
+        />
+        <ExploreStack.Screen
+          name={Screens.TokenDetails}
+          component={TokenDetailsScreen}
+          options={{ headerShown: false }}
+        />
+      </ExploreStack.Group>
+    </ExploreStack.Navigator>
   )
 }

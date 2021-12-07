@@ -28,7 +28,7 @@ export function HomeScreen({ navigation }: Props) {
   const balances = useAllBalances(currentChains, chainIdToTokens, activeAccount?.address)
 
   const onPressToken = (currencyAmount: CurrencyAmount<Currency>) => {
-    navigation.navigate(Screens.TokenDetails, { currencyAmount })
+    navigation.navigate(Screens.TokenDetails, { currency: currencyAmount.currency })
   }
 
   if (!activeAccount)
@@ -45,7 +45,7 @@ export function HomeScreen({ navigation }: Props) {
       <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="md" my="sm">
         <AccountHeader />
         <Box flexDirection="row" mr="md">
-          <Button mr="md">
+          <Button mr="md" onPress={() => navigation.navigate(Screens.Dev)}>
             <Settings height={24} width={24} />
           </Button>
           <Button onPress={() => navigation.navigate(Screens.Notifications)}>

@@ -4,6 +4,7 @@ export enum Screens {
   Camera = 'Camera',
   CurrencySelector = 'CurrencySelector',
   Dev = 'Dev',
+  Explore = 'Explore',
   Home = 'Home',
   ImportAccount = 'ImportAccount',
   Notifications = 'Notifications',
@@ -18,6 +19,7 @@ export enum Screens {
 
 export enum Tabs {
   Dev = 'DevTab',
+  Explore = 'ExploreTab',
   Home = 'HomeTab',
   Swap = 'SwapTab',
 }

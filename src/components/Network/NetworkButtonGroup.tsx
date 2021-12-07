@@ -15,11 +15,17 @@ export function NetworkButtonGroup({ onPress, selected }: NetworkButtonGroupProp
   const activeChains = useActiveChainIds()
 
   return (
-    <Box flexDirection="row">
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    <Box flexDirection="row" mt="md">
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        directionalLockEnabled={true}
+        contentInset={{ top: 0, left: 20, bottom: 0, right: 20 }}
+        contentOffset={{ x: -20, y: 0 }}>
         {activeChains.map((chainId) => {
           return (
-            <Button mx="xs" key={chainId} onPress={() => onPress(chainId)}>
+            <Button mr="sm" key={chainId} onPress={() => onPress(chainId)}>
               <NetworkLabel chainId={chainId} showBorder={selected === chainId} />
             </Button>
           )
