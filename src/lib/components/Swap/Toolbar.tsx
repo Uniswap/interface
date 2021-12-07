@@ -5,29 +5,19 @@ import { useMemo, useState } from 'react'
 import { AlertTriangle, Info } from 'react-feather'
 
 import { TextButton } from '../Button'
-import Column from '../Column'
 import Row from '../Row'
 import Rule from '../Rule'
 import SpinnerIcon from '../SpinnerIcon'
 import Tooltip from '../Tooltip'
-import Details from './Details'
 import { Input, inputAtom, outputAtom, State, swapAtom } from './state'
 
 const AlertIcon = icon(AlertTriangle)
 const InfoIcon = icon(Info)
 
-function DetailsTooltip() {
+function RoutingTooltip() {
   return (
     <Tooltip icon={InfoIcon} placement="bottom">
-      <ThemeProvider>
-        <Column gap={0.75}>
-          <ThemedText.Subhead2>
-            <Trans>Transaction details</Trans>
-          </ThemedText.Subhead2>
-          <Rule />
-          <Details />
-        </Column>
-      </ThemeProvider>
+      <ThemeProvider>{/* TODO: Populate routing details */}</ThemeProvider>
     </Tooltip>
   )
 }
@@ -79,7 +69,7 @@ export default function Toolbar() {
         if (input.value && input.token && input.usdc && output.value && output.token && output.usdc) {
           return (
             <>
-              <DetailsTooltip />
+              <RoutingTooltip />
               <LoadedState input={input as Required<Input>} output={output as Required<Input>} />
             </>
           )
