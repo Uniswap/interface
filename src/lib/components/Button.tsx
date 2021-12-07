@@ -33,13 +33,13 @@ export default styled(BaseButton)<{ color?: Color; theme: Theme }>`
   }
 `
 
-const transparentButtonWithColor = (color: Color) => styled(BaseButton)`
-  color: ${({ theme }) => theme[color]};
+const transparentButton = (defaultColor: Color) => styled(BaseButton)<{ color?: Color; theme: Theme }>`
+  color: ${({ color = defaultColor, theme }) => theme[color]};
 
   :hover {
-    color: ${({ theme }) => theme.onHover(theme[color])};
+    color: ${({ color = defaultColor, theme }) => theme.onHover(theme[color])};
   }
 `
 
-export const TextButton = transparentButtonWithColor('accent')
-export const IconButton = transparentButtonWithColor('secondary')
+export const TextButton = transparentButton('accent')
+export const IconButton = transparentButton('secondary')

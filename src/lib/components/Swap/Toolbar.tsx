@@ -1,27 +1,20 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import styled, { icon, ThemedText, ThemeProvider } from 'lib/theme'
+import { icon, ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
-import { Info } from 'react-feather'
+import { AlertTriangle, Info } from 'react-feather'
 
 import { TextButton } from '../Button'
 import Column from '../Column'
 import Row from '../Row'
 import Rule from '../Rule'
+import SpinnerIcon from '../SpinnerIcon'
 import Tooltip from '../Tooltip'
 import Details from './Details'
-import { inputAtom, outputAtom, swapAtom } from './state'
+import { Input, inputAtom, outputAtom, State, swapAtom } from './state'
 
-const InfoIcon = icon(Info, { color: 'primary' })
-
-const Ratio = styled(TextButton)`
-  color: inherit;
-  text-align: start;
-
-  :hover {
-    opacity: 1;
-  }
-`
+const AlertIcon = icon(AlertTriangle)
+const InfoIcon = icon(Info)
 
 function DetailsTooltip() {
   return (
@@ -39,39 +32,75 @@ function DetailsTooltip() {
   )
 }
 
+interface LoadedStateProps {
+  input: Required<Input>
+  output: Required<Input>
+}
+
+function LoadedState({ input, output }: LoadedStateProps) {
+  const [flip, setFlip] = useState(true)
+  const ratio = useMemo(() => {
+    const [a, b] = flip ? [input, output] : [output, input]
+    return `1 ${a.token.symbol} = ${b.value / a.value} ${b.token.symbol} ($${(a.usdc / a.value).toLocaleString('en')})`
+  }, [flip, input, output])
+
+  return (
+    <TextButton color="primary" onClick={() => setFlip(!flip)}>
+      {ratio}
+    </TextButton>
+  )
+}
+
 export default function Toolbar() {
+  const swap = useAtomValue(swapAtom)
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
-  const { swap } = useAtomValue(swapAtom)
 
-  const [flip, setFlip] = useState(true)
-  const [loaded, ratio] = useMemo(() => {
-    if (input.value && input.token && input.usdc && output.value && output.token && output.usdc) {
-      const ratio = flip
-        ? `1 ${output.token.symbol} = ${input.value / output.value} ${
-            output.token.symbol
-          } ($${output.usdc.toLocaleString('en')})`
-        : `1 ${input.token.symbol} = ${output.value / input.value} ${input.token.symbol} ($${input.usdc.toLocaleString(
-            'en'
-          )})`
-      return [true, ratio]
+  const caption = useMemo(() => {
+    switch (swap.state) {
+      case State.LOADING:
+        return (
+          <>
+            <SpinnerIcon color="primary" />
+            <Trans>Fetching best price…</Trans>
+          </>
+        )
+      case State.BALANCE_INSUFFICIENT:
+        return (
+          <>
+            <AlertIcon />
+            <Trans>Insufficient {input.token?.symbol}</Trans>
+          </>
+        )
+      case State.TOKEN_APPROVAL:
+      // @ts-ignore
+      // eslint-disable-next-line no-fallthrough
+      case State.LOADED:
+        if (input.value && input.token && input.usdc && output.value && output.token && output.usdc) {
+          return (
+            <>
+              <DetailsTooltip />
+              <LoadedState input={input as Required<Input>} output={output as Required<Input>} />
+            </>
+          )
+        }
+      // eslint-disable-next-line no-fallthrough
+      default:
+        return (
+          <>
+            <InfoIcon />
+            <Trans>Enter an amount</Trans>
+          </>
+        )
     }
-    return [false]
-  }, [flip, input.token, input.usdc, input.value, output.token, output.usdc, output.value])
+  }, [swap.state, input, output])
 
   return (
     <>
       <Rule />
       <ThemedText.Caption>
         <Row justify="flex-start" gap={0.5}>
-          {swap && <DetailsTooltip />}
-          {loaded ? (
-            <Ratio color="secondary" onClick={() => setFlip(!flip)}>
-              {ratio}
-            </Ratio>
-          ) : (
-            'Powered by Uniswap'
-          )}
+          {caption}
         </Row>
       </ThemedText.Caption>
     </>
