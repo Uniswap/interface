@@ -27,13 +27,18 @@ export function ImportAccountScreen({ navigation }: Props) {
 
   return (
     <Screen>
-      <BackButton ml={'sm'} size={30} />
-      <Box alignItems="center" mb="lg">
-        <Text variant="h1" textAlign="center">
-          {t`Track any wallet`}
-        </Text>
-        <ImportReadonlyAccountForm onImportSuccess={onImportSuccess} />
+      <Box px="lg" flexGrow={1}>
+        <Box flexDirection="row" alignItems="center" mb="lg">
+          <BackButton size={30} mr="md" />
+          <Text variant="bodyLg" color="black">
+            {t('Track Account')}
+          </Text>
+        </Box>
+        <Box flexGrow={1} justifyContent="center">
+          <ImportReadonlyAccountForm onImportSuccess={onImportSuccess} />
+        </Box>
       </Box>
+
       {/* <Box alignItems="center">
         <Text variant="h1" textAlign="center">
           {t('Import Your Account')}

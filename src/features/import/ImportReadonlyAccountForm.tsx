@@ -45,22 +45,27 @@ export function ImportReadonlyAccountForm({ onImportSuccess }: Props) {
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validate={validateForm(t)}>
-      {({ handleChange, handleBlur, handleSubmit, values, touched, errors, isSubmitting }) => {
+      {({ handleChange, handleBlur, handleSubmit, values, errors, isSubmitting }) => {
         return (
           <Box alignItems="center" justifyContent="center">
-            <Text variant="body">
-              {t`Add a wallet by typing or pasting an ENS name, Ethereum Account or Polygon Account.`}
+            <Text variant="body" textAlign="center">
+              {t(
+                'Add a wallet by typing or pasting an ENS name, Ethereum Account or Polygon Account.'
+              )}
             </Text>
-
             <TextInput
               onChangeText={handleChange('addressOrENS')}
               onBlur={handleBlur('addressOrENS')}
               value={values.addressOrENS}
-              placeholder="ENS name or address Address"
+              placeholder={t('ENS name or address')}
+              backgroundColor="gray50"
+              mt="lg"
+              width={300}
+              fontSize={16}
               testID="import_account_form/address/field"
             />
-            {touched.addressOrENS && errors.addressOrENS && (
-              <Text variant="bodySm" color="error">
+            {errors.addressOrENS && (
+              <Text variant="bodySm" color="error" mt="md">
                 {errors.addressOrENS}
               </Text>
             )}
@@ -69,6 +74,8 @@ export function ImportReadonlyAccountForm({ onImportSuccess }: Props) {
               onPress={handleSubmit}
               label={t('Track')}
               disabled={!values.resolvedAddress || isSubmitting}
+              mt="lg"
+              width={250}
             />
             {status === SagaStatus.Started && <ActivityIndicator />}
 

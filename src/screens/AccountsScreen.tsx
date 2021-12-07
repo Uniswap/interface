@@ -110,13 +110,13 @@ export function AccountsScreen({ navigation }: Props) {
               {t('Switch Accounts')}
             </Text>
             {!isEditMode ? (
-              <TextButton textVariant="bodyLg" textColor="blue" onPress={() => setIsEditMode(true)}>
+              <TextButton textVariant="bodyLg" textColor="pink" onPress={() => setIsEditMode(true)}>
                 {t('Edit')}
               </TextButton>
             ) : (
               <TextButton
                 textVariant="bodyLg"
-                textColor="blue"
+                textColor="pink"
                 onPress={() => setIsEditMode(false)}>
                 {t('Done')}
               </TextButton>
@@ -155,7 +155,7 @@ export function AccountsScreen({ navigation }: Props) {
       </ScrollView>
       <CenterBox flexDirection="row" px="md">
         <PrimaryButton
-          variant="grayTextBlue"
+          variant="palePink"
           label={t('Import Wallet')}
           onPress={() => navigation.navigate(Screens.ImportAccount)}
           testID="accounts/add/button"
@@ -171,26 +171,38 @@ export function AccountsScreen({ navigation }: Props) {
         visible={!!pendingEditAddress}
         position="bottom"
         width={dimensions.fullWidth}
-        dimBackground={true}
         hide={onPressEditCancel}>
         <CenterBox>
           <Text variant="bodySm" color="gray400">
             {t('Edit or rename your account')}
           </Text>
-          <TextButton onPress={onPressRename} textVariant="body" width="100%" py="md">
-            {t('Rename Account')}
-          </TextButton>
-          <TextButton onPress={onPressCopyAddress} textVariant="body" width="100%" py="md">
-            {t('Copy Address')}
-          </TextButton>
-          <TextButton onPress={onPressRemove} textVariant="body" width="100%" py="md">
-            {t('Remove Account')}
-          </TextButton>
+          <PrimaryButton
+            variant="palePink"
+            label={t('Rename Account')}
+            onPress={onPressRename}
+            width={250}
+            mt="lg"
+          />
+          <PrimaryButton
+            variant="palePink"
+            label={t('Copy Address')}
+            onPress={onPressCopyAddress}
+            width={250}
+            mt="md"
+          />
+          <PrimaryButton
+            variant="paleOrange"
+            label={t('Remove Account')}
+            onPress={onPressRemove}
+            width={250}
+            mt="md"
+          />
           <TextButton
             onPress={onPressEditCancel}
             textVariant="body"
-            textColor="blue"
-            width="100%"
+            textColor="pink"
+            textAlign="center"
+            width={250}
             pt="md">
             {t('Cancel')}
           </TextButton>

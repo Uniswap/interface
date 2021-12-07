@@ -6,6 +6,8 @@ import {
   BorderProps,
   color,
   ColorProps,
+  layout,
+  LayoutProps,
   spacing,
   SpacingProps,
   spacingShorthand,
@@ -18,9 +20,19 @@ import React from 'react'
 import { TextInput as TextInputBase, TextInputProps as BaseTextInputProps } from 'react-native'
 import { Theme } from 'src/styles/theme'
 
-const restyleFunctions = [typography, spacing, spacingShorthand, border, backgroundColor, color]
+const restyleFunctions = [
+  layout,
+  typography,
+  spacing,
+  spacingShorthand,
+  border,
+  backgroundColor,
+  color,
+]
 type RestyleProps = TypographyProps<Theme> &
   SpacingProps<Theme> &
+  SpacingShorthandProps<Theme> &
+  LayoutProps<Theme> &
   SpacingShorthandProps<Theme> &
   BorderProps<Theme> &
   BackgroundColorProps<Theme> &
@@ -31,7 +43,7 @@ export type TextInputProps = RestyleProps &
   BaseTextInputProps &
   Required<Pick<BaseTextInputProps, 'onChangeText'>>
 
-export function TextInput({ onChangeText, ...rest }: TextInputProps) {
+export function TextInput({ onChangeText, onBlur, ...rest }: TextInputProps) {
   // Set defaults for style values
   rest.backgroundColor ??= 'mainBackground'
   rest.px ??= 'md'
@@ -40,5 +52,5 @@ export function TextInput({ onChangeText, ...rest }: TextInputProps) {
   rest.borderRadius ??= 'md'
   const transformedProps = useRestyle(restyleFunctions, rest)
 
-  return <TextInputBase onChangeText={onChangeText} {...transformedProps} />
+  return <TextInputBase onChangeText={onChangeText} onBlur={onBlur} {...transformedProps} />
 }

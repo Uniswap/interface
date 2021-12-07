@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Identicon } from 'src/components/accounts/Identicon'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { CenterBox } from 'src/components/layout/CenterBox'
@@ -34,20 +35,23 @@ export function RenameAccountModal({ address, onCancel, onConfirm }: RenameAccou
       width={dimensions.fullWidth * 0.85}
       dimBackground={true}
       hide={onPressCancel}>
-      <Identicon address={address || NULL_ADDRESS} size={50} />
-      <TextInput
-        value={newAccountName}
-        onChangeText={setNewAccountName}
-        mt="md"
-        placeholder={t('New account name')}
-        fontSize={20}
-      />
       <CenterBox mt="md">
-        {/* TODO use pill button */}
-        <TextButton onPress={onPressConfirm} textVariant="body">
-          {t('Done')}
-        </TextButton>
-        <TextButton onPress={onPressCancel} textVariant="body" textColor="blue" mt="lg">
+        <Identicon address={address || NULL_ADDRESS} size={50} />
+        <TextInput
+          value={newAccountName}
+          onChangeText={setNewAccountName}
+          mt="md"
+          placeholder={t('New account name')}
+          fontSize={20}
+        />
+        <PrimaryButton
+          variant="palePink"
+          label={t('Done')}
+          onPress={onPressConfirm}
+          mt="md"
+          width={150}
+        />
+        <TextButton onPress={onPressCancel} textVariant="body" textColor="pink" mt="lg">
           {t('Cancel')}
         </TextButton>
       </CenterBox>

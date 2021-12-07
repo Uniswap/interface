@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Identicon } from 'src/components/accounts/Identicon'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Modal } from 'src/components/modals/Modal'
@@ -30,9 +31,7 @@ export function RemoveAccountModal({ address, onCancel, onConfirm }: RemoveAccou
         {address}
       </Text>
       <CenterBox mt="md">
-        <TextButton onPress={onConfirm} textVariant="body" textColor="red">
-          {t('Remove')}
-        </TextButton>
+        <PrimaryButton variant="paleOrange" label={t('Remove')} onPress={onConfirm} width={150} />
         <TextButton onPress={onCancel} textVariant="body" mt="md">
           {t('Cancel')}
         </TextButton>

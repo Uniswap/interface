@@ -15,9 +15,11 @@ interface Palette {
   gray400: string
   gray600: string
   blue: string
-  blueGray: string
   green: string
   pink: string
+  palePink: string
+  orange: string
+  paleOrange: string
   red: string
   yellow: string
   success: string
@@ -41,9 +43,11 @@ export const colorsLight: Palette = {
   gray400: '#858585',
   gray600: '#4F4F4F',
   blue: '#426CFF',
-  blueGray: '#F6F8FF',
   green: '#28CD88',
   pink: '#FF007A',
+  palePink: '#FFF2F8',
+  orange: '#FD4040',
+  paleOrange: '#FFECEC',
   red: '#DA2D2B',
   yellow: '#E3A507',
   success: '#007D35',
@@ -67,9 +71,11 @@ export const colorsDark: Palette = {
   gray400: '#858585',
   gray600: '#4f4f4f',
   blue: '#2172E5',
-  blueGray: '#F6F8FF',
   green: '#27AE60',
   pink: '#FF007A',
+  palePink: '#FFF2F8',
+  orange: '#FD4040',
+  paleOrange: '#FFECEC',
   red: '#FF4343',
   yellow: '#E3A507',
   success: '#27AE60',
