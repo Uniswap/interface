@@ -6,8 +6,9 @@ import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { maybeApprove } from 'src/features/approve/approveSaga'
+import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { approveAndSwap, SwapParams } from 'src/features/swap/swapSaga'
-import { addTransaction } from 'src/features/transactions/sagaHelpers'
+import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, provider, providerManager, signerManager, tokenContract } from 'src/test/fixtures'
 
@@ -112,6 +113,9 @@ describe(approveAndSwap, () => {
       .next(mockTransactionResponse)
       .call(mockTransactionResponse.wait)
       .next(mockTransactionReceipt)
+      .call(finalizeTransaction, mockTransactionResponse, mockTransactionReceipt)
+      .next()
+      .put(fetchBalancesActions.trigger(account.address))
       .next()
       .isDone()
   })
@@ -140,6 +144,9 @@ describe(approveAndSwap, () => {
       .next(mockTransactionResponse)
       .call(mockTransactionResponse.wait)
       .next(mockTransactionReceipt)
+      .call(finalizeTransaction, mockTransactionResponse, mockTransactionReceipt)
+      .next()
+      .put(fetchBalancesActions.trigger(account.address))
       .next()
       .isDone()
   })

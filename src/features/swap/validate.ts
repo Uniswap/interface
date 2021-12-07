@@ -1,4 +1,5 @@
 import { TFunction } from 'i18next'
+import { ChainId } from 'src/constants/chains'
 import { useDerivedSwapInfo } from 'src/features/swap/hooks'
 import { CurrencyField } from 'src/features/swap/swapFormSlice'
 
@@ -8,6 +9,7 @@ export enum FieldError {
   MISSING_INPUT_CURRENCY,
   MISSING_OUTPUT_AMOUNT,
   MISSING_OUTPUT_CURRENCY,
+  UNSUPPORTED_NETWORK,
 }
 
 export function stringifySwapInfoError(error: FieldError | null, t: TFunction) {
@@ -24,6 +26,8 @@ export function stringifySwapInfoError(error: FieldError | null, t: TFunction) {
       return t('Select an output currency')
     case FieldError.INSUFFICIENT_FUNDS:
       return t('Insufficient funds')
+    case FieldError.UNSUPPORTED_NETWORK:
+      return t('Switch to Rinkeby')
     default:
       return t('Something went wrong')
   }
@@ -55,6 +59,11 @@ export function validateSwapInfo(
   const exactCurrencyAmount = currencyAmounts[exactCurrencyField]
   if (exactCurrencyAmount && currencyBalances[exactCurrencyField]?.lessThan(exactCurrencyAmount)) {
     return FieldError.INSUFFICIENT_FUNDS
+  }
+
+  // TODO: temporary check to restrict swapping to Rinkeby
+  if (currencies[exactCurrencyField]?.chainId !== ChainId.RINKEBY) {
+    return FieldError.UNSUPPORTED_NETWORK
   }
 
   // price impact

@@ -4,6 +4,7 @@ import { Erc20 } from 'src/abis/types'
 import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { maybeApprove } from 'src/features/approve/approveSaga'
+import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
 import {
   ExactInputSwapTransactionInfo,
@@ -13,7 +14,7 @@ import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
 import { isZero } from 'src/utils/number'
 import { createMonitoredSaga } from 'src/utils/saga'
-import { call } from 'typed-redux-saga'
+import { call, put } from 'typed-redux-saga'
 
 export type SwapParams = {
   account: Account
@@ -76,6 +77,8 @@ export function* approveAndSwap(params: SwapParams) {
     const transactionReceipt = yield* call(transactionResponse.wait)
 
     yield* call(finalizeTransaction, transactionResponse, transactionReceipt)
+
+    yield* put(fetchBalancesActions.trigger(account.address))
   } catch (e) {
     logger.error('swapSaga', 'approveAndSwap', 'Failed:', e)
     return false
