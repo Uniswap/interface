@@ -3,9 +3,11 @@
 import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
+import { useActiveChainIds } from 'src/features/chains/hooks'
 import { useCombinedActiveList, useUnsupportedTokenList } from 'src/features/tokenLists/hooks'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
-import { ChainIdToAddressToToken } from 'src/features/tokens/types'
+import { ChainIdToAddressToCurrency, ChainIdToAddressToToken } from 'src/features/tokens/types'
 import { useUserAddedTokens } from 'src/features/tokens/userAddedTokens'
 import { toSupportedChain } from 'src/utils/chainId'
 import { getKeys } from 'src/utils/objects'
@@ -15,7 +17,27 @@ export function useAllTokens(): ChainIdToAddressToToken {
   return useTokensFromListedMap(allTokens, true)
 }
 
-export function useUnsupportedTokens(): ChainIdToAddressToToken {
+export function useAllCurrencies(): ChainIdToAddressToCurrency {
+  const tokens = useAllTokens() as ChainIdToAddressToCurrency
+  const nativeCurrencies = useNativeCurrencies()
+  nativeCurrencies.forEach((currency) => {
+    const chainId = currency.chainId as ChainId
+
+    if (tokens[chainId]) {
+      tokens[chainId]![currency.address] = currency
+    } else {
+      tokens[chainId] = { [currency.address]: currency }
+    }
+  })
+  return tokens
+}
+
+export function useNativeCurrencies(): NativeCurrency[] {
+  const activeChains = useActiveChainIds()
+  return activeChains.map((chainId) => NativeCurrency.onChain(chainId))
+}
+
+export function useUnsupportedTokens(): ChainIdToAddressToCurrency {
   const unsupportedTokensMap = useUnsupportedTokenList()
   return useTokensFromListedMap(unsupportedTokensMap, false)
 }

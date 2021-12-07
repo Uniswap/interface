@@ -14,7 +14,6 @@ import CoffeeIcon from 'src/assets/icons/coffee.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { IconButton } from 'src/components/buttons/IconButton'
-import { config } from 'src/config'
 import { AccountsScreen } from 'src/screens/AccountsScreen'
 import { BalancesScreen } from 'src/screens/BalancesScreen'
 import { CameraScreen } from 'src/screens/CameraScreen'
@@ -87,13 +86,11 @@ function TabNavigator() {
           },
         }}
       />
-      {config.debug && (
-        <Tab.Screen
-          name={Tabs.Dev}
-          component={DevStackScreen}
-          options={{ headerShown: false, tabBarIcon: DevTabIcon }}
-        />
-      )}
+      <Tab.Screen
+        name={Tabs.Dev}
+        component={DevStackScreen}
+        options={{ headerShown: false, tabBarIcon: DevTabIcon }}
+      />
     </Tab.Navigator>
   )
 }

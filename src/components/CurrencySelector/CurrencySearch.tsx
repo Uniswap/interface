@@ -10,7 +10,7 @@ import { CenterBox } from 'src/components/layout/CenterBox'
 import { NetworkButtonGroup } from 'src/components/Network/NetworkButtonGroup'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { useAllTokens } from 'src/features/tokens/useTokens'
+import { useAllCurrencies } from 'src/features/tokens/useTokens'
 
 interface CurrencySearchProps {
   onSelectCurrency: (currency: Currency) => void
@@ -22,7 +22,7 @@ export function CurrencySearch({ onSelectCurrency }: CurrencySearchProps) {
 
   const { t } = useTranslation()
 
-  const currencies = useAllTokens()
+  const currencies = useAllCurrencies()
 
   const filteredCurrencies = useMemo(
     () => filter(currencies, chainFilter, searchFilter),
