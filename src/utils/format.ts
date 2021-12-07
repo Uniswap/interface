@@ -27,20 +27,22 @@ export function formatCurrencyAmount(
   return formatter.format(parseFloat(amount.toSignificant()))
 }
 
+const baseFormatOptions = {
+  style: 'currency',
+  notation: 'compact',
+  currency: 'USD',
+  maximumFractionDigits: 2,
+}
+
 export function formatPrice(
   price?: Price<Currency, Currency> | string | null,
-  fractionDigits: number = 2
+  options: Intl.NumberFormatOptions = {}
 ) {
   if (!price) {
     return '-'
   }
 
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    notation: 'compact',
-    currency: 'USD',
-    maximumFractionDigits: fractionDigits,
-  })
+  const formatter = new Intl.NumberFormat('en-US', { ...baseFormatOptions, ...options })
 
   if (typeof price === 'string') {
     return formatter.format(parseFloat(price))

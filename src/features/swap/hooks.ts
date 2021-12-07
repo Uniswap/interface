@@ -77,8 +77,10 @@ export function useDerivedSwapInfo(state: SwapFormState) {
   })
 
   const currencyAmounts = {
-    [CurrencyField.INPUT]: trade?.inputAmount,
-    [CurrencyField.OUTPUT]: trade?.outputAmount,
+    [CurrencyField.INPUT]:
+      exactCurrencyField === CurrencyField.INPUT ? amountSpecified : trade?.inputAmount,
+    [CurrencyField.OUTPUT]:
+      exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : trade?.outputAmount,
   }
 
   return {

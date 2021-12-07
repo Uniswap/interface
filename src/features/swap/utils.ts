@@ -14,5 +14,7 @@ export function serializeQueryParams(
 export function formatExecutionPrice(price: Price<Currency, Currency> | undefined) {
   if (!price) return '-'
 
-  return `1 ${price.quoteCurrency?.symbol} = ${formatPrice(price)} ${price?.baseCurrency.symbol}`
+  return `1 ${price.quoteCurrency?.symbol} = ${formatPrice(price, { style: 'decimal' })} ${
+    price?.baseCurrency.symbol
+  }`
 }

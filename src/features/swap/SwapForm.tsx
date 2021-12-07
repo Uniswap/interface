@@ -68,10 +68,10 @@ export function SwapForm(props: SwapFormProps) {
   } else if (quoteStatus === 'loading') {
     errorLabel = t`Fetching best price...`
   } else if (quoteStatus === 'error') {
-    errorLabel = t`Quote error`
+    errorLabel = t`Failed to fetch a quote`
   } else if (activeAccount && activeAccount.type === AccountType.readonly) {
     // TODO: move check somewhere else?
-    errorLabel = t('Watched account cannot swap')
+    errorLabel = t('Cannot swap on watched account')
   } else if (swapState?.status === SagaStatus.Failure) {
     errorLabel = t('Swap unsuccessful')
   }

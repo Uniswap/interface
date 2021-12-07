@@ -41,7 +41,7 @@ export function AccountCard({
             </Text>
             {/* TODO get real total */}
             <Text variant="bodySm" color="gray400" mt="xs">
-              $2,243.22
+              {shortenAddress(address)}
             </Text>
           </Box>
         </CenterBox>

@@ -26,7 +26,7 @@ function _CheckmarkCircle({ size, ...rest }: Props) {
       alignItems="center"
       justifyContent="center"
       {...rest}>
-      <Checkmark height={size / 2} width={size / 2} />
+      <Checkmark height={size / 2} width={size / 2} stroke="white" />
     </Box>
   )
 }
