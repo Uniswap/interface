@@ -29,8 +29,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Extract branch
         shell: bash
@@ -63,14 +61,15 @@ jobs:
 
       - name: Extract GitHub HEAD SHA 
         id: head_sha 
-        run: echo "::set-output name=value::$(git rev-parse HEAD)"   
+        run: echo "::set-output name=value::${{ github.event.pull_request.head.sha }}"   
 
       - name: Get Docker image tag
         id: get_tag
         env:
           CURRENT_BRANCH: ${{ steps.current_branch.outputs.value }}
+          HEAD_SHA: ${{ steps.head_sha.outputs.values }}
         run: |
-          short_sha="$(git rev-parse --short HEAD)"
+          short_sha="$(echo "$HEAD_SHA" | head -c7)"
           branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
           echo "::set-output name=value::pr-$branch_tag-$short_sha"  
 
