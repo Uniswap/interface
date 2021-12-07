@@ -315,6 +315,8 @@ export default function Header() {
     if ([ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId)) return 'https://www.binance.org/en/bridge'
     if ([ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId)) return 'https://bridge.avax.network'
     if ([ChainId.FANTOM].includes(chainId)) return 'https://multichain.xyz'
+    if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId))
+      return 'https://cronos.crypto.org/docs/bridge/cdcapp.html'
     return ''
   }
 
