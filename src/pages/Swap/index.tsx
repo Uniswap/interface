@@ -723,7 +723,7 @@ export default function Swap({ history }: RouteComponentProps) {
         <Wrapper>
             <LimitOrders />
             </Wrapper>}
-      {!!isBinance && view === 'swap' && <iframe style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width: '100%'}} src="https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341" />}
+      {!!isBinance && view === 'swap' && <iframe  style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width: '100%'}} src="https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341" />}
       </AppBody>
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (

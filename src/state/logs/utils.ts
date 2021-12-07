@@ -10,6 +10,9 @@ import { request } from 'graphql-request'
 import { fetchBscTokenData, INFO_CLIENT, useBnbPrices } from './bscUtils'
 import { useWeb3React  } from '@web3-react/core'
 import { useActiveWeb3React } from 'hooks/web3'
+import { useKiba } from 'pages/Vote/VotePage'
+import { Token, WETH9 } from '@uniswap/sdk-core'
+import { useTokenBalance } from 'state/wallet/hooks'
 export interface EventFilter {
   address?: string
   topics?: Array<string | Array<string> | null>
@@ -22,7 +25,13 @@ export interface Log {
 
 export const bscClient = new ApolloClient({
   uri: 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2',
-  cache: new InMemoryCache() as any
+  cache: new InMemoryCache() as any,
+  defaultOptions: {
+    watchQuery: {
+      partialRefetch: true,
+      returnPartialData: true
+    }
+  }
 });
 
 export const client = new ApolloClient({
@@ -216,7 +225,7 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
   }
   React.useEffect(() => {
     func()
-  }, [chainId, ethPriceOld, ethPrice, prices])
+  }, [chainId, ethPriceOld, ethPrice,])
   useInterval(func, 30000, false);
   return tokenData
 }
@@ -577,7 +586,6 @@ export const USER_TRANSACTIONS = gql`
       from
       sender
     }
-   
   }
 `
 
@@ -619,6 +627,94 @@ export const useUserSells = (account?: string | null) =>
   return {data,loading,error}
 }
 
+export const useTotalReflections = (account?:string | null, tokenAddress?: string | null) => {
+  const {chainId} = useWeb3React()
+  const [totalBought, setTotalBought] = React.useState<number | undefined>()
+  const [totalSold, setTotalSold] = React.useState<number | undefined>()
+  const [totalGained, setTotalGained] = React.useState<number | undefined>()
+  const userTransactions = useUserTransactions(account)
+  const tokenData = useTokenData(tokenAddress as string)
+  const token = React.useMemo(() => !tokenData || !tokenAddress ? null : new Token(1, tokenAddress as string, 9, tokenData.symbol, tokenData.name),[tokenData, tokenAddress])
+  const balance = useTokenBalance(account as string, token as Token)
+  console.log(balance, token, tokenData)
+  React.useEffect(() => {
+    if (chainId && userTransactions && tokenAddress &&
+        userTransactions.data && balance) {
+        const userTxs = userTransactions.data?.swaps?.filter((swap:any) => {
+          return [tokenAddress?.toLowerCase(), WETH9[1].address].includes(swap?.pair?.token0?.id) && [tokenAddress?.toLowerCase(), WETH9[1].address?.toLowerCase()].includes(swap?.pair?.token1?.id?.toLowerCase())
+        })
+        const userBuys = userTxs.filter((swap:any) => swap?.pair?.token0?.id?.toLowerCase() == tokenAddress?.toLowerCase())
+        const userSells = userTxs.filter((swap:any) => swap?.pair?.token0?.id?.toLowerCase() == WETH9[1].address?.toLowerCase())
+
+        const sumSold = _.sumBy(userSells, (swap:any) => parseFloat(swap.amount0Out))
+        setTotalSold(sumSold);
+        const sumBought = _.sumBy(userBuys, (swap:any) => parseFloat(swap.amount0In))
+        setTotalBought(sumBought);
+        console.log(sumSold, sumBought, balance)
+        const currentBalance = +balance?.toFixed(0);
+        const totalGained = currentBalance + (sumSold - sumBought); 
+        const tG = +(balance).toFixed(0) - (sumBought) - (sumSold);
+        setTotalGained(tG)
+    }
+  }, [
+    userTransactions.data,
+    chainId, 
+    balance, 
+    tokenAddress
+  ])
+
+  return React.useMemo(() => ({
+    loading: userTransactions.loading, 
+    error: userTransactions.error , 
+    totalGained, 
+    totalSold, 
+    totalBought, 
+    balance
+  }), [
+    userTransactions.error, 
+    userTransactions.loading, 
+    userTransactions.data,
+    tokenAddress,
+    totalGained, 
+    balance, 
+    totalSold, 
+    totalBought
+  ])
+}
+
+
+export const useTotalKibaGains = (account?:string | null) => {
+  const {chainId} = useWeb3React()
+  const [totalBought, setTotalBought] = React.useState<number | undefined>()
+  const [totalSold, setTotalSold] = React.useState<number | undefined>()
+  const [totalGained, setTotalGained] = React.useState<number | undefined>()
+  const userTransactions = useUserTransactions(account)
+  const kibaBalance = useKiba(account)
+
+  React.useEffect(() => {
+    if (chainId && userTransactions && 
+        userTransactions.data && kibaBalance && +kibaBalance.toFixed(0) > 0) {
+        const userTxs = userTransactions.data?.swaps?.filter((swap:any) => {
+          return ['KIBA', 'WETH'].includes(swap?.pair?.token0?.symbol) && ['KIBA', 'WETH'].includes(swap?.pair?.token1?.symbol)
+        })
+        const userBuys = userTxs.filter((swap:any) => swap?.pair?.token0?.symbol == 'KIBA')
+        const userSells = userTxs.filter((swap:any) => swap?.pair?.token0?.symbol == 'WETH')
+
+        const sumSold = _.sumBy(userSells, (swap:any) => parseFloat(swap.amount0Out))
+        setTotalSold(sumSold);
+        const sumBought = _.sumBy(userBuys, (swap:any) => parseFloat(swap.amount0In))
+        setTotalBought(sumBought);
+        console.log(sumSold, sumBought)
+        const currentBalance = +kibaBalance?.toFixed(0);
+        const totalGained = currentBalance + (sumSold - sumBought); 
+        const tG = +(kibaBalance).toFixed(0) - (sumBought) - (sumSold);
+        setTotalGained(tG)
+    }
+  }, [userTransactions.data, chainId, kibaBalance])
+
+  return React.useMemo(() => ({totalGained, totalSold, totalBought}), [totalGained, totalSold, totalBought])
+}
+
 export const useUserTransactions = (account?: string | null) => {
   const {chainId} = useWeb3React()
   const sells = useUserSells(account)
@@ -641,6 +737,8 @@ export const useUserTransactions = (account?: string | null) => {
     }
     return data;
   }, [sells, data])
+
+  console.log(query)
 
   return { data: mergedData,loading: sells.loading || loading,error}
 }

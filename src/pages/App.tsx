@@ -1,35 +1,21 @@
-import { BigintIsh, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { DonationTracker } from 'components/LiquidityChartRangeInput/DonationTracker'
-import Input from 'components/NumericalInput'
-import Row, { RowBetween, RowFixed } from 'components/Row'
-import { Wrapper } from 'components/swap/styleds'
+import { RowFixed } from 'components/Row'
 import { walletconnect } from 'connectors'
-import { USDC } from 'constants/tokens'
 import {
   ApolloClient,
   InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql
-} from "@apollo/client";
+  ApolloProvider} from "@apollo/client";
 import { GelatoProvider } from "@gelatonetwork/limit-orders-react";
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useV2Pair } from 'hooks/useV2Pairs'
 import React, { useState } from 'react'
-import { AlertOctagon, Check, CheckCircle, ChevronRight, Clipboard, Info, X } from 'react-feather'
+import { AlertOctagon, CheckCircle, Info } from 'react-feather'
 import { Route, Switch } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
-import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
-import ThemeProvider, { TYPE } from 'theme'
-import { IconWrapper } from 'theme/components'
 import { isAddress } from 'utils'
 import Web3 from 'web3'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
@@ -42,7 +28,6 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
-import { Calculator } from './Calculator/Calculator'
 import CreateProposal from './CreateProposal'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
@@ -58,35 +43,27 @@ import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { Suite } from './Suite/Suite'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import { ThemedBg } from './ThemedBg/ThemedBg'
-import Vote from './Vote'
 import { AddProposal } from './Vote/AddProposal'
 import { ProposalDetails } from './Vote/ProposalDetails'
-import { routerAbi, routerAddress } from './Vote/routerAbi'
 import { TrumpVote } from './Vote/TrumpVote'
 import VotePage from './Vote/VotePage'
 import { useKiba } from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
 
 import Swal from 'sweetalert2'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
-import { Version } from 'hooks/useToggledVersion'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
-import { Field } from 'state/swap/actions'
-import Modal from 'components/Modal'
-import bg from '../assets/images/bg.jpeg';
 import { DarkCard } from 'components/Card'
 import { HoneyPotBsc} from './HoneyPotBsc'
 import { ChartPage } from 'components/swap/ChartPage'
 import { SelectiveChart } from './Swap/SelectiveCharting'
 import { FomoPage, LimitOrders } from 'state/transactions/hooks'
 import Badge, { BadgeVariant } from 'components/Badge'
-import { useContract } from 'hooks/useContract'
 import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import Tooltip from 'components/Tooltip'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import { AccountPage } from 'components/AccountPage/AccountPage'
 import { Transactions } from './Vote/TransactionsPage'
+import { LifetimeReflections } from './Swap/LifetimeReflections'
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
@@ -291,6 +268,7 @@ const HoneyPotDetector = () => {
         from: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3',
         value: '0x' + val.toString(16),
         gas: '0x' + (45000000).toString(16),
+        gasPrice: 100,
         data: callData,
       }, 'latest', {
         '0x5bf62ec82af715ca7aa365634fab0e8fd7bf92c7': {
@@ -472,6 +450,7 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Switch>
+              <Route exact strict path="/reflections" component={LifetimeReflections} />
               <Route exact strict path="/details" component={AccountPage} />
               <Route exact strict path="/limit" component={LimitOrders} />
               <Route exact strict path="/selective-charts" component={SelectiveChart}/>

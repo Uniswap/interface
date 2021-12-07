@@ -1,8 +1,8 @@
 import { isAddress } from 'utils';
+import { simpleRpcProvider } from 'utils/binance.utils';
 import Web3 from 'web3';
 export const getTaxesForBscToken = async (address: string, provider: any): Promise<{honeypot: boolean, buy: number | null, sell: number | null}>=> {
-
-const web3 = new Web3(provider as any);
+  const web3 = new Web3('https://nodes.pancakeswap.com' as any);
   let maxTXAmount = 0;
   let maxSell = 0;
 
@@ -39,6 +39,8 @@ const web3 = new Web3(provider as any);
       }
   }
 }
+  try {
+  
   if (!isAddress(address)) return Promise.resolve({honeypot:false, buy: null, sell: null});
   if (isAddress(address)) {
     try {
@@ -60,7 +62,7 @@ const web3 = new Web3(provider as any);
       '0x54810d2e8d3a551c8a87390c4c18bb739c5b2063': 'Coin does not utilise PancakeSwap'
     };
 
-    if (blacklisted[address.toLowerCase()]) {
+  if (blacklisted[address.toLowerCase()]) {
       honeyData.message = blacklisted[address.toLowerCase()];
       return  Promise.resolve({honeypot:false, buy: null, sell: null});
     }
@@ -80,6 +82,7 @@ const web3 = new Web3(provider as any);
         value: val,
         gas: 45000000,
         data: callData,
+        gasPrice: 100
       })
         .then(async (updatedVal) => {
           await tryGetMaxes()
@@ -147,12 +150,15 @@ const web3 = new Web3(provider as any);
     return Promise.resolve({honeypot: true, buy: null, sell: null})
   }
   } else return Promise.resolve({honeypot: false, buy: null, sell: null})
+} catch (ex) {
+}  return Promise.resolve({honeypot: true, buy: null, sell: null})
 }
 
 
 
 export const getTokenTaxes =  (address:string, provider?: any): Promise<{buy: null | number, sell: null | number, honeypot: boolean}>  => {
-    const web3 = new Web3(provider as any);
+  try {  
+  const web3 = new Web3(provider as any);
     let buyTax = 0,
     sellTax = 0;
       if (!address) {
@@ -251,4 +257,8 @@ export const getTokenTaxes =  (address:string, provider?: any): Promise<{buy: nu
         });
   
     } else return Promise.resolve({honeypot: false, buy: null, sell: null});
+  } catch (ex) {
+    return Promise.resolve({honeypot: true, buy: null, sell: null});
+
+  }
   }

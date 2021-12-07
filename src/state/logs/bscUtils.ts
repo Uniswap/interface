@@ -1,7 +1,7 @@
 import { rawRequest, request } from 'graphql-request'
 import gql from 'graphql-tag'
 import moment from 'moment'
-import React, { useCallback } from 'react'
+import React, { useCallback, useDebugValue } from 'react'
 import { subDays, subWeeks, startOfMinute } from 'date-fns'
 import { bscClient, BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, get2DayPercentChange, getPercentChange, TOKEN_DATA } from './utils'
 import { isEqual } from 'lodash'
@@ -10,6 +10,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useQuery } from '@apollo/client'
 import { useBlockNumber } from 'state/application/hooks'
 import { useActiveWeb3React } from 'hooks/web3'
+import axios from 'axios'
 export const INFO_CLIENT = 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2'
 export const BITQUERY_CLIENT = 'https://graphql.bitquery.io';
 
@@ -362,18 +363,21 @@ export const useBlocksFromTimestamps = (
  */
 export const useBnbPrices = (): BnbPrices | undefined => {
   const [prices, setPrices] = React.useState<BnbPrices | undefined>()
-  const fetch = React.useCallback(async () => {
-    const res = await window.fetch('https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', { method: "GET" })
-    const data = await res.json()
+  const fetchData = React.useCallback(async () => {
+    try {
+    const res = await axios.get('https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
+    const data =  res.data;
     setPrices({
       current: +data.data.price,
       oneDay: 0,
       twoDay: 0,
       week: 0
     });
+  } catch (er) {
+    console.error(er);
+  }
   }, [prices])
-
-  useInterval(fetch, 60000, true)
+  useInterval(fetchData, 60000, true)
   return prices
 }
 export const mapMints = (mint: any) => {
@@ -440,8 +444,6 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
 
   if (chainId && chainId !== 56) {
     queryOne.stopPolling();
-    queryTwo.stopPolling();
-    queryThree.stopPolling();
     setIsPolling(false)
   } else if (chainId &&
     chainId === 56 &&
@@ -451,8 +453,6 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
     queryThree.data) {
     setIsPolling(true)
     queryOne.startPolling(15000)
-    queryTwo.startPolling(15000);
-    queryThree.startPolling(15000)
   }
 
   const data = one?.tokens[0];
