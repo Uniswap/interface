@@ -190,7 +190,16 @@ export const switchOrAddNetwork = (networkDetails?: NetworkDetails, account?: st
       window.ethereum
         .request({
           method: 'wallet_addEthereumChain',
-          params: [{ ...networkDetails }, account]
+          params: [
+            {
+              chainId: networkDetails.chainId,
+              chainName: networkDetails.chainName,
+              nativeCurrency: networkDetails.nativeCurrency,
+              rpcUrls: networkDetails.rpcUrls,
+              blockExplorerUrls: networkDetails.blockExplorerUrls
+            },
+            account
+          ]
         })
         .catch(error => {
           console.error('error adding chain with id', networkDetails.chainId, error)
