@@ -3,6 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
+import { ethers } from 'ethers'
 import Numeral from 'numeral'
 import dayjs from 'dayjs'
 
@@ -37,7 +38,7 @@ import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
 import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 import { getFantomTokenLogoURL } from './fantomTokenMapping'
-import { ethers } from 'ethers'
+import { getCronosTokenLogoURL } from './cronosTokenMapping'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -466,6 +467,9 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
       break
     case ChainId.FANTOM:
       imageURL = getFantomTokenLogoURL(address)
+      break
+    case ChainId.CRONOS:
+      imageURL = getCronosTokenLogoURL(address)
       break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(

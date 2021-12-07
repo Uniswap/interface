@@ -11,6 +11,8 @@ import {
   Clock,
   Avalanche,
   Fantom,
+  Cronos,
+  CronosLogoFull,
   BestPrice,
   LowestSlippage,
   FarmIcon,
@@ -286,6 +288,7 @@ function About() {
             <Binance />
             <Avalanche />
             <Fantom />
+            <Cronos />
           </SupportedChain>
 
           <Flex
@@ -464,7 +467,7 @@ function About() {
                   <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
                     <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
                       <Text fontWeight="600" fontSize="24px">
-                        5
+                        6
                       </Text>
                       <Text color={theme.subText} marginTop="4px" fontSize="14px">
                         <Trans>Chains</Trans>
@@ -780,6 +783,12 @@ function About() {
                 </Flex>
                 <Flex flex={1} alignItems="center">
                   <FantomLogoFull color={isDarkMode ? '#fff' : '#1969FF'} />
+                </Flex>
+              </Flex>
+
+              <Flex flex={0.5} justifyContent="center" alignItems="center" sx={{ gap: '52px' }}>
+                <Flex flex={1} alignItems="center">
+                  <CronosLogoFull color={isDarkMode ? undefined : '#142564'} />
                 </Flex>
               </Flex>
             </Powered>

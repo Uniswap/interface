@@ -86,7 +86,8 @@ export function useGlobalData() {
           ChainId.MATIC,
           ChainId.BSCMAINNET,
           ChainId.AVAXMAINNET,
-          ChainId.FANTOM
+          ChainId.FANTOM,
+          ChainId.CRONOS
         ])
       } else if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
         result = await getResultByChainIds([
@@ -94,7 +95,8 @@ export function useGlobalData() {
           ChainId.MUMBAI,
           ChainId.BSCTESTNET,
           ChainId.AVAXTESTNET,
-          ChainId.FANTOM
+          ChainId.FANTOM,
+          ChainId.CRONOSTESTNET
         ])
       } else {
         result = await apolloClient.query({

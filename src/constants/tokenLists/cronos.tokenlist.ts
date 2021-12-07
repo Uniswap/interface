@@ -30,6 +30,41 @@ export const CRONOS_TOKEN_LIST = {
       symbol: 'WCRO',
       name: 'Wrapped CRO',
       decimals: 18
+    },
+    {
+      chainId: 25,
+      address: '0xe6801928061CDbE32AC5AD0634427E140EFd05F9',
+      symbol: 'BIFI',
+      name: 'Beefy.finance',
+      decimals: 18
+    },
+    {
+      chainId: 25,
+      address: '0xe44Fd7fCb2b1581822D0c862B68222998a0c299a',
+      symbol: 'ETH',
+      name: 'Ether',
+      decimals: 18
+    },
+    {
+      chainId: 25,
+      address: '0xbED48612BC69fA1CaB67052b42a95FB30C1bcFee',
+      symbol: 'SHIB',
+      name: 'Shiba Inu',
+      decimals: 18
+    },
+    {
+      chainId: 25,
+      address: '0x2D03bECE6747ADC00E1a131BBA1469C15fD11e03',
+      symbol: 'VVS',
+      name: 'VVS Token',
+      decimals: 18
+    },
+    {
+      chainId: 25,
+      address: '0x062E66477Faf219F25D27dCED647BF57C3107d52',
+      symbol: 'WBTC',
+      name: 'Wrapped BTC',
+      decimals: 8
     }
   ],
   version: {
