@@ -66,7 +66,9 @@ export function ApprovalButton({ color, message, action, onClick }: ApprovalButt
           <AlertIcon />
           <ThemedText.Subhead2>{message}</ThemedText.Subhead2>
         </Row>
-        <StyledApprovalButton onClick={onClick}>{action}</StyledApprovalButton>
+        <StyledApprovalButton color={color} onClick={onClick}>
+          <ThemedText.ButtonMedium color="onInteractive">{action}</ThemedText.ButtonMedium>
+        </StyledApprovalButton>
       </ApprovalRow>
     </Overlay>
   )
