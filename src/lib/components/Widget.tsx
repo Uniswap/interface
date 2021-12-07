@@ -8,7 +8,7 @@ import { ReactNode, useEffect, useState } from 'react'
 
 import { Provider as DialogProvider } from './Dialog'
 
-const WidgetWrapper = styled.div`
+const WidgetWrapper = styled.div<{ width?: number | string }>`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   display: flex;
@@ -16,6 +16,7 @@ const WidgetWrapper = styled.div`
   font-size: 16px;
   min-height: 340px; // 21.25em
   min-width: 272px; // 17em
+  width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
   padding: 0.25em;
   position: relative;
 
@@ -27,13 +28,14 @@ const WidgetWrapper = styled.div`
 
 export interface WidgetProps {
   children: ReactNode
-  theme?: Partial<Theme>
+  theme?: Theme
   locale?: SupportedLocale
   provider?: EthProvider
+  width?: string | number
   className?: string
 }
 
-export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provider, className }: WidgetProps) {
+export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provider, width, className }: WidgetProps) {
   const [, setProvider] = useAtom(providerAtom)
   useEffect(() => {
     setProvider(provider)
@@ -43,7 +45,7 @@ export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provi
     <AtomProvider>
       <ThemeProvider theme={theme}>
         <I18nProvider locale={locale}>
-          <WidgetWrapper className={className} /* required for styled-components */>
+          <WidgetWrapper width={width} className={className}>
             <div ref={setDialog} />
             <DialogProvider value={dialog}>{children}</DialogProvider>
           </WidgetWrapper>

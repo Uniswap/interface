@@ -2,7 +2,7 @@ import { Provider } from '@ethersproject/abstract-provider'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import styled, { defaultTheme } from 'lib/theme'
+import styled, { darkTheme, defaultTheme } from 'lib/theme'
 import { ReactNode } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
 import { createGlobalStyle } from 'styled-components'
@@ -17,27 +17,27 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-const StyledWidget = styled(Widget)<{ height: number; width: number }>`
-  height: ${({ height }) => height}px;
-  margin: 14px;
-  width: ${({ width }) => width}px;
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `
 
 export const providerAtom = atom<Provider | undefined>(undefined)
 
 export default function WidgetDecorator({ children }: { children: ReactNode }) {
-  const [height] = useValue('height', { defaultValue: 340 })
   const [width] = useValue('width', { defaultValue: 272 })
-  const [theme] = useValue('theme', { defaultValue: defaultTheme })
+  const [theme] = useValue('theme', { defaultValue: { ...defaultTheme, ...darkTheme } })
   const [locale] = useSelect('locale', { defaultValue: DEFAULT_LOCALE, options: ['pseudo', ...SUPPORTED_LOCALES] })
   const provider = useAtomValue(providerAtom)
   return (
     <>
       <GlobalStyle />
       <Connectors />
-      <StyledWidget height={height} width={width} theme={theme} locale={locale} provider={provider}>
-        {children}
-      </StyledWidget>
+      <Wrapper>
+        <Widget width={width} theme={theme} locale={locale} provider={provider}>
+          {children}
+        </Widget>
+      </Wrapper>
     </>
   )
 }

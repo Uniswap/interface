@@ -1,4 +1,3 @@
-import merge from 'lodash/merge'
 import { mix } from 'polished'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 
@@ -68,18 +67,12 @@ export const darkTheme: Colors = {
 }
 
 export const defaultTheme = {
-  darkMode: true,
   fontFamily: '"Inter var", sans-serif',
   borderRadius: true,
-  ...darkTheme,
-  light: lightTheme,
-  dark: darkTheme,
+  ...lightTheme,
 }
 
-const ThemeContext = createContext<ComputedTheme>({
-  ...defaultTheme,
-  borderRadius: defaultTheme.borderRadius ? 1 : 0,
-})
+const ThemeContext = createContext<ComputedTheme>(toComputedTheme(defaultTheme))
 
 interface ThemeProviderProps {
   theme?: Theme
@@ -89,14 +82,21 @@ interface ThemeProviderProps {
 export function ThemeProvider({ theme, children }: ThemeProviderProps) {
   const contextTheme = useContext(ThemeContext)
   const value = useMemo(() => {
-    const value = merge({}, contextTheme, theme)
-    const borderRadius = value.borderRadius ? 1 : 0
-    const colors: Partial<Colors> | undefined = value.darkMode ? value.dark : value.light
-    return merge({}, value, colors, { borderRadius })
+    return toComputedTheme({
+      ...contextTheme,
+      ...theme,
+    } as Required<Theme>)
   }, [contextTheme, theme])
   return (
     <ThemeContext.Provider value={value}>
       <ThemedProvider theme={value}>{children}</ThemedProvider>
     </ThemeContext.Provider>
   )
+}
+
+function toComputedTheme(theme: Required<Theme>): ComputedTheme {
+  return {
+    ...theme,
+    borderRadius: theme.borderRadius ? 1 : 0,
+  }
 }

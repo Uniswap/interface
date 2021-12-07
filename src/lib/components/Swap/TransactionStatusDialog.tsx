@@ -66,7 +66,7 @@ function toElapsedTime(ms: number) {
   if (min) {
     return (
       <Trans>
-        {min}m{sec}s
+        {min}m {sec}s
       </Trans>
     )
   } else {

@@ -34,13 +34,12 @@ const dark: DynamicColors = {
 }
 
 export function getDynamicTheme(theme: Theme, color: string): Theme {
-  const darkMode = JSON.parse(readableColor(color, 'false', 'true', false))
+  const colors = { light, dark }[readableColor(color, 'light', 'dark', false)]
   return {
     ...theme,
-    darkMode,
     module: color,
     onHover: opacify(0.25), // hovered elements increase opacity by 25%
-    ...(darkMode ? dark : light),
+    ...colors,
   }
 }
 

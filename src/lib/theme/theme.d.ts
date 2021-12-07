@@ -27,16 +27,12 @@ export interface Colors {
 export type Color = keyof Omit<Colors, 'onHover'>
 
 export interface Attributes {
-  darkMode: boolean
   fontFamily: string
-  borderRadius: boolean | 1 | 0
+  borderRadius: boolean | 0 | 1
 }
 
-export interface Theme extends Record<string, unknown>, Partial<Attributes>, Partial<Colors> {
-  light?: Partial<Colors>
-  dark?: Partial<Colors>
-}
+export interface Theme extends Record<string, unknown>, Partial<Attributes>, Partial<Colors> {}
 
-export interface ComputedTheme extends Attributes, Colors, Theme {
+export interface ComputedTheme extends Record<string, unknown>, Omit<Attributes, 'borderRadius'>, Colors {
   borderRadius: 0 | 1
 }
