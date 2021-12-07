@@ -10,7 +10,6 @@ import Dialog, { Header } from '../../Dialog'
 import { BoundaryProvider } from '../../Popover'
 import { settingsAtom } from '../state'
 import MaxSlippageSelect from './MaxSlippageSelect'
-import MockToggle from './MockToggle'
 import TransactionTtlInput from './TransactionTtlInput'
 
 const SettingsIcon = icon(SettingsSvg)
@@ -31,7 +30,6 @@ export function SettingsDialog() {
         <BoundaryProvider value={boundary}>
           <MaxSlippageSelect />
           <TransactionTtlInput />
-          <MockToggle />
         </BoundaryProvider>
       </Column>
     </>
