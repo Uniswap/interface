@@ -1,3 +1,4 @@
+import { TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { Signer } from 'ethers'
 import { testSaga } from 'redux-saga-test-plan'
@@ -6,11 +7,14 @@ import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { ApproveParams, maybeApprove } from 'src/features/approve/approveSaga'
 import { approveAndSwap, SwapParams } from 'src/features/swap/swapSaga'
+import { addTransaction } from 'src/features/transactions/sagaHelpers'
+import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, provider, providerManager, signerManager, tokenContract } from 'src/test/fixtures'
 
 const mockTransactionResponse = {
   wait: jest.fn(),
 }
+const mockTransactionReceipt = {}
 
 const approveParams: ApproveParams = {
   account,
@@ -24,8 +28,22 @@ const methodParameters: MethodParameters = {
   value: '0x00',
   calldata: '0x01',
 }
+const transactionInfo: ExactInputSwapTransactionInfo = {
+  type: TransactionType.SWAP,
+  tradeType: TradeType.EXACT_INPUT,
+  inputCurrencyId: 'ETH',
+  outputCurrencyId: '0xabc',
+  inputCurrencyAmountRaw: '10000',
+  expectedOutputCurrencyAmountRaw: '200000',
+  minimumOutputCurrencyAmountRaw: '300000',
+}
 
-const swapParams: SwapParams = { ...approveParams, chainId: ChainId.RINKEBY, methodParameters }
+const swapParams: SwapParams = {
+  ...approveParams,
+  chainId: ChainId.RINKEBY,
+  methodParameters,
+  transactionInfo,
+}
 const transaction = {
   from: account.address,
   to: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
@@ -80,8 +98,10 @@ describe(approveAndSwap, () => {
       .next('0x123')
       .call([provider, provider.sendTransaction], '0x123')
       .next(mockTransactionResponse)
+      .call(addTransaction, mockTransactionResponse, transactionInfo)
+      .next(mockTransactionResponse)
       .call(mockTransactionResponse.wait)
-      .next({ transactionHash: '0x123456' })
+      .next(mockTransactionReceipt)
       .next()
       .isDone()
   })
@@ -106,8 +126,11 @@ describe(approveAndSwap, () => {
       .next('0x123')
       .call([provider, provider.sendTransaction], '0x123')
       .next(mockTransactionResponse)
+      .call(addTransaction, mockTransactionResponse, transactionInfo)
+      .next(mockTransactionResponse)
       .call(mockTransactionResponse.wait)
-      .next({ transactionHash: '0x123456' })
+      .next(mockTransactionReceipt)
+      .next()
       .isDone()
   })
 })

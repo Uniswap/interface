@@ -1,10 +1,11 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useAppNavigation } from 'src/app/navigation/types'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
+import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
 import { CurrencyField, swapFormActions, SwapFormState } from 'src/features/swap/swapFormSlice'
@@ -12,11 +13,19 @@ import { swapActions } from 'src/features/swap/swapSaga'
 import { Trade } from 'src/features/swap/types'
 import { useTrade } from 'src/features/swap/useTrade'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import {
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
+  TransactionType,
+} from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
 import { tryParseAmount } from 'src/utils/tryParseAmount'
+
+const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 
 /** Returns information dereived from the current swap state */
 export function useDerivedSwapInfo(state: SwapFormState) {
@@ -165,6 +174,7 @@ export function useSwapCallback(
             methodParameters,
             contract: tokenContract,
             spender: SWAP_ROUTER_ADDRESSES[chainId],
+            transactionInfo: tradeToTransactionInfo(trade),
           })
         )
         navigation.navigate(Screens.Home)
@@ -179,6 +189,35 @@ export function useSwapCallback(
     tokenContract,
     swapState,
     appDispatch,
+    trade,
     navigation,
   ])
+}
+
+function tradeToTransactionInfo(
+  trade: Trade
+): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
+  return trade.tradeType === TradeType.EXACT_INPUT
+    ? {
+        type: TransactionType.SWAP,
+        inputCurrencyId: currencyId(trade.inputAmount.currency),
+        outputCurrencyId: currencyId(trade.outputAmount.currency),
+        tradeType: TradeType.EXACT_INPUT,
+        inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+        expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+        minimumOutputCurrencyAmountRaw: trade
+          .minimumAmountOut(DEFAULT_SLIPPAGE_TOLERANCE_PERCENT)
+          .quotient.toString(),
+      }
+    : {
+        type: TransactionType.SWAP,
+        inputCurrencyId: currencyId(trade.inputAmount.currency),
+        outputCurrencyId: currencyId(trade.outputAmount.currency),
+        tradeType: TradeType.EXACT_OUTPUT,
+        outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+        expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+        maximumInputCurrencyAmountRaw: trade
+          .maximumAmountIn(DEFAULT_SLIPPAGE_TOLERANCE_PERCENT)
+          .quotient.toString(),
+      }
 }

@@ -25,7 +25,7 @@ export function usePendingTransactions() {
   const now = Date.now()
 
   const pendingTransactions = allTransactions.filter((transaction: TransactionDetails) =>
-    Boolean(transaction.receipt)
+    Boolean(!transaction.receipt)
   )
   const [recentlyFailedTransactions, recentlySuccessfulTransactions] = allTransactions.reduce<
     [TransactionDetails[], TransactionDetails[]]

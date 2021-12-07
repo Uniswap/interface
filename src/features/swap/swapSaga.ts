@@ -2,6 +2,11 @@ import { MethodParameters } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
 import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
 import { ApproveParams, maybeApprove } from 'src/features/approve/approveSaga'
+import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
+import {
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
+} from 'src/features/transactions/types'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
 import { isZero } from 'src/utils/number'
@@ -10,6 +15,7 @@ import { call } from 'typed-redux-saga'
 
 export interface SwapParams extends ApproveParams {
   methodParameters: MethodParameters
+  transactionInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
 }
 
 export function* approveAndSwap(params: SwapParams) {
@@ -18,6 +24,7 @@ export function* approveAndSwap(params: SwapParams) {
     chainId,
     methodParameters: { calldata, value },
     spender: swapRouter,
+    transactionInfo,
   } = params
 
   try {
@@ -45,15 +52,11 @@ export function* approveAndSwap(params: SwapParams) {
     const signedTx = yield* call([connectedSigner, connectedSigner.signTransaction], tx)
     const transactionResponse = yield* call([provider, provider.sendTransaction], signedTx)
 
-    logger.debug(
-      'swapSaga',
-      'approveAndSwap',
-      'Transaction response hash:',
-      transactionResponse.hash
-    )
+    yield* call(addTransaction, transactionResponse, transactionInfo)
 
-    const receipt = yield* call(transactionResponse.wait)
-    logger.debug('swapSaga', '', 'Receipt:', receipt.transactionHash)
+    const transactionReceipt = yield* call(transactionResponse.wait)
+
+    yield* call(finalizeTransaction, transactionResponse, transactionReceipt)
   } catch (e) {
     logger.error('swapSaga', 'approveAndSwap', 'Failed:', e)
     return false

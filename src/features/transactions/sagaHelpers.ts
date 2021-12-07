@@ -8,10 +8,36 @@ export function* addTransaction(response: providers.TransactionResponse, info: T
   yield* put(transactionActions.addTransaction({ chainId, hash, from, info }))
 }
 
+const serializeTransactionReceipt = ({
+  blockHash,
+  blockNumber,
+  contractAddress,
+  from,
+  status,
+  to,
+  transactionHash,
+  transactionIndex,
+}: providers.TransactionReceipt) => ({
+  blockHash,
+  blockNumber,
+  contractAddress,
+  from,
+  status,
+  to,
+  transactionHash,
+  transactionIndex,
+})
+
 export function* finalizeTransaction(
   response: providers.TransactionResponse,
   receipt: providers.TransactionReceipt
 ) {
   const { chainId, hash } = response
-  yield* put(transactionActions.finalizeTransaction({ chainId, hash, receipt }))
+  yield* put(
+    transactionActions.finalizeTransaction({
+      chainId,
+      hash,
+      receipt: serializeTransactionReceipt(receipt),
+    })
+  )
 }
