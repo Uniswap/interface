@@ -36,6 +36,8 @@ export const lightTheme: Colors = {
   warning: '#F3B71E',
   error: '#FD4040',
 
+  currentColor: 'currentColor',
+
   onHover: mix(0.24, '#000000'), // hovered elements get a 24% primary text overlay
 }
 
@@ -59,6 +61,8 @@ export const darkTheme: Colors = {
   success: '#27AE60',
   warning: '#F3B71E',
   error: '#FD4040',
+
+  currentColor: 'currentColor',
 
   onHover: mix(0.24, '#FFFFFF'), // hovered elements get a 24% primary text overlay
 }

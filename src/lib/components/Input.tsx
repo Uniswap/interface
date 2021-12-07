@@ -1,4 +1,4 @@
-import styled from 'lib/theme'
+import styled, { css } from 'lib/theme'
 import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
 
 const Input = styled.input`
@@ -146,3 +146,19 @@ const decimalEnforcer = (nextUserInput: string) => {
 export const DecimalInput = forwardRef(function DecimalInput(props: NumericInputProps, ref) {
   return <NumericInput pattern="^[0-9]*[.,]?[0-9]*$" enforcer={decimalEnforcer} ref={ref as any} {...props} />
 })
+
+export const inputCss = css`
+  background-color: ${({ theme }) => theme.container};
+  border: 1px solid ${({ theme }) => theme.container};
+  border-radius: ${({ theme }) => theme.borderRadius}em;
+  cursor: text;
+  padding: 0.75em;
+
+  :hover {
+    border-color: ${({ theme }) => theme.outline};
+  }
+
+  :focus-within {
+    border-color: ${({ theme }) => theme.accent};
+  }
+`

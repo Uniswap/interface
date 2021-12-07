@@ -6,7 +6,7 @@ import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
-import { StringInput } from '../Input'
+import { inputCss, StringInput } from '../Input'
 import Row from '../Row'
 import Rule from '../Rule'
 import TokenBase from './TokenBase'
@@ -17,15 +17,7 @@ import TokenOptions from './TokenOptions'
 const mockTokens = [DAI, ETH, UNI, USDC]
 
 const SearchInput = styled(StringInput)`
-  background-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => (theme.borderRadius ? theme.borderRadius + 0.25 : 0)}em;
-  height: unset;
-  padding: 0.75em;
-
-  :focus {
-    border: 1px solid ${({ theme }) => theme.active};
-    padding: calc(0.75em - 1px);
-  }
+  ${inputCss}
 `
 
 export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {

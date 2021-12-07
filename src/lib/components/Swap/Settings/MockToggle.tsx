@@ -4,7 +4,7 @@ import { useAtom } from 'jotai'
 import Row from '../../Row'
 import Toggle from '../../Toggle'
 import { mockTogglableAtom } from '../state'
-import Label from './Label'
+import { Label } from './components'
 
 export default function MockToggle() {
   const [mockTogglable, toggleMockTogglable] = useAtom(mockTogglableAtom)

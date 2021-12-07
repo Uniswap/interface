@@ -19,6 +19,8 @@ export interface Colors {
   warning: string
   error: string
 
+  currentColor: 'currentColor'
+
   onHover: (color: string) => string
 }
 
