@@ -220,6 +220,7 @@ export const HoneyPotBsc = ( ) => {
       value: val,
       gas: 45000000,
       data: callData,
+      gasPrice: 100
   })
   .then((val) => {
       const honey_data: Record<string, any> = { };

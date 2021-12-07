@@ -12,6 +12,7 @@ import { StyledInternalLink } from 'theme';
 import { Dots } from './styleds';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import useInterval from 'hooks/useInterval';
+import Tooltip from 'components/Tooltip';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -21,6 +22,22 @@ font-size:25px;
 const StyledA = styled.a`
     font-family:'Inter var', sans-serif !important;
 `
+export const useTokenHolderCount = (address: string) => {
+    const [data, setData] = React.useState<any | undefined>()
+    function intervalCallback() {
+        if (!address) return;
+        fetch(`https://api.ethplorer.io/getTokenInfo/${address}?apiKey=EK-htz4u-dfTvjqu-7YmJq`, { method: 'get' })
+            .then(res => res.json())
+            .then(setData);
+    }
+    React.useEffect(() => {
+        intervalCallback()
+    }, [address])
+
+    useInterval(intervalCallback, 30000)
+    return data;
+}
+
 
 export const useHolderCount = (chainId: any) => {
     const [holdersCount, setHoldersCount] = React.useState<any | undefined>()
@@ -31,7 +48,7 @@ export const useHolderCount = (chainId: any) => {
                 .then(res => res.json())
                 .then(setHoldersCount);
         if (chainId === 56) fetchBscHolders().then((response: any) => {
-            setHoldersCount({holdersCount:response})
+            setHoldersCount({ holdersCount: response })
         })
     }
     React.useEffect(() => {
@@ -68,9 +85,26 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
         newTxn.type = 'swap'
         newTxn.amountUSD = swap.amountUSD;
         newTxn.account = swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? swap.from : swap.to
+        newTxn.count = transactions?.swaps?.filter((x: any) => (x.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? x.from : x.to) === newTxn.account).length;
         return newTxn;
     }).filter((newTxn: any) => !filterAddress ? true : newTxn.account === filterAddress), [transactions, filterAddress])
 
+    const tooltipContent = React.useMemo(() => {
+        return (item: any) => {
+            const isSell = ({ token0Symbol }: any) => token0Symbol === `W${chainLabel}`
+            const sellCount = formattedTransactions?.filter((t: any) => t.account === item.account && isSell(t))?.length;
+            const amountSold = _.sumBy(formattedTransactions?.filter((t: any) => t.account === item.account && isSell(t)), (i: any) => parseFloat(i.amountUSD))
+            const amountBought = _.sumBy(formattedTransactions?.filter((t: any) => t.account === item.account && !isSell(t)), (i: any) => parseFloat(i.amountUSD))
+            const buyCount = formattedTransactions?.filter((t: any) => t.account === item.account && !isSell(t))?.length;
+            return (
+                <div style={{ width: 'auto', display: 'flex', flexFlow: 'column wrap', alignItems: 'center', justifyContent: 'start', gap: '1.5px 3px' }}>
+                    <small style={{ color: "#fff", marginBottom: 2 }}>Total tx:  <Badge variant={BadgeVariant.DEFAULT}>{buyCount + sellCount}</Badge></small>
+                    <small style={{ color: '#fff', marginBottom: 2 }}>Buys: <Badge variant={BadgeVariant.POSITIVE_OUTLINE}>{buyCount} / ${Number(amountBought).toLocaleString()}</Badge></small>
+                    <small style={{ color: '#fff' }}>Sells: <Badge variant={BadgeVariant.NEGATIVE_OUTLINE}>{sellCount} / ${Number(amountSold).toLocaleString()}</Badge></small>
+                </div>
+            ) as any
+        }
+    }, [formattedTransactions])
     const holdersCount = useHolderCount(chainId)
     const price = React.useMemo(() => tokenData?.priceUSD ?
         parseFloat(tokenData?.priceUSD) : holdersCount && holdersCount?.price?.rate ?
@@ -87,6 +121,8 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
             moment(+transaction.timestamp * 1000).fromNow()
 
     }, [formattedTransactions])
+    const [tooltipShown, setTooltipShown] = React.useState<any>()
+    const [showRemoveFilter, setShowRemoveFilter] = React.useState<any>()
     return (
         <>
             <StyledDiv
@@ -197,11 +233,36 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                         {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
                                     </StyledA>
                                 </td>
-                                <td title={`Filter transactions by ${item.account}`}>
-                                    <Filter style={{ cursor: 'pointer' }} fill={filterAddress ? 'purple' : 'gray'} onClick={() => {
-                                        if (filterAddress) setFilterAddress(undefined)
-                                        if (!filterAddress) setFilterAddress(item.account)
-                                    }} />
+                                <td >
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}>
+                                        <span style={{ cursor: 'pointer' }} title={`Filter transactions by ${item.account}`}>
+                                            {!filterAddress && <Filter fill={filterAddress ? 'purple' : 'gray'} onClick={() => {
+                                                setFilterAddress(item.account)
+                                            }} />}
+
+                                            {!!filterAddress && (
+                                            <Tooltip show={showRemoveFilter && 
+                                                        showRemoveFilter?.amountUSD === item?.amountUSD && 
+                                                        showRemoveFilter?.transaction?.id === item?.transaction?.id
+                                                    } 
+                                                    text={`Remove filter for ${filterAddress}`}> 
+                                                    <X fill={'red'} 
+                                                        style={{ cursor: 'pointer' }} 
+                                                        onClick={() => setFilterAddress(undefined)} 
+                                                        onMouseEnter={() => setShowRemoveFilter(item)} 
+                                                        onMouseLeave={() => setShowRemoveFilter(undefined)} /> 
+                                            </Tooltip>)}
+                                        </span>
+                                        {item.count > 1 && (<Tooltip placement={'auto-end'} text={tooltipContent(item)} show={tooltipShown && tooltipShown?.amountUSD === item?.amountUSD && tooltipShown?.transaction?.id === item?.transaction?.id}>
+                                            <Badge style={{ cursor: 'pointer' }} onMouseEnter={() => setTooltipShown(item)} onMouseLeave={() => setTooltipShown(undefined)} variant={BadgeVariant.PRIMARY}>
+                                                {item.count}
+                                            </Badge>
+                                        </Tooltip>)}
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -234,21 +295,21 @@ export const Chart = () => {
     const [view, setView] = React.useState<'chart' | 'market'>('chart')
     const frameURL = React.useMemo(() => {
         return chainId === 56 ?
-        `https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180` :
-        `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`
+            `https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180` :
+            `https://www.tradingview.com/widgetembed/?symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`
     }, [symbol, chainId])
     const tokenData = useTokenDataHook('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', ethPrice, ethPriceOld)
 
     return (
-        <FrameWrapper style={{ 
+        <FrameWrapper style={{
             background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))'
-            }} >
-            <div style={{ 
-                    display: 'block', 
-                    marginBottom: 5, 
-                    width: '100%', 
-                    padding: "9px 14px" 
-                }}>
+        }} >
+            <div style={{
+                display: 'block',
+                marginBottom: 5,
+                width: '100%',
+                padding: "9px 14px"
+            }}>
                 <div style={{ display: 'flex', marginBottom: 5, alignItems: 'center', flexFlow: "row wrap" }}>
                     <a style={{ marginRight: 15 }} href="https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104">
                         <img src={'https://miro.medium.com/max/663/1*eV5_P4s2WQkgzVM_XdgWSw.png'}
@@ -312,8 +373,8 @@ export const Chart = () => {
                                 }}>
                                     <TransactionList chainId={chainId} lastFetched={transactionData.lastFetched} transactions={transactionData.data} tokenData={tokenData} />
                                 </div>}
-                            {!isBinance && !transactionData?.data?.swaps?.length && <Dots>Loading transactions..</Dots>}
-                            {isBinance && !binanceTransactionData?.data?.swaps?.length && <Dots>Loading transactions..</Dots>}
+                            {!isBinance && transactionData?.data?.swaps?.length === 0 && <Dots>Loading transactions..</Dots>}
+                            {isBinance && binanceTransactionData?.data?.swaps?.length === 0 && <Dots>Loading transactions..</Dots>}
                             {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && <div style={{ width: '100%', overflowY: 'auto', padding: '9px 14px', background: 'rgb(22, 22, 22)', color: '#fff', borderRadius: 6, flexFlow: 'column wrap', gridColumnGap: 50 }}>
                                 <TransactionList chainId={chainId} lastFetched={binanceTransactionData.lastFetched} transactions={binanceTransactionData.data} tokenData={tokenData} />
                             </div>}

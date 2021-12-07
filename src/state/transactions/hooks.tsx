@@ -7,12 +7,13 @@ import moment from 'moment'
 import { isHoneyPot } from 'pages/App'
 import { LoadingRows } from 'pages/Pool/styleds'
 import { useKiba } from 'pages/Vote/VotePage'
-import React from 'react'
+import React, { useDebugValue } from 'react'
 import { useCallback, useMemo } from 'react'
-import { AlertCircle, CheckCircle, ChevronDown, ChevronUp, DollarSign, HelpCircle, Info, Loader, RefreshCcw } from 'react-feather'
+import { AlertCircle, CheckCircle, ChevronDown, ChevronUp, DollarSign, HelpCircle, Info, Link, Loader, ExternalLink as ExLink, Circle, Lock } from 'react-feather'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
-import ThemeProvider, { ExternalLink, ExternalLinkIcon, StyledInternalLink } from 'theme'
+import ThemeProvider, { ExternalLink, ExternalLinkIcon, LinkStyledButton, StyledInternalLink } from 'theme'
+import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { addTransaction } from './actions'
 import './limit.css'
@@ -28,6 +29,8 @@ import { getTaxesForBscToken, getTokenTaxes } from 'pages/HoneyUtils'
 import Swal from 'sweetalert2'
 import { fetchBscTokenData, useBnbPrices, useBscTokenData } from 'state/logs/bscUtils'
 import { getTokenData, useEthPrice } from 'state/logs/utils'
+import { useTokenHolderCount } from 'components/swap/ChartPage'
+import { DetailsModal } from 'components/swap/DetailsModal'
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
   response: TransactionResponse,
@@ -206,6 +209,10 @@ const ContractOwner = ({ address }: { address: string }) => {
   )
 }
 
+export const LockedLiquidity = ({symbol, ...rest}: NewToken) => {
+  return null
+}
+
 export const FomoPage = () => {
   const { chainId, account, library } = useWeb3React();
   const [data, setData] = React.useState<NewToken[]>()
@@ -227,7 +234,7 @@ export const FomoPage = () => {
   const [searchValue, setSearchValue] = React.useState('')
   const [flagSafe, setFlagSafe] = React.useState(false)
   const shouldFlagSafe = React.useMemo(() => {
-    return flagSafe && chainId && network === networkMap[chainId]
+    return flagSafe && ['bsc','eth'].includes(network)
   }, [flagSafe, network, chainId])
   const pagedData = React.useMemo(() => {
     if (!data) return [];
@@ -274,7 +281,7 @@ export const FomoPage = () => {
       let safe: any[] = [];
       if (shouldFlagSafe) {
         safe = await Promise.all((data ?? [])?.filter(item => item.safe === undefined).map(async item => {
-          const isHoneyPotFn = network === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
+          const isHoneyPotFn = item.network?.toLowerCase() === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
           const isSafe = await isHoneyPotFn(item.addr, library?.provider)
           return {
             ...item,
@@ -287,7 +294,7 @@ export const FomoPage = () => {
         setData([...safe.concat(alreadyFlagged)])
       } else {
         safe = await Promise.all(items?.map(async item => {
-          const isHoneyPotFn = network === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
+          const isHoneyPotFn = item?.network?.toLowerCase() === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
           const isSafe = await isHoneyPotFn(item.addr, library?.provider)
           return {
             ...item,
@@ -305,11 +312,13 @@ export const FomoPage = () => {
     }
   }, [network, data, ethPrice, ethPriceOld, bnbPrice, chainId, library, flagSafe])
   const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState(false)
 
   const getData = React.useCallback(() => {
     const finallyClause = () => {
       setLastFetched(new Date())
     }
+    const finallyErrorClause = () => setError(true)
     return axios.default.get(`https://tokenfomo.io/api/tokens/${network}?limit=500`, { method: "GET", headers: authHeader.headers })
       .then(async (response) => {
         const json = response.data;
@@ -335,12 +344,12 @@ export const FomoPage = () => {
           }
 
       }).finally(finallyClause)
-      .catch(finallyClause)
+      .catch(finallyErrorClause)
   }, [network, page, library])
 
   useInterval(async () => {
     await getData()
-  }, 45000, false)
+  }, 30000, false)
 
   const fetchedText = React.useMemo(() => lastFetched ? moment(lastFetched).fromNow() : undefined, [moment(lastFetched).fromNow()])
   React.useEffect(() => {
@@ -444,7 +453,8 @@ export const FomoPage = () => {
   const accessDenied = React.useMemo(() => !account || !kibaBalance || +kibaBalance?.toFixed(0) <= 0, [kibaBalance, account])
   const helpTipText = `The honeypot checker will automatically run for the tokens listed to the current connected network. Currently connected to ${chainId && chainId === 1 ? 'Ethereum Mainnet' : chainId && chainId === 56 ? 'Binance Smart Chain' : ''}`;
   const infoTipText = `KibaFomo is auto-refreshing every 30 seconds to go and fetch the latest listed tokens. \r\n\r\nEvery token listed below has been ran through our smart-contract honey pot checks, to determine if it allows for buying and selling. \r\n\r\nThis is an experimental feature. Use at your own risk.`
-  return <DarkCard style={{ maxWidth: 1000, background: 'radial-gradient(orange,rgba(129,3,3,.95))' }}>
+  const [modalShowing, setModalShowing] = React.useState<any>()
+  return <DarkCard style={{ maxWidth: 1200, background: 'radial-gradient(orange,rgba(129,3,3,.95))' }}>
     <Wrapper style={{ overflow: 'auto', padding: '9px 14px' }}>
 
       <div style={{ marginBottom: 10 }}>
@@ -463,7 +473,7 @@ export const FomoPage = () => {
           <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('poly')} variant={network === 'poly' ? BadgeVariant.POSITIVE : BadgeVariant.DEFAULT}>POLY</Badge>
           <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('kcc')} variant={network === 'kcc' ? BadgeVariant.POSITIVE : BadgeVariant.DEFAULT}>KCC</Badge>
         </div>
-        {accessDenied === false && chainId && network === networkMap[chainId] && <div>
+        {accessDenied === false && ['bsc', 'eth'].includes(network) && <div>
           <label>Only Show Safe Listings</label>
           <input type="checkbox" checked={flagSafe} onChange={e => {
             setFlagSafe(e.target.checked)
@@ -510,7 +520,7 @@ export const FomoPage = () => {
 
       {!loading && accessDenied === false && <Table style={{ fontSize: 12, background: '#222', color: "#FFF", width: "100%" }}>
         <tr style={{ textAlign: 'left' }}>
-          <th onClick={() => onSortClick('name')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
+          <th onClick={() => onSortClick('name')} style={{width:'5%',  justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
             <div >
             <div>Name</div>
             {getActiveSort()?.key === 'name' && <>
@@ -531,20 +541,24 @@ export const FomoPage = () => {
           
           </th>
           <th onClick={() => onSortClick('addr')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
-            Contract Address
+            <div  >
+              <span>Contract Address</span>
+       
+              </div>
             {getActiveSort()?.key === 'addr' && <>
               {getActiveSort()?.direction === 'asc' && <ChevronUp />}
               {getActiveSort()?.direction === 'desc' && <ChevronDown />}
             </>}
           </th>
+     
 
-          {chainId && network === networkMap[chainId] && <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>
+          { <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>
             HP Check&nbsp;
             <Tooltip text={helpTipText} show={showHpInfo}>
               <Info onMouseEnter={() => setShowHpInfo(true)} onMouseLeave={() => setShowHpInfo(false)} />
             </Tooltip>
           </th>}
-          {chainId && network === networkMap[chainId] && (
+          {accessDenied === false && ['bsc', 'eth'].includes(network) && (
             <>
               {network === 'eth' && <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>Liquidity
                 {getActiveSort()?.key === 'liquidity' && <>
@@ -570,24 +584,25 @@ export const FomoPage = () => {
               {getActiveSort()?.direction === 'asc' && <ChevronUp />}
               {getActiveSort()?.direction === 'desc' && <ChevronDown />}
             </>}</th>
+         
         </tr>
         <tbody>
-          {pagedData.length === 0 && !loading && <tr><td colSpan={6}>No data available at this time.</td></tr>}
+          {pagedData.length === 0 && !loading && <tr><td colSpan={9}>{!error && 'No data available at this time.'} {error && <Badge variant={BadgeVariant.NEGATIVE_OUTLINE}>Tokenfomo is currently syncing their data. Please check back again soon.</Badge>}</td></tr>}
           {!loading && !!pagedData?.length && pagedData.map((item) => (
             <tr key={item.addr}>
-              <td style={{ fontSize: 12 }}>
-                <div style={{display:'flex', justifyContent: 'space-between', alignItems:'center'}}> 
+              <td style={{  fontSize: 12 }}>
                   <span>{item.name}</span>
-                </div>
               </td>
-              <td style={{width:'5%'}}>{item.symbol}</td>
+              <td style={{width:'3%'}}>{item.symbol}</td>
               <td><div style={{ display: 'flex', alignItems:'center', justifyContent: 'space-between' }}><small>{item.addr}</small><ExternalLinkIcon style={{}} href={getNetworkLink(item)} />
                 {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></StyledInternalLink>}
                 {network === 'bsc' && <ExternalLink href={`https://cashewnutz.github.io/pancake_fork/#/swap?outputCurrency=${item.addr}`}><DollarSign style={{ color: 'white' }} /></ExternalLink>}
-              </div> </td>
+              </div>
+               </td>
+
               {['eth'].includes(network) && item?.liquidity && <td>
                 <Badge variant={BadgeVariant.PRIMARY}>{`${item.liquidity !== '?' ? `$${item.liquidity}` : '?'}`}</Badge></td>}
-              {chainId && network === networkMap[chainId] && (<td>
+              { (<td>
                 {['bsc', 'eth'].includes(network) && <>
                   {item?.safe === undefined && <Loader />}
                   {item?.safe === true && <CheckCircle fontSize={'18px'} fill={'green'} fillOpacity={0.7} />}
@@ -595,17 +610,21 @@ export const FomoPage = () => {
                 </>}
                 {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
               </td>)}
-              {chainId && network === networkMap[chainId] && network === 'eth' && <td>
+              {accessDenied === false && network === 'eth' && <td>
+                <div style={{alignItems:'center', display:'flex', justifyContent:'space-between'}}>
                 <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
+                {['bsc', 'eth'].includes(item.network.toLowerCase()) && <>{!modalShowing && <LinkStyledButton style={{fontSize:8}} onClick={(e:any) => {e.stopPropagation();e.preventDefault();setModalShowing(item);}}>more</LinkStyledButton>  }
+                {!!modalShowing && modalShowing?.addr === item.addr && <DetailsModal address={item.addr} isOpen={modalShowing} onDismiss={() => setModalShowing(undefined)} network={item.network.toLowerCase() as 'bsc' | 'eth'} symbol={item.symbol} />}</>}
+             </div>
               </td>}
-              {chainId && network === networkMap[chainId] && ['bsc', 'eth'].includes(network) && (<td>
+              { ['bsc', 'eth'].includes(network) && (<td>
                 {(item?.buyTax || item?.buyTax === 0) && <Badge style={{ fontSize: 14 }} variant={BadgeVariant.POSITIVE}>
 
                   {<small>{item.buyTax}% buy</small>}
                 </Badge>}
                 {(!item.buyTax && item?.buyTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
               </td>)}
-              {chainId && network === networkMap[chainId] && ['bsc', 'eth'].includes(network) && (<td>
+              { ['bsc', 'eth'].includes(network) && (<td>
                 {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: '#fff' }} color={'white'} variant={BadgeVariant.NEGATIVE}>
 
                   {<small>{item.sellTax}% sell</small>}
@@ -613,7 +632,7 @@ export const FomoPage = () => {
                 </Badge>}
                 {(!item?.sellTax && item?.sellTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
               </td>)}
-              <td>{moment(new Date(+item.timestamp * 1000)).fromNow()}</td>
+                <td>{moment(+item.timestamp * 1000).fromNow()}</td>
             </tr>
           ))}
         </tbody>
@@ -650,12 +669,24 @@ const Liquidity = ({ addr, network, ethPrice, ethPriceOld, bnbPrice }: { addr: s
       const tokenDataFn = network?.toLowerCase() === 'bsc' ? fetchBscTokenData : network?.toLowerCase() === 'eth' ? getTokenData : (add: string, p1: any, p2: any) => ({ totalLiquidity: undefined });
       const [price1, price2] = network?.toLowerCase() === 'bsc' ? [bnbPrice?.current, bnbPrice?.current] : [ethPrice, ethPriceOld]
       const tokenData = await tokenDataFn(addr, price1, price2);
-      const liquidity = tokenData?.totalLiquidityUSD && !isNaN(tokenData?.totalLiquidityUSD) ? Number(+tokenData?.totalLiquidityUSD * 2).toLocaleString() : '?';
+      const liquidity = tokenData?.totalLiquidityUSD && !isNaN(tokenData?.totalLiquidityUSD) ? Number((+tokenData?.totalLiquidityUSD * 2).toFixed(0)).toLocaleString() : '?';
       setLiquidity(liquidity)
     }
     func();
   }, [])
 
-  return <Badge variant={BadgeVariant.DEFAULT}>{liquidity && liquidity !== '?' ? `$${liquidity}` : '?'}</Badge>
+  return (
+  <>
+  <Badge variant={BadgeVariant.DEFAULT}>{liquidity && liquidity !== '?' ? `$${liquidity}` : '?'}</Badge>
+  </>)
 
 }
+
+
+const Renounced = ({address}: {address: any}) => {
+  const owner = useContractOwner(address)
+  const isRenounced = React.useMemo(() => owner === '0x0000000000000000000000000000000000000000', [owner])
+  return (
+    <Circle fill={isRenounced ? 'green' : 'red'} />
+  )
+  }
