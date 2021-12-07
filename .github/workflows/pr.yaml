@@ -67,7 +67,7 @@ jobs:
         id: get_tag
         env:
           CURRENT_BRANCH: ${{ steps.current_branch.outputs.value }}
-          HEAD_SHA: ${{ steps.head_sha.outputs.values }}
+          HEAD_SHA: ${{ steps.head_sha.outputs.value }}
         run: |
           short_sha="$(echo "$HEAD_SHA" | head -c7)"
           branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
