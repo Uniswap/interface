@@ -20,6 +20,8 @@ import SEO from './components/SEO'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
+window.version = process.env.REACT_APP_VERSION
+
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
 }
