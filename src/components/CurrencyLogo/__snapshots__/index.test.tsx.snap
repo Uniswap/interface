@@ -97,53 +97,5 @@ exports[`renders a currency logo without network logo 1`] = `
       ]
     }
   />
-  <View
-    style={
-      Array [
-        Object {
-          "bottom": 0,
-          "display": "flex",
-          "position": "absolute",
-          "right": 0,
-        },
-      ]
-    }
-  >
-    <View
-      style={
-        Array [
-          Object {
-            "borderRadius": "full",
-            "borderWidth": 2,
-            "display": "flex",
-          },
-          Object {
-            "borderColor": "#627EEA",
-          },
-        ]
-      }
-    >
-      <Image
-        source={
-          Object {
-            "uri": undefined,
-          }
-        }
-        style={
-          Array [
-            Object {
-              "backgroundColor": "slategrey",
-              "resizeMode": "cover",
-            },
-            Object {
-              "borderRadius": 3.2,
-              "height": 6.4,
-              "width": 6.4,
-            },
-          ]
-        }
-      />
-    </View>
-  </View>
 </View>
 `;

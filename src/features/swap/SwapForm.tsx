@@ -1,7 +1,8 @@
+import { useTheme } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { ActivityIndicator, StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { Button } from 'src/components/buttons/Button'
@@ -14,6 +15,7 @@ import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { stringifySwapInfoError, validateSwapInfo } from 'src/features/swap/validate'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { Theme } from 'src/styles/theme'
 import { SagaStatus } from 'src/utils/saga'
 
 interface SwapFormProps {
@@ -47,6 +49,8 @@ export function SwapForm(props: SwapFormProps) {
   // -check erc20 permits
   // -handle max amount input/show max amount button
   // -handle price impact too high
+
+  const theme = useTheme<Theme>()
 
   const { t } = useTranslation()
 
@@ -131,7 +135,12 @@ export function SwapForm(props: SwapFormProps) {
         <SwapDetailRow trade={trade} label={errorLabel ?? swapStatusLabel} />
         <PrimaryButton
           alignSelf="stretch"
-          label={t`Swap`}
+          label={t('Swap')}
+          icon={
+            quoteStatus === 'loading' ? (
+              <ActivityIndicator size={25} color={theme.colors.white} />
+            ) : undefined
+          }
           onPress={swapCallback}
           disabled={swapButtonDisabled}
           mt="md"

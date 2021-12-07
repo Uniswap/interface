@@ -19,10 +19,8 @@ export function Option({ currency, onPress }: OptionProps) {
   return (
     <Pressable onPress={onPress}>
       <Box flexDirection="row" justifyContent="space-between" alignItems="center" width="100%">
-        <Box flexDirection="row">
-          <Box>
-            <CurrencyLogo currency={currency} size={20} />
-          </Box>
+        <Box flexDirection="row" alignItems="center">
+          <CurrencyLogo currency={currency} size={20} />
 
           <Box marginHorizontal="md" alignItems="flex-start" flexDirection="row">
             <Text variant="body">{currency.symbol}</Text>

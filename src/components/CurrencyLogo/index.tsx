@@ -7,6 +7,7 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { style } from 'src/components/CurrencyLogo/styles'
 import { getCurrencyLogoSrcs, maybeReplaceIPFSScheme } from 'src/components/CurrencyLogo/utils'
 import { Box } from 'src/components/layout/Box'
+import { ChainId } from 'src/constants/chains'
 
 const DEFAULT_SIZE = 40
 
@@ -22,9 +23,11 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
   return (
     <Box height={size} width={size}>
       <CurrencyLogoOnly size={currencyLogoSize} currency={currency} />
-      <Box position="absolute" bottom={0} right={0}>
-        <NetworkLogo chainId={currency.chainId} size={networkSize} />
-      </Box>
+      {currency.chainId !== ChainId.MAINNET && (
+        <Box position="absolute" bottom={0} right={0}>
+          <NetworkLogo chainId={currency.chainId} size={networkSize} />
+        </Box>
+      )}
     </Box>
   )
 }

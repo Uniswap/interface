@@ -31,8 +31,7 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
       {trade && (
         <Box flexDirection="row">
           <Button
-            borderRadius="xs"
-            p="xs"
+            borderRadius="sm"
             style={{ backgroundColor: networkColors.background }}
             onPress={() => {
               // TODO: implement gas price setting ui
