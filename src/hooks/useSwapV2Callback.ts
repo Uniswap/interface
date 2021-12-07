@@ -269,7 +269,6 @@ export function useSwapV2Callback(
                   })
                   .catch(callError => {
                     console.debug('Call threw error', call, callError)
-                    let errorMessage: string
                     const reason = callError.reason || callError.data?.message || callError.message
                     // switch (reason) {
                     //   case 'execution reverted: DmmExchangeRouter: INSUFFICIENT_OUTPUT_AMOUNT':
@@ -329,7 +328,7 @@ export function useSwapV2Callback(
                   }`
 
             addTransaction(response, {
-              summary: `${base} ${withRecipient}`,
+              summary: `${base} ${withRecipient ?? ''}`,
               arbitrary: {
                 inputSymbol,
                 outputSymbol,

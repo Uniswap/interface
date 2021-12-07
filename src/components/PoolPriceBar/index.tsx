@@ -14,13 +14,14 @@ import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { ONE_BIPS } from '../../constants'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
+import { useMedia } from 'react-use'
 
 const DEFAULT_MIN_PRICE = '0.00'
 const DEFAULT_MAX_PRICE = '♾️'
 
 const Section = styled(Card)`
   padding: 16px;
-  border: 1px solid ${({ theme }) => theme.border4};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
 `
 
@@ -29,10 +30,10 @@ const OutlineCard3 = styled(Section)`
 `
 
 const ChevronUp2 = styled(ChevronUp)`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text};
 `
 const ChevronDown2 = styled(ChevronDown)`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text};
 `
 
 export const Separator = styled.div`
@@ -92,6 +93,7 @@ export function PoolPriceBar({
   pair: Pair | null | undefined
 }) {
   const theme = useContext(ThemeContext)
+  const above768 = useMedia('(min-width: 768px)')
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
 
@@ -123,7 +125,13 @@ export function PoolPriceBar({
         <Text fontWeight={400} fontSize={14} color={theme.subText} pt={noLiquidity ? 1 : 0} style={{ flex: 1 }}>
           {noLiquidity ? <Trans>Share of Pool</Trans> : <Trans>Your Share of Pool</Trans>}
         </Text>
-        <TYPE.black fontWeight={400} color={theme.text} fontSize={14} style={{ flex: noLiquidity ? 'none' : 1 }}>
+        <TYPE.black
+          fontWeight={400}
+          color={theme.text}
+          fontSize={14}
+          style={{ flex: noLiquidity ? 'none' : 1 }}
+          textAlign={above768 ? 'left' : 'right'}
+        >
           {noLiquidity && price
             ? '100'
             : poolTokenPercentage && poolTokenPercentage.greaterThan('0')
@@ -151,7 +159,7 @@ export function ToggleComponent({
   const [showDetails, setShowDetails] = useState(true)
   return (
     <>
-      <RowBetween style={{ paddingBottom: '14px', borderBottom: `1px solid ${theme.border4}` }}>
+      <RowBetween style={{ paddingBottom: '14px', borderBottom: `1px solid ${theme.border}` }}>
         <AutoRow>
           <Text fontWeight={500} fontSize={16} color={theme.text}>
             {title}

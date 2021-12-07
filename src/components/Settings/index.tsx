@@ -22,7 +22,7 @@ const StyledMenuIcon = styled(Settings)`
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.text};
   }
 `
 
@@ -82,7 +82,8 @@ const MenuFlyout = styled.span`
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     min-width: 18.125rem;
-    top: -18rem;
+    top: unset;
+    bottom: 3.5rem;
   `};
 `
 
@@ -119,7 +120,7 @@ export default function SettingsTab() {
 
               <AutoColumn
                 style={{
-                  borderTop: `1px solid ${theme.border3}`,
+                  borderTop: `1px solid ${theme.border}`,
                   padding: '16px 0 4px'
                 }}
               >

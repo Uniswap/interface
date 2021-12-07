@@ -1,13 +1,12 @@
 import { Currency, CurrencyAmount, Pair } from '@dynamic-amm/sdk'
 import React, { useState, useContext, useCallback, ReactNode, useEffect } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { darken } from 'polished'
-import { t, Trans } from '@lingui/macro'
+import { darken, lighten } from 'polished'
+import { Trans } from '@lingui/macro'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { ReactComponent as SwitchIcon } from '../../assets/svg/switch.svg'
@@ -15,6 +14,8 @@ import { useActiveWeb3React } from '../../hooks'
 import Card from '../Card'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { Flex, Text } from 'rebass'
+import { ButtonEmpty } from 'components/Button'
+import Wallet from 'components/Icons/Wallet'
 
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -25,7 +26,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.primary1)};
+    stroke: ${({ selected, theme }) => (selected ? theme.text : theme.primary)};
     stroke-width: 1.5px;
   }
 `
@@ -34,7 +35,7 @@ const StyledSwitchIcon = styled(SwitchIcon)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.primary1)};
+    stroke: ${({ selected, theme }) => (selected ? theme.text : theme.primary)};
     stroke-width: 1.5px;
   }
 `
@@ -45,9 +46,9 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   font-size: 20px;
   font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.buttonBlack : theme.buttonBlack)};
-  border: 1px solid ${({ theme, selected }) => (selected ? 'transparent' : theme.primary1)} !important;
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.primary1)};
-  border-radius: 12px;
+  border: 1px solid ${({ theme, selected }) => (selected ? 'transparent' : theme.primary)} !important;
+  color: ${({ selected, theme }) => (selected ? theme.text : theme.primary)};
+  border-radius: 4px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
@@ -57,12 +58,12 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
 
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
-    color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary))};
+    color: ${({ selected, theme }) => (selected ? theme.text : theme.white)};
   }
   :hover ${StyledDropDown}, :focus ${StyledDropDown} {
     path {
-      stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+      stroke: ${({ selected, theme }) => (selected ? theme.text : theme.white)};
       stroke-width: 1.5px;
     }
   }
@@ -94,21 +95,20 @@ const StyledTokenName = styled.span<{ active?: boolean; fontSize?: string }>`
 `
 
 const StyledBalanceMax = styled.button`
-  height: 28px;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-
+  height: 18px;
+  background-color: ${({ theme }) => theme.primary};
+  border: 1px solid ${({ theme }) => theme.primary};
+  border: none;
+  border-radius: 0.125rem;
+  font-size: 0.625rem;
   font-weight: 500;
   cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.primaryText1};
+  color: ${({ theme }) => theme.textReverse};
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    background-color: 1px solid ${({ theme }) => lighten(0.1, theme.primary)};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.primary};
     outline: none;
   }
 
@@ -167,7 +167,6 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText,
   balancePosition = 'right',
   hideLogo = false,
   fontSize,
@@ -203,39 +202,36 @@ export default function CurrencyInputPanel({
 
   return (
     <div style={{ width: '100%' }}>
-      {(account || label) && (
+      {label && (
         <Card2 borderRadius={'20px'} balancePosition={balancePosition}>
           <Flex justifyContent={label ? 'space-between' : 'end'} alignItems="center">
             {label && (
-              <Text fontSize={14} color={theme.text2} fontWeight={500}>
+              <Text fontSize={12} color={theme.subText} fontWeight={500}>
                 {label}:
               </Text>
-            )}
-            {account && (
-              <Flex
-                onClick={onMax}
-                role="button"
-                alignItems="center"
-                sx={{
-                  cursor: `${!disabledInput && label !== 'To' ? 'pointer' : 'initial'}`
-                }}
-              >
-                <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                  {(!hideBalance && !!currency && !!selectedCurrencyBalanceHasValue && customBalanceText) ??
-                    t`Balance: ${selectedCurrencyBalanceHasValue?.toSignificant(10)}`}
-                </TYPE.body>
-                {showMaxButton && positionMax === 'top' && currency && (
-                  <Text color={theme.primary1} fontSize="14px" marginLeft="0.5rem" fontWeight="500">
-                    <Trans>MAX</Trans>
-                  </Text>
-                )}
-              </Flex>
             )}
           </Flex>
         </Card2>
       )}
       <InputPanel id={id} hideInput={hideInput}>
         <Container hideInput={hideInput} selected={disableCurrencySelect}>
+          {!hideBalance && (
+            <Flex justifyContent="space-between" fontSize="12px" marginBottom="8px" alignItems="center">
+              {showMaxButton && positionMax === 'top' && currency && account ? (
+                <ButtonEmpty padding="0" width="fit-content" onClick={onMax}>
+                  <Trans>Select Max</Trans>
+                </ButtonEmpty>
+              ) : (
+                <div />
+              )}
+              <Flex>
+                <Wallet color={theme.subText} />
+                <Text fontWeight={500} color={theme.subText} marginLeft="4px">
+                  {selectedCurrencyBalanceHasValue?.toSignificant(10) || 0}
+                </Text>
+              </Flex>
+            </Flex>
+          )}
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
             {!hideInput && (
               <>

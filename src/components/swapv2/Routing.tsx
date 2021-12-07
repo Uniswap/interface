@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useRef, useContext } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import styled, { css } from 'styled-components'
-import { t } from '@lingui/macro'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import CurrencyLogo from '../CurrencyLogo'
 import { getEtherscanLink, formattedNum } from '../../utils'
@@ -11,8 +10,6 @@ import { ChainId, Currency, CurrencyAmount, TokenAmount } from '@dynamic-amm/sdk
 import useThrottle from '../../hooks/useThrottle'
 import { Field } from '../../state/swap/actions'
 import { useCurrencyConvertedToNative } from '../../utils/dmm'
-import { TYPE } from 'theme'
-import { ThemeContext } from 'styled-components'
 import { Text, Flex } from 'rebass'
 import { useAllTokens } from 'hooks/Tokens'
 
@@ -20,11 +17,26 @@ const StyledContainer = styled.div`
   flex: 1;
   max-width: 100%;
   margin-left: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
 
-  @media only screen and (min-width: 1000px) {
-    padding-top: 52px;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.border};
+    border-radius: 999px;
+  }
+  &::-webkit-scrollbar-track-piece {
+    background: transparent;
   }
 `
+
 const StyledPair = styled.div`
   position: relative;
   padding-top: 15px;
@@ -49,8 +61,6 @@ const StyledWrapToken = styled.div`
   font-weight: 500;
   white-space: nowrap;
   min-height: 38px;
-  border: 1px solid ${({ theme }) => theme.border};
-  padding: 0.375rem 0.5rem;
   border-radius: 0.5rem;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -140,6 +150,7 @@ const StyledHop = styled.div`
   padding: 8px;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.bg6};
+  border: 1px solid ${({ theme }) => theme.border};
   height: fit-content;
   position: relative;
 `
@@ -208,7 +219,7 @@ const StyledPercent = styled.div`
   transform: translateY(50%);
   z-index: 2;
   color: ${({ theme }) => theme.secondary4};
-  background-color: ${({ theme }) => theme.bg12};
+  background: ${({ theme }) => theme.background};
 `
 const StyledDot = styled.i<{ out?: boolean }>`
   display: inline-block;
@@ -328,10 +339,10 @@ const RouteRow = ({ route, chainId }: RouteRowProps) => {
                   <span>{token?.symbol}</span>
                 </StyledToken>
                 {Array.isArray(subRoute)
-                  ? subRoute.map((pool, i) => {
+                  ? subRoute.map(pool => {
                       const dex = getExchangeConfig(pool.exchange, chainId)
                       const link = (i => {
-                        return pool.id.length == 42 ? (
+                        return pool.id.length === 42 ? (
                           <StyledExchange
                             key={`${i}-${pool.id}`}
                             href={getEtherscanLink(chainId, pool.id, 'address')}
@@ -340,7 +351,7 @@ const RouteRow = ({ route, chainId }: RouteRowProps) => {
                             {i}
                           </StyledExchange>
                         ) : (
-                          <StyledExchangeStatic>{i}</StyledExchangeStatic>
+                          <StyledExchangeStatic key={`${i}-${pool.id}`}>{i}</StyledExchangeStatic>
                         )
                       })(
                         <>
@@ -369,7 +380,6 @@ interface RoutingProps {
 const Routing = ({ trade, currencies, parsedAmounts }: RoutingProps) => {
   const { chainId } = useActiveWeb3React()
 
-  const theme = useContext(ThemeContext)
   const nativeInputCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT] || undefined)
   const nativeOutputCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT] || undefined)
 
@@ -416,12 +426,6 @@ const Routing = ({ trade, currencies, parsedAmounts }: RoutingProps) => {
 
   return (
     <StyledContainer>
-      <TYPE.black color={theme.text1} fontSize={20} fontWeight={500}>{t`Dynamic Trade Routing`}</TYPE.black>
-      <Text
-        fontSize={14}
-        marginTop="4px"
-        color={theme.subText}
-      >{t`Swap any token across different exchanges for the best price`}</Text>
       <StyledPair>
         <StyledWrapToken>{renderTokenInfo(trade?.inputAmount, Field.INPUT)}</StyledWrapToken>
         {!hasRoutes && <StyledPairLine />}

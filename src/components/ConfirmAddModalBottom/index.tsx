@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
-import { Text } from 'rebass'
+import { Text, Flex } from 'rebass'
 
 import { Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent, Price } from '@dynamic-amm/sdk'
 import { ONE_BIPS } from 'constants/index'
@@ -15,13 +15,14 @@ import { Field } from 'state/mint/actions'
 import { TYPE } from 'theme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import useTheme from 'hooks/useTheme'
+import { formattedNum } from 'utils'
 
 const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.border4};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 4px;
   margin-bottom: 24px;
 `
@@ -46,7 +47,8 @@ export function ConfirmAddModalBottom({
   poolTokenPercentage,
   onAdd,
   amplification,
-  priceImpact
+  priceImpact,
+  estimatedUsd
 }: {
   pair: Pair | null | undefined
   noLiquidity?: boolean
@@ -57,6 +59,7 @@ export function ConfirmAddModalBottom({
   onAdd: () => void
   amplification?: Fraction
   priceImpact?: Percent
+  estimatedUsd?: [number, number]
 }) {
   const theme = useTheme()
   const amp = !!pair
@@ -74,9 +77,16 @@ export function ConfirmAddModalBottom({
           </TYPE.subHeader>
           <RowFixed>
             <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
-            <TYPE.black fontSize={14} fontWeight={400}>
-              {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
-            </TYPE.black>
+            <Flex alignItems="center">
+              <TYPE.black fontSize={14} fontWeight={400}>
+                {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
+              </TYPE.black>
+              {estimatedUsd && !!estimatedUsd[0] && (
+                <Text color={theme.subText} marginLeft="4px" fontSize={14}>
+                  ({formattedNum(estimatedUsd[0].toString(), true) || undefined})
+                </Text>
+              )}
+            </Flex>
           </RowFixed>
         </RowBetween>
 
@@ -86,9 +96,17 @@ export function ConfirmAddModalBottom({
           </TYPE.subHeader>
           <RowFixed>
             <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
-            <TYPE.black fontSize={14} fontWeight={400}>
-              {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
-            </TYPE.black>
+            <Flex alignItems="center">
+              <TYPE.black fontSize={14} fontWeight={400}>
+                {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
+              </TYPE.black>
+
+              {estimatedUsd && !!estimatedUsd[1] && (
+                <Text color={theme.subText} marginLeft="4px" fontSize={14}>
+                  ({formattedNum(estimatedUsd[1].toString(), true) || undefined})
+                </Text>
+              )}
+            </Flex>
           </RowFixed>
         </RowBetween>
 

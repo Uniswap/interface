@@ -18,7 +18,7 @@ import {
   TokenAmount,
   WETH
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES } from 'constants/index'
+import { ZAP_ADDRESSES, AMP_HINT } from 'constants/index'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
@@ -337,6 +337,11 @@ const ZapIn = ({
     parsedAmounts[dependentField] &&
     usdPrices[1] * parseFloat((parsedAmounts[dependentField] as CurrencyAmount).toSignificant(6))
 
+  const estimatedUsdForPair: [number, number] =
+    independentField === Field.CURRENCY_A
+      ? [tokenAPoolAllocUsd || 0, tokenBPoolAllocUsd || 0]
+      : [tokenBPoolAllocUsd || 0, tokenAPoolAllocUsd || 0]
+
   const priceImpact =
     price &&
     userInCurrencyAmount &&
@@ -367,7 +372,7 @@ const ZapIn = ({
           <Text fontSize="24px">{'DMM ' + nativeA?.symbol + '/' + nativeB?.symbol + ' LP Tokens'}</Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          {`Output is estimated. If the price changes by more than ${allowedSlippage /
+          {t`Output is estimated. If the price changes by more than ${allowedSlippage /
             100}% your transaction will revert.`}
         </TYPE.italic>
       </AutoColumn>
@@ -386,6 +391,7 @@ const ZapIn = ({
         poolTokenPercentage={poolTokenPercentage}
         amplification={ampConvertedInBps}
         priceImpact={priceImpactWithoutFee}
+        estimatedUsd={estimatedUsdForPair}
       />
     )
   }
@@ -495,8 +501,8 @@ const ZapIn = ({
               <DetailBox
                 style={{
                   padding: '16px 0',
-                  borderTop: `1px dashed ${theme.border4}`,
-                  borderBottom: `1px dashed ${theme.border4}`
+                  borderTop: `1px dashed ${theme.border}`,
+                  borderBottom: `1px dashed ${theme.border}`
                 }}
               >
                 <AutoColumn justify="space-between" gap="4px">
@@ -566,7 +572,7 @@ const ZapIn = ({
             {currencies[independentField] && currencies[dependentField] && pairState !== PairState.INVALID && (
               <Section borderRadius={'20px'} marginBottom="28px">
                 <ToggleComponent title={t`Pool Information`}>
-                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border4}`, gap: '1rem' }}>
+                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border}`, gap: '1rem' }}>
                     {!noLiquidity && (
                       <CurrentPriceWrapper>
                         <TYPE.subHeader fontWeight={500} fontSize={12} color={theme.subText}>
@@ -592,15 +598,13 @@ const ZapIn = ({
                     </PoolRatioWrapper>
                   </AutoRow>
 
-                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border4}`, gap: '1rem' }}>
+                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border}`, gap: '1rem' }}>
                     <AutoColumn style={{ flex: '1' }}>
                       <AutoRow>
                         <Text fontWeight={500} fontSize={12} color={theme.subText}>
                           AMP
                         </Text>
-                        <QuestionHelper
-                          text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
-                        />
+                        <QuestionHelper text={AMP_HINT} />
                       </AutoRow>
                       <Text fontWeight={400} fontSize={14} color={theme.text}>
                         {!!pair ? <>{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</> : ''}

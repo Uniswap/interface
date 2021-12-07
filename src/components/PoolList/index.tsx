@@ -12,6 +12,7 @@ import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { getHealthFactor, getTradingFeeAPR } from 'utils/dmm'
 import ListItem, { ItemCard } from './ListItem'
 import PoolDetailModal from './PoolDetailModal'
+import { AMP_HINT } from 'constants/index'
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -32,7 +33,7 @@ const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 const ClickableText = styled(Text)`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.text6};
+  color: ${({ theme }) => theme.subText};
   &:hover {
     cursor: pointer;
     opacity: 0.6;
@@ -45,13 +46,13 @@ const LoadMoreButtonContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.oddRow};
+  background-color: ${({ theme }) => theme.background};
   font-size: 12px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    background-color: transparent;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    border-radius: 8px;
   `};
 `
 
@@ -185,9 +186,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
           <ClickableText>
             <Trans>AMP</Trans>
           </ClickableText>
-          <InfoHelper
-            text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
-          />
+          <InfoHelper text={AMP_HINT} />
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText
@@ -256,7 +255,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               setSortDirection(sortedColumn !== SORT_FIELD.ONE_YEAR_FL ? true : !sortDirection)
             }}
           >
-            <Trans>APY</Trans>
+            <Trans>APR</Trans>
             {sortedColumn === SORT_FIELD.ONE_YEAR_FL ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -267,7 +266,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               ''
             )}
           </ClickableText>
-          <InfoHelper text={t`1Yr Fees Collected/Liquidity based on 24H volume annualized`} />
+          <InfoHelper text={t`Estimated return based on yearly fees of the pool`} />
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText>

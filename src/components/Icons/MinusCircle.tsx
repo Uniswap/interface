@@ -1,6 +1,8 @@
 import React from 'react'
+import useTheme from 'hooks/useTheme'
 
 const MinusCircle = ({ width, height }: { width?: number; height?: number }) => {
+  const theme = useTheme()
   return (
     <svg width={width || 24} height={height || 24} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <g id="Platform" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -16,7 +18,7 @@ const MinusCircle = ({ width, height }: { width?: number; height?: number }) => 
                     x2="8.00000003"
                     y2="12"
                     id="Path"
-                    stroke="#08A1E7"
+                    stroke={theme.primary}
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -24,7 +26,7 @@ const MinusCircle = ({ width, height }: { width?: number; height?: number }) => 
                   <path
                     d="M12,21 L12,21 C7.02900003,21 3.00000001,16.9710001 3.00000001,12 L3.00000001,12 C3.00000001,7.02900003 7.02900003,3.00000001 12,3.00000001 L12,3.00000001 C16.9710001,3.00000001 21,7.02900003 21,12 L21,12 C21,16.9710001 16.9710001,21 12,21 Z"
                     id="Path"
-                    stroke="#08A1E7"
+                    stroke={theme.primary}
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, ReactNode } from 'react'
 import styled from 'styled-components'
 import Popover, { PopoverProps } from '../Popover'
 import { Flex } from 'rebass'
@@ -8,10 +8,11 @@ const TooltipContainer = styled.div`
   padding: 0.6rem 1rem;
   line-height: 150%;
   font-weight: 400;
+  font-size: 14px;
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {
-  text: string
+  text: string | ReactNode
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {

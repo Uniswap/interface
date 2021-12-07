@@ -22,6 +22,7 @@ import { ChainId } from '@dynamic-amm/sdk'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { setGasPrice } from 'state/application/actions'
+import KyberSwapAnnounce from 'components/Header/KyberSwapAnnounce'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -55,7 +56,7 @@ const MigrateLiquidityUNI = lazy(() =>
 const MigrateLiquiditySUSHI = lazy(() =>
   import(/* webpackChunkName: 'migrate-sushi-page' */ './RemoveLiquidity/migrate_sushi')
 )
-const About = lazy(() => import(/* webpackChunkName: 'about-page' */ './Static/About'))
+const About = lazy(() => import(/* webpackChunkName: 'about-page' */ './About'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -130,6 +131,7 @@ export default function App() {
         <ApolloProvider client={apolloClient || defaultExchangeClient}>
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
+            <KyberSwapAnnounce />
             <URLWarning />
             <HeaderWrapper>
               <Header />
@@ -182,7 +184,7 @@ export default function App() {
                     <Route component={RedirectPathToSwapOnly} />
                   </Switch>
                 </Web3ReactManager>
-                <Marginer />
+                {!window.location.href.includes('about') && <Marginer />}
               </BodyWrapper>
             </Suspense>
           </AppWrapper>

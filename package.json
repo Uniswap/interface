@@ -1,6 +1,6 @@
 {
   "name": "@dmm/interface",
-  "description": "DMM Exchange Interface",
+  "description": "KyberSwap Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {

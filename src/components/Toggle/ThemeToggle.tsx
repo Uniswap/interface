@@ -8,7 +8,7 @@ import LightModeIconInactive from 'components/Icons/LightModeIconInactive'
 
 const ToggleElement = styled.span<{ isDarkMode?: boolean }>`
   border-radius: 50%;
-  background-color: ${({ theme, isDarkMode }) => (isDarkMode ? theme.primary1 : 'none')};
+  background-color: ${({ theme, isDarkMode }) => (isDarkMode ? theme.primary : 'none')};
   font-size: 1rem;
   font-weight: 400;
   flex: 1;

@@ -50,12 +50,12 @@ export const GridColumn = styled.div`
 
 export const TokenColumn = styled(AutoColumn)`
   padding-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.border4};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
 
   @media only screen and (min-width: 768px) {
     padding-right: 24px;
     padding-bottom: 0;
-    border-right: 1px solid ${({ theme }) => theme.border4};
+    border-right: 1px solid ${({ theme }) => theme.border};
     border-bottom: none;
   }
 `
@@ -76,7 +76,7 @@ export const ActiveText = styled.div`
 
 export const Section = styled(Card)`
   padding: 16px;
-  border: 1px solid ${({ theme }) => theme.border4};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
 `
 

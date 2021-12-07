@@ -182,6 +182,7 @@ export class Aggregator {
   public readonly amountOutUsd: string
   public readonly receivedUsd: string
   public readonly gasUsd: number
+  public readonly priceImpact: number
 
   public constructor(
     inputAmount: CurrencyAmount,
@@ -192,7 +193,8 @@ export class Aggregator {
     swaps: any[][],
     tokens: any,
     tradeType: TradeType,
-    gasUsd: number
+    gasUsd: number,
+    priceImpact: number
   ) {
     this.tradeType = tradeType
     this.inputAmount = inputAmount
@@ -209,6 +211,7 @@ export class Aggregator {
     this.swaps = swaps
     this.tokens = tokens
     this.gasUsd = gasUsd
+    this.priceImpact = priceImpact
   }
 
   /**
@@ -310,6 +313,9 @@ export class Aggregator {
 
         const inputAmount = toCurrencyAmount(result.inputAmount, currencyAmountIn.currency)
         const outputAmount = toCurrencyAmount(result.outputAmount, currencyOut)
+
+        const priceImpact = ((-result.amountOutUsd + result.amountInUsd) * 100) / result.amountInUsd
+
         return new Aggregator(
           inputAmount,
           outputAmount,
@@ -319,7 +325,8 @@ export class Aggregator {
           result.swaps || [],
           result.tokens || {},
           TradeType.EXACT_INPUT,
-          result.gasUsd
+          result.gasUsd,
+          priceImpact
         )
       } catch (e) {
         console.error(e)

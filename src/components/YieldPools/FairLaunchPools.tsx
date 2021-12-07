@@ -20,10 +20,9 @@ import { useIsDarkMode } from 'state/user/hooks'
 interface FarmsListProps {
   fairLaunchAddress: string
   farms?: Farm[]
-  stakedOnly?: boolean
 }
 
-const FairLaunchPools = ({ fairLaunchAddress, farms, stakedOnly }: FarmsListProps) => {
+const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
@@ -87,11 +86,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, stakedOnly }: FarmsListProp
     }
   })
 
-  const displayFarms = farmsList
-    .filter(farm =>
-      Boolean(stakedOnly ? farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0) : farm)
-    )
-    .sort((a, b) => b.endBlock - a.endBlock)
+  const displayFarms = farmsList.sort((a, b) => b.endBlock - a.endBlock)
 
   return (
     <FairLaunchPoolsWrapper>

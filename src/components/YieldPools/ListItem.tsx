@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import { ethers } from 'ethers'
 import { MaxUint256 } from '@ethersproject/constants'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMedia } from 'react-use'
 
 import { ChainId, Fraction, JSBI, Token, TokenAmount, ZERO } from '@dynamic-amm/sdk'
-import { DMM_ANALYTICS_URL, MAX_ALLOW_APY } from '../../constants'
+import { DMM_ANALYTICS_URL, MAX_ALLOW_APY, AMP_HINT } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Dots } from 'components/swap/styleds'
@@ -51,6 +51,7 @@ import {
   Seperator
 } from './styleds'
 import CurrencyLogo from 'components/CurrencyLogo'
+import useTheme from 'hooks/useTheme'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -257,16 +258,23 @@ const ListItem = ({ farm }: ListItemProps) => {
     dispatch(setAttemptingTxn(false))
   }
 
+  const theme = useTheme()
+
   return breakpoint ? (
     <>
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
         <DataText grid-area="pools">
-          <Flex alignItems="center">
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
-            <span>
-              {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
-            </span>
-          </Flex>
+          <div>
+            <Flex alignItems="center">
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
+              <span>
+                {farm.token0?.symbol} - {farm.token1?.symbol}
+              </span>
+            </Flex>
+            <Text marginLeft="45px" marginTop="4px" color={theme.subText} fontSize={12}>
+              AMP = {amp}
+            </Text>
+          </div>
         </DataText>
         <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
         <DataText grid-area="end" align="right" style={{ textAlign: 'right' }}>
@@ -492,12 +500,7 @@ const ListItem = ({ farm }: ListItemProps) => {
         <GridItem style={{ gridColumn: '1 / span 2' }}>
           <DataTitle>
             <span>Pool | AMP</span>
-            <InfoHelper
-              text={
-                'AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range.'
-              }
-              size={12}
-            />
+            <InfoHelper text={AMP_HINT} size={12} />
           </DataTitle>
           <DataText grid-area="pools">
             <Flex alignItems="center">
@@ -526,9 +529,12 @@ const ListItem = ({ farm }: ListItemProps) => {
         <GridItem>
           <DataTitle>
             <span>
-              <Trans>APY</Trans>
+              <Trans>APR</Trans>
             </span>
-            <InfoHelper text={'Estimated total annualized yield from fees + rewards'} size={12} />
+            <InfoHelper
+              text={'Once a farm has ended, you will continue to receive returns through LP Fees'}
+              size={12}
+            />
           </DataTitle>
           <DataText grid-area="apy">
             <APY grid-area="apy">{apr.toFixed(2)}%</APY>

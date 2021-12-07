@@ -1,5 +1,6 @@
 import { ButtonEmpty } from 'components/Button'
 import React from 'react'
+import { Trans } from '@lingui/macro'
 
 import { NoFarmsWrapper, NoFarmsMessage } from './styled'
 
@@ -8,11 +9,13 @@ const NoFarms = ({ setActiveTab }: { setActiveTab: (activeTab: number) => void }
     <NoFarmsWrapper>
       <NoFarmsMessage>Currently there are no Upcoming Farms.</NoFarmsMessage>
       <div>
-        Please check the{' '}
-        <ButtonEmpty width="fit-content" padding="0" style={{ display: 'inline' }} onClick={() => setActiveTab(0)}>
-          Current Farms
-        </ButtonEmpty>{' '}
-        or come back later.
+        <Trans>
+          Please check the{' '}
+          <ButtonEmpty width="fit-content" padding="0" style={{ display: 'inline' }} onClick={() => setActiveTab(0)}>
+            Active Farms
+          </ButtonEmpty>{' '}
+          or come back later.
+        </Trans>
       </div>
     </NoFarmsWrapper>
   )

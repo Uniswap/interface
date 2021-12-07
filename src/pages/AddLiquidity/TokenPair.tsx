@@ -16,7 +16,7 @@ import TransactionConfirmationModal, {
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES } from '../../constants'
+import { ROUTER_ADDRESSES, AMP_HINT } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -298,40 +298,6 @@ const TokenPair = ({
       })
   }
 
-  const modalHeader = () => {
-    return (
-      <AutoColumn gap="5px">
-        <RowFlat style={{ marginTop: '20px' }}>
-          <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
-            {liquidityMinted?.toSignificant(6)}
-          </Text>
-        </RowFlat>
-        <Row>
-          <Text fontSize="24px">{'DMM ' + nativeA?.symbol + '/' + nativeB?.symbol + ' LP Tokens'}</Text>
-        </Row>
-        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          {`Output is estimated. If the price changes by more than ${allowedSlippage /
-            100}% your transaction will revert.`}
-        </TYPE.italic>
-      </AutoColumn>
-    )
-  }
-
-  const modalBottom = () => {
-    return (
-      <ConfirmAddModalBottom
-        pair={pair}
-        price={price}
-        currencies={currencies}
-        parsedAmounts={parsedAmounts}
-        noLiquidity={false}
-        onAdd={onAdd}
-        poolTokenPercentage={poolTokenPercentage}
-        amplification={ampConvertedInBps}
-      />
-    )
-  }
-
   const pendingText = `Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
     nativeA?.symbol
   } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${nativeB?.symbol}`
@@ -381,6 +347,41 @@ const TokenPair = ({
   const marketPrice = marketPrices[1] && marketPrices[0] / marketPrices[1]
 
   const showSanityPriceWarning = !!(poolPrice && marketPrice && Math.abs(poolPrice - marketPrice) / marketPrice > 0.05)
+
+  const modalHeader = () => {
+    return (
+      <AutoColumn gap="5px">
+        <RowFlat style={{ marginTop: '20px' }}>
+          <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
+            {liquidityMinted?.toSignificant(6)}
+          </Text>
+        </RowFlat>
+        <Row>
+          <Text fontSize="24px">{'DMM ' + nativeA?.symbol + '/' + nativeB?.symbol + ' LP Tokens'}</Text>
+        </Row>
+        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+          {t`Output is estimated. If the price changes by more than ${allowedSlippage /
+            100}% your transaction will revert.`}
+        </TYPE.italic>
+      </AutoColumn>
+    )
+  }
+
+  const modalBottom = () => {
+    return (
+      <ConfirmAddModalBottom
+        pair={pair}
+        price={price}
+        currencies={currencies}
+        parsedAmounts={parsedAmounts}
+        noLiquidity={false}
+        onAdd={onAdd}
+        poolTokenPercentage={poolTokenPercentage}
+        amplification={ampConvertedInBps}
+        estimatedUsd={[estimatedUsdCurrencyA, estimatedUsdCurrencyB]}
+      />
+    )
+  }
 
   return (
     <Wrapper>
@@ -514,7 +515,7 @@ const TokenPair = ({
             {currencies[independentField] && currencies[dependentField] && pairState !== PairState.INVALID && (
               <Section borderRadius={'20px'} marginBottom="28px">
                 <ToggleComponent title={t`Pool Information`}>
-                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border4}`, gap: '1rem' }}>
+                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border}`, gap: '1rem' }}>
                     {!noLiquidity && (
                       <CurrentPriceWrapper>
                         <TYPE.subHeader fontWeight={500} fontSize={12} color={theme.subText}>
@@ -540,15 +541,13 @@ const TokenPair = ({
                     </PoolRatioWrapper>
                   </AutoRow>
 
-                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border4}`, gap: '1rem' }}>
+                  <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border}`, gap: '1rem' }}>
                     <AutoColumn style={{ flex: '1' }}>
                       <AutoRow>
                         <Text fontWeight={500} fontSize={12} color={theme.subText}>
                           AMP
                         </Text>
-                        <QuestionHelper
-                          text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
-                        />
+                        <QuestionHelper text={AMP_HINT} />
                       </AutoRow>
                       <Text fontWeight={400} fontSize={14} color={theme.text}>
                         {!!pair ? <>{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</> : ''}

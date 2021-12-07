@@ -14,7 +14,8 @@ import {
   updateUserLocale,
   updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning
+  toggleURLWarning,
+  toggleRebrandingAnnouncement
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 
@@ -52,6 +53,7 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+  rebrandingAnnouncement: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -68,7 +70,8 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  URLWarningVisible: true
+  URLWarningVisible: true,
+  rebrandingAnnouncement: true
 }
 
 export default createReducer(initialState, builder =>
@@ -143,5 +146,8 @@ export default createReducer(initialState, builder =>
     })
     .addCase(toggleURLWarning, state => {
       state.URLWarningVisible = !state.URLWarningVisible
+    })
+    .addCase(toggleRebrandingAnnouncement, state => {
+      state.rebrandingAnnouncement = !state.rebrandingAnnouncement
     })
 )

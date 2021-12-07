@@ -2,6 +2,7 @@ import { ChainId, JSBI, Percent, Token, WETH } from '@dynamic-amm/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'
+import { t } from '@lingui/macro'
 
 export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]:
@@ -128,27 +129,27 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-dmm-info.knstats.com'
-      : 'https://info.dmm.exchange',
+      : 'https://analytics.kyberswap.com',
   [ChainId.ROPSTEN]: 'https://dev-dmm-info.knstats.com',
-  [ChainId.RINKEBY]: 'https://info.dmm.exchange',
-  [ChainId.GÖRLI]: 'https://info.dmm.exchange',
-  [ChainId.KOVAN]: 'https://info.dmm.exchange',
+  [ChainId.RINKEBY]: 'https://analytics.kyberswap.com',
+  [ChainId.GÖRLI]: 'https://analytics.kyberswap.com',
+  [ChainId.KOVAN]: 'https://analytics.kyberswap.com',
   [ChainId.MATIC]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-matic-dmm-info.knstats.com'
-      : 'https://polygon-info.dmm.exchange',
+      : 'https://polygon-analytics.kyberswap.com',
   [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com',
   [ChainId.BSCTESTNET]: 'https://mumbai-dmm-info.knstats.com',
   [ChainId.BSCMAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-bsc-dmm-info.knstats.com'
-      : 'https://bsc-info.dmm.exchange',
+      : 'https://bsc-analytics.kyberswap.com',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : 'https://avax-info.dmm.exchange',
+  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : 'https://avax-analytics.kyberswap.com',
   [ChainId.FANTOM]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-fantom-dmm-info.knstats.com'
-      : 'https://fantom-info.dmm.exchange'
+      : 'https://fantom-analytics.kyberswap.com',
 }
 
 // a list of tokens by chain
@@ -907,5 +908,7 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
 
 export const MAX_ALLOW_APY = 2000
 
+export const AMP_HINT = t`Stands for amplification factor. Each pool can have its own AMP. Pools with a higher AMP provide higher capital efficiency within a particular price range`
+export const CREATE_POOL_AMP_HINT = t`Stands for amplification factor. Pools with a higher AMP provide higher capital efficiency within a particular price range. We recommend higher AMP for stable token pairs and lower AMP for volatile token pairs`
 export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
   '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'

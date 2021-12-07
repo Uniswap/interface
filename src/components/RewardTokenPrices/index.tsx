@@ -53,7 +53,7 @@ const TokenWrapper = styled.div<{ isFirstItem?: boolean; isLastItem?: boolean }>
   align-items: center;
   padding-left: ${({ isFirstItem }) => (isFirstItem ? '0' : '20px')};
   padding-right: ${({ isLastItem }) => (isLastItem ? '0' : '20px')};
-  border-left: ${({ theme, isFirstItem }) => (isFirstItem ? 'none' : `1px solid ${theme.border4}`)};
+  border-left: ${({ theme, isFirstItem }) => (isFirstItem ? 'none' : `1px solid ${theme.border}`)};
   white-space: nowrap;
 `
 

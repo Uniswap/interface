@@ -23,7 +23,8 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance,
   toggleURLWarning,
-  updateUserLocale
+  updateUserLocale,
+  toggleRebrandingAnnouncement
 } from './actions'
 import { convertChainIdFromDmmToSushi } from 'utils/dmm'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
@@ -232,8 +233,21 @@ export function usePairAdderByTokens(): (token0: Token, token1: Token) => void {
   )
 }
 
+export function useRebrandingAnnouncement(): boolean {
+  const rebrandingAnnouncement = useSelector((state: AppState) => state.user.rebrandingAnnouncement)
+  return rebrandingAnnouncement === undefined || rebrandingAnnouncement
+}
+
+export function useToggleRebrandingAnnouncement(): () => void {
+  const dispatch = useDispatch()
+  return useCallback(() => dispatch(toggleRebrandingAnnouncement()), [dispatch])
+}
+
 export function useURLWarningVisible(): boolean {
-  return useSelector((state: AppState) => state.user.URLWarningVisible)
+  const rebrandingAnnouncement = useRebrandingAnnouncement()
+  const urlWarningVisible = useSelector((state: AppState) => state.user.URLWarningVisible)
+
+  return !rebrandingAnnouncement && urlWarningVisible
 }
 
 export function useURLWarningToggle(): () => void {

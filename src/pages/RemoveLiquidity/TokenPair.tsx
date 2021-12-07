@@ -376,27 +376,76 @@ export default function TokenPair({
     }
   }
 
+  const usdPrices = useTokensPrice([tokenA, tokenB])
+
+  const estimatedUsdCurrencyA =
+    parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
+      ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount).toSignificant(6)) * usdPrices[0]
+      : 0
+
+  const estimatedUsdCurrencyB =
+    parsedAmounts[Field.CURRENCY_B] && usdPrices[1]
+      ? parseFloat((parsedAmounts[Field.CURRENCY_B] as CurrencyAmount).toSignificant(6)) * usdPrices[1]
+      : 0
+
+  const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
+    nativeA?.symbol
+  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${nativeB?.symbol}`
+
+  const liquidityPercentChangeCallback = useCallback(
+    (value: number) => {
+      onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
+    },
+    [onUserInput]
+  )
+
+  const handleDismissConfirmation = useCallback(() => {
+    setShowConfirm(false)
+    setSignatureData(null) // important that we clear signature data to avoid bad sigs
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      onUserInput(Field.LIQUIDITY_PERCENT, '0')
+    }
+    setTxHash('')
+    setRemoveLiquidityError('')
+  }, [onUserInput, txHash])
+
+  const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
+    Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
+    liquidityPercentChangeCallback
+  )
+
   function modalHeader() {
     return (
       <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
         <AutoRow gap="4px">
-          <CurrencyLogo currency={currencyA} size={'24px'} />
-          <Text fontSize={24} fontWeight={500}>
+          <CurrencyLogo currency={currencyA} size={'28px'} />
+          <Text fontSize={32} fontWeight={500}>
             {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
           </Text>
-          <Text fontSize={24} fontWeight={500}>
+          <Text fontSize={32} fontWeight={500}>
             {nativeA?.symbol}
           </Text>
+          {estimatedUsdCurrencyA && (
+            <Text color={theme.subText} marginLeft="4px" fontSize={18} fontWeight={500}>
+              (~{formattedNum(estimatedUsdCurrencyA.toString(), true) || undefined})
+            </Text>
+          )}
         </AutoRow>
 
         <AutoRow gap="4px">
-          <CurrencyLogo currency={currencyB} size={'24px'} />
-          <Text fontSize={24} fontWeight={500}>
+          <CurrencyLogo currency={currencyB} size={'28px'} />
+          <Text fontSize={32} fontWeight={500}>
             {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
           </Text>
-          <Text fontSize={24} fontWeight={500}>
+          <Text fontSize={32} fontWeight={500}>
             {nativeB?.symbol}
           </Text>
+          {estimatedUsdCurrencyB && (
+            <Text color={theme.subText} marginLeft="4px" fontSize={18} fontWeight={500}>
+              (~{formattedNum(estimatedUsdCurrencyB.toString(), true) || undefined})
+            </Text>
+          )}
         </AutoRow>
 
         <TYPE.italic fontSize={12} fontWeight={400} color={theme.subText} textAlign="left">
@@ -474,45 +523,6 @@ export default function TokenPair({
       </>
     )
   }
-
-  const usdPrices = useTokensPrice([tokenA, tokenB])
-
-  const estimatedUsdCurrencyA =
-    parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
-      ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount).toSignificant(6)) * usdPrices[0]
-      : 0
-
-  const estimatedUsdCurrencyB =
-    parsedAmounts[Field.CURRENCY_B] && usdPrices[1]
-      ? parseFloat((parsedAmounts[Field.CURRENCY_B] as CurrencyAmount).toSignificant(6)) * usdPrices[1]
-      : 0
-
-  const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
-    nativeA?.symbol
-  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${nativeB?.symbol}`
-
-  const liquidityPercentChangeCallback = useCallback(
-    (value: number) => {
-      onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
-    },
-    [onUserInput]
-  )
-
-  const handleDismissConfirmation = useCallback(() => {
-    setShowConfirm(false)
-    setSignatureData(null) // important that we clear signature data to avoid bad sigs
-    // if there was a tx hash, we want to clear the input
-    if (txHash) {
-      onUserInput(Field.LIQUIDITY_PERCENT, '0')
-    }
-    setTxHash('')
-    setRemoveLiquidityError('')
-  }, [onUserInput, txHash])
-
-  const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
-    Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
-    liquidityPercentChangeCallback
-  )
 
   return (
     <>
@@ -606,7 +616,7 @@ export default function TokenPair({
                     onUserInput={onCurrencyAInput}
                     showMaxButton={false}
                     currency={currencyA}
-                    label={'Output'}
+                    label={t`Output`}
                     onCurrencySelect={() => null}
                     disableCurrencySelect={true}
                     id="remove-liquidity-tokena"
@@ -663,7 +673,7 @@ export default function TokenPair({
                   </AutoRow>
 
                   {amountsMin && (
-                    <DetailBox style={{ paddingBottom: '12px', borderBottom: `1px dashed ${theme.border4}` }}>
+                    <DetailBox style={{ paddingBottom: '12px', borderBottom: `1px dashed ${theme.border}` }}>
                       <TokenWrapper>
                         <CurrencyLogo currency={currencyA} size="16px" />
                         <TYPE.black fontWeight={400} fontSize={14}>
@@ -705,29 +715,31 @@ export default function TokenPair({
                   </ButtonLight>
                 ) : (
                   <RowBetween>
-                    <ButtonConfirmed
-                      onClick={onAttemptToApprove}
-                      confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-                      disabled={
-                        approval !== ApprovalState.NOT_APPROVED ||
-                        signatureData !== null ||
-                        !userLiquidity ||
-                        userLiquidity.equalTo('0')
-                      }
-                      mr="0.5rem"
-                      fontWeight={500}
-                      fontSize={16}
-                    >
-                      {approval === ApprovalState.PENDING ? (
-                        <Dots>
-                          <Trans>Approving</Trans>
-                        </Dots>
-                      ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                        t`Approved`
-                      ) : (
-                        t`Approve`
-                      )}
-                    </ButtonConfirmed>
+                    {!error && (
+                      <ButtonConfirmed
+                        onClick={onAttemptToApprove}
+                        confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                        disabled={
+                          approval !== ApprovalState.NOT_APPROVED ||
+                          signatureData !== null ||
+                          !userLiquidity ||
+                          userLiquidity.equalTo('0')
+                        }
+                        margin="0 1rem 0 0"
+                        fontWeight={500}
+                        fontSize={16}
+                      >
+                        {approval === ApprovalState.PENDING ? (
+                          <Dots>
+                            <Trans>Approving</Trans>
+                          </Dots>
+                        ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
+                          t`Approved`
+                        ) : (
+                          t`Approve`
+                        )}
+                      </ButtonConfirmed>
+                    )}
                     <ButtonError
                       onClick={() => {
                         setShowConfirm(true)

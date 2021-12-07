@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { CardProps, Text } from 'rebass'
 import { Box } from 'rebass/styled-components'
+import useTheme from 'hooks/useTheme'
 
 const Card = styled(Box)<{ padding?: string; border?: string; borderRadius?: string }>`
   width: 100%;
@@ -42,21 +43,22 @@ export const YellowCard = styled(Card)`
 
 export const PinkCard = styled(Card)`
   background-color: rgba(255, 0, 122, 0.03);
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.primary};
   font-weight: 500;
 `
 
 const BlueCardStyled = styled(Card)`
-  background-color: ${({ theme }) => theme.bg18};
-  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => `${theme.primary}33`};
+  color: ${({ theme }) => theme.text};
   border-radius: 12px;
   width: fit-content;
 `
 
 export const BlueCard = ({ children, ...rest }: CardProps) => {
+  const theme = useTheme()
   return (
     <BlueCardStyled {...rest}>
-      <Text fontWeight={500} color="#2172E5">
+      <Text fontWeight={500} color={theme.text}>
         {children}
       </Text>
     </BlueCardStyled>

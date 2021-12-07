@@ -1,14 +1,14 @@
-# DMM Exchange Interface
+# KyberSwap Interface
 
-An open source interface for DMM Exchange -- a protocol for decentralized exchange of Ethereum tokens.
+An open source interface for KyberSwap -- a protocol for decentralized exchange.
 Forked from [Uniswap/uniswap-interface](https://github.com/Uniswap/uniswap-interface)
 
-- Website: [dmm.exchange](https://dmm.exchange/)
+- Website: [kyberswap.com](https://kyberswap.com/)
 - Whitepaper: [Link](https://files.kyber.network/DMM-Feb21.pdf)
 
-## Accessing the DMM Exchange Interface
+## Accessing the KyberSwap Interface
 
-To access the DMM Exchange Interface, visit [dmm.exchange](https://dmm.exchange/)
+To access the KyberSwap Interface, visit [kyberswap.com](https://kyberswap.com/)
 
 ## Development
 
@@ -26,5 +26,5 @@ yarn start
 
 ## Contributions
 
-**Please open all pull requests against the `master` branch.** 
+**Please open all pull requests against the `main` branch.**
 CI checks will run against all PRs.

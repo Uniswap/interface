@@ -147,7 +147,7 @@ const RewardLockerSchedules = ({
               expanded={expanded}
               marginLeft="8px"
               padding="9px"
-              width="fit-content"
+              width="max-content"
               onClick={() => setExpanded(prev => !prev)}
             />
           )}
@@ -161,7 +161,7 @@ const RewardLockerSchedules = ({
               expanded={expanded}
               marginLeft="8px"
               padding="9px"
-              width="fit-content"
+              width="max-content"
               onClick={() => setExpanded(prev => !prev)}
             />
           )}

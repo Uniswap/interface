@@ -1,34 +1,35 @@
 import { ChainId, Fraction, JSBI, Pair, Percent, TokenAmount } from '@dynamic-amm/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Text, Flex } from 'rebass'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
-import { BIG_INT_ZERO, DMM_ANALYTICS_URL, ONE_BIPS } from 'constants/index'
+import { DMM_ANALYTICS_URL, ONE_BIPS } from 'constants/index'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, UppercaseText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonOutlined } from '../Button'
+import { ButtonEmpty, ButtonLight } from '../Button'
 import Card, { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
-import WarningRightIcon from 'components/Icons/WarningRightIcon'
-import QuestionHelper from 'components/QuestionHelper'
-import { Dots } from '../swap/styleds'
-import { priceRangeCalcByPair, getMyLiquidity, useCurrencyConvertedToNative } from 'utils/dmm'
-import { UserLiquidityPosition } from 'state/pools/hooks'
+import { getMyLiquidity, useCurrencyConvertedToNative, checkIsFarmingPool, getTradingFeeAPR } from 'utils/dmm'
+import { UserLiquidityPosition, useBulkPoolData } from 'state/pools/hooks'
 import useTheme from 'hooks/useTheme'
 import { TokenWrapper } from 'pages/AddLiquidity/styled'
-import { useTokensPrice } from 'state/application/hooks'
+import { useTokensPrice, useETHPrice } from 'state/application/hooks'
 import { formattedNum } from 'utils'
+import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
+import { MouseoverTooltip } from 'components/Tooltip'
+import Divider from 'components/Divider'
+import DropIcon from 'components/Icons/DropIcon'
+import InfoHelper from 'components/InfoHelper'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -40,12 +41,13 @@ export const HoverCard = styled(Card)`
     border: 1px solid ${({ theme }) => darken(0.06, theme.bg2)};
   }
 `
-const StyledPositionCard = styled(LightCard)<{ border?: string }>`
-  border: ${({ border }) => border || 'none'};
-  background: ${({ theme }) => theme.bg6};
+const StyledPositionCard = styled(LightCard)`
+  border: none;
+  background: ${({ theme }) => theme.background};
   position: relative;
   overflow: hidden;
   border-radius: 8px;
+  padding: 32px 16px 20px;
 `
 
 const StyledMinimalPositionCard = styled.div`
@@ -67,58 +69,31 @@ const StyledMinimalPositionCard = styled.div`
 
 const MinimalPositionItem = styled(AutoColumn)<{ noBorder?: boolean; noPadding?: boolean }>`
   width: 100%;
-  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px solid ${theme.border4}`)};
+  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px solid ${theme.border}`)};
   padding-bottom: ${({ noPadding }) => (noPadding ? '0' : '1rem')};
 
   @media only screen and (min-width: 1000px) {
     width: fit-content;
     border-bottom: none;
-    border-right: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px solid ${theme.border4}`)};
+    border-right: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px solid ${theme.border}`)};
     padding-right: ${({ noPadding }) => (noPadding ? '0' : '1rem')};
     padding-bottom: 0;
   }
 `
 
-const ButtonSecondary2 = styled(ButtonSecondary)`
-  border: none;
-  :hover {
-    border: none;
-  }
-`
-
-const PositionItem = styled.div`
-  width: 100%;
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: 1fr 2fr 4fr 2fr 0.5fr;
-  justify-content: space-between;
-`
-
 const IconWrapper = styled.div`
   position: absolute;
   top: 0;
-  right: 0;
-`
-
-const USDValue = styled.div`
-  text-align: right;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    text-align: left;
-  `}
+  left: 0;
 `
 
 const TokenRatioText = styled(Text)<{ isWarning: boolean }>`
-  color: ${({ theme, isWarning }) => (isWarning ? theme.warning : theme.text1)};
+  color: ${({ theme, isWarning }) => (isWarning ? theme.warning : theme.text)};
 `
 
 const WarningMessage = styled(Text)`
   color: ${({ theme }) => theme.warning};
   text-align: center;
-`
-
-const ButtonOutlined2 = styled(ButtonOutlined)`
-  font-size: inherit;
 `
 
 const formattedUSDPrice = (tokenAmount: TokenAmount, price: number) => {
@@ -268,7 +243,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
   return (
     <>
       <StyledMinimalPositionCard>
-        <MinimalPositionItem style={{ height: '100%', alignItems: 'center' }}>
+        <MinimalPositionItem style={{ height: '100%', alignItems: 'center', display: 'flex' }}>
           <Text fontWeight={500} fontSize={16}>
             <Trans>Your Current Position</Trans>
           </Text>
@@ -361,13 +336,55 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
   )
 }
 
+const Tabs = styled.div`
+  border-radius: 999px;
+  margin-top: 1.5rem;
+  background: ${({ theme }) => theme.buttonBlack};
+  display: flex;
+  align-items: center;
+`
+
+const TabItem = styled.div<{ active: boolean }>`
+  border-radius: 999px;
+  background: ${({ theme, active }) => (active ? theme.primary : theme.buttonBlack)};
+  color: ${({ theme, active }) => (active ? theme.textReverse : theme.subText)};
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  padding: 6px;
+  font-weight: 500;
+  font-size: 14px;
+`
+
+const Row = styled(Flex)`
+  justify-content: space-between;
+  color: ${({ theme }) => theme.subText};
+  font-weight: 500;
+  margin-top: 8px;
+  font-size: 12px;
+`
+
+const RemoveBtn = styled(ButtonLight)`
+  background: ${({ theme }) => `${theme.subText}33`};
+`
+
 export default function FullPositionCard({ pair, border, stakedBalance, myLiquidity }: PositionCardProps) {
   const { account, chainId } = useActiveWeb3React()
 
+  const isFarmingPool = checkIsFarmingPool(pair.address, chainId)
+
+  const ethPrice = useETHPrice()
+
+  const { data: poolsData } = useBulkPoolData([pair.address.toLowerCase()], ethPrice.currentPrice)
+
+  const poolData = poolsData?.[0]
+
+  const volume = poolData?.oneDayVolumeUSD || poolData?.oneDayVolumeUntracked
+  const fee = poolData?.oneDayFeeUSD || poolData?.oneDayFeeUntracked
+  const apr = getTradingFeeAPR(poolData?.reserveUSD, fee).toFixed(2)
+
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
-
-  const [showMore, setShowMore] = useState(false)
 
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
@@ -413,213 +430,200 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
   const native0 = useCurrencyConvertedToNative(currency0 || undefined)
   const native1 = useCurrencyConvertedToNative(currency1 || undefined)
 
+  const theme = useTheme()
+  const [showPoolInfo, setShowPoolInfo] = useState(false)
+
   return (
     <StyledPositionCard border={border}>
-      {isWarning && (
+      {(isWarning || isFarmingPool) && (
         <IconWrapper>
-          <WarningRightIcon />
+          {isFarmingPool ? (
+            <MouseoverTooltip text="Available for yield farming">
+              <DropIcon width={40} height={40} />
+            </MouseoverTooltip>
+          ) : (
+            <MouseoverTooltip
+              text={
+                warningToken ? (
+                  <WarningMessage>{t`Note: ${warningToken} is now <10% of the pool. Pool might become inactive if ${warningToken} reaches 0%`}</WarningMessage>
+                ) : (
+                  <WarningMessage>
+                    <Trans>One token is close to 0% in the pool ratio. Pool might go inactive.</Trans>
+                  </WarningMessage>
+                )
+              }
+            >
+              <WarningLeftIcon width={40} height={40} />
+            </MouseoverTooltip>
+          )}
         </IconWrapper>
       )}
-      <AutoColumn gap="12px">
-        <FixedHeightRow>
-          <AutoRow gap="8px" align="flex-start">
-            {!currency0 || !currency1 ? (
-              <Dots>
-                <Trans>Loading</Trans>
-              </Dots>
-            ) : (
-              <PositionItem>
-                <DoubleCurrencyLogo currency0={native0} currency1={native1} size={20} />
-                <div>{`${native0?.symbol}/${native1?.symbol}`}</div>
-                <div>
-                  {!!token0Deposited && (
-                    <div>
-                      {token0Deposited?.toSignificant(6)} / {token1Deposited?.toSignificant(6)}{' '}
-                    </div>
-                  )}
-                </div>
 
-                {!!usdValue && <USDValue>{usdValue}</USDValue>}
+      <Flex justifyContent="center">
+        <DoubleCurrencyLogo currency0={native0} currency1={native1} size={40} />
+      </Flex>
 
-                <ButtonEmpty padding="0" width="32px" onClick={() => setShowMore(!showMore)}>
-                  {showMore ? (
-                    <ChevronUp size="20" style={{ marginLeft: '10px' }} />
-                  ) : (
-                    <ChevronDown size="20" style={{ marginLeft: '10px' }} />
-                  )}
-                </ButtonEmpty>
-              </PositionItem>
-            )}
-          </AutoRow>
-        </FixedHeightRow>
+      <Flex marginTop="1rem" justifyContent="center" alignItems="center">
+        <Text fontWeight={500}>{`${native0?.symbol}/${native1?.symbol}`}</Text>
+        <Text color={theme.subText} fontWeight={500} marginLeft="4px">
+          (AMP = {amp.toSignificant(5)})
+        </Text>
+      </Flex>
 
-        {showMore && (
-          <AutoColumn gap="8px" style={{ marginTop: '8px' }}>
-            <FixedHeightRow>
-              <Text fontSize={14} fontWeight={500}>
-                <Trans>Your total pool tokens:</Trans>
+      <Tabs>
+        <TabItem active={!showPoolInfo} onClick={() => setShowPoolInfo(false)} role="button">
+          <Trans>Your Liquidity</Trans>
+        </TabItem>
+        <TabItem active={showPoolInfo} onClick={() => setShowPoolInfo(true)} role="button">
+          <Trans>Pool Info</Trans>
+        </TabItem>
+      </Tabs>
+
+      <Flex height="108px" marginTop="14px" flexDirection="column" justifyContent="space-between">
+        {showPoolInfo ? (
+          <>
+            <Row>
+              <Flex>
+                <Trans>Ratio</Trans>
+                <InfoHelper
+                  size={14}
+                  text={t`Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.`}
+                />
+              </Flex>
+              <TokenRatioText fontSize={14} fontWeight={500} isWarning={isWarning}>
+                {percentToken0.toSignificant(2) ?? '.'}% {pair.token0.symbol} - {percentToken1.toSignificant(2) ?? '.'}%{' '}
+                {pair.token1.symbol}
+              </TokenRatioText>
+            </Row>
+            <Row>
+              <Flex>
+                <Trans>APR</Trans>
+                <InfoHelper size={14} text={t`Estimated return based on yearly fees of the pool`} />
+              </Flex>
+              <Text font-size={14} color={theme.apr}>
+                {apr ? `${apr}%` : '-'}
               </Text>
-              <Text fontSize={14} fontWeight={500}>
-                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
+            </Row>
+            <Row>
+              <Text>
+                <Trans>Volume (24H)</Trans>
               </Text>
-            </FixedHeightRow>
-            {stakedBalance && (
-              <FixedHeightRow>
-                <Text fontSize={14} fontWeight={500}>
-                  <Trans>Pool tokens in rewards pool:</Trans>
-                </Text>
-                <Text fontSize={14} fontWeight={500}>
-                  {stakedBalance.toSignificant(4)}
-                </Text>
-              </FixedHeightRow>
-            )}
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={14} fontWeight={500}>
-                  <Trans>Pooled {native0?.symbol}:</Trans>
-                </Text>
-              </RowFixed>
+              <Text color={theme.text} font-size={14}>
+                {volume ? formattedNum(volume, true) : '-'}
+              </Text>
+            </Row>
+            <Row>
+              <Text>
+                <Trans>Fees (24H)</Trans>
+              </Text>
+              <Text font-size={14} color={theme.text}>
+                {fee ? formattedNum(fee, true) : '-'}
+              </Text>
+            </Row>
+          </>
+        ) : (
+          <>
+            <Row>
+              <Text>
+                <Trans>Your deposit</Trans>
+              </Text>
+              <Text fontSize={14} color={theme.text}>
+                {usdValue}
+              </Text>
+            </Row>
+            <Row>
+              <Text>
+                <Trans>Total LP Tokens</Trans>
+              </Text>
+              <Text color={theme.text} fontSize={14}>
+                {userPoolBalance?.toSignificant(6) ?? '-'}
+              </Text>
+            </Row>
+            <Row>
+              <Text>
+                <Trans>Pooled {native0?.symbol}</Trans>
+              </Text>
               {token0Deposited ? (
                 <RowFixed>
-                  <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
+                  <CurrencyLogo size="16px" currency={currency0} />
+                  <Text fontSize={14} fontWeight={500} marginLeft={'6px'} color={theme.text}>
                     {token0Deposited?.toSignificant(6)}
                   </Text>
-                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
-
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={14} fontWeight={500}>
-                  <Trans>Pooled {native1?.symbol}:</Trans>
-                </Text>
-              </RowFixed>
+            </Row>
+            <Row>
+              <Text>
+                <Trans>Pooled {native1?.symbol}</Trans>
+              </Text>
               {token1Deposited ? (
                 <RowFixed>
-                  <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
+                  <CurrencyLogo size="16px" currency={currency1} />
+                  <Text color={theme.text} fontSize={14} fontWeight={500} marginLeft={'6px'}>
                     {token1Deposited?.toSignificant(6)}
                   </Text>
-                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
+            </Row>
 
-            <FixedHeightRow>
-              <Text fontSize={14} fontWeight={500}>
-                <Trans>Your pool share:</Trans>
+            <Row>
+              <Text>
+                <Trans>Your share of pool</Trans>
               </Text>
-              <Text fontSize={14} fontWeight={500}>
+              <Text fontSize={14} color={theme.text}>
                 {poolTokenPercentage
                   ? (poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2)) + '%'
                   : '-'}
               </Text>
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={14} fontWeight={500}>
-                <Trans>Ratio:</Trans>
-              </Text>
-              <TokenRatioText fontSize={16} fontWeight={500} isWarning={isWarning}>
-                {percentToken0.toSignificant(2) ?? '.'}% {pair.token0.symbol} - {percentToken1.toSignificant(2) ?? '.'}%{' '}
-                {pair.token1.symbol}
-              </TokenRatioText>
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={14} fontWeight={500} display="flex">
-                <Trans>AMP</Trans>
-                <QuestionHelper
-                  text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
-                />
-                &nbsp;:
-              </Text>
-              <Text fontSize={14} fontWeight={500}>
-                {amp.toSignificant(5)}
-              </Text>
-            </FixedHeightRow>
-            <RowBetween>
-              <Text fontSize={14} fontWeight={500} display="flex">
-                <Trans>
-                  Price range {pair.token0.symbol}/{pair.token1.symbol}
-                </Trans>{' '}
-                <QuestionHelper
-                  text={t`Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive.`}
-                />
-                &nbsp;:
-              </Text>
-              <Text fontSize={14} fontWeight={500} marginLeft="12px">
-                {/* token 0  */}
-                {priceRangeCalcByPair(pair)[0][0]?.toSignificant(6) ?? '0'} -{' '}
-                {priceRangeCalcByPair(pair)[0][1]?.toSignificant(6) ?? '♾️'}
-              </Text>
-            </RowBetween>
-            <RowBetween>
-              <Text fontSize={14} fontWeight={500} display="flex">
-                Price range {pair.token1.symbol}/{pair.token0.symbol}{' '}
-                <QuestionHelper
-                  text={t`Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive.`}
-                />
-                &nbsp;:
-              </Text>
-              <Text fontSize={14} fontWeight={500} marginLeft="12px">
-                {/* token 1  */}
-                {priceRangeCalcByPair(pair)[1][0]?.toSignificant(6) ?? '0'} -{' '}
-                {priceRangeCalcByPair(pair)[1][1]?.toSignificant(6) ?? '♾️'}
-              </Text>
-            </RowBetween>
-            <ButtonSecondary2 padding="8px" borderRadius="8px">
-              <ExternalLink
-                style={{ width: '100%', textAlign: 'center' }}
-                href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}
-              >
-                <Trans>View accrued fees and analytics</Trans>
-                <span style={{ fontSize: '11px' }}>↗</span>
-              </ExternalLink>
-            </ButtonSecondary2>
-
-            {isWarning && warningToken && (
-              <WarningMessage>{t`Note: ${warningToken} is now <10% of the pool. Pool might become inactive if ${warningToken} reaches 0%`}</WarningMessage>
-            )}
-
-            {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
-              <AutoRow justify="space-around" marginTop="10px">
-                <span style={{ display: 'inherit' }}>
-                  <ButtonOutlined2
-                    padding="8px"
-                    as={Link}
-                    width="150px"
-                    to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
-                  >
-                    <Trans>Remove</Trans>
-                  </ButtonOutlined2>
-                  &nbsp;
-                  <ButtonPrimary
-                    padding="8px"
-                    as={Link}
-                    to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
-                    width="150px"
-                  >
-                    <Trans>Add</Trans>
-                  </ButtonPrimary>
-                </span>
-              </AutoRow>
-            )}
-            {stakedBalance && JSBI.greaterThan(stakedBalance.raw, BIG_INT_ZERO) && (
-              <ButtonPrimary
-                padding="8px"
-                as={Link}
-                to={`/uni/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}`}
-                width="100%"
-              >
-                <Trans>Manage Liquidity in Rewards Pool</Trans>
-              </ButtonPrimary>
-            )}
-          </AutoColumn>
+            </Row>
+          </>
         )}
-      </AutoColumn>
+      </Flex>
+
+      <Divider sx={{ marginTop: '18px' }} />
+
+      <Flex justifyContent="space-between" marginTop="16px" alignItems="center">
+        <ButtonEmpty width="max-content" style={{ fontSize: '14px' }} padding="0">
+          <ExternalLink
+            style={{ width: '100%', textAlign: 'center' }}
+            href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}
+          >
+            <Trans>Analytics ↗</Trans>
+          </ExternalLink>
+        </ButtonEmpty>
+
+        <Flex justifyContent="flex-end">
+          <ButtonLight
+            padding="6px"
+            style={{ fontSize: '14px', marginRight: '8px', borderRadius: '4px' }}
+            as={Link}
+            to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
+          >
+            <Text width="max-content">
+              <Trans>+ Add</Trans>
+            </Text>
+          </ButtonLight>
+
+          <RemoveBtn
+            style={{
+              padding: '6px',
+              borderRadius: '4px',
+              fontSize: '14px',
+              color: theme.subText
+            }}
+            as={Link}
+            to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
+          >
+            <Text width="max-content">
+              <Trans>- Remove</Trans>
+            </Text>
+          </RemoveBtn>
+        </Flex>
+      </Flex>
     </StyledPositionCard>
   )
 }

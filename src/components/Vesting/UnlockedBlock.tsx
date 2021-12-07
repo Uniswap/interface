@@ -26,21 +26,24 @@ const UnlockedBlock = ({ info, onClaimAll }: { info: any; onClaimAll?: () => voi
   return (
     <Flex width="fit-content" backgroundColor={theme.bg12} style={{ borderRadius: '4px' }}>
       <Tag>
-        <RowBetween style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setOpen(prev => !prev)}>
+        <RowBetween
+          style={{ position: 'relative', cursor: 'pointer', width: 'max-content' }}
+          onClick={() => setOpen(prev => !prev)}
+        >
           <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
             <Trans>Unlocked</Trans>:
           </TYPE.body>
 
           <Flex alignItems="center" marginLeft="4px">
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14} width="max-content">
               {formattedNum(unlockedUSD.toString(), true)}
             </TYPE.body>
             {unlockedUSD > 0 && (
               <>
                 {open ? (
-                  <ChevronUp size="14" color={theme.text1} style={{ margin: '0.15rem 0 0 0.25rem' }} />
+                  <ChevronUp size="14" color={theme.text} style={{ margin: '0.15rem 0 0 0.25rem' }} />
                 ) : (
-                  <ChevronDown size="14" color={theme.text1} style={{ margin: '0.15rem 0 0 0.25rem' }} />
+                  <ChevronDown size="14" color={theme.text} style={{ margin: '0.15rem 0 0 0.25rem' }} />
                 )}
               </>
             )}

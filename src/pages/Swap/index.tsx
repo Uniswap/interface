@@ -263,7 +263,7 @@ export default function Swap({ history }: RouteComponentProps) {
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <RowBetween mb={'16px'}>
-          <TYPE.black color={theme.text1} fontSize={20} fontWeight={500}>{t`Swap`}</TYPE.black>
+          <TYPE.black color={theme.text} fontSize={20} fontWeight={500}>{t`Swap`}</TYPE.black>
           <TransactionSettings />
         </RowBetween>
 
@@ -295,6 +295,7 @@ export default function Swap({ history }: RouteComponentProps) {
               otherCurrency={currencies[Field.OUTPUT]}
               id="swap-currency-input"
               showCommonBases={true}
+              positionMax="top"
             />
             <AutoColumn justify="space-between">
               <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
@@ -360,7 +361,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                     <div style={{ alignItems: 'center', display: 'flex' }}>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        <Trans>Slippage Tolerance:</Trans>&nbsp;
+                        <Trans>Max Slippage:</Trans>&nbsp;
                       </ClickableText>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
                         {allowedSlippage / 100}%

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useRouteMatch } from 'react-router'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 import { useMedia } from 'react-use'
@@ -98,18 +97,14 @@ const SocialLinksWrapper = styled.div`
 
 export default function PoweredBy() {
   const [darkMode] = useDarkModeManager()
-  const aboutPage = useRouteMatch('/about')
   const above768 = useMedia('(min-width: 768px)')
-  const above1366 = useMedia('(min-width: 1366px)')
+
+  if (!above768) return null
 
   return (
     <StyledPoweredBy>
       <PoweredByLink href="https://kyber.network/">
-        <PoweredByText
-          style={{
-            color: aboutPage?.isExact && above1366 ? '#fff' : undefined
-          }}
-        >
+        <PoweredByText>
           <Trans>Powered By</Trans>
         </PoweredByText>
         <div>
@@ -120,9 +115,9 @@ export default function PoweredBy() {
               <PoweredByIconDark width={48} />
             )
           ) : above768 ? (
-            <PoweredByIconLight color={aboutPage?.isExact && above1366 ? '#fff' : undefined} />
+            <PoweredByIconLight />
           ) : (
-            <PoweredByIconLight width={48} color={aboutPage?.isExact && above1366 ? '#fff' : undefined} />
+            <PoweredByIconLight width={48} />
           )}
         </div>
       </PoweredByLink>

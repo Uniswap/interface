@@ -6,7 +6,7 @@ import { Flex } from 'rebass'
 
 import { ChainId, Currency } from '@dynamic-amm/sdk'
 import { POPULAR_PAIRS } from 'constants/index'
-import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonPrimary } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
@@ -40,6 +40,7 @@ import Loader from 'components/Loader'
 import { Farm } from 'state/farms/types'
 import { useFarmsData } from 'state/farms/hooks'
 import { PopularPair } from 'state/pair/types'
+import useTheme from 'hooks/useTheme'
 
 const Pools = ({
   match: {
@@ -193,7 +194,7 @@ const Pools = ({
                       chainId
                     )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`}
                     width="fit-content"
-                    style={{ marginLeft: '1rem', borderRadius: '8px' }}
+                    style={{ marginLeft: '1rem', borderRadius: '4px' }}
                   >
                     <span>
                       <Trans>Trade</Trans>
@@ -204,17 +205,17 @@ const Pools = ({
 
               <SearchWrapper>
                 <Search searchValue={searchValue} setSearchValue={setSearchValue} />
-                <ButtonOutlined
-                  width="148px"
-                  padding="12px 18px"
+                <ButtonPrimary
+                  width="max-content"
+                  padding="10px 12px"
                   as={Link}
                   to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
                     currencyIdB === '' ? undefined : currencyIdB
                   }`}
-                  style={{ float: 'right' }}
+                  style={{ float: 'right', fontSize: '14px', borderRadius: '4px' }}
                 >
                   <Trans>+ Create New Pool</Trans>
-                </ButtonOutlined>
+                </ButtonPrimary>
               </SearchWrapper>
             </ToolbarWrapper>
           </>
@@ -223,16 +224,16 @@ const Pools = ({
             <ToolbarWrapper>
               <Trans>Select Pair</Trans>
               <SearchWrapper>
-                <ButtonOutlined
+                <ButtonPrimary
                   padding="10px 12px"
                   as={Link}
                   to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
                     currencyIdB === '' ? undefined : currencyIdB
                   }`}
-                  style={{ float: 'right' }}
+                  style={{ float: 'right', borderRadius: '4px', fontSize: '14px' }}
                 >
                   <Trans>+ Create New Pool</Trans>
-                </ButtonOutlined>
+                </ButtonPrimary>
               </SearchWrapper>
             </ToolbarWrapper>
             <CurrencyWrapper>
@@ -301,6 +302,7 @@ const Pools = ({
 
 const PoolFarm = ({ farm }: { farm: Farm | PopularPair }) => {
   const { chainId } = useActiveWeb3React()
+  const theme = useTheme()
   return (
     <ButtonGray
       padding="8px 28px"
@@ -310,7 +312,7 @@ const PoolFarm = ({ farm }: { farm: Farm | PopularPair }) => {
         chainId
       )}`}
       width="fit-content"
-      style={{ margin: '1rem 1rem 0 0', borderRadius: '8px' }}
+      style={{ margin: '1rem 1rem 0 0', borderRadius: '4px', background: theme.background, color: theme.subText }}
     >
       <span>
         <Trans>

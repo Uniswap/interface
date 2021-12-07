@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useActivePopups } from '../../state/application/hooks'
 import { AutoColumn } from '../Column'
 import PopupItem from './PopupItem'
-import { useURLWarningVisible } from '../../state/user/hooks'
+import { useURLWarningVisible, useRebrandingAnnouncement } from '../../state/user/hooks'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;
@@ -30,9 +30,9 @@ const MobilePopupInner = styled.div`
   }
 `
 
-const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean }>`
+const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: string }>`
   position: fixed;
-  top: ${({ extraPadding }) => (extraPadding ? '108px' : '88px')};
+  top: ${({ extraPadding }) => extraPadding};
   right: 1rem;
   max-width: 355px !important;
   width: 100%;
@@ -48,10 +48,11 @@ export default function Popups() {
   const activePopups = useActivePopups()
 
   const urlWarningActive = useURLWarningVisible()
+  const rebrandingAnounnce = useRebrandingAnnouncement()
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive}>
+      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive ? '108px' : rebrandingAnounnce ? '148px' : '88px'}>
         {activePopups.map(item => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { Switch } from '@rebass/forms'
 
@@ -45,6 +45,17 @@ export const TabContainer = styled.div`
   }
 `
 
+export const Divider = styled.div`
+  width: 1px;
+  height: 20px;
+  background: ${({ theme }) => theme.border};
+  margin-right: 1.5rem;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin-right: 12px;
+  `}
+`
+
 export const TabWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -58,11 +69,13 @@ export const TabWrapper = styled.div`
 
 export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   width: fit-content;
-  margin-right: 2rem;
-  padding: 0 0 4px 0;
-  color: ${({ theme }) => theme.text1};
+  margin-right: 1.5rem;
+  font-weight: 400;
+  padding: 0;
+  padding-bottom: 4px;
+  color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
   border-radius: 0;
-  border-bottom: ${({ theme, isActive }) => (isActive ? `2px solid ${theme.primary1}` : 'none')};
+  border-bottom: ${({ theme, isActive }) => (isActive ? `2px solid ${theme.primary}` : 'none')};
 
   &:hover {
     text-decoration: none;
@@ -72,7 +85,11 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
     text-decoration: none;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  &:last-child {
+    margin-right: 0;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-right: 12px;
   `}
 `
@@ -84,13 +101,13 @@ export const PoolTitleContainer = styled.div`
 
 export const UpcomingPoolsWrapper = styled.div`
   position: relative;
-  padding: 8px 16px 8px 0;
+  margin-right: 4px;
 `
 
 export const NewText = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -10px;
+  right: -12px;
   font-size: 10px;
   font-weight: 500;
   color: #ff537b;
@@ -99,7 +116,10 @@ export const NewText = styled.div`
 export const StakedOnlyToggleWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin-top: 20px;
+  `}
 `
 
 export const StakedOnlyToggle = styled(Switch)`
@@ -120,117 +140,83 @@ export const StakedOnlyToggleText = styled.div`
 `
 
 export const AdContainer = styled.div`
-  margin-bottom: 28px;
+  margin-bottom: 1.75rem;
+  border-radius: 0.5rem;
+  position: relative;
+`
+
+export const LearnMoreBtn = styled.a`
+  outline: none;
+  border: none;
+  text-decoration: none;
+  background-color: #244641;
+  color: ${({ theme }) => theme.primary};
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-top-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+
+  :hover {
+    text-decoration: underline;
+  }
 `
 
 export const HeadingContainer = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   margin-bottom: 20px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    gap: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  `}
+`
+export const HeadingRight = styled.div`
+  display: flex;
+  gap: 20px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: flex;
     flex-direction: column-reverse;
     gap: 0;
   `}
 `
-export const HeadingRight = styled.div`
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg16};
-  padding: 24px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-    box-shadow: none;
-    padding-bottom: 0;
-
-    :after {
-      content: "";
-      display: block;
-      border-bottom: 1px solid #404b51;
-    }
-  `}
+export const TotalRewardsContainer = styled.div<{ disabled?: boolean }>`
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  border-radius: 4px;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  background-color: ${({ theme }) => theme.apr};
+  color: ${({ theme }) => theme.textReverse};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding-bottom: 0;
-  `}
-`
+    justify-content: space-between
+  `};
 
-export const HeadingLeft = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg16};
-  padding: 24px;
-  gap: 16px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    box-shadow: none;
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    gap: 0;
-    display: flex;
-    flex-direction: column;
-  `}
-`
-
-export const LearnMoreContainer = styled.div`
-  padding-right: 24px;
-  border-right: 1px solid #404b51;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-row: 2;
-    padding-bottom: 24px;
-    padding-right: 0;
-    border-bottom: 1px solid #404b51;
-    border-right: none;
-  `}
-`
-
-export const UpcomingFarmsContainer = styled.div`
-  padding-left: 24px;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding-top: 24px;
-    padding-left: 0;
-  `}
-`
-export const LearnMoreInstruction = styled.div`
-  margin-bottom: 20px;
-`
-
-export const LearnMoreLinkContainer = styled.div`
-  font-size: 14px;
-  font-weight: bold;
-`
-
-export const HarvestAllContainer = styled.div`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding-bottom: 24px;
-  `}
-`
-
-export const TotalRewardsContainer = styled.div`
-  margin-right: 32px;
-`
-
-export const TotalRewardsTitleWrapper = styled.div`
-  display: flex;
-  margin-bottom: 12px;
-`
-
-export const TotalRewardsTitle = styled.div`
-  font-size: 16px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text11};
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      background-color: ${({ theme }) => theme.buttonGray};
+      color: ${({ theme }) => theme.disableText};
+      cursor: not-allowed;
+    `};
 `
 
 export const HarvestAllButtonContainer = styled.div`
@@ -280,12 +266,6 @@ export const Plus = styled.span`
   }
 `
 
-export const TotalRewardUSD = styled.span`
-  font-size: 20px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.text};
-`
-
 export const HistoryButton = styled.div`
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.subText};
@@ -295,7 +275,7 @@ export const HistoryButton = styled.div`
   cursor: pointer;
   white-space: nowrap;
 
-  img {
+  svg {
     vertical-align: bottom;
     margin-right: 8px;
   }
@@ -342,7 +322,7 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   grid-gap: 3rem;
   grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr 0.25fr;
   grid-template-areas: 'pools liq end apy reward staked_balance expand';
-  padding: 18px 0 18px 24px;
+  padding: 18px 24px;
   font-size: 12px;
   align-items: center;
   height: fit-content;
@@ -379,11 +359,11 @@ export const ClickableText = styled(Text)`
 `
 
 export const MenuFlyout = styled.span`
-  min-width: 15rem;
+  min-width: 14rem;
   background-color: ${({ theme }) => theme.background};
   filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.2));
   border-radius: 5px;
-  padding: 19px 32px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -499,13 +479,14 @@ export const LPInfoContainer = styled.div`
 export const GetLP = styled.span`
   font-size: 14px;
   font-weight: 600;
+  color: ${({ theme }) => theme.primary};
 `
 
 export const StyledItemCard = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 4px;
-  border: ${({ theme }) => `1px solid ${theme.border3}`};
+  border: ${({ theme }) => `1px solid ${theme.border}`};
   border-radius: 8px;
   margin-bottom: 24px;
   padding: 8px 20px 4px 20px;
@@ -535,7 +516,7 @@ export const DataText = styled(Flex)<{ align?: string }>`
 `
 
 export const APY = styled(DataText)`
-  color: ${({ theme }) => theme.text12};
+  color: ${({ theme }) => theme.apr};
 `
 
 export const GridItem = styled.div<{ noBorder?: boolean }>`
@@ -563,9 +544,38 @@ export const Seperator = styled.div`
   border: 1px solid ${({ theme }) => theme.bg14};
 `
 
-export const TotalRewardsDetailWrapper = styled.div`
+export const SearchContainer = styled.div`
+  background: ${({ theme }) => theme.background};
+  border-radius: 4px;
+  width: 320px;
+  font-size: 12px;
   display: flex;
   align-items: center;
-  position: relative;
-  cursor: pointer;
+  padding: 10px 12px;
+  gap: 8px;
+
+  > svg {
+    cursor: pointer;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    width: 100%;
+    margin-top: 20px;
+  `}
+`
+
+export const SearchInput = styled.input`
+  outline: none;
+  border: none;
+  flex: 1;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background};
+
+  :placeholder {
+    color: ${({ theme }) => theme.disableText};
+  }
 `

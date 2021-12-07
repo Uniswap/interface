@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, ReactNode } from 'react'
 import { Info } from 'react-feather'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip'
@@ -12,7 +12,7 @@ const InfoWrapper = styled.div<{ isActive?: boolean }>`
   outline: none;
   cursor: default;
   border-radius: 36px;
-  color: ${({ theme, isActive }) => (isActive ? 'white' : theme.subText)};
+  color: ${({ theme, isActive }) => (isActive ? theme.textReverse : theme.subText)};
 
   :hover,
   :focus {
@@ -53,11 +53,13 @@ const InfoHelperWrapper = styled.span`
 export default function InfoHelper({
   text,
   size,
-  isActive = false
+  isActive = false,
+  color
 }: {
-  text: string
+  text: string | ReactNode
   size?: number
   isActive?: boolean
+  color?: string
 }) {
   const [show, setShow] = useState<boolean>(false)
 
@@ -68,7 +70,7 @@ export default function InfoHelper({
     <InfoHelperWrapper>
       <Tooltip text={text} show={show}>
         <InfoWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} isActive={isActive}>
-          <Info size={size || 16} />
+          <Info size={size || 16} color={color} />
         </InfoWrapper>
       </Tooltip>
     </InfoHelperWrapper>

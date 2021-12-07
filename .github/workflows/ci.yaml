@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - develop
+      - fix-ci
 
 env:
   SERVICE: dmm-interface
@@ -17,6 +18,7 @@ jobs:
     runs-on: ubuntu-18.04
     outputs:
       current_branch: ${{ steps.current_branch.outputs.value }}
+      head_sha: ${{ steps.head_sha.outputs.value }}
       image_name: "kybernetwork/${{ env.SERVICE }}"
       image_tag: ${{ steps.get_tag.outputs.value }} 
     steps:
@@ -27,23 +29,27 @@ jobs:
         shell: bash
         id: current_branch
         run: |
-          if [[ ! "$GITHUB_REF"  = "refs/tags/"* ]]; then
-            if [[ "$GITHUB_EVENT_NAME" = "pull_request" ]]; then
-              HEAD_REF=$(printf "%q" "$GITHUB_HEAD_REF")
+          if [[ ! "${{ github.ref }}"  = "refs/tags/"* ]]; then
+            if [[ "${{ github.event_name }}" = "pull_request" ]]; then
+              HEAD_REF=$(printf "%q" "${{ github.head_ref }}")
               HEAD_REF=${HEAD_REF/refs\/heads\//}
               BRANCH=$HEAD_REF
             else 
-              REF=$(printf "%q" "$GITHUB_REF")
+              REF=$(printf "%q" "${{ github.ref }}")
               REF_BRANCH=${REF/refs\/pull\//}
               REF_BRANCH=${REF_BRANCH/refs\/heads\//}
-              BRANCH=$HEAD_REF
+              BRANCH=$REF_BRANCH
             fi
           else 
-            REF=$(printf "%q" "$GITHUB_REF")
+            REF=$(printf "%q" "${{ github.ref }}")
             REF_BRANCH=${REF/refs\/tags\//}
             BRANCH=$REF_BRANCH
           fi
           echo "::set-output name=value::$BRANCH" 
+
+      - name: Extract GitHub HEAD SHA 
+        id: head_sha 
+        run: echo "::set-output name=value::$(git rev-parse HEAD)"   
 
       - name: Get Docker image tag
         id: get_tag
@@ -94,6 +100,7 @@ jobs:
       - name: Yarn Build
         env:
           CI: false 
+          REACT_APP_VERSION: ${{ github.sha }}
         run: yarn build-ropsten
       
       - name: Docker build and push
@@ -102,7 +109,6 @@ jobs:
           context: .
           push: true
           labels: |
-            commit=${{ github.sha }}
             org.label-schema.schema-version=1.0
             org.label-schema.vcs-ref=${{ github.sha }}
             org.label-schema.version=${{ needs.prepare.outputs.image_tag }}

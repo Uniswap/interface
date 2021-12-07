@@ -20,6 +20,7 @@ jobs:
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-18.04
     outputs:
+      head_sha: ${{ steps.head_sha.outputs.value }}
       repo_name: ${{ github.event.repository.name }}
       pr_number: ${{ steps.pr_number.outputs.value }}
       image_name: "kybernetwork/${{ env.SERVICE }}"
@@ -42,7 +43,7 @@ jobs:
               REF=$(printf "%q" "${{ github.ref }}")
               REF_BRANCH=${REF/refs\/pull\//}
               REF_BRANCH=${REF_BRANCH/refs\/heads\//}
-              BRANCH=$HEAD_REF
+              BRANCH=$REF_BRANCH
             fi
           else 
             REF=$(printf "%q" "${{ github.ref }}")
@@ -58,14 +59,19 @@ jobs:
           NUMBER="${{ github.event.issue.number || github.event.number }}"
           echo "::set-output name=value::${PR_NUMBER:-$NUMBER}"
 
+      - name: Extract GitHub HEAD SHA 
+        id: head_sha 
+        run: echo "::set-output name=value::${{ github.event.pull_request.head.sha }}"   
+
       - name: Get Docker image tag
         id: get_tag
         env:
           CURRENT_BRANCH: ${{ steps.current_branch.outputs.value }}
+          HEAD_SHA: ${{ steps.head_sha.outputs.value }}
         run: |
-          short_sha="$(git rev-parse --short HEAD)"
+          short_sha="$(echo "$HEAD_SHA" | head -c7)"
           branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
-          echo "::set-output name=value::$branch_tag-$short_sha"  
+          echo "::set-output name=value::pr-$branch_tag-$short_sha"  
 
 
   build:
@@ -76,6 +82,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Set up Node.js 12.x
         uses: actions/setup-node@v1
@@ -109,6 +117,7 @@ jobs:
       - name: Yarn Build
         env:
           CI: false 
+          REACT_APP_VERSION: ${{ needs.prepare.outputs.head_sha }}
         run: yarn build-production
         
       - name: Docker build and push
@@ -117,9 +126,8 @@ jobs:
           context: .
           push: true
           labels: |
-            commit=${{ github.sha }}
             org.label-schema.schema-version=1.0
-            org.label-schema.vcs-ref=${{ github.sha }}
+            org.label-schema.vcs-ref=${{ needs.prepare.outputs.head_sha }}
             org.label-schema.version=${{ needs.prepare.outputs.image_tag }}
             org.label-schema.name=${{ env.SERVICE }}
           tags: |

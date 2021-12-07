@@ -94,8 +94,8 @@ export default function MigrateLiquiditySUSHI({
     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
       ? '0'
       : parsedAmounts[Field.LIQUIDITY_PERCENT].lessThan(new Percent('1', '100'))
-      ? '<1'
-      : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
+        ? '<1'
+        : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
     [Field.LIQUIDITY]:
       independentField === Field.LIQUIDITY ? typedValue : parsedAmounts[Field.LIQUIDITY]?.toSignificant(6) ?? '',
     [Field.CURRENCY_A]:
@@ -217,8 +217,8 @@ export default function MigrateLiquiditySUSHI({
     !liquidityMintedMaxA || !liquidityMintedMaxB
       ? undefined
       : liquidityMintedMaxA.lessThan(liquidityMintedMaxB)
-      ? liquidityMintedMaxA
-      : liquidityMintedMaxB
+        ? liquidityMintedMaxA
+        : liquidityMintedMaxB
 
   // let amountsMin
   let currencyAmountAToAddPool: CurrencyAmount | undefined
@@ -268,11 +268,11 @@ export default function MigrateLiquiditySUSHI({
       estimatedRefund =
         +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
           ? `${currencyAmountB
-              .subtract(tokenAmountDmmToSushi(currencyAmountBOfMaxA as TokenAmount))
-              .toSignificant(6)} ${tokenB?.symbol}`
+            .subtract(tokenAmountDmmToSushi(currencyAmountBOfMaxA as TokenAmount))
+            .toSignificant(6)} ${tokenB?.symbol}`
           : `${currencyAmountA
-              .subtract(tokenAmountDmmToSushi(currencyAmountAOfMaxB as TokenAmount))
-              .toSignificant(6)} ${tokenA?.symbol}`
+            .subtract(tokenAmountDmmToSushi(currencyAmountAOfMaxB as TokenAmount))
+            .toSignificant(6)} ${tokenA?.symbol}`
       poolShare =
         +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
           ? `${poolTokenPercentageMaxA?.toSignificant(2)}%`
@@ -490,9 +490,8 @@ export default function MigrateLiquiditySUSHI({
     }
   }
 
-  const pendingText = t`Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
-    currencyA?.symbol
-  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
+  const pendingText = t`Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${currencyA?.symbol
+    } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
 
   const liquidityPercentChangeCallback = useCallback(
     (value: number) => {
@@ -562,11 +561,7 @@ export default function MigrateLiquiditySUSHI({
       <LightCard>
         <AutoColumn gap="10px">
           <RowFixed>
-            <img
-              src={require('../../assets/svg/logo.svg')}
-              alt="uniswap-icon"
-              style={{ width: '30px', marginBottom: '3px' }}
-            />
+            <img src={'/favicon.png'} alt="uniswap-icon" style={{ width: '20px', marginBottom: '3px' }} />
             <Text fontSize={14} fontWeight={500}>
               &nbsp; <Trans>Pool</Trans>
             </Text>
@@ -714,13 +709,13 @@ export default function MigrateLiquiditySUSHI({
               <Text color={theme.text2} fontWeight={500} fontSize={16}>
                 Price
               </Text>
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+              <Text fontWeight={500} fontSize={16} color={theme.text}>
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+              <Text fontWeight={500} fontSize={16} color={theme.text}>
                 1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
               </Text>
             </RowBetween>
@@ -739,9 +734,8 @@ export default function MigrateLiquiditySUSHI({
     <>
       {chainId && oneCurrencyIsETH ? (
         <Redirect
-          to={`/migrateSushi/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
-            currencyB === ETHER ? WETH[chainId].address : currencyIdB
-          }`}
+          to={`/migrateSushi/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${currencyB === ETHER ? WETH[chainId].address : currencyIdB
+            }`}
         />
       ) : (
         <>
@@ -811,7 +805,7 @@ export default function MigrateLiquiditySUSHI({
                           <Text fontSize={14} fontWeight={500}>
                             <Trans>
                               There is no existing pool for this token pair. You will be creating a new pool with AMP=1
-                              and migrating tokens from Sushiswap to DMM.
+                              and migrating tokens from Sushiswap to KyberSwap.
                             </Trans>{' '}
                           </Text>
                         </RowFixed>

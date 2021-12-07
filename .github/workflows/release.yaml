@@ -48,6 +48,7 @@ jobs:
       - name: Yarn Build
         env:
           CI: false 
+          REACT_APP_VERSION: ${{ github.sha }}
         run: yarn build-production
 
       - name: Save build

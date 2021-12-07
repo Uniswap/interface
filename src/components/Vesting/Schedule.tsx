@@ -140,7 +140,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
   const claimBlock = !fullyVestedAlready && (
     <Flex
       height="fit-content"
-      width="fit-content"
+      width="max-content"
       alignItems="center"
       marginTop="10px"
       backgroundColor={theme.bg12}
@@ -205,7 +205,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
               }}
             >
               <Trans>CLAIMED</Trans> <br />
-              <Text color={theme.text1} fontWeight={600} as="span">
+              <Text color={theme.text} fontWeight={600} as="span">
                 {fixedFormatting(BigNumber.from(schedule[3]), 18)}
               </Text>
             </TYPE.body>
@@ -226,7 +226,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                 position: 'absolute',
                 height: '12px',
                 width: `${vestedPercent}%`,
-                background: '#1183b7',
+                background: theme.primary,
                 borderRadius: '26px',
                 zIndex: 3
               }}
@@ -238,7 +238,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                 position: 'absolute',
                 height: '12px',
                 width: `${vestedAndVestablePercent}%`,
-                background: theme.lightBlue,
+                background: theme.lightGreen,
                 borderRadius: '26px',
                 zIndex: 2
               }}
@@ -268,7 +268,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                   }}
                 >
                   <Trans>UNLOCKED</Trans> <br />
-                  <Text color={theme.text1} fontWeight={600} as="span">
+                  <Text color={theme.text} fontWeight={600} as="span">
                     {fixedFormatting(vestableAmount, 18)}
                   </Text>
                 </TYPE.body>
@@ -289,7 +289,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                     left: `${vestedAndVestablePercent}%`
                   }}
                 >
-                  <Text color={theme.text1} fontWeight={600} as="span">
+                  <Text color={theme.text} fontWeight={600} as="span">
                     {fixedFormatting(unvestableAmount, 18)}
                   </Text>{' '}
                   <Trans>LOCKED</Trans>
@@ -336,7 +336,9 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
               </span>
               <span>{!!endIn ? `(${getFormattedTimeFromSecond(endIn)} left)` : ''}</span>
             </TYPE.body>
-            <div style={{ height: '12px', width: '100%', zIndex: 1, background: '#33444d', borderRadius: '999px' }} />
+            <div
+              style={{ height: '12px', width: '100%', zIndex: 1, background: theme.buttonGray, borderRadius: '999px' }}
+            />
           </AutoRow>
         </AutoRow>
       </div>

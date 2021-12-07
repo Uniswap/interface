@@ -20,6 +20,8 @@ import SEO from './components/SEO'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
+window.version = process.env.REACT_APP_VERSION
+
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
 }
@@ -74,8 +76,8 @@ const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
   return (
     <StrictMode>
       <SEO
-        title="KyberDMM - Swap tokens at the best rates"
-        description="KyberDMM is DeFi‚Äôs first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. KyberDMM is the first major protocol in Kyber‚Äôs liquidity hub."
+        title="KyberSwap - Swap and earn tokens at the best rates"
+        description="KyberSwap is DeFi‚Äôs first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. KyberSwap is the first major protocol in Kyber‚Äôs liquidity hub."
       />
       <FixedGlobalStyle />
       <Provider store={store}>
@@ -98,6 +100,10 @@ const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
 }
 
 ReactDOM.render(<ReactApp hideLoader={hideLoader} />, document.getElementById('root'))
-if (process.env.REACT_APP_SERVICE_WORKER === 'true') {
-  serviceWorkerRegistration.register()
-}
+
+// if (process.env.REACT_APP_SERVICE_WORKER === 'true') {
+//   serviceWorkerRegistration.register()
+// } else {
+//   serviceWorkerRegistration.unregister()
+// }
+serviceWorkerRegistration.unregister()

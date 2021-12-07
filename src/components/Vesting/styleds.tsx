@@ -27,10 +27,10 @@ export const MenuFlyout = styled.span`
   background-color: ${({ theme }) => theme.background};
   filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.2));
   border-radius: 5px;
-  padding: 19px 32px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  font-size: 16px;
+  font-size: 14px;
   position: absolute;
   top: 2.5rem !important;
   left: 0 !important;
@@ -39,7 +39,7 @@ export const MenuFlyout = styled.span`
 
 export const Seperator = styled.div`
   padding: 24px 0;
-  border: 1px solid #404b51;
+  border-right: 1px solid ${({ theme }) => theme.border};
 `
 
 export const Tag = styled.div<{ tag?: string }>`

@@ -22,13 +22,13 @@ const InputRow = styled.div<{ selected: boolean }>`
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
   align-items: center;
-  height: 2.2rem;
+  height: 2.25rem;
   font-size: 20px;
   font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.bg1)};
   border: 1px solid ${({ theme }) => theme.border};
-  color: ${({ theme }) => theme.text1};
-  border-radius: 12px;
+  color: ${({ theme }) => theme.text};
+  border-radius: 4px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
@@ -37,7 +37,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
 
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
+    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary))};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -60,7 +60,7 @@ const StyledDropDown = styled(DropDown)`
   height: 35%;
 
   path {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.text};
     stroke-width: 1.5px;
   }
 `
@@ -68,7 +68,7 @@ const StyledDropDown = styled(DropDown)`
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: transparent;
   z-index: 1;
 

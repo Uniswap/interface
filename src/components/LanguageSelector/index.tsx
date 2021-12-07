@@ -19,7 +19,7 @@ const StyledLanguageSelector = styled.div`
 `
 
 const OptionTitle = styled.div<{ isSelected?: boolean }>`
-  color: ${({ theme, isSelected }) => (isSelected ? theme.primary1 : theme.subText)};
+  color: ${({ theme, isSelected }) => (isSelected ? theme.primary : theme.subText)};
   font-size: 14px;
 `
 
@@ -72,7 +72,7 @@ export default function LanguageSelector({
           >
             <OptionTitle isSelected={locale === userLocale}>{label}</OptionTitle>
 
-            {locale === userLocale && <Check color={theme.primary1}></Check>}
+            {locale === userLocale && <Check color={theme.primary}></Check>}
           </ButtonEmpty>
         )
       })}
