@@ -17,7 +17,9 @@ const InfoIcon = icon(Info)
 function RoutingTooltip() {
   return (
     <Tooltip icon={InfoIcon} placement="bottom">
-      <ThemeProvider>{/* TODO: Populate routing details */}</ThemeProvider>
+      <ThemeProvider>
+        <ThemedText.Subhead2>TODO: Routing Tooltip</ThemedText.Subhead2>
+      </ThemeProvider>
     </Tooltip>
   )
 }
