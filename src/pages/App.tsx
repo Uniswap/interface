@@ -6,7 +6,7 @@ import { ApolloProvider } from '@apollo/client'
 import { defaultExchangeClient } from 'apollo/client'
 import Loader from 'components/LocalLoader'
 import Header from '../components/Header'
-import URLWarning from '../components/Header/URLWarning'
+// import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import PoweredBy from 'components/Footer/PoweredBy'
@@ -132,7 +132,7 @@ export default function App() {
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
             <KyberSwapAnnounce />
-            <URLWarning />
+            {/* <URLWarning /> */}
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
