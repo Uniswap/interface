@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { WETH9 } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
 
 export enum CurrencyField {
@@ -25,8 +24,7 @@ export const initialSwapFormState: Readonly<SwapFormState> = {
   exactCurrencyField: CurrencyField.INPUT,
   exactAmount: '',
   [CurrencyField.INPUT]: {
-    // TODO: set to native ETH once swap flow supports it
-    address: WETH9[ChainId.RINKEBY].address,
+    address: 'ETH',
     chainId: ChainId.RINKEBY,
   },
   [CurrencyField.OUTPUT]: null,

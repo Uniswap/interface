@@ -1,29 +1,40 @@
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
+import { Erc20 } from 'src/abis/types'
 import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
-import { ApproveParams, maybeApprove } from 'src/features/approve/approveSaga'
+import { ChainId } from 'src/constants/chains'
+import { maybeApprove } from 'src/features/approve/approveSaga'
 import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
 } from 'src/features/transactions/types'
-import { AccountType } from 'src/features/wallet/accounts/types'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
 import { isZero } from 'src/utils/number'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
-export interface SwapParams extends ApproveParams {
+export type SwapParams = {
+  account: Account
+  chainId: ChainId
   methodParameters: MethodParameters
+  swapRouterAddress: Address
   transactionInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
+  txAmount: string
+
+  // Optional. provide if input currency requires approval
+  contract: Erc20 | null
 }
 
 export function* approveAndSwap(params: SwapParams) {
   const {
     account,
     chainId,
+    contract,
     methodParameters: { calldata, value },
-    spender: swapRouter,
+    swapRouterAddress,
+    txAmount,
     transactionInfo,
   } = params
 
@@ -36,14 +47,22 @@ export function* approveAndSwap(params: SwapParams) {
     const provider = providerManager.getProvider(chainId)
     const connectedSigner = yield* call([signer, signer.connect], provider)
 
-    const approved = yield* call(maybeApprove, params)
-    if (!approved) {
-      throw new Error('Provided SwapRouter contract is not approved to spend tokens')
+    if (contract) {
+      const approved = yield* call(maybeApprove, {
+        account,
+        chainId,
+        contract,
+        spender: swapRouterAddress,
+        txAmount,
+      })
+      if (!approved) {
+        throw new Error('Provided SwapRouter contract is not approved to spend tokens')
+      }
     }
 
     const transaction: providers.TransactionRequest = {
       from: account.address,
-      to: swapRouter,
+      to: swapRouterAddress,
       data: calldata,
       ...(!value || isZero(value) ? {} : { value }),
     }

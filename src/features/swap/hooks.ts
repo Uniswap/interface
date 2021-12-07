@@ -151,7 +151,7 @@ export function useSwapCallback(
   }, [appDispatch, onSuccess, swapState])
 
   return useMemo(() => {
-    if (!account || !amount || !chainId || !methodParameters || !tokenContract) {
+    if (!account || !amount || !chainId || !methodParameters) {
       return {
         swapCallback: () => {
           logger.error(
@@ -169,12 +169,12 @@ export function useSwapCallback(
         appDispatch(
           swapActions.trigger({
             account,
-            txAmount: amount,
             chainId,
-            methodParameters,
             contract: tokenContract,
-            spender: SWAP_ROUTER_ADDRESSES[chainId],
+            methodParameters,
+            swapRouterAddress: SWAP_ROUTER_ADDRESSES[chainId],
             transactionInfo: tradeToTransactionInfo(trade),
+            txAmount: amount,
           })
         )
         navigation.navigate(Screens.Home)

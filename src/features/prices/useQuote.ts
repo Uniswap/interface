@@ -3,6 +3,7 @@ import { useQuery } from 'react-query'
 import { QuoteResult } from 'src/features/swap/types'
 import { serializeQueryParams } from 'src/features/swap/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from '../../constants/misc'
 
@@ -23,21 +24,18 @@ export function useQuote(params: UseQuoteProps) {
 
   const { amountSpecified, tradeType, otherCurrency } = params
 
-  // tokenIn
-  const { address: tokenInAddress, chainId: tokenInChainId } =
-    (tradeType === TradeType.EXACT_INPUT
-      ? amountSpecified?.currency.wrapped
-      : otherCurrency?.wrapped) || {}
+  const currencyIn = tradeType === TradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
+  const currencyOut =
+    tradeType === TradeType.EXACT_OUTPUT ? amountSpecified?.currency : otherCurrency
 
-  // tokenOut
-  const { address: tokenOutAddress, chainId: tokenOutChainId } =
-    (tradeType === TradeType.EXACT_OUTPUT
-      ? amountSpecified?.currency.wrapped
-      : otherCurrency?.wrapped) || {}
+  const tokenInAddress = currencyIn ? currencyId(currencyIn) : undefined
+  const tokenInChainId = currencyIn?.chainId
+  const tokenOutAddress = currencyOut ? currencyId(currencyOut) : undefined
+  const tokenOutChainId = currencyOut?.chainId
 
   // builds a unique key to represent the quote in the cache
   const key = [
-    amountSpecified?.toExact(),
+    amountSpecified?.quotient.toString(),
     tradeType,
     tokenInAddress,
     tokenOutAddress,

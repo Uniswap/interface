@@ -5,7 +5,7 @@ import { testSaga } from 'redux-saga-test-plan'
 import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { ApproveParams, maybeApprove } from 'src/features/approve/approveSaga'
+import { maybeApprove } from 'src/features/approve/approveSaga'
 import { approveAndSwap, SwapParams } from 'src/features/swap/swapSaga'
 import { addTransaction } from 'src/features/transactions/sagaHelpers'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
@@ -15,14 +15,6 @@ const mockTransactionResponse = {
   wait: jest.fn(),
 }
 const mockTransactionReceipt = {}
-
-const approveParams: ApproveParams = {
-  account,
-  chainId: ChainId.RINKEBY,
-  txAmount: '1',
-  contract: tokenContract,
-  spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
-}
 
 const methodParameters: MethodParameters = {
   value: '0x00',
@@ -39,11 +31,29 @@ const transactionInfo: ExactInputSwapTransactionInfo = {
 }
 
 const swapParams: SwapParams = {
-  ...approveParams,
+  account,
   chainId: ChainId.RINKEBY,
+  contract: tokenContract,
   methodParameters,
+  swapRouterAddress: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
   transactionInfo,
+  txAmount: '1',
 }
+
+const approveParams = (({
+  account: swapAccount,
+  chainId,
+  contract,
+  swapRouterAddress,
+  txAmount,
+}: SwapParams) => ({
+  account: swapAccount,
+  chainId,
+  contract,
+  spender: swapRouterAddress,
+  txAmount,
+}))(swapParams)
+
 const transaction = {
   from: account.address,
   to: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
@@ -74,7 +84,7 @@ describe(approveAndSwap, () => {
       .next(signer)
       .call([signer, signer.connect], provider)
       .next(connectedSigner)
-      .call(maybeApprove, swapParams)
+      .call(maybeApprove, approveParams)
       .next(/*approved=*/ false)
       .isDone()
   })
@@ -90,7 +100,7 @@ describe(approveAndSwap, () => {
       .next(signer)
       .call([signer, signer.connect], provider)
       .next(connectedSigner)
-      .call(maybeApprove, swapParams)
+      .call(maybeApprove, approveParams)
       .next(/*approved=*/ true)
       .call([connectedSigner, connectedSigner.populateTransaction], transaction)
       .next(transaction)
@@ -118,7 +128,7 @@ describe(approveAndSwap, () => {
       .next(signer)
       .call([signer, signer.connect], provider)
       .next(connectedSigner)
-      .call(maybeApprove, params)
+      .call(maybeApprove, approveParams)
       .next(/*approved=*/ true)
       .call([connectedSigner, connectedSigner.populateTransaction], transactionWithValue)
       .next(transactionWithValue)
@@ -132,5 +142,23 @@ describe(approveAndSwap, () => {
       .next(mockTransactionReceipt)
       .next()
       .isDone()
+  })
+
+  it('skips approval for native currencies', () => {
+    const nativeSwapParams: SwapParams = { ...swapParams, contract: null }
+
+    testSaga(approveAndSwap, nativeSwapParams)
+      .next()
+      .call(getSignerManager)
+      .next(signerManager)
+      .call(getWalletProviders)
+      .next(providerManager)
+      .call([signerManager, signerManager.getSignerForAccount], account)
+      .next(signer)
+      .call([signer, signer.connect], provider)
+      .next(connectedSigner)
+      // skips approval and moves to populateTransaction
+      .call([connectedSigner, connectedSigner.populateTransaction], transaction)
+      .next(transaction)
   })
 })
