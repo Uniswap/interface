@@ -9,6 +9,7 @@ const Input = styled.input`
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
+  line-height: inherit;
   margin: 0;
   outline: none;
   overflow: hidden;
@@ -152,10 +153,11 @@ export const inputCss = css`
   border: 1px solid ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   cursor: text;
-  padding: 0.75em;
+  padding: calc(0.75em - 1px);
 
   :hover {
-    border-color: ${({ theme }) => theme.outline};
+    background-color: ${({ theme }) => theme.onHover(theme.container)};
+    border-color: ${({ theme }) => theme.onHover(theme.container)};
   }
 
   :focus-within {

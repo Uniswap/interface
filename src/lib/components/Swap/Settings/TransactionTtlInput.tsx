@@ -22,12 +22,12 @@ export default function TransactionTtlInput() {
     <Column gap={0.75}>
       <Label name={<Trans>Transaction deadline</Trans>} tooltip={tooltip} />
       <Input onClick={() => input.current?.focus()}>
-        <ThemedText.Subhead2>
+        <ThemedText.Body1>
           <IntegerInput value={transactionTtl} onChange={(value) => setTransactionTtl(value ?? 0)} ref={input} />
-        </ThemedText.Subhead2>
-        <ThemedText.Subhead2>
+        </ThemedText.Body1>
+        <ThemedText.Body1>
           <Trans>minutes</Trans>
-        </ThemedText.Subhead2>
+        </ThemedText.Body1>
       </Input>
     </Column>
   )

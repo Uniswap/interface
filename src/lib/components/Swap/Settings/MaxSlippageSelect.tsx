@@ -25,7 +25,7 @@ const StyledInputOption = styled(BaseButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
   ${inputCss}
   border-color: ${({ selected, theme }) => selected && theme.accent};
-  padding: 0.5em 0.75em;
+  padding: calc(0.5em - 1px) 0.75em;
 `
 
 interface OptionProps<T> {
@@ -87,10 +87,9 @@ export default function MaxSlippageSelect() {
             value={custom}
             onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom })}
             placeholder={t`Custom`}
-            height="100%"
             ref={input}
           />
-          <span>%</span>
+          %
         </InputOption>
       </Row>
     </Column>
