@@ -233,5 +233,6 @@ export const DEX_TO_COMPARE: { [chainId in ChainId]?: DexConfig } = {
   [ChainId.MATIC]: findDex('quickswap'),
   [ChainId.AVAXMAINNET]: findDex('traderjoe'),
   [ChainId.MAINNET]: findDex('uniswap'),
-  [ChainId.FANTOM]: findDex('spookyswap')
+  [ChainId.FANTOM]: findDex('spookyswap'),
+  [ChainId.CRONOS]: findDex('vvs')
 }
