@@ -9,7 +9,7 @@ import { AutoRow, RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
-import { CloseIcon, ExternalLink, TYPE, Z_INDEX } from 'theme'
+import { CloseIcon, ExternalLink, ThemedText, Z_INDEX } from 'theme'
 
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -37,7 +37,7 @@ const StyledButtonEmpty = styled(ButtonEmpty)`
   text-decoration: none;
 `
 
-const AddressText = styled(TYPE.blue)`
+const AddressText = styled(ThemedText.Blue)`
   font-size: 12px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -70,9 +70,9 @@ export default function UnsupportedCurrencyFooter({
         <Card padding="2rem">
           <AutoColumn gap="lg">
             <RowBetween>
-              <TYPE.mediumHeader>
+              <ThemedText.MediumHeader>
                 <Trans>Unsupported Assets</Trans>
-              </TYPE.mediumHeader>
+              </ThemedText.MediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
             {tokens.map((token) => {
@@ -84,7 +84,7 @@ export default function UnsupportedCurrencyFooter({
                     <AutoColumn gap="10px">
                       <AutoRow gap="5px" align="center">
                         <CurrencyLogo currency={token} size={'24px'} />
-                        <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
+                        <ThemedText.Body fontWeight={500}>{token.symbol}</ThemedText.Body>
                       </AutoRow>
                       {chainId && (
                         <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
@@ -97,20 +97,20 @@ export default function UnsupportedCurrencyFooter({
               )
             })}
             <AutoColumn gap="lg">
-              <TYPE.body fontWeight={500}>
+              <ThemedText.Body fontWeight={500}>
                 <Trans>
                   Some assets are not available through this interface because they may not work well with the smart
                   contracts or we are unable to allow trading for legal reasons.
                 </Trans>
-              </TYPE.body>
+              </ThemedText.Body>
             </AutoColumn>
           </AutoColumn>
         </Card>
       </Modal>
       <StyledButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
-        <TYPE.blue>
+        <ThemedText.Blue>
           <Trans>Read more about unsupported assets</Trans>
-        </TYPE.blue>
+        </ThemedText.Blue>
       </StyledButtonEmpty>
     </DetailsFooter>
   )

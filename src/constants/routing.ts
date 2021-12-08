@@ -13,6 +13,9 @@ import {
   FRAX,
   FXS,
   renBTC,
+  rETH2,
+  sETH2,
+  SWISE,
   TRIBE,
   USDC,
   USDC_ARBITRUM,
@@ -53,6 +56,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
     '0xF16E4d813f4DcfDe4c5b44f305c908742De84eF0': [ETH2X_FLI],
+    [rETH2.address]: [sETH2],
+    [SWISE.address]: [sETH2],
     [FEI.address]: [TRIBE],
     [TRIBE.address]: [FEI],
     [FRAX.address]: [FXS],

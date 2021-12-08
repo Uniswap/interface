@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 06:11\n"
+"PO-Revision-Date: 2021-11-18 19:06\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -1528,8 +1528,8 @@ msgid "Supply"
 msgstr "Bereitstellen"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and{2} {3}"
-msgstr "Versorgung {0} {1} und{2} {3}"
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Biete {0} {1} und {2} {3} an"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
