@@ -1,7 +1,8 @@
+import { Mutex } from 'async-mutex'
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { config } from 'src/config'
-import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
 import { logger } from 'src/utils/logger'
@@ -10,7 +11,6 @@ import { promiseTimeout, sleep } from 'src/utils/timing'
 
 enum ProviderStatus {
   Disconnected,
-  Initializing,
   Connected,
   Error,
 }
@@ -22,36 +22,54 @@ interface ProviderDetails {
 }
 
 export type ChainIdToProvider = Partial<Record<ChainId, ProviderDetails>>
+export type ChainIdToMutex = Partial<Record<ChainId, Mutex>>
+
+const getChainDetails = (chainId: ChainId) => {
+  const chainDetails = CHAIN_INFO[chainId]
+  if (!chainDetails) {
+    throw new Error(`Cannot create provider for invalid chain details for ${chainId}`)
+  }
+  return chainDetails
+}
+
+const insertMutex = new Mutex()
 
 export class ProviderManager {
   private readonly _providers: ChainIdToProvider = {}
+  private readonly _mutex: ChainIdToMutex = {}
   private onUpdate: (() => void) | null = null
 
   setOnUpdate(onUpdate: () => void) {
     this.onUpdate = onUpdate
   }
 
-  async createProvider(chainId: ChainId) {
-    if (this._providers[chainId]) {
-      throw new Error(`Attempting to overwrite existing provider for ${chainId}`)
+  async createProvider(chainId: ChainId): Promise<ethersProviders.Provider> {
+    if (!this._mutex[chainId]) {
+      await insertMutex.runExclusive(() => {
+        this._mutex[chainId] = new Mutex()
+      })
     }
-    const chainDetails = CHAIN_INFO[chainId]
-    if (!chainDetails) {
-      throw new Error(`Cannot create provider for invalid chain details for ${chainId}`)
-    }
-    // Try all rpcUrls until one works
-    const newProvider = await this.initProvider(chainId, chainDetails)
-    if (newProvider) {
-      this._providers[chainId] = {
-        provider: newProvider,
-        status: ProviderStatus.Connected,
+
+    const mutex = this._mutex[chainId]!
+    const provider: ethersProviders.Provider = await mutex.runExclusive(async () => {
+      if (this._providers[chainId]) {
+        return this._providers[chainId]?.provider!
       }
-      this.onUpdate?.()
-      return newProvider
-    } else {
-      // Otherwise show error
-      throw new Error(`Failed to create new provider for ${chainId}`)
-    }
+      // Try all rpcUrls until one works
+      const newProvider = await this.initProvider(chainId)
+      if (newProvider) {
+        this._providers[chainId] = {
+          provider: newProvider,
+          status: ProviderStatus.Connected,
+        }
+        this.onUpdate?.()
+        return newProvider
+      } else {
+        // Otherwise show error
+        throw new Error(`Failed to create new provider for ${chainId}`)
+      }
+    })
+    return provider!
   }
 
   removeProvider(chainId: ChainId) {
@@ -80,7 +98,7 @@ export class ProviderManager {
     return provider.provider
   }
 
-  getProvider(chainId: ChainId) {
+  getProvider(chainId: ChainId): ethersProviders.Provider {
     if (!this._providers[chainId]) {
       throw new Error(`No provider initialized for chain: ${chainId}`)
     }
@@ -89,6 +107,14 @@ export class ProviderManager {
       throw new Error(`Provider not connected for chain: ${chainId}`)
     }
     return provider.provider
+  }
+
+  async getInitalizedProvider(chainId: ChainId): Promise<ethersProviders.Provider> {
+    if (this.hasProvider(chainId)) {
+      return this._providers[chainId]!.provider
+    } else {
+      return this.createProvider(chainId)
+    }
   }
 
   getAllProviders() {
@@ -109,7 +135,7 @@ export class ProviderManager {
     this._providers[chainId]!.blockWatcher = watcher
   }
 
-  private async initProvider(chainId: ChainId, chainDetails: L1ChainInfo | L2ChainInfo) {
+  private async initProvider(chainId: ChainId) {
     try {
       logger.info(
         'ProviderManager',
@@ -123,7 +149,7 @@ export class ProviderManager {
 
         if (
           blockAndNetwork &&
-          this.isProviderSynced(chainId, chainDetails, blockAndNetwork[0], blockAndNetwork[1])
+          this.isProviderSynced(chainId, blockAndNetwork[0], blockAndNetwork[1])
         ) {
           logger.info(
             'ProviderManager',
@@ -149,10 +175,10 @@ export class ProviderManager {
 
   private isProviderSynced(
     chainId: ChainId,
-    chainDetails: L1ChainInfo | L2ChainInfo,
     block?: ethersProviders.Block,
     network?: ethersProviders.Network
-  ) {
+  ): boolean {
+    const chainDetails = getChainDetails(chainId)
     const staleTime = chainDetails.blockWaitMsBeforeWarning ?? 600_000 // 10 minutes
     if (!(block && block.number && block.timestamp && network && network.chainId === chainId)) {
       return false

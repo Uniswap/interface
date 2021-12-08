@@ -33,7 +33,7 @@ async function _fetchBalances(
   manager: ProviderManager
 ): Promise<{ [currencyKey: string]: Balance }> {
   logger.debug('fetchBalances', '', 'Fetching for:', address)
-  const provider = manager.getProvider(chainId)
+  const provider = await manager.getInitalizedProvider(chainId)
 
   // TODO using NULL_ADDRESS for Eth, eventually use currencyId util function
   const amount = await provider.getBalance(address)

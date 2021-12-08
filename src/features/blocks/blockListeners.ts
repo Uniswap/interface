@@ -12,7 +12,7 @@ import { BlockUpdate } from 'src/features/blocks/types'
 import { logger } from 'src/utils/logger'
 import { put, take } from 'typed-redux-saga'
 
-export function createBlockChannel(provider: providers.JsonRpcProvider, chainId: ChainId) {
+export function createBlockChannel(provider: providers.Provider, chainId: ChainId) {
   return eventChannel<BlockUpdate>((emit) => {
     const blockHandler = (blockNumber: number) => {
       emit({ blockNumber, chainId })

@@ -44,6 +44,7 @@
     "@uniswap/v3-sdk": "^3.7.1",
     "ajv": "^8.6.3",
     "ajv-formats": "^2.1.1",
+    "async-mutex": "^0.3.2",
     "d3-scale": "^4.0.2",
     "d3-shape": "^3.0.1",
     "ethers": "^5.5.2",

@@ -54,6 +54,7 @@ export function ImportReadonlyAccountForm({ onImportSuccess }: Props) {
               )}
             </Text>
             <TextInput
+              autoCapitalize={'none'}
               onChangeText={handleChange('addressOrENS')}
               onBlur={handleBlur('addressOrENS')}
               value={values.addressOrENS}
