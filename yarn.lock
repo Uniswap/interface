@@ -2102,10 +2102,10 @@
     "@ethersproject/logger" "^5.4.0"
     hash.js "1.1.7"
 
-"@ethersproject/shims@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@ethersproject/shims/-/shims-5.4.0.tgz#7c243cea96a8ffdbc04bb031cd55e7897431276b"
-  integrity sha512-J/M1oudCBPw4T8pBoE8wO65dIJruGBSZ1HyKVSygO3rF95Sq1LasQFEfKNzJl2nJP20ni4eXTNlEdKFKoVxnpw==
+"@ethersproject/shims@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@ethersproject/shims/-/shims-5.5.0.tgz#e7102871135e4272928926c5f376fea13d799b05"
+  integrity sha512-Mx8KzgM3RIW1oLHLzJV8R0Ca3zEju6kfo0h8upFZHqSfB1ai9Jz5n3R5tHTGCcPAL4r+Dvclt9ZW3s63wNQPgg==
 
 "@ethersproject/signing-key@5.5.0", "@ethersproject/signing-key@^5.5.0":
   version "5.5.0"

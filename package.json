@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@cmcewen/ethers-rs-mobile": "0.0.2",
-    "@ethersproject/shims": "^5.4.0",
+    "@ethersproject/shims": "^5.5.0",
     "@react-native-async-storage/async-storage": "^1.15.9",
     "@react-native-firebase/analytics": "^12.9.3",
     "@react-native-firebase/app": "^12.9.3",
