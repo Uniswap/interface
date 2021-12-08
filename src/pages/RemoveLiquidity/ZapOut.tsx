@@ -446,9 +446,11 @@ export default function ZapOut({
 
   const usdPrices = useTokensPrice([tokenA, tokenB])
 
+  const independentTokenPrice = independentTokenField === Field.CURRENCY_A ? usdPrices[0] : usdPrices[1]
+
   const estimatedUsd =
-    parsedAmounts[independentTokenField] && usdPrices[0]
-      ? parseFloat((parsedAmounts[independentTokenField] as TokenAmount).toSignificant(6)) * usdPrices[0]
+    parsedAmounts[independentTokenField] && independentTokenPrice
+      ? parseFloat((parsedAmounts[independentTokenField] as TokenAmount).toSignificant(6)) * independentTokenPrice
       : 0
 
   const priceImpact =
