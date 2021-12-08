@@ -57,7 +57,7 @@ export const NETWORK_URLS: {
   [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
   [ChainId.KOVAN]: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-  [ChainId.MUMBAI]: `https://rpc-mumbai.matic.today`,
+  [ChainId.MUMBAI]: `https://rpc-mumbai.maticvigil.com`,
   [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
   [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
   [ChainId.BSCMAINNET]: `https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm-interface`,
