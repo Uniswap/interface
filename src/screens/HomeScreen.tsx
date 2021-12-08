@@ -10,6 +10,7 @@ import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
+import { TabScreen } from 'src/components/layout/TabScreen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
 import { useAllBalances } from 'src/features/balances/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -54,8 +55,8 @@ export function HomeScreen({ navigation }: Props) {
     )
 
   return (
-    <Screen>
-      <GradientBackground>
+    <TabScreen>
+      <GradientBackground height="33%">
         <PinkToBlueLinear />
       </GradientBackground>
       <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="md" my="sm">
@@ -79,6 +80,6 @@ export function HomeScreen({ navigation }: Props) {
         onRefresh={onRefresh}
         onPressToken={onPressToken}
       />
-    </Screen>
+    </TabScreen>
   )
 }

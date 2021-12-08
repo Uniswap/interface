@@ -16,12 +16,12 @@ export function Header({ chainId, onPressBack }: HeaderProps) {
   const { t } = useTranslation()
 
   return (
-    <Box p="md" flexDirection="row" justifyContent="space-between">
-      <Text variant="h2">{t`Swap`}</Text>
+    <Box px="lg" flexDirection="row" justifyContent="space-between" alignItems="center">
+      <Text variant="h3">{t`Swap`}</Text>
       <Box flexDirection="row" alignContent="center" justifyContent="flex-end" flex={1}>
         {chainId && <NetworkLabel chainId={chainId} />}
-        <Button ml="sm" onPress={onPressBack} alignSelf="center">
-          <X height={30} width={30} />
+        <Button ml="md" onPress={onPressBack} alignSelf="center">
+          <X height={20} width={20} />
         </Button>
       </Box>
     </Box>

@@ -1,14 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  ActivityIndicator,
-  FlatList,
-  ListRenderItemInfo,
-  RefreshControl,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native'
+import { ActivityIndicator, FlatList, ListRenderItemInfo, RefreshControl } from 'react-native'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
@@ -52,8 +45,6 @@ export function TokenBalanceList({
   onRefresh,
   onPressToken,
 }: TokenBalanceListProps) {
-  const { height } = useWindowDimensions()
-
   const ethBalance = balances.length > 0 ? balances[0] : undefined
   const currenciesToFetch = balances.map((currencyAmount) => currencyAmount.currency)
   const tokenPricesByChain = useTokenPrices(currenciesToFetch)
@@ -62,7 +53,7 @@ export function TokenBalanceList({
 
   if (loading || !ethBalance) {
     return (
-      <Box padding="xl">
+      <Box padding="lg">
         <ActivityIndicator color="grey" animating={loading} />
       </Box>
     )
@@ -84,21 +75,11 @@ export function TokenBalanceList({
       ? `${balance.currency.chainId}${NULL_ADDRESS}`
       : `${balance.currency.chainId}${balance.currency.address}`
 
-  // Return white footer to fill bottom of FlatList over the gradient
   return (
     <FlatList
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      contentContainerStyle={styles.listContainer}
       data={balances}
       ListHeaderComponent={<TotalBalanceView totalBalance={totalBalance} />}
-      ListFooterComponent={
-        <Box
-          bg="mainBackground"
-          style={{
-            height,
-          }}
-        />
-      }
       renderItem={renderItem}
       keyExtractor={key}
     />
@@ -128,10 +109,3 @@ function useTotalBalance(
     .reduce((a, b) => a + b, 0)
     .toFixed(2)
 }
-
-const styles = StyleSheet.create({
-  listContainer: {
-    flex: 1,
-    flexGrow: 1,
-  },
-})

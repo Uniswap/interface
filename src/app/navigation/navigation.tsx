@@ -67,7 +67,7 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarStyle: { height: 102, paddingTop: 20 },
+        tabBarStyle: { height: 100, paddingTop: 20 },
       }}>
       <Tab.Screen
         name={Tabs.Home}

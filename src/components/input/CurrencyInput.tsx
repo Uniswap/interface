@@ -48,10 +48,12 @@ export function CurrencyInput(props: CurrencyInputProps) {
       </Box>
       <Box flexDirection="row">
         <Box flex={1} flexDirection="row" justifyContent="space-between">
-          <Text variant="body" ml="md">
+          <Text variant="body" ml="md" color="gray400">
             {formatPrice(price)}
           </Text>
-          <Text variant="body">{formatCurrencyAmount(currencyBalance)}</Text>
+          <Text variant="body" color="gray400">{`${formatCurrencyAmount(
+            currencyBalance
+          )} Max`}</Text>
         </Box>
       </Box>
     </Box>

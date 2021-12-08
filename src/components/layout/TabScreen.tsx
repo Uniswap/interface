@@ -9,9 +9,12 @@ const style = {
   flex: 1,
 }
 
-export function Screen(props: PropsWithChildren<Props>) {
+export function TabScreen(props: PropsWithChildren<Props>) {
   return (
-    <SafeAreaView style={{ ...style, backgroundColor: theme.colors.mainBackground }} {...props}>
+    <SafeAreaView
+      style={{ ...style, backgroundColor: theme.colors.mainBackground }}
+      edges={['top', 'left', 'right']}
+      {...props}>
       {props.children}
     </SafeAreaView>
   )
