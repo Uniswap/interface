@@ -165,16 +165,14 @@ export default function SwapDetailsDropdown({
             ) : null}
           </RowFixed>
           <RowFixed>
-            {!trade?.gasUseEstimateUSD ? null : (
-              <GasEstimateBadge trade={trade} loading={syncing || loading} showRoute={true} />
-            )}
+            {!trade?.gasUseEstimateUSD ? null : <GasEstimateBadge trade={trade} loading={syncing || loading} />}
             <RotatingArrow stroke={trade ? theme.text3 : theme.bg3} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap={showDetails ? '8px' : '0'}>
-            {trade && !trade?.gasUseEstimateUSD ? <SwapRoute trade={trade} syncing={syncing} /> : null}
             <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+            {trade ? <SwapRoute trade={trade} syncing={syncing} /> : null}
           </AutoColumn>
         </AnimatedDropdown>
       </AutoColumn>

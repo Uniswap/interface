@@ -26,6 +26,8 @@ const Wrapper = styled(AutoColumn)<{ open: boolean }>`
 
 const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
   margin-left: 8px;
+  height: 18px;
+  stroke-width: 3px;
   transition: transform 0.1s;
   transform: ${({ open }) => (open ? 'rotate(45deg)' : 'none')};
   stroke: ${({ theme }) => theme.blue1};
