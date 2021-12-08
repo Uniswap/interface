@@ -47,25 +47,23 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
   }
 
   return (
-    <Button onPress={onPress} flexDirection="row">
-      <Box flex={1} flexDirection="row" justifyContent="space-between" py="md">
-        <Box flexDirection="row">
-          <CurrencyLogo currency={currency} size={35} />
-          <Box mx="md" alignItems="flex-start">
-            <Text variant="h4">{currency.symbol}</Text>
-            <Text variant="bodySm" color="gray400">{`${formatCurrencyAmount(currencyAmount)} ${
-              currency.symbol
-            }`}</Text>
-          </Box>
+    <Button onPress={onPress} flexDirection="row" justifyContent="space-between" py="md" px="lg">
+      <Box flexDirection="row">
+        <CurrencyLogo currency={currency} size={35} />
+        <Box mx="md" alignItems="flex-start">
+          <Text variant="h4">{currency.symbol}</Text>
+          <Text variant="bodySm" color="gray400">{`${formatCurrencyAmount(currencyAmount)} ${
+            currency.symbol
+          }`}</Text>
         </Box>
-        <Box alignItems="flex-end">
-          <Text variant="h4">{formatCurrencyAmount(balance)}</Text>
-          <Text
-            variant="bodySm"
-            color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>
-            {percentChange ? `${percentChange.toFixed(1)}%` : '-'}
-          </Text>
-        </Box>
+      </Box>
+      <Box alignItems="flex-end">
+        <Text variant="h4">{formatCurrencyAmount(balance)}</Text>
+        <Text
+          variant="bodySm"
+          color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>
+          {percentChange ? `${percentChange.toFixed(1)}%` : '-'}
+        </Text>
       </Box>
     </Button>
   )

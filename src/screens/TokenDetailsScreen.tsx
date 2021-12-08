@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView } from 'react-native'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
@@ -12,8 +13,10 @@ import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { useTokenBalance } from 'src/features/balances/hooks'
+import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { theme } from 'src/styles/theme'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -36,7 +39,10 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   )
 }
 
-export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
+export function TokenDetailsScreen({
+  route,
+  navigation,
+}: AppStackScreenProp<Screens.TokenDetails>) {
   const { currency } = route.params
 
   const activeAccount = useActiveAccount()
@@ -46,6 +52,32 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
   )
 
   const { t } = useTranslation()
+
+  const onPressBuy = () => {
+    const swapFormState: SwapFormState = {
+      exactCurrencyField: CurrencyField.OUTPUT,
+      exactAmount: '0',
+      [CurrencyField.INPUT]: null,
+      [CurrencyField.OUTPUT]: {
+        address: currency.isToken ? currency.wrapped.address : 'ETH',
+        chainId: currency.wrapped.chainId,
+      },
+    }
+    navigation.push(Screens.Swap, { swapFormState })
+  }
+
+  const onPressSell = () => {
+    const swapFormState: SwapFormState = {
+      exactCurrencyField: CurrencyField.INPUT,
+      exactAmount: '0',
+      [CurrencyField.INPUT]: {
+        address: currency.isToken ? currency.wrapped.address : 'ETH',
+        chainId: currency.wrapped.chainId,
+      },
+      [CurrencyField.OUTPUT]: null,
+    }
+    navigation.push(Screens.Swap, { swapFormState })
+  }
 
   return (
     <Screen>
@@ -57,8 +89,8 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
       </CenterBox>
       <ScrollView>
         <PriceChart token={currency.wrapped} />
-        <Box mx="lg" mt="xl">
-          <Text variant="h4" color="gray200">
+        <Box mt="xl">
+          <Text variant="h5" color="gray200" mx="lg">
             {t('Your balance')}
           </Text>
           {loading ? (
@@ -66,6 +98,16 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
           ) : (
             <ActivityIndicator color="grey" animating={loading} />
           )}
+          <Box flexDirection="row" my="md" mx="lg">
+            <PrimaryButton flex={1} label={t`Buy`} onPress={onPressBuy} disabled={false} mr="sm" />
+            <PrimaryButton
+              flex={1}
+              label={t`Sell`}
+              onPress={onPressSell}
+              disabled={false}
+              style={{ backgroundColor: theme.colors.gray200 }}
+            />
+          </Box>
         </Box>
       </ScrollView>
     </Screen>

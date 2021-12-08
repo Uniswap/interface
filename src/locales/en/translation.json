@@ -16,6 +16,8 @@
   "ENS name or address": "ENS name or address",
   "Track": "Track",
   "Swap": "Swap",
+  "Buy": "Buy",
+  "Sell": "Sell",
   "Fetching best price...": "Fetching best price...",
   "Failed to fetch a quote": "Failed to fetch a quote",
   "Cannot swap on watched account": "Cannot swap on watched account",

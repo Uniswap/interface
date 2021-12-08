@@ -8,7 +8,7 @@ import { TransactionDetails, TransactionType } from 'src/features/transactions/t
 
 export function TransactionNotificationBanner() {
   return (
-    <CenterBox p="sm">
+    <CenterBox>
       <TransactionNotification />
     </CenterBox>
   )

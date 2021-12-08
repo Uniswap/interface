@@ -23,7 +23,7 @@ function _PrimaryButton({ label, icon, disabled, style, ...rest }: Props) {
       alignItems="center"
       justifyContent="center"
       borderRadius="lg"
-      py="sm"
+      py="md"
       px="md"
       style={style}
       disabled={disabled}

@@ -20,6 +20,7 @@ export function Toast({ label, variant }: ToastProps) {
       justifyContent="space-between"
       alignContent="center"
       flexDirection="row"
+      m="sm"
       px="md"
       py="sm"
       style={{ borderColor: opacify(60, color) }}

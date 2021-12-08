@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, ListRenderItemInfo } from 'react-native'
+import { ActivityIndicator, FlatList, ListRenderItemInfo, RefreshControl } from 'react-native'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
@@ -12,6 +12,8 @@ import { formatPrice } from 'src/utils/format'
 interface TokenBalanceListProps {
   loading: boolean
   balances: CurrencyAmount<Currency>[]
+  refreshing: boolean
+  onRefresh: () => void
   onPressToken: (currencyAmount: CurrencyAmount<Currency>) => void
 }
 
@@ -23,7 +25,7 @@ function TotalBalanceView({ totalBalance }: TotalBalanceViewProps) {
   const { t } = useTranslation()
 
   return (
-    <Box mb="md">
+    <Box px="lg" mb="md">
       <Text variant="h5" color="gray400" mb="xs">
         {t('Total balance')}
       </Text>
@@ -32,7 +34,13 @@ function TotalBalanceView({ totalBalance }: TotalBalanceViewProps) {
   )
 }
 
-export function TokenBalanceList({ loading, balances, onPressToken }: TokenBalanceListProps) {
+export function TokenBalanceList({
+  loading,
+  balances,
+  refreshing,
+  onRefresh,
+  onPressToken,
+}: TokenBalanceListProps) {
   const ethBalance = balances.length > 0 ? balances[0] : undefined
 
   if (loading || !ethBalance) {
@@ -61,8 +69,9 @@ export function TokenBalanceList({ loading, balances, onPressToken }: TokenBalan
     .toFixed(2)
 
   return (
-    <Box flex={1} mx="lg" my="sm">
+    <Box flex={1}>
       <FlatList
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         contentContainerStyle={flex.grow}
         data={balances}
         ListHeaderComponent={<TotalBalanceView totalBalance={totalBalance} />}

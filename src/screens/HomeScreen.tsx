@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Bell from 'src/assets/icons/bell.svg'
 import Settings from 'src/assets/icons/settings.svg'
@@ -19,6 +19,10 @@ import { Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
+const wait = (timeout: number) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout))
+}
+
 export function HomeScreen({ navigation }: Props) {
   const currentChains = useActiveChainIds()
   // imports test account for easy development/testing
@@ -26,6 +30,13 @@ export function HomeScreen({ navigation }: Props) {
   const activeAccount = useActiveAccount()
   const chainIdToTokens = useAllTokens()
   const balances = useAllBalances(currentChains, chainIdToTokens, activeAccount?.address)
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    // TODO: this is a callback to give illusion of refreshing, in future we can spin until the next block number has updated
+    wait(300).then(() => setRefreshing(false))
+  }, [])
 
   const onPressToken = (currencyAmount: CurrencyAmount<Currency>) => {
     navigation.navigate(Screens.TokenDetails, { currency: currencyAmount.currency })
@@ -59,6 +70,8 @@ export function HomeScreen({ navigation }: Props) {
       <TokenBalanceList
         loading={balances.length === 0}
         balances={balances}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         onPressToken={onPressToken}
       />
     </Screen>

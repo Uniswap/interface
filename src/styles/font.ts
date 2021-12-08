@@ -61,8 +61,8 @@ export const textVariants = {
     color: 'mainForeground',
   },
   buttonLabel: {
-    fontFamily: fontFamily.sansSerif.semibold,
-    fontSize: 16,
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 18,
     lineHeight: 24,
   },
 }

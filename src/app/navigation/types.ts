@@ -8,11 +8,12 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
+import { SwapFormState } from 'src/features/swap/swapFormSlice'
 import { Screens, Tabs } from 'src/screens/Screens'
 
 export type TabParamList = {
   [Tabs.Home]: undefined
-  [Tabs.Swap]: undefined
+  [Tabs.Swap]: { swapFormState?: SwapFormState } | undefined
   [Tabs.Explore]: undefined
 }
 
@@ -35,7 +36,7 @@ export type AppStackParamList = {
   }
   [Screens.DevStack]: NavigatorScreenParams<DevStackParamList>
   [Screens.Notifications]: undefined
-  [Screens.Swap]: undefined
+  [Screens.Swap]: { swapFormState?: SwapFormState } | undefined
   [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.Transfer]: undefined
