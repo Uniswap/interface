@@ -28,6 +28,10 @@ const StyledNavMenu = styled('div')`
   @media (max-width: 320px) {
     margin: 0 8px;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `}
 `
 
 const StyledMenu = styled.div`

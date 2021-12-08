@@ -1,11 +1,14 @@
+import 'rc-drawer/assets/index.css'
+
 import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
 import { CELO, ChainId as UbeswapChainId, TokenAmount } from '@ubeswap/sdk'
 import { CardNoise } from 'components/earn/styled'
 import Modal from 'components/Modal'
+import Hamburger from 'hamburger-react'
 import usePrevious from 'hooks/usePrevious'
 import { darken } from 'polished'
+import Drawer from 'rc-drawer'
 import React, { useState } from 'react'
-import { isMobile } from 'react-device-detect'
 import { Moon, Sun } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
@@ -169,9 +172,6 @@ const UbeIcon = styled.div`
   :hover {
     transform: rotate(-5deg);
   }
-  @media (max-width: 385px) {
-    display: none;
-  }
 `
 
 const activeClassName = 'ACTIVE'
@@ -205,6 +205,14 @@ export const StyledNavLink = styled(NavLink).attrs({
   @media (max-width: 320px) {
     margin: 0 8px;
   }
+`
+
+export const StyledNavLinkExtraSmall = styled(StyledNavLink).attrs({
+  activeClassName,
+})`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `}
 `
 
 const StyledExternalLink = styled(ExternalLink).attrs({
@@ -267,6 +275,66 @@ export const StyledMenuButton = styled.button`
   }
 `
 
+export const StyledDesktopLogo = styled.img`
+  display: inline;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;  
+  `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: inline;  
+  `};
+  @media (max-width: 385px) {
+    display: none;
+  }
+`
+
+export const StyledMobileLogo = styled.img`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: inline;  
+  `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;  
+  `};
+  @media (max-width: 385px) {
+    display: inline;
+  }
+`
+
+export const BurgerElement = styled(HeaderElement)`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: flex;  
+  `};
+`
+
+export const StyledDrawer = styled(Drawer)`
+  & .drawer-content-wrapper {
+    background: ${({ theme }) => theme.bg3};
+    color: ${({ theme }) => theme.text1};
+  }
+`
+
+export const StyledMenu = styled.ul`
+  padding-left: 0px;
+  list-style: none;
+`
+export const StyledMenuItem = styled.li`
+  padding: 10px 0px 10px 20px;
+`
+export const StyledSubMenuItem = styled(StyledMenuItem)`
+  padding-left: 30px;
+`
+
+const StyledDrawerExternalLink = styled(StyledExternalLink).attrs({
+  activeClassName,
+})<{ isActive?: boolean }>`
+  text-decoration: none;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+      display: flex;
+`}
+`
+
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.CeloMainnet]: 'Celo',
   [ChainId.Alfajores]: 'Alfajores',
@@ -287,6 +355,16 @@ export default function Header() {
   const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
+  const [drawerVisible, setDrawerVisible] = useState<boolean>(false)
+
+  const onDrawerClose = () => {
+    setDrawerVisible(false)
+  }
+
+  const onToggle = (toggled: boolean) => {
+    setDrawerVisible(toggled)
+  }
+
   return (
     <HeaderFrame>
       <Modal isOpen={showUbeBalanceModal} onDismiss={() => setShowUbeBalanceModal(false)}>
@@ -295,12 +373,8 @@ export default function Header() {
       <HeaderRow>
         <Title to="/">
           <UbeIcon>
-            <img
-              width={isMobile ? '32px' : '140px'}
-              height={isMobile ? '36px' : '26px'}
-              src={isMobile ? Icon : darkMode ? LogoDark : Logo}
-              alt="Ubeswap"
-            />
+            <StyledMobileLogo width={'32px'} height={'36px'} src={Icon} alt="Ubeswap" />
+            <StyledDesktopLogo width={'140px'} height={'26px'} src={darkMode ? LogoDark : Logo} alt="Ubeswap" />
           </UbeIcon>
         </Title>
         <HeaderLinks>
@@ -324,13 +398,57 @@ export default function Header() {
             {t('farm')}
           </StyledNavLink>
           <BridgeMenuGroup />
-          <StyledNavLink id={`stake-nav-link`} to={'/stake'}>
+          <StyledNavLinkExtraSmall id={`stake-nav-link`} to={'/stake'}>
             {t('stake')}
-          </StyledNavLink>
+          </StyledNavLinkExtraSmall>
           <StyledExternalLink id={`stake-nav-link`} href={'https://info.ubeswap.org'}>
             {t('charts')} <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
         </HeaderLinks>
+        <BurgerElement>
+          <Hamburger size={18} hideOutline={false} label="show menu" toggled={drawerVisible} onToggle={onToggle} />
+          <StyledDrawer
+            open={drawerVisible}
+            placement={'right'}
+            width={'250px'}
+            level={null}
+            handler={false}
+            onClose={onDrawerClose}
+          >
+            <StyledMenu>
+              <StyledMenuItem>
+                <StyledNavLink id={'stake-drawer-nav-link'} to={'#'}>
+                  Bridge
+                </StyledNavLink>
+              </StyledMenuItem>
+              <StyledSubMenuItem>
+                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://allbridge.io/'}>
+                  Allbridge
+                </StyledDrawerExternalLink>
+              </StyledSubMenuItem>
+              <StyledSubMenuItem>
+                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://anyswap.exchange/#/router'}>
+                  Anyswap
+                </StyledDrawerExternalLink>
+              </StyledSubMenuItem>
+              <StyledSubMenuItem>
+                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://optics.app/'}>
+                  Optics
+                </StyledDrawerExternalLink>
+              </StyledSubMenuItem>
+              <StyledMenuItem>
+                <StyledNavLink id={'stake-drawer-nav-link'} to={'/stake'} onClick={onDrawerClose}>
+                  {t('stake')}
+                </StyledNavLink>
+              </StyledMenuItem>
+              <StyledMenuItem>
+                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://info.ubeswap.org'}>
+                  {t('charts')}
+                </StyledDrawerExternalLink>
+              </StyledMenuItem>
+            </StyledMenu>
+          </StyledDrawer>
+        </BurgerElement>
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
