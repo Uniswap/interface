@@ -1,9 +1,11 @@
-import { atom } from 'jotai'
+import { atom, WritableAtom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
+import { useUpdateAtom } from 'jotai/utils'
 import { atomWithReset } from 'jotai/utils'
 import { ETH } from 'lib/mocks'
 import { Token } from 'lib/types'
 import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/utils/atoms'
+import { useMemo } from 'react'
 
 /** Max slippage, as a percentage. */
 export enum MaxSlippage {
@@ -87,6 +89,21 @@ export const outputAtom = atom(
     })
   }
 )
+
+export function useUpdateInputValue(inputAtom: WritableAtom<Input, Input>) {
+  return useUpdateAtom(
+    useMemo(
+      () => atom(null, (get, set, value: Input['value']) => set(inputAtom, { token: get(inputAtom).token, value })),
+      [inputAtom]
+    )
+  )
+}
+
+export function useUpdateInputToken(inputAtom: WritableAtom<Input, Input>) {
+  return useUpdateAtom(
+    useMemo(() => atom(null, (get, set, token: Input['token']) => set(inputAtom, { token })), [inputAtom])
+  )
+}
 
 export interface Transaction {
   input: Required<Pick<Input, 'token' | 'value'>>

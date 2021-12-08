@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import { useUpdateAtom } from 'jotai/utils'
 import styled, { ThemedText } from 'lib/theme'
-import { pickAtom } from 'lib/utils/atoms'
 import { ReactNode } from 'react'
 
 import Column from '../Column'
 import Row from '../Row'
-import { inputAtom } from './state'
+import { inputAtom, useUpdateInputToken, useUpdateInputValue } from './state'
 import TokenInput from './TokenInput'
 
 const mockBalance = 123.45
@@ -24,8 +22,8 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
 
 export default function Input({ children }: { children: ReactNode }) {
   const input = useAtomValue(inputAtom)
-  const setValue = useUpdateAtom(pickAtom(inputAtom, 'value'))
-  const setToken = useUpdateAtom(pickAtom(inputAtom, 'token'))
+  const setValue = useUpdateInputValue(inputAtom)
+  const setToken = useUpdateInputToken(inputAtom)
   const balance = mockBalance
 
   return (
