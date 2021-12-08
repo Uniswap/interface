@@ -1,25 +1,11 @@
-import { Trans } from '@lingui/macro'
-import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
 import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
-import { ReactComponent as StaticRouterIcon } from '../../assets/svg/static_route.svg'
 
 const StyledAutoRouterIcon = styled(AutoRouterIcon)`
   height: 16px;
   width: 16px;
-
-  :hover {
-    filter: brightness(1.3);
-  }
-`
-
-const StyledStaticRouterIcon = styled(StaticRouterIcon)`
-  height: 16px;
-  width: 16px;
-
-  fill: ${({ theme }) => theme.text3};
 
   :hover {
     filter: brightness(1.3);
@@ -40,19 +26,9 @@ const StyledAutoRouterLabel = styled(TYPE.black)`
 `
 
 export function AutoRouterLogo() {
-  const autoRouterSupported = useAutoRouterSupported()
-
-  return autoRouterSupported ? <StyledAutoRouterIcon /> : <StyledStaticRouterIcon />
+  return <StyledAutoRouterIcon />
 }
 
 export function AutoRouterLabel() {
-  const autoRouterSupported = useAutoRouterSupported()
-
-  return autoRouterSupported ? (
-    <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
-  ) : (
-    <TYPE.black fontSize={14}>
-      <Trans>Trade Route</Trans>
-    </TYPE.black>
-  )
+  return <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
 }

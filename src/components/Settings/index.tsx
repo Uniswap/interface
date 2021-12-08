@@ -1,12 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
-import { SUPPORTED_CHAINS } from 'state/routing/clientSideSmartOrderRouter/constants'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -119,8 +117,6 @@ const ModalContentWrapper = styled.div`
 `
 
 export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
-  const { chainId } = useActiveWeb3React()
-
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
@@ -200,29 +196,27 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Trans>Interface Settings</Trans>
             </Text>
 
-            {chainId && SUPPORTED_CHAINS.includes(chainId) && (
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                    <Trans>Auto Router</Trans>
-                  </TYPE.black>
-                  <QuestionHelper
-                    text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
-                  />
-                </RowFixed>
-                <Toggle
-                  id="toggle-optimized-router-button"
-                  isActive={!clientSideRouter}
-                  toggle={() => {
-                    ReactGA.event({
-                      category: 'Routing',
-                      action: clientSideRouter ? 'enable routing API' : 'disable routing API',
-                    })
-                    setClientSideRouter(!clientSideRouter)
-                  }}
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Auto Router</Trans>
+                </TYPE.black>
+                <QuestionHelper
+                  text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
                 />
-              </RowBetween>
-            )}
+              </RowFixed>
+              <Toggle
+                id="toggle-optimized-router-button"
+                isActive={!clientSideRouter}
+                toggle={() => {
+                  ReactGA.event({
+                    category: 'Routing',
+                    action: clientSideRouter ? 'enable routing API' : 'disable routing API',
+                  })
+                  setClientSideRouter(!clientSideRouter)
+                }}
+              />
+            </RowBetween>
 
             <RowBetween>
               <RowFixed>

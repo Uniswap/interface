@@ -4,7 +4,7 @@ import { NETWORK_URLS } from 'connectors/networkUrls'
 import { SupportedChainId } from 'constants/chains'
 import { providers } from 'ethers/lib/ethers'
 
-import { SUPPORTED_CHAINS } from './constants'
+import { SMART_ROUTER_SUPPORTED_CHAINS } from './constants'
 
 export type Dependencies = {
   [chainId in SupportedChainId]?: AlphaRouterParams
@@ -13,7 +13,7 @@ export type Dependencies = {
 /** Minimal set of dependencies for the router to work locally.  */
 export function buildDependencies(): Dependencies {
   const dependenciesByChain: Dependencies = {}
-  for (const chainId of SUPPORTED_CHAINS) {
+  for (const chainId of SMART_ROUTER_SUPPORTED_CHAINS) {
     const provider = new providers.JsonRpcProvider(NETWORK_URLS[chainId])
 
     dependenciesByChain[chainId] = {

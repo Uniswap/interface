@@ -6,7 +6,6 @@ import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
-import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { memo } from 'react'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
@@ -28,8 +27,6 @@ export default memo(function SwapRoute({
   trade: Trade<Currency, Currency, TradeType>
   syncing: boolean
 }) {
-  const autoRouterSupported = useAutoRouterSupported()
-
   const routes = getTokenPath(trade)
 
   const hasV2Routes = routes.some((r) => r.protocol === Protocol.V2)
@@ -55,29 +52,28 @@ export default memo(function SwapRoute({
           routes={routes}
         />
       )}
-      {autoRouterSupported &&
-        (syncing ? (
-          <LoadingRows>
-            <div style={{ width: '250px', height: '15px' }} />
-          </LoadingRows>
-        ) : (
-          <TYPE.main fontSize={12} width={400}>
-            {/* could not get <Plural> to render `one` correctly. */}
-            {routes.length === 1 ? (
-              hasV2Routes && hasV3Routes ? (
-                <Trans>Best trade via one route on Uniswap V2 and V3</Trans>
-              ) : (
-                <Trans>Best trade via one route on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
-              )
-            ) : hasV2Routes && hasV3Routes ? (
-              <Trans>Best trade via {routes.length} routes on Uniswap V2 and V3</Trans>
+      {syncing ? (
+        <LoadingRows>
+          <div style={{ width: '250px', height: '15px' }} />
+        </LoadingRows>
+      ) : (
+        <TYPE.main fontSize={12} width={400}>
+          {/* could not get <Plural> to render `one` correctly. */}
+          {routes.length === 1 ? (
+            hasV2Routes && hasV3Routes ? (
+              <Trans>Best trade via one route on Uniswap V2 and V3</Trans>
             ) : (
-              <Trans>
-                Best trade via {routes.length} routes on Uniswap {hasV2Routes ? 'V2' : 'V3'}
-              </Trans>
-            )}
-          </TYPE.main>
-        ))}
+              <Trans>Best trade via one route on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
+            )
+          ) : hasV2Routes && hasV3Routes ? (
+            <Trans>Best trade via {routes.length} routes on Uniswap V2 and V3</Trans>
+          ) : (
+            <Trans>
+              Best trade via {routes.length} routes on Uniswap {hasV2Routes ? 'V2' : 'V3'}
+            </Trans>
+          )}
+        </TYPE.main>
+      )}
     </AutoColumn>
   )
 })
