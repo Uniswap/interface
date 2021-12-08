@@ -91,10 +91,10 @@ export function useTokenBalances(
     for (let i = 0; i < sortedChainTokens.length; i++) {
       const token = sortedChainTokens[i]
       const callState = callStates[i]
-      if (callState.loading) {
+      if (callState && callState.loading) {
         loading = true
       }
-      const amount = callState.result?.[0]?.toString()
+      const amount = callState && callState.result?.[0]?.toString()
       if (amount) {
         balances[chainId]![token.address] = CurrencyAmount.fromRawAmount<Token>(token, amount)
       }
