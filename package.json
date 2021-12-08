@@ -178,10 +178,11 @@
     "styled-components": "^5.3.0",
     "wcag-contrast": "^3.0.0",
     "wicg-inert": "^3.1.1",
-    "widgets-web3-react/core": "npm:@web3-react/core@8.0.10-alpha.0",
-    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.10-alpha.0",
-    "widgets-web3-react/network": "npm:@web3-react/network@8.0.10-alpha.0",
-    "widgets-web3-react/types": "npm:@web3-react/types@8.0.10-alpha.0",
+    "widgets-web3-react/core": "npm:@web3-react/core@8.0.12-alpha.0",
+    "widgets-web3-react/eip1193": "npm:@web3-react/eip1193@8.0.12-alpha.0",
+    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.12-alpha.0",
+    "widgets-web3-react/network": "npm:@web3-react/network@8.0.12-alpha.0",
+    "widgets-web3-react/types": "npm:@web3-react/types@8.0.12-alpha.0",
     "zustand": "^3.6.5"
   }
 }

@@ -1,10 +1,11 @@
-import { Provider as EthProvider } from '@ethersproject/abstract-provider'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider, useAtom } from 'jotai'
+import EIP1193Connector from 'lib/connectors/EIP1193'
 import { Provider as I18nProvider } from 'lib/i18n'
-import { providerAtom } from 'lib/state'
+import { connectorAtom } from 'lib/state'
 import styled, { Provider as ThemeProvider, Theme } from 'lib/theme'
 import { ReactNode, useEffect, useState } from 'react'
+import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
 
@@ -30,13 +31,16 @@ export interface WidgetProps {
   theme?: Partial<Theme>
   locale?: SupportedLocale
   provider?: EthProvider
+  jsonRpcEndpoint?: string
 }
 
-export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provider }: WidgetProps) {
-  const [, setProvider] = useAtom(providerAtom)
+export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provider, jsonRpcEndpoint }: WidgetProps) {
+  const [, setConnector] = useAtom(connectorAtom)
   useEffect(() => {
-    setProvider(provider)
-  }, [setProvider, provider])
+    const connector = new EIP1193Connector({ provider, jsonRpcEndpoint })
+    setConnector(connector)
+  }, [setConnector, provider, jsonRpcEndpoint])
+
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <AtomProvider>
