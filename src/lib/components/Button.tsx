@@ -15,6 +15,7 @@ export const BaseButton = styled.button`
 
 export default styled(BaseButton)<{ color?: Color; theme: Theme }>`
   color: ${({ color, theme }) => (!color || color === 'interactive') && theme.onInteractive};
+  transition: filter 0.2s;
 
   :enabled {
     background-color: ${({ color = 'interactive', theme }) => theme[color]};
@@ -28,8 +29,7 @@ export default styled(BaseButton)<{ color?: Color; theme: Theme }>`
     border: 1px solid ${({ theme }) => theme.outline};
     color: ${({ theme }) => theme.secondary};
     cursor: not-allowed;
-    filter: saturate(0);
-    opacity: 0.4;
+    filter: saturate(0) opacity(0.4);
   }
 `
 

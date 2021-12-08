@@ -18,6 +18,7 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
 
   img {
     filter: ${({ approved }) => (approved ? undefined : 'saturate(0) opacity(0.6)')};
+    transition: filter 0.2s;
   }
 `
 
