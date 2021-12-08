@@ -1,4 +1,4 @@
-const UNI_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
+const UNI_LIST = 'tokens.uniswap.eth'
 const AAVE_LIST = 'tokenlist.aave.eth'
 const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
 const CMC_ALL_LIST = 'https://api.coinmarketcap.com/data-api/v3/uniswap/all.json'
