@@ -1,7 +1,11 @@
+import { RowFixed } from 'components/Row'
 import { CHAIN_INFO } from 'constants/chains'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import useGasPrice from 'hooks/useGasPrice'
 import useMachineTimeMs from 'hooks/useMachineTime'
+import useTheme from 'hooks/useTheme'
 import { useActiveWeb3React } from 'hooks/web3'
+import JSBI from 'jsbi'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
@@ -43,6 +47,17 @@ const StyledPollingDot = styled.div<{ warning: boolean }>`
   transition: 250ms ease background-color;
 `
 
+const StyledGasDot = styled.div`
+  width: 6px;
+  height: 6px;
+  min-height: 6px;
+  min-width: 6px;
+  border-radius: 50%;
+  position: relative;
+  background-color: ${({ theme }) => theme.text3};
+  transition: 250ms ease background-color;
+`
+
 const rotate360 = keyframes`
   from {
     transform: rotate(0deg);
@@ -81,6 +96,10 @@ export default function Polling() {
   const [isHover, setIsHover] = useState(false)
   const machineTime = useMachineTimeMs(NETWORK_HEALTH_CHECK_MS)
   const blockTime = useCurrentBlockTimestamp()
+  const theme = useTheme()
+
+  const ethGasPrice = useGasPrice()
+  const priceGwei = ethGasPrice ? JSBI.divide(ethGasPrice, JSBI.BigInt(1000000000)) : undefined
 
   const waitMsBeforeWarning =
     (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
@@ -107,17 +126,27 @@ export default function Polling() {
 
   return (
     <>
-      <ExternalLink
-        href={chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''}
-      >
-        <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
-          <StyledPollingNumber breathe={isMounting} hovering={isHover}>
-            {blockNumber}&ensp;
-          </StyledPollingNumber>
-          <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
-        </StyledPolling>
-      </ExternalLink>
-      {warning && <ChainConnectivityWarning />}
+      <RowFixed>
+        <ExternalLink
+          href={chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''}
+        >
+          <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
+            {priceGwei ? (
+              <RowFixed style={{ marginRight: '8px' }}>
+                <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+                  {priceGwei.toString()} gwei
+                </TYPE.main>
+                <StyledGasDot />
+              </RowFixed>
+            ) : null}
+            <StyledPollingNumber breathe={isMounting} hovering={isHover}>
+              {blockNumber}&ensp;
+            </StyledPollingNumber>
+            <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
+          </StyledPolling>
+        </ExternalLink>
+        {warning && <ChainConnectivityWarning />}
+      </RowFixed>
     </>
   )
 }

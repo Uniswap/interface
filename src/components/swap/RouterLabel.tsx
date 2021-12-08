@@ -49,7 +49,7 @@ export function AutoRouterLabel() {
   const autoRouterSupported = useAutoRouterSupported()
 
   return autoRouterSupported ? (
-    <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
+    <StyledAutoRouterLabel fontSize={14}>Route optimized for best price including fees</StyledAutoRouterLabel>
   ) : (
     <TYPE.black fontSize={14}>
       <Trans>Trade Route</Trans>

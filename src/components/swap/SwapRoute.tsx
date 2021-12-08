@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Protocol, Trade } from '@uniswap/router-sdk'
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import AnimatedDropdown from 'components/AnimatedDropdown'
@@ -11,6 +11,7 @@ import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { darken } from 'polished'
 import { memo, useState } from 'react'
 import { Plus } from 'react-feather'
+import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { Separator, TYPE } from 'theme'
 
@@ -41,16 +42,12 @@ export default memo(function SwapRoute({
   syncing,
   fixedOpen = false,
 }: {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType>
   syncing: boolean
-  fixedOpen?: boolean // hide open and close icon, always open
+  fixedOpen?: boolean // fixed in open state, hide open/close icon
 }) {
   const autoRouterSupported = useAutoRouterSupported()
-
   const routes = getTokenPath(trade)
-  const hasV2Routes = routes.some((r) => r.protocol === Protocol.V2)
-  const hasV3Routes = routes.some((r) => r.protocol === Protocol.V3)
-
   const [open, setOpen] = useState(false)
 
   return (
@@ -62,7 +59,7 @@ export default memo(function SwapRoute({
         </AutoRow>
         {fixedOpen ? null : <OpenCloseIcon open={open} onClick={() => setOpen(!open)} />}
       </RowBetween>
-      <AnimatedDropdown open={open}>
+      <AnimatedDropdown open={open || fixedOpen}>
         <AutoRow gap="6px" width="auto">
           {syncing ? (
             <LoadingRows>
@@ -84,19 +81,10 @@ export default memo(function SwapRoute({
             ) : (
               <TYPE.main fontSize={12} width={400}>
                 {/* could not get <Plural> to render `one` correctly. */}
-                {routes.length === 1 ? (
-                  hasV2Routes && hasV3Routes ? (
-                    <Trans>Best trade via one route on Uniswap V2 and V3</Trans>
-                  ) : (
-                    <Trans>Best trade via one route on Uniswap {hasV2Routes ? 'V2' : 'V3'}</Trans>
-                  )
-                ) : hasV2Routes && hasV3Routes ? (
-                  <Trans>Best trade via {routes.length} routes on Uniswap V2 and V3</Trans>
-                ) : (
-                  <Trans>
-                    Best trade via {routes.length} routes on Uniswap {hasV2Routes ? 'V2' : 'V3'}
-                  </Trans>
-                )}
+                {trade?.gasUseEstimateUSD ? (
+                  <Trans>Best price route costs ~${trade.gasUseEstimateUSD.toFixed(2)} in gas. </Trans>
+                ) : null}{' '}
+                <Trans>Your price is optimized by considering split routes, multiple hops, and gas costs.</Trans>
               </TYPE.main>
             ))}
         </AutoRow>

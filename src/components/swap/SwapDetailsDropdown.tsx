@@ -21,7 +21,6 @@ import TradePrice from './TradePrice'
 const Wrapper = styled(Row)`
   width: 100%;
   justify-content: center;
-  width: 100%;
 `
 
 const StyledInfoIcon = styled(Info)`
@@ -31,16 +30,16 @@ const StyledInfoIcon = styled(Info)`
   color: ${({ theme }) => theme.text3};
 `
 
-const StyledHeaderRow = styled(RowBetween)`
+const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean }>`
   padding: 4px 8px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.bg1};
   align-items: center;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
   min-height: 40px;
 
   :hover {
-    background-color: ${({ theme }) => darken(0.015, theme.bg1)};
+    background-color: ${({ theme, disabled }) => (disabled ? theme.bg1 : darken(0.015, theme.bg1))};
   }
 `
 
@@ -120,16 +119,12 @@ export default function SwapDetailsDropdown({
   swapInputError,
 }: SwapDetailsInlineProps) {
   const theme = useTheme()
-
-  // show default gas cost if no trade is loaded yet
-  // const { cost: defaultGasCost, syncing: defaultSyncing, loading: defaultLoading } = useDefaultGasCostEstimate()
-
   const [showDetails, setShowDetails] = useState(false)
 
   return (
     <Wrapper>
-      <AutoColumn gap="8px" style={{ width: '100%' }}>
-        <StyledHeaderRow onClick={() => setShowDetails(!showDetails)}>
+      <AutoColumn gap={showDetails ? '8px' : '0px'} style={{ width: '100%' }}>
+        <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade}>
           <RowFixed style={{ position: 'relative' }}>
             {(loading || syncing) && !(swapInputError && !trade) ? (
               <StyledPolling>
@@ -148,7 +143,7 @@ export default function SwapDetailsDropdown({
                 placement="bottom"
                 disableHover={showDetails}
               >
-                <StyledInfoIcon />
+                <StyledInfoIcon color={trade ? theme.text3 : theme.bg3} />
               </MouseoverTooltipContent>
             )}
             {trade ? (
@@ -170,15 +165,15 @@ export default function SwapDetailsDropdown({
             ) : null}
           </RowFixed>
           <RowFixed>
-            {!trade ? null : !trade.gasUseEstimateUSD ? null : (
-              <GasEstimateBadge gasUseEstimateUSD={trade.gasUseEstimateUSD} loading={syncing || loading} />
+            {!trade?.gasUseEstimateUSD ? null : (
+              <GasEstimateBadge trade={trade} loading={syncing || loading} showRoute={true} />
             )}
-            <RotatingArrow stroke={theme.text3} open={showDetails} />
+            <RotatingArrow stroke={trade ? theme.text3 : theme.bg3} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap={showDetails ? '8px' : '0'}>
-            {trade ? <SwapRoute trade={trade} syncing={syncing} /> : null}
+            {trade && !trade?.gasUseEstimateUSD ? <SwapRoute trade={trade} syncing={syncing} /> : null}
             <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
           </AutoColumn>
         </AnimatedDropdown>

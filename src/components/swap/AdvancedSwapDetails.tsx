@@ -1,23 +1,23 @@
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { Separator, TYPE } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
+import FormattedPriceImpact from './FormattedPriceImpact'
 
 const StyledCard = styled(Card)`
-  /* border: 1px solid ${({ theme }) => theme.bg2}; */
   padding: 12px;
 `
 
 interface AdvancedSwapDetailsProps {
-  trade?: Trade<Currency, Currency, TradeType>
+  trade?: InterfaceTrade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   syncing?: boolean
   hideRouteDiagram?: boolean
@@ -44,12 +44,14 @@ function TextWithLoadingPlaceholder({
 export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
-  const { realizedLPFee, expectedOutputAmount } = useMemo(() => {
+  const { realizedLPFee, priceImpact, expectedOutputAmount } = useMemo(() => {
     if (!trade) return { realizedLPFee: undefined, expectedOutputAmount: undefined }
     const expectedOutputAmount = trade.outputAmount
     const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
     const realizedLPFee = trade.inputAmount.multiply(realizedLpFeePercent)
-    return { realizedLPFee, expectedOutputAmount }
+    const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent)
+
+    return { realizedLPFee, expectedOutputAmount, priceImpact }
   }, [trade])
 
   return !trade ? null : (
@@ -83,14 +85,14 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowBetween>
         <Separator />
         <RowBetween>
-          <RowFixed>
+          <RowFixed style={{ marginRight: '20px' }}>
             <TYPE.subHeader color={theme.text3}>
               {trade.tradeType === TradeType.EXACT_INPUT ? (
                 <Trans>Minimum received</Trans>
               ) : (
                 <Trans>Maximum sent</Trans>
               )}{' '}
-              <Trans>after slippage</Trans> {`(${allowedSlippage.toFixed(2)}%)`}
+              <Trans>after slippage</Trans>
             </TYPE.subHeader>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
@@ -101,6 +103,34 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             </TYPE.black>
           </TextWithLoadingPlaceholder>
         </RowBetween>
+        <RowBetween>
+          <TYPE.subHeader color={theme.text3}>
+            <Trans>Allowed Slippage</Trans>
+          </TYPE.subHeader>
+          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+            <TYPE.subHeader color={theme.text3}>{allowedSlippage.toFixed(2)}%</TYPE.subHeader>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        <RowBetween>
+          <TYPE.subHeader color={theme.text3}>
+            <Trans>Price Impact</Trans>
+          </TYPE.subHeader>
+          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+            <TYPE.subHeader color={theme.text3}>
+              <FormattedPriceImpact priceImpact={priceImpact} />
+            </TYPE.subHeader>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        {!trade?.gasUseEstimateUSD ? null : (
+          <RowBetween>
+            <TYPE.subHeader color={theme.text3}>
+              <Trans>Network Fee</Trans>
+            </TYPE.subHeader>
+            <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+              <TYPE.subHeader color={theme.text3}>~${trade.gasUseEstimateUSD.toFixed(2)}</TYPE.subHeader>
+            </TextWithLoadingPlaceholder>
+          </RowBetween>
+        )}
       </AutoColumn>
     </StyledCard>
   )

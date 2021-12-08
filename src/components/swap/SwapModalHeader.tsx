@@ -115,9 +115,7 @@ export default function SwapModalHeader({
       </LightCard>
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
         <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
-        {trade?.gasUseEstimateUSD ? (
-          <GasEstimateBadge gasUseEstimateUSD={trade.gasUseEstimateUSD} loading={false} />
-        ) : null}
+        {trade?.gasUseEstimateUSD ? <GasEstimateBadge trade={trade} loading={false} /> : null}
       </RowBetween>
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
         <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />

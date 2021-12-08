@@ -413,7 +413,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
-            {!showWrap && (
+            {!showWrap && (trade || routeIsLoading || routeIsSyncing) && (
               <SwapDetailsDropdown
                 trade={trade}
                 syncing={routeIsSyncing}
@@ -556,12 +556,12 @@ export default function Swap({ history }: RouteComponentProps) {
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {priceImpactTooHigh && trade ? (
-                      <Trans>Price Impact Too High</Trans>
-                    ) : trade && priceImpactSeverity > 2 ? (
-                      <Trans>Swap Anyway</Trans>
-                    ) : trade && swapInputError ? (
+                    {swapInputError ? (
                       swapInputError
+                    ) : priceImpactTooHigh ? (
+                      <Trans>Price Impact Too High</Trans>
+                    ) : priceImpactSeverity > 2 ? (
+                      <Trans>Swap Anyway</Trans>
                     ) : (
                       <Trans>Swap</Trans>
                     )}
