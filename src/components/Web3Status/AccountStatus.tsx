@@ -38,6 +38,7 @@ const View = styled.div`
   border-radius: 12px;
   white-space: nowrap;
   margin-left: 8px;
+  padding: 1px;
 `
 
 const Web3StatusConnected = styled.button<{ pending?: boolean }>`
@@ -60,7 +61,7 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
 const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConnected: boolean; clickable: boolean }>`
   display: flex;
   align-items: center;
-  height: 28px;
+  height: 26px;
   padding: 7px 8px;
   font-size: 12px;
   line-height: 15px;
