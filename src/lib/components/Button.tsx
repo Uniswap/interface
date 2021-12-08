@@ -29,7 +29,7 @@ export default styled(BaseButton)<{ color?: Color; theme: Theme }>`
     color: ${({ theme }) => theme.secondary};
     cursor: not-allowed;
     filter: saturate(0);
-    opacity: 0.32;
+    opacity: 0.4;
   }
 `
 
