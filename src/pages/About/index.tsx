@@ -77,29 +77,9 @@ import Medium from 'components/Icons/Medium'
 import Discord from 'components/Icons/Discord'
 import { ButtonEmpty } from 'components/Button'
 
-const getPoolsMenuLink = (chainId?: ChainId) => {
-  switch (chainId) {
-    case ChainId.MAINNET:
-      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
-    case ChainId.ROPSTEN:
-      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
-    case ChainId.MATIC:
-      return `/pools/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/${KNC[chainId as ChainId].address}`
-    case ChainId.MUMBAI:
-      return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
-    case ChainId.BSCTESTNET:
-      return `/pools/BNB`
-    case ChainId.BSCMAINNET:
-      return `/pools/BNB`
-    case ChainId.AVAXTESTNET:
-      return `/pools/AVAX`
-    case ChainId.AVAXMAINNET:
-      return `/pools/AVAX`
-    case ChainId.FANTOM:
-      return `/pools/FTM`
-    default:
-      return '/pools/ETH'
-  }
+const getPoolsMenuLink = (chainId?: ChainId, path?: string) => {
+  const pathname = path || 'pools'
+  return `/${pathname}/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
 }
 
 function About() {
@@ -111,6 +91,7 @@ function About() {
 
   const { chainId } = useActiveWeb3React()
   const poolsMenuLink = getPoolsMenuLink(chainId)
+  const createPoolLink = getPoolsMenuLink(chainId, 'create')
   const data = useGlobalData()
 
   const globalData = data && data.dmmFactories[0]
@@ -624,7 +605,7 @@ function About() {
             flexDirection={above768 ? 'row' : 'column'}
             maxWidth="696px"
           >
-            <BtnPrimary as={Link} to="/create">
+            <BtnPrimary as={Link} to={createPoolLink}>
               <Plus />
               <Text marginLeft="8px">
                 <Trans>Create New Pool</Trans>

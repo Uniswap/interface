@@ -61,10 +61,7 @@ function KyberSwapAnounce() {
         <Trans>
           <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff">
             dmm.exchange is now <b>KyberSwap.com</b>! Click{' '}
-            <ExternalLink href=" https://blog.kyber.network/dmm-is-now-kyberswap-com-on-a-mission-to-provide-the-best-trading-and-earning-experience-in-defi-7664fa29f458">
-              here
-            </ExternalLink>{' '}
-            to learn more.
+            <ExternalLink href="https://bit.ly/3EzNCif">here</ExternalLink> to learn more.
           </Text>
         </Trans>
       </Content>

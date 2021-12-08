@@ -285,9 +285,9 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
     case ChainId.MUMBAI:
       return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
     case ChainId.BSCTESTNET:
-      return `/pools/BNB`
+      return `/pools/BNB/${KNC[chainId as ChainId].address}`
     case ChainId.BSCMAINNET:
-      return `/pools/BNB`
+      return `/pools/BNB/${KNC[chainId as ChainId].address}`
     case ChainId.AVAXTESTNET:
       return `/pools/AVAX`
     case ChainId.AVAXMAINNET:
