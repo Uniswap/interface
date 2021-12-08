@@ -61,7 +61,7 @@ export default function Output({ children }: { children: ReactNode }) {
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
         <Row>
-          <ThemedText.Subhead2>
+          <ThemedText.Subhead2 color="secondary">
             <Trans>For</Trans>
           </ThemedText.Subhead2>
         </Row>

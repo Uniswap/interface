@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
-import { inputAtom, swapAtom } from './state'
+import { inputAtom, outputAtom, swapAtom } from './state'
 import { SummaryDialog } from './Summary'
 import TransactionStatusDialog from './TransactionStatusDialog'
 
@@ -19,16 +19,17 @@ enum Mode {
 export default function SwapButton() {
   const swap = useAtomValue(swapAtom)
   const input = useAtomValue(inputAtom)
+  const output = useAtomValue(outputAtom)
   const balance = mockBalance
   const [mode, setMode] = useState(Mode.NONE)
   const actionProps = useMemo(() => {
-    if (input.token && !input.approved) {
+    if (input.token && output.token && !input.approved) {
       return { updated: { message: <Trans>Approve {input.token.symbol} first</Trans>, action: <Trans>Approve</Trans> } }
     } else if (swap && input.value && input.value <= balance) {
       return {}
     }
     return { disabled: true }
-  }, [balance, input.approved, input.token, input.value, swap])
+  }, [balance, input.approved, input.token, input.value, output.token, swap])
   return (
     <>
       <ActionButton color="interactive" onClick={() => setMode(Mode.SUMMARY)} onUpdate={() => void 0} {...actionProps}>

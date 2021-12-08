@@ -95,7 +95,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
           <Row gap={0.5}>
             <img src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />
             <Column flex gap={0.125} align="flex-start">
-              <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
+              <ThemedText.Subhead1 color="primary">{value.symbol}</ThemedText.Subhead1>
               <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
             </Column>
           </Row>

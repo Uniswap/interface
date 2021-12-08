@@ -14,15 +14,17 @@ export enum MaxSlippage {
   DEFAULT = P05,
 }
 
+export const TRANSACTION_TTL_DEFAULT = 40
+
 export interface Settings {
   maxSlippage: Customizable<MaxSlippage>
-  transactionTtl: number
+  transactionTtl: number | undefined
   mockTogglable: boolean
 }
 
 const initialSettings: Settings = {
   maxSlippage: { value: MaxSlippage.DEFAULT },
-  transactionTtl: 40,
+  transactionTtl: undefined,
   mockTogglable: true,
 }
 

@@ -38,7 +38,11 @@ export default function Header({ title, logo, children }: HeaderProps) {
             <StyledLogo />
           </a>
         )}
-        {title && <ThemedText.Subhead1 userSelect="none">{title}</ThemedText.Subhead1>}
+        {title && (
+          <ThemedText.Subhead1 userSelect="none" color="primary">
+            {title}
+          </ThemedText.Subhead1>
+        )}
       </Row>
       <Row gap={0.5}>{children}</Row>
     </HeaderRow>

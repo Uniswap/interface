@@ -20,11 +20,11 @@ export function SettingsDialog() {
   return (
     <>
       <Header title={<Trans>Settings</Trans>} ruled>
-        <ThemedText.Subhead2>
-          <TextButton onClick={resetSettings}>
+        <TextButton onClick={resetSettings}>
+          <ThemedText.Subhead2>
             <Trans>Reset</Trans>
-          </TextButton>
-        </ThemedText.Subhead2>
+          </ThemedText.Subhead2>
+        </TextButton>
       </Header>
       <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded scrollable>
         <BoundaryProvider value={boundary}>

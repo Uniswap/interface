@@ -15,7 +15,7 @@ const tooltip = (
   <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
 )
 
-const SelectedIcon = icon(CheckCircle)
+const SelectedIcon = icon(CheckCircle, { color: 'accent' })
 
 const StyledOption = styled(TextButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}

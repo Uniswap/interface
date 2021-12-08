@@ -152,6 +152,7 @@ export const inputCss = css`
   background-color: ${({ theme }) => theme.container};
   border: 1px solid ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
+  color: ${({ theme }) => theme.primary};
   cursor: text;
   padding: calc(0.75em - 1px);
 

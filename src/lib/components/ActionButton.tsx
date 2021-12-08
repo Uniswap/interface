@@ -64,10 +64,10 @@ export function ApprovalButton({ color, message, action, onClick }: ApprovalButt
       <ApprovalRow>
         <Row gap={0.5}>
           <AlertIcon />
-          <ThemedText.Subhead2>{message}</ThemedText.Subhead2>
+          <ThemedText.Subhead2 color="primary">{message}</ThemedText.Subhead2>
         </Row>
         <StyledApprovalButton color={color} onClick={onClick}>
-          <ThemedText.ButtonMedium color="onInteractive">{action}</ThemedText.ButtonMedium>
+          <ThemedText.ButtonMedium color="currentColor">{action}</ThemedText.ButtonMedium>
         </StyledApprovalButton>
       </ApprovalRow>
     </Overlay>
@@ -97,7 +97,7 @@ export default function ActionButton({
         <ApprovalButton color={color} onClick={() => onUpdate?.()} {...updated} />
       ) : (
         <StyledActionButton color={color} disabled={disabled} onClick={onClick}>
-          <ThemedText.ButtonLarge color="onInteractive">{children}</ThemedText.ButtonLarge>
+          <ThemedText.ButtonLarge color="currentColor">{children}</ThemedText.ButtonLarge>
         </StyledActionButton>
       )}
     </Overlay>

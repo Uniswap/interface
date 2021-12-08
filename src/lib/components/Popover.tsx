@@ -11,7 +11,6 @@ export const BoundaryProvider = BoundaryContext.Provider
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.dialog};
-  border: 1px solid ${({ theme }) => theme.outline};
   border-radius: 0.5em;
   color: ${({ theme }) => theme.primary};
   opacity: ${(props) => (props.show ? 1 : 0)};
