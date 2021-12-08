@@ -15,6 +15,11 @@ export const dexListConfig: DexList = {
     icon: 'https://kyberswap.com/favicon.ico',
     chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.CRONOS]
   },
+  kyberswap: {
+    name: 'KyberSwap',
+    icon: 'https://kyberswap.com/favicon.ico',
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.CRONOS]
+  },
   uniswap: {
     name: 'UniSwap_V2',
     icon: 'https://www.logowik.com/content/uploads/images/uniswap-uni7403.jpg',
@@ -206,6 +211,7 @@ export const dexTypes: DexTypes = {
   all: {
     curve: 2,
     dmm: 3,
+    kyberswap: 3,
     oneswap: 1,
     ellipsis: 2,
     nerve: 1,
