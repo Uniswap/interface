@@ -1,17 +1,12 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextStyle, TouchableOpacity } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { HomeStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
-import { Screens } from 'src/screens/Screens'
-
-type Props = NativeStackScreenProps<HomeStackParamList, Screens.SeedPhrase>
 
 interface PhraseButtonProps {
   word: string
@@ -53,7 +48,7 @@ export function SeedPhraseScreen({
   route: {
     params: { seedPhrase },
   },
-}: Props) {
+}: any) {
   const [currentPhrase, updatePhrase] = useState(seedPhrase)
   const [isLoading, setLoading] = useState(false)
 
@@ -85,7 +80,7 @@ export function SeedPhraseScreen({
         padding="lg"
         justifyContent="flex-start">
         {removable && <Text>{t('Extra words detected - tap to remove them')}</Text>}
-        {currentPhrase.map((word, idx) => (
+        {currentPhrase.map((word: string, idx: number) => (
           <PhraseButton onPress={onPress} idx={idx} word={word} removable={removable} />
         ))}
       </Box>

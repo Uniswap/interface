@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppNavigation } from 'src/app/navigation/types'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { CurrencySearch } from 'src/components/CurrencySelector/CurrencySearch'
 import { Toggle } from 'src/components/CurrencySelector/Toggle'
@@ -18,7 +18,7 @@ interface CurrencySelectorProps {
 }
 
 export function CurrencySelector({ onSelectCurrency, selectedCurrency }: CurrencySelectorProps) {
-  const navigation = useAppNavigation()
+  const navigation = useAppStackNavigation()
 
   const { t } = useTranslation()
 

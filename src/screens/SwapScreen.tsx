@@ -1,16 +1,13 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useReducer } from 'react'
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native'
-import { SwapStackParamList } from 'src/app/navigation/types'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { Header } from 'src/features/swap/Header'
 import { SwapForm } from 'src/features/swap/SwapForm'
 import { initialSwapFormState, swapFormReducer } from 'src/features/swap/swapFormSlice'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<SwapStackParamList, Screens.Swap>
-
-export function SwapScreen({ navigation }: Props) {
+export function SwapScreen({ navigation }: AppStackScreenProp<Screens.Swap>) {
   const [state, dispatch] = useReducer(swapFormReducer, initialSwapFormState)
 
   const chainId = state[state.exactCurrencyField]?.chainId

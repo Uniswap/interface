@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { WebView } from 'react-native-webview'
-import { CenterBox } from 'src/components/layout/CenterBox'
+import { BackX } from 'src/components/buttons/BackX'
+import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -13,11 +14,12 @@ interface NotificationsHeaderProps {
 
 function NotificationsHeader({ address }: NotificationsHeaderProps) {
   return (
-    <CenterBox alignItems="center" flexDirection="row" my="sm">
+    <Box justifyContent="space-between" flexDirection="row" py="sm" px="md">
       <Text variant="h3" ml="sm">
         {shortenAddress(address)}
       </Text>
-    </CenterBox>
+      <BackX />
+    </Box>
   )
 }
 

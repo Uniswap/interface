@@ -1,8 +1,7 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { HomeStackParamList } from 'src/app/navigation/types'
+import { AccountStackScreenProp } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -11,9 +10,7 @@ import { ImportReadonlyAccountForm } from 'src/features/import/ImportReadonlyAcc
 import { unlockWallet } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<HomeStackParamList, Screens.ImportAccount>
-
-export function ImportAccountScreen({ navigation }: Props) {
+export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Screens.ImportAccount>) {
   const dispatch = useAppDispatch()
   const onImportSuccess = () => {
     dispatch(unlockWallet())

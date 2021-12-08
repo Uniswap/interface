@@ -1,9 +1,8 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { HomeStackParamList } from 'src/app/navigation/types'
+import { useAccountStackNavigation } from 'src/app/navigation/types'
 import { AccountCard } from 'src/components/accounts/AccountCard'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { RenameAccountModal } from 'src/components/accounts/RenameAccountModal'
@@ -24,11 +23,9 @@ import { flex } from 'src/styles/flex'
 import { dimensions } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
 
-type Props = NativeStackScreenProps<HomeStackParamList, Screens.Accounts>
-
-export function AccountsScreen({ navigation }: Props) {
+export function AccountsScreen() {
   const [isEditMode, setIsEditMode] = useState(false)
-
+  const navigation = useAccountStackNavigation()
   const { t } = useTranslation()
 
   const addressToAccount = useAccounts()

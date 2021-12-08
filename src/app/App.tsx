@@ -2,13 +2,13 @@ import { NavigationContainer } from '@react-navigation/native'
 import * as Sentry from '@sentry/react-native'
 import { ThemeProvider } from '@shopify/restyle'
 import React, { StrictMode } from 'react'
-import { StatusBar, useColorScheme } from 'react-native'
+import { StatusBar } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
-import { SwapStackNavigator } from 'src/app/navigation/navigation'
+import { AppStackNavigator } from 'src/app/navigation/navigation'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
@@ -25,7 +25,7 @@ if (!__DEV__) {
 const queryClient = new QueryClient()
 
 export function App() {
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = false // useColorScheme() === 'dark'
 
   return (
     <StrictMode>
@@ -61,7 +61,7 @@ function DataUpdaters() {
 function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <NavigationContainer>
-      <SwapStackNavigator />
+      <AppStackNavigator />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </NavigationContainer>
   )

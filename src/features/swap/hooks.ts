@@ -2,7 +2,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { useAppNavigation } from 'src/app/navigation/types'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
@@ -19,7 +19,6 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
@@ -131,7 +130,7 @@ export function useSwapCallback(
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
 
-  const navigation = useAppNavigation()
+  const navigation = useAppStackNavigation()
 
   const { amount, methodParameters } = trade?.quote || {}
   const chainId = trade?.inputAmount.currency.chainId
@@ -179,7 +178,7 @@ export function useSwapCallback(
             txAmount: amount,
           })
         )
-        navigation.navigate(Screens.Home)
+        navigation.goBack()
       },
       swapState,
     }

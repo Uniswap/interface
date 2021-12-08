@@ -1,16 +1,12 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, useWindowDimensions, View, ViewStyle } from 'react-native'
 import 'react-native-reanimated'
 import { runOnJS } from 'react-native-reanimated'
 import { Camera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera'
-import { HomeStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { Bounds, extractSeedPhraseFromOCR, OcrObject } from 'src/features/import/scanUtils'
 import { Screens } from 'src/screens/Screens'
 import { scanOCR } from 'vision-camera-ocr'
-
-type Props = NativeStackScreenProps<HomeStackParamList, Screens.Camera>
 
 const SAMPLE_SEED = [
   'abacus',
@@ -34,7 +30,7 @@ const VIEWFINDER_ABSOLUTE = VIEWFINDER_HEIGHT / 2
 const VIEWFINDER_SHIFT = 40
 const VIEWFINDER_X_PADDING = 25
 
-export function CameraScreen({ navigation }: Props) {
+export function CameraScreen({ navigation }: any) {
   const [ocr, setOcr] = useState<OcrObject[]>()
   const [hasPermission, setHasPermission] = useState(false)
 

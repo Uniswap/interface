@@ -1,9 +1,7 @@
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
 import React, { PropsWithChildren, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HomeStackParamList } from 'src/app/navigation/types'
+import { useAccountStackNavigation } from 'src/app/navigation/types'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -24,12 +22,12 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
   // TODO: get ENS Name
   const activeAccount = useActiveAccount()
 
-  const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>()
+  const navigation = useAccountStackNavigation()
   const onPressAccount = useCallback(() => {
     if (onPress) {
       onPress()
     } else {
-      navigation.navigate(Screens.Accounts)
+      navigation.navigate(Screens.AccountStack, { screen: Screens.Accounts })
     }
   }, [onPress, navigation])
 

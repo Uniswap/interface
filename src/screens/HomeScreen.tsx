@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
-import { HomeStackParamList } from 'src/app/navigation/types'
+import { AppStackParamList } from 'src/app/navigation/types'
 import Bell from 'src/assets/icons/bell.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -17,7 +17,7 @@ import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<HomeStackParamList, Screens.Accounts>
+type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
 export function HomeScreen({ navigation }: Props) {
   const currentChains = useActiveChainIds()
@@ -45,7 +45,9 @@ export function HomeScreen({ navigation }: Props) {
       <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="md" my="sm">
         <AccountHeader />
         <Box flexDirection="row" mr="md">
-          <Button mr="md" onPress={() => navigation.navigate(Screens.Dev)}>
+          <Button
+            onPress={() => navigation.navigate(Screens.DevStack, { screen: Screens.Dev })}
+            mr="md">
             <Settings height={24} width={24} />
           </Button>
           <Button onPress={() => navigation.navigate(Screens.Notifications)}>

@@ -1,15 +1,8 @@
-import { CompositeScreenProps } from '@react-navigation/core'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { utils } from 'ethers'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import {
-  DevStackParamList,
-  ExploreStackParamList,
-  HomeStackParamList,
-  SwapStackParamList,
-} from 'src/app/navigation/types'
+import { BackX } from 'src/components/buttons/BackX'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -25,18 +18,7 @@ import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
-type Props = CompositeScreenProps<
-  NativeStackScreenProps<HomeStackParamList, Screens.Home>,
-  CompositeScreenProps<
-    NativeStackScreenProps<ExploreStackParamList, Screens.Explore>,
-    CompositeScreenProps<
-      NativeStackScreenProps<SwapStackParamList, Screens.Swap>,
-      NativeStackScreenProps<DevStackParamList, Screens.Dev>
-    >
-  >
->
-
-export function DevScreen({ navigation }: Props) {
+export function DevScreen({ navigation }: any) {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.RINKEBY)
@@ -79,6 +61,9 @@ export function DevScreen({ navigation }: Props) {
 
   return (
     <Screen>
+      <Box justifyContent="flex-end" flexDirection="row" py="sm" px="md">
+        <BackX />
+      </Box>
       <ScrollView>
         <Box alignItems="center">
           <Text variant="h3" textAlign="center">

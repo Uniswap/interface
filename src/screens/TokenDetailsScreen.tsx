@@ -1,9 +1,8 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView } from 'react-native'
-import { HomeStackParamList } from 'src/app/navigation/types'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
@@ -15,8 +14,6 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { useTokenBalance } from 'src/features/balances/hooks'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-
-type Props = NativeStackScreenProps<HomeStackParamList, Screens.TokenDetails>
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -39,7 +36,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   )
 }
 
-export function TokenDetailsScreen({ route }: Props) {
+export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
   const { currency } = route.params
 
   const activeAccount = useActiveAccount()

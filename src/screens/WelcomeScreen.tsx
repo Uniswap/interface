@@ -1,8 +1,7 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useNavigation } from '@react-navigation/core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { HomeStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -11,10 +10,9 @@ import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { unlockWallet } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<HomeStackParamList, Screens.Welcome>
-
-export function WelcomeScreen({ navigation }: Props) {
+export function WelcomeScreen() {
   const dispatch = useAppDispatch()
+  const navigation = useNavigation<any>()
 
   const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
