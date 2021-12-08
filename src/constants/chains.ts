@@ -50,6 +50,8 @@ export const L2_CHAIN_IDS = [
 // Renamed from SupportedL2ChainId in web app
 export type L2ChainId = typeof L2_CHAIN_IDS[number]
 
+export const MAINNET_CHAIN_IDS = [ChainId.MAINNET, ChainId.ARBITRUM_ONE, ChainId.OPTIMISM]
+
 export interface L1ChainInfo {
   readonly blockWaitMsBeforeWarning?: number
   readonly docs: string

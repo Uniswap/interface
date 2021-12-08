@@ -6,6 +6,9 @@ import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { NULL_ADDRESS } from 'src/constants/accounts'
+import { MAINNET_CHAIN_IDS } from 'src/constants/chains'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { flex } from 'src/styles/flex'
 import { formatPrice } from 'src/utils/format'
 
@@ -42,6 +45,7 @@ export function TokenBalanceList({
   onPressToken,
 }: TokenBalanceListProps) {
   const ethBalance = balances.length > 0 ? balances[0] : undefined
+  const totalBalance = useTotalBalance(loading || !ethBalance ? [] : balances)
 
   if (loading || !ethBalance) {
     return (
@@ -59,15 +63,6 @@ export function TokenBalanceList({
       ? `${balance.currency.chainId}${NULL_ADDRESS}`
       : `${balance.currency.chainId}${balance.currency.address}`
 
-  const totalBalance = balances
-    .map((currencyAmount) => {
-      // TODO get current price of each token - currently requires fetching token data from graph via a hook, need a more elegant way
-      const currentPrice = 1
-      return currentPrice * parseFloat(currencyAmount.toSignificant(6))
-    })
-    .reduce((a, b) => a + b, 0)
-    .toFixed(2)
-
   return (
     <Box flex={1}>
       <FlatList
@@ -80,4 +75,23 @@ export function TokenBalanceList({
       />
     </Box>
   )
+}
+
+function useTotalBalance(balances: CurrencyAmount<Currency>[]) {
+  const activeAccount = useActiveAccount()
+  const filteredBalances =
+    activeAccount?.type === AccountType.readonly
+      ? balances.filter((currencyAmount) =>
+          MAINNET_CHAIN_IDS.includes(currencyAmount.currency.chainId)
+        )
+      : balances
+
+  return filteredBalances
+    .map((currencyAmount) => {
+      // TODO get current price of each token - currently requires fetching token data from graph via a hook, need a more elegant way
+      const currentPrice = 1
+      return currentPrice * parseFloat(currencyAmount.toSignificant(6))
+    })
+    .reduce((a, b) => a + b, 0)
+    .toFixed(2)
 }

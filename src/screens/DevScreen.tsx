@@ -1,6 +1,7 @@
 import { utils } from 'ethers'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
+import { batch } from 'react-redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { BackX } from 'src/components/buttons/BackX'
 import { TextButton } from 'src/components/buttons/TextButton'
@@ -37,9 +38,13 @@ export function DevScreen({ navigation }: any) {
   }
 
   const activeChains = useActiveChainIds()
-  const onPressToggleRinkeby = () => {
+  const onPressToggleTestnets = () => {
+    // always rely on the state of rinkeby
     const isRinkebyActive = activeChains.includes(ChainId.RINKEBY)
-    dispatch(setChainActiveStatus({ chainId: ChainId.RINKEBY, isActive: !isRinkebyActive }))
+    batch(() => {
+      dispatch(setChainActiveStatus({ chainId: ChainId.RINKEBY, isActive: !isRinkebyActive }))
+      dispatch(setChainActiveStatus({ chainId: ChainId.GOERLI, isActive: !isRinkebyActive }))
+    })
   }
 
   const blockTimestamp = useCurrentBlockTimestamp(currentChain)
@@ -93,8 +98,8 @@ export function DevScreen({ navigation }: any) {
           <TextButton onPress={onPressGetBalance} mt="sm">
             Get Balance
           </TextButton>
-          <TextButton onPress={onPressToggleRinkeby} mt="sm">
-            Toggle Rinkeby
+          <TextButton onPress={onPressToggleTestnets} mt="sm">
+            Toggle Testnets
           </TextButton>
           <TextButton onPress={onPressComputeFee} mt="sm">
             Compute fee
