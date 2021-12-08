@@ -1,6 +1,7 @@
 import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Toast } from 'src/components/notifications/Toast'
 import { usePendingTransactions } from 'src/features/transactions/hooks'
@@ -22,31 +23,37 @@ function TransactionNotification() {
 
   if (recentlyFailedTransactions.length > 0) {
     return (
-      <Toast
-        variant="failed"
-        // TODO: actually format these
-        label={getNotificationName(recentlyFailedTransactions[0], t) + t(' failed')}
-      />
+      <Box p="sm">
+        <Toast
+          variant="failed"
+          // TODO: actually format these
+          label={getNotificationName(recentlyFailedTransactions[0], t) + t(' failed')}
+        />
+      </Box>
     )
   } else if (recentlySuccessfulTransactions.length > 0) {
     return (
-      <Toast
-        variant="successful"
-        label={getNotificationName(recentlySuccessfulTransactions[0], t) + t(' successful!')}
-      />
+      <Box p="sm">
+        <Toast
+          variant="successful"
+          label={getNotificationName(recentlySuccessfulTransactions[0], t) + t(' successful!')}
+        />
+      </Box>
     )
   } else if (pendingTransactions.length > 0) {
     return (
-      <Toast
-        variant="pending"
-        label={
-          pendingTransactions.length +
-          ' ' +
-          t('pending') +
-          ' ' +
-          getNotificationName(pendingTransactions[0], t).toLowerCase()
-        }
-      />
+      <Box p="sm">
+        <Toast
+          variant="pending"
+          label={
+            pendingTransactions.length +
+            ' ' +
+            t('pending') +
+            ' ' +
+            getNotificationName(pendingTransactions[0], t).toLowerCase()
+          }
+        />
+      </Box>
     )
   }
 

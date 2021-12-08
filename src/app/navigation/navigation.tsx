@@ -53,7 +53,14 @@ function TabNavigator() {
   }
 
   function ExploreTabIcon({ focused }: { focused: boolean }) {
-    return <SearchIcon height={25} width={34} stroke={focused ? primaryColor : secondaryColor} />
+    return (
+      <SearchIcon
+        height={30}
+        width={30}
+        stroke={focused ? primaryColor : secondaryColor}
+        strokeWidth={2.2}
+      />
+    )
   }
 
   return (

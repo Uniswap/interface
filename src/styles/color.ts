@@ -29,7 +29,7 @@ interface Palette {
 }
 
 export const colorsLight: Palette = {
-  primary1: '#E8006F',
+  primary1: '#FF007A',
   primary2: '#FF8CC3',
   primary3: '#FF99C9',
   primaryText: '#D50066',

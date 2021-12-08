@@ -6,6 +6,8 @@ import Bell from 'src/assets/icons/bell.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
+import { GradientBackground } from 'src/components/gradients/GradientBackground'
+import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
@@ -53,6 +55,9 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Screen>
+      <GradientBackground>
+        <PinkToBlueLinear />
+      </GradientBackground>
       <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="md" my="sm">
         <AccountHeader />
         <Box flexDirection="row" mr="md">

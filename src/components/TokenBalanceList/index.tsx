@@ -1,7 +1,14 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, ListRenderItemInfo, RefreshControl } from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList,
+  ListRenderItemInfo,
+  RefreshControl,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
@@ -9,7 +16,7 @@ import { NULL_ADDRESS } from 'src/constants/accounts'
 import { MAINNET_CHAIN_IDS } from 'src/constants/chains'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { flex } from 'src/styles/flex'
+import { theme } from 'src/styles/theme'
 import { formatPrice } from 'src/utils/format'
 
 interface TokenBalanceListProps {
@@ -28,7 +35,7 @@ function TotalBalanceView({ totalBalance }: TotalBalanceViewProps) {
   const { t } = useTranslation()
 
   return (
-    <Box px="lg" mb="md">
+    <Box mt="sm" mb="lg" mx="lg">
       <Text variant="h5" color="gray400" mb="xs">
         {t('Total balance')}
       </Text>
@@ -45,11 +52,12 @@ export function TokenBalanceList({
   onPressToken,
 }: TokenBalanceListProps) {
   const ethBalance = balances.length > 0 ? balances[0] : undefined
+  const { height } = useWindowDimensions()
   const totalBalance = useTotalBalance(loading || !ethBalance ? [] : balances)
 
   if (loading || !ethBalance) {
     return (
-      <Box flex={1} width="100%" alignItems="center">
+      <Box padding="xl">
         <ActivityIndicator color="grey" animating={loading} />
       </Box>
     )
@@ -63,19 +71,36 @@ export function TokenBalanceList({
       ? `${balance.currency.chainId}${NULL_ADDRESS}`
       : `${balance.currency.chainId}${balance.currency.address}`
 
+  // Return white footer to fill bottom of FlatList over the gradient
   return (
-    <Box flex={1}>
-      <FlatList
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        contentContainerStyle={flex.grow}
-        data={balances}
-        ListHeaderComponent={<TotalBalanceView totalBalance={totalBalance} />}
-        renderItem={renderItem}
-        keyExtractor={key}
-      />
-    </Box>
+    <FlatList
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      contentContainerStyle={styles.listContainer}
+      data={balances}
+      ListHeaderComponent={<TotalBalanceView totalBalance={totalBalance} />}
+      ListFooterComponent={
+        <Box
+          style={{
+            ...styles.footer,
+            height: height,
+          }}
+        />
+      }
+      renderItem={renderItem}
+      keyExtractor={key}
+    />
   )
 }
+
+const styles = StyleSheet.create({
+  listContainer: {
+    flex: 1,
+    flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: theme.colors.mainBackground,
+  },
+})
 
 function useTotalBalance(balances: CurrencyAmount<Currency>[]) {
   const activeAccount = useActiveAccount()
