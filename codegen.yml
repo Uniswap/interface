@@ -1,7 +1,10 @@
+hooks:
+  afterOneFileWrite:
+    - prettier --write
 schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
-documents: 'src/features/historicalChainData/*.graphql'
+documents: 'src/features/historicalChainData/queries/*.graphql'
 generates:
-  ./src/features/historicalChainData/generated.ts:
+  ./src/features/historicalChainData/generated/hooks.ts:
     plugins:
       - typescript
       - typescript-operations

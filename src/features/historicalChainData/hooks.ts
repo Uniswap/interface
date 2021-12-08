@@ -6,7 +6,7 @@ import {
   HourlyTokenPricesQuery,
   useDailyTokenPricesQuery,
   useHourlyTokenPricesQuery,
-} from 'src/features/historicalChainData/generated'
+} from 'src/features/historicalChainData/generated/hooks'
 
 interface TokenPricesProps {
   token?: Token
@@ -71,6 +71,6 @@ function useParsedPriceData(
     : undefined
 }
 
-function useEndpoint(chainId?: number) {
+export function useEndpoint(chainId?: number) {
   return useMemo(() => (chainId ? CHAIN_INFO[chainId].subgraphUrl : null) ?? '', [chainId])
 }

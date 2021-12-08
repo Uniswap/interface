@@ -5,7 +5,6 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
-import useUSDCPrice from 'src/features/prices/useUSDCPrice'
 import { formatCurrencyAmount } from 'src/utils/format'
 
 // TODO(#89): use date manipulation util
@@ -14,24 +13,28 @@ const YESTERDAY = Math.round(d.setDate(d.getDate() - 1))
 
 interface TokenBalanceItemProps {
   currencyAmount: CurrencyAmount<Currency>
+  currencyPrice: number | undefined
   onPressToken?: (currencyAmount: CurrencyAmount<Currency>) => void
 }
 
-export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceItemProps) {
+export function TokenBalanceItem({
+  currencyAmount,
+  currencyPrice,
+  onPressToken,
+}: TokenBalanceItemProps) {
   const { currency } = currencyAmount
 
-  const currentPrice = useUSDCPrice(currency)
   const { prices } = useHourlyTokenPrices({
     token: currency.wrapped,
     timestamp: YESTERDAY,
   })
 
   const percentChange = (function () {
-    if (!prices || prices?.length === 0 || !currentPrice) return null
+    if (!prices || prices?.length === 0 || !currencyPrice) return null
 
     const startPrice = prices[prices.length - 1].close
     // TODO: process as `Price`
-    const closePrice = parseFloat(currentPrice.toSignificant(6))
+    const closePrice = currencyPrice
 
     if (startPrice === 0 && closePrice === 0) return null
 
@@ -39,8 +42,9 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
   })()
 
   // TODO: not all tokens have data from the Graph
-  // Note that for ETH, this gets WETH price.
-  const balance = currentPrice ? currentPrice.quote(currencyAmount) : null
+  const balance = currencyPrice
+    ? currencyPrice * parseFloat(currencyAmount.toSignificant())
+    : undefined
 
   const onPress = () => {
     onPressToken?.(currencyAmount)
@@ -64,7 +68,8 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
         </Box>
       </Box>
       <Box alignItems="flex-end">
-        <Text variant="h4">{formatCurrencyAmount(balance)}</Text>
+        {/* TODO: make currency amount and format */}
+        <Text variant="h4">{balance?.toPrecision(6)}</Text>
         <Text
           variant="bodySm"
           color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>

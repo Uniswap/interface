@@ -94,7 +94,7 @@ export function TokenDetailsScreen({
             {t('Your balance')}
           </Text>
           {loading ? (
-            balance && <TokenBalanceItem currencyAmount={balance} />
+            balance && <TokenBalanceItem currencyAmount={balance} currencyPrice={undefined} />
           ) : (
             <ActivityIndicator color="grey" animating={loading} />
           )}

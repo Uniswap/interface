@@ -7,4 +7,4 @@ src/abis/types
 src/abis/uniswapV3
 
 # Generated GraphQL schema types
-src/features/historicalChainData/generated.ts
+src/features/historicalChainData/generated/hooks.ts

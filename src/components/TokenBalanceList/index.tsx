@@ -13,10 +13,11 @@ import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { NULL_ADDRESS } from 'src/constants/accounts'
-import { MAINNET_CHAIN_IDS } from 'src/constants/chains'
+import { ChainId, MAINNET_CHAIN_IDS } from 'src/constants/chains'
+import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { theme } from 'src/styles/theme'
+import { currencyId } from 'src/utils/currencyId'
 import { formatPrice } from 'src/utils/format'
 
 interface TokenBalanceListProps {
@@ -51,9 +52,13 @@ export function TokenBalanceList({
   onRefresh,
   onPressToken,
 }: TokenBalanceListProps) {
-  const ethBalance = balances.length > 0 ? balances[0] : undefined
   const { height } = useWindowDimensions()
-  const totalBalance = useTotalBalance(loading || !ethBalance ? [] : balances)
+
+  const ethBalance = balances.length > 0 ? balances[0] : undefined
+  const currenciesToFetch = balances.map((currencyAmount) => currencyAmount.currency)
+  const tokenPricesByChain = useTokenPrices(currenciesToFetch)
+
+  const totalBalance = useTotalBalance(loading || !ethBalance ? [] : balances, tokenPricesByChain)
 
   if (loading || !ethBalance) {
     return (
@@ -64,7 +69,15 @@ export function TokenBalanceList({
   }
 
   const renderItem = ({ item }: ListRenderItemInfo<CurrencyAmount<Currency>>) => (
-    <TokenBalanceItem currencyAmount={item} onPressToken={onPressToken} />
+    <TokenBalanceItem
+      currencyAmount={item}
+      currencyPrice={
+        tokenPricesByChain.chainIdToPrices[item.currency.chainId as ChainId]?.addressToPrice?.[
+          currencyId(item.currency)
+        ]?.priceUSD
+      }
+      onPressToken={onPressToken}
+    />
   )
   const key = (balance: CurrencyAmount<Currency>) =>
     balance.currency.isNative
@@ -80,9 +93,9 @@ export function TokenBalanceList({
       ListHeaderComponent={<TotalBalanceView totalBalance={totalBalance} />}
       ListFooterComponent={
         <Box
+          bg="mainBackground"
           style={{
-            ...styles.footer,
-            height: height,
+            height,
           }}
         />
       }
@@ -92,17 +105,10 @@ export function TokenBalanceList({
   )
 }
 
-const styles = StyleSheet.create({
-  listContainer: {
-    flex: 1,
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.colors.mainBackground,
-  },
-})
-
-function useTotalBalance(balances: CurrencyAmount<Currency>[]) {
+function useTotalBalance(
+  balances: CurrencyAmount<Currency>[],
+  tokenPricesByChain: ReturnType<typeof useTokenPrices>
+) {
   const activeAccount = useActiveAccount()
   const filteredBalances =
     activeAccount?.type === AccountType.readonly
@@ -113,10 +119,19 @@ function useTotalBalance(balances: CurrencyAmount<Currency>[]) {
 
   return filteredBalances
     .map((currencyAmount) => {
-      // TODO get current price of each token - currently requires fetching token data from graph via a hook, need a more elegant way
-      const currentPrice = 1
-      return currentPrice * parseFloat(currencyAmount.toSignificant(6))
+      const currentPrice =
+        tokenPricesByChain.chainIdToPrices[currencyAmount.currency.chainId as ChainId]
+          ?.addressToPrice?.[currencyId(currencyAmount.currency)]?.priceUSD
+
+      return (currentPrice ?? 0) * parseFloat(currencyAmount.toSignificant(6))
     })
     .reduce((a, b) => a + b, 0)
     .toFixed(2)
 }
+
+const styles = StyleSheet.create({
+  listContainer: {
+    flex: 1,
+    flexGrow: 1,
+  },
+})

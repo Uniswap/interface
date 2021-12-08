@@ -1,0 +1,5 @@
+query ethPrices {
+  current: bundles(first: 1, subgraphError: allow) {
+    ethPriceUSD
+  }
+}
