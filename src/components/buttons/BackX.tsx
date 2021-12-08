@@ -17,7 +17,7 @@ export function BackX({ onPressBack, size, ...rest }: Props) {
 
   return (
     <Button onPress={goBack} {...rest}>
-      <X width={size ?? 30} height={size ?? 30} />
+      <X width={size ?? 20} height={size ?? 20} />
     </Button>
   )
 }

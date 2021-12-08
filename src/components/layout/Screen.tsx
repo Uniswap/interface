@@ -1,18 +1,16 @@
-import { BackgroundColorShorthandProps } from '@shopify/restyle'
+import { BackgroundColorShorthandProps, createBox } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { theme, Theme } from 'src/styles/theme'
+import { NativeSafeAreaViewProps, SafeAreaView } from 'react-native-safe-area-context'
+import { Theme } from 'src/styles/theme'
 
-type Props = BackgroundColorShorthandProps<Theme>
+const SafeAreaBox = createBox<Theme>(SafeAreaView)
 
-const style = {
-  flex: 1,
-}
+type Props = BackgroundColorShorthandProps<Theme> & NativeSafeAreaViewProps
 
 export function Screen(props: PropsWithChildren<Props>) {
   return (
-    <SafeAreaView style={{ ...style, backgroundColor: theme.colors.mainBackground }} {...props}>
+    <SafeAreaBox flex={1} bg="mainBackground" {...props}>
       {props.children}
-    </SafeAreaView>
+    </SafeAreaBox>
   )
 }

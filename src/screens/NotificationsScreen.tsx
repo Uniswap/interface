@@ -14,7 +14,7 @@ interface NotificationsHeaderProps {
 
 function NotificationsHeader({ address }: NotificationsHeaderProps) {
   return (
-    <Box justifyContent="space-between" flexDirection="row" py="sm" px="md">
+    <Box justifyContent="space-between" flexDirection="row" pb="sm" px="lg">
       <Text variant="h3" ml="sm">
         {shortenAddress(address)}
       </Text>
