@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUp } from 'react-feather'
 
 import Button from '../Button'
 import Row from '../Row'
-import { swapAtom } from './state'
+import { stateAtom } from './state'
 
 const ReverseRow = styled(Row)`
   bottom: -1.5em;
@@ -53,14 +53,14 @@ const StyledReverseButton = styled(Button)`
 `
 
 export default function ReverseButton() {
-  const [swap, setSwap] = useAtom(swapAtom)
+  const [state, setState] = useAtom(stateAtom)
   const onClick = useCallback(() => {
-    const { input, output } = swap
-    setSwap((swap) => {
-      swap.input = output
-      swap.output = input
+    const { input, output } = state
+    setState((state) => {
+      state.input = output
+      state.output = input
     })
-  }, [swap, setSwap])
+  }, [state, setState])
 
   return (
     <ReverseRow justify="center">

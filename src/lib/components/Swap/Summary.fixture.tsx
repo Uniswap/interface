@@ -4,14 +4,13 @@ import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { Modal } from '../Dialog'
-import { Field, outputAtom, State, swapAtom } from './state'
+import { Field, outputAtom, stateAtom } from './state'
 import { SummaryDialog } from './Summary'
 
 function Fixture() {
-  const setSwap = useUpdateAtom(swapAtom)
+  const setState = useUpdateAtom(stateAtom)
   useEffect(() => {
-    setSwap({
-      state: State.LOADED,
+    setState({
       activeInput: Field.INPUT,
       input: { token: ETH, value: 1, usdc: 4195 },
       output: { token: DAI, value: 4200, usdc: 4200 },
@@ -26,7 +25,7 @@ function Fixture() {
   })
 
   const setOutput = useUpdateAtom(outputAtom)
-  const [price] = useValue('value', { defaultValue: 4200 })
+  const [price] = useValue('output value', { defaultValue: 4200 })
   useEffect(() => {
     setOutput({ token: DAI, value: price, usdc: price })
   }, [price, setOutput])

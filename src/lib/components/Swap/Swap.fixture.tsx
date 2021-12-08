@@ -1,11 +1,11 @@
+import { useAtom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
-import { DAI, ETH } from 'lib/mocks'
 import { useEffect } from 'react'
-import { useSelect, useValue } from 'react-cosmos/fixture'
+import { useValue } from 'react-cosmos/fixture'
 
 import Swap from '.'
 import { colorAtom } from './Output'
-import { Field, inputAtom, outputAtom, State, stateAtom, swapAtom } from './state'
+import { inputAtom, outputAtom, swapAtom } from './state'
 
 const validateColor = (() => {
   const validator = document.createElement('div').style
@@ -17,47 +17,42 @@ const validateColor = (() => {
 })()
 
 function Fixture() {
-  const setInput = useUpdateAtom(inputAtom)
-  const setOutput = useUpdateAtom(outputAtom)
-  const setState = useUpdateAtom(stateAtom)
-  const setSwap = useUpdateAtom(swapAtom)
-  const [state] = useSelect('state', {
-    options: ['EMPTY', 'LOADING', 'TOKEN APPROVAL', 'BALANCE INSUFFICIENT', 'LOADED'],
-  })
+  const [input, setInput] = useAtom(inputAtom)
+  const [output, setOutput] = useAtom(outputAtom)
+  const [swap, setSwap] = useAtom(swapAtom)
+
+  const [priceFetched] = useValue('price fetched', { defaultValue: false })
   useEffect(() => {
-    switch (state) {
-      case 'EMPTY':
-        setInput({ token: ETH })
-        setOutput({})
-        setState(State.EMPTY)
-        break
-      case 'LOADING':
-        setState(State.LOADING)
-        break
-      case 'TOKEN APPROVAL':
-        setInput({ token: ETH })
-        setState(State.TOKEN_APPROVAL)
-        break
-      case 'BALANCE INSUFFICIENT':
-        setInput({ token: ETH })
-        setState(State.BALANCE_INSUFFICIENT)
-        break
-      case 'LOADED':
-        setSwap({
-          state: State.LOADED,
-          activeInput: Field.INPUT,
-          input: { token: ETH, value: 1, usdc: 4195 },
-          output: { token: DAI, value: 4200, usdc: 4200 },
-          swap: {
-            lpFee: 0.0005,
-            priceImpact: 0.01,
-            slippageTolerance: 0.5,
-            minimumReceived: 4190,
-          },
-        })
-        break
+    if (priceFetched && input.token && output.token) {
+      const inputValue = input.value || 1
+      const outputValue = output.value || 1
+      setOutput({ ...output, value: outputValue })
+      setInput({ ...input, value: inputValue })
     }
-  }, [setInput, setOutput, setState, setSwap, state])
+    // disable the effect on input/output updates to maintain interactivity
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [priceFetched, setInput, setOutput])
+  useEffect(() => {
+    if (priceFetched && !swap && input.token && input.value && output.token && output.value) {
+      setOutput({ ...output, usdc: output.value })
+      setInput({ ...input, usdc: input.value })
+      setSwap({
+        lpFee: 0.0005,
+        priceImpact: 0.01,
+        slippageTolerance: 0.5,
+        minimumReceived: output.value * 0.995,
+      })
+    } else if (!priceFetched && swap) {
+      setSwap(undefined)
+    }
+  }, [input, output, priceFetched, setInput, setOutput, setSwap, swap])
+
+  const [tokenApproved] = useValue('token approved', { defaultValue: false })
+  useEffect(() => {
+    if (tokenApproved !== input.approved) {
+      setInput({ ...input, approved: tokenApproved })
+    }
+  }, [input, setInput, tokenApproved])
 
   const setColor = useUpdateAtom(colorAtom)
   const [color] = useValue('token color', { defaultValue: '' })

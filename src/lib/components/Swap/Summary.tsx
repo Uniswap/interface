@@ -91,7 +91,7 @@ function asInput(input: Input): (Required<Pick<Input, 'token' | 'value'>> & Inpu
 const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
 
 export function SummaryDialog() {
-  const { swap } = useAtomValue(swapAtom)
+  const swap = useAtomValue(swapAtom)
   const partialInput = useAtomValue(inputAtom)
   const partialOutput = useAtomValue(outputAtom)
   const input = asInput(partialInput)

@@ -31,15 +31,6 @@ export const maxSlippageAtom = pickAtom(settingsAtom, 'maxSlippage', setCustomiz
 export const transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl')
 export const mockTogglableAtom = pickAtom(settingsAtom, 'mockTogglable', setTogglable)
 
-export enum State {
-  EMPTY,
-  LOADING,
-  TOKEN_APPROVAL,
-  BALANCE_INSUFFICIENT,
-  LOADED,
-  PENDING,
-}
-
 export enum Field {
   INPUT = 'input',
   OUTPUT = 'output',
@@ -51,10 +42,9 @@ export interface Input {
   usdc?: number
 }
 
-export interface Swap {
-  state: State
+export interface State {
   activeInput: Field
-  [Field.INPUT]: Input
+  [Field.INPUT]: Input & { approved?: boolean }
   [Field.OUTPUT]: Input
   swap?: {
     lpFee: number
@@ -66,31 +56,32 @@ export interface Swap {
   }
 }
 
-export const swapAtom = atomWithImmer<Swap>({
-  state: State.LOADING,
+export const stateAtom = atomWithImmer<State>({
   activeInput: Field.INPUT,
   input: { token: ETH },
   output: {},
 })
 
-export const stateAtom = pickAtom(swapAtom, 'state')
+export const swapAtom = pickAtom(stateAtom, 'swap')
 
 export const inputAtom = atom(
-  (get) => get(swapAtom).input,
-  (get, set, update: Input) => {
-    set(swapAtom, (swap) => {
-      swap.activeInput = Field.INPUT
-      swap.input = update
+  (get) => get(stateAtom).input,
+  (get, set, update: Input & { approved?: boolean }) => {
+    set(stateAtom, (state) => {
+      state.activeInput = Field.INPUT
+      state.input = update
+      state.swap = undefined
     })
   }
 )
 
 export const outputAtom = atom(
-  (get) => get(swapAtom).output,
+  (get) => get(stateAtom).output,
   (get, set, update: Input) => {
-    set(swapAtom, (swap) => {
-      swap.activeInput = Field.OUTPUT
-      swap.output = update
+    set(stateAtom, (state) => {
+      state.activeInput = Field.OUTPUT
+      state.output = update
+      state.swap = undefined
     })
   }
 )

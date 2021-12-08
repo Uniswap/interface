@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 
 import Column from '../Column'
 import Row from '../Row'
-import { swapAtom } from './state'
+import { stateAtom } from './state'
 
 function Detail({ children }: { children: ReactNode }) {
   return (
@@ -16,7 +16,7 @@ function Detail({ children }: { children: ReactNode }) {
 }
 
 export default function Details() {
-  const { input, output, swap } = useAtomValue(swapAtom)
+  const { input, output, swap } = useAtomValue(stateAtom)
   if (!(input.token && output.token && swap)) {
     return null
   }

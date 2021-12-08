@@ -7,10 +7,12 @@ import { ReactNode } from 'react'
 
 import Column from '../Column'
 import Row from '../Row'
-import { inputAtom, State, stateAtom } from './state'
+import { inputAtom } from './state'
 import TokenInput from './TokenInput'
 
-const InputColumn = styled(Column)<{ approved: boolean }>`
+const mockBalance = 123.45
+
+const InputColumn = styled(Column)<{ approved?: boolean }>`
   padding: 0.75em;
   position: relative;
 
@@ -23,11 +25,10 @@ export default function Input({ children }: { children: ReactNode }) {
   const input = useAtomValue(inputAtom)
   const setValue = useUpdateAtom(pickAtom(inputAtom, 'value'))
   const setToken = useUpdateAtom(pickAtom(inputAtom, 'token'))
-  const state = useAtomValue(stateAtom)
-  const balance = 123.45
+  const balance = mockBalance
 
   return (
-    <InputColumn gap={0.5} approved={state !== State.TOKEN_APPROVAL}>
+    <InputColumn gap={0.5} approved={input.approved}>
       <Row>
         <ThemedText.Subhead2 color="secondary">
           <Trans>Trading</Trans>
@@ -44,7 +45,7 @@ export default function Input({ children }: { children: ReactNode }) {
             {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}
             {balance && (
               <Row gap={0.5}>
-                <Row gap={0.25} color={state === State.BALANCE_INSUFFICIENT ? 'error' : undefined}>
+                <Row gap={0.25} color={input.value && input.value > balance ? 'error' : undefined}>
                   Balance: {balance}
                 </Row>
               </Row>

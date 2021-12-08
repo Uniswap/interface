@@ -1,51 +1,47 @@
 import { Trans } from '@lingui/macro'
-import assert from 'assert'
-import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
-import { inputAtom, State, stateAtom } from './state'
+import { inputAtom, swapAtom } from './state'
 import { SummaryDialog } from './Summary'
 import TransactionStatusDialog from './TransactionStatusDialog'
 
+const mockBalance = 123.45
+
+enum Mode {
+  NONE,
+  SUMMARY,
+  STATUS,
+}
+
 export default function SwapButton() {
-  const [state, setState] = useAtom(stateAtom)
-  const { token } = useAtomValue(inputAtom)
-  const [open, setOpen] = useState(false)
+  const swap = useAtomValue(swapAtom)
+  const input = useAtomValue(inputAtom)
+  const balance = mockBalance
+  const [mode, setMode] = useState(Mode.NONE)
   const actionProps = useMemo(() => {
-    switch (state) {
-      case State.LOADED:
-        return {}
-      case State.TOKEN_APPROVAL:
-        assert(token)
-        return { updated: { message: <Trans>Approve {token.symbol} first</Trans>, action: <Trans>Approve</Trans> } }
-      case State.EMPTY:
-      case State.LOADING:
-      case State.BALANCE_INSUFFICIENT:
-      default:
-        return { disabled: true }
+    if (input.token && !input.approved) {
+      return { updated: { message: <Trans>Approve {input.token.symbol} first</Trans>, action: <Trans>Approve</Trans> } }
+    } else if (swap && input.value && input.value <= balance) {
+      return {}
     }
-  }, [state, token])
-  useEffect(() => {
-    if (state === State.PENDING) {
-      setOpen(false)
-    }
-  }, [state])
+    return { disabled: true }
+  }, [balance, input.approved, input.token, input.value, swap])
   return (
     <>
-      <ActionButton color="interactive" onClick={() => setOpen(true)} onUpdate={() => void 0} {...actionProps}>
+      <ActionButton color="interactive" onClick={() => setMode(Mode.SUMMARY)} onUpdate={() => void 0} {...actionProps}>
         <Trans>Review swap</Trans>
       </ActionButton>
-      {open && (
-        <Dialog color="dialog" onClose={() => setOpen(false)}>
+      {mode === Mode.SUMMARY && (
+        <Dialog color="dialog" onClose={() => setMode(Mode.NONE)}>
           <SummaryDialog />
         </Dialog>
       )}
-      {state === State.PENDING && (
+      {mode === Mode.STATUS && (
         <Dialog color="dialog">
-          <TransactionStatusDialog onClose={() => setState(State.LOADED)} />
+          <TransactionStatusDialog onClose={() => setMode(Mode.NONE)} />
         </Dialog>
       )}
     </>
