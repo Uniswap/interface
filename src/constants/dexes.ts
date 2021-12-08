@@ -13,7 +13,7 @@ export const dexListConfig: DexList = {
   dmm: {
     name: 'KyberSwap',
     icon: 'https://kyberswap.com/favicon.ico',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM]
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.CRONOS]
   },
   uniswap: {
     name: 'UniSwap_V2',
@@ -149,6 +149,21 @@ export const dexListConfig: DexList = {
     name: 'Axial',
     icon: 'https://assets.website-files.com/6189dee5e79d6e8f7e214eba/618bf2f3e40e777d4210a84f_favicon.ico',
     chainIds: [ChainId.AVAXMAINNET]
+  },
+  vvs: {
+    name: 'VVS Finance',
+    icon: 'https://vvs.finance/favicon.ico',
+    chainIds: [ChainId.CRONOS]
+  },
+  cronaswap: {
+    name: 'CronaSwap',
+    icon: 'https://app.cronaswap.org/favicon.png',
+    chainIds: [ChainId.CRONOS]
+  },
+  crodex: {
+    name: 'Crodex',
+    icon: 'https://swap.crodex.app/favicon.png',
+    chainIds: [ChainId.CRONOS]
   }
 }
 
@@ -178,7 +193,10 @@ export const dexIds: DexTypes = {
     jetswap: 5,
     polycat: 2,
     spookyswap: 3,
-    axial: 3
+    axial: 3,
+    vvs: 3,
+    cronaswap: 2,
+    crodex: 3
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
