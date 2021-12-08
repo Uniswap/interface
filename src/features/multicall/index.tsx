@@ -2,7 +2,7 @@ import { createMulticall } from '@uniswap/redux-multicall'
 import React from 'react'
 import { ChainId } from 'src/constants/chains'
 import { useLatestBlock } from 'src/features/blocks/hooks'
-import { useActiveChainIds } from 'src/features/chains/hooks'
+import { useActiveChainIds } from 'src/features/chains/utils'
 import { useMulticall2Contract } from 'src/features/contracts/useContract'
 import { SkipFirst } from 'src/utils/tuple'
 

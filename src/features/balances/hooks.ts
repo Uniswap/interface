@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
 import { utils } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
-import { Erc20Interface } from 'src/abis/types/Erc20'
+import { config } from 'src/config'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { useMulticall2Contract, useTokenContract } from 'src/features/contracts/useContract'
 import {
@@ -53,63 +53,54 @@ export function useEthBalance(
   return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), value?.toString())
 }
 
+const ERC20Interface = new utils.Interface(ERC20_ABI)
+const blocksPerFetchOption = { blocksPerFetch: BLOCKS_PER_FETCH }
+
 export function useTokenBalances(
   chainIds: ChainId[],
   chainIdToTokens: ChainIdToAddressToToken,
   accountAddress?: Address
-): [ChainIdTo<Record<string, CurrencyAmount<Token>>> | null, boolean] {
-  const ERC20Interface = new utils.Interface(ERC20_ABI) as Erc20Interface
-  const totalBalances = chainIds.map((chainId) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const tokenAddresses = useMemo(() => {
-      const tokenRecords = chainIdToTokens[chainId] || []
-      const tokens = Object.values(tokenRecords)
-      return tokens.map((token) => token.address)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chainId, chainIdToTokens])
+): { balances: ChainIdTo<AddressTo<CurrencyAmount<Token>>>; loading: boolean } {
+  const balances: ChainIdTo<AddressTo<CurrencyAmount<Token>>> = {}
+  let loading = false
+  const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
+
+  for (const chainId of config.activeChains) {
+    balances[chainId] = {}
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMultipleContractSingleData(
+    const sortedChainTokens = useMemo(
+      () => getSortedChainTokens(chainId, chainIdToTokens),
+      [chainId, chainIdToTokens]
+    )
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const tokenAddresses = useMemo(
+      () => sortedChainTokens.map((t) => t.address),
+      [sortedChainTokens]
+    )
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const callStates = useMultipleContractSingleData(
       chainId,
       tokenAddresses,
       ERC20Interface,
       'balanceOf',
-      [accountAddress],
-      { blocksPerFetch: BLOCKS_PER_FETCH }
+      accountAddressArray,
+      blocksPerFetchOption
     )
-  })
 
-  const anyLoading: boolean = useMemo(
-    () => totalBalances.some((callState) => callState.some((call) => call.loading)),
-    [totalBalances]
-  )
-
-  return [
-    useMemo(
-      () =>
-        chainIds.reduce<{
-          [chainId: string]: { [tokenAddress: string]: CurrencyAmount<Token> }
-        }>((memo, chainId) => {
-          const tokenRecords = chainIdToTokens[chainId] || []
-          const tokens = Object.values(tokenRecords)
-          const t = tokens.reduce<{
-            [tokenAddress: string]: CurrencyAmount<Token>
-          }>((chainTokensMemo, token, i) => {
-            const value = totalBalances[chainId]?.[i]?.result?.[0]
-            const amount = value?.toString()
-            if (amount) {
-              chainTokensMemo[token.address] = CurrencyAmount.fromRawAmount<Token>(token, amount)
-            }
-            return chainTokensMemo
-          }, {})
-
-          memo[chainId] = t
-          return memo
-        }, {}),
-      [totalBalances, chainIdToTokens, chainIds]
-    ),
-    anyLoading,
-  ]
+    for (let i = 0; i < sortedChainTokens.length; i++) {
+      const token = sortedChainTokens[i]
+      const callState = callStates[i]
+      if (callState.loading) {
+        loading = true
+      }
+      const amount = callState.result?.[0]?.toString()
+      if (amount) {
+        balances[chainId]![token.address] = CurrencyAmount.fromRawAmount<Token>(token, amount)
+      }
+    }
+  }
+  return { balances, loading }
 }
 
 /** Returns an array of all nonzero balances of tokens and ETH */
@@ -118,7 +109,7 @@ export function useAllBalances(
   chainIdToTokens: ChainIdToAddressToToken,
   accountAddress?: Address
 ): CurrencyAmount<Currency>[] {
-  const [tokenBalances] = useTokenBalances(chainIds, chainIdToTokens, accountAddress)
+  const { balances: tokenBalances } = useTokenBalances(chainIds, chainIdToTokens, accountAddress)
 
   // Use hook in callback with guaranteed execution order
   const ethBalances = chainIds
@@ -165,4 +156,12 @@ export function useEthBalances(
       }, {}),
     [addresses, chainId, results]
   )
+}
+
+function getSortedChainTokens(chainId: ChainId, chainIdToTokens: ChainIdToAddressToToken) {
+  const tokens = Object.values(chainIdToTokens[chainId] || [])
+  tokens.sort((a, b) => {
+    return a.sortsBefore(b) ? -1 : 1
+  })
+  return tokens
 }

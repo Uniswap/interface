@@ -2,13 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { config } from 'src/config'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
+import { chainListToStateMap } from 'src/features/chains/utils'
 
 interface ChainsState {
   byChainId: ChainIdTo<ChainState>
 }
 
 const initialState: ChainsState = {
-  byChainId: config.activeChains,
+  byChainId: chainListToStateMap(config.activeChains),
 }
 
 const slice = createSlice({

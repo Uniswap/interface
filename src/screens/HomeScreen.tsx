@@ -12,7 +12,7 @@ import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
 import { useAllBalances } from 'src/features/balances/hooks'
-import { useActiveChainIds } from 'src/features/chains/hooks'
+import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionNotificationBanner } from 'src/features/transactions/Notification'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
@@ -26,10 +26,10 @@ const wait = (timeout: number) => {
 }
 
 export function HomeScreen({ navigation }: Props) {
-  const currentChains = useActiveChainIds()
   // imports test account for easy development/testing
   useTestAccount()
   const activeAccount = useActiveAccount()
+  const currentChains = useActiveChainIds()
   const chainIdToTokens = useAllTokens()
   const balances = useAllBalances(currentChains, chainIdToTokens, activeAccount?.address)
   const [refreshing, setRefreshing] = useState(false)

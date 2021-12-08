@@ -55,4 +55,4 @@ const slice = createSlice({
 
 export const { updateBalances, updateBalance, resetBalances } = slice.actions
 
-export const balancesSlice = slice.reducer
+export const balancesReducer = slice.reducer

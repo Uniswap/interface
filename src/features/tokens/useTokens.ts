@@ -3,7 +3,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
-import { useActiveChainIds } from 'src/features/chains/hooks'
+import { useActiveChainIds } from 'src/features/chains/utils'
 import { useCombinedActiveList, useUnsupportedTokenList } from 'src/features/tokenLists/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'

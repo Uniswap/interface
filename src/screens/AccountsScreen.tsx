@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAccountStackNavigation } from 'src/app/navigation/types'
+import CopyIcon from 'src/assets/icons/copy-sheets.svg'
+import EditIcon from 'src/assets/icons/pencil-box.svg'
 import { AccountCard } from 'src/components/accounts/AccountCard'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { RenameAccountModal } from 'src/components/accounts/RenameAccountModal'
@@ -14,6 +16,7 @@ import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
 import { Modal } from 'src/components/modals/Modal'
 import { Text } from 'src/components/Text'
+import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
@@ -41,6 +44,14 @@ export function AccountsScreen() {
   const onPressActivate = (address: Address) => {
     dispatch(activateAccount(address))
   }
+
+  const onPressImport = () => {
+    // First reset to clear saga state that's left over from dev account import
+    // TODO remove when use of dev account is removed
+    dispatch(importAccountActions.reset())
+    navigation.navigate(Screens.ImportAccount)
+  }
+  const onPressCreate = onPressImport // TODO implement for realsies
 
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
   const onPressEdit = (address: Address) => {
@@ -94,7 +105,6 @@ export function AccountsScreen() {
     setPendingRemoveAddress(null)
   }
 
-  // TODO wire up renaming action when designs are ready
   // TODO surface errors from editAccountSaga when designs are ready
 
   return (
@@ -154,13 +164,13 @@ export function AccountsScreen() {
         <PrimaryButton
           variant="palePink"
           label={t('Import Wallet')}
-          onPress={() => navigation.navigate(Screens.ImportAccount)}
+          onPress={onPressImport}
           testID="accounts/add/button"
           mr="lg"
         />
         <PrimaryButton
           label={t('Create Wallet')}
-          onPress={() => navigation.navigate(Screens.ImportAccount)}
+          onPress={onPressCreate}
           testID="accounts/create/button"
         />
       </CenterBox>
@@ -176,14 +186,18 @@ export function AccountsScreen() {
           <PrimaryButton
             variant="palePink"
             label={t('Rename Account')}
+            icon={<EditIcon width={18} height={18} />}
             onPress={onPressRename}
+            // TODO make responsive
             width={250}
             mt="lg"
           />
           <PrimaryButton
             variant="palePink"
             label={t('Copy Address')}
+            icon={<CopyIcon width={18} height={18} />}
             onPress={onPressCopyAddress}
+            // TODO make responsive
             width={250}
             mt="md"
           />
@@ -191,6 +205,7 @@ export function AccountsScreen() {
             variant="paleOrange"
             label={t('Remove Account')}
             onPress={onPressRemove}
+            // TODO make responsive
             width={250}
             mt="md"
           />
@@ -199,6 +214,7 @@ export function AccountsScreen() {
             textVariant="body"
             textColor="pink"
             textAlign="center"
+            // TODO make responsive
             width={250}
             pt="md">
             {t('Cancel')}

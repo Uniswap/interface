@@ -3,7 +3,7 @@ import { getWalletProviders } from 'src/app/walletContext'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { ChainId } from 'src/constants/chains'
 import { Balance } from 'src/features/balances/types'
-import { getActiveChainIds } from 'src/features/chains/hooks'
+import { selectActiveChainIds } from 'src/features/chains/utils'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
@@ -18,8 +18,7 @@ export function* fetchBalances(address: Address) {
   const accounts = yield* appSelect((state) => state.wallet.accounts)
   const allAddresses = Object.keys(accounts)
   const addrsToFetch = address === ALL_ACCOUNTS ? allAddresses : [address]
-  const chains = yield* appSelect((s) => s.chains.byChainId)
-  const activeChains = getActiveChainIds(chains)
+  const activeChains = yield* selectActiveChainIds()
   for (const addr of addrsToFetch) {
     for (const chainId of activeChains) {
       const updatedBalances = yield* call(_fetchBalances, addr, chainId, manager)

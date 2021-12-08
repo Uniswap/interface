@@ -133,7 +133,7 @@ export class ProviderManager {
           return provider
         }
         // Otherwise wait a bit and then try again
-        await sleep(2000)
+        await sleep(1000)
       }
       throw new Error(`Unable to sync ${getInfuraChainName(chainId)} after 3 attempts`)
     } catch (error) {

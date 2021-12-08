@@ -4,7 +4,7 @@ import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { NetworkLabel } from 'src/components/Network/NetworkLabel'
 import { ChainId } from 'src/constants/chains'
-import { useActiveChainIds } from 'src/features/chains/hooks'
+import { useActiveChainIds } from 'src/features/chains/utils'
 
 interface NetworkButtonGroupProps {
   selected: ChainId | null

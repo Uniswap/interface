@@ -45,6 +45,7 @@ module.exports = {
   ],
   globals: {
     Address: 'readonly',
+    AddressTo: 'readonly',
     Nullable: 'readonly',
   },
 }
