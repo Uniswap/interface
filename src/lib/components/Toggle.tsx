@@ -49,7 +49,6 @@ const Input = styled.input<{ text: string }>`
   }
 
   :after {
-    color: ${({ theme }) => theme.primary};
     content: '${({ text }) => text}';
     text-align: center;
     width: 2.75em;

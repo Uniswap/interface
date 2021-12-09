@@ -3,7 +3,7 @@ import { readableColor } from 'polished'
 import { ReactNode, useMemo } from 'react'
 import { hex } from 'wcag-contrast'
 
-import { ThemedProvider, useTheme } from './styled'
+import styled, { ThemedProvider, useTheme } from './styled'
 import { Colors, ComputedTheme as Theme } from './theme'
 
 type DynamicColors = Pick<Colors, 'interactive' | 'outline' | 'primary' | 'secondary' | 'onInteractive'>
@@ -61,6 +61,10 @@ interface DynamicThemeProviderProps {
   children: ReactNode
 }
 
+const ColorProvider = styled.div`
+  color: ${({ theme }) => theme.primary};
+`
+
 export function DynamicThemeProvider({ color, children }: DynamicThemeProviderProps) {
   const theme = useTheme() as Theme
   const value = useMemo(() => {
@@ -71,5 +75,9 @@ export function DynamicThemeProvider({ color, children }: DynamicThemeProviderPr
     const accessibleColor = getAccessibleColor(theme, color)
     return accessibleColor ? getDynamicTheme(theme, accessibleColor) : theme
   }, [theme, color])
-  return <ThemedProvider theme={value}>{children}</ThemedProvider>
+  return (
+    <ThemedProvider theme={value}>
+      <ColorProvider>{children}</ColorProvider>
+    </ThemedProvider>
+  )
 }

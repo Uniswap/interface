@@ -11,6 +11,7 @@ import { Provider as DialogProvider } from './Dialog'
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
+  color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
   font-size: 16px;

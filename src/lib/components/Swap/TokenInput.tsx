@@ -58,7 +58,7 @@ export default function TokenInput({
   return (
     <Column gap={0.375}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
-        <ThemedText.H2 color="primary">
+        <ThemedText.H2>
           <DecimalInput value={value} onFocus={onFocus} onChange={onChangeInput} disabled={!token}></DecimalInput>
         </ThemedText.H2>
         {showMax && (

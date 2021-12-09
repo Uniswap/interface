@@ -97,7 +97,7 @@ export default function Toolbar() {
   return (
     <>
       <Rule />
-      <ThemedText.Caption color="primary">
+      <ThemedText.Caption>
         <Row justify="flex-start" gap={0.5}>
           {caption}
         </Row>

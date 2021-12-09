@@ -90,7 +90,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
       onKeyDown={onEvent}
       ref={ref}
     >
-      <ThemedText.Body1 color="primary">
+      <ThemedText.Body1>
         <Row>
           <Row gap={0.5}>
             <img src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />

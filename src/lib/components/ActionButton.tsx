@@ -51,7 +51,7 @@ export const Overlay = styled(Row)<{ updated?: boolean }>`
   ${({ updated }) => updated && updatedCss}
 `
 
-const AlertIcon = icon(AlertTriangle, { color: 'primary' })
+const AlertIcon = icon(AlertTriangle)
 
 export interface ActionButtonProps {
   color?: Color
@@ -82,7 +82,7 @@ export default function ActionButton({
       {updated && (
         <UpdateRow gap={0.5}>
           <AlertIcon />
-          <ThemedText.Subhead2 color="primary">{updated?.message}</ThemedText.Subhead2>
+          <ThemedText.Subhead2>{updated?.message}</ThemedText.Subhead2>
         </UpdateRow>
       )}
     </Overlay>

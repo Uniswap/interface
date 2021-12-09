@@ -14,13 +14,13 @@ const ReverseRow = styled(Row)`
   z-index: ${Layer.OVERLAY};
 `
 
-const ArrowUpIcon = styled(icon(ArrowUp, { color: 'primary' }))`
+const ArrowUpIcon = styled(icon(ArrowUp))`
   position: absolute;
   right: 0.5em;
   top: 0.375em;
 `
 
-const ArrowDownIcon = styled(icon(ArrowDown, { color: 'primary' }))`
+const ArrowDownIcon = styled(icon(ArrowDown))`
   bottom: 0.375em;
   left: 0.5em;
   position: absolute;

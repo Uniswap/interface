@@ -36,7 +36,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
       <Column gap={0.75}>
         <Header title={<Trans>Select a token</Trans>} />
         <Row pad={0.75} grow>
-          <ThemedText.Body1 color={search ? 'primary' : 'secondary'}>
+          <ThemedText.Body1>
             <SearchInput
               value={search}
               onChange={setSearch}
