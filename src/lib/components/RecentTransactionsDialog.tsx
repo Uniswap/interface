@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
-import styled, { icon } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { icon, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { useMemo, useState } from 'react'
 import { AlertTriangle, ArrowRight, CheckCircle, Trash2 } from 'react-feather'

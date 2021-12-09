@@ -1,7 +1,7 @@
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import styled, { getDefaultTheme } from 'lib/theme'
+import styled, { darkTheme, defaultTheme } from 'lib/theme'
 import { ReactNode } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
 import { createGlobalStyle } from 'styled-components'
@@ -18,13 +18,15 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const Wrapper = styled.div`
-  margin: 14px;
+  display: flex;
+  justify-content: center;
 `
 
 export const providerAtom = atom<Provider | undefined>(undefined)
 
 export default function WidgetDecorator({ children }: { children: ReactNode }) {
-  const [theme] = useValue('theme', { defaultValue: getDefaultTheme() })
+  const [width] = useValue('width', { defaultValue: 272 })
+  const [theme] = useValue('theme', { defaultValue: { ...defaultTheme, ...darkTheme } })
   const [locale] = useSelect('locale', { defaultValue: DEFAULT_LOCALE, options: ['pseudo', ...SUPPORTED_LOCALES] })
   const provider = useAtomValue(providerAtom)
   return (
@@ -32,7 +34,7 @@ export default function WidgetDecorator({ children }: { children: ReactNode }) {
       <GlobalStyle />
       <Connectors />
       <Wrapper>
-        <Widget theme={theme} locale={locale} provider={provider}>
+        <Widget width={width} theme={theme} locale={locale} provider={provider}>
           {children}
         </Widget>
       </Wrapper>

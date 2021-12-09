@@ -1,12 +1,11 @@
 import { useAtom } from 'jotai'
-import styled, { icon } from 'lib/theme'
-import Layer from 'lib/theme/layer'
+import styled, { icon, Layer } from 'lib/theme'
 import { useCallback } from 'react'
 import { ArrowDown, ArrowUp } from 'react-feather'
 
 import Button from '../Button'
 import Row from '../Row'
-import { swapAtom } from './state'
+import { stateAtom } from './state'
 
 const ReverseRow = styled(Row)`
   bottom: -1.5em;
@@ -15,13 +14,13 @@ const ReverseRow = styled(Row)`
   z-index: ${Layer.OVERLAY};
 `
 
-const ArrowUpIcon = styled(icon(ArrowUp, { color: 'primary' }))`
+const ArrowUpIcon = styled(icon(ArrowUp))`
   position: absolute;
   right: 0.5em;
   top: 0.375em;
 `
 
-const ArrowDownIcon = styled(icon(ArrowDown, { color: 'primary' }))`
+const ArrowDownIcon = styled(icon(ArrowDown))`
   bottom: 0.375em;
   left: 0.5em;
   position: absolute;
@@ -54,14 +53,14 @@ const StyledReverseButton = styled(Button)`
 `
 
 export default function ReverseButton() {
-  const [swap, setSwap] = useAtom(swapAtom)
+  const [state, setState] = useAtom(stateAtom)
   const onClick = useCallback(() => {
-    const { input, output } = swap
-    setSwap((swap) => {
-      swap.input = output
-      swap.output = input
+    const { input, output } = state
+    setState((state) => {
+      state.input = output
+      state.output = input
     })
-  }, [swap, setSwap])
+  }, [state, setState])
 
   return (
     <ReverseRow justify="center">

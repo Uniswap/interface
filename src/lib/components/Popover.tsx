@@ -1,6 +1,5 @@
 import { Options, Placement } from '@popperjs/core'
-import styled from 'lib/theme'
-import Layer from 'lib/theme/layer'
+import styled, { Layer } from 'lib/theme'
 import maxSize from 'popper-max-size-modifier'
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -12,9 +11,7 @@ export const BoundaryProvider = BoundaryContext.Provider
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.dialog};
-  border: 1px solid ${({ theme }) => theme.outline};
   border-radius: 0.5em;
-  color: ${({ theme }) => theme.primary};
   opacity: ${(props) => (props.show ? 1 : 0)};
   padding: 8px;
   transition: visibility 0.15s linear, opacity 0.15s linear;

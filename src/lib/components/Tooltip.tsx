@@ -3,14 +3,14 @@ import styled, { icon } from 'lib/theme'
 import { ReactNode, useState } from 'react'
 import { HelpCircle, Icon } from 'react-feather'
 
+import { IconButton } from './Button'
 import Popover from './Popover'
 
 const HelpCircleIcon = icon(HelpCircle)
 
-const IconWrapper = styled.div`
+const IconTooltip = styled(IconButton)`
   :hover {
     cursor: help;
-    opacity: 0.7;
   }
 `
 
@@ -30,9 +30,14 @@ export default function Tooltip({
   const [show, setShow] = useState(false)
   return (
     <Popover content={children} show={show} placement={placement} contained={contained}>
-      <IconWrapper>
-        <Icon onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} />
-      </IconWrapper>
+      <IconTooltip
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        onFocus={() => setShow(true)}
+        onBlur={() => setShow(false)}
+      >
+        <Icon />
+      </IconTooltip>
     </Popover>
   )
 }

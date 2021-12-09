@@ -1,69 +1,56 @@
 import { Trans } from '@lingui/macro'
-import assert from 'assert'
-import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
-import ActionButton, { ApprovalButton, DisabledButton, LoadingButton } from '../ActionButton'
+import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
-import { inputAtom, State, stateAtom } from './state'
+import { inputAtom, outputAtom, swapAtom } from './state'
 import { SummaryDialog } from './Summary'
 import TransactionStatusDialog from './TransactionStatusDialog'
 
+const mockBalance = 123.45
+
+enum Mode {
+  NONE,
+  SUMMARY,
+  STATUS,
+}
+
 export default function SwapButton() {
-  const [state, setState] = useAtom(stateAtom)
-  const { token } = useAtomValue(inputAtom)
-  const [open, setOpen] = useState(false)
-  const action = useMemo(() => {
-    switch (state) {
-      case State.EMPTY:
-        return (
-          <DisabledButton>
-            <Trans>Enter amount</Trans>
-          </DisabledButton>
-        )
-      case State.LOADING:
-        return <LoadingButton />
-      case State.TOKEN_APPROVAL:
-        assert(token)
-        return (
-          <ApprovalButton onClick={() => void 0}>
-            <Trans>Approve {token.symbol} first</Trans>
-          </ApprovalButton>
-        )
-      case State.BALANCE_INSUFFICIENT:
-        assert(token)
-        return (
-          <DisabledButton>
-            <Trans>Insufficient {token.symbol} balance</Trans>
-          </DisabledButton>
-        )
-      case State.LOADED:
-        return (
-          <ActionButton onClick={() => setOpen(true)}>
-            <Trans>Swap</Trans>
-          </ActionButton>
-        )
-      default:
-        return <DisabledButton>🦄</DisabledButton>
+  const swap = useAtomValue(swapAtom)
+  const input = useAtomValue(inputAtom)
+  const output = useAtomValue(outputAtom)
+  const balance = mockBalance
+  const [mode, setMode] = useState(Mode.NONE)
+  const actionProps = useMemo(() => {
+    if (swap && input.token && input.value && output.token && output.value && input.value <= balance) {
+      if (input.approved) {
+        return {}
+      } else {
+        return {
+          updated: { message: <Trans>Approve {input.token.symbol} first</Trans>, action: <Trans>Approve</Trans> },
+        }
+      }
     }
-  }, [state, token])
-  useEffect(() => {
-    if (state === State.PENDING) {
-      setOpen(false)
-    }
-  }, [state])
+    return { disabled: true }
+  }, [balance, input.approved, input.token, input.value, output.token, output.value, swap])
+  const onConfirm = useCallback(() => {
+    // TODO: Send the tx to the connected wallet.
+    setMode(Mode.STATUS)
+  }, [])
   return (
     <>
-      {action}
-      {open && (
-        <Dialog color="dialog" onClose={() => setOpen(false)}>
-          <SummaryDialog />
+      <ActionButton color="interactive" onClick={() => setMode(Mode.SUMMARY)} onUpdate={() => void 0} {...actionProps}>
+        <Trans>Review swap</Trans>
+      </ActionButton>
+      {mode === Mode.SUMMARY && (
+        <Dialog color="dialog" onClose={() => setMode(Mode.NONE)}>
+          <SummaryDialog onConfirm={onConfirm} />
         </Dialog>
       )}
-      {state === State.PENDING && (
+      {mode === Mode.STATUS && (
         <Dialog color="dialog">
-          <TransactionStatusDialog onClose={() => setState(State.LOADED)} />
+          <TransactionStatusDialog onClose={() => setMode(Mode.NONE)} />
         </Dialog>
       )}
     </>

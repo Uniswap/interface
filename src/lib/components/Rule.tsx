@@ -1,6 +1,6 @@
-import styled, { Theme } from 'lib/theme'
+import styled from 'lib/theme'
 
-const Rule = styled.hr<{ padded?: true; theme: Theme }>`
+const Rule = styled.hr<{ padded?: true }>`
   border: none;
   border-bottom: 1px solid ${({ theme }) => theme.outline};
   margin: 0 ${({ padded }) => padded && '0.75em 0'};

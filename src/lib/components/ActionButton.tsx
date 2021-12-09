@@ -1,203 +1,90 @@
-import { Trans } from '@lingui/macro'
-import styled, { Color, icon, keyframes, Theme } from 'lib/theme'
-import Layer from 'lib/theme/layer'
-import * as ThemedText from 'lib/theme/text'
-import { transparentize } from 'polished'
-import { ReactNode, useMemo, useState } from 'react'
+import styled, { Color, css, icon, keyframes, ThemedText } from 'lib/theme'
+import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 
 import Button from './Button'
-import Column from './Column'
 import Row from './Row'
 
-export const Overlay = styled(Column)`
+const StyledButton = styled(Button)<{ updated?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
-  bottom: 0;
-  position: sticky;
-  z-index: ${Layer.OVERLAY};
-
-  :before {
-    background-color: inherit;
-    border-radius: ${({ theme }) => theme.borderRadius}em ${({ theme }) => theme.borderRadius}em 0 0;
-    content: '';
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: -1;
-  }
+  flex-grow: 1;
+  height: 100%;
+  transition: background-color 0.2s ease-out, flex-grow 0.2s ease-out;
 `
 
-const StyledButton = styled(Button)<{ color?: Color; theme: Theme }>`
-  :enabled {
-    background-color: ${({ color = 'accent', theme }) => theme[color]};
-  }
+const UpdateRow = styled(Row)``
 
-  :enabled:hover {
-    background-color: ${({ color = 'accent', theme }) => transparentize(0.3, theme[color])};
+const grow = keyframes`
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  to {
     opacity: 1;
+    width: max-content;
   }
 `
 
-const StyledActionButton = styled(StyledButton)`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  height: 3.5em;
-
-  :disabled {
-    opacity: 1;
-  }
-`
-
-const StyledDisabledButton = styled(StyledActionButton)`
+const updatedCss = css`
   border: 1px solid ${({ theme }) => theme.outline};
-`
+  padding: calc(0.25em - 1px);
+  padding-left: calc(0.75em - 1px);
 
-export function DisabledButton({ children }: { children: ReactNode }) {
-  return (
-    <Overlay>
-      <StyledDisabledButton disabled>
-        <ThemedText.ButtonLarge>{children}</ThemedText.ButtonLarge>
-      </StyledDisabledButton>
-    </Overlay>
-  )
-}
-
-const rotate = ({ width, height }: { width?: number; height?: number }) => {
-  if (!width || !height) {
-    return undefined
+  ${UpdateRow} {
+    animation: ${grow} 0.2s ease-in;
+    white-space: nowrap;
   }
 
-  const mid = (height / (width + height)) * 50
-  const tan = width / height
-  const deg = (Math.atan(tan) * 180) / Math.PI
-
-  return keyframes`
-  @property --start {
-    syntax: '<angle>';
-    inherits: false;
-    initial-value: ${deg}deg;
-  }
-  0% {
-    --start: ${90}deg;
-  }
-  ${mid}% {
-    --start: ${180 - deg}deg;
-  }
-  ${50 - mid}% {
-    --start: ${180 + deg}deg;
-  }
-  ${50 + mid}% {
-    --start: ${360 - deg}deg;
-  }
-  ${100 - mid}% {
-    --start: ${360 + deg}deg;
-  }
-  100% {
-    --start: ${360 + 90}deg;
-  }
-`
-}
-
-const StyledLoadingButton = styled(StyledActionButton)<{ width?: number; height?: number; theme: Theme }>`
-  background: inherit;
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-
-  :before,
-  :after {
-    content: '';
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: -1;
-  }
-
-  :before {
-    animation: 2s ${rotate} ease infinite;
-    background: ${({ theme }) => theme.outline}; // fallback
-
-    @supports (--foo: 0) {
-      background: conic-gradient(
-        from var(--start, 75deg),
-        transparent,
-        ${({ theme }) => theme.outline} 45deg 315deg,
-        transparent
-      );
-    }
-  }
-
-  :after {
-    background: inherit;
-    clip-path: inset(1px round ${({ theme }) => theme.borderRadius}em);
+  ${StyledButton} {
+    border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+    flex-grow: 0;
+    padding: 1em;
   }
 `
 
-export function LoadingButton() {
-  const [ref, setRef] = useState<HTMLButtonElement | null>(null)
-  const rect = useMemo(() => {
-    const rect = ref?.getBoundingClientRect()
-    return rect && { width: rect.width, height: rect.height }
-  }, [ref])
-  return (
-    <Overlay>
-      <StyledLoadingButton ref={setRef} {...rect} disabled>
-        <ThemedText.ButtonLarge>
-          <Trans>Loading…</Trans>
-        </ThemedText.ButtonLarge>
-      </StyledLoadingButton>
-    </Overlay>
-  )
-}
+export const Overlay = styled(Row)<{ updated?: boolean }>`
+  border-radius: ${({ theme }) => theme.borderRadius}em;
+  flex-direction: row-reverse;
+  height: 3.5em;
+  transition: padding 0.2s;
+
+  ${({ updated }) => updated && updatedCss}
+`
+
+const AlertIcon = icon(AlertTriangle)
 
 export interface ActionButtonProps {
   color?: Color
+  disabled?: boolean
+  updated?: { message: ReactNode; action: ReactNode }
   onClick: () => void
+  onUpdate?: () => void
   children: ReactNode
 }
 
-const AlertIcon = icon(AlertTriangle, { color: 'primary' })
-
-const ApprovalRow = styled(Row)`
-  background-color: inherit;
-  border: 1px solid ${({ theme }) => theme.outline};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  height: 3.5em;
-  padding: 0.5em;
-`
-
-const StyledApprovalButton = styled(StyledButton)`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  color: ${({ theme }) => theme.contrast};
-  height: 100%;
-  padding: 0 1em;
-`
-
-export function ApprovalButton({ color, onClick, children }: ActionButtonProps) {
+export default function ActionButton({
+  color = 'accent',
+  disabled,
+  updated,
+  onClick,
+  onUpdate,
+  children,
+}: ActionButtonProps) {
   return (
-    <Overlay>
-      <ApprovalRow>
-        <Row gap={0.5}>
+    <Overlay updated={Boolean(updated)} flex>
+      <StyledButton color={color} disabled={disabled} onClick={updated ? onUpdate : onClick}>
+        {updated ? (
+          <ThemedText.ButtonMedium color="currentColor">{updated.action}</ThemedText.ButtonMedium>
+        ) : (
+          <ThemedText.ButtonLarge color="currentColor">{children}</ThemedText.ButtonLarge>
+        )}
+      </StyledButton>
+      {updated && (
+        <UpdateRow gap={0.5}>
           <AlertIcon />
-          <ThemedText.Subhead2>{children}</ThemedText.Subhead2>
-        </Row>
-        <StyledApprovalButton color={color} onClick={onClick}>
-          <Trans>Approve</Trans>
-        </StyledApprovalButton>
-      </ApprovalRow>
-    </Overlay>
-  )
-}
-
-export default function ActionButton({ color, onClick, children }: ActionButtonProps) {
-  return (
-    <Overlay>
-      <StyledActionButton color={color} onClick={onClick}>
-        <ThemedText.ButtonLarge color="contrast">{children}</ThemedText.ButtonLarge>
-      </StyledActionButton>
+          <ThemedText.Subhead2>{updated?.message}</ThemedText.Subhead2>
+        </UpdateRow>
+      )}
     </Overlay>
   )
 }

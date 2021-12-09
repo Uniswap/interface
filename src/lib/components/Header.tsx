@@ -1,6 +1,5 @@
 import Logo from 'lib/assets/Logo'
-import styled from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { ThemedText } from 'lib/theme'
 import { ReactElement, ReactNode } from 'react'
 
 import Row from './Row'
@@ -19,7 +18,7 @@ const StyledLogo = styled(Logo)`
   width: 1em;
 
   :hover {
-    opacity: 0.7;
+    fill: ${({ theme }) => theme.onHover(theme.secondary)};
     transform: rotate(-5deg);
   }
 `

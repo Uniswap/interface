@@ -1,10 +1,9 @@
 import { t } from '@lingui/macro'
-import styled, { Theme } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { ThemedText } from 'lib/theme'
 import { transparentize } from 'polished'
 import { KeyboardEvent, useCallback } from 'react'
 
-const Input = styled.input<{ text: string; theme: Theme }>`
+const Input = styled.input<{ text: string }>`
   align-items: center;
   appearance: none;
   background: ${({ theme }) => theme.interactive};
@@ -50,7 +49,6 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   }
 
   :after {
-    color: ${({ theme }) => theme.primary};
     content: '${({ text }) => text}';
     text-align: center;
     width: 2.75em;

@@ -1,12 +1,11 @@
 import 'wicg-inert'
 
-import styled, { Color, icon, OriginalProvider as OriginalThemeProvider, Theme } from 'lib/theme'
-import Layer from 'lib/theme/layer'
+import styled, { Color, icon, Layer, ThemeProvider } from 'lib/theme'
 import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
-import Button from './Button'
+import { IconButton } from './Button'
 import Column from './Column'
 import { default as BaseHeader } from './Header'
 import Rule from './Rule'
@@ -50,6 +49,12 @@ export function Provider({ value, children }: ProviderProps) {
 
 const OnCloseContext = createContext<() => void>(() => void 0)
 
+const XButton = styled(IconButton)`
+  :hover {
+    opacity: 0.75;
+  }
+`
+
 const XIcon = icon(X, { color: 'primary' })
 
 interface HeaderProps {
@@ -64,9 +69,9 @@ export function Header({ title, children, ruled }: HeaderProps) {
       <Column gap={0.75}>
         <BaseHeader title={title}>
           {children}
-          <Button onClick={useContext(OnCloseContext)}>
+          <XButton onClick={useContext(OnCloseContext)}>
             <XIcon />
-          </Button>
+          </XButton>
         </BaseHeader>
         {ruled && <Rule padded />}
       </Column>
@@ -74,7 +79,7 @@ export function Header({ title, children, ruled }: HeaderProps) {
   )
 }
 
-export const Modal = styled.div<{ color: Color; theme: Theme }>`
+export const Modal = styled.div<{ color: Color }>`
   background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;
@@ -105,11 +110,11 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
   return (
     modal &&
     createPortal(
-      <OriginalThemeProvider>
+      <ThemeProvider>
         <Modal color={color}>
           <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
         </Modal>
-      </OriginalThemeProvider>,
+      </ThemeProvider>,
       modal
     )
   )

@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import styled, { icon } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { icon, ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 import { ArrowRight, Info } from 'react-feather'
 
-import ActionButton, { ApprovalButton } from '../ActionButton'
+import ActionButton from '../ActionButton'
 import Column from '../Column'
 import { Header } from '../Dialog'
 import Row from '../Row'
@@ -89,8 +88,14 @@ function asInput(input: Input): (Required<Pick<Input, 'token' | 'value'>> & Inpu
   return input.token && input.value ? (input as Required<Pick<Input, 'token' | 'value'>>) : undefined
 }
 
-export function SummaryDialog() {
-  const { swap } = useAtomValue(swapAtom)
+const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
+
+interface SummaryDialogProps {
+  onConfirm: () => void
+}
+
+export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
+  const swap = useAtomValue(swapAtom)
   const partialInput = useAtomValue(inputAtom)
   const partialOutput = useAtomValue(outputAtom)
   const input = asInput(partialInput)
@@ -139,15 +144,13 @@ export function SummaryDialog() {
             </Trans>
           )}
         </ThemedText.Caption>
-        {price === confirmedPrice ? (
-          <ActionButton onClick={() => void 0}>
-            <Trans>Confirm</Trans>
-          </ActionButton>
-        ) : (
-          <ApprovalButton onClick={() => confirmPrice(price)}>
-            <Trans>Price updated</Trans>
-          </ApprovalButton>
-        )}
+        <ActionButton
+          onClick={onConfirm}
+          onUpdate={() => confirmPrice(price)}
+          updated={price === confirmedPrice ? undefined : updated}
+        >
+          <Trans>Confirm</Trans>
+        </ActionButton>
       </SummaryColumn>
     </>
   )

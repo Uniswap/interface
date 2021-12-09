@@ -1,24 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useUpdateAtom } from 'jotai/utils'
 import useColor, { prefetchColor } from 'lib/hooks/useColor'
-import styled, { DynamicProvider as DynamicThemeProvider, icon, Theme } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
-import { pickAtom } from 'lib/utils/atoms'
+import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
-import { Book } from 'react-feather'
 
 import Column from '../Column'
 import Row from '../Row'
-import { inputAtom, outputAtom } from './state'
+import { inputAtom, outputAtom, useUpdateInputToken, useUpdateInputValue } from './state'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
 
-const BookIcon = icon(Book)
-
-const OutputColumn = styled(Column)<{ hasColor: boolean | null; theme: Theme }>`
+const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   padding: 0.75em;
@@ -36,8 +30,8 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null; theme: Theme }>`
 export default function Output({ children }: { children: ReactNode }) {
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
-  const setValue = useUpdateAtom(pickAtom(outputAtom, 'value'))
-  const setToken = useUpdateAtom(pickAtom(outputAtom, 'token'))
+  const setValue = useUpdateInputValue(outputAtom)
+  const setToken = useUpdateInputToken(outputAtom)
   const balance = 123.45
 
   const overrideColor = useAtomValue(colorAtom)
@@ -65,7 +59,7 @@ export default function Output({ children }: { children: ReactNode }) {
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
         <Row>
-          <ThemedText.Subhead2>
+          <ThemedText.Subhead2 color="secondary">
             <Trans>For</Trans>
           </ThemedText.Subhead2>
         </Row>
@@ -75,10 +69,7 @@ export default function Output({ children }: { children: ReactNode }) {
               {usdc}
               {balance && (
                 <Row gap={0.5}>
-                  <Row gap={0.25}>
-                    <BookIcon />
-                    {balance}
-                  </Row>
+                  <Row gap={0.25}>Balance: {balance}</Row>
                 </Row>
               )}
             </Row>

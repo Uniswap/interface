@@ -2,14 +2,14 @@ import styled, { Color, Theme } from 'lib/theme'
 import { Children, ReactNode } from 'react'
 
 const Row = styled.div<{
-  align?: string
   color?: Color
+  align?: string
   justify?: string
+  pad?: number
   gap?: number
+  flex?: true
   grow?: true
   children?: ReactNode
-  padded?: true
-  flex?: true
   theme: Theme
 }>`
   align-items: ${({ align }) => align ?? 'center'};
@@ -21,7 +21,7 @@ const Row = styled.div<{
   grid-auto-flow: column;
   grid-template-columns: ${({ grow, children }) => (grow ? `repeat(${Children.count(children)}, 1fr)` : '')};
   justify-content: ${({ justify }) => justify ?? 'space-between'};
-  padding: ${({ padded }) => padded && '0 1em'};
+  padding: ${({ pad }) => pad && `0 ${pad}em`};
 `
 
 export default Row

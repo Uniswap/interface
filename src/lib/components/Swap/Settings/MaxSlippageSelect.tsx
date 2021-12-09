@@ -1,43 +1,61 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import { icon } from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { icon, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
 
-import Button from '../../Button'
+import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
-import { DecimalInput } from '../../Input'
+import { DecimalInput, inputCss } from '../../Input'
 import Row from '../../Row'
 import { MaxSlippage, maxSlippageAtom } from '../state'
-import Label, { value } from './Label'
+import { Label, optionCss } from './components'
 
 const tooltip = (
   <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
 )
 
-const Value = value(Button)
-
 const SelectedIcon = icon(CheckCircle, { color: 'accent' })
+
+const StyledOption = styled(TextButton)<{ selected: boolean }>`
+  ${({ selected }) => optionCss(selected)}
+`
+
+const StyledInputOption = styled(BaseButton)<{ selected: boolean }>`
+  ${({ selected }) => optionCss(selected)}
+  ${inputCss}
+  border-color: ${({ selected, theme }) => selected && theme.accent};
+  padding: calc(0.5em - 1px) 0.75em;
+`
 
 interface OptionProps<T> {
   value: T
-  children?: ReactNode
-  onSelect: (value: T) => void
   selected: boolean
-  cursor?: string
+  onSelect: (value: T) => void
 }
 
-function Option<T>({ value, children, selected, cursor, onSelect }: OptionProps<T>) {
+function Option<T>({ value, selected, onSelect }: OptionProps<T>) {
   return (
-    <Value selected={selected} onClick={() => onSelect(value)} cursor={cursor}>
+    <StyledOption color="accent" selected={selected} onClick={() => onSelect(value)}>
+      <Row>
+        <ThemedText.Subhead2>{value}%</ThemedText.Subhead2>
+        {selected && (
+          <ThemedText.Subhead2 color="currentColor">
+            <SelectedIcon />
+          </ThemedText.Subhead2>
+        )}
+      </Row>
+    </StyledOption>
+  )
+}
+
+function InputOption<T>({ value, children, selected, onSelect }: OptionProps<T> & { children: ReactNode }) {
+  return (
+    <StyledInputOption color="container" selected={selected} onClick={() => onSelect(value)}>
       <ThemedText.Subhead2>
-        <Row>
-          {children ? children : `${value}%`}
-          {selected && <SelectedIcon />}
-        </Row>
+        <Row>{children}</Row>
       </ThemedText.Subhead2>
-    </Value>
+    </StyledInputOption>
   )
 }
 
@@ -47,7 +65,7 @@ export default function MaxSlippageSelect() {
 
   const input = useRef<HTMLInputElement>(null)
   const focus = useCallback(() => input.current?.focus(), [input])
-  const onCustomSelect = useCallback(
+  const onInputSelect = useCallback(
     (custom) => {
       focus()
       if (custom !== undefined) {
@@ -59,22 +77,20 @@ export default function MaxSlippageSelect() {
 
   return (
     <Column gap={0.75}>
-      <Label name={<Trans>Max Slippage</Trans>} tooltip={tooltip} />
+      <Label name={<Trans>Max slippage</Trans>} tooltip={tooltip} />
       <Row gap={0.5} grow>
         <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
         <Option value={P05} onSelect={setMaxSlippage} selected={maxSlippage === P05} />
-        <Option value={custom} onSelect={onCustomSelect} selected={maxSlippage === CUSTOM} cursor="text">
-          <Row>
-            <DecimalInput
-              size={custom === undefined ? undefined : 5}
-              value={custom}
-              onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom })}
-              placeholder={t`Custom`}
-              ref={input}
-            />
-            {custom !== undefined && <span>%</span>}
-          </Row>
-        </Option>
+        <InputOption value={custom} onSelect={onInputSelect} selected={maxSlippage === CUSTOM}>
+          <DecimalInput
+            size={custom === undefined ? undefined : 5}
+            value={custom}
+            onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom })}
+            placeholder={t`Custom`}
+            ref={input}
+          />
+          %
+        </InputOption>
       </Row>
     </Column>
   )

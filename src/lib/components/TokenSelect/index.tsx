@@ -1,13 +1,12 @@
 import { t, Trans } from '@lingui/macro'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
-import styled from 'lib/theme'
-import * as ThemedText from 'lib/theme/text'
+import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
-import { StringInput } from '../Input'
+import { inputCss, StringInput } from '../Input'
 import Row from '../Row'
 import Rule from '../Rule'
 import TokenBase from './TokenBase'
@@ -18,15 +17,7 @@ import TokenOptions from './TokenOptions'
 const mockTokens = [DAI, ETH, UNI, USDC]
 
 const SearchInput = styled(StringInput)`
-  background-color: ${({ theme }) => theme.container};
-  border-radius: ${({ theme }) => (theme.borderRadius ? theme.borderRadius + 0.25 : 0)}em;
-  height: unset;
-  padding: 0.75em;
-
-  :focus {
-    border: 1px solid ${({ theme }) => theme.active};
-    padding: calc(0.75em - 1px);
-  }
+  ${inputCss}
 `
 
 export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {
@@ -39,26 +30,26 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
   useEffect(() => input.current?.focus(), [input])
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
-  const onKeyDown = useCallback((e) => options?.onKeyDown(e), [options])
 
   return (
     <>
       <Column gap={0.75}>
         <Header title={<Trans>Select a token</Trans>} />
-        <Row padded grow>
-          <ThemedText.Body1 color={search ? 'primary' : 'secondary'}>
+        <Row pad={0.75} grow>
+          <ThemedText.Body1>
             <SearchInput
               value={search}
               onChange={setSearch}
               placeholder={t`Search by token name or address`}
-              onKeyDown={onKeyDown}
+              onKeyDown={options?.onKeyDown}
+              onBlur={options?.blur}
               ref={input}
             />
           </ThemedText.Body1>
         </Row>
-        {baseTokens && (
+        {Boolean(baseTokens.length) && (
           <>
-            <Row gap={0.25} justify="flex-start" flex padded>
+            <Row pad={0.75} gap={0.25} justify="flex-start" flex>
               {baseTokens.map((token) => (
                 <TokenBase value={token} onClick={onSelect} key={token.address} />
               ))}
@@ -74,11 +65,11 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
 
 interface TokenSelectProps {
   value?: Token
-  disabled?: boolean
+  collapsed: boolean
   onSelect: (value: Token) => void
 }
 
-export default function TokenSelect({ value, disabled, onSelect }: TokenSelectProps) {
+export default function TokenSelect({ value, collapsed, onSelect }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
   const selectAndClose = useCallback(
     (value: Token) => {
@@ -89,7 +80,7 @@ export default function TokenSelect({ value, disabled, onSelect }: TokenSelectPr
   )
   return (
     <>
-      <TokenButton value={value} disabled={disabled} onClick={() => setOpen(true)} />
+      <TokenButton value={value} collapsed={collapsed} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <TokenSelectDialog onSelect={selectAndClose} />
