@@ -34,12 +34,12 @@ const dark: DynamicColors = {
 }
 
 export function getDynamicTheme(theme: ComputedTheme, color: string): ComputedTheme {
-  const colors = { light, dark }[readableColor(color, 'light', 'dark', false)]
+  const colors = { light, dark }[readableColor(color, 'light', 'dark', false) as 'light' | 'dark']
   return {
     ...theme,
-    module: color,
-    onHover: opacify(0.25),
     ...colors,
+    module: color,
+    onHover: (color: string) => (color === colors.primary ? transparentize(0.4, colors.primary) : opacify(0.25, color)),
   }
 }
 
