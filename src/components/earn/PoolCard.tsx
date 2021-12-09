@@ -133,6 +133,10 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
       ? `${userAprMode ? apr.toFixed(0, { groupSeparator: ',' }) : compoundedAPY}%`
       : '-'
 
+  if (farmSummary.rewardsUSDPerYear === '0') {
+    return null
+  }
+
   return (
     <Wrapper showBackground={isStaking} bgColor={theme.primary1}>
       <CardNoise />
