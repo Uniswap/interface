@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
+import { SWAP_ROUTER_ADDRESS } from '../constants/addresses'
 import { DAI, UNI, USDC } from '../constants/tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useEIP2612Contract } from './useContract'
@@ -275,7 +275,7 @@ export function useERC20PermitFromTrade(
   allowedSlippage: Percent
 ) {
   const { chainId } = useActiveWeb3React()
-  const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+  const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESS[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [trade, allowedSlippage]

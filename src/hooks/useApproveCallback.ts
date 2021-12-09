@@ -146,13 +146,13 @@ export function useApproveCallbackFromTrade(
     () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [trade, allowedSlippage]
   )
+
+  if (Trade instanceof V2Trade || trade instanceof V3Trade) throw new Error('Trying to approvea legacy router')
   return useApproveCallback(
     amountToApprove,
     chainId
-      ? trade instanceof V2Trade
-        ? V2_ROUTER_ADDRESS[chainId]
-        : trade instanceof V3Trade
-        ? V3_ROUTER_ADDRESS[chainId]
+      ? trade instanceof V2Trade || trade instanceof V3Trade
+        ? undefined
         : SWAP_ROUTER_ADDRESS[chainId]
       : undefined
   )
@@ -173,8 +173,8 @@ export function useApprovalOptimizedTrade(
   | V3Trade<Currency, Currency, TradeType>
   | Trade<Currency, Currency, TradeType>
   | undefined {
-  const hasV2Routes = trade?.routes.some((route) => route.protocol === Protocol.V2)
-  const hasV3Routes = trade?.routes.some((route) => route.protocol === Protocol.V3)
+  const hasV2Routes = trade?.routes.every((route) => route.protocol === Protocol.V2)
+  const hasV3Routes = trade?.routes.every((route) => route.protocol === Protocol.V3)
   const hasSplits = (trade?.routes?.length ?? 0) > 1
 
   const approvalStates = useAllApprovalStates(trade, allowedSlippage)
