@@ -36,7 +36,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
   const results = useSingleContractMultipleData(
     multicallContract,
     'getEthBalance',
-    addresses.map((address) => [address])
+    useMemo(() => addresses.map((address) => [address]), [addresses])
   )
 
   return useMemo(
@@ -104,7 +104,10 @@ export function useTokenBalances(
 
 // get the balance for a single token/account combo
 export function useTokenBalance(account?: string, token?: Token): CurrencyAmount<Token> | undefined {
-  const tokenBalances = useTokenBalances(account, [token])
+  const tokenBalances = useTokenBalances(
+    account,
+    useMemo(() => [token], [token])
+  )
   if (!token) return undefined
   return tokenBalances[token.address]
 }
@@ -120,9 +123,9 @@ export function useCurrencyBalances(
 
   const tokenBalances = useTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(() => currencies?.some((currency) => currency?.isNative) ?? false, [currencies])
-  const ethBalance = useETHBalances(containsETH ? [account] : [])
+  const ethBalance = useETHBalances(useMemo(() => (containsETH ? [account] : []), [containsETH, account]))
 
-  return useMemo(
+  const balances = useMemo(
     () =>
       currencies?.map((currency) => {
         if (!account || !currency) return undefined
@@ -132,6 +135,7 @@ export function useCurrencyBalances(
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances]
   )
+  return balances
 }
 
 export function useCurrencyBalance(account?: string, currency?: Currency): CurrencyAmount<Currency> | undefined {

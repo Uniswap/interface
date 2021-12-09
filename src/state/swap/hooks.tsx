@@ -185,46 +185,57 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
 
   const bestTrade = isV2TradeBetter === undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
 
-  const currencyBalances = {
-    [Field.INPUT]: relevantTokenBalances[0],
-    [Field.OUTPUT]: relevantTokenBalances[1],
-  }
+  const currencyBalances = useMemo(
+    () => ({
+      [Field.INPUT]: relevantTokenBalances[0],
+      [Field.OUTPUT]: relevantTokenBalances[1],
+    }),
+    [relevantTokenBalances]
+  )
 
-  const currencies: { [field in Field]?: Currency | null } = {
-    [Field.INPUT]: inputCurrency,
-    [Field.OUTPUT]: outputCurrency,
-  }
-
-  let inputError: ReactNode | undefined
-  if (!account) {
-    inputError = <Trans>Connect Wallet</Trans>
-  }
-
-  if (!parsedAmount) {
-    inputError = inputError ?? <Trans>Enter an amount</Trans>
-  }
-
-  if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-    inputError = inputError ?? <Trans>Select a token</Trans>
-  }
-
-  const formattedTo = isAddress(to)
-  if (!to || !formattedTo) {
-    inputError = inputError ?? <Trans>Enter a recipient</Trans>
-  } else {
-    if (BAD_RECIPIENT_ADDRESSES[formattedTo] || (v2Trade && involvesAddress(v2Trade, formattedTo))) {
-      inputError = inputError ?? <Trans>Invalid recipient</Trans>
-    }
-  }
+  const currencies: { [field in Field]?: Currency | null } = useMemo(
+    () => ({
+      [Field.INPUT]: inputCurrency,
+      [Field.OUTPUT]: outputCurrency,
+    }),
+    [inputCurrency, outputCurrency]
+  )
 
   const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
 
-  // compare input balance to max input based on version
-  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]
+  const inputError = useMemo(() => {
+    let inputError: ReactNode | undefined
 
-  if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
-  }
+    if (!account) {
+      inputError = <Trans>Connect Wallet</Trans>
+    }
+
+    if (!parsedAmount) {
+      inputError = inputError ?? <Trans>Enter an amount</Trans>
+    }
+
+    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+      inputError = inputError ?? <Trans>Select a token</Trans>
+    }
+
+    const formattedTo = isAddress(to)
+    if (!to || !formattedTo) {
+      inputError = inputError ?? <Trans>Enter a recipient</Trans>
+    } else {
+      if (BAD_RECIPIENT_ADDRESSES[formattedTo] || (v2Trade && involvesAddress(v2Trade, formattedTo))) {
+        inputError = inputError ?? <Trans>Invalid recipient</Trans>
+      }
+    }
+
+    // compare input balance to max input based on version
+    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]
+
+    if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+      inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
+    }
+
+    return inputError
+  }, [account, allowedSlippage, bestTrade, currencies, currencyBalances, parsedAmount, to, v2Trade])
 
   return {
     currencies,
