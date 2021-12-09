@@ -9,16 +9,18 @@ const StyledButton = styled(Button)<{ updated?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-grow: 1;
   height: 100%;
-  transition: flex-grow 0.2s;
+  transition: background-color 0.2s ease-out, flex-grow 0.2s ease-out;
 `
 
 const UpdateRow = styled(Row)``
 
 const grow = keyframes`
   from {
+    opacity: 0;
     width: 0;
   }
   to {
+    opacity: 1;
     width: max-content;
   }
 `
@@ -29,7 +31,7 @@ const updatedCss = css`
   padding-left: calc(0.75em - 1px);
 
   ${UpdateRow} {
-    animation: ${grow} 0.2s;
+    animation: ${grow} 0.2s ease-in;
     white-space: nowrap;
   }
 

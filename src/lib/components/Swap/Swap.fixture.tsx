@@ -25,24 +25,24 @@ function Fixture() {
   useEffect(() => {
     if (priceFetched && input.token && output.token) {
       const inputValue = input.value || 1
+      const inputUsdc = input.usdc || inputValue
       const outputValue = output.value || 1
-      setOutput({ ...output, value: outputValue })
-      setInput({ ...input, value: inputValue })
-    }
-    // disable the effect on input/output updates to maintain interactivity
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [priceFetched, setInput, setOutput])
-  useEffect(() => {
-    if (priceFetched && !swap && input.token && input.value && output.token && output.value) {
-      setOutput({ ...output, usdc: output.value })
-      setInput({ ...input, usdc: input.value })
-      setSwap({
-        lpFee: 0.0005,
-        priceImpact: 0.01,
-        slippageTolerance: 0.5,
-        minimumReceived: output.value * 0.995,
-      })
-    } else if (!priceFetched && swap) {
+      const outputUsdc = output.usdc || outputValue
+      if (!(inputValue === input.value && inputUsdc === input.usdc)) {
+        setInput({ ...input, value: inputValue, usdc: inputUsdc })
+      }
+      if (!(outputValue === output.value && outputUsdc === output.usdc)) {
+        setOutput({ ...output, value: outputValue, usdc: outputUsdc })
+      }
+      if (!swap || swap.minimumReceived !== outputValue * 0.995) {
+        setSwap({
+          lpFee: 0.0005,
+          priceImpact: 0.01,
+          slippageTolerance: 0.5,
+          minimumReceived: outputValue * 0.995,
+        })
+      }
+    } else if (swap) {
       setSwap(undefined)
     }
   }, [input, output, priceFetched, setInput, setOutput, setSwap, swap])
