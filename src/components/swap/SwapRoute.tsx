@@ -17,11 +17,10 @@ import { Separator, TYPE } from 'theme'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
-const Wrapper = styled(AutoColumn)<{ open: boolean }>`
+const Wrapper = styled(AutoColumn)`
   padding: 8px 12px;
   border-radius: 12px;
   background-color: ${({ theme }) => darken(0.11, theme.blue4)};
-  grid-row-gap: ${({ open }) => (open ? '12px' : 0)};
 `
 
 const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
@@ -39,21 +38,19 @@ const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
 
 const V2_DEFAULT_FEE_TIER = 3000
 
-export default memo(function SwapRoute({
-  trade,
-  syncing,
-  fixedOpen = false,
-}: {
+interface SwapRouteProps extends React.HTMLAttributes<HTMLDivElement> {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   syncing: boolean
   fixedOpen?: boolean // fixed in open state, hide open/close icon
-}) {
+}
+
+export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...rest }: SwapRouteProps) {
   const autoRouterSupported = useAutoRouterSupported()
   const routes = getTokenPath(trade)
   const [open, setOpen] = useState(false)
 
   return (
-    <Wrapper open={open || fixedOpen}>
+    <Wrapper {...rest}>
       <RowBetween>
         <AutoRow gap="4px" width="auto">
           <AutoRouterLogo />
@@ -62,7 +59,7 @@ export default memo(function SwapRoute({
         {fixedOpen ? null : <OpenCloseIcon open={open} onClick={() => setOpen(!open)} />}
       </RowBetween>
       <AnimatedDropdown open={open || fixedOpen}>
-        <AutoRow gap="6px" width="auto">
+        <AutoRow gap="6px" width="auto" style={{ paddingTop: '12px' }}>
           {syncing ? (
             <LoadingRows>
               <div style={{ width: '400px', height: '30px' }} />

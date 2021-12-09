@@ -10,10 +10,9 @@ import { Separator, TYPE } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import FormattedPriceImpact from './FormattedPriceImpact'
 
 const StyledCard = styled(Card)`
-  padding: 12px;
+  padding: 0;
 `
 
 interface AdvancedSwapDetailsProps {
@@ -44,7 +43,7 @@ function TextWithLoadingPlaceholder({
 export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
-  const { realizedLPFee, priceImpact, expectedOutputAmount } = useMemo(() => {
+  const { expectedOutputAmount } = useMemo(() => {
     if (!trade) return { realizedLPFee: undefined, expectedOutputAmount: undefined }
     const expectedOutputAmount = trade.outputAmount
     const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
@@ -71,18 +70,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             </TYPE.black>
           </TextWithLoadingPlaceholder>
         </RowBetween>
-        <RowBetween>
-          <RowFixed>
-            <TYPE.subHeader color={theme.text1}>
-              <Trans>Liquidity Provider Fee</Trans>
-            </TYPE.subHeader>
-          </RowFixed>
-          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            <TYPE.black textAlign="right" fontSize={14}>
-              -{realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
-            </TYPE.black>
-          </TextWithLoadingPlaceholder>
-        </RowBetween>
         <Separator />
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
@@ -92,7 +79,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               ) : (
                 <Trans>Maximum sent</Trans>
               )}{' '}
-              <Trans>after slippage</Trans>
+              <Trans>after slippage</Trans> ({allowedSlippage.toFixed(2)}%)
             </TYPE.subHeader>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
@@ -101,24 +88,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
                 ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
                 : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
             </TYPE.black>
-          </TextWithLoadingPlaceholder>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.subHeader color={theme.text3}>
-            <Trans>Allowed Slippage</Trans>
-          </TYPE.subHeader>
-          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <TYPE.subHeader color={theme.text3}>{allowedSlippage.toFixed(2)}%</TYPE.subHeader>
-          </TextWithLoadingPlaceholder>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.subHeader color={theme.text3}>
-            <Trans>Price Impact</Trans>
-          </TYPE.subHeader>
-          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <TYPE.subHeader color={theme.text3}>
-              <FormattedPriceImpact priceImpact={priceImpact} />
-            </TYPE.subHeader>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         {!trade?.gasUseEstimateUSD ? null : (
