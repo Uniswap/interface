@@ -9,10 +9,10 @@ import styled, {
   useTheme as useStyled,
 } from 'styled-components/macro'
 
-import { ComputedTheme as Theme } from './theme'
+import { ComputedTheme } from './theme'
 
-export default styled as unknown as ThemedBaseStyledInterface<Theme>
-export const css = styledCss as unknown as ThemedCssFunction<Theme>
+export default styled as unknown as ThemedBaseStyledInterface<ComputedTheme>
+export const css = styledCss as unknown as ThemedCssFunction<ComputedTheme>
 export const keyframes = styledKeyframes
-export const useTheme = useStyled as unknown as () => Theme
-export const ThemedProvider = StyledProvider as unknown as ThemeProviderComponent<Theme>
+export const useTheme = useStyled as unknown as () => ComputedTheme
+export const ThemedProvider = StyledProvider as unknown as ThemeProviderComponent<ComputedTheme>

@@ -36,8 +36,6 @@ export const lightTheme: Colors = {
   error: '#FD4040',
 
   currentColor: 'currentColor',
-
-  onHover: mix(0.24, '#000000'), // hovered elements get a 24% primary text overlay
 }
 
 export const darkTheme: Colors = {
@@ -62,8 +60,6 @@ export const darkTheme: Colors = {
   error: '#FD4040',
 
   currentColor: 'currentColor',
-
-  onHover: mix(0.24, '#FFFFFF'), // hovered elements get a 24% primary text overlay
 }
 
 export const defaultTheme = {
@@ -98,5 +94,6 @@ function toComputedTheme(theme: Required<Theme>): ComputedTheme {
   return {
     ...theme,
     borderRadius: theme.borderRadius ? 1 : 0,
+    onHover: mix(0.16, theme.primary), // hovered elements get a 16% primary text overlay
   }
 }

@@ -20,11 +20,9 @@ export interface Colors {
   error: string
 
   currentColor: 'currentColor'
-
-  onHover: (color: string) => string
 }
 
-export type Color = keyof Omit<Colors, 'onHover'>
+export type Color = keyof Colors
 
 export interface Attributes {
   fontFamily: string
@@ -35,4 +33,5 @@ export interface Theme extends Record<string, unknown>, Partial<Attributes>, Par
 
 export interface ComputedTheme extends Record<string, unknown>, Omit<Attributes, 'borderRadius'>, Colors {
   borderRadius: 0 | 1
+  onHover: (color: string) => string
 }
