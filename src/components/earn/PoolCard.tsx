@@ -1,6 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { Percent } from '@ubeswap/sdk'
+import { Percent, TokenAmount } from '@ubeswap/sdk'
 import QuestionHelper from 'components/QuestionHelper'
 import { useToken } from 'hooks/Tokens'
 import { useStakingContract } from 'hooks/useContract'
@@ -210,12 +210,10 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
 
                 <RowFixed>
                   <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-                    ${userValueCUSD.toFixed(0, { groupSeparator: ',' })}
+                    {'$' + userValueCUSD.toFixed(0, { groupSeparator: ',' })}
                   </TYPE.black>
                   <QuestionHelper
-                    text={`${userAmountTokenA?.toFixed(0, { groupSeparator: ',' })} ${
-                      userAmountTokenA?.token.symbol
-                    }, ${userAmountTokenB?.toFixed(0, { groupSeparator: ',' })} ${userAmountTokenB?.token.symbol}`}
+                    text={`${formatStakedAmount(userAmountTokenA)} | ${formatStakedAmount(userAmountTokenB)}`}
                   />
                 </RowFixed>
               </RowBetween>
@@ -225,6 +223,14 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
       )}
     </Wrapper>
   )
+}
+
+// Format amount based on the size, when under 1 show significant digits, when 1 to 10 show 1 decimal, over 10 round
+function formatStakedAmount(tokenAmmount?: TokenAmount) {
+  const amount = tokenAmmount?.lessThan('1')
+    ? tokenAmmount.toSignificant(2)
+    : tokenAmmount?.toFixed(tokenAmmount?.lessThan('10') ? 1 : 0, { groupSeparator: ',' })
+  return `${amount} ${tokenAmmount?.token.symbol}`
 }
 
 // formula is 1 + ((nom/compoundsPerYear)^compoundsPerYear) - 1
