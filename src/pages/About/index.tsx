@@ -79,8 +79,12 @@ import Medium from 'components/Icons/Medium'
 import Discord from 'components/Icons/Discord'
 import { ButtonEmpty } from 'components/Button'
 
+const KNC_NOT_AVAILABLE_IN = [ChainId.CRONOS, ChainId.AVAXMAINNET, ChainId.FANTOM]
+
 const getPoolsMenuLink = (chainId?: ChainId, path?: string) => {
   const pathname = path || 'pools'
+  if (chainId && KNC_NOT_AVAILABLE_IN.includes(chainId))
+    return `/${pathname}/${convertToNativeTokenFromETH(ETHER, chainId).symbol}`
   return `/${pathname}/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
 }
 
