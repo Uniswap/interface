@@ -32,7 +32,7 @@ function Fixture() {
 
   return (
     <Modal color="dialog">
-      <SummaryDialog />
+      <SummaryDialog onConfirm={() => void 0} />
     </Modal>
   )
 }
