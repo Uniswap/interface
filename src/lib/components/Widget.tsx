@@ -2,6 +2,7 @@ import 'inter-ui'
 
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider, useAtom } from 'jotai'
+import ErrorBoundary from 'lib/components/ErrorBoundary'
 import EIP1193Connector from 'lib/connectors/EIP1193'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { connectorAtom } from 'lib/state'
@@ -60,15 +61,17 @@ export default function Widget({
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
-    <AtomProvider>
-      <ThemeProvider theme={theme}>
-        <I18nProvider locale={locale}>
-          <WidgetWrapper width={width} className={className}>
-            <div ref={setDialog} />
-            <DialogProvider value={dialog}>{children}</DialogProvider>
-          </WidgetWrapper>
-        </I18nProvider>
-      </ThemeProvider>
-    </AtomProvider>
+    <ErrorBoundary>
+      <AtomProvider>
+        <ThemeProvider theme={theme}>
+          <I18nProvider locale={locale}>
+            <WidgetWrapper width={width} className={className}>
+              <div ref={setDialog} />
+              <DialogProvider value={dialog}>{children}</DialogProvider>
+            </WidgetWrapper>
+          </I18nProvider>
+        </ThemeProvider>
+      </AtomProvider>
+    </ErrorBoundary>
   )
 }
