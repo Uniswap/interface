@@ -234,6 +234,10 @@ msgstr "Approving"
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
+#: src/components/Footer/Footer.tsx
+msgid "Audited By"
+msgstr "Audited By"
+
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
 msgstr "Available for yield farming"
@@ -425,6 +429,13 @@ msgstr "Copied"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copy Address"
+
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+msgid "Covers smart-contracts"
+msgstr "Covers smart-contracts"
 
 #: src/pages/CreatePool/index.tsx
 msgid "Create"
@@ -844,6 +855,7 @@ msgstr "Insufficient liquidity for this trade."
 msgid "Insufficient {0} balance"
 msgstr "Insufficient {0} balance"
 
+#: src/components/Footer/Footer.tsx
 #: src/pages/About/index.tsx
 msgid "Insured by"
 msgstr "Insured by"
@@ -1261,6 +1273,7 @@ msgstr "Pools | AMP"
 msgid "Popular Pairs"
 msgstr "Popular Pairs"
 
+#: src/components/Footer/Footer.tsx
 #: src/components/Footer/PoweredBy.tsx
 msgid "Powered By"
 msgstr "Powered By"

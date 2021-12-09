@@ -234,6 +234,10 @@ msgstr "승인 중"
 msgid "Are you sure?"
 msgstr ""
 
+#: src/components/Footer/Footer.tsx
+msgid "Audited By"
+msgstr ""
+
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
 msgstr "유동성 마이닝 지정 풀"
@@ -425,6 +429,13 @@ msgstr "복사됨"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "주소 복사"
+
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+msgid "Covers smart-contracts"
+msgstr ""
 
 #: src/pages/CreatePool/index.tsx
 msgid "Create"
@@ -844,6 +855,7 @@ msgstr "이 거래에 대한 유동성이 충분하지 않습니다."
 msgid "Insufficient {0} balance"
 msgstr ""
 
+#: src/components/Footer/Footer.tsx
 #: src/pages/About/index.tsx
 msgid "Insured by"
 msgstr "보험 제공"
@@ -1261,6 +1273,7 @@ msgstr "Pools | AMP"
 msgid "Popular Pairs"
 msgstr ""
 
+#: src/components/Footer/Footer.tsx
 #: src/components/Footer/PoweredBy.tsx
 msgid "Powered By"
 msgstr ""

@@ -234,6 +234,10 @@ msgstr "批准"
 msgid "Are you sure?"
 msgstr ""
 
+#: src/components/Footer/Footer.tsx
+msgid "Audited By"
+msgstr ""
+
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
 msgstr "可用于流动性挖矿"
@@ -425,6 +429,13 @@ msgstr "已复制"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "复制地址"
+
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+#: src/components/Footer/Footer.tsx
+msgid "Covers smart-contracts"
+msgstr ""
 
 #: src/pages/CreatePool/index.tsx
 msgid "Create"
@@ -844,6 +855,7 @@ msgstr "这笔交易的流动性不足。"
 msgid "Insufficient {0} balance"
 msgstr ""
 
+#: src/components/Footer/Footer.tsx
 #: src/pages/About/index.tsx
 msgid "Insured by"
 msgstr "承保"
@@ -1261,6 +1273,7 @@ msgstr "池| 放大系数"
 msgid "Popular Pairs"
 msgstr ""
 
+#: src/components/Footer/Footer.tsx
 #: src/components/Footer/PoweredBy.tsx
 msgid "Powered By"
 msgstr ""
