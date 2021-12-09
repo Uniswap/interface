@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
-import styled, { icon, ThemedText } from 'lib/theme'
+import { ChevronDown } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
-import { ChevronDown } from 'react-feather'
 
 import Button from '../Button'
 import Row from '../Row'
@@ -25,10 +25,6 @@ const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
   transition: max-width 0.2s linear;
 `
 
-const ChevronDownIcon = styled(icon(ChevronDown, { color: 'onInteractive' }))`
-  stroke-width: 3;
-`
-
 interface TokenButtonProps {
   value?: Token
   collapsed: boolean
@@ -48,7 +44,7 @@ export default function TokenButton({ value, collapsed, onClick }: TokenButtonPr
           ) : (
             <Trans>Select a token</Trans>
           )}
-          <ChevronDownIcon />
+          <ChevronDown color="onInteractive" strokeWidth={3} />
         </TokenButtonRow>
       </ThemedText.ButtonLarge>
     </StyledTokenButton>

@@ -1,8 +1,8 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import styled, { icon, ThemedText } from 'lib/theme'
+import { CheckCircle } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
-import { CheckCircle } from 'react-feather'
 
 import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -14,8 +14,6 @@ import { Label, optionCss } from './components'
 const tooltip = (
   <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
 )
-
-const SelectedIcon = icon(CheckCircle, { color: 'accent' })
 
 const StyledOption = styled(TextButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
@@ -41,7 +39,7 @@ function Option<T>({ value, selected, onSelect }: OptionProps<T>) {
         <ThemedText.Subhead2>{value}%</ThemedText.Subhead2>
         {selected && (
           <ThemedText.Subhead2 color="currentColor">
-            <SelectedIcon />
+            <CheckCircle color="accent" />
           </ThemedText.Subhead2>
         )}
       </Row>

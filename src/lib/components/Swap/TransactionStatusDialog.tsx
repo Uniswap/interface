@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import useInterval from 'lib/hooks/useInterval'
-import styled, { icon, ThemedText } from 'lib/theme'
+import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Clock, Info } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 import { useState } from 'react'
-import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Clock, Info } from 'react-feather'
 
 import ActionButton from '../ActionButton'
 import Button from '../Button'
@@ -13,13 +13,6 @@ import Rule from '../Rule'
 import SpinnerIcon from '../SpinnerIcon'
 import { Transaction, transactionAtom } from './state'
 import Summary from './Summary'
-
-const DownIcon = icon(ChevronDown)
-const ElapsedIcon = icon(Clock)
-const ErrorIcon = icon(AlertTriangle, { color: 'error' })
-const InfoIcon = icon(Info)
-const SuccessIcon = icon(CheckCircle, { color: 'success' })
-const UpIcon = icon(ChevronUp)
 
 const Header = styled.div<{ maximized?: boolean }>`
   display: flex;
@@ -85,7 +78,7 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
 
   return (
     <Body align="stretch" flex padded>
-      <Header>{transaction.status ? <SuccessIcon /> : <SpinnerIcon />}</Header>
+      <Header>{transaction.status ? <CheckCircle color="success" /> : <SpinnerIcon />}</Header>
       <Column gap={1}>
         <Column gap={0.75} flex>
           <ThemedText.Subhead1>
@@ -97,7 +90,7 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
         <ThemedText.Subhead2 color="secondary">
           <Row>
             <Row gap={0.5}>
-              <ElapsedIcon />
+              <Clock />
               {toElapsedTime(transaction.elapsedMs || Date.now() - transaction.timestamp)}
             </Row>
             <EtherscanA href="//etherscan.io" target="_blank">
@@ -118,7 +111,7 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
   return (
     <Body align="stretch" flex padded>
       <Header maximized={open}>
-        <ErrorIcon />
+        <AlertTriangle color="error" />
       </Header>
       <Column gap={1}>
         <Column gap={0.75}>
@@ -135,12 +128,12 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
         </Column>
         <Row>
           <Row gap={0.5}>
-            <InfoIcon />
+            <Info />
             <ThemedText.Subhead2 color="secondary">
               <Trans>Error details</Trans>
             </ThemedText.Subhead2>
           </Row>
-          <Button onClick={() => setOpen(!open)}>{open ? <DownIcon /> : <UpIcon />}</Button>
+          <Button onClick={() => setOpen(!open)}>{open ? <ChevronDown /> : <ChevronUp />}</Button>
         </Row>
         <ErrorColumn maximized={open}>
           <ThemedText.Code>{error.message}</ThemedText.Code>

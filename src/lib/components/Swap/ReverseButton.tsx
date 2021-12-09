@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
-import styled, { icon, Layer } from 'lib/theme'
+import { ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon } from 'lib/icons'
+import styled, { Layer } from 'lib/theme'
 import { useCallback } from 'react'
-import { ArrowDown, ArrowUp } from 'react-feather'
 
 import Button from '../Button'
 import Row from '../Row'
@@ -14,13 +14,13 @@ const ReverseRow = styled(Row)`
   z-index: ${Layer.OVERLAY};
 `
 
-const ArrowUpIcon = styled(icon(ArrowUp))`
+const ArrowUp = styled(ArrowUpIcon)`
   position: absolute;
   right: 0.5em;
   top: 0.375em;
 `
 
-const ArrowDownIcon = styled(icon(ArrowDown))`
+const ArrowDown = styled(ArrowDownIcon)`
   bottom: 0.375em;
   left: 0.5em;
   position: absolute;
@@ -66,8 +66,8 @@ export default function ReverseButton() {
     <ReverseRow justify="center">
       <Overlay>
         <StyledReverseButton onClick={onClick}>
-          <ArrowUpIcon />
-          <ArrowDownIcon />
+          <ArrowUp />
+          <ArrowDown />
         </StyledReverseButton>
       </Overlay>
     </ReverseRow>

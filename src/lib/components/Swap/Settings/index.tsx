@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useResetAtom } from 'jotai/utils'
-import { icon, ThemedText } from 'lib/theme'
+import { Settings as SettingsIcon } from 'lib/icons'
+import { ThemedText } from 'lib/theme'
 import { useState } from 'react'
-import { Settings as SettingsSvg } from 'react-feather'
 
 import { IconButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -11,8 +11,6 @@ import { BoundaryProvider } from '../../Popover'
 import { settingsAtom } from '../state'
 import MaxSlippageSelect from './MaxSlippageSelect'
 import TransactionTtlInput from './TransactionTtlInput'
-
-const SettingsIcon = icon(SettingsSvg)
 
 export function SettingsDialog() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)

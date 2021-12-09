@@ -14,7 +14,7 @@ export const BaseButton = styled.button`
 `
 
 export default styled(BaseButton)<{ color?: Color }>`
-  color: ${({ color, theme }) => (!color || color === 'interactive') && theme.onInteractive};
+  color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
   transition: background-color 0.2s, color 0.2s, filter 0.2s;
 
   :enabled {

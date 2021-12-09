@@ -10,6 +10,10 @@
           {
             "name": "styled-components/macro",
             "message": "Please import from lib/styled to get the correct typings."
+          },
+          {
+            "name": "react-feather",
+            "message": "Please import from lib/icons to ensure performant usage."
           }
         ]
       }

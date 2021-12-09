@@ -1,13 +1,10 @@
-import { icon } from 'lib/theme'
+import { Clock } from 'lib/icons'
 import { useMemo, useState } from 'react'
-import { Clock } from 'react-feather'
 
 import { IconButton } from './Button'
 import Dialog from './Dialog'
 import RecentTransactionsDialog, { mockTxs, TransactionStatus } from './RecentTransactionsDialog'
 import SpinnerIcon from './SpinnerIcon'
-
-const TransactionsIcon = icon(Clock)
 
 export default function Wallet() {
   const txs = mockTxs
@@ -17,7 +14,7 @@ export default function Wallet() {
     if (txs.length === 0) {
       return undefined
     }
-    return txs.some(({ status }) => status === TransactionStatus.PENDING) ? SpinnerIcon : TransactionsIcon
+    return txs.some(({ status }) => status === TransactionStatus.PENDING) ? SpinnerIcon : Clock
   }, [txs])
   if (Icon) {
     return (
