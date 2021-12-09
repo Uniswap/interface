@@ -121,7 +121,7 @@ function Footer() {
           <Item>
             <Text marginRight="6px" display="flex">
               <Trans>Audited By</Trans>
-              {!above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} />}
+              {!above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} placement="top" />}
             </Text>
             <ExternalLink
               href="https://chainsecurity.com/security-audit/kyber-network-dynamic-market-maker-dmm/"
@@ -137,13 +137,13 @@ function Footer() {
                 width="98px"
               />
             </ExternalLink>
-            {above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} />}
+            {above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} placement="top" />}
           </Item>
           <Separator />
           <Item>
             <Text marginRight="6px" display="flex">
               <Trans>Insured by</Trans>
-              {!above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} />}
+              {!above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} placement="top" />}
             </Text>
 
             <ExternalLink
@@ -165,7 +165,7 @@ function Footer() {
                 />
               </svg>
             </ExternalLink>
-            {above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} />}
+            {above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} placement="top" />}
           </Item>
         </InfoWrapper>
         <FooterSocialLink />

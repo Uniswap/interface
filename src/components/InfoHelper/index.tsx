@@ -2,6 +2,7 @@ import React, { useCallback, useState, ReactNode } from 'react'
 import { Info } from 'react-feather'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip'
+import { Placement } from '@popperjs/core'
 
 const InfoWrapper = styled.div<{ isActive?: boolean }>`
   display: flex;
@@ -54,12 +55,14 @@ export default function InfoHelper({
   text,
   size,
   isActive = false,
-  color
+  color,
+  placement
 }: {
   text: string | ReactNode
   size?: number
   isActive?: boolean
   color?: string
+  placement?: Placement
 }) {
   const [show, setShow] = useState<boolean>(false)
 
@@ -68,7 +71,7 @@ export default function InfoHelper({
 
   return (
     <InfoHelperWrapper>
-      <Tooltip text={text} show={show}>
+      <Tooltip text={text} show={show} placement={placement}>
         <InfoWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} isActive={isActive}>
           <Info size={size || 16} color={color} />
         </InfoWrapper>
