@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
-import styled, { scrollable, ThemedText } from 'lib/theme'
+import styled, { scrollableCss, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import React, {
   ComponentClass,
@@ -41,15 +41,10 @@ const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{ hover
     background-color: ${({ theme }) => theme.onHover(theme.module)};
   }
 
-  ${scrollable}
+  ${scrollableCss}
 
   @supports selector(::-webkit-scrollbar-thumb) {
     overflow-y: overlay !important;
-
-    ::-webkit-scrollbar-thumb {
-      border: none;
-      border-right: 0.75em solid transparent;
-    }
 
     ${TokenButton} {
       padding-right: 2em;

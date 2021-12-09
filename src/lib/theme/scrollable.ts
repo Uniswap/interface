@@ -1,6 +1,6 @@
 import { css } from './styled'
 
-export const scrollable = css`
+export const scrollableCss = css`
   overflow-y: scroll;
 
   ::-webkit-scrollbar {
@@ -26,11 +26,17 @@ export const scrollable = css`
         transparent 0.25em
       );
     background-clip: padding-box;
-    border-left: 0.75em solid transparent;
+    border: none;
+    border-right: 0.75em solid transparent;
   }
 
   @supports not selector(::-webkit-scrollbar-thumb) {
     overflow-y: scroll;
     scrollbar-color: ${({ theme }) => theme.interactive} transparent;
+  }
+
+  @supports selector(::-webkit-scrollbar-thumb) {
+    ::-webkit-scrollbar-thumb {
+    }
   }
 `
