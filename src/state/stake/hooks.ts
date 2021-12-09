@@ -67,7 +67,7 @@ export const usePairMultiStakingInfo = (
 ): StakingInfo | null => {
   const multiRewardPool = multiRewardPools
     .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
-    .find((x) => x.basePool === stakingInfo?.poolInfo.poolAddress)
+    .find((x) => x.basePool.toLowerCase() === stakingInfo?.poolInfo.poolAddress.toLowerCase())
 
   const isTriple = multiRewardPool?.numRewards === 3
 
