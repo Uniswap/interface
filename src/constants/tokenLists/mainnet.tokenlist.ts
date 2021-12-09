@@ -210,6 +210,14 @@ export const MAINNET_TOKEN_LIST = {
       name: 'Mochi Inu',
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/14315.png'
+    },
+    {
+      chainId: 1,
+      address: '0x9F52c8ecbEe10e00D9faaAc5Ee9Ba0fF6550F511',
+      symbol: 'SIPHER',
+      name: 'SIPHER',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/IciyqAe.jpg'
     }
   ],
   version: {

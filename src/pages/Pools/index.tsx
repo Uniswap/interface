@@ -285,14 +285,15 @@ const Pools = ({
           {loadingPoolFarm && <Loader />}
         </Flex>
         <Flex alignItems="center" justifyContent="flexStart" flexWrap="wrap">
+          {popularPairs.map((pair, index) => (
+            <PoolFarm key={index} farm={pair} />
+          ))}
+
           {Object.values(farms)
             .flat()
             .map((farm, index) => (
               <PoolFarm key={index} farm={farm} />
             ))}
-          {popularPairs.map((pair, index) => (
-            <PoolFarm key={index} farm={pair} />
-          ))}
         </Flex>
       </PageWrapper>
       <SwitchLocaleLink />
