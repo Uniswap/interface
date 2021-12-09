@@ -5,6 +5,9 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import { Contract } from 'ethers'
 import { defaultAbiCoder, formatUnits, Interface, isAddress } from 'ethers/lib/utils'
+import request, { gql } from 'graphql-request'
+import snapshot from '@snapshot-labs/snapshot.js';
+import Web3Provider from 'web3'
 import {
   useGovernanceV0Contract,
   useGovernanceV1Contract,
@@ -12,6 +15,7 @@ import {
   useUniContract,
 } from 'hooks/useContract'
 import { useActiveWeb3React } from 'hooks/web3'
+import React from 'react'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { SupportedChainId } from '../../constants/chains'
@@ -30,15 +34,18 @@ interface ProposalDetail {
 export interface ProposalData {
   id: string
   title: string
-  description: string
-  proposer: string
-  status: ProposalState
-  forCount: number
-  againstCount: number
-  startBlock: number
-  endBlock: number
-  details: ProposalDetail[]
-  governorIndex: number // index in the governance address array for which this proposal pertains
+  body: string
+  choices: string[]
+  start: number
+  end: number
+  snapshot: number
+  state: string
+  author: string
+  space :{
+    id: string
+    name:string
+  }
+  votes?: ProposalVote[]
 }
 
 export interface CreateProposalData {
@@ -111,87 +118,111 @@ function countToIndices(count: number | undefined) {
   return typeof count === 'number' ? new Array(count).fill(0).map((_, i) => [i + 1]) : []
 }
 
+const proposal_query = gql`
+query Proposals {
+  proposals(
+    first: 20,
+    skip: 0,
+    where: {
+      space_in: ["kibaworldwide.eth"],
+    },
+    orderBy: "created",
+    orderDirection: desc
+  ) {
+    id
+    title
+    body
+    choices
+    start
+    end
+    snapshot
+    state
+    author
+    space {
+      id
+      name
+    }
+  }
+}
+`
+
+const proposal_client = `https://hub.snapshot.org/graphql`
+export interface ProposalVote {
+  id: string
+  voter: string
+  created: number | string
+  choice: number
+}
+const votes_query = gql`
+query Votes ($proposalId: String!) {
+  votes (
+    where: {
+      proposal: $proposalId
+    }
+  ) {
+    id
+    voter
+    created
+    choice
+    space {
+      id
+    }
+  }
+}`
+
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
   const { chainId } = useActiveWeb3React()
-  const gov0 = useGovernanceV0Contract()
-  const gov1 = useGovernanceV1Contract()
+  const [isLoading ,setIsLoading] = React.useState(false)
+  const [proposalData, setProposalData] = React.useState<ProposalData[]>()
+  React.useEffect(() => {
+    const fn = async () => {
+      setIsLoading(true)
+      try {
+      const proposalData = await request(proposal_client, proposal_query);
+      if (proposalData) setProposalData(proposalData.proposals)
+      setIsLoading(false)
+    } catch {
+      setIsLoading(false)
+    }
+    }
+    fn()
+  }, [])
 
-  const proposalCount0 = useProposalCount(gov0)
-  const proposalCount1 = useProposalCount(gov1)
-
-  const gov0ProposalIndexes = useMemo(() => {
-    return chainId === SupportedChainId.MAINNET ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
-  }, [chainId, proposalCount0])
-  const gov1ProposalIndexes = useMemo(() => {
-    return countToIndices(proposalCount1)
-  }, [proposalCount1])
-
-  const proposalsV0 = useSingleContractMultipleData(gov0, 'proposals', gov0ProposalIndexes)
-  const proposalsV1 = useSingleContractMultipleData(gov1, 'proposals', gov1ProposalIndexes)
-
-  // get all proposal states
-  const proposalStatesV0 = useSingleContractMultipleData(gov0, 'state', gov0ProposalIndexes)
-  const proposalStatesV1 = useSingleContractMultipleData(gov1, 'state', gov1ProposalIndexes)
-
-  // get metadata from past events
-  const formattedLogsV0 = useFormattedProposalCreatedLogs(gov0)
-  const formattedLogsV1 = useFormattedProposalCreatedLogs(gov1)
-
-  // early return until events are fetched
+  React.useEffect(( ) => {
+    const fn = async () => {
+      if (proposalData && !proposalData.every(a => !!a.votes)) {
+        const allProposalData = await Promise.all(proposalData.map(async (p ) => {
+            const votesForProposal = await request(proposal_client, votes_query,  { proposalId: p.id});
+            if (votesForProposal) return {...p,votes: votesForProposal.votes }
+            else return p
+        }))
+        setProposalData(allProposalData)
+      }
+    }
+    fn();
+  }, [proposalData])
   return useMemo(() => {
-    const proposalsCallData = proposalsV0.concat(proposalsV1)
-    const proposalStatesCallData = proposalStatesV0.concat(proposalStatesV1)
-    const formattedLogs = (formattedLogsV0 ?? []).concat(formattedLogsV1 ?? [])
-
     if (
-      proposalsCallData.some((p) => p.loading) ||
-      proposalStatesCallData.some((p) => p.loading) ||
-      (gov0 && !formattedLogsV0) ||
-      (gov1 && !formattedLogsV1)
+     isLoading
     ) {
       return { data: [], loading: true }
     }
 
     return {
-      data: proposalsCallData.map((proposal, i) => {
-        let description = formattedLogs[i]?.description
-        const startBlock = parseInt(proposal?.result?.startBlock?.toString())
-        if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
-          description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
-        }
-        return {
-          id: proposal?.result?.id.toString(),
-          title: description?.split(/# |\n/g)[1] ?? t`Untitled`,
-          description: description ?? t`No description.`,
-          proposer: proposal?.result?.proposer,
-          status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
-          forCount: parseFloat(formatUnits(proposal?.result?.forVotes?.toString() ?? 0, 18)),
-          againstCount: parseFloat(formatUnits(proposal?.result?.againstVotes?.toString() ?? 0, 18)),
-          startBlock,
-          endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-          details: formattedLogs[i]?.details,
-          governorIndex: i >= gov0ProposalIndexes.length ? 1 : 0,
-        }
-      }),
+      data: proposalData as any[],
       loading: false,
     }
   }, [
-    formattedLogsV0,
-    formattedLogsV1,
-    gov0,
-    gov0ProposalIndexes.length,
-    gov1,
-    proposalStatesV0,
-    proposalStatesV1,
-    proposalsV0,
-    proposalsV1,
+    proposalData,
+    isLoading
   ])
 }
 
 export function useProposalData(governorIndex: number, id: string): ProposalData | undefined {
   const { data } = useAllProposalData()
-  return data.filter((p) => p.governorIndex === governorIndex)?.find((p) => p.id === id)
+  console.log(data)
+  return data && data?.find(a => a.id === id)
 }
 
 // get the users delegatee if it exists
@@ -256,28 +287,30 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
 export function useVoteCallback(): {
   voteCallback: (proposalId: string | undefined, support: boolean) => undefined | Promise<string>
 } {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
 
   const latestGovernanceContract = useLatestGovernanceContract()
-
+  
   const addTransaction = useTransactionAdder()
-
-  const voteCallback = useCallback(
-    (proposalId: string | undefined, support: boolean) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+  const hub = 'https://hub.snapshot.org'; // or https://testnet.snapshot.org for testnet
+  const client = new snapshot.Client712(hub);
+  const voteCallback = useCallback( 
+    async (proposalId: string | undefined, support: boolean) => {
       const args = [proposalId, support]
-      return latestGovernanceContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
-        return latestGovernanceContract
-          .castVote(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
-          .then((response: TransactionResponse) => {
-            addTransaction(response, {
-              summary: `Voted ${support ? 'for ' : 'against'} proposal ${proposalId}`,
-            })
-            return response.hash
-          })
-      })
+      if (library?.provider && account && proposalId) {
+      const web3 = new Web3Provider(library.provider as any)
+      const receipt = await client.vote(library?.provider as unknown as any, account, {
+        space: 'kibaworldwide.eth',
+        proposal: proposalId,
+        type: 'single-choice',
+        choice: support ? "For" : "Against",
+        metadata: JSON.stringify({})
+      });
+      console.dir(receipt)
+      return receipt as any
+    }
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account, library, chainId]
   )
   return { voteCallback }
 }

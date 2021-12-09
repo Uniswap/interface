@@ -60,25 +60,7 @@ export const ProposalActionDetail = ({
 
   return (
     <ProposalActionDetailContainer className={className}>
-      {proposalActionsData[proposalAction].map((field, i) =>
-        field.type === ProposalActionDetailField.ADDRESS ? (
-          <AddressInputPanel key={i} label={field.label} value={toAddress} onChange={onToAddressInput} />
-        ) : field.type === ProposalActionDetailField.CURRENCY ? (
-          <CurrencyInputPanel
-            key={i}
-            value={amount}
-            currency={currency}
-            onUserInput={(amount: string) => onAmountInput(amount)}
-            onCurrencySelect={(currency: Currency) => onCurrencySelect(currency)}
-            showMaxButton={false}
-            showCommonBases={false}
-            showCurrencyAmount={false}
-            disableNonToken={true}
-            hideBalance={true}
-            id="currency-input"
-          />
-        ) : null
-      )}
+      <p>Input as much detail as possible below about why you believe this is the direction Kiba Inu should be heading.</p>
     </ProposalActionDetailContainer>
   )
 }

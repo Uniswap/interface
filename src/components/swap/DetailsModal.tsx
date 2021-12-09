@@ -95,7 +95,7 @@ export const DetailsModal = ({
                                     </li>}
                                     {[NaN, 0].includes(Number(tokenData?.priceUSD))===false && <li style={{marginBottom:10}}>
                                         <StyledHeader>Price (USD)</StyledHeader>
-                                        <Badge variant={BadgeVariant.DEFAULT}>{Number(tokenData?.priceUSD).toLocaleString()}</Badge>
+                                        <Badge variant={BadgeVariant.DEFAULT}>{Number(tokenData?.priceUSD).toFixed(18)}</Badge>
                                     </li>}
                                 </ul>
                                 {!lockedMap && <ul style={{ listStyle: 'none', padding: 3 }}>
