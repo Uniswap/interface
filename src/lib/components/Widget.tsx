@@ -49,8 +49,10 @@ export default function Widget({
 }: WidgetProps) {
   const [, setConnector] = useAtom(connectorAtom)
   useEffect(() => {
-    const connector = new EIP1193Connector({ provider, jsonRpcEndpoint })
-    setConnector(connector)
+    try {
+      const connector = new EIP1193Connector({ provider, jsonRpcEndpoint })
+      setConnector(connector)
+    } catch {}
   }, [setConnector, provider, jsonRpcEndpoint])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
