@@ -122,7 +122,7 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 2,
     active: false,
   },
-  // WBTC-mcUSD
+  // WETH-mcUSD
   {
     address: '0x81DDaFE15c01aDfda3dd8Fe9Bb984E64Cba606eB',
     underlyingPool: '0x1e41a9fd5a94def942ed46aa8bdb4a7f248efad3',
@@ -130,7 +130,7 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 2,
     active: true,
   },
-  // WETH-mcUSD
+  // WBTC-mcUSD
   {
     address: '0xE6AD921bDa9F4971aBc8FA78cBD07AeB5c1A61ea',
     underlyingPool: '0xc6910dB4156B535966E4a7e8CcA7D39579b99A81',
