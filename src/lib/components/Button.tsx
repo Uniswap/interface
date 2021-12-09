@@ -1,4 +1,4 @@
-import styled, { Color, Theme } from 'lib/theme'
+import styled, { Color } from 'lib/theme'
 
 export const BaseButton = styled.button`
   background-color: transparent;
@@ -13,7 +13,7 @@ export const BaseButton = styled.button`
   padding: 0;
 `
 
-export default styled(BaseButton)<{ color?: Color; theme: Theme }>`
+export default styled(BaseButton)<{ color?: Color }>`
   color: ${({ color, theme }) => (!color || color === 'interactive') && theme.onInteractive};
   transition: background-color 0.2s, color 0.2s, filter 0.2s;
 
@@ -33,7 +33,7 @@ export default styled(BaseButton)<{ color?: Color; theme: Theme }>`
   }
 `
 
-const transparentButton = (defaultColor: Color) => styled(BaseButton)<{ color?: Color; theme: Theme }>`
+const transparentButton = (defaultColor: Color) => styled(BaseButton)<{ color?: Color }>`
   color: ${({ color = defaultColor, theme }) => theme[color]};
 
   :enabled:hover {

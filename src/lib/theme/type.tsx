@@ -1,11 +1,11 @@
 import { Text, TextProps as TextPropsWithCss } from 'rebass'
 
 import styled from './styled'
-import { Color, Theme } from './theme'
+import { Color } from './theme'
 
 type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { userSelect?: 'none'; color?: Color }
 
-const TextWrapper = styled(Text)<{ userSelect?: 'none'; color?: Color; theme: Theme }>`
+const TextWrapper = styled(Text)<{ userSelect?: 'none'; color?: Color }>`
   color: ${({ color = 'currentColor', theme }) => theme[color as Color]};
   user-select: ${({ userSelect }) => userSelect};
 `

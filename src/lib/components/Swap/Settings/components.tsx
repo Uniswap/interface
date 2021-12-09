@@ -1,4 +1,4 @@
-import styled, { css, Theme, ThemedText } from 'lib/theme'
+import styled, { css, ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 import { AnyStyledComponent } from 'styled-components'
 
@@ -19,7 +19,7 @@ export const optionCss = (selected: boolean) => css`
 `
 
 export function value(Value: AnyStyledComponent) {
-  return styled(Value)<{ selected?: boolean; cursor?: string; theme: Theme }>`
+  return styled(Value)<{ selected?: boolean; cursor?: string }>`
     cursor: ${({ cursor }) => cursor ?? 'pointer'};
   `
 }

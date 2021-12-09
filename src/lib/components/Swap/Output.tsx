@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import useColor, { prefetchColor } from 'lib/hooks/useColor'
-import styled, { DynamicThemeProvider, Theme, ThemedText } from 'lib/theme'
+import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
 
 import Column from '../Column'
@@ -12,7 +12,7 @@ import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
 
-const OutputColumn = styled(Column)<{ hasColor: boolean | null; theme: Theme }>`
+const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   padding: 0.75em;

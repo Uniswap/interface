@@ -1,9 +1,9 @@
 import { t } from '@lingui/macro'
-import styled, { Theme, ThemedText } from 'lib/theme'
+import styled, { ThemedText } from 'lib/theme'
 import { transparentize } from 'polished'
 import { KeyboardEvent, useCallback } from 'react'
 
-const Input = styled.input<{ text: string; theme: Theme }>`
+const Input = styled.input<{ text: string }>`
   align-items: center;
   appearance: none;
   background: ${({ theme }) => theme.interactive};

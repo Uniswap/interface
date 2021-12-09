@@ -1,4 +1,4 @@
-import styled, { Color, keyframes, Theme } from 'lib/theme'
+import styled, { Color, keyframes } from 'lib/theme'
 
 const rotate = keyframes`
   from {
@@ -9,7 +9,7 @@ const rotate = keyframes`
   }
 `
 
-const SpinnerSvg = styled.svg<{ color: Color; theme: Theme }>`
+const SpinnerSvg = styled.svg<{ color: Color }>`
   animation: 2s ${rotate} linear infinite;
   height: 1em;
   stroke: ${({ color, theme }) => theme[color]};

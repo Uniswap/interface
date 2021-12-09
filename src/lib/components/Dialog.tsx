@@ -1,6 +1,6 @@
 import 'wicg-inert'
 
-import styled, { Color, icon, Layer, Theme, ThemeProvider } from 'lib/theme'
+import styled, { Color, icon, Layer, ThemeProvider } from 'lib/theme'
 import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
@@ -79,7 +79,7 @@ export function Header({ title, children, ruled }: HeaderProps) {
   )
 }
 
-export const Modal = styled.div<{ color: Color; theme: Theme }>`
+export const Modal = styled.div<{ color: Color }>`
   background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;

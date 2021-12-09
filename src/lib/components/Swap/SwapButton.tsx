@@ -24,7 +24,7 @@ export default function SwapButton() {
   const [mode, setMode] = useState(Mode.NONE)
   const actionProps = useMemo(() => {
     if (swap && input.token && input.value && output.token && output.value && input.value <= balance) {
-      if (!input.approved) {
+      if (input.approved) {
         return {}
       } else {
         return {

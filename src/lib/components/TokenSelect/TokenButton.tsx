@@ -1,12 +1,12 @@
 import { t, Trans } from '@lingui/macro'
-import styled, { icon, Theme, ThemedText } from 'lib/theme'
+import styled, { icon, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { ChevronDown } from 'react-feather'
 
 import Button from '../Button'
 import Row from '../Row'
 
-const StyledTokenButton = styled(Button)<{ empty?: boolean; theme: Theme }>`
+const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   padding: 0.25em;
   padding-left: ${({ empty }) => (empty ? 0.75 : 0.25)}em;
