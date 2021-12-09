@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
@@ -34,6 +34,10 @@ export default function SwapButton() {
     }
     return { disabled: true }
   }, [balance, input.approved, input.token, input.value, output.token, output.value, swap])
+  const onConfirm = useCallback(() => {
+    // TODO: Send the tx to the connected wallet.
+    setMode(Mode.STATUS)
+  }, [])
   return (
     <>
       <ActionButton color="interactive" onClick={() => setMode(Mode.SUMMARY)} onUpdate={() => void 0} {...actionProps}>
@@ -41,7 +45,7 @@ export default function SwapButton() {
       </ActionButton>
       {mode === Mode.SUMMARY && (
         <Dialog color="dialog" onClose={() => setMode(Mode.NONE)}>
-          <SummaryDialog />
+          <SummaryDialog onConfirm={onConfirm} />
         </Dialog>
       )}
       {mode === Mode.STATUS && (

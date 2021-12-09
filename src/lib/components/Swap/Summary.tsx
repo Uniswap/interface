@@ -90,7 +90,11 @@ function asInput(input: Input): (Required<Pick<Input, 'token' | 'value'>> & Inpu
 
 const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
 
-export function SummaryDialog() {
+interface SummaryDialogProps {
+  onConfirm: () => void
+}
+
+export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
   const swap = useAtomValue(swapAtom)
   const partialInput = useAtomValue(inputAtom)
   const partialOutput = useAtomValue(outputAtom)
@@ -141,7 +145,7 @@ export function SummaryDialog() {
           )}
         </ThemedText.Caption>
         <ActionButton
-          onClick={() => void 0}
+          onClick={onConfirm}
           onUpdate={() => confirmPrice(price)}
           updated={price === confirmedPrice ? undefined : updated}
         >

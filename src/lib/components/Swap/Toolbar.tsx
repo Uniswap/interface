@@ -9,7 +9,7 @@ import Row from '../Row'
 import Rule from '../Rule'
 import SpinnerIcon from '../SpinnerIcon'
 import Tooltip from '../Tooltip'
-import { Input, inputAtom, outputAtom, swapAtom } from './state'
+import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from './state'
 
 const mockBalance = 123.45
 
@@ -54,6 +54,7 @@ function LoadedState({ input, output }: LoadedStateProps) {
 }
 
 export default function Toolbar() {
+  const { activeInput } = useAtomValue(stateAtom)
   const swap = useAtomValue(swapAtom)
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
@@ -62,7 +63,7 @@ export default function Toolbar() {
   const caption = useMemo(() => {
     const filledInput = asFilledInput(input)
     const filledOutput = asFilledInput(output)
-    if (filledInput && filledOutput) {
+    if (activeInput === Field.INPUT ? filledInput && output.token : filledOutput && input.token) {
       if (!swap) {
         return (
           <>
@@ -70,14 +71,16 @@ export default function Toolbar() {
             <Trans>Fetching best price…</Trans>
           </>
         )
-      } else if (filledInput.value > balance) {
+      }
+      if (filledInput && filledInput.value > balance) {
         return (
           <>
             <AlertIcon />
             <Trans>Insufficient {filledInput.token.symbol}</Trans>
           </>
         )
-      } else {
+      }
+      if (filledInput && filledOutput) {
         return (
           <>
             <RoutingTooltip />
@@ -92,7 +95,7 @@ export default function Toolbar() {
         <Trans>Enter an amount</Trans>
       </>
     )
-  }, [balance, input, output, swap])
+  }, [activeInput, balance, input, output, swap])
 
   return (
     <>
