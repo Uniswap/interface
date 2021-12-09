@@ -105,19 +105,11 @@ export default function MobileOptions() {
 
   const location = useLocation()
   const getActiveLInk = () => {
-    switch (location.pathname) {
-      case '/swap':
-        return t('swap')
-      case '/bridge':
-        return t('bridge')
-      case '/pools':
-      case '/add':
-      case '/remove':
-      case '/create':
-        return t('pool')
-      default:
-        return ''
-    }
+    const path = location.pathname
+    if (path.includes('/swap')) return t('swap')
+    if (path.includes('/bridge')) return t('bridge')
+    if (/^\/(pools|add|remove|create|liquidity-mining)/.test(path)) return t('pool')
+    return ''
   }
 
   return (
