@@ -20,6 +20,10 @@ export type FarmSummary = {
   token1Address: string
 }
 
+const blacklist: Record<string, boolean> = {
+  '0x4488682fd16562a68ea0d0f898413e075f42e6da': true,
+}
+
 const CREATION_BLOCK = 9840049
 const LAST_N_BLOCKS = 1440 // Last 2 hours
 
@@ -56,21 +60,23 @@ export const useFarmRegistry = () => {
       }
     })
     const farmSummaries: FarmSummary[] = []
-    farmInfoEvents.forEach((e) => {
-      // sometimes there is no farm data for the staking address return early to avoid crash
-      if (!farmData[e.returnValues.stakingAddress]) {
-        return
-      }
-      farmSummaries.push({
-        farmName: ethers.utils.parseBytes32String(e.returnValues.farmName),
-        stakingAddress: e.returnValues.stakingAddress,
-        lpAddress: e.returnValues.lpAddress,
-        token0Address: lps[e.returnValues.lpAddress][0],
-        token1Address: lps[e.returnValues.lpAddress][1],
-        tvlUSD: farmData[e.returnValues.stakingAddress].tvlUSD,
-        rewardsUSDPerYear: farmData[e.returnValues.stakingAddress].rewardsUSDPerYear,
+    farmInfoEvents
+      .filter((e) => !blacklist[e.returnValues.stakingAddress.toLowerCase()])
+      .forEach((e) => {
+        // sometimes there is no farm data for the staking address return early to avoid crash
+        if (!farmData[e.returnValues.stakingAddress]) {
+          return
+        }
+        farmSummaries.push({
+          farmName: ethers.utils.parseBytes32String(e.returnValues.farmName),
+          stakingAddress: e.returnValues.stakingAddress,
+          lpAddress: e.returnValues.lpAddress,
+          token0Address: lps[e.returnValues.lpAddress][0],
+          token1Address: lps[e.returnValues.lpAddress][1],
+          tvlUSD: farmData[e.returnValues.stakingAddress].tvlUSD,
+          rewardsUSDPerYear: farmData[e.returnValues.stakingAddress].rewardsUSDPerYear,
+        })
       })
-    })
     farmSummaries
       .sort((a, b) => Number(fromWei(toBN(b.rewardsUSDPerYear).sub(toBN(a.rewardsUSDPerYear)))))
       .sort((a, b) => Number(fromWei(toBN(b.tvlUSD).sub(toBN(a.tvlUSD)))))
