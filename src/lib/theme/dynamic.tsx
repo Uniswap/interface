@@ -38,7 +38,7 @@ export function getDynamicTheme(theme: ComputedTheme, color: string): ComputedTh
   return {
     ...theme,
     module: color,
-    onHover: opacify(0.25), // hovered elements increase opacity by 25%
+    onHover: opacify(0.25),
     ...colors,
   }
 }

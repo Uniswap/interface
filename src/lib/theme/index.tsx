@@ -1,4 +1,4 @@
-import { mix } from 'polished'
+import { mix, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 
 import styled, { ThemedProvider } from './styled'
@@ -94,6 +94,7 @@ function toComputedTheme(theme: Required<Theme>): ComputedTheme {
   return {
     ...theme,
     borderRadius: theme.borderRadius ? 1 : 0,
-    onHover: mix(0.16, theme.primary), // hovered elements get a 16% primary text overlay
+    onHover: (color: string) =>
+      color === theme.primary ? transparentize(0.4, theme.primary) : mix(0.16, theme.primary, color),
   }
 }
