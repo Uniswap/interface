@@ -27,7 +27,7 @@ export default function Input({ children }: { children: ReactNode }) {
   const balance = mockBalance
 
   return (
-    <InputColumn gap={0.5} approved={input.approved}>
+    <InputColumn gap={0.5} approved={input.approved !== false}>
       <Row>
         <ThemedText.Subhead2 color="secondary">
           <Trans>Trading</Trans>
