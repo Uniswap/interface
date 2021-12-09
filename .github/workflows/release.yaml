@@ -137,7 +137,6 @@ jobs:
         env:
           BUCKET: kyberswap.com
         run: |
-          gsutil rm gs://$BUCKET/**
           gsutil -m rsync -r $PWD/build gs://$BUCKET
           gsutil setmeta -h "Cache-Control: no-cache" gs://$BUCKET/*.html
 
