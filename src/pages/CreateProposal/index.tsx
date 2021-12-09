@@ -11,11 +11,13 @@ import { ButtonError } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { BlueCard } from 'components/Card'
 import { Wrapper } from 'pages/Pool/styleds'
-import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
+import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal, ProposalChoices } from './ProposalActionSelector'
 import { ProposalEditor } from './ProposalEditor'
 import { ProposalActionDetail } from './ProposalActionDetail'
 import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 import { useActiveWeb3React } from 'hooks/web3'
+import snapshot from '@snapshot-labs/snapshot.js';
+import moment from 'moment'
 import {
   CreateProposalData,
   ProposalState,
@@ -28,6 +30,11 @@ import {
 import { Trans } from '@lingui/macro'
 import { tryParseAmount } from 'state/swap/hooks'
 import { getAddress } from '@ethersproject/address'
+import { Web3Provider } from '@ethersproject/providers';
+import { useBlockNumber } from 'state/application/hooks'
+import { getBlockFromTimestamp } from 'state/logs/utils'
+import useTheme from 'hooks/useTheme'
+
 
 const CreateProposalButton = ({
   proposalThreshold,
@@ -83,9 +90,13 @@ const AutonomousProposalCTA = styled.div`
   margin-top: 10px;
 `
 
-export default function CreateProposal() {
-  const { account, chainId } = useActiveWeb3React()
 
+
+export default function CreateProposal() {
+  const { account, chainId, library } = useActiveWeb3React()
+  const web3 = new Web3Provider(library?.provider as any);
+  const hub = 'https://hub.snapshot.org'; // or https://testnet.snapshot.org for testnet
+  const client = new snapshot.Client712(hub);
   const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
   const latestProposalData = useProposalData(0, latestProposalId)
   const { votes: availableVotes } = useUserVotes()
@@ -155,7 +166,7 @@ export default function CreateProposal() {
     },
     [setBodyValue]
   )
-
+    const lastblock = useBlockNumber()
   const isFormInvalid = useMemo(
     () =>
       Boolean(
@@ -175,17 +186,16 @@ export default function CreateProposal() {
 
   const createProposalCallback = useCreateProposalCallback()
 
+
+  const [choices, setChoices] = React.useState<string[]>(['Yes', 'No'])
   const handleCreateProposal = async () => {
     setAttempting(true)
 
     const createProposalData: CreateProposalData = {} as CreateProposalData
 
-    if (!createProposalCallback || !proposalAction || !currencyValue.isToken) return
+    if (!createProposalCallback || !proposalAction) return
 
-    const tokenAmount = tryParseAmount(amountValue, currencyValue)
-    if (!tokenAmount) return
 
-    createProposalData.targets = [currencyValue.address]
     createProposalData.values = ['0']
     createProposalData.description = `# ${titleValue}
 
@@ -194,47 +204,49 @@ ${bodyValue}
 
     let types: string[][]
     let values: string[][]
-    switch (proposalAction) {
-      case ProposalAction.TRANSFER_TOKEN: {
-        types = [['address', 'uint256']]
-        values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
-        createProposalData.signatures = [`transfer(${types[0].join(',')})`]
-        break
-      }
-
-      case ProposalAction.APPROVE_TOKEN: {
-        types = [['address', 'uint256']]
-        values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
-        createProposalData.signatures = [`approve(${types[0].join(',')})`]
-        break
-      }
-    }
-
+    
     createProposalData.calldatas = []
-    for (let i = 0; i < createProposalData.signatures.length; i++) {
-      createProposalData.calldatas[i] = utils.defaultAbiCoder.encode(types[i], values[i])
-    }
-
-    const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
+ 
+    if (account) {
+      const start = lastblock as number;
+      const end = await getBlockFromTimestamp(moment(new Date()).add('days', 7).unix())
+   
+    const hash =  await client.proposal(web3 as any, account, {
+      space: 'kibaworldwide.eth',
+      type: 'single-choice',
+      title: titleValue,
+      body: bodyValue,
+      choices,
+      start: lastblock as number,
+      end: end,
+      snapshot: lastblock as number,
+      network: '1',
+      strategies: JSON.stringify([]),
+      plugins: JSON.stringify({}),
+      metadata: JSON.stringify({ app: 'snapshot.js' })
+    })
+  ?.catch(() => {
       setAttempting(false)
     })
 
-    if (hash) setHash(hash)
+    if (hash) setHash(hash as any)
   }
+}
+const theme = useTheme()
 
   return (
     <AppBody {...{ maxWidth: '800px' }}>
-      <CreateProposalTabs />
+      {/* <CreateProposalTabs />
       <CreateProposalWrapper>
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'primaryText1'}>
               <Trans>
-                <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal cannot
+                <strong>Tip:</strong> Include as much detail as possible in your proposal. The proposal cannot
                 be modified after submission, so please verify all information before submitting. The voting period will
-                begin immediately and last for 7 days. To propose a custom action,{' '}
-                <ExternalLink href="https://uniswap.org/docs/v2/governance/governance-reference/#propose">
-                  read the docs
+                begin immediately and last for 7 days. 
+                <ExternalLink href="https://snapshot.org/#/kibaworldwide.eth">
+                  view snapshot.org
                 </ExternalLink>
                 .
               </Trans>
@@ -242,7 +254,6 @@ ${bodyValue}
           </AutoColumn>
         </BlueCard>
 
-        <ProposalActionSelector onClick={handleActionSelectorClick} proposalAction={proposalAction} />
         <ProposalActionDetail
           proposalAction={proposalAction}
           currency={currencyValue}
@@ -252,6 +263,7 @@ ${bodyValue}
           onAmountInput={handleAmountInput}
           onToAddressInput={handleToAddressInput}
         />
+        {/* <ProposalChoices choices={choices} setChoices={setChoices} /> 
         <ProposalEditor
           title={titleValue}
           body={bodyValue}
@@ -263,8 +275,8 @@ ${bodyValue}
           hasActiveOrPendingProposal={
             latestProposalData?.status === ProposalState.ACTIVE || latestProposalData?.status === ProposalState.PENDING
           }
-          hasEnoughVote={hasEnoughVote}
-          isFormInvalid={isFormInvalid}
+          hasEnoughVote={true}
+          isFormInvalid={false}
           handleCreateProposal={handleCreateProposal}
         />
         {!hasEnoughVote ? (
@@ -280,6 +292,8 @@ ${bodyValue}
         onProposalActionSelect={(proposalAction: ProposalAction) => handleActionChange(proposalAction)}
       />
       <ProposalSubmissionModal isOpen={attempting} hash={hash} onDismiss={handleDismissSubmissionModal} />
-    </AppBody>
+  */}  
+  <iframe src={'https://snapshot.org/#/kibaworldwide.eth'} style={{width:'100%', height:'100vh', background:'transparent', border: `1px solid ${theme.primary1}`}} />
+   </AppBody>
   )
 }

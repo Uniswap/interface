@@ -64,6 +64,7 @@ import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import { AccountPage } from 'components/AccountPage/AccountPage'
 import { Transactions } from './Vote/TransactionsPage'
 import { LifetimeReflections } from './Swap/LifetimeReflections'
+import Vote from './Vote'
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
@@ -467,8 +468,8 @@ export default function App() {
 
               <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
 
-              <Route exact strict path="/vote" component={TrumpVote} />
-              <Route exact strict path="/vote/:governorIndex/:id" component={VotePageV2} />
+              <Route exact strict path="/vote" component={Vote} />
+              <Route exact strict path="/vote/:id" component={VotePageV2} />
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
               <Route exact strict path="/uni" component={Earn} />
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
@@ -503,7 +504,7 @@ export default function App() {
               <Route exact strict path="/migrate/v2" component={MigrateV2} />
               <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
 
-              <Route exact strict path="/create-proposal" component={CreateProposal} />
+              <Route exact strict path="/proposals" component={CreateProposal} />
               <Route exact strict path="/charts" component={ChartPage} />
 
               <Route component={RedirectPathToSwapOnly} />

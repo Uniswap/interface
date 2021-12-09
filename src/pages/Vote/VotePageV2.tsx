@@ -40,6 +40,10 @@ import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 import { t, Trans } from '@lingui/macro'
+import { useKiba } from './VotePage'
+import Badge, { BadgeVariant } from 'components/Badge'
+import { useBlocksFromTimestamps } from 'state/logs/bscUtils'
+import moment from 'moment'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -144,38 +148,27 @@ export default function VotePageV2({
   // get and format date from data
   const currentTimestamp = useCurrentBlockTimestamp()
   const currentBlock = useBlockNumber()
-  const endDate: DateTime | undefined =
-    proposalData && currentTimestamp && currentBlock
-      ? DateTime.fromSeconds(
-          currentTimestamp
-            .add(
-              BigNumber.from(
-                (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS
-              ).mul(BigNumber.from(proposalData.endBlock - currentBlock))
-            )
-            .toNumber()
-        )
-      : undefined
+  const endDate: any | undefined = proposalData?.end ?
+        moment(proposalData?.end * 1000).toDate() : undefined
   const now: DateTime = DateTime.local()
 
   // get total votes and format percentages for UI
-  const totalVotes: number | undefined = proposalData ? proposalData.forCount + proposalData.againstCount : undefined
+  const totalVotes: number | undefined = proposalData?.votes ? proposalData?.votes?.length : undefined
   const forPercentage: string = t`${
-    proposalData && totalVotes ? ((proposalData.forCount * 100) / totalVotes).toFixed(0) : '0'
+    proposalData && proposalData?.votes && totalVotes ? ((proposalData?.votes?.filter(vote => vote.choice === 1)?.length / totalVotes * 100) / totalVotes).toFixed(0) : '0'
   } %`
   const againstPercentage: string = t`${
-    proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) : '0'
+    proposalData && proposalData?.votes && totalVotes ? ((proposalData?.votes?.filter(vote => vote.choice === 0 )?.length * 100) / totalVotes).toFixed(0) : '0'
   } %`
 
   // only count available votes as of the proposal start block
-  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
-
+  const kibaBalance = useKiba(account)
   // only show voting if user has > 0 votes at proposal start block and proposal is active,
   const showVotingButtons =
-    availableVotes &&
-    JSBI.greaterThan(availableVotes.quotient, JSBI.BigInt(0)) &&
+    kibaBalance &&
+    +kibaBalance?.toFixed(0) >= 0 &&
     proposalData &&
-    proposalData.status === ProposalState.ACTIVE
+    proposalData.state === 'active'
 
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
@@ -194,7 +187,7 @@ export default function VotePageV2({
     if (isAddress(content) && chainId) {
       const commonName = COMMON_CONTRACT_NAMES[chainId]?.[content] ?? content
       return (
-        <ExternalLink href={getExplorerLink(chainId, content, ExplorerDataType.ADDRESS)}>{commonName}</ExternalLink>
+        <ExternalLink style={{color:"#fff"}} href={getExplorerLink(chainId, content, ExplorerDataType.ADDRESS)}>{commonName}</ExternalLink>
       )
     }
     return <span>{content}</span>
@@ -204,7 +197,7 @@ export default function VotePageV2({
   return (
     <>
       <PageWrapper gap="lg" justify="center">
-        <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
+        <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} proposalTitle={proposalData?.title} support={support} />
         <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={<Trans>Unlock Votes</Trans>} />
         <ProposalInfo gap="lg" justify="start">
           <RowBetween style={{ width: '100%' }}>
@@ -213,7 +206,7 @@ export default function VotePageV2({
                 <ArrowLeft size={20} /> All Proposals
               </Trans>
             </ArrowWrapper>
-            {proposalData && <ProposalStatus status={proposalData.status} />}
+            {proposalData && <ProposalStatus status={proposalData.state as any} />}
           </RowBetween>
           <AutoColumn gap="10px" style={{ width: '100%' }}>
             <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
@@ -228,12 +221,12 @@ export default function VotePageV2({
                 )}
               </TYPE.main>
             </RowBetween>
-            {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
+            {proposalData && proposalData.state === 'active' && !showVotingButtons && (
               <GreyCard>
                 <TYPE.black>
                   <Trans>
-                    Only Baby Trump votes that were self delegated or delegated to another address before block{' '}
-                    {proposalData.startBlock} are eligible for voting.{' '}
+                    Only Kiba Inu votes that were self delegated or delegated to another address before block{' '}
+                    {proposalData.start} are eligible for voting.{' '}
                   </Trans>
                   {showLinkForUnlock && (
                     <span>
@@ -282,7 +275,7 @@ export default function VotePageV2({
                       <Trans>For</Trans>
                     </TYPE.black>
                     <TYPE.black fontWeight={600}>
-                      {proposalData?.forCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                      {proposalData?.votes?.filter(a => a.choice === 1)?.length.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </TYPE.black>
                   </WrapSmall>
                 </AutoColumn>
@@ -299,7 +292,7 @@ export default function VotePageV2({
                       <Trans>Against</Trans>
                     </TYPE.black>
                     <TYPE.black fontWeight={600}>
-                      {proposalData?.againstCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                      {proposalData?.votes?.filter(a => a.choice === 0)?.length?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </TYPE.black>
                   </WrapSmall>
                 </AutoColumn>
@@ -313,19 +306,10 @@ export default function VotePageV2({
             <TYPE.mediumHeader fontWeight={600}>
               <Trans>Details</Trans>
             </TYPE.mediumHeader>
-            {proposalData?.details?.map((d, i) => {
+            {proposalData?.votes?.map((d, i) => {
               return (
                 <DetailText key={i}>
-                  {i + 1}: {linkIfAddress(d.target)}.{d.functionSig}(
-                  {d.callData.split(',').map((content, i) => {
-                    return (
-                      <span key={i}>
-                        {linkIfAddress(content)}
-                        {d.callData.split(',').length - 1 === i ? '' : ','}
-                      </span>
-                    )
-                  })}
-                  )
+                  <Badge variant={d.choice === 1 ? BadgeVariant.POSITIVE : BadgeVariant.NEGATIVE}>{i + 1}: {linkIfAddress(d.voter)}</Badge>
                 </DetailText>
               )
             })}
@@ -335,7 +319,7 @@ export default function VotePageV2({
               <Trans>Description</Trans>
             </TYPE.mediumHeader>
             <MarkDownWrapper>
-              <ReactMarkdown source={proposalData?.description} />
+              <ReactMarkdown source={proposalData?.body} />
             </MarkDownWrapper>
           </AutoColumn>
           <AutoColumn gap="md">
@@ -344,12 +328,12 @@ export default function VotePageV2({
             </TYPE.mediumHeader>
             <ProposerAddressLink
               href={
-                proposalData?.proposer && chainId
-                  ? getExplorerLink(chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
+                proposalData?.author && chainId
+                  ? getExplorerLink(chainId, proposalData?.author, ExplorerDataType.ADDRESS)
                   : ''
               }
             >
-              <ReactMarkdown source={proposalData?.proposer} />
+              <ReactMarkdown source={proposalData?.author} />
             </ProposerAddressLink>
           </AutoColumn>
         </ProposalInfo>
