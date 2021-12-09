@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
+import Wallet from '../Wallet'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -15,6 +16,7 @@ export default function Swap() {
   return (
     <>
       <Header logo title={<Trans>Swap</Trans>}>
+        <Wallet />
         <Settings />
       </Header>
       <div ref={setBoundary}>
