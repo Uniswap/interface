@@ -1,5 +1,5 @@
 import Logo from 'lib/assets/Logo'
-import styled, { ThemedText } from 'lib/theme'
+import styled, { Color, ThemedText } from 'lib/theme'
 import { ReactElement, ReactNode } from 'react'
 
 import Row from './Row'
@@ -9,16 +9,15 @@ const HeaderRow = styled(Row)`
   padding-top: 0.75em;
 `
 
-const StyledLogo = styled(Logo)`
+const StyledLogo = styled(Logo)<{ color: Color }>`
   cursor: pointer;
-  fill: ${({ theme }) => theme.secondary};
+  fill: ${({ color, theme }) => theme[color]};
   height: 1em;
-  mix-blend-mode: lighten;
   transition: transform 0.3s ease;
   width: 1em;
 
   :hover {
-    fill: ${({ theme }) => theme.onHover(theme.secondary)};
+    fill: ${({ color, theme }) => theme.onHover(theme[color])};
     transform: rotate(-5deg);
   }
 `
@@ -35,7 +34,7 @@ export default function Header({ title, logo, children }: HeaderProps) {
       <Row gap={0.5}>
         {logo && (
           <a href={`https://app.uniswap.org/`}>
-            <StyledLogo />
+            <StyledLogo color="secondary" />
           </a>
         )}
         {title && <ThemedText.Subhead1 userSelect="none">{title}</ThemedText.Subhead1>}
