@@ -96,11 +96,14 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
-  const importTokensNotInDefault =
-    urlLoadedTokens &&
-    urlLoadedTokens.filter((token: Token) => {
-      return !Boolean(token.address in defaultTokens)
-    })
+  const importTokensNotInDefault = useMemo(
+    () =>
+      urlLoadedTokens &&
+      urlLoadedTokens.filter((token: Token) => {
+        return !Boolean(token.address in defaultTokens)
+      }),
+    [defaultTokens, urlLoadedTokens]
+  )
 
   const theme = useContext(ThemeContext)
 
@@ -198,12 +201,15 @@ export default function Swap({ history }: RouteComponentProps) {
     txHash: undefined,
   })
 
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: showWrap
-      ? parsedAmounts[independentField]?.toExact() ?? ''
-      : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
-  }
+  const formattedAmounts = useMemo(
+    () => ({
+      [independentField]: typedValue,
+      [dependentField]: showWrap
+        ? parsedAmounts[independentField]?.toExact() ?? ''
+        : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+    }),
+    [dependentField, independentField, parsedAmounts, showWrap, typedValue]
+  )
 
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
@@ -248,7 +254,10 @@ export default function Swap({ history }: RouteComponentProps) {
     }
   }, [approvalState, approvalSubmitted])
 
-  const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
+  const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
+    () => maxAmountSpend(currencyBalances[Field.INPUT]),
+    [currencyBalances]
+  )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap

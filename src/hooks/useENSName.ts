@@ -27,8 +27,11 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const name = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
 
   const changed = debouncedAddress !== address
-  return {
-    ENSName: changed ? null : name.result?.[0] ?? null,
-    loading: changed || resolverAddress.loading || name.loading,
-  }
+  return useMemo(
+    () => ({
+      ENSName: changed ? null : name.result?.[0] ?? null,
+      loading: changed || resolverAddress.loading || name.loading,
+    }),
+    [changed, name.loading, name.result, resolverAddress.loading]
+  )
 }
