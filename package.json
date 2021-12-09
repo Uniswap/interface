@@ -58,6 +58,7 @@
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
+    "@uniswap/redux-multicall": "^1.0.0",
     "@uniswap/router-sdk": "^1.0.1",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/smart-order-router": "^2.0.0-beta.16",
@@ -153,12 +154,6 @@
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
     "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos"
-  },
-  "eslintConfig": {
-    "extends": "react-app",
-    "ignorePatterns": [
-      "node_modules"
-    ]
   },
   "browserslist": {
     "production": [

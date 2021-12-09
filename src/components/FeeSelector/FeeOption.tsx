@@ -6,12 +6,12 @@ import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState } from 'hooks/usePools'
 import React from 'react'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from './shared'
 
-const ResponsiveText = styled(TYPE.label)`
+const ResponsiveText = styled(ThemedText.Label)`
   line-height: 16px;
   font-size: 14px;
 
@@ -37,9 +37,9 @@ export function FeeOption({ feeAmount, active, poolState, distributions, onClick
           <ResponsiveText>
             <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}%</Trans>
           </ResponsiveText>
-          <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+          <ThemedText.Main fontWeight={400} fontSize="12px" textAlign="left">
             {FEE_AMOUNT_DETAIL[feeAmount].description}
-          </TYPE.main>
+          </ThemedText.Main>
         </AutoColumn>
 
         {distributions && (

@@ -8,8 +8,7 @@ import Row, { AutoRow } from 'components/Row'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
-import { Z_INDEX } from 'theme'
+import { ThemedText, Z_INDEX } from 'theme'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 
@@ -80,7 +79,7 @@ const ProtocolBadge = styled(Badge)`
   z-index: ${Z_INDEX.sticky + 1};
 `
 
-const BadgeText = styled(TYPE.small)`
+const BadgeText = styled(ThemedText.Small)`
   word-break: normal;
 `
 
@@ -142,7 +141,7 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
       <Box margin="0 5px 0 10px">
         <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
       </Box>
-      <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>
+      <ThemedText.Small fontSize={12}>{feeAmount / 10000}%</ThemedText.Small>
     </PoolBadge>
   )
 }

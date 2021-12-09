@@ -8,8 +8,8 @@ import Circle from '../../assets/images/blue-loader.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
-import { CustomLightSpinner, TYPE } from '../../theme'
-import { ExternalLink } from '../../theme/components'
+import { CustomLightSpinner, ThemedText } from '../../theme'
+import { ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -85,7 +85,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <TYPE.mediumHeader fontWeight={500}>
+              <ThemedText.MediumHeader fontWeight={500}>
                 {voteOption === VoteOption.Against ? (
                   <Trans>Vote against proposal {proposalId}</Trans>
                 ) : voteOption === VoteOption.For ? (
@@ -93,14 +93,14 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
                 ) : (
                   <Trans>Vote to abstain on proposal {proposalId}</Trans>
                 )}
-              </TYPE.mediumHeader>
+              </ThemedText.MediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
-            <TYPE.largeHeader>
+            <ThemedText.LargeHeader>
               <Trans>{formatCurrencyAmount(availableVotes, 4)} Votes</Trans>
-            </TYPE.largeHeader>
+            </ThemedText.LargeHeader>
             <ButtonPrimary onClick={onVote}>
-              <TYPE.mediumHeader color="white">
+              <ThemedText.MediumHeader color="white">
                 {voteOption === VoteOption.Against ? (
                   <Trans>Vote against proposal {proposalId}</Trans>
                 ) : voteOption === VoteOption.For ? (
@@ -108,7 +108,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
                 ) : (
                   <Trans>Vote to abstain on proposal {proposalId}</Trans>
                 )}
-              </TYPE.mediumHeader>
+              </ThemedText.MediumHeader>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -124,13 +124,13 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TYPE.largeHeader>
+              <ThemedText.LargeHeader>
                 <Trans>Submitting Vote</Trans>
-              </TYPE.largeHeader>
+              </ThemedText.LargeHeader>
             </AutoColumn>
-            <TYPE.subHeader>
+            <ThemedText.SubHeader>
               <Trans>Confirm this transaction in your wallet</Trans>
-            </TYPE.subHeader>
+            </ThemedText.SubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
       )}
@@ -145,18 +145,18 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TYPE.largeHeader>
+              <ThemedText.LargeHeader>
                 <Trans>Transaction Submitted</Trans>
-              </TYPE.largeHeader>
+              </ThemedText.LargeHeader>
             </AutoColumn>
             {chainId && (
               <ExternalLink
                 href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
                 style={{ marginLeft: '4px' }}
               >
-                <TYPE.subHeader>
+                <ThemedText.SubHeader>
                   <Trans>View transaction on Explorer</Trans>
-                </TYPE.subHeader>
+                </ThemedText.SubHeader>
               </ExternalLink>
             )}
           </AutoColumn>

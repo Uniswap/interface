@@ -35,7 +35,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
@@ -247,12 +247,12 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
-        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+        <ThemedText.Italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </TYPE.italic>
+        </ThemedText.Italic>
       </AutoColumn>
     )
   }
@@ -344,15 +344,15 @@ export default function AddLiquidity({
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={600} color={'primaryText1'}>
+                      <ThemedText.Link fontWeight={600} color={'primaryText1'}>
                         <Trans>You are the first liquidity provider.</Trans>
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      </ThemedText.Link>
+                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      </ThemedText.Link>
+                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
-                      </TYPE.link>
+                      </ThemedText.Link>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -360,7 +360,7 @@ export default function AddLiquidity({
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -369,7 +369,7 @@ export default function AddLiquidity({
                           automatically earn fees proportional to your share of the pool, and can be redeemed at any
                           time.
                         </Trans>
-                      </TYPE.link>
+                      </ThemedText.Link>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -405,13 +405,13 @@ export default function AddLiquidity({
               <>
                 <LightCard padding="0px" $borderRadius={'20px'}>
                   <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
+                    <ThemedText.SubHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? (
                         <Trans>Initial prices and pool share</Trans>
                       ) : (
                         <Trans>Prices and pool share</Trans>
                       )}
-                    </TYPE.subHeader>
+                    </ThemedText.SubHeader>
                   </RowBetween>{' '}
                   <LightCard padding="1rem" $borderRadius={'20px'}>
                     <PoolPriceBar
@@ -427,9 +427,9 @@ export default function AddLiquidity({
 
             {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
-                <TYPE.main mb="4px">
+                <ThemedText.Main mb="4px">
                   <Trans>Unsupported Asset</Trans>
-                </TYPE.main>
+                </ThemedText.Main>
               </ButtonPrimary>
             ) : !account ? (
               <ButtonLight onClick={toggleWalletModal}>

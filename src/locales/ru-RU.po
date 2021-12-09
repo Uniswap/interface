@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-11-25 20:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -305,11 +305,11 @@ msgstr "Подходит для большинства пар."
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
-msgstr "Подходит для пар стейблкоинов."
+msgstr "Подходит для стабильных пар."
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
-msgstr "Подходит для пар очень стабильных стейблкоинов."
+msgstr "Подходит для очень стабильных пар."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"

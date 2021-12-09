@@ -18,7 +18,7 @@ export default function uriToHttp(uri: string): string[] {
       const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
       return [`https://cloudflare-ipfs.com/ipns/${name}/`, `https://ipfs.io/ipns/${name}/`]
     case 'ar':
-      const tx = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
+      const tx = uri.match(/^ar:(\/\/)?(.*)$/i)?.[2]
       return [`https://arweave.net/${tx}`]
     default:
       return []

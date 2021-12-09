@@ -9,7 +9,7 @@ import { AutoRow, RowBetween } from 'components/Row'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { memo } from 'react'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
@@ -61,7 +61,7 @@ export default memo(function SwapRoute({
             <div style={{ width: '250px', height: '15px' }} />
           </LoadingRows>
         ) : (
-          <TYPE.main fontSize={12} width={400}>
+          <ThemedText.Main fontSize={12} width={400}>
             {/* could not get <Plural> to render `one` correctly. */}
             {routes.length === 1 ? (
               hasV2Routes && hasV3Routes ? (
@@ -76,7 +76,7 @@ export default memo(function SwapRoute({
                 Best trade via {routes.length} routes on Uniswap {hasV2Routes ? 'V2' : 'V3'}
               </Trans>
             )}
-          </TYPE.main>
+          </ThemedText.Main>
         ))}
     </AutoColumn>
   )
