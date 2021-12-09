@@ -1,4 +1,3 @@
-import { Provider } from '@ethersproject/abstract-provider'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -6,6 +5,7 @@ import styled, { darkTheme, defaultTheme } from 'lib/theme'
 import { ReactNode } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
 import { createGlobalStyle } from 'styled-components'
+import { Provider } from 'widgets-web3-react/types'
 
 import Widget from './components/Widget'
 import Connectors from './cosmos/components/Connectors'
