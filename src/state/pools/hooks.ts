@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery, ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDeepCompareEffect } from 'react-use'
@@ -243,7 +243,7 @@ export function useBulkPoolData(
           dispatch(updatePools({ pools }))
         }
       } catch (error) {
-        dispatch(setError(error))
+        dispatch(setError(error as Error))
       }
 
       dispatch(setLoading(false))
@@ -266,4 +266,44 @@ export function useResetPools(currencyA: Currency | undefined, currencyB: Curren
 
 export function useSelectedPool() {
   return useSelector((state: AppState) => state.pools.selectedPool)
+}
+
+export function useSinglePoolData(
+  poolAddress: string | undefined,
+  ethPrice?: string
+): {
+  loading: boolean
+  error?: Error
+  data?: SubgraphPoolData
+} {
+  const { chainId } = useActiveWeb3React()
+  const apolloClient = useExchangeClient()
+
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<Error | undefined>(undefined)
+  const [poolData, setPoolData] = useState<SubgraphPoolData>()
+
+  useEffect(() => {
+    async function checkForPools() {
+      setLoading(true)
+
+      try {
+        if (poolAddress && !error) {
+          const pools = await getBulkPoolData([poolAddress], apolloClient, ethPrice, chainId)
+
+          if (pools.length > 0) {
+            setPoolData(pools[0])
+          }
+        }
+      } catch (error) {
+        setError(error as Error)
+      }
+
+      setLoading(false)
+    }
+
+    checkForPools()
+  }, [ethPrice, error, poolAddress, apolloClient, chainId])
+
+  return { loading, error, data: poolData }
 }

@@ -20,7 +20,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { getMyLiquidity, useCurrencyConvertedToNative, checkIsFarmingPool, getTradingFeeAPR } from 'utils/dmm'
-import { UserLiquidityPosition, useBulkPoolData } from 'state/pools/hooks'
+import { UserLiquidityPosition, useSinglePoolData } from 'state/pools/hooks'
 import useTheme from 'hooks/useTheme'
 import { TokenWrapper } from 'pages/AddLiquidity/styled'
 import { useTokensPrice, useETHPrice } from 'state/application/hooks'
@@ -375,9 +375,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
 
   const ethPrice = useETHPrice()
 
-  const { data: poolsData } = useBulkPoolData([pair.address.toLowerCase()], ethPrice.currentPrice)
-
-  const poolData = poolsData?.[0]
+  const { data: poolData } = useSinglePoolData(pair.address.toLowerCase(), ethPrice.currentPrice)
 
   const volume = poolData?.oneDayVolumeUSD || poolData?.oneDayVolumeUntracked
   const fee = poolData?.oneDayFeeUSD || poolData?.oneDayFeeUntracked
