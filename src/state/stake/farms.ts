@@ -112,13 +112,29 @@ export const multiRewardPools: MultiRewardPool[] = [
     underlyingPool: '0x0079418D54F887e7859c7A3Ecc16cE96A416527b',
     basePool: '0x0079418D54F887e7859c7A3Ecc16cE96A416527b',
     numRewards: 2,
-    active: true,
+    active: false,
   },
   // WETH-mcUSD
   {
     address: '0xD6E28720Fcd1C1aB6da2d1043a6763FDBb67b3aA',
     underlyingPool: '0x666C59E75271f1fF5a52b58D4563afdc76a53b4e',
     basePool: '0x666C59E75271f1fF5a52b58D4563afdc76a53b4e',
+    numRewards: 2,
+    active: false,
+  },
+  // WBTC-mcUSD
+  {
+    address: '0x81DDaFE15c01aDfda3dd8Fe9Bb984E64Cba606eB',
+    underlyingPool: '0x1e41a9fd5a94def942ed46aa8bdb4a7f248efad3',
+    basePool: '0x1e41a9fd5a94def942ed46aa8bdb4a7f248efad3',
+    numRewards: 2,
+    active: true,
+  },
+  // WETH-mcUSD
+  {
+    address: '0xE6AD921bDa9F4971aBc8FA78cBD07AeB5c1A61ea',
+    underlyingPool: '0xc6910dB4156B535966E4a7e8CcA7D39579b99A81',
+    basePool: '0xc6910dB4156B535966E4a7e8CcA7D39579b99A81',
     numRewards: 2,
     active: true,
   },
