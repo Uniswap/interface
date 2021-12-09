@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
 import ERC20ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
 import JSBI from 'jsbi'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { UNI } from '../../constants/tokens'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -121,9 +121,6 @@ export function useCurrencyBalances(
   const tokenBalances = useTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(() => currencies?.some((currency) => currency?.isNative) ?? false, [currencies])
   const ethBalance = useETHBalances(containsETH ? [account] : [])
-  useEffect(() => {
-    console.log('balances')
-  }, [tokenBalances]) //, containsETH, ethBalance])
 
   return useMemo(
     () =>
