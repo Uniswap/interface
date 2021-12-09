@@ -23,13 +23,17 @@ export default function SwapButton() {
   const balance = mockBalance
   const [mode, setMode] = useState(Mode.NONE)
   const actionProps = useMemo(() => {
-    if (input.token && output.token && !input.approved) {
-      return { updated: { message: <Trans>Approve {input.token.symbol} first</Trans>, action: <Trans>Approve</Trans> } }
-    } else if (swap && input.value && input.value <= balance) {
-      return {}
+    if (swap && input.token && input.value && output.token && output.value && input.value <= balance) {
+      if (!input.approved) {
+        return {}
+      } else {
+        return {
+          updated: { message: <Trans>Approve {input.token.symbol} first</Trans>, action: <Trans>Approve</Trans> },
+        }
+      }
     }
     return { disabled: true }
-  }, [balance, input.approved, input.token, input.value, output.token, swap])
+  }, [balance, input.approved, input.token, input.value, output.token, output.value, swap])
   return (
     <>
       <ActionButton color="interactive" onClick={() => setMode(Mode.SUMMARY)} onUpdate={() => void 0} {...actionProps}>

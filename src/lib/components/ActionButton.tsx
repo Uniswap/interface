@@ -1,78 +1,55 @@
-import styled, { Color, icon, Layer, ThemedText } from 'lib/theme'
+import styled, { Color, css, icon, keyframes, ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 
 import Button from './Button'
-import Column from './Column'
 import Row from './Row'
 
-// TODO(zzmp):
-// - disabled
-// - interactive color
-// - 0.2s transition to "approve"
-
-export const Overlay = styled(Column)`
+const StyledButton = styled(Button)<{ updated?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
-  bottom: 0;
-  position: sticky;
-  z-index: ${Layer.OVERLAY};
+  flex-grow: 1;
+  height: 100%;
+  transition: flex-grow 0.2s;
+`
 
-  :before {
-    background-color: inherit;
-    border-radius: ${({ theme }) => theme.borderRadius}em ${({ theme }) => theme.borderRadius}em 0 0;
-    content: '';
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: -1;
+const UpdateRow = styled(Row)``
+
+const grow = keyframes`
+  from {
+    width: 0;
+  }
+  to {
+    width: max-content;
   }
 `
 
-const StyledActionButton = styled(Button)`
+const updatedCss = css`
+  border: 1px solid ${({ theme }) => theme.outline};
+  padding: calc(0.25em - 1px);
+  padding-left: calc(0.75em - 1px);
+
+  ${UpdateRow} {
+    animation: ${grow} 0.2s;
+    white-space: nowrap;
+  }
+
+  ${StyledButton} {
+    border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+    flex-grow: 0;
+    padding: 1em;
+  }
+`
+
+export const Overlay = styled(Row)<{ updated?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
+  flex-direction: row-reverse;
   height: 3.5em;
+  transition: padding 0.2s;
+
+  ${({ updated }) => updated && updatedCss}
 `
 
 const AlertIcon = icon(AlertTriangle, { color: 'primary' })
-
-const ApprovalRow = styled(Row)`
-  background-color: inherit;
-  border: 1px solid ${({ theme }) => theme.outline};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  height: 3.5em;
-  padding: 0.5em;
-`
-
-const StyledApprovalButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  height: 100%;
-  padding: 0 1em;
-`
-
-interface ApprovalButtonProps {
-  color: Color
-  message: ReactNode
-  action: ReactNode
-  onClick: () => void
-}
-
-export function ApprovalButton({ color, message, action, onClick }: ApprovalButtonProps) {
-  return (
-    <Overlay>
-      <ApprovalRow>
-        <Row gap={0.5}>
-          <AlertIcon />
-          <ThemedText.Subhead2 color="primary">{message}</ThemedText.Subhead2>
-        </Row>
-        <StyledApprovalButton color={color} onClick={onClick}>
-          <ThemedText.ButtonMedium color="currentColor">{action}</ThemedText.ButtonMedium>
-        </StyledApprovalButton>
-      </ApprovalRow>
-    </Overlay>
-  )
-}
 
 export interface ActionButtonProps {
   color?: Color
@@ -92,13 +69,19 @@ export default function ActionButton({
   children,
 }: ActionButtonProps) {
   return (
-    <Overlay>
-      {updated ? (
-        <ApprovalButton color={color} onClick={() => onUpdate?.()} {...updated} />
-      ) : (
-        <StyledActionButton color={color} disabled={disabled} onClick={onClick}>
+    <Overlay updated={Boolean(updated)} flex>
+      <StyledButton color={color} disabled={disabled} onClick={updated ? onUpdate : onClick}>
+        {updated ? (
+          <ThemedText.ButtonMedium color="currentColor">{updated.action}</ThemedText.ButtonMedium>
+        ) : (
           <ThemedText.ButtonLarge color="currentColor">{children}</ThemedText.ButtonLarge>
-        </StyledActionButton>
+        )}
+      </StyledButton>
+      {updated && (
+        <UpdateRow gap={0.5}>
+          <AlertIcon />
+          <ThemedText.Subhead2 color="primary">{updated?.message}</ThemedText.Subhead2>
+        </UpdateRow>
       )}
     </Overlay>
   )
