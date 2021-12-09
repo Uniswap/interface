@@ -424,11 +424,15 @@ export function useDerivedZapOutInfo(
     error = error ?? t`Insufficient balance`
   }
 
-  if (zapOutAmount.error && zapOutAmount.error.message.includes('INSUFFICIENT_LIQUIDITY')) {
+  if (
+    zapOutAmount.error &&
+    (zapOutAmount.error.message.includes('INSUFFICIENT_LIQUIDITY') ||
+      zapOutAmount.error.data?.message.includes('INSUFFICIENT_LIQUIDITY'))
+  ) {
     insufficientLiquidity = true
   }
 
-  if (zapOutAmount.error && !zapOutAmount.error.message.includes('INSUFFICIENT_LIQUIDITY')) {
+  if (zapOutAmount.error && !insufficientLiquidity) {
     error = t`Something went wrong`
   }
 

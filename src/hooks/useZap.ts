@@ -98,7 +98,7 @@ export const useZapInAmounts = (tokenIn?: string, tokenOut?: string, pool?: stri
 
 export const useZapOutAmount = (tokenIn?: string, tokenOut?: string, pool?: string, lpQty?: BigNumber) => {
   const { calculateZapOutAmount } = useZap()
-  const [result, setResult] = useState<{ amount: BigNumber; error?: Error }>({
+  const [result, setResult] = useState<{ amount: BigNumber; error?: any }>({
     amount: BigNumber.from(0),
     error: undefined
   })
