@@ -109,7 +109,7 @@ export default function RecentTransactionsDialog() {
           <Trash2 onClick={() => setTxs([])} />
         </Button>
       </Header>
-      <Column scrollable>
+      <Column>
         {txs.map((tx, key) => (
           <Transaction tx={tx} key={key} />
         ))}
