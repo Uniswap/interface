@@ -63,9 +63,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           <Text variant="body" ml="md" color="gray400">
             {formatPrice(price)}
           </Text>
-          <Text variant="body" color="gray400">{`${formatCurrencyAmount(
-            currencyBalance
-          )} Max`}</Text>
+          <Text variant="body" color="gray400">{`${formatCurrencyAmount(currencyBalance)}`}</Text>
         </Box>
       </Box>
     </Box>
