@@ -47,8 +47,8 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
 
 export const MATIC_TOKEN_LISTS: string[] = [QUICK_SWAP]
 export const BSC_TOKEN_LISTS: string[] = [PANCAKE_TOP100, PANCAKE_EXTENDED]
-export const AVAX_TOKEN_LISTS: string[] = [PANGOLIN]
-export const FANTOM_TOKEN_LISTS: string[] = [SPOOKY]
+export const AVAX_TOKEN_LISTS: string[] = []
+export const FANTOM_TOKEN_LISTS: string[] = []
 export const CRONOS_TOKEN_LISTS: string[] = []
 
 // default lists to be 'active' aka searched across

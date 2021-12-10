@@ -18,7 +18,6 @@ import {
   FarmIcon,
   Enter,
   CircleFocus,
-  Telegram,
   Drop
 } from 'components/Icons'
 import { Repeat, Plus, Edit, FileText } from 'react-feather'
@@ -32,7 +31,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import githubImg from 'assets/svg/about_icon_github.png'
 import githubImgLight from 'assets/svg/about_icon_github_light.png'
 import FantomLogoFull from 'components/Icons/FantomLogoFull'
-import { KYBER_NETWORK_TWITTER_URL, KYBER_NETWORK_DISCORD_URL, KNC, MAX_ALLOW_APY } from 'constants/index'
+import { KNC, MAX_ALLOW_APY } from 'constants/index'
 import { ChainId, ETHER, Fraction, JSBI } from '@dynamic-amm/sdk'
 import {
   convertToNativeTokenFromETH,
@@ -74,10 +73,8 @@ import {
   VerticalDivider,
   CommittedToSecurityDivider
 } from './styleds'
-import TwitterIcon from 'components/Icons/TwitterIcon'
-import Medium from 'components/Icons/Medium'
-import Discord from 'components/Icons/Discord'
 import { ButtonEmpty } from 'components/Button'
+import { FooterSocialLink } from 'components/Footer/Footer'
 
 const KNC_NOT_AVAILABLE_IN = [ChainId.CRONOS, ChainId.AVAXMAINNET, ChainId.FANTOM]
 
@@ -824,20 +821,7 @@ function About() {
             <VerticalDivider />
             <ExternalLink href={`https://kyber.network/about/knc`}>KNC</ExternalLink>
           </Flex>
-          <Flex alignItems="center" justifyContent="center" sx={{ gap: '24px' }}>
-            <ExternalLink href="https://t.me/kybernetwork">
-              <Telegram size={16} color={theme.subText} />
-            </ExternalLink>
-            <ExternalLink href={KYBER_NETWORK_TWITTER_URL}>
-              <TwitterIcon color={theme.subText} />
-            </ExternalLink>
-            <ExternalLink href={KYBER_NETWORK_DISCORD_URL}>
-              <Discord />
-            </ExternalLink>
-            <ExternalLink href={`https://blog.kyber.network`}>
-              <Medium />
-            </ExternalLink>
-          </Flex>
+          <FooterSocialLink />
         </FooterContainer>
       </Footer>
     </div>

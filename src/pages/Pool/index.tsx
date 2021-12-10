@@ -27,7 +27,6 @@ export const PageWrapper = styled(AutoColumn)`
   padding: 16px 0 100px;
   width: 100%;
   max-width: 1008px;
-  margin: auto;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 664px;
