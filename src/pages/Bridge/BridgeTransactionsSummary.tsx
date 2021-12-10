@@ -4,10 +4,10 @@ import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
 import { ButtonPrimary, ShowMoreButton } from '../../components/Button'
 import { BridgeTransactionStatus, BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
 import { BridgeStatusTag } from './BridgeStatusTag'
-import { NETWORK_DETAIL } from '../../constants'
 import { useBridgeTxsFilter } from '../../state/bridge/hooks'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { getExplorerLink } from '../../utils'
+import { getNetworkInfo } from '../../utils/networksList'
 
 const Container = styled.div`
   display: flex;
@@ -176,6 +176,8 @@ interface BridgeTransactionsSummaryRow {
 
 const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSummaryRow) => {
   const { assetName, fromChainId, status, toChainId, value, pendingReason, log } = tx
+  const fromChainName = getNetworkInfo(fromChainId).name
+  const toChainName = getNetworkInfo(toChainId).name
 
   return (
     <Row>
@@ -191,7 +193,7 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSumma
             rel="noopener noreferrer"
             target="_blank"
           >
-            {NETWORK_DETAIL[fromChainId].chainName}
+            {fromChainName}
           </Link>
         </TextFrom>
       </ColumnFrom>
@@ -206,7 +208,7 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSumma
           rel="noopener noreferrer"
           target="_blank"
         >
-          {NETWORK_DETAIL[toChainId].chainName}
+          {toChainName}
         </TextTo>
       </ColumnToFlex>
       <ColumnStatus>

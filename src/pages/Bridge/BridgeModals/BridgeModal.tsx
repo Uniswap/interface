@@ -5,8 +5,8 @@ import { BridgeErrorModal } from './BridgeErrorModal'
 import { BridgePendingModal } from './BridgePendingModal'
 import { BridgeSuccessModal } from './BridgeSuccesModal'
 import { BridgingInitiatedModal } from './BridgingInitiatedModal'
-import { NETWORK_DETAIL } from '../../../constants'
 import { BridgeDisclaimerModal } from './BridgeDisclaimerModal'
+import { getNetworkInfo } from '../../../utils/networksList'
 
 export interface BridgeModalProps {
   handleResetBridge: () => void
@@ -23,11 +23,11 @@ const setDisclaimerText = (isArbitrum: boolean) => {
 
 export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, handleSubmit }: BridgeModalProps) => {
   const { status, symbol, typedValue, fromNetwork, toNetwork, error } = modalData
+  const { name: fromNetworkName, isArbitrum } = getNetworkInfo(fromNetwork.chainId)
+  const { name: toNetworkName } = getNetworkInfo(toNetwork.chainId)
 
-  const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
-  const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
-  const txType = NETWORK_DETAIL[fromNetwork.chainId].isArbitrum ? 'Withdraw' : 'Deposit'
-  const disclaimerText = setDisclaimerText(NETWORK_DETAIL[fromNetwork.chainId].isArbitrum)
+  const txType = isArbitrum ? 'Withdraw' : 'Deposit'
+  const disclaimerText = setDisclaimerText(isArbitrum)
 
   const selectModal = () => {
     switch (status) {

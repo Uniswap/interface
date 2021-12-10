@@ -1,25 +1,27 @@
 import { ChainId } from '@swapr/sdk'
 import { NetworkOptions, networkOptionsPreset, NetworkOptionsPreset, NetworksList } from '../components/NetworkSwitcher'
-import { NETWORK_DETAIL, SHOW_TESTNETS, TESTNETS } from '../constants'
+import { NETWORK_DETAIL, NETWORK_OPTIONAL_DETAIL, SHOW_TESTNETS, TESTNETS } from '../constants'
 
 export const getNetworkInfo = (chainId: ChainId, customPreset: NetworkOptionsPreset[] = networkOptionsPreset) => {
   const network = customPreset.find(net => {
     return net.chainId === chainId
   })
   return {
-    name: network ? network.name : '',
+    name: network ? network.name : '', //name displayed in swapr
     logoSrc: network ? network.logoSrc : '',
     color: network ? network.color : '',
     tag: network ? network.tag : '',
-    isArbitrum: NETWORK_DETAIL[chainId].isArbitrum,
-    partnerChainId: NETWORK_DETAIL[chainId].partnerChainId,
+    chainName: NETWORK_DETAIL[chainId].chainName, //name used by metamask
+    chainId: NETWORK_DETAIL[chainId].chainId,
     rpcUrl: NETWORK_DETAIL[chainId].rpcUrls,
-    iconUrls: NETWORK_DETAIL[chainId].iconUrls,
     nativeCurrency: {
       name: NETWORK_DETAIL[chainId].nativeCurrency.name,
       symbol: NETWORK_DETAIL[chainId].nativeCurrency.symbol,
       decimals: NETWORK_DETAIL[chainId].nativeCurrency.decimals
-    }
+    },
+    isArbitrum: NETWORK_OPTIONAL_DETAIL[chainId].isArbitrum,
+    partnerChainId: NETWORK_OPTIONAL_DETAIL[chainId].partnerChainId,
+    iconUrls: NETWORK_OPTIONAL_DETAIL[chainId].iconUrls
   }
 }
 
