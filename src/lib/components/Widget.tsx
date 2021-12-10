@@ -3,11 +3,13 @@ import 'inter-ui'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider, useAtom } from 'jotai'
 import ErrorBoundary from 'lib/components/ErrorBoundary'
-import EIP1193Connector from 'lib/connectors/EIP1193'
 import { Provider as I18nProvider } from 'lib/i18n'
-import { connectorAtom } from 'lib/state'
+import { injectedConnectorAtom, networkConnectorAtom } from 'lib/state'
 import styled, { Theme, ThemeProvider } from 'lib/theme'
 import { ReactNode, useEffect, useState } from 'react'
+import { initializeConnector } from 'widgets-web3-react/core'
+import { EIP1193 } from 'widgets-web3-react/eip1193'
+import { Network } from 'widgets-web3-react/network'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
@@ -51,13 +53,23 @@ export default function Widget({
   width,
   className,
 }: WidgetProps) {
-  const [, setConnector] = useAtom(connectorAtom)
+  const [, setNetworkConnector] = useAtom(networkConnectorAtom)
   useEffect(() => {
-    try {
-      const connector = new EIP1193Connector({ provider, jsonRpcEndpoint })
-      setConnector(connector)
-    } catch {}
-  }, [setConnector, provider, jsonRpcEndpoint])
+    if (!jsonRpcEndpoint) {
+      return
+    }
+    const [connector, hooks] = initializeConnector<Network>((actions) => new Network(actions, jsonRpcEndpoint))
+    setNetworkConnector([connector, hooks])
+  }, [setNetworkConnector, jsonRpcEndpoint])
+
+  const [, setInjectedConnector] = useAtom(injectedConnectorAtom)
+  useEffect(() => {
+    if (!provider) {
+      return
+    }
+    const [connector, hooks] = initializeConnector<EIP1193>((actions) => new EIP1193(actions, provider))
+    setInjectedConnector([connector, hooks])
+  }, [setInjectedConnector, provider])
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
