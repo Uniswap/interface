@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { CurrencyAmount } from '@swapr/sdk'
+import { useDispatch } from 'react-redux'
 
 import { Tabs } from './Tabs'
 import AppBody from '../AppBody'
@@ -27,6 +28,7 @@ import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
 import { useChains } from '../../hooks/useChains'
 import { createNetworksList, getNetworkOptions } from '../../utils/networksList'
+import { setFromBridgeNetwork, setToBridgeNetwork } from '../../state/bridge/actions'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -73,10 +75,11 @@ const AssetWrapper = styled.div`
 `
 
 export default function Bridge() {
+  const dispatch = useDispatch()
   const bridgeService = useBridgeService()
   const { account } = useActiveWeb3React()
-  const { chainId, partnerChainId, isArbitrum } = useChains()
   const bridgeSummaries = useBridgeTransactionsSummary()
+  const { chainId, partnerChainId, isArbitrum } = useChains()
   const [modalData, setModalStatus, setModalData] = useBridgeModal()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
   const {
@@ -106,10 +109,26 @@ export default function Bridge() {
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
 
   useEffect(() => {
-    if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
-      setStep(BridgeStep.Initial)
+    if (!chainId || !partnerChainId) return
+
+    if (collectableTx && isCollecting) {
+      const { assetAddressL1, assetAddressL2, fromChainId, toChainId } = collectableTx
+
+      onCurrencySelection(assetAddressL1 && assetAddressL2 ? (isArbitrum ? assetAddressL2 : assetAddressL1) : 'ETH')
+
+      if (chainId !== fromChainId && chainId !== toChainId) {
+        setStep(BridgeStep.Initial)
+      }
+
+      return
     }
-  }, [chainId, collectableTx, isCollecting, step])
+
+    // Reset input on network change
+    onUserInput('')
+    onCurrencySelection('')
+    dispatch(setFromBridgeNetwork({ chainId }))
+    dispatch(setToBridgeNetwork({ chainId: partnerChainId }))
+  }, [chainId, collectableTx, dispatch, isArbitrum, isCollecting, onCurrencySelection, onUserInput, partnerChainId])
 
   const handleResetBridge = useCallback(() => {
     onUserInput('')

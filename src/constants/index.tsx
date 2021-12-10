@@ -396,3 +396,9 @@ export const OLD_SWPR: { [key: number]: Token } = {
 
 export const TESTNETS = [4, 421611]
 export const SHOW_TESTNETS = true
+
+// addresses to filter by when querying for verified KPI tokens
+export const KPI_TOKEN_CREATORS: { [key: number]: string[] } = {
+  [ChainId.XDAI]: ['0xe716ec63c5673b3a4732d22909b38d779fa47c3f', '0x9467dcfd4519287e3878c018c02f5670465a9003'],
+  [ChainId.RINKEBY]: ['0x1A639b50D807ce7e61Dc9eeB091e6Cea8EcB1595', '0xb4124ceb3451635dacedd11767f004d8a28c6ee7']
+}

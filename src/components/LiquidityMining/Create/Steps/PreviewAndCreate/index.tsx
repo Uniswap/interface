@@ -59,7 +59,7 @@ export default function PreviewAndCreate({
       return 'Connect your wallet'
     }
     if (userBalance && reward && reward.greaterThan('0') && userBalance.lessThan(reward)) {
-      return 'Insuffucient balance'
+      return 'Insufficient balance'
     }
     return 'Approve reward token'
   }
@@ -106,11 +106,7 @@ export default function PreviewAndCreate({
           <FlexContainer justifyContent="stretch" width="100%">
             <Box width="100%">
               <ButtonPrimary
-                disabled={
-                  areButtonsDisabled ||
-                  approvalState === ApprovalState.PENDING ||
-                  approvalState === ApprovalState.APPROVED
-                }
+                disabled={areButtonsDisabled || approvalState !== ApprovalState.NOT_APPROVED}
                 onClick={approveCallback}
               >
                 {getApproveButtonMessage()}

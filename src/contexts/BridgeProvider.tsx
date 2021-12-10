@@ -1,13 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Bridge } from 'arb-ts'
 import { providers, Signer } from 'ethers'
-import { useDispatch } from 'react-redux'
 import { useActiveWeb3React } from '../hooks'
 import { NETWORK_DETAIL } from '../constants'
 import { INFURA_PROJECT_ID } from '../connectors'
 import { POOLING_INTERVAL } from '../utils/getLibrary'
 import { getChainPair } from '../utils/arbitrum'
-import { setFromBridgeNetwork, setToBridgeNetwork } from '../state/bridge/actions'
 
 type BridgeContextType = Bridge | null
 
@@ -31,7 +29,6 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
   const { library, account, chainId } = useActiveWeb3React()
   const [bridge, setBridge] = useState<Bridge | null>(null)
   const { isArbitrum, partnerChainId } = getChainPair(chainId)
-  const dispatch = useDispatch()
 
   useEffect(() => {
     const abortController = new AbortController()
@@ -75,8 +72,6 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
 
         if (l1Signer && l2Signer) {
           initBridge(abortController.signal, l1Signer, l2Signer)
-          dispatch(setFromBridgeNetwork({ chainId }))
-          dispatch(setToBridgeNetwork({ chainId: partnerChainId }))
         }
       }
     }
@@ -84,7 +79,7 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
     return () => {
       abortController.abort()
     }
-  }, [chainId, library, account, dispatch, partnerChainId, isArbitrum])
+  }, [chainId, library, account, partnerChainId, isArbitrum])
 
   return <BridgeContext.Provider value={bridge}>{children}</BridgeContext.Provider>
 }
