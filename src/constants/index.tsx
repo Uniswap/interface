@@ -270,6 +270,9 @@ export interface NetworkDetails {
   }
   rpcUrls: string[]
   blockExplorerUrls?: string[]
+}
+
+export interface NetworkOptionalDetails {
   iconUrls?: string[] // Currently ignored.
   partnerChainId?: ChainId //arbitrum chainId if supported
   isArbitrum: boolean
@@ -285,9 +288,7 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://mainnet.infura.io/v3'],
-    blockExplorerUrls: ['https://etherscan.io'],
-    partnerChainId: ChainId.ARBITRUM_ONE,
-    isArbitrum: false
+    blockExplorerUrls: ['https://etherscan.io']
   },
   [ChainId.XDAI]: {
     chainId: `0x${ChainId.XDAI.toString(16)}`,
@@ -298,34 +299,29 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       decimals: Currency.XDAI.decimals || 18
     },
     rpcUrls: ['https://rpc.xdaichain.com'],
-    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
-    isArbitrum: false
+    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet']
   },
   [ChainId.ARBITRUM_ONE]: {
     chainId: `0x${ChainId.ARBITRUM_ONE.toString(16)}`,
-    chainName: 'Arbitrum one',
+    chainName: 'Arbitrum One',
     nativeCurrency: {
       name: Currency.ETHER.name || 'Ether',
       symbol: Currency.ETHER.symbol || 'ETH',
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://explorer.arbitrum.io'],
-    partnerChainId: ChainId.MAINNET,
-    isArbitrum: true
+    blockExplorerUrls: ['https://explorer.arbitrum.io']
   },
   [ChainId.ARBITRUM_RINKEBY]: {
     chainId: `0x${ChainId.ARBITRUM_RINKEBY.toString(16)}`,
-    chainName: 'A.\xa0Rinkeby',
+    chainName: 'Arbitrum Rinkeby',
     nativeCurrency: {
       name: Currency.ETHER.name || 'Ether',
       symbol: Currency.ETHER.symbol || 'ETH',
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://rinkeby-explorer.arbitrum.io'],
-    partnerChainId: ChainId.RINKEBY,
-    isArbitrum: true
+    blockExplorerUrls: ['https://rinkeby-explorer.arbitrum.io']
   },
   [ChainId.RINKEBY]: {
     chainId: `0x${ChainId.RINKEBY.toString(16)}`,
@@ -336,7 +332,27 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://rinkeby.infura.io/v3'],
-    blockExplorerUrls: ['https://rinkeby.etherscan.io'],
+    blockExplorerUrls: ['https://rinkeby.etherscan.io']
+  }
+}
+
+export const NETWORK_OPTIONAL_DETAIL: { [chainId: number]: NetworkOptionalDetails } = {
+  [ChainId.MAINNET]: {
+    partnerChainId: ChainId.ARBITRUM_ONE,
+    isArbitrum: false
+  },
+  [ChainId.XDAI]: {
+    isArbitrum: false
+  },
+  [ChainId.ARBITRUM_ONE]: {
+    partnerChainId: ChainId.MAINNET,
+    isArbitrum: true
+  },
+  [ChainId.ARBITRUM_RINKEBY]: {
+    partnerChainId: ChainId.RINKEBY,
+    isArbitrum: true
+  },
+  [ChainId.RINKEBY]: {
     partnerChainId: ChainId.ARBITRUM_RINKEBY,
     isArbitrum: false
   }
