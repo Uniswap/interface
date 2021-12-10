@@ -4,7 +4,7 @@ import { ReactNode, useMemo } from 'react'
 import { hex } from 'wcag-contrast'
 
 import styled, { ThemedProvider, useTheme } from './styled'
-import { Colors, ComputedTheme as Theme } from './theme'
+import { Colors, ComputedTheme } from './theme'
 
 type DynamicColors = Pick<Colors, 'interactive' | 'outline' | 'primary' | 'secondary' | 'onInteractive'>
 
@@ -33,17 +33,17 @@ const dark: DynamicColors = {
   onInteractive: black,
 }
 
-export function getDynamicTheme(theme: Theme, color: string): Theme {
-  const colors = { light, dark }[readableColor(color, 'light', 'dark', false)]
+export function getDynamicTheme(theme: ComputedTheme, color: string): ComputedTheme {
+  const colors = { light, dark }[readableColor(color, 'light', 'dark', false) as 'light' | 'dark']
   return {
     ...theme,
-    module: color,
-    onHover: opacify(0.25), // hovered elements increase opacity by 25%
     ...colors,
+    module: color,
+    onHover: (color: string) => (color === colors.primary ? transparentize(0.4, colors.primary) : opacify(0.25, color)),
   }
 }
 
-function getAccessibleColor(theme: Theme, color: string) {
+function getAccessibleColor(theme: ComputedTheme, color: string) {
   const dynamic = getDynamicTheme(theme, color)
   const { darkMode } = dynamic
   let { primary } = dynamic
@@ -66,7 +66,7 @@ const ColorProvider = styled.div`
 `
 
 export function DynamicThemeProvider({ color, children }: DynamicThemeProviderProps) {
-  const theme = useTheme() as Theme
+  const theme = useTheme()
   const value = useMemo(() => {
     if (!color) {
       return theme

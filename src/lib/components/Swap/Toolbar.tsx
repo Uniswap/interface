@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import { icon, ThemedText, ThemeProvider } from 'lib/theme'
+import { AlertTriangle, Info } from 'lib/icons'
+import { ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
-import { AlertTriangle, Info } from 'react-feather'
 
 import { TextButton } from '../Button'
 import Row from '../Row'
@@ -13,12 +13,9 @@ import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from './stat
 
 const mockBalance = 123.45
 
-const AlertIcon = icon(AlertTriangle)
-const InfoIcon = icon(Info)
-
 function RoutingTooltip() {
   return (
-    <Tooltip icon={InfoIcon} placement="bottom">
+    <Tooltip icon={Info} placement="bottom">
       <ThemeProvider>
         <ThemedText.Subhead2>TODO: Routing Tooltip</ThemedText.Subhead2>
       </ThemeProvider>
@@ -42,8 +39,13 @@ function LoadedState({ input, output }: LoadedStateProps) {
   const ratio = useMemo(() => {
     const [a, b] = flip ? [input, output] : [output, input]
     const ratio = `1 ${a.token.symbol} = ${b.value / a.value} ${b.token.symbol}`
-    const usdc = a.usdc ? ` ($${(a.usdc / a.value).toLocaleString('en')})` : ''
-    return ratio + usdc
+    const usdc = a.usdc && ` ($${(a.usdc / a.value).toLocaleString('en')})`
+    return (
+      <Row gap={0.25} style={{ userSelect: 'text' }}>
+        {ratio}
+        {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
+      </Row>
+    )
   }, [flip, input, output])
 
   return (
@@ -53,7 +55,7 @@ function LoadedState({ input, output }: LoadedStateProps) {
   )
 }
 
-export default function Toolbar() {
+export default function Toolbar({ disabled }: { disabled?: boolean }) {
   const { activeInput } = useAtomValue(stateAtom)
   const swap = useAtomValue(swapAtom)
   const input = useAtomValue(inputAtom)
@@ -63,11 +65,19 @@ export default function Toolbar() {
   const caption = useMemo(() => {
     const filledInput = asFilledInput(input)
     const filledOutput = asFilledInput(output)
+    if (disabled) {
+      return (
+        <>
+          <AlertTriangle color="secondary" />
+          <Trans>Connect wallet to swap</Trans>
+        </>
+      )
+    }
     if (activeInput === Field.INPUT ? filledInput && output.token : filledOutput && input.token) {
       if (!swap) {
         return (
           <>
-            <SpinnerIcon color="primary" />
+            <SpinnerIcon color="secondary" />
             <Trans>Fetching best price…</Trans>
           </>
         )
@@ -75,7 +85,7 @@ export default function Toolbar() {
       if (filledInput && filledInput.value > balance) {
         return (
           <>
-            <AlertIcon />
+            <AlertTriangle color="secondary" />
             <Trans>Insufficient {filledInput.token.symbol}</Trans>
           </>
         )
@@ -91,11 +101,11 @@ export default function Toolbar() {
     }
     return (
       <>
-        <InfoIcon />
+        <Info color="secondary" />
         <Trans>Enter an amount</Trans>
       </>
     )
-  }, [activeInput, balance, input, output, swap])
+  }, [activeInput, balance, disabled, input, output, swap])
 
   return (
     <>

@@ -11,11 +11,15 @@ export const BaseButton = styled.button`
   line-height: inherit;
   margin: 0;
   padding: 0;
+
+  :disabled {
+    cursor: initial;
+    filter: saturate(0) opacity(0.4);
+  }
 `
 
 export default styled(BaseButton)<{ color?: Color }>`
-  color: ${({ color, theme }) => (!color || color === 'interactive') && theme.onInteractive};
-  transition: background-color 0.2s, color 0.2s, filter 0.2s;
+  color: ${({ color = 'interactive', theme }) => color === 'interactive' && theme.onInteractive};
 
   :enabled {
     background-color: ${({ color = 'interactive', theme }) => theme[color]};
@@ -28,8 +32,7 @@ export default styled(BaseButton)<{ color?: Color }>`
   :disabled {
     border: 1px solid ${({ theme }) => theme.outline};
     color: ${({ theme }) => theme.secondary};
-    cursor: not-allowed;
-    filter: saturate(0) opacity(0.4);
+    cursor: initial;
   }
 `
 

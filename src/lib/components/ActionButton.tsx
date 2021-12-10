@@ -1,6 +1,6 @@
-import styled, { Color, css, icon, keyframes, ThemedText } from 'lib/theme'
+import { AlertTriangle } from 'lib/icons'
+import styled, { Color, css, keyframes, ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
-import { AlertTriangle } from 'react-feather'
 
 import Button from './Button'
 import Row from './Row'
@@ -51,8 +51,6 @@ export const Overlay = styled(Row)<{ updated?: boolean }>`
   ${({ updated }) => updated && updatedCss}
 `
 
-const AlertIcon = icon(AlertTriangle)
-
 export interface ActionButtonProps {
   color?: Color
   disabled?: boolean
@@ -81,7 +79,7 @@ export default function ActionButton({
       </StyledButton>
       {updated && (
         <UpdateRow gap={0.5}>
-          <AlertIcon />
+          <AlertTriangle />
           <ThemedText.Subhead2>{updated?.message}</ThemedText.Subhead2>
         </UpdateRow>
       )}

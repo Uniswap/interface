@@ -1,4 +1,4 @@
-import { mix } from 'polished'
+import { mix, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 
 import styled, { ThemedProvider } from './styled'
@@ -8,7 +8,6 @@ export type { Color, Colors, Theme } from './theme'
 
 export default styled
 export * from './dynamic'
-export * from './icon'
 export * from './layer'
 export * from './scrollable'
 export * from './styled'
@@ -36,8 +35,6 @@ export const lightTheme: Colors = {
   error: '#FD4040',
 
   currentColor: 'currentColor',
-
-  onHover: mix(0.24, '#000000'), // hovered elements get a 24% primary text overlay
 }
 
 export const darkTheme: Colors = {
@@ -62,8 +59,6 @@ export const darkTheme: Colors = {
   error: '#FD4040',
 
   currentColor: 'currentColor',
-
-  onHover: mix(0.24, '#FFFFFF'), // hovered elements get a 24% primary text overlay
 }
 
 export const defaultTheme = {
@@ -98,5 +93,7 @@ function toComputedTheme(theme: Required<Theme>): ComputedTheme {
   return {
     ...theme,
     borderRadius: theme.borderRadius ? 1 : 0,
+    onHover: (color: string) =>
+      color === theme.primary ? transparentize(0.4, theme.primary) : mix(0.16, theme.primary, color),
   }
 }

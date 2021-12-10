@@ -20,7 +20,12 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
   }
 `
 
-export default function Input({ children }: { children: ReactNode }) {
+interface InputProps {
+  disabled?: boolean
+  children: ReactNode
+}
+
+export default function Input({ disabled, children }: InputProps) {
   const input = useAtomValue(inputAtom)
   const setValue = useUpdateInputValue(inputAtom)
   const setToken = useUpdateInputToken(inputAtom)
@@ -35,6 +40,7 @@ export default function Input({ children }: { children: ReactNode }) {
       </Row>
       <TokenInput
         input={input}
+        disabled={disabled}
         onMax={balance ? () => setValue(balance) : undefined}
         onChangeInput={setValue}
         onChangeToken={setToken}
@@ -43,11 +49,9 @@ export default function Input({ children }: { children: ReactNode }) {
           <Row>
             {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}
             {balance && (
-              <Row gap={0.5}>
-                <Row gap={0.25} color={input.value && input.value > balance ? 'error' : undefined}>
-                  Balance: {balance}
-                </Row>
-              </Row>
+              <ThemedText.Body2 color={input.value && input.value > balance ? 'error' : undefined}>
+                Balance: <span style={{ userSelect: 'text' }}>{balance}</span>
+              </ThemedText.Body2>
             )}
           </Row>
         </ThemedText.Body2>

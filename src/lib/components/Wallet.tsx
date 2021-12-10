@@ -1,37 +1,15 @@
-import { icon } from 'lib/theme'
-import { useMemo, useState } from 'react'
-import { Clock } from 'react-feather'
+import { CreditCard } from 'lib/icons'
+import { ThemedText } from 'lib/theme'
 
-import { IconButton } from './Button'
-import Dialog from './Dialog'
-import RecentTransactionsDialog, { mockTxs, TransactionStatus } from './RecentTransactionsDialog'
-import SpinnerIcon from './SpinnerIcon'
+import Row from './Row'
 
-const TransactionsIcon = icon(Clock)
-
-export default function Wallet() {
-  const txs = mockTxs
-
-  const [open, setOpen] = useState(false)
-  const Icon = useMemo(() => {
-    if (txs.length === 0) {
-      return undefined
-    }
-    return txs.some(({ status }) => status === TransactionStatus.PENDING) ? SpinnerIcon : TransactionsIcon
-  }, [txs])
-  if (Icon) {
-    return (
-      <>
-        <IconButton onClick={() => setOpen(true)}>
-          <Icon />
-        </IconButton>
-        {open && (
-          <Dialog color="module" onClose={() => setOpen(false)}>
-            <RecentTransactionsDialog />
-          </Dialog>
-        )}
-      </>
-    )
-  }
-  return null
+export default function Wallet({ disabled }: { disabled?: boolean }) {
+  return disabled ? (
+    <ThemedText.Caption color="secondary">
+      <Row gap={0.25}>
+        <CreditCard />
+        Connect wallet to swap
+      </Row>
+    </ThemedText.Caption>
+  ) : null
 }

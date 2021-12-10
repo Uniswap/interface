@@ -1,9 +1,9 @@
 import 'wicg-inert'
 
-import styled, { Color, icon, Layer, ThemeProvider } from 'lib/theme'
+import { X } from 'lib/icons'
+import styled, { Color, Layer, ThemeProvider } from 'lib/theme'
 import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { X } from 'react-feather'
 
 import { IconButton } from './Button'
 import Column from './Column'
@@ -49,14 +49,6 @@ export function Provider({ value, children }: ProviderProps) {
 
 const OnCloseContext = createContext<() => void>(() => void 0)
 
-const XButton = styled(IconButton)`
-  :hover {
-    opacity: 0.75;
-  }
-`
-
-const XIcon = icon(X, { color: 'primary' })
-
 interface HeaderProps {
   title?: ReactElement
   ruled?: boolean
@@ -69,9 +61,9 @@ export function Header({ title, children, ruled }: HeaderProps) {
       <Column gap={0.75}>
         <BaseHeader title={title}>
           {children}
-          <XButton onClick={useContext(OnCloseContext)}>
-            <XIcon />
-          </XButton>
+          <IconButton color="primary" onClick={useContext(OnCloseContext)}>
+            <X />
+          </IconButton>
         </BaseHeader>
         {ruled && <Rule padded />}
       </Column>

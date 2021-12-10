@@ -14,6 +14,18 @@ const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
 `
 
+const ValueInput = styled(DecimalInput)`
+  color: ${({ theme }) => theme.primary};
+
+  :hover:not(:focus-within) {
+    color: ${({ theme }) => theme.onHover(theme.primary)};
+  }
+
+  :hover:not(:focus-within)::placeholder {
+    color: ${({ theme }) => theme.onHover(theme.secondary)};
+  }
+`
+
 const delayedFadeIn = keyframes`
   0% {
     opacity: 0;
@@ -34,6 +46,7 @@ const MaxButton = styled(Button)`
 
 interface TokenInputProps {
   input: Input
+  disabled?: boolean
   onMax?: () => void
   onChangeInput: (input: number | undefined) => void
   onChangeToken: (token: Token) => void
@@ -42,6 +55,7 @@ interface TokenInputProps {
 
 export default function TokenInput({
   input: { value, token },
+  disabled,
   onMax,
   onChangeInput,
   onChangeToken,
@@ -59,7 +73,12 @@ export default function TokenInput({
     <Column gap={0.375}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
         <ThemedText.H2>
-          <DecimalInput value={value} onFocus={onFocus} onChange={onChangeInput} disabled={!token}></DecimalInput>
+          <ValueInput
+            value={value}
+            onFocus={onFocus}
+            onChange={onChangeInput}
+            disabled={disabled || !token}
+          ></ValueInput>
         </ThemedText.H2>
         {showMax && (
           <MaxButton onClick={onMax} ref={max}>
@@ -68,7 +87,7 @@ export default function TokenInput({
             </ThemedText.ButtonMedium>
           </MaxButton>
         )}
-        <TokenSelect value={token} collapsed={showMax} onSelect={onChangeToken} />
+        <TokenSelect value={token} collapsed={showMax} disabled={disabled} onSelect={onChangeToken} />
       </TokenInputRow>
       {children}
     </Column>

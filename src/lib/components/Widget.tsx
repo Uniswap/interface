@@ -1,3 +1,5 @@
+import 'inter-ui'
+
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider, useAtom } from 'jotai'
 import EIP1193Connector from 'lib/connectors/EIP1193'
@@ -25,6 +27,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   * {
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.fontFamily};
+    user-select: none;
   }
 `
 

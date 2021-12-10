@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { AlertTriangle, ArrowRight, CheckCircle, Trash2 } from 'lib/icons'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
-import styled, { icon, ThemedText } from 'lib/theme'
+import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { useMemo, useState } from 'react'
-import { AlertTriangle, ArrowRight, CheckCircle, Trash2 } from 'react-feather'
 
 import Button from './Button'
 import Column from './Column'
@@ -47,11 +47,6 @@ export const mockTxs: ITransaction[] = [
   },
 ]
 
-const TrashIcon = icon(Trash2)
-const ArrowIcon = icon(ArrowRight)
-const SuccessIcon = icon(CheckCircle, { color: 'success' })
-const ErrorIcon = icon(AlertTriangle, { color: 'error' })
-
 const TransactionRow = styled(Row)`
   padding: 0.5em 1em;
 
@@ -78,14 +73,14 @@ function TokenAmount({ value: { value, token } }: { value: ITokenAmount }) {
 }
 
 function Transaction({ tx }: { tx: ITransaction }) {
-  const Status = useMemo(() => {
+  const statusIcon = useMemo(() => {
     switch (tx.status) {
       case TransactionStatus.SUCCESS:
-        return SuccessIcon
+        return <CheckCircle color="success" />
       case TransactionStatus.ERROR:
-        return ErrorIcon
+        return <AlertTriangle color="error" />
       case TransactionStatus.PENDING:
-        return SpinnerIcon
+        return <SpinnerIcon />
     }
   }, [tx.status])
   return (
@@ -94,11 +89,11 @@ function Transaction({ tx }: { tx: ITransaction }) {
         <Row flex gap={0.5}>
           <TokenAmount value={tx.input} />
           <Row flex justify="flex-end" gap={0.5} grow>
-            <ArrowIcon />
+            <ArrowRight />
             <TokenAmount value={tx.output} />
           </Row>
         </Row>
-        <Status />
+        {statusIcon}
       </Row>
     </TransactionRow>
   )
@@ -111,7 +106,7 @@ export default function RecentTransactionsDialog() {
     <>
       <Header title={<Trans>Recent transactions</Trans>} ruled>
         <Button>
-          <TrashIcon onClick={() => setTxs([])} />
+          <Trash2 onClick={() => setTxs([])} />
         </Button>
       </Header>
       <Column scrollable>

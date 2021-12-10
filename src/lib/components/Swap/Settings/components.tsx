@@ -6,7 +6,7 @@ import Row from '../../Row'
 import Tooltip from '../../Tooltip'
 
 export const optionCss = (selected: boolean) => css`
-  border: 1px solid ${({ theme }) => (selected ? theme.accent : theme.outline)};
+  border: 1px solid ${({ theme }) => (selected ? theme.active : theme.outline)};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   color: ${({ theme }) => theme.primary} !important;
   display: grid;
@@ -14,7 +14,7 @@ export const optionCss = (selected: boolean) => css`
   padding: 0.5em;
 
   :enabled:hover {
-    border-color: ${({ theme }) => theme.onHover(selected ? theme.accent : theme.outline)};
+    border-color: ${({ theme }) => theme.onHover(selected ? theme.active : theme.outline)};
   }
 `
 
@@ -32,7 +32,7 @@ interface LabelProps {
 export function Label({ name, tooltip }: LabelProps) {
   return (
     <Row gap={0.5} justify="flex-start">
-      <ThemedText.Subhead2 userSelect="none">{name}</ThemedText.Subhead2>
+      <ThemedText.Subhead2>{name}</ThemedText.Subhead2>
       {tooltip && (
         <Tooltip placement="top" contained>
           <ThemedText.Caption>{tooltip}</ThemedText.Caption>

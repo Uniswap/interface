@@ -27,7 +27,12 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   }
 `
 
-export default function Output({ children }: { children: ReactNode }) {
+interface OutputProps {
+  disabled?: boolean
+  children: ReactNode
+}
+
+export default function Output({ disabled, children }: OutputProps) {
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
   const setValue = useUpdateInputValue(outputAtom)
@@ -63,14 +68,14 @@ export default function Output({ children }: { children: ReactNode }) {
             <Trans>For</Trans>
           </ThemedText.Subhead2>
         </Row>
-        <TokenInput input={output} onChangeInput={setValue} onChangeToken={setToken}>
+        <TokenInput input={output} disabled={disabled} onChangeInput={setValue} onChangeToken={setToken}>
           <ThemedText.Body2 color="secondary">
             <Row>
               {usdc}
               {balance && (
-                <Row gap={0.5}>
-                  <Row gap={0.25}>Balance: {balance}</Row>
-                </Row>
+                <span>
+                  Balance: <span style={{ userSelect: 'text' }}>{balance}</span>
+                </span>
               )}
             </Row>
           </ThemedText.Body2>

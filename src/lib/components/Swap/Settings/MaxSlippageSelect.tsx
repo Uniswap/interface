@@ -1,8 +1,8 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import styled, { icon, ThemedText } from 'lib/theme'
+import { CheckCircle } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
-import { CheckCircle } from 'react-feather'
 
 import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -15,8 +15,6 @@ const tooltip = (
   <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
 )
 
-const SelectedIcon = icon(CheckCircle, { color: 'accent' })
-
 const StyledOption = styled(TextButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
 `
@@ -24,7 +22,7 @@ const StyledOption = styled(TextButton)<{ selected: boolean }>`
 const StyledInputOption = styled(BaseButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
   ${inputCss}
-  border-color: ${({ selected, theme }) => selected && theme.accent};
+  border-color: ${({ selected, theme }) => (selected ? theme.active : 'transparent')} !important;
   padding: calc(0.5em - 1px) 0.75em;
 `
 
@@ -36,12 +34,12 @@ interface OptionProps<T> {
 
 function Option<T>({ value, selected, onSelect }: OptionProps<T>) {
   return (
-    <StyledOption color="accent" selected={selected} onClick={() => onSelect(value)}>
+    <StyledOption selected={selected} onClick={() => onSelect(value)}>
       <Row>
         <ThemedText.Subhead2>{value}%</ThemedText.Subhead2>
         {selected && (
           <ThemedText.Subhead2 color="currentColor">
-            <SelectedIcon />
+            <CheckCircle color="active" />
           </ThemedText.Subhead2>
         )}
       </Row>

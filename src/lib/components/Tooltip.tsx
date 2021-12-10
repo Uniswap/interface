@@ -1,12 +1,10 @@
 import { Placement } from '@popperjs/core'
-import styled, { icon } from 'lib/theme'
+import { HelpCircle, Icon } from 'lib/icons'
+import styled from 'lib/theme'
 import { ReactNode, useState } from 'react'
-import { HelpCircle, Icon } from 'react-feather'
 
 import { IconButton } from './Button'
 import Popover from './Popover'
-
-const HelpCircleIcon = icon(HelpCircle)
 
 const IconTooltip = styled(IconButton)`
   :hover {
@@ -22,7 +20,7 @@ interface TooltipInterface {
 }
 
 export default function Tooltip({
-  icon: Icon = HelpCircleIcon,
+  icon: Icon = HelpCircle,
   children,
   placement = 'auto',
   contained,
@@ -36,7 +34,7 @@ export default function Tooltip({
         onFocus={() => setShow(true)}
         onBlur={() => setShow(false)}
       >
-        <Icon />
+        <Icon color="secondary" />
       </IconTooltip>
     </Popover>
   )

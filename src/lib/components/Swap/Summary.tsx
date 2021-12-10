@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import styled, { icon, ThemedText } from 'lib/theme'
+import { ArrowRight, Info } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
-import { ArrowRight, Info } from 'react-feather'
 
 import ActionButton from '../ActionButton'
 import Column from '../Column'
@@ -11,9 +11,6 @@ import Row from '../Row'
 import Rule from '../Rule'
 import Details from './Details'
 import { Input, inputAtom, outputAtom, swapAtom } from './state'
-
-const ArrowIcon = icon(ArrowRight)
-const InfoIcon = icon(Info)
 
 const TokenImg = styled.img`
   border-radius: 100%;
@@ -62,7 +59,7 @@ export default function Summary({ input, output }: SummaryProps) {
             </Row>
           )}
         </Column>
-        <ArrowIcon />
+        <ArrowRight />
         <Column gap={0.25}>
           <Row gap={0.5} justify="flex-start">
             <TokenImg src={output.token.logoURI} />
@@ -123,7 +120,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
         <Rule />
         <Column gap={0.75}>
           <Row justify="flex-start" gap={0.5}>
-            <InfoIcon />
+            <Info />
             <ThemedText.Subhead2 color="secondary">
               <Trans>Transaction details</Trans>
             </ThemedText.Subhead2>

@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
-import styled, { icon, ThemedText } from 'lib/theme'
+import { ChevronDown } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
-import { ChevronDown } from 'react-feather'
 
 import Button from '../Button'
 import Row from '../Row'
@@ -11,6 +11,19 @@ const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
   padding: 0.25em;
   padding-left: ${({ empty }) => (empty ? 0.75 : 0.25)}em;
 
+  :disabled {
+    // prevents border from expanding the button's box size
+    padding: calc(0.25em - 1px);
+    padding-left: calc(${({ empty }) => (empty ? 0.75 : 0.25)}em - 1px);
+  }
+`
+
+const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
+  height: 1.2em;
+  max-width: ${({ collapsed }) => (collapsed ? '1.2' : '8.2')}em;
+  overflow-x: hidden;
+  transition: max-width 0.2s linear;
+
   img {
     border-radius: 100%;
     height: 1.2em;
@@ -18,26 +31,16 @@ const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
   }
 `
 
-const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
-  height: 1.2em;
-  max-width: ${({ collapsed }) => (collapsed ? '1.2' : '8')}em;
-  overflow-x: hidden;
-  transition: max-width 0.2s linear;
-`
-
-const ChevronDownIcon = styled(icon(ChevronDown, { color: 'onInteractive' }))`
-  stroke-width: 3;
-`
-
 interface TokenButtonProps {
   value?: Token
   collapsed: boolean
+  disabled?: boolean
   onClick: () => void
 }
 
-export default function TokenButton({ value, collapsed, onClick }: TokenButtonProps) {
+export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
   return (
-    <StyledTokenButton onClick={onClick} empty={!value} color={value ? 'interactive' : 'accent'}>
+    <StyledTokenButton onClick={onClick} empty={!value} color={value ? 'interactive' : 'accent'} disabled={disabled}>
       <ThemedText.ButtonLarge color="onInteractive">
         <TokenButtonRow gap={0.4} collapsed={Boolean(value) && collapsed}>
           {value ? (
@@ -48,7 +51,7 @@ export default function TokenButton({ value, collapsed, onClick }: TokenButtonPr
           ) : (
             <Trans>Select a token</Trans>
           )}
-          <ChevronDownIcon />
+          <ChevronDown color="onInteractive" strokeWidth={3} />
         </TokenButtonRow>
       </ThemedText.ButtonLarge>
     </StyledTokenButton>
