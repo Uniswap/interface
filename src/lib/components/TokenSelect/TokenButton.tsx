@@ -11,12 +11,6 @@ const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
   padding: 0.25em;
   padding-left: ${({ empty }) => (empty ? 0.75 : 0.25)}em;
 
-  img {
-    border-radius: 100%;
-    height: 1.2em;
-    width: 1.2em;
-  }
-
   :disabled {
     // prevents border from expanding the button's box size
     padding: calc(0.25em - 1px);
@@ -26,9 +20,15 @@ const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
 
 const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
   height: 1.2em;
-  max-width: ${({ collapsed }) => (collapsed ? '1.2' : '8')}em;
+  max-width: ${({ collapsed }) => (collapsed ? '1.2' : '8.2')}em;
   overflow-x: hidden;
   transition: max-width 0.2s linear;
+
+  img {
+    border-radius: 100%;
+    height: 1.2em;
+    width: 1.2em;
+  }
 `
 
 interface TokenButtonProps {

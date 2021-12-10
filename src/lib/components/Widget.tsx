@@ -1,3 +1,5 @@
+import 'inter-ui'
+
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider, useAtom } from 'jotai'
 import EIP1193Connector from 'lib/connectors/EIP1193'
