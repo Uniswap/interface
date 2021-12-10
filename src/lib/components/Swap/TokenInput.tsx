@@ -14,6 +14,18 @@ const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
 `
 
+const ValueInput = styled(DecimalInput)`
+  color: ${({ theme }) => theme.primary};
+
+  :hover:not(:focus-within) {
+    color: ${({ theme }) => theme.onHover(theme.primary)};
+  }
+
+  :hover:not(:focus-within)::placeholder {
+    color: ${({ theme }) => theme.onHover(theme.secondary)};
+  }
+`
+
 const delayedFadeIn = keyframes`
   0% {
     opacity: 0;
@@ -61,12 +73,12 @@ export default function TokenInput({
     <Column gap={0.375}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
         <ThemedText.H2>
-          <DecimalInput
+          <ValueInput
             value={value}
             onFocus={onFocus}
             onChange={onChangeInput}
             disabled={disabled || !token}
-          ></DecimalInput>
+          ></ValueInput>
         </ThemedText.H2>
         {showMax && (
           <MaxButton onClick={onMax} ref={max}>

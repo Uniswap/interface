@@ -155,7 +155,7 @@ export const inputCss = css`
   cursor: text;
   padding: calc(0.75em - 1px);
 
-  :hover {
+  :hover:not(:focus-within) {
     background-color: ${({ theme }) => theme.onHover(theme.container)};
     border-color: ${({ theme }) => theme.onHover(theme.container)};
   }
