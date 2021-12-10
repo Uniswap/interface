@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import CheckIcon from 'lib/assets/Check'
-import styled, { Color } from 'lib/theme'
+import styled, { Color, css } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
 import { Icon as FeatherIcon } from 'react-feather'
 import {
@@ -20,6 +20,8 @@ import {
   X as XIcon,
 } from 'react-feather'
 
+export { default as Logo } from 'lib/assets/Logo'
+
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
 function icon(Icon: FeatherIcon | SVGIcon) {
@@ -32,6 +34,34 @@ function icon(Icon: FeatherIcon | SVGIcon) {
 }
 
 export type Icon = ReturnType<typeof icon>
+
+export const largeIconCss = css<{ iconSize: number }>`
+  display: flex;
+
+  svg {
+    align-self: center;
+    height: ${({ iconSize }) => iconSize}em;
+    width: ${({ iconSize }) => iconSize}em;
+  }
+`
+
+const LargeWrapper = styled.div<{ iconSize: number }>`
+  height: 1em;
+  ${largeIconCss}
+`
+
+interface LargeIconProps {
+  icon: Icon
+  size?: number
+}
+
+export function LargeIcon({ icon: Icon, size = 1.2 }: LargeIconProps) {
+  return (
+    <LargeWrapper iconSize={size}>
+      <Icon />
+    </LargeWrapper>
+  )
+}
 
 export const AlertTriangle = icon(AlertTriangleIcon)
 export const ArrowDown = icon(ArrowDownIcon)

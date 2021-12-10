@@ -1,24 +1,29 @@
-import Logo from 'lib/assets/Logo'
+import { largeIconCss, Logo } from 'lib/icons'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { ReactElement, ReactNode } from 'react'
 
 import Row from './Row'
 
-const HeaderRow = styled(Row)`
-  margin: 0 0.75em;
-  padding-top: 0.75em;
-`
-
 const StyledLogo = styled(Logo)<{ color: Color }>`
   cursor: pointer;
   fill: ${({ color, theme }) => theme[color]};
-  height: 1em;
   transition: transform 0.3s ease;
-  width: 1em;
 
   :hover {
     fill: ${({ color, theme }) => theme.onHover(theme[color])};
     transform: rotate(-5deg);
+  }
+`
+
+const HeaderRow = styled(Row)`
+  height: 2.25em;
+  margin: 0 0.75em;
+  padding-top: 0.75em;
+  ${largeIconCss}
+
+  ${StyledLogo} {
+    height: 1.5em;
+    width: 1.5em;
   }
 `
 
@@ -30,7 +35,7 @@ export interface HeaderProps {
 
 export default function Header({ title, logo, children }: HeaderProps) {
   return (
-    <HeaderRow>
+    <HeaderRow iconSize={1.2}>
       <Row gap={0.5}>
         {logo && (
           <a href={`https://app.uniswap.org/`}>

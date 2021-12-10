@@ -26,7 +26,7 @@ export type Color = keyof Colors
 
 export interface Attributes {
   fontFamily: string
-  borderRadius: boolean
+  borderRadius: boolean | 0 | 1
 }
 
 export interface Theme extends Partial<Attributes>, Partial<Colors> {}

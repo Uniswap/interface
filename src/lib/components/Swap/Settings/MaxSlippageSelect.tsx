@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import { Check } from 'lib/icons'
+import { Check, LargeIcon } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
 
@@ -37,11 +37,7 @@ function Option<T>({ value, selected, onSelect }: OptionProps<T>) {
     <StyledOption selected={selected} onClick={() => onSelect(value)}>
       <Row>
         <ThemedText.Subhead2>{value}%</ThemedText.Subhead2>
-        {selected && (
-          <ThemedText.Subhead2 color="currentColor">
-            <Check />
-          </ThemedText.Subhead2>
-        )}
+        {selected && <LargeIcon icon={Check} />}
       </Row>
     </StyledOption>
   )

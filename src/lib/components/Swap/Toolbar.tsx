@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import { AlertTriangle, Info } from 'lib/icons'
-import { ThemedText, ThemeProvider } from 'lib/theme'
+import { AlertTriangle, Info, largeIconCss } from 'lib/icons'
+import styled, { ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
 import { TextButton } from '../Button'
@@ -54,6 +54,10 @@ function LoadedState({ input, output }: LoadedStateProps) {
     </TextButton>
   )
 }
+
+const ToolbarRow = styled(Row)`
+  ${largeIconCss}
+`
 
 export default function Toolbar({ disabled }: { disabled?: boolean }) {
   const { activeInput } = useAtomValue(stateAtom)
@@ -111,9 +115,9 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     <>
       <Rule />
       <ThemedText.Caption>
-        <Row justify="flex-start" gap={0.5}>
+        <ToolbarRow justify="flex-start" gap={0.5} iconSize={4 / 3}>
           {caption}
-        </Row>
+        </ToolbarRow>
       </ThemedText.Caption>
     </>
   )
