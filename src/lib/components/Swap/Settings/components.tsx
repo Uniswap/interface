@@ -6,7 +6,7 @@ import Row from '../../Row'
 import Tooltip from '../../Tooltip'
 
 export const optionCss = (selected: boolean) => css`
-  border: 1px solid ${({ theme }) => (selected ? theme.accent : theme.outline)};
+  border: 1px solid ${({ theme }) => (selected ? theme.active : theme.outline)};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   color: ${({ theme }) => theme.primary} !important;
   display: grid;
@@ -14,7 +14,7 @@ export const optionCss = (selected: boolean) => css`
   padding: 0.5em;
 
   :enabled:hover {
-    border-color: ${({ theme }) => theme.onHover(selected ? theme.accent : theme.outline)};
+    border-color: ${({ theme }) => theme.onHover(selected ? theme.active : theme.outline)};
   }
 `
 

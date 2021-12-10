@@ -161,6 +161,6 @@ export const inputCss = css`
   }
 
   :focus-within {
-    border-color: ${({ theme }) => theme.accent};
+    border-color: ${({ theme }) => theme.active};
   }
 `
