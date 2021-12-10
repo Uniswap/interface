@@ -62,6 +62,11 @@ export const textVariants = {
   },
   buttonLabel: {
     fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  buttonLabelLg: {
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 18,
     lineHeight: 24,
   },

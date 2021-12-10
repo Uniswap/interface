@@ -3,6 +3,10 @@ export const primaryButtonVariants = {
     backgroundColor: 'pink',
     color: 'white',
   },
+  gray: {
+    backgroundColor: 'gray200',
+    color: 'white',
+  },
   green: {
     backgroundColor: 'green',
     color: 'white',

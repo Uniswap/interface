@@ -16,7 +16,6 @@ import { useTokenBalance } from 'src/features/balances/hooks'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { theme } from 'src/styles/theme'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -99,13 +98,19 @@ export function TokenDetailsScreen({
             <ActivityIndicator color="grey" animating={loading} />
           )}
           <Box flexDirection="row" my="md" mx="lg">
-            <PrimaryButton flex={1} label={t`Buy`} onPress={onPressBuy} disabled={false} mr="sm" />
             <PrimaryButton
               flex={1}
-              label={t`Sell`}
+              label={t('Buy')}
+              largeText={true}
+              onPress={onPressBuy}
+              mr="sm"
+            />
+            <PrimaryButton
+              variant="gray"
+              flex={1}
+              label={t('Sell')}
+              largeText={true}
               onPress={onPressSell}
-              disabled={false}
-              style={{ backgroundColor: theme.colors.gray200 }}
             />
           </Box>
         </Box>
