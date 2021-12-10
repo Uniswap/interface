@@ -437,7 +437,7 @@ const TokenPair = ({
                 onMax={() => {
                   onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                 }}
-                showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                showMaxButton={true}
                 currency={currencies[Field.CURRENCY_A]}
                 id="add-liquidity-input-tokena"
                 disableCurrencySelect={true}
@@ -472,7 +472,7 @@ const TokenPair = ({
                 onMax={() => {
                   onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                 }}
-                showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                showMaxButton={true}
                 currency={currencies[Field.CURRENCY_B]}
                 disableCurrencySelect={true}
                 id="add-liquidity-input-tokenb"
