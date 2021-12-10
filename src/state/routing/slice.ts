@@ -6,10 +6,7 @@ import qs from 'qs'
 
 import { GetQuoteResult } from './types'
 
-const protocols: Protocol[] = [
-  // Protocol.V2,
-  Protocol.V3,
-]
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
