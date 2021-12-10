@@ -39,7 +39,7 @@ export default function Header({ title, logo, children }: HeaderProps) {
         )}
         {title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}
       </Row>
-      <Row gap={0.5}>{children}</Row>
+      <Row gap={1}>{children}</Row>
     </HeaderRow>
   )
 }

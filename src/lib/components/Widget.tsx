@@ -19,11 +19,11 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  min-height: 340px; // 21.25em
-  min-width: 272px; // 17em
-  width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
+  min-height: 340px;
+  min-width: 300px;
   padding: 0.25em;
   position: relative;
+  width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
 
   * {
     box-sizing: border-box;

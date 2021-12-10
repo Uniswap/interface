@@ -1,5 +1,7 @@
 /* eslint-disable no-restricted-imports */
+import CheckIcon from 'lib/assets/Check'
 import styled, { Color } from 'lib/theme'
+import { FunctionComponent, SVGProps } from 'react'
 import { Icon as FeatherIcon } from 'react-feather'
 import {
   AlertTriangle as AlertTriangleIcon,
@@ -18,8 +20,10 @@ import {
   X as XIcon,
 } from 'react-feather'
 
-function icon(FeatherIcon: FeatherIcon) {
-  return styled(FeatherIcon)<{ color?: Color }>`
+type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
+
+function icon(Icon: FeatherIcon | SVGIcon) {
+  return styled(Icon)<{ color?: Color }>`
     clip-path: stroke-box;
     height: 1em;
     stroke: ${({ color = 'currentColor', theme }) => theme[color]};
@@ -43,3 +47,10 @@ export const Info = icon(InfoIcon)
 export const Settings = icon(SettingsIcon)
 export const Trash2 = icon(Trash2Icon)
 export const X = icon(XIcon)
+
+export const Check = styled(icon(CheckIcon))`
+  circle {
+    fill: ${({ theme }) => theme.active};
+    stroke: none;
+  }
+`
