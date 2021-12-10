@@ -29,9 +29,9 @@ export interface Attributes {
   borderRadius: boolean | 0 | 1
 }
 
-export interface Theme extends Record<string, unknown>, Partial<Attributes>, Partial<Colors> {}
+export interface Theme extends Partial<Attributes>, Partial<Colors> {}
 
-export interface ComputedTheme extends Record<string, unknown>, Omit<Attributes, 'borderRadius'>, Colors {
+export interface ComputedTheme extends Omit<Attributes, 'borderRadius'>, Colors {
   borderRadius: 0 | 1
   onHover: (color: string) => string
 }

@@ -24,7 +24,7 @@ export function SettingsDialog() {
           </ThemedText.Subhead2>
         </TextButton>
       </Header>
-      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded scrollable>
+      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded scrollable={{ current: boundary }}>
         <BoundaryProvider value={boundary}>
           <MaxSlippageSelect />
           <TransactionTtlInput />

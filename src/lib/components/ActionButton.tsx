@@ -1,4 +1,4 @@
-import { AlertTriangle } from 'lib/icons'
+import { AlertTriangle, LargeIcon } from 'lib/icons'
 import styled, { Color, css, keyframes, ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 
@@ -79,7 +79,7 @@ export default function ActionButton({
       </StyledButton>
       {updated && (
         <UpdateRow gap={0.5}>
-          <AlertTriangle />
+          <LargeIcon icon={AlertTriangle} />
           <ThemedText.Subhead2>{updated?.message}</ThemedText.Subhead2>
         </UpdateRow>
       )}

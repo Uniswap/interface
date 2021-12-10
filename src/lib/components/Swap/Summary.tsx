@@ -110,7 +110,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
   return (
     <>
       <Header title={<Trans>Swap summary</Trans>} ruled />
-      <SummaryColumn gap={0.75} padded scrollable>
+      <SummaryColumn gap={0.75} padded>
         <Column gap={0.75} flex>
           <Summary input={input} output={output} />
           <ThemedText.Caption>

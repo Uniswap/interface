@@ -1,5 +1,5 @@
 import { mix, transparentize } from 'polished'
-import { createContext, ReactNode, useContext, useMemo } from 'react'
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 
 import styled, { ThemedProvider } from './styled'
 import { Colors, ComputedTheme, Theme } from './theme'
@@ -9,7 +9,7 @@ export type { Color, Colors, Theme } from './theme'
 export default styled
 export * from './dynamic'
 export * from './layer'
-export * from './scrollable'
+export * from './scrollbar'
 export * from './styled'
 export * as ThemedText from './type'
 
@@ -65,6 +65,15 @@ export const defaultTheme = {
   fontFamily: '"Inter var", sans-serif',
   borderRadius: true,
   ...lightTheme,
+}
+
+export function useSystemTheme() {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
+  const [systemTheme, setSystemTheme] = useState(prefersDark.matches ? darkTheme : lightTheme)
+  prefersDark.addEventListener('change', (e) => {
+    setSystemTheme(e.matches ? darkTheme : lightTheme)
+  })
+  return systemTheme
 }
 
 const ThemeContext = createContext<ComputedTheme>(toComputedTheme(defaultTheme))

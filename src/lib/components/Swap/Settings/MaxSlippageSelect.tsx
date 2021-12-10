@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import { CheckCircle } from 'lib/icons'
+import { Check, LargeIcon } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
 
@@ -23,7 +23,7 @@ const StyledInputOption = styled(BaseButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
   ${inputCss}
   border-color: ${({ selected, theme }) => (selected ? theme.active : 'transparent')} !important;
-  padding: calc(0.5em - 1px) 0.75em;
+  padding: calc(0.5em - 1px) 0.625em;
 `
 
 interface OptionProps<T> {
@@ -37,11 +37,7 @@ function Option<T>({ value, selected, onSelect }: OptionProps<T>) {
     <StyledOption selected={selected} onClick={() => onSelect(value)}>
       <Row>
         <ThemedText.Subhead2>{value}%</ThemedText.Subhead2>
-        {selected && (
-          <ThemedText.Subhead2 color="currentColor">
-            <CheckCircle color="active" />
-          </ThemedText.Subhead2>
-        )}
+        {selected && <LargeIcon icon={Check} />}
       </Row>
     </StyledOption>
   )
