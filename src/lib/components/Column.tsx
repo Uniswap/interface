@@ -1,4 +1,5 @@
-import styled, { Color, scrollableCss, Theme } from 'lib/theme'
+import styled, { Color, scrollbarCss, Theme } from 'lib/theme'
+import { RefObject } from 'react'
 
 const Column = styled.div<{
   align?: string
@@ -6,7 +7,7 @@ const Column = styled.div<{
   justify?: string
   gap?: number
   padded?: true
-  scrollable?: true
+  scrollable?: RefObject<HTMLElement>
   flex?: true
   grow?: true
   theme: Theme
@@ -21,9 +22,10 @@ const Column = styled.div<{
   grid-auto-flow: row;
   grid-template-columns: 1fr;
   justify-content: ${({ justify }) => justify ?? 'space-between'};
+  overflow-y: ${({ scrollable }) => scrollable && 'scroll'};
   padding: ${({ padded }) => padded && '0.75em'};
 
-  ${({ scrollable }) => scrollable && scrollableCss}
+  ${({ scrollable }) => scrollable && scrollbarCss(scrollable)}
 `
 
 export default Column

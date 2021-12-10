@@ -9,7 +9,7 @@ export type { Color, Colors, Theme } from './theme'
 export default styled
 export * from './dynamic'
 export * from './layer'
-export * from './scrollable'
+export * from './scrollbar'
 export * from './styled'
 export * as ThemedText from './type'
 

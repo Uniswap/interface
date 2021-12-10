@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
-import styled, { scrollableCss, ThemedText } from 'lib/theme'
+import styled, { css, scrollbarCss, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import React, {
   ComponentClass,
@@ -8,6 +8,7 @@ import React, {
   forwardRef,
   KeyboardEvent,
   memo,
+  RefObject,
   SyntheticEvent,
   useCallback,
   useEffect,
@@ -36,20 +37,32 @@ const TokenButton = styled(BaseButton)`
 
 type ItemData = Token[]
 interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
-const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{ hover: number }>`
+const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
+  hover: number
+  element: RefObject<HTMLElement>
+}>`
   ${TokenButton}[data-index='${({ hover }) => hover}'] {
     background-color: ${({ theme }) => theme.onHover(theme.module)};
   }
 
-  ${scrollableCss}
+  overflow-y: scroll;
 
-  @supports selector(::-webkit-scrollbar-thumb) {
-    overflow-y: overlay !important;
+  ${({ element }) => {
+    const overflowCss = scrollbarCss(element)
+    return (
+      overflowCss &&
+      css`
+        ${overflowCss}
+        @supports selector(::-webkit-scrollbar-thumb) {
+          overflow-y: overlay !important;
 
-    ${TokenButton} {
-      padding-right: 2em;
-    }
-  }
+          ${TokenButton} {
+            padding-right: 2em;
+          }
+        }
+      `
+    )
+  }}
 `
 
 interface TokenOptionProps {
@@ -133,8 +146,8 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   const [hover, setHover] = useState(-1)
   useEffect(() => setHover(-1), [tokens])
 
+  const element = useRef<HTMLElement>(null)
   const list = useRef<FixedSizeList>(null)
-  const innerList = useRef<HTMLElement>(null)
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -203,7 +216,8 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             itemSize={56}
             className="scrollbar"
             ref={list}
-            innerRef={innerList}
+            outerRef={element}
+            element={element}
           >
             {ItemRow}
           </TokenList>
