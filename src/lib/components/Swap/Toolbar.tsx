@@ -55,7 +55,7 @@ function LoadedState({ input, output }: LoadedStateProps) {
   )
 }
 
-export default function Toolbar() {
+export default function Toolbar({ disabled }: { disabled?: boolean }) {
   const { activeInput } = useAtomValue(stateAtom)
   const swap = useAtomValue(swapAtom)
   const input = useAtomValue(inputAtom)
@@ -65,6 +65,14 @@ export default function Toolbar() {
   const caption = useMemo(() => {
     const filledInput = asFilledInput(input)
     const filledOutput = asFilledInput(output)
+    if (disabled) {
+      return (
+        <>
+          <AlertTriangle color="secondary" />
+          <Trans>Connect wallet to swap</Trans>
+        </>
+      )
+    }
     if (activeInput === Field.INPUT ? filledInput && output.token : filledOutput && input.token) {
       if (!swap) {
         return (
@@ -97,7 +105,7 @@ export default function Toolbar() {
         <Trans>Enter an amount</Trans>
       </>
     )
-  }, [activeInput, balance, input, output, swap])
+  }, [activeInput, balance, disabled, input, output, swap])
 
   return (
     <>

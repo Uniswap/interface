@@ -11,6 +11,11 @@ export const BaseButton = styled.button`
   line-height: inherit;
   margin: 0;
   padding: 0;
+
+  :disabled {
+    cursor: initial;
+    filter: saturate(0) opacity(0.4);
+  }
 `
 
 export default styled(BaseButton)<{ color?: Color }>`
@@ -28,8 +33,7 @@ export default styled(BaseButton)<{ color?: Color }>`
   :disabled {
     border: 1px solid ${({ theme }) => theme.outline};
     color: ${({ theme }) => theme.secondary};
-    cursor: not-allowed;
-    filter: saturate(0) opacity(0.4);
+    cursor: initial;
   }
 `
 

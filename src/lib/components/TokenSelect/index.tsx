@@ -66,10 +66,11 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
 interface TokenSelectProps {
   value?: Token
   collapsed: boolean
+  disabled?: boolean
   onSelect: (value: Token) => void
 }
 
-export default function TokenSelect({ value, collapsed, onSelect }: TokenSelectProps) {
+export default function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
   const selectAndClose = useCallback(
     (value: Token) => {
@@ -80,7 +81,7 @@ export default function TokenSelect({ value, collapsed, onSelect }: TokenSelectP
   )
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} onClick={() => setOpen(true)} />
+      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <TokenSelectDialog onSelect={selectAndClose} />

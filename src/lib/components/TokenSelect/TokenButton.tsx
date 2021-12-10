@@ -16,6 +16,12 @@ const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
     height: 1.2em;
     width: 1.2em;
   }
+
+  :disabled {
+    // prevents border from expanding the button's box size
+    padding: calc(0.25em - 1px);
+    padding-left: calc(${({ empty }) => (empty ? 0.75 : 0.25)}em - 1px);
+  }
 `
 
 const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
@@ -28,12 +34,13 @@ const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
 interface TokenButtonProps {
   value?: Token
   collapsed: boolean
+  disabled?: boolean
   onClick: () => void
 }
 
-export default function TokenButton({ value, collapsed, onClick }: TokenButtonProps) {
+export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
   return (
-    <StyledTokenButton onClick={onClick} empty={!value} color={value ? 'interactive' : 'accent'}>
+    <StyledTokenButton onClick={onClick} empty={!value} color={value ? 'interactive' : 'accent'} disabled={disabled}>
       <ThemedText.ButtonLarge color="onInteractive">
         <TokenButtonRow gap={0.4} collapsed={Boolean(value) && collapsed}>
           {value ? (

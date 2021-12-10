@@ -3,11 +3,11 @@ import { Text, TextProps as TextPropsWithCss } from 'rebass'
 import styled from './styled'
 import { Color } from './theme'
 
-type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { userSelect?: 'none'; color?: Color }
+type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { userSelect?: true; color?: Color }
 
-const TextWrapper = styled(Text)<{ userSelect?: 'none'; color?: Color }>`
+const TextWrapper = styled(Text)<{ userSelect?: true; color?: Color }>`
   color: ${({ color = 'currentColor', theme }) => theme[color as Color]};
-  user-select: ${({ userSelect }) => userSelect};
+  user-select: ${({ userSelect }) => (userSelect ? undefined : 'none')};
 `
 
 export function H1(props: TextProps) {

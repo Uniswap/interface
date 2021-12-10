@@ -32,7 +32,7 @@ interface LabelProps {
 export function Label({ name, tooltip }: LabelProps) {
   return (
     <Row gap={0.5} justify="flex-start">
-      <ThemedText.Subhead2 userSelect="none">{name}</ThemedText.Subhead2>
+      <ThemedText.Subhead2>{name}</ThemedText.Subhead2>
       {tooltip && (
         <Tooltip placement="top" contained>
           <ThemedText.Caption>{tooltip}</ThemedText.Caption>

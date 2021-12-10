@@ -15,15 +15,15 @@ const ReverseRow = styled(Row)`
 `
 
 const ArrowUp = styled(ArrowUpIcon)`
+  left: calc(50% - 0.37em);
   position: absolute;
-  right: 0.5em;
-  top: 0.375em;
+  top: calc(50% - 0.82em);
 `
 
 const ArrowDown = styled(ArrowDownIcon)`
-  bottom: 0.375em;
-  left: 0.5em;
+  bottom: calc(50% - 0.82em);
   position: absolute;
+  right: calc(50% - 0.37em);
 `
 
 const Overlay = styled.div`
@@ -33,26 +33,13 @@ const Overlay = styled.div`
 `
 
 const StyledReverseButton = styled(Button)`
-  background-color: ${({ theme }) => theme.interactive};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 2.5em;
   position: relative;
   width: 2.5em;
-
-  > * {
-    stroke-width: 4;
-  }
-
-  :hover {
-    cursor: pointer;
-  }
-
-  :hover > * {
-    opacity: 0.7;
-  }
 `
 
-export default function ReverseButton() {
+export default function ReverseButton({ disabled }: { disabled?: boolean }) {
   const [state, setState] = useAtom(stateAtom)
   const onClick = useCallback(() => {
     const { input, output } = state
@@ -65,9 +52,9 @@ export default function ReverseButton() {
   return (
     <ReverseRow justify="center">
       <Overlay>
-        <StyledReverseButton onClick={onClick}>
-          <ArrowUp />
-          <ArrowDown />
+        <StyledReverseButton disabled={disabled} onClick={onClick}>
+          <ArrowUp strokeWidth={3} />
+          <ArrowDown strokeWidth={3} />
         </StyledReverseButton>
       </Overlay>
     </ReverseRow>
