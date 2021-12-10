@@ -19,13 +19,15 @@ export function computeRoutes(
 
   if (quoteResult.route.length === 0) return []
 
-  const parsedCurrencyIn = currencyIn.isNative
-    ? Ether.onChain(currencyIn.chainId)
-    : parseToken(quoteResult.route[0][0].tokenIn)
+  const parsedTokenIn = parseToken(quoteResult.route[0][0].tokenIn)
+  const parsedTokenOut = parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
 
-  const parsedCurrencyOut = currencyOut.isNative
-    ? Ether.onChain(currencyOut.chainId)
-    : parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
+  if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
+  if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
+
+  const parsedCurrencyIn = currencyIn.isNative ? Ether.onChain(currencyIn.chainId) : parsedTokenIn
+
+  const parsedCurrencyOut = currencyOut.isNative ? Ether.onChain(currencyOut.chainId) : parsedTokenOut
 
   try {
     return quoteResult.route.map((route) => {

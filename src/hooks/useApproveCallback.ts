@@ -5,6 +5,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
+import { selectRouterVersion } from 'utils/selectRouterVersion'
 
 import { SWAP_ROUTER_ADDRESS, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
@@ -147,15 +148,25 @@ export function useApproveCallbackFromTrade(
     [trade, allowedSlippage]
   )
 
-  if (Trade instanceof V2Trade || trade instanceof V3Trade) throw new Error('Trying to approvea legacy router')
-  return useApproveCallback(
+  const approveCallback = useApproveCallback(
     amountToApprove,
     chainId
-      ? trade instanceof V2Trade || trade instanceof V3Trade
-        ? undefined
+      ? trade instanceof V2Trade
+        ? V2_ROUTER_ADDRESS[chainId]
+        : trade instanceof V3Trade
+        ? V3_ROUTER_ADDRESS[chainId]
         : SWAP_ROUTER_ADDRESS[chainId]
       : undefined
   )
+
+  if (
+    (Trade instanceof V2Trade && approveCallback[0] !== ApprovalState.APPROVED) ||
+    (trade instanceof V3Trade && approveCallback[0] !== ApprovalState.APPROVED)
+  ) {
+    throw new Error('Trying to approvea legacy router')
+  }
+
+  return approveCallback
 }
 
 /**
@@ -173,37 +184,42 @@ export function useApprovalOptimizedTrade(
   | V3Trade<Currency, Currency, TradeType>
   | Trade<Currency, Currency, TradeType>
   | undefined {
-  const hasV2Routes = trade?.routes.every((route) => route.protocol === Protocol.V2)
-  const hasV3Routes = trade?.routes.every((route) => route.protocol === Protocol.V3)
-  const hasSplits = (trade?.routes?.length ?? 0) > 1
+  const onlyV2Routes = trade?.routes.every((route) => route.protocol === Protocol.V2)
+  const onlyV3Routes = trade?.routes.every((route) => route.protocol === Protocol.V3)
+  const routeHasSplits = (trade?.routes?.length ?? 0) > 1
 
   const approvalStates = useAllApprovalStates(trade, allowedSlippage)
 
+  const selectedRouterVersion = useMemo(
+    () => selectRouterVersion({ onlyV2Routes, onlyV3Routes, routeHasSplits, approvalStates }),
+    [approvalStates, routeHasSplits, onlyV2Routes, onlyV3Routes]
+  )
+
   return useMemo(() => {
     if (!trade) return undefined
-    if ([approvalStates.v2, approvalStates.v3, approvalStates.v2V3].includes(ApprovalState.PENDING)) return undefined
 
-    // TODO: need to handle unknown state?
-    if (approvalStates.v2 === ApprovalState.APPROVED && hasV2Routes && !hasSplits) {
-      const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
-      const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
-      return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)
-    } else if (approvalStates.v3 === ApprovalState.APPROVED && hasV3Routes) {
-      V3Trade.createUncheckedTradeWithMultipleRoutes({
-        routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
-          route: new V3Route(
-            route.pools.filter((p) => p instanceof Pool) as Pool[],
-            inputAmount.currency,
-            outputAmount.currency
-          ),
-          inputAmount,
-          outputAmount,
-        })),
-        tradeType: trade.tradeType,
-      })
+    switch (selectedRouterVersion) {
+      case 'v2V3':
+        return trade
+      case 'v2':
+        const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
+        const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
+        return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)
+      case 'v3':
+        return V3Trade.createUncheckedTradeWithMultipleRoutes({
+          routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
+            route: new V3Route(
+              route.pools.filter((p) => p instanceof Pool) as Pool[],
+              inputAmount.currency,
+              outputAmount.currency
+            ),
+            inputAmount,
+            outputAmount,
+          })),
+          tradeType: trade.tradeType,
+        })
+      default:
+        return undefined
     }
-
-    // through single protocol, but best route has splits
-    return trade
-  }, [trade, approvalStates.v2, approvalStates.v3, approvalStates.v2V3, hasV2Routes, hasSplits, hasV3Routes])
+  }, [trade, selectedRouterVersion])
 }
