@@ -19,8 +19,11 @@ export default function useENSContentHash(ensName?: string | null): { loading: b
   )
   const contenthash = useSingleCallResult(resolverContract, 'contenthash', ensNodeArgument)
 
-  return {
-    contenthash: contenthash.result?.[0] ?? null,
-    loading: resolverAddressResult.loading || contenthash.loading,
-  }
+  return useMemo(
+    () => ({
+      contenthash: contenthash.result?.[0] ?? null,
+      loading: resolverAddressResult.loading || contenthash.loading,
+    }),
+    [contenthash.loading, contenthash.result, resolverAddressResult.loading]
+  )
 }
