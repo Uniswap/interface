@@ -14,15 +14,13 @@ import Toolbar from './Toolbar'
 
 export default function Swap() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  // TODO: integrate actual connections through cosmos
-  //       then start a new branch to work on summary and statuses
-  const jsonRpcConnection = false
-  const [walletConnection] = useValue('enabled', { defaultValue: false })
+  const [jsonRpcConnection] = useValue('json rpc provided', { defaultValue: false })
+  const [walletConnection] = useValue('wallet connected', { defaultValue: true })
   const disabled = !jsonRpcConnection && !walletConnection
   return (
     <>
       <Header logo title={<Trans>Swap</Trans>}>
-        {(jsonRpcConnection || walletConnection) && <Wallet />}
+        {!disabled && <Wallet disabled={!walletConnection} />}
         <Settings disabled={disabled} />
       </Header>
       <div ref={setBoundary}>
