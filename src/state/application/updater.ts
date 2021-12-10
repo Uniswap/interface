@@ -12,7 +12,7 @@ export default function Updater(): null {
 
   const windowVisible = useIsWindowVisible()
 
-  const [mainnetGasPrices, setMainnetGasPrices] = useState<{ [variant in MainnetGasPrice]: string } | null>(null)
+  const [mainnetGasPrices] = useState<{ [variant in MainnetGasPrice]: string } | null>(null)
   const [state, setState] = useState<{
     chainId: number | undefined
     blockNumber: number | null
@@ -34,18 +34,6 @@ export default function Updater(): null {
     [chainId]
   )
 
-  const gasPriceCallback = useCallback((gasPrices: { rapid: number; fast: number; standard: number } | null) => {
-    if (!gasPrices) {
-      setMainnetGasPrices(null)
-      return
-    }
-    setMainnetGasPrices({
-      [MainnetGasPrice.INSTANT]: gasPrices.rapid.toString(),
-      [MainnetGasPrice.FAST]: gasPrices.fast.toString(),
-      [MainnetGasPrice.NORMAL]: gasPrices.standard.toString()
-    })
-  }, [])
-
   // attach/detach listeners
   useEffect(() => {
     if (!library || !chainId || !windowVisible) return undefined
@@ -59,26 +47,10 @@ export default function Updater(): null {
 
     library.on('block', blockNumberCallback)
 
-    let gasWebsocket: WebSocket | null = null
-    if (chainId === ChainId.MAINNET) {
-      gasWebsocket = new WebSocket('wss://www.gasnow.org/ws/gasprice')
-      gasWebsocket.onmessage = event => {
-        const data = JSON.parse(event.data)
-        if (data.type) {
-          gasPriceCallback(data.data)
-        }
-      }
-      gasWebsocket.onerror = event => {
-        console.error(event)
-        gasPriceCallback(null)
-      }
-    }
-
     return () => {
       library.removeListener('block', blockNumberCallback)
-      if (gasWebsocket) gasWebsocket.close()
     }
-  }, [dispatch, chainId, library, blockNumberCallback, windowVisible, gasPriceCallback])
+  }, [dispatch, chainId, library, blockNumberCallback, windowVisible])
 
   const debouncedState = useDebounce(state, 100)
   const debouncedMainnetGasPrices = useDebounce(mainnetGasPrices, 100)

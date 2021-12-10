@@ -9,6 +9,8 @@ import ApyBadge from '../../ApyBadge'
 import { formatCurrencyAmount } from '../../../../utils'
 import { AutoColumn } from '../../../Column'
 import { unwrappedToken } from '../../../../utils/wrappedCurrency'
+import { ReactComponent as CarrotLogo } from '../../../../assets/svg/carrot.svg'
+import { MouseoverTooltip } from '../../../Tooltip'
 
 const SizedCard = styled(DarkCard)`
   width: 210px;
@@ -31,6 +33,27 @@ const PositiveBadgeRoot = styled.div`
   background-color: rgba(14, 159, 110, 0.1);
   border-radius: 4px;
   padding: 0 4px;
+`
+
+const KpiBadge = styled.div`
+  height: 16px;
+  border: solid 1.5px #f2994a;
+  color: #f2994a;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 9px;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+`
+
+const StyledCarrotLogo = styled(CarrotLogo)`
+  margin-right: 4px;
+  > path {
+    fill: #f2994a;
+  }
 `
 
 const BadgeText = styled.div`
@@ -113,9 +136,19 @@ interface PairProps {
   usdLiquidity: CurrencyAmount
   usdLiquidityText?: string
   staked?: boolean
+  containsKpiToken?: boolean
 }
 
-export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiquidityText, ...rest }: PairProps) {
+export default function Pair({
+  token0,
+  token1,
+  usdLiquidity,
+  apy,
+  staked,
+  containsKpiToken,
+  usdLiquidityText,
+  ...rest
+}: PairProps) {
   return (
     <SizedCard selectable {...rest}>
       <RootFlex>
@@ -124,11 +157,19 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiq
             <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
           </MobileHidden>
           <Box>
-            <AutoColumn gap="6px">
+            <AutoColumn justify="flex-end" gap="6px">
               {apy.greaterThan('0') && (
                 <BadgeWrapper>
-                  <ApyBadge apy={apy} />
+                  <ApyBadge upTo={containsKpiToken} apy={apy} />
                 </BadgeWrapper>
+              )}
+              {containsKpiToken && (
+                <MouseoverTooltip content="Rewards at least a Carrot KPI token">
+                  <KpiBadge>
+                    <StyledCarrotLogo />
+                    CARROT
+                  </KpiBadge>
+                </MouseoverTooltip>
               )}
               {staked && (
                 <PositiveBadgeRoot>

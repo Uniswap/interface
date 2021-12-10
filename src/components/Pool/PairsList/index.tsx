@@ -43,6 +43,7 @@ interface PairsListProps {
     liquidityUSD: CurrencyAmount
     maximumApy: Percent
     staked?: boolean
+    containsKpiToken?: boolean
   }[]
   filter?: PairsFilterType
   loading?: boolean
@@ -78,6 +79,7 @@ export default function PairsList({ aggregatedPairs, loading, filter }: PairsLis
                     usdLiquidity={aggregatedPair.liquidityUSD}
                     apy={aggregatedPair.maximumApy}
                     staked={aggregatedPair.staked}
+                    containsKpiToken={aggregatedPair.containsKpiToken}
                   />
                 </UndecoratedLink>
               )

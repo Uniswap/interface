@@ -2,9 +2,7 @@ import { Pair } from '@swapr/sdk'
 import { DateTime, Duration } from 'luxon'
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { useActiveLiquidityMiningCampaignsForPair } from '../../../../hooks/useActiveLiquidityMiningCampaignsForPair'
-import { useExpiredLiquidityMiningCampaignsForPair } from '../../../../hooks/useExpiredLiquidityMiningCampaignsForPair'
-import { useUpcomingLiquidityMiningCampaignsForPair } from '../../../../hooks/useUpcomingLiquidityMiningCampaignsForPair'
+import { useLiquidityMiningCampaignsForPair } from '../../../../hooks/useLiquidityMiningCampaignsForPair'
 import { AutoColumn } from '../../../Column'
 import TabBar from '../../../TabBar'
 import List from './List'
@@ -26,17 +24,12 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
         .toJSDate(),
     []
   )
-  const { loading: loadingActive, wrappedCampaigns: activeWrappedCampaigns } = useActiveLiquidityMiningCampaignsForPair(
-    pair
-  )
   const {
-    loading: loadingUpcoming,
-    wrappedCampaigns: upcomingWrappedCampaigns
-  } = useUpcomingLiquidityMiningCampaignsForPair(pair)
-  const {
-    loading: loadingExpired,
-    wrappedCampaigns: expiredWrappedCampaigns
-  } = useExpiredLiquidityMiningCampaignsForPair(pair, lowerExpiredCampaignTimeLimit)
+    loading: loadingActive,
+    wrappedCampaigns: activeWrappedCampaigns,
+    expiredLoading,
+    expiredWrappedCampagins
+  } = useLiquidityMiningCampaignsForPair(pair, lowerExpiredCampaignTimeLimit)
 
   const [activeTab, setActiveTab] = useState(0)
 
@@ -48,22 +41,14 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
             key="active"
             loadingAmount={!!(!pair || loadingActive)}
             itemsAmount={activeWrappedCampaigns.length}
-            badgeTheme="green"
-          >
-            Active rewards
-          </TabTitle>,
-          <TabTitle
-            key="active"
-            loadingAmount={!!(!pair || loadingUpcoming)}
-            itemsAmount={upcomingWrappedCampaigns.length}
             badgeTheme="orange"
           >
-            Upcoming
+            Campaigns
           </TabTitle>,
           <TabTitle
             key="active"
-            loadingAmount={!!(!pair || loadingExpired)}
-            itemsAmount={expiredWrappedCampaigns.length}
+            loadingAmount={!!(!pair || expiredLoading)}
+            itemsAmount={expiredWrappedCampagins.length}
             badgeTheme="red"
           >
             Expired (30 days)
@@ -75,8 +60,7 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
       {pair ? (
         <>
           {activeTab === 0 && <List loading={loadingActive} stakablePair={pair} items={activeWrappedCampaigns} />}
-          {activeTab === 1 && <List loading={loadingUpcoming} stakablePair={pair} items={upcomingWrappedCampaigns} />}
-          {activeTab === 2 && <List loading={loadingExpired} stakablePair={pair} items={expiredWrappedCampaigns} />}
+          {activeTab === 1 && <List loading={expiredLoading} stakablePair={pair} items={expiredWrappedCampagins} />}
         </>
       ) : (
         <List loading />
