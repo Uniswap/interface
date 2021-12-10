@@ -37,7 +37,7 @@ interface LoadedStateProps {
 function LoadedState({ input, output }: LoadedStateProps) {
   const [flip, setFlip] = useState(true)
   const ratio = useMemo(() => {
-    const [a, b] = flip ? [input, output] : [output, input]
+    const [a, b] = flip ? [output, input] : [input, output]
     const ratio = `1 ${a.token.symbol} = ${b.value / a.value} ${b.token.symbol}`
     const usdc = a.usdc && ` ($${(a.usdc / a.value).toLocaleString('en')})`
     return (
