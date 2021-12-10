@@ -12,15 +12,16 @@ import { darken } from 'polished'
 import { memo, useState } from 'react'
 import { Plus } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
+import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { Separator, TYPE } from 'theme'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
-const Wrapper = styled(AutoColumn)<{ open: boolean }>`
+const Wrapper = styled(AutoColumn)<{ open: boolean; darkMode?: boolean }>`
   padding: 8px 12px;
   border-radius: 12px;
-  background-color: ${({ theme }) => darken(0.11, theme.blue4)};
+  background-color: ${({ theme, darkMode }) => (darkMode ? darken(0.01, theme.blue4) : 'transparent')};
   grid-row-gap: ${({ open }) => (open ? '12px' : 0)};
 `
 
@@ -50,8 +51,10 @@ export default memo(function SwapRoute({
   const routes = getTokenPath(trade)
   const [open, setOpen] = useState(false)
 
+  const [darkMode] = useDarkModeManager()
+
   return (
-    <Wrapper open={open || fixedOpen}>
+    <Wrapper open={open || fixedOpen} darkMode={darkMode}>
       <RowBetween>
         <AutoRow gap="4px" width="auto">
           <AutoRouterLogo />
