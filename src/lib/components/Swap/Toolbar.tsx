@@ -41,7 +41,7 @@ function LoadedState({ input, output }: LoadedStateProps) {
     const ratio = `1 ${a.token.symbol} = ${b.value / a.value} ${b.token.symbol}`
     const usdc = a.usdc && ` ($${(a.usdc / a.value).toLocaleString('en')})`
     return (
-      <Row gap={0.25}>
+      <Row gap={0.25} style={{ userSelect: 'text' }}>
         {ratio}
         {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
       </Row>

@@ -50,7 +50,7 @@ export default function Input({ disabled, children }: InputProps) {
             {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}
             {balance && (
               <ThemedText.Body2 color={input.value && input.value > balance ? 'error' : undefined}>
-                Balance: {balance}
+                Balance: <span style={{ userSelect: 'text' }}>{balance}</span>
               </ThemedText.Body2>
             )}
           </Row>

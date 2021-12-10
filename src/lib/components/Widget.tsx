@@ -25,6 +25,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   * {
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.fontFamily};
+    user-select: none;
   }
 `
 
