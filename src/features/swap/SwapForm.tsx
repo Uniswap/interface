@@ -97,24 +97,22 @@ export function SwapForm(props: SwapFormProps) {
             onSelectCurrency(CurrencyField.INPUT, newCurrency)
           }
           onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
+          otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
+          showNonZeroBalancesOnly={true}
         />
 
         <Box zIndex="popover">
           <Box style={StyleSheet.absoluteFill} alignItems="center" height={34}>
             <Box
               bg="gray50"
-              borderRadius="lg"
+              borderRadius="md"
               borderColor="white"
               borderWidth={4}
               justifyContent="center"
-              alignItems="center">
-              <Button
-                onPress={onSwitchCurrencies}
-                height={30}
-                width={30}
-                justifyContent="center"
-                alignItems="center">
-                <SwapArrow height={24} width={24} />
+              alignItems="center"
+              p="xs">
+              <Button onPress={onSwitchCurrencies} justifyContent="center" alignItems="center">
+                <SwapArrow height={14} width={16} />
               </Button>
             </Box>
           </Box>
@@ -128,6 +126,8 @@ export function SwapForm(props: SwapFormProps) {
             onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
           }
           onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
+          showNonZeroBalancesOnly={false}
+          otherSelectedCurrency={currencies[CurrencyField.INPUT]}
           backgroundColor="gray50"
         />
       </Box>

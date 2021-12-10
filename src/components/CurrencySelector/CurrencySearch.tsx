@@ -13,10 +13,16 @@ import { useAllCurrencies } from 'src/features/tokens/useTokens'
 
 interface CurrencySearchProps {
   onSelectCurrency: (currency: Currency) => void
+  otherCurrency?: Currency | null
+  selectedCurrency?: Currency | null
 }
 
-export function CurrencySearch({ onSelectCurrency }: CurrencySearchProps) {
-  const [chainFilter, setChainFilter] = useState<ChainId | null>(null)
+export function CurrencySearch({
+  onSelectCurrency,
+  otherCurrency,
+  selectedCurrency,
+}: CurrencySearchProps) {
+  const [chainFilter, setChainFilter] = useState<ChainId | null>(otherCurrency?.chainId ?? null)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
 
   const { t } = useTranslation()
@@ -58,7 +64,11 @@ export function CurrencySearch({ onSelectCurrency }: CurrencySearchProps) {
             </Box>
           }
           renderItem={({ item }: ListRenderItemInfo<Currency>) => (
-            <Option currency={item as Currency} onPress={() => onSelectCurrency?.(item)} />
+            <Option
+              currency={item as Currency}
+              onPress={() => onSelectCurrency?.(item)}
+              selected={Boolean(selectedCurrency?.equals(item))}
+            />
           )}
           keyExtractor={getKey}
         />

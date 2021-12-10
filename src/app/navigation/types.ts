@@ -30,9 +30,12 @@ export type AccountStackParamList = {
 export type AppStackParamList = {
   [Screens.AccountStack]: NavigatorScreenParams<AccountStackParamList>
   [Screens.CurrencySelector]: {
+    showNonZeroBalancesOnly: boolean
     onSelectCurrency: (currency: Currency) => void
-    preselectedCurrencyAddress?: string
-    preselectedCurrencyChainId?: ChainId
+    otherCurrencyAddress?: string
+    otherCurrencyChainId?: ChainId
+    selectedCurrencyAddress?: string
+    selectedCurrencyChainId?: ChainId
   }
   [Screens.DevStack]: NavigatorScreenParams<DevStackParamList>
   [Screens.Notifications]: undefined

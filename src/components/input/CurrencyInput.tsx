@@ -16,15 +16,25 @@ type RestyleProps = BackgroundColorProps<Theme>
 
 type CurrencyInputProps = {
   currency: Currency | null | undefined
-  currencyBalance: CurrencyAmount<Currency> | null | undefined
   currencyAmount: CurrencyAmount<Currency> | null | undefined
+  currencyBalance: CurrencyAmount<Currency> | null | undefined
   onSelectCurrency: (currency: Currency) => void
   onSetAmount: (amount: string) => void
+  otherSelectedCurrency?: Currency | null
+  showNonZeroBalancesOnly?: boolean
 } & RestyleProps
 
 export function CurrencyInput(props: CurrencyInputProps) {
-  const { currency, currencyAmount, currencyBalance, onSetAmount, onSelectCurrency, ...rest } =
-    props
+  const {
+    currency,
+    currencyAmount,
+    currencyBalance,
+    onSetAmount,
+    onSelectCurrency,
+    showNonZeroBalancesOnly,
+    otherSelectedCurrency,
+    ...rest
+  } = props
 
   const transformedProps = useRestyle(restyleFunctions, rest)
 
@@ -43,7 +53,9 @@ export function CurrencyInput(props: CurrencyInputProps) {
         />
         <CurrencySelector
           onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
+          otherSelectedCurrency={otherSelectedCurrency}
           selectedCurrency={currency}
+          showNonZeroBalancesOnly={showNonZeroBalancesOnly}
         />
       </Box>
       <Box flexDirection="row">

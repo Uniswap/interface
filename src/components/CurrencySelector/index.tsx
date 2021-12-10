@@ -9,15 +9,21 @@ import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
 import { Screens } from 'src/screens/Screens'
+import { currencyId } from 'src/utils/currencyId'
 
 interface CurrencySelectorProps {
+  showNonZeroBalancesOnly?: boolean
   onSelectCurrency: ComponentProps<typeof CurrencySearch>['onSelectCurrency']
-  selectedCurrency: Currency | null | undefined
-  // TODO:
-  //  - otherSelectCurrency (to hide)
+  otherSelectedCurrency?: Currency | null
+  selectedCurrency?: Currency | null
 }
 
-export function CurrencySelector({ onSelectCurrency, selectedCurrency }: CurrencySelectorProps) {
+export function CurrencySelector({
+  showNonZeroBalancesOnly,
+  onSelectCurrency,
+  otherSelectedCurrency,
+  selectedCurrency,
+}: CurrencySelectorProps) {
   const navigation = useAppStackNavigation()
 
   const { t } = useTranslation()
@@ -25,6 +31,11 @@ export function CurrencySelector({ onSelectCurrency, selectedCurrency }: Currenc
   const selectCurrency = () => {
     navigation.navigate(Screens.CurrencySelector, {
       onSelectCurrency,
+      otherCurrencyAddress: otherSelectedCurrency ? currencyId(otherSelectedCurrency) : undefined,
+      otherCurrencyChainId: otherSelectedCurrency?.chainId,
+      selectedCurrencyAddress: selectedCurrency ? currencyId(selectedCurrency) : undefined,
+      selectedCurrencyChainId: selectedCurrency?.chainId,
+      showNonZeroBalancesOnly: Boolean(showNonZeroBalancesOnly),
     })
   }
 

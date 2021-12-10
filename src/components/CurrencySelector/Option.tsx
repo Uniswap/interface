@@ -11,6 +11,7 @@ import { getNetworkColors } from 'src/utils/colors'
 interface OptionProps {
   currency: Currency
   onPress: () => void
+  selected: boolean
 }
 
 export function Option({ currency, onPress }: OptionProps) {
