@@ -8,7 +8,7 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { darken } from 'polished'
 import { ReactNode, useState } from 'react'
-import { ChevronDown, Info } from 'react-feather'
+import { Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { TYPE } from 'theme'
@@ -47,11 +47,6 @@ const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean }>`
   :hover {
     background-color: ${({ theme, disabled }) => (disabled ? theme.bg1 : darken(0.015, theme.bg1))};
   }
-`
-
-const RotatingArrow = styled(ChevronDown)<{ open?: boolean }>`
-  transform: ${({ open }) => (open ? 'rotate(180deg)' : 'none')};
-  transition: transform 0.1s linear;
 `
 
 const StyledPolling = styled.div`
@@ -125,12 +120,12 @@ export default function SwapDetailsDropdown({
   swapInputError,
 }: SwapDetailsInlineProps) {
   const theme = useTheme()
-  const [showDetails, setShowDetails] = useState(false)
+  const [showDetails] = useState(false)
 
   return (
     <Wrapper>
       <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
-        <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade}>
+        <StyledHeaderRow disabled={true}>
           <RowFixed style={{ position: 'relative' }}>
             {(loading || syncing) && !(swapInputError && !trade) ? (
               <StyledPolling>
@@ -174,7 +169,6 @@ export default function SwapDetailsDropdown({
             {!trade?.gasUseEstimateUSD ? null : (
               <GasEstimateBadge trade={trade} loading={syncing || loading} showRoute={true} />
             )}
-            <RotatingArrow stroke={trade ? theme.text3 : theme.bg3} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>
         <AnimatedDropdown open={showDetails}>
