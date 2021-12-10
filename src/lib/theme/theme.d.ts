@@ -26,12 +26,12 @@ export type Color = keyof Colors
 
 export interface Attributes {
   fontFamily: string
-  borderRadius: boolean | 0 | 1
+  borderRadius: boolean
 }
 
-export interface Theme extends Record<string, unknown>, Partial<Attributes>, Partial<Colors> {}
+export interface Theme extends Partial<Attributes>, Partial<Colors> {}
 
-export interface ComputedTheme extends Record<string, unknown>, Omit<Attributes, 'borderRadius'>, Colors {
+export interface ComputedTheme extends Omit<Attributes, 'borderRadius'>, Colors {
   borderRadius: 0 | 1
   onHover: (color: string) => string
 }
