@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro'
-import { prefetchColor } from 'lib/hooks/useColor'
 import styled, { css, scrollbarCss, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import React, {
@@ -90,7 +89,6 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     <TokenButton
       data-index={index}
       style={style}
-      onMouseDown={() => prefetchColor(value)}
       onClick={onEvent}
       onBlur={onEvent}
       onFocus={onEvent}

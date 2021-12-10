@@ -62,8 +62,9 @@ export const darkTheme: Colors = {
 }
 
 export const defaultTheme = {
-  fontFamily: '"Inter var", sans-serif',
   borderRadius: true,
+  fontFamily: '"Inter var", sans-serif',
+  tokenColorExtraction: true,
   ...lightTheme,
 }
 

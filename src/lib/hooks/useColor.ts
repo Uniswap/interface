@@ -47,8 +47,10 @@ async function getColorFromUriPath(uri: string): Promise<string | undefined> {
   return
 }
 
-export function prefetchColor(token?: Token) {
-  if (token) {
+export function usePrefetchColor(token?: Token) {
+  const theme = useTheme()
+
+  if (theme.tokenColorExtraction && token) {
     getColorFromToken(token)
   }
 }
@@ -60,7 +62,7 @@ export default function useColor(token?: Token) {
   useLayoutEffect(() => {
     let stale = false
 
-    if (token) {
+    if (theme.tokenColorExtraction && token) {
       getColorFromToken(token, (color) => {
         if (!stale && color) {
           setColor(color)
