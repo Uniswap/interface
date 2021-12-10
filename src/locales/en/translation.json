@@ -16,8 +16,6 @@
   "ENS name or address": "ENS name or address",
   "Track": "Track",
   "Swap": "Swap",
-  "Buy": "Buy",
-  "Sell": "Sell",
   "Fetching best price...": "Fetching best price...",
   "Failed to fetch a quote": "Failed to fetch a quote",
   "Cannot swap on watched account": "Cannot swap on watched account",
@@ -29,6 +27,7 @@
   "Select an input currency": "Select an input currency",
   "Select an output currency": "Select an output currency",
   "Insufficient funds": "Insufficient funds",
+  "Switch to Rinkeby": "Switch to Rinkeby",
   "Something went wrong": "Something went wrong",
   " failed": " failed",
   " successful!": " successful!",
@@ -50,6 +49,7 @@
   "ChainId {{chainId}}": "ChainId {{chainId}}",
   "Accounts": "Accounts",
   "Refresh": "Refresh",
+  "Explore": "Explore",
   "Track Account": "Track Account",
   "Extra words detected - tap to remove them": "Extra words detected - tap to remove them",
   "Confirm phrase": "Confirm phrase",
@@ -59,9 +59,10 @@
   "Higher fees will result in faster transaction processing.": "Higher fees will result in faster transaction processing.",
   "Unknown token": "Unknown token",
   "Your balance": "Your balance",
+  "Buy": "Buy",
+  "Sell": "Sell",
   "Send those tokens around": "Send those tokens around",
   "Uniswap Wallet": "Uniswap Wallet",
   "Create New Account": "Create New Account",
-  "Import Account": "Import Account",
-  "Explore": "Explore"
+  "Import Account": "Import Account"
 }

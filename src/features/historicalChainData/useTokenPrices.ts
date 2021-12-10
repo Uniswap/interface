@@ -4,6 +4,7 @@ import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useEthPricesQuery, useTokensQuery } from 'src/features/historicalChainData/generated/hooks'
 import { useEndpoint } from 'src/features/historicalChainData/hooks'
+import { logger } from 'src/utils/logger'
 
 export function useTokenPrices(tokens: Currency[]) {
   const currentChains = useActiveChainIds()
@@ -18,11 +19,16 @@ export function useTokenPrices(tokens: Currency[]) {
   const chainIdToPrices: ChainIdTo<ReturnType<typeof useChainTokenPrices>> = {}
 
   for (const chainId of currentChains) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    chainIdToPrices[chainId] = useChainTokenPrices({
-      chainId,
-      currencies: chainIdToTokens[chainId] || [],
-    })
+    try {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      chainIdToPrices[chainId] = useChainTokenPrices({
+        chainId,
+        currencies: chainIdToTokens[chainId] || [],
+      })
+    } catch (e) {
+      logger.debug('useTokenPrices', '', 'useTokenPrices failed: ', e)
+      chainIdToPrices[chainId] = { isLoading: false, isError: true, addressToPrice: {} }
+    }
   }
 
   const resultByChain = Object.values(chainIdToPrices).flat()

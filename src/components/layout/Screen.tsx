@@ -1,6 +1,6 @@
 import { BackgroundColorShorthandProps, createBox } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
-import { NativeSafeAreaViewProps, SafeAreaView } from 'react-native-safe-area-context'
+import { Edge, NativeSafeAreaViewProps, SafeAreaView } from 'react-native-safe-area-context'
 import { Theme } from 'src/styles/theme'
 
 const SafeAreaBox = createBox<Theme>(SafeAreaView)
@@ -14,3 +14,5 @@ export function Screen(props: PropsWithChildren<Props>) {
     </SafeAreaBox>
   )
 }
+
+export const sheetScreenEdges: ReadonlyArray<Edge> = ['top', 'left', 'right']

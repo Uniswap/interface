@@ -45,15 +45,14 @@ export function TokenBalanceList({
   onRefresh,
   onPressToken,
 }: TokenBalanceListProps) {
-  const ethBalance = balances.length > 0 ? balances[0] : undefined
   const currenciesToFetch = balances.map((currencyAmount) => currencyAmount.currency)
   const tokenPricesByChain = useTokenPrices(currenciesToFetch)
 
-  const totalBalance = useTotalBalance(loading || !ethBalance ? [] : balances, tokenPricesByChain)
+  const totalBalance = useTotalBalance(balances, tokenPricesByChain)
 
-  if (loading || !ethBalance) {
+  if (loading && !balances.length) {
     return (
-      <Box padding="lg">
+      <Box padding="lg" mt="lg">
         <ActivityIndicator color="grey" animating={loading} />
       </Box>
     )
