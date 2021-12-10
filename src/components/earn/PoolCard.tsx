@@ -133,7 +133,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
       ? `${userAprMode ? apr.toFixed(0, { groupSeparator: ',' }) : compoundedAPY}%`
       : '-'
 
-  if (farmSummary.rewardsUSDPerYear === '0') {
+  if (Number(fromWei(farmSummary.rewardsUSDPerYear)) < 100 && !userValueCUSD?.greaterThan('0')) {
     return null
   }
 
