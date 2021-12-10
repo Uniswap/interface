@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
+import { useMemo } from 'react'
 import { V3TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
@@ -26,7 +27,10 @@ export function useBestV3Trade(
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
-  const [debouncedAmount, debouncedOtherCurrency] = useDebounce([amountSpecified, otherCurrency], 200)
+  const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
+    useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
+    200
+  )
 
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
