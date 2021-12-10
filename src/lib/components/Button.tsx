@@ -33,7 +33,6 @@ export default styled(BaseButton)<{ color?: Color }>`
     border: 1px solid ${({ theme }) => theme.outline};
     color: ${({ theme }) => theme.secondary};
     cursor: initial;
-    transition: background-color 0.2s, color 0.2s, filter 0.2s;
   }
 `
 

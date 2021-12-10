@@ -14,6 +14,8 @@ import Toolbar from './Toolbar'
 
 export default function Swap() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  // TODO: integrate actual connections through cosmos
+  //       then start a new branch to work on summary and statuses
   const jsonRpcConnection = false
   const [walletConnection] = useValue('enabled', { defaultValue: false })
   const disabled = !jsonRpcConnection && !walletConnection
