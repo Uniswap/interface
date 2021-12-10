@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
+import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
@@ -21,6 +22,11 @@ import TradePrice from './TradePrice'
 const Wrapper = styled(Row)`
   width: 100%;
   justify-content: center;
+`
+
+const StyledCard = styled(OutlineCard)`
+  padding: 12px;
+  border: 1px solid ${({ theme }) => theme.bg2};
 `
 
 const StyledInfoIcon = styled(Info)`
@@ -123,7 +129,7 @@ export default function SwapDetailsDropdown({
 
   return (
     <Wrapper>
-      <AutoColumn gap={showDetails ? '8px' : '0px'} style={{ width: '100%' }}>
+      <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
         <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade}>
           <RowFixed style={{ position: 'relative' }}>
             {(loading || syncing) && !(swapInputError && !trade) ? (
@@ -136,7 +142,7 @@ export default function SwapDetailsDropdown({
               <MouseoverTooltipContent
                 wrap={false}
                 content={
-                  <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
+                  <ResponsiveTooltipContainer origin="top right" style={{ padding: '12px' }}>
                     <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
                   </ResponsiveTooltipContainer>
                 }
@@ -172,9 +178,11 @@ export default function SwapDetailsDropdown({
           </RowFixed>
         </StyledHeaderRow>
         <AnimatedDropdown open={showDetails}>
-          <AutoColumn gap={showDetails ? '8px' : '0'}>
+          <AutoColumn gap={'8px'} style={{ padding: '0', paddingBottom: '8px' }}>
             {trade && !trade?.gasUseEstimateUSD ? <SwapRoute trade={trade} syncing={syncing} /> : null}
-            <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+            <StyledCard>
+              <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+            </StyledCard>
           </AutoColumn>
         </AnimatedDropdown>
       </AutoColumn>
