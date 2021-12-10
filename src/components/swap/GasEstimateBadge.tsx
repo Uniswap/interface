@@ -36,14 +36,17 @@ export default function GasEstimateBadge({
   trade,
   loading,
   showRoute,
+  disableHover,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined | null // dollar amount in active chain's stabelcoin
   loading: boolean
   showRoute?: boolean // show route instead of gas estimation summary
+  disableHover?: boolean
 }) {
   return (
     <MouseoverTooltipContent
       wrap={false}
+      disableHover={disableHover}
       content={
         loading ? null : (
           <ResponsiveTooltipContainer origin="top right" style={{ padding: '12px', maxWidth: '400px' }}>

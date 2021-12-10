@@ -171,7 +171,14 @@ export default function SwapDetailsDropdown({
             ) : null}
           </RowFixed>
           <RowFixed>
-            {!trade?.gasUseEstimateUSD ? null : <GasEstimateBadge trade={trade} loading={syncing || loading} />}
+            {!trade?.gasUseEstimateUSD ? null : (
+              <GasEstimateBadge
+                trade={trade}
+                loading={syncing || loading}
+                showRoute={!showDetails}
+                disableHover={showDetails}
+              />
+            )}
             <RotatingArrow stroke={trade ? theme.text3 : theme.bg3} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>
