@@ -42,11 +42,8 @@ const BodyText = styled.div`
   align-items: center;
   display: grid;
   grid-gap: 4px;
-  grid-template-columns: 40px 4fr;
-  grid-template-rows: auto auto;
   margin: 20px 16px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    grid-template-columns: 42px 4fr;
     grid-gap: 8px;
   }
 `
@@ -64,6 +61,7 @@ const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
   padding: 12px 16px;
   text-decoration: none;
   width: auto;
+  white-space: nowrap;
   :hover,
   :focus,
   :active {
@@ -102,8 +100,9 @@ const ContentWrapper = styled.div<{ darkMode: boolean; thin?: boolean }>`
   ${({ thin }) =>
     thin &&
     css`
+      justify-content: space-between;
       flex-direction: row;
-      max-width: max-content;
+      max-width: 100%;
       min-height: min-content;
     `}
 `
@@ -128,6 +127,7 @@ const NetworkSelectorLink = styled.div<{ thin?: boolean }>`
   padding: 12px 16px;
   text-decoration: none;
   width: auto;
+  white-space: nowrap;
   cursor: pointer;
   :hover,
   :focus,
@@ -139,8 +139,7 @@ const NetworkSelectorLink = styled.div<{ thin?: boolean }>`
     thin &&
     css`
       font-size: 14px;
-      margin: auto 10px;
-      width: 168px;
+      margin: auto 10px auto 0;
     `}
 `
 
@@ -160,7 +159,7 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
 
   const dismiss = useCallback(() => {
     setLayerTwoInfoAcknowledged(true)
-  }, [chainId, setLayerTwoInfoAcknowledged])
+  }, [setLayerTwoInfoAcknowledged])
 
   if (!chainId || !L1_CHAIN_IDS.includes(chainId) || layerTwoInfoAcknowledged) {
     return null
@@ -169,7 +168,7 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
   return (
     <RootWrapper>
       <ContentWrapper darkMode={darkMode} thin={props.thin}>
-        <CloseIcon onClick={dismiss} />
+        {!props.thin && <CloseIcon onClick={dismiss} />}
         <BodyText>
           <Header thin={props.thin}>
             <Trans>Swap on Layer 2</Trans>
