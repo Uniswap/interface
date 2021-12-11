@@ -75,6 +75,12 @@ export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
   `};
 `
 
+export const DepositContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
 export const RightContainer = styled(AutoColumn)`
   grid-row: 1 / 3;
   grid-column: 2;

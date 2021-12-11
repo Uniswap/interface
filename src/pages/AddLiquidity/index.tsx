@@ -3,6 +3,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { LayerTwoAddLiquidityPromotion } from 'components/LayerTwoPromotion/LayerTwoAddLiquidityPromotion'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -47,6 +48,7 @@ import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Bound, Field } from '../../state/mint/v3/actions'
+import { tryParseAmount } from '../../state/swap/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
@@ -59,6 +61,7 @@ import { Dots } from '../Pool/styleds'
 import { Review } from './Review'
 import {
   CurrencyDropdown,
+  DepositContainer,
   DynamicSection,
   HideMedium,
   MediumOnly,
@@ -102,6 +105,7 @@ export default function AddLiquidity({
 
   const baseCurrency = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
+  const ether = useCurrency('ETH') ?? undefined
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
@@ -136,10 +140,14 @@ export default function AddLiquidity({
     existingPosition
   )
 
+  const fiveEthUsdcValue = useUSDCValue(tryParseAmount('5', ether))
+
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
 
   const isValid = !errorMessage && !invalidRange
+
+  const [showL2Suggestion, setShowL2Suggestion] = useState<boolean>(false) // clicked confirm
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -363,6 +371,21 @@ export default function AddLiquidity({
     },
     [currencyIdA, currencyIdB, history, onLeftRangeInput, onRightRangeInput]
   )
+
+  const handleBothCurrenciesSelect = useCallback(() => {
+    let _showL2Suggestion = false
+    if (fiveEthUsdcValue) {
+      // Only suggest L2 to users who would like to add liquidity that is worth less than 5 ETH
+      const currencyAusdcValue = usdcValues[Field.CURRENCY_A]
+      const currencyBusdcValue = usdcValues[Field.CURRENCY_B]
+      if (currencyAusdcValue && currencyBusdcValue) {
+        _showL2Suggestion = currencyAusdcValue.add(currencyBusdcValue).lessThan(fiveEthUsdcValue)
+      }
+    }
+    setShowL2Suggestion(_showL2Suggestion)
+  }, [usdcValues, fiveEthUsdcValue])
+
+  useEffect(() => handleBothCurrenciesSelect(), [handleBothCurrenciesSelect])
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
@@ -603,7 +626,7 @@ export default function AddLiquidity({
                   />
                 )}
               </AutoColumn>
-              <div>
+              <DepositContainer>
                 <DynamicSection
                   disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
                 >
@@ -641,7 +664,8 @@ export default function AddLiquidity({
                     />
                   </AutoColumn>
                 </DynamicSection>
-              </div>
+                {!hasExistingPosition && <LayerTwoAddLiquidityPromotion suggestL2={showL2Suggestion} />}
+              </DepositContainer>
 
               {!hasExistingPosition ? (
                 <>
