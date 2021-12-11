@@ -56,6 +56,7 @@ function LoadedState({ input, output }: LoadedStateProps) {
 }
 
 const ToolbarRow = styled(Row)`
+  padding: 0.5em 0;
   ${largeIconCss}
 `
 

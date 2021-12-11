@@ -21,7 +21,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  height: 340px;
+  height: 352px;
   min-width: 300px;
   padding: 0.25em;
   position: relative;
