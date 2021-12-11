@@ -11,6 +11,7 @@ import {
   SerializedPair,
   SerializedToken,
   updateHideClosedPositions,
+  updateLayerTwoInfoAcknowledged,
   updateMatchesDarkMode,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -27,6 +28,7 @@ export interface UserState {
   lastUpdateVersionTimestamp?: number
 
   matchesDarkMode: boolean // whether the dark mode media query matches
+  layerTwoInfoAcknowledged: boolean
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
@@ -68,6 +70,7 @@ function pairKey(token0Address: string, token1Address: string) {
 
 export const initialState: UserState = {
   matchesDarkMode: false,
+  layerTwoInfoAcknowledged: false,
   userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
@@ -124,6 +127,9 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateMatchesDarkMode, (state, action) => {
       state.matchesDarkMode = action.payload.matchesDarkMode
       state.timestamp = currentTimestamp()
+    })
+    .addCase(updateLayerTwoInfoAcknowledged, (state, action) => {
+      state.layerTwoInfoAcknowledged = action.payload.layerTwoInfoAcknowledged
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode

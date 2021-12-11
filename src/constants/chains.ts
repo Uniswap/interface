@@ -285,3 +285,5 @@ export const CHAIN_INFO: ChainInfoMap = {
     },
   },
 }
+
+export const LAYER_TWO_HELP_CENTER_LINK = 'https://help.uniswap.org/en/articles/5576210-what-is-a-layer-2'

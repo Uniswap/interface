@@ -20,6 +20,7 @@ import {
   SerializedPair,
   SerializedToken,
   updateHideClosedPositions,
+  updateLayerTwoInfoAcknowledged,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -335,4 +336,14 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
+}
+
+export function useLayerTwoSwapAlert(): [boolean, (layerTwoInfoAcknowledged: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const layerTwoInfoAcknowledged = useAppSelector(({ user }) => user.layerTwoInfoAcknowledged)
+  const setLayerTwoInfoAcknowledged = (layerTwoInfoAcknowledged: boolean) => {
+    dispatch(updateLayerTwoInfoAcknowledged({ layerTwoInfoAcknowledged }))
+  }
+
+  return [layerTwoInfoAcknowledged, setLayerTwoInfoAcknowledged]
 }
