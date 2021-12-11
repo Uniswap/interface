@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { L1_CHAIN_IDS, LAYER_TWO_HELP_CENTER_LINK } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { X } from 'react-feather'
 import { useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useDarkModeManager, useLayerTwoSwapAlert } from 'state/user/hooks'
-import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
@@ -150,11 +149,9 @@ interface LayerTwoSwapPromotionProps {
 }
 
 export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [layerTwoInfoAcknowledged, setLayerTwoInfoAcknowledged] = useLayerTwoSwapAlert()
-  const [locallyDismissed, setLocallyDimissed] = useState(false)
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
 
   const toggleChain = useCallback(() => {
@@ -162,18 +159,17 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
   }, [toggle])
 
   const dismiss = useCallback(() => {
-    setLocallyDimissed(true)
-  }, [chainId, setLayerTwoInfoAcknowledged, userEthBalance])
+    setLayerTwoInfoAcknowledged(true)
+  }, [chainId, setLayerTwoInfoAcknowledged])
 
-  if (!chainId || !L1_CHAIN_IDS.includes(chainId) || locallyDismissed) {
+  if (!chainId || !L1_CHAIN_IDS.includes(chainId) || layerTwoInfoAcknowledged) {
     return null
   }
   const helpCenterLink = LAYER_TWO_HELP_CENTER_LINK
-  const showCloseIcon = Boolean(userEthBalance?.greaterThan(0) && !props.thin)
   return (
     <RootWrapper>
       <ContentWrapper darkMode={darkMode} thin={props.thin}>
-        {showCloseIcon && <CloseIcon onClick={dismiss} />}
+        <CloseIcon onClick={dismiss} />
         <BodyText>
           <Header thin={props.thin}>
             <Trans>Swap on Layer 2</Trans>
