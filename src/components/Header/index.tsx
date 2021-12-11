@@ -57,7 +57,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   background-size: 100% 200%;
   transition: background-position 0.1s, box-shadow 0.1s;
   background-blend-mode: hard-light;
-
+  margin-top:20px;
   ${({ theme }) => theme.mediaWidth.upToLarge`
     grid-template-columns: 48px 1fr 1fr;
   `};
@@ -382,10 +382,10 @@ export default function Header() {
         <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
           <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
         </Modal>
-        <Title style={{textDecoration:"'none"}} href="/">
+        <Title style={{textDecoration:"none"}} href="/">
           <UniIcon>
             <img
-              width={isMobile ? '30px' : '100px'}
+              width={isMobile ? '100px' : '100px'}
               src={logo}
               alt="logo"
             />

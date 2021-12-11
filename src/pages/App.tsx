@@ -65,6 +65,7 @@ import { AccountPage } from 'components/AccountPage/AccountPage'
 import { Transactions } from './Vote/TransactionsPage'
 import { LifetimeReflections } from './Swap/LifetimeReflections'
 import Vote from './Vote'
+import TopTokenMovers from 'components/swap/TopMovers'
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
@@ -96,6 +97,7 @@ const HeaderWrapper = styled.div`
   width: 100%;
   justify-content: space-between;
   position: fixed;
+  flex-flow:column wrap;
   top: 0;
   z-index: 2;
   margin-bottom:2rem;
@@ -442,11 +444,14 @@ export default function App() {
         })}>
         <AppWrapper>
           {Video}
+
           <HeaderWrapper>
             <Header />
+
           </HeaderWrapper>
+          <TopTokenMovers />
+
           <BodyWrapper>
-         
             <Popups />
             <Polling />
             <TopLevelModals />
@@ -454,6 +459,9 @@ export default function App() {
               <Route exact strict path="/reflections" component={LifetimeReflections} />
               <Route exact strict path="/details" component={AccountPage} />
               <Route exact strict path="/limit" component={LimitOrders} />
+              <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol" component={SelectiveChart}/>
+
+              <Route exact strict path="/selective-charts/:tokenAddress" component={SelectiveChart}/>
               <Route exact strict path="/selective-charts" component={SelectiveChart}/>
               <Route exact strict path="/fomo" component={FomoPage} />
               <Route exact strict path="/donation-tracker" component={DonationTracker} />
@@ -511,7 +519,6 @@ export default function App() {
             </Switch>
 
             <Marginer />
-
           </BodyWrapper>
 
 

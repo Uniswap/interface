@@ -101,7 +101,7 @@ export default function CreateProposal() {
   const latestProposalData = useProposalData(0, latestProposalId)
   const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
-
+  const proposalSource = React.useMemo(() => chainId && chainId === 56 ? 'kinainubsc.eth' : chainId && chainId === 1 ? 'kibaworldwide.eth' : '',[chainId])
   const [modalOpen, setModalOpen] = useState(false)
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
@@ -293,7 +293,7 @@ const theme = useTheme()
       />
       <ProposalSubmissionModal isOpen={attempting} hash={hash} onDismiss={handleDismissSubmissionModal} />
   */}  
-  <iframe src={'https://snapshot.org/#/kibaworldwide.eth'} style={{width:'100%', height:'100vh', background:'transparent', border: `1px solid ${theme.primary1}`}} />
+  <iframe src={`https://snapshot.org/#/${proposalSource}`} style={{width:'100%', height:'100vh', background:'transparent', border: `1px solid ${theme.primary1}`}} />
    </AppBody>
   )
 }

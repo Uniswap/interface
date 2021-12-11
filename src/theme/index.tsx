@@ -132,9 +132,10 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)<{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ font?: string, color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
-`
+  font-family: ${props => props.font ? props.font : 'inherit'};
+  `
 
 export const TYPE = {
   main(props: TextProps) {
@@ -159,7 +160,7 @@ export const TYPE = {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
   },
   mediumHeader(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={20} {...props} />
+    return <TextWrapper font={'"Bangers", cursive;'} fontWeight={500} fontSize={20} {...props} />
   },
   subHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} color={'text1'} fontSize={14} {...props} />

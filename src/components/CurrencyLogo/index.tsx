@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
@@ -34,12 +35,14 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
-
+  const {chainId} = useWeb3React()
   const srcs: string[] = useMemo(() => {
     if (!currency || currency.isNative) return []
 
-    if (currency.isToken) {
-      const defaultUrls = currency.chainId === 1 ? [getTokenLogoURL(currency.address)] : []
+    if (currency.isToken || (currency as any)?.id) {
+      let tokenAdd = currency?.address
+      if((currency as any)?.id && !currency?.address) tokenAdd = (currency as any)?.id
+      const defaultUrls = chainId === 1 ? [getTokenLogoURL(tokenAdd)] : chainId === 56 ? [`https://pancakeswap.finance/images/tokens/${tokenAdd}.png`] : []
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, ...defaultUrls]
       }
@@ -53,7 +56,7 @@ export default function CurrencyLogo({
   }
   
 
-  if (currency?.address?.toLowerCase() === '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'.toLowerCase())
+  if (currency?.symbol?.toLowerCase() === 'kiba'.toLowerCase() || currency?.name?.toLowerCase() === 'kiba inu')
   return <StyledLogo size={size} srcs={['https://assets.coingecko.com/coins/images/19525/large/2021-11-13-18-11-18-removebg-preview.png?1636989110']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
   
   
