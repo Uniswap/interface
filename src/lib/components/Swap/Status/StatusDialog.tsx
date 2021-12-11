@@ -5,14 +5,14 @@ import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Clock, Info } from 
 import styled, { ThemedText } from 'lib/theme'
 import { useState } from 'react'
 
-import ActionButton from '../ActionButton'
-import Button from '../Button'
-import Column from '../Column'
-import Row from '../Row'
-import Rule from '../Rule'
-import SpinnerIcon from '../SpinnerIcon'
-import { Transaction, transactionAtom } from './state'
-import Summary from './Summary'
+import ActionButton from '../../ActionButton'
+import Button from '../../Button'
+import Column from '../../Column'
+import Row from '../../Row'
+import Rule from '../../Rule'
+import SpinnerIcon from '../../SpinnerIcon'
+import { Transaction, transactionAtom } from '../state'
+import Summary from '../Summary'
 
 const Header = styled.div<{ maximized?: boolean }>`
   display: flex;

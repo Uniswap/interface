@@ -4,13 +4,13 @@ import { ArrowRight, Info } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
-import ActionButton from '../ActionButton'
-import Column from '../Column'
-import { Header } from '../Dialog'
-import Row from '../Row'
-import Rule from '../Rule'
+import ActionButton from '../../ActionButton'
+import Column from '../../Column'
+import { Header } from '../../Dialog'
+import Row from '../../Row'
+import Rule from '../../Rule'
+import { Input, inputAtom, outputAtom, swapAtom } from '../state'
 import Details from './Details'
-import { Input, inputAtom, outputAtom, swapAtom } from './state'
 
 const TokenImg = styled.img`
   border-radius: 100%;

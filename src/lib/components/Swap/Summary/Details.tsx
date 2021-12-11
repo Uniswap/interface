@@ -3,9 +3,9 @@ import { useAtomValue } from 'jotai/utils'
 import { ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 
-import Column from '../Column'
-import Row from '../Row'
-import { stateAtom } from './state'
+import Column from '../../Column'
+import Row from '../../Row'
+import { stateAtom } from '../state'
 
 function Detail({ children }: { children: ReactNode }) {
   return (
