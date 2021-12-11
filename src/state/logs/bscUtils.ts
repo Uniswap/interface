@@ -180,15 +180,15 @@ const fetchPoolTransactions = async (address: string): Promise<{ data?: any[]; e
 }
 
 const fetchBnbPrices = async (
-  block24: number,
-  block48: number,
-  blockWeek: number,
+  block24: { number: number, timestamp: string },
+  block48: { number: number, timestamp: string },
+  blockWeek: { number: number, timestamp: string },
 ): Promise<{ bnbPrices: BnbPrices | undefined; error: boolean }> => {
   try {
-    const data = await request<PricesResponse>(INFO_CLIENT, BNB_PRICES, {
-      block24,
-      block48,
-      blockWeek,
+    const data = await request<PricesResponse>(INFO_CLIENT, BNB_PRICES, { 
+      "block24": block24.number,
+      "block48": block48.number,
+      "blockWeek": blockWeek.number,
     }).catch(err => console.error("ERROR", err))
 
     return {
@@ -363,20 +363,20 @@ export const useBlocksFromTimestamps = (
  */
 export const useBnbPrices = (): BnbPrices | undefined => {
   const [prices, setPrices] = React.useState<BnbPrices | undefined>()
+  const [t24h, t48h, t7d, t14d] = getDeltaTimestamps()
+  const { blocks, error: blockError } = useBlocksFromTimestamps([t24h, t48h, t7d, t14d])
+  const [block24h, block48h, block7d, block14d] = blocks ?? []
   const fetchData = React.useCallback(async () => {
     try {
-    const res = await axios.get('https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
-    const data =  res.data;
-    setPrices({
-      current: +data.data.price,
-      oneDay: 0,
-      twoDay: 0,
-      week: 0
-    });
+    //await axios.get('https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
+    if (block24h && block48h && block7d) {
+    const data = await fetchBnbPrices(block24h, block48h, block7d);
+    setPrices(data.bnbPrices);
+    }
   } catch (er) {
     console.error(er);
   }
-  }, [prices])
+  }, [prices, block24h, block7d, block48h])
   useInterval(fetchData, 60000, true)
   return prices
 }
