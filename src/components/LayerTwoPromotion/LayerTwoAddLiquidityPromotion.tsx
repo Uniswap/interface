@@ -42,9 +42,12 @@ const RootWrapper = styled.div<{ darkMode: boolean; suggestL2?: boolean }>`
   padding: 8px 16px;
   border-radius: 12px;
   margin: 12px auto 0;
-  ${({ suggestL2 }) =>
+  ${({ suggestL2, theme }) =>
     !suggestL2 &&
     css`
+      ${theme.mediaWidth.upToMedium`
+        display: none;
+      `}
       visibility: hidden;
     `}
 `
