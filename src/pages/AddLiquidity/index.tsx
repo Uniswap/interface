@@ -169,6 +169,7 @@ export default function AddLiquidity({
     [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const usdcValues = {
     [Field.CURRENCY_A]: useUSDCValue(parsedAmounts[Field.CURRENCY_A]),
     [Field.CURRENCY_B]: useUSDCValue(parsedAmounts[Field.CURRENCY_B]),

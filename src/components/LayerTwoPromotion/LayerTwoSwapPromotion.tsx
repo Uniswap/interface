@@ -29,7 +29,7 @@ export const Controls = styled.div<{ thin?: boolean }>`
   ${({ thin }) =>
     thin &&
     css`
-      margin: auto 32px auto 0;
+      margin: auto 40px auto 0;
     `}
 `
 const CloseIcon = styled(X)`
@@ -71,9 +71,10 @@ const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
   ${({ thin }) =>
     thin &&
     css`
+      height: auto;
       font-size: 14px;
+      padding: 8px 12px;
       margin: auto;
-      width: 112px;
     `}
 `
 const RootWrapper = styled.div`
@@ -104,6 +105,11 @@ const ContentWrapper = styled.div<{ darkMode: boolean; thin?: boolean }>`
       flex-direction: row;
       max-width: 100%;
       min-height: min-content;
+      ${CloseIcon} {
+        top: 50%;
+        margin-top: -12px;
+        right: 8px;
+      }
     `}
 `
 const Header = styled.h2<{ thin?: boolean }>`
@@ -138,7 +144,9 @@ const NetworkSelectorLink = styled.div<{ thin?: boolean }>`
   ${({ thin }) =>
     thin &&
     css`
+      height: auto;
       font-size: 14px;
+      padding: 8px 12px;
       margin: auto 10px auto 0;
     `}
 `
@@ -168,7 +176,7 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
   return (
     <RootWrapper>
       <ContentWrapper darkMode={darkMode} thin={props.thin}>
-        {!props.thin && <CloseIcon onClick={dismiss} />}
+        <CloseIcon onClick={dismiss} />
         <BodyText>
           <Header thin={props.thin}>
             <Trans>Swap on Layer 2</Trans>
