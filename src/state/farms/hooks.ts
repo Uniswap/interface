@@ -15,7 +15,7 @@ import { useBlockNumber, useETHPrice, useExchangeClient, useTokensPrice } from '
 import { useActiveWeb3React } from 'hooks'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useFairLaunchContracts } from 'hooks/useContract'
-import { FAIRLAUNCH_ADDRESSES, ZERO_ADDRESS } from '../../constants'
+import { FAIRLAUNCH_ADDRESSES, ZERO_ADDRESS, DEFAULT_REWARDS } from '../../constants'
 import { useAllTokens } from 'hooks/Tokens'
 import { getBulkPoolData } from 'state/pools/hooks'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
@@ -28,6 +28,10 @@ export const useRewardTokens = () => {
     'getRewardTokens'
   )
 
+  const defaultRewards = useMemo(() => {
+    return DEFAULT_REWARDS[chainId as ChainId] || []
+  }, [chainId])
+
   return useMemo(() => {
     let result: string[] = []
 
@@ -37,8 +41,8 @@ export const useRewardTokens = () => {
       }
     })
 
-    return result
-  }, [rewardTokensMulticallResult])
+    return [...defaultRewards, ...result]
+  }, [rewardTokensMulticallResult, defaultRewards])
 }
 
 export const useRewardTokenPrices = (tokens: (Token | undefined)[]) => {

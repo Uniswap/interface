@@ -727,6 +727,10 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
   '0xc778417e063141139fce010982780140aa0cd5ab': '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
 }
 
+export const DEFAULT_REWARDS: { [key: string]: string[] } = {
+  [ChainId.MAINNET]: ['0x9F52c8ecbEe10e00D9faaAc5Ee9Ba0fF6550F511']
+}
+
 export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'

@@ -1197,6 +1197,13 @@ msgstr "输出估计。 如果价格变化超过 {0}%，您的交易将恢复。
 msgid "Output is estimated. You will receive at least"
 msgstr "输出估计。 至少您将收到"
 
+#: src/components/PoolPriceBar/index.tsx
+#: src/components/PoolPriceBar/index.tsx
+#: src/components/PoolPriceBar/index.tsx
+#: src/components/PoolPriceBar/index.tsx
+msgid "Per"
+msgstr ""
+
 #: src/components/UpcomingFarms/NoFarms.tsx
 msgid "Please check the <0>Active Farms</0> or come back later."
 msgstr ""

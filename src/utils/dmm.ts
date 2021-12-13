@@ -429,7 +429,7 @@ export function useRewardTokensFullInfo(): Token[] {
 
   return useMemo(
     () =>
-      !!rewardTokens
+      !!rewardTokens && allTokens
         ? rewardTokens.map(address =>
             address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
               ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
