@@ -8,6 +8,7 @@ import { formatUnits } from '@ethersproject/units'
 import { t } from '@lingui/macro'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import {
   useGovernanceBravoContract,
@@ -21,7 +22,12 @@ import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { SupportedChainId } from '../../constants/chains'
-import { BRAVO_START_BLOCK, ONE_BIP_START_BLOCK, UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
+import {
+  BRAVO_START_BLOCK,
+  ONE_BIP_START_BLOCK,
+  POLYGON_START_BLOCK,
+  UNISWAP_GRANTS_START_BLOCK,
+} from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
@@ -217,14 +223,21 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
 
     return {
       data: proposalsCallData.map((proposal, i) => {
-        let description = formattedLogs[i]?.description
         const startBlock = parseInt(proposal?.result?.startBlock?.toString())
+
+        let description = formattedLogs[i]?.description
         if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
           description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
         }
+
+        let title = description?.split(/#+\s|\n/g)[1]
+        if (startBlock === POLYGON_START_BLOCK) {
+          title = POLYGON_PROPOSAL_TITLE
+        }
+
         return {
           id: proposal?.result?.id.toString(),
-          title: description?.split(/# |\n/g)[1] ?? t`Untitled`,
+          title: title ?? t`Untitled`,
           description: description ?? t`No description.`,
           proposer: proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
