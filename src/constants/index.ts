@@ -732,6 +732,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A']
       : [
+          '0xc0601973451d9369252Aee01397c0270CD2Ecd60',
           '0x0FEEa33C4dE6f37A0Fc550028FddA2401B2Ee5Ce',
           '0xc93239B33239A901143e15473e4A852a0D92c53b',
           '0x31De05f28568e3d3D612BFA6A78B356676367470'
@@ -787,6 +788,7 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
           '0x23c0E614f660Aeef5Daf87dE483931d145B7F5B8'
         ]
       : [
+          '0x9A56f30fF04884cB06da80cB3aEf09c6132f5E77',
           '0xf4c408835De8C68232f4746b5Ed598608B17e98D',
           '0xdEb01e683FF0d2e3AdB852a03df28e1bA7c99774',
           '0xE69Ba3f5FfE577BBA3A2bF8Ce949f7875D4C67DB'
