@@ -686,17 +686,15 @@ const ListItem = ({ farm }: ListItemProps) => {
               </Link>
 
               {!!FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()] && (
-                <ExternalLink href={`${FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()]}`}>
-                  <GetLP style={{ display: '-webkit-inline-box' }}>
-                    <Trans>Earn More!</Trans>{' '}
-                    <InfoHelper
-                      color={theme.primary}
-                      text={t`Earn even more rewards by staking your LP Tokens here!`}
-                      size={18}
-                    />{' '}
-                    ↗
-                  </GetLP>
-                </ExternalLink>
+                <DataTitle style={{ textTransform: 'none' }}>
+                  <ExternalLink href={`${FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()]}`}>
+                    <GetLP style={{ display: '-webkit-inline-box' }}>
+                      <Trans>Earn More!</Trans> ↗
+                    </GetLP>
+                  </ExternalLink>
+                  &nbsp;
+                  <InfoHelper text={t`Earn even more rewards by staking your LP Tokens here!`} size={16} />
+                </DataTitle>
               )}
             </LPInfoContainer>
 
