@@ -23,7 +23,6 @@ export const ProposalDetails = () => {
     const [data, setData] = React.useState<Proposal>()
 
     React.useEffect(() => {
-        console.log(params)
         if (params && params['id']) {
           axios.get('https://api.babytrumptoken.com/proposal/' + params['id']).then((response) => setData(response.data))
         }

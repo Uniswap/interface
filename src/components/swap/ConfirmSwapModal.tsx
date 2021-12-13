@@ -170,7 +170,6 @@ export default function ConfirmSwapModal({
       </>
     ) : null
   }, [allowedSlippage,isBad, onAcceptChanges, recipient, showAcceptChanges, trade])
-console.log(isBad)
   const modalBottom = useCallback(() => {
     return trade ? (
       <SwapModalFooter

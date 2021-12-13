@@ -221,7 +221,6 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
 
 export function useProposalData(governorIndex: number, id: string): ProposalData | undefined {
   const { data } = useAllProposalData()
-  console.log(data)
   return data && data?.find(a => a.id === id)
 }
 
