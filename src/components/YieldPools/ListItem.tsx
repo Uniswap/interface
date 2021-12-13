@@ -52,6 +52,7 @@ import {
 } from './styleds'
 import CurrencyLogo from 'components/CurrencyLogo'
 import useTheme from 'hooks/useTheme'
+import { MouseoverTooltip } from 'components/Tooltip'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -494,15 +495,11 @@ const ListItem = ({ farm }: ListItemProps) => {
                   href={`${FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()]}`}
                   style={{ marginLeft: 'auto' }}
                 >
-                  <GetLP style={{ display: '-webkit-inline-box' }}>
-                    <Trans>Earn More!</Trans>{' '}
-                    <InfoHelper
-                      color={theme.primary}
-                      text={t`Earn even more rewards by staking your LP Tokens here!`}
-                      size={18}
-                    />{' '}
-                    ↗
-                  </GetLP>
+                  <MouseoverTooltip text={t`Earn even more rewards by staking your LP Tokens here!`}>
+                    <GetLP style={{ display: '-webkit-inline-box' }}>
+                      <Trans>Earn More!</Trans> ↗
+                    </GetLP>
+                  </MouseoverTooltip>
                 </ExternalLink>
               )}
             </LPInfoContainer>
