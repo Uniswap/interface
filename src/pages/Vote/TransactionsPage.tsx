@@ -45,7 +45,6 @@ export const Transactions = ({transactions, loading, error}:{transactions?: any[
             newTxn.buy = swap.to
             newTxn.amount0In = swap.amount0In;
             newTxn.gasPaid = swap.cost;
-            console.log(newTxn)
             return newTxn;
         })
     }, [transactions])
@@ -59,7 +58,6 @@ export const Transactions = ({transactions, loading, error}:{transactions?: any[
         const formattedData = (formattedTransactions ?? [])?.map((tx: any) => {
             const type = tx.token0Symbol === `W${chainLabel}` ? 'Sell' : 'Buy' 
             const date = new Date(+tx.timestamp * 1000).toLocaleString()
-            console.log('transaction for csv' , tx)
             return [
                 date, 
                 type, 

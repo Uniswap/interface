@@ -101,7 +101,6 @@ export const GainsTracker = () => {
   React.useEffect(() => {
     if (account) {
       const trackingCustom = JSON.parse(localStorage.getItem(CUSTOM_GAINS_KEY)!) as StoredAndTrackedGains
-      console.log(trackingCustom)
       if (trackingCustom) {
         setIsTracking(true)
         const currency = {
@@ -172,7 +171,6 @@ export const GainsTracker = () => {
             USDC.address,
           ])
           amountsOut.call().then((response: any) => {
-            console.log(response)
             const usdc = response[response.length - 1]
             const ten6 = 10 ** 6
             const usdcValue = usdc / ten6

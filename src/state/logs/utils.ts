@@ -2,10 +2,10 @@ import gql from 'graphql-tag'
 import { ApolloClient, useQuery } from '@apollo/client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import moment from 'moment'
-import React from 'react'
+import React, { useCallback } from 'react'
 import useInterval from 'hooks/useInterval'
 import _, { isEqual } from 'lodash'
-import { fetchBscTokenData, INFO_CLIENT, useBnbPrices } from './bscUtils'
+import { fetchBscTokenData, getDeltaTimestamps, INFO_CLIENT, useBnbPrices, useBscTokenDataHook } from './bscUtils'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useKiba } from 'pages/Vote/VotePage'
@@ -51,6 +51,53 @@ export function filterToKey(filter: EventFilter): string {
     }`
 }
 
+type Block = {
+  timestamp: string | number;
+  block: number;
+}
+type BlockState = {
+  latest?: Block;
+  oneDay?: Block;
+  twoDay?: Block;
+}
+
+type BlockAction = {
+  payload: {
+    data: Block;
+  }
+  type: "SET" | "UPDATE";
+  key: 'latest' | 'oneDay' | 'twoDay';
+}
+
+function blockReducer  (state: BlockState, action: BlockAction) {
+  switch(action.type) {
+    case "SET":
+    case "UPDATE": {
+      return {
+        ...state,
+        [action.key]: action.payload.data
+      }
+    }
+  }
+}
+
+
+export const useOneDayBlock = () => {
+  const [state, dispatch] = React.useReducer(blockReducer, {
+    oneDay: undefined, 
+    latest: undefined, 
+    twoDay: undefined
+  })  
+
+  const [t24, , , ] = getDeltaTimestamps()
+
+  React.useEffect(() => {
+    getBlockFromTimestamp(t24).then((block) => dispatch({type: "SET", key: "oneDay", payload: {data: block}}))
+  }, [])
+
+  return state?.oneDay
+}
+ 
 const BscTokenFields = `
   fragment TokenFields on Token {
     id
@@ -60,6 +107,9 @@ const BscTokenFields = `
     tradeVolumeUSD
     untrackedVolumeUSD
     totalLiquidity
+    totalTransactions
+    derivedBNB
+    derivedUSD
   } 
 `
 
@@ -100,6 +150,10 @@ export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
     query tokens {
       tokens(where: {id:"${tokenAddress}"}) {
         ...TokenFields
+        derivedUSD
+        totalTransactions
+        totalLiquidity
+        derivedBNB
       }
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
@@ -116,10 +170,13 @@ export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
 
 export const BSC_TOKEN_DATA_BY_BLOCK_ONE = (tokenAddress: string, block: string) => {
   const queryString = `
-    ${TokenFields.replace('derivedETH', '').replace('txCount', '')}
+    ${TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', '')}
     query tokens {
       tokens(block: {number: ${block}} where: {id:"${tokenAddress}"}) {
         ...TokenFields
+        derivedUSD
+        totalTransactions
+        totalLiquidity
       }
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
@@ -209,22 +266,23 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
   const { chainId } = useActiveWeb3React()
   const [tokenData, setTokenData] = React.useState<any>()
   const prices = useBnbPrices()
-  const func = async () => {
+  const func = useCallback(async () => {
     if (address && ethPrice && ethPriceOld &&
       chainId === 1) {
       await getTokenData(address, ethPrice, ethPriceOld).then(setTokenData)
-    } else if (address && chainId && chainId === 56) {
-      fetchBscTokenData('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', prices?.current, prices?.current).then(setTokenData)
+    } else if (address && chainId && chainId === 56 &&
+      prices?.current && prices?.oneDay) {
+      fetchBscTokenData(address, prices?.current, prices?.oneDay).then((data) => setTokenData({...data, priceUSD: data?.priceUSD ? data.priceUSD : data?.derivedUSD }))
     }
-  }
+  }, [chainId, address, ethPrice, ethPriceOld, prices])
   React.useEffect(() => {
-    func()
-  }, [chainId, ethPriceOld, ethPrice,])
+    if (!tokenData) func()
+  }, [chainId, ethPriceOld, ethPrice, prices])
   useInterval(func, 30000, false);
   return tokenData
 }
 
-export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, chainId?: any) => {
+export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, blockOne?: number, blockTwo?:number) => {
   const utcCurrentTime = moment().utc()
   const utcOneDayBack = utcCurrentTime.subtract(24, 'hours').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(48, 'hours').unix()
@@ -233,28 +291,33 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
   let data: Record<string, any> = {}
   let oneDayData: Record<string, any> = {}
   let twoDayData: Record<string, any> = {}
-
+  let dayOneBlock: number;
+  let dayTwoBlock: number;
   try {
-
-    const dayOneBlock = await getBlockFromTimestamp(utcOneDayBack);
-    const dayTwoBlock = await getBlockFromTimestamp(utcTwoDaysBack);
+    if (!blockOne && !blockTwo) {
+     dayOneBlock = await getBlockFromTimestamp(utcOneDayBack);
+     dayTwoBlock = await getBlockFromTimestamp(utcTwoDaysBack);
+    } else {
+      dayOneBlock = blockOne as number;
+      dayTwoBlock = blockTwo as number;
+    }
     // fetch all current and historical data
     const result = await client.query({
-      query: TOKEN_DATA(address, null, chainId && chainId === 56),
+      query: TOKEN_DATA(address, null),
       fetchPolicy: 'network-only',
     })
     data = result?.data?.tokens?.[0]
 
     // get results from 24 hours in past
     const oneDayResult = await client.query({
-      query: TOKEN_DATA(address, dayOneBlock, chainId && chainId === 56),
+      query: TOKEN_DATA(address, dayOneBlock),
       fetchPolicy: 'network-only',
     })
     oneDayData = oneDayResult.data.tokens[0]
 
     // get results from 48 hours in past
     const twoDayResult = await client.query({
-      query: TOKEN_DATA(address, dayTwoBlock, chainId && chainId === 56),
+      query: TOKEN_DATA(address, dayTwoBlock),
       fetchPolicy: 'cache-first',
     })
     twoDayData = twoDayResult.data.tokens[0]
@@ -262,7 +325,7 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     // catch the case where token wasnt in top list in previous days
     if (!oneDayData) {
       const oneDayResult = await client.query({
-        query: TOKEN_DATA(address, dayOneBlock, chainId && chainId === 56),
+        query: TOKEN_DATA(address, dayOneBlock),
         fetchPolicy: 'cache-first',
       })
       oneDayData = oneDayResult.data.tokens[0]
@@ -273,21 +336,21 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     // catch the case where token wasnt in top list in previous days
     if (!oneDayHistory) {
       const oneDayResult = await client.query({
-        query: TOKEN_DATA(addy, dayOneBlock, chainId && chainId === 56),
+        query: TOKEN_DATA(addy, dayOneBlock),
         fetchPolicy: 'cache-first',
       })
       oneDayHistory = oneDayResult.data.tokens[0]
     }
     if (!twoDayHistory) {
       const twoDayResult = await client.query({
-        query: TOKEN_DATA(addy, dayTwoBlock, chainId && chainId === 56),
+        query: TOKEN_DATA(addy, dayTwoBlock),
         fetchPolicy: 'cache-first',
       })
       twoDayHistory = twoDayResult.data.tokens[0]
     }
     if (!twoDayData) {
       const twoDayResult = await client.query({
-        query: TOKEN_DATA(address, {}, chainId && chainId === 56),
+        query: TOKEN_DATA(address, {}),
         fetchPolicy: 'cache-first',
       })
       twoDayData = twoDayResult.data.tokens[0]
@@ -344,7 +407,7 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
       data.oneDayTxns = data.txCount
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
   return data
 }
@@ -726,9 +789,28 @@ query trackerdata {
   }
 }
 `
+
+const TOP_TOKENS_QUERY = (tokenIds: string[]) => gql`
+query trackerdata {
+  tokens(orderBy: volumeUSD, orderDirection:desc,  where: {id_in:${tokenIds}}) {
+    ...TokenFields
+  }`
+
+
+  
 const TOP_TOKENS = gql`
 query trackerdata {
-  pairs(first: 20, orderBy: volumeUSD, orderDirection:desc,  where: {id_not_in:["0xa478c2975ab1ea89e8196811f51a7b7ade33eb11", "0x23fe4ee3bd9bfd1152993a7954298bb4d426698f", "0xe5ffe183ae47f1a0e4194618d34c5b05b98953a8", "0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92" , "0x382a9a8927f97f7489af3f0c202b23ed1eb772b5", "0xbb2b8038a1640196fbe3e38816f3e67cba72d940", "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852", "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc"]}) {
+  pairs(first: 12, orderBy: volumeUSD, orderDirection:desc,  where: {id_not_in:[
+    "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11", 
+    "0x23fe4ee3bd9bfd1152993a7954298bb4d426698f", 
+    "0xe5ffe183ae47f1a0e4194618d34c5b05b98953a8", 
+    "0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92" , 
+    "0x002b931ef0edc4bf61cfa47e82d85fe3a6a31197",
+    "0x382a9a8927f97f7489af3f0c202b23ed1eb772b5", 
+    "0xbb2b8038a1640196fbe3e38816f3e67cba72d940",
+    "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852", 
+    "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc"
+  ]}) {
     id
     token0 {
       id
@@ -808,19 +890,25 @@ query trackerdata {
     id
     token0 {
       id
+      derivedBNB
+      derivedUSD
+      totalTransactions
       totalLiquidity
       tradeVolume
       tradeVolumeUSD
       symbol
       name
     }
-        token1 {
+    token1 {
       id
+      derivedBNB
+      derivedUSD
+      totalTransactions
       totalLiquidity
       tradeVolume
       tradeVolumeUSD
-          symbol
-          name
+      symbol
+      name
     }
     volumeToken0
     volumeToken1
@@ -835,9 +923,10 @@ query trackerdata {
 }`
 export const useTopPairData = function ( ) {
   const {chainId } = useWeb3React()
-  const {data,loading,error} = useQuery(chainId && chainId === 1 ? TOP_TOKENS : TOP_TOKENS_BSC, {pollInterval: 30000})
-  const {data: kiba} = useQuery(chainId && chainId === 1 ? KIBA_TOKEN : KIBA_TOKEN_BSC, {pollInterval: 30000})
-
+  const tokenQuery = React.useMemo(() => chainId && chainId === 1 ? TOP_TOKENS : chainId === 56 ? TOP_TOKENS_BSC : TOP_TOKENS,[chainId])
+  const kibaQuery = React.useMemo(() => chainId && chainId === 1 ? KIBA_TOKEN : chainId === 56 ?KIBA_TOKEN_BSC : KIBA_TOKEN, [chainId])
+  const {data,loading,error} = useQuery(tokenQuery, {pollInterval: 60000, fetchPolicy :'cache-first'})
+  const {data: kiba} = useQuery(kibaQuery, {pollInterval: 60000, fetchPolicy:'cache-first'})
   const allData = React.useMemo(() => {
     if (kiba && data) {
       return { pairs: kiba.pairs.concat(data.pairs) }

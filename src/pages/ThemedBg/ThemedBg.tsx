@@ -10,7 +10,6 @@ import { OutlineCard } from 'components/Card'
 export const THEME_BG_KEY = 'themed_BG'
 
 export const ThemedBg = ({ theme, setTheme }: { theme: any; setTheme: (theme: string) => void }) => {
-  console.log(theme, setTheme)
   return (
     <GreyCard style={{ maxWidth: 600 }}>
       <OutlineCard>

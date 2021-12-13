@@ -24,7 +24,6 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
     const isBinance = web3Data.chainId && web3Data.chainId === 56
     const accessDenied = React.useMemo(() => !web3Data?.account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0), [web3Data.account, kibaBalance])
     const transactionData = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
-    console.log(transactionData)
     const Frame = accessDenied ? null : (
         <iframe id={'tradingview_5aace'} src={`https://www.tradingview.com/widgetembed/?frameElementId=tradingview_5aace&symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`}
             style={{

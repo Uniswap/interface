@@ -13,11 +13,11 @@ import { AlertOctagon, ArrowDown, ArrowLeft, CheckCircle, ChevronRight, HelpCirc
 import ReactGA from 'react-ga'
 import React from 'react'
 import { Link, RouteComponentProps, useParams } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Flex, Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
+import { DarkGreyCard, GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
@@ -52,7 +52,7 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
-import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
+import { ExternalLinkIcon, HideSmall, LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { isTradeBetter } from '../../utils/isTradeBetter'
@@ -65,6 +65,17 @@ import { useKiba } from 'pages/Vote/VotePage'
 import { ChartModal } from 'components/swap/ChartModal'
 import { LimitOrders } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
+import Marquee from "react-marquee-slider";
+const CardWrapper = styled(StyledInternalLink)`
+  min-width: 190px;
+  width:100%;
+  margin-right: 16px;
+  padding:3px;
+  :hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+`
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -75,6 +86,22 @@ const StyledInfo = styled(Info)`
     opacity: 0.8;
   }
 `
+
+
+export const FixedContainer = styled(AutoColumn)``
+
+export const ScrollableRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
 
 export default function Swap({ history }: RouteComponentProps) {
   const params = useParams<{tokenAddress?: string}>()
@@ -339,7 +366,6 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const handleInputSelect = useCallback(
     (inputCurrency) => {
-      console.log(inputCurrency)
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -369,10 +395,14 @@ export default function Swap({ history }: RouteComponentProps) {
   >('swap')
   const StyledDiv = styled.div`
   font-family: 'Bangers', cursive;
-  font-size:25px;
+  font-size:32px;
   `
   const cannotUseFeature = !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0)
-  const filterKeys = (key: string) => ['name', 'id', 'symbol', 'derivedETH', '__typename', 'totalLiquidityUSD', 'priceUSD', 'volumeChangeUT', 'liquidityChangeUSD', 'txnChange', 'oneDayData', 'twoDayData'].includes(key) === false;
+  const increaseRef = React.useRef<HTMLDivElement>(null)
+  // const [pauseAnimation, setPauseAnimation] = useState(false)
+  // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
+
+const items = [{title: "Kiba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Kiba Inu is a token infused with Kiba Swap"},{title: "Swally Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Learn more"},{title: "KIBA INU", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Learn more"},{title: "Jabba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Jabba Inu is a meme coin offering culture to its holders."}];
   return (
     <>
       <TokenWarningModal
@@ -381,8 +411,8 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-
-      <AppBody style={{marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, maxWidth: view === 'bridge' ? 690 : 480}}>
+     
+     <AppBody style={{marginTop: 0, paddingTop: 0, position: 'relative', bottom: 30, maxWidth: view === 'bridge' ? 690 : 480}}>
       <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
 
         {!isBinance && (
@@ -728,6 +758,35 @@ export default function Swap({ history }: RouteComponentProps) {
             </Wrapper>}
       {!!isBinance && view === 'swap' && binanceSwapURL && <iframe  style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width: '100%'}} src={binanceSwapURL} />}
       </AppBody>
+
+      <AppBody style={{right:0 ,position:'relative',bottom:0,padding:'9px 14px', justifyContent:'end', background:'radial-gradient(rgb(234 54 39), rgba(129, 3, 3, 0.95))', border:'1px solid red', height:200, width: '100%'}}>
+        <StyledDiv style={{display:'flex', alignItems:'center', justifyContent:'center'}}>Featured Sponsors
+        <span>
+        <img style={{maxWidth: 100}}  src={'https://kiba.app/static/media/download.cfc6b4d1.png'} />
+          </span>
+      </StyledDiv>
+      <Marquee direction={'ltr'} resetAfterTries={200} scatterRandomly={false} onInit={() => {return}}  onFinish={() => {return}} key={"MARQUEE"} velocity={10}>
+          <></>
+          <FixedContainer style={{background:'rgb(0 0 1 / 50%)', width: '100%'}} gap="xs">
+      <ScrollableRow ref={increaseRef}>         
+         {[{title: "Kiba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Kiba Inu is a token infused with Kiba Swap"},{title: "Swally Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Learn more"},{title: "KIBA INU", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Learn more"},{title: "Jabba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text:"Jabba Inu is a meme coin offering culture to its holders."}].map((sponsor) => (
+             <CardWrapper  key={sponsor.title} to='#'> 
+             <DarkGreyCard style={{background: '#fff', border: `1px solid red`, padding:3}}>
+                <Flex flexDirection="column" alignItems={'center'} justifyContent={'space-between'}>
+                <Flex  alignItems={'center'} flexDirection={'row'}>
+                <TYPE.mediumHeader>{sponsor.title}</TYPE.mediumHeader>
+                <img style={{maxWidth: 60}} src={sponsor.img} />
+                </Flex>
+                <TYPE.small alignItems={'center'} justifyContent={'center'}><ExternalLinkIcon href='#' /></TYPE.small>
+                </Flex>
+              </DarkGreyCard>
+              </CardWrapper>
+            ))}
+  </ScrollableRow>
+          </FixedContainer>
+          </Marquee>
+      </AppBody>
+ 
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />

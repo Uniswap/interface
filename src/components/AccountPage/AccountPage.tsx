@@ -81,7 +81,6 @@ export const AccountPage = () => {
     const totalGasUsed = React.useMemo(() => {
         if (formattedTxns && formattedTxns.length) {
             const totalGas = _.sumBy(formattedTxns, a => a.cost);
-            console.log(totalGas);
             return +totalGas.toFixed(9);
         }
         return 0
@@ -89,7 +88,6 @@ export const AccountPage = () => {
 
 
     const totalGasUSD = useUSDCValue(CurrencyAmount.fromRawAmount(WETH9[1], totalGasUsed > 0 ? parseEther(totalGasUsed.toString()).toHexString() : '0'))
-    console.log(totalGasUSD)
     const [txCount, setTxCount] = React.useState<number>(0)
     React.useEffect(() => {
         if (account) {
