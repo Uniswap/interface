@@ -778,6 +778,11 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.FANTOM]: []
 }
 
+export const FARMING_POOLS_CHAIN_STAKING_LINK: { [key: string]: string } = {
+  '0x9a56f30ff04884cb06da80cb3aef09c6132f5e77':
+    'https://sipher.xyz/stake/deposit/kyber-slp-sipher-eth?utm_source=kyberswap'
+}
+
 export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'

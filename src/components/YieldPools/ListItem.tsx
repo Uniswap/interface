@@ -8,7 +8,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useMedia } from 'react-use'
 
 import { ChainId, Fraction, JSBI, Token, TokenAmount, ZERO } from '@dynamic-amm/sdk'
-import { DMM_ANALYTICS_URL, MAX_ALLOW_APY, AMP_HINT } from '../../constants'
+import { DMM_ANALYTICS_URL, MAX_ALLOW_APY, AMP_HINT, FARMING_POOLS_CHAIN_STAKING_LINK } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Dots } from 'components/swap/styleds'
@@ -489,6 +489,22 @@ const ListItem = ({ farm }: ListItemProps) => {
                   </Trans>
                 </GetLP>
               </Link>
+              {!!FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()] && (
+                <ExternalLink
+                  href={`${FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()]}`}
+                  style={{ marginLeft: 'auto' }}
+                >
+                  <GetLP style={{ display: '-webkit-inline-box' }}>
+                    <Trans>Earn More!</Trans>{' '}
+                    <InfoHelper
+                      color={theme.primary}
+                      text={t`Earn even more rewards by staking your LP Tokens here!`}
+                      size={18}
+                    />{' '}
+                    ↗
+                  </GetLP>
+                </ExternalLink>
+              )}
             </LPInfoContainer>
           </ExpandedContent>
         </ExpandedSection>
@@ -671,6 +687,20 @@ const ListItem = ({ farm }: ListItemProps) => {
                   </Trans>
                 </GetLP>
               </Link>
+
+              {!!FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()] && (
+                <ExternalLink href={`${FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()]}`}>
+                  <GetLP style={{ display: '-webkit-inline-box' }}>
+                    <Trans>Earn More!</Trans>{' '}
+                    <InfoHelper
+                      color={theme.primary}
+                      text={t`Earn even more rewards by staking your LP Tokens here!`}
+                      size={18}
+                    />{' '}
+                    ↗
+                  </GetLP>
+                </ExternalLink>
+              )}
             </LPInfoContainer>
 
             <Seperator />
