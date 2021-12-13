@@ -102,8 +102,14 @@ export function ThemeProvider({ theme, children }: ThemeProviderProps) {
 function toComputedTheme(theme: Required<Theme>): ComputedTheme {
   return {
     ...theme,
-    borderRadius: theme.borderRadius ? 1 : 0,
+    borderRadius: clamp(
+      Number.isFinite(theme.borderRadius) ? (theme.borderRadius as number) : theme.borderRadius ? 1 : 0
+    ),
     onHover: (color: string) =>
       color === theme.primary ? transparentize(0.4, theme.primary) : mix(0.16, theme.primary, color),
+  }
+
+  function clamp(value: number) {
+    return Math.min(Math.max(value, 0), 1)
   }
 }

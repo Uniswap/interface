@@ -25,7 +25,7 @@ export interface Colors {
 export type Color = keyof Colors
 
 export interface Attributes {
-  borderRadius: boolean | 0 | 1
+  borderRadius: boolean | number
   fontFamily: string
   tokenColorExtraction: boolean
 }
@@ -33,6 +33,6 @@ export interface Attributes {
 export interface Theme extends Partial<Attributes>, Partial<Colors> {}
 
 export interface ComputedTheme extends Omit<Attributes, 'borderRadius'>, Colors {
-  borderRadius: 0 | 1
+  borderRadius: number
   onHover: (color: string) => string
 }
