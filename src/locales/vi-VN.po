@@ -1274,7 +1274,6 @@ msgid "Popular Pairs"
 msgstr "Các Cặp Nổi trội"
 
 #: src/components/Footer/Footer.tsx
-#: src/components/Footer/PoweredBy.tsx
 msgid "Powered By"
 msgstr "Được cung cấp bởi"
 
