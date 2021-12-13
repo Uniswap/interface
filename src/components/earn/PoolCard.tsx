@@ -1,7 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { Percent, TokenAmount } from '@ubeswap/sdk'
-import QuestionHelper from 'components/QuestionHelper'
+import { Percent } from '@ubeswap/sdk'
 import { useToken } from 'hooks/Tokens'
 import { useStakingContract } from 'hooks/useContract'
 import { FarmSummary } from 'pages/Earn/useFarmRegistry'
@@ -21,6 +20,7 @@ import { AutoColumn } from '../Column'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed } from '../Row'
 import PoolStatRow from './PoolStats/PoolStatRow'
+import StakedAmountsHelper from './StakedAmountsHelper'
 import { Break, CardNoise } from './styled'
 
 const StatContainer = styled.div`
@@ -216,9 +216,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
                   <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
                     {'$' + userValueCUSD.toFixed(0, { groupSeparator: ',' })}
                   </TYPE.black>
-                  <QuestionHelper
-                    text={`${formatStakedAmount(userAmountTokenA)} | ${formatStakedAmount(userAmountTokenB)}`}
-                  />
+                  <StakedAmountsHelper userAmountTokenA={userAmountTokenA} userAmountTokenB={userAmountTokenB} />
                 </RowFixed>
               </RowBetween>
             )}
@@ -227,14 +225,6 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
       )}
     </Wrapper>
   )
-}
-
-// Format amount based on the size, when under 1 show significant digits, when 1 to 10 show 1 decimal, over 10 round
-function formatStakedAmount(tokenAmmount?: TokenAmount) {
-  const amount = tokenAmmount?.lessThan('1')
-    ? tokenAmmount.toSignificant(2)
-    : tokenAmmount?.toFixed(tokenAmmount?.lessThan('10') ? 1 : 0, { groupSeparator: ',' })
-  return `${amount} ${tokenAmmount?.token.symbol}`
 }
 
 // formula is 1 + ((nom/compoundsPerYear)^compoundsPerYear) - 1

@@ -1,6 +1,6 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { ChainId as UbeswapChainId, cUSD, JSBI } from '@ubeswap/sdk'
-import QuestionHelper from 'components/QuestionHelper'
+import StakedAmountsHelper from 'components/earn/StakedAmountsHelper'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -279,11 +279,7 @@ export default function Manage({
                             })}`
                           : '--'}
                       </TYPE.white>
-                      <QuestionHelper
-                        text={`${userAmountTokenA?.toFixed(0, { groupSeparator: ',' })} ${
-                          userAmountTokenA?.token.symbol
-                        }, ${userAmountTokenB?.toFixed(0, { groupSeparator: ',' })} ${userAmountTokenB?.token.symbol}`}
-                      />
+                      <StakedAmountsHelper userAmountTokenA={userAmountTokenA} userAmountTokenB={userAmountTokenB} />
                     </RowFixed>
                   </RowBetween>
                 )}
