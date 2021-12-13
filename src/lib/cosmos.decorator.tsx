@@ -39,7 +39,9 @@ export default function WidgetDecorator({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useValue('theme', { defaultValue: { ...defaultTheme, ...lightTheme } })
   useEffect(() => {
     setTheme({ ...defaultTheme, ...(darkMode ? darkTheme : lightTheme) })
-  }, [darkMode, setTheme])
+    // cosmos does not maintain referential equality for setters
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [darkMode])
 
   return (
     <>

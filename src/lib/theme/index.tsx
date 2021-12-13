@@ -62,7 +62,7 @@ export const darkTheme: Colors = {
 }
 
 export const defaultTheme = {
-  borderRadius: true,
+  borderRadius: 1,
   fontFamily: '"Inter var", sans-serif',
   tokenColorExtraction: true,
   ...lightTheme,
