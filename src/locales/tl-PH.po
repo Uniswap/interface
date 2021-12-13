@@ -544,6 +544,16 @@ msgstr ""
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Earn More!"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Earn even more rewards by staking your LP Tokens here!"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Earn fees and rewards by depositing your tokens into our pools."
 msgstr ""
