@@ -4273,7 +4273,7 @@ export type TokensQueryVariables = Exact<{
 
 export type TokensQuery = {
   __typename?: 'Query'
-  tokens: Array<{ __typename?: 'Token'; id: string; symbol: string; name: string; derivedETH: any }>
+  tokens: Array<{ __typename?: 'Token'; id: string; derivedETH: any }>
 }
 
 export const EthPricesDocument = `
@@ -4363,8 +4363,6 @@ export const TokensDocument = `
     subgraphError: allow
   ) {
     id
-    symbol
-    name
     derivedETH
   }
 }
