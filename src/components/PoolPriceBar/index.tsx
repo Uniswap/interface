@@ -232,7 +232,7 @@ export function PoolPriceRangeBar({
         <AutoRow justify="space-between" gap="4px">
           <AutoColumn gap="4px">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {nativeA?.symbol}/{nativeB?.symbol}
+              {nativeB?.symbol} <Trans>Per</Trans> {nativeA?.symbol}
             </Text>
             {!amp || amp.lessThan('1') ? (
               <InvalidAMPPriceRange />
@@ -257,7 +257,7 @@ export function PoolPriceRangeBar({
           </AutoColumn>
           <AutoColumn gap="4px" justify="end">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {nativeB?.symbol}/{nativeA?.symbol}
+              {nativeA?.symbol} <Trans>Per</Trans> {nativeB?.symbol}
             </Text>
             {!amp || amp.lessThan('1') ? (
               <InvalidAMPPriceRange />
@@ -293,7 +293,7 @@ export function PoolPriceRangeBar({
         <AutoRow justify="space-between" gap="4px">
           <AutoColumn gap="sm">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {nativeA?.symbol}/{nativeB?.symbol}
+              {nativeB?.symbol} <Trans>Per</Trans> {nativeA?.symbol}
             </Text>
             {!amp || amp.lessThan('1') ? (
               <InvalidAMPPriceRange />
@@ -312,7 +312,7 @@ export function PoolPriceRangeBar({
           </AutoColumn>
           <AutoColumn gap="sm" justify="end">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {nativeB?.symbol}/{nativeA?.symbol}
+              {nativeA?.symbol} <Trans>Per</Trans> {nativeB?.symbol}
             </Text>
             {!amp || amp.lessThan('1') ? (
               <InvalidAMPPriceRange />
