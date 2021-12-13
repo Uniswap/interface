@@ -8,7 +8,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useMedia } from 'react-use'
 
 import { ChainId, Fraction, JSBI, Token, TokenAmount, ZERO } from '@dynamic-amm/sdk'
-import { DMM_ANALYTICS_URL, MAX_ALLOW_APY, AMP_HINT } from '../../constants'
+import { DMM_ANALYTICS_URL, MAX_ALLOW_APY, AMP_HINT, FARMING_POOLS_CHAIN_STAKING_LINK } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Dots } from 'components/swap/styleds'
@@ -52,6 +52,7 @@ import {
 } from './styleds'
 import CurrencyLogo from 'components/CurrencyLogo'
 import useTheme from 'hooks/useTheme'
+import { MouseoverTooltip } from 'components/Tooltip'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -489,6 +490,18 @@ const ListItem = ({ farm }: ListItemProps) => {
                   </Trans>
                 </GetLP>
               </Link>
+              {!!FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()] && (
+                <ExternalLink
+                  href={`${FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()]}`}
+                  style={{ marginLeft: 'auto' }}
+                >
+                  <MouseoverTooltip text={t`Earn even more rewards by staking your LP Tokens here!`}>
+                    <GetLP style={{ display: '-webkit-inline-box' }}>
+                      <Trans>Earn More!</Trans> ↗
+                    </GetLP>
+                  </MouseoverTooltip>
+                </ExternalLink>
+              )}
             </LPInfoContainer>
           </ExpandedContent>
         </ExpandedSection>
@@ -671,6 +684,18 @@ const ListItem = ({ farm }: ListItemProps) => {
                   </Trans>
                 </GetLP>
               </Link>
+
+              {!!FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()] && (
+                <DataTitle style={{ textTransform: 'none' }}>
+                  <ExternalLink href={`${FARMING_POOLS_CHAIN_STAKING_LINK[farm.id.toLowerCase()]}`}>
+                    <GetLP style={{ display: '-webkit-inline-box' }}>
+                      <Trans>Earn More!</Trans> ↗
+                    </GetLP>
+                  </ExternalLink>
+                  &nbsp;
+                  <InfoHelper text={t`Earn even more rewards by staking your LP Tokens here!`} size={16} />
+                </DataTitle>
+              )}
             </LPInfoContainer>
 
             <Seperator />
