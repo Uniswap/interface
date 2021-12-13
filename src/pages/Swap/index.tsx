@@ -171,6 +171,9 @@ export default function Swap() {
 
   const maxAmountInput: TokenAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
+  const atHalfAmountInput = Boolean(
+    maxAmountInput && Number(maxAmountInput.toExact()) * 0.5 === Number(parsedAmounts[Field.INPUT]?.toExact())
+  )
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useTradeCallback(trade, allowedSlippage, recipient)
@@ -273,6 +276,12 @@ export default function Swap() {
     }
   }, [maxAmountInput, onUserInput, currencies, chainId])
 
+  const handleHalfInput = useCallback(() => {
+    if (maxAmountInput) {
+      onUserInput(Field.INPUT, Math.max(Number(maxAmountInput.toExact()) * 0.5, 0).toString())
+    }
+  }, [maxAmountInput, onUserInput])
+
   const handleOutputSelect = useCallback(
     (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
     [onCurrencySelection]
@@ -321,9 +330,11 @@ export default function Swap() {
               }
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
+              showHalfButton={!atHalfAmountInput}
               currency={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
+              onHalf={handleHalfInput}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               id="swap-currency-input"

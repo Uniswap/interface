@@ -70,7 +70,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   font-size:  ${({ active }) => (active ? '20px' : '16px')};
 `
 
-const StyledBalanceMax = styled.button`
+const StyledControlButton = styled.button`
   height: 28px;
   background-color: ${({ theme }) => theme.primary5};
   border: 1px solid ${({ theme }) => theme.primary5};
@@ -79,7 +79,8 @@ const StyledBalanceMax = styled.button`
 
   font-weight: 500;
   cursor: pointer;
-  margin-right: 0.5rem;
+  margin-left: 0.3rem;
+  margin-right: 0.2rem;
   color: ${({ theme }) => theme.primaryText1};
   :hover {
     border: 1px solid ${({ theme }) => theme.primary1};
@@ -90,15 +91,19 @@ const StyledBalanceMax = styled.button`
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin-right: 0.5rem;
+    margin-left: 0.4rem;
+    margin-right: 0.1rem;
   `};
 `
+const ButtonGroup = styled.div``
 
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
   onMax?: () => void
-  showMaxButton: boolean
+  onHalf?: () => void
+  showMaxButton?: boolean
+  showHalfButton?: boolean
   label?: string
   onCurrencySelect?: (currency: Token) => void
   currency?: Token | null
@@ -118,7 +123,9 @@ export default function CurrencyInputPanel({
   value,
   onUserInput,
   onMax,
+  onHalf,
   showMaxButton,
+  showHalfButton,
   label = 'Input',
   onCurrencySelect,
   currency,
@@ -152,9 +159,37 @@ export default function CurrencyInputPanel({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                {label}
-              </TYPE.body>
+              <CurrencySelect
+                selected={!!currency}
+                className="open-currency-select-button"
+                onClick={() => {
+                  if (!disableCurrencySelect) {
+                    setModalOpen(true)
+                  }
+                }}
+              >
+                <Aligner>
+                  {pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                  ) : currency ? (
+                    <CurrencyLogo currency={currency} size={'24px'} />
+                  ) : null}
+                  {pair ? (
+                    <StyledTokenName className="pair-name-container">
+                      {pair?.token0.symbol}:{pair?.token1.symbol}
+                    </StyledTokenName>
+                  ) : (
+                    <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                      {(currency && currency.symbol && currency.symbol.length > 20
+                        ? currency.symbol.slice(0, 4) +
+                          '...' +
+                          currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                        : currency?.symbol) || t('selectToken')}
+                    </StyledTokenName>
+                  )}
+                  {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                </Aligner>
+              </CurrencySelect>
               {account && (
                 <TYPE.body
                   onClick={onMax}
@@ -181,42 +216,14 @@ export default function CurrencyInputPanel({
                   onUserInput(val)
                 }}
               />
-              {account && currency && showMaxButton && label !== 'To' && (
-                <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
+              {account && currency && label !== 'To' && (
+                <ButtonGroup>
+                  {showHalfButton && <StyledControlButton onClick={onHalf}>50%</StyledControlButton>}
+                  {showMaxButton && <StyledControlButton onClick={onMax}>MAX</StyledControlButton>}
+                </ButtonGroup>
               )}
             </>
           )}
-          <CurrencySelect
-            selected={!!currency}
-            className="open-currency-select-button"
-            onClick={() => {
-              if (!disableCurrencySelect) {
-                setModalOpen(true)
-              }
-            }}
-          >
-            <Aligner>
-              {pair ? (
-                <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-              ) : currency ? (
-                <CurrencyLogo currency={currency} size={'24px'} />
-              ) : null}
-              {pair ? (
-                <StyledTokenName className="pair-name-container">
-                  {pair?.token0.symbol}:{pair?.token1.symbol}
-                </StyledTokenName>
-              ) : (
-                <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                  {(currency && currency.symbol && currency.symbol.length > 20
-                    ? currency.symbol.slice(0, 4) +
-                      '...' +
-                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                    : currency?.symbol) || t('selectToken')}
-                </StyledTokenName>
-              )}
-              {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
-            </Aligner>
-          </CurrencySelect>
         </InputRow>
       </Container>
       {!disableCurrencySelect && onCurrencySelect && (
