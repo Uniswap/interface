@@ -18,6 +18,7 @@ import styled from 'styled-components'
 import { TYPE } from 'theme'
 import { ExternalLink } from 'theme/components'
 import { CountUp } from 'use-count-up'
+import { relevantDigits } from 'utils/relevantDigits'
 
 import Icon from '../../assets/svg/icon-ube.svg'
 import Logo from '../../assets/svg/logo.svg'
@@ -352,7 +353,7 @@ export default function Header() {
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const [showUbeBalanceModal, setShowUbeBalanceModal] = useState<boolean>(false)
   const aggregateBalance: TokenAmount | undefined = useAggregateUbeBalance()
-  const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
+  const countUpValue = relevantDigits(aggregateBalance)
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false)
@@ -488,7 +489,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userCELOBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userCELOBalance?.toFixed(2, { groupSeparator: ',' }) ?? '0.00'} CELO
+                {relevantDigits(userCELOBalance) ?? '0.00'} CELO
               </BalanceText>
             ) : null}
             <Web3Status />

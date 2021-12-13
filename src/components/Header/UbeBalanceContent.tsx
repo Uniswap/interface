@@ -5,6 +5,7 @@ import React from 'react'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import { relevantDigits } from 'utils/relevantDigits'
 import { useCUSDPrice } from 'utils/useCUSDPrice'
 
 import tokenLogo from '../../assets/images/token-logo.png'
@@ -73,7 +74,7 @@ export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowU
               <AutoColumn gap="md" justify="center">
                 <UbeTokenAnimated width="48px" src={tokenLogo} />{' '}
                 <TYPE.white fontSize={48} fontWeight={600} color="white">
-                  {total?.toFixed(2, { groupSeparator: ',' })}
+                  {relevantDigits(total)}
                 </TYPE.white>
               </AutoColumn>
               <AutoColumn gap="md">
