@@ -50,7 +50,7 @@ export default function Widget({
   locale = DEFAULT_LOCALE,
   provider,
   jsonRpcEndpoint,
-  width,
+  width = 360,
   className,
 }: WidgetProps) {
   const [, setNetworkConnector] = useAtom(networkConnectorAtom)
