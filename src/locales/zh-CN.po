@@ -1274,7 +1274,6 @@ msgid "Popular Pairs"
 msgstr ""
 
 #: src/components/Footer/Footer.tsx
-#: src/components/Footer/PoweredBy.tsx
 msgid "Powered By"
 msgstr ""
 
