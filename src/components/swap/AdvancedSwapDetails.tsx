@@ -10,6 +10,7 @@ import { Separator, TYPE } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
+import FormattedPriceImpact from './FormattedPriceImpact'
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -43,14 +44,12 @@ function TextWithLoadingPlaceholder({
 export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
-  const { expectedOutputAmount } = useMemo(() => {
-    if (!trade) return { realizedLPFee: undefined, expectedOutputAmount: undefined }
+  const { expectedOutputAmount, priceImpact } = useMemo(() => {
+    if (!trade) return { expectedOutputAmount: undefined, priceImpact: undefined }
     const expectedOutputAmount = trade.outputAmount
     const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-    const realizedLPFee = trade.inputAmount.multiply(realizedLpFeePercent)
     const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent)
-
-    return { realizedLPFee, expectedOutputAmount, priceImpact }
+    return { expectedOutputAmount, priceImpact }
   }, [trade])
 
   return !trade ? null : (
@@ -67,6 +66,18 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               {expectedOutputAmount
                 ? `${expectedOutputAmount.toSignificant(4)}  ${expectedOutputAmount.currency.symbol}`
                 : '-'}
+            </TYPE.black>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <TYPE.subHeader color={theme.text1}>
+              <Trans>Price Impact</Trans>
+            </TYPE.subHeader>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+            <TYPE.black textAlign="right" fontSize={14}>
+              <FormattedPriceImpact priceImpact={priceImpact} />
             </TYPE.black>
           </TextWithLoadingPlaceholder>
         </RowBetween>

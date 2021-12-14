@@ -49,7 +49,15 @@ export default function GasEstimateBadge({
       disableHover={disableHover}
       content={
         loading ? null : (
-          <ResponsiveTooltipContainer origin="top right" style={{ padding: '12px', maxWidth: '400px' }}>
+          <ResponsiveTooltipContainer
+            origin="top right"
+            style={{
+              padding: showRoute ? '0' : '12px',
+              border: 'none',
+              borderRadius: showRoute ? '16px' : '12px',
+              maxWidth: '400px',
+            }}
+          >
             {showRoute ? (
               trade ? (
                 <SwapRoute trade={trade} syncing={loading} fixedOpen={showRoute} />

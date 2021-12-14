@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
-import { OutlineCard } from 'components/Card'
+import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
@@ -144,7 +144,9 @@ export default function SwapDetailsDropdown({
                 wrap={false}
                 content={
                   <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
-                    <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+                    <Card padding="12px">
+                      <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+                    </Card>
                   </ResponsiveTooltipContainer>
                 }
                 placement="bottom"
