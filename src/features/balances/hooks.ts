@@ -18,9 +18,14 @@ export function useTokenBalance(
 ): [CurrencyAmount<Currency> | undefined, boolean] {
   const chainId = token?.chainId ?? ChainId.MAINNET
   const contract = useTokenContract(chainId, token?.address)
-  const balance = useSingleCallResult(chainId, contract, 'balanceOf', [accountAddress], {
-    blocksPerFetch: BLOCKS_PER_FETCH,
-  })
+  const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
+  const balance = useSingleCallResult(
+    chainId,
+    contract,
+    'balanceOf',
+    accountAddressArray,
+    blocksPerFetchOption
+  )
 
   return [
     useMemo(() => {
@@ -37,12 +42,13 @@ export function useEthBalance(
   accountAddress?: Address
 ): CurrencyAmount<Currency> {
   const multicallContract = useMulticall2Contract(chainId)
+  const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
   const result = useSingleCallResult(
     chainId,
     multicallContract,
     'getEthBalance',
-    [accountAddress],
-    { blocksPerFetch: BLOCKS_PER_FETCH }
+    accountAddressArray,
+    blocksPerFetchOption
   )
   const value = result?.result?.[0]
   if (!value) return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), 0)
@@ -151,10 +157,11 @@ export function useAllBalances(
     .flat()
   const filteredTokenBalances = tokenBalancesList.filter((balance) => !!balance?.greaterThan(0))
   const balances = [...filteredEthBalances, ...filteredTokenBalances]
+  const allCurrencyAmounts = [...ethBalancesList, ...tokenBalancesList]
 
   const loading = tokenBalancesLoading || ethBalancesLoading
 
-  return { balances, loading }
+  return { balances, allCurrencyAmounts, loading }
 }
 
 function getSortedChainTokens(chainId: ChainId, chainIdToTokens: ChainIdToAddressToToken) {

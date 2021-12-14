@@ -101,7 +101,7 @@ export function TokenDetailsScreen({
             <PrimaryButton
               flex={1}
               label={t('Buy')}
-              largeText={true}
+              textVariant="buttonLabelLg"
               onPress={onPressBuy}
               mr="sm"
             />
@@ -109,7 +109,7 @@ export function TokenDetailsScreen({
               variant="gray"
               flex={1}
               label={t('Sell')}
-              largeText={true}
+              textVariant="buttonLabelLg"
               onPress={onPressSell}
             />
           </Box>

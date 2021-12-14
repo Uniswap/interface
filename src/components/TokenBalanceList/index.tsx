@@ -50,7 +50,7 @@ export function TokenBalanceList({
 
   const totalBalance = useTotalBalance(balances, tokenPricesByChain)
 
-  if (loading && !balances.length) {
+  if (loading) {
     return (
       <Box padding="lg" mt="lg">
         <ActivityIndicator color="grey" animating={loading} />

@@ -28,7 +28,7 @@ export function HomeScreen({ navigation }: Props) {
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
   const chainIdToTokens = useAllTokens()
-  const { balances, loading } = useAllBalances(
+  const { balances, allCurrencyAmounts, loading } = useAllBalances(
     currentChains,
     chainIdToTokens,
     activeAccount?.address
@@ -74,7 +74,7 @@ export function HomeScreen({ navigation }: Props) {
       </Box>
       <TransactionNotificationBanner />
       <TokenBalanceList
-        loading={loading}
+        loading={loading && !allCurrencyAmounts.length}
         balances={balances}
         refreshing={refreshing}
         onRefresh={onRefresh}
