@@ -8,7 +8,6 @@ import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
-import { darken } from 'polished'
 import { memo, useState } from 'react'
 import { Plus } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -18,11 +17,11 @@ import { Separator, TYPE } from 'theme'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
-const Wrapper = styled(AutoColumn)<{ darkMode?: boolean }>`
-  padding: 12px 8px 12px 12px;
+const Wrapper = styled(AutoColumn)<{ darkMode?: boolean; fixedOpen?: boolean }>`
+  padding: ${({ fixedOpen }) => (fixedOpen ? '0px' : '12px 8px 12px 12px')};
   border-radius: 16px;
-  // background-color: ${({ theme, darkMode }) => (darkMode ? darken(0.01, theme.blue4) : theme.bg1)};
-  border: 1px solid ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme, fixedOpen }) => (fixedOpen ? 'transparent' : theme.bg2)};
+
   cursor: pointer;
 `
 
@@ -55,7 +54,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
   const [darkMode] = useDarkModeManager()
 
   return (
-    <Wrapper {...rest} darkMode={darkMode}>
+    <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
       <RowBetween onClick={() => setOpen(!open)}>
         <AutoRow gap="4px" width="auto">
           <AutoRouterLogo />
