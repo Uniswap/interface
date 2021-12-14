@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useResetAtom } from 'jotai/utils'
 import { Settings as SettingsIcon } from 'lib/icons'
-import { ThemedText } from 'lib/theme'
-import { useState } from 'react'
+import { ThemedText, useScrollbar } from 'lib/theme'
+import React, { useState } from 'react'
 
 import { IconButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -14,6 +14,7 @@ import TransactionTtlInput from './TransactionTtlInput'
 
 export function SettingsDialog() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  const scrollbar = useScrollbar(boundary, { padded: true })
   const resetSettings = useResetAtom(settingsAtom)
   return (
     <>
@@ -24,7 +25,7 @@ export function SettingsDialog() {
           </ThemedText.ButtonSmall>
         </TextButton>
       </Header>
-      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded scrollable={{ current: boundary }}>
+      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded css={scrollbar}>
         <BoundaryProvider value={boundary}>
           <MaxSlippageSelect />
           <TransactionTtlInput />

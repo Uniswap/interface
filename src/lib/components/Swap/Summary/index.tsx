@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import { ChevronDown, ChevronUp, Info } from 'lib/icons'
-import styled, { ThemedText } from 'lib/theme'
+import styled, { ThemedText, useScrollbar } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
 import ActionButton from '../../ActionButton'
@@ -26,6 +26,10 @@ const SummaryColumn = styled(Column)`
   height: calc(100% - 2.5em);
 `
 
+const DetailsColumn = styled(Column)`
+  height: 100%;
+`
+
 interface SummaryDialogProps {
   onConfirm: () => void
 }
@@ -43,6 +47,9 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
   const [confirmedPrice, confirmPrice] = useState(price)
 
   const [open, setOpen] = useState(true)
+
+  const [details, setDetails] = useState<HTMLDivElement | null>(null)
+  const scrollbar = useScrollbar(details)
 
   if (!(input && output && swap)) {
     return null
@@ -68,9 +75,9 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
           </Row>
           <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
         </Row>
-        <Column gap={0.75}>
+        <DetailsColumn gap={0.75} ref={setDetails} css={scrollbar}>
           <Details input={input.token} output={output.token} swap={swap} />
-        </Column>
+        </DetailsColumn>
         <Rule />
         {!open && (
           <ThemedText.Caption color="secondary">
