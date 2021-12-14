@@ -4,6 +4,7 @@ import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { Connector } from 'widgets-web3-react/types'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, portis, walletlink } from '../../connectors'
@@ -176,7 +177,7 @@ const IconWrapper = styled.div<{ size?: number }>`
   `};
 `
 
-function WrappedStatusIcon({ connector }: { connector: AbstractConnector }) {
+function WrappedStatusIcon({ connector }: { connector: AbstractConnector | Connector }) {
   return (
     <IconWrapper size={16}>
       <StatusIcon connector={connector} />

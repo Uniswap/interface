@@ -3,12 +3,11 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import styled, { darkTheme, defaultTheme, lightTheme } from 'lib/theme'
-import { ReactNode, useEffect } from 'react'
+import React, { JSXElementConstructor, ReactElement, useEffect } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
 import { createGlobalStyle } from 'styled-components'
 import { Provider } from 'widgets-web3-react/types'
 
-import Widget from './components/Widget'
 import Connectors from './cosmos/components/Connectors'
 import { URLS } from './cosmos/connectors/network'
 
@@ -26,7 +25,11 @@ const Wrapper = styled.div`
 
 export const providerAtom = atom<Provider | undefined>(undefined)
 
-export default function WidgetDecorator({ children }: { children: ReactNode }) {
+export default function WidgetDecorator({
+  children,
+}: {
+  children: ReactElement<any, string | JSXElementConstructor<any>>
+}) {
   const [jsonRpcEndpoint] = useSelect('jsonRpcEndpoint', {
     defaultValue: URLS[SupportedChainId.MAINNET][0],
     options: Object.values(URLS).flat(),
@@ -46,9 +49,13 @@ export default function WidgetDecorator({ children }: { children: ReactNode }) {
       <GlobalStyle />
       <Connectors />
       <Wrapper>
-        <Widget width={width} theme={theme} locale={locale} provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-          {children}
-        </Widget>
+        {React.cloneElement(children, {
+          width,
+          theme,
+          locale,
+          provider,
+          jsonRpcEndpoint,
+        })}
       </Wrapper>
     </>
   )

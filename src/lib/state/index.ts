@@ -6,8 +6,8 @@ import { Web3ReactHooks } from 'widgets-web3-react/core'
 import { Network } from 'widgets-web3-react/network'
 import { Connector } from 'widgets-web3-react/types'
 
-export const networkConnectorAtom = atom<[Network, Web3ReactHooks] | undefined>(undefined)
-export const injectedConnectorAtom = atom<[Connector, Web3ReactHooks] | undefined>(undefined)
+export const networkConnectorAtom = atom<[Network, Web3ReactHooks] | [undefined, undefined]>([undefined, undefined])
+export const injectedConnectorAtom = atom<[Connector, Web3ReactHooks] | [undefined, undefined]>([undefined, undefined])
 
 export const connectorAtom = atom((get) => get(injectedConnectorAtom) || get(networkConnectorAtom))
 

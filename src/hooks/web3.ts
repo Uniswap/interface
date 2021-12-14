@@ -1,5 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
+import { useAtomValue } from 'jotai/utils'
+import { connectorAtom } from 'lib/state'
 import { useEffect, useState } from 'react'
 
 import { gnosisSafe, injected } from '../connectors'
@@ -7,9 +9,27 @@ import { IS_IN_IFRAME, NetworkContextName } from '../constants/misc'
 import { isMobile } from '../utils/userAgent'
 
 export function useActiveWeb3React() {
-  const context = useWeb3React<Web3Provider>()
-  const contextNetwork = useWeb3React<Web3Provider>(NetworkContextName)
-  return context.active ? context : contextNetwork
+  console.log('process.env.REACT_APP_IS_WIDGET', process.env.REACT_APP_IS_WIDGET)
+  const [connector, widgetsHooks] = useAtomValue(connectorAtom)
+
+  const widgetsProvider = widgetsHooks?.useProvider()
+  const widgetsContext = widgetsHooks?.useWeb3React(widgetsProvider)
+  const interfaceContext = useWeb3React<Web3Provider>()
+  const interfaceNetworkContext = useWeb3React<Web3Provider>(
+    process.env.REACT_APP_IS_WIDGET ? undefined : NetworkContextName
+  )
+  console.log('useActiveWeb3React.connector', connector)
+  if (widgetsContext?.active) {
+    console.log('widgetsContext?.active')
+    return widgetsContext
+  }
+
+  if (interfaceContext.active) {
+    console.log('interfaceContext.active')
+    return interfaceContext
+  }
+  console.log('interfaceNetworkContext.active')
+  return interfaceNetworkContext
 }
 
 export function useEagerConnect() {
