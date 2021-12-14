@@ -22,12 +22,41 @@ function asInput(input: Input): (Required<Pick<Input, 'token' | 'value'>> & Inpu
 
 const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
 
-const SummaryColumn = styled(Column)`
-  height: calc(100% - 2.5em);
+const SummaryColumn = styled(Column)``
+
+const DetailsColumn = styled(Column)``
+
+const Estimate = styled(ThemedText.Caption)`
+  height: 0;
 `
 
-const DetailsColumn = styled(Column)`
-  height: 100%;
+const Body = styled(Column)<{ open: boolean }>`
+  height: calc(100% - 2.5em);
+
+  ${SummaryColumn} {
+    flex-grow: ${({ open }) => (open ? 0 : 1)};
+    transition: flex-grow 0.2s;
+  }
+
+  ${DetailsColumn} {
+    overflow-y: hidden;
+    height: 1px;
+    flex-grow: ${({ open }) => (open ? 1 : 0)};
+    transition: flex-grow 0.2s;
+
+    ${Column} {
+      height: calc(100% - 2px);
+      padding: ${({ open }) => (open ? '0.75em 0' : 0)};
+      transition: padding 0.2s;
+    }
+  }
+
+  ${Estimate} {
+    flex-grow: ${({ open }) => (open ? 0 : 1)};
+    height: ${({ open }) => open && 0};
+    overflow-y: hidden;
+    transition: flex-grow 0.2s;
+  }
 `
 
 interface SummaryDialogProps {
@@ -49,6 +78,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
   const [open, setOpen] = useState(true)
 
   const [details, setDetails] = useState<HTMLDivElement | null>(null)
+
   const scrollbar = useScrollbar(details)
 
   if (!(input && output && swap)) {
@@ -58,13 +88,13 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
   return (
     <>
       <Header title={<Trans>Swap summary</Trans>} ruled />
-      <SummaryColumn gap={0.75} padded>
-        <Column gap={0.75} flex>
+      <Body flex align="stretch" gap={0.75} padded open={open}>
+        <SummaryColumn gap={0.75} flex justify="center">
           <Summary input={input} output={output} usdc={true} />
           <ThemedText.Caption>
             1 {input.token.symbol} = {price} {output.token.symbol}
           </ThemedText.Caption>
-        </Column>
+        </SummaryColumn>
         <Rule />
         <Row>
           <Row gap={0.5}>
@@ -75,25 +105,26 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
           </Row>
           <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
         </Row>
-        <DetailsColumn gap={0.75} ref={setDetails} css={scrollbar}>
-          <Details input={input.token} output={output.token} swap={swap} />
+        <DetailsColumn>
+          <Rule scrollingEdge="bottom" />
+          <Column gap={0.75} ref={setDetails} css={scrollbar}>
+            <Details input={input.token} output={output.token} swap={swap} />
+          </Column>
+          <Rule />
         </DetailsColumn>
-        <Rule />
-        {!open && (
-          <ThemedText.Caption color="secondary">
-            <Trans>Output is estimated.</Trans>{' '}
-            {swap?.minimumReceived && (
-              <Trans>
-                You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.
-              </Trans>
-            )}
-            {swap?.maximumSent && (
-              <Trans>
-                You will send at most {swap.maximumSent} {input.token.symbol} or the transaction will revert.
-              </Trans>
-            )}
-          </ThemedText.Caption>
-        )}
+        <Estimate color="secondary">
+          <Trans>Output is estimated.</Trans>{' '}
+          {swap?.minimumReceived && (
+            <Trans>
+              You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.
+            </Trans>
+          )}
+          {swap?.maximumSent && (
+            <Trans>
+              You will send at most {swap.maximumSent} {input.token.symbol} or the transaction will revert.
+            </Trans>
+          )}
+        </Estimate>
         <ActionButton
           onClick={onConfirm}
           onUpdate={() => confirmPrice(price)}
@@ -101,7 +132,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
         >
           <Trans>Confirm swap</Trans>
         </ActionButton>
-      </SummaryColumn>
+      </Body>
     </>
   )
 }

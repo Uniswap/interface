@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 import Button from './Button'
 import Row from './Row'
 
-const StyledButton = styled(Button)<{ updated?: boolean }>`
+const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-grow: 1;
   height: 100%;
@@ -38,6 +38,7 @@ const updatedCss = css`
   ${StyledButton} {
     border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
     flex-grow: 0;
+    height: 3em;
     padding: 1em;
   }
 `
@@ -45,7 +46,7 @@ const updatedCss = css`
 export const Overlay = styled(Row)<{ updated?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
-  height: 3.5em;
+  min-height: 3.5em;
   transition: padding 0.2s;
 
   ${({ updated }) => updated && updatedCss}
