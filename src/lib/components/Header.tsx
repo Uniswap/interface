@@ -16,7 +16,7 @@ const StyledLogo = styled(Logo)<{ color: Color }>`
 `
 
 const HeaderRow = styled(Row)`
-  height: 2em;
+  height: 1.75em;
   margin: 0 0.75em;
   padding-top: 0.5em;
   ${largeIconCss}
