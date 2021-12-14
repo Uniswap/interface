@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+// eslint-disable-next-line no-restricted-imports
+import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import HoverInlineText from 'components/HoverInlineText'
 import { useMemo } from 'react'
@@ -41,7 +43,7 @@ export function FiatValue({
       {priceImpact ? (
         <span style={{ color: priceImpactColor }}>
           {' '}
-          <MouseoverTooltip text={'The estimated difference between the USD values of input and output amounts.'}>
+          <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
             (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
           </MouseoverTooltip>
         </span>

@@ -82,7 +82,6 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
               </LoadingRows>
             ) : (
               <ThemedText.Main fontSize={12} width={400} margin={0}>
-                {/* could not get <Plural> to render `one` correctly. */}
                 {trade?.gasUseEstimateUSD ? (
                   <Trans>Best price route costs ~${trade.gasUseEstimateUSD.toFixed(2)} in gas. </Trans>
                 ) : null}{' '}

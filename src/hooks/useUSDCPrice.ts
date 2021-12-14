@@ -1,13 +1,9 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { TradeState } from 'state/routing/types'
 import { tryParseAmount } from 'state/swap/hooks'
 
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC, USDC_ARBITRUM } from '../constants/tokens'
-import { useCurrency } from './Tokens'
-import { useBestTrade } from './useBestTrade'
 import { useBestV2Trade } from './useBestV2Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import { useActiveWeb3React } from './web3'
@@ -93,32 +89,5 @@ export function useStablecoinAmountFromFiatValue(fiatValue: string | null | unde
     return tryParseAmount(parsedForDecimals, stablecoin)
   } catch (error) {
     return undefined
-  }
-}
-
-/**
- * Get gas cost estimate for a dummy ETH / Stable v3 trade
- * @returns Estimate in form of stablecoin amount or null
- */
-export function useDefaultGasCostEstimate(): {
-  cost: CurrencyAmount<Token> | null | undefined
-  loading: boolean
-  syncing: boolean
-} {
-  const { chainId } = useActiveWeb3React()
-  const stablecoin = chainId ? STABLECOIN_AMOUNT_OUT[chainId]?.currency : undefined
-  const ether = useCurrency('ETH')
-  const dummyEthAmount = ether ? CurrencyAmount.fromRawAmount(ether, JSBI.BigInt(1)) : undefined
-  const trade = useBestTrade(TradeType.EXACT_INPUT, dummyEthAmount ?? undefined, stablecoin)
-
-  const [routeIsLoading, routeIsSyncing] = useMemo(
-    () => [!trade.trade?.swaps, TradeState.LOADING === trade.state, TradeState.SYNCING === trade.state],
-    [trade]
-  )
-
-  return {
-    cost: trade?.trade?.gasUseEstimateUSD,
-    loading: routeIsLoading,
-    syncing: routeIsSyncing,
   }
 }

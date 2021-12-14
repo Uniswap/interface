@@ -58,14 +58,14 @@ const StyledPollingDot = styled.div<{ warning: boolean }>`
 `
 
 const StyledGasDot = styled.div`
-  width: 4px;
+  background-color: ${({ theme }) => theme.text3};
+  border-radius: 50%;
   height: 4px;
   min-height: 4px;
   min-width: 4px;
-  border-radius: 50%;
   position: relative;
-  background-color: ${({ theme }) => theme.text3};
   transition: 250ms ease background-color;
+  width: 4px;
 `
 
 const rotate360 = keyframes`
@@ -152,7 +152,7 @@ export default function Polling() {
                       </Trans>
                     }
                   >
-                    {priceGwei.toString()} gwei
+                    {priceGwei.toString()} <Trans>gwei</Trans>
                   </MouseoverTooltip>
                 </ThemedText.Main>
                 <StyledGasDot />

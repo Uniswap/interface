@@ -35,8 +35,7 @@ export default function SwapWarningDropdown({
   // gas cost estimate is more than half of input value
   const showNetworkFeeWarning = Boolean(
     fiatValueInput &&
-      trade &&
-      trade.gasUseEstimateUSD &&
+      trade?.gasUseEstimateUSD &&
       parseFloat(trade.gasUseEstimateUSD.toSignificant(6)) > parseFloat(fiatValueInput.toFixed(6)) / 2
   )
 

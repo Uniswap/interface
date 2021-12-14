@@ -10,7 +10,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
-// import { ReactComponent as GasIcon } from '../../assets/images/router-icon-grey.svg'
 import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 
@@ -38,7 +37,7 @@ export default function GasEstimateBadge({
   showRoute,
   disableHover,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined | null // dollar amount in active chain's stabelcoin
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined | null // dollar amount in active chain's stablecoin
   loading: boolean
   showRoute?: boolean // show route instead of gas estimation summary
   disableHover?: boolean

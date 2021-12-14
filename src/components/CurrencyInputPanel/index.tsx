@@ -57,19 +57,18 @@ const Container = styled.div<{ hideInput: boolean }>`
 `
 
 const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean; hideInput?: boolean }>`
-  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   align-items: center;
-  font-size: 24px;
-  font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.bg2 : theme.primary1)};
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 16px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  outline: none;
+  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   cursor: pointer;
+  border-radius: 16px;
+  outline: none;
   user-select: none;
   border: none;
+  font-size: 24px;
+  font-weight: 500;
   height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: 0 8px;
@@ -79,6 +78,7 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg3 : darken(0.05, theme.primary1))};
   }
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
 
 const InputRow = styled.div<{ selected: boolean }>`
@@ -129,17 +129,17 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
+  background-color: ${({ theme }) => theme.primary5};
   border: none;
   border-radius: 12px;
+  color: ${({ theme }) => theme.primary1};
+  cursor: pointer;
   font-size: 11px;
   font-weight: 500;
-  cursor: pointer;
-  padding: 4px 6px;
-  color: ${({ theme }) => theme.primary1};
-  background-color: ${({ theme }) => theme.primary5};
-  opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
-  pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
   margin-left: 0.25rem;
+  opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
+  padding: 4px 6px;
+  pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
 
   :focus {
     outline: none;
