@@ -1,6 +1,6 @@
 import { ApprovalState } from 'hooks/useApproveCallback'
 
-import { selectRouterVersion } from './selectRouterVersion'
+import { getTxOptimizedSwapRouter } from './getTxOptimizedSwapRouter'
 
 const getApprovalState = (approved: string[]) => ({
   v2: approved.includes('v2') ? ApprovalState.APPROVED : ApprovalState.NOT_APPROVED,
@@ -8,10 +8,10 @@ const getApprovalState = (approved: string[]) => ({
   v2V3: approved.includes('v2V3') ? ApprovalState.APPROVED : ApprovalState.NOT_APPROVED,
 })
 
-describe(selectRouterVersion, () => {
+describe(getTxOptimizedSwapRouter, () => {
   it('always selects v2v3 when approved', () => {
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         onlyV2Routes: true,
         onlyV3Routes: false,
         routeHasSplits: false,
@@ -19,7 +19,7 @@ describe(selectRouterVersion, () => {
       })
     ).toEqual('v2V3')
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         onlyV2Routes: false,
         onlyV3Routes: true,
         routeHasSplits: false,
@@ -27,7 +27,7 @@ describe(selectRouterVersion, () => {
       })
     ).toEqual('v2V3')
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         onlyV2Routes: false,
         onlyV3Routes: true,
         routeHasSplits: false,
@@ -41,7 +41,7 @@ describe(selectRouterVersion, () => {
 
     // selects v2
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         ...base,
         onlyV2Routes: true,
         routeHasSplits: false,
@@ -51,7 +51,7 @@ describe(selectRouterVersion, () => {
 
     // selects v2V3
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         ...base,
         onlyV2Routes: true,
         routeHasSplits: true,
@@ -59,7 +59,7 @@ describe(selectRouterVersion, () => {
       })
     ).toEqual('v2V3')
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         ...base,
         onlyV2Routes: true,
         routeHasSplits: true,
@@ -73,7 +73,7 @@ describe(selectRouterVersion, () => {
 
     // select v3
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         ...base,
         onlyV3Routes: true,
         routeHasSplits: false,
@@ -81,7 +81,7 @@ describe(selectRouterVersion, () => {
       })
     ).toEqual('v3')
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         ...base,
         onlyV3Routes: true,
         routeHasSplits: true,
@@ -91,7 +91,7 @@ describe(selectRouterVersion, () => {
 
     // selects v2V3
     expect(
-      selectRouterVersion({
+      getTxOptimizedSwapRouter({
         ...base,
         onlyV3Routes: true,
         routeHasSplits: true,

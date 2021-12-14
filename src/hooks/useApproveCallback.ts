@@ -5,9 +5,9 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
-import { selectRouterVersion } from 'utils/selectRouterVersion'
+import { getTxOptimizedSwapRouter } from 'utils/getTxOptimizedSwapRouter'
 
-import { SWAP_ROUTER_ADDRESS, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from '../constants/addresses'
+import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
@@ -58,7 +58,7 @@ export function useAllApprovalStates(
 
   const v2ApprovalState = useApprovalState(amountToApprove, chainId ? V2_ROUTER_ADDRESS[chainId] : undefined)
   const v3ApprovalState = useApprovalState(amountToApprove, chainId ? V3_ROUTER_ADDRESS[chainId] : undefined)
-  const v2V3ApprovalState = useApprovalState(amountToApprove, chainId ? SWAP_ROUTER_ADDRESS[chainId] : undefined)
+  const v2V3ApprovalState = useApprovalState(amountToApprove, chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined)
 
   return useMemo(
     () => ({ v2: v2ApprovalState, v3: v3ApprovalState, v2V3: v2V3ApprovalState }),
@@ -155,27 +155,21 @@ export function useApproveCallbackFromTrade(
         ? V2_ROUTER_ADDRESS[chainId]
         : trade instanceof V3Trade
         ? V3_ROUTER_ADDRESS[chainId]
-        : SWAP_ROUTER_ADDRESS[chainId]
+        : SWAP_ROUTER_ADDRESSES[chainId]
       : undefined
   )
 
+  // TODO: remove L162-168 after testing is done. This error will help detect mistakes in the logic.
   if (
     (Trade instanceof V2Trade && approveCallback[0] !== ApprovalState.APPROVED) ||
     (trade instanceof V3Trade && approveCallback[0] !== ApprovalState.APPROVED)
   ) {
-    throw new Error('Trying to approvea legacy router')
+    throw new Error('Trying to approve legacy router')
   }
 
   return approveCallback
 }
 
-/**
- * Returns a `Trade` object for which
- * Heuristic:
- * - if trade contains a single v2-only trade & V2 SwapRouter is approved: use V2 SwapRouter
- * - if trade contains only v3 & V3 SwapRouter is approved: use V3 SwapRouter
- * - else: approve and use V2+V3 SwapRouter
- */
 export function useApprovalOptimizedTrade(
   trade: Trade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent
@@ -190,15 +184,15 @@ export function useApprovalOptimizedTrade(
 
   const approvalStates = useAllApprovalStates(trade, allowedSlippage)
 
-  const selectedRouterVersion = useMemo(
-    () => selectRouterVersion({ onlyV2Routes, onlyV3Routes, routeHasSplits, approvalStates }),
+  const optimizedSwapRouter = useMemo(
+    () => getTxOptimizedSwapRouter({ onlyV2Routes, onlyV3Routes, routeHasSplits, approvalStates }),
     [approvalStates, routeHasSplits, onlyV2Routes, onlyV3Routes]
   )
 
   return useMemo(() => {
     if (!trade) return undefined
 
-    switch (selectedRouterVersion) {
+    switch (optimizedSwapRouter) {
       case 'v2V3':
         return trade
       case 'v2':
@@ -221,5 +215,5 @@ export function useApprovalOptimizedTrade(
       default:
         return undefined
     }
-  }, [trade, selectedRouterVersion])
+  }, [trade, optimizedSwapRouter])
 }

@@ -32,6 +32,7 @@ export default memo(function SwapRoute({
 
   const routes = getTokenPath(trade)
 
+  // currently, routes cannot be mixed so while `every` is more correct, some is more efficient
   const hasV2Routes = routes.some((r) => r.protocol === Protocol.V2)
   const hasV3Routes = routes.some((r) => r.protocol === Protocol.V3)
 

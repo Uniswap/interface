@@ -7,7 +7,7 @@ import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode, useMemo } from 'react'
 
-import { SWAP_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from '../constants/addresses'
+import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
@@ -152,7 +152,7 @@ function useSwapCallArguments(
       const swapRouterAddress = chainId
         ? trade instanceof V3Trade
           ? V3_ROUTER_ADDRESS[chainId]
-          : SWAP_ROUTER_ADDRESS[chainId]
+          : SWAP_ROUTER_ADDRESSES[chainId]
         : undefined
       if (!swapRouterAddress) return []
 
@@ -167,7 +167,6 @@ function useSwapCallArguments(
               deadlineOrPreviousBlockhash: deadline.toString(),
             })
 
-      // TODO: applies to new swap router?
       if (argentWalletContract && trade.inputAmount.currency.isToken) {
         return [
           {
