@@ -4,10 +4,18 @@
 import { BigNumber, providers } from 'ethers'
 import {
   GWEI_REWARD_OUTLIER_THRESHOLD,
+  MAX_GWEI_FAST_PRI_FEE,
+  MAX_GWEI_NORMAL_PRI_FEE,
+  MAX_GWEI_URGENT_PRI_FEE,
   MAX_TIME_FACTOR,
+  MIN_GWEI_FAST_PRI_FEE,
+  MIN_GWEI_NORMAL_PRI_FEE,
+  MIN_GWEI_URGENT_PRI_FEE,
   SAMPLE_MAX_PERCENTILE,
   SAMPLE_MIN_PERCENTILE,
+  SUGGESTED_MAX_FEE_MULTIPLIER,
 } from 'src/constants/gas'
+import { computeBaseFeeTrend } from 'src/features/gas/computeBaseFeeTrend'
 import {
   BlockReward,
   FeeHistoryResponse,
@@ -15,19 +23,15 @@ import {
   MaxFeeSuggestions,
   MaxPriorityFeeSuggestions,
 } from 'src/features/gas/types'
-import {
-  exponentialMovingAverage as ema,
-  linearRegression,
-  samplingCurve,
-} from 'src/utils/statistics'
+import { exponentialMovingAverage as ema, samplingCurve } from 'src/utils/statistics'
 import { gweiToWei, weiToGwei } from 'src/utils/wei'
 
-export const suggestMaxBaseFee = async (
+export async function suggestMaxBaseFee(
   provider: providers.JsonRpcProvider,
   fromBlock = 'latest',
-  blockCountHistory = 25 // # blocks to fetch
-): Promise<MaxFeeSuggestions> => {
-  // Retrieve fee history from chain
+  blockCountHistory = 100 // # blocks to fetch
+): Promise<MaxFeeSuggestions> {
+  // Retrieve fee history from chain in ascending block order starting at fromBlock
   const feeHistory: FeeHistoryResponse = await provider.send('eth_feeHistory', [
     blockCountHistory,
     fromBlock,
@@ -49,9 +53,7 @@ export const suggestMaxBaseFee = async (
     order.push(i)
   }
 
-  // Use a simple linear regression to compute trend (like chart slope)
-  const blocksIndexes = Array.from(Array(blockCountHistory + 1).keys())
-  const trend = linearRegression(baseFees, blocksIndexes)
+  const baseFeeTrend = computeBaseFeeTrend(baseFees, currentBaseFee)
 
   // Slightly inflate base fee of last block
   baseFees[baseFees.length - 1] *= 9 / 8
@@ -88,19 +90,19 @@ export const suggestMaxBaseFee = async (
     result[timeFactor] = baseFee
   }
   // Find max base fee of all suggestions
-  const suggestedMaxBaseFee = Math.max(...result)
+  const suggestedMaxBaseFee = Math.max(...result) * SUGGESTED_MAX_FEE_MULTIPLIER
 
   return {
     currentBaseFee: currentBaseFee,
     baseFeeSuggestion: gweiToWei(suggestedMaxBaseFee),
-    baseFeeTrend: trend,
+    baseFeeTrend,
   }
 }
 
-export const suggestMaxPriorityFee = async (
+export async function suggestMaxPriorityFee(
   provider: providers.JsonRpcProvider,
   fromBlock = 'latest'
-): Promise<MaxPriorityFeeSuggestions> => {
+): Promise<MaxPriorityFeeSuggestions> {
   // Retrieve fee history (including rewards) from chain
   const feeHistory: FeeHistoryResponse = await provider.send('eth_feeHistory', [
     10,
@@ -130,14 +132,28 @@ export const suggestMaxPriorityFee = async (
     emaPercentile15 === undefined ||
     emaPercentile30 === undefined ||
     emaPercentile45 === undefined
-  )
+  ) {
     throw new Error('An ema percentile was undefined')
+  }
+
+  const boundedNormalPriorityFee = Math.min(
+    Math.max(emaPercentile15, MIN_GWEI_NORMAL_PRI_FEE),
+    MAX_GWEI_NORMAL_PRI_FEE
+  )
+  const boundedFastMaxPriorityFee = Math.min(
+    Math.max(emaPercentile30, MIN_GWEI_FAST_PRI_FEE),
+    MAX_GWEI_FAST_PRI_FEE
+  )
+  const boundedUrgentPriorityFee = Math.min(
+    Math.max(emaPercentile45, MIN_GWEI_URGENT_PRI_FEE),
+    MAX_GWEI_URGENT_PRI_FEE
+  )
 
   return {
     priorityFeeSuggestions: {
-      normal: gweiToWei(Math.max(emaPercentile15, 1)),
-      fast: gweiToWei(Math.max(emaPercentile30, 1.5)),
-      urgent: gweiToWei(Math.max(emaPercentile45, 2)),
+      normal: gweiToWei(boundedNormalPriorityFee),
+      fast: gweiToWei(boundedFastMaxPriorityFee),
+      urgent: gweiToWei(boundedUrgentPriorityFee),
     },
     confirmationSecondsToPriorityFee: {
       15: gweiToWei(emaPercentile45),
@@ -148,9 +164,9 @@ export const suggestMaxPriorityFee = async (
   }
 }
 
-export const suggestFees = async (
+export async function suggestFees(
   provider: providers.JsonRpcProvider
-): Promise<FeePerGasSuggestions> => {
+): Promise<FeePerGasSuggestions> {
   // Get suggested max base fees
   const maxBasFeeP = suggestMaxBaseFee(provider)
   // Get suggested max priority fees (also known as miner 'tip', though not so accurate)
@@ -191,7 +207,7 @@ const suggestBaseFee = (
   return result
 }
 
-const getOutlierBlocksToRemove = (blocksRewards: BlockReward[], index: number) => {
+function getOutlierBlocksToRemove(blocksRewards: BlockReward[], index: number) {
   const blocks: number[] = []
   blocksRewards
     .map((reward) => weiToGwei(reward[index]))
@@ -203,11 +219,12 @@ const getOutlierBlocksToRemove = (blocksRewards: BlockReward[], index: number) =
   return blocks
 }
 
-const rewardsFilterOutliers = (
+function rewardsFilterOutliers(
   blocksRewards: BlockReward[],
   outlierBlocks: number[],
   rewardIndex: number
-) =>
-  blocksRewards
+) {
+  return blocksRewards
     .filter((_, index) => !outlierBlocks.includes(index))
     .map((reward) => weiToGwei(reward[rewardIndex]))
+}

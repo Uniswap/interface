@@ -49,15 +49,15 @@ describe('computeGasFee', () => {
       type: 'eip1559',
       gasLimit: '100000',
       fee: {
-        fast: '13938609641600000',
-        normal: '13699176511100000',
-        urgent: '13962997254100000',
+        fast: '14255952332500000',
+        normal: '14123468711400000',
+        urgent: '14387289454400000',
       },
       feeDetails: {
         currentBaseFeePerGas: '120281423397',
-        maxBaseFeePerGas: '135316601322',
+        maxBaseFeePerGas: '139559523325',
         maxPriorityFeePerGas: {
-          fast: '4069495094',
+          fast: '3000000000',
           normal: '1675163789',
           urgent: '4313371219',
         },

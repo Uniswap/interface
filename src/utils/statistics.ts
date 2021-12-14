@@ -33,7 +33,7 @@ export function dynamicMovingAverage(
   }
 
   // Dynamic weights: an array of weights
-  // Ref: // https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+  // Ref: https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
   // with a dynamic alpha
   if (!noArrayWeight) {
     for (; i < length; i++) {
@@ -64,8 +64,9 @@ export function exponentialMovingAverage(data: number[], size: number): number[]
   return dynamicMovingAverage(data, 2 / (size + 1))
 }
 
-// Based on https://github.com/rainbow-me/fee-suggestions/blob/main/src/utils.ts#L62
-export const linearRegression = (y: number[], x: number[]) => {
+// Based on https://github.com/rainbow-me/fee-suggestions/blob/39e57a34a509dd916c55a5f160ea2c64cdc879e0/src/utils.ts#L68
+export function linearRegression(y: number[]) {
+  const x = Array.from(Array(y.length + 1).keys())
   const n = y.length
   let sumX = 0
   let sumY = 0
@@ -86,7 +87,7 @@ export const linearRegression = (y: number[], x: number[]) => {
 }
 
 // Based on https://github.com/rainbow-me/fee-suggestions/blob/main/src/utils.ts#L42
-export const samplingCurve = (sumWeight: number, sampleMin: number, sampleMax: number) => {
+export function samplingCurve(sumWeight: number, sampleMin: number, sampleMax: number) {
   if (sumWeight <= sampleMin) return 0
   if (sumWeight >= sampleMax) return 1
   return (1 - Math.cos(((sumWeight - sampleMin) * 2 * Math.PI) / (sampleMax - sampleMin))) / 2
