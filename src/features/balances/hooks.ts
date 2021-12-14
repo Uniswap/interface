@@ -7,7 +7,7 @@ import { useMulticall2Contract, useTokenContract } from 'src/features/contracts/
 import { useMultipleContractSingleData, useSingleCallResult } from 'src/features/multicall'
 import { ChainIdToAddressToToken } from 'src/features/tokens/types'
 
-const BLOCKS_PER_FETCH = 3
+const BLOCKS_PER_FETCH = 10
 const ERC20Interface = new utils.Interface(ERC20_ABI)
 const blocksPerFetchOption = { blocksPerFetch: BLOCKS_PER_FETCH }
 
