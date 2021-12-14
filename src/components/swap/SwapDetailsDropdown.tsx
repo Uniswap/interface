@@ -36,10 +36,10 @@ const StyledCard = styled(OutlineCard)`
   border: 1px solid ${({ theme }) => theme.bg2};
 `
 
-const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean }>`
+const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
   padding: 4px 8px;
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ open, theme }) => (open ? theme.bg1 : 'transparent')};
   align-items: center;
   cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
   min-height: 40px;
@@ -56,9 +56,10 @@ const RotatingArrow = styled(ChevronDown)<{ open?: boolean }>`
 
 const StyledPolling = styled.div`
   display: flex;
-  margin-left: 4px;
   height: 16px;
   width: 16px;
+  margin-right: 2px;
+  margin-left: 10px;
   align-items: center;
   color: ${({ theme }) => theme.text1};
   transition: 250ms ease color;
@@ -130,7 +131,7 @@ export default function SwapDetailsDropdown({
   return (
     <Wrapper>
       <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
-        <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade}>
+        <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
           <RowFixed style={{ position: 'relative' }}>
             {(loading || syncing) && !(swapInputError && !trade) ? (
               <StyledPolling>
@@ -142,7 +143,7 @@ export default function SwapDetailsDropdown({
               <MouseoverTooltipContent
                 wrap={false}
                 content={
-                  <ResponsiveTooltipContainer origin="top right" style={{ padding: '12px' }}>
+                  <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
                     <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
                   </ResponsiveTooltipContainer>
                 }
@@ -171,7 +172,7 @@ export default function SwapDetailsDropdown({
             ) : null}
           </RowFixed>
           <RowFixed>
-            {!trade?.gasUseEstimateUSD ? null : (
+            {!trade?.gasUseEstimateUSD || showDetails ? null : (
               <GasEstimateBadge
                 trade={trade}
                 loading={syncing || loading}

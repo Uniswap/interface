@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import useTheme from '../../hooks/useTheme'
 import { TYPE } from '../../theme'
 import { warningSeverity } from '../../utils/prices'
+import { MouseoverTooltip } from '../Tooltip'
 
 export function FiatValue({
   fiatValue,
@@ -40,7 +41,9 @@ export function FiatValue({
       {priceImpact ? (
         <span style={{ color: priceImpactColor }}>
           {' '}
-          (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+          <MouseoverTooltip text={'The estimated difference between the USD values of input and output amounts.'}>
+            (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+          </MouseoverTooltip>
         </span>
       ) : null}
     </TYPE.body>

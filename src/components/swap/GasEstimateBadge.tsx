@@ -19,7 +19,7 @@ const GasWrapper = styled(RowFixed)`
   padding: 4px 6px;
   height: 24px;
   color: ${({ theme }) => theme.text3};
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
   font-size: 14px;
   font-weight: 500;
   user-select: none;

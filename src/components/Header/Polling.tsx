@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { RowFixed } from 'components/Row'
 import { CHAIN_INFO } from 'constants/chains'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -13,6 +14,7 @@ import styled, { keyframes } from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
 const StyledPolling = styled.div<{ warning: boolean }>`
@@ -35,6 +37,14 @@ const StyledPollingNumber = styled(TYPE.small)<{ breathe: boolean; hovering: boo
   :hover {
     opacity: 1;
   }
+
+  a {
+    color: unset;
+  }
+  a:hover {
+    text-decoration: none;
+    color: unset;
+  }
 `
 const StyledPollingDot = styled.div<{ warning: boolean }>`
   width: 8px;
@@ -48,10 +58,10 @@ const StyledPollingDot = styled.div<{ warning: boolean }>`
 `
 
 const StyledGasDot = styled.div`
-  width: 6px;
-  height: 6px;
-  min-height: 6px;
-  min-width: 6px;
+  width: 4px;
+  height: 4px;
+  min-height: 4px;
+  min-width: 4px;
   border-radius: 50%;
   position: relative;
   background-color: ${({ theme }) => theme.text3};
@@ -124,27 +134,50 @@ export default function Polling() {
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 
+  //TODO - chainlink gas oracle is really slow. Can we get a better data source?
+
   return (
     <>
       <RowFixed>
-        <ExternalLink
-          href={chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''}
-        >
-          <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
+        <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
+          <ExternalLink
+            href={
+              chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''
+            }
+          >
             {priceGwei ? (
               <RowFixed style={{ marginRight: '8px' }}>
                 <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
-                  {priceGwei.toString()} gwei
+                  <MouseoverTooltip
+                    text={
+                      <Trans>
+                        {`The current fast gas amount for sending a transaction on L1.
+                    Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei. `}
+                      </Trans>
+                    }
+                  >
+                    {priceGwei.toString()} gwei
+                  </MouseoverTooltip>
                 </TYPE.main>
                 <StyledGasDot />
               </RowFixed>
             ) : null}
-            <StyledPollingNumber breathe={isMounting} hovering={isHover}>
-              {blockNumber}&ensp;
-            </StyledPollingNumber>
-            <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
-          </StyledPolling>
-        </ExternalLink>
+          </ExternalLink>
+          <StyledPollingNumber breathe={isMounting} hovering={isHover}>
+            <ExternalLink
+              href={
+                chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''
+              }
+            >
+              <MouseoverTooltip
+                text={<Trans>{`The most recent block number on this network. Prices update on every block.`}</Trans>}
+              >
+                {blockNumber}&ensp;
+              </MouseoverTooltip>
+            </ExternalLink>
+          </StyledPollingNumber>
+          <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
+        </StyledPolling>
         {warning && <ChainConnectivityWarning />}
       </RowFixed>
     </>

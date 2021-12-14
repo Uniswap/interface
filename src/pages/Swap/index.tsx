@@ -413,7 +413,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
-            {!showWrap && (trade || routeIsLoading || routeIsSyncing) && (
+            {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
               <SwapDetailsDropdown
                 trade={trade}
                 syncing={routeIsSyncing}

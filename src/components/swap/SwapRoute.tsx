@@ -19,15 +19,17 @@ import { Separator, TYPE } from 'theme'
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Wrapper = styled(AutoColumn)<{ darkMode?: boolean }>`
-  padding: 8px 12px;
-  border-radius: 12px;
-  background-color: ${({ theme, darkMode }) => (darkMode ? darken(0.01, theme.blue4) : 'transparent')};
+  padding: 12px 8px 12px 12px;
+  border-radius: 16px;
+  // background-color: ${({ theme, darkMode }) => (darkMode ? darken(0.01, theme.blue4) : theme.bg1)};
+  border: 1px solid ${({ theme }) => theme.bg2};
+  cursor: pointer;
 `
 
 const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
   margin-left: 8px;
-  height: 18px;
-  stroke-width: 3px;
+  height: 20px;
+  stroke-width: 2px;
   transition: transform 0.1s;
   transform: ${({ open }) => (open ? 'rotate(45deg)' : 'none')};
   stroke: ${({ theme }) => theme.blue1};
@@ -54,15 +56,15 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
 
   return (
     <Wrapper {...rest} darkMode={darkMode}>
-      <RowBetween>
+      <RowBetween onClick={() => setOpen(!open)}>
         <AutoRow gap="4px" width="auto">
           <AutoRouterLogo />
           <AutoRouterLabel />
         </AutoRow>
-        {fixedOpen ? null : <OpenCloseIcon open={open} onClick={() => setOpen(!open)} />}
+        {fixedOpen ? null : <OpenCloseIcon open={open} />}
       </RowBetween>
       <AnimatedDropdown open={open || fixedOpen}>
-        <AutoRow gap="6px" width="auto" style={{ paddingTop: '12px' }}>
+        <AutoRow gap="4px" width="auto" style={{ paddingTop: '12px', margin: 0 }}>
           {syncing ? (
             <LoadingRows>
               <div style={{ width: '400px', height: '30px' }} />
@@ -81,7 +83,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
                 <div style={{ width: '250px', height: '15px' }} />
               </LoadingRows>
             ) : (
-              <TYPE.main fontSize={12} width={400}>
+              <TYPE.main fontSize={12} width={400} margin={0}>
                 {/* could not get <Plural> to render `one` correctly. */}
                 {trade?.gasUseEstimateUSD ? (
                   <Trans>Best price route costs ~${trade.gasUseEstimateUSD.toFixed(2)} in gas. </Trans>
