@@ -1,6 +1,6 @@
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
@@ -130,6 +130,11 @@ export default function Web3Status() {
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { t } = useTranslation()
   const mobileByMedia = useIsMobileByMedia()
+  const unsupportedChain = error && error instanceof UnsupportedChainIdError
+
+  const clickHandler = useCallback(() => {
+    !unsupportedChain && toggleNetworkSwitcherPopover()
+  }, [unsupportedChain, toggleNetworkSwitcherPopover])
 
   if (!contextNetwork.active && !active) {
     return null
@@ -139,8 +144,8 @@ export default function Web3Status() {
     return (
       <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
         <Web3StatusError>
-          {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
-          <SwitchNetworkButton onClick={toggleNetworkSwitcherPopover}>
+          {unsupportedChain ? 'Wrong Network' : 'Error'}
+          <SwitchNetworkButton onClick={clickHandler}>
             Switch network
             <TriangleIcon />
           </SwitchNetworkButton>
