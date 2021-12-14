@@ -1,68 +1,58 @@
-import { Trans } from '@lingui/macro'
-import { useAtomValue } from 'jotai/utils'
+import { t } from '@lingui/macro'
 import { ThemedText } from 'lib/theme'
-import { ReactNode } from 'react'
+import { Token } from 'lib/types'
+import { useMemo } from 'react'
 
-import Column from '../../Column'
 import Row from '../../Row'
-import { stateAtom } from '../state'
+import { State } from '../state'
 
-function Detail({ children }: { children: ReactNode }) {
+interface DetailProps {
+  label: string
+  value: string
+}
+
+function Detail({ label, value }: DetailProps) {
   return (
     <ThemedText.Caption>
-      <Row gap={2}>{children}</Row>
+      <Row gap={2}>
+        <span>{label}</span>
+        {value}
+      </Row>
     </ThemedText.Caption>
   )
 }
 
-export default function Details() {
-  const { input, output, swap } = useAtomValue(stateAtom)
-  if (!(input.token && output.token && swap)) {
-    return null
-  }
+interface DetailsProps {
+  swap: Required<State>['swap']
+  input: Token
+  output: Token
+}
 
+export default function Details({
+  input: { symbol: inputSymbol },
+  output: { symbol: outputSymbol },
+  swap,
+}: DetailsProps) {
+  const integrator = window.location.hostname
+  const details = useMemo((): [string, string][] => {
+    return [
+      [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
+      [t`${integrator} fee`, swap.integratorFee && `${swap.integratorFee} ${inputSymbol}`],
+      [t`Price impact`, `${swap.priceImpact}%`],
+      [t`Maximum sent`, swap.maximumSent && `${swap.maximumSent} ${inputSymbol}`],
+      [t`Minimum received`, swap.minimumReceived && `${swap.minimumReceived} ${outputSymbol}`],
+      [t`Slippage tolerance`, `${swap.slippageTolerance}%`],
+    ].filter(isDetail)
+
+    function isDetail(detail: unknown[]): detail is [string, string] {
+      return Boolean(detail[1])
+    }
+  }, [inputSymbol, outputSymbol, swap, integrator])
   return (
-    <Column gap={0.75}>
-      <Detail>
-        <span>
-          <Trans>Liquidity provider fee</Trans>
-        </span>
-        {swap.lpFee}&emsp;{input.token.symbol}
-      </Detail>
-      <Detail>
-        <span>
-          <Trans>Integrator fee</Trans>
-        </span>
-        {swap.integratorFee}&emsp;{input.token.symbol}
-      </Detail>
-      <Detail>
-        <span>
-          <Trans>Price impact</Trans>
-        </span>
-        {swap.priceImpact}%
-      </Detail>
-      {swap.maximumSent && (
-        <Detail>
-          <span>
-            <Trans>Maximum sent</Trans>
-          </span>
-          {swap.maximumSent}&emsp;{input.token.symbol}
-        </Detail>
-      )}
-      {swap.minimumReceived && (
-        <Detail>
-          <span>
-            <Trans>Minimum received</Trans>
-          </span>
-          {swap.minimumReceived}&emsp;{output.token.symbol}
-        </Detail>
-      )}
-      <Detail>
-        <span>
-          <Trans>Slippage tolerance</Trans>
-        </span>
-        {swap.slippageTolerance}%
-      </Detail>
-    </Column>
+    <>
+      {details.map(([label, detail]) => (
+        <Detail key={label} label={label} value={detail} />
+      ))}
+    </>
   )
 }
