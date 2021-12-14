@@ -108,7 +108,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: TradeState.INVALID,
         trade: undefined,
-        gasUseEstimateUSD,
       }
     }
 
@@ -117,7 +116,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: TradeState.LOADING,
         trade: undefined,
-        gasUseEstimateUSD,
       }
     }
 
@@ -134,12 +132,11 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: TradeState.NO_ROUTE_FOUND,
         trade: undefined,
-        gasUseEstimateUSD,
       }
     }
 
     try {
-      const trade = transformRoutesToTrade(route, tradeType)
+      const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
       return {
         // always return VALID regardless of isFetching status
         state: TradeState.VALID,
