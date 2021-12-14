@@ -37,16 +37,21 @@ export const getTokenLogoURL = (
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  border-radius: 24px;
+  border-radius: 50%;
+  -mox-box-shadow: 0 0 1px white;
+  -webkit-box-shadow: 0 0 1px white;
+  box-shadow: 0 0 1px white;
+  border: 0px solid rgba(255, 255, 255, 0);
 `
 
 const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  border-radius: ${({ size }) => size};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  background-color: ${({ theme }) => theme.white};
+  border-radius: 50%;
+  -mox-box-shadow: 0 0 1px black;
+  -webkit-box-shadow: 0 0 1px black;
+  box-shadow: 0 0 1px black;
+  border: 0px solid rgba(255, 255, 255, 0);
 `
 
 export default function CurrencyLogo({
