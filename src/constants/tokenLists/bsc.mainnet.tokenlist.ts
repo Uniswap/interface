@@ -115,6 +115,14 @@ export const BSC_MAINNET_TOKEN_LIST = {
       name: 'ZUKI MOBA',
       decimals: 18,
       logoURI: 'https://zukimoba.com/images/logos/logo.png'
+    },
+    {
+      chainId: 56,
+      address: '0xe91a8D2c584Ca93C7405F15c22CdFE53C29896E3',
+      symbol: 'DEXT',
+      name: 'DEXTools',
+      decimals: 18,
+      logoURI: 'https://bscscan.com/token/images/dextools_32.png'
     }
   ],
   version: {
