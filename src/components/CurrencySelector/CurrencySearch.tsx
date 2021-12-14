@@ -6,6 +6,7 @@ import { Option } from 'src/components/CurrencySelector/Option'
 import { filter } from 'src/components/CurrencySelector/util'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box } from 'src/components/layout/Box'
+import { CenterBox } from 'src/components/layout/CenterBox'
 import { NetworkButtonGroup } from 'src/components/Network/NetworkButtonGroup'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -45,36 +46,37 @@ export function CurrencySearch({
   const onChangeText = (newSearchFilter: string) => setSearchFilter(newSearchFilter)
 
   return (
-    <Box flex={1}>
-      {filteredCurrencies.length > 0 ? (
-        <FlatList
-          data={filteredCurrencies}
-          ListHeaderComponent={
-            <Box mb="md">
-              <TextInput
-                borderRadius="lg"
-                mx="lg"
-                onChangeText={onChangeText}
-                placeholder="Search token symbols or address"
-                style={styles.input}
-                borderWidth={0}
-                backgroundColor="gray50"
-              />
-              <NetworkButtonGroup selected={chainFilter} onPress={onChainPress} />
-            </Box>
-          }
-          renderItem={({ item }: ListRenderItemInfo<Currency>) => (
-            <Option
-              currency={item as Currency}
-              onPress={() => onSelectCurrency?.(item)}
-              selected={Boolean(selectedCurrency?.equals(item))}
+    <Box flex={1} width="100%">
+      <FlatList
+        data={filteredCurrencies}
+        ListHeaderComponent={
+          <Box mb="md">
+            <TextInput
+              borderRadius="lg"
+              mx="lg"
+              onChangeText={onChangeText}
+              placeholder="Search token symbols or address"
+              style={styles.input}
+              borderWidth={0}
+              backgroundColor="gray50"
             />
-          )}
-          keyExtractor={getKey}
-        />
-      ) : (
-        <Text>{t`No tokens found`}</Text>
-      )}
+            <NetworkButtonGroup selected={chainFilter} onPress={onChainPress} />
+          </Box>
+        }
+        ListEmptyComponent={
+          <CenterBox my="sm">
+            <Text variant="h4" color="gray200">{t`No tokens found`}</Text>
+          </CenterBox>
+        }
+        renderItem={({ item }: ListRenderItemInfo<Currency>) => (
+          <Option
+            currency={item as Currency}
+            onPress={() => onSelectCurrency?.(item)}
+            selected={Boolean(selectedCurrency?.equals(item))}
+          />
+        )}
+        keyExtractor={getKey}
+      />
     </Box>
   )
 }
