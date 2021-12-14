@@ -39,7 +39,6 @@ const FixedContainer = styled.div`
   position: absolute;
   border-radius: 20px;
   background-color: ${({ theme }) => theme.bg2};
-  // opacity: 0.95;
   display: flex;
   align-items: center;
   justify-content: center;
