@@ -5,6 +5,7 @@ import { TYPE } from 'theme'
 
 import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
 import { ReactComponent as StaticRouterIcon } from '../../assets/svg/static_route.svg'
+import { MouseoverTooltip } from '../Tooltip'
 
 const StyledAutoRouterIcon = styled(AutoRouterIcon)`
   height: 16px;
@@ -49,7 +50,11 @@ export function AutoRouterLabel() {
   const autoRouterSupported = useAutoRouterSupported()
 
   return autoRouterSupported ? (
-    <StyledAutoRouterLabel fontSize={14}>Route optimized for best price including fees</StyledAutoRouterLabel>
+    <MouseoverTooltip
+      text={<Trans>Auto router optimizes your price by considering split routes, multiple hops, and gas costs.</Trans>}
+    >
+      <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
+    </MouseoverTooltip>
   ) : (
     <TYPE.black fontSize={14}>
       <Trans>Trade Route</Trans>

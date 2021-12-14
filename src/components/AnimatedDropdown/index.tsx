@@ -10,6 +10,13 @@ export default function AnimatedDropdown({ open, children }: { open: boolean; ch
 
   const props = useSpring({
     height: open ? height ?? 0 : 0,
+    config: {
+      mass: 1.2,
+      tension: 300,
+      friction: 20,
+      clamp: true,
+      velocity: 0.01,
+    },
   })
 
   return (
@@ -18,6 +25,7 @@ export default function AnimatedDropdown({ open, children }: { open: boolean; ch
         ...props,
         overflow: 'hidden',
         width: '100%',
+        willChange: 'height',
       }}
     >
       <div ref={ref}>{children}</div>
