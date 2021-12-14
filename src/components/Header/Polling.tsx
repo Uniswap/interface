@@ -11,7 +11,7 @@ import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import styled, { keyframes } from 'styled-components/macro'
-import { ExternalLink, TYPE } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { MouseoverTooltip } from '../Tooltip'
@@ -31,7 +31,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
     display: none;
   `}
 `
-const StyledPollingNumber = styled(TYPE.small)<{ breathe: boolean; hovering: boolean }>`
+const StyledPollingNumber = styled(ThemedText.Small)<{ breathe: boolean; hovering: boolean }>`
   transition: opacity 0.25s ease;
   opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
   :hover {
@@ -143,7 +143,7 @@ export default function Polling() {
           <ExternalLink href={'https://etherscan.io/gastracker'}>
             {priceGwei ? (
               <RowFixed style={{ marginRight: '8px' }}>
-                <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
+                <ThemedText.Main fontSize="11px" mr="8px" color={theme.text3}>
                   <MouseoverTooltip
                     text={
                       <Trans>
@@ -154,7 +154,7 @@ export default function Polling() {
                   >
                     {priceGwei.toString()} gwei
                   </MouseoverTooltip>
-                </TYPE.main>
+                </ThemedText.Main>
                 <StyledGasDot />
               </RowFixed>
             ) : null}

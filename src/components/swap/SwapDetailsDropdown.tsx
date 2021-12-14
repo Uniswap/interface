@@ -11,7 +11,7 @@ import { ReactNode, useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
@@ -164,13 +164,13 @@ export default function SwapDetailsDropdown({
                 />
               </LoadingOpacityContainer>
             ) : (loading || syncing) && !swapInputError ? (
-              <TYPE.main fontSize={14}>
+              <ThemedText.Main fontSize={14}>
                 <Trans>Fetching best price...</Trans>
-              </TYPE.main>
+              </ThemedText.Main>
             ) : swapInputError ? (
-              <TYPE.main color="bg3" fontSize={14}>
+              <ThemedText.Main color="bg3" fontSize={14}>
                 {swapInputError}
-              </TYPE.main>
+              </ThemedText.Main>
             ) : null}
           </RowFixed>
           <RowFixed>

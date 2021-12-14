@@ -24,7 +24,7 @@ export function transformSwapRouteToGetQuoteResult(
   for (const subRoute of route) {
     const { amount, quote, tokenPath } = subRoute
 
-    if (subRoute.protocol == Protocol.V3) {
+    if (subRoute.protocol === Protocol.V3) {
       const pools = subRoute.route.pools
       const curRoute: V3PoolInRoute[] = []
       for (let i = 0; i < pools.length; i++) {
@@ -33,12 +33,12 @@ export function transformSwapRouteToGetQuoteResult(
         const tokenOut = tokenPath[i + 1]
 
         let edgeAmountIn = undefined
-        if (i == 0) {
+        if (i === 0) {
           edgeAmountIn = type === 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
         }
 
         let edgeAmountOut = undefined
-        if (i == pools.length - 1) {
+        if (i === pools.length - 1) {
           edgeAmountOut = type === 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
         }
 
@@ -66,7 +66,7 @@ export function transformSwapRouteToGetQuoteResult(
       }
 
       routeResponse.push(curRoute)
-    } else if (subRoute.protocol == Protocol.V2) {
+    } else if (subRoute.protocol === Protocol.V2) {
       const pools = subRoute.route.pairs
       const curRoute: V2PoolInRoute[] = []
       for (let i = 0; i < pools.length; i++) {
@@ -75,13 +75,13 @@ export function transformSwapRouteToGetQuoteResult(
         const tokenOut = tokenPath[i + 1]
 
         let edgeAmountIn = undefined
-        if (i == 0) {
-          edgeAmountIn = type == 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
+        if (i === 0) {
+          edgeAmountIn = type === 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
         }
 
         let edgeAmountOut = undefined
-        if (i == pools.length - 1) {
-          edgeAmountOut = type == 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
+        if (i === pools.length - 1) {
+          edgeAmountOut = type === 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
         }
 
         const reserve0 = nextPool.reserve0

@@ -4,7 +4,7 @@ import HoverInlineText from 'components/HoverInlineText'
 import { useMemo } from 'react'
 
 import useTheme from '../../hooks/useTheme'
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 import { warningSeverity } from '../../utils/prices'
 import { MouseoverTooltip } from '../Tooltip'
 
@@ -26,7 +26,7 @@ export function FiatValue({
   }, [priceImpact, theme.green1, theme.red1, theme.text3, theme.yellow1])
 
   return (
-    <TYPE.body fontSize={14} color={fiatValue ? theme.text3 : theme.text4} fontWeight={500}>
+    <ThemedText.Body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
       {fiatValue ? (
         <Trans>
           $
@@ -46,6 +46,6 @@ export function FiatValue({
           </MouseoverTooltip>
         </span>
       ) : null}
-    </TYPE.body>
+    </ThemedText.Body>
   )
 }

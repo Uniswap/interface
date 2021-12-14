@@ -6,7 +6,7 @@ import { useContext, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { Separator, TYPE } from '../../theme'
+import { Separator, ThemedText } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
@@ -57,57 +57,57 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       <AutoColumn gap="8px">
         <RowBetween>
           <RowFixed>
-            <TYPE.subHeader color={theme.text1}>
+            <ThemedText.SubHeader color={theme.text1}>
               <Trans>Expected Output</Trans>
-            </TYPE.subHeader>
+            </ThemedText.SubHeader>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            <TYPE.black textAlign="right" fontSize={14}>
+            <ThemedText.Black textAlign="right" fontSize={14}>
               {expectedOutputAmount
                 ? `${expectedOutputAmount.toSignificant(4)}  ${expectedOutputAmount.currency.symbol}`
                 : '-'}
-            </TYPE.black>
+            </ThemedText.Black>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.subHeader color={theme.text1}>
+            <ThemedText.SubHeader color={theme.text1}>
               <Trans>Price Impact</Trans>
-            </TYPE.subHeader>
+            </ThemedText.SubHeader>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <TYPE.black textAlign="right" fontSize={14}>
+            <ThemedText.Black textAlign="right" fontSize={14}>
               <FormattedPriceImpact priceImpact={priceImpact} />
-            </TYPE.black>
+            </ThemedText.Black>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <Separator />
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
-            <TYPE.subHeader color={theme.text3}>
+            <ThemedText.SubHeader color={theme.text3}>
               {trade.tradeType === TradeType.EXACT_INPUT ? (
                 <Trans>Minimum received</Trans>
               ) : (
                 <Trans>Maximum sent</Trans>
               )}{' '}
               <Trans>after slippage</Trans> ({allowedSlippage.toFixed(2)}%)
-            </TYPE.subHeader>
+            </ThemedText.SubHeader>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-            <TYPE.black textAlign="right" fontSize={14} color={theme.text3}>
+            <ThemedText.Black textAlign="right" fontSize={14} color={theme.text3}>
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
                 : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
-            </TYPE.black>
+            </ThemedText.Black>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         {!trade?.gasUseEstimateUSD ? null : (
           <RowBetween>
-            <TYPE.subHeader color={theme.text3}>
+            <ThemedText.SubHeader color={theme.text3}>
               <Trans>Network Fee</Trans>
-            </TYPE.subHeader>
+            </ThemedText.SubHeader>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-              <TYPE.subHeader color={theme.text3}>~${trade.gasUseEstimateUSD.toFixed(2)}</TYPE.subHeader>
+              <ThemedText.SubHeader color={theme.text3}>~${trade.gasUseEstimateUSD.toFixed(2)}</ThemedText.SubHeader>
             </TextWithLoadingPlaceholder>
           </RowBetween>
         )}

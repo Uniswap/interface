@@ -4895,14 +4895,19 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/router-sdk@^1.0.0-beta.7":
-  version "1.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.0.0-beta.7.tgz#a975dc5c838917d55c7092bc06536045b4e6df99"
-  integrity sha512-7J2NQG0P1NynJjkhgypKWQ/TmoaHEt1d7dF0HNfjY3m56q2BQhRw4kBtAPke/IOAOrCz9PI2MkFgxX98lhlpBA==
+"@uniswap/redux-multicall@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.0.0.tgz#0cee4448909a788ea4700e5ede75ffeba05b5d75"
+  integrity sha512-zR6tNC3XF6JuI6PjGlZW2Hz7tTzRzzVaPJfZ01BBWBJVt/2ixJY0SH514uffD03NHYiXZA//hlPQLfw3TkIxQg==
+
+"@uniswap/router-sdk@^1.0.0-beta.7", "@uniswap/router-sdk@^1.0.1":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.0.2.tgz#6f104a9e507a14182b90fb93a69aceb59d6a9a62"
+  integrity sha512-NYsNsSMY+B0F9TuARDPjVsrfS61X87qsLIfHOcza4Tbp8/bLLnXPA67Jwc6iN4u7xUEdDR049mn0ALPlGeTkDw==
   dependencies:
     "@ethersproject/abi" "^5.5.0"
     "@uniswap/sdk-core" "^3.0.1"
-    "@uniswap/swap-router-contracts" "^1.0.0-beta.5"
+    "@uniswap/swap-router-contracts" "1.0.0"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.7.1"
 
@@ -4960,10 +4965,10 @@
     stats-lite "^2.2.0"
     tslib "^1.14.1"
 
-"@uniswap/swap-router-contracts@^1.0.0-beta.5":
-  version "1.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.0.0-beta.5.tgz#ec5848b568dee38aed09f7c5a2184c9b3407e7a0"
-  integrity sha512-AogRSg8iFzDZzygbMNdRpO0yesuhiI/mMCVpRrPGlDRFxejnoa0BLD7dGFqTHis9nInenpvInE1YKaadCWsQ7g==
+"@uniswap/swap-router-contracts@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.0.0.tgz#357a5b681fa5d5a5b1629271b99845c96932d4fa"
+  integrity sha512-EOO94glkJ4KI38IVklmMJkZzQLSY2MCNndYBPWlu64g3DkYJ/d04rbiHTEh7zYwT4gvGW8InQpmQA7mzmGIANw==
   dependencies:
     "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
     "@uniswap/v2-core" "1.0.1"
@@ -20989,9 +20994,9 @@ url-parse-lax@^3.0.0:
     prepend-http "^2.0.0"
 
 url-parse@^1.4.3, url-parse@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.1.tgz#d5fa9890af8a5e1f274a2c98376510f6425f6e3b"
-  integrity sha512-HOfCOUJt7iSYzEx/UqgtwKRMC6EU91NFhsCHMv9oM03VJcVo2Qrp8T8kI9D7amFf1cu+/3CEhgb3rF9zL7k85Q==
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.3.tgz#71c1303d38fb6639ade183c2992c8cc0686df862"
+  integrity sha512-IIORyIQD9rvj0A4CLWsHkBBJuNqWpFQe224b6j9t/ABmquIS0qDU2pY6kl6AuOrL5OkCXHMCFNe1jBcuAggjvQ==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
@@ -21841,9 +21846,9 @@ ws@>=7.4.6:
   integrity sha512-wBuoj1BDpC6ZQ1B7DWQBYVLphPWkm8i9Y0/3YdHjHKHiohOJ1ws+3OccDWtH+PoC9DZD5WOTrJvNbWvjS6JWaA==
 
 ws@^5.1.1:
-  version "5.2.2"
-  resolved "https://registry.npmjs.org/ws/-/ws-5.2.2.tgz"
-  integrity sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.3.tgz#05541053414921bc29c63bee14b8b0dd50b07b3d"
+  integrity sha512-jZArVERrMsKUatIdnLzqvcfydI85dvd/Fp1u/VOpfdDWQ4c9qWXe+VIeAbQ5FrDwciAkr+lzofXLz3Kuf26AOA==
   dependencies:
     async-limiter "~1.0.0"
 

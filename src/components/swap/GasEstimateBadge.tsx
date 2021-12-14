@@ -7,7 +7,7 @@ import { MouseoverTooltipContent } from 'components/Tooltip'
 import ReactGA from 'react-ga'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
 import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
 // import { ReactComponent as GasIcon } from '../../assets/images/router-icon-grey.svg'
@@ -64,15 +64,15 @@ export default function GasEstimateBadge({
               ) : null
             ) : (
               <AutoColumn gap="4px" justify="center">
-                <TYPE.main fontSize="12px" textAlign="center">
+                <ThemedText.Main fontSize="12px" textAlign="center">
                   <Trans>Estimated network fee</Trans>
-                </TYPE.main>
-                <TYPE.body textAlign="center" fontWeight={500} style={{ userSelect: 'none' }}>
+                </ThemedText.Main>
+                <ThemedText.Body textAlign="center" fontWeight={500} style={{ userSelect: 'none' }}>
                   <Trans>${trade?.gasUseEstimateUSD?.toFixed(2)}</Trans>
-                </TYPE.body>
-                <TYPE.main fontSize="10px" textAlign="center" maxWidth="140px" color="text3">
+                </ThemedText.Body>
+                <ThemedText.Main fontSize="10px" textAlign="center" maxWidth="140px" color="text3">
                   <Trans>Estimate may differ due to your wallet gas settings</Trans>
-                </TYPE.main>
+                </ThemedText.Main>
               </AutoColumn>
             )}
           </ResponsiveTooltipContainer>

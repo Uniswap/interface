@@ -1,6 +1,6 @@
 import { AlphaRouterParams, IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { timing } from 'components/analytics'
-import { NETWORK_URLS } from 'connectors/networkUrls'
+import { NETWORK_URLS } from 'connectors'
 import { SupportedChainId } from 'constants/chains'
 import { providers } from 'ethers/lib/ethers'
 
@@ -10,7 +10,7 @@ export type Dependencies = {
   [chainId in SupportedChainId]?: AlphaRouterParams
 }
 
-/** Minimal set of dependencies for the router to work locally.  */
+/** Minimal set of dependencies for the router to work locally. */
 export function buildDependencies(): Dependencies {
   const dependenciesByChain: Dependencies = {}
   for (const chainId of SUPPORTED_CHAINS) {

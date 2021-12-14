@@ -15,11 +15,7 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const debouncedAddress = useDebounce(address, 200)
   const ensNodeArgument = useMemo(() => {
     if (!debouncedAddress || !isAddress(debouncedAddress)) return [undefined]
-    try {
-      return debouncedAddress ? [namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)] : [undefined]
-    } catch (error) {
-      return [undefined]
-    }
+    return [namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)]
   }, [debouncedAddress])
   const registrarContract = useENSRegistrarContract(false)
   const resolverAddress = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
@@ -31,8 +27,11 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const name = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
 
   const changed = debouncedAddress !== address
-  return {
-    ENSName: changed ? null : name.result?.[0] ?? null,
-    loading: changed || resolverAddress.loading || name.loading,
-  }
+  return useMemo(
+    () => ({
+      ENSName: changed ? null : name.result?.[0] ?? null,
+      loading: changed || resolverAddress.loading || name.loading,
+    }),
+    [changed, name.loading, name.result, resolverAddress.loading]
+  )
 }

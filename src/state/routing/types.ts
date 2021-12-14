@@ -24,7 +24,7 @@ export type V3PoolInRoute = {
   amountIn?: string
   amountOut?: string
 
-  // no used in the interface
+  // not used in the interface
   address?: string
 }
 
@@ -42,7 +42,7 @@ export type V2PoolInRoute = {
   amountIn?: string
   amountOut?: string
 
-  // no used in the interface
+  // not used in the interface
   // avoid returning it from the client-side smart-order-router
   address?: string
 }

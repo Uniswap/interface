@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import styled from 'styled-components/macro'
 import { ThemeContext } from 'styled-components/macro'
 
-import { TYPE } from '../../theme'
+import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
 
 const Wrapper = styled(AutoColumn)`
@@ -65,7 +65,7 @@ export default function ProgressCircles({ steps, disabled = false, ...rest }: Pr
               <Circle confirmed={step} disabled={disabled || (!steps[i - 1] && i !== 0)}>
                 {step ? '✓' : i + 1 + '.'}
               </Circle>
-              <TYPE.main color={theme.text4}>|</TYPE.main>
+              <ThemedText.Main color={theme.text4}>|</ThemedText.Main>
             </CircleRow>
           )
         })}

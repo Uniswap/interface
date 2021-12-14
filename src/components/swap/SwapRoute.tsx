@@ -13,7 +13,7 @@ import { Plus } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { Separator, TYPE } from 'theme'
+import { Separator, ThemedText } from 'theme'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
@@ -81,13 +81,13 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
                 <div style={{ width: '250px', height: '15px' }} />
               </LoadingRows>
             ) : (
-              <TYPE.main fontSize={12} width={400} margin={0}>
+              <ThemedText.Main fontSize={12} width={400} margin={0}>
                 {/* could not get <Plural> to render `one` correctly. */}
                 {trade?.gasUseEstimateUSD ? (
                   <Trans>Best price route costs ~${trade.gasUseEstimateUSD.toFixed(2)} in gas. </Trans>
                 ) : null}{' '}
                 <Trans>Your price is optimized by considering split routes, multiple hops, and gas costs.</Trans>
-              </TYPE.main>
+              </ThemedText.Main>
             ))}
         </AutoRow>
       </AnimatedDropdown>

@@ -5,7 +5,7 @@ import { MouseoverTooltipContent } from 'components/Tooltip'
 import { Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
-import { TYPE } from 'theme'
+import { ThemedText } from 'theme'
 
 import { ResponsiveTooltipContainer } from './styleds'
 
@@ -48,21 +48,21 @@ export default function SwapWarningDropdown({
     <Wrapper>
       {showNetworkFeeWarning ? (
         <RowBetween>
-          <TYPE.main fontSize="14px" color="text3">
+          <ThemedText.Main fontSize="14px" color="text3">
             <Trans>Network fees exceed 50% of the swap amount!</Trans>
-          </TYPE.main>
+          </ThemedText.Main>
           <MouseoverTooltipContent
             wrap={false}
             content={
               <ResponsiveTooltipContainer origin="top right" style={{ padding: '12px' }}>
-                <TYPE.main fontSize="12px" color="text3" maxWidth="200px">
+                <ThemedText.Main fontSize="12px" color="text3" maxWidth="200px">
                   <Trans>
                     The cost of sending this transaction is more than half of the value of the input amount.
                   </Trans>
-                </TYPE.main>
-                <TYPE.main fontSize="12px" color="text3" maxWidth="200px" mt="8px">
+                </ThemedText.Main>
+                <ThemedText.Main fontSize="12px" color="text3" maxWidth="200px" mt="8px">
                   <Trans>You might consider waiting until the network fees go down to complete this transaction.</Trans>
-                </TYPE.main>
+                </ThemedText.Main>
               </ResponsiveTooltipContainer>
             }
             placement="bottom"

@@ -29,7 +29,7 @@ import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApprovalOptimizedTrade, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
@@ -48,7 +48,7 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
@@ -74,11 +74,14 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
-  const importTokensNotInDefault =
-    urlLoadedTokens &&
-    urlLoadedTokens.filter((token: Token) => {
-      return !Boolean(token.address in defaultTokens)
-    })
+  const importTokensNotInDefault = useMemo(
+    () =>
+      urlLoadedTokens &&
+      urlLoadedTokens.filter((token: Token) => {
+        return !Boolean(token.address in defaultTokens)
+      }),
+    [defaultTokens, urlLoadedTokens]
+  )
 
   const theme = useContext(ThemeContext)
 
@@ -171,24 +174,29 @@ export default function Swap({ history }: RouteComponentProps) {
     txHash: undefined,
   })
 
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: showWrap
-      ? parsedAmounts[independentField]?.toExact() ?? ''
-      : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
-  }
+  const formattedAmounts = useMemo(
+    () => ({
+      [independentField]: typedValue,
+      [dependentField]: showWrap
+        ? parsedAmounts[independentField]?.toExact() ?? ''
+        : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+    }),
+    [dependentField, independentField, parsedAmounts, showWrap, typedValue]
+  )
 
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
+  const approvalOptimizedTrade = useApprovalOptimizedTrade(trade, allowedSlippage)
+
   // check whether the user has approved the router on the input token
-  const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(approvalOptimizedTrade, allowedSlippage)
   const {
     state: signatureState,
     signatureData,
     gatherPermitSignature,
-  } = useERC20PermitFromTrade(trade, allowedSlippage)
+  } = useERC20PermitFromTrade(approvalOptimizedTrade, allowedSlippage)
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
@@ -221,12 +229,15 @@ export default function Swap({ history }: RouteComponentProps) {
     }
   }, [approvalState, approvalSubmitted])
 
-  const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
+  const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
+    () => maxAmountSpend(currencyBalances[Field.INPUT]),
+    [currencyBalances]
+  )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
-    trade,
+    approvalOptimizedTrade,
     allowedSlippage,
     recipient,
     signatureData
@@ -427,9 +438,9 @@ export default function Swap({ history }: RouteComponentProps) {
             <div>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
-                  <TYPE.main mb="4px">
+                  <ThemedText.Main mb="4px">
                     <Trans>Unsupported Asset</Trans>
-                  </TYPE.main>
+                  </ThemedText.Main>
                 </ButtonPrimary>
               ) : !account ? (
                 <ButtonLight onClick={toggleWalletModal}>
@@ -444,11 +455,11 @@ export default function Swap({ history }: RouteComponentProps) {
                       <Trans>Unwrap</Trans>
                     ) : null)}
                 </ButtonPrimary>
-              ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading ? (
+              ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                 <GreyCard style={{ textAlign: 'center' }}>
-                  <TYPE.main mb="4px">
+                  <ThemedText.Main mb="4px">
                     <Trans>Insufficient liquidity for this trade.</Trans>
-                  </TYPE.main>
+                  </ThemedText.Main>
                 </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
