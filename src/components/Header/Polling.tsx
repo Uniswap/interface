@@ -140,11 +140,7 @@ export default function Polling() {
     <>
       <RowFixed>
         <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
-          <ExternalLink
-            href={
-              chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''
-            }
-          >
+          <ExternalLink href={'https://etherscan.io/gastracker'}>
             {priceGwei ? (
               <RowFixed style={{ marginRight: '8px' }}>
                 <TYPE.main fontSize="11px" mr="8px" color={theme.text3}>
