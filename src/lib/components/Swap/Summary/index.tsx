@@ -23,12 +23,9 @@ function asInput(input: Input): (Required<Pick<Input, 'token' | 'value'>> & Inpu
 const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
 
 const SummaryColumn = styled(Column)``
-
+const ExpandoColumn = styled(Column)``
 const DetailsColumn = styled(Column)``
-
-const Estimate = styled(ThemedText.Caption)`
-  height: 0;
-`
+const Estimate = styled(ThemedText.Caption)``
 
 const Body = styled(Column)<{ open: boolean }>`
   height: calc(100% - 2.5em);
@@ -38,24 +35,40 @@ const Body = styled(Column)<{ open: boolean }>`
     transition: flex-grow 0.2s;
   }
 
-  ${DetailsColumn} {
-    overflow-y: hidden;
-    height: 1px;
+  ${ExpandoColumn} {
     flex-grow: ${({ open }) => (open ? 1 : 0)};
-    transition: flex-grow 0.2s;
+    transition: flex-grow 0.2s, gap 0.2s;
 
-    ${Column} {
-      height: calc(100% - 2px);
-      padding: ${({ open }) => (open ? '0.75em 0' : 0)};
-      transition: padding 0.2s;
+    ${DetailsColumn} {
+      overflow-y: hidden;
+      height: 1px;
+      flex-grow: ${({ open }) => (open ? 1 : 0)};
+      transition: flex-grow 0.2s;
+      position: relative;
+
+      ${Column} {
+        height: calc(100% - 1px);
+        padding: ${({ open }) => (open ? '0.5em 0' : 0)};
+        transition: padding 0.2s;
+      }
+
+      :after {
+        content: '';
+        bottom: 0;
+        position: absolute;
+        background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
+        width: 100%;
+        height: 2em;
+        pointer-events: none;
+      }
     }
-  }
 
-  ${Estimate} {
-    flex-grow: ${({ open }) => (open ? 0 : 1)};
-    height: ${({ open }) => open && 0};
-    overflow-y: hidden;
-    transition: flex-grow 0.2s;
+    ${Estimate} {
+      flex-grow: ${({ open }) => (open ? 0 : 1)};
+      height: ${({ open }) => (open ? 0 : '100%')};
+      overflow-y: hidden;
+      transition: ${({ open }) => (open ? 'height 0.1s ease-out' : 'height 0.1s ease-in, flex-grow 0.2s ease-out')};
+    }
   }
 `
 
@@ -105,33 +118,34 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
           </Row>
           <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
         </Row>
-        <DetailsColumn>
-          <Rule scrollingEdge="bottom" />
-          <Column gap={0.75} ref={setDetails} css={scrollbar}>
-            <Details input={input.token} output={output.token} swap={swap} />
-          </Column>
-          <Rule />
-        </DetailsColumn>
-        <Estimate color="secondary">
-          <Trans>Output is estimated.</Trans>{' '}
-          {swap?.minimumReceived && (
-            <Trans>
-              You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.
-            </Trans>
-          )}
-          {swap?.maximumSent && (
-            <Trans>
-              You will send at most {swap.maximumSent} {input.token.symbol} or the transaction will revert.
-            </Trans>
-          )}
-        </Estimate>
-        <ActionButton
-          onClick={onConfirm}
-          onUpdate={() => confirmPrice(price)}
-          updated={price === confirmedPrice ? undefined : updated}
-        >
-          <Trans>Confirm swap</Trans>
-        </ActionButton>
+        <ExpandoColumn gap={open ? 0 : 0.75} flex align="stretch">
+          <DetailsColumn>
+            <Rule scrollingEdge="bottom" />
+            <Column gap={0.5} ref={setDetails} css={scrollbar}>
+              <Details input={input.token} output={output.token} swap={swap} />
+            </Column>
+          </DetailsColumn>
+          <Estimate color="secondary">
+            <Trans>Output is estimated.</Trans>{' '}
+            {swap?.minimumReceived && (
+              <Trans>
+                You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.
+              </Trans>
+            )}
+            {swap?.maximumSent && (
+              <Trans>
+                You will send at most {swap.maximumSent} {input.token.symbol} or the transaction will revert.
+              </Trans>
+            )}
+          </Estimate>
+          <ActionButton
+            onClick={onConfirm}
+            onUpdate={() => confirmPrice(price)}
+            updated={price === confirmedPrice ? undefined : updated}
+          >
+            <Trans>Confirm swap</Trans>
+          </ActionButton>
+        </ExpandoColumn>
       </Body>
     </>
   )
