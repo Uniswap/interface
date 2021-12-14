@@ -18,10 +18,9 @@ import { Separator, TYPE } from 'theme'
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Wrapper = styled(AutoColumn)<{ darkMode?: boolean; fixedOpen?: boolean }>`
-  padding: ${({ fixedOpen }) => (fixedOpen ? '0px' : '12px 8px 12px 12px')};
+  padding: ${({ fixedOpen }) => (fixedOpen ? '12px' : '12px 8px 12px 12px')};
   border-radius: 16px;
   border: 1px solid ${({ theme, fixedOpen }) => (fixedOpen ? 'transparent' : theme.bg2)};
-
   cursor: pointer;
 `
 
@@ -31,7 +30,7 @@ const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
   stroke-width: 2px;
   transition: transform 0.1s;
   transform: ${({ open }) => (open ? 'rotate(45deg)' : 'none')};
-  stroke: ${({ theme }) => theme.blue1};
+  stroke: ${({ theme }) => theme.text3};
   cursor: pointer;
   :hover {
     opacity: 0.8;
