@@ -19,9 +19,9 @@ export function SettingsDialog() {
     <>
       <Header title={<Trans>Settings</Trans>} ruled>
         <TextButton onClick={resetSettings}>
-          <ThemedText.Subhead2>
+          <ThemedText.ButtonSmall>
             <Trans>Reset</Trans>
-          </ThemedText.Subhead2>
+          </ThemedText.ButtonSmall>
         </TextButton>
       </Header>
       <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded scrollable={{ current: boundary }}>
