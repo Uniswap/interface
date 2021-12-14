@@ -256,7 +256,7 @@ export async function getBlockFromTimestamp(timestamp: number) {
       timestampFrom: timestamp,
       timestampTo: timestamp + 600,
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-first',
   })
   return result?.data?.blocks?.[0]?.number
 }
@@ -275,6 +275,7 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
       fetchBscTokenData(address, prices?.current, prices?.oneDay).then((data) => setTokenData({...data, priceUSD: data?.priceUSD ? data.priceUSD : data?.derivedUSD }))
     }
   }, [chainId, address, ethPrice, ethPriceOld, prices])
+
   React.useEffect(() => {
     if (!tokenData) func()
   }, [chainId, ethPriceOld, ethPrice, prices])
@@ -304,23 +305,17 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     // fetch all current and historical data
     const result = await client.query({
       query: TOKEN_DATA(address, null),
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
     })
     data = result?.data?.tokens?.[0]
 
     // get results from 24 hours in past
     const oneDayResult = await client.query({
       query: TOKEN_DATA(address, dayOneBlock),
-      fetchPolicy: 'network-only',
-    })
-    oneDayData = oneDayResult.data.tokens[0]
-
-    // get results from 48 hours in past
-    const twoDayResult = await client.query({
-      query: TOKEN_DATA(address, dayTwoBlock),
       fetchPolicy: 'cache-first',
     })
-    twoDayData = twoDayResult.data.tokens[0]
+    oneDayData = oneDayResult?.data?.tokens[0]
+    twoDayData = oneDayResult?.data.tokens[0]
 
     // catch the case where token wasnt in top list in previous days
     if (!oneDayData) {
@@ -332,7 +327,6 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     }
 
     let oneDayHistory = oneDayData?.[addy]
-    let twoDayHistory = twoDayData?.[addy]
     // catch the case where token wasnt in top list in previous days
     if (!oneDayHistory) {
       const oneDayResult = await client.query({
@@ -341,20 +335,7 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
       })
       oneDayHistory = oneDayResult.data.tokens[0]
     }
-    if (!twoDayHistory) {
-      const twoDayResult = await client.query({
-        query: TOKEN_DATA(addy, dayTwoBlock),
-        fetchPolicy: 'cache-first',
-      })
-      twoDayHistory = twoDayResult.data.tokens[0]
-    }
-    if (!twoDayData) {
-      const twoDayResult = await client.query({
-        query: TOKEN_DATA(address, {}),
-        fetchPolicy: 'cache-first',
-      })
-      twoDayData = twoDayResult.data.tokens[0]
-    }
+  
 
     // calculate percentage changes and daily changes
     const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
@@ -420,7 +401,7 @@ const getTokenTransactions = async (allPairsFormatted: any) => {
       variables: {
         allPairs: allPairsFormatted,
       },
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
     })
     transactions.mints = result.data.mints
     transactions.burns = result.data.burns
@@ -507,11 +488,11 @@ const getEthPrice = async () => {
     const oneDayBlock = await getBlockFromTimestamp(timestamp);
     const result = await client.query({
       query: ETH_PRICE(),
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
     })
     const resultOneDay = await client.query({
       query: ETH_PRICE(oneDayBlock),
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
     })
 
     const currentPrice = +result?.data?.bundles[0]?.ethPrice
@@ -921,19 +902,34 @@ query trackerdata {
     volumeUSD
   }
 }`
+
+export const useKibaPairData = function ( ) {
+  const {chainId } = useWeb3React()
+  const kibaQuery = React.useMemo(() => {
+    if  (chainId && chainId === 1) return KIBA_TOKEN 
+    if(chainId === 56) return KIBA_TOKEN_BSC 
+    return  KIBA_TOKEN
+  }, [chainId])
+  const {data: kiba, loading, error} = useQuery(kibaQuery, 
+    {
+      pollInterval: 60000, 
+      fetchPolicy:'cache-first'
+    })
+  return {data: kiba, loading, error}
+}
 export const useTopPairData = function ( ) {
   const {chainId } = useWeb3React()
-  const tokenQuery = React.useMemo(() => chainId && chainId === 1 ? TOP_TOKENS : chainId === 56 ? TOP_TOKENS_BSC : TOP_TOKENS,[chainId])
-  const kibaQuery = React.useMemo(() => chainId && chainId === 1 ? KIBA_TOKEN : chainId === 56 ?KIBA_TOKEN_BSC : KIBA_TOKEN, [chainId])
-  const {data,loading,error} = useQuery(tokenQuery, {pollInterval: 60000, fetchPolicy :'cache-first'})
-  const {data: kiba} = useQuery(kibaQuery, {pollInterval: 60000, fetchPolicy:'cache-first'})
-  const allData = React.useMemo(() => {
-    if (kiba && data) {
-      return { pairs: kiba.pairs.concat(data.pairs) }
-    }
-    return data
-  },[kiba, data])
-  return {data: allData,loading,error}
+  const tokenQuery = React.useMemo(() => {
+    if (chainId && chainId === 1) return TOP_TOKENS 
+    if (chainId === 56) return TOP_TOKENS_BSC 
+    return TOP_TOKENS
+  }, [chainId])
+  const {data,loading,error} = useQuery(tokenQuery, 
+  {
+    pollInterval: 60000, 
+    fetchPolicy :'cache-first'
+  })
+  return {data,loading,error}
 }
 
 const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: timestamp, orderDirection: desc, where: { to: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d", from: $user }) {
@@ -967,11 +963,13 @@ const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: t
 
 export const useUserSells = (account?: string | null) => {
   const { chainId } = useWeb3React()
-  const poller = useQuery(USER_SELLS, { variables: { user: account }, pollInterval: 15000 })
+  const poller = useQuery(USER_SELLS, { variables: { user: account }, pollInterval: 60000 })
   const secondPoller = useQuery(USER_BNB_SELLS, { variables: { user: account?.toLowerCase()}, pollInterval: 60000})
   if (chainId !== 1) poller.stopPolling();
   if (chainId !== 56) secondPoller.stopPolling()
-  let data = null,loading = false,error = null;
+  let data = null,
+      loading = false,
+      error = null;
   if (chainId === 1)
    {
      console.dir(poller)

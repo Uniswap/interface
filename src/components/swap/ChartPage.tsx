@@ -4,6 +4,8 @@ import _ from 'lodash';
 import moment from 'moment';
 import { useKiba } from 'pages/Vote/VotePage';
 import React from 'react';
+import ReactGA from 'react-ga'
+
 import { ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
 import { useBscTokenData, useBnbPrices, useBscTokenTransactions, fetchBscTokenData, fetchBscHolders, useBscPoocoinTransactions } from 'state/logs/bscUtils';
 import { useTokenTransactions, useTokenData, useEthPrice, getTokenData, useTokenDataHook } from 'state/logs/utils';
@@ -15,6 +17,7 @@ import Tooltip from 'components/Tooltip';
 import { LoadingRows } from 'pages/Pool/styleds';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { useUserLocale } from 'state/user/hooks';
+import { isMobile } from 'react-device-detect';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -63,7 +66,7 @@ export const useHolderCount = (chainId: any) => {
 
 const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { lastFetched: any, transactions: any, tokenData: any, chainId?: number }) => {
     const [filterAddress, setFilterAddress] = React.useState<string | undefined>()
-    const chainLabel = React.useMemo(() => chainId && chainId === 1 ? `ETH` : chainId && chainId === 56 ? 'BNB' : '', [chainId])
+    const chainLabel = chainId && chainId === 1 ? `ETH` : chainId && chainId === 56 ? 'BNB' : '';
     const lastUpdated = React.useMemo(() => moment(lastFetched).fromNow(), [moment(lastFetched).fromNow()])
     const formattedTransactions = React.useMemo(() => transactions?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
@@ -85,10 +88,10 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
         newTxn.timestamp = swap?.timestamp ? swap?.timestamp : swap.transaction.timestamp
         newTxn.type = 'swap'
         newTxn.amountUSD = swap.amountUSD;
-        newTxn.account = ["0x10ed43c718714eb63d5aa57b78b54704e256024e", "0x7a250d5ss630b4cf539739df2c5dacb4c659f2488d"].includes(swap.to) ? swap.from : swap.to
-        newTxn.count = transactions?.swaps?.filter((x: any) => (x.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? x.from : x.to) === newTxn.account).length;
+        newTxn.account = ["0x10ed43c718714eb63d5aa57b78b54704e256024e".toLowerCase(), "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D".toLowerCase()].includes(swap.to.toLowerCase()) ? swap.from : swap.to
+        newTxn.count = transactions?.swaps?.filter((x: any) => (["0x10ed43c718714eb63d5aa57b78b54704e256024e", "0x7a250d5630b4cf539739df2c5dacb4c659f2488d".toLowerCase()].includes(x.to.toLowerCase()) ? x.from : x.to) === newTxn.account).length;
         return newTxn;
-    }).filter((newTxn: any) => !filterAddress ? true : newTxn.account === filterAddress), [transactions, filterAddress])
+    }).filter((newTxn: any) => !filterAddress ? true : newTxn.account === filterAddress), [transactions])
 
     const tooltipContent = React.useMemo(() => {
         return (item: any) => {
@@ -111,23 +114,26 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
         parseFloat(tokenData?.priceUSD) : (tokenData?.derivedUSD ? parseFloat(tokenData?.derivedUSD) : holdersCount && holdersCount?.price?.rate ?
             parseFloat(holdersCount?.price?.rate) : NaN)
         , [tokenData, holdersCount])
-
     const CIRCULATING_SUPPLY = 1000000000000;
-    const marketCap = React.useMemo(() => {
-        if (!price) return;
-        return Number(((price) * CIRCULATING_SUPPLY).toFixed(0)).toLocaleString()
-    }, [price])
+    const marketCap = React.useMemo(() => !price ? undefined : Number(((price) * CIRCULATING_SUPPLY).toFixed(0)).toLocaleString(), [price])
     const fromNow = React.useMemo(() => {
         return (transaction: any) =>
             moment(+transaction.timestamp * 1000).fromNow()
     }, [formattedTransactions])
     const [tooltipShown, setTooltipShown] = React.useState<any>()
     const [showRemoveFilter, setShowRemoveFilter] = React.useState<any>()
-    const totalTransactions = React.useMemo(() => {
-        if (tokenData && tokenData?.txCount) return tokenData?.txCount
-        if (tokenData && tokenData?.totalTransactions) return tokenData?.totalTransactions
-        return undefined
-    } ,[tokenData])
+    const totalTransactions = React.useMemo(() => (tokenData && tokenData?.txCount) ?
+        tokenData?.txCount :
+        (tokenData && tokenData?.totalTransactions) ? tokenData?.totalTransactions
+            : undefined, [tokenData])
+
+    React.useEffect(() => {
+        // log selected wallet
+        ReactGA.event({
+            category: 'Chart',
+            action: 'View Chart Page',
+        })
+    }, [])
     return (
         <>
             <StyledDiv
@@ -137,17 +143,17 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                     display: 'flex',
                     flexFlow: 'row wrap',
                     justifyContent: 'stretch',
-                    gap: '1.5px 10.5px',
+                    gap: '1.5px 9px',
                     flex: '1 1',
                     flexGrow: 1
                 }}>
                 {
                     <>
 
-                        {!isNaN(price) && +price >= 0 && <>
+                        {!isNaN(price) && parseFloat(price.toString()) >= 0 && <>
                             <small>
                                 <small style={{ display: 'block' }}>Price</small>
-                                <Badge variant={tokenData?.priceChangeUSD <= 0 ? BadgeVariant.NEGATIVE_OUTLINE : BadgeVariant.POSITIVE_OUTLINE}>{(+price?.toFixed(18))}</Badge>
+                                <Badge variant={tokenData?.priceChangeUSD <= 0 ? BadgeVariant.NEGATIVE_OUTLINE : BadgeVariant.POSITIVE_OUTLINE}>{(+price?.toFixed(14))}</Badge>
                             </small>
                             {!!tokenData?.priceChangeUSD && <small >
                                 <small style={{ display: 'block', textAlign: 'left' }}>24hr %</small>
@@ -170,7 +176,7 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                             </small>
                         )}
 
-                        {tokenData?.oneDayVolumeUSD && (
+                        {!!tokenData?.oneDayVolumeUSD && (
                             <small>
                                 <small style={{ display: 'block' }}>Daily Volume</small>
                                 <Badge variant={BadgeVariant.WARNING_OUTLINE}>${Number(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(0)).toLocaleString()}</Badge>
@@ -251,25 +257,35 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                         alignItems: 'center'
                                     }}>
                                         <span style={{ cursor: 'pointer' }} title={`Filter transactions by ${item.account}`}>
-                                            {!filterAddress && <Filter fill={filterAddress ? 'purple' : 'gray'} onClick={() => {
+                                            {!isMobile && !filterAddress && <Filter fill={filterAddress ? 'purple' : 'gray'} onClick={() => {
                                                 setFilterAddress(item.account)
                                             }} />}
-
-                                            {!!filterAddress && (
-                                            <Tooltip show={showRemoveFilter && 
-                                                        showRemoveFilter?.amountUSD === item?.amountUSD && 
-                                                        showRemoveFilter?.transaction?.id === item?.transaction?.id
-                                                    } 
-                                                    text={`Remove filter for ${filterAddress}`}> 
-                                                    <X fill={'red'} 
-                                                        style={{ cursor: 'pointer' }} 
-                                                        onClick={() => setFilterAddress(undefined)} 
-                                                        onMouseEnter={() => setShowRemoveFilter(item)} 
-                                                        onMouseLeave={() => setShowRemoveFilter(undefined)} /> 
-                                            </Tooltip>)}
+                                            {!isMobile && (
+                                                <React.Fragment>
+                                                    {!!filterAddress && (
+                                                        <Tooltip show={showRemoveFilter &&
+                                                            showRemoveFilter?.amountUSD === item?.amountUSD &&
+                                                            showRemoveFilter?.transaction?.id === item?.transaction?.id
+                                                        }
+                                                            text={`Remove filter for ${filterAddress}`}>
+                                                            <X fill={'red'}
+                                                                style={{ cursor: 'pointer' }}
+                                                                onClick={() => setFilterAddress(undefined)}
+                                                                onMouseEnter={() => setShowRemoveFilter(item)}
+                                                                onMouseLeave={() => setShowRemoveFilter(undefined)} />
+                                                        </Tooltip>)}
+                                                </React.Fragment>
+                                            )}
                                         </span>
-                                        {item.count > 1 && (<Tooltip placement={'auto-end'} text={tooltipContent(item)} show={tooltipShown && tooltipShown?.amountUSD === item?.amountUSD && tooltipShown?.transaction?.id === item?.transaction?.id}>
-                                            <Badge style={{ cursor: 'pointer' }} onMouseEnter={() => setTooltipShown(item)} onMouseLeave={() => setTooltipShown(undefined)} variant={BadgeVariant.PRIMARY}>
+                                        {!isMobile && item.count > 1 && (<Tooltip placement={'auto-end'}
+                                            text={tooltipContent(item)}
+                                            show={tooltipShown &&
+                                                tooltipShown?.amountUSD === item?.amountUSD &&
+                                                tooltipShown?.transaction?.id === item?.transaction?.id}>
+                                            <Badge style={{ cursor: 'pointer' }}
+                                                onMouseEnter={() => setTooltipShown(item)}
+                                                onMouseLeave={() => setTooltipShown(undefined)}
+                                                variant={BadgeVariant.PRIMARY}>
                                                 {item.count}
                                             </Badge>
                                         </Tooltip>)}
@@ -307,17 +323,17 @@ export const Chart = () => {
         return chainId === 56 ?
             `PANCAKESWAP:KIBAWBNB` :
             `UNISWAP:KIBAWETH`
-    }, [ chainId])
-    const tokenDataAddress = React.useMemo(() => chainId === 1 ? 
-    '0x4b2c54b80b77580dc02a0f6734d3bad733f50900' 
-    : chainId === 56 ?
-     '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : '', [chainId])
-     const [tokenDataPriceParam,tokenDataPriceParamTwo] = React.useMemo(() => {
+    }, [chainId])
+    const tokenDataAddress = React.useMemo(() => chainId === 1 ?
+        '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'
+        : chainId === 56 ?
+            '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : '', [chainId])
+    const [tokenDataPriceParam, tokenDataPriceParamTwo] = React.useMemo(() => {
         const valueOne = chainId === 56 ? prices?.current : ethPrice;
         const valueTwo = chainId === 56 ? prices?.oneDay : ethPriceOld;
         return [valueOne, valueTwo]
-     }, [chainId, prices, ethPrice, ethPriceOld])
-    const tokenData = useTokenDataHook(tokenDataAddress,tokenDataPriceParam, tokenDataPriceParamTwo)
+    }, [chainId, prices, ethPrice, ethPriceOld])
+    const tokenData = useTokenDataHook(tokenDataAddress, tokenDataPriceParam, tokenDataPriceParamTwo)
     const locale = useUserLocale()
     return (
         <FrameWrapper style={{
@@ -327,7 +343,7 @@ export const Chart = () => {
                 display: 'block',
                 marginBottom: 5,
                 width: '100%',
-                padding: "9px 14px"
+                padding: "9px 6px"
             }}>
                 <div style={{ display: 'flex', marginBottom: 5, alignItems: 'center', flexFlow: "row wrap" }}>
                     <a style={{ marginRight: 15 }} href="https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104">
@@ -372,19 +388,21 @@ export const Chart = () => {
                             </StyledDiv>}
                         </div>
                         {view === 'chart' && <>
-                            <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: '500px' }}>
-                                <TradingViewWidget locale={locale} theme={'Dark'} symbol={frameURL} autosize />
+                            <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
+                                {!isBinance && <TradingViewWidget locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
+                                {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
+                                {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x89e8c0ead11b783055282c9acebbaf2fe95d1180'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
                             </div>
-                            {(!isBinance && transactionData?.loading) || isBinance && binanceTransactionData.loading  && <LoadingRows>
-                                <div/>
-                                <div/>
-                                <div/>
-                                <div/>
-                                <div/>
-                                <div/>
-                                <div/>
-                                <div/>
-                                </LoadingRows>}
+                            {(!isBinance && transactionData?.loading) || isBinance && binanceTransactionData.loading && <LoadingRows>
+                                <div />
+                                <div />
+                                <div />
+                                <div />
+                                <div />
+                                <div />
+                                <div />
+                                <div />
+                            </LoadingRows>}
                             {!isBinance && transactionData?.data?.swaps?.length &&
                                 tokenData && tokenData?.priceUSD &&
                                 <div style={{
