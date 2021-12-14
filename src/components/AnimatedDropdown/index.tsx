@@ -9,7 +9,7 @@ export default function AnimatedDropdown({ open, children }: { open: boolean; ch
   const { ref, height } = useResizeObserver()
 
   const props = useSpring({
-    height: open ? height ?? 0 : 0,
+    maxHeight: open ? height ?? 0 : 0,
     config: {
       mass: 1.2,
       tension: 300,

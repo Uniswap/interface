@@ -44,7 +44,13 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   const text = `${'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} ${label}`
 
   return (
-    <StyledPriceContainer onClick={flipPrice} title={text}>
+    <StyledPriceContainer
+      onClick={(e) => {
+        e.stopPropagation() // dont want this click to affect dropdowns / hovers
+        flipPrice()
+      }}
+      title={text}
+    >
       <Text fontWeight={500} fontSize={14} color={theme.text1}>
         {text}
       </Text>{' '}
