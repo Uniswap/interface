@@ -1,33 +1,35 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { REHYDRATE } from 'redux-persist'
-import type { RootState } from 'src/app/rootReducer'
 import { getWalletProviders } from 'src/app/walletContext'
+import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { blockChannelWatcher, createBlockChannel } from 'src/features/blocks/blockListeners'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
-import { getSortedActiveChainIds } from 'src/features/chains/utils'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { initialized } from 'src/features/providers/providerSlice'
 import { logger } from 'src/utils/logger'
-import { call, cancel, fork, join, put, take, takeEvery } from 'typed-redux-saga'
+import { call, cancel, fork, join, put, takeEvery } from 'typed-redux-saga'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
   // Wait for rehydration so we know which networks are enabled
-  const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
-  const chains = persisted.payload?.chains?.byChainId
-  if (chains) {
-    logger.debug('providerSaga', 'initProviders', 'Initializing providers')
-    const manager = yield* call(getWalletProviders)
-    const activeChains = getSortedActiveChainIds(chains)
-    const initTasks = []
-    for (const chainId of activeChains) {
-      const task = yield* fork(initProvider, chainId, manager)
-      initTasks.push(task)
-    }
-    yield* join(initTasks)
-    yield* put(initialized())
+  // const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
+  // const chains = persisted.payload?.chains?.byChainId
+  // const activeChains = getSortedActiveChainIds(chains)
+
+  // TODO ^: Like in /features/chains/utils, the use of dynamic chain lists is commented out
+  // until multicall has better multichain support. Until then, chain sets need to be static
+  // to avoid reordering mutlicall hooks calls
+  const activeChains = config.activeChains
+
+  logger.debug('providerSaga', 'initProviders', 'Initializing providers')
+  const manager = yield* call(getWalletProviders)
+  const initTasks = []
+  for (const chainId of activeChains) {
+    const task = yield* fork(initProvider, chainId, manager)
+    initTasks.push(task)
   }
+  yield* join(initTasks)
+  yield* put(initialized())
   yield* takeEvery(setChainActiveStatus.type, modifyProviders)
 }
 
