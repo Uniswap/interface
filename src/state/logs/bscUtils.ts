@@ -376,23 +376,22 @@ export const useBlocksFromTimestamps = (
  * Returns BNB prices at current, 24h, 48h, and 7d intervals
  */
 export const useBnbPrices = (): BnbPrices | undefined => {
-  const [prices, setPrices] = React.useState<BnbPrices | undefined>()
   const [t24h, t48h, t7d, t14d] = getDeltaTimestamps()
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24h, t48h, t7d, t14d])
-  const [block24h, block48h, block7d, block14d] = blocks ?? []
-  const fetchData = React.useCallback(async () => {
-    try {
-      //await axios.get('https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
-      if (block24h && block48h && block7d) {
-        const data = await fetchBnbPrices(block24h, block48h, block7d);
-        setPrices(data.bnbPrices);
-      }
-    } catch (er) {
-      console.error(er);
+  const [blockCurrent, block24h, block48h, block7d] = blocks ?? []
+  const q = useQuery(BNB_PRICES, {
+    variables: {
+    "block24": block24h?.number,
+    "block48": block48h?.number,
+    "blockWeek": block7d?.number
     }
-  }, [prices, block24h, block7d, block48h])
-  useInterval(fetchData, 60000, true)
-  return prices
+  })
+  return {
+    current: q?.data?.current?.bnbPrice,
+    oneDay: q?.data?.oneDay?.bnbPrice,
+    twoDay: q?.data?.twoDay?.bnbPrice,
+    week: q?.data?.week?.bnbPrice
+  }
 }
 export const mapMints = (mint: any) => {
   return {
@@ -449,8 +448,8 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
 
   // initialize data arrays
   const queryOne = useQuery(QUERY_ONE, { fetchPolicy: 'network-only' });
-  const queryTwo = useQuery(QUERY_TWO, { fetchPolicy: 'network-only' });
-  const queryThree = useQuery(QUERY_THREE, { fetchPolicy: 'network-only' });
+  const queryTwo = useQuery(QUERY_TWO, { fetchPolicy: 'cache-first' });
+  const queryThree = useQuery(QUERY_THREE, { fetchPolicy: 'cache-first' });
 
   const one = React.useMemo(() => queryOne.data, [queryOne.data]);
   const two = React.useMemo(() => queryTwo.data, [queryTwo.data]);
@@ -506,16 +505,16 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
       )
 
       const priceChangeUSD = getPercentChange(
-        +data?.derivedBNB * (+ethPrice),
-        +oneDayData?.derivedBNB ? +oneDayData?.derivedBNB * +ethPrice : 0
+        +data?.derivedBNB * (parseFloat(ethPrice)),
+        +oneDayData?.derivedBNB ? +oneDayData?.derivedBNB * parseFloat(ethPriceOld) : 0
       )
 
-      const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedBNB
-      const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedBNB
+      const currentLiquidityUSD = parseFloat(data?.totalLiquidity) * parseFloat(ethPrice) * +data?.derivedBNB
+      const oldLiquidityUSD = parseFloat(oneDayData?.totalLiquidity) * parseFloat(ethPriceOld) * parseFloat(oneDayData?.derivedBNB)
 
       // set data
       data.txCount = +data?.totalTransactions
-      data.priceUSD = (((+data?.derivedBNB) * +(ethPrice ? ethPrice : 0)))
+      data.priceUSD = (((parseFloat(data?.derivedBNB) * parseFloat(ethPrice))))
       data.totalLiquidityUSD = currentLiquidityUSD
       data.oneDayVolumeUSD = oneDayVolumeUSD
       data.volumeChangeUSD = volumeChangeUSD
@@ -546,11 +545,7 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
 
 export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, blockOne?: number, blockTwo?: number) => {
   const address = addy?.toLowerCase()
-  const utcCurrentTime = moment().utc()
-
-  const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
-  const utcTwoDaysBack = utcCurrentTime.subtract(2, 'days').unix()
-  const [t24h, t48h, t7d, t14d] = getDeltaTimestamps()
+  const [t24h, t48h,,] = getDeltaTimestamps()
   let blocks: any[] = [];
   if (blockOne && blockTwo) {
     blocks = [{ number: blockOne }, { number: blockTwo }]
@@ -559,16 +554,12 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
   }
   const QUERY = BSC_TOKEN_DATA(address)
   const QUERY_ONE = BSC_TOKEN_DATA_BY_BLOCK_ONE(address, blocks[0].number)
-  const QUERY_TWO = BSC_TOKEN_DATA_BY_BLOCK_TWO(address, blocks[1].number)
-
   // initialize data arrays
   const queryOne = await request(INFO_CLIENT, QUERY)
   const queryTwo = await request(INFO_CLIENT, QUERY_ONE)
-  const queryThree = await request(INFO_CLIENT, QUERY_TWO)
 
   const data = queryOne?.tokens[0]
   const oneDayData = queryTwo?.tokens[0];
-  const twoDayData = queryThree?.tokens[0];
   try {
     if (data
     ) {
@@ -576,26 +567,26 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
       const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
         +data?.tradeVolumeUSD ?? 0,
         +oneDayData?.tradeVolumeUSD ?? 0,
-        +twoDayData?.tradeVolumeUSD ?? 0
+        +oneDayData?.tradeVolumeUSD
       )
 
       // calculate percentage changes and daily changes
       const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
         +data?.untrackedVolumeUSD,
         +oneDayData?.untrackedVolumeUSD ?? 0,
-        +twoDayData?.untrackedVolumeUSD ?? 0
+        +oneDayData?.tradeVolumeUSD
       )
 
       // calculate percentage changes and daily changes
       const [oneDayTxns, txnChange] = get2DayPercentChange(
         +data?.totalTransactions,
         +oneDayData?.totalTransactions ?? 0,
-        +twoDayData?.totalTransactions ?? 0
+        +oneDayData?.totalTransactions ?? 0
       )
 
       const priceChangeUSD = getPercentChange(
         +data?.derivedBNB * (+ethPrice),
-        +oneDayData?.derivedBNB * (+ethPrice)
+        +oneDayData?.derivedBNB * (+ethPriceOld)
       )
 
       const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedBNB
@@ -615,7 +606,6 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
       data.oneDayTxns = oneDayTxns
       data.txnChange = txnChange
       data.oneDayData = oneDayData
-      data.twoDayData = twoDayData
       data.isBSC = true;
       // new tokens
       if (data) {

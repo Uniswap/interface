@@ -6,6 +6,8 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
+import logo from '../../assets/images/download.png'
+import _ from 'lodash'
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
@@ -24,7 +26,7 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   background-color: ${({ theme }) => theme.white};
 `
 
-export default function CurrencyLogo({
+ const CurrencyLogo = React.memo(({
   currency,
   size = '24px',
   style,
@@ -33,7 +35,7 @@ export default function CurrencyLogo({
   currency?: Currency
   size?: string
   style?: React.CSSProperties
-}) {
+}) => {
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const {chainId} = useWeb3React()
   const srcs: string[] = useMemo(() => {
@@ -59,8 +61,12 @@ export default function CurrencyLogo({
   
 
   if (currency?.symbol?.toLowerCase() === 'kiba'.toLowerCase() || currency?.name?.toLowerCase() === 'kiba inu')
-  return <StyledLogo size={size} srcs={['https://assets.coingecko.com/coins/images/19525/large/2021-11-13-18-11-18-removebg-preview.png?1636989110']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+  return <StyledLogo size={size} srcs={['https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-05-08.31.13-copy-150x150.jpeg']} alt={`Kiba Inu logo`} style={style} {...rest} />
   
   
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-}
+}, _.isEqual);
+
+CurrencyLogo.displayName = 'CurrencyLogo';
+
+export default CurrencyLogo;

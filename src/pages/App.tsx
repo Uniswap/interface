@@ -7,7 +7,7 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider} from "@apollo/client";
-import { GelatoProvider } from "@gelatonetwork/limit-orders-react";
+import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import React, { useState } from 'react'
 import { AlertOctagon, CheckCircle, Info } from 'react-feather'
@@ -114,9 +114,7 @@ const Marginer = styled.div`
 `
 
 function TopLevelModals() {
-  const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
-  const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  return <AddressClaimModal isOpen={open} onDismiss={toggle} />
+  return null
 }
 
 const VideoWrapper = styled.div`
@@ -439,22 +437,28 @@ export default function App() {
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
       <GelatoProvider
-  library={library}
-  chainId={chainId}
-  account={account ?? undefined} 
-  useDefaultTheme={false}
-  >
+        library={library}
+        chainId={chainId}
+        account={account ?? undefined} 
+        useDefaultTheme={false}
+        useDarkMode
+        >
         <ApolloProvider client={chainId && chainId === 1 ? client : chainId && chainId === 56 ? bscClient : client}>
         <AppWrapper>
           {Video}
-
           <HeaderWrapper>
             <Header />
     
           </HeaderWrapper>
-
           <TopTokenMovers />
 
+
+          {/* <div style={{position:'absolute', top:'25%', left:'5%'}}>
+              <img style={{maxWidth:200}} src={'https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-07-22.25.47.jpeg'} />
+          </div>
+          <div style={{position:'absolute', top:'25%', right:'5%'}}>
+              <img style={{maxWidth:200}} src={'https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-07-22.25.47.jpeg'} />
+          </div> */}
           <BodyWrapper>
             <Popups />
             <Polling />
@@ -475,26 +479,17 @@ export default function App() {
               <Route exact strict path="/suite" component={Suite} />
               <Route exact strict path="/transactions" component={Transactions} />
               <Route exact strict path="/gains" component={GainsPage} />
-
               <Route exact strict path="/honeypot-checker" component={HoneyPotDetector} />
-
               <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
-
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/vote/:id" component={VotePageV2} />
-              <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
-              <Route exact strict path="/uni" component={Earn} />
-              <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
-
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/swap" component={Swap} />
-
               <Route exact strict path="/pool/v2/find" component={PoolFinder} />
               <Route exact strict path="/pool/v2" component={PoolV2} />
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/pool/:tokenId" component={PositionPage} />
-
               <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
               <Route
                 exact
@@ -521,16 +516,16 @@ export default function App() {
 
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
-
             <Marginer />
+           
           </BodyWrapper>
-
+       
         </AppWrapper>
         </ApolloProvider>
     </GelatoProvider>
 
       </Web3ReactManager>
-
+        
     </ErrorBoundary>
   )
 }
