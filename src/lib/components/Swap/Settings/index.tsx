@@ -38,9 +38,7 @@ export default function Settings({ disabled }: { disabled?: boolean }) {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <IconButton disabled={disabled} onClick={() => setOpen(true)}>
-        <SettingsIcon />
-      </IconButton>
+      <IconButton disabled={disabled} onClick={() => setOpen(true)} icon={SettingsIcon} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <SettingsDialog />

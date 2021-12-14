@@ -33,9 +33,8 @@ export default function Tooltip({
         onMouseLeave={() => setShow(false)}
         onFocus={() => setShow(true)}
         onBlur={() => setShow(false)}
-      >
-        <Icon color="secondary" />
-      </IconTooltip>
+        icon={Icon}
+      />
     </Popover>
   )
 }

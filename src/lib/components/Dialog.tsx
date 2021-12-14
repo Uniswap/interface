@@ -61,9 +61,7 @@ export function Header({ title, children, ruled }: HeaderProps) {
       <Column gap={0.75}>
         <BaseHeader title={title}>
           {children}
-          <IconButton color="primary" onClick={useContext(OnCloseContext)}>
-            <X />
-          </IconButton>
+          <IconButton color="primary" onClick={useContext(OnCloseContext)} icon={X} />
         </BaseHeader>
         {ruled && <Rule padded />}
       </Column>
