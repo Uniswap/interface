@@ -3,6 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
+import { ethers } from 'ethers'
 import Numeral from 'numeral'
 import dayjs from 'dayjs'
 
@@ -37,7 +38,7 @@ import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
 import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 import { getFantomTokenLogoURL } from './fantomTokenMapping'
-import { ethers } from 'ethers'
+import { getCronosTokenLogoURL } from './cronosTokenMapping'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -82,6 +83,12 @@ function getEtherscanDomain(chainId: ChainId): string {
       return 'https://snowtrace.io'
     case ChainId.FANTOM:
       return 'https://ftmscan.com'
+    case ChainId.CRONOSTESTNET:
+      return 'https://cronos.crypto.org/explorer/testnet3'
+    case ChainId.CRONOS:
+      return 'https://cronos.crypto.org/explorer'
+    default:
+      return ''
   }
 }
 
@@ -123,6 +130,10 @@ export function getEtherscanLinkText(chainId: ChainId): string {
 
   if ([ChainId.FANTOM].includes(chainId)) {
     return 'View on Ftmscan'
+  }
+
+  if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId)) {
+    return 'View on Explorer'
   }
 
   return 'View on Etherscan'
@@ -457,6 +468,9 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
     case ChainId.FANTOM:
       imageURL = getFantomTokenLogoURL(address)
       break
+    case ChainId.CRONOS:
+      imageURL = getCronosTokenLogoURL(address)
+      break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
         address
@@ -484,6 +498,10 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
         return 'AVAX'
       case ChainId.FANTOM:
         return 'FTM'
+      case ChainId.CRONOSTESTNET:
+        return 'CRO'
+      case ChainId.CRONOS:
+        return 'CRO'
       default:
         return 'ETH'
     }

@@ -50,6 +50,7 @@ const avaxTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Apoll
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij',
   cache: new InMemoryCache()
 })
+
 const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
@@ -66,6 +67,16 @@ const fantomExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClie
   cache: new InMemoryCache()
 })
 
+const cronosTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri: 'https://testnet-cronos-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-cronos-testnet',
+  cache: new InMemoryCache()
+})
+
+const cronosExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri: 'https://cronos-subgraph.kyberswap.com/subgraphs/name/kyberswap/kyberswap-cronos',
+  cache: new InMemoryCache()
+})
+
 export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetExchangeClient,
   [ChainId.ROPSTEN]: ropstenExchangeClient,
@@ -78,7 +89,9 @@ export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCac
   [ChainId.BSCMAINNET]: bscMainnetExchangeClient,
   [ChainId.AVAXTESTNET]: avaxTestnetExchangeClient,
   [ChainId.AVAXMAINNET]: avaxMainnetExchangeClient,
-  [ChainId.FANTOM]: fantomExchangeClient
+  [ChainId.FANTOM]: fantomExchangeClient,
+  [ChainId.CRONOSTESTNET]: cronosTestnetExchangeClient,
+  [ChainId.CRONOS]: cronosExchangeClient
 }
 
 const ropstenBlockClient = new ApolloClient({
@@ -124,6 +137,16 @@ const fantomBlockClient = new ApolloClient({
   cache: new InMemoryCache()
 })
 
+const cronosTestnetBlockClient = new ApolloClient({
+  uri: 'https://testnet-cronos-subgraph.knstats.com/subgraphs/name/dynamic-amm/ethereum-blocks-cronos-testnet',
+  cache: new InMemoryCache()
+})
+
+const cronosBlockClient = new ApolloClient({
+  uri: 'https://cronos-subgraph.kyberswap.com/subgraphs/name/dynamic-amm/ethereum-blocks-cronos',
+  cache: new InMemoryCache()
+})
+
 export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetBlockClient,
   [ChainId.ROPSTEN]: ropstenBlockClient,
@@ -136,7 +159,9 @@ export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheOb
   [ChainId.BSCMAINNET]: bscMainnetBlockClient,
   [ChainId.AVAXTESTNET]: avaxTestnetBlockClient,
   [ChainId.AVAXMAINNET]: avaxMainnetBlockClient,
-  [ChainId.FANTOM]: fantomBlockClient
+  [ChainId.FANTOM]: fantomBlockClient,
+  [ChainId.CRONOSTESTNET]: cronosTestnetBlockClient,
+  [ChainId.CRONOS]: cronosBlockClient
 }
 
 //https://router.firebird.finance/bsc/route
@@ -145,7 +170,8 @@ export const routerUri: { [chainId in ChainId]?: string } = {
   [ChainId.BSCMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/bsc/route`,
   [ChainId.MATIC]: `${process.env.REACT_APP_AGGREGATOR_API}/polygon/route`,
   [ChainId.AVAXMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/avalanche/route`,
-  [ChainId.FANTOM]: `${process.env.REACT_APP_AGGREGATOR_API}/fantom/route`
+  [ChainId.FANTOM]: `${process.env.REACT_APP_AGGREGATOR_API}/fantom/route`,
+  [ChainId.CRONOS]: `${process.env.REACT_APP_AGGREGATOR_API}/cronos/route`
 }
 
 // TODO-swapv2: change price uri

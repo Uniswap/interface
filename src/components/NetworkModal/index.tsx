@@ -93,7 +93,7 @@ export default function NetworkModal(): JSX.Element | null {
       <ModalHeader title={t`Select a Network`} />
 
       <NetworkList>
-        {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM].map(
+        {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.CRONOS].map(
           (key: ChainId, i: number) => {
             if (chainId === key) {
               return (
