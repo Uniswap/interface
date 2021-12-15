@@ -4,7 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@dynamic-amm/sdk": "^3.0.17",
+    "@dynamic-amm/sdk": "^3.0.20",
     "@ethersproject/experimental": "^5.0.1",
     "@lingui/cli": "^3.10.2",
     "@lingui/loader": "^3.10.2",

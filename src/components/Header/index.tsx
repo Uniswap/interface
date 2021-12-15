@@ -294,6 +294,10 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/AVAX`
     case ChainId.FANTOM:
       return `/pools/FTM`
+    case ChainId.CRONOSTESTNET:
+      return `/pools/CRO`
+    case ChainId.CRONOS:
+      return `/pools/CRO`
     default:
       return '/pools/ETH'
   }
@@ -311,6 +315,8 @@ export default function Header() {
     if ([ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId)) return 'https://www.binance.org/en/bridge'
     if ([ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId)) return 'https://bridge.avax.network'
     if ([ChainId.FANTOM].includes(chainId)) return 'https://multichain.xyz'
+    if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId))
+      return 'https://cronos.crypto.org/docs/bridge/cdcapp.html'
     return ''
   }
 
@@ -400,11 +406,15 @@ export default function Header() {
                   ? `ETH`
                   : chainId && [137, 80001].includes(chainId)
                   ? `MATIC`
+                  : chainId && [56, 97].includes(chainId)
+                  ? `BNB`
                   : chainId && [43113, 43114].includes(chainId)
                   ? `AVAX`
                   : chainId && [250].includes(chainId)
                   ? `FTM`
-                  : `BNB`}
+                  : chainId && [25, 338].includes(chainId)
+                  ? `CRO`
+                  : `ETH`}
               </BalanceText>
             ) : null}
             <Web3Status />

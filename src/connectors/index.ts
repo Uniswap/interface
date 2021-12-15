@@ -33,7 +33,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114, 250]
+  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114, 250, 25, 338]
 })
 
 const SUPPORTED_CHAIN_IDS: ChainId[] = [
@@ -45,7 +45,9 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.BSCMAINNET,
   ChainId.AVAXTESTNET,
   ChainId.AVAXTESTNET,
-  ChainId.FANTOM
+  ChainId.FANTOM,
+  ChainId.CRONOSTESTNET,
+  ChainId.CRONOS
 ]
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
@@ -55,13 +57,15 @@ export const NETWORK_URLS: {
   [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
   [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
   [ChainId.KOVAN]: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-  [ChainId.MUMBAI]: `https://rpc-mumbai.matic.today`,
+  [ChainId.MUMBAI]: `https://rpc-mumbai.maticvigil.com`,
   [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
   [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
   [ChainId.BSCMAINNET]: `https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm-interface`,
   [ChainId.AVAXTESTNET]: `https://api.avax-test.network/ext/bc/C/rpc`,
   [ChainId.AVAXMAINNET]: `https://avalanche.knstats.com/v1/mainnet/geth?appId=dev-dmm`,
-  [ChainId.FANTOM]: `https://rpcapi.fantom.network `
+  [ChainId.FANTOM]: `https://rpcapi.fantom.network`,
+  [ChainId.CRONOSTESTNET]: `https://cronos-testnet-3.crypto.org:8545`,
+  [ChainId.CRONOS]: `https://evm-cronos.crypto.org`
 }
 
 export const walletconnect = new WalletConnectConnector({

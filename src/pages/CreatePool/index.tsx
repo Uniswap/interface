@@ -434,13 +434,14 @@ export default function CreatePool({
 
                 <div>
                   <CurrencyInputPanel
+                    positionMax="top"
                     value={formattedAmounts[Field.CURRENCY_A]}
                     onUserInput={onFieldAInput}
                     onMax={() => {
                       onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                     }}
                     onCurrencySelect={handleCurrencyASelect}
-                    showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                    showMaxButton={true}
                     currency={currencies[Field.CURRENCY_A]}
                     id="create-pool-input-tokena"
                     disableCurrencySelect={false}
@@ -472,13 +473,14 @@ export default function CreatePool({
                 </ColumnCenter>
                 <div>
                   <CurrencyInputPanel
+                    positionMax="top"
                     value={formattedAmounts[Field.CURRENCY_B]}
                     onUserInput={onFieldBInput}
                     onCurrencySelect={handleCurrencyBSelect}
                     onMax={() => {
                       onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                     }}
-                    showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                    showMaxButton={true}
                     currency={currencies[Field.CURRENCY_B]}
                     disableCurrencySelect={false}
                     id="create-pool-input-tokenb"

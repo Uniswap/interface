@@ -19,7 +19,9 @@ export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.AVAXTESTNET]: '',
   [ChainId.AVAXMAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
-  [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31'
+  [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
+  [ChainId.CRONOSTESTNET]: '',
+  [ChainId.CRONOS]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31'
 }
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -47,7 +49,9 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.FANTOM]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? '0x8efa5a9ad6d594cf76830267077b78ce0bc5a5f8'
-      : '0x5d5A5a0a465129848c2549669e12cDC2f8DE039A'
+      : '0x5d5A5a0a465129848c2549669e12cDC2f8DE039A',
+  [ChainId.CRONOSTESTNET]: '0x548E585B17908D0387d16F9BFf46c4EDe7ca7746',
+  [ChainId.CRONOS]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55'
 }
 
 // TODO-swapv2: change router v2 contract
@@ -56,7 +60,8 @@ export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
   [ChainId.MATIC]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
   [ChainId.AVAXMAINNET]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
   [ChainId.MAINNET]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
-  [ChainId.FANTOM]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c'
+  [ChainId.FANTOM]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
+  [ChainId.CRONOS]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c'
 }
 
 // TODO-swapv2: change aggregation executor contract
@@ -65,7 +70,8 @@ export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
   [ChainId.MATIC]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
   [ChainId.AVAXMAINNET]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
   [ChainId.MAINNET]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
-  [ChainId.FANTOM]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225'
+  [ChainId.FANTOM]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
+  [ChainId.CRONOS]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225'
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -93,7 +99,9 @@ export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.FANTOM]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? '0x10908C875D865C66f271F5d3949848971c9595C9'
-      : '0x78df70615ffc8066cc0887917f2Cd72092C86409'
+      : '0x78df70615ffc8066cc0887917f2Cd72092C86409',
+  [ChainId.CRONOSTESTNET]: '0x9fE747AEA6173DD2c72e9D9BF4E2bCbbC0f8aD9e',
+  [ChainId.CRONOS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974'
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -111,7 +119,9 @@ export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.BSCMAINNET]: '',
   [ChainId.AVAXTESTNET]: '',
   [ChainId.AVAXMAINNET]: '',
-  [ChainId.FANTOM]: ''
+  [ChainId.FANTOM]: '',
+  [ChainId.CRONOSTESTNET]: '',
+  [ChainId.CRONOS]: ''
 }
 
 export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xa650f16F41cA35bF21594eef706290D26B12FF2e'
@@ -149,7 +159,9 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.FANTOM]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-fantom-dmm-info.knstats.com'
-      : 'https://fantom-analytics.kyberswap.com'
+      : 'https://fantom-analytics.kyberswap.com',
+  [ChainId.CRONOSTESTNET]: 'https://cronos-testnet-analytics.kyberswap.com',
+  [ChainId.CRONOS]: 'https://cronos-analytics.kyberswap.com'
 }
 
 // a list of tokens by chain
@@ -217,7 +229,21 @@ export const DAI: { [chainId in ChainId]: Token } = {
     'DAI',
     'Dai Stablecoin'
   ),
-  [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E', 18, 'DAI', 'Dai Stablecoin')
+  [ChainId.FANTOM]: new Token(
+    ChainId.FANTOM,
+    '0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E',
+    18,
+    'DAI',
+    'Dai Stablecoin'
+  ),
+  [ChainId.CRONOSTESTNET]: new Token(
+    ChainId.CRONOSTESTNET,
+    '0xFEC9C3feCB5f17A2C7b01492498D00966E623454',
+    18,
+    'DAI',
+    'Dai Stablecoin'
+  ),
+  [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xF2001B145b43032AAF5Ee2884e456CCd805F677D', 18, 'DAI', 'Dai Stablecoin')
 }
 
 export const USDC: { [chainId in ChainId]: Token } = {
@@ -256,7 +282,15 @@ export const USDC: { [chainId in ChainId]: Token } = {
     'USDC',
     'USD Coin'
   ),
-  [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75', 6, 'USDC', 'USD Coin')
+  [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75', 6, 'USDC', 'USD Coin'),
+  [ChainId.CRONOSTESTNET]: new Token(
+    ChainId.CRONOSTESTNET,
+    '0x136ae5CC3150C4e53AF8b1DC886464CB9AF1AB61',
+    6,
+    'USDC',
+    'USD Coin'
+  ),
+  [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', 6, 'USDC', 'USD Coin')
 }
 
 export const USDT: { [chainId in ChainId]: Token } = {
@@ -295,7 +329,15 @@ export const USDT: { [chainId in ChainId]: Token } = {
     'USDT',
     'Tether USD'
   ),
-  [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x049d68029688eAbF473097a2fC38ef61633A3C7A', 6, 'fUSDT', 'Tether USD')
+  [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x049d68029688eAbF473097a2fC38ef61633A3C7A', 6, 'fUSDT', 'Tether USD'),
+  [ChainId.CRONOSTESTNET]: new Token(
+    ChainId.CRONOSTESTNET,
+    '0x0b19552b293Be73D147159537706450B52f53a61',
+    6,
+    'USDT',
+    'Tether USD'
+  ),
+  [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x66e428c3f67a68878562e79A0234c1F83c208770', 6, 'USDT', 'Tether USD')
 }
 
 export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
@@ -316,7 +358,9 @@ export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId in ChainId]: number } = {
   [ChainId.BSCMAINNET]: 3,
   [ChainId.AVAXTESTNET]: 1.85,
   [ChainId.AVAXMAINNET]: 1.85,
-  [ChainId.FANTOM]: 1
+  [ChainId.FANTOM]: 1,
+  [ChainId.CRONOSTESTNET]: 6,
+  [ChainId.CRONOS]: 5.6
 }
 
 export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
@@ -331,7 +375,9 @@ export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
   [ChainId.BSCMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.BSCMAINNET]) * 60 * 24 * 365),
   [ChainId.AVAXTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.AVAXTESTNET]) * 60 * 24 * 365),
   [ChainId.AVAXMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.AVAXMAINNET]) * 60 * 24 * 365),
-  [ChainId.FANTOM]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.FANTOM]) * 60 * 24 * 365)
+  [ChainId.FANTOM]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.FANTOM]) * 60 * 24 * 365),
+  [ChainId.CRONOSTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.CRONOSTESTNET]) * 60 * 24 * 365),
+  [ChainId.CRONOS]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.CRONOS]) * 60 * 24 * 365)
 }
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
@@ -347,7 +393,9 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.BSCMAINNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.AVAXTESTNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.AVAXMAINNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.FANTOM]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.FANTOM]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.CRONOSTESTNET]: new Token(ChainId.CRONOSTESTNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.CRONOS]: new Token(ChainId.CRONOS, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -362,7 +410,9 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.BSCMAINNET]: [WETH[ChainId.BSCMAINNET]],
   [ChainId.AVAXTESTNET]: [WETH[ChainId.AVAXTESTNET]],
   [ChainId.AVAXMAINNET]: [WETH[ChainId.AVAXMAINNET]],
-  [ChainId.FANTOM]: [WETH[ChainId.FANTOM]]
+  [ChainId.FANTOM]: [WETH[ChainId.FANTOM]],
+  [ChainId.CRONOSTESTNET]: [WETH[ChainId.CRONOSTESTNET]],
+  [ChainId.CRONOS]: [WETH[ChainId.CRONOS]]
 }
 
 export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
@@ -429,7 +479,15 @@ export const KNC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.AVAXTESTNET]: new Token(ChainId.AVAXTESTNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.AVAXMAINNET]: new Token(ChainId.AVAXMAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
-  [ChainId.FANTOM]: new Token(ChainId.FANTOM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal')
+  [ChainId.FANTOM]: new Token(ChainId.FANTOM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
+  [ChainId.CRONOSTESTNET]: new Token(
+    ChainId.CRONOSTESTNET,
+    '0x868FC5cB3367C4A43c350b85D5001acaF58A857E',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.CRONOS]: new Token(ChainId.CRONOS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal')
 }
 
 export const KNCL_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
@@ -486,7 +544,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDC[ChainId.AVAXMAINNET],
     USDT[ChainId.AVAXMAINNET]
   ],
-  [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]]
+  [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
+  [ChainId.CRONOS]: [...WETH_ONLY[ChainId.CRONOS], DAI[ChainId.CRONOS], USDC[ChainId.CRONOS], USDT[ChainId.CRONOS]]
 }
 
 /**
@@ -524,7 +583,8 @@ export const SUGGESTED_BASES: ChainTokenList = {
     new Token(ChainId.AVAXMAINNET, '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB', 18, 'WETH.e', 'Wrapped Ether')
   ],
 
-  [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]]
+  [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
+  [ChainId.CRONOS]: [...WETH_ONLY[ChainId.CRONOS], DAI[ChainId.CRONOS], USDC[ChainId.CRONOS], USDT[ChainId.CRONOS]]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -560,7 +620,8 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     USDC[ChainId.AVAXMAINNET],
     USDT[ChainId.AVAXMAINNET]
   ],
-  [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]]
+  [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
+  [ChainId.CRONOS]: [...WETH_ONLY[ChainId.CRONOS], DAI[ChainId.CRONOS], USDC[ChainId.CRONOS], USDT[ChainId.CRONOS]]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -775,7 +836,9 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
     '0x98910F7f13496fcDE2ade93648F05b4854Fc99D9',
     '0x854Cf246b09c7366AEe5abce92fA167bfE7f3E75'
   ],
-  [ChainId.FANTOM]: []
+  [ChainId.FANTOM]: [],
+  [ChainId.CRONOSTESTNET]: [],
+  [ChainId.CRONOS]: []
 }
 
 export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
@@ -847,7 +910,9 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
     '0x535a99a079d64b8c3f4cc264eba70d82992b224b',
     '0x44d1b2974b3b8CE93B261f6D15DcE5ad57f8933B'
   ],
-  [ChainId.FANTOM]: []
+  [ChainId.FANTOM]: [],
+  [ChainId.CRONOSTESTNET]: [],
+  [ChainId.CRONOS]: []
 }
 
 export const COINGECKO_NETWORK_ID = {
@@ -856,6 +921,7 @@ export const COINGECKO_NETWORK_ID = {
   [ChainId.MATIC]: 'polygon-pos',
   [ChainId.AVAXMAINNET]: 'avalanche',
   [ChainId.FANTOM]: 'fantom',
+  [ChainId.CRONOS]: 'cronos',
 
   [ChainId.ROPSTEN]: '',
   [ChainId.RINKEBY]: '',
@@ -863,7 +929,8 @@ export const COINGECKO_NETWORK_ID = {
   [ChainId.KOVAN]: '',
   [ChainId.MUMBAI]: '',
   [ChainId.BSCTESTNET]: '',
-  [ChainId.AVAXTESTNET]: ''
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.CRONOSTESTNET]: ''
 }
 
 export const ETHER_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
@@ -916,7 +983,9 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
       }
     }
   ],
-  [ChainId.FANTOM]: []
+  [ChainId.FANTOM]: [],
+  [ChainId.CRONOSTESTNET]: [],
+  [ChainId.CRONOS]: []
 }
 
 export const MAX_ALLOW_APY = 2000

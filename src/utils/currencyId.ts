@@ -40,5 +40,12 @@ export function currencyIdFromAddress(address: string, chainId?: ChainId): strin
     return 'FTM'
   }
 
+  if (
+    (chainId === ChainId.CRONOSTESTNET || chainId === ChainId.CRONOS) &&
+    WETH[chainId].address.toLowerCase() === address.toLowerCase()
+  ) {
+    return 'CRO'
+  }
+
   return address
 }
