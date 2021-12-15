@@ -36,3 +36,8 @@ export type NetworksList = {
   tag: string
   networks: NetworkOptions[]
 }
+
+export interface WrongNetworkPopoverProps {
+  isOpen: boolean
+  onDismiss: () => void
+}

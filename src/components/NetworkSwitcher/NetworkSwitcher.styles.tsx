@@ -97,3 +97,6 @@ export const Wrapper = styled.div`
   background: #181920;
   text-align: center;
 `
+export const TitleWrapper = styled.div`
+  margin: 10px 0px;
+`

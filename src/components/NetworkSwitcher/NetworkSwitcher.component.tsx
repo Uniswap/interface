@@ -17,12 +17,13 @@ import {
   StyledPopover,
   ChangeWalletButton,
   NetworkTagRow,
-  Wrapper
+  Wrapper,
+  TitleWrapper
 } from './NetworkSwitcher.styles'
 import ethereumHintImage1x from '../../assets/images/ethereum-hint@1x.png'
 import ethereumHintImage2x from '../../assets/images/ethereum-hint@2x.png'
 
-import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitcher.types'
+import { EthereumOptionPopoverProps, NetworkSwitcherProps, WrongNetworkPopoverProps } from './NetworkSwitcher.types'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import Modal from '../Modal'
@@ -53,17 +54,7 @@ export const NetworkSwitcher = ({
 
   if (isWrongNetwork) {
     if (isMobileByMedia) {
-      return (
-        <Modal isOpen={true} onDismiss={onOuterClick} maxHeight={90}>
-          <Wrapper>
-            <TYPE.main mb="15px">
-              <Image src={ethereumHintImage1x} srcSet={ethereumHintImage2x} alt="hint screenshot" />
-
-              {'Please open up Metamask and switch to supported network manually.'}
-            </TYPE.main>
-          </Wrapper>
-        </Modal>
-      )
+      return <WrongNetworkPopover isOpen={true} onDismiss={onOuterClick}></WrongNetworkPopover>
     }
     return <EthereumOptionPopover show={showEthOptionPopover}>{children}</EthereumOptionPopover>
   }
@@ -114,5 +105,23 @@ const EthereumOptionPopover = ({ children, show }: EthereumOptionPopoverProps) =
     >
       {children}
     </StyledPopover>
+  )
+}
+
+const WrongNetworkPopover = ({ isOpen, onDismiss }: WrongNetworkPopoverProps) => {
+  return (
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
+      <Wrapper>
+        <TitleWrapper>
+          <TYPE.mediumHeader lineHeight="24px" color="text5">
+            {'WRONG NETWORK'}
+          </TYPE.mediumHeader>
+        </TitleWrapper>
+        <TYPE.body mb="15px">
+          <Image src={ethereumHintImage1x} srcSet={ethereumHintImage2x} alt="hint screenshot" />
+          {'Please open up Metamask and switch to supported network manually.'}
+        </TYPE.body>
+      </Wrapper>
+    </Modal>
   )
 }
