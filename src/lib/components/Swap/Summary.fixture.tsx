@@ -30,8 +30,8 @@ function Fixture() {
   const setOutput = useUpdateAtom(outputAtom)
   const [price] = useValue('output value', { defaultValue: 4200 })
   useEffect(() => {
-    setOutput({ token: DAI, value: price, usdc: price })
-  }, [price, setOutput])
+    setState((state) => ({ ...state, output: { token: DAI, value: price, usdc: price } }))
+  }, [price, setOutput, setState])
 
   return (
     <Modal color="dialog">
