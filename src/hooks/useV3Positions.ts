@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Ether, Token, WETH9 } from '@uniswap/sdk-core
 import { KROM } from 'constants/tokens'
 import { useMemo } from 'react'
 import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+import { useNetworkGasPrice } from 'state/user/hooks'
 import { PositionDetails } from 'types/position'
 
 import { useLimitOrderManager } from './useContract'
@@ -75,6 +76,8 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
 
   const { chainId } = useActiveWeb3React()
 
+  const gasPrice = useNetworkGasPrice()
+
   const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(limitOrderManager, 'balanceOf', [
     account ?? undefined,
   ])
@@ -121,7 +124,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
   const { loading: minBalanceLoading, result: minBalanceResult } = useSingleCallResult(
     limitOrderManager,
     'serviceFee',
-    [account ?? undefined]
+    [account ?? undefined, gasPrice?.quotient.toString() ?? undefined]
   )
 
   const minBalance = useMemo(() => {
@@ -130,26 +133,8 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     return CurrencyAmount.fromRawAmount(KROM[chainId], minBalanceResult?.[0])
   }, [chainId, minBalanceResult])
 
-  const { loading: gasPriceLoading, result: gasPriceResult } = useSingleCallResult(
-    limitOrderManager,
-    'targetGasPrice',
-    [account ?? undefined]
-  )
-
-  const gasPrice = useMemo(() => {
-    if (!chainId || !gasPriceResult) return undefined
-
-    return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), gasPriceResult?.[0])
-  }, [chainId, gasPriceResult])
-
   return {
-    loading:
-      someTokenIdsLoading ||
-      balanceLoading ||
-      positionsLoading ||
-      fundingLoading ||
-      minBalanceLoading ||
-      gasPriceLoading,
+    loading: someTokenIdsLoading || balanceLoading || positionsLoading || fundingLoading || minBalanceLoading,
     positions,
     fundingBalance,
     minBalance,

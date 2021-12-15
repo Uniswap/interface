@@ -56,7 +56,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useUserGasPrice } from '../../state/user/hooks'
+import { useNetworkGasPrice } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -125,7 +125,7 @@ export default function Swap({ history }: RouteComponentProps) {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
 
-  const gasAmount = useUserGasPrice()
+  const gasAmount = useNetworkGasPrice()
 
   const {
     wrapType,

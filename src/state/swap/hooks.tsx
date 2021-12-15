@@ -12,7 +12,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { V3TradeState } from 'state/routing/types'
-import { useNetworkGasPrice, useUserGasPrice } from 'state/user/hooks'
+import { useNetworkGasPrice } from 'state/user/hooks'
 
 import { useCurrency } from '../../hooks/Tokens'
 import { useLimitOrderManager } from '../../hooks/useContract'
@@ -206,9 +206,7 @@ export function useDerivedSwapInfo(): {
     ? tryParseAmount(desiredRateApplied, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
     : tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
-  const userGasAmount = useUserGasPrice()
-  const networkGasAmount = useNetworkGasPrice()
-  const gasAmount = userGasAmount?.greaterThan('0') ? userGasAmount : networkGasAmount
+  const gasAmount = useNetworkGasPrice()
 
   // get quotes
   const v3Trade = useBestV3Trade(
@@ -289,11 +287,8 @@ export function useDerivedSwapInfo(): {
   const { result: estimatedServiceFeeResult } = useSingleCallResult(limitOrderManager, 'estimateServiceFee', [
     gasAmount?.quotient.toString() ?? undefined,
     '1',
+    account?.toString() ?? undefined,
   ])
-
-  console.log(gasAmount?.quotient.toString())
-  console.log(estimatedServiceFeeResult?.toString())
-  console.log(chainId)
 
   const serviceFee = useMemo(() => {
     if (!chainId || !estimatedServiceFeeResult) return undefined

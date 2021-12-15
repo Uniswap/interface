@@ -36,7 +36,7 @@ export default function RangeBadge({
   return (
     <BadgeWrapper>
       {closed ? (
-        <MouseoverTooltip text={<Trans>The trade has been processed. Please collect the amount.</Trans>}>
+        <MouseoverTooltip text={<Trans>The trade has been processed.</Trans>}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;

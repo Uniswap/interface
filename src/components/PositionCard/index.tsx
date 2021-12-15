@@ -200,7 +200,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
 
               {isUnderfunded ? (
                 <MouseoverTooltip
-                  text={<Trans>Your account is underfunded. Please fund it up to the minimum balance.</Trans>}
+                  text={<Trans>Your account is underfunded. Please stake KROM up to the minimum balance.</Trans>}
                 >
                   <Badge variant={BadgeVariant.NEGATIVE}>
                     <AlertCircle width={14} height={14} />
@@ -225,7 +225,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  <Trans>Balance:</Trans>
+                  <Trans>Staked Balance:</Trans>
                 </Text>
               </RowFixed>
               {fundingBalance ? (

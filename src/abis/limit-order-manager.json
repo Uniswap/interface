@@ -144,12 +144,6 @@
         "internalType": "uint256",
         "name": "tokensOwed1",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "payment",
-        "type": "uint256"
       }
     ],
     "name": "LimitOrderCollected",
@@ -235,44 +229,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "gasPrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "TargetGasPriceSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "from",
         "type": "address"
       },
@@ -305,6 +261,20 @@
         "internalType": "contract IERC20",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "PROTOCOL_FEE_MULTIPLIER",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -399,10 +369,38 @@
   },
   {
     "inputs": [],
+    "name": "controller",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
     "name": "factory",
     "outputs": [
       {
         "internalType": "contract IUniswapV3Factory",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "feeAddress",
+    "outputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -420,6 +418,20 @@
       }
     ],
     "name": "funding",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "gasUsageMonitor",
     "outputs": [
       {
         "internalType": "uint256",
@@ -470,20 +482,6 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "monitorGasUsage",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -559,20 +557,6 @@
     "constant": true
   },
   {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -594,10 +578,31 @@
   },
   {
     "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "name": "protocolFee",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "quoter",
+    "outputs": [
+      {
+        "internalType": "contract IQuoter",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -654,162 +659,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "deadline",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "s",
-        "type": "bytes32"
-      }
-    ],
-    "name": "selfPermit",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function",
-    "payable": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "nonce",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "expiry",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "s",
-        "type": "bytes32"
-      }
-    ],
-    "name": "selfPermitAllowed",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function",
-    "payable": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "nonce",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "expiry",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "s",
-        "type": "bytes32"
-      }
-    ],
-    "name": "selfPermitAllowedIfNecessary",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function",
-    "payable": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "deadline",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "s",
-        "type": "bytes32"
-      }
-    ],
-    "name": "selfPermitIfNecessary",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function",
-    "payable": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "operator",
         "type": "address"
       },
@@ -852,26 +701,6 @@
         "internalType": "string",
         "name": "",
         "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "targetGasPrice",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -981,17 +810,18 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "utils",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "newOwner",
+        "internalType": "contract ManagerUtils",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "stateMutability": "payable",
@@ -1006,8 +836,18 @@
         "type": "address"
       },
       {
+        "internalType": "contract IQuoter",
+        "name": "_quoter",
+        "type": "address"
+      },
+      {
         "internalType": "contract IWETH9",
         "name": "_WETH",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ManagerUtils",
+        "name": "_utils",
         "type": "address"
       },
       {
@@ -1016,9 +856,19 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "_feeAddress",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
-        "name": "_monitorGasUsage",
+        "name": "_gasUsageMonitor",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_protocolFee",
+        "type": "uint32"
       }
     ],
     "name": "initialize",
@@ -1051,14 +901,14 @@
             "type": "uint160"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint128",
             "name": "_amount0",
-            "type": "uint256"
+            "type": "uint128"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint128",
             "name": "_amount1",
-            "type": "uint256"
+            "type": "uint128"
           }
         ],
         "internalType": "struct IOrderManager.LimitOrderParams",
@@ -1089,24 +939,29 @@
         "internalType": "uint256",
         "name": "_batchId",
         "type": "uint256"
-      }
-    ],
-    "name": "processLimitOrder",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount0",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount1",
-        "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "_serviceFeePaid",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_monitorFeePaid",
+        "type": "uint256"
+      }
+    ],
+    "name": "processLimitOrder",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "_amount0",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "_amount1",
+        "type": "uint128"
       }
     ],
     "stateMutability": "nonpayable",
@@ -1144,7 +999,7 @@
         "type": "uint256"
       }
     ],
-    "name": "collect",
+    "name": "burn",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1158,19 +1013,6 @@
       }
     ],
     "name": "addFunding",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_targetGasPrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "setTargetGasPrice",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1298,13 +1140,22 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "",
+        "name": "underfunded",
         "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_serviceFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_monitorFee",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -1312,6 +1163,11 @@
         "internalType": "address",
         "name": "_owner",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_targetGasPrice",
+        "type": "uint256"
       }
     ],
     "name": "isUnderfunded",
@@ -1325,11 +1181,20 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_serviceFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_monitorFee",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -1347,15 +1212,68 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_monitorGasUsage",
-        "type": "uint256"
+        "internalType": "contract IOrderMonitor",
+        "name": "_newMonitor",
+        "type": "address"
       }
     ],
-    "name": "setMonitorGasUsage",
+    "name": "addMonitor",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint32",
+        "name": "_protocolFee",
+        "type": "uint32"
+      }
+    ],
+    "name": "setProtocolFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gasUsageMonitor",
+        "type": "uint256"
+      }
+    ],
+    "name": "setGasUsageMonitor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_controller",
+        "type": "address"
+      }
+    ],
+    "name": "changeController",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "monitorsLength",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -1373,9 +1291,8 @@
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -1383,19 +1300,23 @@
         "internalType": "address",
         "name": "_owner",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_targetGasPrice",
+        "type": "uint256"
       }
     ],
     "name": "serviceFee",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_serviceFee",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -1408,18 +1329,27 @@
         "internalType": "uint256",
         "name": "_noOrders",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "name": "estimateServiceFee",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_serviceFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_monitorFee",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]

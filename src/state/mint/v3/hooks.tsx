@@ -101,15 +101,10 @@ export function useV3DerivedMintInfo(
   parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   errorMessage?: ReactNode
   depositADisabled: boolean
-  userGasPrice: CurrencyAmount<Currency> | undefined
-  networkGasPrice: CurrencyAmount<Currency> | undefined
 } {
   const { account } = useActiveWeb3React()
 
   const { independentField, typedValue } = useV3MintState()
-
-  const userGasPrice = useUserGasPrice()
-  const networkGasPrice = useNetworkGasPrice()
 
   // currencies
   const currencies: { [field in Field]?: Currency } = useMemo(
@@ -158,8 +153,6 @@ export function useV3DerivedMintInfo(
     parsedAmounts,
     errorMessage,
     depositADisabled: false,
-    userGasPrice,
-    networkGasPrice,
   }
 }
 

@@ -154,7 +154,15 @@ function useSwapCallArguments(
       targetPrice = priceAmount.invert()
     }
 
+    console.log(sortedTokens[0].address)
+    console.log(sortedTokens[1].address)
+    console.log(trade.route.pools[0].fee.toString())
+    console.log(encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString())
+    console.log(amount0?.quotient.toString())
+    console.log(amount1?.quotient.toString())
+
     if (targetPrice && sortedTokens) {
+      console.log(targetPrice)
       calldatas.push(
         limitOrderManager.interface.encodeFunctionData('placeLimitOrder', [
           {
@@ -168,6 +176,8 @@ function useSwapCallArguments(
         ])
       )
     }
+
+    console.log(calldatas)
 
     const calldata =
       calldatas.length === 1 ? calldatas[0] : limitOrderManager.interface.encodeFunctionData('multicall', [calldatas])

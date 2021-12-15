@@ -141,7 +141,7 @@ export function AddRemoveTabs({
           fontSize={20}
           style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
         >
-          {creating ? <Trans>Create a pair</Trans> : adding ? <Trans>Add Funds</Trans> : <Trans>Remove Funds</Trans>}
+          {creating ? <Trans>Create a pair</Trans> : adding ? <Trans>Stake KROM</Trans> : <Trans>Withdraw KROM</Trans>}
         </TYPE.mediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
         {/* <SettingsTab placeholderSlippage={defaultSlippage} /> */}

@@ -124,6 +124,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         return acc
       },
       {
+        [FeeAmount.LOWEST]: [undefined, undefined],
         [FeeAmount.LOW]: [undefined, undefined],
         [FeeAmount.MEDIUM]: [undefined, undefined],
         [FeeAmount.HIGH]: [undefined, undefined],
@@ -145,6 +146,12 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
       tvl0 === undefined && tvl1 === undefined ? undefined : ((tvl0 ?? 0) + (tvl1 ?? 0)) / (sumTvl0 + sumTvl1) || 0
 
     const distributions = {
+      [FeeAmount.LOWEST]: mean(
+        tvlByFeeTier[FeeAmount.LOWEST][0],
+        sumToken0Tvl,
+        tvlByFeeTier[FeeAmount.LOWEST][1],
+        sumToken1Tvl
+      ),
       [FeeAmount.LOW]: mean(tvlByFeeTier[FeeAmount.LOW][0], sumToken0Tvl, tvlByFeeTier[FeeAmount.LOW][1], sumToken1Tvl),
       [FeeAmount.MEDIUM]: mean(
         tvlByFeeTier[FeeAmount.MEDIUM][0],

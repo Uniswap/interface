@@ -1813,7 +1813,7 @@ msgid "Uniswap migration contract↗"
 msgstr "Uniswap 遷移合約↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
+msgid "Kromatika on {0}"
 msgstr "在 {0} 上的 Uniswap"
 
 #: src/components/SearchModal/ImportToken.tsx

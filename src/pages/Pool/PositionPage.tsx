@@ -581,31 +581,16 @@ export function PositionPage({
                     </ButtonConfirmed>
                   ) : (
                     <ButtonConfirmed
-                      disabled={collecting || !!collectMigrationHash}
+                      disabled={true}
                       confirmed={!!collectMigrationHash && !isCollectPending}
                       width="fit-content"
                       style={{ borderRadius: '12px' }}
                       padding="4px 8px"
                       onClick={() => setShowConfirm(true)}
                     >
-                      {!!collectMigrationHash && !isCollectPending ? (
-                        <TYPE.main color={theme.text1}>
-                          <Trans> Collected</Trans>
-                        </TYPE.main>
-                      ) : isCollectPending || collecting ? (
-                        <TYPE.main color={theme.text1}>
-                          {' '}
-                          <Dots>
-                            <Trans>Collecting</Trans>
-                          </Dots>
-                        </TYPE.main>
-                      ) : (
-                        <>
-                          <TYPE.main color={theme.white}>
-                            <Trans>Collect amount</Trans>
-                          </TYPE.main>
-                        </>
-                      )}
+                      <TYPE.main color={theme.text1}>
+                        <Trans> Collected</Trans>
+                      </TYPE.main>
                     </ButtonConfirmed>
                   )}
                 </RowFixed>

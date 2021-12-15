@@ -46,6 +46,10 @@ const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
 `
 
 const FeeAmountLabel = {
+  [FeeAmount.LOWEST]: {
+    label: '0.01',
+    description: <Trans>Best for stable pairs.</Trans>,
+  },
   [FeeAmount.LOW]: {
     label: '0.05',
     description: <Trans>Best for stable pairs.</Trans>,
@@ -71,15 +75,7 @@ function FeeTierPercentageBadge({
 }) {
   return (
     <Badge>
-      <TYPE.label fontSize={12}>
-        {!distributions || poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID ? (
-          <Trans>Not created</Trans>
-        ) : distributions[feeAmount] !== undefined ? (
-          <Trans>{distributions[feeAmount]?.toFixed(0)}% select</Trans>
-        ) : (
-          <Trans>No data</Trans>
-        )}
-      </TYPE.label>
+      <TYPE.label fontSize={12}></TYPE.label>
     </Badge>
   )
 }
@@ -118,6 +114,7 @@ export default function FeeSelector({
         },
         {
           // default all states to NOT_EXISTS
+          [FeeAmount.LOWEST]: PoolState.NOT_EXISTS,
           [FeeAmount.LOW]: PoolState.NOT_EXISTS,
           [FeeAmount.MEDIUM]: PoolState.NOT_EXISTS,
           [FeeAmount.HIGH]: PoolState.NOT_EXISTS,

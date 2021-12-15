@@ -18,6 +18,6 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
             // filter out invalid pairs comprised of the same asset (e.g. WETH<>WETH)
             .filter(([t0, t1]) => !t0.equals(t1))
         : [],
-    [tokenA, tokenB, chainId]
+    [tokenA, tokenB]
   )
 }

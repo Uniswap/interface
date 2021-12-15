@@ -137,9 +137,37 @@ export const ETH2X_FLI = new Token(
   'ETH 2x Flexible Leverage Index'
 )
 export const KROM: { [chainId: number]: Token } = {
+  [SupportedChainId.MAINNET]: new Token(
+    SupportedChainId.MAINNET,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.MAINNET],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
   [SupportedChainId.KOVAN]: new Token(
     SupportedChainId.KOVAN,
     KROM_TOKEN_ADDRESSES[SupportedChainId.KOVAN],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
+  [SupportedChainId.ARBITRUM_RINKEBY]: new Token(
+    SupportedChainId.ARBITRUM_RINKEBY,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.ARBITRUM_RINKEBY],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
+  [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
+    SupportedChainId.OPTIMISTIC_KOVAN,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.OPTIMISTIC_KOVAN],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
+  [SupportedChainId.OPTIMISM]: new Token(
+    SupportedChainId.OPTIMISM,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.OPTIMISM],
     18,
     'KROM',
     'Kromatika'

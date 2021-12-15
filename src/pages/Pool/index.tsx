@@ -156,7 +156,7 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <Trans>Withdraw Funds</Trans>
+          <Trans>Withdraw</Trans>
           <ChevronsRight size={16} />
         </MenuItem>
       ),
@@ -189,9 +189,12 @@ export default function Pool() {
                   )}
                 />
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/add/${kromToken?.address}`}>
-                  + <Trans>Add Funds</Trans>
+                  + <Trans>Stake KROM</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
+              <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/swap`}>
+                + <Trans>New Trade</Trans>
+              </ResponsiveButtonPrimary>
             </TitleRow>
 
             <HideSmall>

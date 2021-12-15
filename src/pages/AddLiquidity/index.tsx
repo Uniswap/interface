@@ -30,7 +30,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/v3/actions'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useNetworkGasPrice, useUserGasPrice } from '../../state/user/hooks'
+import { useIsExpertMode } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -55,8 +55,10 @@ export default function AddLiquidity({
 
   const baseCurrency = useCurrency(currencyIdA)
 
-  const { parsedAmounts, currencyBalances, currencies, errorMessage, depositADisabled, userGasPrice, networkGasPrice } =
-    useV3DerivedMintInfo(baseCurrency ?? undefined, baseCurrency ?? undefined)
+  const { parsedAmounts, currencyBalances, currencies, errorMessage, depositADisabled } = useV3DerivedMintInfo(
+    baseCurrency ?? undefined,
+    baseCurrency ?? undefined
+  )
 
   const { independentField, typedValue } = useV3MintState()
 
@@ -119,12 +121,6 @@ export default function AddLiquidity({
     const calldatas: string[] = []
 
     if (account && amount0) {
-      if (!userGasPrice?.greaterThan('0') && networkGasPrice?.quotient) {
-        console.log(toHex(networkGasPrice?.quotient))
-        calldatas.push(
-          limitManager.interface.encodeFunctionData('setTargetGasPrice', [toHex(networkGasPrice?.quotient)])
-        )
-      }
       calldatas.push(limitManager.interface.encodeFunctionData('addFunding', [toHex(amount0)]))
       const calldata =
         calldatas.length === 1 ? calldatas[0] : limitManager.interface.encodeFunctionData('multicall', [calldatas])
@@ -216,7 +212,7 @@ export default function AddLiquidity({
           </AutoColumn>
         </LightCard>
         <TYPE.italic>
-          <Trans>Adding Funds will allow you to automatically process trades.</Trans>
+          <Trans>Staking KROM will allow you to automatically process trades.</Trans>
         </TYPE.italic>
         <ButtonPrimary onClick={onAdd}>
           <Trans>Add</Trans>
@@ -240,7 +236,7 @@ export default function AddLiquidity({
   const showApprovalA =
     !argentWalletContract && approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
 
-  const pendingText = `Adding ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
+  const pendingText = `Staking ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
     !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
   }`
 
@@ -289,7 +285,7 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={<Trans>Add Funds</Trans>}
+              title={<Trans>Stake</Trans>}
               onDismiss={() => setShowConfirm(false)}
               topContent={modalHeader}
             />

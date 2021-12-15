@@ -5,7 +5,7 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
-import { useNetworkGasPrice, useUserGasPrice } from 'state/user/hooks'
+import { useNetworkGasPrice } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
@@ -50,9 +50,7 @@ export function AdvancedSwapDetails({
 }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
-  const userGasAmount = useUserGasPrice()
-  const networkGasAmount = useNetworkGasPrice()
-  const gasAmount = userGasAmount?.greaterThan('0') ? userGasAmount : networkGasAmount
+  const gasAmount = useNetworkGasPrice()
 
   return trade && priceAmount ? (
     <AutoColumn gap="8px">
@@ -62,7 +60,7 @@ export function AdvancedSwapDetails({
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
-            <Trans>Est. Service Fee</Trans>
+            <Trans>Service Fee</Trans>
           </TYPE.subHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
