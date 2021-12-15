@@ -8,7 +8,7 @@ import Row from './Row'
 const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-grow: 1;
-  transition: background-color 0.2s ease-out, flex-grow 0.2s ease-out;
+  transition: background-color 0.2s ease-out, flex-grow 0.2s ease-out, padding 0.2s ease-out;
 `
 
 const UpdateRow = styled(Row)``
@@ -37,7 +37,6 @@ const updatedCss = css`
   ${StyledButton} {
     border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
     flex-grow: 0;
-    height: 3em;
     padding: 1em;
   }
 `
@@ -46,7 +45,7 @@ export const Overlay = styled(Row)<{ updated?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
   min-height: 3.5em;
-  transition: padding 0.2s;
+  transition: padding 0.2s ease-out;
 
   ${({ updated }) => updated && updatedCss}
 `
@@ -71,11 +70,9 @@ export default function ActionButton({
   return (
     <Overlay updated={Boolean(updated)} flex align="stretch">
       <StyledButton color={color} disabled={disabled} onClick={updated ? onUpdate : onClick}>
-        {updated ? (
-          <ThemedText.ButtonMedium color="currentColor">{updated.action}</ThemedText.ButtonMedium>
-        ) : (
-          <ThemedText.ButtonLarge color="currentColor">{children}</ThemedText.ButtonLarge>
-        )}
+        <ThemedText.TransitionButton buttonSize={updated ? 'medium' : 'large'} color="currentColor">
+          {updated ? updated.action : children}
+        </ThemedText.TransitionButton>
       </StyledButton>
       {updated && (
         <UpdateRow gap={0.5}>

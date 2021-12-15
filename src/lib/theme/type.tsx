@@ -9,6 +9,10 @@ const TextWrapper = styled(Text)<{ color?: Color }>`
   color: ${({ color = 'currentColor', theme }) => theme[color as Color]};
 `
 
+const TransitionTextWrapper = styled(TextWrapper)`
+  transition: font-size 0.2s ease-out, line-height 0.2s ease-out;
+`
+
 export function H1(props: TextProps) {
   return <TextWrapper className="headline headline-1" fontSize={36} fontWeight={400} lineHeight="36px" {...props} />
 }
@@ -55,6 +59,21 @@ export function ButtonMedium(props: TextProps) {
 
 export function ButtonSmall(props: TextProps) {
   return <TextWrapper className="button button-small" fontSize={14} fontWeight={500} lineHeight="14px" {...props} />
+}
+
+export function TransitionButton(props: TextProps & { buttonSize: 'small' | 'medium' | 'large' }) {
+  const className = `button button-${props.buttonSize}`
+  const fontSize = { small: 14, medium: 16, large: 20 }[props.buttonSize]
+  const lineHeight = `${fontSize}px`
+  return (
+    <TransitionTextWrapper
+      className={className}
+      fontSize={fontSize}
+      fontWeight={500}
+      lineHeight={lineHeight}
+      {...props}
+    />
+  )
 }
 
 export function Code(props: TextProps) {
