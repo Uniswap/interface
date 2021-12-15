@@ -57,7 +57,7 @@ const Body = styled(Column)<{ open: boolean }>`
         bottom: 0;
         position: absolute;
         background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
-        width: 100%;
+        width: calc(100% - 0.5em);
         height: 2em;
         pointer-events: none;
       }
