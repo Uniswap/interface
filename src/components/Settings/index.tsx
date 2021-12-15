@@ -204,11 +204,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <RowBetween>
                 <RowFixed>
                   <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
-                    <Trans>Auto Router</Trans>
+                    <Trans>Auto Router API</Trans>
                   </ThemedText.Black>
-                  <QuestionHelper
-                    text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
-                  />
+                  <QuestionHelper text={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>} />
                 </RowFixed>
                 <Toggle
                   id="toggle-optimized-router-button"

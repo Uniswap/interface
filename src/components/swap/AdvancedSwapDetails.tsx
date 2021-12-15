@@ -64,7 +64,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.Black textAlign="right" fontSize={14}>
               {expectedOutputAmount
-                ? `${expectedOutputAmount.toSignificant(4)}  ${expectedOutputAmount.currency.symbol}`
+                ? `${expectedOutputAmount.toSignificant(6)}  ${expectedOutputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.Black>
           </TextWithLoadingPlaceholder>
