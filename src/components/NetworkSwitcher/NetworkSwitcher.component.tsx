@@ -1,4 +1,3 @@
-import { X } from 'react-feather'
 import React, { useRef } from 'react'
 
 import Option from './Option'
@@ -13,7 +12,6 @@ import {
   Text,
   Image,
   OptionGrid,
-  CloseButton,
   StyledPopover,
   ChangeWalletButton,
   NetworkTagRow,
@@ -23,10 +21,10 @@ import {
 import ethereumHintImage1x from '../../assets/images/ethereum-hint@1x.png'
 import ethereumHintImage2x from '../../assets/images/ethereum-hint@2x.png'
 
-import { EthereumOptionPopoverProps, NetworkSwitcherProps, WrongNetworkPopoverProps } from './NetworkSwitcher.types'
+import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitcher.types'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
-import Modal from '../Modal'
+import Modal, { ModalProps } from '../Modal'
 import { TYPE } from '../../theme'
 
 export const NetworkSwitcher = ({
@@ -54,7 +52,7 @@ export const NetworkSwitcher = ({
 
   if (isWrongNetwork) {
     if (isMobileByMedia) {
-      return <WrongNetworkPopover isOpen={true} onDismiss={onOuterClick}></WrongNetworkPopover>
+      return <WrongNetworkMobileModal isOpen={isWrongNetwork} onDismiss={onOuterClick}></WrongNetworkMobileModal>
     }
     return <EthereumOptionPopover show={showEthOptionPopover}>{children}</EthereumOptionPopover>
   }
@@ -95,9 +93,6 @@ const EthereumOptionPopover = ({ children, show }: EthereumOptionPopoverProps) =
         <View>
           <Row>
             <Text>Please open up Metamask and switch to supported network manually.</Text>
-            <CloseButton>
-              <X size="16" />
-            </CloseButton>
           </Row>
           <Image src={ethereumHintImage1x} srcSet={ethereumHintImage2x} alt="hint screenshot" />
         </View>
@@ -108,7 +103,7 @@ const EthereumOptionPopover = ({ children, show }: EthereumOptionPopoverProps) =
   )
 }
 
-const WrongNetworkPopover = ({ isOpen, onDismiss }: WrongNetworkPopoverProps) => {
+const WrongNetworkMobileModal = ({ isOpen, onDismiss }: ModalProps) => {
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
       <Wrapper>
@@ -118,8 +113,10 @@ const WrongNetworkPopover = ({ isOpen, onDismiss }: WrongNetworkPopoverProps) =>
           </TYPE.mediumHeader>
         </TitleWrapper>
         <TYPE.body mb="15px">
-          <Image src={ethereumHintImage1x} srcSet={ethereumHintImage2x} alt="hint screenshot" />
-          {'Please open up Metamask and switch to supported network manually.'}
+          <Row>
+            <Image src={ethereumHintImage1x} srcSet={ethereumHintImage2x} alt="hint screenshot" />
+          </Row>
+          <Text>Please open up Metamask and switch to supported network manually.</Text>
         </TYPE.body>
       </Wrapper>
     </Modal>
