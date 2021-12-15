@@ -19,7 +19,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   const { connector, chainId: activeChainId, account } = useActiveWeb3React()
   const networkSwitcherPopoverOpen = useModalOpen(modal)
 
-  const { selectEthereum, selectNetwork } = useNetworkSwitch({
+  const { selectNetwork } = useNetworkSwitch({
     onSelectNetworkCallback: closeModals
   })
 
@@ -34,7 +34,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   }
 
   function onNetworkChange(chainId: ChainId) {
-    return chainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(chainId)
+    return chainId === ChainId.MAINNET ? selectNetwork(ChainId.MAINNET) : selectNetwork(chainId)
   }
 
   const networkList = createNetworksList({

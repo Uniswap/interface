@@ -36,7 +36,7 @@ export const BridgeActionPanel = ({
   fromNetworkChainId,
   isNetworkConnected
 }: BridgeActionPanelProps) => {
-  const { selectEthereum, selectNetwork } = useNetworkSwitch()
+  const { selectNetwork } = useNetworkSwitch()
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const {
     approvalState,
@@ -59,7 +59,7 @@ export const BridgeActionPanel = ({
       return (
         <ButtonPrimary
           onClick={() =>
-            fromNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(fromNetworkChainId)
+            fromNetworkChainId === ChainId.MAINNET ? selectNetwork(ChainId.MAINNET) : selectNetwork(fromNetworkChainId)
           }
         >
           Connect to {networkOptionsPreset.find(network => network.chainId === fromNetworkChainId)?.name}
@@ -73,7 +73,7 @@ export const BridgeActionPanel = ({
         <NetworkSwitcher
           sendToId={toNetworkChainId}
           onSwitchClick={() =>
-            toNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(toNetworkChainId)
+            toNetworkChainId === ChainId.MAINNET ? selectNetwork(ChainId.MAINNET) : selectNetwork(toNetworkChainId)
           }
           onCollectClick={handleCollect}
         />
