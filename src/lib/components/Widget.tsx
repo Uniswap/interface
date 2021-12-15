@@ -21,7 +21,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  min-height: 340px;
+  height: 348px;
   min-width: 300px;
   padding: 0.25em;
   position: relative;
@@ -50,7 +50,7 @@ export default function Widget({
   locale = DEFAULT_LOCALE,
   provider,
   jsonRpcEndpoint,
-  width,
+  width = 360,
   className,
 }: WidgetProps) {
   const [, setNetworkConnector] = useAtom(networkConnectorAtom)

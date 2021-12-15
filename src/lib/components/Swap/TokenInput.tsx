@@ -70,7 +70,7 @@ export default function TokenInput({
     }
   }, [])
   return (
-    <Column gap={0.375}>
+    <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
         <ThemedText.H2>
           <ValueInput

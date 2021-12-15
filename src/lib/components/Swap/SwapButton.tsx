@@ -5,8 +5,8 @@ import { useCallback, useMemo, useState } from 'react'
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
 import { inputAtom, outputAtom, swapAtom } from './state'
+import { StatusDialog } from './Status'
 import { SummaryDialog } from './Summary'
-import TransactionStatusDialog from './TransactionStatusDialog'
 
 const mockBalance = 123.45
 
@@ -50,7 +50,7 @@ export default function SwapButton() {
       )}
       {mode === Mode.STATUS && (
         <Dialog color="dialog">
-          <TransactionStatusDialog onClose={() => setMode(Mode.NONE)} />
+          <StatusDialog onClose={() => setMode(Mode.NONE)} />
         </Dialog>
       )}
     </>

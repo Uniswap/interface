@@ -1,6 +1,6 @@
 import { useUpdateAtom } from 'jotai/utils'
 import { DAI, ETH } from 'lib/mocks'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { Modal } from '../Dialog'
@@ -9,6 +9,8 @@ import { SummaryDialog } from './Summary'
 
 function Fixture() {
   const setState = useUpdateAtom(stateAtom)
+  const [, setInitialized] = useState(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setState({
       activeInput: Field.INPUT,
@@ -22,6 +24,7 @@ function Fixture() {
         minimumReceived: 4190,
       },
     })
+    setInitialized(true)
   })
 
   const setOutput = useUpdateAtom(outputAtom)
