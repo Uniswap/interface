@@ -20,5 +20,3 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 } else {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
-
-export { timing } from 'react-ga'

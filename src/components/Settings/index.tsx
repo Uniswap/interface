@@ -6,7 +6,7 @@ import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
-import { SUPPORTED_CHAINS } from 'state/routing/clientSideSmartOrderRouter/constants'
+import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'state/routing/clientSideSmartOrderRouter/constants'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -200,7 +200,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Trans>Interface Settings</Trans>
             </Text>
 
-            {chainId && SUPPORTED_CHAINS.includes(chainId) && (
+            {chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId) && (
               <RowBetween>
                 <RowFixed>
                   <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>

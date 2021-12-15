@@ -24,7 +24,7 @@ export const V3_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0xE592427A
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
 ])
-export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0x075B36dE1Bd11cb361c5B3B1E80A9ab0e7aa8a60', [
+export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45', [
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
   SupportedChainId.ARBITRUM_ONE,

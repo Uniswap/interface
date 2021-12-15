@@ -64,16 +64,12 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
   return new InterfaceTrade({
     v2Routes:
       route
-        ?.filter((r) => r.routev2 !== null)
-        // typescript does not perform type narrowing from filter
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        .map(({ routev2, inputAmount, outputAmount }) => ({ routev2: routev2!, inputAmount, outputAmount })) ?? [],
+        ?.filter((r): r is typeof route[0] & { routev2: NonNullable<typeof route[0]['routev2']> } => r.routev2 !== null)
+        .map(({ routev2, inputAmount, outputAmount }) => ({ routev2, inputAmount, outputAmount })) ?? [],
     v3Routes:
       route
-        ?.filter((r) => r.routev3 !== null)
-        // typescript does not perform type narrowing from filter
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        .map(({ routev3, inputAmount, outputAmount }) => ({ routev3: routev3!, inputAmount, outputAmount })) ?? [],
+        ?.filter((r): r is typeof route[0] & { routev3: NonNullable<typeof route[0]['routev3']> } => r.routev3 !== null)
+        .map(({ routev3, inputAmount, outputAmount }) => ({ routev3, inputAmount, outputAmount })) ?? [],
     tradeType,
     gasUseEstimateUSD,
   })
