@@ -8,7 +8,6 @@ import Row from './Row'
 const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-grow: 1;
-  height: 100%;
   transition: background-color 0.2s ease-out, flex-grow 0.2s ease-out;
 `
 
@@ -70,7 +69,7 @@ export default function ActionButton({
   children,
 }: ActionButtonProps) {
   return (
-    <Overlay updated={Boolean(updated)} flex>
+    <Overlay updated={Boolean(updated)} flex align="stretch">
       <StyledButton color={color} disabled={disabled} onClick={updated ? onUpdate : onClick}>
         {updated ? (
           <ThemedText.ButtonMedium color="currentColor">{updated.action}</ThemedText.ButtonMedium>
