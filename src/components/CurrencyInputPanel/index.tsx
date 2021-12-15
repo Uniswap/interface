@@ -86,7 +86,7 @@ const Container = styled.div<{ selected: boolean; hideInput: boolean }>`
   border-radius: 8px;
   border: 1px solid ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.bg2)};
   background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.buttonBlack)};
-  padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+  padding: 0.75rem;
 `
 
 const StyledTokenName = styled.span<{ active?: boolean; fontSize?: string }>`
@@ -144,7 +144,7 @@ interface CurrencyInputPanelProps {
   balancePosition?: string
   hideLogo?: boolean
   fontSize?: string
-  customNode?: ReactNode
+  customCurrencySelect?: ReactNode
   estimatedUsd?: string
   isSwitchMode?: boolean
 }
@@ -167,10 +167,11 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
+  customBalanceText,
   balancePosition = 'right',
   hideLogo = false,
   fontSize,
-  customNode,
+  customCurrencySelect,
   estimatedUsd,
   isSwitchMode = false
 }: CurrencyInputPanelProps) {
@@ -227,7 +228,7 @@ export default function CurrencyInputPanel({
               <Flex>
                 <Wallet color={theme.subText} />
                 <Text fontWeight={500} color={theme.subText} marginLeft="4px">
-                  {selectedCurrencyBalanceHasValue?.toSignificant(10) || 0}
+                  {customBalanceText || selectedCurrencyBalanceHasValue?.toSignificant(10) || 0}
                 </Text>
               </Flex>
             </Flex>
@@ -259,46 +260,47 @@ export default function CurrencyInputPanel({
                 )}
               </>
             )}
-            <CurrencySelect
-              selected={!!currency}
-              className="open-currency-select-button"
-              onClick={() => {
-                if (!disableCurrencySelect && !isSwitchMode) {
-                  setModalOpen(true)
-                } else if (!disableCurrencySelect && isSwitchMode && onSwitchCurrency) {
-                  onSwitchCurrency()
-                }
-              }}
-            >
-              <Aligner>
-                {hideLogo ? null : pair ? (
-                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-                ) : currency ? (
-                  <CurrencyLogo currency={currency || undefined} size={'24px'} />
-                ) : null}
-                {pair ? (
-                  <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
-                  </StyledTokenName>
-                ) : (
-                  <StyledTokenName
-                    className="token-symbol-container"
-                    active={Boolean(currency && currency.symbol)}
-                    fontSize={fontSize}
-                  >
-                    {(nativeCurrency && nativeCurrency.symbol && nativeCurrency.symbol.length > 20
-                      ? nativeCurrency.symbol.slice(0, 4) +
-                        '...' +
-                        nativeCurrency.symbol.slice(nativeCurrency.symbol.length - 5, nativeCurrency.symbol.length)
-                      : nativeCurrency?.symbol) || <Trans>Select a token</Trans>}
-                  </StyledTokenName>
-                )}
-                {!disableCurrencySelect && !isSwitchMode && <StyledDropDown selected={!!currency} />}
-                {!disableCurrencySelect && isSwitchMode && <StyledSwitchIcon selected={!!currency} />}
-              </Aligner>
-            </CurrencySelect>
+            {customCurrencySelect || (
+              <CurrencySelect
+                selected={!!currency}
+                className="open-currency-select-button"
+                onClick={() => {
+                  if (!disableCurrencySelect && !isSwitchMode) {
+                    setModalOpen(true)
+                  } else if (!disableCurrencySelect && isSwitchMode && onSwitchCurrency) {
+                    onSwitchCurrency()
+                  }
+                }}
+              >
+                <Aligner>
+                  {hideLogo ? null : pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                  ) : currency ? (
+                    <CurrencyLogo currency={currency || undefined} size={'24px'} />
+                  ) : null}
+                  {pair ? (
+                    <StyledTokenName className="pair-name-container">
+                      {pair?.token0.symbol}:{pair?.token1.symbol}
+                    </StyledTokenName>
+                  ) : (
+                    <StyledTokenName
+                      className="token-symbol-container"
+                      active={Boolean(currency && currency.symbol)}
+                      fontSize={fontSize}
+                    >
+                      {(nativeCurrency && nativeCurrency.symbol && nativeCurrency.symbol.length > 20
+                        ? nativeCurrency.symbol.slice(0, 4) +
+                          '...' +
+                          nativeCurrency.symbol.slice(nativeCurrency.symbol.length - 5, nativeCurrency.symbol.length)
+                        : nativeCurrency?.symbol) || <Trans>Select a token</Trans>}
+                    </StyledTokenName>
+                  )}
+                  {!disableCurrencySelect && !isSwitchMode && <StyledDropDown selected={!!currency} />}
+                  {!disableCurrencySelect && isSwitchMode && <StyledSwitchIcon selected={!!currency} />}
+                </Aligner>
+              </CurrencySelect>
+            )}
           </InputRow>
-          {customNode}
         </Container>
         {!disableCurrencySelect && !isSwitchMode && onCurrencySelect && (
           <CurrencySearchModal

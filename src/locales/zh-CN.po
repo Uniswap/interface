@@ -242,6 +242,11 @@ msgstr ""
 msgid "Available for yield farming"
 msgstr "可用于流动性挖矿"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "BALANCE:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
 msgstr "额外奖励"
@@ -254,11 +259,6 @@ msgstr "返回"
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Balance"
 msgstr "余额"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Balance: {0} {1}-{2} LP"
-msgstr "余额：{0} {1}-{2} LP"
 
 #: src/pages/About/index.tsx
 msgid "Best price guaranteed"
@@ -485,6 +485,11 @@ msgstr "自定义"
 msgid "DEPOSIT"
 msgstr "存款"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "DEPOSIT:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr "去中心化交易所"
@@ -496,11 +501,6 @@ msgstr "夜间模式"
 #: src/pages/About/index.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
 msgstr "存入您的代币并获取有吸引力的奖励。我们与项目方合作，让用户得到最好的奖励。"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Deposit: {0} {1}-{2} LP"
-msgstr "存储: {0} {1}-{2} LP"
 
 #: src/components/Vesting/index.tsx
 msgid "Details"
@@ -547,11 +547,6 @@ msgstr "每次您收获新的奖励时，都会创建一个新的释放日程（
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Earn More!"
-msgstr ""
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Earn even more rewards by staking your LP Tokens here!"
 msgstr ""
 
 #: src/pages/About/index.tsx
@@ -1354,6 +1349,11 @@ msgstr "价格和池份额"
 msgid "Privacy Policy"
 msgstr "隐私政策"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "REWARD:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Rainmaker Yield Farming"
 msgstr "Rainmaker 流动性挖矿"
@@ -1402,11 +1402,6 @@ msgstr "删除池代币会将您的头寸以当前比率转换回基础代币，
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "删除 {0} {1} 和 {2} {3}"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Reward"
-msgstr "奖励"
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx

@@ -242,6 +242,11 @@ msgstr ""
 msgid "Available for yield farming"
 msgstr "Có thể yield farming"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "BALANCE:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
 msgstr "PHẦN THƯỞNG BONUS"
@@ -254,11 +259,6 @@ msgstr "Quay lại"
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Balance"
 msgstr "Số Dư"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Balance: {0} {1}-{2} LP"
-msgstr "Số dư: {0} {1} - {2} LP"
 
 #: src/pages/About/index.tsx
 msgid "Best price guaranteed"
@@ -485,6 +485,11 @@ msgstr "Tự chọn"
 msgid "DEPOSIT"
 msgstr "GỬI THANH KHOẢN"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "DEPOSIT:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr "Các DEX"
@@ -496,11 +501,6 @@ msgstr "Chế Độ Tối"
 #: src/pages/About/index.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
 msgstr "Gửi Token của bạn và Farm các phần thưởng hấp dẫn. Chúng tôi hợp tác với rất nhiều các dự án khác nhau để mang lại phần thưởng tốt nhất cho bạn."
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Deposit: {0} {1}-{2} LP"
-msgstr "Gửi: {0} {1} - {2} LP"
 
 #: src/components/Vesting/index.tsx
 msgid "Details"
@@ -547,11 +547,6 @@ msgstr "Mỗi khi bạn thu hoạch được phần thưởng mới, một lịc
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Earn More!"
-msgstr ""
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Earn even more rewards by staking your LP Tokens here!"
 msgstr ""
 
 #: src/pages/About/index.tsx
@@ -1354,6 +1349,11 @@ msgstr "Các mức Giá và Phần đóng góp Pool"
 msgid "Privacy Policy"
 msgstr "Chính sách Bảo mật"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "REWARD:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Rainmaker Yield Farming"
 msgstr "Rainmaker Yield Farming"
@@ -1402,11 +1402,6 @@ msgstr "Việc rút token khỏi Pool sẽ chuyển đổi vị trí của bạn
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Xóa {0} {1} và {2} {3}"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Reward"
-msgstr "Phần thưởng"
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx

@@ -242,6 +242,11 @@ msgstr ""
 msgid "Available for yield farming"
 msgstr "Getiri çiftçiliği için kullanılabilir"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "BALANCE:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
 msgstr ""
@@ -254,11 +259,6 @@ msgstr "Geri"
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Balance"
 msgstr ""
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Balance: {0} {1}-{2} LP"
-msgstr "Bakiye: {0} {1}-{2} LP"
 
 #: src/pages/About/index.tsx
 msgid "Best price guaranteed"
@@ -485,6 +485,11 @@ msgstr "Özel"
 msgid "DEPOSIT"
 msgstr ""
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "DEPOSIT:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr ""
@@ -496,11 +501,6 @@ msgstr ""
 #: src/pages/About/index.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
 msgstr ""
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Deposit: {0} {1}-{2} LP"
-msgstr "Yatırılan: {0} {1}-{2} LP"
 
 #: src/components/Vesting/index.tsx
 msgid "Details"
@@ -547,11 +547,6 @@ msgstr ""
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Earn More!"
-msgstr ""
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Earn even more rewards by staking your LP Tokens here!"
 msgstr ""
 
 #: src/pages/About/index.tsx
@@ -1354,6 +1349,11 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr ""
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "REWARD:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Rainmaker Yield Farming"
 msgstr ""
@@ -1402,11 +1402,6 @@ msgstr "Havuz token’larını kaldırmak, pozisyonunuzu havuzdaki payınızla o
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} ve {2} {3} kaldırılıyor"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Reward"
-msgstr "Ödül"
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx

@@ -166,15 +166,6 @@ const ZapIn = ({
     {}
   )
 
-  const atMaxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
-    (accumulator, field) => {
-      return {
-        ...accumulator,
-        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0')
-      }
-    },
-    {}
-  )
   // check whether the user has approved the router on the tokens
   const amountToApprove = tryParseAmount(typedValue, currencies[independentField])
 

@@ -242,6 +242,11 @@ msgstr "Audited By"
 msgid "Available for yield farming"
 msgstr "Available for yield farming"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "BALANCE:"
+msgstr "BALANCE:"
+
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
 msgstr "BONUS REWARDS"
@@ -254,11 +259,6 @@ msgstr "Back"
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Balance"
 msgstr "Balance"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Balance: {0} {1}-{2} LP"
-msgstr "Balance: {0} {1}-{2} LP"
 
 #: src/pages/About/index.tsx
 msgid "Best price guaranteed"
@@ -485,6 +485,11 @@ msgstr "Custom"
 msgid "DEPOSIT"
 msgstr "DEPOSIT"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "DEPOSIT:"
+msgstr "DEPOSIT:"
+
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr "DEXs"
@@ -496,11 +501,6 @@ msgstr "Dark Mode"
 #: src/pages/About/index.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
 msgstr "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Deposit: {0} {1}-{2} LP"
-msgstr "Deposit: {0} {1}-{2} LP"
 
 #: src/components/Vesting/index.tsx
 msgid "Details"
@@ -548,11 +548,6 @@ msgstr "Each time you harvest new rewards, a new vesting schedule (duration depe
 #: src/components/YieldPools/ListItem.tsx
 msgid "Earn More!"
 msgstr "Earn More!"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Earn even more rewards by staking your LP Tokens here!"
-msgstr "Earn even more rewards by staking your LP Tokens here!"
 
 #: src/pages/About/index.tsx
 msgid "Earn fees and rewards by depositing your tokens into our pools."
@@ -1354,6 +1349,11 @@ msgstr "Prices and Pool share"
 msgid "Privacy Policy"
 msgstr "Privacy Policy"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "REWARD:"
+msgstr "REWARD:"
+
 #: src/pages/About/index.tsx
 msgid "Rainmaker Yield Farming"
 msgstr "Rainmaker Yield Farming"
@@ -1402,11 +1402,6 @@ msgstr "Removing pool tokens converts your position back into underlying tokens 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Removing {0} {1} and {2} {3}"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Reward"
-msgstr "Reward"
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
