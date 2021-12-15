@@ -1,10 +1,10 @@
 import { AlphaRouterParams, IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
-import { timing } from 'components/analytics'
 import { NETWORK_URLS } from 'connectors'
 import { SupportedChainId } from 'constants/chains'
 import { providers } from 'ethers/lib/ethers'
+import ReactGA from 'react-ga'
 
-import { SUPPORTED_CHAINS } from './constants'
+import { AUTO_ROUTER_SUPPORTED_CHAINS } from './constants'
 
 export type Dependencies = {
   [chainId in SupportedChainId]?: AlphaRouterParams
@@ -13,7 +13,7 @@ export type Dependencies = {
 /** Minimal set of dependencies for the router to work locally. */
 export function buildDependencies(): Dependencies {
   const dependenciesByChain: Dependencies = {}
-  for (const chainId of SUPPORTED_CHAINS) {
+  for (const chainId of AUTO_ROUTER_SUPPORTED_CHAINS) {
     const provider = new providers.JsonRpcProvider(NETWORK_URLS[chainId])
 
     dependenciesByChain[chainId] = {
@@ -31,7 +31,7 @@ class GAMetric extends IMetric {
   }
 
   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    timing({
+    ReactGA.timing({
       category: 'Routing API',
       variable: `${key} | ${unit}`,
       value,

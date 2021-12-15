@@ -5,7 +5,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
-import { getTxOptimizedSwapRouter } from 'utils/getTxOptimizedSwapRouter'
+import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
 import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
@@ -180,26 +180,26 @@ export function useApprovalOptimizedTrade(
   | undefined {
   const onlyV2Routes = trade?.routes.every((route) => route.protocol === Protocol.V2)
   const onlyV3Routes = trade?.routes.every((route) => route.protocol === Protocol.V3)
-  const routeHasSplits = (trade?.routes?.length ?? 0) > 1
+  const tradeHasSplits = (trade?.routes.length ?? 0) > 1
 
   const approvalStates = useAllApprovalStates(trade, allowedSlippage)
 
   const optimizedSwapRouter = useMemo(
-    () => getTxOptimizedSwapRouter({ onlyV2Routes, onlyV3Routes, routeHasSplits, approvalStates }),
-    [approvalStates, routeHasSplits, onlyV2Routes, onlyV3Routes]
+    () => getTxOptimizedSwapRouter({ onlyV2Routes, onlyV3Routes, tradeHasSplits, approvalStates }),
+    [approvalStates, tradeHasSplits, onlyV2Routes, onlyV3Routes]
   )
 
   return useMemo(() => {
     if (!trade) return undefined
 
     switch (optimizedSwapRouter) {
-      case 'v2V3':
+      case SwapRouterVersion.V2V3:
         return trade
-      case 'v2':
+      case SwapRouterVersion.V2:
         const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
         const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
         return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)
-      case 'v3':
+      case SwapRouterVersion.V3:
         return V3Trade.createUncheckedTradeWithMultipleRoutes({
           routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
             route: new V3Route(

@@ -10,3 +10,5 @@ export type TupleSplit<T, N extends number, O extends readonly any[] = readonly 
 export type TakeFirst<T extends readonly any[], N extends number> = TupleSplit<T, N>[0]
 
 export type SkipFirst<T extends readonly any[], N extends number> = TupleSplit<T, N>[1]
+
+export type NonNullable<T> = T extends null | undefined ? never : T
