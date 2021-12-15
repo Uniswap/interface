@@ -17,6 +17,7 @@ import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainLabel } from '../../constants'
+import { ENSAvatarData } from '../../hooks/useENSAvatar'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -27,7 +28,7 @@ const ChainLogo: any = {
 }
 
 const View = styled.div`
-  height: 29px;
+  height: 32px;
   display: flex;
   align-items: center;
   margin-left: auto;
@@ -37,6 +38,7 @@ const View = styled.div`
   border-radius: 12px;
   white-space: nowrap;
   margin-left: 8px;
+  padding: 1px;
 `
 
 const Web3StatusConnected = styled.button<{ pending?: boolean }>`
@@ -52,12 +54,14 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
   text-transform: uppercase;
   cursor: pointer;
   outline: none;
+  display: flex;
+  align-items: center;
 `
 
 const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConnected: boolean; clickable: boolean }>`
   display: flex;
   align-items: center;
-  height: 25px;
+  height: 26px;
   padding: 7px 8px;
   font-size: 12px;
   line-height: 15px;
@@ -65,7 +69,7 @@ const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConne
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #ffffff;
-  border-radius: 12px;
+  border-radius: 10px;
   background-color: ${({ theme, isConnected }) => (isConnected ? theme.dark2 : 'transparent')};
   border: none;
   outline: none;
@@ -107,9 +111,25 @@ const AddressMobile = styled.span`
   `};
 `
 
+export interface StyledAvatarProps {
+  url: string
+}
+
+const Avatar = styled.div<StyledAvatarProps>(props => ({
+  height: 32,
+  width: 32,
+  borderRadius: '50%',
+  marginRight: 6,
+  marginLeft: -14,
+  backgroundColor: props.theme.bg1,
+  backgroundSize: 'cover',
+  backgroundImage: `url(${props.url})`
+}))
+
 interface AccountStatusProps {
   pendingTransactions: string[]
   ENSName?: string
+  avatar?: ENSAvatarData
   account: string | undefined | null
   connector: AbstractConnector | undefined
   networkConnectorChainId: ChainId | undefined
@@ -122,7 +142,8 @@ export function AccountStatus({
   account,
   connector,
   networkConnectorChainId,
-  onAddressClick
+  onAddressClick,
+  avatar
 }: AccountStatusProps) {
   const hasPendingTransactions = !!pendingTransactions.length
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
@@ -145,13 +166,16 @@ export function AccountStatus({
               </Text>{' '}
               <Loader />
             </RowBetween>
+          ) : ENSName ? (
+            <>
+              {avatar && <Avatar url={avatar.image} />}
+              <>{ENSName}</>
+            </>
           ) : (
-            ENSName || (
-              <>
-                <AddressDesktop>{shortenAddress(account)}</AddressDesktop>
-                <AddressMobile>{shortenAddress(account, 2)}</AddressMobile>
-              </>
-            )
+            <>
+              <AddressDesktop>{shortenAddress(account)}</AddressDesktop>
+              <AddressMobile>{shortenAddress(account, 2)}</AddressMobile>
+            </>
           )}
         </Web3StatusConnected>
       )}
