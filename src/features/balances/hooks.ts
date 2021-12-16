@@ -2,10 +2,14 @@ import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
 import { utils } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
-import { ChainId, ChainIdTo } from 'src/constants/chains'
+import { ChainId, ChainIdTo, ChainIdToAddressTo } from 'src/constants/chains'
 import { useMulticall2Contract, useTokenContract } from 'src/features/contracts/useContract'
 import { useMultipleContractSingleData, useSingleCallResult } from 'src/features/multicall'
 import { ChainIdToAddressToToken } from 'src/features/tokens/types'
+import { currencyId } from 'src/utils/currencyId'
+import { flattenChainIdToAddressTo } from 'src/utils/objects'
+
+type ChainIdToAddressToCurrencyAmount = ChainIdToAddressTo<CurrencyAmount<Currency>>
 
 const BLOCKS_PER_FETCH = 10
 const ERC20Interface = new utils.Interface(ERC20_ABI)
@@ -102,8 +106,14 @@ export function useTokenBalances(
   return { balances, loading }
 }
 
-export function useEthBalances(chainIds: ChainId[], accountAddress?: Address) {
-  const balances: ChainIdTo<CurrencyAmount<Ether>> = {}
+export function useEthBalances(
+  chainIds: ChainId[],
+  accountAddress?: Address
+): {
+  balances: ChainIdTo<AddressTo<CurrencyAmount<Ether>>>
+  loading: boolean
+} {
+  const balances: ChainIdTo<AddressTo<CurrencyAmount<Ether>>> = {}
   const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
   let loading = false
 
@@ -124,19 +134,24 @@ export function useEthBalances(chainIds: ChainId[], accountAddress?: Address) {
     }
     const amount = callState?.result?.[0]?.toString()
     if (amount) {
-      balances[chainId] = CurrencyAmount.fromRawAmount(Ether.onChain(chainId), amount)
+      const currencyAmount = CurrencyAmount.fromRawAmount(Ether.onChain(chainId), amount)
+      balances[chainId] ??= {}
+      balances[chainId]![currencyId(currencyAmount.currency)] = currencyAmount
     }
   }
 
   return { balances, loading }
 }
 
-/** Returns an array of all nonzero balances of tokens and ETH */
-export function useAllBalances(
+/** returns a mapping of chainId to address to CurrencyAmount */
+export function useAllBalancesByChainId(
   chainIds: ChainId[],
   chainIdToTokens: ChainIdToAddressToToken,
   accountAddress?: Address
-) {
+): {
+  balances: ChainIdToAddressToCurrencyAmount
+  loading: boolean
+} {
   const { balances: tokenBalances, loading: tokenBalancesLoading } = useTokenBalances(
     chainIds,
     chainIdToTokens,
@@ -148,18 +163,33 @@ export function useAllBalances(
     accountAddress
   )
 
-  // Note: considered use of useMemo here but would
-  // not help since balances is a new object each call anyway
-  const ethBalancesList = Object.values(ethBalances)
-  const filteredEthBalances = ethBalancesList.filter((balance) => !!balance?.greaterThan(0))
-  const tokenBalancesList = Object.values(tokenBalances)
-    .map((chainTokenBalances) => Object.values(chainTokenBalances))
-    .flat()
-  const filteredTokenBalances = tokenBalancesList.filter((balance) => !!balance?.greaterThan(0))
-  const balances = [...filteredEthBalances, ...filteredTokenBalances]
-  const allCurrencyAmounts = [...ethBalancesList, ...tokenBalancesList]
+  return {
+    loading: tokenBalancesLoading || ethBalancesLoading,
+    balances: Object.assign(ethBalances, tokenBalances) as ChainIdToAddressToCurrencyAmount,
+  }
+}
 
-  const loading = tokenBalancesLoading || ethBalancesLoading
+/** returns a list of `CurrencyAmount<Currency>`s representing non-zero user balances */
+export function useAllBalances(
+  chainIds: ChainId[],
+  chainIdToTokens: ChainIdToAddressToToken,
+  accountAddress?: Address
+): {
+  allCurrencyAmounts: CurrencyAmount<Currency>[]
+  balances: CurrencyAmount<Currency>[]
+  loading: boolean
+} {
+  const { balances: balanceList, loading } = useAllBalancesByChainId(
+    chainIds,
+    chainIdToTokens,
+    accountAddress
+  )
+
+  const allCurrencyAmounts = flattenChainIdToAddressTo(balanceList)
+
+  const balances = allCurrencyAmounts.filter(
+    (currencyAmount: CurrencyAmount<Currency>) => !!currencyAmount?.greaterThan(0)
+  )
 
   return { balances, allCurrencyAmounts, loading }
 }

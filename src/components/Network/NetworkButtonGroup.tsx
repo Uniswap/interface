@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { ScrollView } from 'react-native'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
@@ -7,11 +7,14 @@ import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 
 interface NetworkButtonGroupProps {
-  selected: ChainId | null
   onPress: (chainId: ChainId) => void
+  selected: ChainId | null
+
+  // optional custom button to be renderer before the network buttons
+  customButton?: ReactNode
 }
 
-export function NetworkButtonGroup({ onPress, selected }: NetworkButtonGroupProps) {
+export function NetworkButtonGroup({ customButton, onPress, selected }: NetworkButtonGroupProps) {
   const activeChains = useActiveChainIds()
 
   return (
@@ -23,6 +26,7 @@ export function NetworkButtonGroup({ onPress, selected }: NetworkButtonGroupProp
         directionalLockEnabled={true}
         contentInset={{ top: 0, left: 20, bottom: 0, right: 20 }}
         contentOffset={{ x: -20, y: 0 }}>
+        {customButton}
         {activeChains.map((chainId) => {
           return (
             <Button mr="sm" key={chainId} onPress={() => onPress(chainId)}>

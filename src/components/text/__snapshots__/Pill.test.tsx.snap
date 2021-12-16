@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a NetworkLabel with border 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#B8B8B8",
+        "borderColor": "transparent",
+        "borderRadius": 999999,
+        "borderWidth": 1,
+        "display": "flex",
+        "justifyContent": "center",
+        "paddingHorizontal": 16,
+        "paddingVertical": 6,
+      },
+      Object {
+        "backgroundColor": undefined,
+        "borderColor": "green",
+      },
+    ]
+  }
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "display": "flex",
+        },
+      ]
+    }
+  >
+    Icon
+  </Text>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#27252E",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta3-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        Object {
+          "color": undefined,
+        },
+      ]
+    }
+  >
+    My Second Pill Label
+  </Text>
+</View>
+`;
+
+exports[`renders a NetworkLabel without image 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#B8B8B8",
+        "borderColor": "transparent",
+        "borderRadius": 999999,
+        "borderWidth": 1,
+        "display": "flex",
+        "justifyContent": "center",
+        "paddingHorizontal": 16,
+        "paddingVertical": 6,
+      },
+      Object {
+        "backgroundColor": "orange",
+        "borderColor": "blue",
+      },
+    ]
+  }
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#27252E",
+          "display": "flex",
+          "fontFamily": "UniswapSansBeta3-Regular",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        Object {
+          "color": "blue",
+        },
+      ]
+    }
+  >
+    My Pill Label
+  </Text>
+</View>
+`;

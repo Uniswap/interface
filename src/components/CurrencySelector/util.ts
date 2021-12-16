@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
-import { getKeys } from 'src/utils/objects'
 
 // TODO: consider a more flexible logic similar to the interface
 // https://github.com/Uniswap/interface/blob/main/src/components/SearchModal/filtering.ts#L74
@@ -12,37 +11,33 @@ import { getKeys } from 'src/utils/objects'
  * @param searchFilter filter to apply to currency adddress and symbol
  */
 export function filter(
-  currencies: Partial<Record<ChainId, Record<string, Currency>>>,
+  currencies: Currency[] | null,
   chainFilter: ChainId | null,
   searchFilter: string | null
 ): Currency[] {
   const normalizedSearchFilter = searchFilter?.toLowerCase().trim()
 
-  let filtered = []
+  if (!currencies?.length) return []
 
-  const chainIds = getKeys(currencies)
-  for (const chainId of chainIds) {
-    if (chainFilter && chainId.toString() !== chainFilter.toString()) continue
-    filtered.push(
-      Object.values(currencies[chainId] ?? {}).filter((t: Currency) => {
-        if (normalizedSearchFilter === undefined || normalizedSearchFilter === '') {
-          return true
-        }
+  return currencies.filter((currency) => {
+    if (chainFilter && currency.chainId.toString() !== chainFilter.toString()) {
+      return false
+    }
 
-        if (t.symbol?.toLowerCase()?.includes(normalizedSearchFilter)) {
-          return true
-        }
+    if (normalizedSearchFilter === undefined || normalizedSearchFilter === '') {
+      return true
+    }
 
-        if (
-          normalizedSearchFilter.startsWith('0x') &&
-          t.isToken &&
-          t.wrapped.address.toLowerCase().startsWith(normalizedSearchFilter)
-        ) {
-          return true
-        }
-      })
-    )
-  }
+    if (currency.symbol?.toLowerCase()?.includes(normalizedSearchFilter)) {
+      return true
+    }
 
-  return filtered.flat()
+    if (
+      normalizedSearchFilter.startsWith('0x') &&
+      currency.isToken &&
+      currency.wrapped.address.toLowerCase().startsWith(normalizedSearchFilter)
+    ) {
+      return true
+    }
+  })
 }

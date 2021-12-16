@@ -1,23 +1,11 @@
-import { Ether } from '@uniswap/sdk-core'
+import { Currency, Ether } from '@uniswap/sdk-core'
 import { filter } from 'src/components/CurrencySelector/util'
-import { NULL_ADDRESS } from 'src/constants/accounts'
 import { ChainId } from 'src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE } from 'src/constants/tokens'
 
-type TokenArg = Parameters<typeof filter>[0]
-
 const ETH = Ether.onChain(ChainId.MAINNET)
 
-const TEST_TOKEN_INPUT: TokenArg = {
-  [ChainId.MAINNET]: {
-    [DAI.address]: DAI,
-    [NULL_ADDRESS]: ETH,
-  },
-  [ChainId.ARBITRUM_ONE]: {
-    [DAI_ARBITRUM_ONE.address]: DAI_ARBITRUM_ONE,
-  },
-  [ChainId.ARBITRUM_RINKEBY]: {},
-}
+const TEST_TOKEN_INPUT: Currency[] = [DAI, ETH, DAI_ARBITRUM_ONE]
 
 describe(filter, () => {
   it('returns the entire input flattened if chainFilter and searchFilter are null', () => {

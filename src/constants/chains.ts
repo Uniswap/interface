@@ -1,6 +1,7 @@
 // Based on https://github.com/Uniswap/interface/blob/main/src/constants/chains.ts
 
 export type ChainIdTo<T> = Partial<Record<ChainId, T>>
+export type ChainIdToAddressTo<T> = ChainIdTo<AddressTo<T>>
 
 // Renamed from SupportedChainId in web app
 export enum ChainId {
