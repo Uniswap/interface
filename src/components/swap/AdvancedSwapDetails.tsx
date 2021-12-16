@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -11,6 +12,7 @@ import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from './GasEstimateBadge'
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -43,6 +45,7 @@ function TextWithLoadingPlaceholder({
 
 export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
+  const { chainId } = useActiveWeb3React()
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
     if (!trade) return { expectedOutputAmount: undefined, priceImpact: undefined }
@@ -101,7 +104,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             </ThemedText.Black>
           </TextWithLoadingPlaceholder>
         </RowBetween>
-        {!trade?.gasUseEstimateUSD ? null : (
+        {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
           <RowBetween>
             <ThemedText.SubHeader color={theme.text3}>
               <Trans>Network Fee</Trans>

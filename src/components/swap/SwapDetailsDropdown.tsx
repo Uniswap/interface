@@ -6,6 +6,7 @@ import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
+import { useActiveWeb3React } from 'hooks/web3'
 import { darken } from 'polished'
 import { ReactNode, useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
@@ -14,7 +15,7 @@ import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-import GasEstimateBadge from './GasEstimateBadge'
+import GasEstimateBadge, { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from './GasEstimateBadge'
 import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
@@ -126,6 +127,7 @@ export default function SwapDetailsDropdown({
   swapInputError,
 }: SwapDetailsInlineProps) {
   const theme = useTheme()
+  const { chainId } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
 
   return (
@@ -174,7 +176,10 @@ export default function SwapDetailsDropdown({
             ) : null}
           </RowFixed>
           <RowFixed>
-            {!trade?.gasUseEstimateUSD || showDetails ? null : (
+            {!trade?.gasUseEstimateUSD ||
+            showDetails ||
+            !chainId ||
+            !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
               <HideSmall>
                 <GasEstimateBadge
                   trade={trade}

@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/smart-order-router'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
@@ -30,6 +31,8 @@ const StyledGasIcon = styled(GasIcon)`
     stroke: ${({ theme }) => theme.text3};
   }
 `
+
+export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [ChainId.MAINNET]
 
 export default function GasEstimateBadge({
   trade,
