@@ -35,22 +35,27 @@ export function useFetchListCallback(
   // note: prevent dispatch if using for list search or unsupported list
   return useCallback(
     (listUrl: string, sendDispatch = true) => {
-      const requestId = nanoid()
-      sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
-      return getTokenList(listUrl, ensResolver)
-        .then((tokenList) => {
+      return new Promise(async (resolve) => {
+        const requestId = nanoid()
+        sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
+        try {
+          const tokenList = await getTokenList(listUrl, ensResolver)
           logger.debug('useFetchListCallback', '', 'Fetched list successfully for:', listUrl)
           sendDispatch && dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
-          return tokenList
-        })
-        .catch((error) => {
+          resolve(tokenList)
+        } catch (error) {
           logger.error('useFetchListCallback', '', `Failed to get list at url ${listUrl}`, error)
           sendDispatch &&
             dispatch(
-              fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message })
+              fetchTokenList.rejected({
+                url: listUrl,
+                requestId,
+                errorMessage: (error as Error).message,
+              })
             )
-          return null
-        })
+          resolve(null)
+        }
+      })
     },
     [dispatch, ensResolver]
   )

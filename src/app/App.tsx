@@ -4,7 +4,7 @@ import { ThemeProvider } from '@shopify/restyle'
 import React, { StrictMode } from 'react'
 import { StatusBar } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider, setLogger } from 'react-query'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
@@ -21,6 +21,18 @@ if (!__DEV__) {
     dsn: config.sentryDsn,
   })
 }
+
+setLogger({
+  log: (message) => {
+    Sentry.captureMessage(message)
+  },
+  warn: (message) => {
+    Sentry.captureMessage(message)
+  },
+  error: (error) => {
+    Sentry.captureException(error)
+  },
+})
 
 const queryClient = new QueryClient()
 
