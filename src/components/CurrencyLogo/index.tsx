@@ -37,6 +37,8 @@ export const getTokenLogoURL = (
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  background: radial-gradient(white 50%, #ffffff00 calc(75% + 1px), #ffffff00 100%);
+
   border-radius: 50%;
   -mox-box-shadow: 0 0 1px white;
   -webkit-box-shadow: 0 0 1px white;
@@ -47,6 +49,7 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
 const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  background: radial-gradient(white 50%, #ffffff00 calc(75% + 1px), #ffffff00 100%);
   border-radius: 50%;
   -mox-box-shadow: 0 0 1px black;
   -webkit-box-shadow: 0 0 1px black;
