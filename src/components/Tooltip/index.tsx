@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 import Popover, { PopoverProps } from '../Popover'
 
 export const TooltipContainer = styled.div`
-  width: 256px;
+  max-width: 256px;
   padding: 0.6rem 1rem;
   font-weight: 400;
   word-break: break-word;

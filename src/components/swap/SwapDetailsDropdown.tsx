@@ -11,7 +11,7 @@ import { ReactNode, useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { HideSmall, ThemedText } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
@@ -175,21 +175,25 @@ export default function SwapDetailsDropdown({
           </RowFixed>
           <RowFixed>
             {!trade?.gasUseEstimateUSD || showDetails ? null : (
-              <GasEstimateBadge
-                trade={trade}
-                loading={syncing || loading}
-                showRoute={!showDetails}
-                disableHover={showDetails}
-              />
+              <HideSmall>
+                <GasEstimateBadge
+                  trade={trade}
+                  loading={syncing || loading}
+                  showRoute={!showDetails}
+                  disableHover={showDetails}
+                />
+              </HideSmall>
             )}
             <RotatingArrow stroke={trade ? theme.text3 : theme.bg3} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap={'8px'} style={{ padding: '0', paddingBottom: '8px' }}>
-            <StyledCard>
-              <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
-            </StyledCard>
+            {trade ? (
+              <StyledCard>
+                <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+              </StyledCard>
+            ) : null}
             {trade ? <SwapRoute trade={trade} syncing={syncing} /> : null}
           </AutoColumn>
         </AnimatedDropdown>

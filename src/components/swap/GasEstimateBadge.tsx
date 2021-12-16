@@ -42,6 +42,12 @@ export default function GasEstimateBadge({
   showRoute?: boolean // show route instead of gas estimation summary
   disableHover?: boolean
 }) {
+  const formattedGasPriceString = trade?.gasUseEstimateUSD
+    ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
+      ? '<$0.01'
+      : '$' + trade.gasUseEstimateUSD.toFixed(2)
+    : undefined
+
   return (
     <MouseoverTooltipContent
       wrap={false}
@@ -88,7 +94,7 @@ export default function GasEstimateBadge({
       <LoadingOpacityContainer $loading={loading}>
         <GasWrapper>
           <StyledGasIcon />
-          {trade?.gasUseEstimateUSD ? <Trans>${trade.gasUseEstimateUSD?.toFixed(2)}</Trans> : null}
+          {formattedGasPriceString ?? null}
         </GasWrapper>
       </LoadingOpacityContainer>
     </MouseoverTooltipContent>

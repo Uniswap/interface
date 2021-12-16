@@ -122,7 +122,6 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
           {percent.toSignificant(2)}%
         </BadgeText>
       </OpaqueBadge>
-
       <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>
         {path.map(([currency0, currency1, feeAmount], index) => (
           <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
@@ -137,7 +136,6 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
   const tokenInfo1 = useTokenInfoFromActiveList(currency1)
 
   // TODO - link pool icon to info.uniswap.org via query params
-
   return (
     <MouseoverTooltip
       text={<Trans>{tokenInfo0?.symbol + '/' + tokenInfo1?.symbol + ' ' + feeAmount / 10000}% pool</Trans>}

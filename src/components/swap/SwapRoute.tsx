@@ -52,6 +52,12 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
 
   const [darkMode] = useDarkModeManager()
 
+  const formattedGasPriceString = trade?.gasUseEstimateUSD
+    ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
+      ? '<$0.01'
+      : '$' + trade.gasUseEstimateUSD.toFixed(2)
+    : undefined
+
   return (
     <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
       <RowBetween onClick={() => setOpen(!open)}>
@@ -83,9 +89,12 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
             ) : (
               <ThemedText.Main fontSize={12} width={400} margin={0}>
                 {trade?.gasUseEstimateUSD ? (
-                  <Trans>Best price route costs ~${trade.gasUseEstimateUSD.toFixed(2)} in gas. </Trans>
+                  <Trans>Best price route costs ~{formattedGasPriceString} in gas. </Trans>
                 ) : null}{' '}
-                <Trans>Your price is optimized by considering split routes, multiple hops, and gas costs.</Trans>
+                <Trans>
+                  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of
+                  each step.
+                </Trans>
               </ThemedText.Main>
             ))}
         </AutoRow>

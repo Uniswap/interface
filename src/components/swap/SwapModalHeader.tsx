@@ -18,7 +18,6 @@ import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-import GasEstimateBadge from './GasEstimateBadge'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
 const ArrowWrapper = styled.div`
@@ -115,7 +114,6 @@ export default function SwapModalHeader({
       </LightCard>
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
         <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
-        {trade?.gasUseEstimateUSD ? <GasEstimateBadge trade={trade} loading={false} /> : null}
       </RowBetween>
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
         <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />

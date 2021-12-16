@@ -199,7 +199,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <Text fontWeight={600} fontSize={14}>
               <Trans>Interface Settings</Trans>
             </Text>
-
             {chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId) && (
               <RowBetween>
                 <RowFixed>
@@ -221,7 +220,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 />
               </RowBetween>
             )}
-
             <RowBetween>
               <RowFixed>
                 <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
