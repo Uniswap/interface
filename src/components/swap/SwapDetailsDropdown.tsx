@@ -142,20 +142,22 @@ export default function SwapDetailsDropdown({
                 </StyledPollingDot>
               </StyledPolling>
             ) : (
-              <MouseoverTooltipContent
-                wrap={false}
-                content={
-                  <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
-                    <Card padding="12px">
-                      <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
-                    </Card>
-                  </ResponsiveTooltipContainer>
-                }
-                placement="bottom"
-                disableHover={showDetails}
-              >
-                <StyledInfoIcon color={trade ? theme.text3 : theme.bg3} />
-              </MouseoverTooltipContent>
+              <HideSmall>
+                <MouseoverTooltipContent
+                  wrap={false}
+                  content={
+                    <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
+                      <Card padding="12px">
+                        <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+                      </Card>
+                    </ResponsiveTooltipContainer>
+                  }
+                  placement="bottom"
+                  disableHover={showDetails}
+                >
+                  <StyledInfoIcon color={trade ? theme.text3 : theme.bg3} />
+                </MouseoverTooltipContent>
+              </HideSmall>
             )}
             {trade ? (
               <LoadingOpacityContainer $loading={syncing}>
@@ -180,14 +182,12 @@ export default function SwapDetailsDropdown({
             showDetails ||
             !chainId ||
             !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
-              <HideSmall>
-                <GasEstimateBadge
-                  trade={trade}
-                  loading={syncing || loading}
-                  showRoute={!showDetails}
-                  disableHover={showDetails}
-                />
-              </HideSmall>
+              <GasEstimateBadge
+                trade={trade}
+                loading={syncing || loading}
+                showRoute={!showDetails}
+                disableHover={showDetails}
+              />
             )}
             <RotatingArrow stroke={trade ? theme.text3 : theme.bg3} open={Boolean(trade && showDetails)} />
           </RowFixed>

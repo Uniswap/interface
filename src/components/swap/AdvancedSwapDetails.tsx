@@ -110,7 +110,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               <Trans>Network Fee</Trans>
             </ThemedText.SubHeader>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-              <ThemedText.SubHeader color={theme.text3}>~${trade.gasUseEstimateUSD.toFixed(2)}</ThemedText.SubHeader>
+              <ThemedText.Black textAlign="right" fontSize={14} color={theme.text3}>
+                ~${trade.gasUseEstimateUSD.toFixed(2)}
+              </ThemedText.Black>
             </TextWithLoadingPlaceholder>
           </RowBetween>
         )}

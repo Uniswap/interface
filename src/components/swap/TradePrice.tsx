@@ -13,16 +13,20 @@ interface TradePriceProps {
 }
 
 const StyledPriceContainer = styled.button`
-  align-items: center;
   background-color: transparent;
   border: none;
   cursor: pointer;
-  display: grid;
-  height: 24px;
-  justify-content: center;
+  align-items: flex-start
+  justify-content: flex-start;
   padding: 0;
   grid-template-columns: 1fr auto;
   grid-gap: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+  flex-wrap: wrap;
+  padding: 8px 0;
+
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
