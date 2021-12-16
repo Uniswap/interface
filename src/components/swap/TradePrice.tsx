@@ -50,7 +50,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   return (
     <StyledPriceContainer
       onClick={(e) => {
-        // e.stopPropagation() // dont want this click to affect dropdowns / hovers
+        e.stopPropagation() // dont want this click to affect dropdowns / hovers
         flipPrice()
       }}
       title={text}
