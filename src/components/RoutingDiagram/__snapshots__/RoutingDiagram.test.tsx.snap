@@ -3,10 +3,10 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 ePDWDk css-vurnku"
   >
     <div
-      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV ibRCpr"
     >
       CurrencyLogo currency=USDC
       <div
@@ -22,11 +22,20 @@ exports[`renders multi route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            >
+              V2
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-1aekuku"
+            style="min-width: auto;"
           >
             75%
           </div>
@@ -36,26 +45,13 @@ exports[`renders multi route 1`] = `
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
-          <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
-          >
-            <div
-              class="css-1t7xebc"
-            >
-              DoubleCurrencyLogo currency0=DAI currency1=USDC
-            </div>
-            <div
-              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            >
-              0.01%
-            </div>
-          </div>
+          Popover
         </div>
       </div>
       CurrencyLogo currency=DAI
     </div>
     <div
-      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV ibRCpr"
     >
       CurrencyLogo currency=USDC
       <div
@@ -71,11 +67,20 @@ exports[`renders multi route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            >
+              V3
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-1aekuku"
+            style="min-width: auto;"
           >
             25%
           </div>
@@ -85,34 +90,7 @@ exports[`renders multi route 1`] = `
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
-          <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
-          >
-            <div
-              class="css-1t7xebc"
-            >
-              DoubleCurrencyLogo currency0=WBTC currency1=USDC
-            </div>
-            <div
-              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            >
-              0.3%
-            </div>
-          </div>
-          <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
-          >
-            <div
-              class="css-1t7xebc"
-            >
-              DoubleCurrencyLogo currency0=DAI currency1=WBTC
-            </div>
-            <div
-              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            >
-              1%
-            </div>
-          </div>
+          PopoverPopover
         </div>
       </div>
       CurrencyLogo currency=DAI
@@ -124,10 +102,10 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 ePDWDk css-vurnku"
   >
     <div
-      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV ibRCpr"
     >
       CurrencyLogo currency=USDC
       <div
@@ -143,11 +121,20 @@ exports[`renders single route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            >
+              V3
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-1aekuku"
+            style="min-width: auto;"
           >
             100%
           </div>
@@ -157,20 +144,7 @@ exports[`renders single route 1`] = `
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
-          <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
-          >
-            <div
-              class="css-1t7xebc"
-            >
-              DoubleCurrencyLogo currency0=DAI currency1=USDC
-            </div>
-            <div
-              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            >
-              0.05%
-            </div>
-          </div>
+          Popover
         </div>
       </div>
       CurrencyLogo currency=DAI
@@ -182,7 +156,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 ePDWDk css-vurnku"
   />
 </DocumentFragment>
 `;
