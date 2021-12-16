@@ -2,17 +2,16 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { SupportedChainId } from 'constants/chains'
 import { useAtom } from 'jotai'
-import { providerAtom } from 'lib/cosmos.decorator'
+import { connectors } from 'lib/cosmos/connectors'
+import { hooks as metaMaskHooks, metaMask } from 'lib/cosmos/connectors/metaMask'
+import { hooks as networkHooks, network } from 'lib/cosmos/connectors/network'
+import { cosmosProviderAtom } from 'lib/cosmos/state/provider'
 import styled from 'lib/theme'
 import { useEffect, useState } from 'react'
 import { Web3ReactHooks } from 'widgets-web3-react/core'
 import { MetaMask } from 'widgets-web3-react/metamask'
 import { Network } from 'widgets-web3-react/network'
 import { Connector } from 'widgets-web3-react/types'
-
-import { connectors } from '../connectors'
-import { hooks as metaMaskHooks, metaMask } from '../connectors/metaMask'
-import { hooks as networkHooks, network } from '../connectors/network'
 
 function getName(connector: Connector) {
   if (connector instanceof MetaMask) {
@@ -187,7 +186,7 @@ const ConnectorWrapper = styled.div`
   padding: 14px;
 `
 export default function Connectors() {
-  const [, setProvider] = useAtom(providerAtom)
+  const [, setProvider] = useAtom(cosmosProviderAtom)
   const isMetaMaskActive = metaMaskHooks.useIsActive()
   const isNetworkActive = networkHooks.useIsActive()
   useEffect(() => {

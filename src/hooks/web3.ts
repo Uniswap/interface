@@ -9,26 +9,21 @@ import { IS_IN_IFRAME, NetworkContextName } from '../constants/misc'
 import { isMobile } from '../utils/userAgent'
 
 export function useActiveWeb3React() {
-  console.log('process.env.REACT_APP_IS_WIDGET', process.env.REACT_APP_IS_WIDGET)
-  const [connector, widgetsHooks] = useAtomValue(connectorAtom)
-
-  const widgetsProvider = widgetsHooks?.useProvider()
-  const widgetsContext = widgetsHooks?.useWeb3React(widgetsProvider)
+  const [, widgetsHooks] = useAtomValue(connectorAtom)
+  const widgetsProvider = widgetsHooks.useProvider()
+  const widgetsContext = widgetsHooks.useWeb3React(widgetsProvider)
   const interfaceContext = useWeb3React<Web3Provider>()
   const interfaceNetworkContext = useWeb3React<Web3Provider>(
     process.env.REACT_APP_IS_WIDGET ? undefined : NetworkContextName
   )
-  console.log('useActiveWeb3React.connector', connector)
-  if (widgetsContext?.active) {
-    console.log('widgetsContext?.active')
+
+  if (process.env.REACT_APP_IS_WIDGET) {
     return widgetsContext
   }
-
   if (interfaceContext.active) {
-    console.log('interfaceContext.active')
     return interfaceContext
   }
-  console.log('interfaceNetworkContext.active')
+
   return interfaceNetworkContext
 }
 
