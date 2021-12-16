@@ -42,7 +42,7 @@ The following points should help guide your development:
   - An Ethereum node should be the only critical dependency 
   - All other external dependencies should only enhance the UX ([graceful degradation](https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation))
 - Accessibility: anyone can use the interface
-  - The interface should be responsive, small and also run well on low performance devices (majority of swaps on mobile!)
+  - The interface should be responsive, small and also run well on low performance devices (majority of swaps on mobile)
 
 ## Release process
 
