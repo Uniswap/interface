@@ -26,7 +26,6 @@ const SummaryColumn = styled(Column)``
 const ExpandoColumn = styled(Column)``
 const DetailsColumn = styled(Column)``
 const Estimate = styled(ThemedText.Caption)``
-
 const Body = styled(Column)<{ open: boolean }>`
   height: calc(100% - 2.5em);
 
@@ -37,37 +36,40 @@ const Body = styled(Column)<{ open: boolean }>`
 
   ${ExpandoColumn} {
     flex-grow: ${({ open }) => (open ? 1 : 0)};
-    transition: flex-grow 0.2s, gap 0.2s;
+    transition: flex-grow 0.2s;
 
     ${DetailsColumn} {
-      overflow-y: hidden;
-      height: 1px;
+      flex-basis: 0;
       flex-grow: ${({ open }) => (open ? 1 : 0)};
-      transition: flex-grow 0.2s;
+      overflow-y: hidden;
       position: relative;
+      transition: flex-grow 0.2s;
 
       ${Column} {
-        height: calc(100% - 1px);
+        height: 100%;
         padding: ${({ open }) => (open ? '0.5em 0' : 0)};
         transition: padding 0.2s;
-      }
 
-      :after {
-        content: '';
-        bottom: 0;
-        position: absolute;
-        background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
-        width: calc(100% - 0.5em);
-        height: 2em;
-        pointer-events: none;
+        :after {
+          background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
+          bottom: 0;
+          content: '';
+          height: 0.75em;
+          pointer-events: none;
+          position: absolute;
+          width: calc(100% - 1em);
+        }
       }
     }
 
     ${Estimate} {
-      flex-grow: ${({ open }) => (open ? 0 : 1)};
-      height: ${({ open }) => (open ? 0 : '100%')};
+      max-height: ${({ open }) => (open ? 0 : 56 / 12)}em; // 2 * line-height + padding
       overflow-y: hidden;
-      transition: ${({ open }) => (open ? 'height 0.1s ease-out' : 'height 0.1s ease-in, flex-grow 0.2s ease-out')};
+      padding: ${({ open }) => (open ? 0 : '1em 0')};
+      transition: ${({ open }) =>
+        open
+          ? 'max-height 0.1s ease-out, padding 0.2s ease-out'
+          : 'max-height 0.1s ease-in, flex-grow 0.2s ease-out, padding 0.2s ease-out'};
     }
   }
 `
@@ -118,9 +120,9 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
           </Row>
           <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
         </Row>
-        <ExpandoColumn gap={open ? 0 : 0.75} flex align="stretch">
+        <ExpandoColumn flex align="stretch">
+          <Rule />
           <DetailsColumn>
-            <Rule scrollingEdge="bottom" />
             <Column gap={0.5} ref={setDetails} css={scrollbar}>
               <Details input={input.token} output={output.token} swap={swap} />
             </Column>

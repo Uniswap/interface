@@ -65,7 +65,7 @@ export default function Summary({ input, output, usdc }: SummaryProps) {
     return undefined
   }, [usdc, input.usdc, output.usdc])
   return (
-    <Row gap={1}>
+    <Row gap={usdc ? 1 : 0.25}>
       <TokenValue input={input} usdc={usdc} />
       <ArrowRight />
       <TokenValue input={output} usdc={usdc} change={change} />
