@@ -192,28 +192,34 @@ export function useApprovalOptimizedTrade(
   return useMemo(() => {
     if (!trade) return undefined
 
-    switch (optimizedSwapRouter) {
-      case SwapRouterVersion.V2V3:
-        return trade
-      case SwapRouterVersion.V2:
-        const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
-        const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
-        return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)
-      case SwapRouterVersion.V3:
-        return V3Trade.createUncheckedTradeWithMultipleRoutes({
-          routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
-            route: new V3Route(
-              route.pools.filter((p) => p instanceof Pool) as Pool[],
-              inputAmount.currency,
-              outputAmount.currency
-            ),
-            inputAmount,
-            outputAmount,
-          })),
-          tradeType: trade.tradeType,
-        })
-      default:
-        return undefined
+    try {
+      switch (optimizedSwapRouter) {
+        case SwapRouterVersion.V2V3:
+          return trade
+        case SwapRouterVersion.V2:
+          const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
+          const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
+          return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)
+        case SwapRouterVersion.V3:
+          return V3Trade.createUncheckedTradeWithMultipleRoutes({
+            routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
+              route: new V3Route(
+                route.pools.filter((p) => p instanceof Pool) as Pool[],
+                inputAmount.currency,
+                outputAmount.currency
+              ),
+              inputAmount,
+              outputAmount,
+            })),
+            tradeType: trade.tradeType,
+          })
+        default:
+          return undefined
+      }
+    } catch (e) {
+      // TODO(#2989): remove try-catch
+      console.debug(e)
+      return undefined
     }
   }, [trade, optimizedSwapRouter])
 }
