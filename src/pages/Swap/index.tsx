@@ -595,10 +595,12 @@ export default function Swap({ history }: RouteComponentProps) {
                   <Text fontSize={20} fontWeight={500}>
                     {swapInputError ? (
                       swapInputError
-                    ) : priceImpactTooHigh ? (
-                      <Trans>Price Impact Too High</Trans>
+                    ) : routeIsSyncing || routeIsLoading ? (
+                      <Trans>Swap</Trans>
                     ) : priceImpactSeverity > 2 ? (
                       <Trans>Swap Anyway</Trans>
+                    ) : priceImpactTooHigh ? (
+                      <Trans>Price Impact Too High</Trans>
                     ) : (
                       <Trans>Swap</Trans>
                     )}
