@@ -113,6 +113,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     }
 
+    console.debug(quoteResult?.route[0][0].tokenIn.address, currencyOut.wrapped.address)
+
     const otherAmount =
       tradeType === TradeType.EXACT_INPUT
         ? currencyOut && quoteResult
