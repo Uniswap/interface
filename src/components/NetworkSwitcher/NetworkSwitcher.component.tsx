@@ -28,7 +28,7 @@ import ethereumHintImage2x from '../../assets/images/ethereum-hint@2x.png'
 import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitcher.types'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
-import Modal, { ModalProps } from '../Modal'
+import Modal from '../Modal'
 import { TYPE } from '../../theme'
 
 export const NetworkSwitcher = ({
@@ -62,7 +62,7 @@ export const NetworkSwitcher = ({
 
   if (isWrongNetwork) {
     if (isMobileByMedia) {
-      return <WrongNetworkMobileModal isOpen={isWrongNetwork} onDismiss={onOuterClick}></WrongNetworkMobileModal>
+      return <WrongNetworkMobileModal />
     }
     return <EthereumOptionPopover show={showEthOptionPopover}>{children}</EthereumOptionPopover>
   }
@@ -113,7 +113,7 @@ const EthereumOptionPopover = ({ children, show }: EthereumOptionPopoverProps) =
   )
 }
 
-const WrongNetworkMobileModal = ({ isOpen, onDismiss }: ModalProps) => {
+const WrongNetworkMobileModal = () => {
   return (
     <Modal isOpen={true} onDismiss={() => null} maxHeight={90}>
       <Wrapper>
