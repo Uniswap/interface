@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -12,7 +12,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import { useTokenBalance } from 'src/features/balances/hooks'
+import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -45,10 +45,8 @@ export function TokenDetailsScreen({
   const { currency } = route.params
 
   const activeAccount = useActiveAccount()
-  const [balance, loading] = useTokenBalance(
-    currency.isToken ? currency : undefined,
-    activeAccount?.address
-  )
+  const [balance] = useTokenBalance(currency.isToken ? currency : undefined, activeAccount?.address)
+  const ethBalance = useEthBalance(currency.chainId, activeAccount?.address)
 
   const { t } = useTranslation()
 
@@ -77,7 +75,6 @@ export function TokenDetailsScreen({
     }
     navigation.push(Screens.Swap, { swapFormState })
   }
-
   return (
     <Screen>
       <TokenDetailsHeader currency={currency} />
@@ -92,10 +89,10 @@ export function TokenDetailsScreen({
           <Text variant="h5" color="gray200" mx="lg">
             {t('Your balance')}
           </Text>
-          {loading ? (
-            balance && <TokenBalanceItem currencyAmount={balance} currencyPrice={undefined} />
+          {balance ? (
+            <TokenBalanceItem currencyAmount={balance} currencyPrice={undefined} />
           ) : (
-            <ActivityIndicator color="grey" animating={loading} />
+            <TokenBalanceItem currencyAmount={ethBalance} currencyPrice={undefined} />
           )}
           <Box flexDirection="row" my="md" mx="lg">
             <PrimaryButton
