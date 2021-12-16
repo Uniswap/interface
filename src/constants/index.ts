@@ -949,18 +949,7 @@ export const KYBER_NETWORK_TWITTER_URL = 'https://twitter.com/KyberNetwork'
 export const DEFAULT_GAS_LIMIT_MARGIN = 20000
 
 export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
-  [ChainId.MAINNET]: [
-    {
-      token0: {
-        id: '0x9F52c8ecbEe10e00D9faaAc5Ee9Ba0fF6550F511',
-        symbol: 'SIPHER'
-      },
-      token1: {
-        id: 'ETH',
-        symbol: 'ETH'
-      }
-    }
-  ],
+  [ChainId.MAINNET]: [],
   [ChainId.ROPSTEN]: [],
   [ChainId.RINKEBY]: [],
   [ChainId.GÖRLI]: [],
