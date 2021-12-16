@@ -1,6 +1,5 @@
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import useAutoRouterSupported from './useAutoRouterSupported'
@@ -20,7 +19,7 @@ export function useBestTrade(
   otherCurrency?: Currency
 ): {
   state: TradeState
-  trade: Trade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
@@ -56,6 +55,7 @@ export function useBestTrade(
     useFallback ? debouncedOtherCurrency : undefined
   )
 
+  // only return gas estimate from api if routing api trade is used
   return {
     ...(useFallback ? bestV3Trade : routingAPITrade),
     ...(debouncing ? { state: TradeState.SYNCING } : {}),
