@@ -1,5 +1,6 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'components/swap/GasEstimateBadge'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
@@ -49,8 +50,12 @@ export default function useSwapSlippageTolerance(
       ether && ethGasCost && etherPrice ? etherPrice.quote(CurrencyAmount.fromRawAmount(ether, ethGasCost)) : undefined
 
     // if valid estimate from api and using api trade, use gas estimate from api
+    // NOTE - dont use gas estimate for L2s yet - need to verify accuracy
     // if not, use local heuristic
-    const dollarCostToUse = trade?.gasUseEstimateUSD ?? dollarGasCost
+    const dollarCostToUse =
+      chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && trade?.gasUseEstimateUSD
+        ? trade.gasUseEstimateUSD
+        : dollarGasCost
 
     if (outputDollarValue && dollarCostToUse) {
       // the rationale is that a user will not want their trade to fail for a loss due to slippage that is less than
@@ -63,7 +68,7 @@ export default function useSwapSlippageTolerance(
     }
 
     return V3_SWAP_DEFAULT_SLIPPAGE
-  }, [trade, onL2, ethGasPrice, gasEstimate, ether, etherPrice, outputDollarValue])
+  }, [trade, onL2, ethGasPrice, gasEstimate, ether, etherPrice, chainId, outputDollarValue])
 
   return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
 }
