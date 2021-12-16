@@ -8,6 +8,7 @@ import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
+import { useActiveWeb3React } from 'hooks/web3'
 import { memo, useState } from 'react'
 import { Plus } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -15,6 +16,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { Separator, ThemedText } from 'theme'
 
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from './GasEstimateBadge'
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Wrapper = styled(AutoColumn)<{ darkMode?: boolean; fixedOpen?: boolean }>`
@@ -49,6 +51,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
   const autoRouterSupported = useAutoRouterSupported()
   const routes = getTokenPath(trade)
   const [open, setOpen] = useState(false)
+  const { chainId } = useActiveWeb3React()
 
   const [darkMode] = useDarkModeManager()
 
@@ -88,7 +91,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
               </LoadingRows>
             ) : (
               <ThemedText.Main fontSize={12} width={400} margin={0}>
-                {trade?.gasUseEstimateUSD ? (
+                {trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? (
                   <Trans>Best price route costs ~{formattedGasPriceString} in gas. </Trans>
                 ) : null}{' '}
                 <Trans>

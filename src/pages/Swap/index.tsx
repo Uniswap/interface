@@ -458,7 +458,6 @@ export default function Swap({ history }: RouteComponentProps) {
                 showInverted={showInverted}
                 setShowInverted={setShowInverted}
                 allowedSlippage={allowedSlippage}
-                swapInputError={swapInputError}
               />
             )}
             <div>
