@@ -42,13 +42,13 @@ export const ProposalEditor = ({
 Insert your summary here
 
 ## Methodology
-  
+
 Insert your methodology here
 
 ## Conclusion
-  
+
 Insert your conclusion here
-  
+
   `
 
   return (

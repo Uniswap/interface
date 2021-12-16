@@ -144,13 +144,13 @@ function issueBody(error: Error): string {
   const relevantState = getRelevantState()
   const deviceData = userAgent
   return `## URL
-  
+
 ${window.location.href}
 
 ${
   relevantState
     ? `## \`${relevantState}\` state
-    
+
 \`\`\`json
 ${JSON.stringify(store.getState()[relevantState], null, 2)}
 \`\`\`
