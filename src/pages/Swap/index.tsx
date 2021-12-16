@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
@@ -45,7 +47,6 @@ import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -110,9 +111,6 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
-
-  // get version from the url
-  const toggledVersion = useToggledVersion()
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
@@ -209,6 +207,12 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const approvalOptimizedTrade = useApprovalOptimizedTrade(trade, allowedSlippage)
+  const approvalOptimizedTradeString =
+    approvalOptimizedTrade instanceof V2Trade
+      ? 'V2SwapRouter'
+      : approvalOptimizedTrade instanceof V3Trade
+      ? 'V3SwapRouter'
+      : 'SwapRouter'
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(approvalOptimizedTrade, allowedSlippage)
@@ -234,10 +238,16 @@ export default function Swap({ history }: RouteComponentProps) {
       ReactGA.event({
         category: 'Swap',
         action: 'Approve',
-        label: [trade?.inputAmount.currency.symbol, toggledVersion].join('/'),
+        label: [approvalOptimizedTradeString, approvalOptimizedTrade?.inputAmount?.currency.symbol].join('/'),
       })
     }
-  }, [approveCallback, gatherPermitSignature, signatureState, toggledVersion, trade?.inputAmount.currency.symbol])
+  }, [
+    signatureState,
+    gatherPermitSignature,
+    approveCallback,
+    approvalOptimizedTradeString,
+    approvalOptimizedTrade?.inputAmount?.currency.symbol,
+  ])
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -282,7 +292,12 @@ export default function Swap({ history }: RouteComponentProps) {
               : (recipientAddress ?? recipient) === account
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
-          label: [trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join('/'),
+          label: [
+            approvalOptimizedTradeString,
+            approvalOptimizedTrade?.inputAmount?.currency?.symbol,
+            approvalOptimizedTrade?.outputAmount?.currency?.symbol,
+            'MH',
+          ].join('/'),
         })
       })
       .catch((error) => {
@@ -294,7 +309,18 @@ export default function Swap({ history }: RouteComponentProps) {
           txHash: undefined,
         })
       })
-  }, [swapCallback, priceImpact, tradeToConfirm, showConfirm, recipient, recipientAddress, account, trade])
+  }, [
+    swapCallback,
+    priceImpact,
+    tradeToConfirm,
+    showConfirm,
+    recipient,
+    recipientAddress,
+    account,
+    approvalOptimizedTradeString,
+    approvalOptimizedTrade?.inputAmount?.currency?.symbol,
+    approvalOptimizedTrade?.outputAmount?.currency?.symbol,
+  ])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
