@@ -78,22 +78,13 @@ export const routingApi = createApi({
         tokenOutDecimals: number
         tokenOutSymbol?: string
         amount: string
-        gasPriceWei?: string
         useClientSideRouter: boolean // included in key to invalidate on change
         type: 'exactIn' | 'exactOut'
       }
     >({
       async queryFn(args, _api, _extraOptions, fetch) {
-        const {
-          tokenInAddress,
-          tokenInChainId,
-          tokenOutAddress,
-          tokenOutChainId,
-          amount,
-          useClientSideRouter,
-          type,
-          gasPriceWei,
-        } = args
+        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, useClientSideRouter, type } =
+          args
 
         let result
 
@@ -108,7 +99,6 @@ export const routingApi = createApi({
               tokenOutAddress,
               tokenOutChainId,
               amount,
-              gasPriceWei,
               type,
             })
             result = await fetch(`quote?${query}`)
