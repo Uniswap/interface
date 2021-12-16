@@ -158,6 +158,8 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@fontsource/ibm-plex-mono": "^4.5.1",
+    "@fontsource/inter": "^4.5.1",
     "@lingui/cli": "^3.9.0",
     "@lingui/core": "^3.9.0",
     "@lingui/macro": "^3.9.0",
