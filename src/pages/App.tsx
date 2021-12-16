@@ -23,6 +23,7 @@ import { AppDispatch } from 'state'
 import { setGasPrice } from 'state/application/actions'
 import KyberSwapAnnounce from 'components/Header/KyberSwapAnnounce'
 import Footer from 'components/Footer/Footer'
+import GoogleAnalyticsReporter from 'components/GoogleAnalyticsReporter'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -126,6 +127,7 @@ export default function App() {
     <>
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
         <ApolloProvider client={apolloClient || defaultExchangeClient}>
+          <Route component={GoogleAnalyticsReporter} />
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
             <KyberSwapAnnounce />

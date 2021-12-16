@@ -17,6 +17,7 @@ import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 import SEO from './components/SEO'
+import ReactGA from 'react-ga'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -39,6 +40,7 @@ function Updaters() {
 }
 
 const initGoogleAnalytics = () => {
+  /*
   const gaLinkScript = document.createElement('script')
   gaLinkScript.async = true
   gaLinkScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-69MK4SBS26'
@@ -55,6 +57,8 @@ const initGoogleAnalytics = () => {
 
   document.head.insertBefore(gaScript, document.head.childNodes[0])
   document.head.insertBefore(gaLinkScript, document.head.childNodes[0])
+  */
+  ReactGA.initialize('UA-207888714-1')
 }
 
 if (process.env.REACT_APP_MAINNET_ENV === 'production') {
