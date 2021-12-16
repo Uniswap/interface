@@ -82,8 +82,8 @@ interface StepCounterProps {
   width?: string
   locked?: boolean // disable input
   title: ReactNode
-  currencyA?: Currency | null
-  currencyB?: Currency | null
+  currencyA?: Currency
+  currencyB?: Currency
 }
 
 const StepCounter = ({

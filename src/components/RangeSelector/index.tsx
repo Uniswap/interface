@@ -54,8 +54,8 @@ export default function RangeSelector({
           feeAmount={feeAmount}
           label={leftPrice ? `${currencyB?.symbol}` : '-'}
           title={<Trans>Min Price</Trans>}
-          currencyA={currencyA}
-          currencyB={currencyB}
+          currencyA={currencyA ?? undefined}
+          currencyB={currencyB ?? undefined}
         />
         <StepCounter
           value={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? '∞' : rightPrice?.toSignificant(5) ?? ''}
@@ -67,8 +67,8 @@ export default function RangeSelector({
           decrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
           feeAmount={feeAmount}
           label={rightPrice ? `${currencyB?.symbol}` : '-'}
-          currencyA={currencyA}
-          currencyB={currencyB}
+          currencyA={currencyA ?? undefined}
+          currencyB={currencyB ?? undefined}
           title={<Trans>Max Price</Trans>}
         />
       </RowBetween>
