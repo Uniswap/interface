@@ -4,7 +4,11 @@ import Option from './Option'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
+import {
+  useModalOpen,
+  useNetworkSwitcherPopoverToggle,
+  useWalletSwitcherPopoverToggle
+} from '../../state/application/hooks'
 
 import {
   Row,
@@ -41,14 +45,20 @@ export const NetworkSwitcher = ({
   const { account } = useActiveWeb3React()
   const { error } = useWeb3React()
   const ethereumOptionPopoverOpen = useModalOpen(ApplicationModal.ETHEREUM_OPTION)
+  const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
   const isWrongNetwork = error instanceof UnsupportedChainIdError
   const isMobileByMedia = useIsMobileByMedia()
+
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
 
   useOnClickOutside(parentRef || popoverRef, () => {
     if (show || ethereumOptionPopoverOpen) onOuterClick()
   })
 
-  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  if (isWrongNetwork && !networkSwitcherPopoverOpen) {
+    toggleNetworkSwitcherPopover()
+  }
 
   if (isWrongNetwork) {
     if (isMobileByMedia) {
@@ -105,7 +115,7 @@ const EthereumOptionPopover = ({ children, show }: EthereumOptionPopoverProps) =
 
 const WrongNetworkMobileModal = ({ isOpen, onDismiss }: ModalProps) => {
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
+    <Modal isOpen={true} onDismiss={() => null} maxHeight={90}>
       <Wrapper>
         <TitleWrapper>
           <TYPE.mediumHeader lineHeight="24px" color="text5">

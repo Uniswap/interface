@@ -51,7 +51,7 @@ const SwitchNetworkButton = styled.button`
   line-height: 12px;
   letter-spacing: 0.08em;
   border: none;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'text' : 'pointer')};
 `
 
 const Button = styled.button`
@@ -145,7 +145,7 @@ export default function Web3Status() {
       <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
         <Web3StatusError>
           {unsupportedChain ? 'Wrong Network' : 'Error'}
-          <SwitchNetworkButton onClick={clickHandler}>
+          <SwitchNetworkButton onClick={clickHandler} disabled={unsupportedChain}>
             Switch network
             <TriangleIcon />
           </SwitchNetworkButton>
