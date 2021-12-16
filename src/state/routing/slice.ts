@@ -11,7 +11,7 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
   // example other params
-  // forceCrossProtocol: 'true',
+  forceCrossProtocol: 'true',
   // minSplits: '5',
 }
 
