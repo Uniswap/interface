@@ -27,7 +27,7 @@ makes large architectural changes, consider following all the standards.
 - If something breaks, add automated tests so it doesn't break again
 - Add integration tests for new pages or flows
 - Verify that all CI checks pass before merging
-- Have at least one product manager or designer approve of significant UX changes
+- Have at least one product manager or designer approve of any significant UX changes
 
 ## Guidelines
 
