@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -41,7 +42,7 @@ export default function ConfirmSwapModal({
   txHash,
 }: {
   isOpen: boolean
-  trade: Trade<Currency, Currency, TradeType> | undefined
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   originalTrade: Trade<Currency, Currency, TradeType> | undefined
   attemptingTxn: boolean
   txHash: string | undefined

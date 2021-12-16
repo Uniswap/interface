@@ -1,13 +1,13 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useClientSideRouter } from 'state/user/hooks'
 
-import { TradeState } from './types'
+import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
 
 function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
@@ -69,7 +69,10 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: TradeState; trade: Trade<Currency, Currency, TTradeType> | undefined } {
+): {
+  state: TradeState
+  trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
+} {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -90,12 +93,15 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnFocus: true,
   })
 
-  const quoteResult = useFreshData(data, Number(data?.blockNumber) || 0)
+  const quoteResult: GetQuoteResult | undefined = useFreshData(data, Number(data?.blockNumber) || 0)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
+
+  // get USD gas cost of trade in active chains stablecoin amount
+  const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
@@ -130,7 +136,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     }
 
     try {
-      const trade = transformRoutesToTrade(route, tradeType)
+      const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
       return {
         // always return VALID regardless of isFetching status
         state: TradeState.VALID,
@@ -140,5 +146,5 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       console.debug('transformRoutesToTrade failed: ', e)
       return { state: TradeState.INVALID, trade: undefined }
     }
-  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs])
+  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, gasUseEstimateUSD])
 }

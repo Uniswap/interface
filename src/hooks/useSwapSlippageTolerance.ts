@@ -1,8 +1,10 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'components/swap/GasEstimateBadge'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import { useUserSlippageToleranceWithDefault } from '../state/user/hooks'
 import { useCurrency } from './Tokens'
@@ -27,7 +29,9 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
 const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 
-export default function useSwapSlippageTolerance(trade: Trade<Currency, Currency, TradeType> | undefined): Percent {
+export default function useSwapSlippageTolerance(
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+): Percent {
   const { chainId } = useActiveWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useUSDCValue(trade?.outputAmount)
@@ -45,10 +49,18 @@ export default function useSwapSlippageTolerance(trade: Trade<Currency, Currency
     const dollarGasCost =
       ether && ethGasCost && etherPrice ? etherPrice.quote(CurrencyAmount.fromRawAmount(ether, ethGasCost)) : undefined
 
-    if (outputDollarValue && dollarGasCost) {
+    // if valid estimate from api and using api trade, use gas estimate from api
+    // NOTE - dont use gas estimate for L2s yet - need to verify accuracy
+    // if not, use local heuristic
+    const dollarCostToUse =
+      chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && trade?.gasUseEstimateUSD
+        ? trade.gasUseEstimateUSD
+        : dollarGasCost
+
+    if (outputDollarValue && dollarCostToUse) {
       // the rationale is that a user will not want their trade to fail for a loss due to slippage that is less than
       // the cost of the gas of the failed transaction
-      const fraction = dollarGasCost.asFraction.divide(outputDollarValue.asFraction)
+      const fraction = dollarCostToUse.asFraction.divide(outputDollarValue.asFraction)
       const result = new Percent(fraction.numerator, fraction.denominator)
       if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) return MAX_AUTO_SLIPPAGE_TOLERANCE
       if (result.lessThan(MIN_AUTO_SLIPPAGE_TOLERANCE)) return MIN_AUTO_SLIPPAGE_TOLERANCE
@@ -56,7 +68,7 @@ export default function useSwapSlippageTolerance(trade: Trade<Currency, Currency
     }
 
     return V3_SWAP_DEFAULT_SLIPPAGE
-  }, [ethGasPrice, ether, etherPrice, gasEstimate, onL2, outputDollarValue, trade])
+  }, [trade, onL2, ethGasPrice, gasEstimate, ether, etherPrice, chainId, outputDollarValue])
 
   return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
 }

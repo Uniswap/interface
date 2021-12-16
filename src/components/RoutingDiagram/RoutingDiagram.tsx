@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
@@ -11,6 +12,7 @@ import styled from 'styled-components/macro'
 import { ThemedText, Z_INDEX } from 'theme'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
+import { MouseoverTooltip } from '../Tooltip'
 
 export interface RoutingDiagramEntry {
   percent: Percent
@@ -20,13 +22,11 @@ export interface RoutingDiagramEntry {
 
 const Wrapper = styled(Box)`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg0};
-  width: 430px;
+  width: 100%;
 `
 
 const RouteContainerRow = styled(Row)`
   display: grid;
-  grid-gap: 8px;
   grid-template-columns: 24px 1fr 24px;
 `
 
@@ -40,7 +40,7 @@ const RouteRow = styled(Row)`
 
 const PoolBadge = styled(Badge)`
   display: flex;
-  padding: 0.25rem 0.5rem;
+  padding: 4px 8px;
 `
 
 const DottedLine = styled.div`
@@ -99,9 +99,9 @@ export default function RoutingDiagram({
     <Wrapper>
       {routes.map((entry, index) => (
         <RouteContainerRow key={index}>
-          <CurrencyLogo currency={tokenIn} />
+          <CurrencyLogo currency={tokenIn} size={'20px'} />
           <Route entry={entry} />
-          <CurrencyLogo currency={tokenOut} />
+          <CurrencyLogo currency={tokenOut} size={'20px'} />
         </RouteContainerRow>
       ))}
     </Wrapper>
@@ -116,13 +116,12 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
       </DottedLine>
       <OpaqueBadge>
         <ProtocolBadge>
-          <BadgeText fontSize={11}>{protocol.toUpperCase()}</BadgeText>
+          <BadgeText fontSize={10}>{protocol.toUpperCase()}</BadgeText>
         </ProtocolBadge>
-        <BadgeText fontSize={12} style={{ minWidth: 'auto' }}>
+        <BadgeText fontSize={14} style={{ minWidth: 'auto' }}>
           {percent.toSignificant(2)}%
         </BadgeText>
       </OpaqueBadge>
-
       <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>
         {path.map(([currency0, currency1, feeAmount], index) => (
           <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
@@ -136,12 +135,17 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
   const tokenInfo0 = useTokenInfoFromActiveList(currency0)
   const tokenInfo1 = useTokenInfoFromActiveList(currency1)
 
+  // TODO - link pool icon to info.uniswap.org via query params
   return (
-    <PoolBadge>
-      <Box margin="0 5px 0 10px">
-        <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
-      </Box>
-      <ThemedText.Small fontSize={12}>{feeAmount / 10000}%</ThemedText.Small>
-    </PoolBadge>
+    <MouseoverTooltip
+      text={<Trans>{tokenInfo0?.symbol + '/' + tokenInfo1?.symbol + ' ' + feeAmount / 10000}% pool</Trans>}
+    >
+      <PoolBadge>
+        <Box margin="0 8px 0 12px">
+          <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
+        </Box>
+        <ThemedText.Small fontSize={14}>{feeAmount / 10000}%</ThemedText.Small>
+      </PoolBadge>
+    </MouseoverTooltip>
   )
 }

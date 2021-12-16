@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+// eslint-disable-next-line no-restricted-imports
+import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import HoverInlineText from 'components/HoverInlineText'
 import { useMemo } from 'react'
@@ -6,6 +8,7 @@ import { useMemo } from 'react'
 import useTheme from '../../hooks/useTheme'
 import { ThemedText } from '../../theme'
 import { warningSeverity } from '../../utils/prices'
+import { MouseoverTooltip } from '../Tooltip'
 
 export function FiatValue({
   fiatValue,
@@ -25,10 +28,14 @@ export function FiatValue({
   }, [priceImpact, theme.green1, theme.red1, theme.text3, theme.yellow1])
 
   return (
-    <ThemedText.Body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
+    <ThemedText.Body fontSize={14} color={fiatValue ? theme.text3 : theme.text4}>
       {fiatValue ? (
         <Trans>
-          ~$ <HoverInlineText text={fiatValue?.toSignificant(6, { groupSeparator: ',' })} />
+          $
+          <HoverInlineText
+            text={fiatValue?.toSignificant(6, { groupSeparator: ',' })}
+            textColor={fiatValue ? theme.text3 : theme.text4}
+          />
         </Trans>
       ) : (
         ''
@@ -36,7 +43,9 @@ export function FiatValue({
       {priceImpact ? (
         <span style={{ color: priceImpactColor }}>
           {' '}
-          (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+          <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
+            (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+          </MouseoverTooltip>
         </span>
       ) : null}
     </ThemedText.Body>

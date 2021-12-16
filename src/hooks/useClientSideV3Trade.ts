@@ -1,10 +1,9 @@
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route, SwapQuoter } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { useSingleContractWithCallData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
@@ -28,7 +27,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: TradeState; trade: Trade<Currency, Currency, TTradeType> | undefined } {
+): { state: TradeState; trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined } {
   const [currencyIn, currencyOut] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -125,7 +124,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
 
     return {
       state: TradeState.VALID,
-      trade: new Trade({
+      trade: new InterfaceTrade({
         v2Routes: [],
         v3Routes: [
           {
