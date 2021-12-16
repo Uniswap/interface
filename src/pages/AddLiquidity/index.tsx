@@ -678,9 +678,9 @@ export default function AddLiquidity({
                                 </ThemedText.Body>
                                 <ThemedText.Body color="text2" fontSize={12}>
                                   {quoteCurrency?.symbol}{' '}
-                                  {roundedQuoteCurrencyPrice &&
-                                    showBaseCurrencyPrice &&
-                                    `($${roundedQuoteCurrencyPrice})`}{' '}
+                                  {roundedQuoteCurrencyPrice && showBaseCurrencyPrice
+                                    ? `($${roundedQuoteCurrencyPrice})`
+                                    : null}{' '}
                                   per {baseCurrency.symbol}{' '}
                                 </ThemedText.Body>
                               </Trans>

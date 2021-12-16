@@ -9,6 +9,7 @@ import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { isEthStablecoinPair } from 'utils'
 
 import { Input as NumericalInput } from '../NumericalInput'
 
@@ -146,6 +147,7 @@ const StepCounter = ({
 
   const quoteCurrencyAmount = Number(value)
   const baseCurrencyUSDPrice = useCurrencyUSDPrice(currencyB ?? undefined, quoteCurrencyAmount)
+  const showBaseCurrencyUSDPrice = isEthStablecoinPair(currencyA ?? undefined, currencyB ?? undefined)
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
@@ -184,7 +186,8 @@ const StepCounter = ({
 
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
-            {tokenB} {baseCurrencyUSDPrice && `($${baseCurrencyUSDPrice})`} per {tokenA}
+            {tokenB} {showBaseCurrencyUSDPrice && baseCurrencyUSDPrice ? `($${baseCurrencyUSDPrice})` : null} per{' '}
+            {tokenA}
           </Trans>
         </InputTitle>
       </AutoColumn>

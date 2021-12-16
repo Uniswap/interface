@@ -1,12 +1,12 @@
-import { Currency, Token } from '@uniswap/sdk-core'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-
+import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
+import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { STABLECOINS } from 'constants/tokens'
+
 import { TokenAddressMap } from '../state/lists/hooks'
-import { getAddress } from '@ethersproject/address'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
