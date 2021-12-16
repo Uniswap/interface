@@ -16,7 +16,7 @@ const StyledPriceContainer = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  align-items: flex-start
+  align-items: center
   justify-content: flex-start;
   padding: 0;
   grid-template-columns: 1fr auto;
@@ -26,7 +26,7 @@ const StyledPriceContainer = styled.button`
   text-align: left;
   flex-wrap: wrap;
   padding: 8px 0;
-
+  user-select: text;
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
@@ -50,12 +50,12 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   return (
     <StyledPriceContainer
       onClick={(e) => {
-        e.stopPropagation() // dont want this click to affect dropdowns / hovers
+        // e.stopPropagation() // dont want this click to affect dropdowns / hovers
         flipPrice()
       }}
       title={text}
     >
-      <Text fontWeight={500} fontSize={14} color={theme.text1}>
+      <Text fontWeight={500} color={theme.text1}>
         {text}
       </Text>{' '}
       {usdcPrice && (
