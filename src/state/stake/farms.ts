@@ -80,6 +80,14 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 3,
     active: true,
   },
+  // ARI-CELO
+  {
+    address: '0xEfe2f9d62E45815837b4f20c1F44F0A83605B540',
+    underlyingPool: '0xFEB0df4542E5394aAc89383c135E2Fc829812C6c',
+    basePool: '0xFEB0df4542E5394aAc89383c135E2Fc829812C6c',
+    numRewards: 2,
+    active: true,
+  },
 
   // ** D4P ** //
   // UBE-CELO
