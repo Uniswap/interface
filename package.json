@@ -143,6 +143,7 @@
     "numeral": "^2.0.6",
     "react-app-rewire-styled-components": "^3.0.2",
     "react-app-rewired": "^2.1.8",
+    "react-ga": "^3.3.0",
     "react-helmet": "^6.1.0",
     "react-indiana-drag-scroll": "^2.0.1",
     "react-player": "^2.9.0",
