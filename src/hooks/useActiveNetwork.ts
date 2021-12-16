@@ -83,13 +83,13 @@ export const ADD_NETWORK_PARAMS: {
   },
   [ChainId.AVAXMAINNET]: {
     chainId: '0xA86A',
-    chainName: 'AVAX',
+    chainName: 'Avalanche',
     nativeCurrency: {
       name: 'AVAX',
       symbol: 'AVAX',
       decimals: 18
     },
-    rpcUrls: ['https://avalanche.knstats.com/v1/mainnet/geth?appId=dev-dmm'],
+    rpcUrls: ['https://avalanche.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
     blockExplorerUrls: ['https://snowtrace.io']
   },
   [ChainId.FANTOM]: {
