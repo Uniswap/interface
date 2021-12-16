@@ -17,6 +17,7 @@ import {
   useV3MintState,
 } from 'state/mint/v3/hooks'
 import { ThemeContext } from 'styled-components/macro'
+import { isEthStablecoinPair } from 'utils'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -139,7 +140,9 @@ export default function AddLiquidity({
   const usdcBaseCurrencyPriceInNumber = Number(baseCurrencyPriceInUSDC?.toSignificant(4))
   const quoteCurrencyPrice =
     usdcBaseCurrencyPriceInNumber * Number(invertPrice ? price?.invert().toSignificant(4) : price?.toSignificant(4))
-  const roundedQuoteCurrencyPrice = quoteCurrencyPrice.toFixed(2)
+  const roundedQuoteCurrencyPrice = isNaN(usdcBaseCurrencyPriceInNumber) ? undefined : quoteCurrencyPrice.toFixed(2)
+  const showBaseCurrencyPrice = isEthStablecoinPair(baseCurrency ?? undefined, quoteCurrency ?? undefined)
+
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
 
@@ -674,7 +677,11 @@ export default function AddLiquidity({
                                   />
                                 </ThemedText.Body>
                                 <ThemedText.Body color="text2" fontSize={12}>
-                                  {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                                  {quoteCurrency?.symbol}{' '}
+                                  {roundedQuoteCurrencyPrice &&
+                                    showBaseCurrencyPrice &&
+                                    `($${roundedQuoteCurrencyPrice})`}{' '}
+                                  per {baseCurrency.symbol}{' '}
                                 </ThemedText.Body>
                               </Trans>
                             </AutoRow>

@@ -4,7 +4,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import useUSDCPrice from 'hooks/useUSDCPrice'
+import useCurrencyUSDPrice from 'hooks/useCurrencyUSDPrice'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components/macro'
@@ -144,10 +144,8 @@ const StepCounter = ({
     }
   }, [localValue, useLocalValue, value])
 
-  const baseCurrencyPriceInUSDC = useUSDCPrice(currencyB ?? undefined)
-  const baseCurrencyPriceInUSDCNumber = Number(baseCurrencyPriceInUSDC?.toFixed(4))
-  const baseCurrencyPriceIsNotNaN = !isNaN(baseCurrencyPriceInUSDCNumber)
   const quoteCurrencyAmount = Number(value)
+  const baseCurrencyUSDPrice = useCurrencyUSDPrice(currencyB ?? undefined, quoteCurrencyAmount)
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
@@ -186,8 +184,7 @@ const StepCounter = ({
 
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
-            {tokenB} per {tokenA}{' '}
-            {baseCurrencyPriceIsNotNaN ? `$${(baseCurrencyPriceInUSDCNumber * quoteCurrencyAmount).toFixed(2)}` : ''}
+            {tokenB} {baseCurrencyUSDPrice && `($${baseCurrencyUSDPrice})`} per {tokenA}
           </Trans>
         </InputTitle>
       </AutoColumn>

@@ -165,6 +165,8 @@ export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
 }
 
+export const STABLECOINS = [DAI.symbol, USDC.symbol, USDT.symbol]
+
 export const WETH9_EXTENDED: { [chainId: number]: Token } = {
   ...WETH9,
   [SupportedChainId.OPTIMISM]: new Token(

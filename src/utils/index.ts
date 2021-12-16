@@ -1,11 +1,12 @@
-import { getAddress } from '@ethersproject/address'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-
+import { STABLECOINS } from 'constants/tokens'
 import { TokenAddressMap } from '../state/lists/hooks'
+import { getAddress } from '@ethersproject/address'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -54,4 +55,11 @@ export function isTokenOnList(tokenAddressMap: TokenAddressMap, token?: Token): 
 
 export function formattedFeeAmount(feeAmount: FeeAmount): number {
   return feeAmount / 10000
+}
+
+export function isEthStablecoinPair(currencyA: Currency | undefined, currencyB: Currency | undefined) {
+  const isEthAndStable = currencyA?.isNative && STABLECOINS.includes(currencyB?.symbol)
+  const isStableAndEth = currencyB?.isNative && STABLECOINS.includes(currencyA?.symbol)
+
+  return Boolean(isEthAndStable || isStableAndEth)
 }
