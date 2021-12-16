@@ -1,13 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import { AlertTriangle, Info, largeIconCss } from 'lib/icons'
+import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
 import styled, { ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
 import { TextButton } from '../Button'
 import Row from '../Row'
 import Rule from '../Rule'
-import SpinnerIcon from '../SpinnerIcon'
 import Tooltip from '../Tooltip'
 import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from './state'
 
@@ -82,7 +81,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
       if (!swap) {
         return (
           <>
-            <SpinnerIcon color="secondary" />
+            <Spinner color="secondary" />
             <Trans>Fetching best price…</Trans>
           </>
         )
