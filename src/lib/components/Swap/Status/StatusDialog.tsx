@@ -1,160 +1,224 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import useInterval from 'lib/hooks/useInterval'
-import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Clock, Info } from 'lib/icons'
-import styled, { ThemedText } from 'lib/theme'
-import { useState } from 'react'
+import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Clock, Icon, Info, LargeIcon, Spinner } from 'lib/icons'
+import styled, { Color, ThemedText, useScrollbar } from 'lib/theme'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 
 import ActionButton from '../../ActionButton'
-import Button from '../../Button'
+import { IconButton } from '../../Button'
 import Column from '../../Column'
 import Row from '../../Row'
 import Rule from '../../Rule'
-import SpinnerIcon from '../../SpinnerIcon'
 import { Transaction, transactionAtom } from '../state'
 import Summary from '../Summary'
 
-const Header = styled.div<{ maximized?: boolean }>`
-  display: flex;
-  font-size: ${({ maximized }) => (maximized ? 48 : 64)}px;
-  height: 100%;
-  justify-content: center;
-  padding-top: ${({ maximized }) => (maximized ? 8 : 32)}px;
-  transition: font-size 0.2s linear, padding-top 0.2s linear;
+const HeaderIcon = styled(LargeIcon)`
+  flex-grow: 1;
 
-  * {
-    stroke-width: 1;
+  svg {
+    transition: height 0.2s, width 0.2s;
   }
 `
 
-const Body = styled(Column)`
-  height: 100%;
-  text-align: center;
-  width: 100%;
+interface StatusHeaderProps {
+  icon: Icon
+  iconColor?: Color
+  iconSize?: number
+  children: ReactNode
+}
+
+function StatusHeader({ icon: Icon, iconColor, iconSize = 4, children }: StatusHeaderProps) {
+  return (
+    <>
+      <Column flex style={{ flexGrow: 1, textAlign: 'center' }}>
+        <HeaderIcon icon={Icon} color={iconColor} size={iconSize} />
+        <Column gap={0.75} flex>
+          {children}
+        </Column>
+      </Column>
+      <Rule />
+    </>
+  )
+}
+
+interface StatusProps {
+  onClose: () => void
+}
+
+const TransactionRow = styled(Row)`
+  flex-direction: row-reverse;
 `
 
-const FlexRule = styled(Rule)`
-  width: 100%;
-`
-
-const Break = styled.br`
-  line-height: 1em;
-`
+function ElapsedTime({ tx }: { tx: Transaction }) {
+  const [elapsedMs, setElapsedMs] = useState(0)
+  useInterval(
+    () => {
+      setElapsedMs(tx.elapsedMs || Date.now() - (tx.timestamp ?? 0))
+    },
+    elapsedMs === tx.elapsedMs ? null : 1000
+  )
+  const toElapsedTime = useCallback((ms: number) => {
+    let sec = Math.floor(ms / 1000)
+    const min = Math.floor(sec / 60)
+    sec = sec % 60
+    if (min) {
+      return (
+        <Trans>
+          {min}m {sec}s
+        </Trans>
+      )
+    } else {
+      return <Trans>{sec}s</Trans>
+    }
+  }, [])
+  return (
+    <Row gap={0.5}>
+      <Clock />
+      <ThemedText.Body2>{toElapsedTime(elapsedMs)}</ThemedText.Body2>
+    </Row>
+  )
+}
 
 const EtherscanA = styled.a`
   color: ${({ theme }) => theme.accent};
   text-decoration: none;
 `
 
-const ErrorColumn = styled(Column)<{ maximized?: boolean }>`
-  height: ${({ maximized }) => (maximized ? 'calc(3.5em + 40px)' : '3.5em')};
-  overflow-y: ${({ maximized }) => (maximized ? 'scroll' : 'hidden')};
-  transition: height 0.2s linear;
+interface TransactionStatusProps extends StatusProps {
+  tx: Transaction | null
+}
+
+function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
+  const Icon = useMemo(() => {
+    return tx?.status ? CheckCircle : Spinner
+  }, [tx?.status])
+  const heading = useMemo(() => {
+    return tx?.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>
+  }, [tx?.status])
+  return (
+    <>
+      <StatusHeader icon={Icon} iconColor={tx?.status && 'success'}>
+        <ThemedText.Subhead1>{heading}</ThemedText.Subhead1>
+        {tx && <Summary input={tx.input} output={tx.output} />}
+      </StatusHeader>
+      <TransactionRow flex>
+        <ThemedText.ButtonSmall>
+          <EtherscanA href="//etherscan.io" target="_blank">
+            <Trans>View on Etherscan</Trans>
+          </EtherscanA>
+        </ThemedText.ButtonSmall>
+        {tx && <ElapsedTime tx={tx} />}
+      </TransactionRow>
+      <ActionButton onClick={onClose}>
+        <Trans>Close</Trans>
+      </ActionButton>
+    </>
+  )
+}
+
+const ErrorHeader = styled(Column)<{ open: boolean }>`
+  transition: gap 0.2s;
+
+  div:last-child {
+    max-height: ${({ open }) => (open ? 0 : 60 / 14)}em; // 3 * line-height
+    overflow-y: hidden;
+    transition: max-height 0.2s;
+  }
+`
+const ErrorColumn = styled(Column)``
+const ExpandoColumn = styled(Column)<{ open: boolean }>`
+  flex-grow: ${({ open }) => (open ? 2 : 0)};
+  transition: flex-grow 0.2s, gap 0.2s;
+
+  ${Rule} {
+    margin-bottom: ${({ open }) => (open ? 0 : 0.75)}em;
+    transition: margin-bottom 0.2s;
+  }
+
+  ${ErrorColumn} {
+    flex-basis: 0;
+    flex-grow: ${({ open }) => (open ? 1 : 0)};
+    overflow-y: hidden;
+    position: relative;
+    transition: flex-grow 0.2s;
+
+    ${Column} {
+      height: 100%;
+      padding: ${({ open }) => (open ? '0.5em 0' : 0)};
+      transition: padding 0.2s;
+
+      :after {
+        background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
+        bottom: 0;
+        content: '';
+        height: 0.75em;
+        pointer-events: none;
+        position: absolute;
+        width: calc(100% - 1em);
+      }
+    }
+  }
 `
 
-function toElapsedTime(ms: number) {
-  let sec = Math.floor(ms / 1000)
-  const min = Math.floor(sec / 60)
-  sec = sec % 60
-  if (min) {
-    return (
-      <Trans>
-        {min}m {sec}s
-      </Trans>
-    )
-  } else {
-    return <Trans>{sec}s</Trans>
-  }
+interface ErrorStatusProps extends StatusProps {
+  error: Error
 }
 
-function StatusBody({ transaction, onClose }: { transaction: Transaction; onClose: () => void }) {
-  const [elapsedMs, setElapsedMs] = useState(0)
-  useInterval(
-    () => {
-      setElapsedMs(transaction?.elapsedMs || Date.now() - (transaction?.timestamp ?? 0))
-    },
-    elapsedMs === transaction?.elapsedMs ? null : 1000
-  )
-
-  return (
-    <Body align="stretch" flex padded>
-      <Header>{transaction.status ? <CheckCircle color="success" /> : <SpinnerIcon />}</Header>
-      <Column gap={1}>
-        <Column gap={0.75} flex>
-          <ThemedText.Subhead1>
-            {transaction.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>}
-          </ThemedText.Subhead1>
-          <Summary input={transaction.input} output={transaction.output} />
-          <FlexRule />
-        </Column>
-        <ThemedText.Subhead2 color="secondary">
-          <Row>
-            <Row gap={0.5}>
-              <Clock />
-              {toElapsedTime(transaction.elapsedMs || Date.now() - transaction.timestamp)}
-            </Row>
-            <EtherscanA href="//etherscan.io" target="_blank">
-              <Trans>View on Etherscan</Trans>
-            </EtherscanA>
-          </Row>
-        </ThemedText.Subhead2>
-        <ActionButton onClick={onClose}>
-          <Trans>Close</Trans>
-        </ActionButton>
-      </Column>
-    </Body>
-  )
-}
-
-function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
+function ErrorStatus({ error, onClose }: ErrorStatusProps) {
   const [open, setOpen] = useState(false)
+  const [details, setDetails] = useState<HTMLDivElement | null>(null)
+  const scrollbar = useScrollbar(details)
   return (
-    <Body align="stretch" flex padded>
-      <Header maximized={open}>
-        <AlertTriangle color="error" />
-      </Header>
-      <Column gap={1}>
-        <Column gap={0.75}>
+    <>
+      <StatusHeader icon={AlertTriangle} iconColor="error" iconSize={open ? 3 : 4}>
+        <ErrorHeader gap={open ? 0 : 0.75} open={open}>
           <ThemedText.Subhead1>
             <Trans>Something went wrong.</Trans>
           </ThemedText.Subhead1>
           <ThemedText.Body2>
-            <Trans>Try increasing your slippage tolerance</Trans>
+            <Trans>
+              Try increasing your slippage tolerance.
+              <br />
+              NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
+            </Trans>
           </ThemedText.Body2>
-          <ThemedText.Body2 fontWeight="200" lineHeight={1.25}>
-            <Trans>Note: Fee on transfer and rebase tokens are incompatible with Uniswap V3.</Trans>
-          </ThemedText.Body2>
-          <Rule />
-        </Column>
-        <Row>
-          <Row gap={0.5}>
-            <Info />
-            <ThemedText.Subhead2 color="secondary">
-              <Trans>Error details</Trans>
-            </ThemedText.Subhead2>
-          </Row>
-          <Button onClick={() => setOpen(!open)}>{open ? <ChevronDown /> : <ChevronUp />}</Button>
+        </ErrorHeader>
+      </StatusHeader>
+      <Row>
+        <Row gap={0.5}>
+          <Info color="secondary" />
+          <ThemedText.Subhead2 color="secondary">
+            <Trans>Error details</Trans>
+          </ThemedText.Subhead2>
         </Row>
-        <ErrorColumn maximized={open}>
-          <ThemedText.Code>{error.message}</ThemedText.Code>
-          <Break />
-          <ActionButton color="error" onClick={onClose}>
-            <Trans>Dismiss</Trans>
-          </ActionButton>
+        <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
+      </Row>
+      <ExpandoColumn flex align="stretch" open={open}>
+        <Rule />
+        <ErrorColumn>
+          <Column gap={0.5} ref={setDetails} css={scrollbar}>
+            <ThemedText.Code>{error.message}</ThemedText.Code>
+          </Column>
         </ErrorColumn>
-      </Column>
-    </Body>
+        <ActionButton onClick={onClose}>
+          <Trans>Dismiss</Trans>
+        </ActionButton>
+      </ExpandoColumn>
+    </>
   )
 }
 
-export default function TransactionStatusDialog({ onClose }: { onClose: () => void }) {
-  const transaction = useAtomValue(transactionAtom)
+export default function TransactionStatusDialog({ onClose }: StatusProps) {
+  const tx = useAtomValue(transactionAtom)
+
   return (
-    transaction &&
-    (transaction.status instanceof Error ? (
-      <ErrorBody error={transaction.status} onClose={onClose} />
-    ) : (
-      <StatusBody transaction={transaction} onClose={onClose} />
-    ))
+    <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
+      {tx?.status instanceof Error ? (
+        <ErrorStatus error={tx.status} onClose={onClose} />
+      ) : (
+        <TransactionStatus tx={tx} onClose={onClose} />
+      )}
+    </Column>
   )
 }

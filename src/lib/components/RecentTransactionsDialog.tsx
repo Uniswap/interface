@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { AlertTriangle, ArrowRight, CheckCircle, Trash2 } from 'lib/icons'
+import { AlertTriangle, ArrowRight, CheckCircle, Spinner, Trash2 } from 'lib/icons'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
@@ -9,7 +9,6 @@ import Button from './Button'
 import Column from './Column'
 import { Header } from './Dialog'
 import Row from './Row'
-import SpinnerIcon from './SpinnerIcon'
 
 interface ITokenAmount {
   value: number
@@ -80,7 +79,7 @@ function Transaction({ tx }: { tx: ITransaction }) {
       case TransactionStatus.ERROR:
         return <AlertTriangle color="error" />
       case TransactionStatus.PENDING:
-        return <SpinnerIcon />
+        return <Spinner />
     }
   }, [tx.status])
   return (

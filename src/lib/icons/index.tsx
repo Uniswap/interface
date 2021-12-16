@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-imports */
 import CheckIcon from 'lib/assets/Check'
-import styled, { Color, css } from 'lib/theme'
+import SpinnerIcon from 'lib/assets/Spinner'
+import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
 import { Icon as FeatherIcon } from 'react-feather'
 import {
@@ -52,13 +53,15 @@ const LargeWrapper = styled.div<{ iconSize: number }>`
 
 interface LargeIconProps {
   icon: Icon
+  color?: Color
   size?: number
+  className?: string
 }
 
-export function LargeIcon({ icon: Icon, size = 1.2 }: LargeIconProps) {
+export function LargeIcon({ icon: Icon, color, size = 1.2, className }: LargeIconProps) {
   return (
-    <LargeWrapper iconSize={size}>
-      <Icon />
+    <LargeWrapper color={color} iconSize={size} className={className}>
+      <Icon color={color} />
     </LargeWrapper>
   )
 }
@@ -83,4 +86,19 @@ export const Check = styled(icon(CheckIcon))`
     fill: ${({ theme }) => theme.active};
     stroke: none;
   }
+`
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`
+
+export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
+  animation: 2s ${rotate} linear infinite;
+  stroke: ${({ color = 'active', theme }) => theme[color]};
+  stroke-linecap: round;
+  stroke-width: 2;
 `
