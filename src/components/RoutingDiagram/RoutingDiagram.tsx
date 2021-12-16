@@ -40,7 +40,7 @@ const RouteRow = styled(Row)`
 
 const PoolBadge = styled(Badge)`
   display: flex;
-  padding: 4px 8px;
+  padding: 4px 4px;
 `
 
 const DottedLine = styled.div`
@@ -116,7 +116,7 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
       </DottedLine>
       <OpaqueBadge>
         <ProtocolBadge>
-          <BadgeText fontSize={10}>{protocol.toUpperCase()}</BadgeText>
+          <BadgeText fontSize={12}>{protocol.toUpperCase()}</BadgeText>
         </ProtocolBadge>
         <BadgeText fontSize={14} style={{ minWidth: 'auto' }}>
           {percent.toSignificant(2)}%
@@ -141,7 +141,7 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
       text={<Trans>{tokenInfo0?.symbol + '/' + tokenInfo1?.symbol + ' ' + feeAmount / 10000}% pool</Trans>}
     >
       <PoolBadge>
-        <Box margin="0 8px 0 12px">
+        <Box margin="0 4px 0 12px">
           <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
         </Box>
         <ThemedText.Small fontSize={14}>{feeAmount / 10000}%</ThemedText.Small>

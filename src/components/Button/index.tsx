@@ -33,6 +33,7 @@ export const BaseButton = styled(RebassButton)<
   position: relative;
   z-index: 1;
   &:disabled {
+    opacity: 50%;
     cursor: auto;
     pointer-events: none;
   }
@@ -236,7 +237,7 @@ const ButtonConfirmedStyle = styled(BaseButton)`
   /* border: 1px solid ${({ theme }) => theme.green1}; */
 
   &:disabled {
-    /* opacity: 50%; */
+    opacity: 50%;
     background-color: ${({ theme }) => theme.bg2};
     color: ${({ theme }) => theme.text2};
     cursor: auto;
