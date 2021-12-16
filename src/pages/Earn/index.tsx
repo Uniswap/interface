@@ -1,30 +1,29 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { ErrorBoundary } from '@sentry/react'
 import { Token } from '@ubeswap/sdk'
 import ChangeNetworkModal from 'components/ChangeNetworkModal'
 import TokenSelect from 'components/CurrencyInputPanel/TokenSelect'
 import Loader from 'components/Loader'
 import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
-import React, { useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 
-import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { AutoColumn, ColumnCenter, TopSection } from '../../components/Column'
 import { PoolCard } from '../../components/earn/PoolCard'
-import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { RowBetween } from '../../components/Row'
-import { ExternalLink, TYPE } from '../../theme'
-import { useFarmRegistry } from './useFarmRegistry'
+import { CardNoise, CardSection, DataCard, LiquidityWarningCard } from '../../components/earn/styled'
+import { RowBetween, RowStart } from '../../components/Row'
+import { usePairs } from '../../data/Reserves'
+import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { useFarmRegistry, WarningInfo } from './useFarmRegistry'
 
 const PageWrapper = styled.div`
   width: 100%;
   max-width: 640px;
-`
-
-const TopSection = styled(AutoColumn)`
-  max-width: 720px;
-  width: 100%;
-  margin-bottom: 24px;
 `
 
 const DataRow = styled(RowBetween)`
@@ -67,6 +66,43 @@ export default function Earn() {
   }, [filteringToken, farmSummaries])
 
   const { stakedFarms, unstakedFarms } = useOwnerStakedPools(filteredFarms)
+  const { address: account } = useContractKit()
+  const trackedTokenPairs = useTrackedTokenPairs()
+  const tokenPairsWithLiquidityTokens = useMemo(
+    () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    [trackedTokenPairs]
+  )
+  const liquidityTokens = useMemo(
+    () => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken),
+    [tokenPairsWithLiquidityTokens]
+  )
+  const [v2PairsBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, liquidityTokens)
+  const liquidityTokensWithBalances = useMemo(
+    () =>
+      tokenPairsWithLiquidityTokens
+        .filter(({ liquidityToken }) => v2PairsBalances[liquidityToken.address]?.greaterThan('0'))
+        .map(({ tokens }) => tokens),
+    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+  )
+  const v2Pairs = usePairs(liquidityTokensWithBalances)
+
+  const warnings: WarningInfo[] = useMemo(() => {
+    const localWarnings: WarningInfo[] = []
+    v2Pairs.forEach(([, pair]) => {
+      const token0 = pair?.token0.symbol
+      const token1 = pair?.token1.symbol
+      const poolName = token0 + '-' + token1
+      const unstakedFarm = unstakedFarms.find((farm) => farm.farmName === poolName)
+      const stakedFarm = stakedFarms.find((farm) => farm.farmName === poolName)
+      if (unstakedFarm && !stakedFarm) {
+        const url = `/farm/${unstakedFarm?.token0Address}/${unstakedFarm?.token1Address}/${unstakedFarm?.stakingAddress}`
+        localWarnings.push({ poolName: poolName, link: url })
+      }
+    })
+    return localWarnings
+  }, [v2Pairs, unstakedFarms, stakedFarms])
+
+  const theme = useContext(ThemeContext)
 
   if (!isSupportedNetwork) {
     return <ChangeNetworkModal />
@@ -74,6 +110,30 @@ export default function Earn() {
 
   return (
     <PageWrapper>
+      <TopSection gap="md">
+        {warnings.map((warning) => (
+          <LiquidityWarningCard key={warning.link}>
+            <CardSection>
+              <RowStart>
+                <div style={{ paddingRight: 16 }}>
+                  <AlertTriangle color={theme.yellow2} size={36} />
+                </div>
+                <AutoColumn gap="md">
+                  <RowBetween>
+                    <TYPE.black fontWeight={600}>You need to stake {warning.poolName} LP tokens</TYPE.black>
+                  </RowBetween>
+                  <RowBetween>
+                    <TYPE.black fontSize={14}>
+                      Stake into the {warning.poolName} farming pool to an additional rewards on your LP tokens
+                    </TYPE.black>
+                  </RowBetween>
+                  <StyledInternalLink to={warning.link}>Farm UBE</StyledInternalLink>
+                </AutoColumn>
+              </RowStart>
+            </CardSection>
+          </LiquidityWarningCard>
+        ))}
+      </TopSection>
       {stakedFarms.length === 0 && (
         <TopSection gap="md">
           <DataCard>

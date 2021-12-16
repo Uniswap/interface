@@ -20,4 +20,10 @@ export const AutoColumn = styled.div<{
   justify-items: ${({ justify }) => justify && justify};
 `
 
+export const TopSection = styled(AutoColumn)`
+  max-width: 720px;
+  width: 100%;
+  margin-bottom: 24px;
+`
+
 export default Column

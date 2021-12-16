@@ -43,4 +43,8 @@ export const RowFixed = styled(Row)<{ gap?: string; justify?: string }>`
   margin: ${({ gap }) => gap && `-${gap}`};
 `
 
+export const RowStart = styled(AutoRow)`
+  align-items: start;
+`
+
 export default Row

@@ -28,6 +28,14 @@ export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
   overflow: hidden;
 `
 
+export const LiquidityWarningCard = styled(AutoColumn)<{ disabled?: boolean }>`
+  background-color: ${(props) => props.theme.bg1};
+  border-top: 3px solid ${(props) => props.theme.primary1};
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+`
+
 export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   background: url(${uImage});
   width: 1000px;
@@ -70,7 +78,6 @@ export const CardNoise = styled.span`
   left: 0;
   pointer-events: none;
 `
-
 export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
   padding: 1rem;
   z-index: 1;

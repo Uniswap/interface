@@ -27,6 +27,11 @@ const blacklist: Record<string, boolean> = {
 const CREATION_BLOCK = 9840049
 const LAST_N_BLOCKS = 1440 // Last 2 hours
 
+export interface WarningInfo {
+  poolName: string
+  link: string
+}
+
 export const useFarmRegistry = () => {
   const { kit } = useContractKit()
   const [farmSummaries, setFarmSummaries] = React.useState<FarmSummary[]>([])
