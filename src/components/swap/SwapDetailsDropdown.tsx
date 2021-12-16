@@ -8,7 +8,7 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { useActiveWeb3React } from 'hooks/web3'
 import { darken } from 'polished'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
@@ -114,7 +114,6 @@ interface SwapDetailsInlineProps {
   showInverted: boolean
   setShowInverted: React.Dispatch<React.SetStateAction<boolean>>
   allowedSlippage: Percent
-  swapInputError: ReactNode
 }
 
 export default function SwapDetailsDropdown({
@@ -124,7 +123,6 @@ export default function SwapDetailsDropdown({
   showInverted,
   setShowInverted,
   allowedSlippage,
-  swapInputError,
 }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useActiveWeb3React()
@@ -135,7 +133,7 @@ export default function SwapDetailsDropdown({
       <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
         <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
           <RowFixed style={{ position: 'relative' }}>
-            {(loading || syncing) && !(swapInputError && !trade) ? (
+            {loading || syncing ? (
               <StyledPolling>
                 <StyledPollingDot>
                   <Spinner />
@@ -167,13 +165,9 @@ export default function SwapDetailsDropdown({
                   setShowInverted={setShowInverted}
                 />
               </LoadingOpacityContainer>
-            ) : (loading || syncing) && !swapInputError ? (
+            ) : loading || syncing ? (
               <ThemedText.Main fontSize={14}>
                 <Trans>Fetching best price...</Trans>
-              </ThemedText.Main>
-            ) : swapInputError ? (
-              <ThemedText.Main color="bg3" fontSize={14}>
-                {swapInputError}
               </ThemedText.Main>
             ) : null}
           </RowFixed>
