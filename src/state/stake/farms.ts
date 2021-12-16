@@ -42,11 +42,19 @@ export const multiRewardPools: MultiRewardPool[] = [
   },
   // pCELO-POOF
   {
+    address: '0x999DF57c86EcC98E0e55f5f1dEdD102A89F25e8e',
+    underlyingPool: '0x66B6e41AC12d51918775410D3331B21F7851a8Bc',
+    basePool: '0x66B6e41AC12d51918775410D3331B21F7851a8Bc',
+    numRewards: 2,
+    active: true,
+  },
+  // pCELO-POOF
+  {
     address: '0x7B7F08164036abEbafD1bf75c1464c6F0d01653C',
     underlyingPool: '0xd60E0034D4B27DE226EFf13f68249F69d4D6Cb38',
     basePool: '0xd60E0034D4B27DE226EFf13f68249F69d4D6Cb38',
     numRewards: 2,
-    active: true,
+    active: false,
   },
   // KNX-CELO
   {
