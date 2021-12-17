@@ -88,7 +88,7 @@ export const Check = styled(icon(CheckIcon))`
 `
 
 export const Logo = styled(icon(LogoIcon))`
-  fill: ${({ color, theme }) => theme[color]};
+  fill: ${({ theme }) => theme.secondary};
   stroke: none;
 `
 
