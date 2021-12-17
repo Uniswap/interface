@@ -3,14 +3,25 @@ import { Provider as AtomProvider, useAtom } from 'jotai'
 import ErrorBoundary from 'lib/components/ErrorBoundary'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { injectedConnectorAtom, networkConnectorAtom } from 'lib/state'
-import styled, { Theme, ThemeProvider } from 'lib/theme'
-import { ReactNode, useEffect, useState } from 'react'
+import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
+import { ReactNode, useEffect, useRef } from 'react'
 import { initializeConnector } from 'widgets-web3-react/core'
 import { EIP1193 } from 'widgets-web3-react/eip1193'
 import { Network } from 'widgets-web3-react/network'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
+
+const slideDown = keyframes`
+  to {
+    top: calc(100% - 0.25em);
+  }
+`
+const slideUp = keyframes`
+  from {
+    top: calc(100% - 0.25em);
+  }
+`
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   background-color: ${({ theme }) => theme.container};
@@ -21,6 +32,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   font-size: 16px;
   height: 348px;
   min-width: 300px;
+  overflow-y: hidden;
   padding: 0.25em;
   position: relative;
   width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
@@ -34,6 +46,14 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
       font-family: ${({ theme }) => theme.fontFamilyVariable};
     }
   }
+
+  .dialog {
+    animation: ${slideUp} 0.25s ease-in-out;
+  }
+
+  .dialog.unmounting {
+    animation: ${slideDown} 0.25s ease-in-out;
+  }
 `
 
 export interface WidgetProps {
@@ -43,6 +63,7 @@ export interface WidgetProps {
   provider?: EthProvider
   jsonRpcEndpoint?: string
   width?: string | number
+  dialog?: HTMLElement | null
   className?: string
 }
 
@@ -53,6 +74,7 @@ export default function Widget({
   provider,
   jsonRpcEndpoint,
   width = 360,
+  dialog,
   className,
 }: WidgetProps) {
   const [, setNetworkConnector] = useAtom(networkConnectorAtom)
@@ -73,15 +95,14 @@ export default function Widget({
     setInjectedConnector([connector, hooks])
   }, [setInjectedConnector, provider])
 
-  const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
+  const wrapper = useRef<HTMLDivElement>(null)
   return (
     <ErrorBoundary>
       <AtomProvider>
         <ThemeProvider theme={theme}>
           <I18nProvider locale={locale}>
-            <WidgetWrapper width={width} className={className}>
-              <div ref={setDialog} />
-              <DialogProvider value={dialog}>{children}</DialogProvider>
+            <WidgetWrapper width={width} className={className} ref={wrapper}>
+              <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
             </WidgetWrapper>
           </I18nProvider>
         </ThemeProvider>
