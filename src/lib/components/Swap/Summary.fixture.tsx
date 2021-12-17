@@ -1,6 +1,6 @@
 import { useUpdateAtom } from 'jotai/utils'
 import { DAI, ETH } from 'lib/mocks'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { Modal } from '../Dialog'
@@ -9,6 +9,8 @@ import { SummaryDialog } from './Summary'
 
 function Fixture() {
   const setState = useUpdateAtom(stateAtom)
+  const [, setInitialized] = useState(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setState({
       activeInput: Field.INPUT,
@@ -22,13 +24,14 @@ function Fixture() {
         minimumReceived: 4190,
       },
     })
+    setInitialized(true)
   })
 
   const setOutput = useUpdateAtom(outputAtom)
   const [price] = useValue('output value', { defaultValue: 4200 })
   useEffect(() => {
-    setOutput({ token: DAI, value: price, usdc: price })
-  }, [price, setOutput])
+    setState((state) => ({ ...state, output: { token: DAI, value: price, usdc: price } }))
+  }, [price, setOutput, setState])
 
   return (
     <Modal color="dialog">

@@ -1,13 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
-import { AlertTriangle, Info } from 'lib/icons'
-import { ThemedText, ThemeProvider } from 'lib/theme'
+import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
+import styled, { ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
 import { TextButton } from '../Button'
 import Row from '../Row'
 import Rule from '../Rule'
-import SpinnerIcon from '../SpinnerIcon'
 import Tooltip from '../Tooltip'
 import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from './state'
 
@@ -37,7 +36,7 @@ interface LoadedStateProps {
 function LoadedState({ input, output }: LoadedStateProps) {
   const [flip, setFlip] = useState(true)
   const ratio = useMemo(() => {
-    const [a, b] = flip ? [input, output] : [output, input]
+    const [a, b] = flip ? [output, input] : [input, output]
     const ratio = `1 ${a.token.symbol} = ${b.value / a.value} ${b.token.symbol}`
     const usdc = a.usdc && ` ($${(a.usdc / a.value).toLocaleString('en')})`
     return (
@@ -54,6 +53,11 @@ function LoadedState({ input, output }: LoadedStateProps) {
     </TextButton>
   )
 }
+
+const ToolbarRow = styled(Row)`
+  padding: 0.5em 0;
+  ${largeIconCss}
+`
 
 export default function Toolbar({ disabled }: { disabled?: boolean }) {
   const { activeInput } = useAtomValue(stateAtom)
@@ -77,7 +81,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
       if (!swap) {
         return (
           <>
-            <SpinnerIcon color="secondary" />
+            <Spinner color="secondary" />
             <Trans>Fetching best price…</Trans>
           </>
         )
@@ -111,9 +115,9 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     <>
       <Rule />
       <ThemedText.Caption>
-        <Row justify="flex-start" gap={0.5}>
+        <ToolbarRow justify="flex-start" gap={0.5} iconSize={4 / 3}>
           {caption}
-        </Row>
+        </ToolbarRow>
       </ThemedText.Caption>
     </>
   )

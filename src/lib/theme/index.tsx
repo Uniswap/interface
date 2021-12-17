@@ -1,5 +1,11 @@
+import '@fontsource/inter/400.css'
+import '@fontsource/inter/500.css'
+import '@fontsource/inter/600.css'
+import '@fontsource/inter/variable.css'
+import '@fontsource/ibm-plex-mono/400.css'
+
 import { mix, transparentize } from 'polished'
-import { createContext, ReactNode, useContext, useMemo } from 'react'
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 
 import styled, { ThemedProvider } from './styled'
 import { Colors, ComputedTheme, Theme } from './theme'
@@ -9,7 +15,7 @@ export type { Color, Colors, Theme } from './theme'
 export default styled
 export * from './dynamic'
 export * from './layer'
-export * from './scrollable'
+export * from './scrollbar'
 export * from './styled'
 export * as ThemedText from './type'
 
@@ -62,9 +68,21 @@ export const darkTheme: Colors = {
 }
 
 export const defaultTheme = {
-  fontFamily: '"Inter var", sans-serif',
-  borderRadius: true,
+  borderRadius: 1,
+  fontFamily: '"Inter", sans-serif',
+  fontFamilyVariable: '"InterVariable", sans-serif',
+  fontFamilyCode: 'IBM Plex Mono',
+  tokenColorExtraction: true,
   ...lightTheme,
+}
+
+export function useSystemTheme() {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
+  const [systemTheme, setSystemTheme] = useState(prefersDark.matches ? darkTheme : lightTheme)
+  prefersDark.addEventListener('change', (e) => {
+    setSystemTheme(e.matches ? darkTheme : lightTheme)
+  })
+  return systemTheme
 }
 
 const ThemeContext = createContext<ComputedTheme>(toComputedTheme(defaultTheme))
@@ -92,8 +110,14 @@ export function ThemeProvider({ theme, children }: ThemeProviderProps) {
 function toComputedTheme(theme: Required<Theme>): ComputedTheme {
   return {
     ...theme,
-    borderRadius: theme.borderRadius ? 1 : 0,
+    borderRadius: clamp(
+      Number.isFinite(theme.borderRadius) ? (theme.borderRadius as number) : theme.borderRadius ? 1 : 0
+    ),
     onHover: (color: string) =>
       color === theme.primary ? transparentize(0.4, theme.primary) : mix(0.16, theme.primary, color),
+  }
+
+  function clamp(value: number) {
+    return Math.min(Math.max(value, 0), 1)
   }
 }

@@ -1,3 +1,4 @@
+import { Icon } from 'lib/icons'
 import styled, { Color } from 'lib/theme'
 
 export const BaseButton = styled.button`
@@ -45,4 +46,17 @@ const transparentButton = (defaultColor: Color) => styled(BaseButton)<{ color?: 
 `
 
 export const TextButton = transparentButton('accent')
-export const IconButton = transparentButton('secondary')
+
+const SecondaryButton = transparentButton('secondary')
+
+interface IconButtonProps {
+  icon: Icon
+}
+
+export function IconButton({ icon: Icon, ...props }: IconButtonProps & React.ComponentProps<typeof BaseButton>) {
+  return (
+    <SecondaryButton {...props}>
+      <Icon />
+    </SecondaryButton>
+  )
+}

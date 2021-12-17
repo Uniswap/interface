@@ -1,15 +1,14 @@
-import { AlertTriangle } from 'lib/icons'
+import { AlertTriangle, LargeIcon } from 'lib/icons'
 import styled, { Color, css, keyframes, ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 
 import Button from './Button'
 import Row from './Row'
 
-const StyledButton = styled(Button)<{ updated?: boolean }>`
+const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-grow: 1;
-  height: 100%;
-  transition: background-color 0.2s ease-out, flex-grow 0.2s ease-out;
+  transition: background-color 0.2s ease-out, flex-grow 0.2s ease-out, padding 0.2s ease-out;
 `
 
 const UpdateRow = styled(Row)``
@@ -45,8 +44,8 @@ const updatedCss = css`
 export const Overlay = styled(Row)<{ updated?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
-  height: 3.5em;
-  transition: padding 0.2s;
+  min-height: 3.5em;
+  transition: padding 0.2s ease-out;
 
   ${({ updated }) => updated && updatedCss}
 `
@@ -69,17 +68,15 @@ export default function ActionButton({
   children,
 }: ActionButtonProps) {
   return (
-    <Overlay updated={Boolean(updated)} flex>
+    <Overlay updated={Boolean(updated)} flex align="stretch">
       <StyledButton color={color} disabled={disabled} onClick={updated ? onUpdate : onClick}>
-        {updated ? (
-          <ThemedText.ButtonMedium color="currentColor">{updated.action}</ThemedText.ButtonMedium>
-        ) : (
-          <ThemedText.ButtonLarge color="currentColor">{children}</ThemedText.ButtonLarge>
-        )}
+        <ThemedText.TransitionButton buttonSize={updated ? 'medium' : 'large'} color="currentColor">
+          {updated ? updated.action : children}
+        </ThemedText.TransitionButton>
       </StyledButton>
       {updated && (
         <UpdateRow gap={0.5}>
-          <AlertTriangle />
+          <LargeIcon icon={AlertTriangle} />
           <ThemedText.Subhead2>{updated?.message}</ThemedText.Subhead2>
         </UpdateRow>
       )}

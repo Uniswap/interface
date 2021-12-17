@@ -1,6 +1,13 @@
+import { useMemo } from 'react'
+
 import { css } from './styled'
 
-export const scrollableCss = css`
+const overflowCss = css`
+  overflow-y: scroll;
+`
+
+/** Customizes the scrollbar for vertical overflow. */
+const scrollbarCss = (padded: boolean) => css`
   overflow-y: scroll;
 
   ::-webkit-scrollbar {
@@ -27,16 +34,30 @@ export const scrollableCss = css`
       );
     background-clip: padding-box;
     border: none;
-    border-right: 0.75em solid transparent;
+    ${padded ? 'border-right' : 'border-left'}: 0.75em solid transparent;
   }
 
   @supports not selector(::-webkit-scrollbar-thumb) {
-    overflow-y: scroll;
     scrollbar-color: ${({ theme }) => theme.interactive} transparent;
   }
-
-  @supports selector(::-webkit-scrollbar-thumb) {
-    ::-webkit-scrollbar-thumb {
-    }
-  }
 `
+
+interface ScrollbarOptions {
+  padded?: boolean
+  css?: ReturnType<typeof css>
+}
+
+export function useScrollbar(
+  element: HTMLElement | null,
+  { padded = false, css: additionalCss }: ScrollbarOptions = {}
+) {
+  return useMemo(() => {
+    if (element && element.scrollHeight > element.clientHeight) {
+      return css`
+        ${scrollbarCss(padded)}
+        ${additionalCss}
+      `
+    }
+    return overflowCss
+  }, [additionalCss, element, padded])
+}

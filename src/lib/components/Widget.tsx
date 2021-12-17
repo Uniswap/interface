@@ -1,15 +1,24 @@
-import 'inter-ui'
-
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import ErrorBoundary from 'lib/components/ErrorBoundary'
 import useProviderInfo from 'lib/hooks/useProviderInfo'
 import { Provider as I18nProvider } from 'lib/i18n'
-import styled, { Theme, ThemeProvider } from 'lib/theme'
-import { ReactNode, useState } from 'react'
+import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
+import { ReactNode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
+
+const slideDown = keyframes`
+  to {
+    top: calc(100% - 0.25em);
+  }
+`
+const slideUp = keyframes`
+  from {
+    top: calc(100% - 0.25em);
+  }
+`
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   background-color: ${({ theme }) => theme.container};
@@ -18,16 +27,29 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  min-height: 340px; // 21.25em
-  min-width: 272px; // 17em
-  width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
+  height: 348px;
+  min-width: 300px;
+  overflow-y: hidden;
   padding: 0.25em;
   position: relative;
+  width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
 
   * {
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.fontFamily};
     user-select: none;
+
+    @supports (font-variation-settings: normal) {
+      font-family: ${({ theme }) => theme.fontFamilyVariable};
+    }
+  }
+
+  .dialog {
+    animation: ${slideUp} 0.25s ease-in-out;
+  }
+
+  .dialog.unmounting {
+    animation: ${slideDown} 0.25s ease-in-out;
   }
 `
 
@@ -42,6 +64,7 @@ export interface WidgetProps {
   provider?: EthProvider
   jsonRpcEndpoint?: string
   width?: string | number
+  dialog?: HTMLElement | null
   className?: string
 }
 
@@ -51,20 +74,23 @@ export default function Widget({
   locale = DEFAULT_LOCALE,
   provider,
   jsonRpcEndpoint,
-  width,
+  width = 360,
+  dialog,
   className,
 }: WidgetProps) {
   const connector = useProviderInfo(provider, jsonRpcEndpoint)
-  const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   const hasConnector = connector[0] !== undefined
+  const wrapper = useRef<HTMLDivElement>(null)
+
   return (
     <ErrorBoundary>
       <AtomProvider>
         <ThemeProvider theme={theme}>
           <I18nProvider locale={locale}>
-            <WidgetWrapper width={width} className={className}>
-              <div ref={setDialog} />
-              <DialogProvider value={dialog}>{hasConnector ? children : <NoConnectorAlert />}</DialogProvider>
+            <WidgetWrapper width={width} className={className} ref={wrapper}>
+              <DialogProvider value={dialog || wrapper.current}>
+                {hasConnector ? children : <NoConnectorAlert />}
+              </DialogProvider>
             </WidgetWrapper>
           </I18nProvider>
         </ThemeProvider>

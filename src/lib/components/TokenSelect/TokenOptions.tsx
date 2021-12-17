@@ -1,6 +1,5 @@
 import { t } from '@lingui/macro'
-import { prefetchColor } from 'lib/hooks/useColor'
-import styled, { scrollableCss, ThemedText } from 'lib/theme'
+import styled, { css, ThemedText, useScrollbar } from 'lib/theme'
 import { Token } from 'lib/types'
 import React, {
   ComponentClass,
@@ -34,15 +33,7 @@ const TokenButton = styled(BaseButton)`
   }
 `
 
-type ItemData = Token[]
-interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
-const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{ hover: number }>`
-  ${TokenButton}[data-index='${({ hover }) => hover}'] {
-    background-color: ${({ theme }) => theme.onHover(theme.module)};
-  }
-
-  ${scrollableCss}
-
+const scrollbarCss = css`
   @supports selector(::-webkit-scrollbar-thumb) {
     overflow-y: overlay !important;
 
@@ -50,6 +41,19 @@ const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{ hover
       padding-right: 2em;
     }
   }
+`
+
+type ItemData = Token[]
+interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
+const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
+  hover: number
+  scrollbar?: ReturnType<typeof useScrollbar>
+}>`
+  ${TokenButton}[data-index='${({ hover }) => hover}'] {
+    background-color: ${({ theme }) => theme.onHover(theme.module)};
+  }
+
+  ${({ scrollbar }) => scrollbar}
 `
 
 interface TokenOptionProps {
@@ -77,7 +81,6 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     <TokenButton
       data-index={index}
       style={style}
-      onMouseDown={() => prefetchColor(value)}
       onClick={onEvent}
       onBlur={onEvent}
       onFocus={onEvent}
@@ -134,7 +137,6 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   useEffect(() => setHover(-1), [tokens])
 
   const list = useRef<FixedSizeList>(null)
-  const innerList = useRef<HTMLElement>(null)
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -181,6 +183,9 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
     [focused]
   )
 
+  const [element, setElement] = useState<HTMLElement | null>(null)
+  const scrollbar = useScrollbar(element, { padded: true, css: scrollbarCss })
+
   return (
     <Column
       align="unset"
@@ -203,7 +208,8 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             itemSize={56}
             className="scrollbar"
             ref={list}
-            innerRef={innerList}
+            outerRef={setElement}
+            scrollbar={scrollbar}
           >
             {ItemRow}
           </TokenList>

@@ -3,7 +3,7 @@ import { readableColor } from 'polished'
 import { ReactNode, useMemo } from 'react'
 import { hex } from 'wcag-contrast'
 
-import styled, { ThemedProvider, useTheme } from './styled'
+import { ThemedProvider, useTheme } from './styled'
 import { Colors, ComputedTheme } from './theme'
 
 type DynamicColors = Pick<Colors, 'interactive' | 'outline' | 'primary' | 'secondary' | 'onInteractive'>
@@ -45,11 +45,11 @@ export function getDynamicTheme(theme: ComputedTheme, color: string): ComputedTh
 
 function getAccessibleColor(theme: ComputedTheme, color: string) {
   const dynamic = getDynamicTheme(theme, color)
-  const { darkMode } = dynamic
   let { primary } = dynamic
   let AAscore = hex(color, primary)
+  const contrastify = hex(color, '#000') > hex(color, '#fff') ? darken : lighten
   while (AAscore < 3) {
-    color = darkMode ? lighten(0.005, color) : darken(0.005, color)
+    color = contrastify(0.005, color)
     primary = getDynamicTheme(theme, color).primary
     AAscore = hex(color, primary)
   }
@@ -61,10 +61,6 @@ interface DynamicThemeProviderProps {
   children: ReactNode
 }
 
-const ColorProvider = styled.div`
-  color: ${({ theme }) => theme.primary};
-`
-
 export function DynamicThemeProvider({ color, children }: DynamicThemeProviderProps) {
   const theme = useTheme()
   const value = useMemo(() => {
@@ -73,11 +69,11 @@ export function DynamicThemeProvider({ color, children }: DynamicThemeProviderPr
     }
 
     const accessibleColor = getAccessibleColor(theme, color)
-    return accessibleColor ? getDynamicTheme(theme, accessibleColor) : theme
+    return getDynamicTheme(theme, accessibleColor)
   }, [theme, color])
   return (
     <ThemedProvider theme={value}>
-      <ColorProvider>{children}</ColorProvider>
+      <div style={{ color: value.primary }}>{children}</div>
     </ThemedProvider>
   )
 }

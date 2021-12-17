@@ -6,7 +6,7 @@ import { useSelect } from 'react-cosmos/fixture'
 
 import { Modal } from '../Dialog'
 import { transactionAtom } from './state'
-import TransactionStatusDialog from './TransactionStatusDialog'
+import { StatusDialog } from './Status'
 
 function Fixture() {
   const setTransaction = useUpdateAtom(transactionAtom)
@@ -50,7 +50,7 @@ function Fixture() {
         break
     }
   }, [setTransaction, state])
-  return <TransactionStatusDialog onClose={() => void 0} />
+  return <StatusDialog onClose={() => void 0} />
 }
 
 export default (

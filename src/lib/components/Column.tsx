@@ -1,4 +1,4 @@
-import styled, { Color, scrollableCss, Theme } from 'lib/theme'
+import styled, { Color, css, Theme } from 'lib/theme'
 
 const Column = styled.div<{
   align?: string
@@ -6,10 +6,10 @@ const Column = styled.div<{
   justify?: string
   gap?: number
   padded?: true
-  scrollable?: true
   flex?: true
   grow?: true
   theme: Theme
+  css?: ReturnType<typeof css>
 }>`
   align-items: ${({ align }) => align ?? 'center'};
   background-color: inherit;
@@ -23,7 +23,7 @@ const Column = styled.div<{
   justify-content: ${({ justify }) => justify ?? 'space-between'};
   padding: ${({ padded }) => padded && '0.75em'};
 
-  ${({ scrollable }) => scrollable && scrollableCss}
+  ${({ css }) => css}
 `
 
 export default Column
