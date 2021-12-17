@@ -11,7 +11,7 @@ import TokenInput from './TokenInput'
 const mockBalance = 123.45
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
-  padding: 0.75em;
+  margin: 0.75em;
   position: relative;
 
   img {

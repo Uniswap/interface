@@ -23,8 +23,8 @@ const UniswapA = styled.a`
 
 const HeaderRow = styled(Row)`
   height: 1.75em;
-  margin: 0 0.75em;
-  padding-top: 0.5em 0;
+  margin: 0 0.75em 0.75em;
+  padding-top: 0.5em;
   ${largeIconCss}
 `
 
