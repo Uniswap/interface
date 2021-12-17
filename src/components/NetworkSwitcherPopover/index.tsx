@@ -33,13 +33,9 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
     return connector?.supportedChainIds?.indexOf(chainId) === -1 || activeChainId === chainId
   }
 
-  function onNetworkChange(chainId: ChainId) {
-    return chainId === ChainId.MAINNET ? selectNetwork(ChainId.MAINNET) : selectNetwork(chainId)
-  }
-
   const networkList = createNetworksList({
     networkOptionsPreset,
-    onNetworkChange,
+    onNetworkChange: selectNetwork,
     isNetworkDisabled,
     selectedNetworkChainId: activeChainId ? activeChainId : -1,
     activeChainId: !!account ? activeChainId : -1,
@@ -52,7 +48,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
       show={networkSwitcherPopoverOpen}
       onOuterClick={closeModals}
       placement={placement}
-      showEthOptionPopover={true}
+      showWrongNetworkPopover
     >
       {children}
     </NetworkSwitcher>

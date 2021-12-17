@@ -131,7 +131,9 @@ export default function Web3Status() {
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { t } = useTranslation()
   const mobileByMedia = useIsMobileByMedia()
-  const unsupportedChain = error && error instanceof UnsupportedChainIdError
+  const unsupportedChain = useMemo(() => {
+    return error && error instanceof UnsupportedChainIdError
+  }, [error])
 
   const clickHandler = useCallback(() => {
     !unsupportedChain && toggleNetworkSwitcherPopover()

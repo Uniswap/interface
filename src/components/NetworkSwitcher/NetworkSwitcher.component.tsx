@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 
 import Option from './Option'
 import { useActiveWeb3React } from '../../hooks'
@@ -39,15 +39,17 @@ export const NetworkSwitcher = ({
   onOuterClick,
   parentRef,
   showWalletConnector = true,
-  showEthOptionPopover = false
+  showWrongNetworkPopover = false
 }: NetworkSwitcherProps) => {
   const popoverRef = useRef(null)
   const { account } = useActiveWeb3React()
   const { error } = useWeb3React()
   const ethereumOptionPopoverOpen = useModalOpen(ApplicationModal.ETHEREUM_OPTION)
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
-  const isWrongNetwork = error instanceof UnsupportedChainIdError
   const isMobileByMedia = useIsMobileByMedia()
+  const isWrongNetwork = useMemo(() => {
+    return error instanceof UnsupportedChainIdError
+  }, [error])
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
@@ -64,7 +66,7 @@ export const NetworkSwitcher = ({
     if (isMobileByMedia) {
       return <WrongNetworkMobileModal />
     }
-    return <EthereumOptionPopover show={showEthOptionPopover}>{children}</EthereumOptionPopover>
+    return <WrongNetworkPopover show={showWrongNetworkPopover}>{children}</WrongNetworkPopover>
   }
 
   return (
@@ -94,7 +96,7 @@ export const NetworkSwitcher = ({
   )
 }
 
-const EthereumOptionPopover = ({ children, show }: EthereumOptionPopoverProps) => {
+const WrongNetworkPopover = ({ children, show }: EthereumOptionPopoverProps) => {
   return (
     <StyledPopover
       placement="bottom-end"
@@ -115,7 +117,7 @@ const EthereumOptionPopover = ({ children, show }: EthereumOptionPopoverProps) =
 
 const WrongNetworkMobileModal = () => {
   return (
-    <Modal isOpen={true} onDismiss={() => null} maxHeight={90}>
+    <Modal isOpen onDismiss={() => null} maxHeight={90}>
       <Wrapper>
         <TitleWrapper>
           <TYPE.mediumHeader lineHeight="24px" color="text5">

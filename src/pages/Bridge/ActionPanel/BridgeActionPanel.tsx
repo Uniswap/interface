@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { ButtonPrimary } from '../../../components/Button'
 import { useNetworkSwitch } from '../../../hooks/useNetworkSwitch'
@@ -50,6 +50,14 @@ export const BridgeActionPanel = ({
   } = useBridgeActionPanel()
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
 
+  const handleSelectFromNetwork = useCallback(() => {
+    selectNetwork(fromNetworkChainId)
+  }, [fromNetworkChainId, selectNetwork])
+
+  const handleSelectToNetwork = useCallback(() => {
+    selectNetwork(toNetworkChainId)
+  }, [selectNetwork, toNetworkChainId])
+
   const selectPanel = () => {
     // No wallet
     if (!account) {
@@ -63,11 +71,7 @@ export const BridgeActionPanel = ({
     // Change network
     if (!isNetworkConnected && step !== BridgeStep.Collect) {
       return (
-        <ButtonPrimary
-          onClick={() =>
-            fromNetworkChainId === ChainId.MAINNET ? selectNetwork(ChainId.MAINNET) : selectNetwork(fromNetworkChainId)
-          }
-        >
+        <ButtonPrimary onClick={handleSelectFromNetwork}>
           Connect to {networkOptionsPreset.find(network => network.chainId === fromNetworkChainId)?.name}
         </ButtonPrimary>
       )
@@ -78,9 +82,7 @@ export const BridgeActionPanel = ({
       return (
         <NetworkSwitcher
           sendToId={toNetworkChainId}
-          onSwitchClick={() =>
-            toNetworkChainId === ChainId.MAINNET ? selectNetwork(ChainId.MAINNET) : selectNetwork(toNetworkChainId)
-          }
+          onSwitchClick={handleSelectToNetwork}
           onCollectClick={handleCollect}
         />
       )

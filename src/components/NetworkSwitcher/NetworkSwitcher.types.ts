@@ -9,7 +9,7 @@ export interface NetworkSwitcherProps {
   placement?: Placement
   showWalletConnector?: boolean
   parentRef?: RefObject<HTMLElement>
-  showEthOptionPopover?: boolean
+  showWrongNetworkPopover?: boolean
 }
 
 export interface EthereumOptionPopoverProps {
