@@ -1,7 +1,13 @@
+import { SupportedChainId } from 'constants/chains'
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import { useAtom } from 'jotai'
-import { useUpdateAtom } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { URLS } from 'lib/cosmos/connectors/network'
+import { cosmosProviderAtom } from 'lib/cosmos/state/provider'
+import { cosmosThemeAtom } from 'lib/cosmos/state/theme'
+import { cosmosWidthAtom } from 'lib/cosmos/state/width'
 import { useEffect } from 'react'
-import { useValue } from 'react-cosmos/fixture'
+import { useSelect, useValue } from 'react-cosmos/fixture'
 
 import Swap from '.'
 import { colorAtom } from './Output'
@@ -17,10 +23,19 @@ const validateColor = (() => {
 })()
 
 function Fixture() {
+  const width = useAtomValue(cosmosWidthAtom)
+  const theme = useAtomValue(cosmosThemeAtom)
+  const provider = useAtomValue(cosmosProviderAtom)
+  const [jsonRpcEndpoint] = useSelect('jsonRpcEndpoint', {
+    defaultValue: URLS[SupportedChainId.MAINNET][0],
+    options: Object.values(URLS).flat(),
+  })
+
+  const [locale] = useSelect('locale', { defaultValue: DEFAULT_LOCALE, options: ['pseudo', ...SUPPORTED_LOCALES] })
+
   const [input, setInput] = useAtom(inputAtom)
   const [output, setOutput] = useAtom(outputAtom)
   const [swap, setSwap] = useAtom(swapAtom)
-
   const [priceFetched] = useValue('price fetched', { defaultValue: false })
   useEffect(() => {
     if (priceFetched && input.token && output.token) {
@@ -62,7 +77,7 @@ function Fixture() {
     }
   }, [color, setColor])
 
-  return <Swap />
+  return <Swap jsonRpcEndpoint={jsonRpcEndpoint} locale={locale} provider={provider} theme={theme} width={width} />
 }
 
 export default <Fixture />

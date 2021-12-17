@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { useState } from 'react'
-import { useValue } from 'react-cosmos-shared2/FixtureLoader'
 
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
+import Widget, { WidgetProps } from '../Widget'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -12,15 +12,16 @@ import Settings from './Settings'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 
-export default function Swap() {
+type SwapWidgetProps = Omit<WidgetProps, 'children'>
+
+export default function Swap(props: SwapWidgetProps) {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const [jsonRpcConnection] = useValue('json rpc provided', { defaultValue: false })
-  const [walletConnection] = useValue('wallet connected', { defaultValue: true })
-  const disabled = !jsonRpcConnection && !walletConnection
+  const { jsonRpcEndpoint } = props
+  const disabled = !jsonRpcEndpoint
   return (
-    <>
+    <Widget {...props}>
       <Header logo title={<Trans>Swap</Trans>}>
-        {!disabled && <Wallet disabled={!walletConnection} />}
+        {!disabled && <Wallet disabled={disabled} />}
         <Settings disabled={disabled} />
       </Header>
       <div ref={setBoundary}>
@@ -34,6 +35,6 @@ export default function Swap() {
           </Output>
         </BoundaryProvider>
       </div>
-    </>
+    </Widget>
   )
 }

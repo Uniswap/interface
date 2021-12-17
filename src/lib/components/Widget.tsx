@@ -1,13 +1,10 @@
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
-import { Provider as AtomProvider, useAtom } from 'jotai'
+import { Provider as AtomProvider } from 'jotai'
 import ErrorBoundary from 'lib/components/ErrorBoundary'
+import useProviderInfo from 'lib/hooks/useProviderInfo'
 import { Provider as I18nProvider } from 'lib/i18n'
-import { injectedConnectorAtom, networkConnectorAtom } from 'lib/state'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
-import { ReactNode, useEffect, useRef } from 'react'
-import { initializeConnector } from 'widgets-web3-react/core'
-import { EIP1193 } from 'widgets-web3-react/eip1193'
-import { Network } from 'widgets-web3-react/network'
+import { ReactNode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
@@ -56,6 +53,10 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
+function NoConnectorAlert() {
+  return <div>hey, add a connector</div>
+}
+
 export interface WidgetProps {
   children: ReactNode
   theme?: Theme
@@ -77,32 +78,19 @@ export default function Widget({
   dialog,
   className,
 }: WidgetProps) {
-  const [, setNetworkConnector] = useAtom(networkConnectorAtom)
-  useEffect(() => {
-    if (!jsonRpcEndpoint) {
-      return
-    }
-    const [connector, hooks] = initializeConnector<Network>((actions) => new Network(actions, jsonRpcEndpoint))
-    setNetworkConnector([connector, hooks])
-  }, [setNetworkConnector, jsonRpcEndpoint])
-
-  const [, setInjectedConnector] = useAtom(injectedConnectorAtom)
-  useEffect(() => {
-    if (!provider) {
-      return
-    }
-    const [connector, hooks] = initializeConnector<EIP1193>((actions) => new EIP1193(actions, provider))
-    setInjectedConnector([connector, hooks])
-  }, [setInjectedConnector, provider])
-
+  const connector = useProviderInfo(provider, jsonRpcEndpoint)
+  const hasConnector = connector[0] !== undefined
   const wrapper = useRef<HTMLDivElement>(null)
+
   return (
     <ErrorBoundary>
       <AtomProvider>
         <ThemeProvider theme={theme}>
           <I18nProvider locale={locale}>
             <WidgetWrapper width={width} className={className} ref={wrapper}>
-              <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
+              <DialogProvider value={dialog || wrapper.current}>
+                {hasConnector ? children : <NoConnectorAlert />}
+              </DialogProvider>
             </WidgetWrapper>
           </I18nProvider>
         </ThemeProvider>
