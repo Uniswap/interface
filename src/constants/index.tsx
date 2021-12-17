@@ -256,7 +256,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = 'ipfs://QmfP5P43ngRCS4RNGLDmFsdjLuJRb6jKqQMKpVLNGEh4L2'
+export const DEFAULT_TOKEN_LIST = 'ipfs://QmS3GdeaJbmYQzSf28J8JuhAtq5qfJ2qJCAVcqx9cXscXV'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 
@@ -270,6 +270,9 @@ export interface NetworkDetails {
   }
   rpcUrls: string[]
   blockExplorerUrls?: string[]
+}
+
+export interface NetworkOptionalDetails {
   iconUrls?: string[] // Currently ignored.
   partnerChainId?: ChainId //arbitrum chainId if supported
   isArbitrum: boolean
@@ -285,9 +288,7 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://mainnet.infura.io/v3'],
-    blockExplorerUrls: ['https://etherscan.io'],
-    partnerChainId: ChainId.ARBITRUM_ONE,
-    isArbitrum: false
+    blockExplorerUrls: ['https://etherscan.io']
   },
   [ChainId.XDAI]: {
     chainId: `0x${ChainId.XDAI.toString(16)}`,
@@ -298,34 +299,29 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       decimals: Currency.XDAI.decimals || 18
     },
     rpcUrls: ['https://rpc.xdaichain.com'],
-    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
-    isArbitrum: false
+    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet']
   },
   [ChainId.ARBITRUM_ONE]: {
     chainId: `0x${ChainId.ARBITRUM_ONE.toString(16)}`,
-    chainName: 'Arbitrum one',
+    chainName: 'Arbitrum One',
     nativeCurrency: {
       name: Currency.ETHER.name || 'Ether',
       symbol: Currency.ETHER.symbol || 'ETH',
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://explorer.arbitrum.io'],
-    partnerChainId: ChainId.MAINNET,
-    isArbitrum: true
+    blockExplorerUrls: ['https://explorer.arbitrum.io']
   },
   [ChainId.ARBITRUM_RINKEBY]: {
     chainId: `0x${ChainId.ARBITRUM_RINKEBY.toString(16)}`,
-    chainName: 'A. Rinkeby',
+    chainName: 'Arbitrum Rinkeby',
     nativeCurrency: {
       name: Currency.ETHER.name || 'Ether',
       symbol: Currency.ETHER.symbol || 'ETH',
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://rinkeby-explorer.arbitrum.io'],
-    partnerChainId: ChainId.RINKEBY,
-    isArbitrum: true
+    blockExplorerUrls: ['https://rinkeby-explorer.arbitrum.io']
   },
   [ChainId.RINKEBY]: {
     chainId: `0x${ChainId.RINKEBY.toString(16)}`,
@@ -336,7 +332,27 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://rinkeby.infura.io/v3'],
-    blockExplorerUrls: ['https://rinkeby.etherscan.io'],
+    blockExplorerUrls: ['https://rinkeby.etherscan.io']
+  }
+}
+
+export const NETWORK_OPTIONAL_DETAIL: { [chainId: number]: NetworkOptionalDetails } = {
+  [ChainId.MAINNET]: {
+    partnerChainId: ChainId.ARBITRUM_ONE,
+    isArbitrum: false
+  },
+  [ChainId.XDAI]: {
+    isArbitrum: false
+  },
+  [ChainId.ARBITRUM_ONE]: {
+    partnerChainId: ChainId.MAINNET,
+    isArbitrum: true
+  },
+  [ChainId.ARBITRUM_RINKEBY]: {
+    partnerChainId: ChainId.RINKEBY,
+    isArbitrum: true
+  },
+  [ChainId.RINKEBY]: {
     partnerChainId: ChainId.ARBITRUM_RINKEBY,
     isArbitrum: false
   }
@@ -378,10 +394,11 @@ export const OLD_SWPR: { [key: number]: Token } = {
   )
 }
 
+export const TESTNETS = [4, 421611]
+export const SHOW_TESTNETS = true
+
 // addresses to filter by when querying for verified KPI tokens
 export const KPI_TOKEN_CREATORS: { [key: number]: string[] } = {
   [ChainId.XDAI]: ['0xe716ec63c5673b3a4732d22909b38d779fa47c3f', '0x9467dcfd4519287e3878c018c02f5670465a9003'],
   [ChainId.RINKEBY]: ['0x1A639b50D807ce7e61Dc9eeB091e6Cea8EcB1595', '0xb4124ceb3451635dacedd11767f004d8a28c6ee7']
 }
-
-export const SHOW_TESTNETS = true

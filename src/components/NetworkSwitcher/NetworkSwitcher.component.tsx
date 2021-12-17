@@ -15,7 +15,8 @@ import {
   OptionGrid,
   CloseButton,
   StyledPopover,
-  ChangeWalletButton
+  ChangeWalletButton,
+  NetworkTagRow
 } from './NetworkSwitcher.styles'
 import ethereumHintImage1x from '../../assets/images/ethereum-hint@1x.png'
 import ethereumHintImage2x from '../../assets/images/ethereum-hint@2x.png'
@@ -24,7 +25,7 @@ import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitc
 
 export const NetworkSwitcher = ({
   show,
-  options,
+  networksList,
   children,
   placement,
   onOuterClick,
@@ -40,7 +41,6 @@ export const NetworkSwitcher = ({
   })
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-
   return (
     <div ref={popoverRef}>
       <EthereumOptionPopover show={ethereumOptionPopoverOpen}>
@@ -48,11 +48,14 @@ export const NetworkSwitcher = ({
           placement={placement}
           content={
             <>
-              <OptionGrid>
-                {options.map((props, index) => (
-                  <Option key={index} {...props} />
-                ))}
-              </OptionGrid>
+              {networksList.map((network, index) => (
+                <OptionGrid key={index}>
+                  <NetworkTagRow>{network.tag}</NetworkTagRow>
+                  {network.networks.map((props, index) => (
+                    <Option key={index} {...props} />
+                  ))}
+                </OptionGrid>
+              ))}
               {showWalletConnector && !!account && (
                 <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>
               )}

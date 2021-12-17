@@ -1,12 +1,13 @@
 import { ChainId } from '@swapr/sdk'
-import { NETWORK_DETAIL } from '../constants'
 import { BridgeTxnType } from '../state/bridgeTransactions/types'
+import { getNetworkInfo } from './networksList'
 
 export type ChainIdPair = {
   l1ChainId: ChainId | undefined
   l2ChainId: ChainId | undefined
   chainId: ChainId | undefined
   partnerChainId: ChainId | undefined
+  isArbitrum: boolean | undefined
 }
 
 export const getChainPair = (chainId?: ChainId): ChainIdPair => {
@@ -15,20 +16,22 @@ export const getChainPair = (chainId?: ChainId): ChainIdPair => {
       l1ChainId: chainId,
       l2ChainId: undefined,
       chainId,
-      partnerChainId: undefined
+      partnerChainId: undefined,
+      isArbitrum: undefined
     }
   }
 
-  const networkDetails = NETWORK_DETAIL[chainId]
-  const l1 = !networkDetails.isArbitrum ? networkDetails.chainId : networkDetails.partnerChainId
-  const l2 = networkDetails.isArbitrum ? networkDetails.chainId : networkDetails.partnerChainId
+  const { isArbitrum, chainId: networkChainId, partnerChainId } = getNetworkInfo(chainId)
+  const l1 = !isArbitrum ? networkChainId : partnerChainId
+  const l2 = isArbitrum ? networkChainId : partnerChainId
 
   if (l1 && l2) {
     return {
       l1ChainId: Number(l1) as ChainId,
       l2ChainId: Number(l2) as ChainId,
       chainId,
-      partnerChainId: NETWORK_DETAIL[chainId].partnerChainId
+      partnerChainId,
+      isArbitrum
     }
   }
 
@@ -36,7 +39,8 @@ export const getChainPair = (chainId?: ChainId): ChainIdPair => {
     l1ChainId: chainId,
     l2ChainId: undefined,
     chainId,
-    partnerChainId: undefined
+    partnerChainId: undefined,
+    isArbitrum: false
   }
 }
 

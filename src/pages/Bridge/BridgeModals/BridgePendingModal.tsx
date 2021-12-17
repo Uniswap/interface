@@ -3,11 +3,11 @@ import Modal, { ModalProps } from '../../../components/Modal'
 import { ConfirmationPendingContent } from '../../../components/TransactionConfirmationModal'
 
 interface BridgePendingModalProps extends ModalProps {
-  pendingText: string
+  text: string
 }
 
-export const BridgePendingModal = ({ isOpen, onDismiss, pendingText }: BridgePendingModalProps) => (
+export const BridgePendingModal = ({ isOpen, onDismiss, text }: BridgePendingModalProps) => (
   <Modal isOpen={isOpen} onDismiss={onDismiss}>
-    <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
+    <ConfirmationPendingContent onDismiss={onDismiss} pendingText={text} />
   </Modal>
 )

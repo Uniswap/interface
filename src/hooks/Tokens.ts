@@ -180,3 +180,7 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
   const token = useToken(isNativeCurrency ? undefined : currencyId)
   return isNativeCurrency ? nativeCurrency : token
 }
+
+export function isToken(currency: Currency | Token | null | undefined): currency is Token {
+  return !!currency && (currency as Token).address !== undefined
+}

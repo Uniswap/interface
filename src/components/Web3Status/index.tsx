@@ -38,6 +38,8 @@ const Web3StatusError = styled.div`
 `
 
 const SwitchNetworkButton = styled.button`
+  display: flex;
+  align-items: center;
   height: 29px;
   padding: 8px 14px;
   margin-left: 8px;
