@@ -141,14 +141,14 @@ export default function Pool() {
                   </div>
                   <AutoColumn gap="md">
                     <RowBetween>
-                      <TYPE.black fontWeight={600}>You need to stake {warning.poolName} LP tokens</TYPE.black>
+                      <TYPE.black fontWeight={600}>You have unstaked {warning.poolName} LP tokens</TYPE.black>
                     </RowBetween>
                     <RowBetween>
                       <TYPE.black fontSize={14}>
                         Stake into the {warning.poolName} farming pool to an additional rewards on your LP tokens
                       </TYPE.black>
                     </RowBetween>
-                    <StyledInternalLink to={warning.link}>Farm UBE</StyledInternalLink>
+                    <StyledInternalLink to={warning.link}>Stake</StyledInternalLink>
                   </AutoColumn>
                 </RowStart>
               </CardSection>
