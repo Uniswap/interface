@@ -40,6 +40,10 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   position: relative;
   width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
 
+  @supports (overflow: clip) {
+    overflow-y: clip;
+  }
+
   * {
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.fontFamily};
@@ -52,7 +56,6 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
 
   .dialog {
     animation: ${slideUp} 0.25s ease-in-out;
-    will-change: top;
   }
 
   .dialog.unmounting {
