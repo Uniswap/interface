@@ -11,10 +11,17 @@ import Popover from '../Popover'
 import { useCloseModals, useModalOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/actions'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+import connectedSvg from '../../assets/svg/connected.svg'
 
 const Wrapper = styled.div`
   width: 100%;
 `
+
+const ConnectedIcon = styled.img`
+  margin-left: 6px;
+`
+
+const StyledConnectedIcon = () => <ConnectedIcon src={connectedSvg} alt="connected" />
 
 const List = styled.ul`
   padding: 0;
@@ -30,11 +37,20 @@ const ListItem = styled.li`
   }
 `
 
-const ListFooter = styled.li`
-  background: #2A2F42;
-  padding: 24px 0 24px 0;
-  margin-top: 20px;
-  border-color: #2A2F42;
+export const DisconnectButton = styled.button`
+  width: 100%;
+  padding: 20px 18px;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text1};
+  background: ${({ theme }) => theme.dark2};;
+  border: none;
+  outline: none;
+  cursor: pointer;
   border-radius: 0px 0px 8px 8px;
 `
 
@@ -63,13 +79,13 @@ const ListButton = styled.button`
   }
 `
 
-const ListIconWrapper = styled.div`
+const ListIconWrapper = styled.div<{ isActive?: boolean }>`
   display: inline-flex;
   justify-content: center;
   align-items: center;
   width: 20px;
   height: 20px;
-  margin-right: 8px;
+  margin-right: ${ props => (props.isActive ? "22px" : "8px")};
 
   img {
     max-width: 100%;
@@ -192,7 +208,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
         content={
           <List>
             {getOptions()}
-            { active && <Disconnect onClick={disconnect}></Disconnect> }
+            { active && <DisconnectButton onClick={disconnect}>Disconnect Wallet</DisconnectButton> }
           </List>
         }
         show={walletSwitcherPopoverOpen}
@@ -214,14 +230,11 @@ interface ItemProps {
   isActive?: boolean
 }
 
-interface DisconnectProps {
-  onClick?: () => void
-}
-
 export const Item = ({ id, onClick, name, icon, link, isActive }: ItemProps) => {
   const getContent = () => (
     <>
-      <ListIconWrapper>
+      <ListIconWrapper isActive={isActive}>
+        { isActive && <StyledConnectedIcon /> }
         <img src={icon} alt={name + ' logo'} />
       </ListIconWrapper>
       {name}
@@ -235,20 +248,10 @@ export const Item = ({ id, onClick, name, icon, link, isActive }: ItemProps) => 
           {getContent()}
         </ListButton>
       ) : (
-        <ListButton disabled={isActive} onClick={onClick}>
+        <ListButton onClick={onClick}>
           {getContent()}
         </ListButton>
       )}
     </ListItem>
-  )
-}
-
-export const Disconnect = ({onClick}: DisconnectProps) => {
-  return (
-    <ListFooter>
-      <ListButton onClick={onClick}>
-        DISCONNECT WALLET
-      </ListButton>
-    </ListFooter>
   )
 }
