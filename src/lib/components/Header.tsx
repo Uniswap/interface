@@ -1,30 +1,30 @@
 import { largeIconCss, Logo } from 'lib/icons'
-import styled, { Color, ThemedText } from 'lib/theme'
+import styled, { ThemedText } from 'lib/theme'
 import { ReactElement, ReactNode } from 'react'
 
 import Row from './Row'
 
-const StyledLogo = styled(Logo)<{ color: Color }>`
+const UniswapA = styled.a`
   cursor: pointer;
-  fill: ${({ color, theme }) => theme[color]};
-  transition: transform 0.3s ease;
 
-  :hover {
-    fill: ${({ color, theme }) => theme.onHover(theme[color])};
-    transform: rotate(-5deg);
+  ${Logo} {
+    fill: ${({ theme }) => theme.secondary};
+    height: 1.5em;
+    transition: transform 0.3s ease;
+    width: 1.5em;
+
+    :hover {
+      fill: ${({ theme }) => theme.onHover(theme.secondary)};
+      transform: rotate(-5deg);
+    }
   }
 `
 
 const HeaderRow = styled(Row)`
   height: 1.75em;
   margin: 0 0.75em;
-  padding-top: 0.5em;
+  padding-top: 0.5em 0;
   ${largeIconCss}
-
-  ${StyledLogo} {
-    height: 1.5em;
-    width: 1.5em;
-  }
 `
 
 export interface HeaderProps {
@@ -38,9 +38,9 @@ export default function Header({ title, logo, children }: HeaderProps) {
     <HeaderRow iconSize={1.2}>
       <Row gap={0.5}>
         {logo && (
-          <a href={`https://app.uniswap.org/`}>
-            <StyledLogo color="secondary" />
-          </a>
+          <UniswapA href={`https://app.uniswap.org/`}>
+            <Logo />
+          </UniswapA>
         )}
         {title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}
       </Row>

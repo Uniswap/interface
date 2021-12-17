@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import CheckIcon from 'lib/assets/Check'
+import LogoIcon from 'lib/assets/Logo'
 import SpinnerIcon from 'lib/assets/Spinner'
 import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
@@ -20,8 +21,6 @@ import {
   Trash2 as Trash2Icon,
   X as XIcon,
 } from 'react-feather'
-
-export { default as Logo } from 'lib/assets/Logo'
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
@@ -87,6 +86,12 @@ export const Check = styled(icon(CheckIcon))`
     stroke: none;
   }
 `
+
+export const Logo = styled(icon(LogoIcon))`
+  fill: ${({ color, theme }) => theme[color]};
+  stroke: none;
+`
+
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
