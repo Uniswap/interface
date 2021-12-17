@@ -22,7 +22,8 @@ const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
   height: 1.2em;
   max-width: ${({ collapsed }) => (collapsed ? '1.2' : '8.2')}em;
   overflow-x: hidden;
-  transition: max-width 0.2s linear;
+  transition: max-width 0.25s linear;
+  will-change: max-width;
 
   img {
     border-radius: 100%;

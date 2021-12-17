@@ -10,8 +10,9 @@ const UniswapA = styled.a`
   ${Logo} {
     fill: ${({ theme }) => theme.secondary};
     height: 1.5em;
-    transition: transform 0.3s ease;
+    transition: transform 0.25s ease;
     width: 1.5em;
+    will-change: transform;
 
     :hover {
       fill: ${({ theme }) => theme.onHover(theme.secondary)};

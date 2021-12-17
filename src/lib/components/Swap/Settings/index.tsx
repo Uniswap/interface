@@ -38,6 +38,7 @@ export function SettingsDialog() {
 const SettingsButton = styled(IconButton)`
   ${SettingsIcon} {
     transition: transform 0.25s ease;
+    will-change: transform;
 
     :hover {
       transform: rotate(45deg);

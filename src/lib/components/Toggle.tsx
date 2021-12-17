@@ -4,6 +4,8 @@ import { transparentize } from 'polished'
 import { KeyboardEvent, useCallback } from 'react'
 
 const Input = styled.input<{ text: string }>`
+  -moz-appearance: none;
+  -webkit-appearance: none;
   align-items: center;
   appearance: none;
   background: ${({ theme }) => theme.interactive};
@@ -16,11 +18,9 @@ const Input = styled.input<{ text: string }>`
   height: 2em;
   margin: 0;
   padding: 0;
+
   position: relative;
   width: 4.5em;
-
-  -webkit-appearance: none;
-  -moz-appearance: none;
 
   :before {
     background-color: ${({ theme }) => theme.secondary};
@@ -29,8 +29,8 @@ const Input = styled.input<{ text: string }>`
     display: inline-block;
     height: 1.5em;
     margin-left: 0.25em;
-    width: 1.5em;
     position: absolute;
+    width: 1.5em;
   }
 
   :hover:before {
@@ -39,8 +39,6 @@ const Input = styled.input<{ text: string }>`
 
   :checked:before {
     background-color: ${({ theme }) => theme.accent};
-
-    // use margin because it can transition
     margin-left: 2.75em;
   }
 
@@ -50,11 +48,9 @@ const Input = styled.input<{ text: string }>`
 
   :after {
     content: '${({ text }) => text}';
+    margin-left: 1.75em;
     text-align: center;
     width: 2.75em;
-
-    // use margin because it can transition
-    margin-left: 1.75em;
   }
 
   :checked:after {
@@ -62,7 +58,8 @@ const Input = styled.input<{ text: string }>`
   }
 
   :before {
-    transition: margin 0.15s ease;
+    transition: margin 0.25s ease;
+    will-change: margin;
   }
 `
 

@@ -10,7 +10,8 @@ const TextWrapper = styled(Text)<{ color?: Color }>`
 `
 
 const TransitionTextWrapper = styled(TextWrapper)`
-  transition: font-size 0.2s ease-out, line-height 0.2s ease-out;
+  transition: font-size 0.25s ease-out, line-height 0.25s ease-out;
+  will-change: font-size, line-height;
 `
 
 export function H1(props: TextProps) {

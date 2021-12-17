@@ -40,6 +40,7 @@ const StyledReverseButton = styled(Button)`
 
   div {
     transition: transform 0.25s ease;
+    will-change: transform;
 
     &.reverse {
       transform: rotate(180deg);

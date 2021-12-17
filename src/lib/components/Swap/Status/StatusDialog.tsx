@@ -17,7 +17,8 @@ const HeaderIcon = styled(LargeIcon)`
   flex-grow: 1;
 
   svg {
-    transition: height 0.2s, width 0.2s;
+    transition: height 0.25s, width 0.25s;
+    will-change: height, width;
   }
 `
 
@@ -118,22 +119,26 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
 }
 
 const ErrorHeader = styled(Column)<{ open: boolean }>`
-  transition: gap 0.2s;
+  transition: gap 0.25s;
+  will-change: gap;
 
   div:last-child {
     max-height: ${({ open }) => (open ? 0 : 60 / 14)}em; // 3 * line-height
     overflow-y: hidden;
-    transition: max-height 0.2s;
+    transition: max-height 0.25s;
+    will-change: max-height;
   }
 `
 const ErrorColumn = styled(Column)``
 const ExpandoColumn = styled(Column)<{ open: boolean }>`
   flex-grow: ${({ open }) => (open ? 2 : 0)};
-  transition: flex-grow 0.2s, gap 0.2s;
+  transition: flex-grow 0.25s, gap 0.25s;
+  will-change: flex-grow, gap;
 
   ${Rule} {
     margin-bottom: ${({ open }) => (open ? 0 : 0.75)}em;
-    transition: margin-bottom 0.2s;
+    transition: margin-bottom 0.25s;
+    will-change: margin-bottom;
   }
 
   ${ErrorColumn} {
@@ -141,12 +146,14 @@ const ExpandoColumn = styled(Column)<{ open: boolean }>`
     flex-grow: ${({ open }) => (open ? 1 : 0)};
     overflow-y: hidden;
     position: relative;
-    transition: flex-grow 0.2s;
+    transition: flex-grow 0.25s;
+    will-change: flex-grow;
 
     ${Column} {
       height: 100%;
       padding: ${({ open }) => (open ? '0.5em 0' : 0)};
-      transition: padding 0.2s;
+      transition: padding 0.25s;
+      will-change: padding;
 
       :after {
         background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
