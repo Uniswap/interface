@@ -9,7 +9,6 @@ const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-grow: 1;
   transition: background-color 0.25s ease-out, flex-grow 0.25s ease-out, padding 0.25s ease-out;
-  will-change: background-color, flex-grow, padding;
 `
 
 const UpdateRow = styled(Row)``
@@ -47,7 +46,6 @@ export const Overlay = styled(Row)<{ updated?: boolean }>`
   flex-direction: row-reverse;
   min-height: 3.5em;
   transition: padding 0.25s ease-out;
-  will-change: padding;
 
   ${({ updated }) => updated && updatedCss}
 `

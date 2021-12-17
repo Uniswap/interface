@@ -21,11 +21,9 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   // Set transitions to reduce color flashes when switching color/token.
   // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.
   transition: ${({ hasColor }) => (hasColor ? 'background-color 0.25s ease-out' : undefined)};
-  will-change: background-color;
   * {
     // When color is loading, delay the color/stroke so that it seems to transition from the last state.
     transition: ${({ hasColor }) => (hasColor === null ? 'color 0.25s ease-in, stroke 0.25s ease-in' : undefined)};
-    will-change: color, stroke;
   }
 `
 

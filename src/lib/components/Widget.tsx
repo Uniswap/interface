@@ -52,6 +52,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
 
   .dialog {
     animation: ${slideUp} 0.25s ease-in-out;
+    will-change: top;
   }
 
   .dialog.unmounting {

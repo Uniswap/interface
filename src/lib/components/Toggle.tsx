@@ -59,7 +59,6 @@ const Input = styled.input<{ text: string }>`
 
   :before {
     transition: margin 0.25s ease;
-    will-change: margin;
   }
 `
 

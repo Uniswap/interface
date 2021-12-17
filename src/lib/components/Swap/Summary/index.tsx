@@ -32,13 +32,11 @@ const Body = styled(Column)<{ open: boolean }>`
   ${SummaryColumn} {
     flex-grow: ${({ open }) => (open ? 0 : 1)};
     transition: flex-grow 0.25s;
-    will-change: flex-grow;
   }
 
   ${ExpandoColumn} {
     flex-grow: ${({ open }) => (open ? 1 : 0)};
     transition: flex-grow 0.25s;
-    will-change: flex-grow;
 
     ${DetailsColumn} {
       flex-basis: 0;
@@ -46,13 +44,11 @@ const Body = styled(Column)<{ open: boolean }>`
       overflow-y: hidden;
       position: relative;
       transition: flex-grow 0.25s;
-      will-change: flex-grow;
 
       ${Column} {
         height: 100%;
         padding: ${({ open }) => (open ? '0.5em 0' : 0)};
         transition: padding 0.25s;
-        will-change: padding;
 
         :after {
           background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
@@ -74,7 +70,6 @@ const Body = styled(Column)<{ open: boolean }>`
         open
           ? 'max-height 0.1s ease-out, padding 0.25s ease-out'
           : 'flex-grow 0.25s ease-out, max-height 0.1s ease-in, padding 0.25s ease-out'};
-      will-change: flex-grow, max-height, padding;
     }
   }
 `

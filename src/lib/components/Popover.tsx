@@ -16,7 +16,6 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   padding: 8px;
   transition: visibility 0.25s linear, opacity 0.25s linear;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
-  will-change: visibility, opacity;
   z-index: ${Layer.TOOLTIP};
 `
 
