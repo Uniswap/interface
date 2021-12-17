@@ -20,12 +20,22 @@ const List = styled.ul`
   padding: 0;
   margin: 0;
   list-style: none;
+  margin-top: 12px;
 `
 
 const ListItem = styled.li`
   & + & {
-    margin-top: 24px;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
+`
+
+const ListFooter = styled.li`
+  background: #2A2F42;
+  padding: 24px 0 24px 0;
+  margin-top: 20px;
+  border-color: #2A2F42;
+  border-radius: 0px 0px 8px 8px;
 `
 
 const ListButton = styled.button`
@@ -40,10 +50,11 @@ const ListButton = styled.button`
   text-transform: uppercase;
   white-space: nowrap;
   color: ${({ theme }) => theme.text2};
-  border: 0;
   background: none;
+  border: 0;
   outline: none;
   cursor: pointer;
+  padding: 0 22px 0 22px;
 
   &:disabled {
     cursor: not-allowed;
@@ -67,7 +78,6 @@ const ListIconWrapper = styled.div`
 
 const StyledPopover = styled(Popover)`
   max-width: 290px;
-  padding: 22px;
   background-color: ${({ theme }) => theme.bg1};
   border-color: ${({ theme }) => theme.dark2};
   border-style: solid;
@@ -83,13 +93,22 @@ interface ConnectWalletProps {
 }
 
 export const ConnectWalletPopover = ({ setModal, tryActivation, children }: ConnectWalletProps) => {
-  const { connector } = useWeb3React()
+  const { connector, active, deactivate } = useWeb3React()
   const popoverRef = useRef<HTMLDivElement | null>(null)
   const walletSwitcherPopoverOpen = useModalOpen(ApplicationModal.WALLET_SWITCHER)
   const closeModals = useCloseModals()
   useOnClickOutside(popoverRef, () => {
     if (walletSwitcherPopoverOpen) closeModals()
   })
+
+  async function disconnect() {
+    try {
+      deactivate()
+      // Maybe inform user wallect has successfully disconnect?
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
@@ -108,7 +127,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
                 option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
               icon={require('../../assets/images/' + option.iconName)}
-              active={option.connector && option.connector === connector}
+              isActive={option.connector && option.connector === connector}
             />
           )
         }
@@ -159,7 +178,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
             }}
             name={option.name}
             icon={require('../../assets/images/' + option.iconName)}
-            active={option.connector && option.connector === connector}
+            isActive={option.connector && option.connector === connector}
           />
         )
       )
@@ -170,8 +189,14 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
     <Wrapper>
       <StyledPopover
         innerRef={popoverRef}
-        content={<List>{getOptions()}</List>}
+        content={
+          <List>
+            {getOptions()}
+            { active && <Disconnect onClick={disconnect}></Disconnect> }
+          </List>
+        }
         show={walletSwitcherPopoverOpen}
+        padding={ active ? "8px 0 0 0" : "8px" }
         placement="bottom-end"
       >
         {children}
@@ -186,10 +211,14 @@ interface ItemProps {
   name: string
   link?: string
   onClick?: () => void
-  active?: boolean
+  isActive?: boolean
 }
 
-export const Item = ({ id, onClick, name, icon, link, active }: ItemProps) => {
+interface DisconnectProps {
+  onClick?: () => void
+}
+
+export const Item = ({ id, onClick, name, icon, link, isActive }: ItemProps) => {
   const getContent = () => (
     <>
       <ListIconWrapper>
@@ -206,10 +235,20 @@ export const Item = ({ id, onClick, name, icon, link, active }: ItemProps) => {
           {getContent()}
         </ListButton>
       ) : (
-        <ListButton disabled={active} onClick={onClick}>
+        <ListButton disabled={isActive} onClick={onClick}>
           {getContent()}
         </ListButton>
       )}
     </ListItem>
+  )
+}
+
+export const Disconnect = ({onClick}: DisconnectProps) => {
+  return (
+    <ListFooter>
+      <ListButton onClick={onClick}>
+        DISCONNECT WALLET
+      </ListButton>
+    </ListFooter>
   )
 }
