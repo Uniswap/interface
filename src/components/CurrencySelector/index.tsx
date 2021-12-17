@@ -55,7 +55,9 @@ export function CurrencySelector({
               </Text>
             </CenterBox>
           ) : (
-            <Text variant="body" color="white">{t`Select a token`}</Text>
+            <Text variant="h4" color="white">
+              {t('Select a token')}
+            </Text>
           )}
         </CenterBox>
       </Toggle>

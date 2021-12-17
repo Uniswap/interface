@@ -1,6 +1,7 @@
 import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
@@ -22,6 +23,7 @@ type CurrencyInputProps = {
   onSetAmount: (amount: string) => void
   otherSelectedCurrency?: Currency | null
   showNonZeroBalancesOnly?: boolean
+  title?: string
 } & RestyleProps
 
 export function CurrencyInput(props: CurrencyInputProps) {
@@ -33,6 +35,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
     onSelectCurrency,
     showNonZeroBalancesOnly,
     otherSelectedCurrency,
+    title,
     ...rest
   } = props
 
@@ -40,8 +43,17 @@ export function CurrencyInput(props: CurrencyInputProps) {
 
   const price = useUSDCPrice(currency ?? undefined)
 
+  const { t } = useTranslation()
+
   return (
-    <Box alignItems="center" py="md" pr="md" my="md" borderRadius="md" {...transformedProps}>
+    <Box pb="md" pt={title ? 'lg' : 'md'} pr="md" mt="md" borderRadius="md" {...transformedProps}>
+      {title && (
+        <Box mx="md" flexDirection="row">
+          <Text variant="body" color="gray400">
+            {title}
+          </Text>
+        </Box>
+      )}
       <Box flexDirection="row">
         <AmountInput
           borderWidth={0}
@@ -63,7 +75,11 @@ export function CurrencyInput(props: CurrencyInputProps) {
           <Text variant="body" ml="md" color="gray400">
             {formatPrice(price)}
           </Text>
-          <Text variant="body" color="gray400">{`${formatCurrencyAmount(currencyBalance)}`}</Text>
+          {currency && (
+            <Text variant="body" color="gray400">{`${t('Balance')} ${formatCurrencyAmount(
+              currencyBalance
+            )}`}</Text>
+          )}
         </Box>
       </Box>
     </Box>
@@ -75,6 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     height: 48,
     fontSize: textVariants.h1.fontSize,
+    fontFamily: textVariants.h1.fontFamily,
     flex: 1,
   },
 })

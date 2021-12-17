@@ -58,7 +58,7 @@ export function CurrencySearch({
               borderRadius="lg"
               mx="lg"
               onChangeText={onChangeText}
-              placeholder="Search token symbols or address"
+              placeholder={t('Search token symbols or address')}
               style={styles.input}
               borderWidth={0}
               backgroundColor="gray50"

@@ -7,6 +7,7 @@ interface Palette {
   primaryText: string
   secondary1: string
   secondary2: string
+  background1: string
   white: string
   black: string
   gray50: string
@@ -14,6 +15,7 @@ interface Palette {
   gray200: string
   gray400: string
   gray600: string
+  paleBlue: string
   blue: string
   green: string
   pink: string
@@ -35,6 +37,7 @@ export const colorsLight: Palette = {
   primaryText: '#D50066',
   secondary1: '#F6DDE8',
   secondary2: '#FDEAF1',
+  background1: '#F7F8FA',
   white: '#FFFFFF',
   black: '#27252E',
   gray50: '#F2F2F2',
@@ -42,6 +45,7 @@ export const colorsLight: Palette = {
   gray200: '#B8B8B8',
   gray400: '#858585',
   gray600: '#4F4F4F',
+  paleBlue: '#F4F8FE',
   blue: '#426CFF',
   green: '#28CD88',
   pink: '#FF007A',
@@ -63,6 +67,7 @@ export const colorsDark: Palette = {
   primaryText: '#5090ea',
   secondary1: '#17000b26',
   secondary2: '#17000b26',
+  background1: '#F7F8FA',
   white: '#FFFFFF',
   black: '#27252E',
   gray50: '#f2f2f2',
@@ -70,6 +75,7 @@ export const colorsDark: Palette = {
   gray200: '#b8b8b8',
   gray400: '#858585',
   gray600: '#4f4f4f',
+  paleBlue: '#F4F8FE',
   blue: '#2172E5',
   green: '#27AE60',
   pink: '#FF007A',

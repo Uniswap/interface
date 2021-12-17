@@ -66,9 +66,9 @@ export function SwapForm(props: SwapFormProps) {
   if (swapInfoError !== null) {
     errorLabel = stringifySwapInfoError(swapInfoError, t)
   } else if (quoteStatus === 'loading') {
-    errorLabel = t`Fetching best price...`
+    errorLabel = t('Fetching best price...')
   } else if (quoteStatus === 'error') {
-    errorLabel = t`Failed to fetch a quote`
+    errorLabel = t('Failed to fetch a quote')
   } else if (activeAccount && activeAccount.type === AccountType.readonly) {
     // TODO: move check somewhere else?
     errorLabel = t('Cannot swap on watched account')
@@ -102,9 +102,9 @@ export function SwapForm(props: SwapFormProps) {
         />
 
         <Box zIndex="popover">
-          <Box style={StyleSheet.absoluteFill} alignItems="center" height={34}>
+          <Box style={StyleSheet.absoluteFill} alignItems="center" height={40}>
             <Box
-              bg="gray50"
+              bg="background1"
               borderRadius="md"
               borderColor="white"
               borderWidth={4}
@@ -112,7 +112,7 @@ export function SwapForm(props: SwapFormProps) {
               alignItems="center"
               p="xs">
               <Button onPress={onSwitchCurrencies} justifyContent="center" alignItems="center">
-                <SwapArrow height={14} width={16} />
+                <SwapArrow height={20} width={20} />
               </Button>
             </Box>
           </Box>
@@ -128,7 +128,8 @@ export function SwapForm(props: SwapFormProps) {
           onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
           showNonZeroBalancesOnly={false}
           otherSelectedCurrency={currencies[CurrencyField.INPUT]}
-          backgroundColor="gray50"
+          title={t(`You'll receive`)}
+          backgroundColor="background1"
         />
       </Box>
       <Box>
