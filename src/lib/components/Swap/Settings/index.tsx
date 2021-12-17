@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useResetAtom } from 'jotai/utils'
 import { Settings as SettingsIcon } from 'lib/icons'
-import { ThemedText, useScrollbar } from 'lib/theme'
+import styled, { ThemedText, useScrollbar } from 'lib/theme'
 import React, { useState } from 'react'
 
 import { IconButton, TextButton } from '../../Button'
@@ -35,11 +35,21 @@ export function SettingsDialog() {
   )
 }
 
+const SettingsButton = styled(IconButton)`
+  ${SettingsIcon} {
+    transition: transform 0.25s ease;
+
+    :hover {
+      transform: rotate(45deg);
+    }
+  }
+`
+
 export default function Settings({ disabled }: { disabled?: boolean }) {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <IconButton disabled={disabled} onClick={() => setOpen(true)} icon={SettingsIcon} />
+      <SettingsButton disabled={disabled} onClick={() => setOpen(true)} icon={SettingsIcon} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <SettingsDialog />
