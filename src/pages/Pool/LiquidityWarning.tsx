@@ -1,6 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import React, { useContext, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
 import styled, { ThemeContext } from 'styled-components'
 
@@ -64,6 +65,8 @@ export default function LiquidityWarning() {
     return localWarnings
   }, [v2Pairs, unstakedFarms])
 
+  const { t } = useTranslation()
+
   return (
     <TopSection gap="md">
       {warnings.map((warning) => (
@@ -75,14 +78,16 @@ export default function LiquidityWarning() {
               </div>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.black fontWeight={600}>You have unstaked {warning.poolName} LP tokens</TYPE.black>
+                  <TYPE.black fontWeight={600}>
+                    <Trans i18nKey="unstakedLPTokens" values={{ poolName: warning.poolName }} />
+                  </TYPE.black>
                 </RowBetween>
                 <RowBetween>
                   <TYPE.black fontSize={14}>
-                    Stake into the {warning.poolName} farming pool to an additional rewards on your LP tokens
+                    <Trans i18nKey="stakeIntoFarmingPool" values={{ poolName: warning.poolName }} />
                   </TYPE.black>
                 </RowBetween>
-                <StyledInternalLink to={warning.link}>Farm UBE</StyledInternalLink>
+                <StyledInternalLink to={warning.link}>{t('farmUBE')}</StyledInternalLink>
               </AutoColumn>
             </RowStart>
           </CardSection>

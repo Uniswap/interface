@@ -1,25 +1,21 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
 import { ErrorBoundary } from '@sentry/react'
 import { Token } from '@ubeswap/sdk'
 import ChangeNetworkModal from 'components/ChangeNetworkModal'
 import TokenSelect from 'components/CurrencyInputPanel/TokenSelect'
 import Loader from 'components/Loader'
 import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 
 import { AutoColumn, ColumnCenter, TopSection } from '../../components/Column'
 import { PoolCard } from '../../components/earn/PoolCard'
 import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import { RowBetween } from '../../components/Row'
-import { usePairs } from '../../data/Reserves'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import LiquidityWarning from '../Pool/LiquidityWarning'
-import { useFarmRegistry, WarningInfo } from './useFarmRegistry'
+import { useFarmRegistry } from './useFarmRegistry'
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -66,43 +62,6 @@ export default function Earn() {
   }, [filteringToken, farmSummaries])
 
   const { stakedFarms, unstakedFarms } = useOwnerStakedPools(filteredFarms)
-  const { address: account } = useContractKit()
-  const trackedTokenPairs = useTrackedTokenPairs()
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
-  )
-  const liquidityTokens = useMemo(
-    () => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken),
-    [tokenPairsWithLiquidityTokens]
-  )
-  const [v2PairsBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, liquidityTokens)
-  const liquidityTokensWithBalances = useMemo(
-    () =>
-      tokenPairsWithLiquidityTokens
-        .filter(({ liquidityToken }) => v2PairsBalances[liquidityToken.address]?.greaterThan('0'))
-        .map(({ tokens }) => tokens),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
-  )
-  const v2Pairs = usePairs(liquidityTokensWithBalances)
-
-  const warnings: WarningInfo[] = useMemo(() => {
-    const localWarnings: WarningInfo[] = []
-    v2Pairs.forEach(([, pair]) => {
-      const token0 = pair?.token0.symbol
-      const token1 = pair?.token1.symbol
-      const poolName = token0 + '-' + token1
-      const unstakedFarm = unstakedFarms.find((farm) => farm.farmName === poolName)
-      const stakedFarm = stakedFarms.find((farm) => farm.farmName === poolName)
-      if (unstakedFarm && !stakedFarm) {
-        const url = `/farm/${unstakedFarm?.token0Address}/${unstakedFarm?.token1Address}/${unstakedFarm?.stakingAddress}`
-        localWarnings.push({ poolName: poolName, link: url })
-      }
-    })
-    return localWarnings
-  }, [v2Pairs, unstakedFarms, stakedFarms])
-
-  const theme = useContext(ThemeContext)
 
   if (!isSupportedNetwork) {
     return <ChangeNetworkModal />

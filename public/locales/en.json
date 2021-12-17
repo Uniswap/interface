@@ -223,5 +223,8 @@
   "yourUnclaimedRewards": "Your unclaimed rewards",
   "youWillMint": "You will mint",
   "youWillReceive": "You will receive at least",
-  "youWillRemove": "You will remove"
+  "youWillRemove": "You will remove",
+  "unstakedLPTokens": "You have unstaked {{poolName}} LP tokens",
+  "stakeIntoFarmingPool": "Stake into the {{poolName}} farming pool to an additional rewards on your LP tokens",
+  "farmUBE": "Farm UBE"
 }
