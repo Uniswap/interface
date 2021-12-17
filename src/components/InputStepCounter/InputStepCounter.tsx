@@ -7,9 +7,10 @@ import { AutoColumn } from 'components/Column'
 import useCurrencyUSDPrice from 'hooks/useCurrencyUSDPrice'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
+import { tryParseAmount } from 'state/swap/hooks'
 import styled, { keyframes } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { isEthStablecoinPair } from 'utils'
+import { isEthOrStablecoin } from 'utils'
 
 import { Input as NumericalInput } from '../NumericalInput'
 
@@ -145,9 +146,9 @@ const StepCounter = ({
     }
   }, [localValue, useLocalValue, value])
 
-  const quoteCurrencyAmount = Number(value)
-  const baseCurrencyUSDPrice = useCurrencyUSDPrice(currencyB ?? undefined, quoteCurrencyAmount)
-  const showBaseCurrencyUSDPrice = isEthStablecoinPair(currencyA ?? undefined, currencyB ?? undefined)
+  const baseCurrencyUSDPrice = useCurrencyUSDPrice(tryParseAmount(value, currencyB))
+  const showBaseCurrencyUSDPrice =
+    isEthOrStablecoin(currencyA ?? undefined) && isEthOrStablecoin(currencyB ?? undefined)
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
@@ -186,8 +187,8 @@ const StepCounter = ({
 
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
-            {tokenB} {showBaseCurrencyUSDPrice && baseCurrencyUSDPrice ? `($${baseCurrencyUSDPrice})` : null} per{' '}
-            {tokenA}
+            {tokenB} {showBaseCurrencyUSDPrice && baseCurrencyUSDPrice ? `($${baseCurrencyUSDPrice.toFixed(2)})` : null}{' '}
+            per {tokenA}
           </Trans>
         </InputTitle>
       </AutoColumn>

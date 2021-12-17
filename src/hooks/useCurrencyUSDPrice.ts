@@ -1,9 +1,9 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 
-export default function useCurrencyUSDPrice(baseCurrency: Currency | undefined, quoteAmount: number) {
-  const currencyUSDCPrice = useUSDCPrice(baseCurrency)
-  if (!currencyUSDCPrice || isNaN(quoteAmount)) return undefined
+export default function useCurrencyUSDPrice(currencyAmount: CurrencyAmount<Currency> | undefined) {
+  const price = useUSDCPrice(currencyAmount?.currency)
+  if (!price || !currencyAmount) return undefined
 
-  return (Number(currencyUSDCPrice.toSignificant(6)) * quoteAmount).toFixed(2)
+  return price.quote(currencyAmount)
 }

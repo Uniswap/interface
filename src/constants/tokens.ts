@@ -165,7 +165,11 @@ export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
 }
 
-export const STABLECOINS = [DAI.symbol, USDC.symbol, USDT.symbol]
+export const STABLECOINS: { [chainId: number]: string[] } = {
+  [SupportedChainId.MAINNET]: [DAI.address, USDC.address, USDT.address],
+  [SupportedChainId.OPTIMISM]: [DAI_OPTIMISM.address, USDC_OPTIMISM.address, USDT_OPTIMISM.address],
+  [SupportedChainId.ARBITRUM_ONE]: [DAI_ARBITRUM_ONE.address, USDC_ARBITRUM.address, USDT_ARBITRUM_ONE.address],
+}
 
 export const WETH9_EXTENDED: { [chainId: number]: Token } = {
   ...WETH9,

@@ -57,9 +57,8 @@ export function formattedFeeAmount(feeAmount: FeeAmount): number {
   return feeAmount / 10000
 }
 
-export function isEthStablecoinPair(currencyA: Currency | undefined, currencyB: Currency | undefined) {
-  const isEthAndStable = currencyA?.isNative && STABLECOINS.includes(currencyB?.symbol)
-  const isStableAndEth = currencyB?.isNative && STABLECOINS.includes(currencyA?.symbol)
+export function isEthOrStablecoin(currency: Currency | undefined) {
+  if (!currency) return false
 
-  return Boolean(isEthAndStable || isStableAndEth)
+  return currency.isNative || STABLECOINS[currency.chainId]?.includes(currency.address)
 }

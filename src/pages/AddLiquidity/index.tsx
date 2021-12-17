@@ -5,6 +5,7 @@ import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import DowntimeWarning from 'components/DowntimeWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import useCurrencyUSDPrice from 'hooks/useCurrencyUSDPrice'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -16,8 +17,9 @@ import {
   useV3MintActionHandlers,
   useV3MintState,
 } from 'state/mint/v3/hooks'
+import { tryParseAmount } from 'state/swap/hooks'
 import { ThemeContext } from 'styled-components/macro'
-import { isEthStablecoinPair } from 'utils'
+import { isEthOrStablecoin } from 'utils'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -44,7 +46,7 @@ import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import useUSDCPrice, { useUSDCValue } from '../../hooks/useUSDCPrice'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -107,7 +109,6 @@ export default function AddLiquidity({
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
-  const baseCurrencyPriceInUSDC = useUSDCPrice(currencyB ? currencyB : undefined)
   // mint state
   const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
@@ -137,11 +138,12 @@ export default function AddLiquidity({
     baseCurrency ?? undefined,
     existingPosition
   )
-  const usdcBaseCurrencyPriceInNumber = Number(baseCurrencyPriceInUSDC?.toSignificant(4))
-  const quoteCurrencyPrice =
-    usdcBaseCurrencyPriceInNumber * Number(invertPrice ? price?.invert().toSignificant(4) : price?.toSignificant(4))
-  const roundedQuoteCurrencyPrice = isNaN(usdcBaseCurrencyPriceInNumber) ? undefined : quoteCurrencyPrice.toFixed(2)
-  const showBaseCurrencyPrice = isEthStablecoinPair(baseCurrency ?? undefined, quoteCurrency ?? undefined)
+
+  const quoteCurrencyAmount = invertPrice ? price?.invert().toSignificant(6) : price?.toSignificant(6)
+  const quoteCurrencyPrice = useCurrencyUSDPrice(tryParseAmount(quoteCurrencyAmount, quoteCurrency ?? undefined))
+
+  const showQuoteCurrencyPrice =
+    isEthOrStablecoin(baseCurrency ?? undefined) && isEthOrStablecoin(quoteCurrency ?? undefined)
 
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
@@ -678,8 +680,8 @@ export default function AddLiquidity({
                                 </ThemedText.Body>
                                 <ThemedText.Body color="text2" fontSize={12}>
                                   {quoteCurrency?.symbol}{' '}
-                                  {roundedQuoteCurrencyPrice && showBaseCurrencyPrice
-                                    ? `($${roundedQuoteCurrencyPrice})`
+                                  {quoteCurrencyPrice && showQuoteCurrencyPrice
+                                    ? `($${quoteCurrencyPrice.toFixed(2)})`
                                     : null}{' '}
                                   per {baseCurrency.symbol}{' '}
                                 </ThemedText.Body>
