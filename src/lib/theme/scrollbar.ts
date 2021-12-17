@@ -22,15 +22,15 @@ const scrollbarCss = (padded: boolean) => css`
       ),
       linear-gradient(
         to bottom,
-        transparent 0.25em,
+        #ffffff00 0.25em,
         ${({ theme }) => theme.interactive} 0.25em,
         ${({ theme }) => theme.interactive} calc(100% - 0.25em),
-        transparent calc(100% - 0.25em)
+        #ffffff00 calc(100% - 0.25em)
       ),
       radial-gradient(
         closest-corner at 0.25em calc(100% - 0.25em),
         ${({ theme }) => theme.interactive} 0.25em,
-        transparent 0.25em
+        #ffffff00 0.25em
       );
     background-clip: padding-box;
     border: none;

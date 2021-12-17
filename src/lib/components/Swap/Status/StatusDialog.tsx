@@ -149,7 +149,7 @@ const ExpandoColumn = styled(Column)<{ open: boolean }>`
       transition: padding 0.25s;
 
       :after {
-        background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
+        background: linear-gradient(#ffffff00, ${({ theme }) => theme.dialog});
         bottom: 0;
         content: '';
         height: 0.75em;
