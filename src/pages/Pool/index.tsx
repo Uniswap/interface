@@ -1,26 +1,24 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { Pair } from '@ubeswap/sdk'
 import React, { useContext, useMemo } from 'react'
-import { AlertTriangle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
 import styled, { ThemeContext } from 'styled-components'
 
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
-import { AutoColumn, TopSection } from '../../components/Column'
-import { CardNoise, CardSection, DataCard, LiquidityWarningCard } from '../../components/earn/styled'
+import { AutoColumn } from '../../components/Column'
+import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
-import { RowBetween, RowFixed, RowStart } from '../../components/Row'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { ExternalLink, HideSmall, StyledInternalLink, TYPE } from '../../theme'
-import { useFarmRegistry, WarningInfo } from '../Earn/useFarmRegistry'
+import LiquidityWarning from './LiquidityWarning'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -109,52 +107,10 @@ export default function Pool() {
 
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
-  const farmSummaries = useFarmRegistry()
-  const { stakedFarms, unstakedFarms } = useOwnerStakedPools(farmSummaries)
-
-  const warnings: WarningInfo[] = useMemo(() => {
-    const localWarnings: WarningInfo[] = []
-    v2Pairs.forEach(([, pair]) => {
-      const token0 = pair?.token0.symbol
-      const token1 = pair?.token1.symbol
-      const poolName = token0 + '-' + token1
-      const unstakedFarm = unstakedFarms.find((farm) => farm.farmName === poolName)
-      const stakedFarm = stakedFarms.find((farm) => farm.farmName === poolName)
-      if (unstakedFarm && !stakedFarm) {
-        const url = `/farm/${unstakedFarm?.token0Address}/${unstakedFarm?.token1Address}/${unstakedFarm?.stakingAddress}`
-        localWarnings.push({ poolName: poolName, link: url })
-      }
-    })
-    return localWarnings
-  }, [v2Pairs, unstakedFarms, stakedFarms])
-
   return (
     <>
       <PageWrapper>
-        <TopSection gap="md">
-          {warnings.map((warning) => (
-            <LiquidityWarningCard key={warning.link}>
-              <CardSection>
-                <RowStart>
-                  <div style={{ paddingRight: 16 }}>
-                    <AlertTriangle color={theme.yellow2} size={36} />
-                  </div>
-                  <AutoColumn gap="md">
-                    <RowBetween>
-                      <TYPE.black fontWeight={600}>You have unstaked {warning.poolName} LP tokens</TYPE.black>
-                    </RowBetween>
-                    <RowBetween>
-                      <TYPE.black fontSize={14}>
-                        Stake into the {warning.poolName} farming pool to an additional rewards on your LP tokens
-                      </TYPE.black>
-                    </RowBetween>
-                    <StyledInternalLink to={warning.link}>Stake</StyledInternalLink>
-                  </AutoColumn>
-                </RowStart>
-              </CardSection>
-            </LiquidityWarningCard>
-          ))}
-        </TopSection>
+        <LiquidityWarning />
         <SwapPoolTabs active={'pool'} />
         <VoteCard>
           <CardNoise />

@@ -6,19 +6,19 @@ import TokenSelect from 'components/CurrencyInputPanel/TokenSelect'
 import Loader from 'components/Loader'
 import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
 import React, { useContext, useMemo, useState } from 'react'
-import { AlertTriangle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
 import styled, { ThemeContext } from 'styled-components'
 
 import { AutoColumn, ColumnCenter, TopSection } from '../../components/Column'
 import { PoolCard } from '../../components/earn/PoolCard'
-import { CardNoise, CardSection, DataCard, LiquidityWarningCard } from '../../components/earn/styled'
-import { RowBetween, RowStart } from '../../components/Row'
+import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { RowBetween } from '../../components/Row'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
+import LiquidityWarning from '../Pool/LiquidityWarning'
 import { useFarmRegistry, WarningInfo } from './useFarmRegistry'
 
 const PageWrapper = styled.div`
@@ -110,30 +110,7 @@ export default function Earn() {
 
   return (
     <PageWrapper>
-      <TopSection gap="md">
-        {warnings.map((warning) => (
-          <LiquidityWarningCard key={warning.link}>
-            <CardSection>
-              <RowStart>
-                <div style={{ paddingRight: 16 }}>
-                  <AlertTriangle color={theme.yellow2} size={36} />
-                </div>
-                <AutoColumn gap="md">
-                  <RowBetween>
-                    <TYPE.black fontWeight={600}>You have unstaked {warning.poolName} LP tokens</TYPE.black>
-                  </RowBetween>
-                  <RowBetween>
-                    <TYPE.black fontSize={14}>
-                      Stake into the {warning.poolName} farming pool to an additional rewards on your LP tokens
-                    </TYPE.black>
-                  </RowBetween>
-                  <StyledInternalLink to={warning.link}>Stake</StyledInternalLink>
-                </AutoColumn>
-              </RowStart>
-            </CardSection>
-          </LiquidityWarningCard>
-        ))}
-      </TopSection>
+      <LiquidityWarning />
       {stakedFarms.length === 0 && (
         <TopSection gap="md">
           <DataCard>
