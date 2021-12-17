@@ -42,11 +42,19 @@ export const multiRewardPools: MultiRewardPool[] = [
   },
   // pCELO-POOF
   {
+    address: '0x999DF57c86EcC98E0e55f5f1dEdD102A89F25e8e',
+    underlyingPool: '0x66B6e41AC12d51918775410D3331B21F7851a8Bc',
+    basePool: '0x66B6e41AC12d51918775410D3331B21F7851a8Bc',
+    numRewards: 2,
+    active: true,
+  },
+  // pCELO-POOF
+  {
     address: '0x7B7F08164036abEbafD1bf75c1464c6F0d01653C',
     underlyingPool: '0xd60E0034D4B27DE226EFf13f68249F69d4D6Cb38',
     basePool: '0xd60E0034D4B27DE226EFf13f68249F69d4D6Cb38',
     numRewards: 2,
-    active: true,
+    active: false,
   },
   // KNX-CELO
   {
@@ -70,6 +78,14 @@ export const multiRewardPools: MultiRewardPool[] = [
     underlyingPool: '0x5F5c3eEa2b9e65f667E34C70Db68f62bbbFC9188',
     basePool: '0x9cAF0Cd20C8eF7622EEb8dB50e5bB4d407e38AE2',
     numRewards: 3,
+    active: true,
+  },
+  // ARI-CELO
+  {
+    address: '0xEfe2f9d62E45815837b4f20c1F44F0A83605B540',
+    underlyingPool: '0xFEB0df4542E5394aAc89383c135E2Fc829812C6c',
+    basePool: '0xFEB0df4542E5394aAc89383c135E2Fc829812C6c',
+    numRewards: 2,
     active: true,
   },
 
