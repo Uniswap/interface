@@ -1,6 +1,6 @@
 import { Text, TextProps as TextPropsWithCss } from 'rebass'
 
-import styled from './styled'
+import styled, { useTheme } from './styled'
 import { Color } from './theme'
 
 type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { color?: Color }
@@ -77,7 +77,15 @@ export function TransitionButton(props: TextProps & { buttonSize: 'small' | 'med
 }
 
 export function Code(props: TextProps) {
+  const { fontFamilyCode } = useTheme()
   return (
-    <TextWrapper className="code" fontSize={12} fontWeight={400} lineHeight="16px" fontFamily="Input Mono" {...props} />
+    <TextWrapper
+      className="code"
+      fontSize={12}
+      fontWeight={400}
+      lineHeight="16px"
+      fontFamily={fontFamilyCode}
+      {...props}
+    />
   )
 }

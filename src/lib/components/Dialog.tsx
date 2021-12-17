@@ -1,8 +1,9 @@
 import 'wicg-inert'
 
+import useUnmount from 'lib/hooks/useUnmount'
 import { X } from 'lib/icons'
 import styled, { Color, Layer, ThemeProvider } from 'lib/theme'
-import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { IconButton } from './Button'
@@ -17,32 +18,30 @@ declare global {
   }
 }
 
-const Context = createContext<HTMLDivElement | null>(null)
+const Context = createContext({
+  element: null as HTMLElement | null,
+  active: false,
+  setActive: (active: boolean) => undefined as void,
+})
 
 interface ProviderProps {
-  value: HTMLDivElement | null
+  value: HTMLElement | null
   children: ReactNode
 }
 
 export function Provider({ value, children }: ProviderProps) {
-  // When the Dialog is in use, mark the main content inert
+  // If a Dialog is active, mark the main content inert
   const ref = useRef<HTMLDivElement>(null)
-  const onMutation = useCallback(() => {
-    if (ref.current) {
-      ref.current.inert = value?.hasChildNodes()
-    }
-  }, [value])
-  const observer = useMemo(() => new MutationObserver(onMutation), [onMutation])
+  const [active, setActive] = useState(false)
+  const context = { element: value, active, setActive }
   useEffect(() => {
-    if (value) {
-      observer.observe(value, { childList: true })
+    if (ref.current) {
+      ref.current.inert = active
     }
-    return () => observer.disconnect()
-  }, [observer, value])
-
+  }, [active])
   return (
     <div ref={ref}>
-      <Context.Provider value={value}>{children}</Context.Provider>
+      <Context.Provider value={context}>{children}</Context.Provider>
     </div>
   )
 }
@@ -91,21 +90,27 @@ interface DialogProps {
 }
 
 export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
+  const context = useContext(Context)
+  useEffect(() => {
+    context.setActive(true)
+    return () => context.setActive(false)
+  }, [context])
+  const dialog = useRef<HTMLDivElement>(null)
+  useUnmount(dialog)
   useEffect(() => {
     const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()
     document.addEventListener('keydown', close, true)
     return () => document.removeEventListener('keydown', close, true)
   }, [onClose])
-  const modal = useContext(Context)
   return (
-    modal &&
+    context.element &&
     createPortal(
       <ThemeProvider>
-        <Modal color={color}>
+        <Modal className="dialog" color={color} ref={dialog}>
           <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
         </Modal>
       </ThemeProvider>,
-      modal
+      context.element
     )
   )
 }
