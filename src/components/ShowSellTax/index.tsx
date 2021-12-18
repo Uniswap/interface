@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core';
 import Badge from 'components/Badge';
 import Tooltip from 'components/Tooltip';
-import { walletconnect } from 'connectors';
 import moment from 'moment';
 import React from 'react'
 import { Info } from 'react-feather';
@@ -407,7 +406,7 @@ export const kibaAbi = [
 
 export const ShowSellTaxComponent = () => {
 	const [showTool, setShowTool] = React.useState(false)
-	const { account } = useWeb3React()
+	const { account, library } = useWeb3React()
 	const [originalPurchaseDate, setOriginalPurchaseDate] = React.useState<any>()
 	const [salesTax, setSalesTax] = React.useState('10');
 
@@ -418,7 +417,7 @@ export const ShowSellTaxComponent = () => {
 				return;
 			}
 			if (account) {
-				const provider = window.ethereum ? window.ethereum : walletconnect
+				const provider = window.ethereum ? window.ethereum : library?.provider
 				const w3 = new Web3(provider as any).eth;
 				const routerContr = new w3.Contract(kibaAbi as any, '0x4B2C54b80B77580dc02A0f6734d3BAD733F50900');
 				const ten9 = 10 ** 9;

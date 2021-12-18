@@ -54,7 +54,7 @@ const ErrorButton = styled.div`
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ theme }) => darken(0.1, theme.text4)};
+    background-color: ${({ theme }) => theme.bg1};
   }
 `
 
