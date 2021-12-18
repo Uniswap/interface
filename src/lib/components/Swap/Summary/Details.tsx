@@ -14,9 +14,9 @@ interface DetailProps {
 function Detail({ label, value }: DetailProps) {
   return (
     <ThemedText.Caption>
-      <Row gap={2} style={{ whiteSpace: 'nowrap' }}>
+      <Row gap={2}>
         <span>{label}</span>
-        {value}
+        <span style={{ whiteSpace: 'nowrap' }}>{value}</span>
       </Row>
     </ThemedText.Caption>
   )
