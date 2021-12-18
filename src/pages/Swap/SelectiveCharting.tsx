@@ -16,6 +16,8 @@ import { useWeb3React } from '@web3-react/core';
 import { useKiba } from 'pages/Vote/VotePage';
 import { fetchBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
+import { useHasAccess } from 'components/AccountPage/AccountPage';
+import { TopHolders } from './TopHolders';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -120,7 +122,8 @@ export const SelectiveChart = () => {
         /> : undefined
     }, [selectedCurrency, chainId])
     const kibaBalance = useKiba(account)
-    const accessDenied = React.useMemo(() => !account || !kibaBalance || +kibaBalance.toFixed(0) <= 0, [account, kibaBalance])
+    const hasAccess = useHasAccess()
+    const accessDenied = !hasAccess
     const chainLabel = React.useMemo(() => chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
     return (
         <DarkCard style={{ maxWidth: 900, background: 'radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95))', display: 'flex', flexFlow: 'column wrap' }}>
@@ -143,7 +146,7 @@ export const SelectiveChart = () => {
                             </div>
                             <div style={{ paddingBottom: 5 }}>
                                 <StyledDiv>Volume (24 Hrs)</StyledDiv>
-                                <TYPE.white>${Number((+tokenData?.oneDayVolumeUSD)?.toFixed(2)).toLocaleString()}</TYPE.white>
+                                <TYPE.white>${parseFloat((tokenData?.oneDayVolumeUSD)?.toFixed(2)).toLocaleString()}</TYPE.white>
                             </div>
                             <div style={{ paddingBottom: 5 }}>
                                 <StyledDiv>Transactions</StyledDiv>

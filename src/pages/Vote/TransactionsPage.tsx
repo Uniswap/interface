@@ -14,18 +14,18 @@ export const Transactions = ({transactions, loading, error}:{transactions?: any[
     const chainLabel = React.useMemo(() => chainId && chainId === 1 ? 'ETH' : chainId && chainId === 56 ? 'BNB' : '', [chainId])
     const formattedTransactions = React.useMemo( () => {
             return transactions?.map((swap: any) => {
-                console.dir(swap)
             const netToken0 = swap.amount0In - swap.amount0Out
             const netToken1 = swap.amount1In - swap.amount1Out
             const newTxn: Record<string, any> = {}
-            if (netToken0 < 0) {
+            const isProxied = swap.sender == "0xdef1c0ded9bec7f1a1670819833240f027b25eff".toLowerCase()
+            if (netToken0 < 0 || isProxied) {
                 newTxn.token0Symbol = (swap.pair).token0.symbol
                 newTxn.token1Symbol = (swap.pair).token1.symbol
                 newTxn.token0Name = swap.pair.token0.name;
                 newTxn.token1Name = swap.pair.token1.name;
                 newTxn.token0Amount = Math.abs(netToken0)
                 newTxn.token1Amount = Math.abs(netToken1)
-            } else if (netToken1 < 0) {
+            } else if (netToken1 < 0 && !isProxied) {
                 newTxn.token0Symbol = (swap.pair).token1.symbol
                 newTxn.token0Name = swap.pair.token0.name;
                 newTxn.token1Name = swap.pair.token1.name;
@@ -41,13 +41,14 @@ export const Transactions = ({transactions, loading, error}:{transactions?: any[
             newTxn.timestamp = swap?.timestamp ? swap?.timestamp : swap.transaction.timestamp
             newTxn.type = 'swap'
             newTxn.amountUSD = swap.amountUSD;
-            newTxn.account = swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d" ? swap.sender : swap.to
+            newTxn.isTransfer = swap.to.toLowerCase() !== account?.toLowerCase() && !["0x10ed43c718714eb63d5aa57b78b54704e256024e".toLowerCase(), "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D".toLowerCase()].includes(swap.to);
+            newTxn.account = ["0x10ed43c718714eb63d5aa57b78b54704e256024e".toLowerCase(), "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D".toLowerCase()].includes(swap.to) ? swap.sender : swap.to
             newTxn.buy = swap.to
             newTxn.amount0In = swap.amount0In;
             newTxn.gasPaid = swap.cost;
             return newTxn;
         })
-    }, [transactions])
+    }, [transactions, account])
 
     const exportToCsv = React.useCallback(() => {
     if (!formattedTransactions?.length || !formattedTransactions) return;

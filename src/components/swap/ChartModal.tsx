@@ -9,6 +9,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useKiba } from 'pages/Vote/VotePage';
 import { Dots } from 'pages/Pool/styleds';
 import moment from 'moment';
+import { useHasAccess } from 'components/AccountPage/AccountPage';
 const FrameWrapper = styled.div`
     padding:9px 14px;
     height:540px;
@@ -22,7 +23,8 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
     const web3Data = useWeb3React();
     const kibaBalance = useKiba(web3Data.account)
     const isBinance = web3Data.chainId && web3Data.chainId === 56
-    const accessDenied = React.useMemo(() => !web3Data?.account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0), [web3Data.account, kibaBalance])
+    const hasAccess = useHasAccess()
+    const accessDenied = !hasAccess
     const transactionData = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
     const Frame = accessDenied ? null : (
         <iframe id={'tradingview_5aace'} src={`https://www.tradingview.com/widgetembed/?frameElementId=tradingview_5aace&symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`}

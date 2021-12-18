@@ -16,6 +16,7 @@ import JSBI from 'jsbi'
 import { parseEther } from '@ethersproject/units';
 import { isMobile } from 'react-device-detect';
 import { useKiba } from 'pages/Vote/VotePage';
+import { binanceTokens } from 'utils/binance.tokens';
 const StyledHeader = styled.div`
 font-size: ${isMobile ? '18px' : '32px'};
 font-family: "Bangers", cursive;
@@ -55,7 +56,7 @@ export const useHasAccess = (minimumTokensRequired = 1) => {
 }
 
 export const AccountPage = () => {
-    const { account, library } = useWeb3React()
+    const { account, library, chainId } = useWeb3React()
     const transactions = useUserTransactions(account)
     const [formattedTxns, setFormattedTxns] = React.useState<any[]>()
     const web3 = new Web3(library?.provider)
@@ -68,9 +69,9 @@ export const AccountPage = () => {
                 const txReceipt = await web3.eth.getTransactionReceipt(item?.transaction?.id)
                 const payload = {
                     ...item,
-                    cost: (parseFloat(tx.gasPrice) * txReceipt.gasUsed) / 10 ** 18,
-                    gasUsed: txReceipt.gasUsed,
-                    gasPrice: tx.gasPrice
+                    cost: (parseFloat(tx?.gasPrice) * txReceipt?.gasUsed) / 10 ** 18,
+                    gasUsed: txReceipt?.gasUsed,
+                    gasPrice: tx?.gasPrice
                 }
                 return payload
             } else return {}
@@ -87,7 +88,7 @@ export const AccountPage = () => {
     }, [formattedTxns])
 
 
-    const totalGasUSD = useUSDCValue(CurrencyAmount.fromRawAmount(WETH9[1], totalGasUsed > 0 ? parseEther(totalGasUsed.toString()).toHexString() : '0'))
+    const totalGasUSD = useUSDCValue(CurrencyAmount.fromRawAmount(chainId === 56 ? binanceTokens.wbnb : WETH9[1], totalGasUsed > 0 ? parseEther(totalGasUsed.toString()).toHexString() : '0'))
     const [txCount, setTxCount] = React.useState<number>(0)
     React.useEffect(() => {
         if (account) {
