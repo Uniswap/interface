@@ -34,7 +34,7 @@ const TokenButton = styled(BaseButton)`
 `
 
 const scrollbarCss = css`
-  @supports selector(::-webkit-scrollbar-thumb) {
+  @supports selector(::-webkit-scrollbar-thumb) and (overflow: overlay) {
     overflow-y: overlay !important;
 
     ${TokenButton} {

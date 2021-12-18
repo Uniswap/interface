@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { css } from './styled'
 
@@ -51,13 +51,32 @@ export function useScrollbar(
   element: HTMLElement | null,
   { padded = false, css: additionalCss }: ScrollbarOptions = {}
 ) {
-  return useMemo(() => {
-    if (element && element.scrollHeight > element.clientHeight) {
-      return css`
-        ${scrollbarCss(padded)}
-        ${additionalCss}
-      `
+  const [overflow, setOverflow] = useState(true)
+  useEffect(() => {
+    setOverflow(hasOverflow(element))
+    if (element) {
+      const updateOverflow = () => {
+        console.log('zzmp', 'updateOverflow')
+        setOverflow(hasOverflow(element))
+      }
+      element.addEventListener('transitionend', updateOverflow)
+      return () => element.removeEventListener('transitionend', updateOverflow)
     }
-    return overflowCss
-  }, [additionalCss, element, padded])
+    return
+  }, [element])
+  return useMemo(() => {
+    return overflow
+      ? css`
+          ${scrollbarCss(padded)}
+          ${additionalCss}
+        `
+      : overflowCss
+  }, [additionalCss, overflow, padded])
+
+  function hasOverflow(element: HTMLElement | null) {
+    if (!element) {
+      return true
+    }
+    return element.scrollHeight > element.clientHeight
+  }
 }

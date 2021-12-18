@@ -39,11 +39,10 @@ const Body = styled(Column)<{ open: boolean }>`
     transition: flex-grow 0.25s;
 
     ${DetailsColumn} {
-      flex-basis: 0;
-      flex-grow: ${({ open }) => (open ? 1 : 0)};
+      flex-basis: ${({ open }) => (open ? 7 : 0)}em;
       overflow-y: hidden;
       position: relative;
-      transition: flex-grow 0.25s;
+      transition: flex-basis 0.25s;
 
       ${Column} {
         height: 100%;

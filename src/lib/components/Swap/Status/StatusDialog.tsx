@@ -31,7 +31,7 @@ interface StatusHeaderProps {
 function StatusHeader({ icon: Icon, iconColor, iconSize = 4, children }: StatusHeaderProps) {
   return (
     <>
-      <Column flex style={{ flexGrow: 1, textAlign: 'center' }}>
+      <Column flex style={{ flexGrow: 1 }}>
         <HeaderIcon icon={Icon} color={iconColor} size={iconSize} />
         <Column gap={0.75} flex>
           {children}
