@@ -15,7 +15,7 @@ import {
   useState,
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { areEqual, FixedSizeList, FixedSizeListProps, ListOnScrollProps } from 'react-window'
+import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
 
 import { BaseButton } from '../Button'
 import Column from '../Column'
@@ -187,12 +187,17 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   const scrollbar = useScrollbar(element, { padded: true })
 
   const onHover = useRef<HTMLDivElement>(null)
-  const onScroll = useCallback((e: ListOnScrollProps) => {
-    if (onHover.current) {
-      // must be synchronous to avoid jank when scrolling (not through useState)
-      onHover.current.style.marginTop = `-${e.scrollOffset}px`
+  useEffect(() => {
+    if (element) {
+      // use native onscroll handler to capture Safari's bouncy overscroll effect
+      element.onscroll = () => {
+        if (onHover.current) {
+          // must be set synchronously to avoid jank (avoiding useState)
+          onHover.current.style.marginTop = `${-element.scrollTop}px`
+        }
+      }
     }
-  }, [])
+  }, [element])
 
   return (
     <Column
@@ -205,6 +210,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       onMouseMove={onMouseMove}
       style={{ overflow: 'hidden' }}
     >
+      {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}
       <OnHover hover={hover} ref={onHover} />
       <AutoSizer disableWidth>
         {({ height }) => (
@@ -216,7 +222,6 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             itemData={tokens}
             itemKey={itemKey}
             itemSize={ITEM_SIZE}
-            onScroll={onScroll}
             className="scrollbar"
             ref={list}
             outerRef={setElement}
