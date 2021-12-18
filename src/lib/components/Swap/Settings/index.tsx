@@ -36,22 +36,27 @@ export function SettingsDialog() {
   )
 }
 
-const SettingsButton = styled(IconButton)`
+const SettingsButton = styled(IconButton)<{ hover: boolean }>`
   ${SettingsIcon} {
+    transform: ${({ hover }) => hover && 'rotate(45deg)'};
     transition: transform 0.25s ease;
     will-change: transform;
-
-    :hover {
-      transform: rotate(45deg);
-    }
   }
 `
 
 export default function Settings({ disabled }: { disabled?: boolean }) {
   const [open, setOpen] = useState(false)
+  const [hover, setHover] = useState(false)
   return (
     <>
-      <SettingsButton disabled={disabled} onClick={() => setOpen(true)} icon={SettingsIcon} />
+      <SettingsButton
+        disabled={disabled}
+        hover={hover}
+        onClick={() => setOpen(true)}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        icon={SettingsIcon}
+      />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <SettingsDialog />
