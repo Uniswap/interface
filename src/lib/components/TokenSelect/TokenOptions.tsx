@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
-import styled, { css, ThemedText, useScrollbar } from 'lib/theme'
+import styled, { ThemedText, useScrollbar } from 'lib/theme'
 import { Token } from 'lib/types'
-import React, {
+import {
   ComponentClass,
   CSSProperties,
   forwardRef,
@@ -15,7 +15,7 @@ import React, {
   useState,
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
+import { areEqual, FixedSizeList, FixedSizeListProps, ListOnScrollProps } from 'react-window'
 
 import { BaseButton } from '../Button'
 import Column from '../Column'
@@ -33,16 +33,7 @@ const TokenButton = styled(BaseButton)`
   }
 `
 
-const scrollbarCss = css`
-  @supports selector(::-webkit-scrollbar-thumb) and (overflow: overlay) {
-    overflow-y: overlay !important;
-
-    ${TokenButton} {
-      padding-right: 2em;
-    }
-  }
-`
-
+const ITEM_SIZE = 56
 type ItemData = Token[]
 interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
 const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
@@ -54,6 +45,15 @@ const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
   }
 
   ${({ scrollbar }) => scrollbar}
+`
+const OnHover = styled.div<{ hover: number }>`
+  // TODO(zzmp): This is not performant
+  background-color: ${({ theme }) => theme.onHover(theme.module)};
+  height: ${ITEM_SIZE}px;
+  left: 0;
+  position: absolute;
+  top: ${({ hover }) => hover * ITEM_SIZE}px;
+  width: 100%;
 `
 
 interface TokenOptionProps {
@@ -184,7 +184,15 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   )
 
   const [element, setElement] = useState<HTMLElement | null>(null)
-  const scrollbar = useScrollbar(element, { padded: true, css: scrollbarCss })
+  const scrollbar = useScrollbar(element, { padded: true })
+
+  const onHover = useRef<HTMLDivElement>(null)
+  const onScroll = useCallback((e: ListOnScrollProps) => {
+    if (onHover.current) {
+      // must be synchronous to avoid jank when scrolling (not through useState)
+      onHover.current.style.marginTop = `-${e.scrollOffset}px`
+    }
+  }, [])
 
   return (
     <Column
@@ -195,7 +203,9 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       onBlur={onBlur}
       onFocus={onFocus}
       onMouseMove={onMouseMove}
+      style={{ overflow: 'hidden' }}
     >
+      <OnHover hover={hover} ref={onHover} />
       <AutoSizer disableWidth>
         {({ height }) => (
           <TokenList
@@ -205,7 +215,8 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             itemCount={tokens.length}
             itemData={tokens}
             itemKey={itemKey}
-            itemSize={56}
+            itemSize={ITEM_SIZE}
+            onScroll={onScroll}
             className="scrollbar"
             ref={list}
             outerRef={setElement}

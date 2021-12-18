@@ -44,34 +44,22 @@ const scrollbarCss = (padded: boolean) => css`
 
 interface ScrollbarOptions {
   padded?: boolean
-  css?: ReturnType<typeof css>
 }
 
-export function useScrollbar(
-  element: HTMLElement | null,
-  { padded = false, css: additionalCss }: ScrollbarOptions = {}
-) {
+export function useScrollbar(element: HTMLElement | null, { padded = false }: ScrollbarOptions = {}) {
   const [overflow, setOverflow] = useState(true)
   useEffect(() => {
     setOverflow(hasOverflow(element))
     if (element) {
-      const updateOverflow = () => {
-        console.log('zzmp', 'updateOverflow')
-        setOverflow(hasOverflow(element))
-      }
+      const updateOverflow = () => setOverflow(hasOverflow(element))
       element.addEventListener('transitionend', updateOverflow)
       return () => element.removeEventListener('transitionend', updateOverflow)
     }
     return
   }, [element])
   return useMemo(() => {
-    return overflow
-      ? css`
-          ${scrollbarCss(padded)}
-          ${additionalCss}
-        `
-      : overflowCss
-  }, [additionalCss, overflow, padded])
+    return overflow ? scrollbarCss(padded) : overflowCss
+  }, [overflow, padded])
 
   function hasOverflow(element: HTMLElement | null) {
     if (!element) {
