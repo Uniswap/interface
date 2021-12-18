@@ -1,4 +1,6 @@
 import { t } from '@lingui/macro'
+import assert from 'assert'
+import useNativeEvent from 'lib/hooks/useNativeEvent'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
@@ -189,17 +191,14 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   const scrollbar = useScrollbar(element, { padded: true })
 
   const onHover = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (element) {
-      // use native onscroll handler to capture Safari's bouncy overscroll effect
-      element.onscroll = () => {
-        if (onHover.current) {
-          // must be set synchronously to avoid jank (avoiding useState)
-          onHover.current.style.marginTop = `${-element.scrollTop}px`
-        }
-      }
+  // use native onscroll handler to capture Safari's bouncy overscroll effect
+  useNativeEvent(element, 'scroll', (e) => {
+    assert(element)
+    if (onHover.current) {
+      // must be set synchronously to avoid jank (avoiding useState)
+      onHover.current.style.marginTop = `${-element.scrollTop}px`
     }
-  }, [element])
+  })
 
   return (
     <Column

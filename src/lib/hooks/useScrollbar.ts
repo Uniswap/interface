@@ -1,6 +1,8 @@
 import { css } from 'lib/theme'
 import { useEffect, useMemo, useState } from 'react'
 
+import useNativeEvent from './useNativeEvent'
+
 const overflowCss = css`
   overflow-y: scroll;
 `
@@ -49,16 +51,9 @@ export default function useScrollbar(element: HTMLElement | null, { padded = fal
   const [overflow, setOverflow] = useState(true)
   useEffect(() => {
     setOverflow(hasOverflow(element))
-    if (element) {
-      const updateOverflow = () => setOverflow(hasOverflow(element))
-      element.addEventListener('transitionend', updateOverflow)
-      return () => element.removeEventListener('transitionend', updateOverflow)
-    }
-    return
   }, [element])
-  return useMemo(() => {
-    return overflow ? scrollbarCss(padded) : overflowCss
-  }, [overflow, padded])
+  useNativeEvent(element, 'transitionend', () => setOverflow(hasOverflow(element)))
+  return useMemo(() => (overflow ? scrollbarCss(padded) : overflowCss), [overflow, padded])
 
   function hasOverflow(element: HTMLElement | null) {
     if (!element) {
