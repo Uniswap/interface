@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
+import useScrollbar from 'lib/hooks/useScrollbar'
 import { ChevronDown, ChevronUp, Info } from 'lib/icons'
-import styled, { ThemedText, useScrollbar } from 'lib/theme'
+import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
 import ActionButton from '../../ActionButton'

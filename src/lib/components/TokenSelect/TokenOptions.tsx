@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro'
-import styled, { ThemedText, useScrollbar } from 'lib/theme'
+import useScrollbar from 'lib/hooks/useScrollbar'
+import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import {
   ComponentClass,

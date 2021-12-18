@@ -1,6 +1,5 @@
+import { css } from 'lib/theme'
 import { useEffect, useMemo, useState } from 'react'
-
-import { css } from './styled'
 
 const overflowCss = css`
   overflow-y: scroll;
@@ -46,7 +45,7 @@ interface ScrollbarOptions {
   padded?: boolean
 }
 
-export function useScrollbar(element: HTMLElement | null, { padded = false }: ScrollbarOptions = {}) {
+export default function useScrollbar(element: HTMLElement | null, { padded = false }: ScrollbarOptions = {}) {
   const [overflow, setOverflow] = useState(true)
   useEffect(() => {
     setOverflow(hasOverflow(element))
