@@ -1,7 +1,7 @@
 PODS:
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
-  - EthersRS (0.0.2)
+  - EthersRS (0.0.4)
   - EXApplication (4.0.0):
     - ExpoModulesCore
   - EXClipboard (2.0.3):
@@ -41,15 +41,15 @@ PODS:
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.4)
     - GoogleUtilities/Logger (~> 7.4)
-  - FirebaseCoreDiagnostics (8.8.0):
-    - GoogleDataTransport (~> 9.0)
-    - GoogleUtilities/Environment (~> 7.4)
-    - GoogleUtilities/Logger (~> 7.4)
+  - FirebaseCoreDiagnostics (8.10.0):
+    - GoogleDataTransport (~> 9.1)
+    - GoogleUtilities/Environment (~> 7.6)
+    - GoogleUtilities/Logger (~> 7.6)
     - nanopb (~> 2.30908.0)
-  - FirebaseInstallations (8.8.0):
+  - FirebaseInstallations (8.10.0):
     - FirebaseCore (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.4)
-    - GoogleUtilities/UserDefaults (~> 7.4)
+    - GoogleUtilities/Environment (~> 7.6)
+    - GoogleUtilities/UserDefaults (~> 7.6)
     - PromisesObjC (< 3.0, >= 1.2)
   - fmt (6.2.1)
   - glog (0.3.5)
@@ -63,11 +63,11 @@ PODS:
     - GoogleUtilities/Environment (~> 7.2)
     - nanopb (~> 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleMLKit/MLKitCore (2.4.0):
-    - MLKitCommon (~> 4.0.0)
-  - GoogleMLKit/TextRecognition (2.4.0):
+  - GoogleMLKit/MLKitCore (2.5.0):
+    - MLKitCommon (~> 5.0.0)
+  - GoogleMLKit/TextRecognition (2.5.0):
     - GoogleMLKit/MLKitCore
-    - MLKitTextRecognition (~> 1.4.0-beta2)
+    - MLKitTextRecognition (~> 1.4.0-beta3)
   - GoogleToolboxForMac/DebugUtils (2.3.2):
     - GoogleToolboxForMac/Defines (= 2.3.2)
   - GoogleToolboxForMac/Defines (2.3.2)
@@ -99,11 +99,11 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.6.0):
     - GoogleUtilities/Logger
-  - GoogleUtilitiesComponents (1.0.0):
+  - GoogleUtilitiesComponents (1.1.0):
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.7.0)
-  - MLImage (1.0.0-beta1)
-  - MLKitCommon (4.0.0):
+  - MLImage (1.0.0-beta2)
+  - MLKitCommon (5.0.0):
     - GoogleDataTransport (~> 9.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
@@ -112,19 +112,19 @@ PODS:
     - GoogleUtilitiesComponents (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.12)
-  - MLKitTextRecognition (1.4.0-beta2):
-    - MLKitCommon (~> 4.0)
-    - MLKitTextRecognitionCommon (= 1.0.0-beta2)
-    - MLKitVision (~> 2.0)
-  - MLKitTextRecognitionCommon (1.0.0-beta2):
-    - MLKitCommon (~> 4.0)
-    - MLKitVision (~> 2.0)
-  - MLKitVision (2.0.0):
+  - MLKitTextRecognition (1.4.0-beta3):
+    - MLKitCommon (~> 5.0)
+    - MLKitTextRecognitionCommon (= 1.0.0-beta3)
+    - MLKitVision (~> 3.0)
+  - MLKitTextRecognitionCommon (1.0.0-beta3):
+    - MLKitCommon (~> 5.0)
+    - MLKitVision (~> 3.0)
+  - MLKitVision (3.0.0):
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - GTMSessionFetcher/Core (~> 1.1)
-    - MLImage (= 1.0.0-beta1)
-    - MLKitCommon (~> 4.0)
+    - MLImage (= 1.0.0-beta2)
+    - MLKitCommon (~> 5.0)
     - Protobuf (~> 3.12)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
@@ -132,7 +132,7 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - PromisesObjC (2.0.0)
-  - Protobuf (3.19.0)
+  - Protobuf (3.19.1)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -646,7 +646,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  EthersRS: 8c9242d94dc8e8ee4ae54123556414458e7e578c
+  EthersRS: 646ca8c57f0f2a382b258b5d3d9143a6daacdee3
   EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   Expo: 5316c3ecdc34eb0cad340d01dc8beec97c7e879e
@@ -658,25 +658,25 @@ SPEC CHECKSUMS:
   Firebase: 629510f1a9ddb235f3a7c5c8ceb23ba887f0f814
   FirebaseAnalytics: 5506ea8b867d8423485a84b4cd612d279f7b0b8a
   FirebaseCore: 98b29e3828f0a53651c363937a7f7d92a19f1ba2
-  FirebaseCoreDiagnostics: fe77f42da6329d6d83d21fd9d621a6b704413bfc
-  FirebaseInstallations: 2563cb18a723ef9c6ef18318a49519b75dce613c
+  FirebaseCoreDiagnostics: 56fb7216d87e0e6ec2feddefa9d8a392fe8b2c18
+  FirebaseInstallations: 830327b45345ffc859eaa9c17bcd5ae893fd5425
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 5337263514dd6f09803962437687240c5dc39aa4
   GoogleAppMeasurement: 5ba1164e3c844ba84272555e916d0a6d3d977e91
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
-  GoogleMLKit: db5007bddb78dedf52b60f4038d32e7bd006b519
+  GoogleMLKit: 0d7f5aa2f8a2f2ea9d849a05abdbe80974b0ec83
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
   GoogleUtilities: 684ee790a24f73ebb2d1d966e9711c203f2a4237
-  GoogleUtilitiesComponents: a69c0b3b369ba443e988141e75ef49d9010b1c80
+  GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
-  MLImage: 647f3d580c10b3c9a3f6154f5d7baead60c42a0c
-  MLKitCommon: 923bcf261636f36af5fbf329b1643ea3cd69468b
-  MLKitTextRecognition: 42eecbc7d269d3c6a2d5ff8f3d55f55c1a30932c
-  MLKitTextRecognitionCommon: 1028c20111848c08c82deba94a09ac352725c865
-  MLKitVision: 53b8f93a864c8d9740f7f09041911f2e64150ec8
+  MLImage: a454f9f8ecfd537783a12f9488f5be1a68820829
+  MLKitCommon: 3bc17c6f7d25ce3660f030350b46ae7ec9ebca6e
+  MLKitTextRecognition: 8b0e0023a4babc66ca83d8b82864e57931164445
+  MLKitTextRecognitionCommon: 3e84602c928fe2b775fae81376f2136324cbd763
+  MLKitVision: e87dc3f2e456a6ab32361ebd985e078dd2746143
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
-  Protobuf: e9b99dd5da72f665ec503b19191f245a22188b4d
+  Protobuf: 3724efa50cb2846d7ccebc8691c574e85fd74471
   RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
   RCTRequired: e4a18a90004e0ed97bba9081099104fd0f658dc9
   RCTTypeSafety: 8a3c31d38de58e1a6a7df6e4e643644a60b00e22

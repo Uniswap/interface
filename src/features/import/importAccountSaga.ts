@@ -7,10 +7,11 @@ import {
 } from 'src/features/import/types'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
+import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
 import { logger } from 'src/utils/logger'
 import { normalizeMnemonic } from 'src/utils/mnemonics'
 import { createMonitoredSaga } from 'src/utils/saga'
-import { put } from 'typed-redux-saga'
+import { call, put } from 'typed-redux-saga'
 
 export function* importAccount(params: ImportAccountParams) {
   let account: Account
@@ -28,10 +29,11 @@ export function* importAccount(params: ImportAccountParams) {
       account = { type, privateKey, name, address }
       logger.debug('importAccountSaga', 'importAccount', address, name, type)
     } else if (mnemonic) {
+      type = AccountType.native
       const formattedMnemonic = normalizeMnemonic(mnemonic)
-      const wallet = Wallet.fromMnemonic(mnemonic)
-      const address = wallet.address
-      account = { type, address, name, mnemonic: formattedMnemonic }
+      const address = yield* call(importMnemonic, formattedMnemonic)
+      yield* call(generateAndStorePrivateKey, address, 0)
+      account = { type, address, name }
     } else {
       throw new Error('Expected either privateKey or mnemonic to be provided.')
     }

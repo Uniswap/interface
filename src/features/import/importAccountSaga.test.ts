@@ -47,10 +47,9 @@ describe(importAccount, () => {
     // assert on dispatched actions
     expect(dispatched).toEqual([
       addAccount({
-        type: AccountType.local,
+        type: AccountType.native,
         address: SAMPLE_SEED_ADDRESS,
         name: 'WALLET',
-        mnemonic: SAMPLE_SEED,
       }),
       activateAccount(SAMPLE_SEED_ADDRESS),
       fetchBalancesActions.trigger(SAMPLE_SEED_ADDRESS),

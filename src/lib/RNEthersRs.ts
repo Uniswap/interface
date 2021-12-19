@@ -31,9 +31,10 @@ export function generateAndStorePrivateKey(
 
 export function signTransactionForAddress(
   address: string,
-  transaction: Transaction
+  transaction: Transaction,
+  chainId: number
 ): Promise<string> {
-  return RNEthersRS.signTransactionForAddress(address, JSON.stringify(transaction))
+  return RNEthersRS.signTransactionForAddress(address, JSON.stringify(transaction), chainId)
 }
 
 export function signMessageForAddress(

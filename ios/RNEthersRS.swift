@@ -35,11 +35,14 @@ class RNEthersRS: NSObject {
     resolve(mnemonicIds)
   }
 
-  @objc(importMnemonic:address:resolve:reject:)
+  @objc(importMnemonic:resolve:reject:)
   func importMnemonic(
-    mnemonic: String, address: String, resolve: RCTPromiseResolveBlock,
+    mnemonic: String, resolve: RCTPromiseResolveBlock,
     reject: RCTPromiseRejectBlock
   ) {
+    let private_key = private_key_from_mnemonic(
+      mnemonic, UInt32(exactly: 0)!)
+    let address = String(cString: private_key.address!)
 
     let res = storeNewMnemonic(mnemonic: mnemonic, address: address)
     if res != nil {
@@ -62,7 +65,7 @@ class RNEthersRS: NSObject {
   }
 
   func storeNewMnemonic(mnemonic: String, address: String) -> String? {
-    let newMnemonicKey = mnemonicPrefix + address
+    let newMnemonicKey = keychainKeyForMnemonicId(mnemonicId: address);
     let checkStored = retrieveMnemonic(mnemonicId: newMnemonicKey)
 
     if checkStored == nil {
@@ -94,7 +97,7 @@ class RNEthersRS: NSObject {
   }
 
   func storeNewPrivateKey(address: String, privateKey: String) {
-    let newKey = privateKeyPrefix + address
+    let newKey = keychainKeyForPrivateKey(address: address);
     keychain.set(privateKey, forKey: newKey)
   }
 
@@ -105,7 +108,7 @@ class RNEthersRS: NSObject {
   ) {
     let mnemonic = retrieveMnemonic(mnemonicId: mnemonicId)
     let private_key = private_key_from_mnemonic(
-      mnemonic?.cString(using: String.Encoding.utf8), UInt32(exactly: derivationIndex)!)
+      mnemonic, UInt32(exactly: derivationIndex)!)
     let xprv = String(cString: private_key.private_key!)
     let address = String(cString: private_key.address!)
     storeNewPrivateKey(address: address, privateKey: xprv)
@@ -113,15 +116,26 @@ class RNEthersRS: NSObject {
     resolve(address)
   }
 
-  @objc(signTransactionForAddress:transaction:resolve:reject:)
+  @objc(signTransactionForAddress:transaction:chainId:resolve:reject:)
   func signTransactionForAddress(
-    address: String, transaction: String, resolve: RCTPromiseResolveBlock,
+    address: String, transaction: String, chainId: NSNumber, resolve: RCTPromiseResolveBlock,
     reject: RCTPromiseRejectBlock
   ) {
     let wallet = retrieveOrCreateWalletForAddress(address: address)
-    let signedTransaction = sign_tx_with_wallet(wallet, transaction)
-    let result = String(cString: signedTransaction!)
-    string_free(signedTransaction)
+    let signedTransaction = sign_tx_with_wallet(wallet, transaction, UInt64(chainId))
+    let result = String(cString: signedTransaction.transaction!)
+    resolve(result);
+  }
+  
+  @objc(signMessageForAddress:message:resolve:reject:)
+  func signMessageForAddress(
+    address: String, message: String, resolve: RCTPromiseResolveBlock,
+    reject: RCTPromiseRejectBlock
+  ) {
+    let wallet = retrieveOrCreateWalletForAddress(address: address)
+    let signedMessage = sign_message_with_wallet(wallet, message)
+    let result = String(cString: signedMessage!)
+    string_free(signedMessage)
     resolve(result)
   }
 
@@ -130,16 +144,16 @@ class RNEthersRS: NSObject {
       return walletCache[address]!
     }
     let privateKey = retrievePrivateKey(address: address)
-    let wallet = wallet_from_private_key(privateKey?.cString(using: String.Encoding.utf8))
+    let wallet = wallet_from_private_key(privateKey)
     walletCache[address] = wallet
     return wallet!
   }
 
   func retrievePrivateKey(address: String) -> String? {
-    return keychain.get(keychainKeyForAddress(address: address))
+    return keychain.get(keychainKeyForPrivateKey(address: address))
   }
 
-  func keychainKeyForAddress(address: String) -> String {
+  func keychainKeyForPrivateKey(address: String) -> String {
     return privateKeyPrefix + address
   }
 }

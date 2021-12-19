@@ -13,7 +13,6 @@ RCT_EXTERN_METHOD(getMnemonicIds: (RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(importMnemonic: (NSString *)mnemonic
-                  address: (NSString *)address
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
@@ -30,6 +29,12 @@ RCT_EXTERN_METHOD(generateAndStorePrivateKey: (NSString *)mnemonicId
 
 RCT_EXTERN_METHOD(signTransactionForAddress: (NSString *)address
                   transaction: (NSString *)transaction
+                  chainId: NSNumber
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(signMessageForAddress: (NSString *)address
+                  message: (NSString *)message
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 

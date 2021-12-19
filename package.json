@@ -23,7 +23,7 @@
     "test:e2e:packager": "cross-env REACT_DEBUGGER=\"echo nope\" node_modules/.bin/react-native start --no-interactive"
   },
   "dependencies": {
-    "@cmcewen/ethers-rs-mobile": "0.0.2",
+    "@cmcewen/ethers-rs-mobile": "0.0.4",
     "@ethersproject/shims": "^5.5.0",
     "@react-native-async-storage/async-storage": "^1.15.9",
     "@react-native-firebase/analytics": "^12.9.3",
