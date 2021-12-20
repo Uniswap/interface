@@ -27,6 +27,11 @@ const blacklist: Record<string, boolean> = {
 const CREATION_BLOCK = 9840049
 const LAST_N_BLOCKS = 1440 // Last 2 hours
 
+export interface WarningInfo {
+  poolName: string
+  link: string
+}
+
 export const useFarmRegistry = () => {
   const { kit } = useContractKit()
   const [farmSummaries, setFarmSummaries] = React.useState<FarmSummary[]>([])
@@ -88,4 +93,21 @@ export const useFarmRegistry = () => {
   }, [call])
 
   return farmSummaries
+}
+
+export const useUniqueBestFarms = () => {
+  const farmSummaries = useFarmRegistry()
+
+  const farmsUniqueByBestFarm = farmSummaries.reduce((prev: Record<string, FarmSummary>, current) => {
+    if (!prev[current.lpAddress]) {
+      prev[current.lpAddress] = current
+    } else if (
+      Number(fromWei(current.rewardsUSDPerYear)) > Number(fromWei(prev[current.lpAddress].rewardsUSDPerYear))
+    ) {
+      prev[current.lpAddress] = current
+    }
+    return prev
+  }, {})
+
+  return farmsUniqueByBestFarm
 }

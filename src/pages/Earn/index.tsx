@@ -9,22 +9,17 @@ import { useTranslation } from 'react-i18next'
 import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
 import styled from 'styled-components'
 
-import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { AutoColumn, ColumnCenter, TopSection } from '../../components/Column'
 import { PoolCard } from '../../components/earn/PoolCard'
 import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import { RowBetween } from '../../components/Row'
 import { ExternalLink, TYPE } from '../../theme'
+import LiquidityWarning from '../Pool/LiquidityWarning'
 import { useFarmRegistry } from './useFarmRegistry'
 
 const PageWrapper = styled.div`
   width: 100%;
   max-width: 640px;
-`
-
-const TopSection = styled(AutoColumn)`
-  max-width: 720px;
-  width: 100%;
-  margin-bottom: 24px;
 `
 
 const DataRow = styled(RowBetween)`
@@ -74,6 +69,7 @@ export default function Earn() {
 
   return (
     <PageWrapper>
+      <LiquidityWarning />
       {stakedFarms.length === 0 && (
         <TopSection gap="md">
           <DataCard>

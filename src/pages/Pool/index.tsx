@@ -18,6 +18,7 @@ import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { ExternalLink, HideSmall, StyledInternalLink, TYPE } from '../../theme'
+import LiquidityWarning from './LiquidityWarning'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -109,6 +110,7 @@ export default function Pool() {
   return (
     <>
       <PageWrapper>
+        <LiquidityWarning />
         <SwapPoolTabs active={'pool'} />
         <VoteCard>
           <CardNoise />
