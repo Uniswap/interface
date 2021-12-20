@@ -45,6 +45,13 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
