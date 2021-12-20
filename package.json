@@ -125,7 +125,7 @@
     "@ethersproject/constants": "^5.3.0",
     "@ethersproject/contracts": "^5.3.0",
     "@ethersproject/providers": "^5.3.1",
-    "@ethersproject/strings": "^5.3.0",
+    "@ethersproject/strings": "^5.5.0",
     "@ethersproject/units": "^5.3.0",
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
     "@sentry/react": "^6.9.0",
