@@ -22,7 +22,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import Slider from '../../components/Slider'
 import { Dots } from '../../components/swap/styleds'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { WETH9_EXTENDED } from '../../constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
@@ -388,8 +388,8 @@ export default function RemoveLiquidity({
   const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      WETH9_EXTENDED[chainId] &&
-      (currencyA?.equals(WETH9_EXTENDED[chainId]) || currencyB?.equals(WETH9_EXTENDED[chainId]))
+      WRAPPED_NATIVE_CURRENCY[chainId] &&
+      (currencyA?.equals(WRAPPED_NATIVE_CURRENCY[chainId]) || currencyB?.equals(WRAPPED_NATIVE_CURRENCY[chainId]))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -532,17 +532,17 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.isNative ? WETH9_EXTENDED[chainId].address : currencyIdA}/${
-                              currencyB?.isNative ? WETH9_EXTENDED[chainId].address : currencyIdB
-                            }`}
+                            to={`/remove/v2/${
+                              currencyA?.isNative ? WRAPPED_NATIVE_CURRENCY[chainId].address : currencyIdA
+                            }/${currencyB?.isNative ? WRAPPED_NATIVE_CURRENCY[chainId].address : currencyIdB}`}
                           >
                             Receive WETH
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : currencyIdA}/${
-                              currencyB?.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : currencyIdB
-                            }`}
+                            to={`/remove/v2/${
+                              currencyA?.equals(WRAPPED_NATIVE_CURRENCY[chainId]) ? 'ETH' : currencyIdA
+                            }/${currencyB?.equals(WRAPPED_NATIVE_CURRENCY[chainId]) ? 'ETH' : currencyIdB}`}
                           >
                             Receive ETH
                           </StyledInternalLink>

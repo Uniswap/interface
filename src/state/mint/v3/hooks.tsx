@@ -194,14 +194,14 @@ export function useV3DerivedMintInfo(
   // check for invalid price input (converts to invalid ratio)
   const invalidPrice = useMemo(() => {
     const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.numerator, price.denominator) : undefined
-    const invalid =
+    return (
       price &&
       sqrtRatioX96 &&
       !(
         JSBI.greaterThanOrEqual(sqrtRatioX96, TickMath.MIN_SQRT_RATIO) &&
         JSBI.lessThan(sqrtRatioX96, TickMath.MAX_SQRT_RATIO)
       )
-    return invalid
+    )
   }, [price])
 
   // used for ratio calculation when pool not initialized

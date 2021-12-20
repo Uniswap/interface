@@ -32,7 +32,7 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { WETH9_EXTENDED } from '../../constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/actions'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -266,8 +266,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       liquidityValue1?.currency &&
       (liquidityValue0.currency.isNative ||
         liquidityValue1.currency.isNative ||
-        liquidityValue0.currency.wrapped.equals(WETH9_EXTENDED[liquidityValue0.currency.chainId]) ||
-        liquidityValue1.currency.wrapped.equals(WETH9_EXTENDED[liquidityValue1.currency.chainId]))
+        liquidityValue0.currency.wrapped.equals(WRAPPED_NATIVE_CURRENCY[liquidityValue0.currency.chainId]) ||
+        liquidityValue1.currency.wrapped.equals(WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]))
   )
   return (
     <AutoColumn>

@@ -18,18 +18,29 @@ export async function addNetwork({ library, chainId, info }: AddNetworkArguments
   const formattedChainId = hexStripZeros(BigNumber.from(chainId).toHexString())
   try {
     await library?.provider.request({
-      method: 'wallet_addEthereumChain',
-      params: [
-        {
-          chainId: formattedChainId,
-          chainName: info.label,
-          rpcUrls: info.rpcUrls,
-          nativeCurrency: info.nativeCurrency,
-          blockExplorerUrls: [info.explorer],
-        },
-      ],
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: formattedChainId }],
     })
-  } catch (error) {
-    console.error('error adding eth network: ', chainId, info, error)
+  } catch (switchError) {
+    // This error code indicates that the chain has not been added to MetaMask.
+    if (switchError.code === 4902) {
+      try {
+        await library?.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: formattedChainId,
+              chainName: info.label,
+              rpcUrls: [info.addNetworkInfo.rpcUrl],
+              nativeCurrency: info.addNetworkInfo.nativeCurrency,
+              blockExplorerUrls: [info.explorer],
+            },
+          ],
+        })
+      } catch (addError) {
+        console.error('RPC failed to add Ethereum network:', chainId, info, addError)
+      }
+    }
+    // handle other "switch" errors
   }
 }

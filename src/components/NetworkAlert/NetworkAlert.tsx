@@ -1,27 +1,15 @@
 import { Trans } from '@lingui/macro'
-import {
-  ARBITRUM_HELP_CENTER_LINK,
-  L2_CHAIN_IDS,
-  OPTIMISM_HELP_CENTER_LINK,
-  SupportedChainId,
-  SupportedL2ChainId,
-} from 'constants/chains'
+import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
-import { useArbitrumAlphaAlert, useDarkModeManager, useOptimismAlphaAlert } from 'state/user/hooks'
+import { useDarkModeManager, useNetworkAlertStatus } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 import { CHAIN_INFO } from '../../constants/chains'
-
-export const DesktopTextBreak = styled.div`
-  display: none;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    display: block;
-  }
-`
+import { isL2ChainId } from '../../utils/chains'
 
 const L2Icon = styled.img`
   width: 36px;
@@ -209,59 +197,47 @@ interface NetworkAlertProps {
   thin?: boolean
 }
 
+const BETA_TAG_COLORS: { [chainId in SupportedL2ChainId]: string } = {
+  [SupportedChainId.OPTIMISM]: '#ff0420',
+  [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff0420',
+  [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
+  [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
+}
+
 export function NetworkAlert(props: NetworkAlertProps) {
   const { account, chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
-  const [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
-  const [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged] = useOptimismAlphaAlert()
-  const [locallyDismissed, setLocallyDimissed] = useState(false)
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const [alertAcknowledged, acknowledgeAlert] = useNetworkAlertStatus(chainId)
+  const [locallyDismissed, setLocallyDimissed] = useState(alertAcknowledged)
+  const userNativeCurrencyBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
   const dismiss = useCallback(() => {
-    if (userEthBalance?.greaterThan(0)) {
-      switch (chainId) {
-        case SupportedChainId.OPTIMISM:
-          setOptimismAlphaAcknowledged(true)
-          break
-        case SupportedChainId.ARBITRUM_ONE:
-          setArbitrumAlphaAcknowledged(true)
-          break
-      }
-    } else {
-      setLocallyDimissed(true)
-    }
-  }, [chainId, setArbitrumAlphaAcknowledged, setOptimismAlphaAcknowledged, userEthBalance])
+    setLocallyDimissed(true)
+    if (!alertAcknowledged) acknowledgeAlert()
+  }, [acknowledgeAlert, alertAcknowledged])
 
-  const onOptimismAndOptimismAcknowledged = SupportedChainId.OPTIMISM === chainId && optimismAlphaAcknowledged
-  const onArbitrumAndArbitrumAcknowledged = SupportedChainId.ARBITRUM_ONE === chainId && arbitrumAlphaAcknowledged
-  if (
-    !chainId ||
-    !L2_CHAIN_IDS.includes(chainId) ||
-    onArbitrumAndArbitrumAcknowledged ||
-    onOptimismAndOptimismAcknowledged ||
-    locallyDismissed
-  ) {
+  if (!isL2ChainId(chainId) || locallyDismissed || alertAcknowledged || !chainId) {
     return null
   }
-  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+
+  const { label, logoUrl, bridge, helpCenterUrl } = CHAIN_INFO[chainId]
   const isOptimism = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
-  const depositUrl = isOptimism ? `${info.bridge}?chainId=1` : info.bridge
-  const helpCenterLink = isOptimism ? OPTIMISM_HELP_CENTER_LINK : ARBITRUM_HELP_CENTER_LINK
-  const showCloseIcon = Boolean(userEthBalance?.greaterThan(0) && !props.thin)
+  const depositUrl = isOptimism ? `${bridge}?chainId=1` : bridge
+  const showCloseIcon = Boolean(userNativeCurrencyBalance?.greaterThan(0) && !props.thin)
   return (
     <RootWrapper>
-      <BetaTag color={isOptimism ? '#ff0420' : '#0490ed'}>Beta</BetaTag>
-      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl} thin={props.thin}>
+      <BetaTag color={BETA_TAG_COLORS[chainId]}>Beta</BetaTag>
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl} thin={props.thin}>
         {showCloseIcon && <CloseIcon onClick={dismiss} />}
         <BodyText>
-          <L2Icon src={info.logoUrl} />
+          <L2Icon src={logoUrl} />
           <Header thin={props.thin}>
-            <Trans>Uniswap on {info.label}</Trans>
+            <Trans>Uniswap on {label}</Trans>
           </Header>
           <Body>
             <Trans>
-              To start trading on {info.label}, first bridge your assets from L1 to L2. Please treat this as a beta
-              release and learn about the risks before using {info.label}.
+              To start trading on {label}, first bridge your assets from L1 to L2. Please treat this as a beta release
+              and learn about the risks before using {label}.
             </Trans>
           </Body>
         </BodyText>
@@ -270,9 +246,11 @@ export function NetworkAlert(props: NetworkAlertProps) {
             <Trans>Deposit Assets</Trans>
             <LinkOutCircle />
           </LinkOutToBridge>
-          <LearnMoreLink href={helpCenterLink} thin={props.thin}>
-            <Trans>Learn More</Trans>
-          </LearnMoreLink>
+          {helpCenterUrl ? (
+            <LearnMoreLink href={helpCenterUrl} thin={props.thin}>
+              <Trans>Learn More</Trans>
+            </LearnMoreLink>
+          ) : null}
         </Controls>
       </ContentWrapper>
     </RootWrapper>

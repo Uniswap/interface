@@ -38,7 +38,7 @@ import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 
 import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from '../abis/types'
-import { UNI, WETH9_EXTENDED } from '../constants/tokens'
+import { UNI, WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
 
 // returns null on errors
@@ -74,7 +74,11 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
   const { chainId } = useActiveWeb3React()
-  return useContract<Weth>(chainId ? WETH9_EXTENDED[chainId]?.address : undefined, WETH_ABI, withSignerIfPossible)
+  return useContract<Weth>(
+    chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
+    WETH_ABI,
+    withSignerIfPossible
+  )
 }
 
 export function useERC721Contract(nftAddress?: string) {
@@ -113,7 +117,7 @@ export function useV2RouterContract(): Contract | null {
   return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, true)
 }
 
-export function useMulticall2Contract() {
+export function useInterfaceMulticall() {
   return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI, false) as UniswapInterfaceMulticall
 }
 

@@ -14,14 +14,13 @@ import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { AppState } from '../index'
 import {
+  acknowledgeNetworkAlert,
   addSerializedPair,
   addSerializedToken,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
-  updateOptimismAlphaAcknowledged,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -339,22 +338,13 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   }, [combinedList])
 }
 
-export function useArbitrumAlphaAlert(): [boolean, (arbitrumAlphaAcknowledged: boolean) => void] {
+export function useNetworkAlertStatus(chainId: number | undefined): [boolean, () => void] {
   const dispatch = useAppDispatch()
-  const arbitrumAlphaAcknowledged = useAppSelector(({ user }) => user.arbitrumAlphaAcknowledged)
-  const setArbitrumAlphaAcknowledged = (arbitrumAlphaAcknowledged: boolean) => {
-    dispatch(updateArbitrumAlphaAcknowledged({ arbitrumAlphaAcknowledged }))
-  }
+  const alertAcknowledged = useAppSelector(({ user }) => user.networkAlertsAcknowledged)
+  const acknowledgeAlert = useCallback(() => {
+    if (typeof chainId !== 'number') return
+    dispatch(acknowledgeNetworkAlert({ chainId }))
+  }, [chainId, dispatch])
 
-  return [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged]
-}
-
-export function useOptimismAlphaAlert(): [boolean, (optimismAlphaAcknowledged: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const optimismAlphaAcknowledged = useAppSelector(({ user }) => user.optimismAlphaAcknowledged)
-  const setOptimismAlphaAcknowledged = (optimismAlphaAcknowledged: boolean) => {
-    dispatch(updateOptimismAlphaAcknowledged({ optimismAlphaAcknowledged }))
-  }
-
-  return [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged]
+  return [typeof chainId === 'number' ? alertAcknowledged[chainId] ?? false : false, acknowledgeAlert]
 }

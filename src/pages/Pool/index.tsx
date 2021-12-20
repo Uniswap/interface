@@ -128,6 +128,25 @@ const ResponsiveRow = styled(RowFixed)`
   `};
 `
 
+function PositionsLoadingPlaceholder() {
+  return (
+    <LoadingRows>
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+    </LoadingRows>
+  )
+}
+
 export default function Pool() {
   const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
@@ -231,20 +250,7 @@ export default function Pool() {
 
             <MainContentWrapper>
               {positionsLoading ? (
-                <LoadingRows>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRows>
+                <PositionsLoadingPlaceholder />
               ) : filteredPositions && filteredPositions.length > 0 ? (
                 <PositionList positions={filteredPositions} />
               ) : (

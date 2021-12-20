@@ -5,7 +5,7 @@ import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from '
 import { useMemo } from 'react'
 
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
-import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
+import { ExtendedEther, WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
@@ -237,7 +237,7 @@ export function useCurrency(currencyId: string | null | undefined): Currency | n
           ExtendedEther.onChain(SupportedChainId.MAINNET),
     [chainId]
   )
-  const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
+  const weth = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
   if (currencyId === null || currencyId === undefined) return currencyId
   if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
   return isETH ? extendedEther : token

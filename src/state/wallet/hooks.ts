@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 
 import { UNI } from '../../constants/tokens'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useMulticall2Contract } from '../../hooks/useContract'
+import { useInterfaceMulticall } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { useUserUnclaimedAmount } from '../claim/hooks'
@@ -20,7 +20,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
   [address: string]: CurrencyAmount<Currency> | undefined
 } {
   const { chainId } = useActiveWeb3React()
-  const multicallContract = useMulticall2Contract()
+  const multicallContract = useInterfaceMulticall()
 
   const addresses: string[] = useMemo(
     () =>

@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { AlertOctagon } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
+
+import { isL2ChainId } from '../../utils/chains'
 
 const Root = styled.div`
   background-color: ${({ theme }) => (theme.darkMode ? '#888D9B' : '#CED0D9')};
@@ -28,50 +30,54 @@ const ReadMoreLink = styled(ExternalLink)`
   text-decoration: underline;
 `
 
-export default function DowntimeWarning() {
-  const { chainId } = useActiveWeb3React()
-  if (!chainId || !L2_CHAIN_IDS.includes(chainId)) {
-    return null
-  }
-
-  const Content = () => {
-    switch (chainId) {
-      case SupportedChainId.OPTIMISM:
-      case SupportedChainId.OPTIMISTIC_KOVAN:
-        return (
-          <div>
-            <Trans>
-              Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade
-              the network in the near future. During downtime, your position will not earn fees and you will be unable
-              to remove liquidity.{' '}
-              <ReadMoreLink href="https://help.uniswap.org/en/articles/5406082-what-happens-if-the-optimistic-ethereum-network-experiences-downtime">
-                Read more.
-              </ReadMoreLink>
-            </Trans>
-          </div>
-        )
-      case SupportedChainId.ARBITRUM_ONE:
-      case SupportedChainId.ARBITRUM_RINKEBY:
-        return (
-          <div>
-            <Trans>
-              Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you
-              will be unable to remove liquidity.{' '}
-              <ReadMoreLink href="https://help.uniswap.org/en/articles/5576122-arbitrum-network-downtime">
-                Read more.
-              </ReadMoreLink>
-            </Trans>
-          </div>
-        )
-      default:
-        return null
-    }
-  }
-
+function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <Root>
       <WarningIcon />
-      <Content />
+      {children}
     </Root>
   )
+}
+
+/**
+ * Shows a downtime warning for the network if it's relevant
+ */
+export default function DowntimeWarning() {
+  const { chainId } = useActiveWeb3React()
+  if (!isL2ChainId(chainId)) {
+    return null
+  }
+
+  switch (chainId) {
+    case SupportedChainId.OPTIMISM:
+    case SupportedChainId.OPTIMISTIC_KOVAN:
+      return (
+        <Wrapper>
+          <Trans>
+            Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the
+            network in the near future. During downtime, your position will not earn fees and you will be unable to
+            remove liquidity.{' '}
+            <ReadMoreLink href="https://help.uniswap.org/en/articles/5406082-what-happens-if-the-optimistic-ethereum-network-experiences-downtime">
+              Read more.
+            </ReadMoreLink>
+          </Trans>
+        </Wrapper>
+      )
+    case SupportedChainId.ARBITRUM_ONE:
+    case SupportedChainId.ARBITRUM_RINKEBY:
+      return (
+        <Wrapper>
+          <Trans>
+            Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you
+            will be unable to remove liquidity.{' '}
+            <ReadMoreLink href="https://help.uniswap.org/en/articles/5576122-arbitrum-network-downtime">
+              Read more.
+            </ReadMoreLink>
+          </Trans>
+        </Wrapper>
+      )
+
+    default:
+      throw new Error('unhandled')
+  }
 }

@@ -1,12 +1,5 @@
 import { Trans } from '@lingui/macro'
-import {
-  ARBITRUM_HELP_CENTER_LINK,
-  CHAIN_INFO,
-  L2_CHAIN_IDS,
-  OPTIMISM_HELP_CENTER_LINK,
-  SupportedChainId,
-  SupportedL2ChainId,
-} from 'constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useRef } from 'react'
@@ -173,7 +166,6 @@ export default function NetworkSelector() {
 
   const isOnL2 = chainId ? L2_CHAIN_IDS.includes(chainId) : false
   const showSelector = Boolean(implements3085 || isOnL2)
-  const mainnetInfo = CHAIN_INFO[SupportedChainId.MAINNET]
 
   const conditionalToggle = useCallback(() => {
     if (showSelector) {
@@ -204,7 +196,7 @@ export default function NetworkSelector() {
         {chainId === targetChain && <FlyoutRowActiveIndicator />}
       </FlyoutRow>
     )
-    const helpCenterLink = isOptimism ? OPTIMISM_HELP_CENTER_LINK : ARBITRUM_HELP_CENTER_LINK
+    const helpCenterUrl = CHAIN_INFO[chainId].helpCenterUrl
     if (active && hasExtendedInfo) {
       return (
         <ActiveRowWrapper>
@@ -216,9 +208,11 @@ export default function NetworkSelector() {
             <ExternalLink href={CHAIN_INFO[targetChain].explorer}>
               <ExplorerText chainId={chainId} /> <LinkOutCircle />
             </ExternalLink>
-            <ExternalLink href={helpCenterLink}>
-              <Trans>Help Center</Trans> <LinkOutCircle />
-            </ExternalLink>
+            {helpCenterUrl ? (
+              <ExternalLink href={helpCenterUrl}>
+                <Trans>Help Center</Trans> <LinkOutCircle />
+              </ExternalLink>
+            ) : null}
           </ActiveRowLinkList>
         </ActiveRowWrapper>
       )
@@ -229,7 +223,7 @@ export default function NetworkSelector() {
   return (
     <SelectorWrapper ref={node as any}>
       <SelectorControls onClick={conditionalToggle} interactive={showSelector}>
-        <SelectorLogo interactive={showSelector} src={info.logoUrl || mainnetInfo.logoUrl} />
+        <SelectorLogo interactive={showSelector} src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         {showSelector && <StyledChevronDown />}
       </SelectorControls>
@@ -241,6 +235,7 @@ export default function NetworkSelector() {
           <Row targetChain={SupportedChainId.MAINNET} />
           <Row targetChain={SupportedChainId.OPTIMISM} />
           <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
+          <Row targetChain={SupportedChainId.POLYGON} />
         </FlyoutMenu>
       )}
     </SelectorWrapper>
