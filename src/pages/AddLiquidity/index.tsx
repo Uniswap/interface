@@ -212,7 +212,7 @@ export default function AddLiquidity({
           </AutoColumn>
         </LightCard>
         <TYPE.italic>
-          <Trans>Staking KROM will allow you to automatically process trades.</Trans>
+          <Trans>Depositing KROM will allow you to automatically process trades.</Trans>
         </TYPE.italic>
         <ButtonPrimary onClick={onAdd}>
           <Trans>Add</Trans>
@@ -277,7 +277,6 @@ export default function AddLiquidity({
   return (
     <>
       <ScrollablePage>
-        <DowntimeWarning />
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}

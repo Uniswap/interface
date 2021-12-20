@@ -256,7 +256,7 @@ export function NetworkAlert(props: NetworkAlertProps) {
         <BodyText>
           <L2Icon src={info.logoUrl} />
           <Header thin={props.thin}>
-            <Trans>Kromatika on {info.label}</Trans>
+            <Trans>{info.label}</Trans>
           </Header>
           <Body>
             <Trans>

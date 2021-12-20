@@ -183,7 +183,6 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
 
   return (
     <StyledPositionCard bgColor={backgroundColor}>
-      <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
@@ -211,7 +210,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
                   </Badge>
                 </MouseoverTooltip>
               ) : (
-                <MouseoverTooltip text={<Trans>Your account is activelly processing trades.</Trans>}>
+                <MouseoverTooltip text={<Trans>Your account is actively processing trades.</Trans>}>
                   <Badge variant={BadgeVariant.POSITIVE}>
                     <AlertCircle width={14} height={14} />
                     &nbsp;
@@ -246,7 +245,14 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
               </RowFixed>
               {minBalance ? (
                 <RowFixed>
-                  <MouseoverTooltip text={<Trans>Bla bla bla</Trans>}>
+                  <MouseoverTooltip
+                    text={
+                      <Trans>
+                        You will need to maintain a minimum balance to ensure your trades are processed. This amount
+                        will fluctuate based on the price of ETH and KROM.
+                      </Trans>
+                    }
+                  >
                     <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
                   </MouseoverTooltip>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>

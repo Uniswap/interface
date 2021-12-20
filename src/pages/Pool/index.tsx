@@ -159,7 +159,7 @@ export default function Pool() {
           <ChevronsRight size={16} />
         </MenuItem>
       ),
-      link: '/migrate/v3',
+      link: `/add/${kromToken?.address}/remove`,
       external: false,
     },
   ]
@@ -197,7 +197,6 @@ export default function Pool() {
             </TitleRow>
 
             <HideSmall>
-              <DowntimeWarning />
               <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
             </HideSmall>
 

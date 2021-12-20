@@ -324,16 +324,16 @@ export function PositionPage({
   }, [history, collectMigrationHash])
 
   // usdc prices always in terms of tokens
-  const price0 = useUSDCPrice(token0 ?? undefined)
-  const price1 = useUSDCPrice(token1 ?? undefined)
+  const price0 = useUSDCPrice(currency0 ?? undefined)
+  const price1 = useUSDCPrice(currency1 ?? undefined)
 
   const feeValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
-    if (!tokensOwed0) return undefined
+    if (!tokensOwed0 || !currency0) return undefined
     return CurrencyAmount.fromRawAmount(currency0 as Token, tokensOwed0?.toString())
   }, [currency0, tokensOwed0])
 
   const feeValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
-    if (!tokensOwed1) return undefined
+    if (!tokensOwed1 || !currency1) return undefined
     return CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1?.toString())
   }, [currency1, tokensOwed1])
 
