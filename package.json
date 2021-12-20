@@ -120,7 +120,6 @@
     "ua-parser-js": "^0.7.28",
     "use-count-up": "^2.2.5",
     "web-vitals": "^2.1.0",
-    "webpack": "4.44.2",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0"

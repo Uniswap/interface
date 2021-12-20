@@ -53,10 +53,6 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-function NoConnectorAlert() {
-  return <div>hey, add a connector</div>
-}
-
 export interface WidgetProps {
   children: ReactNode
   theme?: Theme
@@ -78,8 +74,7 @@ export default function Widget({
   dialog,
   className,
 }: WidgetProps) {
-  const connector = useProviderInfo(provider, jsonRpcEndpoint)
-  const hasConnector = connector[0] !== undefined
+  useProviderInfo(provider, jsonRpcEndpoint)
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (
@@ -88,9 +83,7 @@ export default function Widget({
         <ThemeProvider theme={theme}>
           <I18nProvider locale={locale}>
             <WidgetWrapper width={width} className={className} ref={wrapper}>
-              <DialogProvider value={dialog || wrapper.current}>
-                {hasConnector ? children : <NoConnectorAlert />}
-              </DialogProvider>
+              <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
             </WidgetWrapper>
           </I18nProvider>
         </ThemeProvider>

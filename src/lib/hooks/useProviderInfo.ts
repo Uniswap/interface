@@ -1,5 +1,5 @@
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { connectorAtom, injectedConnectorAtom, networkConnectorAtom } from 'lib/state'
+import { useUpdateAtom } from 'jotai/utils'
+import { injectedConnectorAtom, networkConnectorAtom } from 'lib/state'
 import { useEffect } from 'react'
 import { initializeConnector } from 'widgets-web3-react/core'
 import { EIP1193 } from 'widgets-web3-react/eip1193'
@@ -22,6 +22,4 @@ export default function useProviderInfo(provider: EthProvider | undefined, jsonR
       setInjectedConnector([connector, hooks])
     }
   }, [setInjectedConnector, provider])
-
-  return useAtomValue(connectorAtom)
 }
