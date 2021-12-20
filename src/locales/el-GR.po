@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-12-16 20:07\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "(${0})"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(Μέγιστο)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "Επιτρέψτε στο πρωτόκολλο Uniswap να χρησιμ
 msgid "Allowed"
 msgstr "Επιτρέπεται"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "Επιτρέπεται η ολίσθηση"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Ποσό"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "Αυτόματο"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "Αυτόματος δρομολογητής"
+msgid "Auto Router API"
+msgstr "Auto Router API"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "Υπόλοιπο:"
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "Υπόλοιπο: {0} {1}"
+msgid "Balance: {0}"
+msgstr "Υπόλοιπο: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "Καλύτερο για σταθερά ζεύγη."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "Καλύτερο για πολύ σταθερά ζευγάρια."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "Η καλύτερη τιμή διαδρομής κοστίζει ~{formattedGasPriceString} σε φυσικό αέριο."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "Σφάλμα σύνδεσης. Προσπαθήστε ξανά αναν�
 msgid "Error importing list"
 msgstr "Σφάλμα εισαγωγής λίστας"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Η εκτίμηση μπορεί να διαφέρει λόγω των ρυθμίσεων αερίου του πορτοφολιού σας"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Εκτιμώμενο τέλος δικτύου"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Εκτελέστηκε"
@@ -748,6 +757,10 @@ msgstr "Εκτελέστηκε"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Εκτεταμένα αποτελέσματα από ανενεργές Λίστες Μάρκας"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Αναμενόμενη έξοδος"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "Βαθμίδα Χρέωσης"
 msgid "Fee tier"
 msgstr "Επίπεδο χρεώσεων"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Λήψη της καλύτερης τιμής..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Για"
@@ -785,7 +802,6 @@ msgstr "Για"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Για κάθε δεξαμενή που φαίνεται παρακάτω, κάντε κλικ στην επιλογή μεταφορά για να αφαιρέσετε τη ρευστότητά σας από Uniswap V2 και να την καταθέσετε στο Uniswap V3."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "Από"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "Μάθετε σχετικά με την παροχή ρευστότητας"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Μάθε περισσότερα"
 
@@ -953,10 +970,6 @@ msgstr "Ελαφρύ θέμα"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Ρευστότητα"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "Χρέωση παρόχου ρευστότητας"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "Φορτώθηκε"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "Φόρτωση"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "ΜΕΓΙΣΤΗ"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "Λείπουν εξαρτήσεις"
 msgid "More"
 msgstr "Περισσότερα"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Τέλος δικτύου"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Προειδοποίηση δικτύου"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Οι χρεώσεις δικτύου υπερβαίνουν το 50% του ποσού ανταλλαγής!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "Επισκόπηση Δεξαμενών"
 msgid "Preview"
 msgstr "Προεπισκόπηση"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Τιμή"
@@ -1536,6 +1559,7 @@ msgstr "Γίνεται παροχή {0} {1} και {2} {3}"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "Ανταλλαγή"
 
@@ -1593,6 +1617,18 @@ msgstr "Η εφαρμογή καταγράφει ανώνυμα στατιστι
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Η εφαρμογή συλλέγει με ασφάλεια τη διεύθυνση του πορτοφολιού σας και τη μοιράζεται με την TRM Labs Inc. για λόγους κινδύνου και συμμόρφωσης."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Το κόστος αποστολής αυτής της συναλλαγής είναι περισσότερο από το μισό της αξίας του ποσού εισόδου."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "Το τρέχον γρήγορο ποσό αερίου για την αποστολή συναλλαγής στο L1. Τα τέλη φυσικού αερίου καταβάλλονται στο εγγενές νόμισμα Ethereum (ETH) και εκφράζονται σε gwei."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Η εκτιμώμενη διαφορά μεταξύ των τιμών σε USD των ποσών εισροών και εκροών."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Δεν είναι δυνατή η μεταφορά της μάρκας εισαγωγής. Ενδέχεται να υπάρχει πρόβλημα με τη μάρκα εισαγωγής."
@@ -1600,6 +1636,10 @@ msgstr "Δεν είναι δυνατή η μεταφορά της μάρκας �
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Η αγοραία τιμή είναι εκτός του εύρους τιμών που καθορίσατε. Καταθέσεις ενός μόνου περιουσιακού στοιχείου μόνο."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Ο πιο πρόσφατος αριθμός αποκλεισμού σε αυτό το δίκτυο. Οι τιμές ενημερώνονται για κάθε μπλοκ."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "Αυτή η ομάδα πρέπει να προετοιμαστεί για να μπορέσετε να προσθέσετε ρευστότητα. Για να ξεκινήσετε, επιλέξτε μια τιμή εκκίνησης για την ομάδα. Στη συνέχεια, εισαγάγετε το εύρος τιμών ρευστότητας και το ποσό κατάθεσης. Τα τέλη φυσικού αερίου θα είναι υψηλότερα από το συνηθισμένο λόγω της αρχικής συναλλαγής."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Αυτή η διαδρομή βελτιστοποιεί την τιμή σας λαμβάνοντας υπόψη τις χωρισμένες διαδρομές, το πολλαπλό λυκίσκο και το κόστος αερίου."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Αυτή η διαδρομή βελτιστοποιεί τη συνολική σας απόδοση λαμβάνοντας υπόψη τις διαχωρισμένες διαδρομές, τα πολλαπλά άλματα και το κόστος φυσικού αερίου κάθε βήματος."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "Αυτή η συναλλαγή δεν θα πετύχει είτε λό�
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Συμβουλή: Οι προσαρμοσμένες μάρκες αποθηκεύονται τοπικά στο πρόγραμμα περιήγησης σας"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "Συνολικές καταθέσεις"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Εμπορική οδός"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "Λεπτομέρειες Συναλλαγής"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "Ενημέρωση λίστας"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Χρησιμοποιήστε το API Uniswap Labs για να έχετε καλύτερες τιμές μέσω μιας πιο αποτελεσματικής διαδρομής."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Χρησιμοποιήστε το Uniswap Labs API για να λαμβάνετε ταχύτερα εισαγωγικά."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Χρήστης"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "Το V2 δεν είναι διαθέσιμο στο Layer 2. Μετάβ�
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "V2 ρευστότητα"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "Μπορεί να έχετε χάσει τη σύνδεσή σας στ�
 msgid "You may have lost your network connection."
 msgstr "Ενδέχεται να έχετε χάσει τη σύνδεση δικτύου σας."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "Μπορείτε να εξετάσετε το ενδεχόμενο να περιμένετε μέχρι να μειωθούν τα τέλη δικτύου για να ολοκληρώσετε αυτήν τη συναλλαγή."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Πρέπει να συνδέσετε ένα λογαριασμό."
@@ -2236,6 +2267,10 @@ msgstr "Οι συναλλαγές σας θα εμφανιστούν εδώ..."
 msgid "Your unclaimed UNI"
 msgstr "Το αζήτητο UNI σας"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "μετά από ολίσθηση"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "επιβεβαίωση"
@@ -2243,6 +2278,10 @@ msgstr "επιβεβαίωση"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "για {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}χρέωσης 0%"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% πισίνα"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% επιλέξτε"
@@ -2417,10 +2460,6 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} ανά {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

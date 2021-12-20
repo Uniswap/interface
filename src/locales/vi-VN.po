@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-12-16 20:07\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "(${0})"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(Tối đa)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "Cho phép Giao thức hoán đổi Uniswap sử dụng {0}"
 msgid "Allowed"
 msgstr "Được phép"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "Độ trượt được phép"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Số tiền"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "Tự động"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "Bộ định tuyến tự động"
+msgid "Auto Router API"
+msgstr "API bộ định tuyến tự động"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "Thăng bằng:"
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "Số dư: {0} {1}"
+msgid "Balance: {0}"
+msgstr "Số dư: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "Tốt nhất cho các cặp ổn định."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "Tốt nhất cho các cặp rất ổn định."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "Tuyến đường giá tốt nhất chi phí ~{formattedGasPriceString} xăng."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "Lỗi kết nối. Hãy thử làm mới trang."
 msgid "Error importing list"
 msgstr "Lỗi khi nhập danh sách"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Ước tính có thể khác do cài đặt gas ví của bạn"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Phí mạng ước tính"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Thực thi"
@@ -748,6 +757,10 @@ msgstr "Thực thi"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Kết quả mở rộng từ Danh sách mã token không hoạt động"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Sản lượng mong đợi"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "Bậc phí"
 msgid "Fee tier"
 msgstr "Bậc phí"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Đang tìm nạp giá tốt nhất ..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Đối với"
@@ -785,7 +802,6 @@ msgstr "Đối với"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Đối với mỗi pool được hiển thị bên dưới, hãy nhấp vào di chuyển để xóa thanh khoản của bạn khỏi Uniswap V2 và gửi nó vào Uniswap V3."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "Từ"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "Tìm hiểu về cung cấp tính thanh khoản"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Tìm hiểu thêm"
 
@@ -953,10 +970,6 @@ msgstr "Chủ đề ánh sáng"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Thanh khoản"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "Phí nhà cung cấp thanh khoản"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "Đã nạp"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "Đang tải"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "TỐI ĐA"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "Thiếu phụ thuộc"
 msgid "More"
 msgstr "Thêm nữa"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Phí mạng"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Cảnh báo mạng"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Phí mạng vượt quá 50% số tiền hoán đổi!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "Tổng quan về pool"
 msgid "Preview"
 msgstr "Xem trước"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Giá"
@@ -1536,6 +1559,7 @@ msgstr "Cung cấp {0} {1} và {2} {3}"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "Hoán đổi"
 
@@ -1593,6 +1617,18 @@ msgstr "Ứng dụng ghi lại số liệu thống kê sử dụng ẩn danh đ�
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Ứng dụng thu thập địa chỉ ví của bạn một cách an toàn và chia sẻ nó với TRM Labs Inc. vì lý do rủi ro và tuân thủ."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Chi phí gửi giao dịch này là hơn một nửa giá trị của số tiền đầu vào."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "Lượng gas nhanh hiện tại để gửi một giao dịch trên L1. Phí gas được thanh toán bằng đồng tiền bản địa của Ethereum (ETH) và được tính bằng gwei."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Chênh lệch ước tính giữa giá trị USD của lượng đầu vào và đầu ra."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố với mã token đầu vào."
@@ -1600,6 +1636,10 @@ msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố v�
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Giá thị trường nằm ngoài phạm vi giá đã chỉ định của bạn. Chỉ gửi một tài sản duy nhất."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Số khối gần đây nhất trên mạng này. Giá cập nhật trên mọi khối."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "Nhóm này phải được khởi tạo trước khi bạn có thể thêm thanh khoản. Để khởi tạo, hãy chọn giá khởi điểm cho nhóm. Sau đó, nhập phạm vi giá thanh khoản và số tiền ký quỹ của bạn. Phí gas sẽ cao hơn bình thường do giao dịch khởi tạo."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Tuyến đường này tối ưu hóa giá của bạn bằng cách xem xét các tuyến đường chia nhỏ, nhiều chặng và chi phí xăng."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Lộ trình này tối ưu hóa tổng sản lượng của bạn bằng cách xem xét các lộ trình chia nhỏ, nhiều bước nhảy và chi phí xăng của mỗi bước."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "Giao dịch này sẽ không thành công do biến động giá hoặc 
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Mẹo: Mã token tùy chỉnh được lưu trữ cục bộ trong trình duyệt của bạn"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "Tổng số tiền gửi"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Con đường thương mại"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "chi tiết giao dịch"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "Cập nhật danh sách"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Sử dụng API Uniswap Labs để nhận giá tốt hơn thông qua một lộ trình hiệu quả hơn."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Sử dụng API Uniswap Labs để nhận báo giá nhanh hơn."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Người dùng"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "V2 không khả dụng trên Lớp 2. Chuyển sang Lớp 1 Ethereum."
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "Thanh khoản V2"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "Có thể bạn đã mất kết nối mạng hoặc {label} có thể b
 msgid "You may have lost your network connection."
 msgstr "Bạn có thể đã mất kết nối mạng của mình."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "Bạn có thể cân nhắc đợi cho đến khi phí mạng giảm để hoàn tất giao dịch này."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Bạn phải kết nối một tài khoản."
@@ -2236,6 +2267,10 @@ msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây..."
 msgid "Your unclaimed UNI"
 msgstr "UNI chưa được nhận của bạn"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "sau khi trượt"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "xác nhận"
@@ -2243,6 +2278,10 @@ msgstr "xác nhận"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "cho {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "Mức phí {0}"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}%"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% chọn"
@@ -2417,10 +2460,6 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} trên {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
