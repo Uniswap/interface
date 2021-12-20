@@ -49,3 +49,10 @@ The Uniswap Interface supports swapping, adding liquidity, removing liquidity an
 
 The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
 linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
+
+## XinFin Apothem Contracts 
+- factory: *0x78CAafCB80d9E635196322d989e82753d0d229B8*
+- weth: *0xEE3C205346923a989F82827A25778FB6FdfE84d0*
+- router: *0cDf7c990F4D16a235aFb4279F75A8e35d9c2cFB*
+- ERC20: *0xFdCf8bD44EC46a71a13f00F4328F6b65adc8BCf9*
+- token-wbnb pair: *0x81915D0460CBA23fb15d5A7A4bBd5E06799C3DF3*

@@ -328,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "このリストを追加することで、データが正しいことを暗黙的に信頼することになります。 誰でもリストを作成することができます。そのため、既存リストの偽のバージョンや、実体のないプロジェクトを掲載するリストが作成されている可能性があります。"
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "ウォレットを接続することにより、あなたはUniswap Labsのに <0>サービス規約</0>に同意し、あなたがUniswap<1>プロトコル免責事項</1>を読み、理解していることに同意するものとします。"
+msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
+msgstr "ウォレットを接続することにより、あなたはXSwapProtocolのに <0>サービス規約</0>に同意し、あなたがUniswap<1>プロトコル免責事項</1>を読み、理解していることに同意するものとします。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -1330,7 +1330,7 @@ msgid "Proposer"
 msgstr "提案者"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Protocol Disclaimer"
+msgid "Disclaimer"
 msgstr "プロトコルの免責事項"
 
 #: src/pages/Vote/styled.tsx
@@ -1582,7 +1582,7 @@ msgid "The app fetches on-chain data and constructs contract calls with an Infur
 msgstr "アプリはオンチェーンデータをフェッチし、InfuraAPIを使用してコントラクト呼び出しを構築します。"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgid "The app fetches the optimal trade route from a XSwapProtocol server."
 msgstr "アプリは、UniswapLabsサーバーから最適な取引ルートを取得します。"
 
 #: src/components/PrivacyPolicy/index.tsx
@@ -1650,7 +1650,7 @@ msgid "This token doesn't appear on the active token list(s). Make sure this is 
 msgstr "このトークンはご利用中のトークンリストに存在しません。取引したいトークンであることを確認してください。"
 
 #: src/components/SearchModal/BlockedToken.tsx
-msgid "This token is not supported in the Uniswap Labs app"
+msgid "This token is not supported in the XSwapProtocol app"
 msgstr "このトークンは、UniswapLabsアプリではサポートされていません"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1818,7 +1818,7 @@ msgid "Uniswap Governance"
 msgstr "Uniswapのガバナンス"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Uniswap Labs' Terms of Service"
+msgid "XSwapProtocol' Terms of Service"
 msgstr "UniswapLabsの利用規約"
 
 #: src/components/SwitchLocaleLink/index.tsx
@@ -1893,8 +1893,8 @@ msgid "Update list"
 msgstr "リストを更新"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Uniswap Labs APIを使用して、より効率的なルートでより良い価格を取得します。"
+msgid "Use the XSwapProtocol API to get better pricing through a more efficient route."
+msgstr "XSwapProtocol APIを使用して、より効率的なルートでより良い価格を取得します。"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"

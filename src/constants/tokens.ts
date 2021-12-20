@@ -1,6 +1,6 @@
 import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
 
-import { UNI_ADDRESS } from './addresses'
+import { XSP_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
 export const AMPL = new Token(
@@ -17,37 +17,9 @@ export const DAI = new Token(
   'DAI',
   'Dai Stablecoin'
 )
-export const DAI_ARBITRUM_ONE = new Token(
-  SupportedChainId.ARBITRUM_ONE,
-  '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-  18,
-  'DAI',
-  'Dai stable coin'
-)
-export const DAI_OPTIMISM = new Token(
-  SupportedChainId.OPTIMISM,
-  '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-  18,
-  'DAI',
-  'Dai stable coin'
-)
 export const USDC = new Token(
   SupportedChainId.MAINNET,
   '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_ARBITRUM = new Token(
-  SupportedChainId.ARBITRUM_ONE,
-  '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_OPTIMISM = new Token(
-  SupportedChainId.OPTIMISM,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
   6,
   'USDC',
   'USD//C'
@@ -59,37 +31,9 @@ export const USDT = new Token(
   'USDT',
   'Tether USD'
 )
-export const USDT_ARBITRUM_ONE = new Token(
-  SupportedChainId.ARBITRUM_ONE,
-  '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-  6,
-  'USDT',
-  'Tether USD'
-)
-export const USDT_OPTIMISM = new Token(
-  SupportedChainId.OPTIMISM,
-  '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
-  6,
-  'USDT',
-  'Tether USD'
-)
 export const WBTC = new Token(
   SupportedChainId.MAINNET,
   '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-  8,
-  'WBTC',
-  'Wrapped BTC'
-)
-export const WBTC_ARBITRUM_ONE = new Token(
-  SupportedChainId.ARBITRUM_ONE,
-  '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-  8,
-  'WBTC',
-  'Wrapped BTC'
-)
-export const WBTC_OPTIMISM = new Token(
-  SupportedChainId.OPTIMISM,
-  '0x68f180fcCe6836688e9084f035309E29Bf0A2095',
   8,
   'WBTC',
   'Wrapped BTC'
@@ -158,43 +102,18 @@ export const SWISE = new Token(
   'StakeWise'
 )
 export const UNI: { [chainId: number]: Token } = {
-  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, XSP_ADDRESS[1], 18, 'XSP', 'XSwapProtocol'),
 }
 
 export const WETH9_EXTENDED: { [chainId: number]: Token } = {
   ...WETH9,
-  [SupportedChainId.OPTIMISM]: new Token(
-    SupportedChainId.OPTIMISM,
-    '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
-    SupportedChainId.OPTIMISTIC_KOVAN,
-    '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [SupportedChainId.ARBITRUM_ONE]: new Token(
-    SupportedChainId.ARBITRUM_ONE,
-    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [SupportedChainId.ARBITRUM_RINKEBY]: new Token(
-    SupportedChainId.ARBITRUM_RINKEBY,
-    '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
+  // [SupportedChainId.OPTIMISM]: new Token(
+  //   SupportedChainId.OPTIMISM,
+  //   '0x4200000000000000000000000000000000000006',
+  //   18,
+  //   'WETH',
+  //   'Wrapped Ether'
+  // ),
 }
 
 export class ExtendedEther extends Ether {

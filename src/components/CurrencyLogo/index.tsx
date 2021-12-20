@@ -8,18 +8,14 @@ import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism'
+type Network = 'xdc' | 'txdc'
 
 function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
     case SupportedChainId.MAINNET:
-      return 'ethereum'
-    case SupportedChainId.ARBITRUM_ONE:
-      return 'arbitrum'
-    case SupportedChainId.OPTIMISM:
-      return 'optimism'
+      return 'xdc'
     default:
-      return 'ethereum'
+      return 'txdc'
   }
 }
 
@@ -28,7 +24,7 @@ export const getTokenLogoURL = (
   chainId: SupportedChainId = SupportedChainId.MAINNET
 ): string | void => {
   const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.MAINNET, SupportedChainId.OPTIMISM]
+  const networksWithUrls = [SupportedChainId.MAINNET, SupportedChainId.TESTNET]
   if (networksWithUrls.includes(chainId)) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
@@ -43,7 +39,7 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   -mox-box-shadow: 0 0 1px white;
   -webkit-box-shadow: 0 0 1px white;
   box-shadow: 0 0 1px white;
-  border: 0px solid rgba(255, 255, 255, 0);
+  border: 0 solid rgba(255, 255, 255, 0);
 `
 
 const StyledLogo = styled(Logo)<{ size: string }>`
@@ -54,7 +50,7 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   -mox-box-shadow: 0 0 1px black;
   -webkit-box-shadow: 0 0 1px black;
   box-shadow: 0 0 1px black;
-  border: 0px solid rgba(255, 255, 255, 0);
+  border: 0 solid rgba(255, 255, 255, 0);
 `
 
 export default function CurrencyLogo({

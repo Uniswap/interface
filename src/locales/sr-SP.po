@@ -328,7 +328,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Додавањем ове листе имплицитно сте сагласни да су подаци тачни. Свако може да креира листу, укључујући стварање лажних верзија постојећих листа и листа за које се тврди да представљају пројекте којих нема."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
 msgstr "Povezivanjem novčanika prihvatate Uslove korišćenja usluge <0></0> i potvrđujete da ste pročitali i razumeli Odricanje odgovornosti</1><1>."
 
 #: src/pages/Vote/styled.tsx
@@ -1330,8 +1330,8 @@ msgid "Proposer"
 msgstr "Предлагач"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Protocol Disclaimer"
-msgstr "Protocol Disclaimer"
+msgid "Disclaimer"
+msgstr "Disclaimer"
 
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
@@ -1582,8 +1582,8 @@ msgid "The app fetches on-chain data and constructs contract calls with an Infur
 msgstr "Aplikacija preuzima podatke na lancu i konstruiše ugovorne pozive pomoću Infura API-ja."
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "Aplikacija preuzima optimalni trgovački put sa servera Uniswap Labs."
+msgid "The app fetches the optimal trade route from a XSwapProtocol server."
+msgstr "Aplikacija preuzima optimalni trgovački put sa servera XSwapProtocol."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
@@ -1650,8 +1650,8 @@ msgid "This token doesn't appear on the active token list(s). Make sure this is 
 msgstr "Овај токен се не појављује на листи активних токена. Уверите се да је ово жетон којим желите да тргујете."
 
 #: src/components/SearchModal/BlockedToken.tsx
-msgid "This token is not supported in the Uniswap Labs app"
-msgstr "Ovaj token nije podržan u aplikaciji Uniswap Labs"
+msgid "This token is not supported in the XSwapProtocol app"
+msgstr "Ovaj token nije podržan u aplikaciji XSwapProtocol"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1818,8 +1818,8 @@ msgid "Uniswap Governance"
 msgstr "Uniswap управљање"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Uniswap Labs' Terms of Service"
-msgstr "Uslovi korišćenja usluge Uniswap Labs"
+msgid "XSwapProtocol' Terms of Service"
+msgstr "Uslovi korišćenja usluge XSwapProtocol"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1893,7 +1893,7 @@ msgid "Update list"
 msgstr "Ажурирај листу"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
+msgid "Use the XSwapProtocol API to get better pricing through a more efficient route."
 msgstr "Користите Унисвап Лабс АПИ да бисте добили боље цене путем ефикасније руте."
 
 #: src/components/claim/ClaimModal.tsx

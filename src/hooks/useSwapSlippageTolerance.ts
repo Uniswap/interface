@@ -1,7 +1,6 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'components/swap/GasEstimateBadge'
-import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -33,7 +32,6 @@ export default function useSwapSlippageTolerance(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 ): Percent {
   const { chainId } = useActiveWeb3React()
-  const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useUSDCValue(trade?.outputAmount)
   const ethGasPrice = useGasPrice()
 
@@ -42,7 +40,7 @@ export default function useSwapSlippageTolerance(
   const etherPrice = useUSDCPrice(ether ?? undefined)
 
   const defaultSlippageTolerance = useMemo(() => {
-    if (!trade || onL2) return ONE_TENTHS_PERCENT
+    if (!trade) return ONE_TENTHS_PERCENT
 
     const ethGasCost =
       ethGasPrice && typeof gasEstimate === 'number' ? JSBI.multiply(ethGasPrice, JSBI.BigInt(gasEstimate)) : undefined
@@ -68,7 +66,7 @@ export default function useSwapSlippageTolerance(
     }
 
     return V3_SWAP_DEFAULT_SLIPPAGE
-  }, [trade, onL2, ethGasPrice, gasEstimate, ether, etherPrice, chainId, outputDollarValue])
+  }, [trade, ethGasPrice, gasEstimate, ether, etherPrice, chainId, outputDollarValue])
 
   return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
 }

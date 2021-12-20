@@ -328,7 +328,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Durch das Hinzufügen dieser Liste vertrauen Sie implizit darauf, dass die Daten korrekt sind. Jeder kann eine Liste erstellen, einschließlich gefälschter Versionen bestehender Listen oder Listen die vorgeben Projekte zu repräsentieren, die keine Liste haben."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
 msgstr "Durch das Verbinden einer Brieftasche stimmen Sie den <0>Nutzungsbedingungen von</0> und bestätigen, dass Sie den Haftungsausschluss für das Protokoll von <1></1>."
 
 #: src/pages/Vote/styled.tsx
@@ -1330,7 +1330,7 @@ msgid "Proposer"
 msgstr "Antragsteller"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Protocol Disclaimer"
+msgid "Disclaimer"
 msgstr "Protokoll-Haftungsausschluss"
 
 #: src/pages/Vote/styled.tsx
@@ -1582,8 +1582,8 @@ msgid "The app fetches on-chain data and constructs contract calls with an Infur
 msgstr "Die App ruft On-Chain-Daten ab und erstellt Vertragsaufrufe mit einer Infura-API."
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "Die App ruft die optimale Handelsroute von einem Uniswap Labs-Server ab."
+msgid "The app fetches the optimal trade route from a XSwapProtocol server."
+msgstr "Die App ruft die optimale Handelsroute von einem XSwapProtocol-Server ab."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
@@ -1650,8 +1650,8 @@ msgid "This token doesn't appear on the active token list(s). Make sure this is 
 msgstr "Dieser Token erscheint nicht in der/den aktiven Token-Liste(n). Stellen Sie sicher, dass dies der Token ist, den Sie handeln möchten."
 
 #: src/components/SearchModal/BlockedToken.tsx
-msgid "This token is not supported in the Uniswap Labs app"
-msgstr "Dieses Token wird in der Uniswap Labs-App nicht unterstützt"
+msgid "This token is not supported in the XSwapProtocol app"
+msgstr "Dieses Token wird in der XSwapProtocol-App nicht unterstützt"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1818,8 +1818,8 @@ msgid "Uniswap Governance"
 msgstr "Uniswap Governance"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Uniswap Labs' Terms of Service"
-msgstr "Nutzungsbedingungen von Uniswap Labs"
+msgid "XSwapProtocol' Terms of Service"
+msgstr "Nutzungsbedingungen von XSwapProtocol"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1893,8 +1893,8 @@ msgid "Update list"
 msgstr "Liste aktualisieren"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Verwenden Sie die Uniswap Labs-API, um durch eine effizientere Route bessere Preise zu erzielen."
+msgid "Use the XSwapProtocol API to get better pricing through a more efficient route."
+msgstr "Verwenden Sie die XSwapProtocol-API, um durch eine effizientere Route bessere Preise zu erzielen."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"

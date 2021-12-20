@@ -36,7 +36,7 @@ msgid "(Max)"
 msgstr "(Maksimum)"
 
 #: src/components/AddressInputPanel/index.tsx
-msgid "(View on Explorer)"
+msgid "(0)"
 msgstr "(Bekyk op Explorer)"
 
 #: src/components/Header/UniBalanceContent.tsx
@@ -328,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Deur hierdie lys by te voeg, vertrou u implisiet dat die data korrek is. Almal kan 'n lys opstel, insluitend die skep van vals weergawes van bestaande lyste en lyste wat beweer dat hulle projekte verteenwoordig wat nie een het nie."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "Deur 'n beursie te koppel, stem jy in tot Uniswap Labs se <0>Diensbepalings</0> en erken dat jy die Uniswap <1>Protokol Disclaimer</1>gelees en verstaan het."
+msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
+msgstr "Deur 'n beursie te koppel, stem jy in tot XSwapProtocol se <0>Diensbepalings</0> en erken dat jy die Uniswap <1>Protokol Disclaimer</1>gelees en verstaan het."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -1330,7 +1330,7 @@ msgid "Proposer"
 msgstr "Voorsteller"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Protocol Disclaimer"
+msgid "Disclaimer"
 msgstr "Protokol vrywaring"
 
 #: src/pages/Vote/styled.tsx
@@ -1582,8 +1582,8 @@ msgid "The app fetches on-chain data and constructs contract calls with an Infur
 msgstr "Die toepassing haal data in die ketting en bou kontrakoproepe met 'n Infura API."
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "Die toepassing haal die optimale handelsroete vanaf 'n Uniswap Labs-bediener."
+msgid "The app fetches the optimal trade route from a XSwapProtocol server."
+msgstr "Die toepassing haal die optimale handelsroete vanaf 'n XSwapProtocol-bediener."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
@@ -1650,8 +1650,8 @@ msgid "This token doesn't appear on the active token list(s). Make sure this is 
 msgstr "Hierdie teken verskyn nie op die aktiewe tekenlys(te) nie. Maak seker dat dit die teken is wat u wil verhandel."
 
 #: src/components/SearchModal/BlockedToken.tsx
-msgid "This token is not supported in the Uniswap Labs app"
-msgstr "Hierdie teken word nie in die Uniswap Labs-toepassing ondersteun nie"
+msgid "This token is not supported in the XSwapProtocol app"
+msgstr "Hierdie teken word nie in die XSwapProtocol-toepassing ondersteun nie"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1818,8 +1818,8 @@ msgid "Uniswap Governance"
 msgstr "Onttrek bestuur"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Uniswap Labs' Terms of Service"
-msgstr "Uniswap Labs se diensbepalings"
+msgid "XSwapProtocol' Terms of Service"
+msgstr "XSwapProtocol se diensbepalings"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1893,8 +1893,8 @@ msgid "Update list"
 msgstr "Lys van opdaterings"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Gebruik die Uniswap Labs API om beter pryse te kry deur 'n meer doeltreffende roete."
+msgid "Use the XSwapProtocol API to get better pricing through a more efficient route."
+msgstr "Gebruik die XSwapProtocol API om beter pryse te kry deur 'n meer doeltreffende roete."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"

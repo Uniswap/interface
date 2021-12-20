@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'
 
+import ChainId from './clientSideSmartOrderRouter'
 import { GetQuoteResult } from './types'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]

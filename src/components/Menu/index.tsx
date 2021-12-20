@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { L2_CHAIN_IDS } from 'constants/chains'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
@@ -44,15 +43,10 @@ const StyledMenuIcon = styled(MenuIcon)`
 
 const StyledMenuButton = styled.button`
   width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
   margin: 0;
-  padding: 0;
   height: 38px;
   background-color: ${({ theme }) => theme.bg0};
   border: 1px solid ${({ theme }) => theme.bg0};
-
   padding: 0.15rem 0.5rem;
   border-radius: 12px;
 
@@ -88,8 +82,8 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg1};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
+    0 24px 32px rgba(0, 0, 0, 0.01);
   border: 1px solid ${({ theme }) => theme.bg0};
   border-radius: 12px;
   padding: 0.5rem;
@@ -103,10 +97,10 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
     flyoutAlignment === FlyoutAlignment.RIGHT
       ? css`
-          right: 0rem;
+          right: 0;
         `
       : css`
-          left: 0rem;
+          left: 0;
         `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     bottom: unset;
@@ -216,7 +210,7 @@ export default function Menu() {
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
+  const showUNIClaimOption = Boolean(!!account && !!chainId)
 
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 

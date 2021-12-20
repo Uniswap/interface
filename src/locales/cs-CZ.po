@@ -328,7 +328,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Přidáním tohoto seznamu implicitně vyjadřujete důvěru v to, že data jsou správná. Seznam může vytvořit kdokoli, včetně vytváření falešných verzí existujících seznamů a seznamů, které prohlašují, že reprezentují projekty, které žádný seznam nemají."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
 msgstr "Připojením peněženky souhlasíte s <0>podmínkami služby</0> a potvrzujete, že jste si přečetli a rozumíte prohlášení o vyloučení odpovědnosti za protokol <1></1>."
 
 #: src/pages/Vote/styled.tsx
@@ -1330,7 +1330,7 @@ msgid "Proposer"
 msgstr "Navrhovatel"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Protocol Disclaimer"
+msgid "Disclaimer"
 msgstr "Zřeknutí se odpovědnosti za protokol"
 
 #: src/pages/Vote/styled.tsx
@@ -1582,8 +1582,8 @@ msgid "The app fetches on-chain data and constructs contract calls with an Infur
 msgstr "Aplikace načítá data v řetězci a vytváří smluvní volání pomocí Infura API."
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "Aplikace načte optimální obchodní cestu ze serveru Uniswap Labs."
+msgid "The app fetches the optimal trade route from a XSwapProtocol server."
+msgstr "Aplikace načte optimální obchodní cestu ze serveru XSwapProtocol."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
@@ -1650,8 +1650,8 @@ msgid "This token doesn't appear on the active token list(s). Make sure this is 
 msgstr "Tento žeton není na seznamech aktivních žetonů. Ujistěte se, že toto je ten žeton, který chcete obchodovat."
 
 #: src/components/SearchModal/BlockedToken.tsx
-msgid "This token is not supported in the Uniswap Labs app"
-msgstr "Tento token není podporován v aplikaci Uniswap Labs"
+msgid "This token is not supported in the XSwapProtocol app"
+msgstr "Tento token není podporován v aplikaci XSwapProtocol"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1818,8 +1818,8 @@ msgid "Uniswap Governance"
 msgstr "Správa Uniswap"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Uniswap Labs' Terms of Service"
-msgstr "Podmínky služby Uniswap Labs"
+msgid "XSwapProtocol' Terms of Service"
+msgstr "Podmínky služby XSwapProtocol"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1893,8 +1893,8 @@ msgid "Update list"
 msgstr "Aktualizovat seznam"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Pomocí rozhraní Uniswap Labs API získáte lepší ceny prostřednictvím efektivnější trasy."
+msgid "Use the XSwapProtocol API to get better pricing through a more efficient route."
+msgstr "Pomocí rozhraní XSwapProtocol API získáte lepší ceny prostřednictvím efektivnější trasy."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"

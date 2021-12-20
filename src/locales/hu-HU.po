@@ -328,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "A lista hozzáadásával hallgatólagosan megbízik az adatok helyességében. Bárki létrehozhat egy listát, beleértve a meglévő listák hamisított változatait is és olyan listákat is, amelyek azt állítják, hogy olyan projekteket képviselnek, amelyeknek nincs."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "A pénztárca csatlakoztatásával Ön elfogadja az Uniswap Labs <0>szolgáltatási feltételeit</0> és elismeri, hogy elolvasta és megértette az Uniswap <1>Protokoll Jogi nyilatkozatát</1>."
+msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
+msgstr "A pénztárca csatlakoztatásával Ön elfogadja az XSwapProtocol <0>szolgáltatási feltételeit</0> és elismeri, hogy elolvasta és megértette az Uniswap <1>Protokoll Jogi nyilatkozatát</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -1331,7 +1331,7 @@ msgid "Proposer"
 msgstr "Javaslattevő"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Protocol Disclaimer"
+msgid "Disclaimer"
 msgstr "Protokoll Jogi nyilatkozat"
 
 #: src/pages/Vote/styled.tsx
@@ -1583,8 +1583,8 @@ msgid "The app fetches on-chain data and constructs contract calls with an Infur
 msgstr "Az alkalmazás lekéri a láncon belüli adatokat, és szerződéshívásokat hoz létre egy Infura API-val."
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "Az alkalmazás lekéri az optimális kereskedelmi útvonalat egy Uniswap Labs szerverről."
+msgid "The app fetches the optimal trade route from a XSwapProtocol server."
+msgstr "Az alkalmazás lekéri az optimális kereskedelmi útvonalat egy XSwapProtocol szerverről."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
@@ -1651,8 +1651,8 @@ msgid "This token doesn't appear on the active token list(s). Make sure this is 
 msgstr "Ez a token nem jelenik meg az aktív tokenek listájában. Győződjön meg arról, hogy ez az a token, amelyet kereskedni szeretne."
 
 #: src/components/SearchModal/BlockedToken.tsx
-msgid "This token is not supported in the Uniswap Labs app"
-msgstr "Ezt a tokent nem támogatja az Uniswap Labs alkalmazás"
+msgid "This token is not supported in the XSwapProtocol app"
+msgstr "Ezt a tokent nem támogatja az XSwapProtocol alkalmazás"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1819,8 +1819,8 @@ msgid "Uniswap Governance"
 msgstr "Uniswap irányítás"
 
 #: src/components/PrivacyPolicy/index.tsx
-msgid "Uniswap Labs' Terms of Service"
-msgstr "Az Uniswap Labs szolgáltatási feltételei"
+msgid "XSwapProtocol' Terms of Service"
+msgstr "Az XSwapProtocol szolgáltatási feltételei"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1894,8 +1894,8 @@ msgid "Update list"
 msgstr "Lista frissítése"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Használja az Uniswap Labs API -t, hogy hatékonyabb útvonalon jobb árakat kapjon."
+msgid "Use the XSwapProtocol API to get better pricing through a more efficient route."
+msgstr "Használja az XSwapProtocol API -t, hogy hatékonyabb útvonalon jobb árakat kapjon."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"

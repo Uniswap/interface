@@ -1,8 +1,6 @@
 import { Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
-import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
-import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
@@ -19,9 +17,7 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
-  updateOptimismAlphaAcknowledged,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -185,12 +181,8 @@ export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Pe
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
-  const { chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
-  const userDeadline = useAppSelector((state) => state.user.userDeadline)
-  const onL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
-  const deadline = onL2 ? L2_DEADLINE_FROM_NOW : userDeadline
-
+  const deadline = useAppSelector((state) => state.user.userDeadline)
   const setUserDeadline = useCallback(
     (userDeadline: number) => {
       dispatch(updateUserDeadline({ userDeadline }))
@@ -337,24 +329,4 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
-}
-
-export function useArbitrumAlphaAlert(): [boolean, (arbitrumAlphaAcknowledged: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const arbitrumAlphaAcknowledged = useAppSelector(({ user }) => user.arbitrumAlphaAcknowledged)
-  const setArbitrumAlphaAcknowledged = (arbitrumAlphaAcknowledged: boolean) => {
-    dispatch(updateArbitrumAlphaAcknowledged({ arbitrumAlphaAcknowledged }))
-  }
-
-  return [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged]
-}
-
-export function useOptimismAlphaAlert(): [boolean, (optimismAlphaAcknowledged: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const optimismAlphaAcknowledged = useAppSelector(({ user }) => user.optimismAlphaAcknowledged)
-  const setOptimismAlphaAcknowledged = (optimismAlphaAcknowledged: boolean) => {
-    dispatch(updateOptimismAlphaAcknowledged({ optimismAlphaAcknowledged }))
-  }
-
-  return [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged]
 }

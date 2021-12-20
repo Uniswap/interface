@@ -5,8 +5,6 @@ import { SupportedChainId } from './chains'
 import {
   AMPL,
   DAI,
-  DAI_ARBITRUM_ONE,
-  DAI_OPTIMISM,
   ETH2X_FLI,
   ExtendedEther,
   FEI,
@@ -18,14 +16,8 @@ import {
   SWISE,
   TRIBE,
   USDC,
-  USDC_ARBITRUM,
-  USDC_OPTIMISM,
   USDT,
-  USDT_ARBITRUM_ONE,
-  USDT_OPTIMISM,
   WBTC,
-  WBTC_ARBITRUM_ONE,
-  WBTC_OPTIMISM,
   WETH9_EXTENDED,
 } from './tokens'
 
@@ -45,13 +37,6 @@ const WETH_ONLY: ChainTokenList = Object.fromEntries(
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [SupportedChainId.MAINNET]: [...WETH_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
-  [SupportedChainId.OPTIMISM]: [...WETH_ONLY[SupportedChainId.OPTIMISM], DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
-  [SupportedChainId.ARBITRUM_ONE]: [
-    ...WETH_ONLY[SupportedChainId.ARBITRUM_ONE],
-    DAI_ARBITRUM_ONE,
-    USDT_ARBITRUM_ONE,
-    WBTC_ARBITRUM_ONE,
-  ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
@@ -88,36 +73,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC,
     WETH9_EXTENDED[SupportedChainId.MAINNET],
   ],
-  [SupportedChainId.ROPSTEN]: [
-    ExtendedEther.onChain(SupportedChainId.ROPSTEN),
-    WETH9_EXTENDED[SupportedChainId.ROPSTEN],
-  ],
-  [SupportedChainId.RINKEBY]: [
-    ExtendedEther.onChain(SupportedChainId.RINKEBY),
-    WETH9_EXTENDED[SupportedChainId.RINKEBY],
-  ],
-  [SupportedChainId.GOERLI]: [ExtendedEther.onChain(SupportedChainId.GOERLI), WETH9_EXTENDED[SupportedChainId.GOERLI]],
-  [SupportedChainId.KOVAN]: [ExtendedEther.onChain(SupportedChainId.KOVAN), WETH9_EXTENDED[SupportedChainId.KOVAN]],
-  [SupportedChainId.ARBITRUM_ONE]: [
-    ExtendedEther.onChain(SupportedChainId.ARBITRUM_ONE),
-    DAI_ARBITRUM_ONE,
-    USDC_ARBITRUM,
-    USDT_ARBITRUM_ONE,
-    WBTC_ARBITRUM_ONE,
-    WETH9_EXTENDED[SupportedChainId.ARBITRUM_ONE],
-  ],
-  [SupportedChainId.ARBITRUM_RINKEBY]: [
-    ExtendedEther.onChain(SupportedChainId.ARBITRUM_RINKEBY),
-    WETH9_EXTENDED[SupportedChainId.ARBITRUM_RINKEBY],
-  ],
-  [SupportedChainId.OPTIMISM]: [
-    ExtendedEther.onChain(SupportedChainId.OPTIMISM),
-    DAI_OPTIMISM,
-    USDC_OPTIMISM,
-    USDT_OPTIMISM,
-    WBTC_OPTIMISM,
-  ],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

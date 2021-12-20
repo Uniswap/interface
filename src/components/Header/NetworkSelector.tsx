@@ -1,51 +1,16 @@
 import { Trans } from '@lingui/macro'
-import {
-  ARBITRUM_HELP_CENTER_LINK,
-  CHAIN_INFO,
-  L2_CHAIN_IDS,
-  OPTIMISM_HELP_CENTER_LINK,
-  SupportedChainId,
-  SupportedL2ChainId,
-} from 'constants/chains'
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useRef } from 'react'
-import { ArrowDownCircle, ChevronDown } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 
-const ActiveRowLinkList = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0 8px;
-  & > a {
-    align-items: center;
-    color: ${({ theme }) => theme.text2};
-    display: flex;
-    flex-direction: row;
-    font-size: 14px;
-    font-weight: 500;
-    justify-content: space-between;
-    padding: 8px 0 4px;
-    text-decoration: none;
-  }
-  & > a:first-child {
-    margin: 0;
-    margin-top: 0px;
-    padding-top: 10px;
-  }
-`
-const ActiveRowWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
-  border-radius: 8px;
-  cursor: pointer;
-  padding: 8px;
-  width: 100%;
-`
 const FlyoutHeader = styled.div`
   color: ${({ theme }) => theme.text2};
   font-weight: 400;
@@ -53,8 +18,8 @@ const FlyoutHeader = styled.div`
 const FlyoutMenu = styled.div`
   align-items: flex-start;
   background-color: ${({ theme }) => theme.bg0};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
+    0 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -89,11 +54,6 @@ const FlyoutRowActiveIndicator = styled.div`
   border-radius: 50%;
   height: 9px;
   width: 9px;
-`
-const LinkOutCircle = styled(ArrowDownCircle)`
-  transform: rotate(230deg);
-  width: 16px;
-  height: 16px;
 `
 const Logo = styled.img`
   height: 20px;
@@ -136,30 +96,6 @@ const SelectorWrapper = styled.div`
 const StyledChevronDown = styled(ChevronDown)`
   width: 12px;
 `
-const BridgeText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
-  switch (chainId) {
-    case SupportedChainId.ARBITRUM_ONE:
-    case SupportedChainId.ARBITRUM_RINKEBY:
-      return <Trans>Arbitrum Bridge</Trans>
-    case SupportedChainId.OPTIMISM:
-    case SupportedChainId.OPTIMISTIC_KOVAN:
-      return <Trans>Optimism Gateway</Trans>
-    default:
-      return <Trans>Bridge</Trans>
-  }
-}
-const ExplorerText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
-  switch (chainId) {
-    case SupportedChainId.ARBITRUM_ONE:
-    case SupportedChainId.ARBITRUM_RINKEBY:
-      return <Trans>Arbiscan</Trans>
-    case SupportedChainId.OPTIMISM:
-    case SupportedChainId.OPTIMISTIC_KOVAN:
-      return <Trans>Optimistic Etherscan</Trans>
-    default:
-      return <Trans>Explorer</Trans>
-  }
-}
 
 export default function NetworkSelector() {
   const { chainId, library } = useActiveWeb3React()
@@ -170,9 +106,7 @@ export default function NetworkSelector() {
   const implements3085 = useAppSelector((state) => state.application.implements3085)
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
-
-  const isOnL2 = chainId ? L2_CHAIN_IDS.includes(chainId) : false
-  const showSelector = Boolean(implements3085 || isOnL2)
+  const showSelector = Boolean(implements3085)
   const mainnetInfo = CHAIN_INFO[SupportedChainId.MAINNET]
 
   const conditionalToggle = useCallback(() => {
@@ -194,9 +128,7 @@ export default function NetworkSelector() {
       toggle()
     }
     const active = chainId === targetChain
-    const hasExtendedInfo = L2_CHAIN_IDS.includes(targetChain)
-    const isOptimism = targetChain === SupportedChainId.OPTIMISM
-    const rowText = `${CHAIN_INFO[targetChain].label}${isOptimism ? ' (Optimism)' : ''}`
+    const rowText = `${CHAIN_INFO[targetChain].label}${''}`
     const RowContent = () => (
       <FlyoutRow onClick={handleRowClick} active={active}>
         <Logo src={CHAIN_INFO[targetChain].logoUrl} />
@@ -204,25 +136,6 @@ export default function NetworkSelector() {
         {chainId === targetChain && <FlyoutRowActiveIndicator />}
       </FlyoutRow>
     )
-    const helpCenterLink = isOptimism ? OPTIMISM_HELP_CENTER_LINK : ARBITRUM_HELP_CENTER_LINK
-    if (active && hasExtendedInfo) {
-      return (
-        <ActiveRowWrapper>
-          <RowContent />
-          <ActiveRowLinkList>
-            <ExternalLink href={CHAIN_INFO[targetChain as SupportedL2ChainId].bridge}>
-              <BridgeText chainId={chainId} /> <LinkOutCircle />
-            </ExternalLink>
-            <ExternalLink href={CHAIN_INFO[targetChain].explorer}>
-              <ExplorerText chainId={chainId} /> <LinkOutCircle />
-            </ExternalLink>
-            <ExternalLink href={helpCenterLink}>
-              <Trans>Help Center</Trans> <LinkOutCircle />
-            </ExternalLink>
-          </ActiveRowLinkList>
-        </ActiveRowWrapper>
-      )
-    }
     return <RowContent />
   }
 
@@ -239,8 +152,7 @@ export default function NetworkSelector() {
             <Trans>Select a network</Trans>
           </FlyoutHeader>
           <Row targetChain={SupportedChainId.MAINNET} />
-          <Row targetChain={SupportedChainId.OPTIMISM} />
-          <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
+          <Row targetChain={SupportedChainId.TESTNET} />
         </FlyoutMenu>
       )}
     </SelectorWrapper>

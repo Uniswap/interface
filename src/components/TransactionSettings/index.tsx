@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useActiveWeb3React } from 'hooks/web3'
 import ms from 'ms.macro'
@@ -78,7 +77,7 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   input {
     width: 100%;
     height: 100%;
-    border: 0px;
+    border: 0;
     border-radius: 2rem;
   }
 `
@@ -157,7 +156,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
     }
   }
 
-  const showCustomDeadlineRow = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
+  const showCustomDeadlineRow = Boolean(chainId)
 
   return (
     <AutoColumn gap="md">

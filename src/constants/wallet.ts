@@ -1,12 +1,12 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
-import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
-import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
+// import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
+// import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
+// import PORTIS_ICON_URL from '../assets/images/portisIcon.png'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
-import PORTIS_ICON_URL from '../assets/images/portisIcon.png'
 import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { injected, walletconnect } from '../connectors'
 
 interface WalletInfo {
   connector?: AbstractConnector
@@ -47,39 +47,39 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#4196FC',
     mobile: true,
   },
-  WALLET_LINK: {
-    connector: walletlink,
-    name: 'Coinbase Wallet',
-    iconURL: COINBASE_ICON_URL,
-    description: 'Use Coinbase Wallet app on mobile device',
-    href: null,
-    color: '#315CF5',
-  },
-  COINBASE_LINK: {
-    name: 'Open in Coinbase Wallet',
-    iconURL: COINBASE_ICON_URL,
-    description: 'Open in Coinbase Wallet app.',
-    href: 'https://go.cb-w.com/mtUDhEZPy1',
-    color: '#315CF5',
-    mobile: true,
-    mobileOnly: true,
-  },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconURL: FORTMATIC_ICON_URL,
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true,
-  },
-  Portis: {
-    connector: portis,
-    name: 'Portis',
-    iconURL: PORTIS_ICON_URL,
-    description: 'Login using Portis hosted wallet',
-    href: null,
-    color: '#4A6C9B',
-    mobile: true,
-  },
+  // WALLET_LINK: {
+  //   connector: walletlink,
+  //   name: 'Coinbase Wallet',
+  //   iconURL: COINBASE_ICON_URL,
+  //   description: 'Use Coinbase Wallet app on mobile device',
+  //   href: null,
+  //   color: '#315CF5',
+  // },
+  // COINBASE_LINK: {
+  //   name: 'Open in Coinbase Wallet',
+  //   iconURL: COINBASE_ICON_URL,
+  //   description: 'Open in Coinbase Wallet app.',
+  //   href: 'https://go.cb-w.com/mtUDhEZPy1',
+  //   color: '#315CF5',
+  //   mobile: true,
+  //   mobileOnly: true,
+  // },
+  // FORTMATIC: {
+  //   connector: fortmatic,
+  //   name: 'Fortmatic',
+  //   iconURL: FORTMATIC_ICON_URL,
+  //   description: 'Login using Fortmatic hosted wallet',
+  //   href: null,
+  //   color: '#6748FF',
+  //   mobile: true,
+  // },
+  // Portis: {
+  //   connector: portis,
+  //   name: 'Portis',
+  //   iconURL: PORTIS_ICON_URL,
+  //   description: 'Login using Portis hosted wallet',
+  //   href: null,
+  //   color: '#4A6C9B',
+  //   mobile: true,
+  // },
 }

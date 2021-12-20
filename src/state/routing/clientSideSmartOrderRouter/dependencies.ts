@@ -17,6 +17,7 @@ export function buildDependencies(): Dependencies {
     const provider = new providers.JsonRpcProvider(NETWORK_URLS[chainId])
 
     dependenciesByChain[chainId] = {
+      // @ts-ignore
       chainId,
       provider,
     }

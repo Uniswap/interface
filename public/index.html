@@ -3,25 +3,44 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>Uniswap Interface</title>
-    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+    <!-- Links -->
+    <link rel="preconnect" href="%REACT_APP_NODE_PRODUCTION%" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
 
-    <!--
-      %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
-      Only files inside the `public` folder can be referenced from the HTML.
-    -->
-    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
 
+    <title>XSwapProtocol</title>
+    <meta name="description" content="The first significant AMM on XDC Network"/>
+    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#ff007a" />
-    <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
 
-    <!--
-      manifest.json provides metadata used when the app is installed as a PWA.
-      See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+
+    <meta name="twitter:image" content="/images/meta/og.png"/>
+    <meta name="twitter:description" content="The most popular AMM on XDC Network!"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="XSwapProtocol - Main DeFi exchange on XDC Network"/>
+    <link rel="mask-icon" href="/images/meta/safari-pinned-tab.svg" color="#000">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/meta/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/meta/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/meta/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/meta/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/meta/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/meta/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/meta/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/meta/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/meta/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/meta/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/meta/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/meta/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/meta/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/images/meta/android-icon-192x192.png">
+    <link rel="apple-touch-icon" href="/logo.png"/>
+
+    <meta name="msapplication-TileColor" content="#000">
+    <meta name="msapplication-TileImage" content="images/meta/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <link rel="preconnect" href="https://www.google-analytics.com/">
@@ -34,9 +53,6 @@
             box-sizing: border-box;
         }
 
-        /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
-        */
         @font-face {
             font-family: 'Inter custom';
             font-weight: 100 900;
@@ -82,7 +98,7 @@
             pointer-events: none;
             width: 200vw;
             height: 200vh;
-            background: radial-gradient(50% 50% at 50% 50%, #fc077d10 0%, rgba(255, 255, 255, 0) 100%);
+            background: radial-gradient(50% 50% at 50% 50%, #3498db60 0%, rgba(255, 255, 255, 0) 100%);
             transform: translate(-50vw, -100vh);
             z-index: -1;
         }
@@ -105,24 +121,10 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-
-    <!-- The root is the container of the app -->
     <div id="root">
-      <!-- Triggers the font to load immediately and then is replaced by the app -->
       <div>&emsp;</div>
     </div>
 
     <div id="background-radial-gradient"></div>
-
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

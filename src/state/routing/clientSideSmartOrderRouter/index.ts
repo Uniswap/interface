@@ -1,9 +1,10 @@
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
+import { AlphaRouter, AlphaRouterConfig } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
+import { ChainId } from './chain-id.enum'
 import { buildDependencies } from './dependencies'
 
 const routerParamsByChain = buildDependencies()
@@ -50,3 +51,5 @@ export async function getQuote(
 
   return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
 }
+
+export default ChainId

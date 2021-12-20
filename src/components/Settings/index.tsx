@@ -67,7 +67,7 @@ const StyledMenuButton = styled.button`
 const EmojiWrapper = styled.div`
   position: absolute;
   bottom: -6px;
-  right: 0px;
+  right: 0;
   font-size: 14px;
 `
 
@@ -85,8 +85,8 @@ const MenuFlyout = styled.span`
   min-width: 20.125rem;
   background-color: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
+    0 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -205,7 +205,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
                     <Trans>Auto Router API</Trans>
                   </ThemedText.Black>
-                  <QuestionHelper text={<Trans>Use the Uniswap Labs API to get faster quotes.</Trans>} />
+                  <QuestionHelper text={<Trans>Use the XSwapProtocol API to get faster quotes.</Trans>} />
                 </RowFixed>
                 <Toggle
                   id="toggle-optimized-router-button"
