@@ -34,7 +34,9 @@ if (typeof INFURA_KEY === 'undefined') {
 /**
  * Array of all the supported chain IDs
  */
-export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId) as SupportedChainId[]
+export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId).filter(
+  (id) => typeof id === 'number'
+) as SupportedChainId[]
 
 /**
  * All the chain IDs that are running the Ethereum protocol.
