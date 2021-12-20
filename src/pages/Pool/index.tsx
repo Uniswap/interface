@@ -4,7 +4,6 @@ import { AutoColumn } from 'components/Column'
 import DowntimeWarning from 'components/DowntimeWarning'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import FullPositionCard from 'components/PositionCard'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
@@ -189,7 +188,7 @@ export default function Pool() {
                   )}
                 />
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/add/${kromToken?.address}`}>
-                  + <Trans>Stake KROM</Trans>
+                  + <Trans>Deposit KROM</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
               <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/swap`}>
@@ -198,7 +197,6 @@ export default function Pool() {
             </TitleRow>
 
             <HideSmall>
-              <NetworkAlert thin />
               <DowntimeWarning />
               <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
             </HideSmall>

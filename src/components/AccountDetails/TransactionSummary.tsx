@@ -231,7 +231,7 @@ function AddLiquidityV3PoolSummary({
 function AddFundingSummary({ info: { baseCurrencyId } }: { info: AddFundingTransactionInfo }) {
   const baseCurrency = useCurrency(baseCurrencyId)
 
-  return <Trans>Stake {baseCurrency?.symbol}</Trans>
+  return <Trans>Deposit {baseCurrency?.symbol}</Trans>
 }
 
 function AddLiquidityV2PoolSummary({

@@ -285,7 +285,7 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={<Trans>Stake</Trans>}
+              title={<Trans>Deposit</Trans>}
               onDismiss={() => setShowConfirm(false)}
               topContent={modalHeader}
             />

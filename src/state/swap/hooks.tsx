@@ -234,7 +234,7 @@ export function useDerivedSwapInfo(): {
 
   const marketPrice = useMemo(() => {
     const priceTmp =
-      isDesiredRateUpdate && inputCurrency
+      isDesiredRateUpdate && inputCurrency && parsedAmount
         ? new Price({
             baseAmount: tryParseAmount('1', inputCurrency) as CurrencyAmount<Currency>,
             quoteAmount: parsedAmount as CurrencyAmount<Currency>,
