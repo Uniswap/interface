@@ -1,13 +1,13 @@
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
-import ErrorBoundary from 'lib/components/ErrorBoundary'
-import useProviderInfo from 'lib/hooks/useProviderInfo'
 import { Provider as I18nProvider } from 'lib/i18n'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
 import { ReactNode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
+import ErrorBoundary from './ErrorBoundary'
+import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
   to {
@@ -74,7 +74,6 @@ export default function Widget({
   dialog,
   className,
 }: WidgetProps) {
-  useProviderInfo(provider, jsonRpcEndpoint)
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (
@@ -82,9 +81,11 @@ export default function Widget({
       <AtomProvider>
         <ThemeProvider theme={theme}>
           <I18nProvider locale={locale}>
-            <WidgetWrapper width={width} className={className} ref={wrapper}>
-              <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
-            </WidgetWrapper>
+            <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+              <WidgetWrapper width={width} className={className} ref={wrapper}>
+                <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
+              </WidgetWrapper>
+            </Web3Provider>
           </I18nProvider>
         </ThemeProvider>
       </AtomProvider>
