@@ -152,7 +152,7 @@
     "redux": "^4.1.0",
     "rlp": "^2.2.6",
     "tiny-invariant": "^1.1.0",
-    "use-count-up": "^2.3.1",
+    "use-count-up": "^3.0.1",
     "web3": "^1.3.6",
     "web3-utils": "^1.5.2"
   },
