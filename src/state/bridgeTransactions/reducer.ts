@@ -36,14 +36,14 @@ export default createReducer<BridgeTxnsState>(initialState, builder =>
     })
     .addCase(updateBridgeTxnResolvedTimestamp, (state, { payload: { chainId, txHash, timestamp } }) => {
       if (!state[chainId]?.[txHash]) {
-        throw Error('Transaction not found' + txHash)
+        throw Error('Transaction not found ' + txHash)
       }
 
       state[chainId][txHash].timestampResolved = timestamp
     })
     .addCase(updateBridgeTxnReceipt, (state, { payload: { chainId, receipt, txHash, seqNum } }) => {
       if (!state[chainId]?.[txHash]) {
-        throw Error('Transaction not found' + txHash)
+        throw Error('Transaction not found ' + txHash)
       }
       const txn = state[chainId][txHash]
       if (txn.receipt) return

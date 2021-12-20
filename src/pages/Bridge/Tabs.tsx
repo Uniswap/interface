@@ -1,31 +1,47 @@
 import React from 'react'
 import styled from 'styled-components'
-
+import { NumberBadge } from '../../components/NumberBadge'
 import Row from '../../components/Row'
-import { BridgeStep } from './utils'
+import { BridgeTxsFilter } from '../../state/bridge/reducer'
 
 interface TabsProps {
-  step: BridgeStep
-  setStep: (step: BridgeStep) => void
+  collectableTxAmount: number
+  isCollecting: boolean
+  isCollectableFilter: boolean
   handleResetBridge: () => void
+  setTxsFilter: (filter: BridgeTxsFilter) => void
 }
 
-export const Tabs = ({ step, setStep, handleResetBridge }: TabsProps) => {
-  const isCollecting = step === BridgeStep.Collect
-
+export const Tabs = ({
+  collectableTxAmount,
+  isCollecting,
+  isCollectableFilter,
+  handleResetBridge,
+  setTxsFilter
+}: TabsProps) => {
   return (
     <TabsRow>
       <Button
         onClick={() => {
-          if (step !== BridgeStep.Initial) handleResetBridge()
-          setStep(BridgeStep.Initial)
+          if (isCollecting) {
+            handleResetBridge()
+            return
+          }
+          setTxsFilter(BridgeTxsFilter.RECENT)
         }}
-        className={!isCollecting ? 'active' : ''}
+        className={!(isCollecting || isCollectableFilter) ? 'active' : ''}
       >
         Bridge
       </Button>
-      <Button className={isCollecting ? 'active' : ''} disabled={!isCollecting}>
+      <Button
+        onClick={() => {
+          setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+        }}
+        className={isCollecting || isCollectableFilter ? 'active' : ''}
+        disabled={isCollecting}
+      >
         Collect
+        {<Badge badgeTheme="green">{collectableTxAmount}</Badge>}
       </Button>
     </TabsRow>
   )
@@ -64,4 +80,12 @@ const Button = styled.button`
     color: #504d72;
     cursor: not-allowed;
   }
+`
+const Badge = styled(NumberBadge)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 6px;
+  font-size: 9px;
+  letter-spacing: 0;
 `

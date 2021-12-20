@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ChainId, Currency } from '@swapr/sdk'
 
@@ -113,37 +113,30 @@ export function useBridgeActionHandlers(): {
   }
 }
 
-export function useBridgeInfo() {
+export const useBridgeInfo = () => {
   const { account, chainId } = useActiveWeb3React()
   const { typedValue, currencyId, fromNetwork, toNetwork } = useBridgeState()
 
   const bridgeCurrency = useCurrency(currencyId)
-  const parsedAmount = tryParseAmount(typedValue, bridgeCurrency ?? undefined, chainId)
+  const parsedAmount = useMemo(() => tryParseAmount(typedValue, bridgeCurrency ?? undefined, chainId), [
+    bridgeCurrency,
+    chainId,
+    typedValue
+  ])
 
   const [currencyBalance] = useCurrencyBalances(account ?? undefined, [bridgeCurrency ?? undefined])
 
-  let inputError: string | undefined
-  if (!account) {
-    inputError = 'Connect Wallet'
-  }
-
-  if (!parsedAmount) {
-    inputError = inputError ?? 'Enter amount'
-  }
-
-  if (!bridgeCurrency) {
-    inputError = inputError ?? 'Select a token'
-  }
-
-  if (currencyBalance && parsedAmount && currencyBalance.lessThan(parsedAmount)) {
-    inputError = 'Insufficient ' + parsedAmount.currency.symbol + ' balance'
-  }
+  const isBalanceSufficient = useMemo(
+    () => currencyBalance && parsedAmount && currencyBalance.greaterThan(parsedAmount),
+    [currencyBalance, parsedAmount]
+  )
 
   return {
+    isBalanceSufficient,
+    currencyId,
     bridgeCurrency,
     currencyBalance,
     parsedAmount,
-    inputError,
     typedValue,
     fromNetwork,
     toNetwork
@@ -162,11 +155,11 @@ export const useBridgeModal = (): [
   BridgeModalState,
   (status: BridgeModalStatus, error?: string) => void,
   ({
-    currencyId,
+    symbol,
     typedValue,
     fromChainId,
     toChainId
-  }: Pick<BridgeModalState, 'currencyId' | 'typedValue'> & { fromChainId: ChainId; toChainId: ChainId }) => void
+  }: Pick<BridgeModalState, 'symbol' | 'typedValue'> & { fromChainId: ChainId; toChainId: ChainId }) => void
 ] => {
   const dispatch = useDispatch()
   const modalData = useSelector(bridgeModalDataSelector)
@@ -175,12 +168,12 @@ export const useBridgeModal = (): [
     dispatch(setBridgeModalStatus({ status, error }))
 
   const setModalData = ({
-    currencyId,
+    symbol,
     typedValue,
     fromChainId,
     toChainId
-  }: Pick<BridgeModalState, 'currencyId' | 'typedValue'> & { fromChainId: ChainId; toChainId: ChainId }) =>
-    dispatch(setBridgeModalData({ currencyId, typedValue, fromChainId, toChainId }))
+  }: Pick<BridgeModalState, 'symbol' | 'typedValue'> & { fromChainId: ChainId; toChainId: ChainId }) =>
+    dispatch(setBridgeModalData({ symbol, typedValue, fromChainId, toChainId }))
 
   return [modalData, setModalStatus, setModalData]
 }

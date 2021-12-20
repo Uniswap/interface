@@ -1,6 +1,6 @@
 {
   "name": "@swapr/frontend",
-  "version": "1.0.0-beta.8.1",
+  "version": "1.0.0-beta.9",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.4.7",
@@ -124,7 +124,8 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "arb-ts": "^0.0.42",
+    "arb-ts": "^1.0.2",
+    "multiformats": "^9.4.10",
     "query-string": "^6.13.8",
     "react-use": "^15.3.3"
   }

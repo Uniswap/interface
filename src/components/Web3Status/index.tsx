@@ -17,6 +17,7 @@ import { TriangleIcon } from '../Icons'
 import { useTranslation } from 'react-i18next'
 import Row from '../Row'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
+import { useENSAvatar } from '../../hooks/useENSAvatar'
 import { ApplicationModal } from '../../state/application/actions'
 
 const Web3StatusError = styled.div`
@@ -37,6 +38,8 @@ const Web3StatusError = styled.div`
 `
 
 const SwitchNetworkButton = styled.button`
+  display: flex;
+  align-items: center;
   height: 29px;
   padding: 8px 14px;
   margin-left: 8px;
@@ -88,7 +91,7 @@ export default function Web3Status() {
   const contextNetwork = useWeb3React(NetworkContextName)
 
   const { ENSName } = useENSName(account ?? undefined)
-
+  const { avatar: ensAvatar } = useENSAvatar(ENSName)
   const allTransactions = useAllTransactions()
 
   const sortedRecentTransactions = useMemo(() => {
@@ -163,6 +166,7 @@ export default function Web3Status() {
             connector={activeConnector}
             networkConnectorChainId={networkConnectorChainId}
             onAddressClick={() => setModal(ModalView.Account)}
+            avatar={ensAvatar ?? undefined}
           />
         </Row>
       </ConnectWalletPopover>

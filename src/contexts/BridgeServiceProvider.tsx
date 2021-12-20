@@ -12,7 +12,7 @@ export const BridgeServiceContext = React.createContext<BridgeService | null>(de
 export const BridgeServiceProvider = ({ children }: { children?: React.ReactNode }) => {
   const [bridgeService, setBridgeService] = useState<BridgeService | null>(null)
 
-  const { bridge } = useBridge()
+  const bridge = useBridge()
   const { account } = useActiveWeb3React()
 
   useEffect(() => {

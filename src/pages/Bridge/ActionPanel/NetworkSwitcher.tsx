@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ButtonPrimary } from '../../components/Button'
-import { RowBetween } from '../../components/Row'
+import { ButtonPrimary } from '../../../components/Button'
+import { RowBetween } from '../../../components/Row'
 import { transparentize } from 'polished'
-import { useActiveWeb3React } from '../../hooks'
-import { ChainLabel } from '../../constants'
+import { useActiveWeb3React } from '../../../hooks'
+import { ChainLabel } from '../../../constants'
 
 interface NetworkSwitcherProps {
   sendToId: number
@@ -18,7 +18,7 @@ export const NetworkSwitcher = ({ sendToId, onCollectClick, onSwitchClick }: Net
 
   return (
     <>
-      <RowBetween mt="22px">
+      <RowBetween>
         <SwitchButton onClick={onSwitchClick} disabled={networkConnectorChainId === sendToId}>
           Switch to {ChainLabel[sendToId]}
         </SwitchButton>
@@ -95,4 +95,5 @@ const Number = styled.div`
   &.disabled {
     background-color: ${({ theme }) => theme.purple5};
     color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
+  }
 `
