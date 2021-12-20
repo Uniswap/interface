@@ -1,5 +1,6 @@
 import { namehash } from '@ethersproject/hash'
 import { useEffect, useMemo, useState } from 'react'
+import { safeNamehash } from 'utils/safeNamehash'
 import uriToHttp from 'utils/uriToHttp'
 
 import { useSingleCallResult } from '../state/multicall/hooks'
@@ -21,15 +22,12 @@ export default function useENSAvatar(
   const debouncedAddress = useDebounce(address, 200)
   const node = useMemo(() => {
     if (!debouncedAddress || !isAddress(debouncedAddress)) return undefined
-    try {
-      return debouncedAddress ? namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`) : undefined
-    } catch (error) {
-      return undefined
-    }
+    return namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)
   }, [debouncedAddress])
 
   const addressAvatar = useAvatarFromNode(node)
-  const nameAvatar = useAvatarFromNode(namehash(useENSName(address).ENSName ?? ''))
+  const ENSName = useENSName(address).ENSName
+  const nameAvatar = useAvatarFromNode(ENSName === null ? undefined : safeNamehash(ENSName))
   let avatar = addressAvatar.avatar || nameAvatar.avatar
 
   const nftAvatar = useAvatarFromNFT(avatar, enforceOwnership)
@@ -38,10 +36,13 @@ export default function useENSAvatar(
   const http = avatar && uriToHttp(avatar)[0]
 
   const changed = debouncedAddress !== address
-  return {
-    avatar: changed ? null : http ?? null,
-    loading: changed || addressAvatar.loading || nameAvatar.loading || nftAvatar.loading,
-  }
+  return useMemo(
+    () => ({
+      avatar: changed ? null : http ?? null,
+      loading: changed || addressAvatar.loading || nameAvatar.loading || nftAvatar.loading,
+    }),
+    [addressAvatar.loading, changed, http, nameAvatar.loading, nftAvatar.loading]
+  )
 }
 
 function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean } {
@@ -56,10 +57,13 @@ function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean }
   )
   const avatar = useSingleCallResult(resolverContract, 'text', textArgument)
 
-  return {
-    avatar: avatar.result?.[0],
-    loading: resolverAddress.loading || avatar.loading,
-  }
+  return useMemo(
+    () => ({
+      avatar: avatar.result?.[0],
+      loading: resolverAddress.loading || avatar.loading,
+    }),
+    [avatar.loading, avatar.result, resolverAddress.loading]
+  )
 }
 
 function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: string; loading: boolean } {
@@ -94,7 +98,10 @@ function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: st
     }
   }, [http])
 
-  return { avatar, loading: erc721.loading || erc1155.loading || loading }
+  return useMemo(
+    () => ({ avatar, loading: erc721.loading || erc1155.loading || loading }),
+    [avatar, erc1155.loading, erc721.loading, loading]
+  )
 }
 
 function useERC721Uri(
@@ -107,10 +114,13 @@ function useERC721Uri(
   const contract = useERC721Contract(contractAddress)
   const owner = useSingleCallResult(contract, 'ownerOf', idArgument)
   const uri = useSingleCallResult(contract, 'tokenURI', idArgument)
-  return {
-    uri: !enforceOwnership || account === owner.result?.[0] ? uri.result?.[0] : undefined,
-    loading: owner.loading || uri.loading,
-  }
+  return useMemo(
+    () => ({
+      uri: !enforceOwnership || account === owner.result?.[0] ? uri.result?.[0] : undefined,
+      loading: owner.loading || uri.loading,
+    }),
+    [account, enforceOwnership, owner.loading, owner.result, uri.loading, uri.result]
+  )
 }
 
 function useERC1155Uri(
@@ -124,8 +134,11 @@ function useERC1155Uri(
   const contract = useERC1155Contract(contractAddress)
   const balance = useSingleCallResult(contract, 'balanceOf', accountArgument)
   const uri = useSingleCallResult(contract, 'uri', idArgument)
-  return {
-    uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0] : undefined,
-    loading: balance.loading || uri.loading,
-  }
+  return useMemo(
+    () => ({
+      uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0] : undefined,
+      loading: balance.loading || uri.loading,
+    }),
+    [balance.loading, balance.result, enforceOwnership, uri.loading, uri.result]
+  )
 }

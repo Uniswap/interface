@@ -110,7 +110,7 @@ const HoverText = styled.div`
 `
 
 const LinkCard = styled(Card)`
-  background-color: ${({ theme }) => theme.primary1};
+  background-color: ${({ theme }) => theme.bg1};
   color: ${({ theme }) => theme.white};
 
   :hover {
@@ -402,6 +402,16 @@ export default function WalletModal({
                 </ThemedText.Black>
               </AutoRow>
             </LightCard>
+            {walletView === WALLET_VIEWS.PENDING ? (
+              <PendingView
+                connector={pendingWallet}
+                error={pendingError}
+                setPendingError={setPendingError}
+                tryActivation={tryActivation}
+              />
+            ) : (
+              <OptionGrid>{getOptions()}</OptionGrid>
+            )}
             <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
               <RowBetween>
                 <AutoRow gap="4px">
@@ -413,16 +423,6 @@ export default function WalletModal({
                 <ArrowRight size={16} />
               </RowBetween>
             </LinkCard>
-            {walletView === WALLET_VIEWS.PENDING ? (
-              <PendingView
-                connector={pendingWallet}
-                error={pendingError}
-                setPendingError={setPendingError}
-                tryActivation={tryActivation}
-              />
-            ) : (
-              <OptionGrid>{getOptions()}</OptionGrid>
-            )}
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
