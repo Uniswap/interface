@@ -10,7 +10,7 @@
     "@reduxjs/toolkit": "^1.5.1",
     "@sentry/webpack-plugin": "^1.16.0",
     "@typechain/ethers-v5": "^7.0.1",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^27.0.3",
     "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
     "@types/lodash": "^4.14.170",
     "@types/lodash.flatmap": "^4.5.6",
