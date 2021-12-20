@@ -14,7 +14,7 @@ const PopoverContainer = styled.div<{ show: boolean, padding?: string }>`
   opacity: ${props => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
 
-  padding: ${ props => (props.padding ? props.padding : "8px")};
+  padding: "8px";
   backdrop-filter: blur(16px);
   background-color: ${({ theme }) => theme.bg1And2};
   border: 8px solid;
@@ -35,7 +35,6 @@ export interface PopoverProps {
   offsetX?: number
   offsetY?: number
   styled?: CSSProperties
-  padding?: string
 }
 
 export default function Popover({
@@ -48,7 +47,6 @@ export default function Popover({
   offsetY = 8,
   offsetX = 0,
   styled,
-  padding
 }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
@@ -70,7 +68,6 @@ export default function Popover({
           <PopoverContainer
             className={className}
             show={show}
-            padding={padding}
             ref={setPopperElement as any}
             style={{ ...styles.popper, ...styled }}
             {...attributes.popper}

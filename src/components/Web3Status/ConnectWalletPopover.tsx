@@ -11,17 +11,16 @@ import Popover from '../Popover'
 import { useCloseModals, useModalOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/actions'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import connectedSvg from '../../assets/svg/connected.svg'
+import { ReactComponent as ConnectedSvg } from '../../assets/svg/connected.svg'
 
 const Wrapper = styled.div`
   width: 100%;
 `
 
-const ConnectedIcon = styled.img`
-  margin-left: 6px;
+const StyledConnectedIcon = styled(ConnectedSvg)`
+  min-width: 22px;
+  margin-left: 8px;
 `
-
-const StyledConnectedIcon = () => <ConnectedIcon src={connectedSvg} alt="connected" />
 
 const List = styled.ul`
   padding: 0;
@@ -70,7 +69,7 @@ const ListButton = styled.button`
   border: 0;
   outline: none;
   cursor: pointer;
-  padding: 0 22px 0 22px;
+  padding: 0 22px;
 
   &:disabled {
     cursor: not-allowed;
@@ -81,7 +80,7 @@ const ListButton = styled.button`
 
 const ListIconWrapper = styled.div<{ isActive?: boolean }>`
   display: inline-flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   width: 20px;
   height: 20px;
@@ -92,7 +91,7 @@ const ListIconWrapper = styled.div<{ isActive?: boolean }>`
   }
 `
 
-const StyledPopover = styled(Popover)`
+const StyledPopover = styled(Popover)<{ isActive?: boolean }>`
   max-width: 290px;
   background-color: ${({ theme }) => theme.bg1};
   border-color: ${({ theme }) => theme.dark2};
@@ -100,6 +99,7 @@ const StyledPopover = styled(Popover)`
   border-width: 1.2px;
   border-radius: 12px;
   border-image: none;
+  padding: ${ props => (props.isActive ? "8px 0 0 0" : "8px")};
 `
 
 interface ConnectWalletProps {
@@ -118,12 +118,8 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
   })
 
   async function disconnect() {
-    try {
-      deactivate()
-      // Maybe inform user wallect has successfully disconnect?
-    } catch (error) {
-      console.log(error)
-    }
+    deactivate()
+    // Maybe inform user wallect has successfully disconnect?
   }
 
   function getOptions() {
@@ -212,7 +208,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
           </List>
         }
         show={walletSwitcherPopoverOpen}
-        padding={ active ? "8px 0 0 0" : "8px" }
+        isActive={active}
         placement="bottom-end"
       >
         {children}
