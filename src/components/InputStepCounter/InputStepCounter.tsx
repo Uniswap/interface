@@ -102,8 +102,8 @@ const StepCounter = ({
 }: StepCounterProps) => {
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
-  const tokenA = currencyA?.symbol
-  const tokenB = currencyB?.symbol
+  const symbolA = currencyA?.symbol
+  const symbolB = currencyB?.symbol
 
   // let user type value and only update parent value on blur
   const [localValue, setLocalValue] = useState('')
@@ -147,8 +147,7 @@ const StepCounter = ({
   }, [localValue, useLocalValue, value])
 
   const baseCurrencyUSDPrice = useCurrencyUSDPrice(tryParseAmount(value, currencyB))
-  const showBaseCurrencyUSDPrice =
-    isEthOrStablecoin(currencyA ?? undefined) && isEthOrStablecoin(currencyB ?? undefined)
+  const showBaseCurrencyUSDPrice = isEthOrStablecoin(currencyA) && isEthOrStablecoin(currencyB)
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
@@ -187,8 +186,9 @@ const StepCounter = ({
 
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
-            {tokenB} {showBaseCurrencyUSDPrice && baseCurrencyUSDPrice ? `($${baseCurrencyUSDPrice.toFixed(2)})` : null}{' '}
-            per {tokenA}
+            {symbolB}{' '}
+            {showBaseCurrencyUSDPrice && baseCurrencyUSDPrice ? `($${baseCurrencyUSDPrice.toFixed(2)})` : null} per{' '}
+            {symbolA}
           </Trans>
         </InputTitle>
       </AutoColumn>

@@ -57,7 +57,7 @@ export function formattedFeeAmount(feeAmount: FeeAmount): number {
   return feeAmount / 10000
 }
 
-export function isEthOrStablecoin(currency: Currency | undefined) {
+export function isEthOrStablecoin(currency?: Currency) {
   if (!currency) return false
 
   return currency.isNative || STABLECOINS[currency.chainId]?.includes(currency.address)
