@@ -4,7 +4,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import useCurrencyUSDPrice from 'hooks/useCurrencyUSDPrice'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { tryParseAmount } from 'state/swap/hooks'
@@ -146,8 +146,8 @@ const StepCounter = ({
     }
   }, [localValue, useLocalValue, value])
 
-  const baseCurrencyUSDPrice = useCurrencyUSDPrice(tryParseAmount(value, currencyB))
   const showBaseCurrencyUSDPrice = isEthOrStablecoin(currencyA) && isEthOrStablecoin(currencyB)
+  const baseCurrencyUSDPrice = useUSDCValue(showBaseCurrencyUSDPrice ? tryParseAmount(value, currencyB) : undefined)
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
@@ -186,9 +186,7 @@ const StepCounter = ({
 
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
-            {symbolB}{' '}
-            {showBaseCurrencyUSDPrice && baseCurrencyUSDPrice ? `($${baseCurrencyUSDPrice.toFixed(2)})` : null} per{' '}
-            {symbolA}
+            {symbolB} {baseCurrencyUSDPrice ? `($${baseCurrencyUSDPrice.toFixed(2)})` : null} per {symbolA}
           </Trans>
         </InputTitle>
       </AutoColumn>

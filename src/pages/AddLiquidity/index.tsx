@@ -5,7 +5,6 @@ import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import DowntimeWarning from 'components/DowntimeWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import useCurrencyUSDPrice from 'hooks/useCurrencyUSDPrice'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -139,11 +138,13 @@ export default function AddLiquidity({
     existingPosition
   )
 
-  const quoteCurrencyAmount = invertPrice ? price?.invert().toSignificant(6) : price?.toSignificant(6)
-  const quoteCurrencyPrice = useCurrencyUSDPrice(tryParseAmount(quoteCurrencyAmount, quoteCurrency ?? undefined))
-
   const showQuoteCurrencyPrice =
     isEthOrStablecoin(baseCurrency ?? undefined) && isEthOrStablecoin(quoteCurrency ?? undefined)
+
+  const quoteCurrencyAmount = invertPrice ? price?.invert().toSignificant(6) : price?.toSignificant(6)
+  const quoteCurrencyPrice = useUSDCValue(
+    showQuoteCurrencyPrice ? tryParseAmount(quoteCurrencyAmount, quoteCurrency ?? undefined) : undefined
+  )
 
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
@@ -680,10 +681,8 @@ export default function AddLiquidity({
                                 </ThemedText.Body>
                                 <ThemedText.Body color="text2" fontSize={12}>
                                   {quoteCurrency?.symbol}{' '}
-                                  {quoteCurrencyPrice && showQuoteCurrencyPrice
-                                    ? `($${quoteCurrencyPrice.toFixed(2)})`
-                                    : null}{' '}
-                                  per {baseCurrency.symbol}{' '}
+                                  {quoteCurrencyPrice ? `($${quoteCurrencyPrice.toFixed(2)})` : null} per{' '}
+                                  {baseCurrency.symbol}{' '}
                                 </ThemedText.Body>
                               </Trans>
                             </AutoRow>
