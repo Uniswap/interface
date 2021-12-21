@@ -1,13 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { SwapRouter, Trade } from '@uniswap/router-sdk'
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode, useMemo } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
@@ -123,88 +122,9 @@ function useSwapCallArguments(
         }
       })
     } else {
-      // swap options shared by v3 and v2+v3 swap routers
-      const sharedSwapOptions = {
-        recipient,
-        slippageTolerance: allowedSlippage,
-        ...(signatureData
-          ? {
-              inputTokenPermit:
-                'allowed' in signatureData
-                  ? {
-                      expiry: signatureData.deadline,
-                      nonce: signatureData.nonce,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    }
-                  : {
-                      deadline: signatureData.deadline,
-                      amount: signatureData.amount,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    },
-            }
-          : {}),
-      }
-
-      const swapRouterAddress = chainId
-        ? trade instanceof V3Trade
-          ? V3_ROUTER_ADDRESS[chainId]
-          : SWAP_ROUTER_ADDRESSES[chainId]
-        : undefined
-      if (!swapRouterAddress) return []
-
-      const { value, calldata } =
-        trade instanceof V3Trade
-          ? V3SwapRouter.swapCallParameters(trade, {
-              ...sharedSwapOptions,
-              deadline: deadline.toString(),
-            })
-          : SwapRouter.swapCallParameters(trade, {
-              ...sharedSwapOptions,
-              deadlineOrPreviousBlockhash: deadline.toString(),
-            })
-
-      if (argentWalletContract && trade.inputAmount.currency.isToken) {
-        return [
-          {
-            address: argentWalletContract.address,
-            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
-              [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
-                {
-                  to: swapRouterAddress,
-                  value,
-                  data: calldata,
-                },
-              ],
-            ]),
-            value: '0x0',
-          },
-        ]
-      }
-      return [
-        {
-          address: swapRouterAddress,
-          calldata,
-          value,
-        },
-      ]
+      return []
     }
-  }, [
-    trade,
-    recipient,
-    library,
-    account,
-    chainId,
-    deadline,
-    routerContract,
-    allowedSlippage,
-    argentWalletContract,
-    signatureData,
-  ])
+  }, [trade, recipient, library, account, chainId, deadline, routerContract, allowedSlippage, argentWalletContract])
 }
 
 /**

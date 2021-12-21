@@ -1,6 +1,3 @@
-import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@uniswap/v2-sdk'
-import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
-
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 import { SupportedChainId } from './chains'
 
@@ -8,12 +5,8 @@ type AddressMap = { [chainId: number]: string }
 
 export const XSP_ADDRESS: AddressMap = constructSameAddressMap('0xFdCf8bD44EC46a71a13f00F4328F6b65adc8BCf9')
 export const MULTICALL_ADDRESS: AddressMap = constructSameAddressMap('0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB')
-
-export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
-
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
-export const V3_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0xE592427A0AEce92De3Edee1F18E0157C05861564')
-export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45')
+export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap('0x78CAafCB80d9E635196322d989e82753d0d229B8')
+export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0cDf7c990F4D16a235aFb4279F75A8e35d9c2cFB')
 
 /**
  * The oldest V0 governance address
@@ -42,7 +35,6 @@ export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
 export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
   [SupportedChainId.MAINNET]: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
 }
-export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V3_FACTORY_ADDRESS)
 
 export const QUOTER_ADDRESSES: AddressMap = constructSameAddressMap('0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6')
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = constructSameAddressMap(

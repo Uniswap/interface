@@ -6,7 +6,6 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -262,19 +261,10 @@ export function useERC20PermitFromTrade(
     | undefined,
   allowedSlippage: Percent
 ) {
-  const { chainId } = useActiveWeb3React()
-  const swapRouterAddress = chainId
-    ? // v2 router does not support
-      trade instanceof V2Trade
-      ? undefined
-      : trade instanceof V3Trade
-      ? V3_ROUTER_ADDRESS[chainId]
-      : SWAP_ROUTER_ADDRESSES[chainId]
-    : undefined
   const amountToApprove = useMemo(
     () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [trade, allowedSlippage]
   )
 
-  return useERC20Permit(amountToApprove, swapRouterAddress, null)
+  return useERC20Permit(amountToApprove, undefined, null)
 }

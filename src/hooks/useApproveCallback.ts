@@ -7,7 +7,7 @@ import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
-import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from '../constants/addresses'
+import { V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
@@ -55,15 +55,9 @@ export function useAllApprovalStates(
     () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [trade, allowedSlippage]
   )
-
   const v2ApprovalState = useApprovalState(amountToApprove, chainId ? V2_ROUTER_ADDRESS[chainId] : undefined)
-  const v3ApprovalState = useApprovalState(amountToApprove, chainId ? V3_ROUTER_ADDRESS[chainId] : undefined)
-  const v2V3ApprovalState = useApprovalState(amountToApprove, chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined)
 
-  return useMemo(
-    () => ({ v2: v2ApprovalState, v3: v3ApprovalState, v2V3: v2V3ApprovalState }),
-    [v2ApprovalState, v2V3ApprovalState, v3ApprovalState]
-  )
+  return useMemo(() => ({ v2: v2ApprovalState }), [v2ApprovalState])
 }
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
@@ -150,20 +144,11 @@ export function useApproveCallbackFromTrade(
 
   const approveCallback = useApproveCallback(
     amountToApprove,
-    chainId
-      ? trade instanceof V2Trade
-        ? V2_ROUTER_ADDRESS[chainId]
-        : trade instanceof V3Trade
-        ? V3_ROUTER_ADDRESS[chainId]
-        : SWAP_ROUTER_ADDRESSES[chainId]
-      : undefined
+    chainId ? (trade instanceof V2Trade ? V2_ROUTER_ADDRESS[chainId] : undefined) : undefined
   )
 
   // TODO: remove L162-168 after testing is done. This error will help detect mistakes in the logic.
-  if (
-    (Trade instanceof V2Trade && approveCallback[0] !== ApprovalState.APPROVED) ||
-    (trade instanceof V3Trade && approveCallback[0] !== ApprovalState.APPROVED)
-  ) {
+  if (Trade instanceof V2Trade && approveCallback[0] !== ApprovalState.APPROVED) {
     throw new Error('Trying to approve legacy router')
   }
 
@@ -179,14 +164,13 @@ export function useApprovalOptimizedTrade(
   | Trade<Currency, Currency, TradeType>
   | undefined {
   const onlyV2Routes = trade?.routes.every((route) => route.protocol === Protocol.V2)
-  const onlyV3Routes = trade?.routes.every((route) => route.protocol === Protocol.V3)
   const tradeHasSplits = (trade?.routes.length ?? 0) > 1
 
   const approvalStates = useAllApprovalStates(trade, allowedSlippage)
 
   const optimizedSwapRouter = useMemo(
-    () => getTxOptimizedSwapRouter({ onlyV2Routes, onlyV3Routes, tradeHasSplits, approvalStates }),
-    [approvalStates, tradeHasSplits, onlyV2Routes, onlyV3Routes]
+    () => getTxOptimizedSwapRouter({ onlyV2Routes, tradeHasSplits, approvalStates }),
+    [approvalStates, tradeHasSplits, onlyV2Routes]
   )
 
   return useMemo(() => {

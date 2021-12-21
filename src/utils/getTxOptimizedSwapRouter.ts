@@ -15,18 +15,14 @@ export enum SwapRouterVersion {
  */
 export function getTxOptimizedSwapRouter({
   onlyV2Routes,
-  onlyV3Routes,
   tradeHasSplits,
   approvalStates,
 }: {
   onlyV2Routes: boolean | undefined
-  onlyV3Routes: boolean | undefined
   tradeHasSplits: boolean | undefined
-  approvalStates: { v2: ApprovalState; v3: ApprovalState; v2V3: ApprovalState }
+  approvalStates: { v2: ApprovalState }
 }): SwapRouterVersion | undefined {
-  if ([approvalStates.v2, approvalStates.v3, approvalStates.v2V3].includes(ApprovalState.PENDING)) return undefined
-  if (approvalStates.v2V3 === ApprovalState.APPROVED) return SwapRouterVersion.V2V3
+  if ([approvalStates.v2].includes(ApprovalState.PENDING)) return undefined
   if (approvalStates.v2 === ApprovalState.APPROVED && onlyV2Routes && !tradeHasSplits) return SwapRouterVersion.V2
-  if (approvalStates.v3 === ApprovalState.APPROVED && onlyV3Routes) return SwapRouterVersion.V3
   return SwapRouterVersion.V2V3
 }

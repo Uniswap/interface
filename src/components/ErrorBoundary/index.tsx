@@ -20,15 +20,15 @@ const FallbackWrapper = styled.div`
 const BodyWrapper = styled.div<{ margin?: string }>`
   padding: 1rem;
   width: 100%;
-  white-space: ;
+  white-space: break-spaces;
 `
 
 const CodeBlockWrapper = styled.div`
   background: ${({ theme }) => theme.bg0};
   overflow: auto;
   white-space: pre;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
+    0 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
   padding: 18px 24px;
   color: ${({ theme }) => theme.text1};
@@ -131,11 +131,9 @@ function getRelevantState(): null | keyof AppState {
     case 'swap':
       return 'swap'
     case 'add':
-      if (pieces[1] === 'v2') return 'mint'
-      else return 'mintV3'
+      return 'mint'
     case 'remove':
-      if (pieces[1] === 'v2') return 'burn'
-      else return 'burnV3'
+      return 'burn'
   }
   return null
 }

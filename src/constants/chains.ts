@@ -47,7 +47,7 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://howto.xinfin.org/',
     explorer: 'https://explorer.apothem.network',
     infoLink: 'https://xinfin.network/',
-    label: 'XinFin Apothem Testnet',
+    label: 'XinFin Testnet',
     logoUrl: xdcLogoUrl,
     nativeCurrency: {
       name: 'TXDC',

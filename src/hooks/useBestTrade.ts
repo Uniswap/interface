@@ -3,7 +3,6 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import useAutoRouterSupported from './useAutoRouterSupported'
-import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
@@ -46,18 +45,9 @@ export function useBestTrade(
         !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
         !debouncedOtherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
 
-  const useFallback = !autoRouterSupported || (!debouncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND)
-
-  // only use client side router if routing api trade failed or is not supported
-  const bestV3Trade = useClientSideV3Trade(
-    tradeType,
-    useFallback ? debouncedAmount : undefined,
-    useFallback ? debouncedOtherCurrency : undefined
-  )
-
   // only return gas estimate from api if routing api trade is used
   return {
-    ...(useFallback ? bestV3Trade : routingAPITrade),
+    ...routingAPITrade,
     ...(debouncing ? { state: TradeState.SYNCING } : {}),
     ...(isLoading ? { state: TradeState.LOADING } : {}),
   }

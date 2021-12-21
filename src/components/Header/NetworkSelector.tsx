@@ -81,6 +81,7 @@ const SelectorControls = styled.div<{ interactive: boolean }>`
   font-weight: 500;
   justify-content: space-between;
   padding: 6px 8px;
+  min-width: 200px;
 `
 const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
   margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;

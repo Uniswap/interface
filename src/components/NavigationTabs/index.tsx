@@ -8,7 +8,6 @@ import { Link as HistoryLink, NavLink, useLocation } from 'react-router-dom'
 import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
-import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -129,7 +128,6 @@ export function AddRemoveTabs({
             if (adding) {
               // not 100% sure both of these are needed
               dispatch(resetMintState())
-              dispatch(resetMintV3State())
             }
           }}
           flex={children ? '1' : undefined}
