@@ -77,8 +77,8 @@
     "react-window": "^1.8.6",
     "redux-localstorage-simple": "^2.4.0",
     "styled-components": "^5.3.0",
-    "typescript": "=4.5.4",
     "typechain": "^5.2.0",
+    "typescript": "=4.5.4",
     "wcag-contrast": "^3.0.0"
   },
   "scripts": {
@@ -135,6 +135,7 @@
     "@ubeswap/moola": "^0.2.0",
     "@ubeswap/sdk": "^2.1.1",
     "@uniswap/default-token-list": "^2.0.0",
+    "ajv-formats": "^2.1.1",
     "eventemitter3": "^4.0.7",
     "graphql": "^15.6.1",
     "hamburger-react": "^2.4.1",

@@ -1,10 +1,11 @@
 import { TokenList } from '@uniswap/token-lists'
 import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
+import addFormats from 'ajv-formats'
 
 import uriToHttp from './uriToHttp'
 
-const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
+const tokenListValidator = addFormats(new Ajv({ allErrors: true })).compile(schema)
 
 /**
  * Contains the logic for resolving a list URL to a validated token list
