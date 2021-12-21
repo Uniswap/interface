@@ -1,6 +1,12 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "x-swap-protocol",
+  "description": "XSP DApp",
+  "author": "Romanow Agency",
+  "homepage_url": "https://swap.xspswap.finance",
+  "providedBy": {
+    "name": "XSP",
+    "url": "https://xspswap.finance"
+  },
   "homepage": ".",
   "main": "dist/interface.js",
   "module": "dist/interface.esm.js",
