@@ -1,5 +1,4 @@
 import { useAtom } from 'jotai'
-import { RESET } from 'jotai/utils'
 import { injectedConnectorAtom, networkConnectorAtom } from 'lib/state'
 import { ReactNode, useEffect } from 'react'
 import { initializeConnector } from 'widgets-web3-react/core'
@@ -19,8 +18,6 @@ export default function Web3Provider({ provider, jsonRpcEndpoint, children }: We
     if (jsonRpcEndpoint) {
       const [connector, hooks] = initializeConnector<Network>((actions) => new Network(actions, jsonRpcEndpoint))
       setNetworkConnector([connector, hooks])
-    } else {
-      setNetworkConnector(RESET)
     }
   }, [setNetworkConnector, jsonRpcEndpoint])
 
@@ -29,8 +26,6 @@ export default function Web3Provider({ provider, jsonRpcEndpoint, children }: We
     if (provider) {
       const [connector, hooks] = initializeConnector<EIP1193>((actions) => new EIP1193(actions, provider))
       setInjectedConnector([connector, hooks])
-    } else {
-      setInjectedConnector(RESET)
     }
   }, [setInjectedConnector, provider])
 
