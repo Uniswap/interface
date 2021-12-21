@@ -52,6 +52,27 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
+export const DAI_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
+  18,
+  'DAI',
+  'Dai Stablecoin'
+)
+export const USDT_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+  6,
+  'USDT',
+  'Tether USD'
+)
+export const WBTC_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
+  8,
+  'WBTC',
+  'Wrapped BTC'
+)
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
@@ -163,6 +184,21 @@ export const SWISE = new Token(
   18,
   'SWISE',
   'StakeWise'
+)
+export const WETH_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+
+export const WETH_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  18,
+  'WETH',
+  'Wrapped Ether'
 )
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),

@@ -7,6 +7,7 @@ import {
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
+  DAI_POLYGON,
   ETH2X_FLI,
   ExtendedEther,
   FEI,
@@ -20,12 +21,17 @@ import {
   USDC,
   USDC_ARBITRUM,
   USDC_OPTIMISM,
+  USDC_POLYGON,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_OPTIMISM,
+  USDT_POLYGON,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
+  WBTC_POLYGON,
+  WETH_POLYGON,
+  WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
 } from './tokens'
 
@@ -132,10 +138,16 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.POLYGON]: [
     ExtendedEther.onChain(SupportedChainId.POLYGON),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON],
+    WETH_POLYGON,
+    USDC_POLYGON,
+    DAI_POLYGON,
+    USDT_POLYGON,
+    WBTC_POLYGON,
   ],
   [SupportedChainId.POLYGON_MUMBAI]: [
     ExtendedEther.onChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],
+    WETH_POLYGON_MUMBAI,
   ],
 }
 
