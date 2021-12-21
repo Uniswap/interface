@@ -7,7 +7,7 @@ import { SupportedChainId } from './chains'
 type AddressMap = { [chainId: number]: string }
 
 export const XSP_ADDRESS: AddressMap = constructSameAddressMap('0xFdCf8bD44EC46a71a13f00F4328F6b65adc8BCf9')
-export const MULTICALL_ADDRESS: AddressMap = constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984')
+export const MULTICALL_ADDRESS: AddressMap = constructSameAddressMap('0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB')
 
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 
