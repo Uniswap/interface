@@ -52,6 +52,13 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
+export const DAI_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
+  18,
+  'DAI',
+  'Dai Stablecoin'
+)
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
