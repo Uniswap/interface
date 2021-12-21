@@ -16,8 +16,8 @@ import { PaddedColumn, Separator } from './styleds'
 const Wrapper = styled.div`
   width: 100%;
   position: relative;
-  padding-bottom: 80px;
-  overflow-y: hidden;
+  display: flex;
+  flex-flow: column;
 `
 
 const ToggleWrapper = styled(RowBetween)`
