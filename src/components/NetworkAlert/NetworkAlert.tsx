@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
 import { useDarkModeManager, useNetworkAlertStatus } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
@@ -209,7 +209,8 @@ export function NetworkAlert(props: NetworkAlertProps) {
   const [darkMode] = useDarkModeManager()
   const [alertAcknowledged, acknowledgeAlert] = useNetworkAlertStatus(chainId)
   const [locallyDismissed, setLocallyDimissed] = useState(alertAcknowledged)
-  const userNativeCurrencyBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const accounts = useMemo(() => (account ? [account] : []), [account])
+  const userNativeCurrencyBalance = useETHBalances(accounts)?.[account ?? '']
 
   const dismiss = useCallback(() => {
     setLocallyDimissed(true)

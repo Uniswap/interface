@@ -147,8 +147,8 @@ export default function Polling() {
                   <MouseoverTooltip
                     text={
                       <Trans>
-                        {`The current fast gas amount for sending a transaction on L1.
-                    Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei. `}
+                        The current fast gas amount for sending a transaction on L1. Gas fees are paid in
+                        Ethereum&apos;s native currency Ether (ETH) and denominated in GWEI.
                       </Trans>
                     }
                   >
@@ -166,7 +166,7 @@ export default function Polling() {
               }
             >
               <MouseoverTooltip
-                text={<Trans>{`The most recent block number on this network. Prices update on every block.`}</Trans>}
+                text={<Trans>The most recent block number on this network. Prices update on every block.</Trans>}
               >
                 {blockNumber}&ensp;
               </MouseoverTooltip>

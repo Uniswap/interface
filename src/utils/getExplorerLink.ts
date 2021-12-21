@@ -54,7 +54,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
-  const prefix = ETHERSCAN_PREFIXES[chainId]
+  const prefix = ETHERSCAN_PREFIXES[chainId] ?? 'https://etherscan.io'
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
