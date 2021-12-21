@@ -47,7 +47,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^1.1.1",
     "ethers": "^5.3.1",
-    "husky": ">=6",
+    "husky": ">=7",
     "i18next": "^21.6.3",
     "i18next-browser-languagedetector": "^6.1.1",
     "i18next-xhr-backend": "^3.2.2",
