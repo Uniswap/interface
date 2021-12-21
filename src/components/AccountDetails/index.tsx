@@ -6,7 +6,7 @@ import { useAppDispatch } from 'state/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, portis, walletlink } from '../../connectors'
+import { injected, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { clearAllTransactions } from '../../state/transactions/actions'
@@ -40,7 +40,7 @@ const UpperSection = styled.div`
   }
 
   h5:last-child {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   h4 {
@@ -73,7 +73,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  padding: 0rem 1rem;
+  padding: 0 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
 
@@ -131,7 +131,6 @@ const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
   font-size: 0.825rem;
   color: ${({ theme }) => theme.text3};
   margin-left: 1rem;
-  font-size: 0.825rem;
   display: flex;
   :hover {
     color: ${({ theme }) => theme.text2};
@@ -180,15 +179,6 @@ function WrappedStatusIcon({ connector }: { connector: AbstractConnector }) {
   return (
     <IconWrapper size={16}>
       <StatusIcon connector={connector} />
-      {connector === portis && (
-        <MainWalletAction
-          onClick={() => {
-            portis.portis.showPortis()
-          }}
-        >
-          <Trans>Show Portis</Trans>
-        </MainWalletAction>
-      )}
     </IconWrapper>
   )
 }
@@ -207,10 +197,6 @@ const WalletAction = styled(ButtonSecondary)`
     cursor: pointer;
     text-decoration: underline;
   }
-`
-
-const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.primary1};
 `
 
 function renderTransactions(transactions: string[]) {
