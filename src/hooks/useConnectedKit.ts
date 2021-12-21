@@ -10,7 +10,7 @@ export const useConnectedKit = () => {
       try {
         await getConnectedKit()
       } catch (e) {
-        setError(e)
+        if (e instanceof Error) setError(e)
       }
     })()
   }, [getConnectedKit])

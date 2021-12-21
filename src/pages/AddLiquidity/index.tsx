@@ -169,7 +169,7 @@ export default function AddLiquidity({
         action: 'Add',
         label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
       })
-    } catch (error) {
+    } catch (error: any) {
       setAttemptingTxn(false)
       // we only care if the error is something _other_ than the user rejected the tx
       if (error?.code !== 4001) {
