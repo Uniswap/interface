@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 import { useUserSlippageToleranceWithDefault } from '../state/user/hooks'
-import { useCurrency } from './Tokens'
+import { useNativeCurrency } from './Tokens'
 import useGasPrice from './useGasPrice'
 import useUSDCPrice, { useUSDCValue } from './useUSDCPrice'
 import { useActiveWeb3React } from './web3'
@@ -35,19 +35,23 @@ export default function useSwapSlippageTolerance(
   const { chainId } = useActiveWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useUSDCValue(trade?.outputAmount)
-  const ethGasPrice = useGasPrice()
+  const nativeGasPrice = useGasPrice()
 
   const gasEstimate = guesstimateGas(trade)
-  const ether = useCurrency('ETH')
-  const etherPrice = useUSDCPrice(ether ?? undefined)
+  const nativeCurrency = useNativeCurrency()
+  const nativeCurrencyPrice = useUSDCPrice(nativeCurrency ?? undefined)
 
   const defaultSlippageTolerance = useMemo(() => {
     if (!trade || onL2) return ONE_TENTHS_PERCENT
 
-    const ethGasCost =
-      ethGasPrice && typeof gasEstimate === 'number' ? JSBI.multiply(ethGasPrice, JSBI.BigInt(gasEstimate)) : undefined
+    const nativeGasCost =
+      nativeGasPrice && typeof gasEstimate === 'number'
+        ? JSBI.multiply(nativeGasPrice, JSBI.BigInt(gasEstimate))
+        : undefined
     const dollarGasCost =
-      ether && ethGasCost && etherPrice ? etherPrice.quote(CurrencyAmount.fromRawAmount(ether, ethGasCost)) : undefined
+      nativeCurrency && nativeGasCost && nativeCurrencyPrice
+        ? nativeCurrencyPrice.quote(CurrencyAmount.fromRawAmount(nativeCurrency, nativeGasCost))
+        : undefined
 
     // if valid estimate from api and using api trade, use gas estimate from api
     // NOTE - dont use gas estimate for L2s yet - need to verify accuracy
@@ -68,7 +72,7 @@ export default function useSwapSlippageTolerance(
     }
 
     return V3_SWAP_DEFAULT_SLIPPAGE
-  }, [trade, onL2, ethGasPrice, gasEstimate, ether, etherPrice, chainId, outputDollarValue])
+  }, [trade, onL2, nativeGasPrice, gasEstimate, nativeCurrency, nativeCurrencyPrice, chainId, outputDollarValue])
 
   return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
 }

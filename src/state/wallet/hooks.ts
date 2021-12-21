@@ -1,11 +1,11 @@
 import { Interface } from '@ethersproject/abi'
-import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ERC20ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
-import { UNI } from '../../constants/tokens'
+import { nativeOnChain, UNI } from '../../constants/tokens'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useInterfaceMulticall } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -44,7 +44,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
       addresses.reduce<{ [address: string]: CurrencyAmount<Currency> }>((memo, address, i) => {
         const value = results?.[i]?.result?.[0]
         if (value && chainId)
-          memo[address] = CurrencyAmount.fromRawAmount(Ether.onChain(chainId), JSBI.BigInt(value.toString()))
+          memo[address] = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), JSBI.BigInt(value.toString()))
         return memo
       }, {}),
     [addresses, chainId, results]

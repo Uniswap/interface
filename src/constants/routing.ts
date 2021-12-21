@@ -9,10 +9,10 @@ import {
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH2X_FLI,
-  ExtendedEther,
   FEI,
   FRAX,
   FXS,
+  nativeOnChain,
   renBTC,
   rETH2,
   sETH2,
@@ -92,7 +92,7 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  */
 export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.MAINNET]: [
-    ExtendedEther.onChain(SupportedChainId.MAINNET),
+    nativeOnChain(SupportedChainId.MAINNET),
     DAI,
     USDC,
     USDT,
@@ -100,23 +100,17 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET],
   ],
   [SupportedChainId.ROPSTEN]: [
-    ExtendedEther.onChain(SupportedChainId.ROPSTEN),
+    nativeOnChain(SupportedChainId.ROPSTEN),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ROPSTEN],
   ],
   [SupportedChainId.RINKEBY]: [
-    ExtendedEther.onChain(SupportedChainId.RINKEBY),
+    nativeOnChain(SupportedChainId.RINKEBY),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.RINKEBY],
   ],
-  [SupportedChainId.GOERLI]: [
-    ExtendedEther.onChain(SupportedChainId.GOERLI),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.GOERLI],
-  ],
-  [SupportedChainId.KOVAN]: [
-    ExtendedEther.onChain(SupportedChainId.KOVAN),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.KOVAN],
-  ],
+  [SupportedChainId.GOERLI]: [nativeOnChain(SupportedChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[SupportedChainId.GOERLI]],
+  [SupportedChainId.KOVAN]: [nativeOnChain(SupportedChainId.KOVAN), WRAPPED_NATIVE_CURRENCY[SupportedChainId.KOVAN]],
   [SupportedChainId.ARBITRUM_ONE]: [
-    ExtendedEther.onChain(SupportedChainId.ARBITRUM_ONE),
+    nativeOnChain(SupportedChainId.ARBITRUM_ONE),
     DAI_ARBITRUM_ONE,
     USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
@@ -124,19 +118,19 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE],
   ],
   [SupportedChainId.ARBITRUM_RINKEBY]: [
-    ExtendedEther.onChain(SupportedChainId.ARBITRUM_RINKEBY),
+    nativeOnChain(SupportedChainId.ARBITRUM_RINKEBY),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_RINKEBY],
   ],
   [SupportedChainId.OPTIMISM]: [
-    ExtendedEther.onChain(SupportedChainId.OPTIMISM),
+    nativeOnChain(SupportedChainId.OPTIMISM),
     DAI_OPTIMISM,
     USDC_OPTIMISM,
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
   ],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
+  [SupportedChainId.OPTIMISTIC_KOVAN]: [nativeOnChain(SupportedChainId.OPTIMISTIC_KOVAN)],
   [SupportedChainId.POLYGON]: [
-    ExtendedEther.onChain(SupportedChainId.POLYGON),
+    nativeOnChain(SupportedChainId.POLYGON),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON],
     WETH_POLYGON,
     USDC_POLYGON,
@@ -145,7 +139,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_POLYGON,
   ],
   [SupportedChainId.POLYGON_MUMBAI]: [
-    ExtendedEther.onChain(SupportedChainId.POLYGON_MUMBAI),
+    nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],
     WETH_POLYGON_MUMBAI,
   ],

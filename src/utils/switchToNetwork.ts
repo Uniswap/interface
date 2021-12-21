@@ -7,7 +7,7 @@ import { addNetwork } from './addNetwork'
 
 interface SwitchNetworkArguments {
   library: Web3Provider
-  chainId?: SupportedChainId
+  chainId: SupportedChainId
 }
 
 // provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
@@ -16,12 +16,9 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
   if (!library?.provider?.request) {
     return
   }
-  if (!chainId && library?.getNetwork) {
-    ;({ chainId } = await library.getNetwork())
-  }
   const formattedChainId = hexStripZeros(BigNumber.from(chainId).toHexString())
   try {
-    await library?.provider.request({
+    await library.provider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: formattedChainId }],
     })
@@ -34,7 +31,10 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
       // the second call is done here because that behavior is not a part of the spec and cannot be relied upon in the future
       // metamask's behavior when switching to the current network is just to return null (a no-op)
       await addNetwork({ library, chainId, info })
-      await switchToNetwork({ library, chainId })
+      await library.provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: formattedChainId }],
+      })
     } else {
       throw error
     }

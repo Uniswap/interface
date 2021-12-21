@@ -280,12 +280,19 @@ export class ExtendedEther extends Ether {
     throw new Error('Unsupported chain ID')
   }
 
-  private static _cachedNative: { [chainId: number]: NativeCurrency } = {}
+  private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}
 
   public static onChain(chainId: number): ExtendedEther {
-    return (
-      this._cachedNative[chainId] ??
-      (this._cachedNative[chainId] = isMatic(chainId) ? new MaticNativeCurrency(chainId) : new ExtendedEther(chainId))
-    )
+    return this._cachedExtendedEther[chainId] ?? (this._cachedExtendedEther[chainId] = new ExtendedEther(chainId))
   }
+}
+
+const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
+export function nativeOnChain(chainId: number): NativeCurrency {
+  return (
+    cachedNativeCurrency[chainId] ??
+    (cachedNativeCurrency[chainId] = isMatic(chainId)
+      ? new MaticNativeCurrency(chainId)
+      : ExtendedEther.onChain(chainId))
+  )
 }

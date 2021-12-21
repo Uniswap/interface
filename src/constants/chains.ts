@@ -138,7 +138,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     label: 'Ethereum',
     logoUrl: ethereumLogoUrl,
     addNetworkInfo: {
-      nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
       rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
     },
   },
@@ -150,7 +150,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     label: 'Rinkeby',
     logoUrl: ethereumLogoUrl,
     addNetworkInfo: {
-      nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+      nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rETH', decimals: 18 },
       rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.RINKEBY],
     },
   },
@@ -162,7 +162,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     label: 'Ropsten',
     logoUrl: ethereumLogoUrl,
     addNetworkInfo: {
-      nativeCurrency: { name: 'Ropsten ETH', symbol: 'ropETH', decimals: 18 },
+      nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
       rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.ROPSTEN],
     },
   },
@@ -174,7 +174,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     label: 'Kovan',
     logoUrl: ethereumLogoUrl,
     addNetworkInfo: {
-      nativeCurrency: { name: 'Kovan ETH', symbol: 'kovETH', decimals: 18 },
+      nativeCurrency: { name: 'Kovan Ether', symbol: 'kovETH', decimals: 18 },
       rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.KOVAN],
     },
   },
@@ -186,7 +186,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     label: 'Görli',
     logoUrl: ethereumLogoUrl,
     addNetworkInfo: {
-      nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
+      nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
       rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.GOERLI],
     },
   },
@@ -203,7 +203,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     addNetworkInfo: {
-      nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
+      nativeCurrency: { name: 'Optimistic Ether', symbol: 'ETH', decimals: 18 },
       rpcUrl: 'https://mainnet.optimism.io',
     },
   },
@@ -220,7 +220,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     addNetworkInfo: {
-      nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
+      nativeCurrency: { name: 'Optimistic Kovan Ether', symbol: 'kovOpETH', decimals: 18 },
       rpcUrl: 'https://kovan.optimism.io',
     },
   },
@@ -236,7 +236,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     addNetworkInfo: {
-      nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
       rpcUrl: 'https://arb1.arbitrum.io/rpc',
     },
   },
@@ -252,7 +252,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     addNetworkInfo: {
-      nativeCurrency: { name: 'Rinkeby ArbETH', symbol: 'rinkArbETH', decimals: 18 },
+      nativeCurrency: { name: 'Rinkeby Arbitrum Ether', symbol: 'rinkArbETH', decimals: 18 },
       rpcUrl: 'https://rinkeby.arbitrum.io/rpc',
     },
   },
