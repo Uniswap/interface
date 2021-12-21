@@ -143,7 +143,7 @@
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "assets:generate": "svgr -d src/lib/assets --ext tsx --typescript src/lib/assets && rm src/lib/assets/index.tsx",
     "bundle": "microbundle --define process.env.REACT_APP_IS_WIDGET=true --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
-    "cosmos": "cross-env FAST_REFRESH=false REACT_APP_IS_WIDGET=true cosmos && open http://localhost:5000"
+    "cosmos": "cross-env FAST_REFRESH=false REACT_APP_IS_WIDGET=true cosmos"
   },
   "browserslist": {
     "production": [
