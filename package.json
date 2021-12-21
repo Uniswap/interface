@@ -33,7 +33,7 @@
     "@uniswap/token-lists": "^1.0.0-beta.24",
     "@web3-react/core": "^6.1.9",
     "@web3-react/types": "^6.0.7",
-    "ajv": "^6.12.3",
+    "ajv": "^8.8.2",
     "awesome-typescript-loader": "^5.2.1",
     "cids": "^1.1.6",
     "copy-to-clipboard": "^3.2.0",
