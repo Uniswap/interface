@@ -120,7 +120,7 @@ export const CHAIN_INFO: ChainInfo = {
       'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
     primaryColor: '#F9AC14',
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
-    subgraphUrl: 'https://thegraph.com/hosted-service/subgraph/ianlapham/uniswap-v3-rinkeby',
+    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-rinkeby',
   },
   [ChainId.ROPSTEN]: {
     docs: 'https://docs.uniswap.org/',
