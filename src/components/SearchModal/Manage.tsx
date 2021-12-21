@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   width: 100%;
   position: relative;
   padding-bottom: 80px;
+  overflow-y: hidden;
 `
 
 const ToggleWrapper = styled(RowBetween)`
