@@ -5,8 +5,8 @@
   "private": true,
   "devDependencies": {
     "@popperjs/core": "^2.9.2",
-    "@reach/dialog": "^0.15.0",
-    "@reach/portal": "^0.16.2",
+    "@reach/dialog": "^0.16.2",
+    "@reach/portal": "^0.15.0",
     "@reduxjs/toolkit": "^1.5.1",
     "@sentry/webpack-plugin": "^1.16.0",
     "@typechain/ethers-v5": "^7.0.1",
