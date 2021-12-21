@@ -518,7 +518,7 @@ msgid "Connect to a wallet to find pools"
 msgstr "Chcete-li vyhledat fondy, připojte se k peněžence"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Connect to a wallet to view your V2 liquidity."
+msgid "Connect to a wallet to view your liquidity."
 msgstr "Chcete-li si zobrazit svou likviditu V2, připojte se k peněžence."
 
 #: src/pages/Pool/v2.tsx
@@ -1434,7 +1434,7 @@ msgid "Select a token"
 msgstr "Vyberte žeton"
 
 #: src/pages/PoolFinder/index.tsx
-msgid "Select a token to find your v2 liquidity."
+msgid "Select a token to find your liquidity."
 msgstr "Chcete-li najít svou likviditu v2, vyberte žeton."
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
@@ -1838,7 +1838,7 @@ msgid "Uniswap migration contract↗"
 msgstr "Migrační kontrakt Uniswap↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
+msgid "XSwapProtocol on {0}"
 msgstr "Uniswap na {0}"
 
 #: src/components/SearchModal/TokenImportCard.tsx
@@ -2150,7 +2150,7 @@ msgid "Your UNI Breakdown"
 msgstr "Váš rozpis UNI"
 
 #: src/pages/Pool/v2.tsx
-msgid "Your V2 liquidity"
+msgid "Your liquidity"
 msgstr "Vaše likvidita V2"
 
 #: src/pages/Pool/index.tsx

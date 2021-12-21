@@ -4,9 +4,9 @@ import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
-import { useGetQuoteQuery } from 'state/routing/slice'
 import { useClientSideRouter } from 'state/user/hooks'
 
+import { useGetQuoteQuery } from './slice'
 import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
 

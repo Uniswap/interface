@@ -518,7 +518,7 @@ msgid "Connect to a wallet to find pools"
 msgstr "Koppel aan 'n beursie om swembaddens te vind"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Connect to a wallet to view your V2 liquidity."
+msgid "Connect to a wallet to view your liquidity."
 msgstr "Koppel aan 'n beursie om u V2-likiditeit te sien."
 
 #: src/pages/Pool/v2.tsx
@@ -1434,7 +1434,7 @@ msgid "Select a token"
 msgstr "Kies 'n teken"
 
 #: src/pages/PoolFinder/index.tsx
-msgid "Select a token to find your v2 liquidity."
+msgid "Select a token to find your liquidity."
 msgstr "Kies 'n teken om u v2-likiditeit te vind."
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
@@ -1838,7 +1838,7 @@ msgid "Uniswap migration contract↗"
 msgstr "Onttrek migrasie kontrak↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
+msgid "XSwapProtocol on {0}"
 msgstr "Ontruil op {0}"
 
 #: src/components/SearchModal/TokenImportCard.tsx
@@ -2150,7 +2150,7 @@ msgid "Your UNI Breakdown"
 msgstr "U UNI-uiteensetting"
 
 #: src/pages/Pool/v2.tsx
-msgid "Your V2 liquidity"
+msgid "Your liquidity"
 msgstr "U V2-likiditeit"
 
 #: src/pages/Pool/index.tsx

@@ -518,7 +518,7 @@ msgid "Connect to a wallet to find pools"
 msgstr "เชื่อมต่อกับกระเป๋าเงินเพื่อค้นหาพูล"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Connect to a wallet to view your V2 liquidity."
+msgid "Connect to a wallet to view your liquidity."
 msgstr "เชื่อมต่อกับกระเป๋าเงินเพื่อดูสภาพคล่อง V2 ของคุณ"
 
 #: src/pages/Pool/v2.tsx
@@ -1434,7 +1434,7 @@ msgid "Select a token"
 msgstr "เลือกโทเค็น"
 
 #: src/pages/PoolFinder/index.tsx
-msgid "Select a token to find your v2 liquidity."
+msgid "Select a token to find your liquidity."
 msgstr "เลือกโทเค็นเพื่อค้นหาสภาพคล่อง v2 ของคุณ"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
@@ -1838,7 +1838,7 @@ msgid "Uniswap migration contract↗"
 msgstr "สัญญาการโยกย้าย Uniswap↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
+msgid "XSwapProtocol on {0}"
 msgstr "Uniswap บน {0}"
 
 #: src/components/SearchModal/TokenImportCard.tsx
@@ -2150,7 +2150,7 @@ msgid "Your UNI Breakdown"
 msgstr "รายละเอียด UNI ของคุณ"
 
 #: src/pages/Pool/v2.tsx
-msgid "Your V2 liquidity"
+msgid "Your liquidity"
 msgstr "สภาพคล่อง V2 ของคุณ"
 
 #: src/pages/Pool/index.tsx

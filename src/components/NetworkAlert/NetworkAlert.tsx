@@ -146,7 +146,7 @@ export function NetworkAlert(props: NetworkAlertProps) {
         <BodyText>
           <L2Icon src={info.logoUrl} />
           <Header thin={props.thin}>
-            <Trans>Uniswap on {info.label}</Trans>
+            <Trans>XSwapProtocol on {info.label}</Trans>
           </Header>
           <Body>
             <Trans>

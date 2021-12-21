@@ -518,7 +518,7 @@ msgid "Connect to a wallet to find pools"
 msgstr "Csatlakozzon egy pénztárcához a poolok megtalálásához"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Connect to a wallet to view your V2 liquidity."
+msgid "Connect to a wallet to view your liquidity."
 msgstr "Csatlakozzon egy pénztárcához a V2 likviditás megtekintéséhez."
 
 #: src/pages/Pool/v2.tsx
@@ -1435,7 +1435,7 @@ msgid "Select a token"
 msgstr "Token választása"
 
 #: src/pages/PoolFinder/index.tsx
-msgid "Select a token to find your v2 liquidity."
+msgid "Select a token to find your liquidity."
 msgstr "Válasszon egy tokent a v2 likviditásának megkereséséhez."
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
@@ -1839,7 +1839,7 @@ msgid "Uniswap migration contract↗"
 msgstr "Uniswap migrációs szerződés↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
+msgid "XSwapProtocol on {0}"
 msgstr "Lecserélés a {0}"
 
 #: src/components/SearchModal/TokenImportCard.tsx
@@ -2151,7 +2151,7 @@ msgid "Your UNI Breakdown"
 msgstr "Saját UNI lebontása"
 
 #: src/pages/Pool/v2.tsx
-msgid "Your V2 liquidity"
+msgid "Your liquidity"
 msgstr "Saját V2 likviditása"
 
 #: src/pages/Pool/index.tsx

@@ -1,7 +1,7 @@
-import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
+import { Ether, Token } from '@uniswap/sdk-core'
 
 import { XSP_ADDRESS } from './addresses'
-import { SupportedChainId } from './chains'
+import { CHAIN_INFO, SupportedChainId } from './chains'
 
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
@@ -102,18 +102,25 @@ export const SWISE = new Token(
   'StakeWise'
 )
 export const UNI: { [chainId: number]: Token } = {
-  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, XSP_ADDRESS[1], 18, 'XSP', 'XSwapProtocol'),
+  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, XSP_ADDRESS[50], 18, 'XSP', 'XSwapProtocol'),
+  [SupportedChainId.TESTNET]: new Token(SupportedChainId.MAINNET, XSP_ADDRESS[51], 18, 'TXSP', 'XSwapProtocol'),
 }
 
 export const WETH9_EXTENDED: { [chainId: number]: Token } = {
-  ...WETH9,
-  // [SupportedChainId.OPTIMISM]: new Token(
-  //   SupportedChainId.OPTIMISM,
-  //   '0x4200000000000000000000000000000000000006',
-  //   18,
-  //   'WETH',
-  //   'Wrapped Ether'
-  // ),
+  [SupportedChainId.MAINNET]: new Token(
+    SupportedChainId.MAINNET,
+    XSP_ADDRESS[SupportedChainId.MAINNET],
+    CHAIN_INFO[SupportedChainId.MAINNET].nativeCurrency.decimals,
+    CHAIN_INFO[SupportedChainId.MAINNET].nativeCurrency.symbol,
+    CHAIN_INFO[SupportedChainId.MAINNET].nativeCurrency.name
+  ),
+  [SupportedChainId.TESTNET]: new Token(
+    SupportedChainId.TESTNET,
+    XSP_ADDRESS[SupportedChainId.TESTNET],
+    CHAIN_INFO[SupportedChainId.TESTNET].nativeCurrency.decimals,
+    CHAIN_INFO[SupportedChainId.TESTNET].nativeCurrency.symbol,
+    CHAIN_INFO[SupportedChainId.TESTNET].nativeCurrency.name
+  ),
 }
 
 export class ExtendedEther extends Ether {

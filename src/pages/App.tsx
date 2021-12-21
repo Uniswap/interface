@@ -4,7 +4,6 @@ import { Suspense } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
@@ -14,17 +13,12 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import AddLiquidity from './AddLiquidity'
-import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
-import Pool from './Pool'
-import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
-import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 
@@ -70,7 +64,7 @@ function TopLevelModals() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <Route component={GoogleAnalyticsReporter} />
+      {/*<Route component={GoogleAnalyticsReporter} />*/}
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
@@ -95,33 +89,10 @@ export default function App() {
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/swap" component={Swap} />
 
-                <Route exact strict path="/pool/v2/find" component={PoolFinder} />
-                <Route exact strict path="/pool/v2" component={PoolV2} />
-                <Route exact strict path="/pool" component={Pool} />
-                <Route exact strict path="/pool/:tokenId" component={PositionPage} />
-
-                <Route
-                  exact
-                  strict
-                  path="/add/v2/:currencyIdA?/:currencyIdB?"
-                  component={RedirectDuplicateTokenIdsV2}
-                />
-                <Route
-                  exact
-                  strict
-                  path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                  component={RedirectDuplicateTokenIds}
-                />
-
-                <Route
-                  exact
-                  strict
-                  path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
-                  component={AddLiquidity}
-                />
-
-                <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
+                <Route exact strict path="/pool/find" component={PoolFinder} />
+                <Route exact strict path="/pool" component={PoolV2} />
+                <Route exact strict path="/add/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
+                <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Suspense>
