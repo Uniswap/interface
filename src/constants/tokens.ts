@@ -164,6 +164,21 @@ export const SWISE = new Token(
   'SWISE',
   'StakeWise'
 )
+export const WETH_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+
+export const WETH_POLYGON = new Token(
+  SupportedChainId.POLYGON,
+  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),

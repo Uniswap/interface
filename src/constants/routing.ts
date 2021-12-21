@@ -26,6 +26,8 @@ import {
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
+  WETH_POLYGON,
+  WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
 } from './tokens'
 
@@ -133,9 +135,15 @@ export const COMMON_BASES: ChainCurrencyList = {
     ExtendedEther.onChain(SupportedChainId.POLYGON),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON],
   ],
+  [SupportedChainId.POLYGON]: [
+    ExtendedEther.onChain(SupportedChainId.POLYGON),
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON],
+    WETH_POLYGON,
+  ],
   [SupportedChainId.POLYGON_MUMBAI]: [
     ExtendedEther.onChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],
+    WETH_POLYGON_MUMBAI,
   ],
 }
 
