@@ -80,6 +80,16 @@ export const dexListConfig: DexList = {
     icon: 'https://polycat.finance/favicon-32x32.png',
     chainIds: [ChainId.MATIC]
   },
+  gravity: {
+    name: 'Gravity',
+    icon: 'https://gravityfinance.io/favicon.ico',
+    chainIds: [ChainId.MATIC]
+  },
+  cometh: {
+    name: 'ComethSwap',
+    icon: 'https://swap.cometh.io/favicon.ico',
+    chainIds: [ChainId.MATIC]
+  },
   pancake: {
     name: 'PancakeSwap',
     icon: 'https://pancakeswap.finance/favicon.ico',
