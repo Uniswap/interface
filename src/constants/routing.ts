@@ -138,7 +138,6 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: [nativeOnChain(SupportedChainId.OPTIMISTIC_KOVAN)],
   [SupportedChainId.POLYGON]: [
     nativeOnChain(SupportedChainId.POLYGON),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON],
     WETH_POLYGON,
     USDC_POLYGON,
     DAI_POLYGON,

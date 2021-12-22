@@ -1,20 +1,22 @@
 import { Trans } from '@lingui/macro'
-import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
 import { useDarkModeManager, useNetworkAlertStatus } from 'state/user/hooks'
-import { useETHBalances } from 'state/wallet/hooks'
+import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 import { CHAIN_INFO } from '../../constants/chains'
-import { isL2ChainId } from '../../utils/chains'
+import { ThemedText } from '../../theme'
+import { AutoRow } from '../Row'
 
 const L2Icon = styled.img`
   width: 36px;
   height: 36px;
   justify-self: center;
+  margin-right: 14px;
 `
 const BetaTag = styled.span<{ color: string }>`
   align-items: center;
@@ -32,24 +34,10 @@ const BetaTag = styled.span<{ color: string }>`
   width: 60px;
   z-index: 1;
 `
-const Body = styled.p`
-  font-size: 12px;
-  grid-column: 1 / 3;
-  line-height: 143%;
-  margin: 0;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    grid-column: 2 / 3;
-  }
-`
-export const Controls = styled.div<{ thin?: boolean }>`
+export const Controls = styled.div`
   align-items: center;
   display: flex;
   justify-content: flex-start;
-  ${({ thin }) =>
-    thin &&
-    css`
-      margin: auto 32px auto 0;
-    `}
 `
 const CloseIcon = styled(X)`
   cursor: pointer;
@@ -59,17 +47,13 @@ const CloseIcon = styled(X)`
 `
 const BodyText = styled.div`
   align-items: center;
-  display: grid;
-  grid-gap: 4px;
-  grid-template-columns: 40px 4fr;
-  grid-template-rows: auto auto;
   margin: 20px 16px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     grid-template-columns: 42px 4fr;
     grid-gap: 8px;
   }
 `
-const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
+const LearnMoreLink = styled(ExternalLink)`
   align-items: center;
   background-color: transparent;
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -89,13 +73,6 @@ const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
     background-color: rgba(255, 255, 255, 0.05);
   }
   transition: background-color 150ms ease-in-out;
-  ${({ thin }) =>
-    thin &&
-    css`
-      font-size: 14px;
-      margin: auto;
-      width: 112px;
-    `}
 `
 const RootWrapper = styled.div`
   position: relative;
@@ -116,7 +93,7 @@ export const OptimismWrapperBackgroundLightMode = css`
   background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
     radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
 `
-const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string; thin?: boolean }>`
+const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
@@ -133,13 +110,6 @@ const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean
   overflow: hidden;
   position: relative;
   width: 100%;
-  ${({ thin }) =>
-    thin &&
-    css`
-      flex-direction: row;
-      max-width: max-content;
-      min-height: min-content;
-    `}
   :before {
     background-image: url(${({ logoUrl }) => logoUrl});
     background-repeat: no-repeat;
@@ -153,12 +123,11 @@ const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean
     z-index: -1;
   }
 `
-const Header = styled.h2<{ thin?: boolean }>`
+const Header = styled.h2`
   font-weight: 600;
   font-size: 20px;
   margin: 0;
   padding-right: 30px;
-  display: ${({ thin }) => (thin ? 'none' : 'block')};
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
   margin-left: 12px;
@@ -166,7 +135,7 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   width: 20px;
   height: 20px;
 `
-const LinkOutToBridge = styled(ExternalLink)<{ thin?: boolean }>`
+const LinkOutToBridge = styled(ExternalLink)`
   align-items: center;
   background-color: black;
   border-radius: 8px;
@@ -184,71 +153,86 @@ const LinkOutToBridge = styled(ExternalLink)<{ thin?: boolean }>`
   :active {
     background-color: black;
   }
-  ${({ thin }) =>
-    thin &&
-    css`
-      font-size: 14px;
-      margin: auto 10px;
-      width: 168px;
-    `}
 `
 
-interface NetworkAlertProps {
-  thin?: boolean
-}
+const DisclaimerText = styled(ThemedText.Body)`
+  padding: 0 0.5em;
+  font-size: 14px !important;
+  margin-top: 1em !important;
+`
 
-const BETA_TAG_COLORS: { [chainId in SupportedL2ChainId]: string } = {
+const BETA_TAG_COLORS: { [chainId in SupportedChainId]?: string } = {
   [SupportedChainId.OPTIMISM]: '#ff0420',
   [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff0420',
   [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
   [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
 }
 
-export function NetworkAlert(props: NetworkAlertProps) {
+const SHOULD_SHOW_ALERT: { [chainId in SupportedChainId]?: true } = {
+  [SupportedChainId.OPTIMISM]: true,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: true,
+  [SupportedChainId.ARBITRUM_ONE]: true,
+  [SupportedChainId.ARBITRUM_RINKEBY]: true,
+  [SupportedChainId.POLYGON]: true,
+  [SupportedChainId.POLYGON_MUMBAI]: true,
+}
+
+function shouldShowAlert(chainId: number | undefined): chainId is SupportedChainId {
+  return Boolean(chainId && SHOULD_SHOW_ALERT[chainId as SupportedChainId])
+}
+
+export function NetworkAlert() {
   const { account, chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [alertAcknowledged, acknowledgeAlert] = useNetworkAlertStatus(chainId)
-  const [locallyDismissed, setLocallyDimissed] = useState(alertAcknowledged)
+  const [locallyDismissed, setLocallyDimissed] = useState(false)
   const accounts = useMemo(() => (account ? [account] : []), [account])
-  const userNativeCurrencyBalance = useETHBalances(accounts)?.[account ?? '']
+  const userNativeCurrencyBalance = useNativeCurrencyBalances(accounts)?.[account ?? '']
 
   const dismiss = useCallback(() => {
     setLocallyDimissed(true)
     if (!alertAcknowledged) acknowledgeAlert()
   }, [acknowledgeAlert, alertAcknowledged])
 
-  if (!isL2ChainId(chainId) || locallyDismissed || alertAcknowledged || !chainId) {
+  if (!shouldShowAlert(chainId) || alertAcknowledged || locallyDismissed) {
     return null
   }
 
   const { label, logoUrl, bridge, helpCenterUrl } = CHAIN_INFO[chainId]
-  const isOptimism = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
-  const depositUrl = isOptimism ? `${bridge}?chainId=1` : bridge
-  const showCloseIcon = Boolean(userNativeCurrencyBalance?.greaterThan(0) && !props.thin)
+  const showCloseIcon = Boolean(userNativeCurrencyBalance?.greaterThan(0))
+  const betaColor = BETA_TAG_COLORS[chainId]
   return (
     <RootWrapper>
-      <BetaTag color={BETA_TAG_COLORS[chainId]}>Beta</BetaTag>
-      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl} thin={props.thin}>
+      {betaColor ? <BetaTag color={betaColor}>Beta</BetaTag> : null}
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
         {showCloseIcon && <CloseIcon onClick={dismiss} />}
         <BodyText>
-          <L2Icon src={logoUrl} />
-          <Header thin={props.thin}>
-            <Trans>Uniswap on {label}</Trans>
-          </Header>
-          <Body>
-            <Trans>
-              To start trading on {label}, first bridge your assets from L1 to L2. Please treat this as a beta release
-              and learn about the risks before using {label}.
-            </Trans>
-          </Body>
+          <AutoRow>
+            <L2Icon src={logoUrl} />
+            <Header>
+              <Trans>Uniswap on {label}</Trans>
+            </Header>
+          </AutoRow>
+          <DisclaimerText>
+            {betaColor ? (
+              <Trans>
+                Please treat this as a beta release and learn about the risks before using {label}. To start trading on{' '}
+                {label}, first bridge your assets from L1 to L2.
+              </Trans>
+            ) : (
+              <Trans>To start trading on {label}, first bridge your assets from L1 to L2.</Trans>
+            )}
+          </DisclaimerText>
         </BodyText>
-        <Controls thin={props.thin}>
-          <LinkOutToBridge href={depositUrl} thin={props.thin}>
-            <Trans>Deposit Assets</Trans>
-            <LinkOutCircle />
-          </LinkOutToBridge>
+        <Controls>
+          {bridge ? (
+            <LinkOutToBridge href={bridge}>
+              <Trans>Deposit Assets</Trans>
+              <LinkOutCircle />
+            </LinkOutToBridge>
+          ) : null}
           {helpCenterUrl ? (
-            <LearnMoreLink href={helpCenterUrl} thin={props.thin}>
+            <LearnMoreLink href={helpCenterUrl}>
               <Trans>Learn More</Trans>
             </LearnMoreLink>
           ) : null}
@@ -256,4 +240,10 @@ export function NetworkAlert(props: NetworkAlertProps) {
       </ContentWrapper>
     </RootWrapper>
   )
+}
+
+export function SingleRowNetworkAlert() {
+  // TODO: separate component because it's easier to have two components with different DOM in two different places
+  //  than to have
+  return null
 }

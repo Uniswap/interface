@@ -193,7 +193,7 @@ export const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.OPTIMISM]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`15m`,
-    bridge: 'https://gateway.optimism.io/',
+    bridge: 'https://gateway.optimism.io/?chainId=1',
     defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
