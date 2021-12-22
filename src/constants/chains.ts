@@ -192,7 +192,7 @@ export const CHAIN_INFO: ChainInfoMap = {
   },
   [SupportedChainId.OPTIMISM]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`15m`,
+    blockWaitMsBeforeWarning: ms`25m`,
     bridge: 'https://gateway.optimism.io/?chainId=1',
     defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
@@ -209,7 +209,7 @@ export const CHAIN_INFO: ChainInfoMap = {
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`15m`,
+    blockWaitMsBeforeWarning: ms`25m`,
     bridge: 'https://gateway.optimism.io/',
     defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
