@@ -54,9 +54,9 @@ export default function DowntimeWarning() {
       return (
         <Wrapper>
           <Trans>
-            Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the
-            network in the near future. During downtime, your position will not earn fees and you will be unable to
-            remove liquidity.{' '}
+            Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in
+            the near future. During downtime, your position will not earn fees and you will be unable to remove
+            liquidity.{' '}
             <ReadMoreLink href="https://help.uniswap.org/en/articles/5406082-what-happens-if-the-optimistic-ethereum-network-experiences-downtime">
               Read more.
             </ReadMoreLink>
@@ -78,6 +78,6 @@ export default function DowntimeWarning() {
       )
 
     default:
-      throw new Error('unhandled')
+      return null
   }
 }

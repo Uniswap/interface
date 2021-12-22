@@ -173,14 +173,12 @@ function Row({
     return null
   }
   const active = chainId === targetChain
-  const isOptimism = targetChain === SupportedChainId.OPTIMISM
-  const rowText = `${CHAIN_INFO[targetChain].label}${isOptimism ? ' (Optimism)' : ''}`
-  const { helpCenterUrl, explorer, bridge } = CHAIN_INFO[targetChain]
+  const { helpCenterUrl, explorer, bridge, label, logoUrl } = CHAIN_INFO[targetChain]
 
   const rowContent = (
     <FlyoutRow onClick={() => onSelectChain(targetChain)} active={active}>
-      <Logo src={CHAIN_INFO[targetChain].logoUrl} />
-      <NetworkLabel>{rowText}</NetworkLabel>
+      <Logo src={logoUrl} />
+      <NetworkLabel>{label}</NetworkLabel>
       {chainId === targetChain && <FlyoutRowActiveIndicator />}
     </FlyoutRow>
   )
