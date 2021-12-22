@@ -224,7 +224,8 @@ export const dexIds: DexTypes = {
     polycat: 2,
     spookyswap: 3,
     axial: 3,
-    cronaswap: 2
+    cronaswap: 2,
+    gravity: 2
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
