@@ -21,6 +21,7 @@ import Menu from '../Menu'
 import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
+import HolidayOrnament from './HolidayOrnament'
 import NetworkSelector from './NetworkSelector'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
@@ -178,6 +179,8 @@ const UniIcon = styled.div`
   :hover {
     transform: rotate(-5deg);
   }
+
+  position: relative;
 `
 
 const activeClassName = 'ACTIVE'
@@ -270,6 +273,7 @@ export default function Header() {
       <Title href=".">
         <UniIcon>
           <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <HolidayOrnament />
         </UniIcon>
       </Title>
       <HeaderLinks>
