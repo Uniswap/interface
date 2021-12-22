@@ -131,7 +131,7 @@
     "@sentry/react": "^6.9.0",
     "@sentry/tracing": "^6.16.1",
     "@ubeswap/core": "^1.0.2",
-    "@ubeswap/default-token-list": "^4.1.38",
+    "@ubeswap/default-token-list": "^4.1.39",
     "@ubeswap/moola": "^0.2.0",
     "@ubeswap/sdk": "^2.1.1",
     "@uniswap/default-token-list": "^2.0.0",
