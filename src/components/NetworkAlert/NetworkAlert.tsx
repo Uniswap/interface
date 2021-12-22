@@ -38,6 +38,7 @@ export const Controls = styled.div`
   align-items: center;
   display: flex;
   justify-content: flex-start;
+  padding: 0 20px 20px 20px;
 `
 const CloseIcon = styled(X)`
   cursor: pointer;
@@ -63,7 +64,6 @@ const LearnMoreLink = styled(ExternalLink)`
   font-size: 16px;
   height: 44px;
   justify-content: space-between;
-  margin: 0 0 20px 0;
   padding: 12px 16px;
   text-decoration: none;
   width: auto;
@@ -115,8 +115,6 @@ const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  max-width: 480px;
-  min-height: 174px;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -154,8 +152,8 @@ const LinkOutToBridge = styled(ExternalLink)`
   font-size: 16px;
   height: 44px;
   justify-content: space-between;
-  margin: 0 12px 20px 18px;
   padding: 12px 16px;
+  margin-right: 20px;
   text-decoration: none;
   width: auto;
   :hover,
@@ -168,7 +166,6 @@ const LinkOutToBridge = styled(ExternalLink)`
 const DisclaimerText = styled(ThemedText.Body)`
   padding: 0 0.5em;
   font-size: 14px !important;
-  margin-top: 1em !important;
 `
 
 const BETA_TAG_COLORS: { [chainId in SupportedChainId]?: string } = {
@@ -217,7 +214,7 @@ export function NetworkAlert() {
       <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
         {showCloseIcon && <CloseIcon onClick={dismiss} />}
         <BodyText>
-          <AutoRow>
+          <AutoRow style={{ marginBottom: '1em' }}>
             <L2Icon src={logoUrl} />
             <Header>
               <Trans>Uniswap on {label}</Trans>
@@ -252,8 +249,66 @@ export function NetworkAlert() {
   )
 }
 
+const AlertRow = styled.div`
+  display: flex;
+  padding: 1em;
+  align-items: center;
+`
+const ButtonContainer = styled.div`
+  flex-shrink: 0;
+  flex-grow: 0;
+  display: flex;
+  height: 100%;
+`
+const FlexGrow = styled.div`
+  flex-grow: 1;
+`
 export function SingleRowNetworkAlert() {
-  // TODO: separate component because it's easier to have two components with different DOM in two different places
-  //  than to have
-  return null
+  const { chainId } = useActiveWeb3React()
+  const [darkMode] = useDarkModeManager()
+
+  if (!shouldShowAlert(chainId)) {
+    return null
+  }
+
+  const { label, logoUrl, bridge, helpCenterUrl } = CHAIN_INFO[chainId]
+  const betaColor = BETA_TAG_COLORS[chainId]
+
+  return (
+    <RootWrapper>
+      {betaColor ? <BetaTag color={betaColor}>Beta</BetaTag> : null}
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
+        <AlertRow>
+          <L2Icon src={logoUrl} />
+
+          <FlexGrow>
+            <DisclaimerText>
+              {betaColor ? (
+                <Trans>
+                  Please treat this as a beta release and learn about the risks before using {label}. To start trading
+                  on {label}, first bridge your assets from L1 to L2.
+                </Trans>
+              ) : (
+                <Trans>To start trading on {label}, first bridge your assets from L1 to L2.</Trans>
+              )}
+            </DisclaimerText>
+          </FlexGrow>
+
+          <ButtonContainer>
+            {bridge ? (
+              <LinkOutToBridge href={bridge}>
+                <Trans>Deposit Assets</Trans>
+                <LinkOutCircle />
+              </LinkOutToBridge>
+            ) : null}
+            {helpCenterUrl ? (
+              <LearnMoreLink href={helpCenterUrl}>
+                <Trans>Learn More</Trans>
+              </LearnMoreLink>
+            ) : null}
+          </ButtonContainer>
+        </AlertRow>
+      </ContentWrapper>
+    </RootWrapper>
+  )
 }
