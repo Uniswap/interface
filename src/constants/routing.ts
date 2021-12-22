@@ -63,6 +63,13 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
   ],
+  [SupportedChainId.POLYGON]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.POLYGON],
+    DAI_POLYGON,
+    USDC_POLYGON,
+    USDT_POLYGON,
+    WETH_POLYGON,
+  ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
