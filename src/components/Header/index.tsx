@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
-import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
@@ -8,11 +7,10 @@ import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
-import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import Logo from '../../assets/images/logo.png'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
@@ -174,9 +172,14 @@ const Title = styled.a`
 `
 
 const UniIcon = styled.div`
+  background: #ffffff62;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: transform 0.3s ease;
   :hover {
-    transform: rotate(-5deg);
+    transform: rotate(-180deg);
   }
 `
 
@@ -216,8 +219,6 @@ export default function Header() {
   const { account } = useActiveWeb3React()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  const [darkMode] = useDarkModeManager()
-  const { white, black } = useTheme()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -237,7 +238,7 @@ export default function Header() {
       </Modal>
       <Title href=".">
         <UniIcon>
-          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <img src={Logo} alt="logo" height="34px" width="100%" />
         </UniIcon>
       </Title>
       <HeaderLinks>
@@ -257,15 +258,6 @@ export default function Header() {
         >
           <Trans>Pool</Trans>
         </StyledNavLink>
-        {/*{(!chainId || chainId === SupportedChainId.MAINNET) && (*/}
-        {/*  <StyledNavLink id={`vote-nav-link`} to={'/vote'}>*/}
-        {/*    <Trans>Vote</Trans>*/}
-        {/*  </StyledNavLink>*/}
-        {/*)}*/}
-        {/*<StyledExternalLink id={`charts-nav-link`} href={infoLink}>*/}
-        {/*  <Trans>Charts</Trans>*/}
-        {/*  <sup>↗</sup>*/}
-        {/*</StyledExternalLink>*/}
       </HeaderLinks>
 
       <HeaderControls>
