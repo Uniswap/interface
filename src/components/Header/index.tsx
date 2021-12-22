@@ -13,7 +13,6 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
-import SantaHat from '../../assets/images/santa-hat.png'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -24,6 +23,7 @@ import Modal from '../Modal'
 import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
+import HolidayOrnament from './HolidayOrnament'
 import NetworkSelector from './NetworkSelector'
 import UniBalanceContent from './UniBalanceContent'
 
@@ -186,13 +186,6 @@ const UniIcon = styled.div`
   position: relative;
 `
 
-const SantaHatImage = styled.img`
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  height: 18px;
-`
-
 const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
@@ -281,7 +274,7 @@ export default function Header() {
       <Title href=".">
         <UniIcon>
           <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
-          <SantaHatImage src={SantaHat} alt="santa hat" />
+          <HolidayOrnament />
         </UniIcon>
       </Title>
       <HeaderLinks>
