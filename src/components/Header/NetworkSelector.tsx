@@ -231,9 +231,7 @@ export default function NetworkSelector() {
         .catch((error) => {
           console.error('Failed to switch networks', error)
           toggle()
-          dispatch(
-            addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch-${targetChain}` })
-          )
+          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
         })
     },
     [dispatch, library, toggle]

@@ -25,7 +25,7 @@ export default function FailedNetworkSwitchPopup({ chainId }: { chainId: Support
         <ThemedText.Body fontWeight={500}>
           <Trans>
             Your wallet does not support switching networks from the Uniswap Interface. In order to use Uniswap on{' '}
-            {chainInfo.label}, you must change the network in your wallet
+            {chainInfo.label}, you must change the network in your wallet.
           </Trans>
         </ThemedText.Body>
       </AutoColumn>
