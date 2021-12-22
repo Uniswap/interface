@@ -36,7 +36,7 @@ import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
-import { WETH9_EXTENDED } from '../../constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useToken } from '../../hooks/Tokens'
 import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
@@ -592,10 +592,10 @@ function V2PairMigration({
                   <ThemedText.Black fontSize={12}>
                     <Trans>
                       At least {formatCurrencyAmount(refund0, 4)}{' '}
-                      {token0.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : token0.symbol} and{' '}
+                      {token0.equals(WRAPPED_NATIVE_CURRENCY[chainId]) ? 'ETH' : token0.symbol} and{' '}
                       {formatCurrencyAmount(refund1, 4)}{' '}
-                      {token1.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : token1.symbol} will be refunded to your wallet
-                      due to selected price range.
+                      {token1.equals(WRAPPED_NATIVE_CURRENCY[chainId]) ? 'ETH' : token1.symbol} will be refunded to your
+                      wallet due to selected price range.
                     </Trans>
                   </ThemedText.Black>
                 ) : null}

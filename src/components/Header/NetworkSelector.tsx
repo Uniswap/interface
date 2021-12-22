@@ -1,22 +1,16 @@
 import { Trans } from '@lingui/macro'
-import {
-  ARBITRUM_HELP_CENTER_LINK,
-  CHAIN_INFO,
-  L2_CHAIN_IDS,
-  OPTIMISM_HELP_CENTER_LINK,
-  SupportedChainId,
-  SupportedL2ChainId,
-} from 'constants/chains'
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import { useAppSelector } from 'state/hooks'
+import { addPopup, ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
-import { switchToNetwork } from 'utils/switchToNetwork'
+
+import { useAppDispatch } from '../../state/hooks'
+import { switchToNetwork } from '../../utils/switchToNetwork'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -136,7 +130,7 @@ const SelectorWrapper = styled.div`
 const StyledChevronDown = styled(ChevronDown)`
   width: 12px;
 `
-const BridgeText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
+const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
@@ -144,11 +138,14 @@ const BridgeText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
       return <Trans>Optimism Gateway</Trans>
+    case SupportedChainId.POLYGON:
+    case SupportedChainId.POLYGON_MUMBAI:
+      return <Trans>Polygon Bridge</Trans>
     default:
       return <Trans>Bridge</Trans>
   }
 }
-const ExplorerText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
+const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
@@ -156,9 +153,61 @@ const ExplorerText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
       return <Trans>Optimistic Etherscan</Trans>
+    case SupportedChainId.POLYGON:
+    case SupportedChainId.POLYGON_MUMBAI:
+      return <Trans>Polygonscan</Trans>
     default:
-      return <Trans>Explorer</Trans>
+      return <Trans>Etherscan</Trans>
   }
+}
+
+function Row({
+  targetChain,
+  onSelectChain,
+}: {
+  targetChain: SupportedChainId
+  onSelectChain: (targetChain: number) => void
+}) {
+  const { library, chainId } = useActiveWeb3React()
+  if (!library || !chainId) {
+    return null
+  }
+  const active = chainId === targetChain
+  const { helpCenterUrl, explorer, bridge, label, logoUrl } = CHAIN_INFO[targetChain]
+
+  const rowContent = (
+    <FlyoutRow onClick={() => onSelectChain(targetChain)} active={active}>
+      <Logo src={logoUrl} />
+      <NetworkLabel>{label}</NetworkLabel>
+      {chainId === targetChain && <FlyoutRowActiveIndicator />}
+    </FlyoutRow>
+  )
+
+  if (active) {
+    return (
+      <ActiveRowWrapper>
+        {rowContent}
+        <ActiveRowLinkList>
+          {bridge ? (
+            <ExternalLink href={bridge}>
+              <BridgeLabel chainId={chainId} /> <LinkOutCircle />
+            </ExternalLink>
+          ) : null}
+          {explorer ? (
+            <ExternalLink href={explorer}>
+              <ExplorerLabel chainId={chainId} /> <LinkOutCircle />
+            </ExternalLink>
+          ) : null}
+          {helpCenterUrl ? (
+            <ExternalLink href={helpCenterUrl}>
+              <Trans>Help Center</Trans> <LinkOutCircle />
+            </ExternalLink>
+          ) : null}
+        </ActiveRowLinkList>
+      </ActiveRowWrapper>
+    )
+  }
+  return rowContent
 }
 
 export default function NetworkSelector() {
@@ -167,80 +216,45 @@ export default function NetworkSelector() {
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
   useOnClickOutside(node, open ? toggle : undefined)
-  const implements3085 = useAppSelector((state) => state.application.implements3085)
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
-  const isOnL2 = chainId ? L2_CHAIN_IDS.includes(chainId) : false
-  const showSelector = Boolean(implements3085 || isOnL2)
-  const mainnetInfo = CHAIN_INFO[SupportedChainId.MAINNET]
+  const dispatch = useAppDispatch()
 
-  const conditionalToggle = useCallback(() => {
-    if (showSelector) {
-      toggle()
-    }
-  }, [showSelector, toggle])
+  const handleRowClick = useCallback(
+    (targetChain: number) => {
+      if (!library) return
+      switchToNetwork({ library, chainId: targetChain })
+        .then(() => toggle())
+        .catch((error) => {
+          console.error('Failed to switch networks', error)
+          toggle()
+          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
+        })
+    },
+    [dispatch, library, toggle]
+  )
 
   if (!chainId || !info || !library) {
     return null
   }
 
-  function Row({ targetChain }: { targetChain: number }) {
-    if (!library || !chainId || (!implements3085 && targetChain !== chainId)) {
-      return null
-    }
-    const handleRowClick = () => {
-      switchToNetwork({ library, chainId: targetChain })
-      toggle()
-    }
-    const active = chainId === targetChain
-    const hasExtendedInfo = L2_CHAIN_IDS.includes(targetChain)
-    const isOptimism = targetChain === SupportedChainId.OPTIMISM
-    const rowText = `${CHAIN_INFO[targetChain].label}${isOptimism ? ' (Optimism)' : ''}`
-    const RowContent = () => (
-      <FlyoutRow onClick={handleRowClick} active={active}>
-        <Logo src={CHAIN_INFO[targetChain].logoUrl} />
-        <NetworkLabel>{rowText}</NetworkLabel>
-        {chainId === targetChain && <FlyoutRowActiveIndicator />}
-      </FlyoutRow>
-    )
-    const helpCenterLink = isOptimism ? OPTIMISM_HELP_CENTER_LINK : ARBITRUM_HELP_CENTER_LINK
-    if (active && hasExtendedInfo) {
-      return (
-        <ActiveRowWrapper>
-          <RowContent />
-          <ActiveRowLinkList>
-            <ExternalLink href={CHAIN_INFO[targetChain as SupportedL2ChainId].bridge}>
-              <BridgeText chainId={chainId} /> <LinkOutCircle />
-            </ExternalLink>
-            <ExternalLink href={CHAIN_INFO[targetChain].explorer}>
-              <ExplorerText chainId={chainId} /> <LinkOutCircle />
-            </ExternalLink>
-            <ExternalLink href={helpCenterLink}>
-              <Trans>Help Center</Trans> <LinkOutCircle />
-            </ExternalLink>
-          </ActiveRowLinkList>
-        </ActiveRowWrapper>
-      )
-    }
-    return <RowContent />
-  }
-
   return (
     <SelectorWrapper ref={node as any}>
-      <SelectorControls onClick={conditionalToggle} interactive={showSelector}>
-        <SelectorLogo interactive={showSelector} src={info.logoUrl || mainnetInfo.logoUrl} />
+      <SelectorControls onClick={toggle} interactive>
+        <SelectorLogo interactive src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
-        {showSelector && <StyledChevronDown />}
+        <StyledChevronDown />
       </SelectorControls>
       {open && (
         <FlyoutMenu>
           <FlyoutHeader>
             <Trans>Select a network</Trans>
           </FlyoutHeader>
-          <Row targetChain={SupportedChainId.MAINNET} />
-          <Row targetChain={SupportedChainId.OPTIMISM} />
-          <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.MAINNET} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.POLYGON} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.OPTIMISM} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.ARBITRUM_ONE} />
         </FlyoutMenu>
       )}
     </SelectorWrapper>

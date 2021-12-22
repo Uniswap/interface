@@ -1,11 +1,17 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 
-export type PopupContent = {
-  txn: {
-    hash: string
-  }
-}
+import { SupportedChainId } from '../../constants/chains'
+
+export type PopupContent =
+  | {
+      txn: {
+        hash: string
+      }
+    }
+  | {
+      failedSwitchNetwork: SupportedChainId
+    }
 
 export enum ApplicationModal {
   WALLET,
@@ -26,7 +32,6 @@ type PopupList = Array<{ key: string; show: boolean; content: PopupContent; remo
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly chainId: number | null
-  readonly implements3085: boolean
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
 }
@@ -34,7 +39,6 @@ export interface ApplicationState {
 const initialState: ApplicationState = {
   blockNumber: {},
   chainId: null,
-  implements3085: false,
   openModal: null,
   popupList: [],
 }
@@ -75,12 +79,8 @@ const applicationSlice = createSlice({
         }
       })
     },
-    setImplements3085(state, { payload: { implements3085 } }) {
-      state.implements3085 = implements3085
-    },
   },
 })
 
-export const { updateChainId, updateBlockNumber, setOpenModal, addPopup, removePopup, setImplements3085 } =
-  applicationSlice.actions
+export const { updateChainId, updateBlockNumber, setOpenModal, addPopup, removePopup } = applicationSlice.actions
 export default applicationSlice.reducer

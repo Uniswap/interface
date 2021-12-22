@@ -4,11 +4,10 @@ import { AutoColumn } from 'components/Column'
 import DowntimeWarning from 'components/DowntimeWarning'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import { SingleRowNetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { L2_CHAIN_IDS } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useContext } from 'react'
@@ -20,6 +19,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
+import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
@@ -128,6 +128,25 @@ const ResponsiveRow = styled(RowFixed)`
   `};
 `
 
+function PositionsLoadingPlaceholder() {
+  return (
+    <LoadingRows>
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+    </LoadingRows>
+  )
+}
+
 export default function Pool() {
   const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
@@ -147,7 +166,7 @@ export default function Pool() {
 
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
   const showConnectAWallet = Boolean(!account)
-  const showV2Features = !!chainId && !L2_CHAIN_IDS.includes(chainId)
+  const showV2Features = Boolean(chainId && V2_FACTORY_ADDRESSES[chainId])
 
   const menuItems = [
     {
@@ -224,27 +243,14 @@ export default function Pool() {
             </TitleRow>
 
             <HideSmall>
-              <NetworkAlert thin />
+              <SingleRowNetworkAlert />
               <DowntimeWarning />
               <CTACards />
             </HideSmall>
 
             <MainContentWrapper>
               {positionsLoading ? (
-                <LoadingRows>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRows>
+                <PositionsLoadingPlaceholder />
               ) : filteredPositions && filteredPositions.length > 0 ? (
                 <PositionList positions={filteredPositions} />
               ) : (

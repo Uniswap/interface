@@ -1,6 +1,5 @@
 import { AlphaRouterParams, IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
-import { NETWORK_URLS } from 'connectors'
-import { SupportedChainId } from 'constants/chains'
+import { INFURA_NETWORK_URLS, SupportedChainId } from 'constants/chains'
 import { providers } from 'ethers/lib/ethers'
 import ReactGA from 'react-ga'
 
@@ -14,7 +13,7 @@ export type Dependencies = {
 export function buildDependencies(): Dependencies {
   const dependenciesByChain: Dependencies = {}
   for (const chainId of AUTO_ROUTER_SUPPORTED_CHAINS) {
-    const provider = new providers.JsonRpcProvider(NETWORK_URLS[chainId])
+    const provider = new providers.JsonRpcProvider(INFURA_NETWORK_URLS[chainId])
 
     dependenciesByChain[chainId] = {
       chainId,

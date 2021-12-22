@@ -71,3 +71,4 @@ ReactDOM.render(
 if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
   serviceWorkerRegistration.register()
 }
+export { INFURA_NETWORK_URLS } from './constants/chains'

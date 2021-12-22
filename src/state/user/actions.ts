@@ -15,13 +15,8 @@ export interface SerializedPair {
 }
 
 export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('user/updateMatchesDarkMode')
-export const updateArbitrumAlphaAcknowledged = createAction<{ arbitrumAlphaAcknowledged: boolean }>(
-  'user/updateArbitrumAlphaAcknowledged'
-)
-export const updateOptimismAlphaAcknowledged = createAction<{ optimismAlphaAcknowledged: boolean }>(
-  'user/updateOptimismAlphaAcknowledged'
-)
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
+export const acknowledgeNetworkAlert = createAction<{ chainId: number }>('user/acknowledgeNetworkAlert')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
 export const updateUserClientSideRouter = createAction<{ userClientSideRouter: boolean }>(

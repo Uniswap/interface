@@ -1,19 +1,19 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
 
+import { SupportedChainId } from '../../constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import {
+  acknowledgeNetworkAlert,
   addSerializedPair,
   addSerializedToken,
   removeSerializedPair,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateMatchesDarkMode,
-  updateOptimismAlphaAcknowledged,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -25,13 +25,15 @@ import {
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  arbitrumAlphaAcknowledged: boolean
+  // replaces the above two fields
+  networkAlertsAcknowledged: {
+    [chainId: number]: true
+  }
 
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
   matchesDarkMode: boolean // whether the dark mode media query matches
-  optimismAlphaAcknowledged: boolean
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
@@ -72,9 +74,8 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  arbitrumAlphaAcknowledged: false,
   matchesDarkMode: false,
-  optimismAlphaAcknowledged: false,
+  networkAlertsAcknowledged: {},
   userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
@@ -122,7 +123,19 @@ export default createReducer(initialState, (builder) =>
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
 
+      state.networkAlertsAcknowledged = state.networkAlertsAcknowledged ?? {}
+      if ((state as unknown as { arbitrumAlphaAcknowledged: boolean }).arbitrumAlphaAcknowledged) {
+        state.networkAlertsAcknowledged[SupportedChainId.ARBITRUM_ONE] = true
+      }
+      if ((state as unknown as { optimismAlphaAcknowledged: boolean }).optimismAlphaAcknowledged) {
+        state.networkAlertsAcknowledged[SupportedChainId.OPTIMISM] = true
+      }
+
       state.lastUpdateVersionTimestamp = currentTimestamp()
+    })
+    .addCase(acknowledgeNetworkAlert, (state, action) => {
+      state.networkAlertsAcknowledged = state.networkAlertsAcknowledged ?? {}
+      state.networkAlertsAcknowledged[action.payload.chainId] = true
     })
     .addCase(updateUserDarkMode, (state, action) => {
       state.userDarkMode = action.payload.userDarkMode
@@ -131,12 +144,6 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateMatchesDarkMode, (state, action) => {
       state.matchesDarkMode = action.payload.matchesDarkMode
       state.timestamp = currentTimestamp()
-    })
-    .addCase(updateArbitrumAlphaAcknowledged, (state, action) => {
-      state.arbitrumAlphaAcknowledged = action.payload.arbitrumAlphaAcknowledged
-    })
-    .addCase(updateOptimismAlphaAcknowledged, (state, action) => {
-      state.optimismAlphaAcknowledged = action.payload.optimismAlphaAcknowledged
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode
