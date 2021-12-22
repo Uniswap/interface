@@ -111,8 +111,7 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
 }
 
 const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
-  background-color: ${({ chainId, darkMode }) =>
-    BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID[darkMode ? 'dark' : 'light'][chainId]};
+  background: ${({ chainId, darkMode }) => BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID[darkMode ? 'dark' : 'light'][chainId]};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
