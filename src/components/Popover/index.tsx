@@ -7,14 +7,14 @@ import useInterval from '../../hooks/useInterval'
 import Portal from '@reach/portal'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
-const PopoverContainer = styled.div<{ show: boolean, padding?: string }>`
+const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
 
   visibility: ${props => (props.show ? 'visible' : 'hidden')};
   opacity: ${props => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
 
-  padding: "8px";
+  padding: 8px;
   backdrop-filter: blur(16px);
   background-color: ${({ theme }) => theme.bg1And2};
   border: 8px solid;
@@ -46,7 +46,7 @@ export default function Popover({
   className,
   offsetY = 8,
   offsetX = 0,
-  styled,
+  styled
 }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
