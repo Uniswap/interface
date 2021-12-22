@@ -10,6 +10,21 @@
     "dist"
   ],
   "private": true,
+  "scripts": {
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*.json\"",
+    "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
+    "prei18n:extract": "touch src/locales/en-US.po",
+    "i18n:extract": "lingui extract --locale en-US",
+    "i18n:compile": "yarn i18n:extract && lingui compile",
+    "postinstall": "yarn contracts:compile && yarn i18n:compile",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=./custom-test-env.js",
+    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
+    "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
+    "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos"
+  },
   "devDependencies": {
     "@ethersproject/experimental": "^5.4.0",
     "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
@@ -132,21 +147,6 @@
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "1.6.5"
-  },
-  "scripts": {
-    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
-    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*.json\"",
-    "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
-    "prei18n:extract": "touch src/locales/en-US.po",
-    "i18n:extract": "lingui extract --locale en-US",
-    "i18n:compile": "yarn i18n:extract && lingui compile",
-    "postinstall": "yarn contracts:compile && yarn i18n:compile",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=./custom-test-env.js",
-    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
-    "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
-    "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos"
   },
   "browserslist": {
     "production": [
