@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-12-16 20:07\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "<0/>דולר"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "(${0})"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(מקסימום)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "אפשר לפרוטוקול Uniswap להשתמש ב- {0}"
 msgid "Allowed"
 msgstr "מוּתָר"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "מותר החלקה"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "כמות"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "אוטומטי"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "נתב אוטומטי"
+msgid "Auto Router API"
+msgstr "ממשק API של נתב אוטומטי"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "מאזן:"
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "מאזן: {0} {1}"
+msgid "Balance: {0}"
+msgstr "יתרה: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "הטוב ביותר לזוגות יציבים."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "הטוב ביותר עבור זוגות יציבים מאוד."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "מסלול המחיר הטוב ביותר עולה ~{formattedGasPriceString} בדלק."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "שגיאה בהתחברות. נסה לרענן את הדף."
 msgid "Error importing list"
 msgstr "שגיאה בייבוא הרשימה"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "ההערכה עשויה להשתנות עקב הגדרות הגז בארנק שלך"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "עמלת רשת משוערת"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "יצא לפועל"
@@ -748,6 +757,10 @@ msgstr "יצא לפועל"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "תוצאות מורחבות מרשימות אסימון לא פעילות"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "פלט צפוי"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "שכבת עמלה"
 msgid "Fee tier"
 msgstr "שכבת שכר טרחה"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "משיג את המחיר הטוב ביותר..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "ל"
@@ -785,7 +802,6 @@ msgstr "ל"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "עבור כל מאגר המוצג למטה, לחץ על העבר כדי להסיר את הנזילות שלך מ- Uniswap V2 והפקד אותו ל- Uniswap V3."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "מ"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "למד אודות מתן נזילות"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "למד עוד"
 
@@ -953,10 +970,6 @@ msgstr "נושא קל"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "נְזִילוּת"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "עמלת ספק נזילות"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "עמוס"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "טוען"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAX"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "חסרות תלות"
 msgid "More"
 msgstr "יותר"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "עמלת רשת"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "אזהרת רשת"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "עמלות הרשת עולות על 50% מסכום ההחלפה!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "סקירת מאגרים"
 msgid "Preview"
 msgstr "תצוגה מקדימה"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "מחיר"
@@ -1536,6 +1559,7 @@ msgstr "אספקת {0} {1} ו {2} {3}"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "לְהַחלִיף"
 
@@ -1593,6 +1617,18 @@ msgstr "האפליקציה רושם סטטיסטיקות שימוש אנונימ
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "האפליקציה אוספת בצורה מאובטחת את כתובת הארנק שלך ומשתפת אותה עם TRM Labs Inc. מסיבות סיכון ותאימות."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "עלות שליחת העסקה הזו היא יותר ממחצית הערך של סכום הקלט."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "סכום הגז המהיר הנוכחי לשליחת עסקה ב-L1. עמלות הגז משולמות במטבע המקומי של Ethereum Ether (ETH) ונקובות ב-gwei."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "ההפרש המשוער בין ערכי הדולר של סכומי קלט ופלט."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "לא ניתן להעביר את אסימון הקלט. יכול להיות שיש בעיה באסימון הקלט."
@@ -1600,6 +1636,10 @@ msgstr "לא ניתן להעביר את אסימון הקלט. יכול להיו
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "מחיר השוק הוא מחוץ לטווח המחירים שצוין. הפקדת נכס יחיד בלבד."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "מספר החסימה העדכני ביותר ברשת זו. המחירים מתעדכנים בכל בלוק."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "יש לאתחל את המאגר הזה לפני שתוכל להוסיף נזילות. כדי לאתחל, בחר מחיר התחלתי לבריכה. לאחר מכן, הזן את טווח מחירי הנזילות ואת סכום ההפקדה. דמי הגז יהיו גבוהים מהרגיל עקב עסקת האתחול."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "מסלול זה מייעל את המחיר שלך על ידי התחשבות במסלולים מפוצלים, כשות מרובות ועלויות גז."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "מסלול זה מייעל את התפוקה הכוללת שלך על ידי התחשבות במסלולים מפוצלים, ריבוי דילוגים ועלות הגז של כל שלב."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "עסקה זו לא תצליח גם בגלל תנועת מחירים או
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "טיפ: אסימונים מותאמים אישית נשמרים באופן מקומי בדפדפן שלך"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "סך ההפקדות"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "נתיב מסחר"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "פרטי העברה"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "רשימת עדכונים"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "השתמש בממשק ה- Uniswap Labs כדי לקבל תמחור טוב יותר דרך מסלול יעיל יותר."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "השתמש בממשק ה-API של Uniswap Labs כדי לקבל הצעות מחיר מהירות יותר."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "מִשׁתַמֵשׁ"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "V2 אינו זמין בשכבה 2. עבור לשכבה 1 אתריום."
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "נזילות V2"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "ייתכן שאיבדת את חיבור הרשת שלך, או {label} מ
 msgid "You may have lost your network connection."
 msgstr "יכול להיות שאיבדת את חיבור הרשת שלך."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "אתה יכול לשקול להמתין עד שדמי הרשת יורדים כדי להשלים את העסקה הזו."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "עליך לחבר חשבון."
@@ -2236,6 +2267,10 @@ msgstr "העסקאות שלך יופיעו כאן ..."
 msgid "Your unclaimed UNI"
 msgstr "ה-UNI שלך לא נדרש"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "לאחר החלקה"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "לְאַשֵׁר"
@@ -2243,6 +2278,10 @@ msgstr "לְאַשֵׁר"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "עבור {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "שכבת שכר טרחה של {0}"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% בריכה"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "בחר {0}"
@@ -2417,10 +2460,6 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} לכל {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

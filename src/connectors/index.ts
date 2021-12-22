@@ -70,4 +70,5 @@ export const walletlink = new WalletLinkConnector({
   url: NETWORK_URLS[SupportedChainId.MAINNET],
   appName: 'Uniswap',
   appLogoUrl: UNISWAP_LOGO_URL,
+  supportedChainIds: [SupportedChainId.MAINNET],
 })

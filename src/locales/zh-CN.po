@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-30 02:11\n"
+"PO-Revision-Date: 2021-12-19 14:07\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/> 美元"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "(${0})"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(最大值)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "允许 Uniswap 调用您的 {0}"
 msgid "Allowed"
 msgstr "已允许"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "允许滑点"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "数额"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "自动"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "自动路由"
+msgid "Auto Router API"
+msgstr "自动路由 API"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "余额："
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "余额：{0} {1}"
+msgid "Balance: {0}"
+msgstr "余额： {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "适合稳定币币对。"
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "适合非常稳定的币对。"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "最佳价格路由消耗的gas约为 {formattedGasPriceString}"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "连接出错。请尝试刷新页面。"
 msgid "Error importing list"
 msgstr "导入列表出错"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "由于您的钱包 gas 设置，估计值可能有差异"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "预估网络费用"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "已执行"
@@ -748,6 +757,10 @@ msgstr "已执行"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "从待用代币列表中扩展出的结果"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "预期获得"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "手续费级别"
 msgid "Fee tier"
 msgstr "手续费级别"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "正在获取最优兑换率..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "赞成"
@@ -785,7 +802,6 @@ msgstr "赞成"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "对于下面显示的每个流动池，单击“迁移”以从 Uniswap V2 赎回您的流动资金，并将其注入到 Uniswap V3。"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "源自"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "了解提供流动性的相关信息"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "了解更多"
 
@@ -953,10 +970,6 @@ msgstr "浅色主题"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "流动资金"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "流动资金提供者手续费"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "已加载"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "正在加载"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "最大值"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "缺少依赖套件"
 msgid "More"
 msgstr "更多"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "网络费用"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "网络警告"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "网络费用超过兑换金额的50%！"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "流动池概览"
 msgid "Preview"
 msgstr "预览"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "兑换率"
@@ -1536,6 +1559,7 @@ msgstr "提供 {0} {1} 和 {2} {3}"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "兑换"
 
@@ -1593,6 +1617,18 @@ msgstr "该应用程序会匿名记录使用情况统计信息，以便不断改
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "出于风险和合规性原因，该应用程序会安全地收集您的钱包地址并与 TRM Labs Inc. 共享。"
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "发送此交易的成本是输入金额价值的一半以上。"
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "当前用于在 L1 上发送交易的快速 gas 量。 Gas 费用以 gwei 为单位，用以太坊本地货币以太币 (ETH) 来支付。"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "输入和输出金额的美元价值之间的估计差异。"
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "输入代币无法进行转账。输入代币可能有些问题。"
@@ -1600,6 +1636,10 @@ msgstr "输入代币无法进行转账。输入代币可能有些问题。"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "市场兑换率超出您指定的范围。将只注入单项代币。"
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "此网络上的最新区块编号。兑换率会每区块都更新。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "需要先初始化，然后再添加流动性。初始化时，请先选择起始价格，然后输入您的流动性价格范围和存款金额。因需进行初始化相关操作，Gas 费将比平时高一些。"
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "这个路由方案通过考虑拆分路由、多级路由和gas 成本等因素来优化价格。"
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "此路线通过考虑拆分路线、多跳和每一步的 gas 成本来优化您的总输出额。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "由于兑换率变动或代币带有转账时的扣除费用（fee-on-tr
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "提示：自定义代币信息会本地存储在您的浏览器中"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "存入总额"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "交易路由"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "交易明细"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "更新代币列表"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "使用 Uniswap Labs API 通过更有效的路由获得更好的定价。"
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "使用 Uniswap Labs API 获得更快的报价。"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "用户"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "V2 在 Layer 2 不可用。切换到以太坊 Layer 1。"
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "V2 流动资金"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "您的网络连接可能已断开，或者 {label} 可能正处停机状
 msgid "You may have lost your network connection."
 msgstr "您的网络连接可能断了。"
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "您可能要考虑等到网络费用下降才完成此交易。"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "您必须连接帐户。"
@@ -2236,6 +2267,10 @@ msgstr "您的交易将出现在这里..."
 msgid "Your unclaimed UNI"
 msgstr "您未领取的 UNI 代币"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "滑点后"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "确认"
@@ -2243,6 +2278,10 @@ msgstr "确认"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "为 {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% 手续费级别"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% 池"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "选择 {0}%"
@@ -2417,10 +2460,6 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} 每 {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

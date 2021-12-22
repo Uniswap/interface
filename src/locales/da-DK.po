@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-12-16 20:07\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "(${0})"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(Maks)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "Tillad Uniswap-protokollen at bruge din {0}"
 msgid "Allowed"
 msgstr "Tilladt"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "Tilladt glidning"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Beløb"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "Automatisk"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "Auto router"
+msgid "Auto Router API"
+msgstr "Auto Router API"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "Saldo:"
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "Saldo: {0} {1}"
+msgid "Balance: {0}"
+msgstr "Saldo: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "Bedst for stabile par."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "Bedst til meget stabile par."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "Bedste pris rute koster ~{formattedGasPriceString} i gas."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "Der opstod en fejl. Prøv at opdatere siden."
 msgid "Error importing list"
 msgstr "Fejl ved import af liste"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Estimatet kan variere på grund af dine pengepung-gasindstillinger"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Estimeret netværksgebyr"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Henrettet"
@@ -748,6 +757,10 @@ msgstr "Henrettet"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Ekspanderede resultater fra inaktive token-lister"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Forventet output"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "Gebyrniveau"
 msgid "Fee tier"
 msgstr "Gebyrniveau"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Får den bedste pris..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Til"
@@ -785,7 +802,6 @@ msgstr "Til"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "For hver pulje vist nedenfor skal du klikke på migrer for at fjerne din likviditet fra Uniswap V2 og indsætte den i Uniswap V3."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "Fra"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "Lær om levering af likviditet"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Lær mere"
 
@@ -953,10 +970,6 @@ msgstr "Let tema"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Likviditet"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "Gebyr for likviditetsudbyder"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "Indlæst"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "Indlæser"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAKS"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "Manglende afhængigheder"
 msgid "More"
 msgstr "Mere"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Netværksgebyr"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Netværksadvarsel"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Netværksgebyrer overstiger 50 % af byttebeløbet!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "Puljeoversigt"
 msgid "Preview"
 msgstr "Eksempel"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Pris"
@@ -1536,6 +1559,7 @@ msgstr "Forsyning {0} {1} og {2} {3}"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "Byt"
 
@@ -1593,6 +1617,18 @@ msgstr "Appen logger anonymiseret brugsstatistik for at forbedre sig over tid."
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Appen indsamler sikkert din tegnebogsadresse og deler den med TRM Labs Inc. af risiko- og overholdelsesårsager."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Omkostningerne ved at sende denne transaktion er mere end halvdelen af værdien af det indtastede beløb."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "Det aktuelle hurtiggasbeløb for at sende en transaktion på L1. Gasgebyrer betales i Ethereums oprindelige valuta Ether (ETH) og denomineret i gwei."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Den estimerede forskel mellem USD-værdierne for input- og outputbeløb."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Input-token kan ikke overføres. Der kan være et problem med input-token."
@@ -1600,6 +1636,10 @@ msgstr "Input-token kan ikke overføres. Der kan være et problem med input-toke
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Markedsprisen ligger uden for din angivne prisklasse. Kun enkeltindskud."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Det seneste bloknummer på dette netværk. Priserne opdateres på hver blok."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "Denne pulje skal initialiseres, før du kan tilføje likviditet. For at initialisere skal du vælge en startpris for puljen. Indtast derefter dit likviditetsprisklasse og indbetalingsbeløb. Gasafgifter vil være højere end normalt på grund af initialiseringstransaktionen."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Denne rute optimerer din pris ved at overveje opdelte ruter, flere humle- og gasomkostninger."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Denne rute optimerer dit samlede output ved at overveje opdelte ruter, flere hop og gasomkostningerne for hvert trin."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "Denne transaktion lykkes ikke på grund af prisbevægelse eller gebyr ve
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Tip: Brugerdefinerede tokens gemmes lokalt i din browser"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "Indlån i alt"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Handelsrute"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "overførselsdetaljer"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "Opdater liste"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Brug Uniswap Labs API til at få bedre priser via en mere effektiv rute."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Brug Uniswap Labs API til at få hurtigere tilbud."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Bruger"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "V2 er ikke tilgængelig på lag 2. Skift til lag 1 Ethereum."
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "V2-likviditet"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "Du har muligvis mistet din netværksforbindelse, eller {label} muligvis 
 msgid "You may have lost your network connection."
 msgstr "Du har muligvis mistet din netværksforbindelse."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "Du kan overveje at vente, indtil netværksgebyrerne falder, for at gennemføre denne transaktion."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Du skal forbinde en konto."
@@ -2236,6 +2267,10 @@ msgstr "Dine transaktioner vises her..."
 msgid "Your unclaimed UNI"
 msgstr "Din ikke-krævede UNI"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "efter glidning"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "bekræft"
@@ -2243,6 +2278,10 @@ msgstr "bekræft"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "for {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "{0} %"
 msgid "{0}% fee tier"
 msgstr "{0}% gebyrniveau"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% pulje"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% vælg"
@@ -2417,10 +2460,6 @@ msgstr "{percentForSlider} %"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} pr. {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
