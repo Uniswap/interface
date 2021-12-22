@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-16 20:07\n"
+"PO-Revision-Date: 2021-12-22 19:47\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -39,10 +39,6 @@ msgstr "(${0})"
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(Bekyk op Explorer)"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "(claim)"
-msgstr "(eis)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -283,10 +279,6 @@ msgstr "Auto Router API"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Beskikbaar vir deposito: {0}"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Balance:"
-msgstr "Saldo:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -618,6 +610,7 @@ msgid "Deposit Amounts"
 msgstr "Depositobedrae"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
 msgstr "Deposito bates"
 
@@ -723,6 +716,11 @@ msgstr "Voer geldige lysligging in"
 msgid "Enter valid token address"
 msgstr "Voer geldige tekenadres in"
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "Voer {0} bedrag in"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -749,6 +747,10 @@ msgstr "Skatting kan verskil as gevolg van jou beursie gas instellings"
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
 msgstr "Geskatte netwerkfooi"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
@@ -777,10 +779,6 @@ msgstr "Verstreke"
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Verken gewilde poele op Uniswap Analytics."
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Explorer"
-msgstr "Verkenner"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -900,6 +898,8 @@ msgstr "Installeer Metamask"
 msgid "Insufficient liquidity for this trade."
 msgstr "Onvoldoende likiditeit vir hierdie handel."
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -943,6 +943,7 @@ msgstr "Taal"
 msgid "Learn"
 msgstr "Leer"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
 msgstr "Leer meer"
@@ -1199,8 +1200,8 @@ msgid "Optimism Gateway"
 msgstr "Optimisme poort"
 
 #: src/components/DowntimeWarning/index.tsx
-msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimistiese Ethereum is in Beta en kan stilstand ondervind. Optimisme verwag dat beplande stilstand die netwerk in die nabye toekoms sal opgradeer. Tydens stilstand verdien u pos geen fooie nie en kan u nie likiditeit verwyder nie. <0> Lees meer.</0>"
+msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimisme is in Beta en kan stilstand ervaar. Optimisme verwag beplande stilstand om die netwerk in die nabye toekoms op te gradeer. Tydens stilstand sal jou posisie nie fooie verdien nie en jy sal nie likiditeit kan verwyder nie. <0>Lees meer.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1247,9 +1248,22 @@ msgstr "Maak asseblief verbinding met Layer 1 Ethereum"
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Verbind asseblief die toepaslike Ethereum-netwerk."
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
+msgstr "Behandel dit asseblief as 'n beta-vrystelling en leer oor die risiko's voordat u {label}. Om te begin handel dryf op {label}, oorbrug eers jou bates van L1 na L2."
+
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Tik die woord \"{confirmWord}\" in om die kundige modus te aktiveer."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr "Veelhoekbrug"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr "Veelhoekskandering"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1622,8 +1636,8 @@ msgid "The cost of sending this transaction is more than half of the value of th
 msgstr "Die koste om hierdie transaksie te stuur is meer as die helfte van die waarde van die insetbedrag."
 
 #: src/components/Header/Polling.tsx
-msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
-msgstr "Die huidige vinnige gasbedrag vir die stuur van 'n transaksie op L1. Gasfooie word in Ethereum se inheemse geldeenheid Ether (ETH) betaal en in gwei gedenomineer."
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
+msgstr "Die huidige vinnige gasbedrag vir die stuur van 'n transaksie op L1. Gasfooie word in Ethereum se inheemse geldeenheid Ether (ETH) betaal en in GWEI gedenomineer."
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1720,8 +1734,9 @@ msgid "To (at least)"
 msgstr "Aan (ten minste)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Om te begin handel dryf op {0}, oorbrug eers jou bates van L1 na L2. Behandel dit asseblief as 'n beta-vrystelling en leer oor die risiko's voordat u {1}."
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To start trading on {label}, first bridge your assets from L1 to L2."
+msgstr "Om te begin handel dryf op {label}, oorbrug eers jou bates van L1 na L2."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1738,10 +1753,6 @@ msgstr "Tekens uit onaktiewe lyste. Voer spesifieke tekens hieronder in of klik 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Top poele"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Total Supply"
-msgstr "Totale Verskaffing"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -1799,14 +1810,6 @@ msgstr "Skakel kundigheidsmodus aan"
 msgid "UNI has arrived"
 msgstr "UNI het aangebreek"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "UNI in omloop:"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "UNI-prys:"
-
 #: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "UNI-tekens verteenwoordig stemgeregtigde aandele in Uniswap-bestuur. U kan self oor elke voorstel stem of u stemme aan 'n derde party delegeer."
@@ -1831,10 +1834,6 @@ msgstr "Onopgeëiste UNI"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
 msgstr "Onopgeëiste fooie"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Unclaimed:"
-msgstr "Onopgeëiste:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -1873,8 +1872,8 @@ msgid "Uniswap migration contract↗"
 msgstr "Onttrek migrasie kontrak↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
-msgstr "Ontruil op {0}"
+msgid "Uniswap on {label}"
+msgstr "Verruil op {label}"
 
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
@@ -1916,8 +1915,8 @@ msgid "Unwrap"
 msgstr "Maak oop"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Unwrap <0/> to ETH"
-msgstr "Pak <0/> uit na ETH"
+msgid "Unwrap <0/> to {0}"
+msgstr "Pak <0/> tot {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -1947,10 +1946,6 @@ msgstr "V2 likiditeit"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "V3 {0} prys:"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "Kyk na UNI Analytics"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -2099,8 +2094,8 @@ msgid "Wrap"
 msgstr "Draai toe"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Wrap <0/> to WETH"
-msgstr "Draai <0/> om met WETH"
+msgid "Wrap <0/> to {0}"
+msgstr "Wikkel <0/> tot {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2175,10 +2170,6 @@ msgstr "U sal ook fooie wat u uit hierdie posisie verdien, invorder."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "U sal ontvang"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "U UNI-uiteensetting"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2267,6 +2258,10 @@ msgstr "U transaksies sal hier verskyn ..."
 msgid "Your unclaimed UNI"
 msgstr "U onopgeëiste UNI"
 
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Your wallet does not support switching networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "Jou beursie ondersteun nie omskakeling van netwerke vanaf die Uniswap-koppelvlak nie. Om Uniswap op {0}te gebruik, moet jy die netwerk in jou beursie verander."
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "na gly"
@@ -2336,7 +2331,6 @@ msgstr "{0} Persoonlike tekens"
 msgid "{0} Deposited"
 msgstr "{0} gestort"
 
-#: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
@@ -2400,6 +2394,10 @@ msgstr "{0} tekens"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Prys:"
+
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr "{0} {nativeCurrencySymbol}"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"

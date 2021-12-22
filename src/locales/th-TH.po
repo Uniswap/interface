@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-16 20:07\n"
+"PO-Revision-Date: 2021-12-22 19:47\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -39,10 +39,6 @@ msgstr "(${0})"
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(ดูใน Explorer)"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "(claim)"
-msgstr "(เรียกร้อง)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -283,10 +279,6 @@ msgstr "ออโต้เราเตอร์ API"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "สามารถฝากได้: {0}"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Balance:"
-msgstr "สมดุล:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -618,6 +610,7 @@ msgid "Deposit Amounts"
 msgstr "จำนวนเงินฝาก"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
 msgstr "ฝากทรัพย์สิน"
 
@@ -723,6 +716,11 @@ msgstr "ป้อนตำแหน่งรายการที่ถูกต
 msgid "Enter valid token address"
 msgstr "ป้อนที่อยู่โทเค็นที่ถูกต้อง"
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "ใส่ {0} จำนวน"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -749,6 +747,10 @@ msgstr "ค่าประมาณอาจแตกต่างกันเน
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
 msgstr "ค่าธรรมเนียมเครือข่ายโดยประมาณ"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr "อีเธอร์สแกน"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
@@ -777,10 +779,6 @@ msgstr "หมดอายุ"
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "สำรวจกลุ่มยอดนิยมบน Uniswap Analytics"
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Explorer"
-msgstr "สำรวจ"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -900,6 +898,8 @@ msgstr "ติดตั้ง Metamask"
 msgid "Insufficient liquidity for this trade."
 msgstr "สภาพคล่องไม่เพียงพอสำหรับการค้านี้"
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -943,6 +943,7 @@ msgstr "ภาษา"
 msgid "Learn"
 msgstr "เรียนรู้"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
 msgstr "เรียนรู้เพิ่มเติม"
@@ -1199,8 +1200,8 @@ msgid "Optimism Gateway"
 msgstr "เกตเวย์การมองในแง่ดี"
 
 #: src/components/DowntimeWarning/index.tsx
-msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Ethereum ในแง่ดีอยู่ในเบต้าและอาจประสบปัญหาการหยุดทำงาน การมองในแง่ดีคาดว่าการหยุดทำงานตามแผนเพื่ออัพเกรดเครือข่ายในอนาคตอันใกล้นี้ ในช่วงหยุดทำงาน โพซิชั่นของคุณจะไม่ได้รับค่าธรรมเนียมและคุณจะไม่สามารถลบสภาพคล่องได้ <0>อ่านต่อ.</0>"
+msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "การมองในแง่ดีอยู่ในช่วงเบต้าและอาจประสบปัญหาการหยุดทำงาน การมองในแง่ดีคาดว่าการหยุดทำงานตามแผนจะอัพเกรดเครือข่ายในอนาคตอันใกล้ ในช่วงหยุดทำงาน โพซิชั่นของคุณจะไม่ได้รับค่าธรรมเนียมและคุณจะไม่สามารถลบสภาพคล่องได้ <0>อ่านเพิ่มเติม.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1247,9 +1248,22 @@ msgstr "โปรดเชื่อมต่อกับ Layer 1 Ethereum"
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "โปรดเชื่อมต่อกับเครือข่าย Ethereum ที่เหมาะสม"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
+msgstr "โปรดถือเป็นรุ่นเบต้าและเรียนรู้เกี่ยวกับความเสี่ยงก่อนใช้ {label}ในการเริ่มต้นซื้อขายในวันที่ {label}แรกให้เชื่อมโยงสินทรัพย์ของคุณจาก L1 ถึง L2"
+
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "โปรดพิมพ์คำว่า \"{confirmWord}\" เพื่อเปิดใช้งานโหมดผู้เชี่ยวชาญ"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr "สะพานรูปหลายเหลี่ยม"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr "รูปหลายเหลี่ยม"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1622,8 +1636,8 @@ msgid "The cost of sending this transaction is more than half of the value of th
 msgstr "ค่าใช้จ่ายในการส่งธุรกรรมนี้มากกว่าครึ่งหนึ่งของมูลค่าของจำนวนเงินที่ป้อน"
 
 #: src/components/Header/Polling.tsx
-msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
-msgstr "ปริมาณก๊าซที่รวดเร็วในปัจจุบันสำหรับการส่งธุรกรรมใน L1 ค่าธรรมเนียมก๊าซจะจ่ายในสกุลเงินท้องถิ่นของ Ethereum (ETH) และคิดเป็น gwei"
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
+msgstr "ปริมาณก๊าซที่รวดเร็วในปัจจุบันสำหรับการส่งธุรกรรมใน L1 ค่าธรรมเนียมก๊าซจะจ่ายในสกุลเงินท้องถิ่นของ Ethereum (ETH) และคิดเป็น GWEI"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1720,8 +1734,9 @@ msgid "To (at least)"
 msgstr "ถึง (อย่างน้อย)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "ในการเริ่มต้นซื้อขายบน {0}แรกให้เชื่อมโยงสินทรัพย์ของคุณจาก L1 ถึง L2 โปรดถือว่าเป็นรุ่นเบต้าและเรียนรู้เกี่ยวกับความเสี่ยงก่อนใช้ {1}"
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To start trading on {label}, first bridge your assets from L1 to L2."
+msgstr "ในการเริ่มต้นซื้อขายบน {label}แรกให้เชื่อมโยงสินทรัพย์ของคุณจาก L1 ถึง L2"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1738,10 +1753,6 @@ msgstr "โทเค็นจากรายการที่ไม่ใช้
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "สระว่ายน้ำยอดนิยม"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Total Supply"
-msgstr "อุปทานทั้งหมด"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -1799,14 +1810,6 @@ msgstr "เปิดโหมดผู้เชี่ยวชาญ"
 msgid "UNI has arrived"
 msgstr "UNI มาแล้วจ้า"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "UNI หมุนเวียน:"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "ราคายูนิ:"
-
 #: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "โทเค็นของ UNI เป็นตัวแทนของการลงคะแนนเสียงในการกำกับดูแล Uniswap คุณสามารถลงคะแนนในแต่ละข้อเสนอด้วยตัวเองหรือมอบสิทธิ์การโหวตของคุณให้กับบุคคลที่สาม"
@@ -1831,10 +1834,6 @@ msgstr "UNI . ที่ไม่มีการอ้างสิทธิ์"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
 msgstr "ค่าธรรมเนียมที่ไม่มีการอ้างสิทธิ์"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Unclaimed:"
-msgstr "ไม่มีการอ้างสิทธิ์:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -1873,8 +1872,8 @@ msgid "Uniswap migration contract↗"
 msgstr "สัญญาการโยกย้าย Uniswap↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
-msgstr "Uniswap บน {0}"
+msgid "Uniswap on {label}"
+msgstr "Uniswap บน {label}"
 
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
@@ -1916,8 +1915,8 @@ msgid "Unwrap"
 msgstr "แกะ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Unwrap <0/> to ETH"
-msgstr "แกะ <0/> ไปยัง ETH"
+msgid "Unwrap <0/> to {0}"
+msgstr "แกะ <0/> ถึง {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -1947,10 +1946,6 @@ msgstr "สภาพคล่อง V2"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "V3 {0} ราคา:"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "ดู UNI Analytics"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -2099,8 +2094,8 @@ msgid "Wrap"
 msgstr "ห่อ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Wrap <0/> to WETH"
-msgstr "ตัด <0/> ถึง WETH"
+msgid "Wrap <0/> to {0}"
+msgstr "ตัด <0/> ถึง {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2175,10 +2170,6 @@ msgstr "คุณจะเก็บค่าธรรมเนียมที่
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "คุณจะได้รับ"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "รายละเอียด UNI ของคุณ"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2267,6 +2258,10 @@ msgstr "ธุรกรรมของคุณจะปรากฏที่น
 msgid "Your unclaimed UNI"
 msgstr "UNI . ที่ไม่มีการอ้างสิทธิ์ของคุณ"
 
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Your wallet does not support switching networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "กระเป๋าเงินของคุณไม่รองรับการสลับเครือข่ายจากอินเทอร์เฟซ Uniswap ในการใช้ Uniswap บน {0}คุณต้องเปลี่ยนเครือข่ายในกระเป๋าเงินของคุณ"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "หลังการลื่นไถล"
@@ -2336,7 +2331,6 @@ msgstr "{0} โทเค็นที่กำหนดเอง"
 msgid "{0} Deposited"
 msgstr "{0} ฝากแล้ว"
 
-#: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
@@ -2400,6 +2394,10 @@ msgstr "{0} โทเค็น"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} ราคา:"
+
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr "{0} {nativeCurrencySymbol}"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"

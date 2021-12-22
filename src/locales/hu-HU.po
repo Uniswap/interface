@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-16 20:07\n"
+"PO-Revision-Date: 2021-12-22 19:47\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -39,10 +39,6 @@ msgstr "(${0})"
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(Megtekintés az Intézőben)"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "(claim)"
-msgstr "(követel)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -283,10 +279,6 @@ msgstr "Auto Router API"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Letétbe helyezhető: {0}"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Balance:"
-msgstr "Egyenleg:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -618,6 +610,7 @@ msgid "Deposit Amounts"
 msgstr "Letéti összegek"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
 msgstr "Betéti eszközök"
 
@@ -723,6 +716,11 @@ msgstr "Adja meg az érvényes lista helyét"
 msgid "Enter valid token address"
 msgstr "Adja meg az érvényes token címet"
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "Adjon meg {0} összeget"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -749,6 +747,10 @@ msgstr "A becslés a pénztárca gázbeállításaitól függően eltérő lehet
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
 msgstr "Becsült hálózati díj"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
@@ -778,10 +780,6 @@ msgstr "Lejárt"
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Fedezze fel az Uniswap Analytics népszerű pooljait."
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Explorer"
-msgstr "Felfedező"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -901,6 +899,8 @@ msgstr "Metamask telepítése"
 msgid "Insufficient liquidity for this trade."
 msgstr "Nincs elegendő likviditás ehhez a kereskedéshez."
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -944,6 +944,7 @@ msgstr "Nyelv"
 msgid "Learn"
 msgstr "Tanulás"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
 msgstr "Tudj meg többet"
@@ -1200,8 +1201,8 @@ msgid "Optimism Gateway"
 msgstr "Optimizmus átjáró"
 
 #: src/components/DowntimeWarning/index.tsx
-msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Az optimista Ethereum bétaverzióban van, és leállhat. Az optimizmus a tervezett leállásoktól a közeljövőben a hálózat korszerűsítését várja. Az állásidőben pozíciója nem jár díjakkal, és nem tudja eltávolítani a likviditást. <0> További információ.</0>"
+msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Az optimizmus béta állapotban van, és leállások is előfordulhatnak. Az Optimism arra számít, hogy a tervezett leállások a közeljövőben frissítik a hálózatot. Az állásidő alatt pozíciója nem fog díjat fizetni, és nem tudja eltávolítani a likviditást. <0>Olvass tovább.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1248,9 +1249,22 @@ msgstr "Kérjük, csatlakozzon az 1. réteg Ethereumhoz"
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Kérjük, csatlakozzon a megfelelő Ethereum hálózathoz."
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
+msgstr "Kérjük, kezelje ezt béta kiadásként, és a {label}használata előtt tájékozódjon a kockázatokról. {label}kereskedés megkezdéséhez először kapcsolja át eszközeit L1-ről L2-re."
+
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Írja be a \"{confirmWord}\" szót a szakértői mód engedélyezéséhez."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr "Sokszög híd"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr "Polygonscan"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1623,8 +1637,8 @@ msgid "The cost of sending this transaction is more than half of the value of th
 msgstr "A tranzakció elküldésének költsége több mint a fele a bevitt összeg értékének."
 
 #: src/components/Header/Polling.tsx
-msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
-msgstr "Az aktuális gyorsgáz-összeg az L1-es tranzakció elküldéséhez. A gázdíjat az Ethereum natív pénznemében, Etherben (ETH) kell fizetni, és gwei-ben denomináltuk."
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
+msgstr "Az aktuális gyorsgáz-összeg az L1-es tranzakció elküldéséhez. A gázdíjat az Ethereum natív pénznemében, Etherben (ETH) kell fizetni, és GWEI-ben denominálják."
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1721,8 +1735,9 @@ msgid "To (at least)"
 msgstr "(Legalább)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "{0}kezdje meg a kereskedést, először hidalja át eszközeit L1-ről L2-re. Kérjük, kezelje ezt béta kiadásként, és az {1}használata előtt tájékozódjon a kockázatokról."
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To start trading on {label}, first bridge your assets from L1 to L2."
+msgstr "{label}kezdje meg a kereskedést, először hidalja át eszközeit L1-ről L2-re."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1739,10 +1754,6 @@ msgstr "Tokenek az inaktív listákról. Importáljon konkrét tokeneket az alá
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Legjobb poolok"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Total Supply"
-msgstr "Teljes kínálat"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -1800,14 +1811,6 @@ msgstr "Kapcsolja be a Szakértő módot"
 msgid "UNI has arrived"
 msgstr "Megérkezett az UNI"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "Forgalomban lévő UNI:"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "UNI ár:"
-
 #: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Az UNI tokenek szavazati részvényeket képviselnek az Uniswap irányításában. Az egyes javaslatokról saját maga is szavazhat, vagy szavazatait átruházhatja egy harmadik félre."
@@ -1832,10 +1835,6 @@ msgstr "Nem igényelt UNI"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
 msgstr "Nem igényelt díjak"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Unclaimed:"
-msgstr "Nem igényelt:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -1874,8 +1873,8 @@ msgid "Uniswap migration contract↗"
 msgstr "Uniswap migrációs szerződés↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
-msgstr "Lecserélés a {0}"
+msgid "Uniswap on {label}"
+msgstr "Unswap {label}"
 
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
@@ -1917,8 +1916,8 @@ msgid "Unwrap"
 msgstr "Kicsomagolás"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Unwrap <0/> to ETH"
-msgstr "Csomagolja ki a (z) <0/> gombot ETH -ra"
+msgid "Unwrap <0/> to {0}"
+msgstr "Kicsomagolás <0/> tól {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -1948,10 +1947,6 @@ msgstr "V2 likviditás"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "V3 {0} ár:"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "UNI analitika megtekintése"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -2100,8 +2095,8 @@ msgid "Wrap"
 msgstr "Becsomagolás"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Wrap <0/> to WETH"
-msgstr "Tekerje a <0/> elemet WETH -re"
+msgid "Wrap <0/> to {0}"
+msgstr "Tekerje <0/> tól {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2176,10 +2171,6 @@ msgstr "Ezen a pozíción megszerzett díjakat is beszedi."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Kapni fog"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "Saját UNI lebontása"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2268,6 +2259,10 @@ msgstr "A tranzakciói itt jelennek meg..."
 msgid "Your unclaimed UNI"
 msgstr "Nem igényelt UNI"
 
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Your wallet does not support switching networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "Pénztárcája nem támogatja a hálózatváltást az Uniswap interfészről. Az Uniswap {0}történő használatához meg kell változtatnia a hálózatot a pénztárcájában."
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "csúszás után"
@@ -2337,7 +2332,6 @@ msgstr "{0} egyedi token"
 msgid "{0} Deposited"
 msgstr "{0} letétbe helyezve"
 
-#: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
@@ -2402,6 +2396,10 @@ msgstr "{0} token"
 msgid "{0} {1} Price:"
 msgstr "{0} {1} á\n"
 "r:"
+
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr "{0} {nativeCurrencySymbol}"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
