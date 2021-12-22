@@ -455,7 +455,7 @@ function About() {
 
                     <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
                       <Text fontWeight="600" fontSize="24px">
-                        28+
+                        33+
                       </Text>
                       <Text color={theme.subText} marginTop="4px" fontSize="14px">
                         <Trans>DEXs</Trans>
