@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 
-import { WETH9_EXTENDED } from '../constants/tokens'
+import { WETH_EXTENDED } from '../constants/tokens'
 import { tryParseAmount } from '../state/swap/hooks'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -36,7 +36,7 @@ export default function useWrapCallback(
 
   return useMemo(() => {
     if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
-    const weth = WETH9_EXTENDED[chainId]
+    const weth = WETH_EXTENDED[chainId]
     if (!weth) return NOT_APPLICABLE
 
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
@@ -60,7 +60,7 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient ETH balance' : 'Enter ETH amount',
+        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient XDC balance' : 'Enter XDC amount',
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {

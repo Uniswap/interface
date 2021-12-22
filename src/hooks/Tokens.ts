@@ -5,7 +5,8 @@ import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
-import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
+import { ExtendedXDC } from '../constants/extended-xdc'
+import { WETH_EXTENDED } from '../constants/tokens'
 import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
 import { TokenAddressMap, useUnsupportedTokenList } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
@@ -181,18 +182,22 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
 
 export function useCurrency(currencyId: string | null | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
-  const isETH = currencyId?.toUpperCase() === 'ETH'
-  const token = useToken(isETH ? undefined : currencyId)
+  const isXDC = currencyId?.toUpperCase() === 'XDC'
+  const token = useToken(isXDC ? undefined : currencyId)
   const extendedEther = useMemo(
     () =>
       chainId
-        ? ExtendedEther.onChain(chainId)
-        : // display mainnet when not connected
-          ExtendedEther.onChain(SupportedChainId.MAINNET),
+        ? ExtendedXDC.onChain(chainId)
+        : // display testnet when not connected
+          ExtendedXDC.onChain(SupportedChainId.TESTNET),
     [chainId]
   )
-  const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
-  if (currencyId === null || currencyId === undefined) return currencyId
-  if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
-  return isETH ? extendedEther : token
+  const weth = chainId ? WETH_EXTENDED[chainId] : undefined
+  if (currencyId === null || currencyId === undefined) {
+    return currencyId
+  }
+  if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) {
+    return weth
+  }
+  return isXDC ? extendedEther : token
 }

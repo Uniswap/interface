@@ -98,13 +98,13 @@ function WrapSummary({ info: { currencyAmountRaw, unwrapped } }: { info: WrapTra
     return (
       <Trans>
         Unwrap <FormattedCurrencyAmount rawAmount={currencyAmountRaw} symbol={'WETH'} decimals={18} sigFigs={6} /> to
-        ETH
+        XDC
       </Trans>
     )
   } else {
     return (
       <Trans>
-        Wrap <FormattedCurrencyAmount rawAmount={currencyAmountRaw} symbol={'ETH'} decimals={18} sigFigs={6} /> to WETH
+        Wrap <FormattedCurrencyAmount rawAmount={currencyAmountRaw} symbol={'XDC'} decimals={18} sigFigs={6} /> to WXDC
       </Trans>
     )
   }

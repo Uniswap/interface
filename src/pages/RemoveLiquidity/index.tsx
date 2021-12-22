@@ -22,7 +22,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import Slider from '../../components/Slider'
 import { Dots } from '../../components/swap/styleds'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { WETH9_EXTENDED } from '../../constants/tokens'
+import { WETH_EXTENDED } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
@@ -388,16 +388,16 @@ export default function RemoveLiquidity({
   const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      WETH9_EXTENDED[chainId] &&
-      (currencyA?.equals(WETH9_EXTENDED[chainId]) || currencyB?.equals(WETH9_EXTENDED[chainId]))
+      WETH_EXTENDED[chainId] &&
+      (currencyA?.equals(WETH_EXTENDED[chainId]) || currencyB?.equals(WETH_EXTENDED[chainId]))
   )
 
   const handleSelectCurrencyA = useCallback(
     (currency: Currency) => {
       if (currencyIdB && currencyId(currency) === currencyIdB) {
-        history.push(`/remove/v2/${currencyId(currency)}/${currencyIdA}`)
+        history.push(`/remove/${currencyId(currency)}/${currencyIdA}`)
       } else {
-        history.push(`/remove/v2/${currencyId(currency)}/${currencyIdB}`)
+        history.push(`/remove/${currencyId(currency)}/${currencyIdB}`)
       }
     },
     [currencyIdA, currencyIdB, history]
@@ -405,9 +405,9 @@ export default function RemoveLiquidity({
   const handleSelectCurrencyB = useCallback(
     (currency: Currency) => {
       if (currencyIdA && currencyId(currency) === currencyIdA) {
-        history.push(`/remove/v2/${currencyIdB}/${currencyId(currency)}`)
+        history.push(`/remove/${currencyIdB}/${currencyId(currency)}`)
       } else {
-        history.push(`/remove/v2/${currencyIdA}/${currencyId(currency)}`)
+        history.push(`/remove/${currencyIdA}/${currencyId(currency)}`)
       }
     },
     [currencyIdA, currencyIdB, history]
@@ -532,19 +532,19 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.isNative ? WETH9_EXTENDED[chainId].address : currencyIdA}/${
-                              currencyB?.isNative ? WETH9_EXTENDED[chainId].address : currencyIdB
+                            to={`/remove/${currencyA?.isNative ? WETH_EXTENDED[chainId].address : currencyIdA}/${
+                              currencyB?.isNative ? WETH_EXTENDED[chainId].address : currencyIdB
                             }`}
                           >
                             Receive WETH
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : currencyIdA}/${
-                              currencyB?.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : currencyIdB
+                            to={`/remove/${currencyA?.equals(WETH_EXTENDED[chainId]) ? 'XDC' : currencyIdA}/${
+                              currencyB?.equals(WETH_EXTENDED[chainId]) ? 'XDC' : currencyIdB
                             }`}
                           >
-                            Receive ETH
+                            Receive XDC
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

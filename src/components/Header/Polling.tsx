@@ -148,7 +148,7 @@ export default function Polling() {
                     text={
                       <Trans>
                         {`The current fast gas amount for sending a transaction on L1.
-                    Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei. `}
+                    Gas fees are paid in XinFin's native currency XDC and denominated in gwei.`}
                       </Trans>
                     }
                   >

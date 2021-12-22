@@ -13,7 +13,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
-import { ExtendedEther } from '../../constants/tokens'
+import { ExtendedXDC } from '../../constants/extended-xdc'
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
@@ -112,11 +112,12 @@ export function CurrencySearch({
 
   const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 
-  const ether = useMemo(() => chainId && ExtendedEther.onChain(chainId), [chainId])
+  const ether = useMemo(() => chainId && ExtendedXDC.onChain(chainId), [chainId])
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
-    if (s === '' || s === 'e' || s === 'et' || s === 'eth') {
+    if (s === '' || s === 'x' || s === 'xd' || s === 'xdc') {
+      console.log(ether)
       return ether ? [ether, ...filteredSortedTokens] : filteredSortedTokens
     }
     return filteredSortedTokens
@@ -148,7 +149,7 @@ export function CurrencySearch({
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         const s = debouncedQuery.toLowerCase().trim()
-        if (s === 'eth' && ether) {
+        if (s === 'xdc' && ether) {
           handleCurrencySelect(ether)
         } else if (filteredSortedTokensWithETH.length > 0) {
           if (

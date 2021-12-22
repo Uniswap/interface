@@ -1,7 +1,7 @@
-import { Ether, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 
-import { XSP_ADDRESS } from './addresses'
-import { CHAIN_INFO, SupportedChainId } from './chains'
+import { WXDC_ADDRESS, XSP_ADDRESS } from './addresses'
+import { SupportedChainId } from './chains'
 
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
@@ -106,32 +106,44 @@ export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.TESTNET]: new Token(SupportedChainId.MAINNET, XSP_ADDRESS[51], 18, 'TXSP', 'XSwapProtocol'),
 }
 
-export const WETH9_EXTENDED: { [chainId: number]: Token } = {
-  [SupportedChainId.MAINNET]: new Token(
-    SupportedChainId.MAINNET,
-    XSP_ADDRESS[SupportedChainId.MAINNET],
-    CHAIN_INFO[SupportedChainId.MAINNET].nativeCurrency.decimals,
-    CHAIN_INFO[SupportedChainId.MAINNET].nativeCurrency.symbol,
-    CHAIN_INFO[SupportedChainId.MAINNET].nativeCurrency.name
-  ),
-  [SupportedChainId.TESTNET]: new Token(
-    SupportedChainId.TESTNET,
-    XSP_ADDRESS[SupportedChainId.TESTNET],
-    CHAIN_INFO[SupportedChainId.TESTNET].nativeCurrency.decimals,
-    CHAIN_INFO[SupportedChainId.TESTNET].nativeCurrency.symbol,
-    CHAIN_INFO[SupportedChainId.TESTNET].nativeCurrency.name
-  ),
+export const WXDC_CONFIG: {
+  [chainId: number]: {
+    chainId: number
+    address: string
+    decimals: number
+    symbol: string
+    name: string
+  }
+} = {
+  [SupportedChainId.MAINNET]: {
+    chainId: SupportedChainId.MAINNET,
+    address: WXDC_ADDRESS[SupportedChainId.MAINNET],
+    decimals: 18,
+    symbol: 'WXDC',
+    name: 'Wrapped XDC',
+  },
+  [SupportedChainId.TESTNET]: {
+    chainId: SupportedChainId.TESTNET,
+    address: WXDC_ADDRESS[SupportedChainId.TESTNET],
+    decimals: 18,
+    symbol: 'WTXDC',
+    name: 'Wrapped TXDC',
+  },
 }
 
-export class ExtendedEther extends Ether {
-  public get wrapped(): Token {
-    if (this.chainId in WETH9_EXTENDED) return WETH9_EXTENDED[this.chainId]
-    throw new Error('Unsupported chain ID')
-  }
-
-  private static _cachedEther: { [chainId: number]: ExtendedEther } = {}
-
-  public static onChain(chainId: number): ExtendedEther {
-    return this._cachedEther[chainId] ?? (this._cachedEther[chainId] = new ExtendedEther(chainId))
-  }
+export const WETH_EXTENDED: { [chainId: number]: Token } = {
+  [SupportedChainId.MAINNET]: new Token(
+    WXDC_CONFIG[SupportedChainId.MAINNET].chainId,
+    WXDC_CONFIG[SupportedChainId.MAINNET].address,
+    WXDC_CONFIG[SupportedChainId.MAINNET].decimals,
+    WXDC_CONFIG[SupportedChainId.MAINNET].symbol,
+    WXDC_CONFIG[SupportedChainId.MAINNET].name
+  ),
+  [SupportedChainId.TESTNET]: new Token(
+    WXDC_CONFIG[SupportedChainId.TESTNET].chainId,
+    WXDC_CONFIG[SupportedChainId.TESTNET].address,
+    WXDC_CONFIG[SupportedChainId.TESTNET].decimals,
+    WXDC_CONFIG[SupportedChainId.TESTNET].symbol,
+    WXDC_CONFIG[SupportedChainId.TESTNET].name
+  ),
 }

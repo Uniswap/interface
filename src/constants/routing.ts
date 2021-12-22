@@ -2,11 +2,11 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 
 import { SupportedChainId } from './chains'
+import { ExtendedXDC } from './extended-xdc'
 import {
   AMPL,
   DAI,
   ETH2X_FLI,
-  ExtendedEther,
   FEI,
   FRAX,
   FXS,
@@ -18,7 +18,7 @@ import {
   USDC,
   USDT,
   WBTC,
-  WETH9_EXTENDED,
+  WETH_EXTENDED,
 } from './tokens'
 
 type ChainTokenList = {
@@ -30,7 +30,7 @@ type ChainCurrencyList = {
 }
 
 const WETH_ONLY: ChainTokenList = Object.fromEntries(
-  Object.entries(WETH9_EXTENDED).map(([key, value]) => [key, [value]])
+  Object.entries(WETH_EXTENDED).map(([key, value]) => [key, [value]])
 )
 
 // used to construct intermediary pairs for trading
@@ -57,7 +57,7 @@ export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: To
  */
 export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WETH9_EXTENDED[SupportedChainId.MAINNET]],
+    [AMPL.address]: [DAI, WETH_EXTENDED[SupportedChainId.MAINNET]],
   },
 }
 
@@ -66,12 +66,12 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  */
 export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.MAINNET]: [
-    ExtendedEther.onChain(SupportedChainId.MAINNET),
+    ExtendedXDC.onChain(SupportedChainId.MAINNET),
     DAI,
     USDC,
     USDT,
     WBTC,
-    WETH9_EXTENDED[SupportedChainId.MAINNET],
+    WETH_EXTENDED[SupportedChainId.MAINNET],
   ],
 }
 
