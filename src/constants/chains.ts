@@ -138,7 +138,7 @@ export const CHAIN_INFO: ChainInfo = {
     nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
   },
   [SupportedChainId.OPTIMISM]: {
-    blockWaitMsBeforeWarning: ms`15m`,
+    blockWaitMsBeforeWarning: ms`25m`,
     bridge: 'https://gateway.optimism.io/',
     defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
@@ -150,7 +150,7 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://mainnet.optimism.io'],
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
-    blockWaitMsBeforeWarning: ms`15m`,
+    blockWaitMsBeforeWarning: ms`25m`,
     bridge: 'https://gateway.optimism.io/',
     defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
