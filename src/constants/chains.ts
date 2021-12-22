@@ -262,7 +262,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     bridge: 'https://wallet.polygon.technology/bridge',
     docs: 'https://polygon.io/',
     explorer: 'https://polygonscan.com/',
-    infoLink: 'https://info.uniswap.org/#/polygon',
+    infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
     logoUrl: polygonMaticLogo,
     addNetworkInfo: {
@@ -276,7 +276,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     bridge: 'https://wallet.polygon.technology/bridge',
     docs: 'https://polygon.io/',
     explorer: 'https://mumbai.polygonscan.com/',
-    infoLink: 'https://info.uniswap.org/#/polygon',
+    infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon Mumbai',
     logoUrl: polygonMaticLogo,
     addNetworkInfo: {
