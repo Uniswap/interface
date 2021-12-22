@@ -264,7 +264,7 @@ msgstr "Balance"
 msgid "Best price guaranteed"
 msgstr "Best price guaranteed"
 
-#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 msgid "Bridge Assets"
 msgstr "Bridge Assets"
 
@@ -1584,6 +1584,10 @@ msgstr "Terms"
 #: src/components/WalletModal/index.tsx
 msgid "Terms of Use"
 msgstr "Terms of Use"
+
+#: src/components/Header/index.tsx
+msgid "Test our L2 solution now!"
+msgstr "Test our L2 solution now!"
 
 #: src/pages/SwapV2/index.tsx
 msgid "The amount you save compared to <0>{0}</0>."

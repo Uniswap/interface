@@ -3,8 +3,8 @@ import React from 'react'
 import { Text } from 'rebass'
 import { NavLink, Link } from 'react-router-dom'
 import { darken } from 'polished'
-import { Trans } from '@lingui/macro'
-import styled from 'styled-components'
+import { Trans, t } from '@lingui/macro'
+import styled, { keyframes } from 'styled-components'
 
 import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
@@ -17,6 +17,7 @@ import { ExternalLink } from 'theme/components'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 import Web3Network from 'components/Web3Network'
 import { useIsDarkMode } from 'state/user/hooks'
+import { MouseoverTooltip } from 'components/Tooltip'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -131,12 +132,6 @@ const HideSmall = styled.span`
   `};
 `
 
-const HideText = styled.span`
-  @media (max-width: 1400px) {
-    display: none;
-  }
-`
-
 const AnalyticsWrapper = styled.span`
   @media (max-width: 1100px) {
     display: none;
@@ -146,18 +141,6 @@ const AnalyticsWrapper = styled.span`
 const AboutWrapper = styled.span`
   @media (max-width: 1320px) {
     display: none;
-  }
-`
-
-const BridgeExternalLink = styled(ExternalLink)`
-  border-radius: 12px;
-  padding: 8px 12px;
-  font-size: 16px;
-  color: inherit;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  white-space: nowrap;
-  :hover {
-    text-decoration: none;
   }
 `
 
@@ -274,6 +257,33 @@ const NewText = styled.div`
   color: #ff537b;
 `
 
+const shine = keyframes`
+  0% {
+    background-position: 0;
+  }
+  60% {
+    background-position: 50px;
+  }
+  100% {
+    background-position: 100px;
+  }
+`
+
+export const SlideToUnlock = styled.div`
+  background: linear-gradient(
+    to right,
+    ${props => props.theme.subText} 0,
+    white 10%,
+    ${props => props.theme.subText} 20%
+  );
+  animation: ${shine} 1.3s infinite linear;
+  animation-fill-mode: forwards;
+  background-position: 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-size-adjust: none;
+`
+
 const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
     case ChainId.MAINNET:
@@ -308,19 +318,6 @@ export default function Header() {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
   const poolsMenuLink = getPoolsMenuLink(chainId)
-
-  const getBridgeLink = () => {
-    if (!chainId) return ''
-    if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) return 'https://wallet.matic.network/bridge'
-    if ([ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId)) return 'https://www.binance.org/en/bridge'
-    if ([ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId)) return 'https://bridge.avax.network'
-    if ([ChainId.FANTOM].includes(chainId)) return 'https://multichain.xyz'
-    if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId))
-      return 'https://cronos.crypto.org/docs/bridge/cdcapp.html'
-    return ''
-  }
-
-  const bridgeLink = getBridgeLink()
 
   const isDark = useIsDarkMode()
 
@@ -386,16 +383,16 @@ export default function Header() {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          {bridgeLink && (
-            <HideExtraSmall>
-              <BridgeExternalLink href={bridgeLink}>
-                <HideText>
-                  <Trans>Bridge Assets</Trans>
-                </HideText>
-                ↗
-              </BridgeExternalLink>
-            </HideExtraSmall>
-          )}
+          <HideExtraSmall>
+            <MouseoverTooltip text={t`Test our L2 solution now!`} placement="bottom">
+              <SlideToUnlock>
+                <StyledNavExternalLink href={process.env.REACT_APP_ZKYBER_URL || ''}>
+                  <Text width="max-content">ZKyber ↗</Text>
+                </StyledNavExternalLink>
+              </SlideToUnlock>
+            </MouseoverTooltip>
+          </HideExtraSmall>
+
           <Web3Network />
 
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
