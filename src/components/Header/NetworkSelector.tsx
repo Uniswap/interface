@@ -2,15 +2,15 @@ import { Trans } from '@lingui/macro'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
-import { switchToNetwork } from 'utils/switchToNetwork'
 
 import { useAppDispatch } from '../../state/hooks'
+import { switchToNetwork } from '../../utils/switchToNetwork'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -161,6 +161,57 @@ const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   }
 }
 
+function Row({
+  targetChain,
+  onSelectChain,
+}: {
+  targetChain: SupportedChainId
+  onSelectChain: (targetChain: number) => void
+}) {
+  const { library, chainId } = useActiveWeb3React()
+  if (!library || !chainId) {
+    return null
+  }
+  const active = chainId === targetChain
+  const isOptimism = targetChain === SupportedChainId.OPTIMISM
+  const rowText = `${CHAIN_INFO[targetChain].label}${isOptimism ? ' (Optimism)' : ''}`
+  const { helpCenterUrl, explorer, bridge } = CHAIN_INFO[targetChain]
+
+  const rowContent = (
+    <FlyoutRow onClick={() => onSelectChain(targetChain)} active={active}>
+      <Logo src={CHAIN_INFO[targetChain].logoUrl} />
+      <NetworkLabel>{rowText}</NetworkLabel>
+      {chainId === targetChain && <FlyoutRowActiveIndicator />}
+    </FlyoutRow>
+  )
+
+  if (active) {
+    return (
+      <ActiveRowWrapper>
+        {rowContent}
+        <ActiveRowLinkList>
+          {bridge ? (
+            <ExternalLink href={bridge}>
+              <BridgeLabel chainId={chainId} /> <LinkOutCircle />
+            </ExternalLink>
+          ) : null}
+          {explorer ? (
+            <ExternalLink href={explorer}>
+              <ExplorerLabel chainId={chainId} /> <LinkOutCircle />
+            </ExternalLink>
+          ) : null}
+          {helpCenterUrl ? (
+            <ExternalLink href={helpCenterUrl}>
+              <Trans>Help Center</Trans> <LinkOutCircle />
+            </ExternalLink>
+          ) : null}
+        </ActiveRowLinkList>
+      </ActiveRowWrapper>
+    )
+  }
+  return rowContent
+}
+
 export default function NetworkSelector() {
   const { chainId, library } = useActiveWeb3React()
   const node = useRef<HTMLDivElement>()
@@ -168,19 +219,13 @@ export default function NetworkSelector() {
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
   useOnClickOutside(node, open ? toggle : undefined)
 
-  const dispatch = useAppDispatch()
-
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
-  if (!chainId || !info || !library) {
-    return null
-  }
+  const dispatch = useAppDispatch()
 
-  function Row({ targetChain }: { targetChain: SupportedChainId }) {
-    if (!library || !chainId) {
-      return null
-    }
-    const handleRowClick = () => {
+  const handleRowClick = useCallback(
+    (targetChain: number) => {
+      if (!library) return
       switchToNetwork({ library, chainId: targetChain })
         .then(() => toggle())
         .catch((error) => {
@@ -190,43 +235,12 @@ export default function NetworkSelector() {
             addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch-${targetChain}` })
           )
         })
-    }
-    const active = chainId === targetChain
-    const isOptimism = targetChain === SupportedChainId.OPTIMISM
-    const rowText = `${CHAIN_INFO[targetChain].label}${isOptimism ? ' (Optimism)' : ''}`
-    const RowContent = () => (
-      <FlyoutRow onClick={handleRowClick} active={active}>
-        <Logo src={CHAIN_INFO[targetChain].logoUrl} />
-        <NetworkLabel>{rowText}</NetworkLabel>
-        {chainId === targetChain && <FlyoutRowActiveIndicator />}
-      </FlyoutRow>
-    )
-    const { helpCenterUrl, explorer, bridge } = CHAIN_INFO[targetChain]
-    if (active) {
-      return (
-        <ActiveRowWrapper>
-          <RowContent />
-          <ActiveRowLinkList>
-            {bridge ? (
-              <ExternalLink href={bridge}>
-                <BridgeLabel chainId={chainId} /> <LinkOutCircle />
-              </ExternalLink>
-            ) : null}
-            {explorer ? (
-              <ExternalLink href={explorer}>
-                <ExplorerLabel chainId={chainId} /> <LinkOutCircle />
-              </ExternalLink>
-            ) : null}
-            {helpCenterUrl ? (
-              <ExternalLink href={helpCenterUrl}>
-                <Trans>Help Center</Trans> <LinkOutCircle />
-              </ExternalLink>
-            ) : null}
-          </ActiveRowLinkList>
-        </ActiveRowWrapper>
-      )
-    }
-    return <RowContent />
+    },
+    [dispatch, library, toggle]
+  )
+
+  if (!chainId || !info || !library) {
+    return null
   }
 
   return (
@@ -241,10 +255,10 @@ export default function NetworkSelector() {
           <FlyoutHeader>
             <Trans>Select a network</Trans>
           </FlyoutHeader>
-          <Row targetChain={SupportedChainId.MAINNET} />
-          <Row targetChain={SupportedChainId.POLYGON} />
-          <Row targetChain={SupportedChainId.OPTIMISM} />
-          <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.MAINNET} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.POLYGON} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.OPTIMISM} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.ARBITRUM_ONE} />
         </FlyoutMenu>
       )}
     </SelectorWrapper>
