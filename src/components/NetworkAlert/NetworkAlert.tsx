@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
 import { useDarkModeManager, useNetworkAlertStatus } from 'state/user/hooks'
 import { useNativeCurrencyBalances } from 'state/wallet/hooks'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 import { CHAIN_INFO } from '../../constants/chains'
@@ -77,31 +77,42 @@ const LearnMoreLink = styled(ExternalLink)`
 const RootWrapper = styled.div`
   position: relative;
 `
-export const ArbitrumWrapperBackgroundDarkMode = css`
-  background: radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),
-    radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.3) 0%, rgba(33, 114, 229, 0.3) 100%), hsla(0, 0%, 100%, 0.1);
-`
-export const ArbitrumWrapperBackgroundLightMode = css`
-  background: radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),
-    radial-gradient(circle at top left, hsla(206, 50%, 75%, 0.01), hsla(215, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1);
-`
-export const OptimismWrapperBackgroundDarkMode = css`
-  background: radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%),
-    radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.5) 0%, rgba(235, 0, 255, 0.345) 96%);
-`
-export const OptimismWrapperBackgroundLightMode = css`
-  background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
-    radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
-`
+const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
+  [darkMode in 'dark' | 'light']: { [chainId in SupportedChainId]?: string }
+} = {
+  dark: {
+    [SupportedChainId.POLYGON]:
+      'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.3) 0%, rgba(82, 32, 166, 0.3) 100%)',
+    [SupportedChainId.POLYGON_MUMBAI]:
+      'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.3) 0%, rgba(82, 32, 166, 0.3) 100%)',
+    [SupportedChainId.OPTIMISM]:
+      'radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%),radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.5) 0%, rgba(235, 0, 255, 0.345) 96%)',
+    [SupportedChainId.OPTIMISTIC_KOVAN]:
+      'radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%),radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.5) 0%, rgba(235, 0, 255, 0.345) 96%)',
+    [SupportedChainId.ARBITRUM_ONE]:
+      'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.3) 0%, rgba(33, 114, 229, 0.3) 100%), hsla(0, 0%, 100%, 0.1)',
+    [SupportedChainId.ARBITRUM_RINKEBY]:
+      'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.3) 0%, rgba(33, 114, 229, 0.3) 100%), hsla(0, 0%, 100%, 0.1)',
+  },
+  light: {
+    [SupportedChainId.POLYGON]:
+      'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.3) 0%, rgba(167, 202, 255, 0.3) 100%)',
+    [SupportedChainId.POLYGON_MUMBAI]:
+      'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.3) 0%, rgba(167, 202, 255, 0.3) 100%)',
+    [SupportedChainId.OPTIMISM]:
+      'radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5)',
+    [SupportedChainId.OPTIMISTIC_KOVAN]:
+      'radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5)',
+    [SupportedChainId.ARBITRUM_ONE]:
+      'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(circle at top left, hsla(206, 50%, 75%, 0.01), hsla(215, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1)',
+    [SupportedChainId.ARBITRUM_RINKEBY]:
+      'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(circle at top left, hsla(206, 50%, 75%, 0.01), hsla(215, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1)',
+  },
+}
+
 const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
-  ${({ chainId, darkMode }) =>
-    [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
-      ? darkMode
-        ? OptimismWrapperBackgroundDarkMode
-        : OptimismWrapperBackgroundLightMode
-      : darkMode
-      ? ArbitrumWrapperBackgroundDarkMode
-      : ArbitrumWrapperBackgroundLightMode};
+  background-color: ${({ chainId, darkMode }) =>
+    BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID[darkMode ? 'dark' : 'light'][chainId]};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
