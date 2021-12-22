@@ -25,6 +25,7 @@
   "dependencies": {
     "@cmcewen/ethers-rs-mobile": "0.0.4",
     "@ethersproject/shims": "^5.5.0",
+    "@gorhom/bottom-sheet": "^4.1.5",
     "@react-native-async-storage/async-storage": "^1.15.9",
     "@react-native-firebase/analytics": "^12.9.3",
     "@react-native-firebase/app": "^12.9.3",
@@ -50,6 +51,7 @@
     "ethers": "^5.5.2",
     "expo": "^43.0.3",
     "expo-clipboard": "^2.0.3",
+    "expo-haptics": "~11.0.3",
     "expo-secure-store": "^11.0.3",
     "expo-splash-screen": "^0.13.5",
     "formik": "^2.2.9",

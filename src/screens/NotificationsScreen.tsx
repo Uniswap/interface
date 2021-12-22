@@ -3,42 +3,34 @@ import { useTranslation } from 'react-i18next'
 import { WebView } from 'react-native-webview'
 import { BackX } from 'src/components/buttons/BackX'
 import { Box } from 'src/components/layout/Box'
-import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { shortenAddress } from 'src/utils/addresses'
 
-interface NotificationsHeaderProps {
-  address: Address
+interface NotificationScreenProps {
+  onPressClose: () => void
 }
 
-function NotificationsHeader({ address }: NotificationsHeaderProps) {
-  return (
-    <Box justifyContent="space-between" flexDirection="row" pb="sm" px="lg">
-      <Text variant="h3" ml="sm">
-        {shortenAddress(address)}
-      </Text>
-      <BackX />
-    </Box>
-  )
-}
-
-export function NotificationsScreen() {
+export function NotificationsScreen({ onPressClose }: NotificationScreenProps) {
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
 
-  if (!activeAccount || !activeAccount.address) {
-    return (
-      <Screen>
-        <Text variant="h1">{t`Connect Wallet`}</Text>
-      </Screen>
-    )
-  }
-
   return (
-    <Screen>
-      <NotificationsHeader address={activeAccount?.address} />
+    <Box flex={1}>
+      <Box
+        justifyContent="space-between"
+        alignItems="center"
+        flexDirection="row"
+        pt="sm"
+        pb="md"
+        px="lg">
+        {activeAccount?.address && (
+          <Text variant="h4" color="gray400">
+            {t('Recent Transactions')}
+          </Text>
+        )}
+        <BackX onPressBack={onPressClose} />
+      </Box>
       <WebView source={{ uri: `https://etherscan.io/address/${activeAccount?.address}` }} />
-    </Screen>
+    </Box>
   )
 }

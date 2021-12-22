@@ -1,6 +1,8 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
+import { impactAsync } from 'expo-haptics'
 import React from 'react'
 import { View } from 'react-native'
 import {
@@ -64,35 +66,48 @@ function TabNavigator() {
   }
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarShowLabel: false,
-        tabBarStyle: { height: 100, paddingTop: 20 },
-      }}>
-      <Tab.Screen
-        name={Tabs.Home}
-        component={HomeScreen}
-        options={{ headerShown: false, tabBarIcon: WalletTabIcon }}
-      />
-      <Tab.Screen
-        name={Tabs.Swap}
-        component={View}
-        options={{
-          tabBarButton: SwapButton,
-        }}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault()
-            navigation.navigate(Screens.Swap)
-          },
-        }}
-      />
-      <Tab.Screen
-        name={Tabs.Explore}
-        component={ExploreScreen}
-        options={{ headerShown: false, tabBarIcon: ExploreTabIcon }}
-      />
-    </Tab.Navigator>
+    <BottomSheetModalProvider>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarStyle: { height: 100, paddingTop: 20 },
+        }}>
+        <Tab.Screen
+          name={Tabs.Home}
+          component={HomeScreen}
+          options={{ headerShown: false, tabBarIcon: WalletTabIcon }}
+          listeners={{
+            tabPress: () => {
+              impactAsync()
+            },
+          }}
+        />
+        <Tab.Screen
+          name={Tabs.Swap}
+          component={View}
+          options={{
+            tabBarButton: SwapButton,
+          }}
+          listeners={{
+            tabPress: (e) => {
+              impactAsync()
+              e.preventDefault()
+              navigation.navigate(Screens.Swap)
+            },
+          }}
+        />
+        <Tab.Screen
+          name={Tabs.Explore}
+          component={ExploreScreen}
+          options={{ headerShown: false, tabBarIcon: ExploreTabIcon }}
+          listeners={{
+            tabPress: () => {
+              impactAsync()
+            },
+          }}
+        />
+      </Tab.Navigator>
+    </BottomSheetModalProvider>
   )
 }
 

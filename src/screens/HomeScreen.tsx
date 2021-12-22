@@ -1,8 +1,9 @@
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { AppStackParamList } from 'src/app/navigation/types'
-import Bell from 'src/assets/icons/bell.svg'
+import Clock from 'src/assets/icons/clock.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
@@ -17,7 +18,9 @@ import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionNotificationBanner } from 'src/features/transactions/Notification'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { Screens } from 'src/screens/Screens'
+import { bottomSheetStyles, FULL_SNAP_POINTS } from 'src/styles/bottomSheet'
 import { sleep } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
@@ -45,6 +48,14 @@ export function HomeScreen({ navigation }: Props) {
     navigation.navigate(Screens.TokenDetails, { currency: currencyAmount.currency })
   }
 
+  const notificationsModalRef = useRef<BottomSheetModal>(null)
+  const onPressNotifications = () => {
+    notificationsModalRef.current?.present()
+  }
+  const onCloseNotifications = () => {
+    notificationsModalRef.current?.dismiss()
+  }
+
   if (!activeAccount)
     return (
       <Screen>
@@ -67,8 +78,8 @@ export function HomeScreen({ navigation }: Props) {
             mr="md">
             <Settings height={24} width={24} />
           </Button>
-          <Button onPress={() => navigation.navigate(Screens.Notifications)}>
-            <Bell height={24} width={24} />
+          <Button onPress={onPressNotifications}>
+            <Clock height={24} width={24} />
           </Button>
         </Box>
       </Box>
@@ -80,6 +91,13 @@ export function HomeScreen({ navigation }: Props) {
         onRefresh={onRefresh}
         onPressToken={onPressToken}
       />
+      <BottomSheetModal
+        ref={notificationsModalRef}
+        index={0}
+        snapPoints={FULL_SNAP_POINTS}
+        style={bottomSheetStyles.bottomSheet}>
+        <NotificationsScreen onPressClose={onCloseNotifications} />
+      </BottomSheetModal>
     </Screen>
   )
 }
