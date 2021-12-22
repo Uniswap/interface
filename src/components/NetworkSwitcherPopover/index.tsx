@@ -30,7 +30,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   }, [activeChainId, closeModals])
 
   const isNetworkDisabled = (chainId: ChainId) => {
-    return connector?.supportedChainIds?.indexOf(chainId) === -1 || activeChainId === chainId
+    return connector?.supportedChainIds?.indexOf(chainId) === -1
   }
 
   const networkList = createNetworksList({

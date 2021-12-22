@@ -11,15 +11,10 @@ import Popover from '../Popover'
 import { useCloseModals, useModalOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/actions'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ReactComponent as ConnectedSvg } from '../../assets/svg/connected.svg'
+import { StyledConnectedIcon } from '../../utils'
 
 const Wrapper = styled.div`
   width: 100%;
-`
-
-const StyledConnectedIcon = styled(ConnectedSvg)`
-  min-width: 22px;
-  margin-left: 8px;
 `
 
 const List = styled.ul`
@@ -84,7 +79,7 @@ const ListIconWrapper = styled.div<{ isActive?: boolean }>`
   align-items: center;
   width: 20px;
   height: 20px;
-  margin-right: ${ props => (props.isActive ? "22px" : "8px")};
+  margin-right: ${ props => (props.isActive ? "34px" : "8px")};
 
   img {
     max-width: 100%;
@@ -230,7 +225,7 @@ export const Item = ({ id, onClick, name, icon, link, isActive }: ItemProps) => 
   const getContent = () => (
     <>
       <ListIconWrapper isActive={isActive}>
-        { isActive && <StyledConnectedIcon /> }
+        { isActive && <StyledConnectedIcon width="50px" padding="0 0 0 12px" /> }
         <img src={icon} alt={name + ' logo'} />
       </ListIconWrapper>
       {name}
