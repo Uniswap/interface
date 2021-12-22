@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useState } from 'react'
 
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
-import Widget, { WidgetProps } from '../Widget'
 import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
@@ -12,29 +12,26 @@ import Settings from './Settings'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 
-type SwapWidgetProps = Omit<WidgetProps, 'children'>
-
-export default function Swap(props: SwapWidgetProps) {
+export default function Swap() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const { jsonRpcEndpoint } = props
-  const disabled = !jsonRpcEndpoint
+  const { active, account } = useActiveWeb3React()
   return (
-    <Widget {...props}>
+    <>
       <Header logo title={<Trans>Swap</Trans>}>
-        {!disabled && <Wallet disabled={disabled} />}
-        <Settings disabled={disabled} />
+        {active && <Wallet disabled={!account} />}
+        <Settings disabled={!active} />
       </Header>
       <div ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <Input disabled={disabled}>
-            <ReverseButton disabled={disabled} />
+          <Input disabled={!active}>
+            <ReverseButton disabled={!active} />
           </Input>
-          <Output disabled={disabled}>
-            <Toolbar disabled={disabled} />
+          <Output disabled={!active}>
+            <Toolbar disabled={!active} />
             <SwapButton />
           </Output>
         </BoundaryProvider>
       </div>
-    </Widget>
+    </>
   )
 }
