@@ -13,6 +13,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
+import SantaHat from '../../assets/images/santa-hat.png'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -181,6 +182,15 @@ const UniIcon = styled.div`
   :hover {
     transform: rotate(-5deg);
   }
+
+  position: relative;
+`
+
+const SantaHatImage = styled.img`
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  height: 18px;
 `
 
 const activeClassName = 'ACTIVE'
@@ -271,6 +281,7 @@ export default function Header() {
       <Title href=".">
         <UniIcon>
           <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <SantaHatImage src={SantaHat} alt="santa hat" />
         </UniIcon>
       </Title>
       <HeaderLinks>
