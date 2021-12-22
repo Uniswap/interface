@@ -88,6 +88,14 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 2,
     active: true,
   },
+  // PACT-CELO
+  {
+    address: '0x6F11B6eA70DEe4f167b1A4ED1F01C903f6781960',
+    underlyingPool: '0xFc26229c90E6236fC85c492b738c6E496c177cd0',
+    basePool: '0x833Febc01260D8f3DCc98393c216A025E90b405d',
+    numRewards: 3,
+    active: true,
+  },
 
   // ** D4P ** //
   // UBE-CELO
