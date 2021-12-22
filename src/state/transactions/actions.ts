@@ -1,8 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { TradeType } from '@uniswap/sdk-core'
 
-import { VoteOption } from '../governance/types'
-
 export interface SerializableTransactionReceipt {
   to: string
   from: string
@@ -38,14 +36,6 @@ export enum TransactionType {
 
 export interface BaseTransactionInfo {
   type: TransactionType
-}
-
-export interface VoteTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.VOTE
-  governorAddress: string
-  proposalId: number
-  decision: VoteOption
-  reason: string
 }
 
 export interface DelegateTransactionInfo extends BaseTransactionInfo {
@@ -157,7 +147,6 @@ export type TransactionInfo =
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ClaimTransactionInfo
-  | VoteTransactionInfo
   | DelegateTransactionInfo
   | DepositLiquidityStakingTransactionInfo
   | WithdrawLiquidityStakingTransactionInfo
