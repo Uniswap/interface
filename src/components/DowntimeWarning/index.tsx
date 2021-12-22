@@ -20,7 +20,6 @@ const Root = styled.div`
   max-width: 880px;
 `
 const WarningIcon = styled(AlertOctagon)`
-  display: block;
   margin: auto 16px auto 0;
   min-height: 22px;
   min-width: 22px;
@@ -34,7 +33,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <Root>
       <WarningIcon />
-      {children}
+      <div>{children}</div>
     </Root>
   )
 }
