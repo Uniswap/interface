@@ -13,7 +13,7 @@ const SantaHatImage = styled.img`
 const Christmas = <SantaHatImage src={SantaHat} alt="Santa hat" />
 
 const DATE_TO_ORNAMENT: { [date: string]: ReactElement } = {
-  '12-222': Christmas,
+  '12-24': Christmas,
   '12-25': Christmas,
 }
 
