@@ -1,10 +1,9 @@
-import styled from 'lib/theme'
 import { JSXElementConstructor, ReactElement } from 'react'
 import { createGlobalStyle } from 'styled-components'
 
+import Row from './components/Row'
 import Connectors from './cosmos/components/Connectors'
-import { useCosmosTheme } from './cosmos/state/theme'
-import { useCosmosWidth } from './cosmos/state/width'
+import Widget from './cosmos/components/Widget'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -13,24 +12,18 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`
-
 export default function WidgetDecorator({
   children,
 }: {
   children: ReactElement<any, string | JSXElementConstructor<any>>
 }) {
-  useCosmosWidth()
-  useCosmosTheme()
-
   return (
     <>
       <GlobalStyle />
       <Connectors />
-      <Wrapper>{children}</Wrapper>
+      <Row justify="center">
+        <Widget>{children}</Widget>
+      </Row>
     </>
   )
 }

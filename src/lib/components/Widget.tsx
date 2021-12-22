@@ -1,13 +1,13 @@
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
-import ErrorBoundary from 'lib/components/ErrorBoundary'
-import useProviderInfo from 'lib/hooks/useProviderInfo'
 import { Provider as I18nProvider } from 'lib/i18n'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
 import { ReactNode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
+import ErrorBoundary from './ErrorBoundary'
+import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
   to {
@@ -53,10 +53,6 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-function NoConnectorAlert() {
-  return <div>hey, add a connector</div>
-}
-
 export interface WidgetProps {
   children: ReactNode
   theme?: Theme
@@ -78,8 +74,6 @@ export default function Widget({
   dialog,
   className,
 }: WidgetProps) {
-  const connector = useProviderInfo(provider, jsonRpcEndpoint)
-  const hasConnector = connector[0] !== undefined
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (
@@ -87,11 +81,11 @@ export default function Widget({
       <AtomProvider>
         <ThemeProvider theme={theme}>
           <I18nProvider locale={locale}>
-            <WidgetWrapper width={width} className={className} ref={wrapper}>
-              <DialogProvider value={dialog || wrapper.current}>
-                {hasConnector ? children : <NoConnectorAlert />}
-              </DialogProvider>
-            </WidgetWrapper>
+            <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+              <WidgetWrapper width={width} className={className} ref={wrapper}>
+                <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
+              </WidgetWrapper>
+            </Web3Provider>
           </I18nProvider>
         </ThemeProvider>
       </AtomProvider>

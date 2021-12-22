@@ -120,7 +120,6 @@
     "ua-parser-js": "^0.7.28",
     "use-count-up": "^2.2.5",
     "web-vitals": "^2.1.0",
-    "webpack": "4.44.2",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0"
@@ -144,7 +143,7 @@
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "assets:generate": "svgr -d src/lib/assets --ext tsx --typescript src/lib/assets && rm src/lib/assets/index.tsx",
     "bundle": "microbundle --define process.env.REACT_APP_IS_WIDGET=true --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
-    "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false REACT_APP_IS_WIDGET=true cosmos"
+    "cosmos": "cross-env FAST_REFRESH=false REACT_APP_IS_WIDGET=true cosmos"
   },
   "browserslist": {
     "production": [
@@ -184,11 +183,11 @@
     "styled-components": "^5.3.0",
     "wcag-contrast": "^3.0.0",
     "wicg-inert": "^3.1.1",
-    "widgets-web3-react/core": "npm:@web3-react/core@8.0.12-alpha.0",
-    "widgets-web3-react/eip1193": "npm:@web3-react/eip1193@8.0.12-alpha.0",
-    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.12-alpha.0",
-    "widgets-web3-react/network": "npm:@web3-react/network@8.0.12-alpha.0",
-    "widgets-web3-react/types": "npm:@web3-react/types@8.0.12-alpha.0",
+    "widgets-web3-react/core": "npm:@web3-react/core@8.0.14-alpha.0",
+    "widgets-web3-react/eip1193": "npm:@web3-react/eip1193@8.0.14-alpha.0",
+    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.14-alpha.0",
+    "widgets-web3-react/network": "npm:@web3-react/network@8.0.14-alpha.0",
+    "widgets-web3-react/types": "npm:@web3-react/types@8.0.14-alpha.0",
     "zustand": "^3.6.5"
   }
 }
