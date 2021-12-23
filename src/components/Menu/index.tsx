@@ -154,16 +154,16 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          {!above768 && (
-            <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>
-              <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />
-              <SlideToUnlock>
-                <Text width="max-content" marginLeft="8px">
-                  ZKyber ↗
-                </Text>
-              </SlideToUnlock>
-            </MenuItem>
-          )}
+          {/*{!above768 && (*/}
+          {/*  <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>*/}
+          {/*    <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />*/}
+          {/*    <SlideToUnlock>*/}
+          {/*      <Text width="max-content" marginLeft="8px">*/}
+          {/*        ZKyber ↗*/}
+          {/*      </Text>*/}
+          {/*    </SlideToUnlock>*/}
+          {/*  </MenuItem>*/}
+          {/*)}*/}
           {bridgeLink && (
             <MenuItem href={bridgeLink}>
               <Share2 size={14} />
