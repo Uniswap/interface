@@ -112,11 +112,6 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
     if (walletSwitcherPopoverOpen) closeModals()
   })
 
-  async function disconnect() {
-    deactivate()
-    // Maybe inform user wallect has successfully disconnect?
-  }
-
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
@@ -199,7 +194,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
         content={
           <List>
             {getOptions()}
-            { active && <DisconnectButton onClick={disconnect}>Disconnect Wallet</DisconnectButton> }
+            { active && <DisconnectButton onClick={deactivate}>Disconnect Wallet</DisconnectButton> }
           </List>
         }
         show={walletSwitcherPopoverOpen}
