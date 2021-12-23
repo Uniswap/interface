@@ -105,7 +105,7 @@ const LinkOutToBridge = styled(ExternalLink)`
   padding: 6px 8px;
   margin-right: 12px;
   text-decoration: none;
-  width: auto;
+  width: 100%;
   :hover {
     text-decoration: none;
   }
@@ -113,8 +113,8 @@ const LinkOutToBridge = styled(ExternalLink)`
 
 const LinkOutCircle = styled(ArrowUpRight)<{ darkMode: boolean }>`
   margin-left: 12px;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   color: ${({ color, darkMode }) => (darkMode ? 'rgba(255,255,255,0.8)' : color)};
 `
 

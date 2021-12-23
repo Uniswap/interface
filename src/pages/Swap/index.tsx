@@ -57,6 +57,7 @@ import AppBody from '../AppBody'
 
 const AlertWrapper = styled.div`
   max-width: 460px;
+  width: 100%;
 `
 
 export default function Swap({ history }: RouteComponentProps) {

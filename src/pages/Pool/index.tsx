@@ -147,8 +147,6 @@ export default function Pool() {
   const showConnectAWallet = Boolean(!account)
   const showV2Features = Boolean(chainId && V2_FACTORY_ADDRESSES[chainId])
 
-  console.log(chainId)
-
   const menuItems = [
     {
       content: (
