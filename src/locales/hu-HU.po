@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 16:06\n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -456,10 +456,6 @@ msgstr "Díjak beszedése"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "A díjak beszedése visszavonja a jelenleg elérhető díjakat az Ön számára."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "Közös alapok"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Megerősítés"
@@ -609,11 +605,6 @@ msgstr "Letét"
 msgid "Deposit Amounts"
 msgstr "Letéti összegek"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit Assets"
-msgstr "Betéti eszközök"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP tokenek letétbe helyezése"
@@ -621,6 +612,10 @@ msgstr "UNI-V2 LP tokenek letétbe helyezése"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Likviditás letétbe helyezése"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "Befizetési tokenek a {label} hálózatba."
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -778,8 +773,8 @@ msgid "Expired"
 msgstr "Lejárt"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Fedezze fel az Uniswap Analytics népszerű pooljait."
+msgid "Explore Uniswap Analytics."
+msgstr "Fedezze fel az Uniswap Analytics szolgáltatást."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
@@ -833,6 +828,10 @@ msgstr "Segítség Központ"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Elrejt"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Zárt pozíciók elrejtése"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -948,11 +947,6 @@ msgstr "Nyelv"
 msgid "Learn"
 msgstr "Tanulás"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Learn More"
-msgstr "Tudj meg többet"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Tudjon meg többet a likviditás biztosításáról"
@@ -1064,10 +1058,6 @@ msgstr "Menü"
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
 msgstr "Migrálás"
-
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "Likviditás migrálása"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
@@ -1252,11 +1242,6 @@ msgstr "Kérjük, csatlakozzon az 1. réteg Ethereumhoz"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Kérjük, csatlakozzon a megfelelő Ethereum hálózathoz."
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "Kérjük, kezelje ezt béta kiadásként, és a {label}használata előtt tájékozódjon a kockázatokról. {label}kereskedés megkezdéséhez először kapcsolja át eszközeit L1-ről L2-re."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1537,10 +1522,6 @@ msgstr "Egyes eszközök nem érhetők el ezen a felületen keresztül, mert el�
 msgid "Something went wrong"
 msgstr "Valami elromlott"
 
-#: src/components/PositionList/index.tsx
-msgid "Status"
-msgstr "Állapot"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1. lépés: Szerezzen UNI-V2 likviditási tokeneket"
@@ -1688,10 +1669,6 @@ msgstr "A tranzakciót nem sikerült elküldeni, mert a határidő lejárt. Kér
 msgid "There is no liquidity data."
 msgstr "Nincs likviditási adat."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "Ezeket a tokeneket általában más tokenekkel párosítják."
-
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "Ez az alkalmazás a következő harmadik féltől származó API-kat használja:"
@@ -1737,11 +1714,6 @@ msgstr "-nak/-nek"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "(Legalább)"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "{label}kezdje meg a kereskedést, először hidalja át eszközeit L1-ről L2-re."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1876,10 +1848,6 @@ msgstr "Uniswap likviditásbányászat"
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap migrációs szerződés↗"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {label}"
-msgstr "Unswap {label}"
-
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Ismeretlen forrás"
@@ -1951,10 +1919,6 @@ msgstr "V2 likviditás"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "V3 {0} ár:"
-
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "View V2 Likviditás megtekintése"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -2181,8 +2145,8 @@ msgid "Your V2 liquidity"
 msgstr "Saját V2 likviditása"
 
 #: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "A saját V3 likviditási pozíciók itt jelennek meg."
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "Itt jelennek meg aktív V3 likviditási pozíciói."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2452,6 +2416,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} token"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} token híd"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

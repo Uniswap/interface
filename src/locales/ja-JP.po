@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 16:07\n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -456,10 +456,6 @@ msgstr "報酬を取得中"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "報酬の取得は現在取得できる報酬を引き出します。"
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "共通のベース"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "確認"
@@ -609,11 +605,6 @@ msgstr "預け入れ"
 msgid "Deposit Amounts"
 msgstr "預け入れる数量"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit Assets"
-msgstr "預け入れ資産"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP トークンを預け入れる"
@@ -621,6 +612,10 @@ msgstr "UNI-V2 LP トークンを預け入れる"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "流動性を預ける"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "{label} ネットワークにトークンをデポジットします。"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -777,8 +772,8 @@ msgid "Expired"
 msgstr "期限切れ"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap分析サイトで人気のあるプールを探しましょう。"
+msgid "Explore Uniswap Analytics."
+msgstr "UniswapAnalyticsをご覧ください。"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
@@ -832,6 +827,10 @@ msgstr "ヘルプセンター"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "非表示"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "決済したポジションを隠す"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -947,11 +946,6 @@ msgstr "言語"
 msgid "Learn"
 msgstr "資料"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Learn More"
-msgstr "もっと詳しく知る"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "流動性の提供について学ぶ"
@@ -1063,10 +1057,6 @@ msgstr "メニュー"
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
 msgstr "移行"
-
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "流動性の移行"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
@@ -1251,11 +1241,6 @@ msgstr "イーサリアムのレイヤー1に接続してください"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "適切なイーサリアムネットワークに接続してください。"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "{label}を使用する前にリスクについて学習してください。 {label}で取引を開始するには、最初に資産をL1からL2にブリッジします。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1536,10 +1521,6 @@ msgstr "一部のトークンは、スマートコントラクトでうまく動
 msgid "Something went wrong"
 msgstr "何らかの問題が発生しました"
 
-#: src/components/PositionList/index.tsx
-msgid "Status"
-msgstr "ステータス"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "ステップ1. UNI-V2流動性トークンを入手"
@@ -1687,10 +1668,6 @@ msgstr "期限が過ぎたため、取引を送信できませんでした。期
 msgid "There is no liquidity data."
 msgstr "流動性データはありません。"
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "これらのトークンは一般的に他のトークンとペアになっています。"
-
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "このアプリは、次のサードパーティAPIを使用します。"
@@ -1736,11 +1713,6 @@ msgstr "買うトークン"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "買うトークン（少なくとも）"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "{label}で取引を開始するには、最初に資産をL1からL2にブリッジします。"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1875,10 +1847,6 @@ msgstr "Uniswap流動性マイニング"
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap移行コントラクト↗"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {label}"
-msgstr "{label}ユニスワップ"
-
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "不明なソース"
@@ -1950,10 +1918,6 @@ msgstr "V2の流動性"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "V3での {0} 価格:"
-
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "V2の流動性を表示"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -2180,8 +2144,8 @@ msgid "Your V2 liquidity"
 msgstr "V2の流動性"
 
 #: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "V3の流動性ポジションはこちらに表示されます。"
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "アクティブなV3流動性ポジションがここに表示されます。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2450,6 +2414,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} トークン"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} トークンブリッジ"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

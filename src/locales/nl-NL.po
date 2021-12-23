@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 16:06\n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -456,10 +456,6 @@ msgstr "Incassokosten"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Incassokosten zullen de momenteel beschikbare kosten voor u opnemen."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "Gemeenschappelijke bases"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Bevestigen"
@@ -609,11 +605,6 @@ msgstr "Storting"
 msgid "Deposit Amounts"
 msgstr "Stortingsbedragen"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit Assets"
-msgstr "Tegoeden storten"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Stort UNI-V2 LP Tokens"
@@ -621,6 +612,10 @@ msgstr "Stort UNI-V2 LP Tokens"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Stort liquiditeit"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "Stort tokens op het {label} netwerk."
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -777,8 +772,8 @@ msgid "Expired"
 msgstr "Niet meer geldig"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Verken populaire pools op Uniswap Analytics."
+msgid "Explore Uniswap Analytics."
+msgstr "Ontdek Uniswap Analytics."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
@@ -832,6 +827,10 @@ msgstr "Helpcentrum"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Zich verstoppen"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Verberg gesloten posities"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -947,11 +946,6 @@ msgstr "Taal"
 msgid "Learn"
 msgstr "Leren"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Learn More"
-msgstr "Kom meer te weten"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Meer informatie over het verstrekken van liquiditeit"
@@ -1063,10 +1057,6 @@ msgstr "Menu"
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
 msgstr "Migreer"
-
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "Liquiditeit migreren"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
@@ -1251,11 +1241,6 @@ msgstr "Maak verbinding met Layer 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Maak verbinding met het juiste Ethereum-netwerk."
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "Behandel dit als een bètaversie en leer over de risico's voordat u {label}. Om te beginnen met handelen op {label}, moet u eerst uw activa overbruggen van L1 naar L2."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1536,10 +1521,6 @@ msgstr "Sommige activa zijn niet beschikbaar via deze interface omdat ze mogelij
 msgid "Something went wrong"
 msgstr "Er is iets fout gegaan"
 
-#: src/components/PositionList/index.tsx
-msgid "Status"
-msgstr "Toestand"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Stap 1. Verkrijg UNI-V2 liquiditeitstokens"
@@ -1687,10 +1668,6 @@ msgstr "De transactie kan niet worden verzonden omdat de deadline is verstreken.
 msgid "There is no liquidity data."
 msgstr "Er zijn geen liquiditeitsgegevens."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "Deze tokens worden meestal gekoppeld aan andere tokens."
-
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "Deze app gebruikt de volgende API's van derden:"
@@ -1736,11 +1713,6 @@ msgstr "Naar"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Naar (ten minste)"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "Om te beginnen met handelen op {label}, moet u eerst uw activa overbruggen van L1 naar L2."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1875,10 +1847,6 @@ msgstr "Uniswap liquidity mining"
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap migratiecontract↗"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {label}"
-msgstr "Uniswap op {label}"
-
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Onbekende bron"
@@ -1950,10 +1918,6 @@ msgstr "V2-liquiditeit"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "V3 {0} prijs:"
-
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "V2-liquiditeit bekijken"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -2180,8 +2144,8 @@ msgid "Your V2 liquidity"
 msgstr "Uw V2-liquiditeit"
 
 #: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "Uw V3-liquiditeitsposities zullen hier verschijnen."
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "Uw actieve V3-liquiditeitsposities verschijnen hier."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2450,6 +2414,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} tokens"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} tokenbrug"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

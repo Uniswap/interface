@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 16:06\n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -456,10 +456,6 @@ msgstr "تحصيل الرسوم"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "سيقوم تحصيل الرسوم بسحب الرسوم المتاحة لك حاليًا."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "القواعد المشتركة"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "تأكيد"
@@ -609,11 +605,6 @@ msgstr "الإيداع"
 msgid "Deposit Amounts"
 msgstr "مبالغ الإيداع"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit Assets"
-msgstr "أصول الإيداع"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "إيداع رموز UNI-V2 LP"
@@ -621,6 +612,10 @@ msgstr "إيداع رموز UNI-V2 LP"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "إيداع السيولة"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "إيداع الرموز في شبكة {label}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -777,8 +772,8 @@ msgid "Expired"
 msgstr "منتهي الصلاحية"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "استكشف المجموعات الشعبية على تحليلات Uniswap."
+msgid "Explore Uniswap Analytics."
+msgstr "اكتشف تحليلات Uniswap."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
@@ -832,6 +827,10 @@ msgstr "مركز المساعدة"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "يخفي"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "إخفاء المراكز المغلقة"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -947,11 +946,6 @@ msgstr "لغة"
 msgid "Learn"
 msgstr "تعلم"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Learn More"
-msgstr "يتعلم أكثر"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "تعرف على توفير السيولة"
@@ -1063,10 +1057,6 @@ msgstr "قائمة الطعام"
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
 msgstr "ترحيل"
-
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "ترحيل السيولة"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
@@ -1251,11 +1241,6 @@ msgstr "يرجى الاتصال بـ Layer 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "الرجاء الاتصال بشبكة إيثيريوم المناسبة."
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "يرجى التعامل مع هذا على أنه إصدار تجريبي والتعرف على المخاطر قبل استخدام {label}. لبدء التداول على {label}، قم أولاً بتوصيل أصولك من L1 إلى L2."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1536,10 +1521,6 @@ msgstr "بعض الأصول غير متوفرة من خلال هذه الواج�
 msgid "Something went wrong"
 msgstr "حدث خطأ ما"
 
-#: src/components/PositionList/index.tsx
-msgid "Status"
-msgstr "حالة"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "الخطوة 1. احصل على رمز سيولة UNI-V2"
@@ -1687,10 +1668,6 @@ msgstr "تعذر إرسال المعاملة لانتهاء الموعد الم�
 msgid "There is no liquidity data."
 msgstr "لا توجد بيانات سيولة."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "هذه الرموز عادة ما تقترن مع رموز أخرى."
-
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "يستخدم هذا التطبيق واجهات برمجة التطبيقات الخارجية التالية:"
@@ -1736,11 +1713,6 @@ msgstr "إلى"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "إلى (على الأقل)"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "لبدء التداول على {label}، قم أولاً بتوصيل أصولك من L1 إلى L2."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1875,10 +1847,6 @@ msgstr "تعدين سيولة Uniswap"
 msgid "Uniswap migration contract↗"
 msgstr "عقد ترحيل Uniswap ↗"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {label}"
-msgstr "Uniswap على {label}"
-
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "مصدر مجهول"
@@ -1950,10 +1918,6 @@ msgstr "سيولة V2"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "سعر V3 {0}:"
-
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "عرض سيولة V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -2180,8 +2144,8 @@ msgid "Your V2 liquidity"
 msgstr "سيولة V2 الخاصة بك"
 
 #: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "ستظهر هنا حالة سيولة V3 الخاصة بك."
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "ستظهر مراكز سيولة V3 النشطة الخاصة بك هنا."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2450,6 +2414,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} توكينز"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} جسر رمزي"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

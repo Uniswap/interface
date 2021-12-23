@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 16:07\n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -456,10 +456,6 @@ msgstr "Ücretler toplanıyor"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Ücretleri toplama işlemi, sizin için şu anda mevcut olan ücretleri çekecektir."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "Ortak tabanlar"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Onayla"
@@ -609,11 +605,6 @@ msgstr "Mevduat"
 msgid "Deposit Amounts"
 msgstr "Mevduat Tutarları"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit Assets"
-msgstr "Mevduat Varlıkları"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP Jetonlarını yatırın"
@@ -621,6 +612,10 @@ msgstr "UNI-V2 LP Jetonlarını yatırın"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Mevduat likiditesi"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "{label} ağına jeton yatırın."
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -777,8 +772,8 @@ msgid "Expired"
 msgstr "Süresi doldu"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap Analytics'teki popüler havuzları keşfedin."
+msgid "Explore Uniswap Analytics."
+msgstr "Uniswap Analytics'i keşfedin."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
@@ -832,6 +827,10 @@ msgstr "Yardım Merkezi"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Saklamak"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Kapalı pozisyonları gizle"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -947,11 +946,6 @@ msgstr "Dil"
 msgid "Learn"
 msgstr "Öğren"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Learn More"
-msgstr "Daha fazla bilgi edin"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Likidite sağlama hakkında bilgi edinin"
@@ -1063,10 +1057,6 @@ msgstr "Menü"
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
 msgstr "Geçir"
-
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "Likiditeyi Geçirin"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
@@ -1251,11 +1241,6 @@ msgstr "Lütfen Katman 1 Ethereum'a bağlanın"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Lütfen uygun Ethereum ağına bağlanın."
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "Lütfen bunu bir beta sürümü olarak ele alın ve {label}kullanmadan önce riskler hakkında bilgi edinin. {label}işlem yapmaya başlamak için önce varlıklarınızı L1'den L2'ye köprüleyin."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1536,10 +1521,6 @@ msgstr "Bazı varlıklar bu arayüz aracılığıyla kullanılamaz. Bunun nedeni
 msgid "Something went wrong"
 msgstr "Bir şeyler yanlış gitti"
 
-#: src/components/PositionList/index.tsx
-msgid "Status"
-msgstr "Durum"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Adım 1. UNI-V2 Likidite jetonları alın"
@@ -1687,10 +1668,6 @@ msgstr "Son tarih geçtiği için işlem gönderilemedi. Lütfen işlem süreniz
 msgid "There is no liquidity data."
 msgstr "Likidite verisi yok."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "Bu jetonlar genellikle diğer jetonlarla eşleştirilir."
-
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "Bu uygulama, aşağıdaki üçüncü taraf API'lerini kullanır:"
@@ -1736,11 +1713,6 @@ msgstr "Alıcı"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Alıcı (en az)"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "{label}alım satıma başlamak için önce varlıklarınızı L1'den L2'ye köprüleyin."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1875,10 +1847,6 @@ msgstr "Uniswap likidite madenciliği"
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap geçiş sözleşmesi↗"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {label}"
-msgstr "Üzerinde Uniswap {label}"
-
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Bilinmeyen Kaynak"
@@ -1950,10 +1918,6 @@ msgstr "V2 likiditesi"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "V3 {0} Fiyat:"
-
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "V2 Likiditesini Görüntüle"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -2180,8 +2144,8 @@ msgid "Your V2 liquidity"
 msgstr "V2 likiditeniz"
 
 #: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "V3 likidite pozisyonlarınız burada görünecektir."
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "Aktif V3 likidite pozisyonlarınız burada görünecektir."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2450,6 +2414,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} jeton"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} simge köprüsü"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

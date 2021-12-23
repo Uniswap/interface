@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 16:07\n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -456,10 +456,6 @@ msgstr "Збір комісій"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Збір комісій зніме доступні для вас наразі комісії."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "Загальні основи"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Підтвердити"
@@ -609,11 +605,6 @@ msgstr "Внести"
 msgid "Deposit Amounts"
 msgstr "Суми поповнення"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit Assets"
-msgstr "Депозитні активи"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Токени для внесення на UNI-V2"
@@ -621,6 +612,10 @@ msgstr "Токени для внесення на UNI-V2"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Ліквідність внеску"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "Внесіть токени в мережу {label}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -777,8 +772,8 @@ msgid "Expired"
 msgstr "Термін дії закінчився"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Дослідіть популярні пули на Uniswap Analytics."
+msgid "Explore Uniswap Analytics."
+msgstr "Ознайомтеся з Uniswap Analytics."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
@@ -832,6 +827,10 @@ msgstr "Центр допомоги"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Сховати"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Приховати закриті позиції"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -947,11 +946,6 @@ msgstr "Мову"
 msgid "Learn"
 msgstr "Ознайомитися"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Learn More"
-msgstr "Вчи більше"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Дізнайтеся про забезпечення ліквідності"
@@ -1063,10 +1057,6 @@ msgstr "Меню"
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
 msgstr "Перенесення"
-
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "Перенесення ліквідності"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
@@ -1251,11 +1241,6 @@ msgstr "Будь ласка, підключіться до рівня 1 Ефір
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Підключіться до відповідної мережі Ethereum."
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "Будь ласка, розглядайте це як бета-версію та дізнайтеся про ризики перед використанням {label}. Щоб почати торгувати на {label}, спочатку переведіть свої активи з L1 на L2."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1536,10 +1521,6 @@ msgstr "Деякі активи недоступні через цей інте�
 msgid "Something went wrong"
 msgstr "Сталася помилка"
 
-#: src/components/PositionList/index.tsx
-msgid "Status"
-msgstr "Статус"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Крок 1. Отримайте токени ліквідності UNI-V2"
@@ -1687,10 +1668,6 @@ msgstr "Не вдалося надіслати транзакцію, оскіл�
 msgid "There is no liquidity data."
 msgstr "Даних про ліквідність немає."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "Ці токени зазвичай поєднані в пари з іншими токенами."
-
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "Ця програма використовує такі сторонні API:"
@@ -1736,11 +1713,6 @@ msgstr "Кому"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "До (не менше)"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "Щоб почати торгувати на {label}, спочатку переведіть свої активи з L1 на L2."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1875,10 +1847,6 @@ msgstr "Майнінг ліквідності Uniswap"
 msgid "Uniswap migration contract↗"
 msgstr "Контракт Uniswap щодо перенесення↗"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {label}"
-msgstr "Змінити на {label}"
-
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Невідоме джерело"
@@ -1950,10 +1918,6 @@ msgstr "V2 ліквідність"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "Ціна V3 {0}:"
-
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "Переглянути ліквідність V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -2180,8 +2144,8 @@ msgid "Your V2 liquidity"
 msgstr "Ваша ліквідність V2"
 
 #: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "Тут з’являться ваші позиції ліквідності V3."
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "Тут з’являться ваші активні позиції ліквідності V3."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2450,6 +2414,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} лексем"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} маркерний міст"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
