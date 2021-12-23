@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { L1_CHAIN_IDS, LAYER_TWO_HELP_CENTER_LINK } from 'constants/chains'
+import { L1_CHAIN_IDS, LAYER_TWO_HELP_CENTER_LINK, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback } from 'react'
 import { X } from 'react-feather'
@@ -130,6 +130,7 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [layerTwoInfoAcknowledged, setLayerTwoInfoAcknowledged] = useLayerTwoSwapAlert()
+  const isPolygon = chainId && [SupportedChainId.POLYGON, SupportedChainId.POLYGON_MUMBAI].includes(chainId)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
 
   const toggleChain = useCallback(() => {
@@ -140,7 +141,7 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
     setLayerTwoInfoAcknowledged(true)
   }, [setLayerTwoInfoAcknowledged])
 
-  if (!chainId || !L1_CHAIN_IDS.includes(chainId) || layerTwoInfoAcknowledged) {
+  if (!chainId || !L1_CHAIN_IDS.includes(chainId) || isPolygon || layerTwoInfoAcknowledged) {
     return null
   }
   const helpCenterLink = LAYER_TWO_HELP_CENTER_LINK
