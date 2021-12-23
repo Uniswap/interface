@@ -11,17 +11,13 @@ import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 import { WrapperBackgroundDarkMode, WrapperBackgroundLightMode } from './styled'
 
-const RootWrapper = styled.div`
-  position: relative;
-`
-const ContentWrapper = styled.div<{ darkMode: boolean; thin?: boolean }>`
+const RootWrapper = styled.div<{ darkMode: boolean; thin?: boolean }>`
   ${({ darkMode }) => (darkMode ? WrapperBackgroundDarkMode : WrapperBackgroundLightMode)};
   display: flex;
   flex-direction: ${({ thin }) => (thin ? 'row' : 'column')};
   position: relative;
-  max-width: ${({ thin }) => (thin ? '100%' : '480px')};
-  min-height: ${({ thin }) => (thin ? 'min-content' : '174px')};
   width: 100%;
+  min-height: ${({ thin }) => (thin ? 'min-content' : '174px')};
   border-radius: 20px;
   overflow: hidden;
   ${({ thin }) =>
@@ -74,14 +70,20 @@ export const Controls = styled.div<{ thin?: boolean }>`
       margin: auto 40px auto 0;
     `}
 `
-const NetworkSelectorLink = styled.div<{ thin?: boolean }>`
+const ControlStyles = (thin?: boolean) => css`
   display: flex;
   align-items: center;
-  height: ${({ thin }) => (thin ? 'auto' : '44px')};
+  height: ${thin ? 'auto' : '44px'};
+  padding: ${thin ? '8px 12px' : '12px 16px'};
+  border-radius: 8px;
+  ${thin &&
+  css`
+    font-size: 14px;
+  `}
+`
+const NetworkSelectorLink = styled.div<{ thin?: boolean }>`
   color: white;
   background-color: black;
-  border-radius: 8px;
-  padding: ${({ thin }) => (thin ? '8px 12px' : '12px 16px')};
   margin: ${({ thin }) => (thin ? 'auto 10px auto 0' : '0 12px 20px 18px')};
   white-space: nowrap;
   cursor: pointer;
@@ -91,21 +93,14 @@ const NetworkSelectorLink = styled.div<{ thin?: boolean }>`
     background-color: black;
     text-decoration: underline;
   }
-  ${({ thin }) =>
-    thin &&
-    css`
-      font-size: 14px;
-    `}
+  ${({ thin }) => ControlStyles(thin)}
 `
 const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
   display: flex;
   align-items: center;
-  height: ${({ thin }) => (thin ? 'auto' : '44px')};
-  background-color: transparent;
   color: ${({ theme }) => theme.text1};
-  padding: ${({ thin }) => (thin ? '8px 12px' : '12px 16px')};
+  background-color: transparent;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
   margin: ${({ thin }) => (thin ? 'auto' : '0 0 20px 0')};
   white-space: nowrap;
   :hover,
@@ -114,11 +109,7 @@ const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
     background-color: rgba(255, 255, 255, 0.05);
   }
   transition: background-color 150ms ease-in-out;
-  ${({ thin }) =>
-    thin &&
-    css`
-      font-size: 14px;
-    `}
+  ${({ thin }) => ControlStyles(thin)}
 `
 
 interface LayerTwoSwapPromotionProps {
@@ -146,28 +137,26 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
   }
   const helpCenterLink = LAYER_TWO_HELP_CENTER_LINK
   return (
-    <RootWrapper>
-      <ContentWrapper darkMode={darkMode} thin={thin}>
-        <CloseIcon onClick={dismiss} />
-        <BodyText>
-          <Header thin={thin}>
-            <Trans>Swap on Layer 2</Trans>
-          </Header>
-          <Body>
-            <Trans>
-              Enjoy 10x cheaper fees on L2 networks. Learn more about the benefits and risks before you start.
-            </Trans>
-          </Body>
-        </BodyText>
-        <Controls thin={thin}>
-          <NetworkSelectorLink onClick={toggleChain} thin={thin}>
-            <Trans>Switch to L2</Trans>
-          </NetworkSelectorLink>
-          <LearnMoreLink href={helpCenterLink} thin={thin}>
-            <Trans>Learn More</Trans>
-          </LearnMoreLink>
-        </Controls>
-      </ContentWrapper>
+    <RootWrapper darkMode={darkMode} thin={thin}>
+      <CloseIcon onClick={dismiss} />
+      <BodyText>
+        <Header thin={thin}>
+          <Trans>Swap on Layer 2</Trans>
+        </Header>
+        <Body>
+          <Trans>
+            Enjoy 10x cheaper fees on L2 networks. Learn more about the benefits and risks before you start.
+          </Trans>
+        </Body>
+      </BodyText>
+      <Controls thin={thin}>
+        <NetworkSelectorLink onClick={toggleChain} thin={thin}>
+          <Trans>Switch to L2</Trans>
+        </NetworkSelectorLink>
+        <LearnMoreLink href={helpCenterLink} thin={thin}>
+          <Trans>Learn More</Trans>
+        </LearnMoreLink>
+      </Controls>
     </RootWrapper>
   )
 }

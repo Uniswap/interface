@@ -16,8 +16,6 @@ const RootWrapper = styled.div<{ darkMode: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  position: relative;
-  width: 100%;
   min-height: 54px;
   padding: 8px 16px;
   border-radius: 12px;
@@ -27,10 +25,9 @@ const Body = styled.div`
   font-size: 12px;
   line-height: 143%;
 `
-const NetworkSelectorLink = styled.div`
-  display: inline-flex;
+const NetworkSelectorLink = styled.a`
+  color: ${({ theme }) => theme.text1};
   font-weight: 500;
-  white-space: nowrap;
   cursor: pointer;
   :hover,
   :focus,
@@ -42,7 +39,6 @@ const LearnMoreLink = styled(ExternalLink)`
   background-color: transparent;
   color: ${({ theme }) => theme.text1};
   text-decoration: none;
-  width: auto;
 `
 const CloseIcon = styled(X)`
   flex: 0 0 auto;
@@ -75,22 +71,14 @@ export function LayerTwoAddLiquidityPromotion(props: LayerTwoAddLiquidityPromoti
   }
   return (
     <RootWrapper darkMode={darkMode}>
-      <>
-        <Body>
-          <Trans>
-            Provide liquidity on{' '}
-            <NetworkSelectorLink onClick={toggleChain}>
-              <Trans>L2 networks</Trans>
-            </NetworkSelectorLink>{' '}
-            to save on fees.{' '}
-            <LearnMoreLink href={helpCenterLink}>
-              <Trans>Learn More</Trans>
-            </LearnMoreLink>{' '}
-            about the benefits and risks before you start.
-          </Trans>
-        </Body>
-        <CloseIcon onClick={dismiss} />
-      </>
+      <Body>
+        <Trans>
+          Provide liquidity on <NetworkSelectorLink onClick={toggleChain}>L2 networks</NetworkSelectorLink> to save on
+          fees. <LearnMoreLink href={helpCenterLink}>Learn More</LearnMoreLink> about the benefits and risks before you
+          start.
+        </Trans>
+      </Body>
+      <CloseIcon onClick={dismiss} />
     </RootWrapper>
   )
 }
