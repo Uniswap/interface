@@ -116,11 +116,8 @@ const LinkOutToBridge = styled(ExternalLink)`
   justify-content: space-between;
   padding: 6px 8px;
   margin-right: 12px;
-  text-decoration: none;
+  text-decoration: none !important;
   width: 100%;
-  :hover {
-    text-decoration: none;
-  }
 `
 
 const StyledArrowUpRight = styled(ArrowUpRight)`
@@ -164,7 +161,7 @@ export function NetworkAlert() {
                 <Trans>{label} token bridge</Trans>
               </Header>
               <HideSmall>
-                <Trans>Deposit cross-chain assets to swap on {label}.</Trans>
+                <Trans>Deposit tokens to the {label} network.</Trans>
               </HideSmall>
             </AutoRow>
           </BodyText>
