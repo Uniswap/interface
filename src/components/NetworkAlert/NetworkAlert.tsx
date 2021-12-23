@@ -113,8 +113,8 @@ const LinkOutToBridge = styled(ExternalLink)`
 
 const LinkOutCircle = styled(ArrowUpRight)<{ darkMode: boolean }>`
   margin-left: 12px;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   color: ${({ color, darkMode }) => (darkMode ? 'rgba(255,255,255,0.8)' : color)};
 `
 
@@ -163,7 +163,7 @@ export function NetworkAlert() {
                   <Trans>{label} token bridge</Trans>
                 </Header>
                 <HideSmall>
-                  <Trans>Bring cross-chain assets to {label} chain.</Trans>
+                  <Trans>Deposit cross-chain assets to swap on {label}.</Trans>
                 </HideSmall>
               </AutoRow>
             </BodyText>
