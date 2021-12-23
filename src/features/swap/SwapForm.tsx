@@ -128,7 +128,7 @@ export function SwapForm(props: SwapFormProps) {
           onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
           showNonZeroBalancesOnly={false}
           otherSelectedCurrency={currencies[CurrencyField.INPUT]}
-          title={t(`You'll receive`)}
+          title={t("You'll receive")}
           backgroundColor="background1"
         />
       </Box>

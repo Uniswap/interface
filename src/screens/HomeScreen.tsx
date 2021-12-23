@@ -44,17 +44,15 @@ export function HomeScreen({ navigation }: Props) {
     sleep(300).then(() => setRefreshing(false))
   }, [])
 
-  const onPressToken = (currencyAmount: CurrencyAmount<Currency>) => {
+  const onPressToken = (currencyAmount: CurrencyAmount<Currency>) =>
     navigation.navigate(Screens.TokenDetails, { currency: currencyAmount.currency })
-  }
+
+  const onPressSettings = () =>
+    navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
 
   const notificationsModalRef = useRef<BottomSheetModal>(null)
-  const onPressNotifications = () => {
-    notificationsModalRef.current?.present()
-  }
-  const onCloseNotifications = () => {
-    notificationsModalRef.current?.dismiss()
-  }
+  const onPressNotifications = () => notificationsModalRef.current?.present()
+  const onCloseNotifications = () => notificationsModalRef.current?.dismiss()
 
   if (!activeAccount)
     return (
@@ -73,9 +71,7 @@ export function HomeScreen({ navigation }: Props) {
       <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="md" my="sm">
         <AccountHeader />
         <Box flexDirection="row" mr="md">
-          <Button
-            onPress={() => navigation.navigate(Screens.DevStack, { screen: Screens.Dev })}
-            mr="md">
+          <Button onPress={onPressSettings} mr="md">
             <Settings height={24} width={24} />
           </Button>
           <Button onPress={onPressNotifications}>

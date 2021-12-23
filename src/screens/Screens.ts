@@ -1,16 +1,18 @@
 export enum Screens {
-  AccountStack = 'AccountStack',
   Accounts = 'Accounts',
+  AccountStack = 'AccountStack',
   Balances = 'Balances',
   Camera = 'Camera',
   CurrencySelector = 'CurrencySelector',
   Dev = 'Dev',
-  DevStack = 'DevStack',
   Explore = 'Explore',
   Home = 'Home',
   ImportAccount = 'ImportAccount',
   Notifications = 'Notifications',
   SeedPhrase = 'SeedPhrase',
+  Settings = 'Settings',
+  SettingsChains = 'SettingsChains',
+  SettingsStack = 'SettingsStack',
   Swap = 'Swap',
   SwapConfig = 'SwapConfig',
   TabNavigator = 'TabNavigator',
@@ -20,7 +22,6 @@ export enum Screens {
 }
 
 export enum Tabs {
-  Dev = 'DevTab',
   Explore = 'ExploreTab',
   Home = 'HomeTab',
   Swap = 'SwapTab',

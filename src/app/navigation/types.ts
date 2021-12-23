@@ -17,14 +17,15 @@ export type TabParamList = {
   [Tabs.Explore]: undefined
 }
 
-export type DevStackParamList = {
-  [Screens.Dev]: undefined
-  [Screens.Balances]: undefined
-}
-
 export type AccountStackParamList = {
   [Screens.Accounts]: undefined
   [Screens.ImportAccount]: undefined
+}
+
+export type SettingsStackParamList = {
+  [Screens.Settings]: undefined
+  [Screens.SettingsChains]: undefined
+  [Screens.Dev]: undefined
 }
 
 export type AppStackParamList = {
@@ -37,8 +38,8 @@ export type AppStackParamList = {
     selectedCurrencyAddress?: string
     selectedCurrencyChainId?: ChainId
   }
-  [Screens.DevStack]: NavigatorScreenParams<DevStackParamList>
   [Screens.Notifications]: undefined
+  [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.Swap]: { swapFormState?: SwapFormState } | undefined
   [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
@@ -70,10 +71,14 @@ export type AccountStackNavigationProp = CompositeNavigationProp<
 export type AccountStackScreenProp<Screen extends keyof AccountStackParamList> =
   CompositeScreenProps<NativeStackScreenProps<AccountStackParamList, Screen>, AppStackScreenProps>
 
-export type DevStackNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<DevStackParamList>,
+export type SettingsStackNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<SettingsStackParamList>,
   AppStackNavigationProp
 >
 
+export type SettingsStackScreenProp<Screen extends keyof SettingsStackParamList> =
+  CompositeScreenProps<NativeStackScreenProps<SettingsStackParamList, Screen>, AppStackScreenProps>
+
 export const useAppStackNavigation = () => useNavigation<AppStackNavigationProp>()
 export const useAccountStackNavigation = () => useNavigation<AccountStackNavigationProp>()
+export const useSettingsStackNavigation = () => useNavigation<SettingsStackNavigationProp>()
