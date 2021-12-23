@@ -55,12 +55,17 @@
   "Refresh": "Refresh",
   "Explore": "Explore",
   "Track Account": "Track Account",
+  "Recent Transactions": "Recent Transactions",
   "Extra words detected - tap to remove them": "Extra words detected - tap to remove them",
   "Confirm phrase": "Confirm phrase",
   "Chain Settings": "Chain Settings",
-  "Settings": "Settings",
+  "Configure active chains (networks)": "Configure active chains (networks)",
   "Chains": "Chains",
+  "Support": "Support",
   "Dev Options": "Dev Options",
+  "Settings": "Settings",
+  "Wallet Support": "Wallet Support",
+  "Recent logs": "Recent logs",
   "Transaction Settings": "Transaction Settings",
   "About Gas Price": "About Gas Price",
   "Gas price determines the priority with which your transaction is handled by the network.": "Gas price determines the priority with which your transaction is handled by the network.",
@@ -72,6 +77,5 @@
   "Send those tokens around": "Send those tokens around",
   "Uniswap Wallet": "Uniswap Wallet",
   "Create New Account": "Create New Account",
-  "Import Account": "Import Account",
-  "Recent Transactions": "Recent Transactions"
+  "Import Account": "Import Account"
 }

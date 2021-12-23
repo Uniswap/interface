@@ -26,7 +26,7 @@ export function Switch({
     <Box {...rest}>
       <BaseSwitch
         trackColor={{ false: theme.colors.gray100, true: theme.colors.gray100 }}
-        thumbColor={value ? theme.colors.blue : theme.colors.gray400}
+        thumbColor={value ? theme.colors.green : theme.colors.gray400}
         ios_backgroundColor={theme.colors.gray100}
         onValueChange={disabled ? undefined : onValueChange}
         value={value}

@@ -22,6 +22,7 @@ import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
+import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 
@@ -93,6 +94,7 @@ function SettingsStackGroup() {
     <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
       <SettingsStack.Screen name={Screens.Settings} component={SettingsScreen} />
       <SettingsStack.Screen name={Screens.SettingsChains} component={SettingsChainsScreen} />
+      <SettingsStack.Screen name={Screens.SettingsSupport} component={SettingsSupportScreen} />
       <SettingsStack.Screen name={Screens.Dev} component={DevScreen} />
     </SettingsStack.Navigator>
   )

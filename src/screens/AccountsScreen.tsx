@@ -43,6 +43,7 @@ export function AccountsScreen() {
   const dispatch = useAppDispatch()
   const onPressActivate = (address: Address) => {
     dispatch(activateAccount(address))
+    navigation.goBack()
   }
 
   const onPressImport = () => {

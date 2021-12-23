@@ -54,7 +54,7 @@ function argsToString(args: any[]): string {
 export function getLogBuffer() {
   const logs: string[] = []
   for (let i = 0; i < config.logBufferSize; i++) {
-    const nextIndex = (i + logBufferIndex + 1) % config.logBufferSize
+    const nextIndex = (i + logBufferIndex) % config.logBufferSize
     if (logBuffer[nextIndex]) logs.push(logBuffer[nextIndex])
   }
   return logs
