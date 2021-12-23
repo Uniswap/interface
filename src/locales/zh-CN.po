@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 16:06\n"
+"PO-Revision-Date: 2021-12-23 17:11\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -719,7 +719,7 @@ msgstr "输入有效的代币合约地址"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 msgid "Enter {0} amount"
-msgstr "输入 {0} 金额"
+msgstr "输入 {0} 数量"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1205,7 +1205,7 @@ msgstr "Optimism 网关"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "乐观处于测试阶段，可能会遇到停机时间。乐观预计计划停机时间将在不久的将来升级网络。在停机期间，您的头寸将不会产生费用，并且您将无法移除流动性。 <0>阅读更多。</0>"
+msgstr "Optimistic 处于 Beta 阶段，可能会遇到停机问题。Optimistic 计划近期会停机升级网络。在停机期间，您的头寸不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1255,7 +1255,7 @@ msgstr "请连接到适当的以太坊网络。"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Please treat this as a beta release and learn about the risks before using {label}. To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "请将此视为测试版并在使用 {label}之前了解风险。 {label}上开始交易，首先将您的资产从 L1 桥接到 L2。"
+msgstr "请将此视为测试版并在使用 {label} 之前了解风险。 在{label} 开始交易之前，首先将您的资产从 L1 桥接到 L2。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1267,7 +1267,7 @@ msgstr "多边形桥"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
-msgstr "多边形扫描"
+msgstr "Polygonscan"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1641,7 +1641,7 @@ msgstr "发送此交易的成本是输入金额价值的一半以上。"
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "当前用于在 L1 上发送交易的快速 gas 量。 Gas 费用以以太坊的本币以太币 (ETH) 支付，并以 GWEI 计价。"
+msgstr "当前用于在 L1 上发送交易的快速 gas 量。 Gas 费用以以太坊的本位币以太币 (ETH) 支付，并以 GWEI 计价。"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1740,7 +1740,7 @@ msgstr "兑换到(至少数额)"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To start trading on {label}, first bridge your assets from L1 to L2."
-msgstr "{label}上开始交易，首先将您的资产从 L1 桥接到 L2。"
+msgstr "在 {label} 交易之前，首先将您的资产从 L1 桥接到 L2。"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1877,7 +1877,7 @@ msgstr "Uniswap 迁移合约↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Uniswap on {label}"
-msgstr "Uniswap 在 {label}"
+msgstr "{label} Uniswap"
 
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
@@ -1920,7 +1920,7 @@ msgstr "展开"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr "展开 <0/> 到 {0}"
+msgstr "将 <0/> 换回为 {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2099,7 +2099,7 @@ msgstr "兑换"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr "从 <0/> 到 {0}"
+msgstr "将 <0/> 换为 {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
