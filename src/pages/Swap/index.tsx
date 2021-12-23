@@ -56,7 +56,7 @@ import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
 const AlertWrapper = styled.div`
-  max-width: 480px;
+  max-width: 460px;
 `
 
 export default function Swap({ history }: RouteComponentProps) {
@@ -378,9 +378,6 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-      <AlertWrapper>
-        <NetworkAlert />
-      </AlertWrapper>
       <AppBody>
         <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
@@ -618,6 +615,9 @@ export default function Swap({ history }: RouteComponentProps) {
           </AutoColumn>
         </Wrapper>
       </AppBody>
+      <AlertWrapper>
+        <NetworkAlert />
+      </AlertWrapper>
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter
