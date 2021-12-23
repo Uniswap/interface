@@ -1,11 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
 
-import { SupportedChainId } from '../../constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import {
-  acknowledgeNetworkAlert,
   addSerializedPair,
   addSerializedToken,
   removeSerializedPair,
@@ -25,11 +23,6 @@ import {
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  // replaces the above two fields
-  networkAlertsAcknowledged: {
-    [chainId: number]: true
-  }
-
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
@@ -75,7 +68,6 @@ function pairKey(token0Address: string, token1Address: string) {
 
 export const initialState: UserState = {
   matchesDarkMode: false,
-  networkAlertsAcknowledged: {},
   userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
@@ -123,19 +115,7 @@ export default createReducer(initialState, (builder) =>
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
 
-      state.networkAlertsAcknowledged = state.networkAlertsAcknowledged ?? {}
-      if ((state as unknown as { arbitrumAlphaAcknowledged: boolean }).arbitrumAlphaAcknowledged) {
-        state.networkAlertsAcknowledged[SupportedChainId.ARBITRUM_ONE] = true
-      }
-      if ((state as unknown as { optimismAlphaAcknowledged: boolean }).optimismAlphaAcknowledged) {
-        state.networkAlertsAcknowledged[SupportedChainId.OPTIMISM] = true
-      }
-
       state.lastUpdateVersionTimestamp = currentTimestamp()
-    })
-    .addCase(acknowledgeNetworkAlert, (state, action) => {
-      state.networkAlertsAcknowledged = state.networkAlertsAcknowledged ?? {}
-      state.networkAlertsAcknowledged[action.payload.chainId] = true
     })
     .addCase(updateUserDarkMode, (state, action) => {
       state.userDarkMode = action.payload.userDarkMode
