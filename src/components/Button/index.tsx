@@ -23,7 +23,7 @@ export const BaseButton = styled(RebassButton)<
   border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
   outline: none;
   border: 1px solid transparent;
-  color: white;
+  color: ${({ theme }) => theme.text1};
   text-decoration: none;
   display: flex;
   justify-content: center;

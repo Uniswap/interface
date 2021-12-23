@@ -14,7 +14,6 @@ import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { AppState } from '../index'
 import {
-  acknowledgeNetworkAlert,
   addSerializedPair,
   addSerializedToken,
   removeSerializedToken,
@@ -336,15 +335,4 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
-}
-
-export function useNetworkAlertStatus(chainId: number | undefined): [boolean, () => void] {
-  const dispatch = useAppDispatch()
-  const alertAcknowledged = useAppSelector(({ user }) => user.networkAlertsAcknowledged)
-  const acknowledgeAlert = useCallback(() => {
-    if (typeof chainId !== 'number') return
-    dispatch(acknowledgeNetworkAlert({ chainId }))
-  }, [chainId, dispatch])
-
-  return [typeof chainId === 'number' ? alertAcknowledged[chainId] ?? false : false, acknowledgeAlert]
 }

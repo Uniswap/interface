@@ -108,7 +108,7 @@ const SelectorControls = styled.div<{ interactive: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg0};
   border: 2px solid ${({ theme }) => theme.bg0};
-  border-radius: 12px;
+  border-radius: 16px;
   color: ${({ theme }) => theme.text1};
   cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
   display: flex;
@@ -128,7 +128,7 @@ const SelectorWrapper = styled.div`
   }
 `
 const StyledChevronDown = styled(ChevronDown)`
-  width: 12px;
+  width: 16px;
 `
 const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
@@ -247,7 +247,7 @@ export default function NetworkSelector() {
         <StyledChevronDown />
       </SelectorControls>
       {open && (
-        <FlyoutMenu>
+        <FlyoutMenu onMouseLeave={toggle}>
           <FlyoutHeader>
             <Trans>Select a network</Trans>
           </FlyoutHeader>

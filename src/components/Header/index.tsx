@@ -89,7 +89,7 @@ const HeaderLinks = styled(Row)`
   justify-self: center;
   background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
-  padding: 4px;
+  padding: 2px;
   border-radius: 16px;
   display: grid;
   grid-auto-flow: column;
@@ -121,10 +121,11 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg1)};
-  border-radius: 12px;
+  background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg0)};
+  border-radius: 16px;
   white-space: nowrap;
   width: 100%;
+  height: 40px;
 
   :focus {
     border: 1px solid blue;
@@ -202,11 +203,11 @@ const StyledNavLink = styled(NavLink).attrs({
   overflow: hidden;
   white-space: nowrap;
   &.${activeClassName} {
-    border-radius: 12px;
+    border-radius: 14px;
     font-weight: 600;
     justify-content: center;
     color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.bg1};
   }
 
   :hover,
@@ -231,7 +232,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   font-weight: 500;
 
   &.${activeClassName} {
-    border-radius: 12px;
+    border-radius: 14px;
     font-weight: 600;
     color: ${({ theme }) => theme.text1};
   }
