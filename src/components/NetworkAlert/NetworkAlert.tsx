@@ -123,11 +123,10 @@ const LinkOutToBridge = styled(ExternalLink)`
   }
 `
 
-const LinkOutCircle = styled(ArrowUpRight)<{ darkMode: boolean }>`
+const StyledArrowUpRight = styled(ArrowUpRight)`
   margin-left: 12px;
   width: 24px;
   height: 24px;
-  color: ${({ color, darkMode }) => (darkMode ? 'rgba(255,255,255,0.8)' : color)};
 `
 
 const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
@@ -169,7 +168,7 @@ export function NetworkAlert() {
               </HideSmall>
             </AutoRow>
           </BodyText>
-          <LinkOutCircle darkMode={darkMode} color={textColor} />
+          <StyledArrowUpRight color={textColor} />
         </LinkOutToBridge>
       </ContentWrapper>
     </RootWrapper>
