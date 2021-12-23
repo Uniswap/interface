@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import ReactGA from 'react-ga'
 
