@@ -9,27 +9,30 @@ import { useDarkModeManager, useLayerTwoSwapAlert } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
-export const DesktopTextBreak = styled.div`
-  display: none;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    display: block;
-  }
-`
+import { WrapperBackgroundDarkMode, WrapperBackgroundLightMode } from './styled'
 
-const Body = styled.p`
-  font-size: 12px;
-  grid-column: 1 / 3;
-  line-height: 143%;
-  margin: 0;
+const RootWrapper = styled.div`
+  position: relative;
 `
-export const Controls = styled.div<{ thin?: boolean }>`
-  align-items: center;
+const ContentWrapper = styled.div<{ darkMode: boolean; thin?: boolean }>`
+  ${({ darkMode }) => (darkMode ? WrapperBackgroundDarkMode : WrapperBackgroundLightMode)};
   display: flex;
-  justify-content: flex-start;
+  flex-direction: ${({ thin }) => (thin ? 'row' : 'column')};
+  position: relative;
+  max-width: ${({ thin }) => (thin ? '100%' : '480px')};
+  min-height: ${({ thin }) => (thin ? 'min-content' : '174px')};
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
   ${({ thin }) =>
     thin &&
     css`
-      margin: auto 40px auto 0;
+      justify-content: space-between;
+      ${CloseIcon} {
+        top: 50%;
+        margin-top: -12px;
+        right: 8px;
+      }
     `}
 `
 const CloseIcon = styled(X)`
@@ -47,92 +50,39 @@ const BodyText = styled.div`
     grid-gap: 8px;
   }
 `
-const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
-  align-items: center;
-  background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
-  color: ${({ theme }) => theme.text1};
-  display: flex;
-  font-size: 16px;
-  height: 44px;
-  justify-content: space-between;
-  margin: 0 0 20px 0;
-  padding: 12px 16px;
-  text-decoration: none;
-  width: auto;
-  white-space: nowrap;
-  :hover,
-  :focus,
-  :active {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-  transition: background-color 150ms ease-in-out;
-  ${({ thin }) =>
-    thin &&
-    css`
-      height: auto;
-      font-size: 14px;
-      padding: 8px 12px;
-      margin: auto;
-    `}
-`
-const RootWrapper = styled.div`
-  position: relative;
-`
-export const WrapperBackgroundDarkMode = css`
-  background: radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%),
-    radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.5) 0%, rgba(235, 0, 255, 0.345) 96%);
-`
-export const WrapperBackgroundLightMode = css`
-  background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
-    radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
-`
-const ContentWrapper = styled.div<{ darkMode: boolean; thin?: boolean }>`
-  ${({ darkMode }) => (darkMode ? WrapperBackgroundDarkMode : WrapperBackgroundLightMode)};
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  max-width: 480px;
-  min-height: 174px;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  ${({ thin }) =>
-    thin &&
-    css`
-      justify-content: space-between;
-      flex-direction: row;
-      max-width: 100%;
-      min-height: min-content;
-      ${CloseIcon} {
-        top: 50%;
-        margin-top: -12px;
-        right: 8px;
-      }
-    `}
-`
 const Header = styled.h2<{ thin?: boolean }>`
   grid-column: 1 / 3;
+  display: ${({ thin }) => (thin ? 'none' : 'block')};
   font-weight: 600;
   font-size: 20px;
-  margin: 0;
   padding-right: 30px;
-  display: ${({ thin }) => (thin ? 'none' : 'block')};
+  margin: 0;
+`
+const Body = styled.p`
+  grid-column: 1 / 3;
+  font-size: 12px;
+  line-height: 143%;
+  margin: 0;
+`
+export const Controls = styled.div<{ thin?: boolean }>`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  ${({ thin }) =>
+    thin &&
+    css`
+      margin: auto 40px auto 0;
+    `}
 `
 const NetworkSelectorLink = styled.div<{ thin?: boolean }>`
+  display: flex;
   align-items: center;
+  height: ${({ thin }) => (thin ? 'auto' : '44px')};
+  color: white;
   background-color: black;
   border-radius: 8px;
-  color: white;
-  display: flex;
-  font-size: 16px;
-  height: 44px;
-  justify-content: space-between;
-  margin: 0 12px 20px 18px;
-  padding: 12px 16px;
-  text-decoration: none;
-  width: auto;
+  padding: ${({ thin }) => (thin ? '8px 12px' : '12px 16px')};
+  margin: ${({ thin }) => (thin ? 'auto 10px auto 0' : '0 12px 20px 18px')};
   white-space: nowrap;
   cursor: pointer;
   :hover,
@@ -144,10 +94,30 @@ const NetworkSelectorLink = styled.div<{ thin?: boolean }>`
   ${({ thin }) =>
     thin &&
     css`
-      height: auto;
       font-size: 14px;
-      padding: 8px 12px;
-      margin: auto 10px auto 0;
+    `}
+`
+const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
+  display: flex;
+  align-items: center;
+  height: ${({ thin }) => (thin ? 'auto' : '44px')};
+  background-color: transparent;
+  color: ${({ theme }) => theme.text1};
+  padding: ${({ thin }) => (thin ? '8px 12px' : '12px 16px')};
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  margin: ${({ thin }) => (thin ? 'auto' : '0 0 20px 0')};
+  white-space: nowrap;
+  :hover,
+  :focus,
+  :active {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  transition: background-color 150ms ease-in-out;
+  ${({ thin }) =>
+    thin &&
+    css`
+      font-size: 14px;
     `}
 `
 
@@ -156,6 +126,7 @@ interface LayerTwoSwapPromotionProps {
 }
 
 export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
+  const { thin } = props
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [layerTwoInfoAcknowledged, setLayerTwoInfoAcknowledged] = useLayerTwoSwapAlert()
@@ -175,10 +146,10 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
   const helpCenterLink = LAYER_TWO_HELP_CENTER_LINK
   return (
     <RootWrapper>
-      <ContentWrapper darkMode={darkMode} thin={props.thin}>
+      <ContentWrapper darkMode={darkMode} thin={thin}>
         <CloseIcon onClick={dismiss} />
         <BodyText>
-          <Header thin={props.thin}>
+          <Header thin={thin}>
             <Trans>Swap on Layer 2</Trans>
           </Header>
           <Body>
@@ -187,11 +158,11 @@ export function LayerTwoSwapPromotion(props: LayerTwoSwapPromotionProps) {
             </Trans>
           </Body>
         </BodyText>
-        <Controls thin={props.thin}>
-          <NetworkSelectorLink onClick={toggleChain} thin={props.thin}>
+        <Controls thin={thin}>
+          <NetworkSelectorLink onClick={toggleChain} thin={thin}>
             <Trans>Switch to L2</Trans>
           </NetworkSelectorLink>
-          <LearnMoreLink href={helpCenterLink} thin={props.thin}>
+          <LearnMoreLink href={helpCenterLink} thin={thin}>
             <Trans>Learn More</Trans>
           </LearnMoreLink>
         </Controls>
