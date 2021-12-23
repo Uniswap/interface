@@ -8,6 +8,7 @@ export type PopupContent =
       txn: {
         hash: string
         success: boolean
+        type?: string
         summary?: string
       }
     }

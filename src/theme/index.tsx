@@ -82,6 +82,12 @@ export function colors(darkMode: boolean): Colors {
     bg18: darkMode ? '#1a4052' : '#ecebeb',
     bg19: darkMode ? '#222c31' : '#ffffff',
     bg20: darkMode ? '#243036' : '#F5F5F5',
+    bg21: darkMode
+      ? 'linear-gradient(90deg, rgba(29, 122, 95, 0.5) 0%, rgba(29, 122, 95, 0) 100%)'
+      : 'linear-gradient(90deg, rgba(49, 203, 158, 0.15) 0%, rgba(49, 203, 158, 0) 100%)',
+    bg22: darkMode
+      ? 'linear-gradient(90deg, rgba(255, 83, 123, 0.4) 0%, rgba(255, 83, 123, 0) 100%)'
+      : 'linear-gradient(90deg, rgba(255, 83, 123, 0.15) 0%, rgba(255, 83, 123, 0) 100%)',
 
     buttonBlack: darkMode ? '#11171a' : '#f5f5f5',
     buttonGray: darkMode ? '#40444f' : '#dcdbdc',

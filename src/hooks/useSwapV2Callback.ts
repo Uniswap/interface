@@ -218,7 +218,7 @@ export function useSwapV2Callback(
 
   const swapCalls = useSwapV2CallArguments(trade, allowedSlippage, recipientAddressOrName)
 
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
@@ -317,7 +317,7 @@ export function useSwapV2Callback(
             const inputAmount = formatCurrencyAmount(trade.inputAmount)
             const outputAmount = formatCurrencyAmount(trade.outputAmount)
 
-            const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+            const base = `${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
             const withRecipient =
               recipient === account
                 ? undefined
@@ -327,7 +327,8 @@ export function useSwapV2Callback(
                       : recipientAddressOrName
                   }`
 
-            addTransaction(response, {
+            addTransactionWithType(response, {
+              type: 'Swap',
               summary: `${base} ${withRecipient ?? ''}`,
               arbitrary: {
                 inputSymbol,
@@ -353,5 +354,5 @@ export function useSwapV2Callback(
       },
       error: null
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransactionWithType])
 }

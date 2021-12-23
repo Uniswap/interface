@@ -5,6 +5,7 @@ import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useFairLaunchContract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { calculateGasMargin } from 'utils'
+import { getFullDisplayBalance } from 'utils/formatBalance'
 
 const useFairLaunch = (address: string) => {
   const addTransaction = useTransactionAdder()
@@ -57,7 +58,7 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.deposit(pid, amount, shouldHaverst, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Deposit ${name}` })
+      addTransaction(tx, { type: 'Stake', summary: `${getFullDisplayBalance(amount)} ${name} Tokens` })
 
       return tx.hash
     },
@@ -75,7 +76,7 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.withdraw(pid, amount, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Withdraw ${name}` })
+      addTransaction(tx, { type: 'Unstake', summary: `${getFullDisplayBalance(amount)} ${name} Tokens` })
 
       return tx.hash
     },
@@ -92,7 +93,7 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.harvest(pid, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Harvest ${name}` })
+      addTransaction(tx, { type: 'Harvest' })
 
       return tx.hash
     },

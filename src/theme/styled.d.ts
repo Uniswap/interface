@@ -46,6 +46,8 @@ export interface Colors {
   bg18: Color
   bg19: Color
   bg20: Color
+  bg21: Color
+  bg22: Color
   buttonBlack: Color
   buttonGray: Color
   poweredByText: Color
