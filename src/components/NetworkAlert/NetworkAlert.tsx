@@ -22,8 +22,8 @@ export const Controls = styled.div`
   padding: 0 20px 20px 20px;
 `
 
-const BodyText = styled.div<{ darkMode: boolean }>`
-  color: ${({ color, darkMode }) => (darkMode ? color : color)};
+const BodyText = styled.div`
+  color: ${({ color }) => color};
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -34,8 +34,20 @@ const RootWrapper = styled.div`
   position: relative;
   margin-top: 16px;
 `
+
+const SHOULD_SHOW_ALERT = {
+  [SupportedChainId.OPTIMISM]: true,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: true,
+  [SupportedChainId.ARBITRUM_ONE]: true,
+  [SupportedChainId.ARBITRUM_RINKEBY]: true,
+  [SupportedChainId.POLYGON]: true,
+  [SupportedChainId.POLYGON_MUMBAI]: true,
+}
+
+type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
+
 const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
-  [darkMode in 'dark' | 'light']: { [chainId in SupportedChainId]?: string }
+  [darkMode in 'dark' | 'light']: { [chainId in NetworkAlertChains]: string }
 } = {
   dark: {
     [SupportedChainId.POLYGON]:
@@ -67,7 +79,7 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
   },
 }
 
-const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+const ContentWrapper = styled.div<{ chainId: NetworkAlertChains; darkMode: boolean; logoUrl: string }>`
   background: ${({ chainId, darkMode }) => BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID[darkMode ? 'dark' : 'light'][chainId]};
   border-radius: 20px;
   display: flex;
@@ -118,7 +130,7 @@ const LinkOutCircle = styled(ArrowUpRight)<{ darkMode: boolean }>`
   color: ${({ color, darkMode }) => (darkMode ? 'rgba(255,255,255,0.8)' : color)};
 `
 
-const BETA_TAG_COLORS: { [chainId in SupportedChainId]?: string } = {
+const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
   [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
   [SupportedChainId.OPTIMISM]: '#ff3856',
@@ -127,17 +139,8 @@ const BETA_TAG_COLORS: { [chainId in SupportedChainId]?: string } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
 }
 
-const SHOULD_SHOW_ALERT: { [chainId in SupportedChainId]?: true } = {
-  [SupportedChainId.OPTIMISM]: true,
-  [SupportedChainId.OPTIMISTIC_KOVAN]: true,
-  [SupportedChainId.ARBITRUM_ONE]: true,
-  [SupportedChainId.ARBITRUM_RINKEBY]: true,
-  [SupportedChainId.POLYGON]: true,
-  [SupportedChainId.POLYGON_MUMBAI]: true,
-}
-
-function shouldShowAlert(chainId: number | undefined): chainId is SupportedChainId {
-  return Boolean(chainId && SHOULD_SHOW_ALERT[chainId as SupportedChainId])
+function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {
+  return Boolean(chainId && SHOULD_SHOW_ALERT[chainId as unknown as NetworkAlertChains])
 }
 
 export function NetworkAlert() {
@@ -149,28 +152,26 @@ export function NetworkAlert() {
   }
 
   const { label, logoUrl, bridge } = CHAIN_INFO[chainId]
-  const betaColor = BETA_TAG_COLORS[chainId]
+  const textColor = TEXT_COLORS[chainId]
 
-  return (
+  return bridge ? (
     <RootWrapper>
-      {bridge && (
-        <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
-          <LinkOutToBridge href={bridge}>
-            <BodyText darkMode={darkMode} color={betaColor}>
-              <L2Icon src={logoUrl} />
-              <AutoRow>
-                <Header>
-                  <Trans>{label} token bridge</Trans>
-                </Header>
-                <HideSmall>
-                  <Trans>Deposit cross-chain assets to swap on {label}.</Trans>
-                </HideSmall>
-              </AutoRow>
-            </BodyText>
-            <LinkOutCircle darkMode={darkMode} color={betaColor} />
-          </LinkOutToBridge>
-        </ContentWrapper>
-      )}
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
+        <LinkOutToBridge href={bridge}>
+          <BodyText color={textColor}>
+            <L2Icon src={logoUrl} />
+            <AutoRow>
+              <Header>
+                <Trans>{label} token bridge</Trans>
+              </Header>
+              <HideSmall>
+                <Trans>Deposit cross-chain assets to swap on {label}.</Trans>
+              </HideSmall>
+            </AutoRow>
+          </BodyText>
+          <LinkOutCircle darkMode={darkMode} color={textColor} />
+        </LinkOutToBridge>
+      </ContentWrapper>
     </RootWrapper>
-  )
+  ) : null
 }
