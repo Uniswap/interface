@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-22 19:47\n"
+"PO-Revision-Date: 2021-12-23 16:06\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -779,6 +779,10 @@ msgstr "Verfallen"
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Entdecken Sie populäre Pools auf Uniswap Analytics."
+
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "Netzwerkwechsel über die Uniswap-Schnittstelle fehlgeschlagen. Um Uniswap auf {0}, müssen Sie das Netzwerk in Ihrem Wallet ändern."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -2257,10 +2261,6 @@ msgstr "Ihre Transaktionen werden hier erscheinen..."
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
 msgstr "Deine noch nicht bezogenen UNI"
-
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
-msgid "Your wallet does not support switching networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Ihr Wallet unterstützt kein Wechseln von Netzwerken über die Uniswap-Schnittstelle. Um Uniswap auf {0}, müssen Sie das Netzwerk in Ihrem Wallet ändern."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"

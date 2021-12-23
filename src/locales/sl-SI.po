@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-22 19:47\n"
+"PO-Revision-Date: 2021-12-23 16:07\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -779,6 +779,10 @@ msgstr "Potekla"
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Raziskujte priljubljene sklade v Uniswap Analytics."
+
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "Preklop omrežij z vmesnika Uniswap ni uspel. Če želite uporabiti Uniswap na {0}, morate spremeniti omrežje v svoji denarnici."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -2257,10 +2261,6 @@ msgstr "Vaše transakcije bodo prikazane tukaj ..."
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
 msgstr "Vaši neprevzeti UNI"
-
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
-msgid "Your wallet does not support switching networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Vaša denarnica ne podpira preklapljanja omrežij z vmesnika Uniswap. Če želite uporabiti Uniswap na {0}, morate spremeniti omrežje v svoji denarnici."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
