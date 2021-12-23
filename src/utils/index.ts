@@ -125,7 +125,7 @@ export function getEtherscanLinkText(chainId: ChainId): string {
   }
 
   if ([ChainId.AVAXTESTNET, ChainId.AVAXMAINNET].includes(chainId)) {
-    return 'View on C-Chain Explorer'
+    return 'View on Snowtrace Explorer'
   }
 
   if ([ChainId.FANTOM].includes(chainId)) {

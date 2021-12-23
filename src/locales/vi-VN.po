@@ -264,7 +264,7 @@ msgstr "Số Dư"
 msgid "Best price guaranteed"
 msgstr "Đảm báo giá tốt nhất"
 
-#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 msgid "Bridge Assets"
 msgstr "Cầu Nối"
 
@@ -1584,6 +1584,10 @@ msgstr "Điều khoản"
 #: src/components/WalletModal/index.tsx
 msgid "Terms of Use"
 msgstr "Điều khoản Sử dụng"
+
+#: src/components/Header/index.tsx
+msgid "Test our L2 solution now!"
+msgstr ""
 
 #: src/pages/SwapV2/index.tsx
 msgid "The amount you save compared to <0>{0}</0>."

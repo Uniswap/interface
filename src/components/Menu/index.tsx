@@ -1,8 +1,21 @@
 import React, { ReactNode, useRef } from 'react'
-import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor, User, Triangle, Edit } from 'react-feather'
+import {
+  Info,
+  PieChart,
+  Menu as MenuIcon,
+  Zap,
+  BookOpen,
+  FileText,
+  Monitor,
+  User,
+  Triangle,
+  Edit,
+  Share2
+} from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
+import { Text } from 'rebass'
 
 import { ChainId } from '@dynamic-amm/sdk'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -12,6 +25,7 @@ import { ExternalLink } from '../../theme'
 import { DMM_ANALYTICS_URL } from '../../constants'
 import { useActiveWeb3React } from 'hooks'
 import { useMedia } from 'react-use'
+import { SlideToUnlock } from 'components/Header'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -26,22 +40,20 @@ const StyledMenuButton = styled.button`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
-  color: ${({ theme }) => theme.text11};
-  background-color: ${({ theme }) => theme.bg3};
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.text};
 
-  padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg4};
-  }
-
-  svg {
-    margin-top: 2px;
+    background-color: ${({ theme }) => theme.buttonBlack};
   }
 `
 
@@ -121,6 +133,19 @@ export default function Menu() {
   const above1100 = useMedia('(min-width: 1100px)')
   const above768 = useMedia('(min-width: 768px)')
 
+  const getBridgeLink = () => {
+    if (!chainId) return ''
+    if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) return 'https://wallet.matic.network/bridge'
+    if ([ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId)) return 'https://www.binance.org/en/bridge'
+    if ([ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId)) return 'https://bridge.avax.network'
+    if ([ChainId.FANTOM].includes(chainId)) return 'https://multichain.xyz'
+    if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId))
+      return 'https://cronos.crypto.org/docs/bridge/cdcapp.html'
+    return ''
+  }
+
+  const bridgeLink = getBridgeLink()
+
   return (
     <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggle} aria-label="Menu">
@@ -129,6 +154,25 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
+          {/*{!above768 && (*/}
+          {/*  <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>*/}
+          {/*    <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />*/}
+          {/*    <SlideToUnlock>*/}
+          {/*      <Text width="max-content" marginLeft="8px">*/}
+          {/*        ZKyber ↗*/}
+          {/*      </Text>*/}
+          {/*    </SlideToUnlock>*/}
+          {/*  </MenuItem>*/}
+          {/*)}*/}
+          {bridgeLink && (
+            <MenuItem href={bridgeLink}>
+              <Share2 size={14} />
+              <Text width="max-content">
+                <Trans>Bridge Assets</Trans>
+              </Text>
+            </MenuItem>
+          )}
+
           {!above768 && (
             <NavMenuItem to="/myPools">
               <Monitor size={14} />

@@ -59,7 +59,7 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
     return '0'
   }
 
-  return fraction.toFixed(18)
+  return fraction.toFixed(18).replace(/\.0+$/, '')
 }
 
 interface ListItemProps {

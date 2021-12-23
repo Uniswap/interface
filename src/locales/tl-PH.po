@@ -264,7 +264,7 @@ msgstr ""
 msgid "Best price guaranteed"
 msgstr ""
 
-#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 msgid "Bridge Assets"
 msgstr ""
 
@@ -1583,6 +1583,10 @@ msgstr ""
 
 #: src/components/WalletModal/index.tsx
 msgid "Terms of Use"
+msgstr ""
+
+#: src/components/Header/index.tsx
+msgid "Test our L2 solution now!"
 msgstr ""
 
 #: src/pages/SwapV2/index.tsx

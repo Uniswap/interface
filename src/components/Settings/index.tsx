@@ -27,31 +27,28 @@ const StyledMenuIcon = styled(Settings)`
 `
 
 const StyledMenuButton = styled.button`
-  position: relative;
   width: 100%;
   height: 100%;
   border: none;
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.text};
 
-  padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg4};
-  }
-
-  svg {
-    margin-top: 2px;
+    background-color: ${({ theme }) => theme.buttonBlack};
   }
 `
-
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
   display: flex;
