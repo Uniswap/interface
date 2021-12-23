@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-12-16 20:07\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "(${0})"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(Maks)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "Izinkan Protokol Uniswap untuk menggunakan {0}"
 msgid "Allowed"
 msgstr "Diizinkan"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "Slip yang Diizinkan"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Jumlah"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "Otomatis"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "Router Otomatis"
+msgid "Auto Router API"
+msgstr "API Router Otomatis"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "Saldo:"
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "Saldo: {0} {1}"
+msgid "Balance: {0}"
+msgstr "Saldo: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "Terbaik untuk pasangan stabil."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "Terbaik untuk pasangan yang sangat stabil."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "Biaya rute harga terbaik ~{formattedGasPriceString} dalam gas."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "Terjadi kesalahan saat menyambungkan. Coba muat ulang halaman."
 msgid "Error importing list"
 msgstr "Terjadi kesalahan saat mengimpor daftar"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Estimasi mungkin berbeda karena pengaturan gas dompet Anda"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Perkiraan biaya jaringan"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Dieksekusi"
@@ -748,6 +757,10 @@ msgstr "Dieksekusi"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Hasil yang diperluas dari Daftar Token yang tidak aktif"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Keluaran yang diharapkan"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "Jenjang Biaya"
 msgid "Fee tier"
 msgstr "Tingkat biaya"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Mengambil harga terbaik..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Untuk"
@@ -785,7 +802,6 @@ msgstr "Untuk"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Untuk tiap pool yang ditunjukkan di bawah ini, klik migrasikan untuk menghapus likuiditas Anda dari Uniswap V2 dan menyimpannya ke Uniswap V3."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "Dari"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "Pelajari tentang menyediakan likuiditas"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Pelajari lebih lanjut"
 
@@ -953,10 +970,6 @@ msgstr "Tema Terang"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Likuiditas"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "Biaya Penyedia Likuiditas"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "Sarat"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "Memuat"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAKSIMAL"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "Ketergantungan yang hilang"
 msgid "More"
 msgstr "Lebih"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Biaya Jaringan"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Peringatan Jaringan"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Biaya jaringan melebihi 50% dari jumlah swap!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "Gambaran Umum Pool"
 msgid "Preview"
 msgstr "Pratinjau"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Harga"
@@ -1536,6 +1559,7 @@ msgstr "Memasok {0} {1} dan {2} {3}"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "Tukar"
 
@@ -1593,6 +1617,18 @@ msgstr "Aplikasi ini mencatat statistik penggunaan anonim untuk meningkatkan dar
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Aplikasi ini dengan aman mengumpulkan alamat dompet Anda dan membagikannya dengan TRM Labs Inc. untuk alasan risiko dan kepatuhan."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Biaya pengiriman transaksi ini lebih dari setengah dari nilai jumlah input."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "Jumlah gas cepat saat ini untuk mengirim transaksi di L1. Biaya gas dibayarkan dalam mata uang asli Ethereum, Ether (ETH) dan dalam mata uang gwei."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Perkiraan perbedaan antara nilai input dan jumlah output USD."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Token input tidak dapat ditransfer. Mungkin ada masalah dengan token input."
@@ -1600,6 +1636,10 @@ msgstr "Token input tidak dapat ditransfer. Mungkin ada masalah dengan token inp
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Harga pasar di luar rentang harga yang Anda tentukan. Khusus setoran aset tunggal."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Nomor blokir terbaru di jaringan ini. Harga update di setiap blok."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "Pool ini harus diinisialisasi sebelum Anda dapat menambahkan likuiditas. Untuk menginisialisasi, pilih harga awal untuk pool. Kemudian, masukkan kisaran harga likuiditas dan jumlah deposit Anda. Biaya gas akan lebih tinggi dari biasanya karena transaksi inisialisasi."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Rute ini mengoptimalkan harga Anda dengan mempertimbangkan rute terpisah, beberapa lompatan, dan biaya bahan bakar."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Rute ini mengoptimalkan total output Anda dengan mempertimbangkan rute terpisah, beberapa lompatan, dan biaya bahan bakar untuk setiap langkah."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "Transaksi ini tidak akan berhasil baik karena pergerakan harga atau biay
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Tip: Token khusus disimpan secara lokal di browser Anda"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "Jumlah simpanan"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Rute Perdagangan"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "Detil transaksi"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "Perbarui daftar"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Gunakan Uniswap Labs API untuk mendapatkan harga yang lebih baik melalui rute yang lebih efisien."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Gunakan Uniswap Labs API untuk mendapatkan penawaran lebih cepat."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Pengguna"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "V2 tidak tersedia di Layer 2. Beralih ke Layer 1 Ethereum."
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "Likuiditas V2"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "Anda mungkin kehilangan koneksi jaringan Anda, atau {label} mungkin seda
 msgid "You may have lost your network connection."
 msgstr "Anda mungkin kehilangan koneksi jaringan."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "Anda mungkin mempertimbangkan untuk menunggu hingga biaya jaringan turun untuk menyelesaikan transaksi ini."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Anda harus menghubungkan akun."
@@ -2236,6 +2267,10 @@ msgstr "Transaksi Anda akan muncul di sini ..."
 msgid "Your unclaimed UNI"
 msgstr "UNI Anda yang belum diklaim"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "setelah tergelincir"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "konfirmasikan"
@@ -2243,6 +2278,10 @@ msgstr "konfirmasikan"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "untuk {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "tingkat biaya {0}%"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% kolam"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% memilih"
@@ -2417,10 +2460,6 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

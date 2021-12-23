@@ -31,7 +31,8 @@ import { CurrencyModalView } from './CurrencySearchModal'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 
 const Wrapper = styled(Column)`
-  height: 100%;
+  flex: 1;
+  overflow-y: hidden;
 `
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
@@ -229,7 +230,7 @@ const ListContainer = styled.div`
   padding: 1rem;
   height: 100%;
   overflow: auto;
-  padding-bottom: 80px;
+  flex: 1;
 `
 
 export function ManageLists({

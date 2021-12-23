@@ -150,10 +150,10 @@ export function useV3DerivedMintInfo(
   )
 
   // balances
-  const balances = useCurrencyBalances(account ?? undefined, [
-    currencies[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_B],
-  ])
+  const balances = useCurrencyBalances(
+    account ?? undefined,
+    useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies])
+  )
   const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
     [Field.CURRENCY_A]: balances[0],
     [Field.CURRENCY_B]: balances[1],

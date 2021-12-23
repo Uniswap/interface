@@ -1,9 +1,9 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Route, SwapQuoter, Trade } from '@uniswap/v3-sdk'
+import { Route, SwapQuoter } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { V3TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { useSingleContractWithCallData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
@@ -27,7 +27,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
+): { state: TradeState; trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined } {
   const [currencyIn, currencyOut] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -61,15 +61,15 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         : amountSpecified.currency.equals(currencyIn))
     ) {
       return {
-        state: V3TradeState.INVALID,
-        trade: null,
+        state: TradeState.INVALID,
+        trade: undefined,
       }
     }
 
     if (routesLoading || quotesResults.some(({ loading }) => loading)) {
       return {
-        state: V3TradeState.LOADING,
-        trade: null,
+        state: TradeState.LOADING,
+        trade: undefined,
       }
     }
 
@@ -117,18 +117,23 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
 
     if (!bestRoute || !amountIn || !amountOut) {
       return {
-        state: V3TradeState.NO_ROUTE_FOUND,
-        trade: null,
+        state: TradeState.NO_ROUTE_FOUND,
+        trade: undefined,
       }
     }
 
     return {
-      state: V3TradeState.VALID,
-      trade: Trade.createUncheckedTrade({
-        route: bestRoute,
+      state: TradeState.VALID,
+      trade: new InterfaceTrade({
+        v2Routes: [],
+        v3Routes: [
+          {
+            routev3: bestRoute,
+            inputAmount: amountIn,
+            outputAmount: amountOut,
+          },
+        ],
         tradeType,
-        inputAmount: amountIn,
-        outputAmount: amountOut,
       }),
     }
   }, [amountSpecified, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])

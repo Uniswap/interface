@@ -3,6 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useActiveWeb3React } from 'hooks/web3'
+import ms from 'ms.macro'
 import { darken } from 'polished'
 import { useContext, useState } from 'react'
 import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
@@ -85,13 +86,15 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
 const SlippageEmojiContainer = styled.span`
   color: #f3841e;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;  
+    display: none;
   `}
 `
 
 interface TransactionSettingsProps {
   placeholderSlippage: Percent // varies according to the context in which the settings dialog is placed
 }
+
+const THREE_DAYS_IN_SECONDS = ms`3 days` / 1000
 
 export default function TransactionSettings({ placeholderSlippage }: TransactionSettingsProps) {
   const { chainId } = useActiveWeb3React()
@@ -142,7 +145,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
     } else {
       try {
         const parsed: number = Math.floor(Number.parseFloat(value) * 60)
-        if (!Number.isInteger(parsed) || parsed < 60 || parsed > 180 * 60) {
+        if (!Number.isInteger(parsed) || parsed < 60 || parsed > THREE_DAYS_IN_SECONDS) {
           setDeadlineError(DeadlineError.InvalidInput)
         } else {
           setDeadline(parsed)

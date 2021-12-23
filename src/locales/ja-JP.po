@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-30 02:11\n"
+"PO-Revision-Date: 2021-12-16 20:07\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "（${0}）"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(最大)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "{0} の使用をUniswapに許可する"
 msgid "Allowed"
 msgstr "許可"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "許可されたスリッページ"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "数量"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "自動"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "自動ルーター"
+msgid "Auto Router API"
+msgstr "自動ルーターAPI"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "残高:"
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "残高： {0} {1}"
+msgid "Balance: {0}"
+msgstr "バランス： {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "安定的なペアに最適"
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "非常に安定したペアに最適"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "ベストプライスルートコスト〜{formattedGasPriceString} ガスインチ"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "接続中にエラーが発生しました。ページを更新してく
 msgid "Error importing list"
 msgstr "リストのインポートエラー"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "ウォレットガスの設定により、見積もりが異なる場合があります"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "推定ネットワーク料金"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "実行済"
@@ -748,6 +757,10 @@ msgstr "実行済"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "あなたが利用していないトークンリストからの検索結果"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "期待される出力"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "設定手数料"
 msgid "Fee tier"
 msgstr "手数料レベル"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "最高の価格を取得しています..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "賛成"
@@ -785,7 +802,6 @@ msgstr "賛成"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "以下の各流動性について「移行」ボタンをクリックすると、Uniswap V2から流動性を取り出し、Uniswap V3に移行します。"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "売るトークン"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "流動性の提供について学ぶ"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "より詳しく"
 
@@ -953,10 +970,6 @@ msgstr "ライトテーマ"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "流動性"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "流動性プロバイダー手数料"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "読み込まれました"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "読み込み中"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAX"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "依存関係がありません"
 msgid "More"
 msgstr "もっと見る"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "ネットワーク料金"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "ネットワーク警告"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "ネットワーク料金がスワップ金額の50％を超えています！"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "プールの概要"
 msgid "Preview"
 msgstr "プレビュー"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "価格"
@@ -1536,6 +1559,7 @@ msgstr "{0} {1} と {2} {3} を追加中"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "スワップ"
 
@@ -1593,6 +1617,18 @@ msgstr "アプリは、時間の経過とともに改善するために、匿名
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "アプリはウォレットアドレスを安全に収集し、リスクとコンプライアンスの理由からTRM LabsInc。と共有します。"
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "このトランザクションを送信するコストは、入力金額の値の半分以上です。"
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "L1でトランザクションを送信するための現在の高速ガス量。ガス料金はイーサリアムの自国通貨イーサリアム（ETH）で支払われ、gweiで表示されます。"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "入力金額と出力金額のUSD値の推定差。"
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "売るトークンが転送できません。売るトークンに問題がある可能性があります。"
@@ -1600,6 +1636,10 @@ msgstr "売るトークンが転送できません。売るトークンに問題
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "市場価格が設定した価格範囲から外れています。単一トークンのみ預け入れできます。"
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "このネットワークの最新のブロック番号。価格はブロックごとに更新されます。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "流動性を追加する前に、このプールを初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預け入れ数量を入力します。初期化取引のため、ガス料金は通常より高くなります。"
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "このルートは、分割ルート、複数のホップ、およびガスのコストを考慮して価格を最適化します。"
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "このルートは、分割ルート、複数のホップ、および各ステップのガスコストを考慮して、総出力を最適化します。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "この取引は、価格変動または転送時に手数料が発生す
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "ヒント：カスタムトークンの設定はブラウザ内のローカルに保存されます"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "合計預入額"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "取引ルート"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "取引の詳細"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "リストを更新"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Uniswap Labs APIを使用して、より効率的なルートでより良い価格を取得します。"
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Uniswap Labs APIを使用して、より迅速な見積もりを取得します。"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "ユーザー"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "V2はレイヤー2では使用できません。イーサリアムのレ
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "V2の流動性"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "ネットワーク接続が失われたか、 {label} がダウンして
 msgid "You may have lost your network connection."
 msgstr "ネットワーク接続が失われた可能性があります。"
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "このトランザクションを完了するには、ネットワーク料金が下がるまで待つことを検討してください。"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "アカウントに接続してください。"
@@ -2236,6 +2267,10 @@ msgstr "取引履歴がここに表示されます..."
 msgid "Your unclaimed UNI"
 msgstr "未請求のUNI"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "すべり後"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "確認する"
@@ -2243,6 +2278,10 @@ msgstr "確認する"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "賛成 {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}%の手数料レベル"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}％プール"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}％が選択"
@@ -2417,10 +2460,6 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} / {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-12-16 20:07\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "<0/>$"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "(${0})"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(Maks.)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "Uniswap Protokolünün {0} kullanmasına izin verin"
 msgid "Allowed"
 msgstr "İzin veriliyor"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "İzin Verilen Kayma"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Miktar"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "Otomatik"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "Otomatik Yönlendirici"
+msgid "Auto Router API"
+msgstr "Otomatik Yönlendirici API'si"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "Bakiye:"
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "Bakiye: {0} {1}"
+msgid "Balance: {0}"
+msgstr "Bakiye: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "Kararlı çiftler için en iyisi."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "Çok kararlı çiftler için en iyisi."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "En iyi fiyat rota maliyetleri gazda{formattedGasPriceString}"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "Bağlanırken hata oluştu. Sayfayı yenilemeyi deneyin."
 msgid "Error importing list"
 msgstr "Liste içe aktarılırken hata oluştu"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Tahmin, cüzdan gaz ayarlarınız nedeniyle farklılık gösterebilir"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Tahmini ağ ücreti"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "yürütüldü"
@@ -748,6 +757,10 @@ msgstr "yürütüldü"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Aktif olmayan Jeton Listelerinden genişletilmiş sonuçlar"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Beklenen çıktı"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "Ücret Katmanı"
 msgid "Fee tier"
 msgstr "Ücret katmanı"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "En iyi fiyat alınıyor..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Şunun için"
@@ -785,7 +802,6 @@ msgstr "Şunun için"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Aşağıda gösterilen her bir havuz için, likiditenizi Uniswap V2'den kaldırmak ve Uniswap V3'e yatırmak için Geçir'e tıklayın."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "Kaynak"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "Likidite sağlama hakkında bilgi edinin"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Daha fazla bilgi edin"
 
@@ -953,10 +970,6 @@ msgstr "Işık Tema"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Likidite"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "Likidite Sağlayıcı Ücreti"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "Yüklendi"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "Yükleniyor"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAKS"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "Eksik bağımlılıklar"
 msgid "More"
 msgstr "Daha fazla"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Ağ Ücreti"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Ağ Uyarısı"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Ağ ücretleri takas tutarının %50'sini aşıyor!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "Havuzlara Genel Bakış"
 msgid "Preview"
 msgstr "Ön izleme"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Fiyat"
@@ -1536,6 +1559,7 @@ msgstr "{0} {1} ve {2} {3} temini"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "Swap"
 
@@ -1593,6 +1617,18 @@ msgstr "Uygulama, zaman içinde iyileştirmek için anonimleştirilmiş kullanı
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Uygulama, cüzdan adresinizi güvenli bir şekilde toplar ve risk ve uyumluluk nedenleriyle TRM Labs Inc. ile paylaşır."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Bu işlemi göndermenin maliyeti, giriş tutarının değerinin yarısından fazladır."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "L1'de işlem göndermek için geçerli hızlı gaz miktarı. Gaz ücretleri, Ethereum'un yerel para birimi Ether'de (ETH) ödenir ve gwei cinsindendir."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Girdi ve çıktı miktarlarının USD değerleri arasındaki tahmini fark."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Giriş jetonu aktarılamaz. Giriş jetonuyla ilgili bir sorun olabilir."
@@ -1600,6 +1636,10 @@ msgstr "Giriş jetonu aktarılamaz. Giriş jetonuyla ilgili bir sorun olabilir."
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Piyasa fiyatı, belirttiğiniz fiyat aralığının dışında. Yalnızca tek varlıklı para yatırma yapılabilir."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Bu ağdaki en son blok numarası. Fiyatlar her blokta güncellenir."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "Likidite eklemeden önce bu havuzun başlatılması gerekir. Başlatmak için havuz için bir başlangıç fiyatı seçin. Ardından likidite fiyat aralığınızı ve mevduat tutarınızı girin. Başlatma işlemi nedeniyle gaz ücretleri normalden daha yüksek olacaktır."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Bu rota, bölünmüş rotaları, birden fazla duraklamayı ve gaz maliyetlerini göz önünde bulundurarak fiyatınızı optimize eder."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Bu rota, bölünmüş rotaları, çoklu atlamaları ve her adımın gaz maliyetini dikkate alarak toplam çıktınızı optimize eder."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "Bu işlem, ya fiyat hareketinden dolayı ya da transfer ücretinden dola
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "İpucu: Özel jetonlar tarayıcınızda yerel olarak depolanır"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "Toplam mevduat"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Ticaret rotası"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "ödeme detayları"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "Güncelleme listesi"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Daha verimli bir yolla daha iyi fiyatlandırma elde etmek için Uniswap Labs API'sini kullanın."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Daha hızlı fiyat teklifi almak için Uniswap Labs API'sini kullanın."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Kullanıcı"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "V2, Katman 2'de mevcut değildir. Katman 1 Ethereum'a geçin."
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "V2 likiditesi"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "Ağ bağlantınızı kaybetmiş {label} çalışmıyor olabilir."
 msgid "You may have lost your network connection."
 msgstr "Ağ bağlantınızı kaybetmiş olabilirsiniz."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "Bu işlemi tamamlamak için ağ ücretlerinin düşmesini beklemeyi düşünebilirsiniz."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Bir hesap bağlamalısınız."
@@ -2236,6 +2267,10 @@ msgstr "İşlemleriniz burada görünecek..."
 msgid "Your unclaimed UNI"
 msgstr "Talep edilmemiş UNI'niz"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "kaymadan sonra"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "onayla"
@@ -2243,6 +2278,10 @@ msgstr "onayla"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "{0} için"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "%{0}"
 msgid "{0}% fee tier"
 msgstr "{0}ücret katmanı"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "% {0}"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "% {0}"
@@ -2417,10 +2460,6 @@ msgstr "%{percentForSlider}"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} / {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

@@ -31,7 +31,11 @@ export default function Identicon() {
     if (icon) {
       current?.appendChild(icon)
       return () => {
-        current?.removeChild(icon)
+        try {
+          current?.removeChild(icon)
+        } catch (e) {
+          console.error('Avatar icon not found')
+        }
       }
     }
     return

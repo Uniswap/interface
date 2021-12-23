@@ -1,12 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode, useMemo } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
+import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
@@ -19,6 +20,11 @@ import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useActiveWeb3React } from './web3'
+
+type AnyTrade =
+  | V2Trade<Currency, Currency, TradeType>
+  | V3Trade<Currency, Currency, TradeType>
+  | Trade<Currency, Currency, TradeType>
 
 enum SwapCallbackState {
   INVALID,
@@ -45,7 +51,6 @@ interface FailedCall extends SwapCallEstimate {
   call: SwapCall
   error: Error
 }
-
 /**
  * Returns the swap calls that can be used to make the trade
  * @param trade trade to execute
@@ -54,7 +59,7 @@ interface FailedCall extends SwapCallEstimate {
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
 function useSwapCallArguments(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  trade: AnyTrade | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined
@@ -75,7 +80,7 @@ function useSwapCallArguments(
       const swapMethods = []
 
       swapMethods.push(
-        Router.swapCallParameters(trade, {
+        V2SwapRouter.swapCallParameters(trade, {
           feeOnTransfer: false,
           allowedSlippage,
           recipient,
@@ -85,7 +90,7 @@ function useSwapCallArguments(
 
       if (trade.tradeType === TradeType.EXACT_INPUT) {
         swapMethods.push(
-          Router.swapCallParameters(trade, {
+          V2SwapRouter.swapCallParameters(trade, {
             feeOnTransfer: true,
             allowedSlippage,
             recipient,
@@ -118,14 +123,10 @@ function useSwapCallArguments(
         }
       })
     } else {
-      // trade is V3Trade
-      const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-      if (!swapRouterAddress) return []
-
-      const { value, calldata } = SwapRouter.swapCallParameters(trade, {
+      // swap options shared by v3 and v2+v3 swap routers
+      const sharedSwapOptions = {
         recipient,
         slippageTolerance: allowedSlippage,
-        deadline: deadline.toString(),
         ...(signatureData
           ? {
               inputTokenPermit:
@@ -146,7 +147,26 @@ function useSwapCallArguments(
                     },
             }
           : {}),
-      })
+      }
+
+      const swapRouterAddress = chainId
+        ? trade instanceof V3Trade
+          ? V3_ROUTER_ADDRESS[chainId]
+          : SWAP_ROUTER_ADDRESSES[chainId]
+        : undefined
+      if (!swapRouterAddress) return []
+
+      const { value, calldata } =
+        trade instanceof V3Trade
+          ? V3SwapRouter.swapCallParameters(trade, {
+              ...sharedSwapOptions,
+              deadline: deadline.toString(),
+            })
+          : SwapRouter.swapCallParameters(trade, {
+              ...sharedSwapOptions,
+              deadlineOrPreviousBlockhash: deadline.toString(),
+            })
+
       if (argentWalletContract && trade.inputAmount.currency.isToken) {
         return [
           {
@@ -174,16 +194,16 @@ function useSwapCallArguments(
       ]
     }
   }, [
+    trade,
+    recipient,
+    library,
     account,
-    allowedSlippage,
-    argentWalletContract,
     chainId,
     deadline,
-    library,
-    recipient,
     routerContract,
+    allowedSlippage,
+    argentWalletContract,
     signatureData,
-    trade,
   ])
 }
 
@@ -267,7 +287,7 @@ function swapErrorToUserReadableMessage(error: any): ReactNode {
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  trade: AnyTrade | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | undefined | null

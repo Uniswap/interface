@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-12-16 20:07\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$ -"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -30,10 +35,6 @@ msgstr "${0}"
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
 msgstr "(${0})"
-
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(Sote)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -206,10 +207,6 @@ msgstr "Ruhusu Itifaki ya Uniswap kutumia {0}"
 msgid "Allowed"
 msgstr "Ruhusu"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "Kuruhusiwa Slippage"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Kiasi"
@@ -280,8 +277,8 @@ msgid "Auto"
 msgstr "Otomatiki"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "Njia ya Kiotomatiki"
+msgid "Auto Router API"
+msgstr "API ya Njia ya Kiendeshaji"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -292,8 +289,8 @@ msgid "Balance:"
 msgstr "Kiasi:"
 
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "Kiasi: {0} {1}"
+msgid "Balance: {0}"
+msgstr "Salio: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +307,10 @@ msgstr "Bora kwa pair thabiti."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "Bora kwa jozi imara sana."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "Gharama bora za njia ya bei ~{formattedGasPriceString} kwa gesi."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -741,6 +742,14 @@ msgstr "Hitilafu wakati wa kuunganisha. Jaribu kuonyesha ukurasa upya."
 msgid "Error importing list"
 msgstr "Hitilafu ya kuingiza orodha"
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Kadirio linaweza kutofautiana kwa sababu ya mipangilio ya gesi ya mkoba wako"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Kadirio la ada ya mtandao"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Wanyongwa"
@@ -748,6 +757,10 @@ msgstr "Wanyongwa"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Matokeo yaliyopanuliwa kutoka kwa Orodha za Ishara ambazo hazifanyi kazi"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Pato Linalotarajiwa"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -777,6 +790,10 @@ msgstr "Kiwango cha ada"
 msgid "Fee tier"
 msgstr "Kiwango cha ada"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Inaleta bei nzuri..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Kwa maana"
@@ -785,7 +802,6 @@ msgstr "Kwa maana"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Kwa kila dimbwi lililoonyeshwa hapa chini, bonyeza hamisha ili kuondoa ukwasi wako kutoka kwa Uniswap V2 na uweke kwenye Uniswap V3."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "Kutoka"
@@ -936,6 +952,7 @@ msgid "Learn about providing liquidity"
 msgstr "Jifunze juu ya kutoa ukwasi"
 
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Jifunze zaidi"
 
@@ -953,10 +970,6 @@ msgstr "Mandhari mepesi"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "Kioevu"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "Ada ya Mtoaji wa Liquid"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +998,12 @@ msgstr "Imepakiwa"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "Inapakia"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAX"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1093,9 +1109,17 @@ msgstr "Kukosa utegemezi"
 msgid "More"
 msgstr "Zaidi"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Ada ya Mtandao"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Onyo la Mtandao"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Ada za mtandao zinazidi 50% ya kiasi cha ubadilishaji!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1268,7 +1292,6 @@ msgstr "Muhtasari wa Mabwawa"
 msgid "Preview"
 msgstr "Hakiki"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Bei"
@@ -1536,6 +1559,7 @@ msgstr "Kusambaza {0} {1} na {2} {3}"
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "Swap"
 msgstr "Badilishana"
 
@@ -1593,6 +1617,18 @@ msgstr "Programu huweka takwimu za matumizi bila utambulisho ili kuboreshwa kadr
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Programu hukusanya kwa usalama anwani ya mkoba wako na kuishiriki na TRM Labs Inc. kwa sababu za hatari na kufuata."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Gharama ya kutuma muamala huu ni zaidi ya nusu ya thamani ya kiasi cha pembejeo."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in gwei."
+msgstr "Kiasi cha sasa cha gesi ya haraka cha kutuma muamala kwenye L1. Ada za gesi hulipwa kwa sarafu ya asili ya Ethereum (ETH) na hutumika kwa gwei."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Tofauti inayokadiriwa kati ya thamani za USD za kiasi cha pembejeo na pato."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Ishara ya kuingiza haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya kuingiza."
@@ -1600,6 +1636,10 @@ msgstr "Ishara ya kuingiza haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Bei ya soko iko nje ya kiwango chako cha bei maalum. Amana ya mali moja tu."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Nambari ya hivi karibuni ya kuzuia kwenye mtandao huu. Bei zinasasishwa kwa kila block."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1642,8 +1682,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "Bwawa hili lazima lianzishwe kabla ya kuongeza ukwasi. Ili kuanzisha, chagua bei ya kuanzia ya bwawa. Kisha, ingiza anuwai ya bei ya ukwasi na kiwango cha amana. Ada ya gesi itakuwa kubwa kuliko kawaida kwa sababu ya shughuli za uanzishaji."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Njia hii inaboresha bei yako kwa kuzingatia njia zilizogawanyika, hops nyingi, na gharama za gesi."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Njia hii huboresha jumla ya matokeo yako kwa kuzingatia njia zilizogawanyika, miinuko mingi na gharama ya gesi ya kila hatua."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1709,6 @@ msgstr "Ununuzi huu hautafanikiwa ama kwa sababu ya kusonga kwa bei au ada kweny
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Kidokezo: Ishara maalum huhifadhiwa ndani ya kivinjari chako"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1715,10 +1754,6 @@ msgstr "Amana ya jumla"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Njia ya Biashara"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "Maelezo ya Muamala"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1893,16 +1928,12 @@ msgid "Update list"
 msgstr "Sasisha orodha"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Tumia API ya Maabara Isiyobadilishwa kupata bei bora kupitia njia inayofaa zaidi."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Tumia API ya Uniswap Labs kupata manukuu haraka zaidi."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Mtumiaji"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1911,10 +1942,6 @@ msgstr "V2 haipatikani kwenye Tabaka 2. Badilisha hadi Tabaka 1 Ethereum."
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "V2 ukwasi"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -2120,6 +2147,10 @@ msgstr "Labda umepoteza muunganisho wako wa mtandao, au {label} inaweza kuwa chi
 msgid "You may have lost your network connection."
 msgstr "Labda umepoteza muunganisho wako wa mtandao."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "Unaweza kufikiria kusubiri hadi ada za mtandao zishuke ili kukamilisha muamala huu."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Lazima uunganishe akaunti."
@@ -2236,6 +2267,10 @@ msgstr "Shughuli zako zitaonekana hapa ..."
 msgid "Your unclaimed UNI"
 msgstr "UNI yako isiyodaiwa"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "baada ya kuteleza"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "thibitisha"
@@ -2243,6 +2278,10 @@ msgstr "thibitisha"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "kwa {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2382,6 +2421,10 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "Kiwango cha ada ya {0}"
 
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% bwawa"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "Chagua {0}"
@@ -2417,10 +2460,6 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} kwa {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~ $ <0 />"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

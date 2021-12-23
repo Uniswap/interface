@@ -27,7 +27,7 @@ makes large architectural changes, consider following all the standards.
 - If something breaks, add automated tests so it doesn't break again
 - Add integration tests for new pages or flows
 - Verify that all CI checks pass before merging
-- Have at least one product manager or designer approve of significant UX changes
+- Have at least one product manager or designer approve of any significant UX changes
 
 ## Guidelines
 
@@ -42,7 +42,7 @@ The following points should help guide your development:
   - An Ethereum node should be the only critical dependency 
   - All other external dependencies should only enhance the UX ([graceful degradation](https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation))
 - Accessibility: anyone can use the interface
-  - The interface should be responsive, small and run well on low performance devices (majority of swaps on mobile!)
+  - The interface should be responsive, small and also run well on low performance devices (majority of swaps on mobile!)
 
 ## Release process
 
@@ -73,4 +73,4 @@ We sync to the repository on a schedule, rather than download translations at bu
 
 You can contribute by joining Crowdin to proofread existing translations [here](https://crowdin.com/project/uniswap-interface/invite?d=93i5n413q403t4g473p443o4c3t2g3s21343u2c3n403l4b3v2735353i4g4k4l4g453j4g4o4j4e4k4b323l4a3h463s4g453q443m4e3t2b303s2a35353l403o443v293e303k4g4n4r4g483i4g4r4j4e4o473i5n4a3t463t4o4)
 
-Or, ask to join us as a translator in the Discord!
+Or, ask to join us as a translator in the Discord!!

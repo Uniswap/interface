@@ -21,12 +21,18 @@ const slideUp = keyframes`
 `
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
+  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
   font-size: 16px;
+  font-smooth: always;
+  font-variant: none;
   height: 348px;
   min-width: 300px;
   overflow-y: hidden;
