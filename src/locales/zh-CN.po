@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 21:06\n"
+"PO-Revision-Date: 2021-12-24 07:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -773,7 +773,7 @@ msgstr "已过期"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
-msgstr "探索 Uniswap 分析。"
+msgstr "查看 Uniswap 分析。"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
@@ -830,7 +830,7 @@ msgstr "隐藏"
 
 #: src/components/PositionList/index.tsx
 msgid "Hide closed positions"
-msgstr "隐藏已关闭的仓位"
+msgstr "隐藏已关闭的头寸"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -2145,7 +2145,7 @@ msgstr "您的V2流动资金"
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
-msgstr "您的活跃 V3 流动性头寸将显示在此处。"
+msgstr "您的有效 V3 流动性头寸将显示在此处。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2417,7 +2417,7 @@ msgstr "{activeTokensOnThisChain} 代币"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
-msgstr "{label} 令牌桥"
+msgstr "{label} 代币桥"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
