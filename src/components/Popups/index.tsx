@@ -57,8 +57,7 @@ export default function Popups() {
         extraPadding={urlWarningActive ? '108px' : rebrandingAnnouncement ? '148px' : '88px'}
       >
         {activePopups.map(item => (
-          // <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
-          <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={12345678} />
+          <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
       <MobilePopupWrapper height={activePopups?.length > 0 ? 'fit-content' : 0}>
