@@ -38,20 +38,7 @@ export interface ApplicationState {
 
 const initialState: ApplicationState = {
   blockNumber: {},
-  popupList: [
-    {
-      key: '0x28330a747adf95b8e22dd4e07a85f100ca92b6fdfbfe26115c5694ec94986994',
-      show: true,
-      content: {
-        txn: {
-          hash: '0x28330a747adf95b8e22dd4e07a85f100ca92b6fdfbfe26115c5694ec94986994',
-          success: true,
-          summary: 'Swap 0.001 BNB for 0.268 USDC'
-        }
-      },
-      removeAfterMs: 15000
-    }
-  ],
+  popupList: [],
   openModal: null,
   ethPrice: {},
   kncPrice: '',
