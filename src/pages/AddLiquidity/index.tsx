@@ -3,7 +3,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { LayerTwoAddLiquidityPromotion } from 'components/LayerTwoPromotion/LayerTwoAddLiquidityPromotion'
+import { LayerTwoPromotion } from 'components/LayerTwoPromotion/LayerTwoPromotion'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -643,7 +643,7 @@ export default function AddLiquidity({
                     />
                   </AutoColumn>
                 </DynamicSection>
-                <LayerTwoAddLiquidityPromotion hasExistingPosition={hasExistingPosition} />
+                <LayerTwoPromotion hasExistingPosition={hasExistingPosition} />
               </DepositContainer>
 
               {!hasExistingPosition ? (
