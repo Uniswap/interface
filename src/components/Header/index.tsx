@@ -1,14 +1,14 @@
 import { ChainId, ETHER } from '@dynamic-amm/sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { NavLink, Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import styled, { keyframes } from 'styled-components'
 
 import { DMM_ANALYTICS_URL, KNC } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
+import { useActiveWeb3React } from 'hooks'
+import { useETHBalances } from 'state/wallet/hooks'
 import Settings from '../Settings'
 import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
@@ -17,7 +17,6 @@ import { ExternalLink } from 'theme/components'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 import Web3Network from 'components/Web3Network'
 import { useIsDarkMode } from 'state/user/hooks'
-import { MouseoverTooltip } from 'components/Tooltip'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -383,15 +382,15 @@ export default function Header() {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          <HideExtraSmall>
-            <MouseoverTooltip text={t`Test our L2 solution now!`} placement="bottom">
-              <SlideToUnlock>
-                <StyledNavExternalLink href={process.env.REACT_APP_ZKYBER_URL || ''}>
-                  <Text width="max-content">ZKyber ↗</Text>
-                </StyledNavExternalLink>
-              </SlideToUnlock>
-            </MouseoverTooltip>
-          </HideExtraSmall>
+          {/*<HideExtraSmall>*/}
+          {/*  <MouseoverTooltip text={t`Test our L2 solution now!`} placement="bottom">*/}
+          {/*    <SlideToUnlock>*/}
+          {/*      <StyledNavExternalLink href={process.env.REACT_APP_ZKYBER_URL || ''}>*/}
+          {/*        <Text width="max-content">ZKyber ↗</Text>*/}
+          {/*      </StyledNavExternalLink>*/}
+          {/*    </SlideToUnlock>*/}
+          {/*  </MouseoverTooltip>*/}
+          {/*</HideExtraSmall>*/}
 
           <Web3Network />
 

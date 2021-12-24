@@ -18,14 +18,13 @@ import { Trans } from '@lingui/macro'
 import { Text } from 'rebass'
 
 import { ChainId } from '@dynamic-amm/sdk'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleModal } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { ExternalLink } from 'theme'
 import { DMM_ANALYTICS_URL } from '../../constants'
 import { useActiveWeb3React } from 'hooks'
 import { useMedia } from 'react-use'
-import { SlideToUnlock } from 'components/Header'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -34,8 +33,6 @@ const StyledMenuIcon = styled(MenuIcon)`
 `
 
 const StyledMenuButton = styled.button`
-  width: 100%;
-  height: 100%;
   border: none;
   background-color: transparent;
   margin: 0;
@@ -154,16 +151,16 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          {!above768 && (
-            <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>
-              <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />
-              <SlideToUnlock>
-                <Text width="max-content" marginLeft="8px">
-                  ZKyber ↗
-                </Text>
-              </SlideToUnlock>
-            </MenuItem>
-          )}
+          {/*{!above768 && (*/}
+          {/*  <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>*/}
+          {/*    <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />*/}
+          {/*    <SlideToUnlock>*/}
+          {/*      <Text width="max-content" marginLeft="8px">*/}
+          {/*        ZKyber ↗*/}
+          {/*      </Text>*/}
+          {/*    </SlideToUnlock>*/}
+          {/*  </MenuItem>*/}
+          {/*)}*/}
           {bridgeLink && (
             <MenuItem href={bridgeLink}>
               <Share2 size={14} />
