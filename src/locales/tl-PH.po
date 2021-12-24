@@ -137,11 +137,6 @@ msgstr ""
 msgid "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
 msgstr ""
 
-#: src/pages/AddLiquidity/ZapIn.tsx
-#: src/pages/AddLiquidity/ZapIn.tsx
-msgid "Add liquidity for single token {0} with amount of {1}"
-msgstr ""
-
 #: src/pages/Pools/index.tsx
 msgid "Add liquidity:"
 msgstr ""

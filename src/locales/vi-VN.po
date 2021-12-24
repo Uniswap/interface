@@ -137,11 +137,6 @@ msgstr "Thêm thanh khoản"
 msgid "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
 msgstr "Thêm thanh khoản và nhận token của pool dựa vào tỷ lệ đóng góp của bạn. Bạn sẽ kiếm được phí một cách linh hoạt dựa trên các giao dịch đối với cặp token này, tỷ lệ thuận với tỷ lệ đóng góp của bạn. Phí kiếm được sẽ tự động được nhận khi bạn rút thanh khoản."
 
-#: src/pages/AddLiquidity/ZapIn.tsx
-#: src/pages/AddLiquidity/ZapIn.tsx
-msgid "Add liquidity for single token {0} with amount of {1}"
-msgstr "Thêm thanh khoản vào một token {0} với số lượng là {1}"
-
 #: src/pages/Pools/index.tsx
 msgid "Add liquidity:"
 msgstr "Thêm thanh khoản:"
