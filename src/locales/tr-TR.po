@@ -137,11 +137,6 @@ msgstr "Likidite ekle"
 msgid "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
 msgstr "Likidite ekleyin ve havuz payınızı temsil eden havuz tokenı alın. Havuz payınız ile orantılı olarak bu token çifti için işlemlerden dinamik ücretler kazanacaksınız. Kazanılan ücretler, likiditenizi çektiğinizde otomatik olarak talep edilecektir."
 
-#: src/pages/AddLiquidity/ZapIn.tsx
-#: src/pages/AddLiquidity/ZapIn.tsx
-msgid "Add liquidity for single token {0} with amount of {1}"
-msgstr "Tek token {0} için {1} tutarında likidite ekleyin"
-
 #: src/pages/Pools/index.tsx
 msgid "Add liquidity:"
 msgstr "Likidite Ekle:"

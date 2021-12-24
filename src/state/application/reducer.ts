@@ -68,7 +68,6 @@ export default createReducer(initialState, builder =>
           removeAfterMs
         }
       ])
-      console.log(`state.popupList`, JSON.stringify(state.popupList))
     })
     .addCase(removePopup, (state, { payload: { key } }) => {
       state.popupList.forEach(p => {

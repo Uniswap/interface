@@ -87,7 +87,7 @@ export default function TransactionPopup({
         </div>
         <AutoColumn gap="8px">
           {type && (
-            <Text fontSize="16px" fontWeight={500} color={theme.primary}>
+            <Text fontSize="16px" fontWeight={500} color={success ? theme.primary : theme.red}>
               {type + ' - ' + (success ? 'Success' : 'Error') + '!'}
             </Text>
           )}
@@ -101,8 +101,7 @@ export default function TransactionPopup({
       {chainId && (
         <ExternalLink
           href={getEtherscanLink(chainId, hash, 'transaction')}
-          color={success ? theme.primary : theme.red}
-          style={{ margin: '8px 0 0 40px', display: 'block' }}
+          style={{ margin: '8px 0 0 40px', display: 'block', color: success ? theme.primary : theme.red }}
         >
           {getEtherscanLinkText(chainId)}
         </ExternalLink>

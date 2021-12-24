@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { X } from 'react-feather'
 import { useSpring } from 'react-spring/web'
-import styled, { ThemeContext } from 'styled-components'
+import styled, { keyframes, ThemeContext } from 'styled-components'
 import { animated } from 'react-spring'
 import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
@@ -17,6 +17,31 @@ export const StyledClose = styled(X)`
     cursor: pointer;
   }
 `
+
+const rtl = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(1000px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`
+
+const ltr = keyframes`
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(1000px);
+  }
+`
+
 export const Popup = styled.div<{ success?: boolean }>`
   display: inline-block;
   width: 100%;
@@ -26,6 +51,7 @@ export const Popup = styled.div<{ success?: boolean }>`
   padding: 20px;
   padding-right: 35px;
   overflow: hidden;
+  animation: ${rtl} 1.5s ease-in-out, ${ltr} 1.5s ease-in-out 14.15s;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;
@@ -34,13 +60,14 @@ export const Popup = styled.div<{ success?: boolean }>`
     }
   `}
 `
+
 const Fader = styled.div`
   position: absolute;
   bottom: 0px;
   left: 0px;
   width: 100%;
   height: 2px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.subText};
 `
 
 const AnimatedFader = animated(Fader)
