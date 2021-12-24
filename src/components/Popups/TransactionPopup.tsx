@@ -53,6 +53,10 @@ const SUMMARY: { [type: string]: { success: (summary: string) => string; failure
   Harvest: {
     success: () => 'Harvested your rewards',
     failure: () => 'Error harvesting your rewards'
+  },
+  Claim: {
+    success: summary => 'Claimed ' + summary,
+    failure: summary => 'Error claiming ' + summary
   }
 }
 
