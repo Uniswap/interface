@@ -49,14 +49,6 @@ export const Popup = styled.div<{ success?: boolean }>`
   position: relative;
   padding: 20px;
   padding-right: 35px;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    min-width: 290px;
-    
-    &:not(:last-of-type) {
-      margin-right: 20px;
-    }
-  `}
 `
 
 const Fader = styled.div`
@@ -79,6 +71,11 @@ const PopupWrapper = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     animation: none;
+    min-width: 290px;
+    
+    &:not(:last-of-type) {
+      margin-right: 20px;
+    }
   `}
 `
 
