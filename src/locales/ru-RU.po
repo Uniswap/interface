@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 21:06\n"
+"PO-Revision-Date: 2021-12-24 21:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -615,7 +615,7 @@ msgstr "Внести ликвидность"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit tokens to the {label} network."
-msgstr "Внесите токены в сеть {label}"
+msgstr "Внесите токены в сеть {label}."
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -714,7 +714,7 @@ msgstr "Введите правильный адрес токена"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 msgid "Enter {0} amount"
-msgstr "Введите {0} сумму"
+msgstr "Введите сумму в {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -777,7 +777,7 @@ msgstr "Изучите Uniswap Analytics."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Не удалось переключить сети из интерфейса Uniswap. Чтобы использовать Uniswap на {0}, вы должны изменить сеть в своем кошельке."
+msgstr "Не удалось переключить сеть через интерфейс Uniswap. Чтобы использовать Uniswap в {0}, вам нужно переключить сеть в своем кошельке."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1195,7 +1195,7 @@ msgstr "Шлюз в Optimism"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Оптимизм находится на стадии бета-тестирования, и возможны простои. Оптимизм ожидает запланированного простоя для обновления сети в ближайшем будущем. Во время простоя с вашей позиции не будет начисляться комиссия, и вы не сможете снять ликвидность. <0>Читать дальше.</0>"
+msgstr "Optimism находится на стадии бета-тестирования, возможны перерывы в работе. В ближайшем будущем ожидается плановый перерыв в работе Optimism для обновления сети. Во время перерыва ваша позиция не будет зарабатывать комиссии, и вы не сможете удалить ликвидность. <0>Читать дальше.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1248,11 +1248,11 @@ msgstr "Пожалуйста, введите слово \"{confirmWord}\", чт�
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr "Полигональный мост"
+msgstr "Мост в Polygon"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
-msgstr "Полигональное сканирование"
+msgstr "Polygonscan"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1622,7 +1622,7 @@ msgstr "Стоимость отправки этой транзакции пре
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "Текущее количество быстрого газа для отправки транзакции на L1. Плата за газ оплачивается в национальной валюте Ethereum, Ether (ETH), и номинирована в GWEI."
+msgstr "Текущая стоимость газа для быстрого подтверждения транзакции на L1. Комиссия за газ оплачивается в собственной валюте сети Ethereum — эфире (ETH) и деноминируется в GWEI."
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1888,7 +1888,7 @@ msgstr "Развернуть"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr "Развернуть от <0/> до {0}"
+msgstr "Развернуть <0/> в {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2063,7 +2063,7 @@ msgstr "Завернуть"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr "Обернуть от <0/> до {0}"
+msgstr "Завернуть <0/> в {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2145,7 +2145,7 @@ msgstr "Ваша ликвидность в V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
-msgstr "Здесь появятся ваши активные позиции ликвидности V3."
+msgstr "Здесь появятся ваши активные позиции ликвидности в V3."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2417,7 +2417,7 @@ msgstr "{activeTokensOnThisChain} токенов"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
-msgstr "{label} токен-мост"
+msgstr "Мост токена {label}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
