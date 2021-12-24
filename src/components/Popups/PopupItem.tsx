@@ -17,11 +17,10 @@ export const StyledClose = styled(X)`
     cursor: pointer;
   }
 `
-export const Popup = styled.div`
+export const Popup = styled.div<{ success?: boolean }>`
   display: inline-block;
   width: 100%;
-  padding: 1em;
-  background-color: ${({ theme }) => theme.bg1};
+  background: ${({ theme, success }) => (success ? theme.bg21 : theme.bg22)};
   position: relative;
   border-radius: 10px;
   padding: 20px;
@@ -74,9 +73,9 @@ export default function PopupItem({
   let popupContent
   if ('txn' in content) {
     const {
-      txn: { hash, success, summary }
+      txn: { hash, success, type, summary }
     } = content
-    popupContent = <TransactionPopup hash={hash} success={success} summary={summary} />
+    popupContent = <TransactionPopup hash={hash} success={success} type={type} summary={summary} />
   } else if ('listUpdate' in content) {
     const {
       listUpdate: { listUrl, oldList, newList, auto }
@@ -91,7 +90,7 @@ export default function PopupItem({
   })
 
   return (
-    <Popup>
+    <Popup success={'txn' in content ? content.txn.success : true}>
       <StyledClose color={theme.text2} onClick={removeThisPopup} />
       {popupContent}
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}

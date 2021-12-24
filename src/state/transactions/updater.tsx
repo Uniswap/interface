@@ -45,6 +45,13 @@ export default function Updater(): null {
   // show popup on confirm
   const addPopup = useAddPopup()
 
+  const parseTransactionType = useCallback(
+    (receipt: TransactionReceipt): string | undefined => {
+      return transactions[receipt.transactionHash]?.type
+    },
+    [transactions]
+  )
+
   const parseTransactionSummary = useCallback(
     (receipt: TransactionReceipt): string | undefined => {
       let log = undefined
@@ -123,6 +130,7 @@ export default function Updater(): null {
                   txn: {
                     hash,
                     success: receipt.status === 1,
+                    type: parseTransactionType(receipt),
                     summary: parseTransactionSummary(receipt)
                   }
                 },
