@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
@@ -11,6 +10,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
+import { SupportedChainId } from '../../constants/chains'
 import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 
@@ -32,7 +32,7 @@ const StyledGasIcon = styled(GasIcon)`
   }
 `
 
-export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [ChainId.MAINNET]
+export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.POLYGON]
 
 export default function GasEstimateBadge({
   trade,

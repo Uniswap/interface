@@ -4911,10 +4911,10 @@
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.7.1"
 
-"@uniswap/router-sdk@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.0.3.tgz#378a8cc96a3f17b5627b811e64bfcf1e0e50a551"
-  integrity sha512-9Nq0+J4+u5cPkZlLjCnV1IbbmPVVDxlwrIuYh/fPTVMH4DnPVVEcP68BArtkSUG0OSC87rWrkEHIZd+L8CO6sQ==
+"@uniswap/router-sdk@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.0.4.tgz#88371b84ef2a64b1fb18036e1933ebaa1a48133f"
+  integrity sha512-uh6/RBDsUL2L3eFDodMu40tW3OBQHo4tgkI4GD74VlBoHLoBzsrvmg9/g2BfwTRWSnQma4mg0IRwVdJ5untsFg==
   dependencies:
     "@ethersproject/abi" "^5.5.0"
     "@uniswap/sdk-core" "^3.0.1"
@@ -4934,10 +4934,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^2.5.4":
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.5.4.tgz#dee2580d5fd836aecd46d935ab6ca7f7963c0501"
-  integrity sha512-uInC4+gL/n28XtEVOY/jrV7uT8FFBtgoW7x0Ks6SGoe/Gx/dYRmzhdeIR1rb3Tg1WP10OwnnC0AW73BJghdGxA==
+"@uniswap/smart-order-router@^2.5.7":
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.5.7.tgz#369544adabf6aeea1bbbdafbba380427a8346916"
+  integrity sha512-xX65WK5TrVu9lq4plauG4RlbyA0T6yKA1bjD+wUHHfFZQ/xUaRjNOQQmYeviHBFpsgSqIM1C9XQX1qH2AWzT5g==
   dependencies:
     "@bitauth/libauth" "^1.17.1"
     "@ethersproject/bignumber" "^5.1.1"
@@ -4951,7 +4951,7 @@
     "@types/sinon" "^10.0.2"
     "@types/stats-lite" "^2.2.0"
     "@uniswap/default-token-list" "^2.0.0"
-    "@uniswap/router-sdk" "^1.0.3"
+    "@uniswap/router-sdk" "^1.0.4"
     "@uniswap/swap-router-contracts" "1.1.0"
     "@uniswap/token-lists" "^1.0.0-beta.25"
     "@uniswap/v2-core" "^1.0.1"
