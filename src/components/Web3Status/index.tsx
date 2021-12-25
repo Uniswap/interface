@@ -8,6 +8,7 @@ import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 
 import { NetworkContextName } from '../../constants/misc'
+import useENSAddress from '../../hooks/useENSAddress'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -141,7 +142,10 @@ function WrappedStatusIcon({ connector }: { connector: AbstractConnector }) {
 function Web3StatusInner() {
   const { account, connector, error } = useWeb3React()
 
-  const { ENSName } = useENSName(account ?? undefined)
+  const revName = useENSName(account ?? undefined)
+  // check that reverse-lookup ENS name resolves to account address
+  const fwdAddr = useENSAddress(revName.ENSName)
+  const ENSName = account === fwdAddr.address ? revName.ENSName : null
 
   const allTransactions = useAllTransactions()
 
@@ -197,7 +201,10 @@ export default function Web3Status() {
   const { active, account } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
 
-  const { ENSName } = useENSName(account ?? undefined)
+  const revName = useENSName(account ?? undefined)
+  // check that reverse-lookup ENS name resolves to account address
+  const fwdAddr = useENSAddress(revName.ENSName)
+  const ENSName = account === fwdAddr.address ? revName.ENSName : null
 
   const allTransactions = useAllTransactions()
 
