@@ -53,7 +53,8 @@ linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/re
 ## XinFin Apothem Contracts 
 - factory: *0x78CAafCB80d9E635196322d989e82753d0d229B8*
 - weth: *0xEE3C205346923a989F82827A25778FB6FdfE84d0*
-- router: *0cDf7c990F4D16a235aFb4279F75A8e35d9c2cFB*
+- router: *0x0cDf7c990F4D16a235aFb4279F75A8e35d9c2cFB*
 - ERC20: *0xFdCf8bD44EC46a71a13f00F4328F6b65adc8BCf9*
 - token-wbnb pair: *0x81915D0460CBA23fb15d5A7A4bBd5E06799C3DF3*
 - multicall: *0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB*
+- obossanniy: *0x14956774a1ab82F3655A4df20686C1FF54fD7D53*

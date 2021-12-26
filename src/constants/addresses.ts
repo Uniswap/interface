@@ -3,11 +3,12 @@ import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
-export const XSP_ADDRESS: AddressMap = constructSameAddressMap('0xFdCf8bD44EC46a71a13f00F4328F6b65adc8BCf9')
+export const XSP_ADDRESS: AddressMap = constructSameAddressMap('0xbC4979e749c28F81F22f95B603B350D9Ab0F172A')
 export const WXDC_ADDRESS: AddressMap = constructSameAddressMap('0xEE3C205346923a989F82827A25778FB6FdfE84d0')
 export const MULTICALL_ADDRESS: AddressMap = constructSameAddressMap('0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB')
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap('0x78CAafCB80d9E635196322d989e82753d0d229B8')
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0cDf7c990F4D16a235aFb4279F75A8e35d9c2cFB')
+export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x0cDf7c990F4D16a235aFb4279F75A8e35d9c2cFB')
+// 0xbC4979e749c28F81F22f95B603B350D9Ab0F172A
 
 /**
  * The oldest V0 governance address
