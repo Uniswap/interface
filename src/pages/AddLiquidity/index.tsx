@@ -4,9 +4,10 @@ import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { toHex } from '@uniswap/v3-sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DowntimeWarning from 'components/DowntimeWarning'
+import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useState } from 'react'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useV3DerivedMintInfo, useV3MintActionHandlers, useV3MintState } from 'state/mint/v3/hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -48,16 +49,20 @@ export default function AddLiquidity({
   history,
 }: RouteComponentProps<{ currencyIdA?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
+  const location = useLocation()
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const limitManager = useLimitOrderManager()
 
   const baseCurrency = useCurrency(currencyIdA)
+  const withdraw = location.pathname.includes('/remove')
+  const { fundingBalance } = useV3Positions(account)
 
   const { parsedAmounts, currencyBalances, currencies, errorMessage, depositADisabled } = useV3DerivedMintInfo(
     baseCurrency ?? undefined,
-    baseCurrency ?? undefined
+    baseCurrency ?? undefined,
+    withdraw ? fundingBalance : undefined
   )
 
   const { independentField, typedValue } = useV3MintState()
@@ -121,7 +126,9 @@ export default function AddLiquidity({
     const calldatas: string[] = []
 
     if (account && amount0) {
-      calldatas.push(limitManager.interface.encodeFunctionData('addFunding', [toHex(amount0)]))
+      calldatas.push(
+        limitManager.interface.encodeFunctionData(withdraw ? 'withdrawFunding' : 'addFunding', [toHex(amount0)])
+      )
       const calldata =
         calldatas.length === 1 ? calldatas[0] : limitManager.interface.encodeFunctionData('multicall', [calldatas])
 
@@ -161,21 +168,20 @@ export default function AddLiquidity({
             ...txn,
             gasLimit: calculateGasMargin(chainId, estimate),
           }
-
           return library
             .getSigner()
             .sendTransaction(newTxn)
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               addTransaction(response, {
-                type: TransactionType.ADD_FUNDING,
+                type: withdraw ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
                 baseCurrencyId: currencyId(baseCurrency),
                 expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
               })
               setTxHash(response.hash)
               ReactGA.event({
                 category: 'Liquidity',
-                action: 'Add',
+                action: withdraw ? 'Remove' : 'Add',
                 label: [currencies[Field.CURRENCY_A]?.symbol].join('/'),
               })
             })
@@ -212,10 +218,14 @@ export default function AddLiquidity({
           </AutoColumn>
         </LightCard>
         <TYPE.italic>
-          <Trans>Depositing KROM will allow you to automatically process trades.</Trans>
+          {withdraw ? (
+            <Trans>Withdrawing KROM may prevent the system to automatically processing trades</Trans>
+          ) : (
+            <Trans>Depositing KROM will allow the system to automatically process trades</Trans>
+          )}
         </TYPE.italic>
         <ButtonPrimary onClick={onAdd}>
-          <Trans>Add</Trans>
+          <Trans>{withdraw ? 'Withdraw' : 'Add'}</Trans>
         </ButtonPrimary>
       </AutoColumn>
     )
@@ -236,9 +246,13 @@ export default function AddLiquidity({
   const showApprovalA =
     !argentWalletContract && approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
 
-  const pendingText = `Staking ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
-    !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
-  }`
+  const pendingText = withdraw
+    ? `Withdraw ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
+        !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
+      }`
+    : `Deposit ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
+        !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
+      }`
 
   const Buttons = () =>
     !account ? (
@@ -263,6 +277,7 @@ export default function AddLiquidity({
           </RowBetween>
         )}
         <ButtonError
+          style={{ marginTop: '8px' }}
           onClick={() => {
             expertMode ? onAdd() : setShowConfirm(true)
           }}
@@ -284,7 +299,7 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={<Trans>Deposit</Trans>}
+              title={withdraw ? <Trans>Withdraw</Trans> : <Trans>Deposit</Trans>}
               onDismiss={() => setShowConfirm(false)}
               topContent={modalHeader}
             />
@@ -311,14 +326,21 @@ export default function AddLiquidity({
                     value={formattedAmounts[Field.CURRENCY_A]}
                     onUserInput={onFieldAInput}
                     onMax={() => {
-                      onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                      onFieldAInput(
+                        withdraw ? fundingBalance?.toExact() ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? ''
+                      )
                     }}
-                    showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                    showMaxButton={!(withdraw ? fundingBalance : atMaxAmounts[Field.CURRENCY_A])}
                     currency={currencies[Field.CURRENCY_A] ?? null}
                     id="add-liquidity-input-tokena"
                     fiatValue={usdcValues[Field.CURRENCY_A]}
                     showCommonBases
                     locked={depositADisabled}
+                    renderBalance={(amount) => (
+                      <Trans>
+                        Wallet: {formatCurrencyAmount(amount, 4)}, Balance: {formatCurrencyAmount(fundingBalance, 4)}
+                      </Trans>
+                    )}
                   />
                 </AutoColumn>
               </DynamicSection>

@@ -14,7 +14,6 @@ import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
-import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
 import Pool from './Pool'
@@ -83,34 +82,16 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Switch>
-              <Route exact strict path="/vote" component={Vote} />
-              <Route exact strict path="/vote/:governorIndex/:id" component={VotePage} />
-              <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
-              <Route exact strict path="/uni" component={Earn} />
-              <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
-
-              <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/swap" component={Swap} />
 
-              <Route exact strict path="/pool/v2/find" component={PoolFinder} />
-              <Route exact strict path="/pool/v2" component={PoolV2} />
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/pool/:tokenId" component={PositionPage} />
-
-              <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
               <Route
                 exact
                 strict
                 path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
                 component={RedirectDuplicateTokenIds}
-              />
-
-              <Route
-                exact
-                strict
-                path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
-                component={AddLiquidity}
               />
 
               <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />

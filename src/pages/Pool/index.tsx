@@ -96,6 +96,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
   width: fit-content;
+  margin-left: 8px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex: 1 1 auto;
     width: 100%;
@@ -151,42 +152,20 @@ export default function Pool() {
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
   const showConnectAWallet = Boolean(!account)
 
-  const menuItems = [
-    {
-      content: (
-        <MenuItem>
-          <Trans>Withdraw</Trans>
-          <ChevronsRight size={16} />
-        </MenuItem>
-      ),
-      link: `/add/${kromToken?.address}/remove`,
-      external: false,
-    },
-  ]
-
   return (
     <>
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+            <TitleRow style={{ marginTop: '1rem' }} padding={'10'}>
               <TYPE.body fontSize={'20px'}>
                 <Trans>Trades</Trans>
               </TYPE.body>
               <ButtonRow>
-                <Menu
-                  menuItems={menuItems}
-                  flyoutAlignment={FlyoutAlignment.LEFT}
-                  ToggleUI={(props: any) => (
-                    <MoreOptionsButton {...props}>
-                      <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
-                        <Trans>More</Trans>
-                        <ChevronDown size={15} />
-                      </TYPE.body>
-                    </MoreOptionsButton>
-                  )}
-                />
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/add/${kromToken?.address}/remove`}>
+                  + <Trans>Withdraw KROM</Trans>
+                </ResponsiveButtonPrimary>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/add/${kromToken?.address}`}>
                   + <Trans>Deposit KROM</Trans>
                 </ResponsiveButtonPrimary>

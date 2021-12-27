@@ -94,7 +94,8 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
 
 export function useV3DerivedMintInfo(
   currencyA?: Currency,
-  baseCurrency?: Currency
+  baseCurrency?: Currency,
+  maxAmount?: CurrencyAmount<Token> | undefined
 ): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -143,8 +144,12 @@ export function useV3DerivedMintInfo(
 
   const { [Field.CURRENCY_A]: currencyAAmount } = parsedAmounts
 
-  if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
+  if (currencyAAmount) {
+    if (maxAmount && maxAmount?.lessThan(currencyAAmount)) {
+      errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_A]?.symbol} deposit</Trans>
+    } else if (currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
+      errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
+    }
   }
 
   return {
