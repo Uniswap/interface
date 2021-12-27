@@ -120,6 +120,8 @@ export function AddRemoveTabs({
     ? '/pool/v2'
     : '/pool' + (!!positionID ? `/${positionID.toString()}` : '')
 
+  const remove = location.pathname.includes('/remove')
+
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
@@ -143,14 +145,13 @@ export function AddRemoveTabs({
         >
           {creating ? (
             <Trans>Create a pair</Trans>
-          ) : adding ? (
-            <Trans>Deposit KROM</Trans>
-          ) : (
+          ) : remove ? (
             <Trans>Withdraw KROM</Trans>
+          ) : (
+            <Trans>Deposit KROM</Trans>
           )}
         </TYPE.mediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
-        {/* <SettingsTab placeholderSlippage={defaultSlippage} /> */}
       </RowBetween>
     </Tabs>
   )

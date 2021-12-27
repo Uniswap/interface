@@ -23,6 +23,7 @@ import {
   TransactionInfo,
   TransactionType,
   VoteTransactionInfo,
+  WithdrawFundingTransactionInfo,
   WithdrawLiquidityStakingTransactionInfo,
   WrapTransactionInfo,
 } from '../../state/transactions/actions'
@@ -234,6 +235,12 @@ function AddFundingSummary({ info: { baseCurrencyId } }: { info: AddFundingTrans
   return <Trans>Deposit {baseCurrency?.symbol}</Trans>
 }
 
+function WithdrawFundingSummary({ info: { baseCurrencyId } }: { info: WithdrawFundingTransactionInfo }) {
+  const baseCurrency = useCurrency(baseCurrencyId)
+
+  return <Trans>Withdraw {baseCurrency?.symbol}</Trans>
+}
+
 function AddLiquidityV2PoolSummary({
   info: { quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw, baseCurrencyId },
 }: {
@@ -293,6 +300,9 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.ADD_FUNDING:
       return <AddFundingSummary info={info} />
+
+    case TransactionType.WITHDRAW_FUNDING:
+      return <WithdrawFundingSummary info={info} />
 
     case TransactionType.ADD_LIQUIDITY_V2_POOL:
       return <AddLiquidityV2PoolSummary info={info} />
