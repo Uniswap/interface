@@ -2,12 +2,11 @@ import { Trans } from '@lingui/macro'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import { useContext, useMemo } from 'react'
-import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
@@ -182,7 +181,7 @@ export default function Pool() {
                 </ResponsiveButtonPrimary>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/XDC" padding="6px 8px">
                   <Text fontWeight={500} fontSize={16}>
-                    <Trans>Add V2 Liquidity</Trans>
+                    <Trans>Add Liquidity</Trans>
                   </Text>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -227,23 +226,6 @@ export default function Pool() {
                       />
                     )
                 )}
-                <RowFixed justify="center" style={{ width: '100%' }}>
-                  <ButtonOutlined
-                    as={Link}
-                    to="/migrate/v2"
-                    id="import-pool-link"
-                    style={{
-                      padding: '8px 16px',
-                      margin: '0 4px',
-                      borderRadius: '12px',
-                      width: 'fit-content',
-                      fontSize: '14px',
-                    }}
-                  >
-                    <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-                    <Trans>Migrate Liquidity to V3</Trans>
-                  </ButtonOutlined>
-                </RowFixed>
               </>
             ) : (
               <EmptyProposals>
