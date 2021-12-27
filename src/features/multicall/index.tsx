@@ -1,7 +1,7 @@
 import { createMulticall } from '@uniswap/redux-multicall'
 import React from 'react'
 import { ChainId } from 'src/constants/chains'
-import { useLatestBlock } from 'src/features/blocks/hooks'
+import { useLatestBlock, useLatestBlockChainMap } from 'src/features/blocks/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useMulticall2Contract } from 'src/features/contracts/useContract'
 import { SkipFirst } from 'src/utils/tuple'
@@ -15,10 +15,13 @@ const {
   useSingleCallResult: _useSingleCallResult,
   useSingleContractMultipleData: _useSingleContractMultipleData,
   useSingleContractWithCallData: _useSingleContractWithCallData,
+  useMultiChainMultiContractSingleData: _useMultiChainMultiContractSingleData,
+  useMultiChainSingleContractSingleData: _useMultiChainSingleContractSingleData,
 } = multicall.hooks
 
 // Create wrappers for hooks so consumers don't need to get latest block themselves
 
+type SkipFirstParam<T extends (...args: any) => any> = SkipFirst<Parameters<T>, 1>
 type SkipFirstTwoParams<T extends (...args: any) => any> = SkipFirst<Parameters<T>, 2>
 
 export function useMultipleContractSingleData(
@@ -51,6 +54,22 @@ export function useSingleContractWithCallData(
 ) {
   const latestBlock = useLatestBlock(chainId)
   return _useSingleContractWithCallData(chainId, latestBlock, ...args)
+}
+
+export function useMultiChainMultiContractSingleData(
+  chainIds: ChainId[],
+  ...args: SkipFirstParam<typeof _useMultiChainMultiContractSingleData>
+) {
+  const chainToBlock = useLatestBlockChainMap(chainIds)
+  return _useMultiChainMultiContractSingleData(chainToBlock, ...args)
+}
+
+export function useMultiChainSingleContractSingleData(
+  chainIds: ChainId[],
+  ...args: SkipFirstParam<typeof _useMultiChainSingleContractSingleData>
+) {
+  const chainToBlock = useLatestBlockChainMap(chainIds)
+  return _useMultiChainSingleContractSingleData(chainToBlock, ...args)
 }
 
 export function MulticallUpdaters() {

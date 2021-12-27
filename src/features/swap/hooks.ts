@@ -42,19 +42,19 @@ export function useDerivedSwapInfo(state: SwapFormState) {
 
   const currencies = { [CurrencyField.INPUT]: currencyIn, [CurrencyField.OUTPUT]: currencyOut }
 
-  const [tokenInBalance] = useTokenBalance(
+  const { balance: tokenInBalance } = useTokenBalance(
     currencyIn?.isToken ? currencyIn : undefined,
     activeAccount?.address
   )
-  const [tokenOutBalance] = useTokenBalance(
+  const { balance: tokenOutBalance } = useTokenBalance(
     currencyOut?.isToken ? currencyOut : undefined,
     activeAccount?.address
   )
-  const nativeInBalance = useEthBalance(
+  const { balance: nativeInBalance } = useEthBalance(
     currencyIn?.chainId ?? ChainId.MAINNET,
     activeAccount?.address
   )
-  const nativeOutBalance = useEthBalance(
+  const { balance: nativeOutBalance } = useEthBalance(
     currencyOut?.chainId ?? ChainId.MAINNET,
     activeAccount?.address
   )

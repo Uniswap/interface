@@ -9,7 +9,7 @@ import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useAllCurrencies, useAllTokens } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { flattenChainIdToAddressTo } from 'src/utils/objects'
+import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export function CurrencySelectorScreen({
   route: {
@@ -97,7 +97,7 @@ function CurrencySearchAllCurrencies({
   const navigation = useAppStackNavigation()
   const chainIdToAddressToCurrency = useAllCurrencies()
 
-  const currencies = flattenChainIdToAddressTo(chainIdToAddressToCurrency)
+  const currencies = flattenObjectOfObjects(chainIdToAddressToCurrency)
 
   return (
     <CurrencySearch

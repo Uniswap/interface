@@ -9,7 +9,7 @@ import { Screen, sheetScreenEdges } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { Screens, Tabs } from 'src/screens/Screens'
-import { flattenChainIdToAddressTo } from 'src/utils/objects'
+import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
   const { t } = useTranslation()
@@ -27,7 +27,7 @@ export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
       </Box>
       <CenterBox flex={1}>
         <CurrencySearch
-          currencies={flattenChainIdToAddressTo(currencies)}
+          currencies={flattenObjectOfObjects(currencies)}
           onSelectCurrency={onPressCurrency}
         />
       </CenterBox>

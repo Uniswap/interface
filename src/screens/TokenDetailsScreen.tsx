@@ -45,8 +45,11 @@ export function TokenDetailsScreen({
   const { currency } = route.params
 
   const activeAccount = useActiveAccount()
-  const [balance] = useTokenBalance(currency.isToken ? currency : undefined, activeAccount?.address)
-  const ethBalance = useEthBalance(currency.chainId, activeAccount?.address)
+  const { balance } = useTokenBalance(
+    currency.isToken ? currency : undefined,
+    activeAccount?.address
+  )
+  const { balance: ethBalance } = useEthBalance(currency.chainId, activeAccount?.address)
 
   const { t } = useTranslation()
 

@@ -1,14 +1,14 @@
 import { DAI, DAI_RINKEBY, USDC } from 'src/constants/tokens'
-import { flattenChainIdToAddressTo } from 'src/utils/objects'
+import { flattenObjectOfObjects } from 'src/utils/objects'
 
-describe(flattenChainIdToAddressTo, () => {
+describe(flattenObjectOfObjects, () => {
   it('correctly flattens', () => {
-    expect(flattenChainIdToAddressTo({})).toEqual([])
+    expect(flattenObjectOfObjects({})).toEqual([])
 
-    expect(flattenChainIdToAddressTo({ 1: {}, 4: {} })).toEqual([])
+    expect(flattenObjectOfObjects({ 1: {}, 4: {} })).toEqual([])
 
     expect(
-      flattenChainIdToAddressTo({
+      flattenObjectOfObjects({
         1: {
           [DAI.address]: DAI,
           [USDC.address]: USDC,
@@ -20,6 +20,6 @@ describe(flattenChainIdToAddressTo, () => {
       })
     ).toEqual([DAI, USDC, DAI_RINKEBY])
 
-    expect(flattenChainIdToAddressTo({ 1: { '0x1': [1, 2, 3], '0x2': 4 } })).toEqual([[1, 2, 3], 4])
+    expect(flattenObjectOfObjects({ 1: { '0x1': [1, 2, 3], '0x2': 4 } })).toEqual([[1, 2, 3], 4])
   })
 })

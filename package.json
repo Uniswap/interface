@@ -36,7 +36,7 @@
     "@sentry/react-native": "^3.1.1",
     "@shopify/restyle": "^1.6.1",
     "@uniswap/default-token-list": "^2.0.0",
-    "@uniswap/redux-multicall": "^1.0.0",
+    "@uniswap/redux-multicall": "^1.1.0",
     "@uniswap/router-sdk": "^1.0.2",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/token-lists": "^1.0.0-beta.27",
