@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Box, Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
-import { ExternalLink } from 'theme'
+import { ExternalLink, HideSmall } from 'theme'
 import { getEtherscanLink, getEtherscanLinkText } from 'utils'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -121,12 +121,14 @@ export default function TransactionPopup({
         </AutoColumn>
       </RowNoFlex>
       {chainId && (
-        <ExternalLink
-          href={getEtherscanLink(chainId, hash, 'transaction')}
-          style={{ margin: '8px 0 0 40px', display: 'block', color: success ? theme.primary : theme.red }}
-        >
-          {getEtherscanLinkText(chainId)}
-        </ExternalLink>
+        <HideSmall>
+          <ExternalLink
+            href={getEtherscanLink(chainId, hash, 'transaction')}
+            style={{ margin: '8px 0 0 40px', display: 'block', color: success ? theme.primary : theme.red }}
+          >
+            {getEtherscanLinkText(chainId)}
+          </ExternalLink>
+        </HideSmall>
       )}
     </Box>
   )
