@@ -124,6 +124,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@web3-react/walletlink-connector": "^6.2.8",
     "arb-ts": "^1.0.2",
     "multiformats": "^9.4.10",
     "query-string": "^6.13.8",

@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { isMobile } from 'react-device-detect'
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 
 import { useActiveWeb3React } from '.'
 import { NETWORK_DETAIL } from '../constants'
@@ -20,7 +21,7 @@ export const useNetworkSwitch = ({ onSelectNetworkCallback }: UseNetworkSwitchPr
     (optionChainId?: ChainId) => {
       if (optionChainId === undefined || optionChainId === chainId) return
       if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
-      else if (connector instanceof InjectedConnector)
+      else if (connector instanceof InjectedConnector || connector instanceof WalletLinkConnector)
         switchOrAddNetwork(NETWORK_DETAIL[optionChainId], account || undefined)
       if (onSelectNetworkCallback) onSelectNetworkCallback()
     },

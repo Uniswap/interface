@@ -15,6 +15,7 @@ import { TriangleIcon } from '../Icons'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainLabel } from '../../constants'
 import { ENSAvatarData } from '../../hooks/useENSAvatar'
@@ -150,7 +151,9 @@ export function AccountStatus({
   const [networkSwitchingActive, setNetworkSwitchingActive] = useState(false)
 
   useEffect(() => {
-    setNetworkSwitchingActive(connector instanceof CustomNetworkConnector || connector instanceof InjectedConnector)
+    setNetworkSwitchingActive(
+      connector instanceof CustomNetworkConnector || connector instanceof InjectedConnector || connector instanceof WalletLinkConnector
+    )
   }, [connector])
 
   if (!networkConnectorChainId) return null
