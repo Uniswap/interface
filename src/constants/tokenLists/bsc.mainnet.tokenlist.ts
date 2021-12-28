@@ -130,7 +130,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
       symbol: 'PRL',
       name: 'Parallel',
       decimals: 18,
-      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/15669.png'
+      logoURI: 'https://i.imgur.com/99UaEcO.png'
     }
   ],
   version: {
