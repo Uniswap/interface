@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 21:06\n"
+"PO-Revision-Date: 2021-12-28 17:11\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -714,7 +714,7 @@ msgstr "Vnesite veljaven naslov žetona"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 msgid "Enter {0} amount"
-msgstr "Vnesite {0} znesek"
+msgstr "Vnesite znesek {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -773,11 +773,11 @@ msgstr "Potekla"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
-msgstr "Raziščite Uniswap Analytics."
+msgstr "Pobrskajte po Uniswap Analytics."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Preklop omrežij z vmesnika Uniswap ni uspel. Če želite uporabiti Uniswap na {0}, morate spremeniti omrežje v svoji denarnici."
+msgstr "Zamenjava omrežij iz Uniswapovega vmesnika ni uspel. Če želite uporabiti Uniswap na {0}, morate zamenjati omrežje v svoji denarnici."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1195,7 +1195,7 @@ msgstr "Portal za Optimism"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimizem je v beta različici in lahko pride do izpadov. Optimisti pričakujejo načrtovane izpade za nadgradnjo omrežja v bližnji prihodnosti. Med izpadom vaša pozicija ne bo zaslužila provizij in ne boste mogli odstraniti likvidnosti. <0>Preberite več.</0>"
+msgstr "Optimism je v različici beta in lahko prihaja do izpadov. Optimizem pričakuje v bližnji prihodnosti načrtovane izpade za nadgradnjo omrežja. V času izpadov vaša pozicija ne bo služila pristojbin in likvidnosti ne boste mogli odstraniti. <0> Preberi več.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1248,7 +1248,7 @@ msgstr "Prosimo, vnesite besedo \"{confirmWord}\", če želite omogočiti stroko
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr "Poligonski most"
+msgstr "Most za Polygon"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
@@ -1622,7 +1622,7 @@ msgstr "Strošek pošiljanja te transakcije presega polovico vrednosti vhodnega 
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "Trenutna količina hitrega plina za pošiljanje transakcije na L1. Pristojbine za plin se plačajo v domači valuti Ethereuma Ether (ETH) in denominirane v GWEI."
+msgstr "Trenutna količina plina za hitro pošiljanje transakcije na L1. Provizije za plin se plačajo v valuti ether (ETH), domači valuti omrežja Ethereum, in so denominirane v enoti Gwei."
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1888,7 +1888,7 @@ msgstr "Odvij"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr "Odvijte <0/> do {0}"
+msgstr "Odvijte <0/> v {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2063,7 +2063,7 @@ msgstr "Ovij"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr "Zavijte <0/> proti {0}"
+msgstr "Ovijte <0/> v {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2145,7 +2145,7 @@ msgstr "Vaša likvidnost V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
-msgstr "Tukaj bodo prikazane vaše aktivne likvidnostne pozicije V3."
+msgstr "Tukaj bodo prikazane vaše aktivne likvidnostne pozicije na V3."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2417,7 +2417,7 @@ msgstr "{activeTokensOnThisChain} žetonov"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
-msgstr "{label} žetonov most"
+msgstr "Most za žetone {label}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
