@@ -468,17 +468,7 @@ export default function MigrateLiquiditySUSHI({
         .then((response: TransactionResponse) => {
           setAttemptingTxn(false)
 
-          addTransactionWithType(response, {
-            type: 'Remove liquidity',
-            summary:
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencyA?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencyB?.symbol
-          })
+          addTransactionWithType(response, { type: 'Migrate' })
 
           setTxHash(response.hash)
         })
