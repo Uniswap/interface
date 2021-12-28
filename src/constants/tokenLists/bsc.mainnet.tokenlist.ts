@@ -123,6 +123,14 @@ export const BSC_MAINNET_TOKEN_LIST = {
       name: 'DEXTools',
       decimals: 18,
       logoURI: 'https://bscscan.com/token/images/dextools_32.png'
+    },
+    {
+      chainId: 56,
+      address: '0xd07e82440A395f3F3551b42dA9210CD1Ef4f8B24',
+      symbol: 'PRL',
+      name: 'Parallel',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/15669.png'
     }
   ],
   version: {
