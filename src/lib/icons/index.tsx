@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import CheckIcon from 'lib/assets/Check'
+import ExpandoIcon from 'lib/assets/Expando'
 import LogoIcon from 'lib/assets/Logo'
 import SpinnerIcon from 'lib/assets/Spinner'
 import styled, { Color, css, keyframes } from 'lib/theme'
@@ -12,7 +13,6 @@ import {
   ArrowUp as ArrowUpIcon,
   CheckCircle as CheckCircleIcon,
   ChevronDown as ChevronDownIcon,
-  ChevronUp as ChevronUpIcon,
   Clock as ClockIcon,
   CreditCard as CreditCardIcon,
   HelpCircle as HelpCircleIcon,
@@ -86,9 +86,19 @@ export const Check = styled(icon(CheckIcon))`
   }
 `
 
-export const Expando = styled(icon(ChevronUpIcon))<{ open: boolean }>`
-  transform: ${({ open }) => open && 'rotate(180deg)'};
-  transition: transform 0.2s ease-in-out;
+export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
+  path {
+    transition: transform 0.2s ease-in-out;
+    will-change: transform;
+
+    &:first-child {
+      transform: ${({ open }) => open && 'translateX(-25%)'};
+    }
+
+    &:last-child {
+      transform: ${({ open }) => open && 'translateX(25%)'};
+    }
+  }
 `
 
 export const Logo = styled(icon(LogoIcon))`
