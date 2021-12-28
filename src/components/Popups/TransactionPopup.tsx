@@ -13,7 +13,9 @@ const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
 `
 
-const SUMMARY: { [type: string]: { success: (summary?: string) => string; failure: (summary?: string) => string } } = {
+export const SUMMARY: {
+  [type: string]: { success: (summary?: string) => string; failure: (summary?: string) => string }
+} = {
   Wrap: {
     success: summary => 'Wrapped ' + summary,
     failure: summary => 'Error wrapping ' + summary

@@ -2,12 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { CheckCircle, Triangle } from 'react-feather'
 
-import { useActiveWeb3React } from '../../hooks'
-import { getEtherscanLink } from '../../utils'
-import { ExternalLink } from '../../theme'
-import { useAllTransactions } from '../../state/transactions/hooks'
-import { RowFixed } from '../Row'
-import Loader from '../Loader'
+import { useActiveWeb3React } from 'hooks'
+import { getEtherscanLink } from 'utils'
+import { ExternalLink } from 'theme'
+import { useAllTransactions } from 'state/transactions/hooks'
+import { RowFixed } from 'components/Row'
+import Loader from 'components/Loader'
+import { SUMMARY } from 'components/Popups/TransactionPopup'
 
 const TransactionWrapper = styled.div``
 
@@ -20,7 +21,7 @@ const TransactionStatusText = styled.div`
   }
 `
 
-const TransactionState = styled(ExternalLink) <{ pending: boolean; success?: boolean }>`
+const TransactionState = styled(ExternalLink)<{ pending: boolean; success?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,9 +42,13 @@ export default function Transaction({ hash }: { hash: string }) {
   const allTransactions = useAllTransactions()
 
   const tx = allTransactions?.[hash]
-  const summary = tx?.summary
   const pending = !tx?.receipt
   const success = !pending && tx && (tx.receipt?.status === 1 || typeof tx.receipt?.status === 'undefined')
+  const type = tx?.type
+  const summary = tx?.summary
+  const parsedSummary = type
+    ? SUMMARY[type][success ? 'success' : 'failure'](summary)
+    : summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)
 
   if (!chainId) return null
 
@@ -51,7 +56,7 @@ export default function Transaction({ hash }: { hash: string }) {
     <TransactionWrapper>
       <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
         <RowFixed>
-          <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>
+          <TransactionStatusText>{parsedSummary} ↗</TransactionStatusText>
         </RowFixed>
         <IconWrapper pending={pending} success={success}>
           {pending ? <Loader /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}
