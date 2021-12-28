@@ -57,7 +57,9 @@ export default function useWrapCallback(
                   })
                   addTransactionWithType(txReceipt, {
                     type: 'Wrap',
-                    summary: `${inputAmount.toSignificant(6)} ${nativeTokenSymbol} to W${nativeTokenSymbol}`
+                    summary: `${inputAmount.toSignificant(6)} ${nativeTokenSymbol} to ${inputAmount.toSignificant(
+                      6
+                    )} W${nativeTokenSymbol}`
                   })
                 } catch (error) {
                   console.error('Could not deposit', error)
@@ -83,7 +85,9 @@ export default function useWrapCallback(
                   })
                   addTransactionWithType(txReceipt, {
                     type: 'Unwrap',
-                    summary: `${inputAmount.toSignificant(6)} W${nativeTokenSymbol} to ${nativeTokenSymbol}`
+                    summary: `${inputAmount.toSignificant(6)} W${nativeTokenSymbol} to ${inputAmount.toSignificant(
+                      6
+                    )} ${nativeTokenSymbol}`
                   })
                 } catch (error) {
                   console.error('Could not withdraw', error)
