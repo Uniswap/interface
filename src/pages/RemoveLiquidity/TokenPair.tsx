@@ -220,7 +220,7 @@ export default function TokenPair({
   ])
 
   // tx sending
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
   async function onRemove() {
     if (!chainId || !library || !account || !deadline) throw new Error('missing dependencies')
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -345,9 +345,9 @@ export default function TokenPair({
           if (!!currencyA && !!currencyB) {
             setAttemptingTxn(false)
 
-            addTransaction(response, {
+            addTransactionWithType(response, {
+              type: 'Remove liquidity',
               summary:
-                'Remove ' +
                 parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
                 ' ' +
                 convertToNativeTokenFromETH(currencyA, chainId).symbol +

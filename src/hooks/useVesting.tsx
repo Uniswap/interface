@@ -6,7 +6,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { calculateGasMargin } from 'utils'
 
 const useVesting = (rewardLockerAddress: string) => {
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
   const lockerContract = useRewardLockerContract(rewardLockerAddress)
 
   const vestAtIndex = useCallback(
@@ -19,11 +19,11 @@ const useVesting = (rewardLockerAddress: string) => {
       const tx = await lockerContract.vestScheduleAtIndices(token, index, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Claim schedule ${index}` })
+      addTransactionWithType(tx, { type: 'Claim', summary: 'reward' })
 
       return tx.hash
     },
-    [lockerContract, addTransaction]
+    [lockerContract, addTransactionWithType]
   )
 
   const vestMultipleTokensAtIndices = useCallback(
@@ -36,11 +36,11 @@ const useVesting = (rewardLockerAddress: string) => {
       const tx = await lockerContract.vestScheduleForMultipleTokensAtIndices(tokens, indices, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Claim all` })
+      addTransactionWithType(tx, { type: 'Claim', summary: 'all rewards' })
 
       return tx.hash
     },
-    [lockerContract, addTransaction]
+    [lockerContract, addTransactionWithType]
   )
 
   return { vestAtIndex, vestMultipleTokensAtIndices }

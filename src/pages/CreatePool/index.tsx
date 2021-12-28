@@ -152,7 +152,7 @@ export default function CreatePool({
     !!chainId ? ROUTER_ADDRESSES[chainId] : undefined
   )
 
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
   async function onAdd() {
     // if (!pair) return
     if (!chainId || !library || !account) return
@@ -215,9 +215,9 @@ export default function CreatePool({
           const cB = currencies[Field.CURRENCY_B]
           if (!!cA && !!cB) {
             setAttemptingTxn(false)
-            addTransaction(response, {
+            addTransactionWithType(response, {
+              type: 'Create pool',
               summary:
-                'Add ' +
                 parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
                 ' ' +
                 convertToNativeTokenFromETH(cA, chainId).symbol +

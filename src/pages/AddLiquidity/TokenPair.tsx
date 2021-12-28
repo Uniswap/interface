@@ -149,7 +149,7 @@ const TokenPair = ({
     !!chainId ? ROUTER_ADDRESSES[chainId] : undefined
   )
 
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
   async function onAdd() {
     // if (!pair) return
     if (!chainId || !library || !account) return
@@ -258,9 +258,9 @@ const TokenPair = ({
           const cB = currencies[Field.CURRENCY_B]
           if (!!cA && !!cB) {
             setAttemptingTxn(false)
-            addTransaction(response, {
+            addTransactionWithType(response, {
+              type: 'Add liquidity',
               summary:
-                'Add ' +
                 parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
                 ' ' +
                 convertToNativeTokenFromETH(cA, chainId).symbol +

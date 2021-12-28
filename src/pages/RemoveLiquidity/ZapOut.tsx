@@ -251,7 +251,7 @@ export default function ZapOut({
   ])
 
   // tx sending
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
   async function onRemove() {
     if (!chainId || !library || !account || !deadline) throw new Error('missing dependencies')
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -380,9 +380,9 @@ export default function ZapOut({
           if (!!currencyA && !!currencyB) {
             setAttemptingTxn(false)
 
-            addTransaction(response, {
-              summary:
-                'Remove ' + parsedAmounts[independentTokenField]?.toSignificant(3) + ' ' + independentToken?.symbol
+            addTransactionWithType(response, {
+              type: 'Remove liquidity',
+              summary: parsedAmounts[independentTokenField]?.toSignificant(3) + ' ' + independentToken?.symbol
             })
 
             setTxHash(response.hash)

@@ -5,9 +5,10 @@ import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useFairLaunchContract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { calculateGasMargin } from 'utils'
+import { getFullDisplayBalance } from 'utils/formatBalance'
 
 const useFairLaunch = (address: string) => {
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
   const fairLaunchContract = useFairLaunchContract(address) // withSigner
 
   const getPoolLength = useCallback(async () => {
@@ -57,11 +58,11 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.deposit(pid, amount, shouldHaverst, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Deposit ${name}` })
+      addTransactionWithType(tx, { type: 'Stake', summary: `${getFullDisplayBalance(amount)} ${name} Tokens` })
 
       return tx.hash
     },
-    [addTransaction, fairLaunchContract]
+    [addTransactionWithType, fairLaunchContract]
   )
 
   // Withdraw
@@ -75,11 +76,11 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.withdraw(pid, amount, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Withdraw ${name}` })
+      addTransactionWithType(tx, { type: 'Unstake', summary: `${getFullDisplayBalance(amount)} ${name} Tokens` })
 
       return tx.hash
     },
-    [addTransaction, fairLaunchContract]
+    [addTransactionWithType, fairLaunchContract]
   )
 
   const harvest = useCallback(
@@ -92,11 +93,11 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.harvest(pid, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Harvest ${name}` })
+      addTransactionWithType(tx, { type: 'Harvest' })
 
       return tx.hash
     },
-    [addTransaction, fairLaunchContract]
+    [addTransactionWithType, fairLaunchContract]
   )
 
   const harvestMultiplePools = useCallback(
@@ -109,11 +110,11 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.harvestMultiplePools(pids, {
         gasLimit: calculateGasMargin(estimateGas)
       })
-      addTransaction(tx, { summary: `Harvest multiple pools: ${pids.join(',')}` })
+      addTransactionWithType(tx, { type: 'Harvest' })
 
       return tx.hash
     },
-    [addTransaction, fairLaunchContract]
+    [addTransactionWithType, fairLaunchContract]
   )
 
   return {

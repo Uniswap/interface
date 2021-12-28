@@ -95,8 +95,8 @@ export default function MigrateLiquidity({
     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
       ? '0'
       : parsedAmounts[Field.LIQUIDITY_PERCENT].lessThan(new Percent('1', '100'))
-        ? '<1'
-        : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
+      ? '<1'
+      : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
     [Field.LIQUIDITY]:
       independentField === Field.LIQUIDITY ? typedValue : parsedAmounts[Field.LIQUIDITY]?.toSignificant(6) ?? '',
     [Field.CURRENCY_A]:
@@ -219,8 +219,8 @@ export default function MigrateLiquidity({
     !liquidityMintedMaxA || !liquidityMintedMaxB
       ? undefined
       : liquidityMintedMaxA.lessThan(liquidityMintedMaxB)
-        ? liquidityMintedMaxA
-        : liquidityMintedMaxB
+      ? liquidityMintedMaxA
+      : liquidityMintedMaxB
 
   // let amountsMin
   let currencyAmountAToAddPool: CurrencyAmount | undefined
@@ -299,7 +299,7 @@ export default function MigrateLiquidity({
     poolShare = '100%'
   }
 
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
   async function onRemove() {
     if (!chainId || !library || !account || !deadline) throw new Error('missing dependencies')
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -466,17 +466,7 @@ export default function MigrateLiquidity({
         .then((response: TransactionResponse) => {
           setAttemptingTxn(false)
 
-          addTransaction(response, {
-            summary:
-              'Remove ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencyA?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencyB?.symbol
-          })
+          addTransactionWithType(response, { type: 'Migrate' })
 
           setTxHash(response.hash)
         })
@@ -488,8 +478,9 @@ export default function MigrateLiquidity({
     }
   }
 
-  const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${currencyA?.symbol
-    } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
+  const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
+    currencyA?.symbol
+  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
 
   const liquidityPercentChangeCallback = useCallback(
     (value: number) => {
@@ -732,8 +723,9 @@ export default function MigrateLiquidity({
     <>
       {chainId && oneCurrencyIsETH ? (
         <Redirect
-          to={`/migrate/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${currencyB === ETHER ? WETH[chainId].address : currencyIdB
-            }`}
+          to={`/migrate/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
+            currencyB === ETHER ? WETH[chainId].address : currencyIdB
+          }`}
         />
       ) : (
         <>

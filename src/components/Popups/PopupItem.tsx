@@ -1,12 +1,13 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { X } from 'react-feather'
 import { useSpring } from 'react-spring/web'
-import styled, { ThemeContext } from 'styled-components'
+import styled, { keyframes, ThemeContext } from 'styled-components'
 import { animated } from 'react-spring'
-import { PopupContent } from '../../state/application/actions'
-import { useRemovePopup } from '../../state/application/hooks'
+import { PopupContent } from 'state/application/actions'
+import { useRemovePopup } from 'state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
 import TransactionPopup from './TransactionPopup'
+import { HideSmall } from 'theme/components'
 
 export const StyledClose = styled(X)`
   position: absolute;
@@ -17,34 +18,80 @@ export const StyledClose = styled(X)`
     cursor: pointer;
   }
 `
-export const Popup = styled.div`
+
+const rtl = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(1000px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`
+
+const ltr = keyframes`
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(1000px);
+  }
+`
+
+export const Popup = styled.div<{ success?: boolean }>`
   display: inline-block;
   width: 100%;
-  padding: 1em;
-  background-color: ${({ theme }) => theme.bg1};
+  background: ${({ theme, success }) => (success ? theme.bg21 : theme.bg22)};
   position: relative;
-  border-radius: 10px;
   padding: 20px;
-  padding-right: 35px;
-  overflow: hidden;
+  padding-right: 36px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    min-width: 290px;
-    &:not(:last-of-type) {
-      margin-right: 20px;
-    }
+    padding: 12px;
+    padding-right: 24px;
   `}
 `
+
 const Fader = styled.div`
   position: absolute;
-  bottom: 0px;
-  left: 0px;
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 2px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.subText};
 `
 
 const AnimatedFader = animated(Fader)
+
+const PopupWrapper = styled.div`
+  position: relative;
+  isolation: isolate;
+  border-radius: 10px;
+  overflow: hidden;
+  animation: ${rtl} 1.5s ease-in-out, ${ltr} 1.5s ease-in-out 14.15s;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: min(calc(100vw - 32px), 425px);
+    
+    &:not(:first-of-type) {
+      margin-top: 10px;
+    }
+  `}
+`
+
+const SolidBackgroundLayer = styled.div`
+  background: ${({ theme }) => theme.bg2};
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`
 
 export default function PopupItem({
   removeAfterMs,
@@ -74,9 +121,9 @@ export default function PopupItem({
   let popupContent
   if ('txn' in content) {
     const {
-      txn: { hash, success, summary }
+      txn: { hash, success, type, summary }
     } = content
-    popupContent = <TransactionPopup hash={hash} success={success} summary={summary} />
+    popupContent = <TransactionPopup hash={hash} success={success} type={type} summary={summary} />
   } else if ('listUpdate' in content) {
     const {
       listUpdate: { listUrl, oldList, newList, auto }
@@ -91,10 +138,13 @@ export default function PopupItem({
   })
 
   return (
-    <Popup>
-      <StyledClose color={theme.text2} onClick={removeThisPopup} />
-      {popupContent}
-      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
-    </Popup>
+    <PopupWrapper>
+      <SolidBackgroundLayer />
+      <Popup success={'txn' in content ? content.txn.success : true}>
+        <StyledClose color={theme.text2} onClick={removeThisPopup} />
+        {popupContent}
+        {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
+      </Popup>
+    </PopupWrapper>
   )
 }

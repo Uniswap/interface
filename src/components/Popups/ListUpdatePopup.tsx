@@ -4,14 +4,14 @@ import { useDispatch } from 'react-redux'
 import { Text } from 'rebass'
 import { Trans } from '@lingui/macro'
 
-import { AppDispatch } from '../../state'
-import { useRemovePopup } from '../../state/application/hooks'
-import { acceptListUpdate } from '../../state/lists/actions'
-import { TYPE } from '../../theme'
-import listVersionLabel from '../../utils/listVersionLabel'
-import { ButtonSecondary } from '../Button'
-import { AutoColumn } from '../Column'
-import { AutoRow } from '../Row'
+import { AppDispatch } from 'state'
+import { useRemovePopup } from 'state/application/hooks'
+import { acceptListUpdate } from 'state/lists/actions'
+import { TYPE } from 'theme'
+import listVersionLabel from 'utils/listVersionLabel'
+import { ButtonSecondary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import { AutoRow } from 'components/Row'
 
 export default function ListUpdatePopup({
   popKey,

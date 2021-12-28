@@ -137,11 +137,6 @@ msgstr "유동성 추가"
 msgid "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
 msgstr "유동성을 추가하고 해당 풀 토큰을 보상으로 받을 수 있습니다. 자신의 풀 점유율에 비례하여 해당 토큰 거래가 이루어 질때마다 다이나믹 수수료를 받게 됩니다. 얻은 수수료는 유동성을 인출할 때 자동으로 인출됩니다."
 
-#: src/pages/AddLiquidity/ZapIn.tsx
-#: src/pages/AddLiquidity/ZapIn.tsx
-msgid "Add liquidity for single token {0} with amount of {1}"
-msgstr "{1} 해당하는 {0}에 대한 단일 유동성 추가"
-
 #: src/pages/Pools/index.tsx
 msgid "Add liquidity:"
 msgstr "유동성 추가:"
@@ -1584,10 +1579,6 @@ msgstr "약관"
 #: src/components/WalletModal/index.tsx
 msgid "Terms of Use"
 msgstr "이용 약관"
-
-#: src/components/Header/index.tsx
-msgid "Test our L2 solution now!"
-msgstr ""
 
 #: src/pages/SwapV2/index.tsx
 msgid "The amount you save compared to <0>{0}</0>."

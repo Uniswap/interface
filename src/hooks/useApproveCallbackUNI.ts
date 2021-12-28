@@ -7,6 +7,7 @@ import { useTransactionAdder, useHasPendingApproval } from '../state/transaction
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -20,7 +21,7 @@ export function useApproveCallback(
   amountToApprove?: CurrencyAmount,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowanceUNI(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
@@ -40,7 +41,7 @@ export function useApproveCallback(
       : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
   const tokenContract = useTokenContract(token?.address)
-  const addTransaction = useTransactionAdder()
+  const addTransactionWithType = useTransactionAdder()
 
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
@@ -79,8 +80,9 @@ export function useApproveCallback(
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then((response: TransactionResponse) => {
-        addTransaction(response, {
-          summary: 'Approve ' + amountToApprove.currency.symbol,
+        addTransactionWithType(response, {
+          type: 'Approve',
+          summary: convertToNativeTokenFromETH(amountToApprove.currency, chainId).symbol,
           approval: { tokenAddress: token.address, spender: spender }
         })
       })
@@ -88,7 +90,7 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType])
 
   return [approvalState, approve]
 }

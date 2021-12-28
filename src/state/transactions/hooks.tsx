@@ -11,6 +11,7 @@ import { TransactionDetails } from './reducer'
 export function useTransactionAdder(): (
   response: TransactionResponse,
   customData?: {
+    type?: string
     summary?: string
     approval?: { tokenAddress: string; spender: string }
     claim?: { recipient: string }
@@ -24,11 +25,13 @@ export function useTransactionAdder(): (
     (
       response: TransactionResponse,
       {
+        type,
         summary,
         approval,
         claim,
         arbitrary
       }: {
+        type?: string
         summary?: string
         claim?: { recipient: string }
         approval?: { tokenAddress: string; spender: string }
@@ -42,7 +45,7 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, chainId, approval, summary, claim, arbitrary }))
+      dispatch(addTransaction({ hash, from: account, chainId, approval, type, summary, claim, arbitrary }))
     },
     [dispatch, chainId, account]
   )

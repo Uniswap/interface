@@ -137,11 +137,6 @@ msgstr "添加流动性"
 msgid "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
 msgstr "添加流动性并接收代表您池份额的池代币。 您将获得此代币对交易的动态费用，与您的池份额成正比。 当您提取流动性时，所赚取的费用将自动领取。"
 
-#: src/pages/AddLiquidity/ZapIn.tsx
-#: src/pages/AddLiquidity/ZapIn.tsx
-msgid "Add liquidity for single token {0} with amount of {1}"
-msgstr "为单一代币添加流动性 {0} ，金额为 {1}"
-
 #: src/pages/Pools/index.tsx
 msgid "Add liquidity:"
 msgstr "添加流动性:"
@@ -1584,10 +1579,6 @@ msgstr "条例"
 #: src/components/WalletModal/index.tsx
 msgid "Terms of Use"
 msgstr "使用条款"
-
-#: src/components/Header/index.tsx
-msgid "Test our L2 solution now!"
-msgstr ""
 
 #: src/pages/SwapV2/index.tsx
 msgid "The amount you save compared to <0>{0}</0>."
