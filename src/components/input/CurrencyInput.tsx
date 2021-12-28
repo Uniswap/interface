@@ -60,7 +60,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
           placeholder="0.0"
           mr="sm"
-          value={currencyAmount?.toSignificant(6)}
+          value={currencyAmount?.toExact()}
           style={styles.amountInput}
         />
         <CurrencySelector
