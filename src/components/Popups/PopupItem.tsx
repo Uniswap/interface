@@ -7,6 +7,7 @@ import { PopupContent } from 'state/application/actions'
 import { useRemovePopup } from 'state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
 import TransactionPopup from './TransactionPopup'
+import { HideSmall } from 'theme/components'
 
 export const StyledClose = styled(X)`
   position: absolute;
@@ -48,7 +49,12 @@ export const Popup = styled.div<{ success?: boolean }>`
   background: ${({ theme, success }) => (success ? theme.bg21 : theme.bg22)};
   position: relative;
   padding: 20px;
-  padding-right: 35px;
+  padding-right: 36px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 12px;
+    padding-right: 24px;
+  `}
 `
 
 const Fader = styled.div`
@@ -70,11 +76,10 @@ const PopupWrapper = styled.div`
   animation: ${rtl} 1.5s ease-in-out, ${ltr} 1.5s ease-in-out 14.15s;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    animation: none;
-    min-width: 290px;
+    width: min(calc(100vw - 32px), 425px);
     
-    &:not(:last-of-type) {
-      margin-right: 20px;
+    &:not(:first-of-type) {
+      margin-top: 10px;
     }
   `}
 `

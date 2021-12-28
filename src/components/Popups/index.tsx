@@ -6,7 +6,8 @@ import PopupItem from './PopupItem'
 import { useURLWarningVisible, useRebrandingAnnouncement } from 'state/user/hooks'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
-  position: relative;
+  position: absolute;
+  z-index: 9999;
   max-width: 100%;
   height: ${({ height }) => height};
   margin: ${({ height }) => (height ? '20px auto;' : 0)};
@@ -22,7 +23,7 @@ const MobilePopupInner = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   -webkit-overflow-scrolling: touch;
   ::-webkit-scrollbar {
     display: none;
@@ -59,11 +60,9 @@ export default function Popups() {
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
-      <MobilePopupWrapper height={activePopups?.length > 0 ? 'fit-content' : 0}>
+      <MobilePopupWrapper height={activePopups?.length > 0 ? 'auto' : 0}>
         <MobilePopupInner>
           {activePopups // reverse so new items up front
-            .slice(0)
-            .reverse()
             .map(item => (
               <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
             ))}
