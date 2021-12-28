@@ -47,7 +47,7 @@ export default function Transaction({ hash }: { hash: string }) {
   const type = tx?.type
   const summary = tx?.summary
   const parsedSummary = type
-    ? SUMMARY[type][success ? 'success' : 'failure'](summary)
+    ? SUMMARY[type][pending ? 'pending' : success ? 'success' : 'failure'](summary)
     : summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)
 
   if (!chainId) return null

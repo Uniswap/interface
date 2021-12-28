@@ -7,6 +7,7 @@ import { useTransactionAdder, useHasPendingApproval } from '../state/transaction
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -20,7 +21,7 @@ export function useApproveCallback(
   amountToApprove?: CurrencyAmount,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowanceUNI(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
@@ -80,7 +81,8 @@ export function useApproveCallback(
       })
       .then((response: TransactionResponse) => {
         addTransactionWithType(response, {
-          type: 'Migrate',
+          type: 'Approve',
+          summary: convertToNativeTokenFromETH(amountToApprove.currency, chainId).symbol,
           approval: { tokenAddress: token.address, spender: spender }
         })
       })
