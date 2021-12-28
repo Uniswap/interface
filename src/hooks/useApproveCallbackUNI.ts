@@ -80,8 +80,7 @@ export function useApproveCallback(
       })
       .then((response: TransactionResponse) => {
         addTransactionWithType(response, {
-          type: 'Approve',
-          summary: amountToApprove.currency.symbol,
+          type: 'Migrate',
           approval: { tokenAddress: token.address, spender: spender }
         })
       })
