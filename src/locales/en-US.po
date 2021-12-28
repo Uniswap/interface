@@ -157,6 +157,14 @@ msgstr "Advanced Settings"
 msgid "Advanced mode is on!"
 msgstr "Advanced mode is on!"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time High"
+msgstr "All-Time High"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time Low"
+msgstr "All-Time Low"
+
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
 msgstr "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
@@ -306,6 +314,10 @@ msgstr "Change"
 msgid "Checking allowance..."
 msgstr "Checking allowance..."
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Circulating Supply"
+msgstr "Circulating Supply"
+
 #: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "Claim"
@@ -407,6 +419,10 @@ msgstr "Connected with {name}"
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr "Contact Us"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Contract Address"
+msgstr "Contract Address"
 
 #: src/constants/messages.ts
 msgid "Contract not found! Please reload and try again."
@@ -793,6 +809,10 @@ msgstr "Import your Wallet"
 msgid "Includes DEX aggregation"
 msgstr "Includes DEX aggregation"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Info"
+msgstr "Info"
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Information"
@@ -984,6 +1004,14 @@ msgstr "Manage this pool."
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage your pools."
 msgstr "Manage your pools."
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap"
+msgstr "Market Cap"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap Rank"
+msgstr "Market Cap Rank"
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1284,6 +1312,7 @@ msgstr "Popular Pairs"
 msgid "Powered By"
 msgstr "Powered By"
 
+#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/About/index.tsx
 msgid "Powered by"
 msgstr "Powered by"
@@ -1291,6 +1320,10 @@ msgstr "Powered by"
 #: src/components/Settings/index.tsx
 msgid "Preferences"
 msgstr "Preferences"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Price"
+msgstr "Price"
 
 #: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -1681,6 +1714,10 @@ msgstr "Total Earnings"
 msgid "Total LP Tokens"
 msgstr "Total LP Tokens"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Total Supply"
+msgstr "Total Supply"
+
 #: src/pages/About/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
@@ -1712,6 +1749,10 @@ msgstr "Tradable token pair price range for this pool based on AMP. If the price
 #: src/pages/Pools/index.tsx
 msgid "Trade"
 msgstr "Trade"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Trading Volume (24H)"
+msgstr "Trading Volume (24H)"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"

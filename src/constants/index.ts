@@ -942,6 +942,24 @@ export const COINGECKO_NETWORK_ID = {
   [ChainId.CRONOSTESTNET]: ''
 }
 
+export const COINGECKO_NATIVE_TOKEN_ID = {
+  [ChainId.MAINNET]: 'ethereum',
+  [ChainId.BSCMAINNET]: 'binancecoin',
+  [ChainId.MATIC]: 'matic-network',
+  [ChainId.AVAXMAINNET]: 'avalanche-2',
+  [ChainId.FANTOM]: 'fantom',
+  [ChainId.CRONOS]: 'crypto-com-chain',
+
+  [ChainId.ROPSTEN]: '',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MUMBAI]: '',
+  [ChainId.BSCTESTNET]: '',
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.CRONOSTESTNET]: ''
+}
+
 export const ETHER_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 export const KYBER_NETWORK_DISCORD_URL = 'https://discord.com/invite/NB3vc8J9uv'
 export const KYBER_NETWORK_TWITTER_URL = 'https://twitter.com/KyberNetwork'

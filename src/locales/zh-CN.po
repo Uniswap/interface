@@ -157,6 +157,14 @@ msgstr "高级设置"
 msgid "Advanced mode is on!"
 msgstr "高级模式开启！"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time High"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time Low"
+msgstr ""
+
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
 msgstr "始终确保 URL 为<0>KyberSwap.com</0> - 将其加入书签以确保安全。"
@@ -306,6 +314,10 @@ msgstr "改变"
 msgid "Checking allowance..."
 msgstr "检查補貼..."
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Circulating Supply"
+msgstr ""
+
 #: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "领取"
@@ -407,6 +419,10 @@ msgstr "与{name}连接"
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr "联系我们"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Contract Address"
+msgstr ""
 
 #: src/constants/messages.ts
 msgid "Contract not found! Please reload and try again."
@@ -793,6 +809,10 @@ msgstr "导入您的钱包"
 msgid "Includes DEX aggregation"
 msgstr "包括DEX聚合"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Info"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Information"
@@ -984,6 +1004,14 @@ msgstr "管理这个池。"
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage your pools."
 msgstr "管理您的池。"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap Rank"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1284,6 +1312,7 @@ msgstr "热门的代币对"
 msgid "Powered By"
 msgstr "驱动"
 
+#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/About/index.tsx
 msgid "Powered by"
 msgstr "驱动"
@@ -1291,6 +1320,10 @@ msgstr "驱动"
 #: src/components/Settings/index.tsx
 msgid "Preferences"
 msgstr "偏好"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Price"
+msgstr ""
 
 #: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -1681,6 +1714,10 @@ msgstr "总收益"
 msgid "Total LP Tokens"
 msgstr "LP代币总数"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Total Supply"
+msgstr ""
+
 #: src/pages/About/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
@@ -1712,6 +1749,10 @@ msgstr "基于AMP的池的可交易代币对价格范围。如果价格低于或
 #: src/pages/Pools/index.tsx
 msgid "Trade"
 msgstr "交易"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Trading Volume (24H)"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"

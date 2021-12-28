@@ -2,6 +2,8 @@ import { transparentize } from 'polished'
 import React, { useContext, useState } from 'react'
 import styled, { ThemeContext, css } from 'styled-components'
 import { Text } from 'rebass'
+
+import { ButtonEmpty } from 'components/Button'
 import { AutoColumn } from '../Column'
 import { errorFriendly } from 'utils/dmm'
 import { ReactComponent as Alert } from '../../assets/images/alert.svg'
@@ -28,6 +30,55 @@ export const PageWrapper = styled.div`
   @media only screen and (min-width: 1440px) {
     padding: 24px 252px 50px;
   }
+`
+
+export const TabContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @media only screen and (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+`
+
+export const TabWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media only screen and (min-width: 768px) {
+    margin-bottom: 0;
+  }
+`
+
+export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
+  width: fit-content;
+  margin-right: 1.5rem;
+  font-weight: 400;
+  padding: 0;
+  padding-bottom: 4px;
+  color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
+  border-radius: 0;
+  border-bottom: ${({ theme, isActive }) => (isActive ? `2px solid ${theme.primary}` : 'none')};
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin-right: 12px;
+  `}
 `
 
 export const Container = styled.div`

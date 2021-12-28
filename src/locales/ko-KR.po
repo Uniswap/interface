@@ -157,6 +157,14 @@ msgstr "고급 설정"
 msgid "Advanced mode is on!"
 msgstr "고급 모드 사용중"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time High"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time Low"
+msgstr ""
+
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
 msgstr "URL이 <0>KyberSwap.com인지 항상 확인하십시오.</0> - 안전하게 북마크하세요."
@@ -306,6 +314,10 @@ msgstr "변경"
 msgid "Checking allowance..."
 msgstr "금액 확인 중..."
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Circulating Supply"
+msgstr ""
+
 #: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "클레임하기"
@@ -407,6 +419,10 @@ msgstr "{name}에 연결됨"
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr "연락처"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Contract Address"
+msgstr ""
 
 #: src/constants/messages.ts
 msgid "Contract not found! Please reload and try again."
@@ -793,6 +809,10 @@ msgstr "지갑 가져오기"
 msgid "Includes DEX aggregation"
 msgstr "DEX 집계 포함"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Info"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Information"
@@ -984,6 +1004,14 @@ msgstr "풀 관리하기."
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage your pools."
 msgstr "자신의 풀 관리하기."
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap Rank"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1284,6 +1312,7 @@ msgstr "인기있는 쌍"
 msgid "Powered By"
 msgstr "Powered by"
 
+#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/About/index.tsx
 msgid "Powered by"
 msgstr "Powered by"
@@ -1291,6 +1320,10 @@ msgstr "Powered by"
 #: src/components/Settings/index.tsx
 msgid "Preferences"
 msgstr "기본 설정"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Price"
+msgstr ""
 
 #: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -1681,6 +1714,10 @@ msgstr "총 수익"
 msgid "Total LP Tokens"
 msgstr "총 LP 토큰"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Total Supply"
+msgstr ""
+
 #: src/pages/About/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
@@ -1712,6 +1749,10 @@ msgstr "AMP에 따른 거래 가능 한 토큰 가격 범위입니다. 이 범�
 #: src/pages/Pools/index.tsx
 msgid "Trade"
 msgstr "거래"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Trading Volume (24H)"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"

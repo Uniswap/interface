@@ -157,6 +157,14 @@ msgstr "Tuỳ Chỉnh Nâng Cao"
 msgid "Advanced mode is on!"
 msgstr "Đang bật chế độ nâng cao!"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time High"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time Low"
+msgstr ""
+
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
 msgstr "Luôn đảm bảo URL là<0>KyberSwap.com</0> - nên bookmark link này để an toàn hơn."
@@ -306,6 +314,10 @@ msgstr "Thay đổi"
 msgid "Checking allowance..."
 msgstr "Đang kiểm tra khoản cho phép..."
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Circulating Supply"
+msgstr ""
+
 #: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "Nhận"
@@ -407,6 +419,10 @@ msgstr "Đã kết nối với {name}"
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr "Liên Hệ Chúng Tôi"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Contract Address"
+msgstr ""
 
 #: src/constants/messages.ts
 msgid "Contract not found! Please reload and try again."
@@ -793,6 +809,10 @@ msgstr "Nhập Ví của bạn"
 msgid "Includes DEX aggregation"
 msgstr "Bao gồm tổ hợp DEX"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Info"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Information"
@@ -984,6 +1004,14 @@ msgstr "Quản lý pool này."
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage your pools."
 msgstr "Quản lý các Pool của bạn."
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap Rank"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1284,6 +1312,7 @@ msgstr "Các Cặp Nổi trội"
 msgid "Powered By"
 msgstr "Được cung cấp bởi"
 
+#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/About/index.tsx
 msgid "Powered by"
 msgstr "Được cung cấp bởi"
@@ -1291,6 +1320,10 @@ msgstr "Được cung cấp bởi"
 #: src/components/Settings/index.tsx
 msgid "Preferences"
 msgstr "Các tùy chọn"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Price"
+msgstr ""
 
 #: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -1681,6 +1714,10 @@ msgstr "Tổng Lợi Nhuận"
 msgid "Total LP Tokens"
 msgstr "Tổng số Token LP"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Total Supply"
+msgstr ""
+
 #: src/pages/About/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
@@ -1712,6 +1749,10 @@ msgstr "Phạm vi giá của cặp token có thể giao dịch cho Pool này đ�
 #: src/pages/Pools/index.tsx
 msgid "Trade"
 msgstr "Giao dịch"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Trading Volume (24H)"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"
