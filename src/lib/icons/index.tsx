@@ -71,7 +71,6 @@ export const ArrowRight = icon(ArrowRightIcon)
 export const ArrowUp = icon(ArrowUpIcon)
 export const CheckCircle = icon(CheckCircleIcon)
 export const ChevronDown = icon(ChevronDownIcon)
-export const ChevronUp = icon(ChevronUpIcon)
 export const Clock = icon(ClockIcon)
 export const CreditCard = icon(CreditCardIcon)
 export const HelpCircle = icon(HelpCircleIcon)
@@ -85,6 +84,11 @@ export const Check = styled(icon(CheckIcon))`
     fill: ${({ theme }) => theme.active};
     stroke: none;
   }
+`
+
+export const Expando = styled(icon(ChevronUpIcon))<{ open: boolean }>`
+  transform: ${({ open }) => open && 'rotate(180deg)'};
+  transition: transform 0.2s ease-in-out;
 `
 
 export const Logo = styled(icon(LogoIcon))`

@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import useInterval from 'lib/hooks/useInterval'
 import useScrollbar from 'lib/hooks/useScrollbar'
-import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Clock, Icon, Info, LargeIcon, Spinner } from 'lib/icons'
+import { AlertTriangle, CheckCircle, Clock, Expando, Icon, Info, LargeIcon, Spinner } from 'lib/icons'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 
@@ -193,7 +193,7 @@ function ErrorStatus({ error, onClose }: ErrorStatusProps) {
             <Trans>Error details</Trans>
           </ThemedText.Subhead2>
         </Row>
-        <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
+        <IconButton color="secondary" onClick={() => setOpen(!open)} icon={Expando} iconProps={{ open }} />
       </Row>
       <ExpandoColumn flex align="stretch" open={open}>
         <Rule />

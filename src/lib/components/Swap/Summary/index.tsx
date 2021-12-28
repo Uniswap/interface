@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import useScrollbar from 'lib/hooks/useScrollbar'
-import { ChevronDown, ChevronUp, Info } from 'lib/icons'
+import { Expando, Info } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
@@ -118,7 +118,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
               <Trans>Swap details</Trans>
             </ThemedText.Subhead2>
           </Row>
-          <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
+          <IconButton color="secondary" onClick={() => setOpen(!open)} icon={Expando} iconProps={{ open }} />
         </Row>
         <ExpandoColumn flex align="stretch">
           <Rule />
