@@ -13,7 +13,7 @@ const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
 `
 
-const SUMMARY: { [type: string]: { success: (summary: string) => string; failure: (summary: string) => string } } = {
+const SUMMARY: { [type: string]: { success: (summary?: string) => string; failure: (summary?: string) => string } } = {
   Wrap: {
     success: summary => 'Wrapped ' + summary,
     failure: summary => 'Error wrapping ' + summary
@@ -36,7 +36,7 @@ const SUMMARY: { [type: string]: { success: (summary: string) => string; failure
   },
   'Add liquidity': {
     success: summary => 'Added ' + summary,
-    failure: summary => 'Error added ' + summary
+    failure: summary => 'Error adding ' + summary
   },
   'Remove liquidity': {
     success: summary => 'Removed ' + summary,
@@ -57,6 +57,10 @@ const SUMMARY: { [type: string]: { success: (summary: string) => string; failure
   Claim: {
     success: summary => 'Claimed ' + summary,
     failure: summary => 'Error claiming ' + summary
+  },
+  Migrate: {
+    success: () => 'Migrated your liquidity',
+    failure: () => 'Error migrating your liquidity'
   }
 }
 
@@ -92,7 +96,7 @@ export default function TransactionPopup({
             </Text>
           )}
           <Text fontSize="14px" fontWeight={400} color={theme.text}>
-            {type && summary
+            {type
               ? SUMMARY[type][success ? 'success' : 'failure'](summary)
               : summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}
           </Text>
