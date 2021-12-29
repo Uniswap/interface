@@ -7,7 +7,7 @@ import { ReactNode, StrictMode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
-import ErrorBoundary, { ErrorHandler } from './ErrorBoundary'
+import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
@@ -91,19 +91,21 @@ export default function Widget({
 
   return (
     <StrictMode>
-      <ErrorBoundary onError={onError}>
-        <AtomProvider>
-          <ThemeProvider theme={theme}>
-            <I18nProvider locale={locale}>
-              <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                <WidgetWrapper width={width} className={className} ref={wrapper}>
-                  <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
-                </WidgetWrapper>
-              </Web3Provider>
-            </I18nProvider>
-          </ThemeProvider>
-        </AtomProvider>
-      </ErrorBoundary>
+      <I18nProvider locale={locale}>
+        <ThemeProvider theme={theme}>
+          <WidgetWrapper width={width} className={className} ref={wrapper}>
+            <DialogProvider value={dialog || wrapper.current}>
+              <ErrorBoundary onError={onError}>
+                <AtomProvider>
+                  <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                    {children}
+                  </Web3Provider>
+                </AtomProvider>
+              </ErrorBoundary>
+            </DialogProvider>
+          </WidgetWrapper>
+        </ThemeProvider>
+      </I18nProvider>
     </StrictMode>
   )
 }

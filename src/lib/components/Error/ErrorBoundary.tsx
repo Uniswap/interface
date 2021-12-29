@@ -1,4 +1,8 @@
+import { Trans } from '@lingui/macro'
 import React, { ErrorInfo } from 'react'
+
+import Dialog from '../Dialog'
+import ErrorDialog from './ErrorDialog'
 
 export type ErrorHandler = (error: Error, info: ErrorInfo) => void
 
@@ -26,7 +30,16 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
 
   render() {
     if (this.state.error) {
-      return <h1>Something went wrong.</h1>
+      return (
+        <Dialog color="dialog">
+          <ErrorDialog
+            error={this.state.error}
+            header={<Trans>Reload the page to try again</Trans>}
+            action={<Trans>Reload the page</Trans>}
+            onAction={() => window.location.reload()}
+          />
+        </Dialog>
+      )
     }
     return this.props.children
   }
