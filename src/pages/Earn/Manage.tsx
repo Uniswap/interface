@@ -131,7 +131,14 @@ export default function Manage({
     userAmountTokenB,
   } = useStakingPoolValue(stakingInfo, stakingTokenPair)
 
-  const countUpAmounts = stakingInfo?.earnedAmounts?.map((earnedAmount) => earnedAmount.toFixed(6) ?? '0') || []
+  stakingInfo?.rewardRates?.sort((a, b) =>
+    a.multiply(BIG_INT_SECONDS_IN_WEEK).lessThan(b.multiply(BIG_INT_SECONDS_IN_WEEK)) ? 1 : -1
+  )
+  const countUpAmounts =
+    stakingInfo?.earnedAmounts
+      ?.sort((a, b) => (a.lessThan(b) ? 1 : -1))
+      .map((earnedAmount) => earnedAmount.toFixed(6) ?? '0') || []
+
   const countUpAmountsPrevious = usePrevious(countUpAmounts) ?? countUpAmounts
 
   const toggleWalletModal = useWalletModalToggle()

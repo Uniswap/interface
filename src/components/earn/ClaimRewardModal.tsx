@@ -1,5 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
+import { TokenAmount } from '@ubeswap/sdk'
 import { useDoTransaction } from 'components/swap/routing'
+import { zip } from 'lodash'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -72,13 +74,17 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           <AutoColumn justify="center" gap="md">
-            {stakingInfo?.earnedAmounts?.map((earnedAmount, idx) => {
-              return (
-                <TYPE.body fontWeight={600} fontSize={36} key={idx}>
-                  {earnedAmount.toSignificant(4)} {earnedAmount.token.symbol}
-                </TYPE.body>
-              )
-            })}
+            {stakingInfo.earnedAmounts &&
+              stakingInfo.rewardRates &&
+              zip<TokenAmount, TokenAmount>(stakingInfo?.earnedAmounts, stakingInfo?.rewardRates).map(
+                ([earn, reward], idx) => {
+                  return (
+                    <TYPE.body fontWeight={600} fontSize={36} key={idx}>
+                      {earn?.toSignificant(4)} {reward?.token.symbol}
+                    </TYPE.body>
+                  )
+                }
+              )}
             <TYPE.body>Unclaimed rewards</TYPE.body>
           </AutoColumn>
           <TYPE.subHeader style={{ textAlign: 'center' }}>
