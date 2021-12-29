@@ -10,7 +10,7 @@ import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
 import { Box } from 'src/components/layout/Box'
-import { Screen, sheetScreenEdges } from 'src/components/layout/Screen'
+import { Screen } from 'src/components/layout/Screen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
 import { useAllBalances } from 'src/features/balances/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -64,7 +64,7 @@ export function HomeScreen({ navigation }: Props) {
     )
 
   return (
-    <Screen edges={sheetScreenEdges}>
+    <Screen>
       <GradientBackground height="33%">
         <PinkToBlueLinear />
       </GradientBackground>

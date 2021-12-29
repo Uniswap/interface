@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { CurrencySearch } from 'src/components/CurrencySelector/CurrencySearch'
-import { Screen } from 'src/components/layout/Screen'
+import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { useAllBalances } from 'src/features/balances/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
@@ -27,7 +27,7 @@ export function CurrencySelectorScreen({
   const otherCurrency = useCurrency(otherCurrencyAddress, otherCurrencyChainId)
 
   return (
-    <Screen>
+    <SheetScreen>
       {showNonZeroBalancesOnly ? (
         <CurrencySearchOwnedCurrencies
           selectedCurrency={selectedCurrency}
@@ -41,7 +41,7 @@ export function CurrencySelectorScreen({
           onSelectCurrency={onSelectCurrency}
         />
       )}
-    </Screen>
+    </SheetScreen>
   )
 }
 

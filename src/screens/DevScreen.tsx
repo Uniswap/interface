@@ -6,7 +6,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { BackX } from 'src/components/buttons/BackX'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
-import { Screen } from 'src/components/layout/Screen'
+import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
@@ -65,7 +65,7 @@ export function DevScreen({ navigation }: any) {
   }
 
   return (
-    <Screen>
+    <SheetScreen>
       <Box justifyContent="flex-end" flexDirection="row" py="sm" px="md">
         <BackX />
       </Box>
@@ -123,6 +123,6 @@ export function DevScreen({ navigation }: any) {
           </Text>
         </Box>
       </ScrollView>
-    </Screen>
+    </SheetScreen>
   )
 }

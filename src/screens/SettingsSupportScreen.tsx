@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Box } from 'src/components/layout/Box'
-import { Screen } from 'src/components/layout/Screen'
+import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { flex } from 'src/styles/flex'
 import { getLogBuffer } from 'src/utils/logger'
@@ -14,7 +14,7 @@ export function SettingsSupportScreen() {
   const recentLogs = getLogBuffer().reverse()
 
   return (
-    <Screen>
+    <SheetScreen>
       <ScrollView contentContainerStyle={flex.fill}>
         <Box px="lg">
           <Box flexDirection="row" alignItems="center" mb="lg">
@@ -31,6 +31,6 @@ export function SettingsSupportScreen() {
           </ScrollView>
         </Box>
       </ScrollView>
-    </Screen>
+    </SheetScreen>
   )
 }

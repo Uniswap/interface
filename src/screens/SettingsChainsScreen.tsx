@@ -5,7 +5,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { Box } from 'src/components/layout/Box'
-import { Screen } from 'src/components/layout/Screen'
+import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
@@ -23,7 +23,7 @@ export function SettingsChainsScreen() {
   }
 
   return (
-    <Screen>
+    <SheetScreen>
       <ScrollView contentContainerStyle={flex.fill}>
         <Box px="lg">
           <Box flexDirection="row" alignItems="center" mb="lg">
@@ -49,6 +49,6 @@ export function SettingsChainsScreen() {
           </Box>
         </Box>
       </ScrollView>
-    </Screen>
+    </SheetScreen>
   )
 }

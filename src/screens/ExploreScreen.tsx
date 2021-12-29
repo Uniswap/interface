@@ -5,7 +5,7 @@ import { TabScreenProp } from 'src/app/navigation/types'
 import { CurrencySearch } from 'src/components/CurrencySelector/CurrencySearch'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
-import { Screen, sheetScreenEdges } from 'src/components/layout/Screen'
+import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { Screens, Tabs } from 'src/screens/Screens'
@@ -21,7 +21,7 @@ export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
   }
 
   return (
-    <Screen edges={sheetScreenEdges}>
+    <Screen>
       <Box mx="lg" my="lg">
         <Text variant="h3">{t('Explore')}</Text>
       </Box>

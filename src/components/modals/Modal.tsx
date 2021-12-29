@@ -17,27 +17,32 @@ interface Props extends ModalProps {
   dimBackground?: boolean
 }
 
+// TODO excluding some props here due to bug with React Native's Modal and reanimated
+// May be resolved after upgrading reanimated to latest but uncertain
+// https://github.com/facebook/react-native/issues/32329
 export function Modal({
-  title,
+  visible,
   hide,
   showCloseButton,
+  title,
   position,
   width,
   dimBackground,
   children,
   dismissable = true,
-  ...rest
-}: React.PropsWithChildren<Props>) {
+}: // ...rest (TODO above)
+React.PropsWithChildren<Props>) {
   let justifyContent: ResponsiveValue<'center' | 'flex-start' | 'flex-end', Theme> = 'center'
   if (position === 'top') justifyContent = 'flex-start'
   if (position === 'bottom') justifyContent = 'flex-end'
 
   return (
     <BaseModal
-      animationType="slide"
+      visible={visible}
+      animationType="none"
       transparent={true}
-      presentationStyle="overFullScreen"
-      {...rest}>
+      presentationStyle="overFullScreen" /* {...rest} */
+    >
       <Button
         alignItems="center"
         justifyContent={justifyContent}

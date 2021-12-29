@@ -46,7 +46,7 @@ export function AccountCard({
           </Box>
         </CenterBox>
         {isEditable && onEdit && (
-          <Button onPress={() => onEdit(address)} mr="sm">
+          <Button onPress={() => onEdit(address)} mx="sm" my="md">
             <TripleDots width={22} height={12} />
           </Button>
         )}

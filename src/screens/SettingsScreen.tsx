@@ -17,7 +17,7 @@ import { BlueToPinkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout/Box'
-import { Screen } from 'src/components/layout/Screen'
+import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -59,7 +59,7 @@ export function SettingsScreen() {
   )
 
   return (
-    <Screen>
+    <SheetScreen>
       <ScrollView contentContainerStyle={flex.fill}>
         <Box px="lg">
           <Box flexDirection="row" alignItems="center" mb="lg">
@@ -72,7 +72,7 @@ export function SettingsScreen() {
           ))}
         </Box>
       </ScrollView>
-    </Screen>
+    </SheetScreen>
   )
 }
 

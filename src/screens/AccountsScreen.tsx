@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from 'react'
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import React, { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAccountStackNavigation } from 'src/app/navigation/types'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
@@ -13,8 +14,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
-import { Screen } from 'src/components/layout/Screen'
-import { Modal } from 'src/components/modals/Modal'
+import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { AccountType } from 'src/features/wallet/accounts/types'
@@ -22,9 +22,11 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
+import { bottomSheetStyles } from 'src/styles/bottomSheet'
 import { flex } from 'src/styles/flex'
-import { dimensions } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
+
+const BOTTOM_SHEET_SNAP_POINTS = [275]
 
 export function AccountsScreen() {
   const [isEditMode, setIsEditMode] = useState(false)
@@ -54,25 +56,26 @@ export function AccountsScreen() {
   }
   const onPressCreate = onPressImport // TODO implement for realsies
 
+  const editAccountModalRef = useRef<BottomSheetModal>(null)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
   const onPressEdit = (address: Address) => {
+    editAccountModalRef.current?.present()
     setPendingEditAddress(address)
   }
   const onPressEditCancel = () => {
+    editAccountModalRef.current?.dismiss()
     setPendingEditAddress(null)
   }
 
   const onPressCopyAddress = () => {
     if (!pendingEditAddress) return
     setClipboard(pendingEditAddress)
-    setPendingEditAddress(null)
   }
 
   const [pendingRenameAddress, setPendingRenameAddress] = useState<Address | null>(null)
   const onPressRename = () => {
     if (!pendingEditAddress) return
     setPendingRenameAddress(pendingEditAddress)
-    setPendingEditAddress(null)
   }
   const onPressRenameCancel = () => {
     setPendingRenameAddress(null)
@@ -93,7 +96,6 @@ export function AccountsScreen() {
   const onPressRemove = () => {
     if (!pendingEditAddress) return
     setPendingRemoveAddress(pendingEditAddress)
-    setPendingEditAddress(null)
   }
   const onPressRemoveCancel = () => {
     setPendingRemoveAddress(null)
@@ -109,129 +111,137 @@ export function AccountsScreen() {
   // TODO surface errors from editAccountSaga when designs are ready
 
   return (
-    <Screen>
-      <ScrollView contentContainerStyle={flex.fill}>
-        <Box px="lg">
-          <Box flexDirection="row" alignItems="center" justifyContent="space-between" mb="lg">
-            <BackButton size={30} />
-            <Text variant="bodyLg" color="gray400">
-              {t('Switch Accounts')}
-            </Text>
-            {!isEditMode ? (
-              <TextButton textVariant="bodyLg" textColor="pink" onPress={() => setIsEditMode(true)}>
-                {t('Edit')}
-              </TextButton>
-            ) : (
-              <TextButton
-                textVariant="bodyLg"
-                textColor="pink"
-                onPress={() => setIsEditMode(false)}>
-                {t('Done')}
-              </TextButton>
+    <SheetScreen>
+      {/* This provider is needed here in the screen directly otherwise the sheet is rendered
+      behind the screen because AccountStack is itself in a sheet/modal. */}
+      <BottomSheetModalProvider>
+        <ScrollView contentContainerStyle={flex.fill}>
+          <Box px="lg">
+            <Box flexDirection="row" alignItems="center" justifyContent="space-between" mb="lg">
+              <BackButton size={30} />
+              <Text variant="bodyLg" color="gray400">
+                {t('Switch Accounts')}
+              </Text>
+              {!isEditMode ? (
+                <TextButton
+                  textVariant="bodyLg"
+                  textColor="pink"
+                  onPress={() => setIsEditMode(true)}>
+                  {t('Edit')}
+                </TextButton>
+              ) : (
+                <TextButton
+                  textVariant="bodyLg"
+                  textColor="pink"
+                  onPress={() => setIsEditMode(false)}>
+                  {t('Done')}
+                </TextButton>
+              )}
+            </Box>
+            {Object.values(signerAccounts).map((account) => (
+              <Box mb="xl" key={account.address}>
+                <AccountCard
+                  account={account}
+                  isActive={!!activeAccount && activeAccount.address === account.address}
+                  isEditable={isEditMode}
+                  onPress={onPressActivate}
+                  onEdit={onPressEdit}
+                />
+              </Box>
+            ))}
+            {!!readOnlyAccounts.length && (
+              <>
+                <Text variant="body" color="gray400" mb="lg">
+                  {t('Watching')}
+                </Text>
+                {Object.values(readOnlyAccounts).map((account) => (
+                  <Box mb="xl" key={account.address}>
+                    <AccountCard
+                      account={account}
+                      isActive={!!activeAccount && activeAccount.address === account.address}
+                      isEditable={isEditMode}
+                      onPress={onPressActivate}
+                      onEdit={onPressEdit}
+                    />
+                  </Box>
+                ))}
+              </>
             )}
           </Box>
-          {Object.values(signerAccounts).map((account) => (
-            <Box mb="xl" key={account.address}>
-              <AccountCard
-                account={account}
-                isActive={!!activeAccount && activeAccount.address === account.address}
-                isEditable={isEditMode}
-                onPress={onPressActivate}
-                onEdit={onPressEdit}
-              />
-            </Box>
-          ))}
-          {!!readOnlyAccounts.length && (
-            <>
-              <Text variant="body" color="gray400" mb="lg">
-                {t('Watching')}
-              </Text>
-              {Object.values(readOnlyAccounts).map((account) => (
-                <Box mb="xl" key={account.address}>
-                  <AccountCard
-                    account={account}
-                    isActive={!!activeAccount && activeAccount.address === account.address}
-                    isEditable={isEditMode}
-                    onPress={onPressActivate}
-                    onEdit={onPressEdit}
-                  />
-                </Box>
-              ))}
-            </>
-          )}
-        </Box>
-      </ScrollView>
-      <CenterBox flexDirection="row" px="md">
-        <PrimaryButton
-          variant="palePink"
-          label={t('Import Wallet')}
-          onPress={onPressImport}
-          testID="accounts/add/button"
-          mr="lg"
-        />
-        <PrimaryButton
-          label={t('Create Wallet')}
-          onPress={onPressCreate}
-          testID="accounts/create/button"
-        />
-      </CenterBox>
-      <Modal
-        visible={!!pendingEditAddress}
-        position="bottom"
-        width={dimensions.fullWidth}
-        hide={onPressEditCancel}>
-        <CenterBox>
-          <Text variant="bodySm" color="gray400">
-            {t('Edit or rename your account')}
-          </Text>
+        </ScrollView>
+        <CenterBox flexDirection="row" px="md">
           <PrimaryButton
             variant="palePink"
-            label={t('Rename Account')}
-            icon={<EditIcon width={18} height={18} />}
-            onPress={onPressRename}
-            // TODO make responsive
-            width={250}
-            mt="lg"
+            label={t('Import Wallet')}
+            onPress={onPressImport}
+            testID="accounts/add/button"
+            mr="lg"
           />
           <PrimaryButton
-            variant="palePink"
-            label={t('Copy Address')}
-            icon={<CopyIcon width={18} height={18} />}
-            onPress={onPressCopyAddress}
-            // TODO make responsive
-            width={250}
-            mt="md"
+            label={t('Create Wallet')}
+            onPress={onPressCreate}
+            testID="accounts/create/button"
           />
-          <PrimaryButton
-            variant="paleOrange"
-            label={t('Remove Account')}
-            onPress={onPressRemove}
-            // TODO make responsive
-            width={250}
-            mt="md"
-          />
-          <TextButton
-            onPress={onPressEditCancel}
-            textVariant="body"
-            textColor="pink"
-            textAlign="center"
-            // TODO make responsive
-            width={250}
-            pt="md">
-            {t('Cancel')}
-          </TextButton>
         </CenterBox>
-      </Modal>
-      <RenameAccountModal
-        address={pendingRenameAddress}
-        onCancel={onPressRenameCancel}
-        onConfirm={onPressRenameConfirm}
-      />
-      <RemoveAccountModal
-        address={pendingRemoveAddress}
-        onCancel={onPressRemoveCancel}
-        onConfirm={onPressRemoveConfirm}
-      />
-    </Screen>
+        <BottomSheetModal
+          ref={editAccountModalRef}
+          snapPoints={BOTTOM_SHEET_SNAP_POINTS}
+          style={bottomSheetStyles.bottomSheet}>
+          <CenterBox px="md" pt="xs" pb="sm" flex={1} justifyContent="space-between">
+            <Text variant="bodySm" color="gray400">
+              {t('Edit or rename your account')}
+            </Text>
+            <PrimaryButton
+              variant="palePink"
+              label={t('Rename Account')}
+              icon={<EditIcon width={18} height={18} />}
+              onPress={onPressRename}
+              width="100%"
+            />
+            <PrimaryButton
+              variant="palePink"
+              label={t('Copy Address')}
+              icon={<CopyIcon width={18} height={18} />}
+              onPress={onPressCopyAddress}
+              width="100%"
+            />
+            <PrimaryButton
+              variant="paleOrange"
+              label={t('Remove Account')}
+              onPress={onPressRemove}
+              width="100%"
+            />
+            <TextButton
+              onPress={onPressEditCancel}
+              textVariant="body"
+              textColor="pink"
+              textAlign="center"
+              width="100%"
+              pt="xs"
+              pb="sm">
+              {t('Cancel')}
+            </TextButton>
+          </CenterBox>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
+      {!!pendingRenameAddress && (
+        <View style={flex.fill}>
+          <RenameAccountModal
+            address={pendingRenameAddress}
+            onCancel={onPressRenameCancel}
+            onConfirm={onPressRenameConfirm}
+          />
+        </View>
+      )}
+      {!!pendingRemoveAddress && (
+        <View style={flex.fill}>
+          <RemoveAccountModal
+            address={pendingRemoveAddress}
+            onCancel={onPressRemoveCancel}
+            onConfirm={onPressRemoveConfirm}
+          />
+        </View>
+      )}
+    </SheetScreen>
   )
 }
