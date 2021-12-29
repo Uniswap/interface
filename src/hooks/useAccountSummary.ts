@@ -1,5 +1,6 @@
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
 import { useContractKit } from '@celo-tools/use-contractkit'
+import { NomKit } from '@nomspace/nomspace'
 import { useEffect, useState } from 'react'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>
@@ -13,8 +14,13 @@ type AccountSummary = AsyncReturnType<AccountsWrapper['getAccountSummary']>
 /**
  * Fetches the account summary of a Celo account.
  */
-export default function useAccountSummary(address?: string): { summary: AccountSummary | null; loading: boolean } {
+export default function useAccountSummary(address?: string | null): {
+  summary: AccountSummary | null
+  nom: string | null
+  loading: boolean
+} {
   const [summary, setSummary] = useState<AccountSummary | null>(null)
+  const [nom, setNom] = useState<string | null>(null)
   const { kit } = useContractKit()
 
   useEffect(() => {
@@ -29,8 +35,15 @@ export default function useAccountSummary(address?: string): { summary: AccountS
       } catch (e) {
         console.error('Could not fetch account summary', e)
       }
+
+      const nomKit = new NomKit(kit as any, '0xABf8faBbC071F320F222A526A2e1fBE26429344d')
+      try {
+        setNom(await nomKit.allNamesForResolution(address).then((n) => (n[0] ? `${n[0]}.nom` : null)))
+      } catch (e) {
+        console.error('Could not fetch nom data', e)
+      }
     })()
   }, [address, kit])
 
-  return { summary, loading: summary === null }
+  return { summary, nom, loading: summary === null }
 }

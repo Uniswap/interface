@@ -87,8 +87,8 @@ export default function BridgeMenuGroup() {
           <MenuItem id="link" href="https://allbridge.io/">
             Allbridge
           </MenuItem>
-          <MenuItem id="link" href="https://anyswap.exchange/#/router">
-            Anyswap
+          <MenuItem id="link" href="https://app.multichain.org/#/router">
+            Multichain
           </MenuItem>
           <MenuItem id="link" href="https://optics.app/">
             Optics

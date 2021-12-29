@@ -284,21 +284,10 @@ export default function AccountDetails({
               </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">
                 <AccountControl>
-                  {ENSName ? (
-                    <>
-                      <div>
-                        {getStatusIcon()}
-                        <p> {ENSName}</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        {getStatusIcon()}
-                        <p> {address && shortenAddress(address)}</p>
-                      </div>
-                    </>
-                  )}
+                  <div>
+                    {getStatusIcon()}
+                    {ENSName ? <p> {ENSName}</p> : <p> {address && shortenAddress(address)}</p>}
+                  </div>
                 </AccountControl>
               </AccountGroupingRow>
               <AccountGroupingRow>

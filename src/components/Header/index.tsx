@@ -428,8 +428,8 @@ export default function Header() {
                 </StyledDrawerExternalLink>
               </StyledSubMenuItem>
               <StyledSubMenuItem>
-                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://anyswap.exchange/#/router'}>
-                  Anyswap
+                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://app.multichain.org/#/router'}>
+                  Multichain
                 </StyledDrawerExternalLink>
               </StyledSubMenuItem>
               <StyledSubMenuItem>

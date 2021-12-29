@@ -1,9 +1,7 @@
 import { ErrorBoundary } from '@sentry/react'
 import { Token } from '@ubeswap/sdk'
-import ChangeNetworkModal from 'components/ChangeNetworkModal'
 import TokenSelect from 'components/CurrencyInputPanel/TokenSelect'
 import Loader from 'components/Loader'
-import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
@@ -47,7 +45,6 @@ function useTokenFilter(): [Token | null, (t: Token | null) => void] {
 
 export default function Earn() {
   const { t } = useTranslation()
-  const isSupportedNetwork = useIsSupportedNetwork()
   const [filteringToken, setFilteringToken] = useTokenFilter()
   const farmSummaries = useFarmRegistry()
 
@@ -62,10 +59,6 @@ export default function Earn() {
   }, [filteringToken, farmSummaries])
 
   const { stakedFarms, unstakedFarms } = useOwnerStakedPools(filteredFarms)
-
-  if (!isSupportedNetwork) {
-    return <ChangeNetworkModal />
-  }
 
   return (
     <PageWrapper>

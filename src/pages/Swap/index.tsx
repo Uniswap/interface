@@ -1,14 +1,12 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { CELO, ChainId as UbeswapChainId, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
-import ChangeNetworkModal from 'components/ChangeNetworkModal'
 import { describeTrade } from 'components/swap/routing/describeTrade'
 import { MoolaDirectTrade } from 'components/swap/routing/moola/MoolaDirectTrade'
 import { useTradeCallback } from 'components/swap/routing/useTradeCallback'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import useENS from 'hooks/useENS'
-import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -78,7 +76,6 @@ export default function Swap() {
 
   const { address: account, network } = useContractKit()
   const chainId = network.chainId as unknown as UbeswapChainId
-  const isSupportedNetwork = useIsSupportedNetwork()
 
   const theme = useContext(ThemeContext)
 
@@ -291,10 +288,6 @@ export default function Swap() {
 
   const { isEstimate, makeLabel } = describeTrade(trade)
   const actionLabel = t(makeLabel(independentField !== Field.INPUT))
-
-  if (!isSupportedNetwork) {
-    return <ChangeNetworkModal />
-  }
 
   return (
     <>

@@ -122,6 +122,7 @@ const StatusIcon: React.FC = () => {
 function Web3StatusInner() {
   const { t } = useTranslation()
   const { connect, address, account } = useContractKit()
+  const { nom } = useAccountSummary(address)
   const error = null
 
   const allTransactions = useAllTransactions()
@@ -136,9 +137,11 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const toggleWalletModal = useWalletModalToggle()
   let accountName
-  if (account) {
+  if (nom) {
+    accountName = nom
+  } else if (account && !isAddress(account)) {
     // Phone numbers show up under `account`, so we need to check if it is an address
-    accountName = isAddress(account) ? shortenAddress(account) : account
+    accountName = account
   } else if (address) {
     accountName = shortenAddress(address)
   }
@@ -187,7 +190,7 @@ export default function Web3Status() {
 
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
-  const { summary } = useAccountSummary(account ?? undefined)
+  const { summary, nom } = useAccountSummary(account ?? undefined)
 
   useEffect(() => {
     Sentry.setUser({ id: account ?? undefined })
@@ -199,7 +202,7 @@ export default function Web3Status() {
     <>
       <Web3StatusInner />
       <WalletModal
-        ENSName={summary?.name ?? undefined}
+        ENSName={nom ?? summary?.name ?? undefined}
         pendingTransactions={pending}
         confirmedTransactions={confirmed}
       />

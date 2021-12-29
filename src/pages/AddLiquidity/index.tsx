@@ -1,11 +1,9 @@
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { CELO, ChainId as UbeswapChainId, Token, TokenAmount } from '@ubeswap/sdk'
-import ChangeNetworkModal from 'components/ChangeNetworkModal'
 import { useDoTransaction } from 'components/swap/routing'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
-import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -49,7 +47,6 @@ export default function AddLiquidity({
   const { address: account, network } = useContractKit()
   const library = useProvider()
   const chainId = network.chainId
-  const isSupportedNetwork = useIsSupportedNetwork()
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
@@ -276,10 +273,6 @@ export default function AddLiquidity({
   const isCreate = history.location.pathname.includes('/create')
 
   const addIsUnsupported = useIsTransactionUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
-
-  if (!isSupportedNetwork) {
-    return <ChangeNetworkModal />
-  }
 
   return (
     <>
