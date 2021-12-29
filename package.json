@@ -185,6 +185,7 @@
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
     "rebass": "^4.0.7",
+    "redux": "^4.1.2",
     "styled-components": "^5.3.0",
     "tiny-invariant": "^1.2.0",
     "wcag-contrast": "^3.0.0",
