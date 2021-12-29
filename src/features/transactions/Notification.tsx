@@ -2,16 +2,15 @@ import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box } from 'src/components/layout/Box'
-import { CenterBox } from 'src/components/layout/CenterBox'
 import { Toast } from 'src/components/notifications/Toast'
 import { usePendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 
 export function TransactionNotificationBanner() {
   return (
-    <CenterBox>
+    <Box>
       <TransactionNotification />
-    </CenterBox>
+    </Box>
   )
 }
 

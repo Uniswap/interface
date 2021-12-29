@@ -13,6 +13,7 @@ import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
 import { useAllBalances } from 'src/features/balances/hooks'
+import TotalBalance from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionNotificationBanner } from 'src/features/transactions/Notification'
@@ -65,35 +66,40 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Screen>
-      <GradientBackground height="33%">
+      <GradientBackground height="50%">
         <PinkToBlueLinear />
       </GradientBackground>
-      <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="md" my="sm">
-        <AccountHeader />
-        <Box flexDirection="row" mr="md">
-          <Button onPress={onPressSettings} mr="md">
-            <Settings height={24} width={24} />
-          </Button>
-          <Button onPress={onPressNotifications}>
-            <Clock height={24} width={24} />
-          </Button>
+      <Box>
+        <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="md" my="sm">
+          <AccountHeader />
+          <Box flexDirection="row" mr="md">
+            <Button onPress={onPressSettings} mr="md">
+              <Settings height={24} width={24} />
+            </Button>
+            <Button onPress={onPressNotifications}>
+              <Clock height={24} width={24} />
+            </Button>
+          </Box>
         </Box>
+        <TransactionNotificationBanner />
+        <TotalBalance balances={balances} />
       </Box>
-      <TransactionNotificationBanner />
-      <TokenBalanceList
-        loading={loading && !allCurrencyAmounts.length}
-        balances={balances}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        onPressToken={onPressToken}
-      />
-      <BottomSheetModal
-        ref={notificationsModalRef}
-        index={0}
-        snapPoints={FULL_SNAP_POINTS}
-        style={bottomSheetStyles.bottomSheet}>
-        <NotificationsScreen onPressClose={onCloseNotifications} />
-      </BottomSheetModal>
+      <Box flex={1} backgroundColor="mainBackground">
+        <TokenBalanceList
+          loading={loading && !allCurrencyAmounts.length}
+          balances={balances}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          onPressToken={onPressToken}
+        />
+        <BottomSheetModal
+          ref={notificationsModalRef}
+          index={0}
+          snapPoints={FULL_SNAP_POINTS}
+          style={bottomSheetStyles.bottomSheet}>
+          <NotificationsScreen onPressClose={onCloseNotifications} />
+        </BottomSheetModal>
+      </Box>
     </Screen>
   )
 }
