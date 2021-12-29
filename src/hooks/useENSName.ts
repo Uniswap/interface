@@ -28,7 +28,7 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const name = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
   const nameres = name.result?.[0]
   const fwdAddr = useENSAddress(nameres)
-  const checkedName = address !== fwdAddr.address ? nameres : null
+  const checkedName = address === fwdAddr.address ? nameres : null
 
   const changed = debouncedAddress !== address
   return useMemo(
