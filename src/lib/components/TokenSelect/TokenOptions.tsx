@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro'
-import assert from 'assert'
 import useNativeEvent from 'lib/hooks/useNativeEvent'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import styled, { ThemedText } from 'lib/theme'
@@ -19,6 +18,7 @@ import {
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
+import invariant from 'tiny-invariant'
 
 import { BaseButton } from '../Button'
 import Column from '../Column'
@@ -193,7 +193,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   const onHover = useRef<HTMLDivElement>(null)
   // use native onscroll handler to capture Safari's bouncy overscroll effect
   useNativeEvent(element, 'scroll', (e) => {
-    assert(element)
+    invariant(element)
     if (onHover.current) {
       // must be set synchronously to avoid jank (avoiding useState)
       onHover.current.style.marginTop = `${-element.scrollTop}px`

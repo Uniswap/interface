@@ -17,6 +17,7 @@
     "@graphql-codegen/typescript": "1.22.3",
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
+    "@lingui/cli": "^3.9.0",
     "@metamask/jazzicon": "^2.0.0",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
@@ -165,7 +166,6 @@
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
-    "@lingui/cli": "^3.9.0",
     "@lingui/core": "^3.9.0",
     "@lingui/macro": "^3.9.0",
     "@lingui/react": "^3.9.0",
@@ -185,6 +185,7 @@
     "react-window": "^1.8.5",
     "rebass": "^4.0.7",
     "styled-components": "^5.3.0",
+    "tiny-invariant": "^1.2.0",
     "wcag-contrast": "^3.0.0",
     "wicg-inert": "^3.1.1",
     "widgets-web3-react/core": "npm:@web3-react/core@8.0.14-alpha.0",
