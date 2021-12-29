@@ -5,19 +5,7 @@ import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/loca
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  BookOpen,
-  Check,
-  ChevronLeft,
-  Coffee,
-  FileText,
-  Globe,
-  HelpCircle,
-  Info,
-  MessageCircle,
-  Moon,
-  Sun,
-} from 'react-feather'
+import { Check, ChevronLeft, FileText, Globe, Info, Moon, Sun } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
@@ -235,12 +223,12 @@ export default function Menu() {
                       </div>
                       <Info opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://help.uniswap.org/">
+                    {/* <MenuItem href="https://help.uniswap.org/">
                       <div>
                         <Trans>Help Center</Trans>
                       </div>
                       <HelpCircle opacity={0.6} size={16} />
-                    </MenuItem>
+                    </MenuItem> 
                     <MenuItem href="https://uniswap.canny.io/feature-requests">
                       <div>
                         <Trans>Request Features</Trans>
@@ -253,6 +241,7 @@ export default function Menu() {
                       </div>
                       <MessageCircle opacity={0.6} size={16} />
                     </MenuItem>
+                    */}
                     <ToggleMenuItem onClick={() => setMenu('lang')}>
                       <div>
                         <Trans>Language</Trans>
@@ -263,12 +252,12 @@ export default function Menu() {
                       <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
                       {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
                     </ToggleMenuItem>
-                    <MenuItem href="https://docs.uniswap.org/">
+                    {/* <MenuItem href="https://docs.uniswap.org/">
                       <div>
                         <Trans>Docs</Trans>
                       </div>
                       <BookOpen opacity={0.6} size={16} />
-                    </MenuItem>
+                    </MenuItem> */}
                     <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
                       <div>
                         <Trans>Legal & Privacy</Trans>
