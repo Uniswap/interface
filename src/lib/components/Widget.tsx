@@ -3,7 +3,7 @@ import { Provider as AtomProvider } from 'jotai'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
-import { ReactNode, useRef } from 'react'
+import { ReactNode, StrictMode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
@@ -88,18 +88,20 @@ export default function Widget({
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (
-    <ErrorBoundary>
-      <AtomProvider>
-        <ThemeProvider theme={theme}>
-          <I18nProvider locale={locale}>
-            <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-              <WidgetWrapper width={width} className={className} ref={wrapper}>
-                <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
-              </WidgetWrapper>
-            </Web3Provider>
-          </I18nProvider>
-        </ThemeProvider>
-      </AtomProvider>
-    </ErrorBoundary>
+    <StrictMode>
+      <ErrorBoundary>
+        <AtomProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider locale={locale}>
+              <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                <WidgetWrapper width={width} className={className} ref={wrapper}>
+                  <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
+                </WidgetWrapper>
+              </Web3Provider>
+            </I18nProvider>
+          </ThemeProvider>
+        </AtomProvider>
+      </ErrorBoundary>
+    </StrictMode>
   )
 }
