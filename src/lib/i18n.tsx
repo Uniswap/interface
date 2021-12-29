@@ -1,6 +1,6 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { DEFAULT_LOCALE, DEFAULT_MESSAGES, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import {
   af,
   ar,
@@ -78,8 +78,12 @@ const plurals: LocalePlural = {
 
 export async function dynamicActivate(locale: SupportedLocale) {
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
-  const loaded = locale === DEFAULT_LOCALE ? DEFAULT_MESSAGES : await import(`locales/${locale}`)
-  i18n.load(locale, loaded.messages)
+  if (locale !== DEFAULT_LOCALE) {
+    const loaded = await import(`locales/${locale}`)
+    i18n.load(locale, loaded.messages)
+  } else {
+    i18n.load(locale, {})
+  }
   i18n.activate(locale)
 }
 
