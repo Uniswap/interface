@@ -13,7 +13,7 @@ import {
   RoutablePlatform,
   SWPR
 } from '@swapr/sdk'
-import { authereum, injected, walletConnect, walletlink } from '../connectors'
+import { authereum, injected, walletConnect, walletLink } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
 import SushiswapLogo from '../assets/svg/sushiswap-logo.svg'
@@ -230,7 +230,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobile: true
   },
   COINBASE: {
-    connector: walletlink,
+    connector: walletLink,
     name: 'Coinbase',
     iconName: 'coinbase.svg',
     description: 'Connect using Coinbase.',
