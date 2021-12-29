@@ -25,17 +25,22 @@ export default function useENSName(address?: string): { ENSName: string | null; 
     resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
     false
   )
-  const name = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
-  const nameres = name.result?.[0]
-  const fwdAddr = useENSAddress(nameres)
-  const checkedName = address === fwdAddr.address ? nameres : null
+  const nameCallRes = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
+  const name = nameCallRes.result?.[0]
+
+  /* ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy 
+     and recommends that you perform a match on the forward resolution
+     see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
+  */
+  const fwdAddr = useENSAddress(name)
+  const checkedName = address === fwdAddr?.address ? name : null
 
   const changed = debouncedAddress !== address
   return useMemo(
     () => ({
       ENSName: changed ? null : checkedName,
-      loading: changed || resolverAddress.loading || name.loading,
+      loading: changed || resolverAddress.loading || nameCallRes.loading,
     }),
-    [changed, name.loading, checkedName, resolverAddress.loading]
+    [changed, nameCallRes.loading, checkedName, resolverAddress.loading]
   )
 }
