@@ -1,29 +1,12 @@
-import { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
 import type { EthereumProvider } from 'lib/ethereum'
-import { useActiveWeb3React as useWidgetsWeb3React } from 'lib/state'
 import { useEffect, useState } from 'react'
 
 import { gnosisSafe, injected } from '../connectors'
-import { IS_IN_IFRAME, NetworkContextName } from '../constants/misc'
+import { IS_IN_IFRAME } from '../constants/misc'
 import { isMobile } from '../utils/userAgent'
 
-export function useActiveWeb3React() {
-  const widgetsContext = useWidgetsWeb3React()
-  const interfaceContext = useWeb3React<Web3Provider>()
-  const interfaceNetworkContext = useWeb3React<Web3Provider>(
-    process.env.REACT_APP_IS_WIDGET ? undefined : NetworkContextName
-  )
-
-  if (process.env.REACT_APP_IS_WIDGET) {
-    return widgetsContext
-  }
-  if (interfaceContext.active) {
-    return interfaceContext
-  }
-
-  return interfaceNetworkContext
-}
+export { default as useActiveWeb3React } from './useActiveWeb3React'
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React()

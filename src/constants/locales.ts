@@ -35,9 +35,10 @@ export const SUPPORTED_LOCALES = [
 ] as const
 export type SupportedLocale = typeof SUPPORTED_LOCALES[number] | 'pseudo'
 
+// eslint-disable-next-line import/first
+import * as enUs from '../locales/en-US'
 export const DEFAULT_LOCALE: SupportedLocale = 'en-US'
-
-export { messages as DEFAULT_MESSAGES } from '../locales/en-US'
+export const DEFAULT_MESSAGES = enUs
 
 export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
   'af-ZA': 'Afrikaans',

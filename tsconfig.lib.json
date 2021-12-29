@@ -4,8 +4,10 @@
     "jsx": "preserve",
     "baseUrl": "src/lib",
     "paths": {
-      "lib/*": ["./*"]
-    }
+      "lib/*": ["./*"],
+      "constants/*": ["../constants/*"],
+      "hooks/*": ["../hooks/*"],
+    },
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],
   "include": ["src/lib/**/*"]
