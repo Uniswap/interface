@@ -157,6 +157,14 @@ msgstr "Gelişmiş Ayarlar"
 msgid "Advanced mode is on!"
 msgstr "Gelişmiş mod açık!"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time High"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time Low"
+msgstr ""
+
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
 msgstr "URL'nin her zaman<0>KyberSwap.com</0> olduğundan emin olun - Güvenli olması için yer imlerine ekleyebilirsiniz."
@@ -306,6 +314,10 @@ msgstr "Değişim"
 msgid "Checking allowance..."
 msgstr "Kontrol ediliyor..."
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Circulating Supply"
+msgstr ""
+
 #: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "Talep Et"
@@ -407,6 +419,10 @@ msgstr "{name} ile bağlandı"
 #: src/pages/About/index.tsx
 msgid "Contact Us"
 msgstr "Bize Ulaşın"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Contract Address"
+msgstr ""
 
 #: src/constants/messages.ts
 msgid "Contract not found! Please reload and try again."
@@ -793,6 +809,10 @@ msgstr "Cüzdanını içe aktar"
 msgid "Includes DEX aggregation"
 msgstr "DEX’lerden toplanan oranları içerir"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Info"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Information"
@@ -984,6 +1004,14 @@ msgstr "Bu havuzu yönetin."
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage your pools."
 msgstr "Havuzlarınızı yönetin."
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap Rank"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1284,6 +1312,7 @@ msgstr "Popüler Çiftler"
 msgid "Powered By"
 msgstr "Tarafından Desteklenmektedir"
 
+#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/About/index.tsx
 msgid "Powered by"
 msgstr "Tarafından Desteklenmektedir"
@@ -1291,6 +1320,10 @@ msgstr "Tarafından Desteklenmektedir"
 #: src/components/Settings/index.tsx
 msgid "Preferences"
 msgstr "Tercihler"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Price"
+msgstr ""
 
 #: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -1681,6 +1714,10 @@ msgstr "Toplam Kazanç"
 msgid "Total LP Tokens"
 msgstr "Toplam LP Token’ları"
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Total Supply"
+msgstr ""
+
 #: src/pages/About/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
@@ -1712,6 +1749,10 @@ msgstr "AMP'ye dayalı olarak bu havuz için takas edilebilir token çifti fiyat
 #: src/pages/Pools/index.tsx
 msgid "Trade"
 msgstr "Al-Sat"
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Trading Volume (24H)"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"

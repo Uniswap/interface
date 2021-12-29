@@ -157,6 +157,14 @@ msgstr ""
 msgid "Advanced mode is on!"
 msgstr ""
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time High"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "All-Time Low"
+msgstr ""
+
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>KyberSwap.com</0> - bookmark it to be safe."
 msgstr ""
@@ -306,6 +314,10 @@ msgstr ""
 msgid "Checking allowance..."
 msgstr ""
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Circulating Supply"
+msgstr ""
+
 #: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr ""
@@ -406,6 +418,10 @@ msgstr ""
 #: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
 msgid "Contact Us"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Contract Address"
 msgstr ""
 
 #: src/constants/messages.ts
@@ -793,6 +809,10 @@ msgstr ""
 msgid "Includes DEX aggregation"
 msgstr ""
 
+#: src/pages/SwapV2/index.tsx
+msgid "Info"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Information"
@@ -983,6 +1003,14 @@ msgstr ""
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage your pools."
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Market Cap Rank"
 msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
@@ -1284,12 +1312,17 @@ msgstr ""
 msgid "Powered By"
 msgstr ""
 
+#: src/components/swapv2/TokenInfo.tsx
 #: src/pages/About/index.tsx
 msgid "Powered by"
 msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Preferences"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Price"
 msgstr ""
 
 #: src/components/ConfirmAddModalBottom/index.tsx
@@ -1681,6 +1714,10 @@ msgstr ""
 msgid "Total LP Tokens"
 msgstr ""
 
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Total Supply"
+msgstr ""
+
 #: src/pages/About/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
@@ -1711,6 +1748,10 @@ msgstr ""
 #: src/components/PoolList/ListItem.tsx
 #: src/pages/Pools/index.tsx
 msgid "Trade"
+msgstr ""
+
+#: src/components/swapv2/TokenInfo.tsx
+msgid "Trading Volume (24H)"
 msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
