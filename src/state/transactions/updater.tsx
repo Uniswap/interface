@@ -91,7 +91,7 @@ export default function Updater(): null {
       const inputAmount = getFullDisplayBalance(BigNumber.from(decodedValues[4].toString()), inputDecimals, 3)
       const outputAmount = getFullDisplayBalance(BigNumber.from(decodedValues[5].toString()), outputDecimals, 3)
 
-      const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+      const base = `${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
 
       return `${base} ${withRecipient ?? ''}`
     },
