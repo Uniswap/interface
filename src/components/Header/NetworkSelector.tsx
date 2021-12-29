@@ -3,12 +3,15 @@ import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useCallback, useRef } from 'react'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import { ParsedQs } from 'qs'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { supportedChainId } from 'utils/supportedChainId'
 
 import { useAppDispatch } from '../../state/hooks'
 import { switchToNetwork } from '../../utils/switchToNetwork'
@@ -211,8 +214,18 @@ function Row({
   return rowContent
 }
 
+const getParsedChainId = (parsedQs?: ParsedQs) => {
+  const chainId = parsedQs?.chainId
+  if (!chainId || typeof chainId !== 'string') return undefined
+
+  const parsedChainId = parseInt(chainId, 10)
+  return supportedChainId(parsedChainId)
+}
+
 export default function NetworkSelector() {
   const { chainId, library } = useActiveWeb3React()
+  const parsedQs = useParsedQueryString()
+  const [promptedNetworkChange, setPromptedNetworkChange] = useState(false)
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
@@ -222,7 +235,7 @@ export default function NetworkSelector() {
 
   const dispatch = useAppDispatch()
 
-  const handleRowClick = useCallback(
+  const handleChainSwitch = useCallback(
     (targetChain: number) => {
       if (!library) return
       switchToNetwork({ library, chainId: targetChain })
@@ -235,6 +248,16 @@ export default function NetworkSelector() {
     },
     [dispatch, library, toggle]
   )
+
+  useEffect(() => {
+    if (!chainId || promptedNetworkChange) return
+    const newChainId = getParsedChainId(parsedQs)
+
+    if (newChainId && chainId !== newChainId) {
+      handleChainSwitch(newChainId)
+      setPromptedNetworkChange(true)
+    }
+  }, [handleChainSwitch, promptedNetworkChange, chainId, parsedQs])
 
   if (!chainId || !info || !library) {
     return null
@@ -252,10 +275,10 @@ export default function NetworkSelector() {
           <FlyoutHeader>
             <Trans>Select a network</Trans>
           </FlyoutHeader>
-          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.MAINNET} />
-          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.POLYGON} />
-          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.OPTIMISM} />
-          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.ARBITRUM_ONE} />
+          <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.MAINNET} />
+          <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.POLYGON} />
+          <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.OPTIMISM} />
+          <Row onSelectChain={handleChainSwitch} targetChain={SupportedChainId.ARBITRUM_ONE} />
         </FlyoutMenu>
       )}
     </SelectorWrapper>
