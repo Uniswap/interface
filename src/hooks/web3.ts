@@ -1,5 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
+import type { EthereumProvider } from 'lib/ethereum'
 import { useActiveWeb3React as useWidgetsWeb3React } from 'lib/state'
 import { useEffect, useState } from 'react'
 
@@ -86,7 +87,7 @@ export function useInactiveListener(suppress = false) {
   const { active, error, activate } = useWeb3React()
 
   useEffect(() => {
-    const { ethereum } = window
+    const ethereum = window.ethereum as EthereumProvider | undefined
 
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
