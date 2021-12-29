@@ -15,7 +15,6 @@ import Menu from '../Menu'
 import Row from '../Row'
 import Web3Status from '../Web3Status'
 import HolidayOrnament from './HolidayOrnament'
-import NetworkSelector from './NetworkSelector'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -229,9 +228,6 @@ export default function Header() {
       </HeaderLinks>
 
       <HeaderControls>
-        <HeaderElement>
-          <NetworkSelector />
-        </HeaderElement>
         <HeaderElement>
           <AccountElement active={!!account}>
             {account && userEthBalance ? (
