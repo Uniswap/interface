@@ -6,6 +6,7 @@ import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 import useDebounce from './useDebounce'
+import useENSAddress from './useENSAddress'
 
 /**
  * Does a reverse lookup for an address to find its ENS name.
@@ -25,13 +26,16 @@ export default function useENSName(address?: string): { ENSName: string | null; 
     false
   )
   const name = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
+  const nameres = name.result?.[0]
+  const fwdAddr = useENSAddress(nameres)
+  const checkedName = address !== fwdAddr.address ? nameres : null
 
   const changed = debouncedAddress !== address
   return useMemo(
     () => ({
-      ENSName: changed ? null : name.result?.[0] ?? null,
+      ENSName: changed ? null : checkedName,
       loading: changed || resolverAddress.loading || name.loading,
     }),
-    [changed, name.loading, name.result, resolverAddress.loading]
+    [changed, name.loading, checkedName, resolverAddress.loading]
   )
 }
