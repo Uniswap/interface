@@ -1,12 +1,17 @@
 import React, { ErrorInfo } from 'react'
-import ReactGA from 'react-ga'
+
+export type ErrorHandler = (error: Error, info: ErrorInfo) => void
+
+interface ErrorBoundaryProps {
+  onError?: ErrorHandler
+}
 
 type ErrorBoundaryState = {
   error: Error | null
 }
 
-export default class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
-  constructor(props: unknown) {
+export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props)
     this.state = { error: null }
   }
@@ -14,13 +19,11 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   static getDerivedStateFromError(error: Error) {
     return { error }
   }
+
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    ReactGA.exception({
-      ...error,
-      ...errorInfo,
-      fatal: true,
-    })
+    this.props.onError?.(error, errorInfo)
   }
+
   render() {
     if (this.state.error) {
       return <h1>Something went wrong.</h1>

@@ -7,7 +7,7 @@ import { ReactNode, StrictMode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
-import ErrorBoundary from './ErrorBoundary'
+import ErrorBoundary, { ErrorHandler } from './ErrorBoundary'
 import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
@@ -73,6 +73,7 @@ export interface WidgetProps {
   width?: string | number
   dialog?: HTMLElement | null
   className?: string
+  onError?: ErrorHandler
 }
 
 export default function Widget({
@@ -84,12 +85,13 @@ export default function Widget({
   width = 360,
   dialog,
   className,
+  onError,
 }: WidgetProps) {
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (
     <StrictMode>
-      <ErrorBoundary>
+      <ErrorBoundary onError={onError}>
         <AtomProvider>
           <ThemeProvider theme={theme}>
             <I18nProvider locale={locale}>
