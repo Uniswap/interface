@@ -1,5 +1,7 @@
 /* eslint-disable no-restricted-imports */
 import CheckIcon from 'lib/assets/Check'
+import ExpandoIcon from 'lib/assets/Expando'
+import LogoIcon from 'lib/assets/Logo'
 import SpinnerIcon from 'lib/assets/Spinner'
 import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
@@ -11,7 +13,6 @@ import {
   ArrowUp as ArrowUpIcon,
   CheckCircle as CheckCircleIcon,
   ChevronDown as ChevronDownIcon,
-  ChevronUp as ChevronUpIcon,
   Clock as ClockIcon,
   CreditCard as CreditCardIcon,
   HelpCircle as HelpCircleIcon,
@@ -20,8 +21,6 @@ import {
   Trash2 as Trash2Icon,
   X as XIcon,
 } from 'react-feather'
-
-export { default as Logo } from 'lib/assets/Logo'
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
@@ -72,7 +71,6 @@ export const ArrowRight = icon(ArrowRightIcon)
 export const ArrowUp = icon(ArrowUpIcon)
 export const CheckCircle = icon(CheckCircleIcon)
 export const ChevronDown = icon(ChevronDownIcon)
-export const ChevronUp = icon(ChevronUpIcon)
 export const Clock = icon(ClockIcon)
 export const CreditCard = icon(CreditCardIcon)
 export const HelpCircle = icon(HelpCircleIcon)
@@ -87,6 +85,27 @@ export const Check = styled(icon(CheckIcon))`
     stroke: none;
   }
 `
+
+export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
+  path {
+    transition: transform 0.2s ease-in-out;
+    will-change: transform;
+
+    &:first-child {
+      transform: ${({ open }) => open && 'translateX(-25%)'};
+    }
+
+    &:last-child {
+      transform: ${({ open }) => open && 'translateX(25%)'};
+    }
+  }
+`
+
+export const Logo = styled(icon(LogoIcon))`
+  fill: ${({ theme }) => theme.secondary};
+  stroke: none;
+`
+
 const rotate = keyframes`
   from {
     transform: rotate(0deg);

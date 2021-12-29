@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
-import { ChevronDown, ChevronUp, Info } from 'lib/icons'
-import styled, { ThemedText, useScrollbar } from 'lib/theme'
+import useScrollbar from 'lib/hooks/useScrollbar'
+import { Expando, Info } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
 import ActionButton from '../../ActionButton'
@@ -31,27 +32,26 @@ const Body = styled(Column)<{ open: boolean }>`
 
   ${SummaryColumn} {
     flex-grow: ${({ open }) => (open ? 0 : 1)};
-    transition: flex-grow 0.2s;
+    transition: flex-grow 0.25s;
   }
 
   ${ExpandoColumn} {
     flex-grow: ${({ open }) => (open ? 1 : 0)};
-    transition: flex-grow 0.2s;
+    transition: flex-grow 0.25s;
 
     ${DetailsColumn} {
-      flex-basis: 0;
-      flex-grow: ${({ open }) => (open ? 1 : 0)};
+      flex-basis: ${({ open }) => (open ? 7 : 0)}em;
       overflow-y: hidden;
       position: relative;
-      transition: flex-grow 0.2s;
+      transition: flex-basis 0.25s;
 
       ${Column} {
         height: 100%;
         padding: ${({ open }) => (open ? '0.5em 0' : 0)};
-        transition: padding 0.2s;
+        transition: padding 0.25s;
 
         :after {
-          background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
+          background: linear-gradient(#ffffff00, ${({ theme }) => theme.dialog});
           bottom: 0;
           content: '';
           height: 0.75em;
@@ -68,8 +68,8 @@ const Body = styled(Column)<{ open: boolean }>`
       padding: ${({ open }) => (open ? 0 : '1em 0')};
       transition: ${({ open }) =>
         open
-          ? 'max-height 0.1s ease-out, padding 0.2s ease-out'
-          : 'max-height 0.1s ease-in, flex-grow 0.2s ease-out, padding 0.2s ease-out'};
+          ? 'max-height 0.1s ease-out, padding 0.25s ease-out'
+          : 'flex-grow 0.25s ease-out, max-height 0.1s ease-in, padding 0.25s ease-out'};
     }
   }
 `
@@ -118,7 +118,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
               <Trans>Swap details</Trans>
             </ThemedText.Subhead2>
           </Row>
-          <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
+          <IconButton color="secondary" onClick={() => setOpen(!open)} icon={Expando} iconProps={{ open }} />
         </Row>
         <ExpandoColumn flex align="stretch">
           <Rule />

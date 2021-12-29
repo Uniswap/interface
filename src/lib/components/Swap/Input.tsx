@@ -11,12 +11,12 @@ import TokenInput from './TokenInput'
 const mockBalance = 123.45
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
-  padding: 0.75em;
+  margin: 0.75em;
   position: relative;
 
   img {
     filter: ${({ approved }) => (approved ? undefined : 'saturate(0) opacity(0.4)')};
-    transition: filter 0.2s;
+    transition: filter 0.25s;
   }
 `
 

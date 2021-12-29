@@ -57,7 +57,7 @@ interface HeaderProps {
 export function Header({ title, children, ruled }: HeaderProps) {
   return (
     <>
-      <Column gap={0.75}>
+      <Column>
         <BaseHeader title={title}>
           {children}
           <IconButton color="primary" onClick={useContext(OnCloseContext)} icon={X} />

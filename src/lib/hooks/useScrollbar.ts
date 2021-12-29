@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
+import { css } from 'lib/theme'
+import { useEffect, useMemo, useState } from 'react'
 
-import { css } from './styled'
+import useNativeEvent from './useNativeEvent'
 
 const overflowCss = css`
   overflow-y: scroll;
@@ -22,15 +23,15 @@ const scrollbarCss = (padded: boolean) => css`
       ),
       linear-gradient(
         to bottom,
-        transparent 0.25em,
+        #ffffff00 0.25em,
         ${({ theme }) => theme.interactive} 0.25em,
         ${({ theme }) => theme.interactive} calc(100% - 0.25em),
-        transparent calc(100% - 0.25em)
+        #ffffff00 calc(100% - 0.25em)
       ),
       radial-gradient(
         closest-corner at 0.25em calc(100% - 0.25em),
         ${({ theme }) => theme.interactive} 0.25em,
-        transparent 0.25em
+        #ffffff00 0.25em
       );
     background-clip: padding-box;
     border: none;
@@ -44,20 +45,20 @@ const scrollbarCss = (padded: boolean) => css`
 
 interface ScrollbarOptions {
   padded?: boolean
-  css?: ReturnType<typeof css>
 }
 
-export function useScrollbar(
-  element: HTMLElement | null,
-  { padded = false, css: additionalCss }: ScrollbarOptions = {}
-) {
-  return useMemo(() => {
-    if (element && element.scrollHeight > element.clientHeight) {
-      return css`
-        ${scrollbarCss(padded)}
-        ${additionalCss}
-      `
+export default function useScrollbar(element: HTMLElement | null, { padded = false }: ScrollbarOptions = {}) {
+  const [overflow, setOverflow] = useState(true)
+  useEffect(() => {
+    setOverflow(hasOverflow(element))
+  }, [element])
+  useNativeEvent(element, 'transitionend', () => setOverflow(hasOverflow(element)))
+  return useMemo(() => (overflow ? scrollbarCss(padded) : overflowCss), [overflow, padded])
+
+  function hasOverflow(element: HTMLElement | null) {
+    if (!element) {
+      return true
     }
-    return overflowCss
-  }, [additionalCss, element, padded])
+    return element.scrollHeight > element.clientHeight
+  }
 }

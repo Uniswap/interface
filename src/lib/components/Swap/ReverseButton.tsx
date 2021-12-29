@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
 import { ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon } from 'lib/icons'
 import styled, { Layer } from 'lib/theme'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 import Button from '../Button'
 import Row from '../Row'
@@ -37,24 +37,37 @@ const StyledReverseButton = styled(Button)`
   height: 2.5em;
   position: relative;
   width: 2.5em;
+
+  div {
+    transition: transform 0.25s ease;
+    will-change: transform;
+
+    &.reverse {
+      transform: rotate(180deg);
+    }
+  }
 `
 
 export default function ReverseButton({ disabled }: { disabled?: boolean }) {
   const [state, setState] = useAtom(stateAtom)
+  const [reversed, setReversed] = useState(false)
   const onClick = useCallback(() => {
     const { input, output } = state
     setState((state) => {
       state.input = output
       state.output = input
     })
+    setReversed((reversed) => !reversed)
   }, [state, setState])
 
   return (
     <ReverseRow justify="center">
       <Overlay>
         <StyledReverseButton disabled={disabled} onClick={onClick}>
-          <ArrowUp strokeWidth={3} />
-          <ArrowDown strokeWidth={3} />
+          <div className={reversed ? 'reverse' : undefined}>
+            <ArrowUp strokeWidth={3} />
+            <ArrowDown strokeWidth={3} />
+          </div>
         </StyledReverseButton>
       </Overlay>
     </ReverseRow>

@@ -33,8 +33,8 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
 
   return (
     <>
+      <Header title={<Trans>Select a token</Trans>} />
       <Column gap={0.75}>
-        <Header title={<Trans>Select a token</Trans>} />
         <Row pad={0.75} grow>
           <ThemedText.Body1>
             <SearchInput

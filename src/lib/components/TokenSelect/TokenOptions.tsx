@@ -1,7 +1,10 @@
 import { t } from '@lingui/macro'
-import styled, { css, ThemedText, useScrollbar } from 'lib/theme'
+import assert from 'assert'
+import useNativeEvent from 'lib/hooks/useNativeEvent'
+import useScrollbar from 'lib/hooks/useScrollbar'
+import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
-import React, {
+import {
   ComponentClass,
   CSSProperties,
   forwardRef,
@@ -33,16 +36,7 @@ const TokenButton = styled(BaseButton)`
   }
 `
 
-const scrollbarCss = css`
-  @supports selector(::-webkit-scrollbar-thumb) {
-    overflow-y: overlay !important;
-
-    ${TokenButton} {
-      padding-right: 2em;
-    }
-  }
-`
-
+const ITEM_SIZE = 56
 type ItemData = Token[]
 interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
 const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
@@ -54,6 +48,16 @@ const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
   }
 
   ${({ scrollbar }) => scrollbar}
+  overscroll-behavior: none; // prevent Firefox's bouncy overscroll effect (because it does not trigger the scroll handler)
+`
+const OnHover = styled.div<{ hover: number }>`
+  // TODO(zzmp): This is not performant
+  background-color: ${({ theme }) => theme.onHover(theme.module)};
+  height: ${ITEM_SIZE}px;
+  left: 0;
+  position: absolute;
+  top: ${({ hover }) => hover * ITEM_SIZE}px;
+  width: 100%;
 `
 
 interface TokenOptionProps {
@@ -184,7 +188,17 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   )
 
   const [element, setElement] = useState<HTMLElement | null>(null)
-  const scrollbar = useScrollbar(element, { padded: true, css: scrollbarCss })
+  const scrollbar = useScrollbar(element, { padded: true })
+
+  const onHover = useRef<HTMLDivElement>(null)
+  // use native onscroll handler to capture Safari's bouncy overscroll effect
+  useNativeEvent(element, 'scroll', (e) => {
+    assert(element)
+    if (onHover.current) {
+      // must be set synchronously to avoid jank (avoiding useState)
+      onHover.current.style.marginTop = `${-element.scrollTop}px`
+    }
+  })
 
   return (
     <Column
@@ -195,7 +209,10 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       onBlur={onBlur}
       onFocus={onFocus}
       onMouseMove={onMouseMove}
+      style={{ overflow: 'hidden' }}
     >
+      {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}
+      <OnHover hover={hover} ref={onHover} />
       <AutoSizer disableWidth>
         {({ height }) => (
           <TokenList
@@ -205,7 +222,7 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             itemCount={tokens.length}
             itemData={tokens}
             itemKey={itemKey}
-            itemSize={56}
+            itemSize={ITEM_SIZE}
             className="scrollbar"
             ref={list}
             outerRef={setElement}

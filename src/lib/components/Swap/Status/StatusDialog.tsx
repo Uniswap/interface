@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import useInterval from 'lib/hooks/useInterval'
-import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Clock, Icon, Info, LargeIcon, Spinner } from 'lib/icons'
-import styled, { Color, ThemedText, useScrollbar } from 'lib/theme'
+import useScrollbar from 'lib/hooks/useScrollbar'
+import { AlertTriangle, CheckCircle, Clock, Expando, Icon, Info, LargeIcon, Spinner } from 'lib/icons'
+import styled, { Color, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 
 import ActionButton from '../../ActionButton'
@@ -17,7 +18,7 @@ const HeaderIcon = styled(LargeIcon)`
   flex-grow: 1;
 
   svg {
-    transition: height 0.2s, width 0.2s;
+    transition: height 0.25s, width 0.25s;
   }
 `
 
@@ -31,7 +32,7 @@ interface StatusHeaderProps {
 function StatusHeader({ icon: Icon, iconColor, iconSize = 4, children }: StatusHeaderProps) {
   return (
     <>
-      <Column flex style={{ flexGrow: 1, textAlign: 'center' }}>
+      <Column flex style={{ flexGrow: 1 }}>
         <HeaderIcon icon={Icon} color={iconColor} size={iconSize} />
         <Column gap={0.75} flex>
           {children}
@@ -118,22 +119,22 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
 }
 
 const ErrorHeader = styled(Column)<{ open: boolean }>`
-  transition: gap 0.2s;
+  transition: gap 0.25s;
 
   div:last-child {
     max-height: ${({ open }) => (open ? 0 : 60 / 14)}em; // 3 * line-height
     overflow-y: hidden;
-    transition: max-height 0.2s;
+    transition: max-height 0.25s;
   }
 `
 const ErrorColumn = styled(Column)``
 const ExpandoColumn = styled(Column)<{ open: boolean }>`
   flex-grow: ${({ open }) => (open ? 2 : 0)};
-  transition: flex-grow 0.2s, gap 0.2s;
+  transition: flex-grow 0.25s, gap 0.25s;
 
   ${Rule} {
     margin-bottom: ${({ open }) => (open ? 0 : 0.75)}em;
-    transition: margin-bottom 0.2s;
+    transition: margin-bottom 0.25s;
   }
 
   ${ErrorColumn} {
@@ -141,15 +142,15 @@ const ExpandoColumn = styled(Column)<{ open: boolean }>`
     flex-grow: ${({ open }) => (open ? 1 : 0)};
     overflow-y: hidden;
     position: relative;
-    transition: flex-grow 0.2s;
+    transition: flex-grow 0.25s;
 
     ${Column} {
       height: 100%;
       padding: ${({ open }) => (open ? '0.5em 0' : 0)};
-      transition: padding 0.2s;
+      transition: padding 0.25s;
 
       :after {
-        background: linear-gradient(transparent, ${({ theme }) => theme.dialog});
+        background: linear-gradient(#ffffff00, ${({ theme }) => theme.dialog});
         bottom: 0;
         content: '';
         height: 0.75em;
@@ -192,7 +193,7 @@ function ErrorStatus({ error, onClose }: ErrorStatusProps) {
             <Trans>Error details</Trans>
           </ThemedText.Subhead2>
         </Row>
-        <IconButton color="secondary" onClick={() => setOpen(!open)} icon={open ? ChevronDown : ChevronUp} />
+        <IconButton color="secondary" onClick={() => setOpen(!open)} icon={Expando} iconProps={{ open }} />
       </Row>
       <ExpandoColumn flex align="stretch" open={open}>
         <Rule />
