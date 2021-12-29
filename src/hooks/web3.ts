@@ -1,7 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
-import { useAtomValue } from 'jotai/utils'
-import { connectorAtom } from 'lib/state'
+import { useActiveWeb3React as useWidgetsWeb3React } from 'lib/state'
 import { useEffect, useState } from 'react'
 
 import { gnosisSafe, injected } from '../connectors'
@@ -9,9 +8,7 @@ import { IS_IN_IFRAME, NetworkContextName } from '../constants/misc'
 import { isMobile } from '../utils/userAgent'
 
 export function useActiveWeb3React() {
-  const [, widgetsHooks] = useAtomValue(connectorAtom)
-  const widgetsProvider = widgetsHooks.useProvider()
-  const widgetsContext = widgetsHooks.useWeb3React(widgetsProvider)
+  const widgetsContext = useWidgetsWeb3React()
   const interfaceContext = useWeb3React<Web3Provider>()
   const interfaceNetworkContext = useWeb3React<Web3Provider>(
     process.env.REACT_APP_IS_WIDGET ? undefined : NetworkContextName
