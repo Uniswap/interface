@@ -1,7 +1,7 @@
 import Loader from 'components/Loader'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -19,8 +19,6 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
-import Pool from './Pool'
-import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -88,10 +86,10 @@ export default function App() {
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/swap" component={Swap} />
 
-                <Route exact strict path="/pool/v2/find" component={PoolFinder} />
-                <Route exact strict path="/pool/v2" component={PoolV2} />
-                <Route exact strict path="/pool" component={Pool} />
-                <Route exact strict path="/pool/:tokenId" component={PositionPage} />
+                <Redirect from="/pool/v2/find" to="/pool/find" />
+                <Route exact strict path="/pool/find" component={PoolFinder} />
+                <Redirect from="/pool/v2" to="/pool" />
+                <Route exact strict path="/pool" component={PoolV2} />
 
                 <Route
                   exact
