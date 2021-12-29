@@ -34,7 +34,7 @@ function StatusHeader({ icon: Icon, iconColor, iconSize = 4, children }: StatusH
     <>
       <Column flex style={{ flexGrow: 1 }}>
         <HeaderIcon icon={Icon} color={iconColor} size={iconSize} />
-        <Column gap={0.75} flex>
+        <Column gap={0.75} flex style={{ textAlign: 'center' }}>
           {children}
         </Column>
       </Column>
