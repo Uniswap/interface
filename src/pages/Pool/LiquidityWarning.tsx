@@ -2,24 +2,16 @@ import { useContractKit } from '@celo-tools/use-contractkit'
 import React, { useContext, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 
 import { AutoColumn, TopSection } from '../../components/Column'
-import { CardSection } from '../../components/earn/styled'
+import { CardSection, TopBorderCard } from '../../components/earn/styled'
 import { RowBetween, RowStart } from '../../components/Row'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { useUniqueBestFarms, WarningInfo } from '../Earn/useFarmRegistry'
-
-export const LiquidityWarningCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  background-color: ${(props) => props.theme.bg1};
-  border-top: 3px solid ${(props) => props.theme.primary1};
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-`
 
 export default function LiquidityWarning() {
   const theme = useContext(ThemeContext)
@@ -67,7 +59,7 @@ export default function LiquidityWarning() {
   return (
     <TopSection gap="md">
       {warnings.map((warning) => (
-        <LiquidityWarningCard key={warning.link}>
+        <TopBorderCard key={warning.link}>
           <CardSection>
             <RowStart>
               <div style={{ paddingRight: 16 }}>
@@ -88,7 +80,7 @@ export default function LiquidityWarning() {
               </AutoColumn>
             </RowStart>
           </CardSection>
-        </LiquidityWarningCard>
+        </TopBorderCard>
       ))}
     </TopSection>
   )

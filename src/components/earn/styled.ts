@@ -81,3 +81,10 @@ export const Break = styled.div`
   background-color: rgba(255, 255, 255, 0.2);
   height: 1px;
 `
+export const TopBorderCard = styled(AutoColumn)<{ disabled?: boolean }>`
+  background-color: ${(props) => props.theme.bg1};
+  border-top: 3px solid ${(props) => props.theme.primary1};
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+`

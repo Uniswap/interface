@@ -426,6 +426,32 @@ export function useTotalUbeEarned(): TokenAmount | undefined {
   }, [stakingInfos, ube])
 }
 
+export function useFilteredStakingInfo(stakingAddresses: string[]): readonly StakingInfo[] | undefined {
+  const { network } = useContractKit()
+  const { chainId } = network
+  const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
+  const stakingInfos = useStakingInfo()
+  return useMemo(() => {
+    if (!ube) return
+    return stakingInfos.filter(
+      (stakingInfo) => stakingInfo.stakingToken.address && stakingAddresses.includes(stakingInfo.stakingToken.address)
+    )
+  }, [stakingInfos, ube, stakingAddresses])
+}
+
+export function useFarmRewardsInfo(stakingAddresses: string[]): readonly StakingInfo[] | undefined {
+  const { network } = useContractKit()
+  const { chainId } = network
+  const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
+  const stakingInfos = useStakingInfo()
+  return useMemo(() => {
+    if (!ube) return
+    return stakingInfos.filter(
+      (stakingInfo) => stakingInfo.stakingToken.address && stakingAddresses.includes(stakingInfo.stakingToken.address)
+    )
+  }, [stakingInfos, ube, stakingAddresses])
+}
+
 // based on typed value
 export function useDerivedStakeInfo(
   typedValue: string,

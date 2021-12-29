@@ -3,6 +3,7 @@ import { Contract } from '@ethersproject/contracts'
 import IUniswapV2PairABI from '@ubeswap/core/build/abi/IUniswapV2Pair.json'
 import { ReleaseUbe } from 'generated/ReleaseUbe'
 import { useMemo } from 'react'
+import { StakingInfo } from 'state/stake/hooks'
 
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ERC20_ABI, { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
@@ -29,6 +30,23 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])
+}
+
+function useContracts(
+  addresses: (string | undefined)[] | undefined,
+  ABI: any,
+  withSignerIfPossible = true
+): (Contract | null)[] | null {
+  const { address: account } = useContractKit()
+  const library = useProvider()
+
+  return useMemo(() => {
+    if (!addresses || !ABI || !library) return null
+    return addresses.map((address) => {
+      if (!address) return null
+      return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+    })
+  }, [addresses, ABI, library, withSignerIfPossible, account])
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Erc20 | null {
@@ -61,6 +79,16 @@ export function useMulticallContract(): Contract | null {
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): StakingRewards | null {
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible) as StakingRewards | null
+}
+
+export function useStakingContracts(
+  stakingInfos?: readonly StakingInfo[],
+  withSignerIfPossible?: boolean
+): StakingRewards[] | null {
+  const rewardAddresses: (string | undefined)[] | undefined = stakingInfos?.map(
+    (stakingInfo) => stakingInfo.stakingRewardAddress
+  )
+  return useContracts(rewardAddresses, STAKING_REWARDS_ABI, withSignerIfPossible) as StakingRewards[] | null
 }
 
 export function useVotableStakingContract(

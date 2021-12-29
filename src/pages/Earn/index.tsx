@@ -1,6 +1,7 @@
 import { ErrorBoundary } from '@sentry/react'
 import { Token } from '@ubeswap/sdk'
 import TokenSelect from 'components/CurrencyInputPanel/TokenSelect'
+import ClaimAllRewardPanel from 'components/earn/ClaimAllRewardPanel'
 import Loader from 'components/Loader'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -62,6 +63,7 @@ export default function Earn() {
 
   return (
     <PageWrapper>
+      <ClaimAllRewardPanel stakedFarms={stakedFarms} />
       <LiquidityWarning />
       {stakedFarms.length === 0 && (
         <TopSection gap="md">
