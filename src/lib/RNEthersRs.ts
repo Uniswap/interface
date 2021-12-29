@@ -1,4 +1,4 @@
-import { Transaction, utils } from 'ethers'
+import { utils } from 'ethers'
 import { NativeModules } from 'react-native'
 
 const { RNEthersRS } = NativeModules
@@ -29,12 +29,12 @@ export function generateAndStorePrivateKey(
   return RNEthersRS.generateAndStorePrivateKey(mnemonicId, derivationIndex)
 }
 
-export function signTransactionForAddress(
+export function signTransactionHashForAddress(
   address: string,
-  transaction: Transaction,
+  hash: string,
   chainId: number
 ): Promise<string> {
-  return RNEthersRS.signTransactionForAddress(address, JSON.stringify(transaction), chainId)
+  return RNEthersRS.signTransactionHashForAddress(address, hash, chainId)
 }
 
 export function signMessageForAddress(

@@ -1,7 +1,7 @@
 PODS:
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
-  - EthersRS (0.0.4)
+  - EthersRS (0.0.5)
   - EXApplication (4.0.0):
     - ExpoModulesCore
   - EXClipboard (2.0.3):
@@ -651,7 +651,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  EthersRS: 646ca8c57f0f2a382b258b5d3d9143a6daacdee3
+  EthersRS: d9bd4b6d742bfc017670e52badf9cb08cf8715fe
   EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   EXHaptics: f52df335f17192e440d9639c971ebcbb3fb91dec

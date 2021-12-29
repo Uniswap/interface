@@ -1594,10 +1594,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cmcewen/ethers-rs-mobile@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@cmcewen/ethers-rs-mobile/-/ethers-rs-mobile-0.0.4.tgz#800bdcf91c91d71417e3f8f28837fb9bcf21fa2a"
-  integrity sha512-tfsZ6coE18H1MjXNbbGE96tiBv5hSQTvX/tBbVl1ZIf8U++u8p8qlEVZzKwWBT7uuqYSgoPjo2QZHI6moEV81A==
+"@cmcewen/ethers-rs-mobile@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@cmcewen/ethers-rs-mobile/-/ethers-rs-mobile-0.0.5.tgz#58545482942fb8bd61e4f81197cfb9f708312aa0"
+  integrity sha512-grB3HD6KGoYpcZRCDTxbp6jsV3xFMoNMI1PribVS8CpwNC7fKj14o5dPBNgvz0tfjwPAtv9yzLHa+9GN73y1hA==
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"

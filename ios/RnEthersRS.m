@@ -27,8 +27,8 @@ RCT_EXTERN_METHOD(generateAndStorePrivateKey: (NSString *)mnemonicId
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(signTransactionForAddress: (NSString *)address
-                  transaction: (NSString *)transaction
+RCT_EXTERN_METHOD(signTransactionHashForAddress: (NSString *)address
+                  hash: (NSString *)hash
                   chainId: NSNumber
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
