@@ -194,12 +194,32 @@ export const dexListConfig: DexList = {
     name: 'Crodex',
     icon: 'https://swap.crodex.app/favicon.png',
     chainIds: [ChainId.CRONOS]
+  },
+  mmf: {
+    name: 'Mad Meerkat Finance',
+    icon: 'https://mm.finance/favicon.ico',
+    chainIds: [ChainId.CRONOS]
+  },
+  kryptodex: {
+    name: 'KryptoDEX',
+    icon: 'https://www.kryptodex.org/favicon.svg',
+    chainIds: [ChainId.CRONOS]
+  },
+  empiredex: {
+    name: 'Empire Dex',
+    icon: 'https://bsc.empiredex.org/favicon.png',
+    chainIds: [ChainId.CRONOS]
+  },
+  photonswap: {
+    name: 'PhotonSwap',
+    icon: 'https://photonswap.finance/logo.png',
+    chainIds: [ChainId.CRONOS]
   }
 }
 
 type DexTypes = {
   [chainId in ChainId | 'all']?: {
-    [dex: string]: 0 | 1 | 2 | 3 | 4 | 5 | 6
+    [dex: string]: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
   }
 }
 /*
@@ -210,6 +230,7 @@ type DexTypes = {
 4 - 15
 5 - 10
 6 - 5
+7 - 17 = 0.17%
 */
 export const dexIds: DexTypes = {
   all: {
@@ -226,7 +247,9 @@ export const dexIds: DexTypes = {
     axial: 3,
     cronaswap: 2,
     gravity: 2,
-    kyberswap: 0
+    kyberswap: 0,
+    mmf: 7,
+    kryptodex: 3
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
