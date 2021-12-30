@@ -30,7 +30,7 @@ const updatedCss = css`
   padding-left: calc(0.75em - 1px);
 
   ${UpdateRow} {
-    animation: ${grow} 0.2s ease-in;
+    animation: ${grow} 0.25s ease-in;
     white-space: nowrap;
   }
 

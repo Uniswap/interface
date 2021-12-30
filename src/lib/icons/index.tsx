@@ -88,7 +88,7 @@ export const Check = styled(icon(CheckIcon))`
 
 export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
   path {
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.25s ease-in-out;
     will-change: transform;
 
     &:first-child {
