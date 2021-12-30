@@ -155,31 +155,6 @@ export function useActiveNetwork() {
       if (isNotConnected) {
         dispatch(updateChainIdWhenNotConnected(chainId))
 
-        if (window.ethereum?.isMetaMask) {
-          try {
-            await (window.ethereum as any).request({
-              method: 'wallet_switchEthereumChain',
-              params: [switchNetworkParams]
-            })
-          } catch (switchError) {
-            // This error code indicates that the chain has not been added to MetaMask.
-            if (switchError.code === 4902 || switchError.code === -32603) {
-              try {
-                await (window.ethereum as any).request({
-                  method: 'wallet_addEthereumChain',
-                  params: [addNetworkParams]
-                })
-                history.push(target)
-              } catch (addError) {
-                console.error(addError)
-              }
-            } else {
-              // handle other "switch" errors
-              console.error(switchError)
-            }
-          }
-        }
-
         setTimeout(() => {
           history.push(target)
         }, 3000)
