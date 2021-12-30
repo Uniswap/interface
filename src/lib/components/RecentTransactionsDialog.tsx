@@ -58,7 +58,7 @@ const TransactionRow = styled(Row)`
 function TokenAmount({ value: { value, token } }: { value: ITokenAmount }) {
   return (
     <Row gap={0.375}>
-      <TokenImg src={token.logoURI} />
+      <TokenImg token={token} />
       <ThemedText.Body2>
         {value.toLocaleString('en')} {token.symbol}
       </ThemedText.Body2>
