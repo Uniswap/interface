@@ -46,7 +46,7 @@ function Fixture() {
     }
   }, [input, output, priceFetched, setInput, setOutput, setSwap, swap])
 
-  const [tokenApproved] = useValue('token approved', { defaultValue: false })
+  const [tokenApproved] = useValue('token approved', { defaultValue: true })
   useEffect(() => {
     if (tokenApproved !== input.approved) {
       setInput({ ...input, approved: tokenApproved })

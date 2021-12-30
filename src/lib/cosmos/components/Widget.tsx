@@ -1,3 +1,4 @@
+import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import Widget from 'lib/components/Widget'
 import { darkTheme, defaultTheme, lightTheme } from 'lib/theme'
@@ -20,7 +21,7 @@ export default function Wrapper({ children }: { children: ReactNode }) {
 
   const NO_JSON_RPC = 'None'
   const [jsonRpcEndpoint] = useSelect('JSON-RPC', {
-    defaultValue: NO_JSON_RPC,
+    defaultValue: URLS[SupportedChainId.MAINNET][0] || NO_JSON_RPC,
     options: [NO_JSON_RPC, ...Object.values(URLS).flat()],
   })
 
