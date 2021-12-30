@@ -145,7 +145,7 @@
     "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "assets:generate": "yarn assets:svg:generate && yarn assets:font:generate",
-    "assets:svg:generate": "svgr -d src/lib/assets --ext tsx --typescript src/lib/assets && rm src/lib/assets/index.tsx",
+    "assets:svg:generate": "svgr -d src/lib/assets/svg --ext tsx --typescript src/lib/assets/svg && rm src/lib/assets/svg/index.tsx",
     "assets:font:generate": "sass src/lib/assets/fonts/index.scss src/lib/assets/fonts/index.css --no-source-map -I node_modules",
     "bundle": "microbundle --define process.env.REACT_APP_IS_WIDGET=true --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
     "bundle:depcheck": "node depcheck.js",
