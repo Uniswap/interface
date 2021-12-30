@@ -90,6 +90,11 @@ export const dexListConfig: DexList = {
     icon: 'https://swap.cometh.io/favicon.ico',
     chainIds: [ChainId.MATIC]
   },
+  dinoswap: {
+    name: 'DinoSwap',
+    icon: 'https://dinoswap.exchange/favicon.ico',
+    chainIds: [ChainId.MATIC]
+  },
   pancake: {
     name: 'PancakeSwap',
     icon: 'https://pancakeswap.finance/favicon.ico',
@@ -113,7 +118,7 @@ export const dexListConfig: DexList = {
   apeswap: {
     name: 'ApeSwap',
     icon: 'https://apeswap.finance/favicon.ico',
-    chainIds: [ChainId.BSCMAINNET]
+    chainIds: [ChainId.MATIC, ChainId.BSCMAINNET]
   },
   ellipsis: {
     name: 'Ellipsis',
@@ -219,7 +224,7 @@ export const dexListConfig: DexList = {
 
 type DexTypes = {
   [chainId in ChainId | 'all']?: {
-    [dex: string]: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+    [dex: string]: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
   }
 }
 /*
@@ -231,6 +236,8 @@ type DexTypes = {
 5 - 10
 6 - 5
 7 - 17 = 0.17%
+8 - 18 = 0.18%
+9 - 50 = 0.5%
 */
 export const dexIds: DexTypes = {
   all: {
@@ -249,7 +256,9 @@ export const dexIds: DexTypes = {
     gravity: 2,
     kyberswap: 0,
     mmf: 7,
-    kryptodex: 3
+    kryptodex: 3,
+    cometh: 9,
+    dinoswap: 8
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
