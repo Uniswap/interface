@@ -165,6 +165,16 @@ export const dexListConfig: DexList = {
     icon: 'https://paintswap.finance/favicon.png',
     chainIds: [ChainId.FANTOM]
   },
+  morpheus: {
+    name: 'MorpheusSwap',
+    icon: 'https://morpheusswap.app/favicon.ico',
+    chainIds: [ChainId.FANTOM]
+  },
+  beethovenx: {
+    name: 'beethoven-x',
+    icon: 'https://app.beets.fi/favicon.ico',
+    chainIds: [ChainId.FANTOM]
+  },
   synapse: {
     name: 'Synapse',
     icon: 'https://synapseprotocol.com/favicon.ico',
@@ -270,7 +280,8 @@ export const dexIds: DexTypes = {
     cometh: 9,
     dinoswap: 8,
     safeswap: 2,
-    pantherswap: 3
+    pantherswap: 3,
+    morpheus: 4
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
@@ -289,7 +300,8 @@ export const dexTypes: DexTypes = {
     'iron-stable': 4,
     balancer: 6,
     synapse: 4,
-    axial: 4
+    axial: 4,
+    beethovenx: 6
   },
   [ChainId.MAINNET]: {},
   [ChainId.BSCMAINNET]: {},
