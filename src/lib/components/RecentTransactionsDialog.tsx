@@ -9,6 +9,7 @@ import Button from './Button'
 import Column from './Column'
 import { Header } from './Dialog'
 import Row from './Row'
+import TokenImg from './TokenImg'
 
 interface ITokenAmount {
   value: number
@@ -52,12 +53,6 @@ const TransactionRow = styled(Row)`
   :first-of-type {
     padding-top: 1em;
   }
-`
-
-const TokenImg = styled.img`
-  border-radius: 100%;
-  height: 1em;
-  width: 1em;
 `
 
 function TokenAmount({ value: { value, token } }: { value: ITokenAmount }) {

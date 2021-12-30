@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import useNativeEvent from 'lib/hooks/useNativeEvent'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import styled, { ThemedText } from 'lib/theme'
@@ -23,17 +22,12 @@ import invariant from 'tiny-invariant'
 import { BaseButton } from '../Button'
 import Column from '../Column'
 import Row from '../Row'
+import TokenImg from '../TokenImg'
 
 const TokenButton = styled(BaseButton)`
   border-radius: 0;
   outline: none;
   padding: 0.5em 0.75em;
-
-  img {
-    border-radius: 100%;
-    height: 1.25em;
-    width: 1.25em;
-  }
 `
 
 const ITEM_SIZE = 56
@@ -94,7 +88,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
       <ThemedText.Body1>
         <Row>
           <Row gap={0.5}>
-            <img src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />
+            <TokenImg token={value} size={1.5} />
             <Column flex gap={0.125} align="flex-start">
               <ThemedText.Subhead1>{value.symbol}</ThemedText.Subhead1>
               <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>

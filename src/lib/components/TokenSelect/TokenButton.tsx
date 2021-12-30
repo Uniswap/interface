@@ -1,10 +1,11 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { ChevronDown } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 
 import Button from '../Button'
 import Row from '../Row'
+import TokenImg from '../TokenImg'
 
 const StyledTokenButton = styled(Button)<{ empty?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
@@ -23,12 +24,6 @@ const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
   max-width: ${({ collapsed }) => (collapsed ? '1.2' : '8.2')}em;
   overflow-x: hidden;
   transition: max-width 0.25s linear;
-
-  img {
-    border-radius: 100%;
-    height: 1.2em;
-    width: 1.2em;
-  }
 `
 
 interface TokenButtonProps {
@@ -45,7 +40,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
         <TokenButtonRow gap={0.4} collapsed={Boolean(value) && collapsed}>
           {value ? (
             <>
-              <img src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />
+              <TokenImg token={value} size={1.2} />
               {value.symbol}
             </>
           ) : (
