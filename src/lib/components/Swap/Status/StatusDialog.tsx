@@ -24,13 +24,17 @@ const TransactionRow = styled(Row)`
   flex-direction: row-reverse;
 `
 
-function ElapsedTime({ tx }: { tx: Transaction }) {
+function ElapsedTime({ tx }: { tx: Transaction | null }) {
   const [elapsedMs, setElapsedMs] = useState(0)
   useInterval(
     () => {
-      setElapsedMs(tx.elapsedMs || Date.now() - (tx.timestamp ?? 0))
+      if (tx?.elapsedMs) {
+        setElapsedMs(tx.elapsedMs)
+      } else if (tx?.timestamp) {
+        setElapsedMs(Date.now() - tx.timestamp)
+      }
     },
-    elapsedMs === tx.elapsedMs ? null : 1000
+    elapsedMs === tx?.elapsedMs ? null : 1000
   )
   const toElapsedTime = useCallback((ms: number) => {
     let sec = Math.floor(ms / 1000)
@@ -74,7 +78,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={Icon} iconColor={tx?.status && 'success'}>
         <ThemedText.Subhead1>{heading}</ThemedText.Subhead1>
-        {tx && <Summary input={tx.input} output={tx.output} />}
+        {tx ? <Summary input={tx.input} output={tx.output} /> : <div style={{ height: '1.25em' }} />}
       </StatusHeader>
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
@@ -82,7 +86,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
             <Trans>View on Etherscan</Trans>
           </EtherscanA>
         </ThemedText.ButtonSmall>
-        {tx && <ElapsedTime tx={tx} />}
+        <ElapsedTime tx={tx} />
       </TransactionRow>
       <ActionButton onClick={onClose}>
         <Trans>Close</Trans>

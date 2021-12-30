@@ -9,6 +9,7 @@ import Button from './Button'
 import Column from './Column'
 import { Header } from './Dialog'
 import Row from './Row'
+import TokenImg from './TokenImg'
 
 interface ITokenAmount {
   value: number
@@ -54,16 +55,10 @@ const TransactionRow = styled(Row)`
   }
 `
 
-const TokenImg = styled.img`
-  border-radius: 100%;
-  height: 1em;
-  width: 1em;
-`
-
 function TokenAmount({ value: { value, token } }: { value: ITokenAmount }) {
   return (
     <Row gap={0.375}>
-      <TokenImg src={token.logoURI} />
+      <TokenImg token={token} />
       <ThemedText.Body2>
         {value.toLocaleString('en')} {token.symbol}
       </ThemedText.Body2>

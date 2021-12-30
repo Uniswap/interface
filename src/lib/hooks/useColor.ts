@@ -19,7 +19,7 @@ async function getColorFromToken(token: Token, cb: (color: string | undefined) =
 
   // Color extraction must use a CORS-compatible resource, but the resource is already cached.
   // Add a dummy parameter to force a different browser resource cache entry.
-  // Without this, color extraction prevent resource caching.
+  // Without this, color extraction prevents resource caching.
   const uri = uriToHttp(logoURI)[0] + '?color'
 
   let color = colors.get(uri)

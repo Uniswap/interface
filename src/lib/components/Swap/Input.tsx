@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 
 import Column from '../Column'
 import Row from '../Row'
+import TokenImg from '../TokenImg'
 import { inputAtom, useUpdateInputToken, useUpdateInputValue } from './state'
 import TokenInput from './TokenInput'
 
@@ -14,7 +15,7 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
   margin: 0.75em;
   position: relative;
 
-  img {
+  ${TokenImg} {
     filter: ${({ approved }) => (approved ? undefined : 'saturate(0) opacity(0.4)')};
     transition: filter 0.25s;
   }

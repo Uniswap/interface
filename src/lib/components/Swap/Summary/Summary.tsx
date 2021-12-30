@@ -5,13 +5,8 @@ import { useMemo } from 'react'
 
 import Column from '../../Column'
 import Row from '../../Row'
+import TokenImg from '../../TokenImg'
 import { Input } from '../state'
-
-const TokenImg = styled.img`
-  border-radius: 100%;
-  height: ${4 / 3}em;
-  width: ${4 / 3}em;
-`
 
 const Percent = styled.span<{ gain: boolean }>`
   color: ${({ gain, theme }) => (gain ? theme.success : theme.error)};
@@ -33,12 +28,12 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
   }, [change])
   return (
     <Column justify="flex-start">
-      <ThemedText.Body2>
-        <Row gap={0.375} justify="flex-start">
-          <TokenImg src={input.token.logoURI} />
+      <Row gap={0.375} justify="flex-start">
+        <TokenImg token={input.token} />
+        <ThemedText.Body2>
           {input.value} {input.token.symbol}
-        </Row>
-      </ThemedText.Body2>
+        </ThemedText.Body2>
+      </Row>
       {usdc && input.usdc && (
         <Row justify="flex-start">
           <ThemedText.Caption color="secondary">
