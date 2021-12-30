@@ -114,6 +114,7 @@
     "react-spring": "^8.0.27",
     "react-use-gesture": "^6.0.14",
     "redux-localstorage-simple": "^2.3.1",
+    "sass": "^1.45.1",
     "serve": "^11.3.2",
     "start-server-and-test": "^1.11.0",
     "typechain": "^5.0.0",
@@ -144,8 +145,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
-    "assets:generate": "yarn assets:svg:generate",
+    "assets:generate": "yarn assets:svg:generate && yarn assets:font:generate",
     "assets:svg:generate": "svgr -d src/lib/assets --ext tsx --typescript src/lib/assets && rm src/lib/assets/index.tsx",
+    "assets:font:generate": "sass src/lib/assets/fonts/index.scss src/lib/assets/fonts/index.css --no-source-map -I node_modules",
     "bundle": "microbundle --define process.env.REACT_APP_IS_WIDGET=true --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
     "bundle:depcheck": "node depcheck.js",
     "cosmos": "cross-env FAST_REFRESH=false REACT_APP_IS_WIDGET=true cosmos"

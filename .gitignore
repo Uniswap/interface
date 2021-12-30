@@ -13,6 +13,7 @@
 
 # generated assets
 /src/lib/assets/svg/*.tsx
+/src/lib/assets/fonts/*.css
 
 # dependencies
 /node_modules
