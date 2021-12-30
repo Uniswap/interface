@@ -30,6 +30,16 @@ export const dexListConfig: DexList = {
     icon: 'https://sushi.com/favicon.ico',
     chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM]
   },
+  shibaswap: {
+    name: 'ShibaSwap',
+    icon: 'https://shibaswap.com/images/logo_shiba_swap.png',
+    chainIds: [ChainId.MAINNET]
+  },
+  defiswap: {
+    name: 'DefiSwap',
+    icon: 'https://crypto.com/defi/swap/favicon.c5a5b109.png',
+    chainIds: [ChainId.MAINNET]
+  },
   quickswap: {
     name: 'QuickSwap',
     icon: 'https://quickswap.exchange/logo_circle.png',
