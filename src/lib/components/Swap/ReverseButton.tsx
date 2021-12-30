@@ -56,7 +56,6 @@ export default function ReverseButton({ disabled }: { disabled?: boolean }) {
     })
     setTurns((turns) => ++turns)
   }, [state, setState])
-  console.log('zzmp', turns)
 
   return (
     <ReverseRow justify="center">
