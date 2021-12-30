@@ -51,7 +51,6 @@ const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
   overscroll-behavior: none; // prevent Firefox's bouncy overscroll effect (because it does not trigger the scroll handler)
 `
 const OnHover = styled.div<{ hover: number }>`
-  // TODO(zzmp): This is not performant
   background-color: ${({ theme }) => theme.onHover(theme.module)};
   height: ${ITEM_SIZE}px;
   left: 0;
