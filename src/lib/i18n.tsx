@@ -79,10 +79,8 @@ const plurals: LocalePlural = {
 export async function dynamicActivate(locale: SupportedLocale) {
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
   if (locale !== DEFAULT_LOCALE) {
-    const loaded = await import(`locales/${locale}`)
-    i18n.load(locale, loaded.messages)
-  } else {
-    i18n.load(locale, {})
+    const catalog = await import(`locales/${locale}`)
+    i18n.load(locale, catalog.messages)
   }
   i18n.activate(locale)
 }
