@@ -144,7 +144,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
-    "assets:generate": "svgr -d src/lib/assets --ext tsx --typescript src/lib/assets && rm src/lib/assets/index.tsx",
+    "assets:generate": "yarn assets:svg:generate",
+    "assets:svg:generate": "svgr -d src/lib/assets --ext tsx --typescript src/lib/assets && rm src/lib/assets/index.tsx",
     "bundle": "microbundle --define process.env.REACT_APP_IS_WIDGET=true --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
     "bundle:depcheck": "node depcheck.js",
     "cosmos": "cross-env FAST_REFRESH=false REACT_APP_IS_WIDGET=true cosmos"

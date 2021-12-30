@@ -11,8 +11,8 @@
 /src/locales/**/pseudo.po
 /src/state/data/generated.ts
 
-# generated react assets
-/src/lib/assets/*.tsx
+# generated assets
+/src/lib/assets/svg/*.tsx
 
 # dependencies
 /node_modules
