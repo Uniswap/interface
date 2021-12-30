@@ -39,7 +39,7 @@ const delayedFadeIn = keyframes`
 `
 
 const MaxButton = styled(Button)`
-  animation: ${delayedFadeIn} 0.2s linear;
+  animation: ${delayedFadeIn} 0.25s linear;
   border-radius: 0.75em;
   padding: 0.5em;
 `

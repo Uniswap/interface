@@ -1,23 +1,25 @@
 import { createMulticall } from '@uniswap/redux-multicall'
-import { NETWORK_URLS } from 'connectors'
-import { atom } from 'jotai'
 import { atomWithStore } from 'jotai/redux'
+import { atomWithDefault } from 'jotai/utils'
 import { createStore } from 'redux'
 import { Web3ReactHooks } from 'widgets-web3-react/core'
 import { initializeConnector } from 'widgets-web3-react/core'
-import { Network } from 'widgets-web3-react/network'
 import { Connector } from 'widgets-web3-react/types'
 
-export const networkConnectorAtom = atom<[Network, Web3ReactHooks]>(
-  initializeConnector<Network>((actions) => new Network(actions, NETWORK_URLS))
+// TODO(zzmp): EmptyConnector singleton should come from 'widgets-web3-react/empty'
+const EMPTY_CONNECTOR = initializeConnector<Connector>(
+  (actions) =>
+    new (class EmptyConnector extends Connector {
+      activate() {
+        void 0
+      }
+    })(actions)
 )
-export const injectedConnectorAtom = atom<[Connector, Web3ReactHooks] | [undefined, undefined]>([undefined, undefined])
 
-export const connectorAtom = atom((get) => {
-  const injectedContext = get(injectedConnectorAtom)
-  const [connector] = injectedContext
-  return connector ? injectedContext : get(networkConnectorAtom)
-})
+export type Web3ReactState = [Connector, Web3ReactHooks]
+
+export const networkAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
+export const injectedAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
 
 export const multicall = createMulticall()
 const multicallStore = createStore(multicall.reducer)

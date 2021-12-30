@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-imports */
-import CheckIcon from 'lib/assets/Check'
-import ExpandoIcon from 'lib/assets/Expando'
-import LogoIcon from 'lib/assets/Logo'
-import SpinnerIcon from 'lib/assets/Spinner'
+import CheckIcon from 'lib/assets/svg/Check'
+import ExpandoIcon from 'lib/assets/svg/Expando'
+import LogoIcon from 'lib/assets/svg/Logo'
+import SpinnerIcon from 'lib/assets/svg/Spinner'
 import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
 import { Icon as FeatherIcon } from 'react-feather'
@@ -88,7 +88,7 @@ export const Check = styled(icon(CheckIcon))`
 
 export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
   path {
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.25s ease-in-out;
     will-change: transform;
 
     &:first-child {

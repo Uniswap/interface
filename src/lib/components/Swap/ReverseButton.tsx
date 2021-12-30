@@ -32,39 +32,36 @@ const Overlay = styled.div`
   padding: 0.25em;
 `
 
-const StyledReverseButton = styled(Button)`
+const StyledReverseButton = styled(Button)<{ turns: number }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   height: 2.5em;
   position: relative;
   width: 2.5em;
 
   div {
-    transition: transform 0.25s ease;
+    transform: rotate(${({ turns }) => turns / 2}turn);
+    transition: transform 0.25s ease-in-out;
     will-change: transform;
-
-    &.reverse {
-      transform: rotate(180deg);
-    }
   }
 `
 
 export default function ReverseButton({ disabled }: { disabled?: boolean }) {
   const [state, setState] = useAtom(stateAtom)
-  const [reversed, setReversed] = useState(false)
+  const [turns, setTurns] = useState(0)
   const onClick = useCallback(() => {
     const { input, output } = state
     setState((state) => {
       state.input = output
       state.output = input
     })
-    setReversed((reversed) => !reversed)
+    setTurns((turns) => ++turns)
   }, [state, setState])
 
   return (
     <ReverseRow justify="center">
       <Overlay>
-        <StyledReverseButton disabled={disabled} onClick={onClick}>
-          <div className={reversed ? 'reverse' : undefined}>
+        <StyledReverseButton disabled={disabled} onClick={onClick} turns={turns}>
+          <div>
             <ArrowUp strokeWidth={3} />
             <ArrowDown strokeWidth={3} />
           </div>

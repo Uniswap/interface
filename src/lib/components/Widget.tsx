@@ -3,11 +3,11 @@ import { Provider as AtomProvider } from 'jotai'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
-import { ReactNode, useRef } from 'react'
+import { ReactNode, StrictMode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
-import ErrorBoundary from './ErrorBoundary'
+import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
@@ -73,6 +73,7 @@ export interface WidgetProps {
   width?: string | number
   dialog?: HTMLElement | null
   className?: string
+  onError?: ErrorHandler
 }
 
 export default function Widget({
@@ -84,22 +85,27 @@ export default function Widget({
   width = 360,
   dialog,
   className,
+  onError,
 }: WidgetProps) {
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (
-    <ErrorBoundary>
-      <AtomProvider>
+    <StrictMode>
+      <I18nProvider locale={locale}>
         <ThemeProvider theme={theme}>
-          <I18nProvider locale={locale}>
-            <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-              <WidgetWrapper width={width} className={className} ref={wrapper}>
-                <DialogProvider value={dialog || wrapper.current}>{children}</DialogProvider>
-              </WidgetWrapper>
-            </Web3Provider>
-          </I18nProvider>
+          <WidgetWrapper width={width} className={className} ref={wrapper}>
+            <DialogProvider value={dialog || wrapper.current}>
+              <ErrorBoundary onError={onError}>
+                <AtomProvider>
+                  <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                    {children}
+                  </Web3Provider>
+                </AtomProvider>
+              </ErrorBoundary>
+            </DialogProvider>
+          </WidgetWrapper>
         </ThemeProvider>
-      </AtomProvider>
-    </ErrorBoundary>
+      </I18nProvider>
+    </StrictMode>
   )
 }

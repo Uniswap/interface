@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useActiveWeb3React } from 'hooks/web3'
+import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useState } from 'react'
 
 import Header from '../Header'
