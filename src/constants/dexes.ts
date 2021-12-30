@@ -125,6 +125,16 @@ export const dexListConfig: DexList = {
     icon: 'https://ellipsis.finance/ellipsis-light.png',
     chainIds: [ChainId.BSCMAINNET]
   },
+  safeswap: {
+    name: 'SafeSwap',
+    icon: 'https://safeswap.yfdai.finance/favicon.png',
+    chainIds: [ChainId.BSCMAINNET]
+  },
+  pantherswap: {
+    name: 'PantherSwap',
+    icon: 'https://pantherswap.com/favicon.ico',
+    chainIds: [ChainId.BSCMAINNET]
+  },
   nerve: {
     name: 'Nerve',
     icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/8755.png',
@@ -258,7 +268,9 @@ export const dexIds: DexTypes = {
     mmf: 7,
     kryptodex: 3,
     cometh: 9,
-    dinoswap: 8
+    dinoswap: 8,
+    safeswap: 2,
+    pantherswap: 3
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
