@@ -188,6 +188,7 @@ export default function AddLiquidity({
         }).then((response) => {
           setAttemptingTxn(false)
 
+          console.log('B4 adding a transaction')
           addTransaction(response, {
             type: TransactionType.ADD_LIQUIDITY_V2_POOL,
             baseCurrencyId: currencyId(currencyA),
@@ -206,6 +207,7 @@ export default function AddLiquidity({
         })
       )
       .catch((error) => {
+        console.log('THE ERROR: ', error)
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {
