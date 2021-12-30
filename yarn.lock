@@ -5450,26 +5450,26 @@
     "@web3-react/types" "^6.0.7"
     tiny-invariant "^1.0.6"
 
-"@web3-react/store@^8.0.14-alpha.0":
-  version "8.0.14-alpha.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/store/-/store-8.0.14-alpha.0.tgz#5024d7ed5110ee781400b79a1dda08276dbc9e29"
-  integrity sha512-g2U/Lp+RkJGCiKmASqdRiiiYpSLHB8QHA2Gw1uYLqcg1BfYV/nLoWSwjIVF+WsxmxJYbSfFxLYERah8qAvWlog==
+"@web3-react/store@^8.0.15-alpha.0":
+  version "8.0.15-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/store/-/store-8.0.15-alpha.0.tgz#2586390e9b2168ea132f55aa47fd09461d5f77da"
+  integrity sha512-cHva0gDMSob6AAvcWXGRGFCdKeoTD0P3Kb5gOWQDUuhGCBdqEVBldjYHdewBnVPkylZ5EYKSDkFoBj87WKtvHA==
   dependencies:
     "@ethersproject/address" "^5.4.0"
-    "@web3-react/types" "^8.0.14-alpha.0"
-    zustand "^3.6.7"
+    "@web3-react/types" "^8.0.15-alpha.0"
+    zustand "^4.0.0-beta.0"
 
 "@web3-react/types@^6.0.7":
   version "6.0.7"
   resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-6.0.7.tgz#34a6204224467eedc6123abaf55fbb6baeb2809f"
   integrity sha512-ofGmfDhxmNT1/P/MgVa8IKSkCStFiyvXe+U5tyZurKdrtTDFU+wJ/LxClPDtFerWpczNFPUSrKcuhfPX1sI6+A==
 
-"@web3-react/types@^8.0.14-alpha.0", "widgets-web3-react/types@npm:@web3-react/types@8.0.14-alpha.0":
-  version "8.0.14-alpha.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-8.0.14-alpha.0.tgz#eade3cb15ca6a1f3f383e63ac3a491e783df7531"
-  integrity sha512-WNdsAdbY/iVoEKEHCC5wR1IrsUNX8BPLjrBGCqlrflkurZ8c35MEKiKmSqgE2DcVo4o9fKNWO+F6tcu1QdETFg==
+"@web3-react/types@^8.0.15-alpha.0", "widgets-web3-react/types@npm:@web3-react/types@8.0.15-alpha.0":
+  version "8.0.15-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-8.0.15-alpha.0.tgz#cc3da4360cee6a04306509a8b32b47079547cb10"
+  integrity sha512-gKIp03QbRzGdBpd/vDF6pDkbDDlVAuq2QofthtNR/lIUOgl/V2Smwt1m80yXPHhSQG9L6OfkiJPkiTth/QsbOw==
   dependencies:
-    zustand "^3.6.7"
+    zustand "^4.0.0-beta.0"
 
 "@web3-react/walletconnect-connector@^7.0.2-alpha.0":
   version "7.0.2-alpha.0"
@@ -21627,38 +21627,38 @@ widest-line@^3.1.0:
   dependencies:
     string-width "^4.0.0"
 
-"widgets-web3-react/core@npm:@web3-react/core@8.0.14-alpha.0":
-  version "8.0.14-alpha.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.0.14-alpha.0.tgz#36d70a2ac70bfa285b6f0faa1ca285d2d0fd1265"
-  integrity sha512-nrBDB17WMm6uLFnUbOlc8RcSfQ+eK3IJ5iqXGCq4i+NhNjR1SMWvvEya3SDmlhy8So9yAMUwTW+IYJVdkBdCZA==
+"widgets-web3-react/core@npm:@web3-react/core@8.0.15-alpha.0":
+  version "8.0.15-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.0.15-alpha.0.tgz#2e42b7b980366bdef9aff5978b3352796e71dbe9"
+  integrity sha512-k6blVwxqXzaVsz1eBV86Zc4RM5iCRhMKtg+bJlvsFrqzHLJZOv7FoC1pnssGE3yDTkRFFzQmHbcMSLlZcAxFjg==
   dependencies:
-    "@web3-react/store" "^8.0.14-alpha.0"
-    "@web3-react/types" "^8.0.14-alpha.0"
-    zustand "^3.6.7"
+    "@web3-react/store" "^8.0.15-alpha.0"
+    "@web3-react/types" "^8.0.15-alpha.0"
+    zustand "^4.0.0-beta.0"
 
-"widgets-web3-react/eip1193@npm:@web3-react/eip1193@8.0.14-alpha.0":
-  version "8.0.14-alpha.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.0.14-alpha.0.tgz#ea41e6362914dddab2919f01183a4bf7b0342b62"
-  integrity sha512-ikHmtFhrZRngY37U9x41GKMgt2tnSCRAS7nJebROCWlF8lRFolJLVnNmbC8PJkaFUaRfjLetXbkTYDQxXjJ2gw==
+"widgets-web3-react/eip1193@npm:@web3-react/eip1193@8.0.15-alpha.0":
+  version "8.0.15-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.0.15-alpha.0.tgz#ee6ea16886bd89d9d68d16577f18911bc37be114"
+  integrity sha512-bUjXoFWu+6Kqb8TDOYi+GF8ZMfprQHo7H5/doG9txPjbaqlQMRUIgpzhp4qmdzx0x9PFaloa8MumBNXPX9akDg==
   dependencies:
-    "@web3-react/types" "^8.0.14-alpha.0"
+    "@web3-react/types" "^8.0.15-alpha.0"
 
-"widgets-web3-react/metamask@npm:@web3-react/metamask@8.0.14-alpha.0":
-  version "8.0.14-alpha.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.14-alpha.0.tgz#5c6919c652986d1f79fc83668723d1a26d984fe9"
-  integrity sha512-HWC3Pgc4+cw2oDiq27FPN/kRfJEfKqIypLNBDeZk04AmmOnsmryKp0mUuzsM6V03Rikn/sSaL1cFMHId1UrtSw==
+"widgets-web3-react/metamask@npm:@web3-react/metamask@8.0.15-alpha.0":
+  version "8.0.15-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.15-alpha.0.tgz#b710c0fb791cc6c4990647f4cebc636df32d84c8"
+  integrity sha512-NUU0dg39bLUkuRKk99ZJjsi/t4rL0b+H2erzuKm5/rvDDgwM26tBbndUqzGB7d1vz/iJOVtjjUv/dfZQAHhS9g==
   dependencies:
     "@metamask/detect-provider" "^1.2.0"
-    "@web3-react/types" "^8.0.14-alpha.0"
+    "@web3-react/types" "^8.0.15-alpha.0"
 
-"widgets-web3-react/network@npm:@web3-react/network@8.0.14-alpha.0":
-  version "8.0.14-alpha.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/network/-/network-8.0.14-alpha.0.tgz#b27959da09974cc53b68fda99ad79af973b8a42c"
-  integrity sha512-/jn26zmXpCjc8RTEmKQd8J6b23odL+fM35CPYtQ1Xx5ReS0QUW5qKGIbt00I3Syh7pTFpnRpOy44D7ga78dpJg==
+"widgets-web3-react/network@npm:@web3-react/network@8.0.15-alpha.0":
+  version "8.0.15-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/network/-/network-8.0.15-alpha.0.tgz#ad4f5979a0978f8b800151afb6c57637c52150f6"
+  integrity sha512-ajmyXXd7cZ9wNzuADzvBZHBZXRfeDWQBteq6AN4q9P44AreOzoAVpUB7KzaSdCe8JOt6l3GO4cL1znbF+Jzq6A==
   dependencies:
     "@ethersproject/experimental" "^5.4.0"
     "@ethersproject/providers" "^5.4.5"
-    "@web3-react/types" "^8.0.14-alpha.0"
+    "@web3-react/types" "^8.0.15-alpha.0"
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
@@ -22158,7 +22158,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zustand@4.0.0-beta.0, zustand@^3.6.7:
+zustand@^4.0.0-beta.0:
   version "4.0.0-beta.0"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.0.0-beta.0.tgz#880bb21d9308ebc733a2ae07edd7c2c7b4f68eed"
   integrity sha512-m7POAHkAeTEQqUdGC9M62/KXSsX6YQu6Gd4CiGZ6FOOTaUp1a0Hm9D8/fnBiMv8rGg0dfZu19JFSbRT9b+qQwA==
