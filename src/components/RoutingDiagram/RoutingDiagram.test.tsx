@@ -47,16 +47,16 @@ jest.mock('hooks/useTokenInfoFromActiveList', () => ({
 }))
 
 it('renders when no routes are provided', () => {
-  const { asFragment } = render(<RoutingDiagram currencyIn={DAI} currencyOut={USDC} routes={[]} />)
+  const { asFragment } = render(<RoutingDiagram currencyIn={DAI} currencyOut={USDC} route={[]} />)
   expect(asFragment()).toMatchSnapshot()
 })
 
 it('renders single route', () => {
-  const { asFragment } = render(<RoutingDiagram currencyIn={USDC} currencyOut={DAI} routes={[singleRoute]} />)
+  const { asFragment } = render(<RoutingDiagram currencyIn={USDC} currencyOut={DAI} route={[singleRoute]} />)
   expect(asFragment()).toMatchSnapshot()
 })
 
 it('renders multi route', () => {
-  const { asFragment } = render(<RoutingDiagram currencyIn={USDC} currencyOut={DAI} routes={multiRoute} />)
+  const { asFragment } = render(<RoutingDiagram currencyIn={USDC} currencyOut={DAI} route={multiRoute} />)
   expect(asFragment()).toMatchSnapshot()
 })
