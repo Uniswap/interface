@@ -8,7 +8,7 @@ import uriToHttp from 'utils/uriToHttp'
 import { hex } from 'wcag-contrast'
 
 function URIForEthToken(address: string) {
-  return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+  return `https://raw.githubusercontent.com/RomanowAgency/xdc-token-list/master/assets/${address}/logo.png`
 }
 
 async function getColorFromToken(token: Token): Promise<string | null> {

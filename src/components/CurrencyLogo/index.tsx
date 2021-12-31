@@ -8,25 +8,13 @@ import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
 
-type Network = 'xdc' | 'txdc'
-
-function chainIdToNetworkName(networkId: SupportedChainId): Network {
-  switch (networkId) {
-    case SupportedChainId.MAINNET:
-      return 'xdc'
-    default:
-      return 'txdc'
-  }
-}
-
 export const getTokenLogoURL = (
   address: string,
   chainId: SupportedChainId = SupportedChainId.MAINNET
 ): string | void => {
-  const networkName = chainIdToNetworkName(chainId)
   const networksWithUrls = [SupportedChainId.MAINNET, SupportedChainId.TESTNET]
   if (networksWithUrls.includes(chainId)) {
-    return `https://raw.githubusercontent.com/RomanowAgency/xdc-token-list/master/assets/${address}/${networkName}-logo.png`
+    return `https://raw.githubusercontent.com/RomanowAgency/xdc-token-list/master/assets/${address}/logo.png`
   }
 }
 
