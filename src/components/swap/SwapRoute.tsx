@@ -79,8 +79,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
 function getTokenPath(trade: V2Trade<Currency, Currency, TradeType>): RoutingDiagramEntry {
   const pools = trade.route.pairs
   const paths = trade.route.path
-  const portion = trade.tradeType === TradeType.EXACT_INPUT ? trade.inputAmount : trade.outputAmount
-  const percent = new Percent(portion.numerator, portion.denominator).divide(portion.decimalScale)
+  const percent = new Percent(1)
 
   const path: RoutingDiagramEntry['path'] = []
   for (let i = 0; i < pools.length; i++) {
