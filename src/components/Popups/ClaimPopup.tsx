@@ -27,7 +27,7 @@ const StyledClaimPopup = styled(AutoColumn)`
   overflow: hidden;
   position: relative;
   max-width: 360px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `
 
 const StyledClose = styled(X)`
@@ -99,13 +99,13 @@ export default function ClaimPopup() {
           <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} justify="center">
             <UniToken width="48px" src={tokenLogo} />{' '}
             <ThemedText.White style={{ marginTop: '1rem' }} fontSize={36} fontWeight={600}>
-              {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
+              {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} XSP
             </ThemedText.White>
             <ThemedText.White style={{ paddingTop: '1.25rem', textAlign: 'center' }} fontWeight={600} color="white">
               <span role="img" aria-label="party">
                 🎉
               </span>{' '}
-              <Trans>UNI has arrived</Trans>{' '}
+              <Trans>XSP has arrived</Trans>{' '}
               <span role="img" aria-label="party">
                 🎉
               </span>
@@ -118,7 +118,7 @@ export default function ClaimPopup() {
           </AutoColumn>
           <AutoColumn style={{ zIndex: 10 }} justify="center">
             <ButtonPrimary padding="8px" $borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>
-              <Trans>Claim your UNI tokens</Trans>
+              <Trans>Claim your XSP tokens</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </StyledClaimPopup>

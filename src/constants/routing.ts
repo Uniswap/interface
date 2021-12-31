@@ -15,6 +15,7 @@ import {
   sETH2,
   SWISE,
   TRIBE,
+  TT,
   USDC,
   USDT,
   WBTC,
@@ -72,6 +73,11 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT,
     WBTC,
     WETH_EXTENDED[SupportedChainId.MAINNET],
+  ],
+  [SupportedChainId.TESTNET]: [
+    ExtendedXDC.onChain(SupportedChainId.TESTNET),
+    TT,
+    WETH_EXTENDED[SupportedChainId.TESTNET],
   ],
 }
 

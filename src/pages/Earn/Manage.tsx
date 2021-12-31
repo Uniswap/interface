@@ -185,10 +185,10 @@ export default function Manage({
               {stakingInfo?.active ? (
                 <Trans>
                   {stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
-                  UNI / week
+                  XSP / week
                 </Trans>
               ) : (
-                <Trans>0 UNI / week</Trans>
+                <Trans>0 XSP / week</Trans>
               )}
             </ThemedText.Body>
           </AutoColumn>
@@ -203,13 +203,13 @@ export default function Manage({
             <AutoColumn gap="md">
               <RowBetween>
                 <ThemedText.White fontWeight={600}>
-                  <Trans>Step 1. Get UNI-V2 Liquidity tokens</Trans>
+                  <Trans>Step 1. Get XSP Liquidity tokens</Trans>
                 </ThemedText.White>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <ThemedText.White fontSize={14}>
                   <Trans>
-                    UNI-V2 LP tokens are required. Once you&apos;ve added liquidity to the {currencyA?.symbol}-
+                    XSP LP tokens are required. Once you&apos;ve added liquidity to the {currencyA?.symbol}-
                     {currencyB?.symbol} pool you can stake your liquidity tokens on this page.
                   </Trans>
                 </ThemedText.White>
@@ -285,7 +285,7 @@ export default function Manage({
               <RowBetween>
                 <div>
                   <ThemedText.Black>
-                    <Trans>Your unclaimed UNI</Trans>
+                    <Trans>Your unclaimed XSP</Trans>
                   </ThemedText.Black>
                 </div>
                 {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.quotient) && (
@@ -319,10 +319,10 @@ export default function Manage({
                   {stakingInfo?.active ? (
                     <Trans>
                       {stakingInfo.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
-                      UNI / week
+                      XSP / week
                     </Trans>
                   ) : (
-                    <Trans>0 UNI / week</Trans>
+                    <Trans>0 XSP / week</Trans>
                   )}
                 </ThemedText.Black>
               </RowBetween>
@@ -333,7 +333,7 @@ export default function Manage({
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
-          <Trans>When you withdraw, the contract will automagically claim UNI on your behalf!</Trans>
+          <Trans>When you withdraw, the contract will automagically claim XSP on your behalf!</Trans>
         </ThemedText.Main>
 
         {!showAddLiquidityButton && (

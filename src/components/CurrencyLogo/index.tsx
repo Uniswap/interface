@@ -26,7 +26,7 @@ export const getTokenLogoURL = (
   const networkName = chainIdToNetworkName(chainId)
   const networksWithUrls = [SupportedChainId.MAINNET, SupportedChainId.TESTNET]
   if (networksWithUrls.includes(chainId)) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
+    return `https://raw.githubusercontent.com/RomanowAgency/xdc-token-list/master/assets/${address}/${networkName}-logo.png`
   }
 }
 

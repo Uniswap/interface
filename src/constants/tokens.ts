@@ -24,6 +24,13 @@ export const USDC = new Token(
   'USDC',
   'USD//C'
 )
+export const TT = new Token(
+  SupportedChainId.TESTNET,
+  '0xFdCf8bD44EC46a71a13f00F4328F6b65adc8BCf9',
+  18,
+  'TT',
+  'Test Token'
+)
 export const USDT = new Token(
   SupportedChainId.MAINNET,
   '0xdAC17F958D2ee523a2206206994597C13D831ec7',

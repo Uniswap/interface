@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import ReactGA from 'react-ga'
-import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -32,25 +31,17 @@ const StyledGasIcon = styled(GasIcon)`
   }
 `
 
-export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [ChainId.MAINNET]
-
 export default function GasEstimateBadge({
   trade,
   loading,
   showRoute,
   disableHover,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined | null // dollar amount in active chain's stablecoin
+  trade: V2Trade<Currency, Currency, TradeType> | undefined | null // dollar amount in active chain's stablecoin
   loading: boolean
   showRoute?: boolean // show route instead of gas estimation summary
   disableHover?: boolean
 }) {
-  const formattedGasPriceString = trade?.gasUseEstimateUSD
-    ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
-      ? '<$0.01'
-      : '$' + trade.gasUseEstimateUSD.toFixed(2)
-    : undefined
-
   return (
     <MouseoverTooltipContent
       wrap={false}
@@ -75,9 +66,6 @@ export default function GasEstimateBadge({
                 <ThemedText.Main fontSize="12px" textAlign="center">
                   <Trans>Estimated network fee</Trans>
                 </ThemedText.Main>
-                <ThemedText.Body textAlign="center" fontWeight={500} style={{ userSelect: 'none' }}>
-                  <Trans>${trade?.gasUseEstimateUSD?.toFixed(2)}</Trans>
-                </ThemedText.Body>
                 <ThemedText.Main fontSize="10px" textAlign="center" maxWidth="140px" color="text3">
                   <Trans>Estimate may differ due to your wallet gas settings</Trans>
                 </ThemedText.Main>
@@ -97,7 +85,7 @@ export default function GasEstimateBadge({
       <LoadingOpacityContainer $loading={loading}>
         <GasWrapper>
           <StyledGasIcon />
-          {formattedGasPriceString ?? null}
+          {null}
         </GasWrapper>
       </LoadingOpacityContainer>
     </MouseoverTooltipContent>

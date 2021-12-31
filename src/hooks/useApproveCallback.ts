@@ -1,11 +1,9 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Protocol, Trade } from '@uniswap/router-sdk'
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useCallback, useMemo } from 'react'
-import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import { V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
@@ -71,6 +69,9 @@ export function useApproveCallback(
   // check the current approval status
   const approvalState = useApprovalState(amountToApprove, spender)
 
+  // useEffect(() => {
+  //   console.log(approvalState)
+  // }, [approvalState])
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
 
@@ -129,81 +130,22 @@ export function useApproveCallback(
 
 // wraps useApproveCallback in the context of a swap
 export function useApproveCallbackFromTrade(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
-    | undefined,
-  allowedSlippage: Percent
+  trade?: V2Trade<Currency, Currency, TradeType>,
+  allowedSlippage = new Percent(0)
 ) {
   const { chainId } = useActiveWeb3React()
-  const amountToApprove = useMemo(
-    () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [trade, allowedSlippage]
-  )
+  const amountToApprove = useMemo(() => {
+    return trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined
+  }, [trade, allowedSlippage])
 
-  const approveCallback = useApproveCallback(
-    amountToApprove,
-    chainId ? (trade instanceof V2Trade ? V2_ROUTER_ADDRESS[chainId] : undefined) : undefined
-  )
+  useEffect(() => {
+    console.log(amountToApprove, chainId, chainId ? V2_ROUTER_ADDRESS[chainId] : 'no chainId')
+  }, [chainId, amountToApprove])
 
   // TODO: remove L162-168 after testing is done. This error will help detect mistakes in the logic.
-  if (Trade instanceof V2Trade && approveCallback[0] !== ApprovalState.APPROVED) {
-    throw new Error('Trying to approve legacy router')
-  }
+  // if (approveCallback[0] !== ApprovalState.APPROVED) {
+  //   throw new Error('Trying to approve legacy router')
+  // }
 
-  return approveCallback
-}
-
-export function useApprovalOptimizedTrade(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
-  allowedSlippage: Percent
-):
-  | V2Trade<Currency, Currency, TradeType>
-  | V3Trade<Currency, Currency, TradeType>
-  | Trade<Currency, Currency, TradeType>
-  | undefined {
-  const onlyV2Routes = trade?.routes.every((route) => route.protocol === Protocol.V2)
-  const tradeHasSplits = (trade?.routes.length ?? 0) > 1
-
-  const approvalStates = useAllApprovalStates(trade, allowedSlippage)
-
-  const optimizedSwapRouter = useMemo(
-    () => getTxOptimizedSwapRouter({ onlyV2Routes, tradeHasSplits, approvalStates }),
-    [approvalStates, tradeHasSplits, onlyV2Routes]
-  )
-
-  return useMemo(() => {
-    if (!trade) return undefined
-
-    try {
-      switch (optimizedSwapRouter) {
-        case SwapRouterVersion.V2V3:
-          return trade
-        case SwapRouterVersion.V2:
-          const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
-          const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
-          return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)
-        case SwapRouterVersion.V3:
-          return V3Trade.createUncheckedTradeWithMultipleRoutes({
-            routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
-              route: new V3Route(
-                route.pools.filter((p) => p instanceof Pool) as Pool[],
-                inputAmount.currency,
-                outputAmount.currency
-              ),
-              inputAmount,
-              outputAmount,
-            })),
-            tradeType: trade.tradeType,
-          })
-        default:
-          return undefined
-      }
-    } catch (e) {
-      // TODO(#2989): remove try-catch
-      console.debug(e)
-      return undefined
-    }
-  }, [trade, optimizedSwapRouter])
+  return useApproveCallback(amountToApprove, chainId ? V2_ROUTER_ADDRESS[chainId] : undefined)
 }

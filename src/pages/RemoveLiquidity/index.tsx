@@ -334,7 +334,7 @@ export default function RemoveLiquidity({
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
             <Trans>
-              UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
+              XSP {currencyA?.symbol}/{currencyB?.symbol} Burned
             </Trans>
           </Text>
           <RowFixed>

@@ -150,7 +150,7 @@ export function useAllTokenBalances(): { [tokenAddress: string]: CurrencyAmount<
   return balances ?? {}
 }
 
-// get the total owned, unclaimed, and unharvested UNI for account
+// get the total owned, unclaimed, and unharvested XSP for account
 export function useAggregateUniBalance(): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useActiveWeb3React()
 

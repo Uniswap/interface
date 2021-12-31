@@ -1,22 +1,16 @@
-import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
-import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
-import { useActiveWeb3React } from 'hooks/web3'
 import { memo, useState } from 'react'
 import { Plus } from 'react-feather'
-import { InterfaceTrade } from 'state/routing/types'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { Separator, ThemedText } from 'theme'
+import { Separator } from 'theme'
 
-import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from './GasEstimateBadge'
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Wrapper = styled(AutoColumn)<{ darkMode?: boolean; fixedOpen?: boolean }>`
@@ -42,24 +36,16 @@ const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
 const V2_DEFAULT_FEE_TIER = 3000
 
 interface SwapRouteProps extends React.HTMLAttributes<HTMLDivElement> {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: V2Trade<Currency, Currency, TradeType>
   syncing: boolean
   fixedOpen?: boolean // fixed in open state, hide open/close icon
 }
 
 export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...rest }: SwapRouteProps) {
-  const autoRouterSupported = useAutoRouterSupported()
-  const routes = getTokenPath(trade)
+  const route = getTokenPath(trade)
   const [open, setOpen] = useState(false)
-  const { chainId } = useActiveWeb3React()
 
   const [darkMode] = useDarkModeManager()
-
-  const formattedGasPriceString = trade?.gasUseEstimateUSD
-    ? trade.gasUseEstimateUSD.toFixed(2) === '0.00'
-      ? '<$0.01'
-      : '$' + trade.gasUseEstimateUSD.toFixed(2)
-    : undefined
 
   return (
     <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
@@ -80,60 +66,34 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
             <RoutingDiagram
               currencyIn={trade.inputAmount.currency}
               currencyOut={trade.outputAmount.currency}
-              routes={routes}
+              route={route}
             />
           )}
           <Separator />
-          {autoRouterSupported &&
-            (syncing ? (
-              <LoadingRows>
-                <div style={{ width: '250px', height: '15px' }} />
-              </LoadingRows>
-            ) : (
-              <ThemedText.Main fontSize={12} width={400} margin={0}>
-                {trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? (
-                  <Trans>Best price route costs ~{formattedGasPriceString} in gas. </Trans>
-                ) : null}{' '}
-                <Trans>
-                  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of
-                  each step.
-                </Trans>
-              </ThemedText.Main>
-            ))}
         </AutoRow>
       </AnimatedDropdown>
     </Wrapper>
   )
 })
 
-function getTokenPath(trade: Trade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
-  return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
-    const portion =
-      trade.tradeType === TradeType.EXACT_INPUT
-        ? inputAmount.divide(trade.inputAmount)
-        : outputAmount.divide(trade.outputAmount)
+function getTokenPath(trade: V2Trade<Currency, Currency, TradeType>): RoutingDiagramEntry {
+  const pools = trade.route.pairs
+  const paths = trade.route.path
+  const portion = trade.tradeType === TradeType.EXACT_INPUT ? trade.inputAmount : trade.outputAmount
+  const percent = new Percent(portion.numerator, portion.denominator).divide(portion.decimalScale)
 
-    const percent = new Percent(portion.numerator, portion.denominator)
+  const path: RoutingDiagramEntry['path'] = []
+  for (let i = 0; i < pools.length; i++) {
+    const tokenIn = paths[i]
+    const tokenOut = paths[i + 1]
 
-    const path: RoutingDiagramEntry['path'] = []
-    for (let i = 0; i < pools.length; i++) {
-      const nextPool = pools[i]
-      const tokenIn = tokenPath[i]
-      const tokenOut = tokenPath[i + 1]
+    const entry: RoutingDiagramEntry['path'][0] = [tokenIn, tokenOut, V2_DEFAULT_FEE_TIER]
 
-      const entry: RoutingDiagramEntry['path'][0] = [
-        tokenIn,
-        tokenOut,
-        nextPool instanceof Pair ? V2_DEFAULT_FEE_TIER : nextPool.fee,
-      ]
+    path.push(entry)
+  }
 
-      path.push(entry)
-    }
-
-    return {
-      percent,
-      path,
-      protocol,
-    }
-  })
+  return {
+    percent,
+    path,
+  }
 }

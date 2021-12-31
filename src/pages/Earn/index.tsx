@@ -70,7 +70,7 @@ export default function Earn() {
               <RowBetween>
                 <ThemedText.White fontSize={14}>
                   <Trans>
-                    Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
+                    Deposit your Liquidity Provider tokens to receive XSP, the Uniswap protocol governance token.
                   </Trans>
                 </ThemedText.White>
               </RowBetween>{' '}

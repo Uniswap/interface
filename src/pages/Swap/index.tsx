@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -12,7 +10,6 @@ import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { TradeState } from 'state/routing/types'
 import { ThemeContext } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -30,7 +27,7 @@ import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApprovalOptimizedTrade, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
@@ -94,12 +91,12 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    trade: { state: tradeState, trade },
     allowedSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
     inputError: swapInputError,
+    v2Trade,
   } = useDerivedSwapInfo()
 
   const {
@@ -118,20 +115,17 @@ export default function Swap({ history }: RouteComponentProps) {
             [Field.OUTPUT]: parsedAmount,
           }
         : {
-            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : v2Trade?.inputAmount,
+            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : v2Trade?.outputAmount,
           },
-    [independentField, parsedAmount, showWrap, trade]
+    [independentField, parsedAmount, showWrap, v2Trade]
   )
 
-  const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
-    () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
-    [trade, tradeState]
-  )
+  const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(() => [!v2Trade?.route.path, false, false], [v2Trade])
 
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
-  const priceImpact = routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
+  const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
@@ -159,7 +153,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
+    tradeToConfirm: V2Trade<Currency, Currency, TradeType> | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
@@ -184,22 +178,15 @@ export default function Swap({ history }: RouteComponentProps) {
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
-
-  const approvalOptimizedTrade = useApprovalOptimizedTrade(trade, allowedSlippage)
-  const approvalOptimizedTradeString =
-    approvalOptimizedTrade instanceof V2Trade
-      ? 'V2SwapRouter'
-      : approvalOptimizedTrade instanceof V3Trade
-      ? 'V3SwapRouter'
-      : 'SwapRouter'
+  const approvalOptimizedTradeString = 'V2SwapRouter'
 
   // check whether the user has approved the router on the input token
-  const [approvalState, approveCallback] = useApproveCallbackFromTrade(approvalOptimizedTrade, allowedSlippage)
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(v2Trade, allowedSlippage)
   const {
     state: signatureState,
     signatureData,
     gatherPermitSignature,
-  } = useERC20PermitFromTrade(approvalOptimizedTrade, allowedSlippage)
+  } = useERC20PermitFromTrade(v2Trade, allowedSlippage)
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
@@ -217,7 +204,7 @@ export default function Swap({ history }: RouteComponentProps) {
       ReactGA.event({
         category: 'Swap',
         action: 'Approve',
-        label: [approvalOptimizedTradeString, approvalOptimizedTrade?.inputAmount?.currency.symbol].join('/'),
+        label: [approvalOptimizedTradeString, v2Trade?.inputAmount?.currency.symbol].join('/'),
       })
     }
   }, [
@@ -225,7 +212,7 @@ export default function Swap({ history }: RouteComponentProps) {
     gatherPermitSignature,
     approveCallback,
     approvalOptimizedTradeString,
-    approvalOptimizedTrade?.inputAmount?.currency.symbol,
+    v2Trade?.inputAmount?.currency.symbol,
   ])
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
@@ -246,7 +233,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
-    approvalOptimizedTrade,
+    v2Trade,
     allowedSlippage,
     recipient,
     signatureData
@@ -273,8 +260,8 @@ export default function Swap({ history }: RouteComponentProps) {
               : 'Swap w/ Send',
           label: [
             approvalOptimizedTradeString,
-            approvalOptimizedTrade?.inputAmount?.currency?.symbol,
-            approvalOptimizedTrade?.outputAmount?.currency?.symbol,
+            v2Trade?.inputAmount?.currency?.symbol,
+            v2Trade?.outputAmount?.currency?.symbol,
             'MH',
           ].join('/'),
         })
@@ -297,8 +284,8 @@ export default function Swap({ history }: RouteComponentProps) {
     recipientAddress,
     account,
     approvalOptimizedTradeString,
-    approvalOptimizedTrade?.inputAmount?.currency?.symbol,
-    approvalOptimizedTrade?.outputAmount?.currency?.symbol,
+    v2Trade?.inputAmount?.currency?.symbol,
+    v2Trade?.outputAmount?.currency?.symbol,
   ])
 
   // errors
@@ -306,7 +293,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // warnings on the greater of fiat value price impact and execution price impact
   const priceImpactSeverity = useMemo(() => {
-    const executionPriceImpact = trade?.priceImpact
+    const executionPriceImpact = v2Trade?.priceImpact
     return warningSeverity(
       executionPriceImpact && priceImpact
         ? executionPriceImpact.greaterThan(priceImpact)
@@ -314,7 +301,7 @@ export default function Swap({ history }: RouteComponentProps) {
           : priceImpact
         : executionPriceImpact ?? priceImpact
     )
-  }, [priceImpact, trade])
+  }, [priceImpact, v2Trade])
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -337,8 +324,8 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
-  }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
+    setSwapState({ tradeToConfirm: v2Trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
+  }, [attemptingTxn, showConfirm, swapErrorMessage, v2Trade, txHash])
 
   const handleInputSelect = useCallback(
     (inputCurrency) => {
@@ -378,7 +365,7 @@ export default function Swap({ history }: RouteComponentProps) {
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
-            trade={trade}
+            trade={v2Trade}
             originalTrade={tradeToConfirm}
             onAcceptChanges={handleAcceptChanges}
             attemptingTxn={attemptingTxn}
@@ -406,7 +393,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 otherCurrency={currencies[Field.OUTPUT]}
                 showCommonBases={true}
                 id="swap-currency-input"
-                loading={independentField === Field.OUTPUT && routeIsSyncing}
+                // loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
               <ArrowWrapper clickable>
                 <ArrowDown
@@ -431,7 +418,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 otherCurrency={currencies[Field.INPUT]}
                 showCommonBases={true}
                 id="swap-currency-output"
-                loading={independentField === Field.INPUT && routeIsSyncing}
+                // loading={independentField === Field.INPUT && routeIsSyncing}
               />
             </div>
 
@@ -448,11 +435,12 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
-            {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
+            {!showWrap && userHasSpecifiedInputOutput && v2Trade && (
               <SwapDetailsDropdown
-                trade={trade}
-                syncing={routeIsSyncing}
-                loading={routeIsLoading}
+                trade={v2Trade}
+                // todo handle status
+                syncing={false}
+                loading={false}
                 showInverted={showInverted}
                 setShowInverted={setShowInverted}
                 allowedSlippage={allowedSlippage}
@@ -539,7 +527,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           handleSwap()
                         } else {
                           setSwapState({
-                            tradeToConfirm: trade,
+                            tradeToConfirm: v2Trade,
                             attemptingTxn: false,
                             swapErrorMessage: undefined,
                             showConfirm: true,
@@ -561,7 +549,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       <Text fontSize={16} fontWeight={500}>
                         {priceImpactTooHigh ? (
                           <Trans>High Price Impact</Trans>
-                        ) : trade && priceImpactSeverity > 2 ? (
+                        ) : v2Trade && priceImpactSeverity > 2 ? (
                           <Trans>Swap Anyway</Trans>
                         ) : (
                           <Trans>Swap</Trans>
@@ -577,7 +565,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       handleSwap()
                     } else {
                       setSwapState({
-                        tradeToConfirm: trade,
+                        tradeToConfirm: v2Trade,
                         attemptingTxn: false,
                         swapErrorMessage: undefined,
                         showConfirm: true,

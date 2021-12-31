@@ -271,10 +271,10 @@ export default function Header() {
                 <ThemedText.White padding="0 2px">
                   {claimTxn && !claimTxn?.receipt ? (
                     <Dots>
-                      <Trans>Claiming UNI</Trans>
+                      <Trans>Claiming XSP</Trans>
                     </Dots>
                   ) : (
-                    <Trans>Claim UNI</Trans>
+                    <Trans>Claim XSP</Trans>
                   )}
                 </ThemedText.White>
               </UNIAmount>

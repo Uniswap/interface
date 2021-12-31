@@ -25,7 +25,7 @@ const ContentWrapper = styled(AutoColumn)`
 `
 
 const ModalUpper = styled(DataCard)`
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);
   padding: 0.5rem;
 `
@@ -71,7 +71,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
         <CardSection gap="md">
           <RowBetween>
             <ThemedText.White color="white">
-              <Trans>Your UNI Breakdown</Trans>
+              <Trans>Your XSP Breakdown</Trans>
             </ThemedText.White>
             <StyledClose stroke="white" onClick={() => setShowUniBalanceModal(false)} />
           </RowBetween>
@@ -115,13 +115,13 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
           <AutoColumn gap="md">
             <RowBetween>
               <ThemedText.White color="white">
-                <Trans>UNI price:</Trans>
+                <Trans>XSP price:</Trans>
               </ThemedText.White>
               <ThemedText.White color="white">${uniPrice?.toFixed(2) ?? '-'}</ThemedText.White>
             </RowBetween>
             <RowBetween>
               <ThemedText.White color="white">
-                <Trans>UNI in circulation:</Trans>
+                <Trans>XSP in circulation:</Trans>
               </ThemedText.White>
               <ThemedText.White color="white">{circulation?.toFixed(0, { groupSeparator: ',' })}</ThemedText.White>
             </RowBetween>
@@ -133,7 +133,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
             </RowBetween>
             {uni && uni.chainId === 1 ? (
               <ExternalLink href={`${infoLink}/token/${uni.address}`}>
-                <Trans>View UNI Analytics</Trans>
+                <Trans>View XSP Analytics</Trans>
               </ExternalLink>
             ) : null}
           </AutoColumn>

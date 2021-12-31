@@ -28,7 +28,7 @@ const ContentWrapper = styled(AutoColumn)`
 `
 
 const ModalUpper = styled(DataCard)`
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);
 `
 
@@ -106,12 +106,12 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardSection gap="md">
               <RowBetween>
                 <ThemedText.White fontWeight={500}>
-                  <Trans>Claim UNI Token</Trans>
+                  <Trans>Claim XSP Token</Trans>
                 </ThemedText.White>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
               <ThemedText.White fontWeight={700} fontSize={36}>
-                <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
+                <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} XSP</Trans>
               </ThemedText.White>
             </CardSection>
             <Break />
@@ -119,7 +119,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <ThemedText.SubHeader fontWeight={500}>
               <Trans>
-                Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
+                Enter an address to trigger a XSP claim. If the address has any claimable XSP it will be sent to them on
                 submission.
               </Trans>
             </ThemedText.SubHeader>
@@ -137,7 +137,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               mt="1rem"
               onClick={onClaim}
             >
-              <Trans>Claim UNI</Trans>
+              <Trans>Claim XSP</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -154,7 +154,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             {!claimConfirmed ? (
               <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
             ) : (
-              <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI logo" />
+              <UniTokenAnimated width="72px" src={tokenLogo} alt="XSP logo" />
             )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
@@ -164,7 +164,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               </ThemedText.LargeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
+                  <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} XSP</Trans>
                 </Text>
               )}
               {parsedAddress && (

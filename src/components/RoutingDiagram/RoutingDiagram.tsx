@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
@@ -17,7 +16,6 @@ import { MouseoverTooltip } from '../Tooltip'
 export interface RoutingDiagramEntry {
   percent: Percent
   path: [Currency, Currency, FeeAmount][]
-  protocol: Protocol
 }
 
 const Wrapper = styled(Box)`
@@ -70,14 +68,14 @@ const OpaqueBadge = styled(Badge)`
   z-index: ${Z_INDEX.sticky};
 `
 
-const ProtocolBadge = styled(Badge)`
-  background-color: ${({ theme }) => theme.bg3};
-  border-radius: 4px;
-  color: ${({ theme }) => theme.text2};
-  font-size: 10px;
-  padding: 2px 4px;
-  z-index: ${Z_INDEX.sticky + 1};
-`
+// const ProtocolBadge = styled(Badge)`
+//   background-color: ${({ theme }) => theme.bg3};
+//   border-radius: 4px;
+//   color: ${({ theme }) => theme.text2};
+//   font-size: 10px;
+//   padding: 2px 4px;
+//   z-index: ${Z_INDEX.sticky + 1};
+// `
 
 const BadgeText = styled(ThemedText.Small)`
   word-break: normal;
@@ -86,38 +84,33 @@ const BadgeText = styled(ThemedText.Small)`
 export default function RoutingDiagram({
   currencyIn,
   currencyOut,
-  routes,
+  route,
 }: {
   currencyIn: Currency
   currencyOut: Currency
-  routes: RoutingDiagramEntry[]
+  route: RoutingDiagramEntry
 }) {
   const tokenIn = useTokenInfoFromActiveList(currencyIn)
   const tokenOut = useTokenInfoFromActiveList(currencyOut)
 
   return (
     <Wrapper>
-      {routes.map((entry, index) => (
-        <RouteContainerRow key={index}>
-          <CurrencyLogo currency={tokenIn} size={'20px'} />
-          <Route entry={entry} />
-          <CurrencyLogo currency={tokenOut} size={'20px'} />
-        </RouteContainerRow>
-      ))}
+      <RouteContainerRow>
+        <CurrencyLogo currency={tokenIn} size={'20px'} />
+        <Route entry={route} />
+        <CurrencyLogo currency={tokenOut} size={'20px'} />
+      </RouteContainerRow>
     </Wrapper>
   )
 }
 
-function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEntry }) {
+function Route({ entry: { percent, path } }: { entry: RoutingDiagramEntry }) {
   return (
     <RouteRow>
       <DottedLine>
         <DotColor />
       </DottedLine>
       <OpaqueBadge>
-        <ProtocolBadge>
-          <BadgeText fontSize={12}>{protocol.toUpperCase()}</BadgeText>
-        </ProtocolBadge>
         <BadgeText fontSize={14} style={{ minWidth: 'auto' }}>
           {percent.toSignificant(2)}%
         </BadgeText>
