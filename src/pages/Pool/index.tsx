@@ -164,7 +164,7 @@ export default function Pool() {
               </TYPE.body>
               <ButtonRow>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/add/${kromToken?.address}/remove`}>
-                  + <Trans>Withdraw KROM</Trans>
+                  - <Trans>Withdraw KROM</Trans>
                 </ResponsiveButtonPrimary>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/add/${kromToken?.address}`}>
                   + <Trans>Deposit KROM</Trans>

@@ -118,7 +118,7 @@ export function useV3DerivedMintInfo(
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [currencies[Field.CURRENCY_A]])
   const currencyBalances: { [field in Field.CURRENCY_A]?: CurrencyAmount<Currency> } = {
-    [Field.CURRENCY_A]: balances[0],
+    [Field.CURRENCY_A]: maxAmount ? maxAmount : balances[0],
   }
 
   // amounts
