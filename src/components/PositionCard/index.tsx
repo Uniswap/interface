@@ -23,7 +23,7 @@ import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardNoise } from '../earn/styled'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { AutoRow, RowAround, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 
 export const FixedHeightRow = styled(RowBetween)`
@@ -308,16 +308,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               </ExternalLink>
             </ButtonSecondary>
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
-              <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  $borderRadius="8px"
-                  as={Link}
-                  to={`/migrate/v2/${pair.liquidityToken.address}`}
-                  width="32%"
-                >
-                  <Trans>Migrate</Trans>
-                </ButtonPrimary>
+              <RowAround marginTop="10px">
                 <ButtonPrimary
                   padding="8px"
                   $borderRadius="8px"
@@ -336,7 +327,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 >
                   <Trans>Remove</Trans>
                 </ButtonPrimary>
-              </RowBetween>
+              </RowAround>
             )}
             {stakedBalance && JSBI.greaterThan(stakedBalance.quotient, BIG_INT_ZERO) && (
               <ButtonPrimary
