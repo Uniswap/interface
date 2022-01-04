@@ -10,7 +10,7 @@ const EMPTY_CONNECTOR = initializeConnector(() => EMPTY)
 
 export type Web3ReactState = [Connector, Web3ReactHooks]
 
-export const networkAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
+export const urlAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
 export const injectedAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
 
 export const multicall = createMulticall()
