@@ -19,6 +19,7 @@ export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
+  ROLL_LIST,
   COMPOUND_LIST,
   AAVE_LIST,
   SYNTHETIX_LIST,
@@ -26,14 +27,13 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   WRAPPED_LIST,
   SET_LIST,
   OPYN_LIST,
-  ROLL_LIST,
   COINGECKO_LIST,
   CMC_ALL_LIST,
   CMC_STABLECOIN,
   KLEROS_LIST,
   GEMINI_LIST,
-  ...UNSUPPORTED_LIST_URLS // need to load unsupported tokens as well
+  ...UNSUPPORTED_LIST_URLS, // need to load unsupported tokens as well
 ]
 
 // default lists to be 'active' aka searched across
-export const DEFAULT_ACTIVE_LIST_URLS: string[] = [GEMINI_LIST]
+export const DEFAULT_ACTIVE_LIST_URLS: string[] = [ROLL_LIST]
