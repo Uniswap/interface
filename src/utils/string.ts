@@ -27,3 +27,8 @@ export function toTitleCase(str: string) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
   })
 }
+
+export function normalizeTextInput(input: string, toLowerCase = true) {
+  const trimmed = input.trim()
+  return toLowerCase ? trimmed.toLowerCase() : trimmed
+}

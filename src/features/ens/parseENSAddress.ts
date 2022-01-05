@@ -9,3 +9,7 @@ export function parseENSAddress(
   if (!match) return undefined
   return { ensName: `${match[1].toLowerCase()}eth`, ensPath: match[4] }
 }
+
+export function isValidEnsName(value: string) {
+  return value && ENS_NAME_REGEX.test(value)
+}

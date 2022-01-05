@@ -18,13 +18,19 @@ import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { AccountType } from 'src/features/wallet/accounts/types'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
+import {
+  EditAccountAction,
+  editAccountActions,
+  editAccountSagaName,
+} from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { bottomSheetStyles } from 'src/styles/bottomSheet'
 import { flex } from 'src/styles/flex'
 import { setClipboard } from 'src/utils/clipboard'
+import { SagaStatus } from 'src/utils/saga'
+import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 const BOTTOM_SHEET_SNAP_POINTS = [275]
 
@@ -90,6 +96,7 @@ export function AccountsScreen() {
       })
     )
     setPendingRenameAddress(null)
+    onPressEditCancel() // Dismiss bottom sheet
   }
 
   const [pendingRemoveAddress, setPendingRemoveAddress] = useState<Address | null>(null)
@@ -106,9 +113,12 @@ export function AccountsScreen() {
       editAccountActions.trigger({ type: EditAccountAction.Remove, address: pendingRemoveAddress })
     )
     setPendingRemoveAddress(null)
+    onPressEditCancel() // Dismiss bottom sheet
   }
 
   // TODO surface errors from editAccountSaga when designs are ready
+  const { status } = useSagaStatus(editAccountSagaName)
+  const isLoading = status === SagaStatus.Started
 
   return (
     <SheetScreen>
@@ -169,18 +179,20 @@ export function AccountsScreen() {
             )}
           </Box>
         </ScrollView>
-        <CenterBox flexDirection="row" px="md">
+        <CenterBox flexDirection="row" px="md" py="md">
           <PrimaryButton
             variant="palePink"
-            label={t('Import Wallet')}
+            label={t('Import Account')}
             onPress={onPressImport}
             testID="accounts/add/button"
             mr="lg"
+            disabled={isLoading}
           />
           <PrimaryButton
-            label={t('Create Wallet')}
+            label={t('Create Account')}
             onPress={onPressCreate}
             testID="accounts/create/button"
+            disabled={isLoading}
           />
         </CenterBox>
         <BottomSheetModal
@@ -197,6 +209,7 @@ export function AccountsScreen() {
               icon={<EditIcon width={18} height={18} />}
               onPress={onPressRename}
               width="100%"
+              disabled={isLoading}
             />
             <PrimaryButton
               variant="palePink"
@@ -204,12 +217,14 @@ export function AccountsScreen() {
               icon={<CopyIcon width={18} height={18} />}
               onPress={onPressCopyAddress}
               width="100%"
+              disabled={isLoading}
             />
             <PrimaryButton
               variant="paleOrange"
               label={t('Remove Account')}
               onPress={onPressRemove}
               width="100%"
+              disabled={isLoading}
             />
             <TextButton
               onPress={onPressEditCancel}
@@ -218,7 +233,8 @@ export function AccountsScreen() {
               textAlign="center"
               width="100%"
               pt="xs"
-              pb="sm">
+              pb="sm"
+              disabled={isLoading}>
               {t('Cancel')}
             </TextButton>
           </CenterBox>

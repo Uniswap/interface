@@ -7,6 +7,7 @@ import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
+import { ImportAccountType } from 'src/features/import/types'
 
 interface PhraseButtonProps {
   word: string
@@ -60,10 +61,12 @@ export function SeedPhraseScreen({
 
   const dispatch = useAppDispatch()
 
+  // TODO this should use sagaStatus instead of custom loading state
   const onConfirmPhrase = () => {
     setLoading(true)
     setTimeout(() => {
-      dispatch(importAccountActions.trigger({ mnemonic: currentPhrase.join(' ') }))
+      const mnemonic = currentPhrase.join(' ')
+      dispatch(importAccountActions.trigger({ type: ImportAccountType.Mnemonic, mnemonic }))
     }, 100)
   }
 

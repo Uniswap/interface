@@ -33,6 +33,8 @@ function* editAccount(params: EditAccountParams) {
   const accounts = yield* appSelect(accountsSelector)
   const account = accounts[address]
 
+  if (!account) throw new Error(`No account found for ${address}`)
+
   if (type === EditAccountAction.Rename) {
     yield* call(renameAccount, params, account)
   } else if (type === EditAccountAction.Remove) {

@@ -1,24 +1,37 @@
+export enum ImportAccountType {
+  Address = 'address',
+  Mnemonic = 'mnemonic',
+  PrivateKey = 'privateKey',
+}
+
+export enum ImportAccountEnsType {
+  ENS = 'ens',
+}
+
+export const ImportAccountInputType = { ...ImportAccountType, ...ImportAccountEnsType }
+
 interface BaseImportAccountParams {
+  type: ImportAccountType
   name?: string
   locale?: string
 }
 
-export interface ImportLocalAccountParams extends BaseImportAccountParams {
-  privateKey?: string
-
-  mnemonic?: string
-  derivationPath?: string
-}
-
-export interface ImportReadonlyAccountParams extends BaseImportAccountParams {
+export interface ImportAddressAccountParams extends BaseImportAccountParams {
+  type: ImportAccountType.Address
   address: Address
 }
 
-export function isImportLocalAccountParams(params: unknown): params is ImportLocalAccountParams {
-  return (
-    Object.prototype.hasOwnProperty.call(params, 'mnemonic') ||
-    Object.prototype.hasOwnProperty.call(params, 'privateKey')
-  )
+export interface ImportMnemonicAccountParams extends BaseImportAccountParams {
+  type: ImportAccountType.Mnemonic
+  mnemonic: string
 }
 
-export type ImportAccountParams = ImportLocalAccountParams | ImportReadonlyAccountParams
+export interface ImportPrivateKeyAccountParams extends BaseImportAccountParams {
+  type: ImportAccountType.PrivateKey
+  privateKey: string
+}
+
+export type ImportAccountParams =
+  | ImportAddressAccountParams
+  | ImportMnemonicAccountParams
+  | ImportPrivateKeyAccountParams
