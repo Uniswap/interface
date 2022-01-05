@@ -29,5 +29,12 @@ export const iconButtonVariants = {
     letterSpacing: 'headline',
     paddingHorizontal: 'xl',
     paddingVertical: 'sm',
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
 }
