@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { ChainId, Percent, CurrencyAmount, Currency, TradeType, Token } from '@uniswap/sdk-core'
+import { Percent, CurrencyAmount, Currency, TradeType, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { splitSignature } from 'ethers/lib/utils'
@@ -11,6 +11,7 @@ import { useActiveWeb3React } from './web3'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
 import useTransactionDeadline from './useTransactionDeadline'
+import { ChainId } from 'constants/chains'
 
 enum PermitType {
   AMOUNT = 1,
@@ -38,19 +39,9 @@ const PERMITTABLE_TOKENS: {
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
     [UNI[ChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [ChainId.RINKEBY]: {
+  [ChainId.TESTNET]: {
     ['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[ChainId.RINKEBY].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  [ChainId.ROPSTEN]: {
-    [UNI[ChainId.ROPSTEN].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-    ['0x07865c6E87B9F70255377e024ace6630C1Eaa37F']: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
-  },
-  [ChainId.GÖRLI]: {
-    [UNI[ChainId.GÖRLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  [ChainId.KOVAN]: {
-    [UNI[ChainId.KOVAN].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [UNI[ChainId.TESTNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
 }
 
@@ -276,10 +267,10 @@ export function useERC20PermitFromTrade(
 ) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
-  const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [
-    trade,
-    allowedSlippage,
-  ])
+  const amountToApprove = useMemo(
+    () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
+    [trade, allowedSlippage]
+  )
 
   return useERC20Permit(
     amountToApprove,

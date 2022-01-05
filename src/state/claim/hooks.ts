@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { CurrencyAmount, ChainId, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useEffect, useState } from 'react'
 import { UNI } from '../../constants/tokens'
@@ -9,6 +9,7 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useSingleCallResult } from '../multicall/hooks'
 import { isAddress } from '../../utils'
 import { useTransactionAdder } from '../transactions/hooks'
+import { ChainId } from 'constants/chains'
 
 interface UserClaimData {
   index: number
@@ -88,9 +89,7 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(userClaimData.amount))
 }
 
-export function useClaimCallback(
-  account: string | null | undefined
-): {
+export function useClaimCallback(account: string | null | undefined): {
   claimCallback: () => Promise<string>
 } {
   // get claim data for this account

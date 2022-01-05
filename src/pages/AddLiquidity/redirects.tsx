@@ -2,7 +2,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import AddLiquidity from './index'
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from 'constants/tokens'
 
 export function RedirectDuplicateTokenIds(
   props: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>

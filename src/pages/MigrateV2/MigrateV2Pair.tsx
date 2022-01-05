@@ -1,6 +1,6 @@
 import JSBI from 'jsbi'
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
-import { Fraction, Percent, Price, Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { Fraction, Percent, Price, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
@@ -48,6 +48,7 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import SettingsTab from 'components/Settings'
+import { WETH9 } from 'constants/tokens'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -158,12 +159,10 @@ function V2PairMigration({
   const noLiquidity = poolState === PoolState.NOT_EXISTS
 
   // get spot prices + price difference
-  const v2SpotPrice = useMemo(() => new Price(token0, token1, reserve0.quotient, reserve1.quotient), [
-    token0,
-    token1,
-    reserve0,
-    reserve1,
-  ])
+  const v2SpotPrice = useMemo(
+    () => new Price(token0, token1, reserve0.quotient, reserve1.quotient),
+    [token0, token1, reserve0, reserve1]
+  )
   const v3SpotPrice = poolState === PoolState.EXISTS ? pool?.token0Price : undefined
 
   let priceDifferenceFraction: Fraction | undefined =

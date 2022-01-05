@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { CurrencyAmount, ChainId, Percent, Currency, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
@@ -10,6 +10,7 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './web3'
 import { useTokenAllowance } from './useTokenAllowance'
+import { ChainId } from 'constants/chains'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',

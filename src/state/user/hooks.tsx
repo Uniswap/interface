@@ -1,11 +1,11 @@
-import { ChainId, Percent, Token } from '@uniswap/sdk-core'
+import { Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
-
+import { ChainId } from 'constants/chains'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
@@ -131,9 +131,10 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
     return state.user.userSlippageTolerance
   })
 
-  return useMemo(() => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)), [
-    userSlippageTolerance,
-  ])
+  return useMemo(
+    () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
+    [userSlippageTolerance]
+  )
 }
 
 /**
@@ -142,10 +143,10 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
  */
 export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
   const allowedSlippage = useUserSlippageTolerance()
-  return useMemo(() => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage), [
-    allowedSlippage,
-    defaultSlippageTolerance,
-  ])
+  return useMemo(
+    () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
+    [allowedSlippage, defaultSlippageTolerance]
+  )
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
@@ -278,11 +279,10 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     })
   }, [savedSerializedPairs, chainId])
 
-  const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
-    generatedPairs,
-    pinnedPairs,
-    userPairs,
-  ])
+  const combinedList = useMemo(
+    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
+    [generatedPairs, pinnedPairs, userPairs]
+  )
 
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list

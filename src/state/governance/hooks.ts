@@ -64,9 +64,10 @@ export function useDataFromEventLogs() {
   const govContract = useGovernanceContract()
 
   // create filter for these specific events
-  const filter = useMemo(() => ({ ...govContract?.filters?.['ProposalCreated'](), fromBlock: 0, toBlock: 'latest' }), [
-    govContract,
-  ])
+  const filter = useMemo(
+    () => ({ ...govContract?.filters?.['ProposalCreated'](), fromBlock: 0, toBlock: 'latest' }),
+    [govContract]
+  )
 
   useEffect(() => {
     async function fetchData() {

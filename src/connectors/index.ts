@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { Web3Provider } from '@ethersproject/providers'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -9,6 +8,7 @@ import getLibrary from '../utils/getLibrary'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
+import { ChainId } from '../constants/chains'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
@@ -23,13 +23,10 @@ const NETWORK_URLS: {
   [chainId in ChainId]: string
 } = {
   [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [ChainId.TESTNET]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
 }
 
-const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ROPSTEN, ChainId.KOVAN, ChainId.GÖRLI]
+const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.TESTNET]
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,

@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
@@ -13,6 +13,7 @@ import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { ChainId } from 'constants/chains'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 
 const Wrapper = styled.div`

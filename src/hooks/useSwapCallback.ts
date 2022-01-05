@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { ChainId, Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
@@ -15,6 +15,7 @@ import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
+import { ChainId } from 'constants/chains'
 
 export enum SwapCallbackState {
   INVALID,

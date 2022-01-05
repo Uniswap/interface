@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, currencyEquals, Percent } from '@uniswap/sdk-core'
-import { WETH9 } from '@uniswap/sdk-core'
+
 import { AlertTriangle, AlertCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { ZERO_PERCENT } from '../../constants/misc'
@@ -26,6 +26,8 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field, Bound } from '../../state/mint/v3/actions'
+
+import { WETH9 } from 'constants/tokens'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
@@ -128,13 +130,8 @@ export default function AddLiquidity({
     existingPosition
   )
 
-  const {
-    onFieldAInput,
-    onFieldBInput,
-    onLeftRangeInput,
-    onRightRangeInput,
-    onStartPriceInput,
-  } = useV3MintActionHandlers(noLiquidity)
+  const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
+    useV3MintActionHandlers(noLiquidity)
 
   const isValid = !errorMessage && !invalidRange
 

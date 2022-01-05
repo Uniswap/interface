@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import useScrollPosition from '@react-hook/window-scroll'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
@@ -29,6 +28,7 @@ import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
 import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import UniBalanceContent from './UniBalanceContent'
+import { ChainId } from 'constants/chains'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -302,10 +302,8 @@ export const StyledMenuButton = styled.button`
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan',
+  [ChainId.TESTNET]: 'Evmos Testnet',
+  [ChainId.MAINNET]: 'Evmos',
 }
 
 export default function Header() {

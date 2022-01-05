@@ -1,14 +1,8 @@
-import {
-  ChainId,
-  Currency,
-  ETHER,
-  Token,
-  CurrencyAmount,
-  wrappedCurrency as wrappedCurrencyInternal,
-  wrappedCurrencyAmount as wrappedCurrencyAmountInternal,
-  WETH9,
-} from '@uniswap/sdk-core'
+import { Currency, ETHER, Token, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId } from 'constants/chains'
+import { WETH9 } from 'constants/tokens'
 import { supportedChainId } from './supportedChainId'
+import invariant from 'tiny-invariant'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
   return chainId && currency ? wrappedCurrencyInternal(currency, chainId) : undefined
@@ -26,4 +20,30 @@ export function unwrappedToken(token: Token): Currency {
   const formattedChainId = supportedChainId(token.chainId)
   if (formattedChainId && token.equals(WETH9[formattedChainId])) return ETHER
   return token
+}
+
+/**
+ * Source: https://github.com/Uniswap/sdk-core/blob/d61d31e5f6e79e174f3e4226c04e8c5cfcf3e227/src/utils/wrappedCurrency.ts
+ */
+function wrappedCurrencyInternal(currency: Currency, chainId: ChainId): Token {
+  if (currency.isToken) {
+    invariant(currency.chainId === chainId, 'CHAIN_ID')
+    return currency
+  }
+  if (currency.isEther) return WETH9[chainId]
+  throw new Error('CURRENCY')
+}
+
+/**
+ * Source: https://github.com/Uniswap/sdk-core/blob/d61d31e5f6e79e174f3e4226c04e8c5cfcf3e227/src/utils/wrappedCurrencyAmount.ts
+ */
+function wrappedCurrencyAmountInternal(
+  currencyAmount: CurrencyAmount<Currency>,
+  chainId: ChainId
+): CurrencyAmount<Token> {
+  return CurrencyAmount.fromFractionalAmount(
+    wrappedCurrencyInternal(currencyAmount.currency, chainId),
+    currencyAmount.numerator,
+    currencyAmount.denominator
+  )
 }

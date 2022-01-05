@@ -1,5 +1,4 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
-import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -7,21 +6,19 @@ import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
 import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import { ChainId } from './../../constants/chains'
 import { WrappedTokenInfo } from './wrappedTokenInfo'
 
-export type TokenAddressMap = Readonly<
-  { [chainId in ChainId | number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
->
+export type TokenAddressMap = Readonly<{
+  [chainId in ChainId | number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }>
+}>
 
 /**
  * An empty result, useful as a default.
  */
 const EMPTY_LIST: TokenAddressMap = {
-  [ChainId.KOVAN]: {},
-  [ChainId.RINKEBY]: {},
-  [ChainId.ROPSTEN]: {},
-  [ChainId.GÖRLI]: {},
   [ChainId.MAINNET]: {},
+  [ChainId.TESTNET]: {},
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -64,10 +61,7 @@ export function useAllLists(): AppState['lists']['byUrl'] {
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
     [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
-    [ChainId.RINKEBY]: { ...map1[ChainId.RINKEBY], ...map2[ChainId.RINKEBY] },
-    [ChainId.ROPSTEN]: { ...map1[ChainId.ROPSTEN], ...map2[ChainId.ROPSTEN] },
-    [ChainId.KOVAN]: { ...map1[ChainId.KOVAN], ...map2[ChainId.KOVAN] },
-    [ChainId.GÖRLI]: { ...map1[ChainId.GÖRLI], ...map2[ChainId.GÖRLI] },
+    [ChainId.TESTNET]: { ...map1[ChainId.TESTNET], ...map2[ChainId.TESTNET] },
   }
 }
 
@@ -124,10 +118,10 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
-  return useMemo(() => combineMaps(localUnsupportedListMap, loadedUnsupportedListMap), [
-    localUnsupportedListMap,
-    loadedUnsupportedListMap,
-  ])
+  return useMemo(
+    () => combineMaps(localUnsupportedListMap, loadedUnsupportedListMap),
+    [localUnsupportedListMap, loadedUnsupportedListMap]
+  )
 }
 
 export function useIsListActive(url: string): boolean {

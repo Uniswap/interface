@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from 'constants/chains'
 import { GOVERNANCE_ADDRESS, TIMELOCK_ADDRESS, UNI_ADDRESS } from './addresses'
 
 export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]?: { [address: string]: string } } = {
@@ -7,25 +7,10 @@ export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]?: { [address: string]
     [GOVERNANCE_ADDRESS[ChainId.MAINNET]]: 'Governance',
     [TIMELOCK_ADDRESS[ChainId.MAINNET]]: 'Timelock',
   },
-  [ChainId.RINKEBY]: {
-    [UNI_ADDRESS[ChainId.RINKEBY]]: 'Rinkeby UNI',
-    [GOVERNANCE_ADDRESS[ChainId.RINKEBY]]: 'Rinkeby Governance',
-    [TIMELOCK_ADDRESS[ChainId.RINKEBY]]: 'Rinkeby Timelock',
-  },
-  [ChainId.ROPSTEN]: {
-    [UNI_ADDRESS[ChainId.ROPSTEN]]: 'Ropsten UNI',
-    [GOVERNANCE_ADDRESS[ChainId.ROPSTEN]]: 'Ropsten Governance',
-    [TIMELOCK_ADDRESS[ChainId.ROPSTEN]]: 'Ropsten Timelock',
-  },
-  [ChainId.KOVAN]: {
-    [UNI_ADDRESS[ChainId.KOVAN]]: 'Kovan UNI',
-    [GOVERNANCE_ADDRESS[ChainId.KOVAN]]: 'Kovan Governance',
-    [TIMELOCK_ADDRESS[ChainId.KOVAN]]: 'Kovan Timelock',
-  },
-  [ChainId.GÖRLI]: {
-    [UNI_ADDRESS[ChainId.GÖRLI]]: 'Goerli UNI',
-    [GOVERNANCE_ADDRESS[ChainId.GÖRLI]]: 'Goerli Governance',
-    [TIMELOCK_ADDRESS[ChainId.GÖRLI]]: 'Goerli Timelock',
+  [ChainId.TESTNET]: {
+    [UNI_ADDRESS[ChainId.TESTNET]]: 'Rinkeby UNI',
+    [GOVERNANCE_ADDRESS[ChainId.TESTNET]]: 'Rinkeby Governance',
+    [TIMELOCK_ADDRESS[ChainId.TESTNET]]: 'Rinkeby Timelock',
   },
 }
 

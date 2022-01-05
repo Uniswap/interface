@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from 'constants/chains'
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 
@@ -20,9 +20,7 @@ export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = constructSameAddressMap(
 )
 export const ENS_REGISTRAR_ADDRESSES = {
   [ChainId.MAINNET]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [ChainId.GÖRLI]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [ChainId.RINKEBY]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [ChainId.ROPSTEN]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+  [ChainId.TESTNET]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
 }
 export const SOCKS_CONTROLLER_ADDRESSES = {
   [ChainId.MAINNET]: '0x65770b5283117639760beA3F867b69b3697a91dd',

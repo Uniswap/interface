@@ -305,8 +305,15 @@ export function PositionPage({
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
 
-  const { token0: token0Address, token1: token1Address, fee: feeAmount, liquidity, tickLower, tickUpper, tokenId } =
-    positionDetails || {}
+  const {
+    token0: token0Address,
+    token1: token1Address,
+    fee: feeAmount,
+    liquidity,
+    tickLower,
+    tickUpper,
+    tokenId,
+  } = positionDetails || {}
 
   const removed = liquidity?.eq(0)
 

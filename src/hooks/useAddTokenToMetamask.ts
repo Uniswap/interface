@@ -4,9 +4,10 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { useCallback, useState } from 'react'
 import { useActiveWeb3React } from 'hooks/web3'
 
-export default function useAddTokenToMetamask(
-  currencyToAdd: Currency | undefined
-): { addToken: () => void; success: boolean | undefined } {
+export default function useAddTokenToMetamask(currencyToAdd: Currency | undefined): {
+  addToken: () => void
+  success: boolean | undefined
+} {
   const { library, chainId } = useActiveWeb3React()
 
   const token: Token | undefined = wrappedCurrency(currencyToAdd, chainId)

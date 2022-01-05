@@ -1,6 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, Percent, WETH9 } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, Percent } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -16,6 +16,7 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
+import { WETH9 } from 'constants/tokens'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
@@ -53,11 +54,10 @@ export default function RemoveLiquidity({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
-  const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
-    currencyA,
-    currencyB,
-    chainId,
-  ])
+  const [tokenA, tokenB] = useMemo(
+    () => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)],
+    [currencyA, currencyB, chainId]
+  )
 
   const theme = useContext(ThemeContext)
 
@@ -135,15 +135,18 @@ export default function RemoveLiquidity({
     [_onUserInput]
   )
 
-  const onLiquidityInput = useCallback((typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue), [
-    onUserInput,
-  ])
-  const onCurrencyAInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue), [
-    onUserInput,
-  ])
-  const onCurrencyBInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue), [
-    onUserInput,
-  ])
+  const onLiquidityInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue),
+    [onUserInput]
+  )
+  const onCurrencyAInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue),
+    [onUserInput]
+  )
+  const onCurrencyBInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue),
+    [onUserInput]
+  )
 
   // tx sending
   const addTransaction = useTransactionAdder()

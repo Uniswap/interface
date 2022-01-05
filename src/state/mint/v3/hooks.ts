@@ -28,9 +28,7 @@ export function useV3MintState(): AppState['mintV3'] {
   return useSelector<AppState, AppState['mintV3']>((state) => state.mintV3)
 }
 
-export function useV3MintActionHandlers(
-  noLiquidity: boolean | undefined
-): {
+export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
   onFieldAInput: (typedValue: string) => void
   onFieldBInput: (typedValue: string) => void
   onLeftRangeInput: (typedValue: string) => void
@@ -114,13 +112,8 @@ export function useV3DerivedMintInfo(
 } {
   const { account, chainId } = useActiveWeb3React()
 
-  const {
-    independentField,
-    typedValue,
-    leftRangeTypedValue,
-    rightRangeTypedValue,
-    startPriceTypedValue,
-  } = useV3MintState()
+  const { independentField, typedValue, leftRangeTypedValue, rightRangeTypedValue, startPriceTypedValue } =
+    useV3MintState()
 
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 

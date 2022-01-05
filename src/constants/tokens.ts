@@ -1,5 +1,6 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
+import { ChainId } from 'constants/chains'
 
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
@@ -23,8 +24,27 @@ export const UST = new Token(ChainId.MAINNET, '0xa47c8bf37f92abed4a126bda807a7b7
 export const MIR = new Token(ChainId.MAINNET, '0x09a3ecafa817268f77be1283176b946c4ff2e608', 18, 'MIR', 'Wrapped MIR')
 export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESS[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS[ChainId.RINKEBY], 18, 'UNI', 'Uniswap'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS[ChainId.ROPSTEN], 18, 'UNI', 'Uniswap'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS[ChainId.GÖRLI], 18, 'UNI', 'Uniswap'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS[ChainId.KOVAN], 18, 'UNI', 'Uniswap'),
+  [ChainId.TESTNET]: new Token(ChainId.MAINNET, UNI_ADDRESS[ChainId.TESTNET], 18, 'UNI', 'Uniswap'),
+}
+
+/**
+ * Adapted from core-sdk
+ * https://github.com/Uniswap/sdk-core/blob/d61d31e5f6e79e174f3e4226c04e8c5cfcf3e227/src/entities/token.ts
+ * @TODO: adapt to real wrapped tokens
+ */
+export const WETH9 = {
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    18,
+    'WETH9',
+    'Wrapped Ether'
+  ),
+  [ChainId.TESTNET]: new Token(
+    ChainId.TESTNET,
+    '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+    18,
+    'WETH9',
+    'Wrapped Ether'
+  ),
 }

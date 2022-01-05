@@ -1,7 +1,7 @@
 // a list of tokens by chain
-import { ChainId, Token, WETH9 } from '@uniswap/sdk-core'
-import { AMPL, DAI, FEI, FRAX, FXS, MIR, renBTC, TRIBE, UMA, UNI, USDC, USDT, UST, WBTC } from './tokens'
-
+import { Token } from '@uniswap/sdk-core'
+import { AMPL, DAI, FEI, FRAX, FXS, MIR, renBTC, TRIBE, UMA, UNI, USDC, USDT, UST, WBTC, WETH9 } from './tokens'
+import { ChainId } from './chains'
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
@@ -27,10 +27,7 @@ const mAssetsAdditionalBases: { [tokenAddress: string]: Token[] } = {
 }
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH9[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [WETH9[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [WETH9[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH9[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH9[ChainId.KOVAN]],
+  [ChainId.TESTNET]: [WETH9[ChainId.TESTNET]],
 }
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {

@@ -1,5 +1,4 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
@@ -21,6 +20,9 @@ import { Unisocks } from 'abis/types/Unisocks'
 import UNISOCKS_ABI from 'abis/unisocks.json'
 import WETH_ABI from 'abis/weth.json'
 import EIP_2612 from 'abis/eip_2612.json'
+
+import { ChainId } from 'constants/chains'
+import { WETH9 } from 'constants/tokens'
 
 import {
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,

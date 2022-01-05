@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { Pair } from '@uniswap/v2-sdk'
-import { Token, ChainId } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
@@ -18,6 +18,7 @@ import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { getCreate2Address } from '@ethersproject/address'
 import { pack, keccak256 } from '@ethersproject/solidity'
+import { ChainId } from 'constants/chains'
 
 function EmptyState({ message }: { message: string }) {
   return (

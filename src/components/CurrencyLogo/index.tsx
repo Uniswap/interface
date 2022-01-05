@@ -1,10 +1,11 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
+import { ChainId } from 'constants/chains'
 
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`

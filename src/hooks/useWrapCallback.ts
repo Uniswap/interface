@@ -1,10 +1,11 @@
-import { Currency, currencyEquals, WETH9 } from '@uniswap/sdk-core'
+import { Currency, currencyEquals } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useActiveWeb3React } from './web3'
 import { useWETHContract } from './useContract'
+import { WETH9 } from 'constants/tokens'
 
 export enum WrapType {
   NOT_APPLICABLE,

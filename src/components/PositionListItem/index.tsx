@@ -118,9 +118,7 @@ export interface PositionListItemProps {
   positionDetails: PositionDetails
 }
 
-export function getPriceOrderingFromPositionForUI(
-  position?: Position
-): {
+export function getPriceOrderingFromPositionForUI(position?: Position): {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   quote?: Token
