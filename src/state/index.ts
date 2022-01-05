@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import { save, load } from 'redux-localstorage-simple'
 
 import application from './application/reducer'
@@ -33,14 +33,10 @@ const store = configureStore({
     farms,
     vesting
   },
-  middleware: [
-    ...getDefaultMiddleware({
-      thunk: false,
-      immutableCheck: false,
-      serializableCheck: false
-    }),
-    save({ states: PERSISTED_KEYS })
-  ],
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({ thunk: false, immutableCheck: false, serializableCheck: false }).concat(
+      save({ states: PERSISTED_KEYS, debounce: 1000 })
+    ),
   preloadedState: load({ states: PERSISTED_KEYS })
 })
 
