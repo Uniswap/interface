@@ -1,11 +1,11 @@
 import { useAtom } from 'jotai'
 import { ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon } from 'lib/icons'
+import { stateAtom } from 'lib/state/swap'
 import styled, { Layer } from 'lib/theme'
 import { useCallback, useState } from 'react'
 
 import Button from '../Button'
 import Row from '../Row'
-import { stateAtom } from './state'
 
 const ReverseRow = styled(Row)`
   bottom: -1.5em;

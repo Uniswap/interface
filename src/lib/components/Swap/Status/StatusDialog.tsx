@@ -3,13 +3,13 @@ import { useAtomValue } from 'jotai/utils'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
+import { Transaction, transactionAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useCallback, useMemo, useState } from 'react'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
 import Row from '../../Row'
-import { Transaction, transactionAtom } from '../state'
 import Summary from '../Summary'
 
 const errorMessage = (

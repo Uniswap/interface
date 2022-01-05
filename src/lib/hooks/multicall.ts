@@ -1,4 +1,4 @@
-import { multicall } from 'lib/state'
+import { multicall } from 'lib/state/web3'
 
 export const {
   useMultipleContractSingleData,

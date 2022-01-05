@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { Input } from 'lib/state/swap'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
@@ -8,7 +9,6 @@ import Column from '../Column'
 import { DecimalInput } from '../Input'
 import Row from '../Row'
 import TokenSelect from '../TokenSelect'
-import { Input } from './state'
 
 const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;

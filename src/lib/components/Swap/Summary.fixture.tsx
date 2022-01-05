@@ -1,10 +1,10 @@
 import { useUpdateAtom } from 'jotai/utils'
 import { DAI, ETH } from 'lib/mocks'
+import { Field, outputAtom, stateAtom } from 'lib/state/swap'
 import { useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { Modal } from '../Dialog'
-import { Field, outputAtom, stateAtom } from './state'
 import { SummaryDialog } from './Summary'
 
 function Fixture() {

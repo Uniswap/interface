@@ -1,6 +1,6 @@
 import { SetStateAction } from 'jotai'
 import { RESET, useUpdateAtom } from 'jotai/utils'
-import { injectedAtom, networkAtom } from 'lib/state'
+import { injectedAtom, networkAtom } from 'lib/state/web3'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { initializeConnector, Web3ReactHooks } from 'widgets-web3-react/core'
 import { EIP1193 } from 'widgets-web3-react/eip1193'

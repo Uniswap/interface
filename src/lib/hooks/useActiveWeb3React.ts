@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai/utils'
-import { injectedAtom, networkAtom, Web3ReactState } from 'lib/state'
+import { injectedAtom, networkAtom, Web3ReactState } from 'lib/state/web3'
 import { Web3ReactHooks } from 'widgets-web3-react/core'
 
 export function useActiveWeb3ReactState(): Web3ReactState {
