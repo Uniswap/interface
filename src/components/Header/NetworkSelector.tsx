@@ -7,10 +7,12 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
+import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { replaceURLParam } from 'utils/routes'
 import { supportedChainId } from 'utils/supportedChainId'
 
 import { useAppDispatch } from '../../state/hooks'
@@ -231,6 +233,8 @@ export default function NetworkSelector() {
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
   useOnClickOutside(node, open ? toggle : undefined)
 
+  const history = useHistory()
+
   const info = chainId ? CHAIN_INFO[chainId] : undefined
 
   const dispatch = useAppDispatch()
@@ -239,14 +243,29 @@ export default function NetworkSelector() {
     (targetChain: number, skipToggle?: boolean) => {
       if (!library) return
       switchToNetwork({ library, chainId: targetChain })
-        .then(() => !skipToggle && toggle())
+        .then(() => {
+          if (!skipToggle) {
+            toggle()
+          }
+          history.push({ search: replaceURLParam(history.location.search, 'chainId', targetChain.toString()) })
+        })
         .catch((error) => {
           console.error('Failed to switch networks', error)
-          toggle()
+
+          // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
+          // but the request fails, revert the URL back to current chainId
+          if (chainId) {
+            history.push({ search: replaceURLParam(history.location.search, 'chainId', chainId.toString()) })
+          }
+
+          if (!skipToggle) {
+            toggle()
+          }
+
           dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
         })
     },
-    [dispatch, library, toggle]
+    [dispatch, library, toggle, history, chainId]
   )
 
   useEffect(() => {
@@ -258,6 +277,14 @@ export default function NetworkSelector() {
       setLastNetworkChange(chainId)
     }
   }, [handleChainSwitch, lastNetworkChange, chainId, parsedQs])
+
+  // set chainId parameter on initial load if not there
+  useEffect(() => {
+    const newChainId = getParsedChainId(parsedQs)
+    if (chainId && !newChainId) {
+      history.push({ search: replaceURLParam(history.location.search, 'chainId', chainId.toString()) })
+    }
+  }, [chainId, history, parsedQs])
 
   if (!chainId || !info || !library) {
     return null
