@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
+import { mockTogglableAtom } from 'lib/state/swap'
 
 import Row from '../../Row'
 import Toggle from '../../Toggle'
-import { mockTogglableAtom } from '../state'
 import { Label } from './components'
 
 export default function MockToggle() {

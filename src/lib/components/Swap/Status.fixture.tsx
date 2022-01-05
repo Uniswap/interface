@@ -1,11 +1,11 @@
 import { useUpdateAtom } from 'jotai/utils'
 import { DAI, ETH } from 'lib/mocks'
+import { transactionAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
 import invariant from 'tiny-invariant'
 
 import { Modal } from '../Dialog'
-import { transactionAtom } from './state'
 import { StatusDialog } from './Status'
 
 function Fixture() {

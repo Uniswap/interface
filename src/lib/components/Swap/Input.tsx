@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
+import { inputAtom, useUpdateInputToken, useUpdateInputValue } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 
 import Column from '../Column'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
-import { inputAtom, useUpdateInputToken, useUpdateInputValue } from './state'
 import TokenInput from './TokenInput'
 
 const mockBalance = 123.45

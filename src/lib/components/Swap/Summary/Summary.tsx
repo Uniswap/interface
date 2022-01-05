@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lib/icons'
+import { Input } from 'lib/state/swap'
 import styled from 'lib/theme'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
@@ -6,7 +7,6 @@ import { useMemo } from 'react'
 import Column from '../../Column'
 import Row from '../../Row'
 import TokenImg from '../../TokenImg'
-import { Input } from '../state'
 
 const Percent = styled.span<{ gain: boolean }>`
   color: ${({ gain, theme }) => (gain ? theme.success : theme.error)};
