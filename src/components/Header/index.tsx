@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
+// import Logo from '../../assets/svg/logo.svg'
+// import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances, useAggregateUniBalance } from '../../state/wallet/hooks'
@@ -177,26 +177,26 @@ const BalanceText = styled(Text)`
   `};
 `
 
-const Title = styled.a`
-  display: flex;
-  align-items: center;
-  pointer-events: auto;
-  justify-self: flex-start;
-  margin-right: 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    justify-self: center;
-  `};
-  :hover {
-    cursor: pointer;
-  }
-`
+// const Title = styled.a`
+//   display: flex;
+//   align-items: center;
+//   pointer-events: auto;
+//   justify-self: flex-start;
+//   margin-right: 12px;
+//   ${({ theme }) => theme.mediaWidth.upToSmall`
+//     justify-self: center;
+//   `};
+//   :hover {
+//     cursor: pointer;
+//   }
+// `
 
-const UniIcon = styled.div`
-  transition: transform 0.3s ease;
-  :hover {
-    transform: rotate(-5deg);
-  }
-`
+// const UniIcon = styled.div`
+//   transition: transform 0.3s ease;
+//   :hover {
+//     transform: rotate(-5deg);
+//   }
+// `
 
 const activeClassName = 'ACTIVE'
 
