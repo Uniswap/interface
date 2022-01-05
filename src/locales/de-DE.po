@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-23 21:06\n"
+"PO-Revision-Date: 2022-01-05 20:06\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -121,6 +121,7 @@ msgid "About"
 msgstr "Über"
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Accept"
 msgstr "Akzeptieren"
 
@@ -212,6 +213,7 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "Beim Versuch, diesen Swap auszuführen, ist ein Fehler aufgetreten. Möglicherweise müssen Sie Ihre Schlupftoleranz erhöhen. Wenn dies nicht funktioniert, liegt möglicherweise eine Inkompatibilität mit dem Token vor, den Sie handeln. Hinweis: Gebühren für Transfer- und Rebase-Token sind nicht mit Uniswap V3 kompatibel."
 
 #: src/components/earn/StakingModal.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Bestätigen"
@@ -227,6 +229,10 @@ msgstr "Token genehmigen"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "{0} freischalten"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve {0} first"
+msgstr "{0} zuerst genehmigen"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -415,6 +421,7 @@ msgstr "Alles löschen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Schließen"
 
@@ -469,6 +476,10 @@ msgstr "Angebot bestätigen"
 msgid "Confirm Swap"
 msgstr "Tausch bestätigen"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Confirm swap"
+msgstr "Tausch bestätigen"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -513,6 +524,10 @@ msgstr "Verbinden Sie sich mit einer Wallet, um Ihre V2-Liquidität anzuzeigen."
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Verbinden Sie sich mit einer Wallet, um Ihre Liquidität anzuzeigen."
+
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Connect wallet to swap"
+msgstr "Wallet zum Tausch verbinden"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -569,6 +584,10 @@ msgstr "Aktueller Preis"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
 msgstr "Aktueller {0}-Preis:"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Custom"
+msgstr "Brauch"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
@@ -654,6 +673,7 @@ msgid "Discord"
 msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
 msgstr "Verwerfen"
 
@@ -695,6 +715,7 @@ msgstr "Geben Sie eine Adresse ein, um UNI einzufordern. Wenn die Adresse Anspru
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -730,6 +751,10 @@ msgstr "Verbindungsfehler"
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
 msgstr "Verbindungsfehler. Versuchen Sie die Seite neu zu laden."
+
+#: src/lib/components/Error/ErrorDialog.tsx
+msgid "Error details"
+msgstr "Fehlerdetails"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -791,6 +816,11 @@ msgstr "Gebührenstufe"
 msgid "Fetching best price..."
 msgstr "Bester Preis geholt..."
 
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Fetching best price…"
+msgstr "Abrufen des besten Preises…"
+
+#: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Dafür"
@@ -901,6 +931,10 @@ msgstr "Metamask installieren"
 msgid "Insufficient liquidity for this trade."
 msgstr "Unzureichende Liquidität für diesen Handel."
 
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Insufficient {0}"
+msgstr "Unzureichend {0}"
+
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/state/mint/hooks.tsx
@@ -974,6 +1008,10 @@ msgstr "Liquidität"
 msgid "Liquidity data not available."
 msgstr "Liquiditätsdaten nicht verfügbar."
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Gebühr für Liquiditätsanbieter"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Liquiditätsanbieter-Belohnungen"
@@ -1025,6 +1063,7 @@ msgstr "Tokenlisten verwalten"
 msgid "Manage this pool."
 msgstr "Diesen Pool verwalten."
 
+#: src/lib/components/Swap/TokenInput.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Max."
@@ -1038,11 +1077,16 @@ msgstr "Max. Preis"
 msgid "Max price"
 msgstr "Max. Preis"
 
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Max slippage"
+msgstr "Max. Schlupf"
+
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "Max.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Maximum gesendet"
 
@@ -1093,12 +1137,17 @@ msgid "Min:"
 msgstr "Min.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimum erhalten"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Fehlende Abhängigkeiten"
+
+#: src/lib/components/Swap/Settings/MockToggle.tsx
+msgid "Mock Toggle"
+msgstr "Mock Toggle"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1158,10 +1207,12 @@ msgid "Not created"
 msgstr "Nicht erstellt"
 
 #: src/components/Toggle/ListToggle.tsx
+#: src/lib/components/Toggle.tsx
 msgid "OFF"
 msgstr "AUS"
 
 #: src/components/Toggle/ListToggle.tsx
+#: src/lib/components/Toggle.tsx
 msgid "ON"
 msgstr "EIN"
 
@@ -1204,6 +1255,10 @@ msgstr "Optimism Etherscan"
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
 msgstr "Nicht im Bereich"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated."
+msgstr "Die Ausgabe wird geschätzt."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1315,9 +1370,17 @@ msgstr "Preiseinfluss zu hoch"
 msgid "Price Updated"
 msgstr "Preis aktualisiert"
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Preisauswirkung"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Preisbereich"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Price updated"
+msgstr "Preis aktualisiert"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1387,9 +1450,21 @@ msgstr "Erfahre mehr über nicht unterstützte Token"
 msgid "Recent Transactions"
 msgstr "Letzte Transaktionen"
 
+#: src/lib/components/RecentTransactionsDialog.tsx
+msgid "Recent transactions"
+msgstr "Kürzliche Transaktionen"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Empfänger"
+
+#: src/lib/components/Error/ErrorBoundary.tsx
+msgid "Reload the page"
+msgstr "Seite neu laden"
+
+#: src/lib/components/Error/ErrorBoundary.tsx
+msgid "Reload the page to try again"
+msgstr "Laden Sie die Seite neu, um es erneut zu versuchen"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1433,11 +1508,23 @@ msgstr "Entfernen {0} {1} und{2} {3}"
 msgid "Request Features"
 msgstr "Funktionen anfordern"
 
+#: src/lib/components/Swap/Settings/index.tsx
+msgid "Reset"
+msgstr "Zurücksetzen"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Zurück"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Review swap"
+msgstr "Bewertungstausch"
+
+#: src/lib/components/TokenSelect/index.tsx
+msgid "Search by token name or address"
+msgstr "Suche nach Token-Name oder -Adresse"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1453,6 +1540,8 @@ msgstr "Wählen Sie ein Netzwerk"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/lib/components/TokenSelect/TokenButton.tsx
+#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1489,6 +1578,10 @@ msgstr "Preisbereich festlegen"
 msgid "Set Starting Price"
 msgstr "Startpreis festlegen"
 
+#: src/lib/components/Swap/Settings/index.tsx
+msgid "Settings"
+msgstr "Einstellungen"
+
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
 msgstr "Anteil am Pool"
@@ -1510,6 +1603,7 @@ msgid "Simple"
 msgstr "Einfach"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
 msgstr "Schlupftoleranz"
 
@@ -1520,6 +1614,10 @@ msgstr "Einige Assets sind über diese Benutzeroberfläche nicht verfügbar, da 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Etwas ist schief gelaufen"
+
+#: src/lib/components/Error/ErrorDialog.tsx
+msgid "Something went wrong."
+msgstr "Etwas ist schief gelaufen."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1556,6 +1654,7 @@ msgstr "Biete {0} {1} und {2} {3} an"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
+#: src/lib/components/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1571,6 +1670,10 @@ msgstr "Tausche <0/> gegen genau <1/>"
 msgid "Swap Anyway"
 msgstr "Trotzdem tauschen"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Swap details"
+msgstr "Swap-Details"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Tausche genau <0/> gegen <1/>"
@@ -1579,6 +1682,10 @@ msgstr "Tausche genau <0/> gegen <1/>"
 #: src/hooks/useSwapCallback.tsx
 msgid "Swap failed: {0}"
 msgstr "Tausch fehlgeschlagen: {0}"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Swap summary"
+msgstr "Swap-Zusammenfassung"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1742,6 +1849,10 @@ msgstr "Gesamteinlagen"
 msgid "Trade Route"
 msgstr "Handelsroute"
 
+#: src/lib/components/Swap/Input.tsx
+msgid "Trading"
+msgstr "Handel"
+
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -1762,13 +1873,22 @@ msgid "Transaction completed in"
 msgstr "Transaktion abgeschlossen in"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
 msgstr "Transaktionsfrist"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction pending"
+msgstr "Transaktion ausstehend"
 
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Transaction rejected."
 msgstr "Transaktion abgelehnt."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction submitted"
+msgstr "Transaktion übermittelt"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -1777,6 +1897,10 @@ msgstr "Token übertragen"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Erneut versuchen"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Versuchen Sie, Ihre Schlupftoleranz zu erhöhen.<0/>HINWEIS: Gebühren für Transfer- und Rebase-Token sind nicht mit Uniswap V3 kompatibel."
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -1927,6 +2051,7 @@ msgstr "Eingenommene Gebühren und Analysen anzeigen<0>↗</0>"
 msgid "View list"
 msgstr "Liste anzeigen"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Auf Etherscan ansehen"
@@ -2139,6 +2264,14 @@ msgstr "Sie werden auch die Gebühren einziehen, die diese Position eingenommen 
 msgid "You will receive"
 msgstr "Sie werden erhalten"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Sie erhalten mindestens {0} {1} oder die Transaktion wird rückgängig gemacht."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Sie senden höchstens {0} {1} oder die Transaktion wird rückgängig gemacht."
+
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "Ihre V2-Liquidität"
@@ -2210,11 +2343,16 @@ msgstr "Ihre Transaktion könnte anfällig für \"Frontrunning\" sein"
 msgid "Your transaction may fail"
 msgstr "Ihre Transaktion könnte fehlschlagen"
 
+#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
+msgid "Your transaction will revert if it has been pending for longer than this period of time."
+msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sie länger als dieser Zeitraum aussteht."
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sie für mehr als diesen Zeitraum aussteht."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sich der Preis ungünstig um mehr als diesen Prozentsatz ändert."
 
@@ -2255,6 +2393,7 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https: // oder ipfs: // oder ENS-Name"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "Minuten"
 
@@ -2415,13 +2554,25 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} Token"
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "{integrator} fee"
+msgstr "{integrator} Gebühr"
+
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
 msgstr "{label} Token-Brücke"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "{min}m {sec}s"
+msgstr "{min}m {sec}s"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "{sec}s"
+msgstr "{sec}s"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
