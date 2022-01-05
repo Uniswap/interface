@@ -1094,6 +1094,13 @@
       "name": "ENS DAO",
       "symbol": "ENS",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0xa82AA729AE2F0d78e961D66db53949e27a9E866d",
+      "name": "BMEX",
+      "symbol": "BMEX",
+      "decimals": 18
     }
   ]
 }
