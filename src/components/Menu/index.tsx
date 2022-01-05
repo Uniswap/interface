@@ -127,6 +127,11 @@ const MenuItem = styled(ExternalLink)`
     cursor: pointer;
     text-decoration: none;
   }
+  :focus-visible {
+    border-radius: 0.5rem;
+    text-decoration: none;
+    outline: 1px solid ${({ theme }) => theme.bg3};
+  }
 `
 
 const InternalMenuItem = styled(Link)`
@@ -175,6 +180,10 @@ const ToggleMenuItem = styled.button`
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
+  }
+  :focus-visible {
+    border-radius: 0.5rem;
+    outline: 1px solid ${({ theme }) => theme.bg3};
   }
 `
 
