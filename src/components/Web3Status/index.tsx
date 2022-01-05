@@ -6,6 +6,7 @@ import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
+import { Connector } from 'widgets-web3-react/types'
 
 import { NetworkContextName } from '../../constants/misc'
 import useENSName from '../../hooks/useENSName'
@@ -130,7 +131,7 @@ function Sock() {
   )
 }
 
-function WrappedStatusIcon({ connector }: { connector: AbstractConnector }) {
+function WrappedStatusIcon({ connector }: { connector: AbstractConnector | Connector }) {
   return (
     <IconWrapper size={16}>
       <StatusIcon connector={connector} />

@@ -1,0 +1,22 @@
+// Use Inter mixin to set font-display: block.
+@use "@fontsource/inter/scss/mixins" as Inter;
+@include Inter.fontFace(
+    $fontName: 'Inter',
+    $weight: 400,
+    $display: block,
+);
+@include Inter.fontFace(
+    $fontName: 'Inter',
+    $weight: 500,
+    $display: block,
+);
+@include Inter.fontFace(
+    $fontName: 'Inter',
+    $weight: 600,
+    $display: block,
+);
+@include Inter.fontFaceVariable(
+    $display: block,
+);
+
+@import "~@fontsource/ibm-plex-mono/400.css";

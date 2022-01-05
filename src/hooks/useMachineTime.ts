@@ -1,6 +1,5 @@
+import useInterval from 'lib/hooks/useInterval'
 import { useState } from 'react'
-
-import useInterval from './useInterval'
 
 const useMachineTimeMs = (updateInterval: number): number => {
   const [now, setNow] = useState(Date.now())

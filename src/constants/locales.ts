@@ -33,11 +33,12 @@ export const SUPPORTED_LOCALES = [
   'zh-CN',
   'zh-TW',
 ] as const
-export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
+export type SupportedLocale = typeof SUPPORTED_LOCALES[number] | 'pseudo'
 
+// eslint-disable-next-line import/first
+import * as enUS from '../locales/en-US'
 export const DEFAULT_LOCALE: SupportedLocale = 'en-US'
-
-export { messages as DEFAULT_MESSAGES } from '../locales/en-US'
+export const DEFAULT_CATALOG = enUS
 
 export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
   'af-ZA': 'Afrikaans',
@@ -72,4 +73,5 @@ export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
   'vi-VN': 'Tiếng Việt',
   'zh-CN': '简体中文',
   'zh-TW': '繁体中文',
+  pseudo: 'ƥƨèúδô',
 }

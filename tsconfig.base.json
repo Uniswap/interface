@@ -25,5 +25,4 @@
     "types": ["react-spring", "jest"]
   },
   "exclude": ["node_modules", "cypress"],
-  "include": ["src/**/*"]
 }
