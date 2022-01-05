@@ -236,10 +236,10 @@ export default function NetworkSelector() {
   const dispatch = useAppDispatch()
 
   const handleChainSwitch = useCallback(
-    (targetChain: number) => {
+    (targetChain: number, skipToggle?: boolean) => {
       if (!library) return
       switchToNetwork({ library, chainId: targetChain })
-        .then(() => toggle())
+        .then(() => !skipToggle && toggle())
         .catch((error) => {
           console.error('Failed to switch networks', error)
           toggle()
@@ -254,7 +254,7 @@ export default function NetworkSelector() {
     const newChainId = getParsedChainId(parsedQs)
 
     if (newChainId && chainId !== newChainId) {
-      handleChainSwitch(newChainId)
+      handleChainSwitch(newChainId, true)
       setPromptedNetworkChange(true)
     }
   }, [handleChainSwitch, promptedNetworkChange, chainId, parsedQs])
