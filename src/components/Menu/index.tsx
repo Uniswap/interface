@@ -12,13 +12,12 @@ import {
   Edit,
   Share2
 } from 'react-feather'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { NavLink } from 'react-router-dom'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { Text, Flex } from 'rebass'
 
 import { ChainId } from '@dynamic-amm/sdk'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ExternalLink } from 'theme'
@@ -26,6 +25,7 @@ import { DMM_ANALYTICS_URL } from '../../constants'
 import { useActiveWeb3React } from 'hooks'
 import { useMedia } from 'react-use'
 import { SlideToUnlock } from 'components/Header'
+import MenuFlyout from 'components/MenuFlyout'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -65,18 +65,44 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span`
-  min-width: 11rem;
-  background-color: ${({ theme }) => theme.tableHeader};
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.36));
-  border-radius: 8px;
+const NavMenuItem = styled(NavLink)`
+  flex: 1;
+  padding-top: 1.5rem;
+  text-decoration: none;
   display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-  position: absolute;
-  top: 4rem;
+  font-weight: 500;
+  align-items: center;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text};
+    cursor: pointer;
+  }
+  > svg {
+    margin-right: 8px;
+  }
+`
+
+const MenuItem = styled(ExternalLink)`
+  flex: 1;
+  padding-top: 1.5rem;
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  > svg {
+    margin-right: 8px;
+  }
+`
+
+const MenuFlyoutBrowserStyle = css`
+  min-width: 15rem;
+  background-color: ${({ theme }) => theme.tableHeader};
   right: -8px;
-  z-index: 100;
 
   & > div {
     position: relative;
@@ -96,8 +122,6 @@ const MenuFlyout = styled.span`
   }
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    top: unset;
-    bottom: 3.5rem;
     & > div:after {
       top: 100%;
       border-top-color: ${({ theme }) => theme.tableHeader};
@@ -106,39 +130,17 @@ const MenuFlyout = styled.span`
       margin-left: -10px;
     }
   `};
-`
 
-const NavMenuItem = styled(NavLink)`
-  flex: 1;
-  padding: 0.5rem 0.5rem;
-  text-decoration: none;
-  display: flex;
-  font-weight: 500;
-  align-items: center;
-  color: ${({ theme }) => theme.text2};
-  :hover {
-    color: ${({ theme }) => theme.text};
-    cursor: pointer;
-  }
-  > svg {
-    margin-right: 8px;
+  & ${MenuItem}:nth-child(1),
+  & ${NavMenuItem}:nth-child(1) {
+    padding-top: 0.5rem;
   }
 `
 
-const MenuItem = styled(ExternalLink)`
-  flex: 1;
-  padding: 0.5rem 0.5rem;
-  display: flex;
-  font-weight: 500;
-  align-items: center;
-  color: ${({ theme }) => theme.text2};
-  :hover {
-    color: ${({ theme }) => theme.text};
-    cursor: pointer;
-    text-decoration: none;
-  }
-  > svg {
-    margin-right: 8px;
+const MenuFlyoutMobileStyle = css`
+  & ${MenuItem}:nth-child(1),
+  & ${NavMenuItem}:nth-child(1) {
+    padding-top: 0.5rem;
   }
 `
 
@@ -147,7 +149,6 @@ export default function Menu() {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
-  useOnClickOutside(node, open ? toggle : undefined)
 
   const above1320 = useMedia('(min-width: 1320px)')
   const above1100 = useMedia('(min-width: 1100px)')
@@ -172,82 +173,88 @@ export default function Menu() {
         <StyledMenuIcon />
       </StyledMenuButton>
 
-      {open && (
-        <MenuFlyout>
-          <Flex flexDirection={'column'} padding="5px">
-            {!above768 && (
-              <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>
-                <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />
-                <SlideToUnlock>
-                  <Text width="max-content" marginLeft="8px">
-                    ZKyber ↗
-                  </Text>
-                </SlideToUnlock>
-              </MenuItem>
-            )}
-            {bridgeLink && (
-              <MenuItem href={bridgeLink}>
-                <Share2 size={14} />
-                <Text width="max-content">
-                  <Trans>Bridge Assets</Trans>
+      <MenuFlyout
+        node={node}
+        browserCustomStyle={MenuFlyoutBrowserStyle}
+        mobileCustomStyle={MenuFlyoutMobileStyle}
+        isOpen={open}
+        toggle={toggle}
+        translatedTitle={t`Menu`}
+      >
+        <Flex flexDirection={'column'} padding="5px">
+          {!above768 && (
+            <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>
+              <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />
+              <SlideToUnlock>
+                <Text width="max-content" marginLeft="8px">
+                  ZKyber ↗
                 </Text>
-              </MenuItem>
-            )}
+              </SlideToUnlock>
+            </MenuItem>
+          )}
+          {bridgeLink && (
+            <MenuItem href={bridgeLink}>
+              <Share2 size={14} />
+              <Text width="max-content">
+                <Trans>Bridge Assets</Trans>
+              </Text>
+            </MenuItem>
+          )}
 
-            {!above768 && (
-              <NavMenuItem to="/myPools">
-                <Monitor size={14} />
-                <Trans>My Pools</Trans>
-              </NavMenuItem>
-            )}
-            {!above1320 && (
-              <NavMenuItem to="/about">
-                <Info size={14} />
-                <Trans>About</Trans>
-              </NavMenuItem>
-            )}
-            {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
-              <NavMenuItem to="/migration">
-                <Zap size={14} />
-                <Trans>Migrate Liquidity</Trans>
-              </NavMenuItem>
-            )}
-            {!above1100 && (
-              <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
-                <PieChart size={14} />
-                <Trans>Analytics</Trans>
-              </MenuItem>
-            )}
-            <MenuItem id="link" href="https://docs.kyberswap.com">
-              <BookOpen size={14} />
-              <Trans>Docs</Trans>
+          {!above768 && (
+            <NavMenuItem to="/myPools">
+              <Monitor size={14} />
+              <Trans>My Pools</Trans>
+            </NavMenuItem>
+          )}
+          {!above1320 && (
+            <NavMenuItem to="/about">
+              <Info size={14} />
+              <Trans>About</Trans>
+            </NavMenuItem>
+          )}
+          {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
+            <NavMenuItem to="/migration">
+              <Zap size={14} />
+              <Trans>Migrate Liquidity</Trans>
+            </NavMenuItem>
+          )}
+          {!above1100 && (
+            <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
+              <PieChart size={14} />
+              <Trans>Analytics</Trans>
             </MenuItem>
-            <MenuItem id="link" href="https://gov.kyber.org">
-              <User size={14} />
-              <Trans>Forum</Trans>
-            </MenuItem>
-            <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
-              <FileText size={14} />
-              <Trans>Terms</Trans>
-            </MenuItem>
+          )}
+          <MenuItem id="link" href="https://docs.kyberswap.com">
+            <BookOpen size={14} />
+            <Trans>Docs</Trans>
+          </MenuItem>
+          <MenuItem id="link" href="https://gov.kyber.org">
+            <User size={14} />
+            <Trans>Forum</Trans>
+          </MenuItem>
+          <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
+            <FileText size={14} />
+            <Trans>Terms</Trans>
+          </MenuItem>
 
-            {process.env.REACT_APP_MAINNET_ENV !== 'production' && (
-              <NavMenuItem to="/swap-legacy">
-                <Triangle size={14} />
-                <Trans>Swap Legacy</Trans>
-              </NavMenuItem>
-            )}
-            <MenuItem id="link" href="https://forms.gle/gLiNsi7iUzHws2BY8">
-              <Edit size={14} />
-              <Trans>Contact Us</Trans>
-            </MenuItem>
-          </Flex>
-        </MenuFlyout>
-      )}
+          {process.env.REACT_APP_MAINNET_ENV !== 'production' && (
+            <NavMenuItem to="/swap-legacy">
+              <Triangle size={14} />
+              <Trans>Swap Legacy</Trans>
+            </NavMenuItem>
+          )}
+          <MenuItem id="link" href="https://forms.gle/gLiNsi7iUzHws2BY8">
+            <Edit size={14} />
+            <Trans>Contact Us</Trans>
+          </MenuItem>
+        </Flex>
+      </MenuFlyout>
     </StyledMenu>
   )
 }
 
+// TODO: no reference, remove this
 export function FlyoutPriceRange({ header, content }: { header: ReactNode; content: ReactNode }) {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.PRICE_RANGE)
@@ -259,13 +266,11 @@ export function FlyoutPriceRange({ header, content }: { header: ReactNode; conte
         {header}
       </span>
 
-      {open && (
-        <MenuFlyout>
-          <MenuItem id="link" href="https://dmm.exchange/">
-            {content}
-          </MenuItem>
-        </MenuFlyout>
-      )}
+      <MenuFlyout node={node} isOpen={open} toggle={toggle} translatedTitle="">
+        <MenuItem id="link" href="https://dmm.exchange/">
+          {content}
+        </MenuItem>
+      </MenuFlyout>
     </StyledMenu>
   )
 }

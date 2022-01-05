@@ -7,7 +7,6 @@ import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import NetworkModal from '../NetworkModal'
 import Card from 'components/Card'
 import Row from 'components/Row'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { ApplicationModal } from 'state/application/actions'
 
 const NetworkSwitchContainer = styled.div`
@@ -68,7 +67,6 @@ function Web3Network(): JSX.Element | null {
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
   const node = useRef<HTMLDivElement>()
-  useOnClickOutside(node, networkModalOpen ? toggleNetworkModal : undefined)
 
   if (!chainId) return null
 
@@ -85,7 +83,7 @@ function Web3Network(): JSX.Element | null {
         </Row>
         <DropdownIcon open={networkModalOpen} />
       </NetworkSwitchContainer>
-      <NetworkModal />
+      <NetworkModal node={node} />
     </NetworkCard>
   )
 }

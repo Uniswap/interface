@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   margin-bottom: 16px;
 `
 
+// TODO: no reference, remove this
 function ModalHeader({ title = undefined }: { title?: string }): JSX.Element {
   return <Wrapper>{title && <TYPE.body>{title}</TYPE.body>}</Wrapper>
 }

@@ -1047,6 +1047,10 @@ msgstr "Tối đa Đã Bán"
 msgid "Maximum sold"
 msgstr "Tối đa đã bán"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr ""
+
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
 #: src/components/PositionCard/V1.tsx
@@ -1505,6 +1509,14 @@ msgstr "Chọn một token để tìm thanh khoản của bạn."
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr "Chia sẽ của Pool"
+
+#: src/components/ShareModal/index.tsx
+msgid "Share this pool with your friends!"
+msgstr ""
+
+#: src/components/ShareModal/index.tsx
+msgid "Share this token with your friends!"
+msgstr ""
 
 #: src/components/PoolList/index.tsx
 msgid "Show More Pools"

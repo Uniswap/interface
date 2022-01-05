@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useCallback } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import styled, { css, ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Text, Flex } from 'rebass'
 import { X } from 'react-feather'
@@ -17,9 +17,9 @@ import Toggle from 'components/Toggle'
 import Modal from 'components/Modal'
 import { ButtonPrimary, ButtonOutlined } from 'components/Button'
 import { ApplicationModal } from 'state/application/actions'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
 import Tooltip from 'components/Tooltip'
+import MenuFlyout from 'components/MenuFlyout'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -154,18 +154,14 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span`
+const MenuFlyoutBrowserStyle = css`
   min-width: 322px;
-  background-color: ${({ theme }) => theme.tableHeader};
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.36));
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-  position: absolute;
-  top: 3rem;
   right: -10px;
-  z-index: 100;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    top: 4rem;
+    bottom: unset;
+  `};
 
   & > div {
     position: relative;
@@ -183,12 +179,6 @@ const MenuFlyout = styled.span`
       margin-left: -10px;
     }
   }
-`
-
-const MenuFlyoutTitle = styled.div`
-  padding-bottom: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-  color: ${({ theme }) => theme.text};
 `
 
 const StyledInput = styled.input`
@@ -383,7 +373,6 @@ export default function TransactionSettings() {
   const [showConfirmation, setShowConfirmation] = useState(false)
   const open = useModalOpen(ApplicationModal.TRANSACTION_SETTINGS)
   const node = useRef<HTMLDivElement>()
-  useOnClickOutside(node, open ? toggle : undefined)
 
   const [isShowTooltip, setIsShowTooltip] = useState<boolean>(false)
   const showTooltip = useCallback(() => setIsShowTooltip(true), [setIsShowTooltip])
@@ -470,48 +459,46 @@ export default function TransactionSettings() {
           </div>
         </Tooltip>
 
-        {open && (
-          <MenuFlyout>
-            <AutoColumn gap="16px" style={{ padding: '16px' }}>
-              <MenuFlyoutTitle>
-                <Text fontWeight={500} fontSize={16} color={theme.text}>
-                  <Trans>Advanced Settings</Trans>
-                </Text>
-              </MenuFlyoutTitle>
+        <MenuFlyout
+          node={node}
+          browserCustomStyle={MenuFlyoutBrowserStyle}
+          isOpen={open}
+          toggle={toggle}
+          translatedTitle={t`Advanced Settings`}
+        >
+          <>
+            <SlippageTabs
+              rawSlippage={userSlippageTolerance}
+              setRawSlippage={setUserslippageTolerance}
+              deadline={ttl}
+              setDeadline={setTtl}
+            />
 
-              <SlippageTabs
-                rawSlippage={userSlippageTolerance}
-                setRawSlippage={setUserslippageTolerance}
-                deadline={ttl}
-                setDeadline={setTtl}
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
+                  <Trans>Advanced Mode</Trans>
+                </TYPE.black>
+                <QuestionHelper text={t`Enables high slippage trades. Use at your own risk.`} />
+              </RowFixed>
+              <Toggle
+                id="toggle-expert-mode-button"
+                isActive={expertMode}
+                toggle={
+                  expertMode
+                    ? () => {
+                        toggleExpertMode()
+                        setShowConfirmation(false)
+                      }
+                    : () => {
+                        toggle()
+                        setShowConfirmation(true)
+                      }
+                }
               />
-
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
-                    <Trans>Advanced Mode</Trans>
-                  </TYPE.black>
-                  <QuestionHelper text={t`Enables high slippage trades. Use at your own risk.`} />
-                </RowFixed>
-                <Toggle
-                  id="toggle-expert-mode-button"
-                  isActive={expertMode}
-                  toggle={
-                    expertMode
-                      ? () => {
-                          toggleExpertMode()
-                          setShowConfirmation(false)
-                        }
-                      : () => {
-                          toggle()
-                          setShowConfirmation(true)
-                        }
-                  }
-                />
-              </RowBetween>
-            </AutoColumn>
-          </MenuFlyout>
-        )}
+            </RowBetween>
+          </>
+        </MenuFlyout>
       </StyledMenu>
     </>
   )

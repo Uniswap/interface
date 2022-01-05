@@ -1047,6 +1047,10 @@ msgstr "최대 판매"
 msgid "Maximum sold"
 msgstr "최대 판매"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr ""
+
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
 #: src/components/PositionCard/V1.tsx
@@ -1505,6 +1509,14 @@ msgstr "유동성을 찾기 위해 토큰을 선택하십시오."
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr "풀 점유율"
+
+#: src/components/ShareModal/index.tsx
+msgid "Share this pool with your friends!"
+msgstr ""
+
+#: src/components/ShareModal/index.tsx
+msgid "Share this token with your friends!"
+msgstr ""
 
 #: src/components/PoolList/index.tsx
 msgid "Show More Pools"
