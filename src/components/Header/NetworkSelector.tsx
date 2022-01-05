@@ -225,7 +225,7 @@ const getParsedChainId = (parsedQs?: ParsedQs) => {
 export default function NetworkSelector() {
   const { chainId, library } = useActiveWeb3React()
   const parsedQs = useParsedQueryString()
-  const [promptedNetworkChange, setPromptedNetworkChange] = useState(false)
+  const [lastNetworkChange, setLastNetworkChange] = useState<number | null>(null)
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
@@ -250,14 +250,14 @@ export default function NetworkSelector() {
   )
 
   useEffect(() => {
-    if (!chainId || promptedNetworkChange) return
+    if (!chainId || lastNetworkChange === chainId) return
     const newChainId = getParsedChainId(parsedQs)
 
     if (newChainId && chainId !== newChainId) {
       handleChainSwitch(newChainId, true)
-      setPromptedNetworkChange(true)
+      setLastNetworkChange(chainId)
     }
-  }, [handleChainSwitch, promptedNetworkChange, chainId, parsedQs])
+  }, [handleChainSwitch, lastNetworkChange, chainId, parsedQs])
 
   if (!chainId || !info || !library) {
     return null
