@@ -2,30 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { TIME_TO_REFRESH_SWAP_RATE } from '../../constants'
 import { Aggregator } from '../../utils/aggregator'
-
-const IconButton = styled.button`
-  cursor: pointer;
-  height: 36px;
-  width: 36px;
-  border-radius: 4px;
-  //transition: background 0.2s;
-  outline: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.buttonBlack};
-  }
-`
-
+import { IconButton } from './styleds'
 const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
   return (
     <svg

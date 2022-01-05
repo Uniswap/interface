@@ -61,7 +61,7 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span`
   min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.tableHeader};
   filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.36));
   border-radius: 8px;
   display: flex;
@@ -69,18 +69,45 @@ const MenuFlyout = styled.span`
   font-size: 1rem;
   position: absolute;
   top: 4rem;
-  right: 0rem;
+  right: -10px;
   z-index: 100;
+
+  & > div {
+    position: relative;
+    :after {
+      bottom: 100%;
+      right: 18px;
+      border: solid transparent;
+      content: '';
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-bottom-color: ${({ theme }) => theme.tableHeader};
+      border-width: 10px;
+      margin-left: -10px;
+    }
+  }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     min-width: 18.125rem;
     right: -46px;
+    & > div:after{
+       right: 52px;
+    }
   `};
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     min-width: 18.125rem;
     top: unset;
     bottom: 3.5rem;
+    & > div:after {
+        top: 100%;
+        border-top-color: ${({ theme }) => theme.tableHeader};
+        border-bottom-color: transparent
+        border-width: 10px;
+        margin-left: -10px;
+    }
   `};
 `
 

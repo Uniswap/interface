@@ -348,3 +348,34 @@ export const PriceImpactHigh = styled.div<{ veryHigh?: boolean }>`
   align-items: center;
   font-size: 12px;
 `
+
+export const IconButton = styled.button`
+  cursor: pointer;
+  height: 36px;
+  width: 36px;
+  border-radius: 4px;
+  //transition: background 0.2s;
+  outline: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.buttonBlack};
+  }
+`
+
+export const ShareButton = styled(IconButton)`
+  svg {
+    circle {
+      fill: ${({ theme }) => theme.text};
+    }
+  }
+`

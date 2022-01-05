@@ -15,7 +15,7 @@ import {
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
-import { Text } from 'rebass'
+import { Text, Flex } from 'rebass'
 
 import { ChainId } from '@dynamic-amm/sdk'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -66,23 +66,45 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 9rem;
-  background-color: ${({ theme }) => theme.background};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
-  padding: 0.5rem;
+  min-width: 11rem;
+  background-color: ${({ theme }) => theme.tableHeader};
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.36));
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
   top: 4rem;
-  right: 0rem;
+  right: -8px;
   z-index: 100;
+
+  & > div {
+    position: relative;
+    :after {
+      bottom: 100%;
+      right: 18px;
+      border: solid transparent;
+      content: '';
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-bottom-color: ${({ theme }) => theme.tableHeader};
+      border-width: 10px;
+      margin-left: -10px;
+    }
+  }
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     top: unset;
     bottom: 3.5rem;
+    & > div:after {
+      top: 100%;
+      border-top-color: ${({ theme }) => theme.tableHeader};
+      border-bottom-color: transparent
+      border-width: 10px;
+      margin-left: -10px;
+    }
   `};
 `
 
@@ -152,72 +174,74 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          {!above768 && (
-            <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>
-              <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />
-              <SlideToUnlock>
-                <Text width="max-content" marginLeft="8px">
-                  ZKyber ↗
+          <Flex flexDirection={'column'} padding="5px">
+            {!above768 && (
+              <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>
+                <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />
+                <SlideToUnlock>
+                  <Text width="max-content" marginLeft="8px">
+                    ZKyber ↗
+                  </Text>
+                </SlideToUnlock>
+              </MenuItem>
+            )}
+            {bridgeLink && (
+              <MenuItem href={bridgeLink}>
+                <Share2 size={14} />
+                <Text width="max-content">
+                  <Trans>Bridge Assets</Trans>
                 </Text>
-              </SlideToUnlock>
-            </MenuItem>
-          )}
-          {bridgeLink && (
-            <MenuItem href={bridgeLink}>
-              <Share2 size={14} />
-              <Text width="max-content">
-                <Trans>Bridge Assets</Trans>
-              </Text>
-            </MenuItem>
-          )}
+              </MenuItem>
+            )}
 
-          {!above768 && (
-            <NavMenuItem to="/myPools">
-              <Monitor size={14} />
-              <Trans>My Pools</Trans>
-            </NavMenuItem>
-          )}
-          {!above1320 && (
-            <NavMenuItem to="/about">
-              <Info size={14} />
-              <Trans>About</Trans>
-            </NavMenuItem>
-          )}
-          {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
-            <NavMenuItem to="/migration">
-              <Zap size={14} />
-              <Trans>Migrate Liquidity</Trans>
-            </NavMenuItem>
-          )}
-          {!above1100 && (
-            <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
-              <PieChart size={14} />
-              <Trans>Analytics</Trans>
+            {!above768 && (
+              <NavMenuItem to="/myPools">
+                <Monitor size={14} />
+                <Trans>My Pools</Trans>
+              </NavMenuItem>
+            )}
+            {!above1320 && (
+              <NavMenuItem to="/about">
+                <Info size={14} />
+                <Trans>About</Trans>
+              </NavMenuItem>
+            )}
+            {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
+              <NavMenuItem to="/migration">
+                <Zap size={14} />
+                <Trans>Migrate Liquidity</Trans>
+              </NavMenuItem>
+            )}
+            {!above1100 && (
+              <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
+                <PieChart size={14} />
+                <Trans>Analytics</Trans>
+              </MenuItem>
+            )}
+            <MenuItem id="link" href="https://docs.kyberswap.com">
+              <BookOpen size={14} />
+              <Trans>Docs</Trans>
             </MenuItem>
-          )}
-          <MenuItem id="link" href="https://docs.kyberswap.com">
-            <BookOpen size={14} />
-            <Trans>Docs</Trans>
-          </MenuItem>
-          <MenuItem id="link" href="https://gov.kyber.org">
-            <User size={14} />
-            <Trans>Forum</Trans>
-          </MenuItem>
-          <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
-            <FileText size={14} />
-            <Trans>Terms</Trans>
-          </MenuItem>
+            <MenuItem id="link" href="https://gov.kyber.org">
+              <User size={14} />
+              <Trans>Forum</Trans>
+            </MenuItem>
+            <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
+              <FileText size={14} />
+              <Trans>Terms</Trans>
+            </MenuItem>
 
-          {process.env.REACT_APP_MAINNET_ENV !== 'production' && (
-            <NavMenuItem to="/swap-legacy">
-              <Triangle size={14} />
-              <Trans>Swap Legacy</Trans>
-            </NavMenuItem>
-          )}
-          <MenuItem id="link" href="https://forms.gle/gLiNsi7iUzHws2BY8">
-            <Edit size={14} />
-            <Trans>Contact Us</Trans>
-          </MenuItem>
+            {process.env.REACT_APP_MAINNET_ENV !== 'production' && (
+              <NavMenuItem to="/swap-legacy">
+                <Triangle size={14} />
+                <Trans>Swap Legacy</Trans>
+              </NavMenuItem>
+            )}
+            <MenuItem id="link" href="https://forms.gle/gLiNsi7iUzHws2BY8">
+              <Edit size={14} />
+              <Trans>Contact Us</Trans>
+            </MenuItem>
+          </Flex>
         </MenuFlyout>
       )}
     </StyledMenu>

@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI, Token } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, X, AlertTriangle } from 'react-feather'
+import { ArrowDown, X, AlertTriangle, Share2 } from 'react-feather'
 import { Text, Flex, Box } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
@@ -26,7 +26,8 @@ import {
   SwapFormActions,
   Wrapper,
   KyberTag,
-  PriceImpactHigh
+  PriceImpactHigh,
+  ShareButton
 } from '../../components/swapv2/styleds'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -67,6 +68,7 @@ import { Swap as SwapIcon } from 'components/Icons'
 import TradePrice from 'components/swapv2/TradePrice'
 import Modal from 'components/Modal'
 import InfoHelper from 'components/InfoHelper'
+import ShareModal from 'components/ShareModal'
 import TokenInfo from 'components/swapv2/TokenInfo'
 
 enum ACTIVE_TAB {
@@ -89,7 +91,6 @@ export default function Swap({ history }: RouteComponentProps) {
   const toggleShowRoute = () => setShowRoute(prev => !prev)
 
   const loadedUrlParams = useDefaultsFromURLSearch()
-
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
@@ -329,6 +330,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <SwapFormActions>
                   <RefreshButton isConfirming={showConfirm} trade={trade} onClick={onRefresh} />
                   <TransactionSettings />
+                  <ShareModal currencies={currencies} />
                 </SwapFormActions>
               </RowBetween>
 

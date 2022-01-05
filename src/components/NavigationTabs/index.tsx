@@ -4,11 +4,12 @@ import { darken } from 'polished'
 import { NavLink, useHistory } from 'react-router-dom'
 import { ArrowLeft } from 'react-feather'
 import { t, Trans } from '@lingui/macro'
-
+import { Flex } from 'rebass'
 import { ButtonEmpty } from 'components/Button'
 import { RowBetween } from '../Row'
 import QuestionHelper from '../QuestionHelper'
 import TransactionSettings from 'components/TransactionSettings'
+import ShareModal from 'components/ShareModal'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -63,6 +64,8 @@ const StyledArrowLeft = styled(ArrowLeft)`
 `
 
 const ButtonBack = styled(ButtonEmpty)`
+  margin-right: 54px;
+  justify-content: flex-start;
   :hover,
   :focus {
     cursor: pointer;
@@ -119,7 +122,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
         <ButtonBack width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
         </ButtonBack>
-        <div style={{ display: 'flex' }}>
+        <Flex>
           <ActiveText>{creating ? t`Create a new pool` : adding ? t`Add Liquidity` : t`Remove Liquidity`}</ActiveText>
           <QuestionHelper
             text={
@@ -128,8 +131,11 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
                 : t`Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.`
             }
           />
-        </div>
-        <TransactionSettings />
+        </Flex>
+        <Flex style={{ gap: '8px' }}>
+          <TransactionSettings />
+          <ShareModal />
+        </Flex>
       </Wrapper>
     </Tabs>
   )
