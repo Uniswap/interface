@@ -1,11 +1,11 @@
 import { TokenList } from '@uniswap/token-lists'
-// import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
-// import Ajv from 'ajv'
+import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
+import Ajv from 'ajv'
 import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './parseENSAddress'
 import uriToHttp from './uriToHttp'
 
-// const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
+const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
 
 /**
  * Contains the logic for resolving a list URL to a validated token list
@@ -55,32 +55,34 @@ export default async function getTokenList(
     }
 
     const json = await response.json()
-    // @dev: this is removed because roll list is not well formated. We should patch the list in the future
-    // if (!tokenListValidator(json)) {
-    //   const validationErrors: string =
-    //     tokenListValidator.errors?.reduce<string>((memo, error) => {
-    //       const add = `${error.dataPath} ${error.message ?? ''}`
-    //       return memo.length > 0 ? `${memo}; ${add}` : `${add}`
-    //     }, '') ?? 'unknown error'
-    //   throw new Error(`Token list failed validation: ${validationErrors}`)
-    // }
-
-    // return json
-    const OBJ = {
-      name: 'Roll Default List',
-      timestamp: new Date().toISOString(),
-      version: {
-        major: 1,
-        minor: 0,
-        patch: json.tokens.length,
-      },
-      tags: {},
-      logoURI: '',
-      keywords: ['roll', 'default'],
-      tokens: json.tokens,
+    // @dev: this is because roll list is not well formated. We should patch the list in the future
+    if (json.name === 'Roll Social Money') {
+      const OBJ = {
+        name: 'Roll Social Money',
+        timestamp: json.timestamp ?? new Date().toISOString(),
+        version: json.version ?? {
+          major: 1,
+          minor: 0,
+          patch: json.tokens.length,
+        },
+        tags: json.tags ?? {},
+        logoURI: json.logoURI ?? '',
+        keywords: ['roll', 'default'],
+        tokens: json.tokens,
+      }
+      return OBJ
     }
 
-    return OBJ
+    if (!tokenListValidator(json)) {
+      const validationErrors: string =
+        tokenListValidator.errors?.reduce<string>((memo, error) => {
+          const add = `${error.dataPath} ${error.message ?? ''}`
+          return memo.length > 0 ? `${memo}; ${add}` : `${add}`
+        }, '') ?? 'unknown error'
+      throw new Error(`Token list failed validation: ${validationErrors}`)
+    }
+
+    return json
   }
   throw new Error('Unrecognized list URL protocol.')
 }

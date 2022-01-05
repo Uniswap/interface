@@ -48,7 +48,6 @@ const listCache: WeakMap<TokenList, TokenAddressMap> | null =
   typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
 const buildToken = (rollExchangeToken: any): TokenInfo => {
-  console.log(rollExchangeToken.tags)
   return {
     address: rollExchangeToken.address,
     chainId: 1,
