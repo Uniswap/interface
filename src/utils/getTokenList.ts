@@ -68,17 +68,18 @@ export default async function getTokenList(
     // return json
     const OBJ = {
       name: 'Roll Default List',
-      timestamp: '2020-07-28T20:33:38+00:00',
+      timestamp: new Date().toISOString(),
       version: {
         major: 1,
         minor: 0,
-        patch: 2,
+        patch: json.tokens.length,
       },
       tags: {},
       logoURI: '',
       keywords: ['roll', 'default'],
       tokens: json.tokens,
     }
+
     return OBJ
   }
   throw new Error('Unrecognized list URL protocol.')
