@@ -6,7 +6,10 @@ const supportedChains = Object.values(ChainId).map((c) => c.toString())
 // This validates them as coerces into SupportedChainId
 export function toSupportedChain(chainId: number | string) {
   if (!supportedChains.includes(chainId.toString())) {
-    throw new Error(`Cannot convert unsupported chainId ${chainId}`)
+    // Too noisy as lists include Polygon tokens.
+    // TODO uncomment when polygon is supported
+    // logger.debug('chainId', 'toSupportedChain', 'Unsupported chain:', chainId)
+    return null
   }
   return parseInt(chainId.toString(), 10) as ChainId
 }

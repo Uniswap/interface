@@ -2,6 +2,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { REHYDRATE } from 'redux-persist'
 import { RootState } from 'src/app/rootReducer'
 import { getWalletProviders } from 'src/app/walletContext'
+import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { blockChannelWatcher, createBlockChannel } from 'src/features/blocks/blockListeners'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
@@ -16,7 +17,7 @@ export function* initProviders() {
   // Wait for rehydration so we know which networks are enabled
   const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
   const chains = persisted.payload?.chains?.byChainId
-  const activeChains = getSortedActiveChainIds(chains)
+  const activeChains = getSortedActiveChainIds(chains || config.activeChains)
 
   logger.debug('providerSaga', 'initProviders', 'Initializing providers')
   const manager = yield* call(getWalletProviders)

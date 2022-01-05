@@ -61,9 +61,10 @@ function useTokensFromListedMap(
     // reduce to just tokens
     const mapWithoutUrls: ChainIdToAddressToToken = {}
     for (const _chainId of getKeys(listedTokenMap)) {
-      for (const tokenAddr of getKeys(listedTokenMap[_chainId])) {
-        const tokenInfo = listedTokenMap[_chainId][tokenAddr]
-        const chainId = toSupportedChain(_chainId)
+      const chainId = toSupportedChain(_chainId)
+      if (!chainId) continue
+      for (const tokenAddr of getKeys(listedTokenMap[chainId])) {
+        const tokenInfo = listedTokenMap[chainId][tokenAddr]
         mapWithoutUrls[chainId] ??= {}
         mapWithoutUrls[chainId]![tokenAddr] = tokenInfo.token
       }
@@ -76,6 +77,7 @@ function useTokensFromListedMap(
           .reduce<ChainIdToAddressToToken>(
             (newMap, token) => {
               const chainId = toSupportedChain(token.chainId)
+              if (!chainId) return newMap
               newMap[chainId] ??= {}
               newMap[chainId]![token.address] = token
               return newMap

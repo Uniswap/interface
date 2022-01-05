@@ -1,6 +1,5 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/state/lists/hooks.ts
 
-import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
@@ -35,8 +34,6 @@ function listToTokenMap(list: TokenList): ChainIdToListedTokens {
   listCache?.set(list, map)
   return map
 }
-
-const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
 
 export function useAllLists() {
   return useAppSelector((state) => state.tokenLists.byUrl)
@@ -118,7 +115,7 @@ export function useInactiveListUrls(): string[] {
 export function useCombinedActiveList(): ChainIdToListedTokens {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-  return combineMaps(activeTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
+  return activeTokens
 }
 
 // list of tokens not supported on interface for various reasons, used to show warnings and prevent swaps and adds
