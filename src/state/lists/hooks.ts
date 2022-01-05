@@ -1,4 +1,3 @@
-import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -52,7 +51,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
+const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap({ tokens: [] } as unknown as TokenList)
 
 export function useAllLists(): AppState['lists']['byUrl'] {
   return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
@@ -78,12 +77,16 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
         .reduce((allTokens, currentUrl) => {
           const current = lists[currentUrl]?.current
           if (!current) return allTokens
-          try {
-            return combineMaps(allTokens, listToTokenMap(current))
-          } catch (error) {
-            console.error('Could not show token list due to error', error)
-            return allTokens
-          }
+          return allTokens
+          /**
+           * @TODO: get the tokenlist in here
+           */
+          // try {
+          //   return combineMaps(allTokens, listToTokenMap(current))
+          // } catch (error) {
+          //   console.error('Could not show token list due to error', error)
+          //   return allTokens
+          // }
         }, EMPTY_LIST)
     )
   }, [lists, urls])
@@ -112,7 +115,7 @@ export function useCombinedActiveList(): TokenAddressMap {
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds
 export function useUnsupportedTokenList(): TokenAddressMap {
   // get hard coded unsupported tokens
-  const localUnsupportedListMap = listToTokenMap(UNSUPPORTED_TOKEN_LIST)
+  const localUnsupportedListMap = listToTokenMap({ tokens: [] } as unknown as TokenList)
 
   // get any loaded unsupported tokens
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
