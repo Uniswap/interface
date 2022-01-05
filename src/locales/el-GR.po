@@ -1,0 +1,2433 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
+"Last-Translator: \n"
+"Language: el_GR\n"
+"Language-Team: Greek\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project-ID: 458284\n"
+"X-Crowdin-Language: el\n"
+"X-Crowdin-File: en-US.po\n"
+"X-Crowdin-File-ID: 4\n"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "$-"
+msgstr "$-"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "${0}"
+msgstr "${0}"
+
+#: src/components/swap/TradePrice.tsx
+msgid "(${0})"
+msgstr "(${0})"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(Προβολή στον Explorer)"
+
+#: src/components/AccountDetails/index.tsx
+msgid "(clear all)"
+msgstr "(καθαρισμός όλων)"
+
+#: src/pages/Vote/Landing.tsx
+msgid "(edit)"
+msgstr "(επεξεργασία)"
+
+#: src/pages/Swap/index.tsx
+msgid "- Remove recipient"
+msgstr "- Αφαίρεση παραλήπτη"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/PoolCard.tsx
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "0 UNI / week"
+msgstr "0 UNI / εβδομάδα"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "25%"
+msgstr "25%"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "50%"
+msgstr "50%"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "75%"
+msgstr "75%"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "<0/> All Proposals"
+msgstr "<0/> Όλες Οι Προτάσεις"
+
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
+msgid "<0/> Votes"
+msgstr "<0/> Ψήφοι"
+
+#: src/pages/Pool/v2.tsx
+msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
+msgstr "<0>Αναλυτικά λογαριασμού και δεδουλευμένα τέλη</0><1> ↗ </1>"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
+msgstr "<0> Τρέχουσα τιμή:</0> <1> <2 /></1> <3>{0} ανά {1}</3>"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
+msgstr "<0>Συμβουλή:</0> Η αφαίρεση μάρκας από τη δεξαμενή οπισθοχωρεί την θέση σας σε υποκείμενες μάρκες στη τρέχουσα τιμή, αναλογικά με το μερίδιό σας στην δεξαμενή. Τα δεδουλευμένα τέλη περιλαμβάνονται στα ποσά που λαμβάνετε."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0> Συμβουλή:</0> Επιλέξτε μια ενέργεια και περιγράψτε την πρότασή σας για την κοινότητα. Η πρόταση δεν μπορεί να τροποποιηθεί μετά την υποβολή, επομένως επαληθεύστε όλες τις πληροφορίες πριν από την υποβολή. Η περίοδος ψηφοφορίας θα ξεκινήσει αμέσως και θα διαρκέσει 7 ημέρες. Για να προτείνετε μια προσαρμοσμένη ενέργεια, <1> διαβάστε τα έγγραφα</1> ."
+
+#: src/pages/PoolFinder/index.tsx
+msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
+msgstr "<0> Συμβουλή:</0> Χρησιμοποιήστε αυτό το εργαλείο για να βρείτε δεξαμενές της v2 που δεν εμφανίζονται αυτόματα στη διεπαφή."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
+msgstr "<0>Συμβουλή:</0> Όταν προσθέσετε ρευστότητα, θα λάβετε μάρκες δεξαμενής που αντιπροσωπεύουν τη θέση σας. Αυτές οι μάρκες κερδίζουν αυτόματα τέλη ανάλογα με το μερίδιό σας στην πισίνα, και μπορούν να εξαργυρωθούν ανά πάσα στιγμή."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "<0>Unlock voting</0> to prepare for the next proposal."
+msgstr "<0>Ξεκλειδώστε τη ψηφοφορία</0> για να προετοιμαστείτε για την επόμενη πρόταση."
+
+#: src/components/claim/ClaimModal.tsx
+msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
+msgstr "<0>🎉 </0>Καλώς ήρθατε στην ομάδα Unicorn :) <1>🎉</1>"
+
+#: src/pages/Vote/Landing.tsx
+msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
+msgstr "Απαιτείται ελάχιστο όριο 0,25% της συνολικής προσφοράς UNI για την υποβολή προτάσεων"
+
+#: src/components/Menu/index.tsx
+msgid "About"
+msgstr "Σχετικά με εμάς"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Accept"
+msgstr "Αποδοχή"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Account"
+msgstr "Λογαριασμός"
+
+#: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
+msgid "Active"
+msgstr "Ενεργός"
+
+#: src/components/PositionCard/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add"
+msgstr "Προσθήκη"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Προσθέστε <0/> και <1/> στο Uniswap V2"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Add Delegate +"
+msgstr "Προσθήκη εκπροσώπου +"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add Liquidity"
+msgstr "Προσθήκη Ρευστότητας"
+
+#: src/pages/Pool/v2.tsx
+msgid "Add V2 Liquidity"
+msgstr "Προσθήκη Ρευστότητας V2"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Add liquidity."
+msgstr "Προσθήκη ρευστότητας."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add more liquidity"
+msgstr "Προσθέστε περισσότερη ρευστότητα"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Add {0} to Metamask <0/>"
+msgstr "Προσθήκη {0} στο Metamask <0/>"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Add {0}-{1} liquidity"
+msgstr "Προσθήκη {0}-{1} ρευστότητας"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add {0}/{1} V3 liquidity"
+msgstr "Προσθήκη {0}/{1} V3 ρευστότητας"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Added {0}"
+msgstr "Προστέθηκε {0}"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Address has no available claim"
+msgstr "Η διεύθυνση δεν έχει διαθέσιμη διεκδίκηση"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Against"
+msgstr "Εναντίον"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Allow LP token migration"
+msgstr "Επιτρέψτε τη μεταφορά μάρκας παρόχου ρευστότητας (LP)"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Επιτρέψτε τις διαπραγματεύσεις υψηλής επίδρασης τιμών και παραλείψτε την οθόνη επιβεβαίωσης. Χρησιμοποιήστε τη με δική σας ευθύνη."
+
+#: src/pages/Swap/index.tsx
+msgid "Allow the Uniswap Protocol to use your {0}"
+msgstr "Επιτρέψτε στο πρωτόκολλο Uniswap να χρησιμοποιήσει το {0} σας"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Allowed"
+msgstr "Επιτρέπεται"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Amount"
+msgstr "Ποσό"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Παρουσιάστηκε σφάλμα κατά την προσπάθεια εκτέλεσης αυτής της ανταλλαγής. Ίσως χρειαστεί να αυξήσετε την ανοχή ολίσθησης. Εάν αυτό δεν λειτουργεί, μπορεί να υπάρχει ασυμβατότητα με το διακριτικό που διαπραγματεύεστε. Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+
+#: src/components/earn/StakingModal.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approve"
+msgstr "Έγκριση"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "Έγκριση κουπονιού"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Approve {0}"
+msgstr "Έγκριση {0}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approved"
+msgstr "Εγκρίθηκε"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approving"
+msgstr "Έγκριση"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Approving {0}"
+msgstr "Έγκριση {0}"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Αρβισκανός"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "Γέφυρα Arbitrum"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Το Arbitrum βρίσκεται σε Beta και ενδέχεται να αντιμετωπίσει διακοπές λειτουργίας. Κατά τη διάρκεια του χρόνου διακοπής, η θέση σας δεν θα κερδίσει τέλη και δεν θα μπορείτε να αφαιρέσετε τη ρευστότητα. <0> Διαβάστε περισσότερα.</0>"
+
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Σίγουρα;"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "Ως μέλος της κοινότητας Uniswap μπορείτε να διεκδικήσετε το UNI για να χρησιμοποιηθεί για ψηφοφορία και διακυβέρνηση.<0/><1/><2>Διαβάστε περισσότερα για UNI</2>"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
+msgstr "Τουλάχιστον {0} {1} και {2} {3} θα επιστραφούν στο πορτοφόλι σας λόγω του επιλεγμένου εύρους τιμών."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Αυτόματο"
+
+#: src/components/Settings/index.tsx
+msgid "Auto Router API"
+msgstr "Auto Router API"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Available to deposit: {0}"
+msgstr "Διαθέσιμο για κατάθεση: {0}"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0}"
+msgstr "Υπόλοιπο: {0}"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for exotic pairs."
+msgstr "Καλύτερο για εξωτικά ζεύγη."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for most pairs."
+msgstr "Καλύτερο για τα περισσότερα ζεύγη."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for stable pairs."
+msgstr "Καλύτερο για σταθερά ζεύγη."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Καλύτερο για πολύ σταθερά ζευγάρια."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "Η καλύτερη τιμή διαδρομής κοστίζει ~{formattedGasPriceString} σε φυσικό αέριο."
+
+#: src/components/Blocklist/index.tsx
+msgid "Blocked address"
+msgstr "Αποκλεισμένη διεύθυνση"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "Γέφυρα"
+
+#: src/components/PositionCard/index.tsx
+msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "Προσθέτοντας ρευστότητα θα κερδίσετε το 0,3% όλων των συναλλαγών σε αυτό το ζεύγος αναλογικά με το μερίδιό σας στη δεξαμενή. Οι χρεώσεις προστίθενται στη ψηφοφορία, συσσωρεύονται σε πραγματικό χρόνο και μπορούν να ζητηθούν μέσω της ανάληψη σας ρευστότητας."
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
+msgstr "Προσθέτοντας αυτή τη λίστα, εμπιστεύεστε έμμεσα ότι τα δεδομένα είναι σωστά. Οποιοσδήποτε μπορεί να δημιουργήσει μια λίστα, συμπεριλαμβανομένης της δημιουργίας πλαστών εκδόσεων των υφιστάμενων καταλόγων και καταλόγων που ισχυρίζονται ότι αντιπροσωπεύουν έργα που δεν έχουν ένα."
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "Συνδέοντας ένα πορτοφόλι, συμφωνείτε με τους Όρους Παροχής Υπηρεσιών <0></0> και αναγνωρίζετε ότι έχετε διαβάσει και κατανοήσει τη Δήλωση Αποποίησης ευθυνών Πρωτοκόλλου <1></1>."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Ακυρώθηκε"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Change"
+msgstr "Αλλαγή"
+
+#: src/components/Header/index.tsx
+msgid "Charts"
+msgstr "Διαγράμματα"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Ελέγξτε την κατάσταση του δικτύου"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Check out our v3 LP walkthrough and migration guides."
+msgstr "Ρίξτε μια ματιά στους οδηγούς μας συνέχειας και μεταφοράς παρόχων ρευστότητας (LP) της v3."
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Claim"
+msgstr "Διεκδίκηση"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Αξίωση <0/> για {0}"
+
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "Claim UNI"
+msgstr "Διεκδικήστε UNI"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claim UNI Token"
+msgstr "Διεκδίκηση μάρκας UNI"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Διεκδικήστε ανταμοιβή UNI για {0}"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Claim fees"
+msgstr "Διεκδικήστε χρεώσεις"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "Διεκδικήστε τις μάρκες σας UNI"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claimed"
+msgstr "Διεκδικήθηκε"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Claimed UNI!"
+msgstr "UNI διεκδικήθηκε!"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Διεκδικήθηκε!"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "Claiming"
+msgstr "Διεκδίκηση"
+
+#: src/components/Header/index.tsx
+msgid "Claiming UNI"
+msgstr "Γίνεται Διεκδίκηση UNI"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Claiming {0} UNI"
+msgstr "Γίνεται Διεκδίκηση {0} UNI"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Clear All"
+msgstr "Εκκαθάριση Όλων"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Clear all"
+msgstr "Εκκαθάριση όλων"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: src/components/Badge/RangeBadge.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Closed"
+msgstr "Κλειστό"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collect"
+msgstr "Συλλογή"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Collect as WETH"
+msgstr "Συλλέξτε ως WETH"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collect fees"
+msgstr "Συλλέξτε χρεώσεις"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Συλλέξτε {0}/{1} τέλη"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collected"
+msgstr "Συλλέχθηκαν"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting"
+msgstr "Συλλογή"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting fees"
+msgstr "Γίνεται συλλογή χρεώσεων"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting fees will withdraw currently available fees for you."
+msgstr "Η συλλογή χρεώσεων θα αποσύρει τις τρέχουσες διαθέσιμες χρεώσεις για εσάς."
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Confirm"
+msgstr "Επιβεβαίωση"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Confirm Supply"
+msgstr "Επιβεβαίωση Παροχής"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr "Επιβεβαίωση ανταλλαγής"
+
+#: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Confirm this transaction in your wallet"
+msgstr "Επιβεβαιώστε αυτή τη συναλλαγή στο πορτοφόλι σας"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Επιβεβαίωση συναλλαγής στο πορτοφόλι"
+
+#: src/components/Web3Status/index.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Connect Wallet"
+msgstr "Σύνδεση Πορτοφολιού"
+
+#: src/components/WalletModal/index.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/pages/Pool/index.tsx
+msgid "Connect a wallet"
+msgstr "Συνδέστε ένα πορτοφόλι"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Connect to a wallet to find pools"
+msgstr "Συνδεθείτε σε ένα πορτοφόλι για να βρείτε δεξαμενές"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Connect to a wallet to view your V2 liquidity."
+msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτε τη ρευστότητα στη V2."
+
+#: src/pages/Pool/v2.tsx
+msgid "Connect to a wallet to view your liquidity."
+msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτε την ρευστότητά σας."
+
+#: src/components/AccountDetails/index.tsx
+msgid "Connected with {name}"
+msgstr "Συνδέθηκε με {name}"
+
+#: src/components/AccountDetails/Copy.tsx
+msgid "Copied"
+msgstr "Αντιγράφηκε"
+
+#: src/components/AccountDetails/index.tsx
+#: src/components/AccountDetails/index.tsx
+msgid "Copy Address"
+msgstr "Αντιγραφή Διεύθυνσης"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Create Pool & Supply"
+msgstr "Δημιουργία Ψηφοφορίας & Παροχής"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/Landing.tsx
+msgid "Create Proposal"
+msgstr "Δημιουργία πρότασης"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/v2.tsx
+msgid "Create a pair"
+msgstr "Δημιουργία ζεύγους"
+
+#: src/pages/Pool/index.tsx
+msgid "Create a pool"
+msgstr "Δημιουργία δεξαμενής"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Create an issue on GitHub"
+msgstr "Δημιουργήστε ένα ζήτημα στο GitHub"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Create pool and add {0}/{1} V3 liquidity"
+msgstr "Δημιουργήστε δεξαμενή και προσθέστε {0}/{1} V3 ρευστότητα"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Create pool."
+msgstr "Δημιουργία δεξαμενής."
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Create {0}/{1} V3 pool"
+msgstr "Δημιουργία {0}/{1} πισίνα V3"
+
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Current price"
+msgstr "Τρέχουσα τιμή"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current {0} Price:"
+msgstr "Τρέχουσα τιμή {0}:"
+
+#: src/components/Menu/index.tsx
+msgid "Dark Theme"
+msgstr "Σκούρο θέμα"
+
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Νίκησε"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Delegate Votes"
+msgstr "Ανάθεση Ψήφων"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Εκχωρήστε την εξουσία ψήφου στο {0}"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Delegated to:"
+msgstr "Ανατέθηκε σε:"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Delegating votes"
+msgstr "Γίνεται ανάθεση ψήφων"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Deposit"
+msgstr "Κατάθεση"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Deposit Amounts"
+msgstr "Ποσά Κατάθεσης"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Deposit UNI-V2 LP Tokens"
+msgstr "Κατάθεση μάρκας UNI-V2 LP"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Deposit liquidity"
+msgstr "Κατάθεση ρευστότητας"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "Καταθέστε διακριτικά στο δίκτυο {label}"
+
+#: src/pages/Earn/index.tsx
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
+msgstr "Καταθέστε τα διακριτικά του παρόχου ρευστότητας για να λάβετε UNI, το διακριτικό διακυβέρνησης πρωτοκόλλου Uniswap."
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Deposited liquidity:"
+msgstr "Ρευστότητα που κατατέθηκε:"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Deposited {0} UNI-V2"
+msgstr "Κατατέθηκε {0} UNI-V2"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Depositing Liquidity"
+msgstr "Γίνεται κατάθεση ρευστότητας"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Detailed"
+msgstr "Λεπτομερής"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Disconnect"
+msgstr "Αποσύνδεση"
+
+#: src/components/Menu/index.tsx
+msgid "Discord"
+msgstr "Discord"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Dismiss"
+msgstr "Απόρριψη"
+
+#: src/components/Menu/index.tsx
+msgid "Docs"
+msgstr "Έγγραφα"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
+msgstr "Δεν βλέπετε μία από τις θέσεις σας στο v2; <0> Εισαγάγετε τη.</0>"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Earned UNI tokens represent voting shares in Uniswap governance."
+msgstr "Κερδισμένες μάρκες του UNI αντιπροσωπεύουν μερίδια ψήφου στη διακυβέρνηση Uniswap."
+
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Efficiency Comparison"
+msgstr "Σύγκριση αποδοτικότητας"
+
+#: src/state/burn/v3/hooks.tsx
+msgid "Enter a percent"
+msgstr "Εισαγωγή ποσοστού"
+
+#: src/state/swap/hooks.tsx
+msgid "Enter a recipient"
+msgstr "Εισαγάγετε έναν παραλήπτη"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Εισάγετε ένα έγκυρο ποσοστό διαφοράς κόστους συναλλαγής"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
+msgstr "Εισάγετε μια διεύθυνση για να εκκινήσετε μια διεκδίκηση UNI. Εάν η διεύθυνση έχει οποιοδήποτε UNI που μπορεί να διεκδικηθεί, αυτό θα αποσταλεί σε αυτούς κατά την υποβολή."
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Enter an amount"
+msgstr "Εισάγετε ένα ποσό"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Enter valid list location"
+msgstr "Εισάγετε έγκυρη λίστα τοποθεσιών"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Enter valid token address"
+msgstr "Εισάγετε μια διεύθυνση έγκυρης μάρκας"
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "Εισαγάγετε {0} ποσό"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Error connecting"
+msgstr "Σφάλμα σύνδεσης"
+
+#: src/components/WalletModal/index.tsx
+msgid "Error connecting. Try refreshing the page."
+msgstr "Σφάλμα σύνδεσης. Προσπαθήστε ξανά ανανεώνοντας τη σελίδα."
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Error importing list"
+msgstr "Σφάλμα εισαγωγής λίστας"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Η εκτίμηση μπορεί να διαφέρει λόγω των ρυθμίσεων αερίου του πορτοφολιού σας"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Εκτιμώμενο τέλος δικτύου"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr "Etherscan"
+
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Εκτελέστηκε"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Εκτεταμένα αποτελέσματα από ανενεργές Λίστες Μάρκας"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Αναμενόμενη έξοδος"
+
+#: src/components/Settings/index.tsx
+msgid "Expert Mode"
+msgstr "Λειτουργία ειδικού"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Η λειτουργία εμπειρογνωμόνων απενεργοποιεί την ειδοποίηση επιβεβαίωσης της συναλλαγής και επιτρέπει την υψηλή διαφορά κόστους συναλλαγών που συχνά οδηγεί σε κακές τιμές και χαμένα κεφάλαια."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "έχει λήξει"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Explore Uniswap Analytics."
+msgstr "Εξερευνήστε το Uniswap Analytics."
+
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "Αποτυχία εναλλαγής δικτύων από τη διεπαφή Uniswap. Για να χρησιμοποιήσετε το Uniswap στο {0}, πρέπει να αλλάξετε το δίκτυο στο πορτοφόλι σας."
+
+#: src/components/PositionPreview/index.tsx
+msgid "Fee Tier"
+msgstr "Βαθμίδα Χρέωσης"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "Επίπεδο χρεώσεων"
+
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Λήψη της καλύτερης τιμής..."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "For"
+msgstr "Για"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
+msgstr "Για κάθε δεξαμενή που φαίνεται παρακάτω, κάντε κλικ στην επιλογή μεταφορά για να αφαιρέσετε τη ρευστότητά σας από Uniswap V2 και να την καταθέσετε στο Uniswap V3."
+
+#: src/pages/Swap/index.tsx
+msgid "From"
+msgstr "Από"
+
+#: src/pages/Swap/index.tsx
+msgid "From (at most)"
+msgstr "Από (το μέγιστο)"
+
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "Full Range"
+msgstr "Πλήρες εύρος"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
+msgstr "Οι θέσεις πλήρους εμβέλειας μπορεί να κερδίζουν λιγότερα τέλη από τις συγκεντρωμένες θέσεις. Μάθετε περισσότερα <0> εδώ</0> ."
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support on Discord"
+msgstr "Βρείτε υποστήριξη για τη Διαφωνία"
+
+#: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
+msgid "Help Center"
+msgstr "Κέντρο βοηθείας"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Hide"
+msgstr "Κρύβω"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Απόκρυψη κλειστών θέσεων"
+
+#: src/pages/Swap/index.tsx
+msgid "High Price Impact"
+msgstr "Υψηλή Επίδραση Τιμών"
+
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "Πώς αυτή η εφαρμογή χρησιμοποιεί API"
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "I understand"
+msgstr "Κατανοώ"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "If you purchase a token from this list, you may not be able to sell it back."
+msgstr "Αν αγοράσετε μία μάρκα από αυτή τη λίστα, μπορεί να μην μπορείτε να την πουλήσετε πίσω."
+
+#: src/components/SearchModal/BlockedToken.tsx
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Import"
+msgstr "Εισαγωγή"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import List"
+msgstr "Εισαγωγή Λίστας"
+
+#: src/pages/Pool/v2.tsx
+msgid "Import Pool"
+msgstr "Εισαγωγή Δεξαμενής"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import V2 Pool"
+msgstr "Εισαγωγή Δεξαμενής της V2"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import at your own risk"
+msgstr "Εισαγωγή με δική σας ευθύνη"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "In range"
+msgstr "Εντός εύρους"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Increase Liquidity"
+msgstr "Αύξηση Ρευστότητας"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Initial prices and pool share"
+msgstr "Αρχικές τιμές και μερίδιο δεξαμενής"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Initializing..."
+msgstr "Έναρξη..."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
+msgstr "Η τιμή που εισάγετε εκτιμήθηκε. Θα πουλήσετε το πολύ <0>{0} {1}</0> ή η συναλλαγή θα υπαναχωρήσει."
+
+#: src/components/WalletModal/index.tsx
+msgid "Install Metamask"
+msgstr "Εγκατάσταση Metamask"
+
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "Ανεπαρκής ρευστότητα για αυτή τη διαπραγμάτευση."
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient {0} balance"
+msgstr "Ανεπαρκές υπόλοιπο {0}"
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Ρυθμίσεις Διεπαφής"
+
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+msgid "Invalid pair"
+msgstr "Μη έγκυρο ζεύγος"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Invalid pair."
+msgstr "Μη έγκυρο ζεύγος."
+
+#: src/state/mint/v3/hooks.tsx
+msgid "Invalid price input"
+msgstr "Μη έγκυρη εισαγωγή τιμής"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Invalid range selected. The min price must be lower than the max price."
+msgstr "Επιλέχθηκε μη έγκυρο εύρος. Η ελάχιστη τιμή πρέπει να είναι χαμηλότερη από τη μέγιστη τιμή."
+
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
+msgid "Invalid recipient"
+msgstr "Μη έγκυρος παραλήπτης"
+
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: src/pages/Pool/index.tsx
+msgid "Learn"
+msgstr "Μάθετε"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Learn about providing liquidity"
+msgstr "Μάθετε σχετικά με την παροχή ρευστότητας"
+
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "Μάθε περισσότερα"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "Νομική και Απόρρητο"
+
+#: src/components/Menu/index.tsx
+msgid "Light Theme"
+msgstr "Ελαφρύ θέμα"
+
+#: src/components/claim/ClaimModal.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Liquidity"
+msgstr "Ρευστότητα"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Liquidity data not available."
+msgstr "Δεν υπάρχουν διαθέσιμα δεδομένα ρευστότητας."
+
+#: src/pages/Pool/v2.tsx
+msgid "Liquidity provider rewards"
+msgstr "Επιβραβεύσεις παρόχου ρευστότητας"
+
+#: src/pages/Pool/v2.tsx
+msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "Οι πάροχοι ρευστότητας κερδίζουν μια χρέωση της τάξεως του 0,3% σε όλες τις συναλλαγές ανάλογα με το μερίδιο τους στη δεξαμενή. Οι χρεώσεις προστίθενται στην ψηφοφορία, συσσωρεύονται σε πραγματικό χρόνο και μπορούν να ζητηθούν μέσω της ανάληψης σας ρευστότητας."
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Λίστες"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Loaded"
+msgstr "Φορτώθηκε"
+
+#: src/components/PositionCard/Sushi.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/index.tsx
+#: src/pages/Pool/v2.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Loading"
+msgstr "Φόρτωση"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "ΜΕΓΙΣΤΗ"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
+#: src/components/earn/PoolCard.tsx
+msgid "Manage"
+msgstr "Διαχείριση"
+
+#: src/components/PositionCard/index.tsx
+msgid "Manage Liquidity in Rewards Pool"
+msgstr "Διαχείριση ρευστότητας στην Δεξαμενή Επιβραβεύσεων"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Manage Token Lists"
+msgstr "Διαχείριση Λίστας μάρκας"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Manage this pool."
+msgstr "Διαχείριση αυτής της δεξαμενής."
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Max"
+msgstr "Μέγιστο"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
+msgid "Max Price"
+msgstr "Μέγιστη Τιμή"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Max price"
+msgstr "Μέγιστη τιμή"
+
+#: src/components/PositionListItem/index.tsx
+msgid "Max:"
+msgstr "Μέγιστο:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum sent"
+msgstr "Απεστάλη το μέγιστο"
+
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "Μενού"
+
+#: src/components/PositionCard/Sushi.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/index.tsx
+msgid "Migrate"
+msgstr "Μετεγκατάσταση"
+
+#: src/pages/Pool/v2.tsx
+msgid "Migrate Liquidity to V3"
+msgstr "Μεταφορά ρευστότητας σε V3"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/index.tsx
+msgid "Migrate V2 Liquidity"
+msgstr "Μεταφορά Ρευστότητας V2"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
+msgstr "Μεταφορά της δίκης μάρκας ρευστότητας σας από Uniswap V2 σε Uniswap V3."
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Μετεγκατάσταση {0}/{1} ρευστότητας στο V3"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Migrating"
+msgstr "Γίνεται μεταφορά"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
+msgid "Min Price"
+msgstr "Ελάχιστη Τιμή"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Min price"
+msgstr "Ελάχιστη τιμή"
+
+#: src/components/PositionListItem/index.tsx
+msgid "Min:"
+msgstr "Ελάχιστο:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum received"
+msgstr "Ελάχιστο λαμβανόμενο"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "Λείπουν εξαρτήσεις"
+
+#: src/pages/Pool/index.tsx
+msgid "More"
+msgstr "Περισσότερα"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Τέλος δικτύου"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "Προειδοποίηση δικτύου"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Οι χρεώσεις δικτύου υπερβαίνουν το 50% του ποσού ανταλλαγής!"
+
+#: src/pages/Pool/index.tsx
+msgid "New Position"
+msgstr "Νέα Θέση"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "No V2 Liquidity found."
+msgstr "Δεν βρέθηκε ρευστότητα V2."
+
+#: src/pages/Earn/index.tsx
+#: src/pages/Earn/index.tsx
+msgid "No active pools"
+msgstr "Δεν υπάρχει ενεργή δεξαμενή"
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "No data"
+msgstr "Χωρίς δεδομένα"
+
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Χωρίς περιγραφή."
+
+#: src/pages/Pool/v2.tsx
+msgid "No liquidity found."
+msgstr "Δεν βρέθηκε ρευστότητα."
+
+#: src/pages/PoolFinder/index.tsx
+msgid "No pool found."
+msgstr "Δεν βρέθηκε δεξαμενή."
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "No proposals found."
+msgstr "Δεν βρέθηκαν προτάσεις."
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "No results found."
+msgstr "Δεν βρέθηκαν αποτελέσματα."
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "Not created"
+msgstr "Δεν δημιουργήθηκε"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "ΚΛΕΙΣΤΟ"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "ΑΝΟΙΚΤΟ"
+
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "ΧΡΗΣΙΜΟΠΟΙΗΣΤΕ ΑΥΤΟ ΤΟΝ ΤΡΟΠΟ ΜΟΝΟ ΕΑΝ ΓΝΩΡΙΖΕΤΕ ΤΙ ΚΑΝΕΤΕ."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "Μακριά από"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "Ανοικτο"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Once you are happy with the rate click supply to review."
+msgstr "Μόλις είστε ευχαριστημένοι με τη τιμή κάντε κλικ στο παροχή για επανεξέταση."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
+msgstr "Μόνο οι ψήφοι UNI που ανατέθηκαν αυτοπροσώπως ή ανατέθηκαν σε άλλη διεύθυνση πριν από το κλείσιμο {0} έχουν δικαίωμα ψήφου."
+
+#: src/components/Web3ReactManager/index.tsx
+msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
+msgstr "Ωχ! Προέκυψε ένα άγνωστο σφάλμα. Παρακαλώ ανανεώστε τη σελίδα ή επισκεφθείτε από άλλο πρόγραμμα περιήγησης ή συσκευή."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "Πύλη αισιοδοξίας"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Η αισιοδοξία βρίσκεται σε Beta και μπορεί να αντιμετωπίσει διακοπές λειτουργίας. Ο Optimism αναμένει ότι οι προγραμματισμένες διακοπές λειτουργίας θα αναβαθμίσουν το δίκτυο στο εγγύς μέλλον. Κατά τη διάρκεια της διακοπής λειτουργίας, η θέση σας δεν θα κερδίζει χρεώσεις και δεν θα μπορείτε να αφαιρέσετε ρευστότητα. <0>Διαβάστε περισσότερα.</0>"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimistic Etherscan"
+msgstr "Αισιόδοξη Ethercan"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Out of range"
+msgstr "Εκτός εύρους"
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
+msgstr "Το αποτέλεσμα εκτιμήθηκε. Αν η τιμή αλλάξει παραπάνω από {0}% η συναλλαγή σας θα υπαναχωρήσει."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
+msgstr "Το αποτέλεσμα εκτιμήθηκε. Θα λάβετε τουλάχιστον <0>{0} {1}</0> ή η συναλλαγή θα υπαναχωρήσει."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Output will be sent to <0>{0}</0>"
+msgstr "Το αποτέλεσμα θα σταλεί στο <0>{0}</0>"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Owner"
+msgstr "Ιδιοκτήτης"
+
+#: src/pages/Earn/index.tsx
+msgid "Participating pools"
+msgstr "Συμμετέχουσες δεξαμενές"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "εκκρεμής"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Please confirm you would like to remove this list by typing REMOVE"
+msgstr "Επιβεβαιώστε ότι θέλετε να καταργήσετε αυτήν τη λίστα πληκτρολογώντας REMOVE"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Συνδεθείτε στο Layer 1 Ethereum"
+
+#: src/components/WalletModal/index.tsx
+msgid "Please connect to the appropriate Ethereum network."
+msgstr "Συνδεθείτε στο κατάλληλο δίκτυο του Ethereum."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Παρακαλώ πληκτρολογήστε τη λέξη \"{confirmWord}\" για να ενεργοποιήσετε τη λειτουργία εμπειρογνωμόνων."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr "Γέφυρα Πολυγώνου"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr "Πολυγωνική σάρωση"
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+msgid "Pool"
+msgstr "Δεξαμενή"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Pool Found!"
+msgstr "Βρέθηκε Δεξαμενή!"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Pool Rate"
+msgstr "Τιμή Δεξαμενής"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Pool rate"
+msgstr "Τιμή δεξαμενής"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Pool tokens in rewards pool:"
+msgstr "Μάρκες ψηφοφορίας στη δεξαμενή επιβραβεύσεων:"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Pooled {0}:"
+msgstr "Συγκεντρώθηκε(αν) {0}:"
+
+#: src/pages/Pool/index.tsx
+msgid "Pools Overview"
+msgstr "Επισκόπηση Δεξαμενών"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price"
+msgstr "Τιμή"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Price Difference:"
+msgstr "Διαφορά Τιμής:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Price Impact"
+msgstr "Επιδράσεις τιμής"
+
+#: src/pages/Swap/index.tsx
+msgid "Price Impact Too High"
+msgstr "Πολύ υψηλή επίδραση σε τιμή"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Price Updated"
+msgstr "Η Τιμή Ενημερώθηκε"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Price range"
+msgstr "Εύρος τιμών"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price:"
+msgstr "Τιμή:"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Prices and pool share"
+msgstr "Τιμές και μερίδιο στη δεξαμενή"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "Πρόταση"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "Υποβλήθηκε πρόταση"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "Τίτλος πρότασης"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Proposals"
+msgstr "Προτάσεις"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Proposals submitted by community members will appear here."
+msgstr "Προτάσεις που υποβάλλονται από τα μέλη της κοινότητας θα εμφανίζονται εδώ."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "Προτεινόμενη δράση"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Proposer"
+msgstr "Άτομο που κάνει προτάσεις"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "Αποποίηση ευθυνών πρωτοκόλλου"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "Σε ουρά"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Rates"
+msgstr "Τιμές"
+
+#: src/pages/Earn/index.tsx
+msgid "Read more about UNI"
+msgstr "Διαβάστε περισσότερα για UNI"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Read more about Uniswap governance"
+msgstr "Διαβάστε περισσότερα για τη διακυβέρνηση Uniswap"
+
+#: src/pages/Pool/v2.tsx
+msgid "Read more about providing liquidity"
+msgstr "Διαβάστε περισσότερα σχετικά με την παροχή ρευστότητας"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Read more about unsupported assets"
+msgstr "Διαβάστε περισσότερα για τα μη υποστηριζόμενα περιουσιακά στοιχεία"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Recent Transactions"
+msgstr "Πρόσφατες Συναλλαγές"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "Παραλήπτης"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Κατάργηση <0/> και <1/>"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Remove Amount"
+msgstr "Αφαίρεση Ποσού"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Remove Delegate"
+msgstr "Αφαίρεση Αντιπροσώπου"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Remove Liquidity"
+msgstr "Αφαίρεση Ρευστότητας"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Remove list"
+msgstr "Αφαίρεση λίστας"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Removing {0} {1} and {2} {3}"
+msgstr "Αφαίρεση των {0} {1} και {2} {3}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "Αφαίρεση {0} {1} και{2} {3}"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Χαρακτηριστικά αιτήματος"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Return"
+msgstr "Επιστροφή"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Search name or paste address"
+msgstr "Αναζήτηση ονόματος ή επικόλλησης διεύθυνσης"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Select Pair"
+msgstr "Επιλέξτε Ζεύγος"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "Επιλέξτε ένα δίκτυο"
+
+#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/state/swap/hooks.tsx
+msgid "Select a token"
+msgstr "Επιλέξτε μία μάρκα"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Select a token to find your v2 liquidity."
+msgstr "Επιλέξτε μια μάρκα για να βρείτε τη ρευστότητά σας στη v2."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "Επιλέξτε μια ενέργεια"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Selected Range"
+msgstr "Επιλεγμένο Εύρος"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Self"
+msgstr "Αυτοπροσώπως"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Self Delegate"
+msgstr "Ανάθεση στον εαυτό μου"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Set Price Range"
+msgstr "Ορισμός Εύρους Τιμών"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Set Starting Price"
+msgstr "Ορισμός Τιμής Εκκίνησης"
+
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+msgid "Share of Pool"
+msgstr "Μερίδιο από τη Δεξαμενή"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Share of Pool:"
+msgstr "Μερίδιο από τη Δεξαμενή:"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Εμφάνιση Portis"
+
+#: src/pages/Pool/index.tsx
+msgid "Show closed positions"
+msgstr "Εμφάνιση κλειστών θέσεων"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Simple"
+msgstr "Απλό"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Ανοχή ολίσθησης"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
+msgstr "Ορισμένα περιουσιακά στοιχεία δεν είναι διαθέσιμα μέσω αυτής της διεπαφής, επειδή μπορεί να μην λειτουργούν καλά με τις έξυπνες συμβάσεις ή δεν είμαστε σε θέση να επιτρέψουμε τη διαπραγμάτευση για νομικούς λόγους."
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Something went wrong"
+msgstr "Κάτι πήγε στραβά"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Step 1. Get UNI-V2 Liquidity tokens"
+msgstr "Βήμα 1. Πάρτε τα διακριτικά ρευστότητας UNI-V2"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Υποβολή νέας πρότασης"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "Υποβολή πρότασης"
+
+#: src/components/vote/VoteModal.tsx
+msgid "Submitting Vote"
+msgstr "Γίνεται υποβολή ψήφου"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Επιτεύχθηκε"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Επιτυχία"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Supply"
+msgstr "Παροχή"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Γίνεται παροχή {0} {1} και {2} {3}"
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap"
+msgstr "Ανταλλαγή"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Αντικαταστήστε <0/> με ακριβώς <1/>"
+
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap Anyway"
+msgstr "Ανταλλάξτε ούτως ή άλλως"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Αντικαταστήστε ακριβώς <0/> με <1/>"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "Η ανταλλαγή απέτυχε: {0}"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Swapping {0} {1} for {2} {3}"
+msgstr "Ανταλλαγή {0} {1} για {2} {3}"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "Σας ευχαριστούμε που συμμετείχατε στην κοινότητα Uniswap <0 />"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "Το% που θα κερδίσετε σε προμήθειες."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Το αμετάβλητο Uniswap x * y = k δεν ικανοποιήθηκε από την ανταλλαγή. Αυτό συνήθως σημαίνει ότι μία από τις μάρκες που ανταλλάσσετε περιλαμβάνει προσαρμοσμένη συμπεριφορά κατά τη μεταφορά."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "Η εφαρμογή ανακτά δεδομένα blockchain από την φιλοξενούμενη υπηρεσία του The Graph."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "Η εφαρμογή ανακτά δεδομένα στην αλυσίδα και δημιουργεί κλήσεις συμβολαίου με ένα Infura API."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "Η εφαρμογή ανακτά τη βέλτιστη εμπορική διαδρομή από έναν διακομιστή Uniswap Labs."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "Η εφαρμογή καταγράφει ανώνυμα στατιστικά στοιχεία χρήσης για να βελτιώνεται με την πάροδο του χρόνου."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "Η εφαρμογή συλλέγει με ασφάλεια τη διεύθυνση του πορτοφολιού σας και τη μοιράζεται με την TRM Labs Inc. για λόγους κινδύνου και συμμόρφωσης."
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Το κόστος αποστολής αυτής της συναλλαγής είναι περισσότερο από το μισό της αξίας του ποσού εισόδου."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
+msgstr "Το τρέχον γρήγορο ποσό αερίου για την αποστολή συναλλαγής στο L1. Τα τέλη φυσικού αερίου καταβάλλονται στο εγγενές νόμισμα Ethereum (ETH) και εκφράζονται σε GWEI."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Η εκτιμώμενη διαφορά μεταξύ των τιμών σε USD των ποσών εισροών και εκροών."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The input token cannot be transferred. There may be an issue with the input token."
+msgstr "Δεν είναι δυνατή η μεταφορά της μάρκας εισαγωγής. Ενδέχεται να υπάρχει πρόβλημα με τη μάρκα εισαγωγής."
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "The market price is outside your specified price range. Single-asset deposit only."
+msgstr "Η αγοραία τιμή είναι εκτός του εύρους τιμών που καθορίσατε. Καταθέσεις ενός μόνου περιουσιακού στοιχείου μόνο."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Ο πιο πρόσφατος αριθμός αποκλεισμού σε αυτό το δίκτυο. Οι τιμές ενημερώνονται για κάθε μπλοκ."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token."
+msgstr "Η μάρκα αποτελέσματος δεν μπορεί να μεταφερθεί. Ενδέχεται να υπάρχει ένα ζήτημα με τη μάρκα αποτελέσματος."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Δεν είναι δυνατή η μεταφορά της μάρκας αποτελέσματος. Ενδέχεται να υπάρχει πρόβλημα με τη μάρκα αποτελέσματος. Σημείωση: οι χρεώσεις μεταφοράς και οι μάρκες rebase δεν είναι συμβατές με το Uniswap V3."
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
+msgstr "Η τιμή αυτής της δεξαμενής είναι εκτός του επιλεγμένου εύρους. Η θέση σας δεν κερδίζει επί του παρόντος χρεώσεις."
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "The price of this pool is within your selected range. Your position is currently earning fees."
+msgstr "Η τιμή αυτής της δεξαμενής είναι εντός του επιλεγμένου εύρους. Η θέση σας κερδίζει επί του παρόντος χρεώσεις."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "The ratio of tokens you add will set the price of this pool."
+msgstr "Η αναλογία των διακριτικών που προσθέτετε θα ορίσει την τιμή αυτής της δεξαμενής."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "Δεν ήταν δυνατή η αποστολή της συναλλαγής επειδή έχει παρέλθει η προθεσμία. Βεβαιωθείτε ότι η προθεσμία συναλλαγής σας δεν είναι πολύ μικρή."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data."
+msgstr "Δεν υπάρχουν δεδομένα ρευστότητας."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "Αυτή η εφαρμογή χρησιμοποιεί τα ακόλουθα API τρίτων:"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+msgstr "Αυτή η ομάδα πρέπει να προετοιμαστεί για να μπορέσετε να προσθέσετε ρευστότητα. Για να ξεκινήσετε, επιλέξτε μια τιμή εκκίνησης για την ομάδα. Στη συνέχεια, εισαγάγετε το εύρος τιμών ρευστότητας και το ποσό κατάθεσης. Τα τέλη φυσικού αερίου θα είναι υψηλότερα από το συνηθισμένο λόγω της αρχικής συναλλαγής."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Αυτή η διαδρομή βελτιστοποιεί τη συνολική σας απόδοση λαμβάνοντας υπόψη τις διαχωρισμένες διαδρομές, τα πολλαπλά άλματα και το κόστος φυσικού αερίου κάθε βήματος."
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr "Αυτή η μάρκα δεν εμφανίζεται στην(ις) ενεργή (ές) λίστα(ες). Βεβαιωθείτε ότι αυτή είναι η μάρκα που θέλετε να διαπραγματευτείτε."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Αυτό το διακριτικό δεν υποστηρίζεται στην εφαρμογή Uniswap Labs"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
+msgstr "Αυτό το εργαλείο θα μεταφέρει με ασφάλεια τη ρευστότητα {0} σας στο V3. Η διαδικασία αυτή διακρίνεται από έλλειψη εμπιστοσύνης μεταξύ των μερών χάρη στο"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Αυτή η συναλλαγή δεν θα πετύχει λόγω της μεταβολής των τιμών. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης. Σημείωση: οι χρεώσεις μεταφοράς και οι μάρκες rebase δεν είναι συμβατές με το Uniswap V3."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
+msgstr "Αυτή η συναλλαγή δεν θα πετύχει είτε λόγω της κίνησης των τιμών είτε της χρέωσης κατά τη μεταφορά. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης."
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Tip: Custom tokens are stored locally in your browser"
+msgstr "Συμβουλή: Οι προσαρμοσμένες μάρκες αποθηκεύονται τοπικά στο πρόγραμμα περιήγησης σας"
+
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/Swap/index.tsx
+msgid "To"
+msgstr "'Ως"
+
+#: src/pages/Swap/index.tsx
+msgid "To (at least)"
+msgstr "Έως (από το ελάχιστο)"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Το διακριτικό δεν υποστηρίζεται"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Μάρκες"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "Μάρκες από ανενεργές λίστες. Εισαγάγετε συγκεκριμένες μάρκες παρακάτω ή κάντε κλικ στην επιλογή Διαχείριση για να ενεργοποιήσετε περισσότερες λίστες."
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Top pools"
+msgstr "Κορυφαίες δεξαμενές"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Total deposited"
+msgstr "Σύνολο που κατατέθηκε"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Total deposits"
+msgstr "Συνολικές καταθέσεις"
+
+#: src/components/swap/RouterLabel.tsx
+msgid "Trade Route"
+msgstr "Εμπορική οδός"
+
+#: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Ρυθμίσεις Συναλλαγής"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/components/vote/DelegateModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Transaction Submitted"
+msgstr "Συναλλαγή Υποβλήθηκε"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Η συναλλαγή ολοκληρώθηκε στις"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Προθεσμία συναλλαγής"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "Η συναλλαγή απορρίφθηκε."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "Μεταφορά κουπονιού"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Try Again"
+msgstr "Δοκιμάστε Ξανά"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Ενεργοποίηση Λειτουργίας Εμπειρογνωμόνων"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "Το UNI έφτασε"
+
+#: src/pages/Vote/Landing.tsx
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Οι μάρκες UNI αντιπροσωπεύουν μετοχές με ψήφους στη διακυβέρνηση Uniswap. Μπορείτε να ψηφίσετε μόνοι σας για κάθε πρόταση ή να αναθέσετε τις ψήφους σας σε ένα τρίτο μέρος."
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "UNI {0}/{1} Burned"
+msgstr "UNI {0}/{1} \"Κάηκαν\""
+
+#: src/pages/Earn/Manage.tsx
+msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
+msgstr "Απαιτούνται μάρκες UNI-V2 παρόχου ρευστότητας (LP). Μόλις έχετε προσθέσει ρευστότητα στη {0}-{1} δεξαμενή μπορείτε να ποντάρετε τις μάρκες ρευστότητας σας σε αυτή τη σελίδα."
+
+#: src/pages/Earn/Manage.tsx
+msgid "UNI-V2 {0}-{1}"
+msgstr "UNI-V2 {0}-{1}"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Unclaimed UNI"
+msgstr "Αζήτητο UNI"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Unclaimed fees"
+msgstr "Αζήτητες χρεώσεις"
+
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Αναποφάσιστος"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "Απρόσμενο σφάλμα. Δεν ήταν δυνατή η εκτίμηση αερίου για την ανταλλαγή."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "Μη αναμενόμενο πρόβλημα με την εκτίμηση του αερίου. ΠΑΡΑΚΑΛΩ προσπαθησε ξανα."
+
+#: src/pages/Vote/Landing.tsx
+msgid "Uniswap Governance"
+msgstr "Uniswap Διακυβέρνηση"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Όροι Παροχής Υπηρεσιών της Uniswap Labs"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Το Uniswap διατίθεται σε: <0>{0}</0>"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Η διαχείριση Uniswap είναι διαθέσιμη μόνο στο Layer 1. Αλλάξτε το δίκτυό σας στο Ethereum Mainnet για να δείτε Προτάσεις και Ψηφοφορία."
+
+#: src/pages/Earn/index.tsx
+msgid "Uniswap liquidity mining"
+msgstr "Εξόρυξη ρευστότητας Uniswap"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Uniswap migration contract↗"
+msgstr "Σύμβαση μετεγκατάστασης Uniswap↗"
+
+#: src/components/SearchModal/TokenImportCard.tsx
+msgid "Unknown Source"
+msgstr "Άγνωστη πηγή"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Άγνωστο σφάλμα{0}. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης Σημείωση: οι χρεώσεις μεταφοράς και οι rebase μάρκες δεν είναι συμβατές με το Uniswap V3."
+
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Unlock Votes"
+msgstr "Ξεκλείδωμα Ψήφων"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Unlock Voting"
+msgstr "Ξεκλείδωμα Ψηφοφορίας"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Unlocking Votes"
+msgstr "Ξεκλείδωμα Ψήφων"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Unsupported Asset"
+msgstr "Μη Υποστηριζόμενο Περιουσιακό Στοιχείο"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Unsupported Assets"
+msgstr "Μη Υποστηριζόμενα Περιουσιακά Στοιχεία"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Χωρίς τίτλο"
+
+#: src/pages/Swap/index.tsx
+msgid "Unwrap"
+msgstr "Αποκαλύπτω"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to {0}"
+msgstr "Ξετυλίξτε <0/> προς {0}"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Update Delegation"
+msgstr "Ενημέρωση Ανάθεσης"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Update list"
+msgstr "Ενημέρωση λίστας"
+
+#: src/components/Settings/index.tsx
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Χρησιμοποιήστε το Uniswap Labs API για να λαμβάνετε ταχύτερα εισαγωγικά."
+
+#: src/components/claim/ClaimModal.tsx
+msgid "User"
+msgstr "Χρήστης"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "Το V2 δεν είναι διαθέσιμο στο Layer 2. Μετάβαση στο Layer 1 Ethereum."
+
+#: src/pages/Pool/index.tsx
+msgid "V2 liquidity"
+msgstr "V2 ρευστότητα"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "V3 {0} Price:"
+msgstr "V3 {0} Τιμή:"
+
+#: src/components/PositionCard/index.tsx
+msgid "View accrued fees and analytics<0>↗</0>"
+msgstr "Προβολή δεδουλευμένων τελών και αναλύσεων<0>↗</0>"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "View list"
+msgstr "Προβολή λίστας"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "Θέα στο Ethercan"
+
+#: src/components/AccountDetails/index.tsx
+#: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Explorer"
+msgstr "Προβολή στον Explorer"
+
+#: src/components/ModalViews/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "View transaction on Explorer"
+msgstr "Προβολή συναλλαγής στον Explorer"
+
+#: src/components/Header/index.tsx
+msgid "Vote"
+msgstr "Ψηφοφορίες"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote Against"
+msgstr "Ψήφοι Κατά"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "Ψήφοι υπέρ"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote against proposal {proposalId}"
+msgstr "Ψήφοι κατά της πρότασης {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Vηφοφορία κατά της πρότασης {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Vηφίστε κατά της πρότασης {proposalKey} με αιτιολογία \"{0}\""
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote for proposal {proposalId}"
+msgstr "Ψήφοι υπέρ της πρότασης {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Vηφίστε την πρόταση {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Vηφίστε την πρόταση {proposalKey} με αιτιολογία \"{0}\""
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote to abstain on proposal {proposalId}"
+msgstr "Vηφοφορία για αποχή στην πρόταση {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Vηφοφορία για αποχή στην πρόταση {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Vηφοφορία για αποχή στην πρόταση {proposalKey} με αιτιολογία \"{0}\""
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting ended {0}"
+msgstr "Η ψηφοφορία έληξε {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting ends approximately {0}"
+msgstr "Η ψηφοφορία λήγει περίπου {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "Η ψηφοφορία ξεκινά περίπου {0}"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting For Confirmation"
+msgstr "Αναμονή Επιβεβαίωσης"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "Διεύθυνση Πορτοφολιού ή όνομα ENS"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Weekly Rewards"
+msgstr "Εβδομαδιαίες Επιβραβεύσεις"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Welcome to team Unicorn :)"
+msgstr "Καλώς ήρθατε στην ομάδα Unicorn :)"
+
+#: src/components/earn/ClaimRewardModal.tsx
+msgid "When you claim without withdrawing your liquidity remains in the mining pool."
+msgstr "Όταν διεκδικείτε χωρίς ανάληψη, η ρευστότητά σας παραμένει στη δεξαμενή εξόρυξης."
+
+#: src/pages/Earn/Manage.tsx
+msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgstr "Όταν πραγματοποιήσετε ανάληψη, η σύμβαση θα διεκδικήσει αυτόματα UNI για λογαριασμό σας!"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
+msgstr "Όταν πραγματοποιείτε ανάληψη, τα UNI σας διεκδικούνται και η ρευστότητά σας αφαιρείται από τη δεξαμενή εξόρυξης."
+
+#: src/components/earn/UnstakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Withdraw"
+msgstr "Ανάληψη"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdraw & Claim"
+msgstr "Ανάληψη & Διεκδίκηση"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Withdraw deposited liquidity"
+msgstr "Ανάληψη κατατεθειμένης ρευστότητας"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdrawing {0} UNI-V2"
+msgstr "Ανάληψη {0} UNI-V2"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdrew UNI-V2!"
+msgstr "Πραγματοποιήθηκε ανάληψη UNI-V2!"
+
+#: src/pages/Swap/index.tsx
+msgid "Wrap"
+msgstr "Καλύπτω"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to {0}"
+msgstr "Τυλίξτε <0/> προς {0}"
+
+#: src/components/WalletModal/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Wrong Network"
+msgstr "Λάθος Δίκτυο"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "Έχετε ήδη μια ενεργή ή σε εκκρεμότητα πρόταση"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "You are creating a pool"
+msgstr "Δημιουργείτε μια ψηφοφορία"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
+msgstr "Είστε ο πρώτος πάροχος ρευστότητας για αυτή τη Uniswap V3 ψηφοφορία. Η ρευστότητά σας θα μετακυλίσει στην τρέχουσα τιμή {0}."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "You are the first liquidity provider."
+msgstr "Είστε ο πρώτος πάροχος ρευστότητας."
+
+#: src/components/vote/DelegateModal.tsx
+msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Μπορείτε είτε να ψηφίσετε μόνοι σας για κάθε πρόταση είτε να αναθέσετε την ψήφο σας σε ένα τρίτο μέρος."
+
+#: src/pages/Swap/index.tsx
+msgid "You can now trade {0}"
+msgstr "Τώρα μπορείτε να διαπραγματευτείτε {0}"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "Δεν έχετε αρκετές ψήφους για να υποβάλετε πρόταση"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "You don’t have liquidity in this pool yet."
+msgstr "Δεν έχετε ακόμα ρευστότητα σε αυτή την δεξαμενή."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "Μπορεί να έχετε χάσει τη σύνδεσή σας στο δίκτυο ή το {label} να είναι εκτός λειτουργίας αυτήν τη στιγμή."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "Ενδέχεται να έχετε χάσει τη σύνδεση δικτύου σας."
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "Μπορείτε να εξετάσετε το ενδεχόμενο να περιμένετε μέχρι να μειωθούν τα τέλη δικτύου για να ολοκληρώσετε αυτήν τη συναλλαγή."
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You must connect an account."
+msgstr "Πρέπει να συνδέσετε ένα λογαριασμό."
+
+#: src/pages/Swap/index.tsx
+msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "Πρέπει να δώσετε στο έξυπνο συμβόλαιο Uniswap άδεια για να χρησιμοποιήσει το {0} σας. Πρέπει να το κάνετε αυτό μία φορά ανά μάρκα."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "Πρέπει να έχετε {formattedProposalThreshold} ψήφους για να υποβάλετε μια πρόταση"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "Θα πρέπει να καταθέσετε μόνο ρευστότητα σε Uniswap V3 σε μια τιμή που πιστεύετε ότι είναι σωστή. <0/>Αν η τιμή φαίνεται λανθασμένη, μπορείτε είτε να κάνετε μια ανταλλαγή για να μετακινήσετε την τιμή είτε να περιμένετε κάποιον άλλο να το κάνει."
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "You will also collect fees earned from this position."
+msgstr "Θα εισπράξετε επίσης τις χρεώσεις που κερδίζονται από αυτή τη θέση."
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "You will receive"
+msgstr "Θα λάβετε"
+
+#: src/pages/Pool/v2.tsx
+msgid "Your V2 liquidity"
+msgstr "Η ρευστότητα V2 σας"
+
+#: src/pages/Pool/index.tsx
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "Οι ενεργές σας θέσεις ρευστότητας V3 θα εμφανίζονται εδώ."
+
+#: src/pages/Earn/Manage.tsx
+msgid "Your liquidity deposits"
+msgstr "Οι καταθέσεις σας ρευστότητας"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your pool share:"
+msgstr "Το μερίδιό σας από την δεξαμενή:"
+
+#: src/components/PositionCard/index.tsx
+msgid "Your position"
+msgstr "Η θέση σας"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Your position has 0 liquidity, and is not earning fees."
+msgstr "Η θέση σας έχει 0 ρευστότητα, και δεν κερδίζει χρεώσεις."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "Η θέση σας θα εμφανιστεί εδώ."
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+msgid "Your position will be 100% composed of {0} at this price"
+msgstr "Η θέση σας θα αποτελείται 100% από {0} σε αυτή την τιμή"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Your position will be 100% {0} at this price."
+msgstr "Η θέση σας θα είναι 100% {0} σε αυτή την τιμή."
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
+msgstr "Η θέση σας δεν θα κερδίσει χρεώσεις ή θα χρησιμοποιηθεί σε συναλλαγές έως ότου η τιμή αγοράς μετακινηθεί στο εύρος σας."
+
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "Your positions"
+msgstr "Οι θέσεις σας"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Your rate"
+msgstr "Η τιμή σας"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your total pool tokens:"
+msgstr "Οι συνολικές μάρκες της δεξαμενής σας:"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
+msgstr "Το κόστος της συναλλαγής σας θα είναι πολύ υψηλότερο καθώς περιλαμβάνει τον αιθέρα, τις χρεώσεις προμήθειας δηλαδή, για να δημιουργήσετε την δεξαμενή."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Η συναλλαγή σας μπορεί να έχει το προβάδισμα"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Η συναλλαγή σας μπορεί να αποτύχει"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Η συναλλαγή σας θα επανέλθει αν είναι σε εκκρεμότητα για περισσότερο από αυτό το χρονικό διάστημα."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Η συναλλαγή σας θα επανέλθει αν η τιμή αλλάξει δυσμενώς περισσότερο από αυτό το ποσοστό."
+
+#: src/components/AccountDetails/index.tsx
+msgid "Your transactions will appear here..."
+msgstr "Οι συναλλαγές σας θα εμφανιστούν εδώ..."
+
+#: src/pages/Earn/Manage.tsx
+msgid "Your unclaimed UNI"
+msgstr "Το αζήτητο UNI σας"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "μετά από ολίσθηση"
+
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "επιβεβαίωση"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "for {0}"
+msgstr "για {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
+
+#: src/components/Web3Status/index.tsx
+msgid "has socks emoji"
+msgstr "έχει κάλτσες emoji"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "εδώ."
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https: // ή ipfs: // ή όνομα ENS"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "λεπτά"
+
+#: src/components/SearchModal/ImportRow.tsx
+msgid "via {0}"
+msgstr "μέσω {0}"
+
+#: src/components/SearchModal/TokenImportCard.tsx
+msgid "via {0} token list"
+msgstr "μέσω {0} λίστας μάρκας"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "{0, plural, one {Import token} other {Import tokens}}"
+msgstr "{0, plural, one {Εισαγωγή διακριτικού} other {Εισαγωγή διακριτικών}}"
+
+#: src/components/RateToggle/index.tsx
+#: src/components/RateToggle/index.tsx
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/PositionCard/index.tsx
+#: src/pages/Vote/VotePage.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "{0} %"
+msgstr "{0} %"
+
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionListItem/index.tsx
+msgid "{0} <0/> per <1/>"
+msgstr "{0} <0/> ανά <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} Προσαρμοσμένες Μάρκες"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "{0} Deposited"
+msgstr "{0} Κατατέθηκε"
+
+#: src/components/earn/PoolCard.tsx
+msgid "{0} ETH"
+msgstr "{0} ETH"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "{0} Fees Earned:"
+msgstr "Κερδισμένες {0} χρεώσεις:"
+
+#: src/components/Web3Status/index.tsx
+msgid "{0} Pending"
+msgstr "{0} Εκκρεμεί"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "{0} UNI"
+msgstr "{0} UNI"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "{0} UNI / week"
+msgstr "{0} UNI / εβδομάδα"
+
+#: src/components/earn/StakingModal.tsx
+msgid "{0} UNI-V2"
+msgstr "{0} UNI-V2"
+
+#: src/pages/Earn/Manage.tsx
+msgid "{0} UNI-V2 LP tokens available"
+msgstr "{0} διαθέσιμες μάρκες UNI-V2 LP"
+
+#: src/components/vote/VoteModal.tsx
+msgid "{0} Votes"
+msgstr "{0} Ψήφοι"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "{0} per {1}"
+msgstr "{0} ανά {1}"
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{0} tokens"
+msgstr "{0} μάρκες"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0} {1} Price:"
+msgstr "{0} {1} Τιμή:"
+
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr "{0} {nativeCurrencySymbol}"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • Προστέθηκε από τον χρήστη"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "{0}χρέωσης 0%"
+
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% πισίνα"
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "{0}% select"
+msgstr "{0}% επιλέξτε"
+
+#: src/pages/Earn/Manage.tsx
+msgid "{0}-{1} Liquidity Mining"
+msgstr "{0}-{1} Εξόρυξη ρευστότητας"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0}/{1} LP NFT"
+msgstr "{0}/{1} LP NFT"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0}/{1} LP Tokens"
+msgstr "{0}/{1} Μάρκες Παρόχου Ρευστότητας (LP)"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "{SOCKS_AMOUNT} UNI"
+msgstr "{SOCKS_AMOUNT} UNI"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "{USER_AMOUNT} UNI"
+msgstr "{USER_AMOUNT} UNI"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{activeTokensOnThisChain} tokens"
+msgstr "{activeTokensOnThisChain} μάρκες"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} συμβολική γέφυρα"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "{percentForSlider}%"
+msgstr "{percentForSlider}%"
+
+#: src/components/InputStepCounter/InputStepCounter.tsx
+msgid "{tokenB} per {tokenA}"
+msgstr "{tokenB} ανά {tokenA}"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "← Back to Pools Overview"
+msgstr "← Επιστροφή στην επισκόπηση ψηφοφοριών"
+

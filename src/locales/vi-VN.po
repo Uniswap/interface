@@ -1,0 +1,2433 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
+"Last-Translator: \n"
+"Language: vi_VN\n"
+"Language-Team: Vietnamese\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project-ID: 458284\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: en-US.po\n"
+"X-Crowdin-File-ID: 4\n"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "$-"
+msgstr "$-"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "${0}"
+msgstr "${0}"
+
+#: src/components/swap/TradePrice.tsx
+msgid "(${0})"
+msgstr "(${0})"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(Xem trên Explorer)"
+
+#: src/components/AccountDetails/index.tsx
+msgid "(clear all)"
+msgstr "(xóa tất cả)"
+
+#: src/pages/Vote/Landing.tsx
+msgid "(edit)"
+msgstr "(chỉnh sửa)"
+
+#: src/pages/Swap/index.tsx
+msgid "- Remove recipient"
+msgstr "- Xóa người nhận"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/PoolCard.tsx
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "0 UNI / week"
+msgstr "0 UNI / tuần"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "25%"
+msgstr "25%"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "50%"
+msgstr "50%"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "75%"
+msgstr "75%"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "<0/> All Proposals"
+msgstr "<0/> Tất cả các đề xuất"
+
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
+msgid "<0/> Votes"
+msgstr "<0/> Phiếu bầu"
+
+#: src/pages/Pool/v2.tsx
+msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
+msgstr "<0>Phân tích tài khoản và phí tích lũy</0><1> ↗ </1>"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
+msgstr "<0> Giá hiện tại:</0> <1> <2 /></1> <3>{0} trên {1}</3>"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
+msgstr "<0> Mẹo:</0> Loại bỏ mã token chung sẽ chuyển vị trí của bạn trở lại thành các mã token cơ bản với tỷ lệ hiện tại, tỷ lệ thuận với thị phần của bạn trong nhóm. Phí tích lũy được bao gồm trong số tiền bạn nhận được."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0> Mẹo:</0> Chọn một hành động và mô tả đề xuất của bạn cho cộng đồng. Đề xuất không thể được sửa đổi sau khi gửi, vì vậy vui lòng xác minh tất cả thông tin trước khi gửi. Thời gian bình chọn sẽ bắt đầu ngay lập tức và kéo dài trong 7 ngày. Để đề xuất một hành động tùy chỉnh, hãy <1> đọc tài liệu</1> ."
+
+#: src/pages/PoolFinder/index.tsx
+msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
+msgstr "<0> Mẹo:</0> Sử dụng công cụ này để tìm các nhóm v2 không tự động xuất hiện trong giao diện."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
+msgstr "<0> Mẹo:</0> Khi bạn thêm thanh khoản, bạn sẽ nhận được mã token chung đại diện cho vị trí của bạn. Các mã token này tự động kiếm được phí tỷ lệ thuận với phần của bạn trong nhóm và có thể được đổi bất kỳ lúc nào."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "<0>Unlock voting</0> to prepare for the next proposal."
+msgstr "<0>Mở khóa biểu quyết</0> để chuẩn bị cho đề xuất tiếp theo."
+
+#: src/components/claim/ClaimModal.tsx
+msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
+msgstr "<0>🎉 </0> Chào mừng đến với đội Unicorn :) <1> 🎉</1>"
+
+#: src/pages/Vote/Landing.tsx
+msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
+msgstr "Yêu cầu ngưỡng tối thiểu 0,25% tổng nguồn cung cấp UNI để gửi đề xuất"
+
+#: src/components/Menu/index.tsx
+msgid "About"
+msgstr "Giới thiệu"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Accept"
+msgstr "Chấp nhận"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Account"
+msgstr "Tài khoản"
+
+#: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
+msgid "Active"
+msgstr "Hoạt động"
+
+#: src/components/PositionCard/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add"
+msgstr "Thêm vào"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Thêm <0 /> và <1 /> vào Uniswap V2"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Add Delegate +"
+msgstr "Thêm đại biểu +"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add Liquidity"
+msgstr "Thêm thanh khoản"
+
+#: src/pages/Pool/v2.tsx
+msgid "Add V2 Liquidity"
+msgstr "Thêm thanh khoản V2"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Add liquidity."
+msgstr "Thêm thanh khoản."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add more liquidity"
+msgstr "Thêm thanh khoản"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Add {0} to Metamask <0/>"
+msgstr "Thêm {0} vào Metamask <0/>"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Add {0}-{1} liquidity"
+msgstr "Thêm {0}-{1} thanh khoản"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add {0}/{1} V3 liquidity"
+msgstr "Thêm {0}/{1} thanh khoản V3"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Added {0}"
+msgstr "Đã thêm {0}"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Address has no available claim"
+msgstr "Địa chỉ không có yêu cầu"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Against"
+msgstr "Chống lại"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Allow LP token migration"
+msgstr "Cho phép di chuyển mã token LP"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Cho phép các giao dịch tác động đến giá cao và bỏ qua màn hình xác nhận. Sử dụng và tự gánh chịu mọi rủi ro."
+
+#: src/pages/Swap/index.tsx
+msgid "Allow the Uniswap Protocol to use your {0}"
+msgstr "Cho phép Giao thức hoán đổi Uniswap sử dụng {0}"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Allowed"
+msgstr "Được phép"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Amount"
+msgstr "Số tiền"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Đã xảy ra lỗi khi cố gắng thực hiện hoán đổi này. Bạn có thể cần phải tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
+
+#: src/components/earn/StakingModal.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approve"
+msgstr "Phê duyệt"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "Phê duyệt mã thông báo"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Approve {0}"
+msgstr "Phê duyệt {0}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approved"
+msgstr "Tán thành"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approving"
+msgstr "Đang phê duyệt"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Approving {0}"
+msgstr "Đang phê duyệt {0}"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Arbiscan"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "Cầu Arbitrum"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Arbitrum đang ở giai đoạn Beta và có thể gặp phải thời gian chết. Trong thời gian ngừng hoạt động, vị thế của bạn sẽ không kiếm được phí và bạn sẽ không thể xóa thanh khoản. <0> Đọc thêm.</0>"
+
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Bạn có chắc không?"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "Là một thành viên của cộng đồng Uniswap, bạn có thể yêu cầu UNI được sử dụng để bỏ phiếu và quản trị. <0 /> <1 /> <2> Đọc thêm về UNI</2>"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
+msgstr "Ít nhất {0} {1} và {2} {3} sẽ được hoàn lại vào ví của bạn do phạm vi giá đã chọn."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Tự động"
+
+#: src/components/Settings/index.tsx
+msgid "Auto Router API"
+msgstr "API bộ định tuyến tự động"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Available to deposit: {0}"
+msgstr "Có sẵn để đặt cọc: {0}"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0}"
+msgstr "Số dư: {0}"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for exotic pairs."
+msgstr "Tốt nhất cho các cặp kỳ lạ."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for most pairs."
+msgstr "Tốt nhất cho hầu hết các cặp."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for stable pairs."
+msgstr "Tốt nhất cho các cặp ổn định."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Tốt nhất cho các cặp rất ổn định."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "Tuyến đường giá tốt nhất chi phí ~{formattedGasPriceString} xăng."
+
+#: src/components/Blocklist/index.tsx
+msgid "Blocked address"
+msgstr "Địa chỉ bị chặn"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "Cầu"
+
+#: src/components/PositionCard/index.tsx
+msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "Bằng cách thêm thanh khoản, bạn sẽ kiếm được 0,3% tất cả các giao dịch trên cặp tiền này tỷ lệ với phần của bạn trong nhóm. Phí được thêm vào nhóm, tích lũy trong thời gian thực và có thể được yêu cầu bằng cách rút tiền thanh khoản của bạn."
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
+msgstr "Bằng cách thêm danh sách này, bạn hoàn toàn tin tưởng rằng dữ liệu là chính xác. Bất kỳ ai cũng có thể tạo danh sách, bao gồm cả việc tạo các phiên bản giả mạo của danh sách hiện có và danh sách yêu cầu đại diện cho các dự án không có danh sách đó."
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "Bằng cách kết nối ví, bạn đồng ý với <0>Điều khoản dịch vụ</0> của Uniswap Labs và xác nhận rằng bạn đã đọc và hiểu Tuyên bố từ chối trách nhiệm</1><1>."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Đã hủy"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Change"
+msgstr "Thay đổi"
+
+#: src/components/Header/index.tsx
+msgid "Charts"
+msgstr "Biểu đồ"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Kiểm tra trạng thái mạng"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Check out our v3 LP walkthrough and migration guides."
+msgstr "Xem hướng dẫn di chuyển và hướng dẫn v3 LP của chúng tôi."
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Claim"
+msgstr "Nhận"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Yêu cầu <0 /> cho {0}"
+
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "Claim UNI"
+msgstr "Nhận UNI"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claim UNI Token"
+msgstr "Yêu cầu mã token UNI"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Yêu cầu phần thưởng UNI cho {0}"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Claim fees"
+msgstr "Yêu cầu phí"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "Yêu cầu mã token UNI của bạn"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claimed"
+msgstr "Đã yêu cầu bồi thường"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Claimed UNI!"
+msgstr "Đã nhận UNI!"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Đã yêu cầu bồi thường!"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "Claiming"
+msgstr "Đang yêu cầu"
+
+#: src/components/Header/index.tsx
+msgid "Claiming UNI"
+msgstr "Đang yêu cầu UNI"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Claiming {0} UNI"
+msgstr "Đang yêu cầu {0} UNI"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Clear All"
+msgstr "Xóa tất cả"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Clear all"
+msgstr "Xóa tất cả"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Close"
+msgstr "Đóng"
+
+#: src/components/Badge/RangeBadge.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Closed"
+msgstr "Đã đóng cửa"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collect"
+msgstr "Sưu tầm"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Collect as WETH"
+msgstr "Thu thập dưới dạng WETH"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collect fees"
+msgstr "Thu phí"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Thu thập {0}/{1} phí"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collected"
+msgstr "Đã thu thập"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting"
+msgstr "Sưu tập"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting fees"
+msgstr "Thu phí"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting fees will withdraw currently available fees for you."
+msgstr "Thu phí sẽ rút các khoản phí hiện có sẵn cho bạn."
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Confirm Supply"
+msgstr "Xác nhận cung cấp"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr "Xác nhận Hoán đổi"
+
+#: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Confirm this transaction in your wallet"
+msgstr "Xác nhận giao dịch này trong ví của bạn"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Xác nhận giao dịch trong ví"
+
+#: src/components/Web3Status/index.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Connect Wallet"
+msgstr "Kết nối ví"
+
+#: src/components/WalletModal/index.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/pages/Pool/index.tsx
+msgid "Connect a wallet"
+msgstr "Kết nối ví"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Connect to a wallet to find pools"
+msgstr "Kết nối với ví để tìm nhóm"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Connect to a wallet to view your V2 liquidity."
+msgstr "Kết nối với ví để xem tính thanh khoản V2 của bạn."
+
+#: src/pages/Pool/v2.tsx
+msgid "Connect to a wallet to view your liquidity."
+msgstr "Kết nối với ví để xem tính thanh khoản của bạn."
+
+#: src/components/AccountDetails/index.tsx
+msgid "Connected with {name}"
+msgstr "Đã kết nối với {name}"
+
+#: src/components/AccountDetails/Copy.tsx
+msgid "Copied"
+msgstr "Đã sao chép"
+
+#: src/components/AccountDetails/index.tsx
+#: src/components/AccountDetails/index.tsx
+msgid "Copy Address"
+msgstr "Sao chép địa chỉ"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Create Pool & Supply"
+msgstr "Tạo Nhóm & Nguồn cung"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/Landing.tsx
+msgid "Create Proposal"
+msgstr "Tạo đề xuất"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/v2.tsx
+msgid "Create a pair"
+msgstr "Tạo một cặp"
+
+#: src/pages/Pool/index.tsx
+msgid "Create a pool"
+msgstr "Tạo một nhóm"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Create an issue on GitHub"
+msgstr "Tạo sự cố trên GitHub"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Create pool and add {0}/{1} V3 liquidity"
+msgstr "Tạo nhóm và thêm {0}/{1} thanh khoản V3"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Create pool."
+msgstr "Tạo nhóm."
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Create {0}/{1} V3 pool"
+msgstr "Tạo {0}/{1} hồ bơi V3"
+
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Current price"
+msgstr "Giá hiện tại"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current {0} Price:"
+msgstr "Giá {0} hiện tại:"
+
+#: src/components/Menu/index.tsx
+msgid "Dark Theme"
+msgstr "Chủ đề tối"
+
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Bị đánh bại"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Delegate Votes"
+msgstr "Phiếu bầu ủy quyền"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Ủy quyền biểu quyết thành {0}"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Delegated to:"
+msgstr "Giao cho:"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Delegating votes"
+msgstr "Ủy quyền phiếu bầu"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Deposit"
+msgstr "Tiền gửi"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Deposit Amounts"
+msgstr "Số tiền đặt cọc"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Deposit UNI-V2 LP Tokens"
+msgstr "Gửi token UNI-V2 LP"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Deposit liquidity"
+msgstr "Thanh khoản tiền gửi"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "Gửi mã thông báo vào mạng {label}"
+
+#: src/pages/Earn/index.tsx
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
+msgstr "Gửi mã token Nhà cung cấp thanh khoản của bạn để nhận UNI, mã token quản trị giao thức Uniswap."
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Deposited liquidity:"
+msgstr "Thanh khoản tiền gửi:"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Deposited {0} UNI-V2"
+msgstr "Đã gửi {0} UNI-V2"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Depositing Liquidity"
+msgstr "Thanh khoản tiền gửi"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Description"
+msgstr "Sự miêu tả"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Detailed"
+msgstr "Chi tiết"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Details"
+msgstr "Chi tiết"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Disconnect"
+msgstr "Ngắt kết nối"
+
+#: src/components/Menu/index.tsx
+msgid "Discord"
+msgstr "Bất hòa"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Dismiss"
+msgstr "Bỏ qua"
+
+#: src/components/Menu/index.tsx
+msgid "Docs"
+msgstr "Docs"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
+msgstr "Bạn không thấy một trong các vị trí v2 của mình? <0> Nhập nó ngay.</0>"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Earned UNI tokens represent voting shares in Uniswap governance."
+msgstr "Token UNI kiếm được đại diện cho cổ phần có quyền biểu quyết trong quản trị Uniswap."
+
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Biên tập"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Efficiency Comparison"
+msgstr "So sánh hiệu quả"
+
+#: src/state/burn/v3/hooks.tsx
+msgid "Enter a percent"
+msgstr "Nhập một phần trăm"
+
+#: src/state/swap/hooks.tsx
+msgid "Enter a recipient"
+msgstr "Nhập người nhận"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Nhập phần trăm trượt giá hợp lệ"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
+msgstr "Nhập địa chỉ để kích hoạt khiếu nại UNI. Nếu địa chỉ có bất kỳ UNI nào có thể xác nhận quyền sở hữu, địa chỉ đó sẽ được gửi cho họ khi gửi."
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Enter an amount"
+msgstr "Nhập số tiền"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Enter valid list location"
+msgstr "Nhập vị trí danh sách hợp lệ"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Enter valid token address"
+msgstr "Nhập địa chỉ mã token hợp lệ"
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "Nhập số tiền {0}"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Error"
+msgstr "Lỗi"
+
+#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Error connecting"
+msgstr "Lỗi kết nối"
+
+#: src/components/WalletModal/index.tsx
+msgid "Error connecting. Try refreshing the page."
+msgstr "Lỗi kết nối. Hãy thử làm mới trang."
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Error importing list"
+msgstr "Lỗi khi nhập danh sách"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Ước tính có thể khác do cài đặt gas ví của bạn"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Phí mạng ước tính"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr "Etherscan"
+
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Thực thi"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Kết quả mở rộng từ Danh sách mã token không hoạt động"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Sản lượng mong đợi"
+
+#: src/components/Settings/index.tsx
+msgid "Expert Mode"
+msgstr "Chế độ chuyên gia"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Chế độ chuyên gia tắt nhắc nhở xác nhận giao dịch và cho phép thực hiện các giao dịch trượt giá cao thường dẫn đến tỷ giá xấu và mất tiền."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Đã hết hạn"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Explore Uniswap Analytics."
+msgstr "Khám phá Uniswap Analytics."
+
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "Không chuyển được mạng từ Giao diện Hoán đổi Uniswap. Để sử dụng Uniswap trên {0}, bạn phải thay đổi mạng trong ví của mình."
+
+#: src/components/PositionPreview/index.tsx
+msgid "Fee Tier"
+msgstr "Bậc phí"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "Bậc phí"
+
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Đang tìm nạp giá tốt nhất ..."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "For"
+msgstr "Đối với"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
+msgstr "Đối với mỗi pool được hiển thị bên dưới, hãy nhấp vào di chuyển để xóa thanh khoản của bạn khỏi Uniswap V2 và gửi nó vào Uniswap V3."
+
+#: src/pages/Swap/index.tsx
+msgid "From"
+msgstr "Từ"
+
+#: src/pages/Swap/index.tsx
+msgid "From (at most)"
+msgstr "Từ (nhiều nhất)"
+
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "Full Range"
+msgstr "Phạm vi đầy đủ"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
+msgstr "Các vị trí đầy đủ có thể kiếm được ít phí hơn các vị trí tập trung. Tìm hiểu thêm <0> tại đây</0> ."
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support on Discord"
+msgstr "Nhận hỗ trợ về Discord"
+
+#: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
+msgid "Help Center"
+msgstr "Trung tâm trợ giúp"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Hide"
+msgstr "Ẩn giấu"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Ẩn các vị trí đã đóng"
+
+#: src/pages/Swap/index.tsx
+msgid "High Price Impact"
+msgstr "Tác động giá cao"
+
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "Cách ứng dụng này sử dụng API"
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "I understand"
+msgstr "Tôi hiểu"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "If you purchase a token from this list, you may not be able to sell it back."
+msgstr "Nếu bạn mua mã token từ danh sách này, bạn có thể không bán lại được."
+
+#: src/components/SearchModal/BlockedToken.tsx
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Import"
+msgstr "Nhập"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import List"
+msgstr "Nhập danh sách"
+
+#: src/pages/Pool/v2.tsx
+msgid "Import Pool"
+msgstr "Nhập Pool"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import V2 Pool"
+msgstr "Nhập pool V2"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import at your own risk"
+msgstr "Nhập rồi tự chịu mọi rủ ro"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "In range"
+msgstr "Trong phạm vi"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Increase Liquidity"
+msgstr "Tăng tính thanh khoản"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Initial prices and pool share"
+msgstr "Giá ban đầu và tỷ trọng pool"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Initializing..."
+msgstr "Đang khởi tạo..."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
+msgstr "Đầu vào được ước tính. Bạn sẽ bán nhiều nhất <0>{0} {1}</0> hoặc giao dịch sẽ hoàn nguyên."
+
+#: src/components/WalletModal/index.tsx
+msgid "Install Metamask"
+msgstr "Cài đặt Metamask"
+
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "Không đủ thanh khoản cho giao dịch này."
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient {0} balance"
+msgstr "Số dư {0} không đủ"
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Cài đặt giao diện"
+
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+msgid "Invalid pair"
+msgstr "Cặp không hợp lệ"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Invalid pair."
+msgstr "Cặp không hợp lệ."
+
+#: src/state/mint/v3/hooks.tsx
+msgid "Invalid price input"
+msgstr "Giá đầu vào không hợp lệ"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Invalid range selected. The min price must be lower than the max price."
+msgstr "Đã chọn dải ô không hợp lệ. Giá tối thiểu phải thấp hơn giá tối đa."
+
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
+msgid "Invalid recipient"
+msgstr "Người nhận không hợp lệ"
+
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "Ngôn ngữ"
+
+#: src/pages/Pool/index.tsx
+msgid "Learn"
+msgstr "Học hỏi"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Learn about providing liquidity"
+msgstr "Tìm hiểu về cung cấp tính thanh khoản"
+
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "Tìm hiểu thêm"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "Pháp lý & Quyền riêng tư"
+
+#: src/components/Menu/index.tsx
+msgid "Light Theme"
+msgstr "Chủ đề ánh sáng"
+
+#: src/components/claim/ClaimModal.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Liquidity"
+msgstr "Thanh khoản"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Liquidity data not available."
+msgstr "Dữ liệu thanh khoản không có sẵn."
+
+#: src/pages/Pool/v2.tsx
+msgid "Liquidity provider rewards"
+msgstr "Phần thưởng của nhà cung cấp thanh khoản"
+
+#: src/pages/Pool/v2.tsx
+msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "Các nhà cung cấp thanh khoản kiếm được một khoản phí 0,3% cho tất cả các giao dịch tỷ lệ với phần của họ trong pool. Phí được thêm vào pool, tích lũy trong thời gian thực và có thể được yêu cầu bằng cách rút tiền thanh khoản của bạn."
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Danh sách"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Loaded"
+msgstr "Đã nạp"
+
+#: src/components/PositionCard/Sushi.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/index.tsx
+#: src/pages/Pool/v2.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Loading"
+msgstr "Đang tải"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "TỐI ĐA"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
+#: src/components/earn/PoolCard.tsx
+msgid "Manage"
+msgstr "Quản lý"
+
+#: src/components/PositionCard/index.tsx
+msgid "Manage Liquidity in Rewards Pool"
+msgstr "Quản lý tính thanh khoản trong Nhóm phần thưởng"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Manage Token Lists"
+msgstr "Quản lý danh sách mã Token"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Manage this pool."
+msgstr "Quản lý pool này."
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Max"
+msgstr "Tối đa"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
+msgid "Max Price"
+msgstr "Giá tối đa"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Max price"
+msgstr "Giá tối đa"
+
+#: src/components/PositionListItem/index.tsx
+msgid "Max:"
+msgstr "Tối đa:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum sent"
+msgstr "Đã gửi tối đa"
+
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "Thực đơn"
+
+#: src/components/PositionCard/Sushi.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/index.tsx
+msgid "Migrate"
+msgstr "Di chuyển"
+
+#: src/pages/Pool/v2.tsx
+msgid "Migrate Liquidity to V3"
+msgstr "Di chuyển thanh khoản sang V3"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/index.tsx
+msgid "Migrate V2 Liquidity"
+msgstr "Di chuyển Thanh khoản V2"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
+msgstr "Di chuyển mã token thanh khoản của bạn từ Uniswap V2 sang Uniswap V3."
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Di chuyển {0}/{1} thanh khoản cho V3"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Migrating"
+msgstr "Đang di chuyển"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
+msgid "Min Price"
+msgstr "Giá tối thiểu"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Min price"
+msgstr "Giá tối thiểu"
+
+#: src/components/PositionListItem/index.tsx
+msgid "Min:"
+msgstr "Tối thiểu:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum received"
+msgstr "Số tiền nhận được tối thiểu"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "Thiếu phụ thuộc"
+
+#: src/pages/Pool/index.tsx
+msgid "More"
+msgstr "Thêm nữa"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Phí mạng"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "Cảnh báo mạng"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Phí mạng vượt quá 50% số tiền hoán đổi!"
+
+#: src/pages/Pool/index.tsx
+msgid "New Position"
+msgstr "Vị trí mới"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "No V2 Liquidity found."
+msgstr "Không tìm thấy Thanh khoản V2."
+
+#: src/pages/Earn/index.tsx
+#: src/pages/Earn/index.tsx
+msgid "No active pools"
+msgstr "Không có pool hoạt động"
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "No data"
+msgstr "Không có dữ liệu"
+
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Không có mô tả."
+
+#: src/pages/Pool/v2.tsx
+msgid "No liquidity found."
+msgstr "Không tìm thấy thanh khoản."
+
+#: src/pages/PoolFinder/index.tsx
+msgid "No pool found."
+msgstr "Không tìm thấy pool."
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "No proposals found."
+msgstr "Không tìm thấy đề xuất nào."
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "No results found."
+msgstr "Không có kết quả nào được tìm thấy."
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "Not created"
+msgstr "Chưa tạo"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "TẮT"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "BẬT"
+
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "CHỈ SỬ DỤNG CHẾ ĐỘ NÀY NẾU BẠN BIẾT BẠN ĐANG LÀM GÌ."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "Tắt"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "Bật"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Once you are happy with the rate click supply to review."
+msgstr "Một khi bạn hài lòng với tỷ lệ, nhấp vào cung cấp để xem xét."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
+msgstr "Chỉ những phiếu bầu UNI đã được tự ủy quyền hoặc được ủy quyền cho một địa chỉ khác trước khối {0} đủ điều kiện để bỏ phiếu."
+
+#: src/components/Web3ReactManager/index.tsx
+msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
+msgstr "Ối! Đã xảy ra lỗi không xác định. Vui lòng làm mới trang hoặc truy cập từ trình duyệt hoặc thiết bị khác."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "Cổng lạc quan"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Tính năng lạc quan đang ở giai đoạn Beta và có thể gặp phải thời gian chết. Lạc quan mong đợi thời gian ngừng hoạt động theo kế hoạch để nâng cấp mạng trong tương lai gần. Trong thời gian ngừng hoạt động, vị trí của bạn sẽ không kiếm được phí và bạn sẽ không thể xóa thanh khoản. <0>Đọc thêm.</0>"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimistic Etherscan"
+msgstr "Etherscan lạc quan"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Out of range"
+msgstr "Ngoài phạm vi"
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
+msgstr "Đầu ra được ước tính. Nếu giá thay đổi nhiều hơn {0}%, giao dịch của bạn sẽ hoàn nguyên."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
+msgstr "Đầu ra được ước tính. Bạn sẽ nhận được ít nhất <0>{0} {1}</0> hoặc giao dịch sẽ hoàn nguyên."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Output will be sent to <0>{0}</0>"
+msgstr "Đầu ra sẽ được gửi đến <0>{0}</0>"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Owner"
+msgstr "Chủ sở hữu"
+
+#: src/pages/Earn/index.tsx
+msgid "Participating pools"
+msgstr "Pool tham gia"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "Đang chờ xử lý"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Please confirm you would like to remove this list by typing REMOVE"
+msgstr "Vui lòng xác nhận rằng bạn muốn xóa danh sách này bằng cách gõ XÓA"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Vui lòng kết nối với Ethereum Lớp 1"
+
+#: src/components/WalletModal/index.tsx
+msgid "Please connect to the appropriate Ethereum network."
+msgstr "Vui lòng kết nối với mạng Ethereum thích hợp."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Vui lòng nhập từ \"{confirmWord}\" để bật chế độ chuyên gia."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr "Cầu đa giác"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr "Polygonscan"
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+msgid "Pool"
+msgstr "Pool"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Pool Found!"
+msgstr "Đã tìm thấy pool!"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Pool Rate"
+msgstr "Tỷ lệ Pool"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Pool rate"
+msgstr "Tỷ lệ pool"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Pool tokens in rewards pool:"
+msgstr "Nhóm mã token trong nhóm phần thưởng:"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Pooled {0}:"
+msgstr "Pool {0}:"
+
+#: src/pages/Pool/index.tsx
+msgid "Pools Overview"
+msgstr "Tổng quan về pool"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Preview"
+msgstr "Xem trước"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price"
+msgstr "Giá"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Price Difference:"
+msgstr "Chênh lệch giá:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Price Impact"
+msgstr "Tác động giá"
+
+#: src/pages/Swap/index.tsx
+msgid "Price Impact Too High"
+msgstr "Tác động giá quá cao"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Price Updated"
+msgstr "Đã cập nhật giá"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Price range"
+msgstr "Phạm vi giá"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price:"
+msgstr "Giá:"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Prices and pool share"
+msgstr "Giá và pool chia sẻ"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "Đề nghị"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "Đề xuất đã được đệ trình"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "Tiêu đề đề xuất"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Proposals"
+msgstr "Đề xuất"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Proposals submitted by community members will appear here."
+msgstr "Các đề xuất do các thành viên cộng đồng gửi sẽ xuất hiện ở đây."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "Đề xuất hành động"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Proposer"
+msgstr "Người đề xuất"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "Tuyên bố từ chối trách nhiệm"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "Đã xếp hàng"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Rates"
+msgstr "Tỷ giá"
+
+#: src/pages/Earn/index.tsx
+msgid "Read more about UNI"
+msgstr "Đọc thêm về UNI"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Read more about Uniswap governance"
+msgstr "Đọc thêm về quản trị Uniswap"
+
+#: src/pages/Pool/v2.tsx
+msgid "Read more about providing liquidity"
+msgstr "Đọc thêm về cung cấp thanh khoản"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Read more about unsupported assets"
+msgstr "Đọc thêm về nội dung không được hỗ trợ"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Recent Transactions"
+msgstr "Giao dịch gần đây"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "Người nhận"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Remove"
+msgstr "Xóa"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Xóa <0 /> và <1 />"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Remove Amount"
+msgstr "Xóa số tiền"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Remove Delegate"
+msgstr "Xóa ủy quyền"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Remove Liquidity"
+msgstr "Loại bỏ thanh khoản"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Remove list"
+msgstr "Xóa danh sách"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Removing {0} {1} and {2} {3}"
+msgstr "Loại bỏ {0} {1} và {2} {3}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "Loại bỏ {0} {1} và{2} {3}"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Yêu cầu tính năng"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Return"
+msgstr "Trở về"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Search name or paste address"
+msgstr "Tìm kiếm tên hoặc dán địa chỉ"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Select Pair"
+msgstr "Chọn cặp"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "Chọn một mạng"
+
+#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/state/swap/hooks.tsx
+msgid "Select a token"
+msgstr "Chọn một mã token"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Select a token to find your v2 liquidity."
+msgstr "Chọn một mã token để tìm thanh khoản v2 của bạn."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "Chọn một hành động"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Selected Range"
+msgstr "Phạm vi đã chọn"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Self"
+msgstr "Bản thân"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Self Delegate"
+msgstr "Tự ủy quyền"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Set Price Range"
+msgstr "Đặt phạm vi giá"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Set Starting Price"
+msgstr "Đặt giá khởi điểm"
+
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+msgid "Share of Pool"
+msgstr "Chia sẻ của Pool"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Share of Pool:"
+msgstr "Chia sẻ của Pool:"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Hiển thị Portis"
+
+#: src/pages/Pool/index.tsx
+msgid "Show closed positions"
+msgstr "Hiển thị các vị trí đã đóng"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Simple"
+msgstr "Đơn giản"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Khả năng chịu trượt"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
+msgstr "Một số tài sản không khả dụng thông qua giao diện này vì chúng không hoạt động tốt với các hợp đồng thông minh hoặc chúng tôi không thể cho phép giao dịch vì lý do pháp lý."
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Something went wrong"
+msgstr "Đã xảy ra sự cố"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Step 1. Get UNI-V2 Liquidity tokens"
+msgstr "Bước 1. Nhận mã token thanh khoản UNI-V2"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Gửi đề xuất mới"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "Gửi đề xuất"
+
+#: src/components/vote/VoteModal.tsx
+msgid "Submitting Vote"
+msgstr "Gửi phiếu bầu"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Thành công"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Sự thành công"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Supply"
+msgstr "Cung cấp"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Cung cấp {0} {1} và {2} {3}"
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap"
+msgstr "Hoán đổi"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Hoán đổi <0 /> lấy chính xác <1 />"
+
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap Anyway"
+msgstr "Vẫn hoán đổi"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Hoán đổi chính xác <0 /> lấy <1 />"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "Hoán đổi không thành công: {0}"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Swapping {0} {1} for {2} {3}"
+msgstr "Đổi {0} {1} lấy {2} {3}"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "Cảm ơn bạn đã tham gia cộng đồng Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "% Bạn sẽ kiếm được từ phí."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Bất biến Uniswap x * y = k không được thỏa mãn bởi hoán đổi. Điều này thường có nghĩa là một trong những mã token bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "Ứng dụng tìm nạp dữ liệu blockchain từ dịch vụ lưu trữ của The Graph."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "Ứng dụng tìm nạp dữ liệu trên chuỗi và tạo các lệnh gọi hợp đồng bằng API Infura."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "Ứng dụng tìm nạp lộ trình giao dịch tối ưu từ máy chủ Uniswap Labs."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "Ứng dụng ghi lại số liệu thống kê sử dụng ẩn danh để cải thiện theo thời gian."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "Ứng dụng thu thập địa chỉ ví của bạn một cách an toàn và chia sẻ nó với TRM Labs Inc. vì lý do rủi ro và tuân thủ."
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Chi phí gửi giao dịch này là hơn một nửa giá trị của số tiền đầu vào."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
+msgstr "Lượng gas nhanh hiện tại để gửi một giao dịch trên L1. Phí gas được thanh toán bằng đồng tiền bản địa của Ethereum (ETH) và có giá trị bằng GWEI."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Chênh lệch ước tính giữa giá trị USD của lượng đầu vào và đầu ra."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The input token cannot be transferred. There may be an issue with the input token."
+msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố với mã token đầu vào."
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "The market price is outside your specified price range. Single-asset deposit only."
+msgstr "Giá thị trường nằm ngoài phạm vi giá đã chỉ định của bạn. Chỉ gửi một tài sản duy nhất."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Số khối gần đây nhất trên mạng này. Giá cập nhật trên mọi khối."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token."
+msgstr "Không thể chuyển mã token đầu ra. Có thể có sự cố với mã token đầu ra."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Không thể chuyển mã thông báo đầu ra. Có thể có sự cố với mã thông báo đầu ra. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
+msgstr "Giá của pool này nằm ngoài phạm vi bạn đã chọn. Vị trí của bạn hiện không kiếm được phí."
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "The price of this pool is within your selected range. Your position is currently earning fees."
+msgstr "Giá của pool này nằm trong phạm vi bạn đã chọn. Vị trí của bạn hiện đang thu phí."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "The ratio of tokens you add will set the price of this pool."
+msgstr "Tỷ lệ mã token bạn thêm vào sẽ thiết lập giá của nhóm này."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng kiểm tra xem thời hạn giao dịch của bạn không quá thấp."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data."
+msgstr "Không có dữ liệu thanh khoản."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "Ứng dụng này sử dụng các API của bên thứ ba sau:"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+msgstr "Nhóm này phải được khởi tạo trước khi bạn có thể thêm thanh khoản. Để khởi tạo, hãy chọn giá khởi điểm cho nhóm. Sau đó, nhập phạm vi giá thanh khoản và số tiền ký quỹ của bạn. Phí gas sẽ cao hơn bình thường do giao dịch khởi tạo."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Lộ trình này tối ưu hóa tổng sản lượng của bạn bằng cách xem xét các lộ trình chia nhỏ, nhiều bước nhảy và chi phí xăng của mỗi bước."
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr "Mã token này không xuất hiện trên (các) danh sách mã token đang hoạt động. Đảm bảo rằng đây là mã token mà bạn muốn giao dịch."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Mã thông báo này không được hỗ trợ trong ứng dụng Uniswap Labs"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
+msgstr "Công cụ này sẽ chuyển thanh khoản {0} sang V3. Quá trình này hoàn toàn không đáng tin cậy nhờ vào"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Giao dịch này sẽ không thành công do biến động giá. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
+msgstr "Giao dịch này sẽ không thành công do biến động giá hoặc phí chuyển nhượng. Hãy thử tăng khả năng chịu trượt của bạn."
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Tip: Custom tokens are stored locally in your browser"
+msgstr "Mẹo: Mã token tùy chỉnh được lưu trữ cục bộ trong trình duyệt của bạn"
+
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/Swap/index.tsx
+msgid "To"
+msgstr "Đến"
+
+#: src/pages/Swap/index.tsx
+msgid "To (at least)"
+msgstr "Đến (Ít nhất)"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Mã thông báo không được hỗ trợ"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Token"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "Mã token từ danh sách không hoạt động. Nhập mã token cụ thể bên dưới hoặc nhấp vào Quản lý để kích hoạt thêm danh sách."
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Top pools"
+msgstr "Pool hàng đầu"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Total deposited"
+msgstr "Tổng số tiền gửi"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Total deposits"
+msgstr "Tổng số tiền gửi"
+
+#: src/components/swap/RouterLabel.tsx
+msgid "Trade Route"
+msgstr "Con đường thương mại"
+
+#: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Cài đặt giao dịch"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/components/vote/DelegateModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Transaction Submitted"
+msgstr "Giao dịch đã được gửi"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Giao dịch đã hoàn tất trong"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Thời hạn giao dịch"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "Giao dịch bị từ chối."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "Mã thông báo chuyển"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Try Again"
+msgstr "Thử lại"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Bật Chế độ chuyên gia"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI đã đến"
+
+#: src/pages/Vote/Landing.tsx
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Mã token UNI đại diện cho cổ phần có quyền biểu quyết trong quản trị Uniswap. Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy thác phiếu bầu của mình cho bên thứ ba."
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "UNI {0}/{1} Burned"
+msgstr "UNI {0}/{1} đã đốt"
+
+#: src/pages/Earn/Manage.tsx
+msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
+msgstr "Mã token UNI-V2 LP là bắt buộc. Khi bạn đã thêm tính thanh khoản vào nhóm {0}-{1} bạn có thể đặt cược mã token thanh khoản của mình trên trang này."
+
+#: src/pages/Earn/Manage.tsx
+msgid "UNI-V2 {0}-{1}"
+msgstr "UNI-V2 {0}-{1}"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Unclaimed UNI"
+msgstr "UNI chưa nhận"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Unclaimed fees"
+msgstr "Phí chưa nhận"
+
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Không xác định"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "Lỗi không mong đợi. Không thể ước tính khí cho hoán đổi."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "Vấn đề không mong muốn với ước tính khí. Vui lòng thử lại."
+
+#: src/pages/Vote/Landing.tsx
+msgid "Uniswap Governance"
+msgstr "Quản trị Uniswap"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Điều khoản dịch vụ của Uniswap Labs"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap có sẵn ở: <0>{0}</0>"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Quản trị Uniswap chỉ khả dụng trên Lớp 1. Chuyển mạng của bạn sang Ethereum Mainnet để xem các Đề xuất và Bỏ phiếu."
+
+#: src/pages/Earn/index.tsx
+msgid "Uniswap liquidity mining"
+msgstr "Khai thác thanh khoản Uniswap"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Uniswap migration contract↗"
+msgstr "Hợp đồng di chuyển Uniswap↗"
+
+#: src/components/SearchModal/TokenImportCard.tsx
+msgid "Unknown Source"
+msgstr "Nguồn không rõ"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Lỗi không xác định{0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
+
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Unlock Votes"
+msgstr "Mở khóa phiếu bầu"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Unlock Voting"
+msgstr "Mở khóa biểu quyết"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Unlocking Votes"
+msgstr "Mở khóa phiếu bầu"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Unsupported Asset"
+msgstr "Tài sản không được hỗ trợ"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Unsupported Assets"
+msgstr "Tài sản không được hỗ trợ"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Không có tiêu đề"
+
+#: src/pages/Swap/index.tsx
+msgid "Unwrap"
+msgstr "Tháo"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to {0}"
+msgstr "Bỏ gói <0/> thành {0}"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Update Delegation"
+msgstr "Cập nhật ủy quyền"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Update list"
+msgstr "Cập nhật danh sách"
+
+#: src/components/Settings/index.tsx
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Sử dụng API Uniswap Labs để nhận báo giá nhanh hơn."
+
+#: src/components/claim/ClaimModal.tsx
+msgid "User"
+msgstr "Người dùng"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 không khả dụng trên Lớp 2. Chuyển sang Lớp 1 Ethereum."
+
+#: src/pages/Pool/index.tsx
+msgid "V2 liquidity"
+msgstr "Thanh khoản V2"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "V3 {0} Price:"
+msgstr "V3 {0} Giá:"
+
+#: src/components/PositionCard/index.tsx
+msgid "View accrued fees and analytics<0>↗</0>"
+msgstr "Xem phí đã tích lũy và số liệu phân tích <0>↗</0>"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "View list"
+msgstr "Danh sách xem"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "Xem trên Etherscan"
+
+#: src/components/AccountDetails/index.tsx
+#: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Explorer"
+msgstr "Xem trên Explorer"
+
+#: src/components/ModalViews/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "View transaction on Explorer"
+msgstr "Xem giao dịch trên Explorer"
+
+#: src/components/Header/index.tsx
+msgid "Vote"
+msgstr "Bỏ phiếu"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote Against"
+msgstr "Bỏ phiếu chống lại"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "Bỏ phiếu cho"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote against proposal {proposalId}"
+msgstr "Bỏ phiếu chống lại đề xuất {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Bỏ phiếu chống lại đề xuất {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Bỏ phiếu chống lại đề xuất {proposalKey} với lý do \"{0}\""
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote for proposal {proposalId}"
+msgstr "Bỏ phiếu cho đề xuất {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Bỏ phiếu cho đề xuất {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Bỏ phiếu cho đề xuất {proposalKey} với lý do \"{0}\""
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote to abstain on proposal {proposalId}"
+msgstr "Bỏ phiếu trắng đối với đề xuất {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Bỏ phiếu trắng đối với đề xuất {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Bỏ phiếu trắng đối với đề xuất {proposalKey} với lý do \"{0}\""
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting ended {0}"
+msgstr "Bỏ phiếu đã kết thúc {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting ends approximately {0}"
+msgstr "Bỏ phiếu kết thúc vào khoảng {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "Bỏ phiếu bắt đầu khoảng {0}"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting For Confirmation"
+msgstr "Chờ đợi sự xác nhận"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "Địa chỉ ví hoặc tên ENS"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Weekly Rewards"
+msgstr "Phần thưởng hàng tuần"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Welcome to team Unicorn :)"
+msgstr "Chào mừng đến với đội Unicorn :)"
+
+#: src/components/earn/ClaimRewardModal.tsx
+msgid "When you claim without withdrawing your liquidity remains in the mining pool."
+msgstr "Khi bạn yêu cầu mà không rút tiền, thanh khoản của bạn vẫn còn trong pool khai thác."
+
+#: src/pages/Earn/Manage.tsx
+msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgstr "Khi bạn rút tiền, hợp đồng sẽ tự động yêu cầu UNI thay mặt bạn!"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
+msgstr "Khi bạn rút tiền, UNI của bạn sẽ được xác nhận quyền sở hữu và thanh khoản của bạn sẽ bị xóa khỏi pool khai thác."
+
+#: src/components/earn/UnstakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Withdraw"
+msgstr "Rút tiền"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdraw & Claim"
+msgstr "Rút tiền & xác nhận quyền sở hữu"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Withdraw deposited liquidity"
+msgstr "Rút tiền thanh khoản đã ký gửi"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdrawing {0} UNI-V2"
+msgstr "Đang rút {0} UNI-V2"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdrew UNI-V2!"
+msgstr "Đã rút UNI-V2!"
+
+#: src/pages/Swap/index.tsx
+msgid "Wrap"
+msgstr "Bọc lại"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to {0}"
+msgstr "Kết thúc từ <0/> đến {0}"
+
+#: src/components/WalletModal/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Wrong Network"
+msgstr "Mạng sai"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "Bạn đã có một đề xuất đang hoạt động hoặc đang chờ xử lý"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "You are creating a pool"
+msgstr "Bạn đang tạo một pool"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
+msgstr "Bạn là nhà cung cấp thanh khoản đầu tiên cho pool Uniswap V3 này. Thanh khoản của bạn sẽ thay đổi ở mức giá {0}."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "You are the first liquidity provider."
+msgstr "Bạn là nhà cung cấp thanh khoản đầu tiên."
+
+#: src/components/vote/DelegateModal.tsx
+msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy thác phiếu bầu của mình cho bên thứ ba."
+
+#: src/pages/Swap/index.tsx
+msgid "You can now trade {0}"
+msgstr "Giờ đây, bạn có thể giao dịch {0}"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "Bạn không có đủ phiếu bầu để gửi đề xuất"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "You don’t have liquidity in this pool yet."
+msgstr "Bạn chưa có thanh khoản trong pool này."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "Có thể bạn đã mất kết nối mạng hoặc {label} có thể bị ngắt ngay bây giờ."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "Bạn có thể đã mất kết nối mạng của mình."
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "Bạn có thể cân nhắc đợi cho đến khi phí mạng giảm để hoàn tất giao dịch này."
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You must connect an account."
+msgstr "Bạn phải kết nối một tài khoản."
+
+#: src/pages/Swap/index.tsx
+msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "Bạn phải cấp quyền cho hợp đồng thông minh Uniswap để sử dụng số {0} của bạn. Bạn chỉ phải làm điều này một lần cho mỗi mã token."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "Bạn phải có {formattedProposalThreshold} phiếu bầu để gửi đề xuất"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "Bạn chỉ nên gửi thanh khoản vào Uniswap V3 ở mức giá mà bạn tin là chính xác. <0/> Nếu giá có vẻ không chính xác, bạn có thể hoán đổi để thay đổi giá hoặc đợi người khác thực hiện."
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "You will also collect fees earned from this position."
+msgstr "Bạn cũng sẽ thu phí kiếm được từ vị trí này."
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "You will receive"
+msgstr "Bạn sẽ nhận"
+
+#: src/pages/Pool/v2.tsx
+msgid "Your V2 liquidity"
+msgstr "Thanh khoản V2 của bạn"
+
+#: src/pages/Pool/index.tsx
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "Các vị trí thanh khoản V3 đang hoạt động của bạn sẽ xuất hiện tại đây."
+
+#: src/pages/Earn/Manage.tsx
+msgid "Your liquidity deposits"
+msgstr "Tiền gửi thanh khoản của bạn"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your pool share:"
+msgstr "Chia sẻ pool của bạn:"
+
+#: src/components/PositionCard/index.tsx
+msgid "Your position"
+msgstr "Vị trí của bạn"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Your position has 0 liquidity, and is not earning fees."
+msgstr "Vị thế của bạn có tính thanh khoản bằng 0 và không thu phí."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "Vị trí của bạn sẽ xuất hiện ở đây."
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+msgid "Your position will be 100% composed of {0} at this price"
+msgstr "Vị trí của bạn sẽ 100% bao gồm {0} ở mức giá này"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Your position will be 100% {0} at this price."
+msgstr "Vị trí của bạn sẽ là 100% {0} ở mức giá này."
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
+msgstr "Vị trí của bạn sẽ không kiếm được phí hoặc được sử dụng trong các giao dịch cho đến khi giá thị trường di chuyển vào phạm vi của bạn."
+
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "Your positions"
+msgstr "Vị trí của bạn"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Your rate"
+msgstr "Tỷ lệ của bạn"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your total pool tokens:"
+msgstr "Tổng số mã token chung của bạn:"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
+msgstr "Chi phí giao dịch của bạn sẽ cao hơn nhiều vì nó đã bao gồm khí để tạo pool."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Giao dịch của bạn có thể chạy trước"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Giao dịch của bạn có thể thất bại"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Giao dịch của bạn sẽ hoàn nguyên nếu nó đang chờ xử lý trong hơn khoảng thời gian này."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Giao dịch của bạn sẽ hoàn nguyên nếu giá thay đổi bất lợi hơn tỷ lệ phần trăm này."
+
+#: src/components/AccountDetails/index.tsx
+msgid "Your transactions will appear here..."
+msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây..."
+
+#: src/pages/Earn/Manage.tsx
+msgid "Your unclaimed UNI"
+msgstr "UNI chưa được nhận của bạn"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "sau khi trượt"
+
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "xác nhận"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "for {0}"
+msgstr "cho {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
+
+#: src/components/Web3Status/index.tsx
+msgid "has socks emoji"
+msgstr "có biểu tượng cảm xúc vớ"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "ở đây."
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https:// hoặc ipfs:// hoặc tên ENS"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "phút"
+
+#: src/components/SearchModal/ImportRow.tsx
+msgid "via {0}"
+msgstr "qua {0}"
+
+#: src/components/SearchModal/TokenImportCard.tsx
+msgid "via {0} token list"
+msgstr "thông qua {0} mã token"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "{0, plural, one {Import token} other {Import tokens}}"
+msgstr "{0, plural, one {Import token} other {Import tokens}}"
+
+#: src/components/RateToggle/index.tsx
+#: src/components/RateToggle/index.tsx
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/PositionCard/index.tsx
+#: src/pages/Vote/VotePage.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "{0} %"
+msgstr "{0} %"
+
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionListItem/index.tsx
+msgid "{0} <0/> per <1/>"
+msgstr "{0} <0/> mỗi <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} Token tùy chỉnh"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "{0} Deposited"
+msgstr "{0} Đã gửi"
+
+#: src/components/earn/PoolCard.tsx
+msgid "{0} ETH"
+msgstr "{0} ETH"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "{0} Fees Earned:"
+msgstr "{0} Phí đã kiếm được:"
+
+#: src/components/Web3Status/index.tsx
+msgid "{0} Pending"
+msgstr "{0} Đang chờ xử lý"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "{0} UNI"
+msgstr "{0} UNI"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "{0} UNI / week"
+msgstr "{0} UNI / tuần"
+
+#: src/components/earn/StakingModal.tsx
+msgid "{0} UNI-V2"
+msgstr "{0} UNI-V2"
+
+#: src/pages/Earn/Manage.tsx
+msgid "{0} UNI-V2 LP tokens available"
+msgstr "{0} mã token UNI-V2 LP có sẵn"
+
+#: src/components/vote/VoteModal.tsx
+msgid "{0} Votes"
+msgstr "{0} phiếu bầu"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "{0} per {1}"
+msgstr "{0} trên {1}"
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{0} tokens"
+msgstr "{0} mã token"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0} {1} Price:"
+msgstr "{0} {1} Giá:"
+
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr "{0} {nativeCurrencySymbol}"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • Người dùng thêm vào"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "Mức phí {0}"
+
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}%"
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "{0}% select"
+msgstr "{0}% chọn"
+
+#: src/pages/Earn/Manage.tsx
+msgid "{0}-{1} Liquidity Mining"
+msgstr "{0}-{1} Thanh khoản Mining"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0}/{1} LP NFT"
+msgstr "{0}/{1} LP NFT"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0}/{1} LP Tokens"
+msgstr "{0}/{1} LP Token"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "{SOCKS_AMOUNT} UNI"
+msgstr "{SOCKS_AMOUNT} UNI"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "{USER_AMOUNT} UNI"
+msgstr "{USER_AMOUNT} UNI"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{activeTokensOnThisChain} tokens"
+msgstr "{activeTokensOnThisChain} mã thông báo"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} mã thông báo"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "{percentForSlider}%"
+msgstr "{percentForSlider}%"
+
+#: src/components/InputStepCounter/InputStepCounter.tsx
+msgid "{tokenB} per {tokenA}"
+msgstr "{tokenB} trên {tokenA}"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "← Back to Pools Overview"
+msgstr "← Quay lại Tổng quan về pool"
+

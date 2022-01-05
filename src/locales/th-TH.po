@@ -1,0 +1,2433 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
+"Last-Translator: \n"
+"Language: th_TH\n"
+"Language-Team: Thai\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project-ID: 458284\n"
+"X-Crowdin-Language: th\n"
+"X-Crowdin-File: en-US.po\n"
+"X-Crowdin-File-ID: 4\n"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "$-"
+msgstr "$-"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "${0}"
+msgstr "${0}"
+
+#: src/components/swap/TradePrice.tsx
+msgid "(${0})"
+msgstr "(${0})"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(ดูใน Explorer)"
+
+#: src/components/AccountDetails/index.tsx
+msgid "(clear all)"
+msgstr "(ลบทั้งหมด)"
+
+#: src/pages/Vote/Landing.tsx
+msgid "(edit)"
+msgstr "(แก้ไข)"
+
+#: src/pages/Swap/index.tsx
+msgid "- Remove recipient"
+msgstr "- ลบผู้รับ"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/PoolCard.tsx
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "0 UNI / week"
+msgstr "0 UNI / สัปดาห์"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "25%"
+msgstr "25%"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "50%"
+msgstr "50%"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "75%"
+msgstr "75%"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "<0/> All Proposals"
+msgstr "<0/> ข้อเสนอทั้งหมด"
+
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
+msgid "<0/> Votes"
+msgstr "<0/> โหวต"
+
+#: src/pages/Pool/v2.tsx
+msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
+msgstr "<0>การวิเคราะห์บัญชีและค่าธรรมเนียมค้างจ่าย</0> <1></1>"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
+msgstr "<0>ราคาปัจจุบัน:</0> <1/22/></1> <3>{0} ต่อ {1}</3>"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
+msgstr "<0>เคล็ดลับ:</0> การลบโทเค็นของพูลจะแปลงตำแหน่งของคุณกลับเป็นโทเค็นพื้นฐานที่อัตราปัจจุบัน โดยเป็นสัดส่วนกับส่วนแบ่งของพูลของคุณ ค่าธรรมเนียมค้างจ่ายรวมอยู่ในจำนวนเงินที่คุณได้รับ"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0>เคล็ดลับ:</0> เลือกการดำเนินการและอธิบายข้อเสนอของคุณสำหรับชุมชน ไม่สามารถแก้ไขข้อเสนอได้หลังจากส่ง ดังนั้นโปรดตรวจสอบข้อมูลทั้งหมดก่อนส่ง ระยะเวลาการลงคะแนนจะเริ่มทันทีและมีอายุ 7 วัน หากต้องการเสนอการดำเนินการที่กำหนดเอง <1>อ่านเอกสาร</1> ."
+
+#: src/pages/PoolFinder/index.tsx
+msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
+msgstr "<0>เคล็ดลับ:</0> ใช้เครื่องมือนี้เพื่อค้นหาพูล v2 ที่ไม่ปรากฏในอินเทอร์เฟซโดยอัตโนมัติ"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
+msgstr "<0>เคล็ดลับ:</0> เมื่อคุณเพิ่มสภาพคล่อง คุณจะได้รับโทเค็นพูลที่แสดงตำแหน่งของคุณ โทเค็นเหล่านี้จะได้รับค่าธรรมเนียมโดยอัตโนมัติตามสัดส่วนของส่วนแบ่งในพูลของคุณ และสามารถแลกได้ทุกเมื่อ"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "<0>Unlock voting</0> to prepare for the next proposal."
+msgstr "<0>ปลดล็อกการโหวต</0> เพื่อเตรียมรับข้อเสนอต่อไป"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
+msgstr "<0>🎉</0> ยินดีต้อนรับสู่ทีมยูนิคอร์น :) <1>🎉</1>"
+
+#: src/pages/Vote/Landing.tsx
+msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
+msgstr "เกณฑ์ขั้นต่ำ 0.25% ของอุปทาน UNI ทั้งหมดจะต้องส่งข้อเสนอ"
+
+#: src/components/Menu/index.tsx
+msgid "About"
+msgstr "เกี่ยวกับ"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Accept"
+msgstr "ยอมรับ"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Account"
+msgstr "บัญชี"
+
+#: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
+msgid "Active"
+msgstr "คล่องแคล่ว"
+
+#: src/components/PositionCard/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add"
+msgstr "เพิ่ม"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "เพิ่ม <0/> และ <1/> ไปยัง Uniswap V2"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Add Delegate +"
+msgstr "เพิ่มผู้รับมอบสิทธิ์ +"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add Liquidity"
+msgstr "เพิ่มสภาพคล่อง"
+
+#: src/pages/Pool/v2.tsx
+msgid "Add V2 Liquidity"
+msgstr "เพิ่มสภาพคล่อง V2"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Add liquidity."
+msgstr "เพิ่มสภาพคล่อง"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add more liquidity"
+msgstr "เพิ่มสภาพคล่อง"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Add {0} to Metamask <0/>"
+msgstr "เพิ่ม {0} ให้กับ Metamask <0/>"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Add {0}-{1} liquidity"
+msgstr "เพิ่มสภาพคล่อง {0}-{1}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add {0}/{1} V3 liquidity"
+msgstr "เพิ่มสภาพคล่อง {0}/{1}"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Added {0}"
+msgstr "เพิ่มแล้ว {0}"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Address has no available claim"
+msgstr "ที่อยู่ไม่มีการอ้างสิทธิ์"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Against"
+msgstr "ขัดต่อ"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Allow LP token migration"
+msgstr "อนุญาตให้ย้ายโทเค็น LP"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "อนุญาตให้ทำการซื้อขายที่กระทบราคาสูงและข้ามหน้าจอยืนยัน ใช้ความเสี่ยงของคุณเอง"
+
+#: src/pages/Swap/index.tsx
+msgid "Allow the Uniswap Protocol to use your {0}"
+msgstr "อนุญาตให้ Uniswap Protocol ใช้ {0}"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Allowed"
+msgstr "อนุญาต"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Amount"
+msgstr "จำนวน"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
+
+#: src/components/earn/StakingModal.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approve"
+msgstr "อนุมัติ"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "อนุมัติโทเค็น"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Approve {0}"
+msgstr "อนุมัติ {0}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approved"
+msgstr "ที่ได้รับการอนุมัติ"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approving"
+msgstr "อนุมัติ"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Approving {0}"
+msgstr "กำลังอนุมัติ {0}"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Arbiscan"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "สะพานอนุญาโตตุลาการ"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Arbitrum อยู่ในช่วงเบต้าและอาจประสบปัญหาการหยุดทำงาน ในช่วงหยุดทำงาน โพซิชั่นของคุณจะไม่ได้รับค่าธรรมเนียมและคุณจะไม่สามารถลบสภาพคล่องได้ <0>อ่านต่อ.</0>"
+
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "คุณแน่ใจไหม?"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "ในฐานะสมาชิกของชุมชน Uniswap คุณอาจอ้างว่า UNI ใช้สำหรับการลงคะแนนและการกำกับดูแล<0/><1/><2>อ่านเพิ่มเติมเกี่ยวกับ UNI</2>"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
+msgstr "อย่างน้อย {0} {1} และ {2} {3} จะถูกคืนไปยังกระเป๋าเงินของคุณเนื่องจากช่วงราคาที่เลือก"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "รถยนต์"
+
+#: src/components/Settings/index.tsx
+msgid "Auto Router API"
+msgstr "ออโต้เราเตอร์ API"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Available to deposit: {0}"
+msgstr "สามารถฝากได้: {0}"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0}"
+msgstr "ยอดคงเหลือ: {0}"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for exotic pairs."
+msgstr "ดีที่สุดสำหรับคู่ที่แปลกใหม่"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for most pairs."
+msgstr "ดีที่สุดสำหรับคู่ส่วนใหญ่"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for stable pairs."
+msgstr "ดีที่สุดสำหรับคู่ที่มั่นคง"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "ดีที่สุดสำหรับคู่ที่มีเสถียรภาพมาก"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "เส้นทางราคาที่ถูกที่สุด ~{formattedGasPriceString} ในก๊าซ"
+
+#: src/components/Blocklist/index.tsx
+msgid "Blocked address"
+msgstr "ที่อยู่ที่ถูกบล็อก"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "สะพาน"
+
+#: src/components/PositionCard/index.tsx
+msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "โดยการเพิ่มสภาพคล่อง คุณจะได้รับ 0.3% ของการซื้อขายทั้งหมดในคู่นี้ตามสัดส่วนของส่วนแบ่งในพูลของคุณ ค่าธรรมเนียมจะถูกเพิ่มเข้าในพูล สะสมตามเวลาจริง และสามารถอ้างสิทธิ์ได้โดยการถอนสภาพคล่องของคุณ"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
+msgstr "การเพิ่มรายการนี้แสดงว่าคุณเชื่อมั่นโดยปริยายว่าข้อมูลถูกต้อง ใครๆ ก็สร้างรายการได้ ซึ่งรวมถึงการสร้างเวอร์ชันปลอมของรายการที่มีอยู่และรายการที่อ้างว่าเป็นตัวแทนของโครงการที่ไม่มีอยู่"
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "การเชื่อมต่อกระเป๋าเงินหมายความว่าคุณยอมรับข้อกำหนดในการให้บริการ <0></0> และรับทราบว่าคุณได้อ่านและทำความเข้าใจ Uniswap <1>Protocol Disclaimer</1>แล้ว"
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "ยกเลิก"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Change"
+msgstr "เปลี่ยน"
+
+#: src/components/Header/index.tsx
+msgid "Charts"
+msgstr "ชาร์ต"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "ตรวจสอบสถานะเครือข่าย"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Check out our v3 LP walkthrough and migration guides."
+msgstr "ดูคำแนะนำการใช้งาน v3 LP และคู่มือการย้ายข้อมูล"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Claim"
+msgstr "เรียกร้อง"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "อ้างสิทธิ์ <0/> สำหรับ {0}"
+
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "Claim UNI"
+msgstr "รับสิทธิ์ UNI"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claim UNI Token"
+msgstr "รับโทเค็น UNI"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "รับรางวัล UNI สำหรับ {0}"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Claim fees"
+msgstr "ค่าธรรมเนียมการเรียกร้อง"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "รับโทเค็น UNI ของคุณ"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claimed"
+msgstr "อ้างสิทธิ์"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Claimed UNI!"
+msgstr "อ้างสิทธิ์ UNI!"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "อ้างสิทธิ์!"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "Claiming"
+msgstr "อ้างสิทธิ์"
+
+#: src/components/Header/index.tsx
+msgid "Claiming UNI"
+msgstr "อ้างสิทธิ์ UNI"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Claiming {0} UNI"
+msgstr "รับสิทธิ์ {0} UNI"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Clear All"
+msgstr "ลบทั้งหมด"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Clear all"
+msgstr "ลบทั้งหมด"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Close"
+msgstr "ปิด I"
+
+#: src/components/Badge/RangeBadge.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Closed"
+msgstr "ปิด"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collect"
+msgstr "เก็บรวบรวม"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Collect as WETH"
+msgstr "สะสมเป็น WETH"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collect fees"
+msgstr "เก็บค่าธรรมเนียม"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "เก็บค่าธรรมเนียม {0}/{1}"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collected"
+msgstr "สะสม"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting"
+msgstr "สะสม"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting fees"
+msgstr "การเก็บค่าธรรมเนียม"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting fees will withdraw currently available fees for you."
+msgstr "การเก็บค่าธรรมเนียมจะถอนค่าธรรมเนียมที่มีอยู่ในปัจจุบันสำหรับคุณ"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Confirm"
+msgstr "ยืนยัน"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Confirm Supply"
+msgstr "ยืนยันการจัดหา"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr "ยืนยันการสลับ"
+
+#: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Confirm this transaction in your wallet"
+msgstr "ยืนยันการทำธุรกรรมนี้ในกระเป๋าเงินของคุณ"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "ยืนยันการทำธุรกรรมในกระเป๋าเงิน"
+
+#: src/components/Web3Status/index.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Connect Wallet"
+msgstr "เชื่อมต่อกระเป๋าเงิน"
+
+#: src/components/WalletModal/index.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/pages/Pool/index.tsx
+msgid "Connect a wallet"
+msgstr "เชื่อมต่อกระเป๋าสตางค์"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Connect to a wallet to find pools"
+msgstr "เชื่อมต่อกับกระเป๋าเงินเพื่อค้นหาพูล"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Connect to a wallet to view your V2 liquidity."
+msgstr "เชื่อมต่อกับกระเป๋าเงินเพื่อดูสภาพคล่อง V2 ของคุณ"
+
+#: src/pages/Pool/v2.tsx
+msgid "Connect to a wallet to view your liquidity."
+msgstr "เชื่อมต่อกับกระเป๋าเงินเพื่อดูสภาพคล่องของคุณ"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Connected with {name}"
+msgstr "เชื่อมต่อกับ {name}"
+
+#: src/components/AccountDetails/Copy.tsx
+msgid "Copied"
+msgstr "คัดลอกแล้ว"
+
+#: src/components/AccountDetails/index.tsx
+#: src/components/AccountDetails/index.tsx
+msgid "Copy Address"
+msgstr "คัดลอกที่อยู่"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Create Pool & Supply"
+msgstr "สร้างพูลและซัพพลาย"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/Landing.tsx
+msgid "Create Proposal"
+msgstr "สร้างข้อเสนอ"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/v2.tsx
+msgid "Create a pair"
+msgstr "สร้างคู่"
+
+#: src/pages/Pool/index.tsx
+msgid "Create a pool"
+msgstr "สร้างสระ"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Create an issue on GitHub"
+msgstr "สร้างปัญหาบน GitHub"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Create pool and add {0}/{1} V3 liquidity"
+msgstr "สร้างกลุ่มและเพิ่มสภาพคล่อง {0}/{1}"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Create pool."
+msgstr "สร้างพูล"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Create {0}/{1} V3 pool"
+msgstr "สร้างพูล V3 {0}/{1}"
+
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Current price"
+msgstr "ราคาปัจจุบัน"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current {0} Price:"
+msgstr "ปัจจุบัน {0} ราคา:"
+
+#: src/components/Menu/index.tsx
+msgid "Dark Theme"
+msgstr "ธีมมืด"
+
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "พ่ายแพ้"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Delegate Votes"
+msgstr "โหวตตัวแทน"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "มอบอำนาจการลงคะแนนเป็น {0}"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Delegated to:"
+msgstr "มอบหมายให้:"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Delegating votes"
+msgstr "การลงคะแนนเสียง"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Deposit"
+msgstr "เงินฝาก"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Deposit Amounts"
+msgstr "จำนวนเงินฝาก"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Deposit UNI-V2 LP Tokens"
+msgstr "ฝากโทเค็น LP ของ UNI-V2"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Deposit liquidity"
+msgstr "สภาพคล่องในการฝาก"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "ฝากโทเค็นไปยังเครือข่าย {label}"
+
+#: src/pages/Earn/index.tsx
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
+msgstr "ฝากโทเค็นผู้ให้บริการสภาพคล่องของคุณเพื่อรับ UNI ซึ่งเป็นโทเค็นการกำกับดูแลโปรโตคอล Uniswap"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Deposited liquidity:"
+msgstr "สภาพคล่องเงินฝาก:"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Deposited {0} UNI-V2"
+msgstr "ฝาก {0} UNI-V2"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Depositing Liquidity"
+msgstr "การฝากสภาพคล่อง"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Detailed"
+msgstr "รายละเอียด"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Details"
+msgstr "รายละเอียด"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Disconnect"
+msgstr "ตัดการเชื่อมต่อ"
+
+#: src/components/Menu/index.tsx
+msgid "Discord"
+msgstr "ความไม่ลงรอยกัน"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Dismiss"
+msgstr "อนุญาตให้ออกไป"
+
+#: src/components/Menu/index.tsx
+msgid "Docs"
+msgstr "เอกสาร"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
+msgstr "ไม่เห็นหนึ่งในตำแหน่ง v2 ของคุณใช่หรือไม่ <0>นำเข้า.</0>"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Earned UNI tokens represent voting shares in Uniswap governance."
+msgstr "โทเค็น UNI ที่ได้รับแสดงถึงการลงคะแนนเสียงในการกำกับดูแล Uniswap"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "แก้ไข"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Efficiency Comparison"
+msgstr "การเปรียบเทียบประสิทธิภาพ"
+
+#: src/state/burn/v3/hooks.tsx
+msgid "Enter a percent"
+msgstr "ป้อนเปอร์เซ็นต์"
+
+#: src/state/swap/hooks.tsx
+msgid "Enter a recipient"
+msgstr "ใส่ผู้รับ"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "ป้อนเปอร์เซ็นต์การเลื่อนหลุดที่ถูกต้อง"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
+msgstr "ป้อนที่อยู่เพื่อเรียกใช้การอ้างสิทธิ์ของ UNI หากที่อยู่มี UNI ที่อ้างสิทธิ์ได้ จะส่งไปให้เมื่อส่ง"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Enter an amount"
+msgstr "ใส่จำนวนเงิน"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Enter valid list location"
+msgstr "ป้อนตำแหน่งรายการที่ถูกต้อง"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Enter valid token address"
+msgstr "ป้อนที่อยู่โทเค็นที่ถูกต้อง"
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "ใส่ {0} จำนวน"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Error"
+msgstr "ข้อผิดพลาด"
+
+#: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Error connecting"
+msgstr "เกิดข้อผิดพลาดในการเชื่อมต่อ"
+
+#: src/components/WalletModal/index.tsx
+msgid "Error connecting. Try refreshing the page."
+msgstr "เกิดข้อผิดพลาดในการเชื่อมต่อ ลองรีเฟรชหน้า"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Error importing list"
+msgstr "เกิดข้อผิดพลาดในการนำเข้ารายการ"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "ค่าประมาณอาจแตกต่างกันเนื่องจากการตั้งค่าแก๊สในกระเป๋าเงินของคุณ"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "ค่าธรรมเนียมเครือข่ายโดยประมาณ"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr "อีเธอร์สแกน"
+
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "ถูกประหารชีวิต"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "ขยายผลจากรายการโทเค็นที่ไม่ได้ใช้งาน"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "ผลผลิตที่คาดหวัง"
+
+#: src/components/Settings/index.tsx
+msgid "Expert Mode"
+msgstr "โหมดผู้เชี่ยวชาญ"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "โหมดผู้เชี่ยวชาญจะปิดการแจ้งยืนยันการทำธุรกรรมและอนุญาตให้มีการซื้อขายที่คลาดเคลื่อนสูง ซึ่งมักส่งผลให้อัตราไม่ดีและเงินหายไป"
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "หมดอายุ"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Explore Uniswap Analytics."
+msgstr "สำรวจ Uniswap Analytics"
+
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "ไม่สามารถสลับเครือข่ายจากอินเทอร์เฟซ Uniswap ในการใช้ Uniswap บน {0}คุณต้องเปลี่ยนเครือข่ายในกระเป๋าเงินของคุณ"
+
+#: src/components/PositionPreview/index.tsx
+msgid "Fee Tier"
+msgstr "ระดับค่าธรรมเนียม"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "ระดับค่าธรรมเนียม"
+
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "กำลังเรียกราคาที่ดีที่สุด..."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "For"
+msgstr "สำหรับ"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
+msgstr "สำหรับแต่ละกลุ่มที่แสดงด้านล่าง ให้คลิกย้ายเพื่อลบสภาพคล่องของคุณออกจาก Uniswap V2 และฝากเข้า Uniswap V3"
+
+#: src/pages/Swap/index.tsx
+msgid "From"
+msgstr "จาก"
+
+#: src/pages/Swap/index.tsx
+msgid "From (at most)"
+msgstr "จาก (มากสุด)"
+
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "Full Range"
+msgstr "ฟูลเรนจ์"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
+msgstr "ตำแหน่งเต็มช่วงอาจได้รับค่าธรรมเนียมน้อยกว่าตำแหน่งที่เข้มข้น เรียนรู้เพิ่มเติม <0>ที่นี่</0> ."
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support on Discord"
+msgstr "รับการสนับสนุนบน Discord"
+
+#: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
+msgid "Help Center"
+msgstr "ศูนย์ช่วยเหลือ"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Hide"
+msgstr "ซ่อน"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "ซ่อนตำแหน่งที่ปิด"
+
+#: src/pages/Swap/index.tsx
+msgid "High Price Impact"
+msgstr "ผลกระทบราคาสูง"
+
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "แอปนี้ใช้ API อย่างไร"
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "I understand"
+msgstr "ฉันเข้าใจ"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "If you purchase a token from this list, you may not be able to sell it back."
+msgstr "หากคุณซื้อโทเค็นจากรายการนี้ คุณอาจไม่สามารถขายคืนได้"
+
+#: src/components/SearchModal/BlockedToken.tsx
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Import"
+msgstr "นำเข้า"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import List"
+msgstr "รายการนำเข้า"
+
+#: src/pages/Pool/v2.tsx
+msgid "Import Pool"
+msgstr "นำเข้าพูล"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import V2 Pool"
+msgstr "นำเข้า V2 Pool"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import at your own risk"
+msgstr "นำเข้าความเสี่ยงของคุณเอง"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "In range"
+msgstr "อยู่ในช่วง"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Increase Liquidity"
+msgstr "เพิ่มสภาพคล่อง"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Initial prices and pool share"
+msgstr "ราคาเริ่มต้นและส่วนแบ่งพูล"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Initializing..."
+msgstr "กำลังเริ่มต้น..."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
+msgstr "ข้อมูลเข้าเป็นค่าประมาณ คุณจะขายได้มากที่สุด <0>{0} {1}</0> หรือธุรกรรมจะเปลี่ยนกลับ"
+
+#: src/components/WalletModal/index.tsx
+msgid "Install Metamask"
+msgstr "ติดตั้ง Metamask"
+
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "สภาพคล่องไม่เพียงพอสำหรับการค้านี้"
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient {0} balance"
+msgstr "ไม่เพียงพอ {0} ยอดคงเหลือ"
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "การตั้งค่าอินเทอร์เฟซ"
+
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+msgid "Invalid pair"
+msgstr "คู่ไม่ถูกต้อง"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Invalid pair."
+msgstr "คู่ที่ไม่ถูกต้อง"
+
+#: src/state/mint/v3/hooks.tsx
+msgid "Invalid price input"
+msgstr "ใส่ราคาไม่ถูกต้อง"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Invalid range selected. The min price must be lower than the max price."
+msgstr "เลือกช่วงที่ไม่ถูกต้อง ราคาขั้นต่ำต้องต่ำกว่าราคาสูงสุด"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
+msgid "Invalid recipient"
+msgstr "ผู้รับไม่ถูกต้อง"
+
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "ภาษา"
+
+#: src/pages/Pool/index.tsx
+msgid "Learn"
+msgstr "เรียนรู้"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Learn about providing liquidity"
+msgstr "เรียนรู้เกี่ยวกับการจัดหาสภาพคล่อง"
+
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "เรียนรู้เพิ่มเติม"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "กฎหมาย & ความเป็นส่วนตัว"
+
+#: src/components/Menu/index.tsx
+msgid "Light Theme"
+msgstr "ธีมไฟ"
+
+#: src/components/claim/ClaimModal.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Liquidity"
+msgstr "สภาพคล่อง"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Liquidity data not available."
+msgstr "ไม่มีข้อมูลสภาพคล่อง"
+
+#: src/pages/Pool/v2.tsx
+msgid "Liquidity provider rewards"
+msgstr "รางวัลผู้ให้บริการสภาพคล่อง"
+
+#: src/pages/Pool/v2.tsx
+msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "ผู้ให้บริการสภาพคล่องจะได้รับค่าธรรมเนียม 0.3% จากการซื้อขายทั้งหมดตามสัดส่วนของส่วนแบ่งในพูล ค่าธรรมเนียมจะถูกเพิ่มเข้าในพูล สะสมตามเวลาจริง และสามารถอ้างสิทธิ์ได้โดยการถอนสภาพคล่องของคุณ"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "รายการ"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Loaded"
+msgstr "โหลดแล้ว"
+
+#: src/components/PositionCard/Sushi.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/index.tsx
+#: src/pages/Pool/v2.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Loading"
+msgstr "กำลังโหลด"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAX"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
+#: src/components/earn/PoolCard.tsx
+msgid "Manage"
+msgstr "จัดการ"
+
+#: src/components/PositionCard/index.tsx
+msgid "Manage Liquidity in Rewards Pool"
+msgstr "จัดการสภาพคล่องในกลุ่มรางวัล"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Manage Token Lists"
+msgstr "จัดการรายการโทเค็น"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Manage this pool."
+msgstr "จัดการพูลนี้"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Max"
+msgstr "แม็กซ์"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
+msgid "Max Price"
+msgstr "ราคาสูงสุด"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Max price"
+msgstr "ราคาสูงสุด"
+
+#: src/components/PositionListItem/index.tsx
+msgid "Max:"
+msgstr "สูงสุด:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum sent"
+msgstr "ส่งสูงสุด"
+
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "เมนู"
+
+#: src/components/PositionCard/Sushi.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/index.tsx
+msgid "Migrate"
+msgstr "โยกย้าย"
+
+#: src/pages/Pool/v2.tsx
+msgid "Migrate Liquidity to V3"
+msgstr "ย้ายสภาพคล่องไปที่ V3"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/index.tsx
+msgid "Migrate V2 Liquidity"
+msgstr "โยกย้ายสภาพคล่อง V2"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
+msgstr "ย้ายโทเค็นสภาพคล่องของคุณจาก Uniswap V2 เป็น Uniswap V3"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "โอนย้าย {0}/{1} ไปที่ V3"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Migrating"
+msgstr "การย้ายถิ่น"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
+msgid "Min Price"
+msgstr "ราคาต่ำสุด"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Min price"
+msgstr "ราคาขั้นต่ำ"
+
+#: src/components/PositionListItem/index.tsx
+msgid "Min:"
+msgstr "นาที:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum received"
+msgstr "รับขั้นต่ำ"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "ไม่มีการพึ่งพา"
+
+#: src/pages/Pool/index.tsx
+msgid "More"
+msgstr "มากกว่า"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "ค่าธรรมเนียมเครือข่าย"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "คำเตือนเกี่ยวกับเครือข่าย"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "ค่าธรรมเนียมเครือข่ายเกิน 50% ของจำนวนสวอป!"
+
+#: src/pages/Pool/index.tsx
+msgid "New Position"
+msgstr "ตำแหน่งใหม่"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "No V2 Liquidity found."
+msgstr "ไม่พบสภาพคล่อง V2"
+
+#: src/pages/Earn/index.tsx
+#: src/pages/Earn/index.tsx
+msgid "No active pools"
+msgstr "ไม่มีสระว่ายน้ำที่ใช้งาน"
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "No data"
+msgstr "ไม่มีข้อมูล"
+
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "ไม่มีคำอธิบาย."
+
+#: src/pages/Pool/v2.tsx
+msgid "No liquidity found."
+msgstr "ไม่พบสภาพคล่อง"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "No pool found."
+msgstr "ไม่พบพูล"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "No proposals found."
+msgstr "ไม่พบข้อเสนอ"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "No results found."
+msgstr "ไม่พบผลลัพธ์."
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "Not created"
+msgstr "ไม่ได้สร้าง"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "ปิด"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "บน"
+
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "ใช้โหมดนี้เฉพาะเมื่อคุณรู้ว่ากำลังทำอะไรอยู่"
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "ปิด"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "บน"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Once you are happy with the rate click supply to review."
+msgstr "เมื่อคุณพอใจกับอัตราคลิกอุปทานเพื่อตรวจสอบ"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
+msgstr "เฉพาะคะแนนโหวตของ UNI ที่มอบหมายด้วยตนเองหรือมอบหมายไปยังที่อยู่อื่นก่อนบล็อก {0} เท่านั้นที่มีสิทธิ์ลงคะแนน"
+
+#: src/components/Web3ReactManager/index.tsx
+msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
+msgstr "อ๊ะ! เกิดข้อผิดพลาดที่ไม่รู้จัก โปรดรีเฟรชหน้า หรือเยี่ยมชมจากเบราว์เซอร์หรืออุปกรณ์อื่น"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "เกตเวย์การมองในแง่ดี"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "การมองในแง่ดีอยู่ในช่วงเบต้าและอาจประสบปัญหาการหยุดทำงาน การมองในแง่ดีคาดว่าการหยุดทำงานตามแผนจะอัพเกรดเครือข่ายในอนาคตอันใกล้ ในช่วงหยุดทำงาน โพซิชั่นของคุณจะไม่ได้รับค่าธรรมเนียมและคุณจะไม่สามารถลบสภาพคล่องได้ <0>อ่านเพิ่มเติม.</0>"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimistic Etherscan"
+msgstr "มองโลกในแง่ดี Etherscan"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Out of range"
+msgstr "ไม่อยู่ในขอบเขต"
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
+msgstr "ประมาณการเอาท์พุต หากราคาเปลี่ยนแปลงมากกว่า {0}% ธุรกรรมของคุณจะถูกเปลี่ยนกลับ"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
+msgstr "ประมาณการเอาท์พุต คุณจะได้รับอย่างน้อย <0>{0} {1}</0> หรือธุรกรรมจะเปลี่ยนกลับ"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Output will be sent to <0>{0}</0>"
+msgstr "เอาต์พุตจะถูกส่งไปยัง <0>{0}</0>"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Owner"
+msgstr "เจ้าของ"
+
+#: src/pages/Earn/index.tsx
+msgid "Participating pools"
+msgstr "สระว่ายน้ำที่เข้าร่วม"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "รอดำเนินการ"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Please confirm you would like to remove this list by typing REMOVE"
+msgstr "โปรดยืนยันว่าคุณต้องการลบรายการนี้โดยพิมพ์ REMOVE"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "โปรดเชื่อมต่อกับ Layer 1 Ethereum"
+
+#: src/components/WalletModal/index.tsx
+msgid "Please connect to the appropriate Ethereum network."
+msgstr "โปรดเชื่อมต่อกับเครือข่าย Ethereum ที่เหมาะสม"
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "โปรดพิมพ์คำว่า \"{confirmWord}\" เพื่อเปิดใช้งานโหมดผู้เชี่ยวชาญ"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr "สะพานรูปหลายเหลี่ยม"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr "รูปหลายเหลี่ยม"
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+msgid "Pool"
+msgstr "สระน้ำ"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Pool Found!"
+msgstr "พบสระน้ำ!"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Pool Rate"
+msgstr "อัตราสระ"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Pool rate"
+msgstr "อัตราสระ"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Pool tokens in rewards pool:"
+msgstr "โทเค็นพูลในกลุ่มรางวัล:"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Pooled {0}:"
+msgstr "รวม {0}:"
+
+#: src/pages/Pool/index.tsx
+msgid "Pools Overview"
+msgstr "ภาพรวมสระน้ำ"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Preview"
+msgstr "ดูตัวอย่าง"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price"
+msgstr "ราคา"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Price Difference:"
+msgstr "ความแตกต่างของราคา:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Price Impact"
+msgstr "ผลกระทบด้านราคา"
+
+#: src/pages/Swap/index.tsx
+msgid "Price Impact Too High"
+msgstr "ผลกระทบของราคาสูงเกินไป"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Price Updated"
+msgstr "อัพเดทราคา"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Price range"
+msgstr "ช่วงราคา"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price:"
+msgstr "ราคา:"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Prices and pool share"
+msgstr "ราคาและส่วนแบ่งสระว่ายน้ำ"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "ข้อเสนอ"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "ส่งข้อเสนอแล้ว"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "ชื่อข้อเสนอ"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Proposals"
+msgstr "ข้อเสนอ"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Proposals submitted by community members will appear here."
+msgstr "ข้อเสนอที่ส่งโดยสมาชิกชุมชนจะปรากฏที่นี่"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "การดำเนินการที่เสนอ"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Proposer"
+msgstr "ผู้เสนอ"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "ข้อจำกัดความรับผิดชอบของโปรโตคอล"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "เข้าคิว"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Rates"
+msgstr "ราคา"
+
+#: src/pages/Earn/index.tsx
+msgid "Read more about UNI"
+msgstr "อ่านเพิ่มเติมเกี่ยวกับ UNI"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Read more about Uniswap governance"
+msgstr "อ่านเพิ่มเติมเกี่ยวกับการกำกับดูแล Uniswap"
+
+#: src/pages/Pool/v2.tsx
+msgid "Read more about providing liquidity"
+msgstr "อ่านเพิ่มเติมเกี่ยวกับการจัดหาสภาพคล่อง"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Read more about unsupported assets"
+msgstr "อ่านเพิ่มเติมเกี่ยวกับเนื้อหาที่ไม่รองรับ"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Recent Transactions"
+msgstr "ธุรกรรมล่าสุด"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "ผู้รับ"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Remove"
+msgstr "ลบ"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "ลบ <0/> และ </1/>"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Remove Amount"
+msgstr "ลบจำนวนเงิน"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Remove Delegate"
+msgstr "ลบผู้รับมอบสิทธิ์"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Remove Liquidity"
+msgstr "ลบสภาพคล่อง"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Remove list"
+msgstr "ลบรายการ"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Removing {0} {1} and {2} {3}"
+msgstr "กำลังลบ {0} {1} และ {2} {3}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "กำลังลบ {0} {1} และ{2} {3}"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "ขอคุณสมบัติ"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Return"
+msgstr "กลับ"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Search name or paste address"
+msgstr "ค้นหาชื่อหรือวางที่อยู่"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Select Pair"
+msgstr "เลือกคู่"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "เลือกเครือข่าย"
+
+#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/state/swap/hooks.tsx
+msgid "Select a token"
+msgstr "เลือกโทเค็น"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Select a token to find your v2 liquidity."
+msgstr "เลือกโทเค็นเพื่อค้นหาสภาพคล่อง v2 ของคุณ"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "เลือกการดำเนินการ"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Selected Range"
+msgstr "ช่วงที่เลือก"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Self"
+msgstr "ตัวเอง"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Self Delegate"
+msgstr "ผู้แทนตนเอง"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Set Price Range"
+msgstr "กำหนดช่วงราคา"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Set Starting Price"
+msgstr "ตั้งราคาเริ่มต้น"
+
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+msgid "Share of Pool"
+msgstr "ส่วนแบ่งของพูล"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Share of Pool:"
+msgstr "ส่วนแบ่งของพูล:"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "โชว์ปอร์ติส"
+
+#: src/pages/Pool/index.tsx
+msgid "Show closed positions"
+msgstr "แสดงตำแหน่งที่ปิด"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Simple"
+msgstr "เรียบง่าย"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "ความทนทานต่อการเลื่อนหลุด"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
+msgstr "สินทรัพย์บางรายการไม่สามารถใช้ได้ผ่านอินเทอร์เฟซนี้ เนื่องจากอาจทำงานได้ไม่ดีกับสัญญาอัจฉริยะ หรือเราไม่สามารถอนุญาตให้ซื้อขายได้ด้วยเหตุผลทางกฎหมาย"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Something went wrong"
+msgstr "อะไรบางอย่างผิดปกติ"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Step 1. Get UNI-V2 Liquidity tokens"
+msgstr "ขั้นตอนที่ 1 รับโทเค็นสภาพคล่อง UNI-V2"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "ส่งข้อเสนอใหม่"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "การส่งข้อเสนอ"
+
+#: src/components/vote/VoteModal.tsx
+msgid "Submitting Vote"
+msgstr "ส่งโหวต"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "ที่ประสบความสำเร็จ"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "ความสำเร็จ"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Supply"
+msgstr "จัดหา"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "การจัดหา {0} {1} และ {2} {3}"
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap"
+msgstr "แลกเปลี่ยน"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "สลับ <0/> เป็น </1/>"
+
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap Anyway"
+msgstr "สลับกัน"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "สลับเฉพาะ <0/> เป็น <1/>"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "สลับล้มเหลว: {0}"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Swapping {0} {1} for {2} {3}"
+msgstr "สลับ {0} {1} เป็น {2} {3}"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "ขอบคุณที่เป็นส่วนหนึ่งของชุมชน Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "% ที่คุณจะได้รับเป็นค่าธรรมเนียม"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "ค่าคงที่ Uniswap x*y=k ไม่พอใจโดยการแลกเปลี่ยน ซึ่งมักจะหมายถึงหนึ่งในโทเค็นที่คุณกำลังแลกเปลี่ยนรวมลักษณะการทำงานที่กำหนดเองในการโอน"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "แอพดึงข้อมูลบล็อคเชนจากบริการโฮสต์ของ The Graph"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "แอปดึงข้อมูลในสายโซ่และสร้างการเรียกสัญญาด้วย Infura API"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "แอพดึงเส้นทางการค้าที่เหมาะสมที่สุดจากเซิร์ฟเวอร์ Uniswap Labs"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "แอปจะบันทึกสถิติการใช้งานที่ไม่ระบุชื่อเพื่อปรับปรุงเมื่อเวลาผ่านไป"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "แอปจะรวบรวมที่อยู่กระเป๋าเงินของคุณอย่างปลอดภัยและแชร์กับ TRM Labs Inc. ด้วยเหตุผลด้านความเสี่ยงและการปฏิบัติตามข้อกำหนด"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "ค่าใช้จ่ายในการส่งธุรกรรมนี้มากกว่าครึ่งหนึ่งของมูลค่าของจำนวนเงินที่ป้อน"
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
+msgstr "ปริมาณก๊าซที่รวดเร็วในปัจจุบันสำหรับการส่งธุรกรรมใน L1 ค่าธรรมเนียมก๊าซจะจ่ายในสกุลเงินท้องถิ่นของ Ethereum (ETH) และคิดเป็น GWEI"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "ค่าความแตกต่างโดยประมาณระหว่างค่า USD ของจำนวนเงินเข้าและออก"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The input token cannot be transferred. There may be an issue with the input token."
+msgstr "ไม่สามารถโอนโทเค็นอินพุตได้ อาจมีปัญหากับโทเค็นอินพุต"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "The market price is outside your specified price range. Single-asset deposit only."
+msgstr "ราคาตลาดอยู่นอกช่วงราคาที่คุณกำหนด เงินฝากสินทรัพย์เดียวเท่านั้น"
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "หมายเลขบล็อกล่าสุดในเครือข่ายนี้ ราคาอัพเดททุกบล็อค"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token."
+msgstr "ไม่สามารถโอนโทเค็นเอาต์พุตได้ อาจมีปัญหากับโทเค็นเอาต์พุต"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "ไม่สามารถโอนโทเค็นเอาต์พุตได้ อาจมีปัญหากับโทเค็นเอาต์พุต หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
+msgstr "ราคาของพูลนี้อยู่นอกช่วงที่คุณเลือก ตำแหน่งของคุณไม่ได้รับค่าธรรมเนียมในขณะนี้"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "The price of this pool is within your selected range. Your position is currently earning fees."
+msgstr "ราคาของพูลนี้อยู่ในช่วงที่คุณเลือก ตำแหน่งของคุณกำลังได้รับค่าธรรมเนียม"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "The ratio of tokens you add will set the price of this pool."
+msgstr "อัตราส่วนของโทเค็นที่คุณเพิ่มจะกำหนดราคาของพูลนี้"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "ไม่สามารถส่งธุรกรรมได้เนื่องจากเลยกำหนดส่งแล้ว โปรดตรวจสอบว่ากำหนดเวลาในการทำธุรกรรมของคุณไม่ต่ำเกินไป"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data."
+msgstr "ไม่มีข้อมูลสภาพคล่อง"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "แอพนี้ใช้ API บุคคลที่สามต่อไปนี้:"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+msgstr "ต้องเริ่มต้นกลุ่มนี้ก่อนจึงจะสามารถเพิ่มสภาพคล่องได้ ในการเริ่มต้น เลือกราคาเริ่มต้นสำหรับพูล จากนั้นป้อนช่วงราคาสภาพคล่องและจำนวนเงินฝาก ค่าธรรมเนียมก๊าซจะสูงกว่าปกติเนื่องจากการทำธุรกรรมเริ่มต้น"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "เส้นทางนี้ปรับผลผลิตทั้งหมดของคุณให้เหมาะสมโดยพิจารณาจากเส้นทางแยก การกระโดดหลายครั้ง และต้นทุนน้ำมันของแต่ละขั้นตอน"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr "โทเค็นนี้ไม่ปรากฏในรายการโทเค็นที่ใช้งานอยู่ ตรวจสอบให้แน่ใจว่านี่คือโทเค็นที่คุณต้องการซื้อขาย"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "ไม่รองรับโทเค็นนี้ในแอป Uniswap Labs"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
+msgstr "เครื่องมือนี้จะย้าย {0} ของคุณไปยัง V3 อย่างปลอดภัย กระบวนการนี้ไม่น่าเชื่อถืออย่างสมบูรณ์ต้องขอบคุณ"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "ธุรกรรมนี้จะไม่สำเร็จเนื่องจากการเคลื่อนไหวของราคา ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
+msgstr "ธุรกรรมนี้จะไม่สำเร็จเนื่องจากการเคลื่อนไหวของราคาหรือค่าธรรมเนียมในการโอน ลองเพิ่มความทนทานต่อการเลื่อนหลุด"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Tip: Custom tokens are stored locally in your browser"
+msgstr "เคล็ดลับ: โทเค็นที่กำหนดเองจะถูกเก็บไว้ในเบราว์เซอร์ของคุณ"
+
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/Swap/index.tsx
+msgid "To"
+msgstr "ถึง"
+
+#: src/pages/Swap/index.tsx
+msgid "To (at least)"
+msgstr "ถึง (อย่างน้อย)"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "ไม่รองรับโทเค็น"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "โทเค็น"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "โทเค็นจากรายการที่ไม่ใช้งาน นำเข้าโทเค็นเฉพาะด้านล่างหรือคลิกจัดการเพื่อเปิดใช้งานรายการเพิ่มเติม"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Top pools"
+msgstr "สระว่ายน้ำยอดนิยม"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Total deposited"
+msgstr "ยอดฝาก"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Total deposits"
+msgstr "ยอดเงินฝาก"
+
+#: src/components/swap/RouterLabel.tsx
+msgid "Trade Route"
+msgstr "เส้นทางการค้า"
+
+#: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "การตั้งค่าธุรกรรม"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+#: src/components/vote/DelegateModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Transaction Submitted"
+msgstr "ส่งธุรกรรมแล้ว"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "ธุรกรรมเสร็จสมบูรณ์ใน"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "กำหนดเวลาการทำธุรกรรม"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "ธุรกรรมถูกปฏิเสธ"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "โทเค็นการโอน"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Try Again"
+msgstr "ลองอีกครั้ง"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "เปิดโหมดผู้เชี่ยวชาญ"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI มาแล้วจ้า"
+
+#: src/pages/Vote/Landing.tsx
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "โทเค็นของ UNI เป็นตัวแทนของการลงคะแนนเสียงในการกำกับดูแล Uniswap คุณสามารถลงคะแนนในแต่ละข้อเสนอด้วยตัวเองหรือมอบสิทธิ์การโหวตของคุณให้กับบุคคลที่สาม"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "UNI {0}/{1} Burned"
+msgstr "UNI {0}/{1} เผา"
+
+#: src/pages/Earn/Manage.tsx
+msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
+msgstr "ต้องใช้โทเค็น UNI-V2 LP เมื่อคุณเพิ่มสภาพคล่องให้กับกลุ่ม {0}-{1} คุณสามารถเดิมพันโทเค็นสภาพคล่องของคุณในหน้านี้"
+
+#: src/pages/Earn/Manage.tsx
+msgid "UNI-V2 {0}-{1}"
+msgstr "UNI-V2 {0}-{1}"
+
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/components/earn/UnstakingModal.tsx
+msgid "Unclaimed UNI"
+msgstr "UNI . ที่ไม่มีการอ้างสิทธิ์"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Unclaimed fees"
+msgstr "ค่าธรรมเนียมที่ไม่มีการอ้างสิทธิ์"
+
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "ไม่แน่นอน"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "ข้อผิดพลาดที่ไม่คาดคิด ไม่สามารถประมาณค่าก๊าซสำหรับการแลกเปลี่ยนได้"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "ปัญหาที่ไม่คาดคิดกับการประมาณค่าก๊าซ กรุณาลองอีกครั้ง."
+
+#: src/pages/Vote/Landing.tsx
+msgid "Uniswap Governance"
+msgstr "การกำกับดูแล Uniswap"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "ข้อกำหนดในการให้บริการของ Uniswap Labs"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap มีให้ใน: <0>{0}</0>"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "การกำกับดูแล Uniswap ใช้ได้เฉพาะในเลเยอร์ 1 เท่านั้น เปลี่ยนเครือข่ายของคุณเป็น Ethereum Mainnet เพื่อดูข้อเสนอและการโหวต"
+
+#: src/pages/Earn/index.tsx
+msgid "Uniswap liquidity mining"
+msgstr "การขุดสภาพคล่อง Uniswap"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Uniswap migration contract↗"
+msgstr "สัญญาการโยกย้าย Uniswap↗"
+
+#: src/components/SearchModal/TokenImportCard.tsx
+msgid "Unknown Source"
+msgstr "ไม่ทราบแหล่งที่มา"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "ข้อผิดพลาดที่ไม่รู้จัก{0}ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
+
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Unlock Votes"
+msgstr "ปลดล็อกการโหวต"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Unlock Voting"
+msgstr "ปลดล็อกการโหวต"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Unlocking Votes"
+msgstr "ปลดล็อคการโหวต"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Unsupported Asset"
+msgstr "เนื้อหาที่ไม่รองรับ"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Unsupported Assets"
+msgstr "สินทรัพย์ที่ไม่รองรับ"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "ไม่มีชื่อ"
+
+#: src/pages/Swap/index.tsx
+msgid "Unwrap"
+msgstr "แกะ"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to {0}"
+msgstr "แกะ <0/> ถึง {0}"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Update Delegation"
+msgstr "อัพเดทคณะผู้แทน"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Update list"
+msgstr "อัพเดทรายการ"
+
+#: src/components/Settings/index.tsx
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "ใช้ Uniswap Labs API เพื่อรับใบเสนอราคาที่เร็วขึ้น"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "User"
+msgstr "ผู้ใช้"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 ไม่พร้อมใช้งานใน Layer 2 เปลี่ยนเป็น Layer 1 Ethereum"
+
+#: src/pages/Pool/index.tsx
+msgid "V2 liquidity"
+msgstr "สภาพคล่อง V2"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "V3 {0} Price:"
+msgstr "V3 {0} ราคา:"
+
+#: src/components/PositionCard/index.tsx
+msgid "View accrued fees and analytics<0>↗</0>"
+msgstr "ดูค่าธรรมเนียมและการวิเคราะห์ค้างชำระ<0>↗</0>"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "View list"
+msgstr "ดูรายการ"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "ดูบน Etherscan"
+
+#: src/components/AccountDetails/index.tsx
+#: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Explorer"
+msgstr "ดูบน Explorer"
+
+#: src/components/ModalViews/index.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "View transaction on Explorer"
+msgstr "ดูธุรกรรมบน Explorer"
+
+#: src/components/Header/index.tsx
+msgid "Vote"
+msgstr "โหวต"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote Against"
+msgstr "โหวตต่อต้าน"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "โหวตให้"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote against proposal {proposalId}"
+msgstr "โหวตคัดค้านข้อเสนอ {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "โหวตคัดค้านข้อเสนอ {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "โหวตคัดค้านข้อเสนอ {proposalKey} ด้วยเหตุผล \"{0}\""
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote for proposal {proposalId}"
+msgstr "โหวตข้อเสนอ {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "โหวตข้อเสนอ {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "โหวตข้อเสนอ {proposalKey} ด้วยเหตุผล \"{0}\""
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote to abstain on proposal {proposalId}"
+msgstr "โหวตงดรับข้อเสนอ {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "โหวตงดรับข้อเสนอ {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "โหวตงดรับข้อเสนอ {proposalKey} ด้วยเหตุผล \"{0}\""
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting ended {0}"
+msgstr "สิ้นสุดการโหวต {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting ends approximately {0}"
+msgstr "การลงคะแนนจะสิ้นสุดลงประมาณ {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "การลงคะแนนเริ่มต้นประมาณ {0}"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting For Confirmation"
+msgstr "รอการยืนยัน"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "ที่อยู่กระเป๋าเงินหรือชื่อ ENS"
+
+#: src/components/earn/StakingModal.tsx
+msgid "Weekly Rewards"
+msgstr "รางวัลประจำสัปดาห์"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Welcome to team Unicorn :)"
+msgstr "ยินดีต้อนรับสู่ทีมยูนิคอร์น :)"
+
+#: src/components/earn/ClaimRewardModal.tsx
+msgid "When you claim without withdrawing your liquidity remains in the mining pool."
+msgstr "เมื่อคุณอ้างสิทธิ์โดยไม่ถอนสภาพคล่องของคุณจะยังคงอยู่ในกลุ่มการขุด"
+
+#: src/pages/Earn/Manage.tsx
+msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgstr "เมื่อคุณถอนตัว สัญญาจะอ้างสิทธิ์ UNI ในนามของคุณโดยอัตโนมัติ!"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
+msgstr "เมื่อคุณถอนออก UNI ของคุณจะถูกอ้างสิทธิ์และสภาพคล่องของคุณจะถูกลบออกจากกลุ่มการขุด"
+
+#: src/components/earn/UnstakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "Withdraw"
+msgstr "ถอน"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdraw & Claim"
+msgstr "ถอนและเรียกร้อง"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Withdraw deposited liquidity"
+msgstr "ถอนเงินที่ฝากไว้"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdrawing {0} UNI-V2"
+msgstr "ถอน {0} UNI-V2"
+
+#: src/components/earn/UnstakingModal.tsx
+msgid "Withdrew UNI-V2!"
+msgstr "ถอนตัว UNI-V2!"
+
+#: src/pages/Swap/index.tsx
+msgid "Wrap"
+msgstr "ห่อ"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to {0}"
+msgstr "ตัด <0/> ถึง {0}"
+
+#: src/components/WalletModal/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Wrong Network"
+msgstr "ผิดเครือข่าย"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "คุณมีข้อเสนอที่ใช้งานอยู่หรือรอดำเนินการอยู่แล้ว"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "You are creating a pool"
+msgstr "คุณกำลังสร้างพูล"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
+msgstr "คุณเป็นผู้ให้บริการสภาพคล่องรายแรกสำหรับกลุ่ม Uniswap V3 นี้ สภาพคล่องของคุณจะถูกย้ายที่ราคา {0}"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "You are the first liquidity provider."
+msgstr "คุณเป็นผู้ให้บริการสภาพคล่องรายแรก"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
+msgstr "คุณสามารถลงคะแนนในแต่ละข้อเสนอด้วยตัวเองหรือมอบสิทธิ์การโหวตของคุณให้กับบุคคลที่สาม"
+
+#: src/pages/Swap/index.tsx
+msgid "You can now trade {0}"
+msgstr "ตอนนี้คุณสามารถแลกเปลี่ยน {0}"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "คุณมีคะแนนเสียงไม่เพียงพอที่จะส่งข้อเสนอ"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "You don’t have liquidity in this pool yet."
+msgstr "คุณยังไม่มีสภาพคล่องในกลุ่มนี้"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "คุณอาจสูญเสียการเชื่อมต่อเครือข่าย หรือ {label} อาจหยุดทำงานในขณะนี้"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "คุณอาจสูญเสียการเชื่อมต่อเครือข่ายของคุณ"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "คุณอาจลองรอจนกว่าค่าธรรมเนียมเครือข่ายจะลดลงเพื่อทำธุรกรรมนี้ให้เสร็จสิ้น"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You must connect an account."
+msgstr "คุณต้องเชื่อมต่อบัญชี"
+
+#: src/pages/Swap/index.tsx
+msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "คุณต้องให้สิทธิ์สัญญาอัจฉริยะ Uniswap เพื่อใช้ {0}คุณต้องทำเช่นนี้เพียงครั้งเดียวต่อโทเค็น"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "คุณต้องมี {formattedProposalThreshold} โหวตเพื่อส่งข้อเสนอ"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "คุณควรฝากสภาพคล่องเข้า Uniswap V3 ในราคาที่คุณเชื่อว่าถูกต้องเท่านั้น <0/>หากราคาดูเหมือนไม่ถูกต้อง คุณสามารถทำการแลกเปลี่ยนเพื่อย้ายราคาหรือรอให้คนอื่นทำ"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "You will also collect fees earned from this position."
+msgstr "คุณจะเก็บค่าธรรมเนียมที่ได้รับจากตำแหน่งนี้ด้วย"
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "You will receive"
+msgstr "คุณจะได้รับ"
+
+#: src/pages/Pool/v2.tsx
+msgid "Your V2 liquidity"
+msgstr "สภาพคล่อง V2 ของคุณ"
+
+#: src/pages/Pool/index.tsx
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "ตำแหน่งสภาพคล่อง V3 ที่ใช้งานอยู่ของคุณจะปรากฏที่นี่"
+
+#: src/pages/Earn/Manage.tsx
+msgid "Your liquidity deposits"
+msgstr "เงินฝากสภาพคล่องของคุณ"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your pool share:"
+msgstr "ส่วนแบ่งสระว่ายน้ำของคุณ:"
+
+#: src/components/PositionCard/index.tsx
+msgid "Your position"
+msgstr "ตำแหน่งของคุณ"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Your position has 0 liquidity, and is not earning fees."
+msgstr "สถานะของคุณมีสภาพคล่อง 0 และไม่มีค่าธรรมเนียม"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "ตำแหน่งของคุณจะปรากฏที่นี่"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+msgid "Your position will be 100% composed of {0} at this price"
+msgstr "โพซิชั่นของคุณจะ 100% ประกอบด้วย {0} ในราคานี้"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Your position will be 100% {0} at this price."
+msgstr "ตำแหน่งของคุณจะเป็น 100% {0} ในราคานี้"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
+msgstr "ตำแหน่งของคุณจะไม่ได้รับค่าธรรมเนียมหรือใช้ในการซื้อขายจนกว่าราคาตลาดจะเคลื่อนเข้าสู่ช่วงของคุณ"
+
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "Your positions"
+msgstr "ตำแหน่งของคุณ"
+
+#: src/components/earn/PoolCard.tsx
+msgid "Your rate"
+msgstr "อัตราของคุณ"
+
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your total pool tokens:"
+msgstr "โทเค็นพูลทั้งหมดของคุณ:"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
+msgstr "ต้นทุนการทำธุรกรรมของคุณจะสูงขึ้นมาก เนื่องจากมีก๊าซเพื่อสร้างพูล"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "ธุรกรรมของคุณอาจเป็น frontrun"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "ธุรกรรมของคุณอาจล้มเหลว"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "ธุรกรรมของคุณจะเปลี่ยนกลับหากรอดำเนินการนานกว่าช่วงเวลานี้"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "ธุรกรรมของคุณจะกลับคืนมาหากราคาเปลี่ยนแปลงไปในทางไม่ดีเกินกว่าเปอร์เซ็นต์นี้"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Your transactions will appear here..."
+msgstr "ธุรกรรมของคุณจะปรากฏที่นี่..."
+
+#: src/pages/Earn/Manage.tsx
+msgid "Your unclaimed UNI"
+msgstr "UNI . ที่ไม่มีการอ้างสิทธิ์ของคุณ"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "หลังการลื่นไถล"
+
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "ยืนยัน"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "for {0}"
+msgstr "สำหรับ {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
+
+#: src/components/Web3Status/index.tsx
+msgid "has socks emoji"
+msgstr "มีถุงเท้าอีโมจิ"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "ที่นี่."
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https:// หรือ ipfs:// หรือชื่อ ENS"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "นาที"
+
+#: src/components/SearchModal/ImportRow.tsx
+msgid "via {0}"
+msgstr "ผ่าน {0}"
+
+#: src/components/SearchModal/TokenImportCard.tsx
+msgid "via {0} token list"
+msgstr "ผ่าน {0} รายการโทเค็น"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "{0, plural, one {Import token} other {Import tokens}}"
+msgstr "{0, plural, one {นำเข้าโทเค็น} other {นำเข้าโทเค็น}}"
+
+#: src/components/RateToggle/index.tsx
+#: src/components/RateToggle/index.tsx
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/PositionCard/index.tsx
+#: src/pages/Vote/VotePage.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "{0} %"
+msgstr "{0} %"
+
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionListItem/index.tsx
+msgid "{0} <0/> per <1/>"
+msgstr "{0} <0/> ต่อ <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} โทเค็นที่กำหนดเอง"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "{0} Deposited"
+msgstr "{0} ฝากแล้ว"
+
+#: src/components/earn/PoolCard.tsx
+msgid "{0} ETH"
+msgstr "{0} ETH"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "{0} Fees Earned:"
+msgstr "{0} ค่าธรรมเนียมที่ได้รับ:"
+
+#: src/components/Web3Status/index.tsx
+msgid "{0} Pending"
+msgstr "{0} รอดำเนินการ"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
+msgid "{0} UNI"
+msgstr "{0} UNI"
+
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/PoolCard.tsx
+#: src/components/earn/StakingModal.tsx
+#: src/pages/Earn/Manage.tsx
+#: src/pages/Earn/Manage.tsx
+msgid "{0} UNI / week"
+msgstr "{0} UNI / สัปดาห์"
+
+#: src/components/earn/StakingModal.tsx
+msgid "{0} UNI-V2"
+msgstr "{0} UNI-V2"
+
+#: src/pages/Earn/Manage.tsx
+msgid "{0} UNI-V2 LP tokens available"
+msgstr "{0} โทเค็น LP UNI-V2 พร้อมใช้งาน"
+
+#: src/components/vote/VoteModal.tsx
+msgid "{0} Votes"
+msgstr "{0} โหวต"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "{0} per {1}"
+msgstr "{0} ต่อ {1}"
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{0} tokens"
+msgstr "{0} โทเค็น"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0} {1} Price:"
+msgstr "{0} {1} ราคา:"
+
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr "{0} {nativeCurrencySymbol}"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • เพิ่มโดย user"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "ระดับค่าธรรมเนียม {0}"
+
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% สระ"
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "{0}% select"
+msgstr "เลือก {0}"
+
+#: src/pages/Earn/Manage.tsx
+msgid "{0}-{1} Liquidity Mining"
+msgstr "{0}-{1} ขุดสภาพคล่อง"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0}/{1} LP NFT"
+msgstr "{0}/{1} LP NFT"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0}/{1} LP Tokens"
+msgstr "{0}/{1} LP Tokens"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "{SOCKS_AMOUNT} UNI"
+msgstr "{SOCKS_AMOUNT} UNI"
+
+#: src/components/claim/ClaimModal.tsx
+msgid "{USER_AMOUNT} UNI"
+msgstr "{USER_AMOUNT} UNI"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{activeTokensOnThisChain} tokens"
+msgstr "{activeTokensOnThisChain} โทเค็น"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "สะพานโทเค็น {label}"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "{percentForSlider}%"
+msgstr "{percentForSlider}%"
+
+#: src/components/InputStepCounter/InputStepCounter.tsx
+msgid "{tokenB} per {tokenA}"
+msgstr "{tokenB} ต่อ {tokenA}"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "← Back to Pools Overview"
+msgstr "← กลับไปที่ภาพรวมพูล"
+
