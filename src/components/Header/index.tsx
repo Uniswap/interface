@@ -214,6 +214,10 @@ const StyledNavLink = styled(NavLink).attrs({
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
+
+  :focus-visible {
+    outline: 1px solid ${({ theme }) => theme.bg3};
+  }
 `
 
 const StyledExternalLink = styled(ExternalLink).attrs({
