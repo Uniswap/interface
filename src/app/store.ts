@@ -50,12 +50,13 @@ export const store = configureStore({
             // contains non-serializable objects that do not hit the store
             swapActions.trigger.type,
           ],
+          warnAfter: 128,
         },
         invariantCheck: {
-          warnAfter: 128,
+          warnAfter: 256,
         },
         immutableCheck: {
-          warnAfter: 128,
+          warnAfter: 256,
         },
       }),
       sagaMiddleware,
