@@ -15,6 +15,12 @@ import {
 import { initProviders } from 'src/features/providers/providerSaga'
 import { swapActions, swapReducer, swapSaga, swapSagaName } from 'src/features/swap/swapSaga'
 import {
+  tokenWrapActions,
+  tokenWrapReducer,
+  tokenWrapSaga,
+  tokenWrapSagaName,
+} from 'src/features/swap/wrapSaga'
+import {
   transferTokenActions,
   transferTokenReducer,
   transferTokenSaga,
@@ -83,6 +89,12 @@ export const monitoredSagas: {
     wrappedSaga: swapSaga,
     reducer: swapReducer,
     actions: swapActions,
+  },
+  [tokenWrapSagaName]: {
+    name: tokenWrapSagaName,
+    wrappedSaga: tokenWrapSaga,
+    reducer: tokenWrapReducer,
+    actions: tokenWrapActions,
   },
 }
 

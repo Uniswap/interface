@@ -56,8 +56,8 @@ export function validateSwapInfo(
     return FieldError.MISSING_OUTPUT_AMOUNT
   }
 
-  const exactCurrencyAmount = currencyAmounts[exactCurrencyField]
-  if (exactCurrencyAmount && currencyBalances[exactCurrencyField]?.lessThan(exactCurrencyAmount)) {
+  const exactCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
+  if (exactCurrencyAmount && currencyBalances[CurrencyField.INPUT]?.lessThan(exactCurrencyAmount)) {
     return FieldError.INSUFFICIENT_FUNDS
   }
 

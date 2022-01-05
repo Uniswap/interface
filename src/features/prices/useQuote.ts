@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useQuery } from 'react-query'
-import { QuoteResult } from 'src/features/swap/types'
+import { QuoteResult } from 'src/features/prices/types'
 import { serializeQueryParams } from 'src/features/swap/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyId } from 'src/utils/currencyId'

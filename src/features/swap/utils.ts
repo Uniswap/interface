@@ -1,4 +1,5 @@
-import { Currency, Price } from '@uniswap/sdk-core'
+import { Currency, Price, WETH9 } from '@uniswap/sdk-core'
+import { WrapType } from 'src/features/swap/wrapSaga'
 import { formatPrice } from 'src/utils/format'
 
 export function serializeQueryParams(
@@ -17,4 +18,27 @@ export function formatExecutionPrice(price: Price<Currency, Currency> | undefine
   return `1 ${price.quoteCurrency?.symbol} = ${formatPrice(price, { style: 'decimal' })} ${
     price?.baseCurrency.symbol
   }`
+}
+
+export function getWrapType(
+  inputCurrency: Currency | null | undefined,
+  outputCurrency: Currency | null | undefined
+): WrapType {
+  if (!inputCurrency || !outputCurrency || inputCurrency.chainId !== outputCurrency.chainId) {
+    return WrapType.NOT_APPLICABLE
+  }
+
+  const weth = WETH9[inputCurrency.chainId]
+
+  if (inputCurrency.isNative && outputCurrency.equals(weth)) {
+    return WrapType.WRAP
+  } else if (outputCurrency.isNative && inputCurrency.equals(weth)) {
+    return WrapType.UNWRAP
+  }
+
+  return WrapType.NOT_APPLICABLE
+}
+
+export function isWrapAction(wrapType: WrapType): wrapType is WrapType.UNWRAP | WrapType.WRAP {
+  return wrapType === WrapType.UNWRAP || wrapType === WrapType.WRAP
 }

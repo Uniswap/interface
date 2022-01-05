@@ -9,10 +9,17 @@ import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
 import { Box } from 'src/components/layout/Box'
-import { useDerivedSwapInfo, useSwapActionHandlers, useSwapCallback } from 'src/features/swap/hooks'
+import {
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapCallback,
+  useWrapCallback,
+} from 'src/features/swap/hooks'
 import { SwapDetailRow } from 'src/features/swap/SwapDetailsRow'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
+import { isWrapAction } from 'src/features/swap/utils'
 import { stringifySwapInfoError, validateSwapInfo } from 'src/features/swap/validate'
+import { WrapType } from 'src/features/swap/wrapSaga'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
@@ -23,7 +30,6 @@ interface SwapFormProps {
   dispatch: React.Dispatch<AnyAction>
 }
 
-// TODO: handle wrap eth
 // TODO: token warnings
 export function SwapForm(props: SwapFormProps) {
   const { state, dispatch } = props
@@ -37,15 +43,16 @@ export function SwapForm(props: SwapFormProps) {
     currencyAmounts,
     currencyBalances,
     trade: { trade: trade, status: quoteStatus },
+    wrapType,
   } = derivedSwapInfo
   const swapInfoError = validateSwapInfo(derivedSwapInfo)
 
   const { onSelectCurrency, onSwitchCurrencies, onEnterExactAmount } =
     useSwapActionHandlers(dispatch)
   const { swapCallback, swapState } = useSwapCallback(trade)
+  const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType)
 
   // TODO:
-  // -check approval status
   // -check erc20 permits
   // -handle max amount input/show max amount button
   // -handle price impact too high
@@ -83,7 +90,7 @@ export function SwapForm(props: SwapFormProps) {
     swapStatusLabel = t('Swapping...')
   }
 
-  const swapButtonDisabled = Boolean(!trade || errorLabel !== '')
+  const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || errorLabel)
 
   return (
     <Box paddingHorizontal="md" flex={1} justifyContent="space-between">
@@ -133,19 +140,33 @@ export function SwapForm(props: SwapFormProps) {
         />
       </Box>
       <Box>
-        <SwapDetailRow trade={trade} label={errorLabel ?? swapStatusLabel} />
+        {!isWrapAction(wrapType) && (
+          <SwapDetailRow trade={trade} label={errorLabel ?? swapStatusLabel} />
+        )}
         <PrimaryButton
           alignSelf="stretch"
-          label={t('Swap')}
+          label={
+            wrapType === WrapType.WRAP
+              ? t('Wrap')
+              : wrapType === WrapType.UNWRAP
+              ? t('Unwrap')
+              : t('Swap')
+          }
           icon={
             quoteStatus === 'loading' ? (
               <ActivityIndicator size={25} color={theme.colors.white} />
             ) : undefined
           }
-          onPress={swapCallback}
-          disabled={swapButtonDisabled}
+          onPress={() => {
+            if (isWrapAction(wrapType)) {
+              wrapCallback()
+            } else {
+              swapCallback()
+            }
+          }}
+          disabled={actionButtonDisabled}
           mt="md"
-          {...(swapButtonDisabled ? { bg: 'gray400' } : {})}
+          bg={actionButtonDisabled ? 'gray400' : undefined}
         />
       </Box>
     </Box>

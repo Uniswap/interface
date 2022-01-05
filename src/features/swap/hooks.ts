@@ -1,4 +1,4 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -10,8 +10,9 @@ import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
 import { CurrencyField, swapFormActions, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { swapActions } from 'src/features/swap/swapSaga'
-import { Trade } from 'src/features/swap/types'
-import { useTrade } from 'src/features/swap/useTrade'
+import { Trade, useTrade } from 'src/features/swap/useTrade'
+import { getWrapType, isWrapAction } from 'src/features/swap/utils'
+import { tokenWrapActions, WrapType } from 'src/features/swap/wrapSaga'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   ExactInputSwapTransactionInfo,
@@ -26,7 +27,7 @@ import { tryParseAmount } from 'src/utils/tryParseAmount'
 
 const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 
-/** Returns information dereived from the current swap state */
+/** Returns information derived from the current swap state */
 export function useDerivedSwapInfo(state: SwapFormState) {
   const {
     exactCurrencyField,
@@ -60,27 +61,37 @@ export function useDerivedSwapInfo(state: SwapFormState) {
   )
 
   const isExactIn = exactCurrencyField === CurrencyField.INPUT
+  const wrapType = getWrapType(currencyIn, currencyOut)
 
-  const amountSpecified = tryParseAmount(exactAmount, isExactIn ? currencyIn : currencyOut)
+  // amountSpecified, otherCurrency, tradeType fully defines a trade
+  const amountSpecified = useMemo(
+    () => tryParseAmount(exactAmount, isExactIn ? currencyIn : currencyOut),
+    [currencyIn, currencyOut, exactAmount, isExactIn]
+  )
   const otherCurrency = isExactIn ? currencyOut : currencyIn
 
-  // TODO: transform quoteResult to `Trade` with callData
+  const skipQuote = isWrapAction(wrapType)
   const {
     status,
     error: quoteError,
     trade,
   } = useTrade({
-    amountSpecified,
+    amountSpecified: skipQuote ? null : amountSpecified,
     otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
   })
 
-  const currencyAmounts = {
-    [CurrencyField.INPUT]:
-      exactCurrencyField === CurrencyField.INPUT ? amountSpecified : trade?.inputAmount,
-    [CurrencyField.OUTPUT]:
-      exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : trade?.outputAmount,
-  }
+  const currencyAmounts = skipQuote
+    ? {
+        [CurrencyField.INPUT]: amountSpecified,
+        [CurrencyField.OUTPUT]: amountSpecified,
+      }
+    : {
+        [CurrencyField.INPUT]:
+          exactCurrencyField === CurrencyField.INPUT ? amountSpecified : trade?.inputAmount,
+        [CurrencyField.OUTPUT]:
+          exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : trade?.outputAmount,
+      }
 
   return {
     currencies,
@@ -95,6 +106,7 @@ export function useDerivedSwapInfo(state: SwapFormState) {
       status,
       trade,
     },
+    wrapType,
   }
 }
 
@@ -129,7 +141,6 @@ export function useSwapCallback(
 } {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-
   const navigation = useAppStackNavigation()
 
   const { amount, methodParameters } = trade?.quote || {}
@@ -193,6 +204,47 @@ export function useSwapCallback(
     trade,
     navigation,
   ])
+}
+
+export function useWrapCallback(
+  inputCurrencyAmount: CurrencyAmount<Currency> | null | undefined,
+  wrapType: WrapType
+) {
+  const appDispatch = useAppDispatch()
+  const account = useActiveAccount()
+  const navigation = useAppStackNavigation()
+
+  return useMemo(() => {
+    if (!isWrapAction(wrapType)) {
+      return {
+        wrapCallback: () =>
+          logger.error('hooks', 'useWrapCallback', 'Wrap callback invoked for non-wrap actions'),
+      }
+    }
+
+    if (!account || !inputCurrencyAmount) {
+      return {
+        wrapCallback: () =>
+          logger.error(
+            'hooks',
+            'useWrapCallback',
+            'Wrap callback invoked without active account, input currency or weth contract'
+          ),
+      }
+    }
+
+    return {
+      wrapCallback: () => {
+        appDispatch(
+          tokenWrapActions.trigger({
+            account,
+            inputCurrencyAmount,
+          })
+        )
+        navigation.goBack()
+      },
+    }
+  }, [account, appDispatch, inputCurrencyAmount, navigation, wrapType])
 }
 
 function tradeToTransactionInfo(

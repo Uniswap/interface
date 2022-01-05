@@ -1,42 +1,10 @@
-import { Trade as RouterSDKTrade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
-import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
+import { Token } from '@uniswap/sdk-core'
 
 export type QuoteParams = {
   amountIn?: string
   amountOut?: string
   inAddress?: string
   outAddress?: string
-}
-
-export class Trade<
-  TInput extends Currency = Currency,
-  TOutput extends Currency = Currency,
-  TTradeType extends TradeType = TradeType
-> extends RouterSDKTrade<TInput, TOutput, TTradeType> {
-  quote?: QuoteResult
-
-  constructor({
-    quote,
-    ...routes
-  }: {
-    quote?: QuoteResult
-    v2Routes: {
-      routev2: V2RouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
-    }[]
-    v3Routes: {
-      routev3: V3RouteSDK<TInput, TOutput>
-      inputAmount: CurrencyAmount<TInput>
-      outputAmount: CurrencyAmount<TOutput>
-    }[]
-    tradeType: TTradeType
-  }) {
-    super(routes)
-    this.quote = quote
-  }
 }
 
 // Routing API types

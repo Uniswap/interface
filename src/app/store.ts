@@ -16,6 +16,7 @@ import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { swapActions } from 'src/features/swap/swapSaga'
+import { tokenWrapActions } from 'src/features/swap/wrapSaga'
 
 const sagaMiddleware = createSagaMiddleware({
   context: {
@@ -49,6 +50,7 @@ export const store = configureStore({
             REGISTER,
             // contains non-serializable objects that do not hit the store
             swapActions.trigger.type,
+            tokenWrapActions.trigger.type,
           ],
           warnAfter: 128,
         },
