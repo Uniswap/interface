@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - widgets
   pull_request:
     branches:
       - main
-      - widgets
 
 jobs:
   run-linters:

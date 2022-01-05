@@ -7,9 +7,7 @@ import { NetworkContextName } from '../constants/misc'
 export default function useActiveWeb3React() {
   const widgetsContext = useWidgetsWeb3React()
   const interfaceContext = useWeb3React<Web3Provider>()
-  const interfaceNetworkContext = useWeb3React<Web3Provider>(
-    process.env.REACT_APP_IS_WIDGET ? undefined : NetworkContextName
-  )
+  const interfaceNetworkContext = useWeb3React<Web3Provider>(NetworkContextName)
 
   if (process.env.REACT_APP_IS_WIDGET) {
     return widgetsContext
