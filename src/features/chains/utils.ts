@@ -1,21 +1,16 @@
-import { config } from 'src/config'
+import { useMemo } from 'react'
+import { appSelect, useAppSelector } from 'src/app/hooks'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
 
-// TODO hard-coding in a list of active chains to work
-// around hook ordering issue for multichain multicall
 export function useActiveChainIds(): ChainId[] {
-  return config.activeChains
-  // const chains = useAppSelector((state) => state.chains.byChainId)
-  // return useMemo(() => getActiveChainIds(chains), [chains])
+  const chains = useAppSelector((state) => state.chains.byChainId)
+  return useMemo(() => getSortedActiveChainIds(chains), [chains])
 }
 
-// TODO hard-coding in a list of active chains to work
-// around hook ordering issue for multichain multicall
 export function* selectActiveChainIds() {
-  return config.activeChains
-  // const chains = yield* appSelect((s) => s.chains.byChainId)
-  // return getActiveChainIds(chains)
+  const chains = yield* appSelect((s) => s.chains.byChainId)
+  return getSortedActiveChainIds(chains)
 }
 
 export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>) {

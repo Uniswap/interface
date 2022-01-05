@@ -1,15 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { ChainId, ChainIdTo } from 'src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useEthPricesQuery, useTokensQuery } from 'src/features/historicalChainData/generated/hooks'
 import { useEndpoint } from 'src/features/historicalChainData/hooks'
 import { logger } from 'src/utils/logger'
 
 export function useTokenPrices(tokens: Currency[]) {
-  const currentChains = useActiveChainIds()
+  const activeChains = useActiveChainIds()
 
-  // subgraph data is separated by chainIdo
+  // subgraph data is separated by chainId
   const chainIdToTokens = tokens.reduce<ChainIdTo<Currency[]>>((memo, cur) => {
     memo[cur.chainId as ChainId] ??= []
     memo[cur.chainId as ChainId]!.push(cur)
@@ -18,12 +18,15 @@ export function useTokenPrices(tokens: Currency[]) {
 
   const chainIdToPrices: ChainIdTo<ReturnType<typeof useChainTokenPrices>> = {}
 
-  for (const chainId of currentChains) {
+  for (const chainId of ALL_SUPPORTED_CHAIN_IDS) {
     try {
+      const isEnabled = activeChains.includes(chainId)
+      // TODO Restructured use*Query calls to avoid loop of hooks
       // eslint-disable-next-line react-hooks/rules-of-hooks
       chainIdToPrices[chainId] = useChainTokenPrices({
         chainId,
         currencies: chainIdToTokens[chainId] || [],
+        isEnabled,
       })
     } catch (e) {
       logger.debug('useTokenPrices', '', 'useTokenPrices failed: ', e)
@@ -46,9 +49,11 @@ export function useTokenPrices(tokens: Currency[]) {
 function useChainTokenPrices({
   chainId,
   currencies,
+  isEnabled,
 }: {
   chainId: ChainId
   currencies: Currency[]
+  isEnabled: boolean
 }): {
   isLoading: boolean
   isError: boolean
@@ -65,13 +70,13 @@ function useChainTokenPrices({
   const tokensResult = useTokensQuery(
     { endpoint },
     { tokenList },
-    { enabled: Boolean(endpoint && tokenList && tokenList.length > 0) }
+    { enabled: Boolean(isEnabled && endpoint && tokenList && tokenList.length > 0) }
   )
 
   const ethPricesResult = useEthPricesQuery(
     { endpoint },
     {},
-    { enabled: Boolean(endpoint && currencies.length > 0) }
+    { enabled: Boolean(isEnabled && endpoint && currencies.length > 0) }
   )
 
   const anyIsLoading = tokensResult.isLoading || ethPricesResult.isLoading
