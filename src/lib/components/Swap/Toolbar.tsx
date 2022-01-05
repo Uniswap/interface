@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
+import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from 'lib/state/swap'
 import styled, { ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
 
@@ -8,7 +9,6 @@ import { TextButton } from '../Button'
 import Row from '../Row'
 import Rule from '../Rule'
 import Tooltip from '../Tooltip'
-import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from './state'
 
 const mockBalance = 123.45
 

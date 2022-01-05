@@ -1,10 +1,10 @@
 import { t } from '@lingui/macro'
+import { State } from 'lib/state/swap'
 import { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
 import { useMemo } from 'react'
 
 import Row from '../../Row'
-import { State } from '../state'
 
 interface DetailProps {
   label: string

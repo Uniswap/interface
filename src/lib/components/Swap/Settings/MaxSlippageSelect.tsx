@@ -1,6 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { Check, LargeIcon } from 'lib/icons'
+import { MaxSlippage, maxSlippageAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
 
@@ -8,7 +9,6 @@ import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
 import { DecimalInput, inputCss } from '../../Input'
 import Row from '../../Row'
-import { MaxSlippage, maxSlippageAtom } from '../state'
 import { Label, optionCss } from './components'
 
 const tooltip = (

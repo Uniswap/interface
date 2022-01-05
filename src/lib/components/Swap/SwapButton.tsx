@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
+import { inputAtom, outputAtom, swapAtom } from 'lib/state/swap'
 import { useCallback, useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
-import { inputAtom, outputAtom, swapAtom } from './state'
 import { StatusDialog } from './Status'
 import { SummaryDialog } from './Summary'
 

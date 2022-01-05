@@ -3,8 +3,8 @@ import { atomWithImmer } from 'jotai/immer'
 import { useUpdateAtom } from 'jotai/utils'
 import { atomWithReset } from 'jotai/utils'
 import { ETH } from 'lib/mocks'
+import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/state/atoms'
 import { Token } from 'lib/types'
-import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/utils/atoms'
 import { useMemo } from 'react'
 
 /** Max slippage, as a percentage. */

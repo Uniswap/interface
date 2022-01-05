@@ -2,12 +2,12 @@ import { Trans } from '@lingui/macro'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import useColor, { usePrefetchColor } from 'lib/hooks/useColor'
+import { inputAtom, outputAtom, useUpdateInputToken, useUpdateInputValue } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
 
 import Column from '../Column'
 import Row from '../Row'
-import { inputAtom, outputAtom, useUpdateInputToken, useUpdateInputValue } from './state'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)

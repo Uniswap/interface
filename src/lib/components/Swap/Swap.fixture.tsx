@@ -1,11 +1,11 @@
 import { useAtom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
+import { inputAtom, outputAtom, swapAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import Swap from '.'
 import { colorAtom } from './Output'
-import { inputAtom, outputAtom, swapAtom } from './state'
 
 const validateColor = (() => {
   const validator = document.createElement('div').style
