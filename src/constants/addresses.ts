@@ -1,12 +1,13 @@
 // import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@uniswap/v2-sdk'
-// import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
+import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
 
+import GenesisContractAddresses from '../assets/config/contract-addresses.json'
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
-const FACTORY_ADDRESS = '0xC5CFe2578d966DB85291aAa78faEe431Ba527c24'
+export const GENESIS_ROUTER = GenesisContractAddresses.ROUTER
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
 export const MULTICALL_ADDRESS: AddressMap = {
@@ -19,12 +20,12 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
-export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(FACTORY_ADDRESS, [
+export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(GenesisContractAddresses.FACTORY, [
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
 ])
 
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x8Da33Bd44A0e8Ac670A47905a74f3f72a83086Da', [
+export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap(GenesisContractAddresses.ROUTER, [
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
 ])
@@ -72,7 +73,7 @@ export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
 export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
   [SupportedChainId.MAINNET]: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
 }
-export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(FACTORY_ADDRESS, [
+export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V3_FACTORY_ADDRESS, [
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
   SupportedChainId.ARBITRUM_ONE,

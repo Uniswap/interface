@@ -157,6 +157,12 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [SupportedChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
+  [SupportedChainId.POLYGON_MUMBAI]: [
+    [
+      new Token(SupportedChainId.POLYGON_MUMBAI, '0x62ca00b6e212413F62FCBDf649DcE8C697d40930', 18, 'TK0', 'Token1'),
+      new Token(SupportedChainId.POLYGON_MUMBAI, '0xB37f76e1BE2e67A4Bd0B1764E61DaC820152dEDb', 18, 'TK0', 'Token2'),
+    ],
+  ],
   [SupportedChainId.MAINNET]: [
     [
       new Token(SupportedChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),

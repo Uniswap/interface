@@ -2359,6 +2359,17 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.6.0.tgz#e18ea901c84917f8dadd0185048a9d00573fe595"
   integrity sha512-Pz4+7HPzKvOFI1ICQ6pyUv/VgStEWq9IGiVaaV1cQLi66NIA1mD5INnY4CDNoVAxlkuZvDEUZ+cVHLQ8iwA2hQ==
 
+"@genesisprotocol/sdk@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@genesisprotocol/sdk/-/sdk-3.0.1.tgz#6d675afb9bf5e7b96d57836eaf76d143fcf4fbf1"
+  integrity sha512-cBT8Ua8smdI7iZo4CXPdkrpNplbS4pt8fb4rZnZhO70fUhslPOazpRW7+Fnx/r073Vu0oshL/lAM5U5u6VPHbw==
+  dependencies:
+    "@ethersproject/address" "^5.0.0"
+    "@ethersproject/solidity" "^5.0.0"
+    "@uniswap/sdk-core" "^3.0.0-alpha.3"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+
 "@gnosis.pm/safe-apps-provider@0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-provider/-/safe-apps-provider-0.6.0.tgz#07cc78df57ca4d0fa9c24c4040ea6322ac759a23"
