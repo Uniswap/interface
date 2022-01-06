@@ -1,13 +1,13 @@
 hooks:
-  afterOneFileWrite:
+  afterAllFileWrite:
     - prettier --write
-schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
-documents: 'src/features/historicalChainData/queries/*.graphql'
 generates:
-  ./src/features/historicalChainData/generated/hooks.ts:
+  ./src/features/historicalChainData/generated/uniswap-hooks.ts:
+    schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
+    documents: 'src/features/historicalChainData/queries/*.graphql'
     plugins:
       - typescript
       - typescript-operations
-      - typescript-react-query:
+      - typescript-react-query
     config:
-    fetcher: graphql-request
+      fetcher: graphql-request

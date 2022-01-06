@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import dayjs from 'dayjs'
 import React from 'react'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
@@ -6,10 +7,6 @@ import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
 import { formatCurrencyAmount } from 'src/utils/format'
-
-// TODO(#89): use date manipulation util
-const d = new Date()
-const YESTERDAY = Math.round(d.setDate(d.getDate() - 1))
 
 interface TokenBalanceItemProps {
   currencyAmount: CurrencyAmount<Currency>
@@ -26,7 +23,7 @@ export function TokenBalanceItem({
 
   const { prices } = useHourlyTokenPrices({
     token: currency.wrapped,
-    timestamp: YESTERDAY,
+    periodStartUnix: dayjs().subtract(1, 'day').unix(),
   })
 
   const percentChange = (function () {

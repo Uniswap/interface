@@ -1,3 +1,5 @@
+import { GraphQLClient } from 'graphql-request'
+import { RequestInit } from 'graphql-request/dist/types.dom'
 import { useQuery, UseQueryOptions } from 'react-query'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -5,28 +7,12 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 
 function fetcher<TData, TVariables>(
-  endpoint: string,
-  requestInit: RequestInit,
+  client: GraphQLClient,
   query: string,
-  variables?: TVariables
+  variables?: TVariables,
+  headers?: RequestInit['headers']
 ) {
-  return async (): Promise<TData> => {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      ...requestInit,
-      body: JSON.stringify({ query, variables }),
-    })
-
-    const json = await res.json()
-
-    if (json.errors) {
-      const { message } = json.errors[0]
-
-      throw new Error(message)
-    }
-
-    return json.data
-  }
+  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers)
 }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -4284,23 +4270,20 @@ export const EthPricesDocument = `
 }
     `
 export const useEthPricesQuery = <TData = EthPricesQuery, TError = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  client: GraphQLClient,
   variables?: EthPricesQueryVariables,
-  options?: UseQueryOptions<EthPricesQuery, TError, TData>
+  options?: UseQueryOptions<EthPricesQuery, TError, TData>,
+  headers?: RequestInit['headers']
 ) =>
   useQuery<EthPricesQuery, TError, TData>(
     variables === undefined ? ['ethPrices'] : ['ethPrices', variables],
-    fetcher<EthPricesQuery, EthPricesQueryVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      EthPricesDocument,
-      variables
-    ),
+    fetcher<EthPricesQuery, EthPricesQueryVariables>(client, EthPricesDocument, variables, headers),
     options
   )
 export const HourlyTokenPricesDocument = `
     query hourlyTokenPrices($address: String, $periodStartUnix: Int, $chainId: Int) {
   tokenHourDatas(
+    first: 1000
     where: {token: $address, periodStartUnix_gt: $periodStartUnix}
     orderBy: periodStartUnix
     orderDirection: desc
@@ -4314,23 +4297,29 @@ export const HourlyTokenPricesDocument = `
 }
     `
 export const useHourlyTokenPricesQuery = <TData = HourlyTokenPricesQuery, TError = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  client: GraphQLClient,
   variables?: HourlyTokenPricesQueryVariables,
-  options?: UseQueryOptions<HourlyTokenPricesQuery, TError, TData>
+  options?: UseQueryOptions<HourlyTokenPricesQuery, TError, TData>,
+  headers?: RequestInit['headers']
 ) =>
   useQuery<HourlyTokenPricesQuery, TError, TData>(
     variables === undefined ? ['hourlyTokenPrices'] : ['hourlyTokenPrices', variables],
     fetcher<HourlyTokenPricesQuery, HourlyTokenPricesQueryVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
+      client,
       HourlyTokenPricesDocument,
-      variables
+      variables,
+      headers
     ),
     options
   )
 export const DailyTokenPricesDocument = `
     query dailyTokenPrices($address: String, $chainId: Int) {
-  tokenDayDatas(where: {token: $address}, orderBy: date, orderDirection: desc) {
+  tokenDayDatas(
+    first: 1000
+    where: {token: $address}
+    orderBy: date
+    orderDirection: desc
+  ) {
     timestamp: date
     high
     low
@@ -4340,17 +4329,18 @@ export const DailyTokenPricesDocument = `
 }
     `
 export const useDailyTokenPricesQuery = <TData = DailyTokenPricesQuery, TError = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  client: GraphQLClient,
   variables?: DailyTokenPricesQueryVariables,
-  options?: UseQueryOptions<DailyTokenPricesQuery, TError, TData>
+  options?: UseQueryOptions<DailyTokenPricesQuery, TError, TData>,
+  headers?: RequestInit['headers']
 ) =>
   useQuery<DailyTokenPricesQuery, TError, TData>(
     variables === undefined ? ['dailyTokenPrices'] : ['dailyTokenPrices', variables],
     fetcher<DailyTokenPricesQuery, DailyTokenPricesQueryVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
+      client,
       DailyTokenPricesDocument,
-      variables
+      variables,
+      headers
     ),
     options
   )
@@ -4368,17 +4358,13 @@ export const TokensDocument = `
 }
     `
 export const useTokensQuery = <TData = TokensQuery, TError = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  client: GraphQLClient,
   variables: TokensQueryVariables,
-  options?: UseQueryOptions<TokensQuery, TError, TData>
+  options?: UseQueryOptions<TokensQuery, TError, TData>,
+  headers?: RequestInit['headers']
 ) =>
   useQuery<TokensQuery, TError, TData>(
     ['tokens', variables],
-    fetcher<TokensQuery, TokensQueryVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      TokensDocument,
-      variables
-    ),
+    fetcher<TokensQuery, TokensQueryVariables>(client, TokensDocument, variables, headers),
     options
   )

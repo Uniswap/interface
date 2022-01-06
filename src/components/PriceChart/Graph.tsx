@@ -39,10 +39,10 @@ export const Graph = ({ graphs }: GraphProps) => {
   const graphTransitionAnimatedProps = useAnimatedProps(() => {
     const previousPath = graphs[previousGraphIndex.value].data.path
     const currentPath = graphs[currentGraphIndex.value].data.path
-    return {
-      //TODO(judo): make animation interruptible
+    const d = {
       d: mixPath(transition.value, previousPath, currentPath),
     }
+    return d
   })
   const graphTransitionClosedAnimatedProps = useAnimatedProps(() => {
     //TODO(judo): figure out a way to merge with `graphTransitionAnimatedProps`
@@ -108,14 +108,14 @@ export const Graph = ({ graphs }: GraphProps) => {
                 currentGraphIndex.value = index
                 transition.value = withTiming(1)
               }}>
-              <AnimatedBox padding="xs" width={BUTTON_WIDTH}>
+              <Box padding="xs" width={BUTTON_WIDTH}>
                 <Text
                   variant="buttonLabel"
                   color={index === currentGraphIndex.value ? 'white' : 'primary1'}
                   textAlign="center">
                   {graph.label}
                 </Text>
-              </AnimatedBox>
+              </Box>
             </TouchableWithoutFeedback>
           )
         })}

@@ -7,16 +7,19 @@ import { Graph } from 'src/components/PriceChart/Graph'
 import { buildGraph } from 'src/components/PriceChart/Model'
 import { theme } from 'src/styles/theme'
 
-const graphDatapoints = buildGraph([
-  {
-    timestamp: 0,
-    close: 100,
-  },
-  {
-    timestamp: 1,
-    close: 200,
-  },
-])!
+const graphDatapoints = buildGraph(
+  [
+    {
+      timestamp: 0,
+      close: 100,
+    },
+    {
+      timestamp: 1,
+      close: 200,
+    },
+  ],
+  3
+)!
 
 const buildGraphMetadata = (index: number) =>
   ({

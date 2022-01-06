@@ -1,35 +1,37 @@
 import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { CHAIN_INFO } from 'src/constants/chains'
 import {
-  DailyTokenPricesQuery,
-  HourlyTokenPricesQuery,
   useDailyTokenPricesQuery,
   useHourlyTokenPricesQuery,
-} from 'src/features/historicalChainData/generated/hooks'
+} from 'src/features/historicalChainData/generated/uniswap-hooks'
+import {
+  getTokenQueryKey,
+  parseTokenData,
+  useV3SubgraphClient,
+} from 'src/features/historicalChainData/utils'
+
+type WithPeriodStartUnix<T> = T & { periodStartUnix: number }
 
 interface TokenPricesProps {
   token?: Token
 }
 
-interface HourlyTokenPricesProps extends TokenPricesProps {
-  timestamp: number
-}
+export function useHourlyTokenPrices({
+  token,
+  periodStartUnix,
+}: WithPeriodStartUnix<TokenPricesProps>) {
+  const client = useV3SubgraphClient(token?.chainId)
 
-export function useHourlyTokenPrices({ token, timestamp }: HourlyTokenPricesProps) {
-  const endpoint = useEndpoint(token?.chainId)
-
+  // non-null assertions enforced by `enabled`
   const { data, ...queryStatus } = useHourlyTokenPricesQuery(
-    { endpoint },
-    {
-      address: token?.address.toLowerCase(),
-      chainId: token?.chainId, // enforces key by chain
-      periodStartUnix: Math.round(timestamp / 1000),
-    },
-    { enabled: Boolean(endpoint) && Boolean(token) }
+    client!,
+    getTokenQueryKey(token!, {
+      periodStartUnix,
+    }),
+    { enabled: Boolean(client) && Boolean(token) }
   )
 
-  const prices = useParsedPriceData(data?.tokenHourDatas)
+  const prices = useMemo(() => parseTokenData(data?.tokenHourDatas), [data?.tokenHourDatas])
 
   return {
     prices,
@@ -38,39 +40,17 @@ export function useHourlyTokenPrices({ token, timestamp }: HourlyTokenPricesProp
 }
 
 export function useDailyTokenPrices({ token }: TokenPricesProps) {
-  const endpoint = useEndpoint(token?.chainId)
+  const client = useV3SubgraphClient(token?.chainId)
 
-  const { data, ...queryStatus } = useDailyTokenPricesQuery(
-    { endpoint },
-    {
-      address: token?.address.toLowerCase(),
-      chainId: token?.chainId, // enforces key by chain
-    },
-    { enabled: Boolean(endpoint) && Boolean(token) }
-  )
+  // non-null assertions enforced by `enabled`
+  const { data, ...queryStatus } = useDailyTokenPricesQuery(client!, getTokenQueryKey(token!), {
+    enabled: Boolean(client) && Boolean(token),
+  })
 
-  const prices = useParsedPriceData(data?.tokenDayDatas)
+  const prices = useMemo(() => parseTokenData(data?.tokenDayDatas), [data?.tokenDayDatas])
 
   return {
     prices,
     ...queryStatus,
   }
-}
-
-function useParsedPriceData(
-  data?: HourlyTokenPricesQuery['tokenHourDatas'] | DailyTokenPricesQuery['tokenDayDatas']
-) {
-  return data
-    ? data.map(({ open, close, high, low, ...rest }) => ({
-        ...rest,
-        open: parseFloat(open),
-        close: parseFloat(close),
-        high: parseFloat(high),
-        low: parseFloat(low),
-      }))
-    : undefined
-}
-
-export function useEndpoint(chainId?: number) {
-  return useMemo(() => (chainId ? CHAIN_INFO[chainId].subgraphUrl : null) ?? '', [chainId])
 }

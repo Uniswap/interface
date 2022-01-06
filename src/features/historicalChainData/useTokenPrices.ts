@@ -2,8 +2,11 @@ import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
-import { useEthPricesQuery, useTokensQuery } from 'src/features/historicalChainData/generated/hooks'
-import { useEndpoint } from 'src/features/historicalChainData/hooks'
+import {
+  useEthPricesQuery,
+  useTokensQuery,
+} from 'src/features/historicalChainData/generated/uniswap-hooks'
+import { useV3SubgraphClient } from 'src/features/historicalChainData/utils'
 import { logger } from 'src/utils/logger'
 
 export function useTokenPrices(tokens: Currency[]) {
@@ -59,7 +62,7 @@ function useChainTokenPrices({
   isError: boolean
   addressToPrice: { [address: Address]: { priceUSD?: number } } | null
 } {
-  const endpoint = useEndpoint(chainId)
+  const client = useV3SubgraphClient(chainId)
 
   const tokens = currencies.filter((c) => c.isToken)
   const tokenList = useMemo(
@@ -68,15 +71,15 @@ function useChainTokenPrices({
   )
 
   const tokensResult = useTokensQuery(
-    { endpoint },
+    client!,
     { tokenList },
-    { enabled: Boolean(isEnabled && endpoint && tokenList && tokenList.length > 0) }
+    { enabled: Boolean(isEnabled && client && tokenList && tokenList.length > 0) }
   )
 
   const ethPricesResult = useEthPricesQuery(
-    { endpoint },
+    client!,
     {},
-    { enabled: Boolean(isEnabled && endpoint && currencies.length > 0) }
+    { enabled: Boolean(isEnabled && client && currencies.length > 0) }
   )
 
   const anyIsLoading = tokensResult.isLoading || ethPricesResult.isLoading

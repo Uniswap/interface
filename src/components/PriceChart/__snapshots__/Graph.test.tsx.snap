@@ -101,7 +101,7 @@ exports[`renders correctly 1`] = `
     >
       <RNSVGGroup>
         <RNSVGPath
-          d="M0,0 C0,0 750,180 750,180"
+          d="M0,0 C0,0 62.5,15 62.5,15 C125,30 250,60 375,90 C500,120 625,150 687.5,165 C687.5,165 750,180 750,180"
           fill={0}
           propList={
             Array [
@@ -133,7 +133,7 @@ exports[`renders correctly 1`] = `
           />
         </RNSVGDefs>
         <RNSVGPath
-          d="M0,0 C0,0 750,180 750,180 L 750 180 L 0 180"
+          d="M0,0 C0,0 62.5,15 62.5,15 C125,30 250,60 375,90 C500,120 625,150 687.5,165 C687.5,165 750,180 750,180 L 750 180 L 0 180"
           fill={
             Array [
               1,
@@ -307,12 +307,6 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
-      animatedStyle={
-        Object {
-          "value": Object {},
-        }
-      }
-      collapsable={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -322,11 +316,13 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Object {
-          "display": "flex",
-          "padding": 6,
-          "width": 140,
-        }
+        Array [
+          Object {
+            "display": "flex",
+            "padding": 6,
+            "width": 140,
+          },
+        ]
       }
     >
       <Text
@@ -348,12 +344,6 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
-      animatedStyle={
-        Object {
-          "value": Object {},
-        }
-      }
-      collapsable={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -363,11 +353,13 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Object {
-          "display": "flex",
-          "padding": 6,
-          "width": 140,
-        }
+        Array [
+          Object {
+            "display": "flex",
+            "padding": 6,
+            "width": 140,
+          },
+        ]
       }
     >
       <Text
@@ -389,12 +381,6 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
-      animatedStyle={
-        Object {
-          "value": Object {},
-        }
-      }
-      collapsable={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -404,11 +390,13 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Object {
-          "display": "flex",
-          "padding": 6,
-          "width": 140,
-        }
+        Array [
+          Object {
+            "display": "flex",
+            "padding": 6,
+            "width": 140,
+          },
+        ]
       }
     >
       <Text
@@ -430,12 +418,6 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
-      animatedStyle={
-        Object {
-          "value": Object {},
-        }
-      }
-      collapsable={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -445,11 +427,13 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Object {
-          "display": "flex",
-          "padding": 6,
-          "width": 140,
-        }
+        Array [
+          Object {
+            "display": "flex",
+            "padding": 6,
+            "width": 140,
+          },
+        ]
       }
     >
       <Text
@@ -471,12 +455,6 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
-      animatedStyle={
-        Object {
-          "value": Object {},
-        }
-      }
-      collapsable={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -486,11 +464,13 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Object {
-          "display": "flex",
-          "padding": 6,
-          "width": 140,
-        }
+        Array [
+          Object {
+            "display": "flex",
+            "padding": 6,
+            "width": 140,
+          },
+        ]
       }
     >
       <Text

@@ -1,9 +1,11 @@
 import { Token } from '@uniswap/sdk-core'
 import { scaleLinear } from 'd3-scale'
 import { curveBasis, line } from 'd3-shape'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { parse } from 'react-native-redash'
 import { GraphData, GraphMetadatas, PriceList } from 'src/components/PriceChart/types'
+import { normalizePath, takeSubset } from 'src/components/PriceChart/utils'
 import { useDailyTokenPrices, useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
 import { dimensions } from 'src/styles/sizing'
 import { logger } from 'src/utils/logger'
@@ -12,39 +14,39 @@ export const HEIGHT = 180
 export const WIDTH = dimensions.fullWidth
 
 export const NUM_GRAPHS = 5
+export const GRAPH_PRECISION = 20 // number of points in graph
 
 const HOURS_IN_DAY = 24
-const HOURS_IN_WEEK = 24 * 7
+const HOURS_IN_WEEK = HOURS_IN_DAY * 7
 const HOURS_IN_MONTH = HOURS_IN_WEEK * 4
 const DAYS_IN_YEAR = 365
 
-// TODO(#89): use date manipulation util
-const d = new Date()
-const ONE_MONTH_AGO = d.setMonth(d.getMonth() - 1)
-
 export function useGraphs(token: Token): GraphMetadatas | null {
-  const hourlyTokenData = useHourlyTokenPrices({ token, timestamp: ONE_MONTH_AGO })
+  const oneMonthAgo = dayjs().subtract(1, 'month').startOf('hour').unix()
+
+  const hourlyTokenData = useHourlyTokenPrices({ token, periodStartUnix: oneMonthAgo })
   const dailyTokenData = useDailyTokenPrices({ token })
 
-  const isError = dailyTokenData.isError || hourlyTokenData.isError
+  const isError = hourlyTokenData.isError || dailyTokenData.isError
 
-  const hourlyTokenPrices = useMemo(
+  // build graph data for each data set to reduce the number of re-renders
+
+  const graphDataDerivedFromHours = useMemo(
     () => ({
-      // TODO(judo): interpolation requires same data length
-      // TODO(#80): use block-level data and add 1h chart
-      oneDay: hourlyTokenData.prices?.slice(0, HOURS_IN_DAY),
-      oneWeek: hourlyTokenData.prices?.slice(0, HOURS_IN_WEEK),
-      oneMonth: hourlyTokenData.prices?.slice(0, HOURS_IN_MONTH),
+      // TODO(judo): consider not slicing price data for performance
+      oneDay: buildGraph(takeSubset(hourlyTokenData.prices, HOURS_IN_DAY), GRAPH_PRECISION),
+      oneWeek: buildGraph(takeSubset(hourlyTokenData.prices, HOURS_IN_WEEK), GRAPH_PRECISION),
+      oneMonth: buildGraph(takeSubset(hourlyTokenData.prices, HOURS_IN_MONTH), GRAPH_PRECISION),
     }),
-    [hourlyTokenData]
+    [hourlyTokenData.prices]
   )
 
-  const dailyTokenPrices = useMemo(
+  const graphDataDerivedFromDays = useMemo(
     () => ({
-      oneYear: dailyTokenData.prices?.slice(0, DAYS_IN_YEAR),
-      all: dailyTokenData.prices,
+      oneYear: buildGraph(takeSubset(dailyTokenData.prices, DAYS_IN_YEAR), GRAPH_PRECISION),
+      all: buildGraph(dailyTokenData.prices?.slice(), GRAPH_PRECISION),
     }),
-    [dailyTokenData]
+    [dailyTokenData.prices]
   )
 
   return useMemo(() => {
@@ -58,54 +60,53 @@ export function useGraphs(token: Token): GraphMetadatas | null {
       return null
     }
 
+    // TODO: consider lazy building graphs
     const graphs = [
       {
         label: '1D',
         index: 0,
-        data: buildGraph(hourlyTokenPrices.oneDay),
+        data: graphDataDerivedFromHours.oneDay,
       },
       {
         label: '1W',
         index: 1,
-        data: buildGraph(hourlyTokenPrices.oneWeek),
+        data: graphDataDerivedFromHours.oneWeek,
       },
       {
         label: '1M',
         index: 2,
-        data: buildGraph(hourlyTokenPrices.oneMonth),
+        data: graphDataDerivedFromHours.oneMonth,
       },
       {
         label: '1Y',
         index: 3,
-        data: buildGraph(dailyTokenPrices.oneYear),
+        data: graphDataDerivedFromDays.oneYear,
       },
       {
         label: 'ALL',
         index: 4,
-        data: buildGraph(dailyTokenPrices.all),
+        data: graphDataDerivedFromDays.all,
       },
     ] as const
 
     return graphs as GraphMetadatas
   }, [
     isError,
-    hourlyTokenPrices.oneDay,
-    hourlyTokenPrices.oneWeek,
-    hourlyTokenPrices.oneMonth,
-    dailyTokenPrices.oneYear,
-    dailyTokenPrices.all,
+    graphDataDerivedFromDays.all,
+    graphDataDerivedFromDays.oneYear,
+    graphDataDerivedFromHours.oneMonth,
+    graphDataDerivedFromHours.oneWeek,
+    graphDataDerivedFromHours.oneDay,
     dailyTokenData.error,
     hourlyTokenData.error,
   ])
 }
 
-/**
- * Constructs a drawable Path from a PriceList
- */
-export function buildGraph(datapoints: PriceList | undefined): GraphData | null {
+/** Constructs a drawable Path from a PriceList */
+export function buildGraph(datapoints: PriceList | undefined, precision: number): GraphData | null {
   if (!datapoints || datapoints.length === 0) return null
 
-  const priceList = datapoints.slice(0, 24).reverse()
+  const priceList = datapoints.reverse()
 
   const formattedValues = priceList.map(
     (price) => [price.timestamp, parseFloat(price.close)] as [number, number]
@@ -124,11 +125,16 @@ export function buildGraph(datapoints: PriceList | undefined): GraphData | null 
     .range([0, WIDTH])
   const scaleY = scaleLinear().domain([lowPrice, highPrice]).range([HEIGHT, 0])
 
-  const path = parse(
-    line()
-      .x(([x]) => scaleX(x) as number)
-      .y(([, y]) => scaleY(y) as number)
-      .curve(curveBasis)(formattedValues) as string
+  // normalize brings all paths to the same precision (number of points)
+  const path = normalizePath(
+    parse(
+      line()
+        .x(([x]) => scaleX(x) as number)
+        .y(([, y]) => scaleY(y) as number)
+        .curve(curveBasis)(formattedValues) as string
+    ),
+    precision,
+    WIDTH
   )
 
   return {

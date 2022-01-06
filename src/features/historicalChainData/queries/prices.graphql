@@ -8,6 +8,7 @@
 
 query hourlyTokenPrices($address: String, $periodStartUnix: Int, $chainId: Int) {
   tokenHourDatas(
+    first: 1000
     where: { token: $address, periodStartUnix_gt: $periodStartUnix }
     orderBy: periodStartUnix
     orderDirection: desc
@@ -21,7 +22,7 @@ query hourlyTokenPrices($address: String, $periodStartUnix: Int, $chainId: Int) 
 }
 
 query dailyTokenPrices($address: String, $chainId: Int) {
-  tokenDayDatas(where: { token: $address }, orderBy: date, orderDirection: desc) {
+  tokenDayDatas(first: 1000, where: { token: $address }, orderBy: date, orderDirection: desc) {
     timestamp: date
     high
     low
