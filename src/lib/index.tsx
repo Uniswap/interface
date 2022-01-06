@@ -1,12 +1,12 @@
 import Swap from './components/Swap'
 import Widget, { WidgetProps } from './components/Widget'
 
-type SwapWidgetProps = Omit<WidgetProps, 'children'>
+export type SwapWidgetProps = WidgetProps<typeof Swap>
 
-export function SwapWidget(props: SwapWidgetProps) {
+export function SwapWidget({ ...props }: SwapWidgetProps) {
   return (
     <Widget {...props}>
-      <Swap />
+      <Swap {...props} />
     </Widget>
   )
 }
