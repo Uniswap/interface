@@ -19,6 +19,10 @@ export const primaryButtonVariants = {
     backgroundColor: 'paleOrange',
     color: 'orange',
   },
+  blue: {
+    backgroundColor: 'paleBlue',
+    color: 'blue',
+  },
 }
 
 export const iconButtonVariants = {

@@ -1,3 +1,4 @@
+import { CommonActions } from '@react-navigation/native'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
@@ -20,6 +21,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
@@ -189,7 +191,12 @@ export function useSwapCallback(
             txAmount: amount,
           })
         )
-        navigation.goBack()
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{ name: Screens.Home }],
+          })
+        )
       },
       swapState,
     }
