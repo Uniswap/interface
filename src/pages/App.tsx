@@ -28,6 +28,7 @@ import { PositionPage } from './Pool/PositionPage'
 import AddLiquidity from './AddLiquidity'
 import { ThemedBackground } from '../theme'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { PlaygroundPage } from './Playground'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -87,6 +88,7 @@ export default function App() {
             <TopLevelModals />
             <Web3ReactManager>
               <Switch>
+                <Route exact strict path="/play" component={PlaygroundPage} />
                 <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/uni" component={Earn} />
                 <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
