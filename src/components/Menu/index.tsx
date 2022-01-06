@@ -33,7 +33,7 @@ const StyledMenuIcon = styled(MenuIcon)`
   }
 `
 
-const StyledMenuButton = styled.button`
+const StyledMenuButton = styled.button<{ active?: boolean }>`
   border: none;
   background-color: transparent;
   margin: 0;
@@ -47,12 +47,20 @@ const StyledMenuButton = styled.button`
 
   border-radius: 0.5rem;
 
-  :hover,
-  :focus {
+  :hover {
     cursor: pointer;
     outline: none;
     background-color: ${({ theme }) => theme.buttonBlack};
   }
+
+  ${({ active }) =>
+    active
+      ? css`
+          cursor: pointer;
+          outline: none;
+          background-color: ${({ theme }) => theme.buttonBlack};
+        `
+      : ''}
 `
 
 const StyledMenu = styled.div`
@@ -101,35 +109,7 @@ const MenuItem = styled(ExternalLink)`
 
 const MenuFlyoutBrowserStyle = css`
   min-width: 15rem;
-  background-color: ${({ theme }) => theme.tableHeader};
   right: -8px;
-
-  & > div {
-    position: relative;
-    :after {
-      bottom: 100%;
-      right: 18px;
-      border: solid transparent;
-      content: '';
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-      border-bottom-color: ${({ theme }) => theme.tableHeader};
-      border-width: 10px;
-      margin-left: -10px;
-    }
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    & > div:after {
-      top: 100%;
-      border-top-color: ${({ theme }) => theme.tableHeader};
-      border-bottom-color: transparent
-      border-width: 10px;
-      margin-left: -10px;
-    }
-  `};
 
   & ${MenuItem}:nth-child(1),
   & ${NavMenuItem}:nth-child(1) {
@@ -169,7 +149,7 @@ export default function Menu() {
 
   return (
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle} aria-label="Menu">
+      <StyledMenuButton active={open} onClick={toggle} aria-label="Menu">
         <StyledMenuIcon />
       </StyledMenuButton>
 
@@ -180,6 +160,7 @@ export default function Menu() {
         isOpen={open}
         toggle={toggle}
         translatedTitle={t`Menu`}
+        hasArrow
       >
         <Flex flexDirection={'column'} padding="5px">
           {!above768 && (

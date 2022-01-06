@@ -120,7 +120,7 @@ const ModalContentWrapper = styled.div`
   background-color: ${({ theme }) => theme.background};
 `
 
-const StyledMenuButton = styled.button`
+const StyledMenuButton = styled.button<{ active?: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
@@ -133,12 +133,20 @@ const StyledMenuButton = styled.button`
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
 
-  :hover,
-  :focus {
+  :hover {
     cursor: pointer;
     outline: none;
     background-color: ${({ theme }) => theme.buttonBlack};
   }
+
+  ${({ active }) =>
+    active
+      ? css`
+          cursor: pointer;
+          outline: none;
+          background-color: ${({ theme }) => theme.buttonBlack};
+        `
+      : ''}
 
   svg {
     margin-top: 2px;
@@ -161,24 +169,14 @@ const MenuFlyoutBrowserStyle = css`
   ${({ theme }) => theme.mediaWidth.upToLarge`
     top: 4rem;
     bottom: unset;
-  `};
-
-  & > div {
-    position: relative;
-    :after {
-      bottom: 100%;
-      right: 18px;
-      border: solid transparent;
-      content: '';
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
+    & > div:after {
+      top: -40px;
+      border-top-color: transparent;
       border-bottom-color: ${({ theme }) => theme.tableHeader};
       border-width: 10px;
       margin-left: -10px;
     }
-  }
+  `};
 `
 
 const StyledInput = styled.input`
@@ -453,7 +451,12 @@ export default function TransactionSettings() {
       <StyledMenu ref={node as any}>
         <Tooltip text={t`Advanced mode is on!`} show={expertMode && isShowTooltip}>
           <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip}>
-            <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label="Transaction Settings">
+            <StyledMenuButton
+              active={open}
+              onClick={toggle}
+              id="open-settings-dialog-button"
+              aria-label="Transaction Settings"
+            >
               <TransactionSettingsIcon fill={expertMode ? theme.warning : theme.text} />
             </StyledMenuButton>
           </div>
@@ -465,6 +468,7 @@ export default function TransactionSettings() {
           isOpen={open}
           toggle={toggle}
           translatedTitle={t`Advanced Settings`}
+          hasArrow
         >
           <>
             <SlippageTabs

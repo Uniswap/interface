@@ -18,7 +18,7 @@ const ModalBrowserStyle = css`
   left: 0;
   align-items: flex-start;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg19};
+  background-color: ${({ theme }) => theme.tableHeader};
   color: ${({ theme }) => theme.text};
   min-width: 180px;
   max-width: 180px;

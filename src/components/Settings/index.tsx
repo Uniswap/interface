@@ -26,7 +26,7 @@ const StyledMenuIcon = styled(Settings)`
   }
 `
 
-const StyledMenuButton = styled.button`
+const StyledMenuButton = styled.button<{ active?: boolean }>`
   width: 100%;
   height: 100%;
   border: none;
@@ -42,12 +42,20 @@ const StyledMenuButton = styled.button`
 
   border-radius: 0.5rem;
 
-  :hover,
-  :focus {
+  :hover {
     cursor: pointer;
     outline: none;
     background-color: ${({ theme }) => theme.buttonBlack};
   }
+
+  ${({ active }) =>
+    active
+      ? css`
+          cursor: pointer;
+          outline: none;
+          background-color: ${({ theme }) => theme.buttonBlack};
+        `
+      : ''}
 `
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
@@ -61,33 +69,10 @@ const StyledMenu = styled.div`
 
 const MenuFlyoutBrowserStyle = css`
   min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.tableHeader};
   right: -10px;
-  & > div {
-    position: relative;
-    :after {
-      bottom: 100%;
-      right: 18px;
-      border: solid transparent;
-      content: '';
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-      border-bottom-color: ${({ theme }) => theme.tableHeader};
-      border-width: 10px;
-      margin-left: -10px;
-    }
-  }
+
   ${({ theme }) => theme.mediaWidth.upToLarge`
     min-width: 18.125rem;
-    & > div:after {
-      top: 100%;
-      border-top-color: ${({ theme }) => theme.tableHeader};
-      border-bottom-color: transparent
-      border-width: 10px;
-      margin-left: -10px;
-    }
   `};
 `
 
@@ -109,7 +94,7 @@ export default function SettingsTab() {
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label="Settings">
+      <StyledMenuButton active={open} onClick={toggle} id="open-settings-dialog-button" aria-label="Settings">
         <StyledMenuIcon />
       </StyledMenuButton>
       <MenuFlyout
@@ -118,6 +103,7 @@ export default function SettingsTab() {
         isOpen={open}
         toggle={toggle}
         translatedTitle={isSelectingLanguage ? undefined : t`Preferences`}
+        hasArrow
       >
         {!isSelectingLanguage ? (
           <>

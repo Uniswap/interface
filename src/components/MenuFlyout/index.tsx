@@ -8,9 +8,38 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { Text } from 'rebass'
 import { AutoColumn } from 'components/Column'
 
+const Arrow = css`
+  & > div {
+    position: relative;
+    :after {
+      bottom: 100%;
+      right: 0;
+      top: -40px;
+      border: solid transparent;
+      content: '';
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-bottom-color: ${({ theme }) => theme.tableHeader};
+      border-width: 10px;
+      margin-left: -10px;
+    }
+  }
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    & > div:after {
+      top: calc(100% + 20px);
+      border-top-color: ${({ theme }) => theme.tableHeader};
+      border-bottom-color: transparent
+      border-width: 10px;
+      margin-left: -10px;
+    }
+  `};
+`
+
 const BrowserDefaultStyle = css`
   min-width: 9rem;
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.tableHeader};
   filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.36));
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -48,11 +77,13 @@ const MenuFlyout = (props: {
   children: React.ReactNode
   node: any
   translatedTitle?: string
+  hasArrow?: boolean
 }) => {
   useOnClickOutside(props.node, props.isOpen && !isMobile ? props.toggle : undefined)
   const BrowserStyle = useMemo(
     () => styled.span`
       ${BrowserDefaultStyle}
+      ${props.hasArrow ? Arrow : ''}
       ${props.browserCustomStyle}
     `,
     [props.browserCustomStyle]
