@@ -3,12 +3,21 @@ import { Box } from 'src/components/layout/Box'
 import { Spacer } from 'src/components/layout/Spacer'
 import { Theme } from 'src/styles/theme'
 
-type FlexProps = ComponentProps<typeof Box> & {
-  /** shorthand for alignItems:center and justifyContent:center */
-  centered?: boolean
-  /** spacing _between_ elements */
-  gap?: keyof Theme['spacing']
-}
+type CenteredProps =
+  | {
+      centered?: false
+    }
+  | {
+      alignItems?: 'center'
+      centered: true
+      justifyContent?: 'center'
+    }
+
+type FlexProps = ComponentProps<typeof Box> &
+  CenteredProps & {
+    /** spacing _between_ elements */
+    gap?: keyof Theme['spacing']
+  }
 
 /** Layout component to place child items with spacing between them */
 export function Flex({
