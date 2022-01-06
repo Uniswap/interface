@@ -5,13 +5,17 @@ import { interpolate, useAnimatedStyle, useDerivedValue } from 'react-native-rea
 import { ReText, round } from 'react-native-redash'
 import { Box } from 'src/components/layout/Box'
 import { HEIGHT } from 'src/components/PriceChart/Model'
-import { AnimatedIndex, AnimatedTranslation, GraphMetadatas } from 'src/components/PriceChart/types'
+import {
+  AnimatedNumber,
+  AnimatedTranslation,
+  GraphMetadatas,
+} from 'src/components/PriceChart/types'
 import { fontFamily } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 
 interface HeaderProps {
   translation: AnimatedTranslation
-  index: AnimatedIndex
+  index: AnimatedNumber
   graphs: GraphMetadatas
 }
 

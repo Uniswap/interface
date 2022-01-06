@@ -2,7 +2,7 @@ import Animated from 'react-native-reanimated'
 import { Path, Vector } from 'react-native-redash'
 import { DailyTokenPricesQuery } from 'src/features/historicalChainData/generated/uniswap-hooks'
 
-export type AnimatedIndex = Animated.SharedValue<number>
+export type AnimatedNumber = Animated.SharedValue<number>
 export type AnimatedTranslation = Vector<Animated.SharedValue<number>>
 
 export type GraphData = {

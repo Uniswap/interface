@@ -326,17 +326,23 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        style={
-          Array [
-            Object {
-              "color": "#FFFFFF",
-              "display": "flex",
-              "fontFamily": "UniswapSansBeta3-Medium",
-              "fontSize": 16,
-              "lineHeight": 24,
-              "textAlign": "center",
+        animatedStyle={
+          Object {
+            "value": Object {
+              "color": "rgba(255, 255, 255, 1)",
             },
-          ]
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "color": "rgba(255, 255, 255, 1)",
+            "display": "flex",
+            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontSize": 16,
+            "lineHeight": 24,
+            "textAlign": "center",
+          }
         }
       >
         Graph 0
@@ -363,17 +369,23 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        style={
-          Array [
-            Object {
+        animatedStyle={
+          Object {
+            "value": Object {
               "color": "#FF007A",
-              "display": "flex",
-              "fontFamily": "UniswapSansBeta3-Medium",
-              "fontSize": 16,
-              "lineHeight": 24,
-              "textAlign": "center",
             },
-          ]
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "color": "#FF007A",
+            "display": "flex",
+            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontSize": 16,
+            "lineHeight": 24,
+            "textAlign": "center",
+          }
         }
       >
         Graph 1
@@ -400,17 +412,23 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        style={
-          Array [
-            Object {
+        animatedStyle={
+          Object {
+            "value": Object {
               "color": "#FF007A",
-              "display": "flex",
-              "fontFamily": "UniswapSansBeta3-Medium",
-              "fontSize": 16,
-              "lineHeight": 24,
-              "textAlign": "center",
             },
-          ]
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "color": "#FF007A",
+            "display": "flex",
+            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontSize": 16,
+            "lineHeight": 24,
+            "textAlign": "center",
+          }
         }
       >
         Graph 2
@@ -437,17 +455,23 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        style={
-          Array [
-            Object {
+        animatedStyle={
+          Object {
+            "value": Object {
               "color": "#FF007A",
-              "display": "flex",
-              "fontFamily": "UniswapSansBeta3-Medium",
-              "fontSize": 16,
-              "lineHeight": 24,
-              "textAlign": "center",
             },
-          ]
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "color": "#FF007A",
+            "display": "flex",
+            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontSize": 16,
+            "lineHeight": 24,
+            "textAlign": "center",
+          }
         }
       >
         Graph 3
@@ -474,17 +498,23 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        style={
-          Array [
-            Object {
+        animatedStyle={
+          Object {
+            "value": Object {
               "color": "#FF007A",
-              "display": "flex",
-              "fontFamily": "UniswapSansBeta3-Medium",
-              "fontSize": 16,
-              "lineHeight": 24,
-              "textAlign": "center",
             },
-          ]
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "color": "#FF007A",
+            "display": "flex",
+            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontSize": 16,
+            "lineHeight": 24,
+            "textAlign": "center",
+          }
         }
       >
         Graph 4

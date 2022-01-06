@@ -12,8 +12,8 @@ import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Cursor } from 'src/components/PriceChart/Cursor'
 import { Header } from 'src/components/PriceChart/Header'
 import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/Model'
+import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
-import { Text } from 'src/components/Text'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
@@ -30,7 +30,7 @@ interface GraphProps {
  */
 export const Graph = ({ graphs }: GraphProps) => {
   const translation = useVector()
-  const transition = useSharedValue(0)
+  const transition = useSharedValue(1)
 
   const previousGraphIndex = useSharedValue<number>(0)
   const currentGraphIndex = useSharedValue<number>(0)
@@ -109,12 +109,11 @@ export const Graph = ({ graphs }: GraphProps) => {
                 transition.value = withTiming(1)
               }}>
               <Box padding="xs" width={BUTTON_WIDTH}>
-                <Text
-                  variant="buttonLabel"
-                  color={index === currentGraphIndex.value ? 'white' : 'primary1'}
-                  textAlign="center">
-                  {graph.label}
-                </Text>
+                <TimeRangeLabel
+                  label={graph.label}
+                  selected={currentGraphIndex.value === index}
+                  transition={transition}
+                />
               </Box>
             </TouchableWithoutFeedback>
           )

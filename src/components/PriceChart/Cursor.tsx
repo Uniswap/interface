@@ -9,12 +9,16 @@ import {
 } from 'react-native-reanimated'
 import { getYForX } from 'react-native-redash'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
-import { AnimatedIndex, AnimatedTranslation, GraphMetadatas } from 'src/components/PriceChart/types'
+import {
+  AnimatedNumber,
+  AnimatedTranslation,
+  GraphMetadatas,
+} from 'src/components/PriceChart/types'
 
 const CURSOR_SIZE = 50
 
 interface CursorProps {
-  index: AnimatedIndex
+  index: AnimatedNumber
   translation: AnimatedTranslation
   graphs: GraphMetadatas
 }
