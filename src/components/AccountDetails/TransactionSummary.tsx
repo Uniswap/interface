@@ -18,6 +18,7 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
+  RemoveLiquidityV2TransactionInfo,
   RemoveLiquidityV3TransactionInfo,
   SubmitProposalTransactionInfo,
   TransactionInfo,
@@ -224,6 +225,20 @@ function RemoveLiquidityV3Summary({
   )
 }
 
+function RemoveLiquidityV2Summary({
+  info: { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
+}: {
+  info: RemoveLiquidityV2TransactionInfo
+}) {
+  return (
+    <Trans>
+      Remove{' '}
+      <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} /> and{' '}
+      <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />
+    </Trans>
+  )
+}
+
 function AddLiquidityV3PoolSummary({
   info: { createPool, quoteCurrencyId, baseCurrencyId },
 }: {
@@ -338,6 +353,9 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.REMOVE_LIQUIDITY_V3:
       return <RemoveLiquidityV3Summary info={info} />
+
+    case TransactionType.REMOVE_LIQUIDITY_V2:
+      return <RemoveLiquidityV2Summary info={info} />
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary info={info} />

@@ -22,7 +22,6 @@ import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
-  GENESIS_ROUTER,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
@@ -30,7 +29,7 @@ import {
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
-  // V2_ROUTER_ADDRESS,
+  V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
 import { useMemo } from 'react'
@@ -116,7 +115,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useV2RouterContract(): Contract | null {
-  return useContract(GENESIS_ROUTER, IUniswapV2Router02ABI, true)
+  return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, true)
 }
 
 export function useInterfaceMulticall() {

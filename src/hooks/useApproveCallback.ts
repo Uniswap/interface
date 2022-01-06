@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Protocol, Trade } from '@uniswap/router-sdk'
+import { Protocol, Trade } from '@genesisprotocol/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -197,6 +197,7 @@ export function useApprovalOptimizedTrade(
         case SwapRouterVersion.V2V3:
           return trade
         case SwapRouterVersion.V2:
+          // @ts-ignore
           const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
           const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
           return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)

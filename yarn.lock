@@ -2359,6 +2359,17 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.6.0.tgz#e18ea901c84917f8dadd0185048a9d00573fe595"
   integrity sha512-Pz4+7HPzKvOFI1ICQ6pyUv/VgStEWq9IGiVaaV1cQLi66NIA1mD5INnY4CDNoVAxlkuZvDEUZ+cVHLQ8iwA2hQ==
 
+"@genesisprotocol/router-sdk@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@genesisprotocol/router-sdk/-/router-sdk-1.0.5.tgz#7e52017328d45f9fce4fa44aa61f2558095a0452"
+  integrity sha512-DVZ9wiZDrMJBz83b3hfL9kCAC7D0XcJ4ooY4EAdeJbt2F5OixAZg3Ozw0rdQ42fnrvwNk8VxZfSJ80QonBMhbw==
+  dependencies:
+    "@ethersproject/abi" "^5.5.0"
+    "@genesisprotocol/sdk" "^3.0.1"
+    "@uniswap/sdk-core" "^3.0.1"
+    "@uniswap/swap-router-contracts" "1.1.0"
+    "@uniswap/v3-sdk" "^3.7.1"
+
 "@genesisprotocol/sdk@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@genesisprotocol/sdk/-/sdk-3.0.1.tgz#6d675afb9bf5e7b96d57836eaf76d143fcf4fbf1"

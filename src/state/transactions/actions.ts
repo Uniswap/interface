@@ -33,6 +33,7 @@ export enum TransactionType {
   MIGRATE_LIQUIDITY_V3 = 11,
   COLLECT_FEES = 12,
   REMOVE_LIQUIDITY_V3 = 13,
+  REMOVE_LIQUIDITY_V2 = 15,
   SUBMIT_PROPOSAL = 14,
 }
 
@@ -149,6 +150,14 @@ export interface RemoveLiquidityV3TransactionInfo {
   expectedAmountQuoteRaw: string
 }
 
+export interface RemoveLiquidityV2TransactionInfo {
+  type: TransactionType.REMOVE_LIQUIDITY_V2
+  baseCurrencyId: string
+  quoteCurrencyId: string
+  expectedAmountBaseRaw: string
+  expectedAmountQuoteRaw: string
+}
+
 export interface SubmitProposalTransactionInfo {
   type: TransactionType.SUBMIT_PROPOSAL
 }
@@ -169,6 +178,7 @@ export type TransactionInfo =
   | MigrateV2LiquidityToV3TransactionInfo
   | CollectFeesTransactionInfo
   | RemoveLiquidityV3TransactionInfo
+  | RemoveLiquidityV2TransactionInfo
   | SubmitProposalTransactionInfo
 
 export const addTransaction = createAction<{

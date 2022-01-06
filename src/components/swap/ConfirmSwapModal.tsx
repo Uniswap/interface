@@ -1,5 +1,5 @@
+import { Trade } from '@genesisprotocol/router-sdk'
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'

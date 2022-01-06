@@ -1,4 +1,5 @@
-import { Pair, Trade } from '@genesisprotocol/sdk'
+import { Trade } from '@genesisprotocol/router-sdk'
+import { Pair } from '@genesisprotocol/sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'

@@ -170,6 +170,7 @@ export default function RemoveLiquidity({
 
     let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
+    console.log('approval: ', approval)
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
       if (oneCurrencyIsETH) {
@@ -246,6 +247,8 @@ export default function RemoveLiquidity({
           })
       )
     )
+
+    console.log('safe gas estimate: ', safeGasEstimates)
 
     const indexOfSuccessfulEstimation = safeGasEstimates.findIndex((safeGasEstimate) =>
       BigNumber.isBigNumber(safeGasEstimate)

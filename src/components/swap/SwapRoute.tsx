@@ -1,6 +1,6 @@
-import { Pair, Trade } from '@genesisprotocol/sdk'
+import { Trade } from '@genesisprotocol/router-sdk'
+import { Pair } from '@genesisprotocol/sdk'
 import { Trans } from '@lingui/macro'
-// import {  } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'

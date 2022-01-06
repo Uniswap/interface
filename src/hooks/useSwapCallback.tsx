@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { SwapRouter, Trade } from '@genesisprotocol/router-sdk'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'

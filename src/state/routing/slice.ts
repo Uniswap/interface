@@ -1,5 +1,5 @@
+import { Protocol } from '@genesisprotocol/router-sdk'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
-import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'
