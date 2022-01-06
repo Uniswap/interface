@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-05 20:06\n"
+"PO-Revision-Date: 2022-01-06 10:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -2556,7 +2556,7 @@ msgstr "{activeTokensOnThisChain} žetonov"
 
 #: src/lib/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"
-msgstr "{integrator} pristojbina"
+msgstr "Provizija za {integrator}"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
@@ -2564,7 +2564,7 @@ msgstr "Most za žetone {label}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "{min}m {sec}s"
-msgstr "{min}m {sec}s"
+msgstr "{min} m {sec} s"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
@@ -2572,7 +2572,7 @@ msgstr "{percentForSlider} %"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "{sec}s"
-msgstr "{sec}s"
+msgstr "{sec} s"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
