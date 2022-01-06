@@ -6,6 +6,7 @@ import { Identicon } from 'src/components/accounts/Identicon'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout/Box'
+import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -41,17 +42,18 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
         alignItems="center"
         onPress={onPressAccount}
         testID="account_header/manage/button">
-        <Identicon address={activeAccount?.address ?? NULL_ADDRESS} mr="sm" size={30} />
-        <Text variant="h4">
-          {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}
-        </Text>
-        <Chevron
-          color={theme.colors.gray200}
-          height="9"
-          width="18"
-          direction={chevronDirection ?? 's'}
-          ml="sm"
-        />
+        <Flex gap="sm" centered>
+          <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={30} />
+          <Text variant="h4">
+            {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}
+          </Text>
+          <Chevron
+            color={theme.colors.gray200}
+            height="9"
+            width="18"
+            direction={chevronDirection ?? 's'}
+          />
+        </Flex>
       </Button>
       <Box flexDirection="row" alignItems="center" justifyContent="flex-end">
         {children}
