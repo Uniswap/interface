@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-06 10:06\n"
+"PO-Revision-Date: 2022-01-06 11:07\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -232,7 +232,7 @@ msgstr "Odobri {0}"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approve {0} first"
-msgstr "Najprej odobri {0}"
+msgstr "Najprej odobrite {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -478,7 +478,7 @@ msgstr "Potrdi menjavo"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
-msgstr "Potrdite zamenjavo"
+msgstr "Potrdi menjavo"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -527,7 +527,7 @@ msgstr "Če si želite ogledati svojo likvidnost, povežite denarnico."
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Connect wallet to swap"
-msgstr "Povežite denarnico za zamenjavo"
+msgstr "Povežite denarnico za menjavo"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -818,7 +818,7 @@ msgstr "Pridobivam najboljšo ceno ..."
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Fetching best price…"
-msgstr "Pridobivanje najboljše cene…"
+msgstr "Pridobivam najboljšo ceno…"
 
 #: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -933,7 +933,7 @@ msgstr "Za ta posel je likvidnost prenizka."
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Insufficient {0}"
-msgstr "Nezadostno {0}"
+msgstr "Premalo {0}"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
@@ -1147,7 +1147,7 @@ msgstr "Manjkajoče odvisnosti"
 
 #: src/lib/components/Swap/Settings/MockToggle.tsx
 msgid "Mock Toggle"
-msgstr "Lažni preklop"
+msgstr "Navidezni preklop"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1464,7 +1464,7 @@ msgstr "Ponovno naložite stran"
 
 #: src/lib/components/Error/ErrorBoundary.tsx
 msgid "Reload the page to try again"
-msgstr "Ponovno naložite stran, da poskusite znova"
+msgstr "Ponovno naložite stran in poskusite znova"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1510,7 +1510,7 @@ msgstr "Predlagajte funkcionalnosti"
 
 #: src/lib/components/Swap/Settings/index.tsx
 msgid "Reset"
-msgstr "Ponastaviti"
+msgstr "Ponastavi"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1520,7 +1520,7 @@ msgstr "Nazaj"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Review swap"
-msgstr "Zamenjava pregleda"
+msgstr "Preglej menjavo"
 
 #: src/lib/components/TokenSelect/index.tsx
 msgid "Search by token name or address"
@@ -1672,7 +1672,7 @@ msgstr "Vseeno zamenjaj"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
-msgstr "Zamenjajte podrobnosti"
+msgstr "Podrobnosti menjave"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
@@ -1685,7 +1685,7 @@ msgstr "Menjava je spodletela: {0}"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
-msgstr "Povzetek zamenjave"
+msgstr "Povzetek menjave"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -2266,11 +2266,11 @@ msgstr "Prejeli boste"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "Prejeli boste vsaj {0} {1} ali pa se bo transakcija povrnila."
+msgstr "Prejeli boste vsaj {0} {1} ali pa bo transakcija stornirana."
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Poslali boste največ {0} {1} ali pa se bo transakcija povrnila."
+msgstr "Poslali boste največ {0} {1} ali pa bo transakcija stornirana."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2345,7 +2345,7 @@ msgstr "Vaša transakcija bo morda spodletela"
 
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "Vaša transakcija bo razveljavljena, če je čakala dlje kot to časovno obdobje."
+msgstr "Vaša transakcija bo stornirana, če ne bo potrjena v tem času."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
