@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-06 04:07\n"
+"PO-Revision-Date: 2022-01-06 05:08\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -1900,7 +1900,7 @@ msgstr "再试一次"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "尝试增加您的滑点容限。<0/>注意：转移和变基代币的费用与 Uniswap V3 不兼容。"
+msgstr "尝试增加您的滑点容限。<0/>注意：在转账和rebase时产生费用的代币与 Uniswap V3 不兼容。"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2564,7 +2564,7 @@ msgstr "{label} 代币桥"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "{min}m {sec}s"
-msgstr "{min}米 {sec}秒"
+msgstr "{min}分 {sec}秒"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
