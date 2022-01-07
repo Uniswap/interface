@@ -449,7 +449,7 @@ export const ShowSellTaxComponent = () => {
 				message += `You need to wait ${24 - holdingTime} hour(s) until your sales tax reduces\r\n\r\n<br/>`;
 				currentTax = 25;
 			} else if (holdingTime > 24) {
-				currentTax = 8;
+				currentTax = 9;
 			}
 
 			message += `Original Purchase Timestamp: ${moment(datePurchased).toDate().toLocaleString()}`;

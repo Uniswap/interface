@@ -273,7 +273,7 @@ export default function Menu() {
                       </div>
                       <List size={16} opacity={0.6} />
                     </InternalLinkMenuItem>}
-                    <MenuItem href="https://kibainu.space/">
+                    <MenuItem href="https://kibainu.org/">
                       <div>
                         <Trans>About</Trans>
                       </div>
