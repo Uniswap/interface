@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { TokenList } from '@uniswap/token-lists'
+import { TokenInfo } from '@uniswap/token-lists'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList from 'lib/hooks/useTokenList'
 import { useMemo, useState } from 'react'
@@ -20,7 +20,7 @@ interface DefaultTokenAmount {
 }
 
 interface SwapDefaults {
-  tokenList: string | TokenList['tokens']
+  tokenList: string | TokenInfo[]
   input: DefaultTokenAmount
   output: DefaultTokenAmount
 }
