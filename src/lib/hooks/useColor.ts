@@ -17,11 +17,8 @@ function UriForEthToken(address: string) {
 async function getColorFromToken(token: Token, cb: (color: string | undefined) => void = () => void 0) {
   const { address, chainId, logoURI } = token
   const key = chainId + address
-  if (colors.has(key)) {
-    return colors.get(key)
-  }
+  let color = colors.get(key)
 
-  let color
   if (!color && logoURI) {
     // Color extraction must use a CORS-compatible resource, but the resource is already cached.
     // Add a dummy parameter to force a different browser resource cache entry.
