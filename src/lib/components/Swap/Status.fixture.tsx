@@ -1,5 +1,6 @@
+import { ChainId } from '@uniswap/smart-order-router'
+import { DAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
-import { DAI, ETH } from 'lib/mocks'
 import { transactionAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
@@ -7,6 +8,8 @@ import invariant from 'tiny-invariant'
 
 import { Modal } from '../Dialog'
 import { StatusDialog } from './Status'
+
+const ETH = WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
 
 function Fixture() {
   const setTransaction = useUpdateAtom(transactionAtom)
@@ -16,7 +19,7 @@ function Fixture() {
   })
   useEffect(() => {
     setTransaction({
-      input: Ether,
+      input: ETH,
       output: DAI,
       receipt: '',
       timestamp: Date.now(),
@@ -26,8 +29,8 @@ function Fixture() {
     switch (state) {
       case 'PENDING':
         setTransaction({
-          input: { token: ETH, value: 1 },
-          output: { token: DAI, value: 4200 },
+          input: ETH,
+          output: DAI,
           receipt: '',
           timestamp: Date.now(),
         })

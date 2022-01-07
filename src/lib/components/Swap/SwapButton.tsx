@@ -1,14 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { useAtomValue } from 'jotai/utils'
-import { inputAtom, outputAtom, swapAtom } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import { useCallback, useMemo, useState } from 'react'
+import { useDerivedSwapInfo } from 'state/swap/hooks'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
 import { StatusDialog } from './Status'
 import { SummaryDialog } from './Summary'
-
-const mockBalance = 123.45
 
 enum Mode {
   NONE,
@@ -17,23 +15,29 @@ enum Mode {
 }
 
 export default function SwapButton() {
-  const swap = useAtomValue(swapAtom)
-  const input = useAtomValue(inputAtom)
-  const output = useAtomValue(outputAtom)
-  const balance = mockBalance
+  const {
+    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
+    parsedAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
+    currencyBalances: { [Field.INPUT]: balance },
+  } = useDerivedSwapInfo()
+
   const [mode, setMode] = useState(Mode.NONE)
+
+  // @todo - IanLapham - use real approval
+  const inputApproved = true
+
   const actionProps = useMemo(() => {
-    if (swap && input.token && input.value && output.token && output.value && input.value <= balance) {
-      if (input.approved) {
+    if (inputCurrency && inputAmount && outputCurrency && outputAmount && balance && inputAmount.lessThan(balance)) {
+      if (inputApproved) {
         return {}
       } else {
         return {
-          updated: { message: <Trans>Approve {input.token.symbol} first</Trans>, action: <Trans>Approve</Trans> },
+          updated: { message: <Trans>Approve {inputCurrency.symbol} first</Trans>, action: <Trans>Approve</Trans> },
         }
       }
     }
     return { disabled: true }
-  }, [balance, input.approved, input.token, input.value, output.token, output.value, swap])
+  }, [balance, inputAmount, inputApproved, inputCurrency, outputAmount, outputCurrency])
   const onConfirm = useCallback(() => {
     // TODO: Send the tx to the connected wallet.
     setMode(Mode.STATUS)

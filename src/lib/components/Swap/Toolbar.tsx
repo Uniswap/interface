@@ -1,16 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { useAtomValue } from 'jotai/utils'
+import { useAtom } from 'jotai'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
-import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from 'lib/state/swap'
+import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
+import { useDerivedSwapInfo } from 'state/swap/hooks'
 
 import { TextButton } from '../Button'
 import Row from '../Row'
 import Rule from '../Rule'
 import Tooltip from '../Tooltip'
-
-const mockBalance = 123.45
 
 function RoutingTooltip() {
   return (
@@ -20,12 +19,6 @@ function RoutingTooltip() {
       </ThemeProvider>
     </Tooltip>
   )
-}
-
-type FilledInput = Input & Required<Pick<Input, 'token' | 'value'>>
-
-function asFilledInput(input: Input): FilledInput | undefined {
-  return input.token && input.value ? (input as FilledInput) : undefined
 }
 
 interface LoadedStateProps {
@@ -60,15 +53,15 @@ const ToolbarRow = styled(Row)`
 `
 
 export default function Toolbar({ disabled }: { disabled?: boolean }) {
-  const { activeInput } = useAtomValue(stateAtom)
-  const swap = useAtomValue(swapAtom)
-  const input = useAtomValue(inputAtom)
-  const output = useAtomValue(outputAtom)
-  const balance = mockBalance
+  const [independentField] = useAtom(independentFieldAtom)
+  const {
+    trade,
+    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurency },
+    currencyBalances: { [Field.INPUT]: balance },
+    parsedAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
+  } = useDerivedSwapInfo()
 
   const caption = useMemo(() => {
-    const filledInput = asFilledInput(input)
-    const filledOutput = asFilledInput(output)
     if (disabled) {
       return (
         <>
@@ -77,8 +70,8 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         </>
       )
     }
-    if (activeInput === Field.INPUT ? filledInput && output.token : filledOutput && input.token) {
-      if (!swap) {
+    if (independentField === Field.INPUT ? inputCurrency && inputAmount : outputCurency && outputAmount) {
+      if (!trade?.trade) {
         return (
           <>
             <Spinner color="secondary" />
@@ -86,19 +79,19 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
           </>
         )
       }
-      if (filledInput && filledInput.value > balance) {
+      if (inputAmount && balance && inputAmount.greaterThan(balance)) {
         return (
           <>
             <AlertTriangle color="secondary" />
-            <Trans>Insufficient {filledInput.token.symbol}</Trans>
+            <Trans>Insufficient {inputCurrency?.symbol}</Trans>
           </>
         )
       }
-      if (filledInput && filledOutput) {
+      if (inputCurrency && inputAmount && outputCurency && outputAmount) {
         return (
           <>
             <RoutingTooltip />
-            <LoadedState input={filledInput} output={filledOutput} />
+            {/* <LoadedState input={filledInput} output={filledOutput} /> */}
           </>
         )
       }

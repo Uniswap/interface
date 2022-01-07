@@ -32,6 +32,7 @@ export const stateAtom = atomWithImmer<SwapState>({
   recipient: null,
 })
 
+export const independentFieldAtom = pickAtom(stateAtom, 'independentField')
 export const integratorFeeAtom = pickAtom(stateAtom, 'integratorFee')
 
 // typed value atom and updater
@@ -67,6 +68,22 @@ export function useUpdateCurrency() {
           } else {
             set(outputAtom, currencyId)
           }
+        }),
+      []
+    )
+  )
+}
+
+// Accepts a field and typed value, updates state
+export function useSwitchCurrencies() {
+  return useUpdateAtom(
+    useMemo(
+      () =>
+        atom(null, (_, set) => {
+          set(stateAtom, (state) => {
+            state.OUTPUT = state[Field.INPUT]
+            state.INPUT = state[Field.OUTPUT]
+          })
         }),
       []
     )

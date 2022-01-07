@@ -1,5 +1,5 @@
+import { DAI } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
-import { DAI, ETH } from 'lib/mocks'
 import { Field, outputAtom, stateAtom } from 'lib/state/swap'
 import { useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
@@ -14,15 +14,10 @@ function Fixture() {
   useEffect(() => {
     setState({
       independentField: Field.INPUT,
-      input: { token: ETH, value: 1, usdc: 4195 },
-      output: { token: DAI, value: 4200, usdc: 4200 },
-      swap: {
-        lpFee: 0.0005,
-        integratorFee: 0.00025,
-        priceImpact: 0.01,
-        slippageTolerance: 0.5,
-        minimumReceived: 4190,
-      },
+      typedValue: '1',
+      [Field.INPUT]: { currencyId: 'ETH' },
+      [Field.OUTPUT]: { currencyId: DAI.address },
+      recipient: null,
     })
     setInitialized(true)
   })

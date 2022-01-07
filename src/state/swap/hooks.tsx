@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useBestTrade } from 'hooks/useBestTrade'
 import { useAtomValue } from 'jotai/utils'
 import JSBI from 'jsbi'
-import { stateAtom, useUpdateCurrency, useUpdateTypedInput } from 'lib/state/swap'
+import { stateAtom, useSwitchCurrencies, useUpdateCurrency, useUpdateTypedInput } from 'lib/state/swap'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -66,9 +66,14 @@ export function useSwapActionHandlers(): {
     [dispatch, updateCurrency]
   )
 
+  const switchCurrenciesWidget = useSwitchCurrencies()
   const onSwitchTokens = useCallback(() => {
-    dispatch(switchCurrencies())
-  }, [dispatch])
+    if (process.env.REACT_APP_IS_WIDGET) {
+      switchCurrenciesWidget()
+    } else {
+      dispatch(switchCurrencies())
+    }
+  }, [dispatch, switchCurrenciesWidget])
 
   const updateTypedInputWidget = useUpdateTypedInput()
   const onUserInput = useCallback(

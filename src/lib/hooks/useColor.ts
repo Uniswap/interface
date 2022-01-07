@@ -1,8 +1,9 @@
+import { Currency, Token } from '@uniswap/sdk-core'
 import { useTheme } from 'lib/theme'
-import { Token } from 'lib/types'
 import uriToHttp from 'lib/utils/uriToHttp'
 import Vibrant from 'node-vibrant/lib/bundle'
 import { useLayoutEffect, useState } from 'react'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 const colors = new Map<string, string>()
 
@@ -14,8 +15,15 @@ function UriForEthToken(address: string) {
  * Extracts the prominent color from a token.
  * NB: If cached, this function returns synchronously; using a callback allows sync or async returns.
  */
-async function getColorFromToken(token: Token, cb: (color: string | undefined) => void = () => void 0) {
+async function getColorFromToken(token: Token, cb: (color: string | undefined | null) => void = () => void 0) {
+  // only valid wrapped tokens have uri
+  if (!(token instanceof WrappedTokenInfo)) {
+    return cb(null)
+  }
   const { address, chainId, logoURI } = token
+  if (!logoURI) {
+    return cb(null)
+  }
 
   // Color extraction must use a CORS-compatible resource, but the resource is already cached.
   // Add a dummy parameter to force a different browser resource cache entry.
@@ -47,15 +55,15 @@ async function getColorFromUriPath(uri: string): Promise<string | undefined> {
   return
 }
 
-export function usePrefetchColor(token?: Token) {
+export function usePrefetchColor(token: Currency | undefined | null) {
   const theme = useTheme()
 
   if (theme.tokenColorExtraction && token) {
-    getColorFromToken(token)
+    getColorFromToken(token.wrapped)
   }
 }
 
-export default function useColor(token?: Token) {
+export default function useColor(token: Token | undefined | null) {
   const [color, setColor] = useState<string | undefined>(undefined)
   const theme = useTheme()
 

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import { TRANSACTION_TTL_DEFAULT, transactionTtlAtom } from 'lib/state/swap'
+import { TRANSACTION_TTL_DEFAULT, transactionTtlAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
 import { useRef } from 'react'
 

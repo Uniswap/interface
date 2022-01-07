@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useResetAtom } from 'jotai/utils'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Settings as SettingsIcon } from 'lib/icons'
-import { settingsAtom } from 'lib/state/swap'
+import { settingsAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
 import React, { useState } from 'react'
 

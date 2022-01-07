@@ -1,8 +1,10 @@
-import { useAtom } from 'jotai'
+import { ChainId } from '@uniswap/smart-order-router'
+import { DAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
-import { inputAtom, outputAtom, swapAtom } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 
 import Swap from '.'
 import { colorAtom } from './Output'
@@ -16,42 +18,25 @@ const validateColor = (() => {
   }
 })()
 
-function Fixture() {
-  const [input, setInput] = useAtom(inputAtom)
-  const [output, setOutput] = useAtom(outputAtom)
-  const [swap, setSwap] = useAtom(swapAtom)
-  const [priceFetched] = useValue('price fetched', { defaultValue: false })
-  useEffect(() => {
-    if (priceFetched && input.token && output.token) {
-      const inputValue = input.value || 1
-      const inputUsdc = input.usdc || inputValue
-      const outputValue = output.value || 1
-      const outputUsdc = output.usdc || outputValue
-      if (!(inputValue === input.value && inputUsdc === input.usdc)) {
-        setInput({ ...input, value: inputValue, usdc: inputUsdc })
-      }
-      if (!(outputValue === output.value && outputUsdc === output.usdc)) {
-        setOutput({ ...output, value: outputValue, usdc: outputUsdc })
-      }
-      if (!swap || swap.minimumReceived !== outputValue * 0.995) {
-        setSwap({
-          lpFee: 0.0005,
-          priceImpact: 0.01,
-          slippageTolerance: 0.5,
-          minimumReceived: outputValue * 0.995,
-        })
-      }
-    } else if (swap) {
-      setSwap(undefined)
-    }
-  }, [input, output, priceFetched, setInput, setOutput, setSwap, swap])
+const ETH = WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
 
-  const [tokenApproved] = useValue('token approved', { defaultValue: true })
+function Fixture() {
+  const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
+  const {
+    trade,
+    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
+    parsedAmounts: { [Field.INPUT]: inputAmount },
+  } = useDerivedSwapInfo()
+
   useEffect(() => {
-    if (tokenApproved !== input.approved) {
-      setInput({ ...input, approved: tokenApproved })
+    if (inputCurrency && outputCurrency) {
+      if (!(inputAmount && inputCurrency && outputCurrency)) {
+        onCurrencySelection(Field.INPUT, ETH)
+        onCurrencySelection(Field.OUTPUT, DAI)
+        onUserInput(Field.INPUT, '1')
+      }
     }
-  }, [input, setInput, tokenApproved])
+  }, [inputAmount, inputCurrency, onCurrencySelection, onUserInput, outputCurrency, trade])
 
   const setColor = useUpdateAtom(colorAtom)
   const [color] = useValue('token color', { defaultValue: '' })
