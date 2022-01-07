@@ -1,5 +1,4 @@
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
-import { SupportedChainId } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import fetchTokenList, { getTokenInfo } from 'lib/utils/fetchTokenList'
@@ -50,7 +49,7 @@ export default function useTokenList(list?: string | TokenInfo[]): TokenMap {
           tokens = Promise.resolve(cached)
         } else {
           const tokenlist = (tokens = fetchTokenList(list, (ensName: string) => {
-            if (library && chainId === SupportedChainId.MAINNET) {
+            if (library && chainId === 1) {
               return resolveENSContentHash(ensName, library)
             }
             throw new Error('Could not construct mainnet ENS resolver')
