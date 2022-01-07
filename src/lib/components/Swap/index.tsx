@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import useTokenList from 'lib/hooks/useTokenList'
 import { useMemo, useState } from 'react'
 
 import Header from '../Header'
@@ -42,7 +43,8 @@ export interface SwapProps {
 }
 
 export default function Swap({ defaults }: SwapProps) {
-  useSwapDefaults(defaults)
+  const { tokenList } = useSwapDefaults(defaults)
+  useTokenList(tokenList)
 
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
   const { active, account } = useActiveWeb3React()
