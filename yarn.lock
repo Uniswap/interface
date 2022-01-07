@@ -4937,7 +4937,7 @@
     "@typescript-eslint/types" "4.30.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uniswap/default-token-list@^2.0.0", "@uniswap/default-token-list@^2.1.0":
+"@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-2.2.0.tgz#d85a5c2520f57f4920bd989dfc9f01e1b701a567"
   integrity sha512-vFPWoGzDjHP4i2l7yLaober/lZMmzOZXXirVF8XNyfNzRxgmYCWKO6SzKtfEUwxpd3/KUebgdK55II4Mnak62A==
