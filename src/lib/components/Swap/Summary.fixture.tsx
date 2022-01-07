@@ -13,7 +13,7 @@ function Fixture() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setState({
-      activeInput: Field.INPUT,
+      independentField: Field.INPUT,
       input: { token: ETH, value: 1, usdc: 4195 },
       output: { token: DAI, value: 4200, usdc: 4200 },
       swap: {

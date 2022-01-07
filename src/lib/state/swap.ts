@@ -1,113 +1,97 @@
-import { atom, WritableAtom } from 'jotai'
+import { Currency } from '@uniswap/sdk-core'
+import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { useUpdateAtom } from 'jotai/utils'
-import { atomWithReset } from 'jotai/utils'
-import { ETH } from 'lib/mocks'
-import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/state/atoms'
-import { Token } from 'lib/types'
+import { pickAtom } from 'lib/state/atoms'
 import { useMemo } from 'react'
 
-/** Max slippage, as a percentage. */
-export enum MaxSlippage {
-  P01 = 0.1,
-  P05 = 0.5,
-  // Members to satisfy CustomizableEnum; see setCustomizable
-  CUSTOM = -1,
-  DEFAULT = P05,
-}
-
-export const TRANSACTION_TTL_DEFAULT = 40
-
-export interface Settings {
-  maxSlippage: Customizable<MaxSlippage>
-  transactionTtl: number | undefined
-  mockTogglable: boolean
-}
-
-const initialSettings: Settings = {
-  maxSlippage: { value: MaxSlippage.DEFAULT },
-  transactionTtl: undefined,
-  mockTogglable: true,
-}
-
-export const settingsAtom = atomWithReset(initialSettings)
-export const maxSlippageAtom = pickAtom(settingsAtom, 'maxSlippage', setCustomizable(MaxSlippage))
-export const transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl')
-export const mockTogglableAtom = pickAtom(settingsAtom, 'mockTogglable', setTogglable)
-
 export enum Field {
-  INPUT = 'input',
-  OUTPUT = 'output',
+  INPUT = 'INPUT',
+  OUTPUT = 'OUTPUT',
 }
 
-export interface Input {
-  value?: number
-  token?: Token
-  usdc?: number
-}
-
-export interface State {
-  activeInput: Field
-  [Field.INPUT]: Input & { approved?: boolean }
-  [Field.OUTPUT]: Input
-  swap?: {
-    lpFee: number
-    priceImpact: number
-    slippageTolerance: number
-    integratorFee?: number
-    maximumSent?: number
-    minimumReceived?: number
+export interface SwapState {
+  readonly independentField: Field
+  readonly typedValue: string
+  readonly [Field.INPUT]: {
+    readonly currencyId: string | undefined | null
   }
+  readonly [Field.OUTPUT]: {
+    readonly currencyId: string | undefined | null
+  }
+  // the typed recipient address or ENS name, or null if swap should go to sender
+  readonly recipient: string | null
+  integratorFee?: number
 }
 
-export const stateAtom = atomWithImmer<State>({
-  activeInput: Field.INPUT,
-  input: { token: ETH },
-  output: {},
+export const stateAtom = atomWithImmer<SwapState>({
+  independentField: Field.INPUT,
+  typedValue: '',
+  [Field.INPUT]: { currencyId: 'ETH' },
+  [Field.OUTPUT]: { currencyId: undefined },
+  recipient: null,
 })
 
-export const swapAtom = pickAtom(stateAtom, 'swap')
+export const integratorFeeAtom = pickAtom(stateAtom, 'integratorFee')
 
+// typed value atom and updater
+export const typedValueAtom = pickAtom(stateAtom, 'typedValue')
+
+// the input currency
 export const inputAtom = atom(
-  (get) => get(stateAtom).input,
-  (get, set, update: Input & { approved?: boolean }) => {
+  (get) => get(stateAtom).INPUT,
+  (_, set, currencyId: string) => {
     set(stateAtom, (state) => {
-      state.activeInput = Field.INPUT
-      state.input = update
-      state.swap = undefined
+      state.INPUT = { currencyId }
     })
   }
 )
 
 export const outputAtom = atom(
-  (get) => get(stateAtom).output,
-  (get, set, update: Input) => {
+  (get) => get(stateAtom).OUTPUT,
+  (_, set, currencyId: string) => {
     set(stateAtom, (state) => {
-      state.activeInput = Field.OUTPUT
-      state.output = update
-      state.swap = undefined
+      state.OUTPUT = { currencyId }
     })
   }
 )
 
-export function useUpdateInputValue(inputAtom: WritableAtom<Input, Input>) {
+// write only function that updates input/output currencyId based on a submitted field
+export function useUpdateCurrency() {
   return useUpdateAtom(
     useMemo(
-      () => atom(null, (get, set, value: Input['value']) => set(inputAtom, { token: get(inputAtom).token, value })),
-      [inputAtom]
+      () =>
+        atom(null, (_, set, { currencyId, field }) => {
+          if (field === Field.INPUT) {
+            set(inputAtom, currencyId)
+          } else {
+            set(outputAtom, currencyId)
+          }
+        }),
+      []
     )
   )
 }
 
-export function useUpdateInputToken(inputAtom: WritableAtom<Input, Input>) {
+// Accepts a field and typed value, updates state
+export function useUpdateTypedInput() {
   return useUpdateAtom(
-    useMemo(() => atom(null, (get, set, token: Input['token']) => set(inputAtom, { token })), [inputAtom])
+    useMemo(
+      () =>
+        atom(null, (_, set, { typedValue, field }) => {
+          set(stateAtom, (state) => {
+            state.independentField = field
+            state.typedValue = typedValue
+          })
+        }),
+      []
+    )
   )
 }
 
 export interface Transaction {
-  input: Required<Pick<Input, 'token' | 'value'>>
-  output: Required<Pick<Input, 'token' | 'value'>>
+  input: Currency
+  output: Currency
   receipt: string
   timestamp: number
   elapsedMs?: number

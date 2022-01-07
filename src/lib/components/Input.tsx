@@ -67,8 +67,8 @@ export const StringInput = forwardRef<HTMLInputElement, StringInputProps>(functi
 })
 
 interface NumericInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
-  value: number | undefined
-  onChange: (input: number | undefined) => void
+  value: string | undefined
+  onChange: (input: string | undefined) => void
 }
 
 interface EnforcedNumericInputProps extends NumericInputProps {
@@ -83,7 +83,7 @@ const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(fun
   // Allow value/onChange to use number by preventing a  trailing decimal separator from triggering onChange
   const [state, setState] = useState(value ?? '')
   useEffect(() => {
-    if (+state !== value) {
+    if (state !== value) {
       setState(value ?? '')
     }
   }, [value, state, setState])
@@ -93,8 +93,8 @@ const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(fun
       const nextInput = enforcer(event.target.value.replace(/,/g, '.'))
       if (nextInput !== null) {
         setState(nextInput ?? '')
-        if (nextInput === undefined || +nextInput !== value) {
-          onChange(nextInput === undefined ? undefined : +nextInput)
+        if (nextInput === undefined || nextInput !== value) {
+          onChange(nextInput === undefined ? undefined : nextInput)
         }
       }
     },

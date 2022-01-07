@@ -1,5 +1,5 @@
+import { Currency } from '@uniswap/sdk-core'
 import styled, { ThemedText } from 'lib/theme'
-import { Token } from 'lib/types'
 
 import Button from '../Button'
 import Row from '../Row'
@@ -11,8 +11,8 @@ const TokenButton = styled(Button)`
 `
 
 interface TokenBaseProps {
-  value: Token
-  onClick: (value: Token) => void
+  value: Currency
+  onClick: (value: Currency) => void
 }
 
 export default function TokenBase({ value, onClick }: TokenBaseProps) {

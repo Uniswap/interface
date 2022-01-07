@@ -2,7 +2,9 @@ import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useBestTrade } from 'hooks/useBestTrade'
+import { useAtomValue } from 'jotai/utils'
 import JSBI from 'jsbi'
+import { stateAtom, useUpdateCurrency, useUpdateTypedInput } from 'lib/state/swap'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -20,7 +22,15 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 
 export function useSwapState(): AppState['swap'] {
-  return useAppSelector((state) => state.swap)
+  const widgetState = useAtomValue(stateAtom)
+  const appState = useAppSelector((state) => state.swap)
+
+  // split path for widget state if widget
+  if (process.env.REACT_APP_IS_WIDGET) {
+    return widgetState
+  }
+
+  return appState
 }
 
 export function useSwapActionHandlers(): {
@@ -29,28 +39,47 @@ export function useSwapActionHandlers(): {
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
+  // split path for widget state if widget
+  if (process.env.REACT_APP_IS_WIDGET) {
+  }
+
   const dispatch = useAppDispatch()
+  const updateCurrency = useUpdateCurrency()
+
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
-      dispatch(
-        selectCurrency({
+      const currencyId = currency.isToken ? currency.address : currency.isNative ? 'ETH' : ''
+      if (process.env.REACT_APP_IS_WIDGET) {
+        updateCurrency({
           field,
-          currencyId: currency.isToken ? currency.address : currency.isNative ? 'ETH' : '',
+          currencyId,
         })
-      )
+      } else {
+        dispatch(
+          selectCurrency({
+            field,
+            currencyId,
+          })
+        )
+      }
     },
-    [dispatch]
+    [dispatch, updateCurrency]
   )
 
   const onSwitchTokens = useCallback(() => {
     dispatch(switchCurrencies())
   }, [dispatch])
 
+  const updateTypedInputWidget = useUpdateTypedInput()
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue }))
+      if (process.env.REACT_APP_IS_WIDGET) {
+        updateTypedInputWidget({ field, typedValue })
+      } else {
+        dispatch(typeInput({ field, typedValue }))
+      }
     },
-    [dispatch]
+    [dispatch, updateTypedInputWidget]
   )
 
   const onChangeRecipient = useCallback(
@@ -97,6 +126,10 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
+  parsedAmounts: {
+    [Field.INPUT]: CurrencyAmount<Currency> | undefined
+    [Field.OUTPUT]: CurrencyAmount<Currency> | undefined
+  }
   inputError?: ReactNode
   trade: {
     trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
@@ -146,6 +179,13 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: outputCurrency,
   }
 
+  const parsedAmounts = useMemo(() => {
+    return {
+      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.trade?.inputAmount,
+      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.trade?.outputAmount,
+    }
+  }, [independentField, parsedAmount, trade])
+
   let inputError: ReactNode | undefined
   if (!account) {
     inputError = <Trans>Connect Wallet</Trans>
@@ -181,6 +221,7 @@ export function useDerivedSwapInfo(): {
     currencies,
     currencyBalances,
     parsedAmount,
+    parsedAmounts,
     inputError,
     trade,
     allowedSlippage,

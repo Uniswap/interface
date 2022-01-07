@@ -1,24 +1,25 @@
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { ArrowRight } from 'lib/icons'
-import { Input } from 'lib/state/swap'
 import styled from 'lib/theme'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 
 import Column from '../../Column'
 import Row from '../../Row'
-import TokenImg from '../../TokenImg'
 
 const Percent = styled.span<{ gain: boolean }>`
   color: ${({ gain, theme }) => (gain ? theme.success : theme.error)};
 `
 
 interface TokenValueProps {
-  input: Required<Pick<Input, 'token' | 'value'>> & Input
+  inputAmount: CurrencyAmount<Currency>
   usdc?: boolean
   change?: number
 }
 
-function TokenValue({ input, usdc, change }: TokenValueProps) {
+function TokenValue({ inputAmount, usdc, change }: TokenValueProps) {
   const percent = useMemo(() => {
     if (change) {
       const percent = (change * 100).toPrecision(3)
@@ -26,18 +27,21 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
     }
     return undefined
   }, [change])
+
+  const usdcAmount = useUSDCValue(inputAmount)
+
   return (
     <Column justify="flex-start">
       <Row gap={0.375} justify="flex-start">
-        <TokenImg token={input.token} />
+        <CurrencyLogo currency={inputAmount.currency} />
         <ThemedText.Body2>
-          {input.value} {input.token.symbol}
+          {inputAmount.toSignificant(6)} {inputAmount.currency.symbol}
         </ThemedText.Body2>
       </Row>
-      {usdc && input.usdc && (
+      {usdc && usdcAmount && (
         <Row justify="flex-start">
           <ThemedText.Caption color="secondary">
-            ~ ${input.usdc.toLocaleString('en')}
+            ~ ${usdcAmount.toFixed(2)}
             {change && <Percent gain={change > 0}> {percent}</Percent>}
           </ThemedText.Caption>
         </Row>
@@ -47,23 +51,27 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
 }
 
 interface SummaryProps {
-  input: Required<Pick<Input, 'token' | 'value'>> & Input
-  output: Required<Pick<Input, 'token' | 'value'>> & Input
+  input: CurrencyAmount<Currency>
+  output: CurrencyAmount<Currency>
   usdc?: boolean
 }
 
 export default function Summary({ input, output, usdc }: SummaryProps) {
+  const inputUSDCValue = useUSDCValue(input)
+  const outputUSDCValue = useUSDCValue(output)
+
   const change = useMemo(() => {
-    if (usdc && input.usdc && output.usdc) {
-      return output.usdc / input.usdc - 1
+    if (inputUSDCValue && outputUSDCValue) {
+      return parseFloat(inputUSDCValue.divide(outputUSDCValue).quotient.toString())
     }
     return undefined
-  }, [usdc, input.usdc, output.usdc])
+  }, [inputUSDCValue, outputUSDCValue])
+
   return (
     <Row gap={usdc ? 1 : 0.25}>
-      <TokenValue input={input} usdc={usdc} />
+      <TokenValue inputAmount={input} usdc={usdc} />
       <ArrowRight />
-      <TokenValue input={output} usdc={usdc} change={change} />
+      <TokenValue inputAmount={output} usdc={usdc} change={change} />
     </Row>
   )
 }

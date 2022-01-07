@@ -1,7 +1,7 @@
+import { Currency } from '@uniswap/sdk-core'
 import useNativeEvent from 'lib/hooks/useNativeEvent'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import styled, { ThemedText } from 'lib/theme'
-import { Token } from 'lib/types'
 import {
   ComponentClass,
   CSSProperties,
@@ -18,6 +18,7 @@ import {
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
 import invariant from 'tiny-invariant'
+import { currencyId } from 'utils/currencyId'
 
 import { BaseButton } from '../Button'
 import Column from '../Column'
@@ -31,7 +32,7 @@ const TokenButton = styled(BaseButton)`
 `
 
 const ITEM_SIZE = 56
-type ItemData = Token[]
+type ItemData = Currency[]
 interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
 const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
   hover: number
@@ -55,13 +56,13 @@ const OnHover = styled.div<{ hover: number }>`
 
 interface TokenOptionProps {
   index: number
-  value: Token
+  value: Currency
   style: CSSProperties
 }
 
 interface BubbledEvent extends SyntheticEvent {
   index?: number
-  token?: Token
+  token?: Currency
   ref?: HTMLButtonElement
 }
 
@@ -101,7 +102,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
   )
 }
 
-const itemKey = (index: number, tokens: ItemData) => tokens[index]?.address
+const itemKey = (index: number, tokens: ItemData) => currencyId(tokens[index])
 const ItemRow = memo(function ItemRow({
   data: tokens,
   index,
@@ -121,8 +122,8 @@ interface TokenOptionsHandle {
 }
 
 interface TokenOptionsProps {
-  tokens: Token[]
-  onSelect: (token: Token) => void
+  tokens: Currency[]
+  onSelect: (token: Currency) => void
 }
 
 const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function TokenOptions(

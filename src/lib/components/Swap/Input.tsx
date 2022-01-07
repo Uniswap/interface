@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { useAtomValue } from 'jotai/utils'
-import { inputAtom, useUpdateInputToken, useUpdateInputValue } from 'lib/state/swap'
+import { Currency } from '@uniswap/sdk-core'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
+import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
+import { useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 
 import Column from '../Column'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
-
-const mockBalance = 123.45
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
   margin: 0.75em;
@@ -27,30 +27,37 @@ interface InputProps {
 }
 
 export default function Input({ disabled, children }: InputProps) {
-  const input = useAtomValue(inputAtom)
-  const setValue = useUpdateInputValue(inputAtom)
-  const setToken = useUpdateInputToken(inputAtom)
-  const balance = mockBalance
+  const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
+  const {
+    currencies: { [Field.INPUT]: inputCurrency },
+    currencyBalances: { [Field.INPUT]: balance },
+    parsedAmounts: { [Field.INPUT]: inputAmount },
+  } = useDerivedSwapInfo()
+
+  const inputAmountUSDC = useUSDCValue(inputAmount)
+  //@TODO - ianlapham - mimic logic from app swap page
+  const mockApproved = true
 
   return (
-    <InputColumn gap={0.5} approved={input.approved !== false}>
+    <InputColumn gap={0.5} approved={mockApproved}>
       <Row>
         <ThemedText.Subhead2 color="secondary">
           <Trans>Trading</Trans>
         </ThemedText.Subhead2>
       </Row>
       <TokenInput
-        input={input}
+        currency={inputCurrency}
+        amount={inputAmount}
         disabled={disabled}
-        onMax={balance ? () => setValue(balance) : undefined}
-        onChangeInput={setValue}
-        onChangeToken={setToken}
+        onMax={balance ? () => onUserInput(Field.INPUT, balance.toExact()) : undefined}
+        onChangeInput={(val) => (val ? onUserInput(Field.INPUT, val?.toString()) : null)}
+        onChangeCurrency={(currency: Currency) => onCurrencySelection(Field.INPUT, currency)}
       >
         <ThemedText.Body2 color="secondary">
           <Row>
-            {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}
+            {inputAmountUSDC ? `~ $${inputAmountUSDC.toFixed(2)}` : '-'}
             {balance && (
-              <ThemedText.Body2 color={input.value && input.value > balance ? 'error' : undefined}>
+              <ThemedText.Body2 color={inputAmount && inputAmount.greaterThan(balance) ? 'error' : undefined}>
                 Balance: <span style={{ userSelect: 'text' }}>{balance}</span>
               </ThemedText.Body2>
             )}

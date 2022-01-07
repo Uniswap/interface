@@ -16,8 +16,8 @@ function Fixture() {
   })
   useEffect(() => {
     setTransaction({
-      input: { token: ETH, value: 1 },
-      output: { token: DAI, value: 4200 },
+      input: Ether,
+      output: DAI,
       receipt: '',
       timestamp: Date.now(),
     })

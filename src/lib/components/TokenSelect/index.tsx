@@ -1,8 +1,10 @@
 import { t, Trans } from '@lingui/macro'
-import { DAI, ETH, UNI, USDC } from 'lib/mocks'
+import { Currency } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/smart-order-router'
+import { COMMON_BASES } from 'constants/routing'
 import styled, { ThemedText } from 'lib/theme'
-import { Token } from 'lib/types'
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
+import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -14,14 +16,14 @@ import TokenButton from './TokenButton'
 import TokenOptions from './TokenOptions'
 
 // TODO: integrate with web3-react context
-const mockTokens = [DAI, ETH, UNI, USDC]
+const mockTokens = COMMON_BASES[ChainId.MAINNET]
 
 const SearchInput = styled(StringInput)`
   ${inputCss}
 `
 
-export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {
-  const baseTokens = [DAI, ETH, UNI, USDC]
+export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) => void }) {
+  const baseTokens = COMMON_BASES[ChainId.MAINNET]
   const tokens = mockTokens
 
   const [search, setSearch] = useState('')
@@ -51,7 +53,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
           <>
             <Row pad={0.75} gap={0.25} justify="flex-start" flex>
               {baseTokens.map((token) => (
-                <TokenBase value={token} onClick={onSelect} key={token.address} />
+                <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
               ))}
             </Row>
             <Rule padded />
@@ -64,16 +66,16 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
 }
 
 interface TokenSelectProps {
-  value?: Token
+  value?: Currency | null | undefined
   collapsed: boolean
   disabled?: boolean
-  onSelect: (value: Token) => void
+  onSelect: (value: Currency) => void
 }
 
 export default function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
   const selectAndClose = useCallback(
-    (value: Token) => {
+    (value: Currency) => {
       onSelect(value)
       setOpen(false)
     },

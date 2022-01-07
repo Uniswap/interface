@@ -1,11 +1,12 @@
+import { Currency } from '@uniswap/sdk-core'
+import { getTokenLogoURL } from 'components/CurrencyLogo'
 import useNativeEvent from 'lib/hooks/useNativeEvent'
 import styled from 'lib/theme'
-import { Token } from 'lib/types'
 import { useState } from 'react'
 
 interface TokenImgProps {
   className?: string
-  token: Token
+  token: Currency
 }
 const TRANSPARENT_SRC = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 
@@ -18,7 +19,14 @@ function TokenImg({ className, token }: TokenImgProps) {
       img.src = TRANSPARENT_SRC
     }
   })
-  return <img className={className} src={token.logoURI} alt={token.name || token.symbol} ref={setImg} />
+  return (
+    <img
+      className={className}
+      src={getTokenLogoURL(token.wrapped.address, token.wrapped.chainId) ?? undefined}
+      alt={token.name || token.symbol}
+      ref={setImg}
+    />
+  )
 }
 
 export default styled(TokenImg)<{ size?: number }>`

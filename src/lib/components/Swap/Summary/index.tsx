@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
-import { Input, inputAtom, outputAtom, swapAtom } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { useDerivedSwapInfo } from 'state/swap/hooks'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
@@ -16,10 +16,6 @@ import Details from './Details'
 import Summary from './Summary'
 
 export default Summary
-
-function asInput(input: Input): (Required<Pick<Input, 'token' | 'value'>> & Input) | undefined {
-  return input.token && input.value ? (input as Required<Pick<Input, 'token' | 'value'>>) : undefined
-}
 
 const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
 
@@ -79,15 +75,18 @@ interface SummaryDialogProps {
 }
 
 export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
-  const swap = useAtomValue(swapAtom)
-  const partialInput = useAtomValue(inputAtom)
-  const partialOutput = useAtomValue(outputAtom)
-  const input = asInput(partialInput)
-  const output = asInput(partialOutput)
+  const {
+    trade: { trade },
+    parsedAmounts,
+    currencies,
+  } = useDerivedSwapInfo()
 
-  const price = useMemo(() => {
-    return input && output ? output.value / input.value : undefined
-  }, [input, output])
+  const inputCurrency = currencies[Field.INPUT]
+  const outputCurrency = currencies[Field.OUTPUT]
+  const inputCurrencyAmount = parsedAmounts[Field.INPUT]
+  const outputCurrencyAmount = parsedAmounts[Field.OUTPUT]
+
+  const price = trade?.executionPrice
   const [confirmedPrice, confirmPrice] = useState(price)
 
   const [open, setOpen] = useState(true)
@@ -96,7 +95,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
 
   const scrollbar = useScrollbar(details)
 
-  if (!(input && output && swap)) {
+  if (!(trade && inputCurrency && outputCurrency && inputCurrencyAmount && outputCurrencyAmount)) {
     return null
   }
 
@@ -105,9 +104,9 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
       <Header title={<Trans>Swap summary</Trans>} ruled />
       <Body flex align="stretch" gap={0.75} padded open={open}>
         <SummaryColumn gap={0.75} flex justify="center">
-          <Summary input={input} output={output} usdc={true} />
+          <Summary input={inputCurrencyAmount} output={outputCurrencyAmount} usdc={true} />
           <ThemedText.Caption>
-            1 {input.token.symbol} = {price} {output.token.symbol}
+            1 {inputCurrency.symbol} = {price} {outputCurrency.symbol}
           </ThemedText.Caption>
         </SummaryColumn>
         <Rule />
@@ -124,12 +123,12 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
           <Rule />
           <DetailsColumn>
             <Column gap={0.5} ref={setDetails} css={scrollbar}>
-              <Details input={input.token} output={output.token} swap={swap} />
+              <Details input={inputCurrency} output={outputCurrency} />
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
             <Trans>Output is estimated.</Trans>{' '}
-            {swap?.minimumReceived && (
+            {/* {swap?.minimumReceived && (
               <Trans>
                 You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.
               </Trans>
@@ -138,7 +137,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
               <Trans>
                 You will send at most {swap.maximumSent} {input.token.symbol} or the transaction will revert.
               </Trans>
-            )}
+            )} */}
           </Estimate>
           <ActionButton
             onClick={onConfirm}
