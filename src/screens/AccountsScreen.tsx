@@ -28,6 +28,7 @@ import { activateAccount } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { bottomSheetStyles } from 'src/styles/bottomSheet'
 import { flex } from 'src/styles/flex'
+import { theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
 import { SagaStatus } from 'src/utils/saga'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
@@ -214,7 +215,7 @@ export function AccountsScreen() {
             <PrimaryButton
               variant="palePink"
               label={t('Copy Address')}
-              icon={<CopyIcon width={18} height={18} />}
+              icon={<CopyIcon width={18} height={18} stroke={theme.colors.pink} />}
               onPress={onPressCopyAddress}
               width="100%"
               disabled={isLoading}

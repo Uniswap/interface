@@ -2,8 +2,10 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useCallback, useRef, useState } from 'react'
+import { ViewStyle } from 'react-native'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
+import QrCode from 'src/assets/icons/qr-code.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
@@ -11,6 +13,7 @@ import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
+import { WalletQRCode } from 'src/components/modals/WalletQRCode'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
 import { useAllBalances } from 'src/features/balances/hooks'
 import TotalBalance from 'src/features/balances/TotalBalance'
@@ -22,6 +25,7 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { Screens } from 'src/screens/Screens'
 import { bottomSheetStyles, FULL_SNAP_POINTS } from 'src/styles/bottomSheet'
+import { theme } from 'src/styles/theme'
 import { sleep } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
@@ -38,6 +42,7 @@ export function HomeScreen({ navigation }: Props) {
     activeAccount?.address
   )
   const [refreshing, setRefreshing] = useState(false)
+  const [showQRModal, setShowQRModal] = useState(false)
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
@@ -50,6 +55,8 @@ export function HomeScreen({ navigation }: Props) {
 
   const onPressSettings = () =>
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
+
+  const onPressQRCode = () => setShowQRModal(true)
 
   const notificationsModalRef = useRef<BottomSheetModal>(null)
   const onPressNotifications = () => notificationsModalRef.current?.present()
@@ -82,7 +89,19 @@ export function HomeScreen({ navigation }: Props) {
           </Box>
         </Box>
         <TransactionNotificationBanner />
-        <TotalBalance balances={balances} />
+        <Box flexDirection="row" alignItems="flex-end" justifyContent="space-between">
+          <TotalBalance balances={balances} />
+          <Button
+            onPress={onPressQRCode}
+            mx="lg"
+            my="lg"
+            padding="md"
+            style={headerButtonStyle}
+            backgroundColor="white">
+            <QrCode stroke={theme.colors.pink} height={15} width={15} />
+          </Button>
+        </Box>
+        <WalletQRCode isVisible={showQRModal} onClose={() => setShowQRModal(false)} />
       </Box>
       <Box flex={1} backgroundColor="mainBackground">
         <TokenBalanceList
@@ -102,4 +121,10 @@ export function HomeScreen({ navigation }: Props) {
       </Box>
     </Screen>
   )
+}
+
+const headerButtonStyle: ViewStyle = {
+  borderRadius: 16,
+  borderColor: 'rgba(255, 0, 122, 0.2)',
+  borderWidth: 1,
 }
