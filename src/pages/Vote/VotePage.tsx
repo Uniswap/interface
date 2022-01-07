@@ -360,7 +360,7 @@ console.log(allTimeGains)
       <PageWrapper gap="lg" justify="center">
         <ProposalInfo>
 
-            <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaGains</GainsText></div>
+            <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaGains <Badge variant={BadgeVariant.DEFAULT}><GainsText>Beta</GainsText></Badge></GainsText></div>
               {isTrackingGains && kibaBalance && +kibaBalance?.toFixed(0) > 0 && (
                  <GreyCard style={{flexFlow: 'row nowrap', background:'#222',opacity:'.95',display:'inline-block', justifyContent:'center',marginBottom:15}}> <TYPE.main>
                       <GainsText style={{display:'inline'}}>

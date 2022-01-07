@@ -21,7 +21,7 @@ const HeaderType = styled(TYPE.black)`
 
 font-family:'Bangers', cursive !important;`
 
-export default function SwapHeader({ allowedSlippage, view, onViewChange }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit', onViewChange: (view: "bridge"  | "swap" | 'limit') => void }) {
+export default function SwapHeader({ allowedSlippage, view, onViewChange }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit' | 'flooz', onViewChange: (view: "bridge"  | "swap" | 'limit' | 'flooz') => void }) {
   const [showBridgeTip, setShowBridgeTip] = React.useState(false)
   const tipMessage = `Contract interaction fees will still occur when using the bridge, just like any other transactions (buys, transfers, sells). Redistribution fees will still occur.`
   return (
@@ -31,6 +31,9 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange }: { al
           <HeaderType  onClick={( ) => onViewChange('swap')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer', marginRight: '8px' }}>
             <Trans>Swap</Trans>
           </HeaderType>
+          {<HeaderType  onClick={( ) => onViewChange('flooz')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'flooz' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
+            <Trans>Flooz</Trans>
+          </HeaderType>}
           {<HeaderType  onClick={( ) => onViewChange('limit')} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
             <Trans>Limit</Trans>
           </HeaderType>}
@@ -41,6 +44,7 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange }: { al
               </Tooltip>
             </Trans>
           </HeaderType>
+    
         </RowFixed>
         <RowFixed>
           <SettingsTab placeholderSlippage={allowedSlippage} />

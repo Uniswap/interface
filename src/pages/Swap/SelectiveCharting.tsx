@@ -18,6 +18,7 @@ import { fetchBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { useHasAccess } from 'components/AccountPage/AccountPage';
 import { TopHolders } from './TopHolders';
+import Swal from 'sweetalert2';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -47,7 +48,7 @@ export const SelectiveChart = () => {
     const [tokenData, setTokenData] = React.useState<any>({})
     const bnbPrices = useBnbPrices()
     const getTokenCallback = useCallback((address: string) => {
-        if (chainId === 1)
+        if (chainId === 1 || !chainId)
             getTokenData(address, ethPrice, ethPriceOld).then((data) => {
                 setTokenData(data)
             })
@@ -66,9 +67,8 @@ export const SelectiveChart = () => {
     const bscTransactionData = useBscTokenTransactions(address?.toLowerCase(), 60000)
     const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
     const formattedTransactions = React.useMemo(() => {
-        if (!chainId) return [];
         let retVal: any;
-        if (chainId && chainId === 1) retVal = transactionData;
+        if ((chainId && chainId === 1) ||!chainId) retVal = transactionData;
         if (chainId && chainId === 56) retVal = bscTransactionData;
         return retVal?.data?.swaps?.map((swap: any) => {
             const netToken0 = swap.amount0In - swap.amount0Out
@@ -94,6 +94,7 @@ export const SelectiveChart = () => {
             return newTxn;
         })
     }, [transactionData, bscTransactionData, chainId])
+    const hasAccess = useHasAccess();
 
     const PanelMemo = React.useMemo(() => {
         return chainId && chainId === 1 ? <CurrencyInputPanel
@@ -111,6 +112,10 @@ export const SelectiveChart = () => {
             onMax={undefined}
             fiatValue={undefined}
             onCurrencySelect={(currency: any) => {
+                if (!hasAccess) {
+                    Swal.fire({ title: "You must hold kiba inu tokens to use this feature", icon: 'error', toast: true, timer: 5000, timerProgressBar: true, showConfirmButton: false })
+                    return;
+                }
                 setSelectedCurrency(currency);
                 setAddressCallback(currency?.address)
             }}
@@ -120,10 +125,10 @@ export const SelectiveChart = () => {
 
             id="swap-currency-input"
         /> : undefined
-    }, [selectedCurrency, chainId])
+    }, [selectedCurrency, chainId, hasAccess])
     const kibaBalance = useKiba(account)
-    const hasAccess = useHasAccess()
-    const accessDenied = !hasAccess
+    // this page will not use access denied, all users can view top token charts
+    const accessDenied = false;
     const chainLabel = React.useMemo(() => chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
     return (
         <DarkCard style={{ maxWidth: 900, background: 'radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95))', display: 'flex', flexFlow: 'column wrap' }}>
@@ -162,7 +167,7 @@ export const SelectiveChart = () => {
                         {PanelMemo}
                     </div>
                     <div style={{ height: '500px' }}>
-                        {(tokenData?.symbol || chainId === 56) && <TradingViewWidget symbol={chainId === 1 ? 'UNISWAP:' + (tokenData?.symbol === "WETH" ? "WETHUSDT" : `${tokenData?.symbol}WETH`) : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'Dark'} locale={"en"} autosize={true} />}
+                        {(tokenData?.symbol || chainId === 56) && <TradingViewWidget symbol={(!chainId || chainId === 1) ? 'UNISWAP:' + (tokenData?.symbol === "WETH" ? "WETHUSDT" : `${tokenData?.symbol}WETH`) : chainId === 56 ? 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" : ''} theme={'Dark'} locale={"en"} autosize={true} />}
                     </div>
                     {(selectedCurrency || !!prebuilt?.symbol) && (
                         <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
@@ -174,7 +179,7 @@ export const SelectiveChart = () => {
                                             Date
                                         </th>
                                         <th>Type</th>
-                                        <th>Amount {chainId === 1 ? 'ETH' : 'BNB'}</th>
+                                        <th>Amount {(!chainId || chainId === 1) ? 'ETH' : 'BNB'}</th>
                                         <th>Amount USD</th>
                                         <th>Amount Tokens</th>
                                         <th>Maker</th>

@@ -7,11 +7,12 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider} from "@apollo/client";
+  import logo from '../assets/images/download.png'
 
 import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import React, { useState } from 'react'
-import { AlertOctagon, CheckCircle, Info } from 'react-feather'
+import { AlertOctagon, CheckCircle, Info, Globe, ChevronUp, ChevronDown, AlertCircle } from 'react-feather'
 import { Route, Switch } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -42,7 +43,7 @@ import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { Suite } from './Suite/Suite'
-import Swap from './Swap'
+import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { AddProposal } from './Vote/AddProposal'
 import { ProposalDetails } from './Vote/ProposalDetails'
@@ -53,9 +54,9 @@ import VotePageV2 from './Vote/VotePageV2'
 
 import Swal from 'sweetalert2'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
-import { DarkCard } from 'components/Card'
+import { DarkCard, DarkGreyCard } from 'components/Card'
 import { HoneyPotBsc} from './HoneyPotBsc'
-import { ChartPage } from 'components/swap/ChartPage'
+import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
 import { SelectiveChart } from './Swap/SelectiveCharting'
 import { FomoPage, LimitOrders } from 'state/transactions/hooks'
 import Badge, { BadgeVariant } from 'components/Badge'
@@ -68,6 +69,11 @@ import { LifetimeReflections } from './Swap/LifetimeReflections'
 import Vote from './Vote'
 import TopTokenMovers from 'components/swap/TopMovers'
 import AppBody from './AppBody'
+import { FavoritesPanel } from 'components/FavoritesPanel'
+import { getTokenTaxes } from './HoneyUtils'
+import Marquee from 'react-marquee-slider'
+import { Flex } from 'rebass'
+import { ExternalLinkIcon, TYPE } from 'theme'
 const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
@@ -235,8 +241,11 @@ const HoneyPotDetector = () => {
   const provider = window.ethereum ? window.ethereum : library?.provider
   const web3 = new Web3(provider as any);
   const tokenData = useTokenData(msg)
+  const tokenInfo = useTokenInfo(chainId, msg)
   const [showTip, setShowTip] = React.useState(false)
   const contractOwner = useContractOwner(msg)
+const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.price)
+  console.log(tokenInfo)
   const runCheck = (value: string) => {
     if (!value) {
       setHoneyData({})
@@ -283,7 +292,8 @@ const HoneyPotDetector = () => {
           'balance': '0x' + (100000000000000000000).toString(16),
         }
       })
-        .then((val: any) => {
+        .then(async (val: any) => {
+          const taxes = await getTokenTaxes(value, library?.provider);
           const honey_data: Record<string, any> = {}
           const maxTxBNB = null;
           const decoded = web3.eth.abi.decodeParameters(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], val);
@@ -299,8 +309,8 @@ const HoneyPotDetector = () => {
           honey_data['sellExpected'] = sellExpectedOut;
           honey_data['sellActual'] = sellActualOut;
 
-          honey_data['buyTax'] = buy_tax;
-          honey_data['sellTax'] = sell_tax;
+          honey_data['buyTax'] = taxes.buy;
+          honey_data['sellTax'] = taxes.sell;
           let maxdiv = '';
           if (maxTXAmount != 0 || maxSell != 0) {
             let n = 'Max TX';
@@ -361,7 +371,9 @@ const HoneyPotDetector = () => {
           display:'flex', 
           justifyContent:'space-between', 
           alignItems:'center', 
-          flexFlow:'row wrap'
+          flexFlow:'row wrap',
+          padding: '9px 14px',
+          columnGap: 3
         }}>
         {honeyData && honeyData['ran'] && honeyData['isHoneyPot'] && <div style={{ flexFlow:'row wrap',  display: 'flex' }}><Badge><AlertOctagon style={{color:'#FFF'}} /> &nbsp;HONEY POT DETECTED! {tokenData?.symbol && <>{tokenData?.name}({tokenData?.symbol}) is not safe.</>}</Badge> </div>}
         {honeyData && honeyData['ran'] && !honeyData['isHoneyPot'] && <Badge variant={BadgeVariant.POSITIVE} style={{ textAlign: 'center', display: 'flex' }}><CheckCircle /> This is not a honey pot. </Badge>}
@@ -387,10 +399,45 @@ const HoneyPotDetector = () => {
             <StyledHeader>Max Sell <br /> {honeyData['maxSell']} </StyledHeader>
           </div>}
         </div>}
-      
+       
+
+       {tokenInfo && <div style={{display:'flex', flexFlow: 'row wrap'}}>
+        <div style={{display:'flex', flexFlow: 'row wrap', gap: 2, alignItems:'center'}}><StyledHeader>Website</StyledHeader><a title={!tokenInfo?.website ? 'Website not found' : `${tokenInfo?.symbol} website`} style={{cursor: !tokenInfo?.website ? 'not-allowed' : 'pointer'}} href={tokenInfo.website}>{tokenInfo?.website ? <Globe /> : <AlertCircle />}</a> </div>
+       </div>}
 
       </AutoColumn>
     </RowFixed>
+    {!!tokenInfo && typeof(tokenInfo.price) === 'object' && (
+      <div style={{background: 'rgb(0 0 0 / 58%)', padding: 10}}>
+        <StyledHeader onClick={() => setPriceDetailsOpen(!priceDetailsOpen)} style={{filter: priceDetailsOpen ? 'drop-shadow(2px 4px 6px black)' : 'none',cursor: 'pointer', width: '100%', display:'flex', justifyContent:'center'}}>Price Details {priceDetailsOpen ? <ChevronUp/> : <ChevronDown />} </StyledHeader>
+      {priceDetailsOpen && <RowFixed style={{ paddingRight: '0.5rem', paddingLeft:'0.5rem', maxWidth: 600, width: "100%" }}>
+        <AutoColumn style={{         
+            display:'flex', 
+              justifyContent:'stretch', 
+              alignItems:'center',
+              flexFlow:'row wrap',
+              padding: '9px 14px',
+              marginTop: 10,
+              columnCount:2,
+              columnGap: 12,
+              rowGap: 12}}>
+                  {!!tokenInfo && typeof(tokenInfo?.price) === 'object'  && (
+                    <>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${tokenInfo.price.rate.toFixed(12)}</Badge></div>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Volume (24h)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${tokenInfo.price.volume24h.toLocaleString()}</Badge></div>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Total Supply</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{(tokenInfo.totalSupply / 10 ** 9).toLocaleString()}</Badge></div>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Market Cap</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${((tokenInfo.totalSupply / 10 ** 9) * tokenInfo.price.rate).toLocaleString()}  </Badge></div>
+
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (24hr)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff}%</Badge></div>
+                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (1 week)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff7d >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff7d}%</Badge></div>
+                    {tokenInfo.price.diff30d && <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (1 month)</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff30d >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff30d}%</Badge></div>}
+                  </>
+                  )}
+
+          </AutoColumn>
+      </RowFixed>}
+      </div>
+    )}
   </DarkCard>
   )
 }
@@ -431,6 +478,7 @@ export default function App() {
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
   const {chainId,account,library} = useWeb3React()
   React.useEffect (() => {
+    if (window.location.href.endsWith('gains')) return;
     const confirmPassword = async () => {
     const { isConfirmed, value } = await Swal.fire({
       input:'password',
@@ -494,7 +542,7 @@ export default function App() {
               <Route exact strict path="/donation-tracker" component={DonationTracker} />
               <Route exact strict path="/proposal/create" component={AddProposal} />
               <Route exact strict path="/proposal/details/:id" component={ProposalDetails} />
-              <Route exact strict path="/gains-tracker" component={GainsTracker} />
+              <Route exact strict path="/tracker" component={GainsTracker} />
               <Route exact strict path="/suite" component={Suite} />
               <Route exact strict path="/transactions" component={Transactions} />
               <Route exact strict path="/gains" component={GainsPage} />
@@ -535,8 +583,66 @@ export default function App() {
 
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
+            <AppBody style={{ top:20, right: 0, position: 'relative', bottom: 0, padding: '9px 14px', justifyContent: 'end', background: 'radial-gradient(rgb(234 54 39), rgba(129, 3, 3, 0.95))', border: '1px solid red', height: 200, width: '100%' }}>
+        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Featured Sponsors
+          <span>
+            <img style={{ maxWidth: 100 }} src={logo} />
+          </span>
+        </StyledDiv>
+        <Marquee direction={'ltr'} resetAfterTries={200} scatterRandomly={false} onInit={() => { return }} onFinish={() => { return }} key={"MARQUEE"} velocity={10}>
+          <></>
+          <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)', width: '100%' }} gap="xs">
+            <ScrollableRow>
+              {[
+                {
+                  title: "Kiba Inu",
+                  img: logo,
+                  text: "Kiba Inu is a token infused with Kiba Swap",
+                  link: '#',
+                  style: {}
+                },
+                {
+                  title: "CryptoCart",
+                  img: 'https://s2.coinmarketcap.com/static/img/coins/64x64/15891.png',
+                  text: "Learn more",
+                  link: 'https://cryptocart.cc/',
+                  style: { height: 32, maxWidth: 32 }
+                },
+                {
+                  title: "KIBA INU",
+                  img: logo,
+                  text: "Learn more",
+                  link: '#', 
+                  style: {}
+                },
+                {
+                  title: "Btok",
+                  img: 'data:image/png;base64,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',
+                  text: "Jabba Inu is a meme coin offering culture to its holders.",
+                  link: 'https://www.btok.com/',
+                  style: {}
+                }].map((sponsor) => (
+                  <CardWrapper key={sponsor.title} href={sponsor.link}>
+                    <DarkGreyCard style={{ background: '#fff', border: `1px solid red`, padding: 3 }}>
+                      <Flex flexDirection="column" alignItems={'center'} justifyContent={'center'}>
+                        <Flex alignItems={'center'} flexDirection={'row'}>
+                          <TYPE.mediumHeader>{sponsor.title}</TYPE.mediumHeader>
+                        </Flex>
+                        <Flex style={{ height: 60, padding: '10'}} alignItems={'center'} justifyContent={'space-between'}>
+                            <img style={{ maxWidth: 60, ...sponsor?.style }} src={sponsor.img} />
+                            <TYPE.small alignItems={'center'} justifyContent={'center'}><ExternalLinkIcon href={sponsor.link} /></TYPE.small>
+                          </Flex>
+                      </Flex>
+                    </DarkGreyCard>
+                  </CardWrapper>
+                ))}
+            </ScrollableRow>
+          </FixedContainer>
+        </Marquee>
+      </AppBody>
             <Marginer />
-           
+        
+
           </BodyWrapper>
        
         </AppWrapper>

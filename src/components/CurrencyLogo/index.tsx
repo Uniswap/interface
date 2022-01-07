@@ -74,6 +74,9 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   if (currency?.symbol?.toLowerCase() === 'kiba'.toLowerCase() || currency?.name?.toLowerCase() === 'kiba inu')
   return <StyledLogo size={size} srcs={['https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-05-08.31.13-copy-150x150.jpeg']} alt={`Kiba Inu logo`} style={style} {...rest} />
   
+  if (currency?.symbol?.toLowerCase() === 'ccv2'.toLowerCase() && currency?.name?.toLowerCase() === 'cryptocart v2') 
+  return <StyledLogo size={size} srcs={['https://s2.coinmarketcap.com/static/img/coins/64x64/9564.png']} alt={`CrytpoCart logo`} style={style} {...rest} />
+
   
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 }, _.isEqual);
