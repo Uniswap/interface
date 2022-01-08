@@ -1,0 +1,22 @@
+{
+  "extends": ["../../.eslintrc.json"],
+  "plugins": ["better-styled-components"],
+  "rules": {
+    "better-styled-components/sort-declarations-alphabetically": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "styled-components/macro",
+            "message": "Please import styled from lib/theme to get the correct typings."
+          },
+          {
+            "name": "react-feather",
+            "message": "Please import from lib/icons to ensure performant usage."
+          }
+        ]
+      }
+    ]
+  }
+}
