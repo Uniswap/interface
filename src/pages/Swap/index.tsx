@@ -1,6 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { CELO, ChainId as UbeswapChainId, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
+import OpticsV1Warning from 'components/Header/OpticsV1Warning'
 import { describeTrade } from 'components/swap/routing/describeTrade'
 import { MoolaDirectTrade } from 'components/swap/routing/moola/MoolaDirectTrade'
 import { useTradeCallback } from 'components/swap/routing/useTradeCallback'
@@ -296,6 +297,7 @@ export default function Swap() {
         tokens={importTokensNotInDefault}
         onConfirm={handleConfirmTokenWarning}
       />
+      <OpticsV1Warning />
       <SwapPoolTabs active={'swap'} />
       <AppBody>
         <SwapHeader title={actionLabel} />
