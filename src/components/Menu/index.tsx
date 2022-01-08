@@ -130,7 +130,7 @@ const MenuItem = styled(ExternalLink)`
   :focus-visible {
     border-radius: 0.5rem;
     text-decoration: none;
-    outline: 1px solid ${({ theme }) => theme.bg3};
+    outline: 1px solid ${({ theme }) => theme.text3};
   }
 `
 
@@ -183,7 +183,7 @@ const ToggleMenuItem = styled.button`
   }
   :focus-visible {
     border-radius: 0.5rem;
-    outline: 1px solid ${({ theme }) => theme.bg3};
+    outline: 1px solid ${({ theme }) => theme.text3};
   }
 `
 
