@@ -8,6 +8,8 @@ import fetchTokenList from './fetchTokenList'
 import { ChainTokenMap, TokenMap, tokensToChainTokenMap } from './utils'
 import { validateTokens } from './validateTokenList'
 
+export { DEFAULT_TOKEN_LIST } from './fetchTokenList'
+
 const chainTokenMapAtom = atom<ChainTokenMap>({})
 
 export default function useTokenList(list?: string | TokenInfo[]): TokenMap {
@@ -36,6 +38,6 @@ export default function useTokenList(list?: string | TokenInfo[]): TokenMap {
   }, [chainId, library, list, setChainTokenMap])
 
   return useMemo(() => {
-    return (chainId && chainTokenMap[chainId]) || {}
+    return chainTokenMap[chainId || 1] || {}
   }, [chainId, chainTokenMap])
 }

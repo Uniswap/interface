@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
-import useTokenList from 'lib/hooks/useTokenList'
+import useTokenList, { DEFAULT_TOKEN_LIST } from 'lib/hooks/useTokenList'
 import { useMemo, useState } from 'react'
 
 import Header from '../Header'
@@ -29,7 +29,7 @@ const DEFAULT_INPUT: DefaultTokenAmount = { address: 'ETH' }
 const DEFAULT_OUTPUT: DefaultTokenAmount = {}
 
 function useSwapDefaults(defaults: Partial<SwapDefaults> = {}): SwapDefaults {
-  const tokenList = defaults.tokenList || 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
+  const tokenList = defaults.tokenList || DEFAULT_TOKEN_LIST
   const input: DefaultTokenAmount = defaults.input || DEFAULT_INPUT
   const output: DefaultTokenAmount = defaults.output || DEFAULT_OUTPUT
   input.amount = input.amount || 0
