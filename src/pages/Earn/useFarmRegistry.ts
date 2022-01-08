@@ -18,10 +18,16 @@ export type FarmSummary = {
   tvlUSD: string
   token0Address: string
   token1Address: string
+  isFeatured: boolean
 }
 
 const blacklist: Record<string, boolean> = {
   '0x4488682fd16562a68ea0d0f898413e075f42e6da': true,
+}
+
+const featuredPoolWhitelist: Record<string, boolean> = {
+  '0x6F11B6eA70DEe4f167b1A4ED1F01C903f6781960': true,
+  '0xEfe2f9d62E45815837b4f20c1F44F0A83605B540': true,
 }
 
 const CREATION_BLOCK = 9840049
@@ -80,11 +86,14 @@ export const useFarmRegistry = () => {
           token1Address: lps[e.returnValues.lpAddress][1],
           tvlUSD: farmData[e.returnValues.stakingAddress].tvlUSD,
           rewardsUSDPerYear: farmData[e.returnValues.stakingAddress].rewardsUSDPerYear,
+          isFeatured: !!featuredPoolWhitelist[e.returnValues.stakingAddress],
         })
       })
+
     farmSummaries
       .sort((a, b) => Number(fromWei(toBN(b.rewardsUSDPerYear).sub(toBN(a.rewardsUSDPerYear)))))
       .sort((a, b) => Number(fromWei(toBN(b.tvlUSD).sub(toBN(a.tvlUSD)))))
+
     setFarmSummaries(farmSummaries)
   }, [kit.web3.eth])
 

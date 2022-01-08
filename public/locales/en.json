@@ -228,5 +228,6 @@
   "stakeIntoFarmingPool": "Farm into the {{poolName}} farming pool to an additional rewards on your LP tokens",
   "farmUBE": "Farm UBE",
   "youHaveUnclaimedRewards": "You have {{count}} farms with unclaimed rewards",
-  "claimAllRewards": "Claim all rewards"
+  "claimAllRewards": "Claim all rewards",
+  "featuredPools": "Featrued Pools"
 }

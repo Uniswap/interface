@@ -59,8 +59,7 @@ export default function Earn() {
     }
   }, [filteringToken, farmSummaries])
 
-  const { stakedFarms, unstakedFarms } = useOwnerStakedPools(filteredFarms)
-
+  const { stakedFarms, featuredFarms, unstakedFarms } = useOwnerStakedPools(filteredFarms)
   return (
     <PageWrapper>
       <ClaimAllRewardPanel stakedFarms={stakedFarms} />
@@ -103,6 +102,18 @@ export default function Earn() {
         <>
           <Header>{t('yourPools')}</Header>
           {stakedFarms.map((farmSummary) => (
+            <PoolWrapper key={farmSummary.stakingAddress}>
+              <ErrorBoundary>
+                <PoolCard farmSummary={farmSummary} />
+              </ErrorBoundary>
+            </PoolWrapper>
+          ))}
+        </>
+      )}
+      {featuredFarms.length > 0 && (
+        <>
+          <Header>{t('featuredPools')}</Header>
+          {featuredFarms.map((farmSummary) => (
             <PoolWrapper key={farmSummary.stakingAddress}>
               <ErrorBoundary>
                 <PoolCard farmSummary={farmSummary} />
