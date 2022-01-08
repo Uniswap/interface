@@ -284,7 +284,7 @@ export function useDefaultTokenList(): TokenAddressMap {
   const dmmTokens = useDMMTokenList()
 
   return useMemo(() => {
-    return combineMaps(TRANSFORMED_DEFAULT_TOKEN_LIST, dmmTokens)
+    return combineMaps(dmmTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
   }, [dmmTokens])
 }
 
