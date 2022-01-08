@@ -19,7 +19,7 @@ const SearchInput = styled(StringInput)`
 
 export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {
   const tokenMap = useTokenList()
-  const tokens = useMemo(() => Object.values(tokenMap), [tokenMap])
+  const tokens = useMemo(() => Object.values(tokenMap).map(({ token }) => token), [tokenMap])
   const baseTokens: Token[] = [] // TODO(zzmp): Add base tokens to token list functionality
 
   // TODO(zzmp): Load token balances

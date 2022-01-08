@@ -1,6 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
-import getTokenList from 'lib/utils/fetchTokenList'
+import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
