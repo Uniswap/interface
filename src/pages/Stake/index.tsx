@@ -3,10 +3,11 @@ import { TokenAmount } from '@ubeswap/sdk'
 import { ButtonEmpty, ButtonLight, ButtonPrimary, ButtonRadio } from 'components/Button'
 import { GreyCard, YellowCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import CurrencyLogo from 'components/CurrencyLogo'
 import { CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import Loader from 'components/Loader'
 import { AutoRow, RowBetween } from 'components/Row'
+import StakeInputField from 'components/Stake/StakeInputField'
 import { useDoTransaction } from 'components/swap/routing'
 import { VotableStakingRewards__factory } from 'generated/factories/VotableStakingRewards__factory'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -18,7 +19,7 @@ import { WrappedTokenInfo } from 'state/lists/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useCurrencyBalance } from 'state/wallet/hooks'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { ExternalLink, TYPE } from 'theme'
 
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_SECONDS_IN_YEAR } from '../../constants'
@@ -45,6 +46,11 @@ const Wrapper = styled.div({
   margin: '0px 24px',
 })
 
+const DescriptionWrapper = styled.div({
+  display: 'flex',
+  justifyContent: 'space-between',
+})
+
 const ube = new WrappedTokenInfo(
   {
     address: '0x00be915b9dcf56a3cbe739d9b9c202ca692409ec',
@@ -57,8 +63,27 @@ const ube = new WrappedTokenInfo(
   []
 )
 
+const CommunityWrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
+  border-radius: 12px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 1.25rem;
+  display: grid;
+  grid-gap: 24px;
+  margin-bottom: 1rem;
+  background: ${({ bgColor }) => `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, #212429 100%) `};
+  color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
+  ${({ showBackground }) =>
+    showBackground &&
+    `  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);`}
+`
+
 export const Stake: React.FC = () => {
   const { t } = useTranslation()
+  const theme = useTheme()
+
   const { address, connect } = useContractKit()
   const getConnectedSigner = useGetConnectedSigner()
   const [amount, setAmount] = useState('')
@@ -71,6 +96,7 @@ export const Stake: React.FC = () => {
     ube,
     useSingleCallResult(contract, 'balanceOf', [address ?? undefined]).result?.[0] ?? 0
   )
+
   // 0 - Abstain
   // 1 - For
   // 2 - Against
@@ -81,7 +107,6 @@ export const Stake: React.FC = () => {
 
   const apy = totalSupply.greaterThan('0') ? rewardRate.multiply(BIG_INT_SECONDS_IN_YEAR).divide(totalSupply) : null
   const userRewardRate = totalSupply.greaterThan('0') ? stakeBalance.multiply(rewardRate).divide(totalSupply) : null
-
   const doTransaction = useDoTransaction()
   const onStakeClick = useCallback(async () => {
     const c = VotableStakingRewards__factory.connect(VOTABLE_STAKING_REWARDS_ADDRESS, await getConnectedSigner())
@@ -162,7 +187,7 @@ export const Stake: React.FC = () => {
   return (
     <>
       <TopSection gap="md">
-        <DataCard style={{ marginBottom: '32px' }}>
+        <DataCard style={{ marginBottom: '2px' }}>
           <CardNoise />
           <CardSection>
             <AutoColumn gap="md">
@@ -171,7 +196,15 @@ export const Stake: React.FC = () => {
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  Stake UBE to automatically participate in governance and earn UBE rewards.
+                  Stake UBE to automatically participate in governance and earn UBE rewards. You can check all
+                  governance proposals&nbsp;
+                  <ExternalLink
+                    style={{ color: 'white', textDecoration: 'underline' }}
+                    target="_blank"
+                    href="https://romulus.page/romulus/0xa7581d8E26007f4D2374507736327f5b46Dd6bA8"
+                  >
+                    here
+                  </ExternalLink>
                 </TYPE.white>
               </RowBetween>
             </AutoColumn>
@@ -179,23 +212,63 @@ export const Stake: React.FC = () => {
           <CardNoise />
         </DataCard>
         <div style={{ textAlign: 'center' }}>
-          <h2>Your UBE stake: {stakeBalance ? stakeBalance.toFixed(2, { groupSeparator: ',' }) : '--'} UBE</h2>
+          {/* <h2>Your UBE stake: {stakeBalance ? stakeBalance.toFixed(2, { groupSeparator: ',' }) : '--'} UBE</h2> */}
           {userRewardRate?.greaterThan('0') ? (
-            <YellowCard style={{ marginBottom: '16px' }}>
-              <h3>
-                Your weekly rewards:{' '}
-                {userRewardRate
-                  ? userRewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(2, { groupSeparator: ',' })
-                  : '--'}{' '}
-                UBE / week
-              </h3>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <h3>Unclaimed UBE: {userRewardRate ? earned.toFixed(4, { groupSeparator: ',' }) : '--'}</h3>
-                <ButtonEmpty padding="8px" borderRadius="8px" width="fit-content" onClick={onClaimClick}>
-                  {t('claim')}
-                </ButtonEmpty>
-              </div>
-            </YellowCard>
+            <>
+              <YellowCard style={{ marginBottom: '16px' }}>
+                <DescriptionWrapper>
+                  <h4 style={{ margin: '12px 0' }}>Your weekly rewards</h4>
+                  <h4 style={{ margin: '12px 0' }}>
+                    {userRewardRate
+                      ? userRewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(2, { groupSeparator: ',' })
+                      : '--'}
+                    {'  '}
+                  </h4>
+                </DescriptionWrapper>
+                <DescriptionWrapper>
+                  <h4 style={{ margin: '12px 0' }}>Annual stake APR</h4>
+                  <h4 style={{ margin: '12px 0' }}>
+                    {apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}%{' '}
+                  </h4>
+                </DescriptionWrapper>
+                <DescriptionWrapper>
+                  <h4 style={{ margin: '12px 0' }}>Unclaimed Rewards</h4>
+                  <div style={{ display: 'flex' }}>
+                    <h4 style={{ margin: '12px 0' }}>
+                      {userRewardRate ? earned.toFixed(4, { groupSeparator: ',' }) : '--'}
+                    </h4>
+                    <ButtonEmpty padding="8px" borderRadius="8px" width="fit-content" onClick={onClaimClick}>
+                      {t('claim')}
+                    </ButtonEmpty>
+                  </div>
+                </DescriptionWrapper>
+              </YellowCard>
+              <CommunityWrapper showBackground={true} bgColor={theme.primary1}>
+                <h3 style={{ margin: 'unset' }}>Community UBE Stake</h3>
+                <DescriptionWrapper>
+                  <h4 style={{ margin: 'unset' }}>Total UBE Staked</h4>
+                  <h4 style={{ margin: 'unset' }}>{Number(totalSupply?.toSignificant(4)).toLocaleString('en-US')}</h4>
+                </DescriptionWrapper>
+                <DescriptionWrapper>
+                  <h4 style={{ margin: 'unset' }}>Your UBE Stake Pool Share</h4>
+                  <h4 style={{ margin: 'unset' }}>{stakeBalance?.toSignificant(4)}</h4>
+                </DescriptionWrapper>
+                <ExternalLink
+                  style={{ color: 'white', textDecoration: 'underline', textAlign: 'left' }}
+                  target="_blank"
+                  href="https://explorer.celo.org/address/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC/transactions"
+                >
+                  View UBE Contract
+                </ExternalLink>
+                <ExternalLink
+                  style={{ color: 'white', textDecoration: 'underline', textAlign: 'left' }}
+                  target="_blank"
+                  href="https://info.ubeswap.org/token/0x00be915b9dcf56a3cbe739d9b9c202ca692409ec"
+                >
+                  View UBE Chart
+                </ExternalLink>
+              </CommunityWrapper>
+            </>
           ) : (
             <h3>
               Weekly rewards:{' '}
@@ -228,7 +301,13 @@ export const Stake: React.FC = () => {
         </div>
       </TopSection>
       <BodyWrapper style={{ marginTop: '16px' }}>
-        <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'center' }}>
+        <CurrencyLogo
+          currency={ube}
+          size={'42px'}
+          style={{ position: 'absolute', top: '30px', right: 'calc(50% + 120px)' }}
+        />
+        <h2 style={{ textAlign: 'center', margin: '15px 0px' }}>Your UBE stake</h2>
+        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
           <div style={{ width: '100px' }}>
             <StyledButtonRadio active={staking} onClick={() => setStaking(true)}>
               Stake
@@ -240,14 +319,13 @@ export const Stake: React.FC = () => {
             </StyledButtonRadio>
           </div>
         </div>
+
         <Wrapper>
           <div style={{ margin: '32px 0px' }}>
-            <CurrencyInputPanel
+            <StakeInputField
               id="stake-currency"
               value={amount}
               onUserInput={setAmount}
-              label={t('amount')}
-              showMaxButton
               onMax={() => {
                 if (staking) {
                   ubeBalance && setAmount(ubeBalance.toSignificant(18))
@@ -256,8 +334,8 @@ export const Stake: React.FC = () => {
                 }
               }}
               currency={ube}
-              disableCurrencySelect
-              balanceOverride={staking ? ubeBalance : stakeBalance}
+              stakeBalance={stakeBalance}
+              walletBalance={ubeBalance}
             />
           </div>
           <div style={{ marginBottom: '16px' }}>{button}</div>
