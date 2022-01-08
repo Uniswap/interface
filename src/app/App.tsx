@@ -13,6 +13,7 @@ import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { MulticallUpdaters } from 'src/features/multicall'
+import { NotificationBannerWrapper } from 'src/features/notifications/NotificationBanner'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { darkTheme, theme } from 'src/styles/theme'
 
@@ -49,7 +50,9 @@ export function App() {
                 <WalletContextProvider>
                   <DataUpdaters />
                   <QueryClientProvider client={queryClient}>
-                    <NavStack isDarkMode={isDarkMode} />
+                    <NotificationBannerWrapper>
+                      <NavStack isDarkMode={isDarkMode} />
+                    </NotificationBannerWrapper>
                   </QueryClientProvider>
                 </WalletContextProvider>
               </ErrorBoundary>

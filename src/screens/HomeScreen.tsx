@@ -19,7 +19,7 @@ import { useAllBalances } from 'src/features/balances/hooks'
 import TotalBalance from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllTokens } from 'src/features/tokens/useTokens'
-import { TransactionNotificationBanner } from 'src/features/transactions/Notification'
+import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
@@ -88,7 +88,7 @@ export function HomeScreen({ navigation }: Props) {
             </Button>
           </Box>
         </Box>
-        <TransactionNotificationBanner />
+        <TransactionStatusBanner />
         <Box flexDirection="row" alignItems="flex-end" justifyContent="space-between">
           <TotalBalance balances={balances} />
           <Button

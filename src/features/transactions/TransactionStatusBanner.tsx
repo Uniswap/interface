@@ -6,15 +6,15 @@ import { Toast } from 'src/components/notifications/Toast'
 import { usePendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 
-export function TransactionNotificationBanner() {
+export function TransactionStatusBanner() {
   return (
     <Box>
-      <TransactionNotification />
+      <TransactionStatus />
     </Box>
   )
 }
 
-function TransactionNotification() {
+function TransactionStatus() {
   const { pendingTransactions, recentlyFailedTransactions, recentlySuccessfulTransactions } =
     usePendingTransactions()
 

@@ -1,5 +1,7 @@
 import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
 import { call, delay, Effect, put, race, take } from 'redux-saga/effects'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { NotificationSeverity } from 'src/features/notifications/types'
 import { logger } from 'src/utils/logger'
 import { errorToString } from 'src/utils/validation'
 
@@ -54,6 +56,7 @@ export interface SagaState {
 
 interface MonitoredSagaOptions {
   timeoutDuration?: number // in milliseconds
+  suppressErrorNotification?: boolean // disable automatic showing of errors
   // If retry / or other options are ever needed, they can go here
 }
 
@@ -111,21 +114,25 @@ export function createMonitoredSaga<SagaParams = void>(
 
         if (timeout) {
           logger.warn('saga', 'monitoredSaga', `${name} timed out`)
-          yield put(errorAction('Action timed out.'))
-          continue
+          throw new Error('Action timed out.')
         }
 
         if (result === false) {
           logger.warn('saga', 'monitoredSaga', `${name} returned failure result`)
-          yield put(errorAction('Action returned failure result.'))
-          continue
+          throw new Error('Action returned failure result.')
         }
 
         yield put(statusAction(SagaStatus.Success))
         logger.debug('saga', 'monitoredSaga', `${name} finished`)
       } catch (error: any) {
         logger.error('saga', 'monitoredSaga', `${name} error`, error)
-        yield put(errorAction(errorToString(error)))
+        const errorMessage = errorToString(error)
+        yield put(errorAction(errorMessage))
+        if (!options?.suppressErrorNotification) {
+          yield put(
+            pushNotification({ message: errorMessage, severity: NotificationSeverity.error })
+          )
+        }
       }
     }
   }

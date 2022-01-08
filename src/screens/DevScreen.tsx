@@ -15,6 +15,8 @@ import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTim
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useGasFee } from 'src/features/gas/useGasFee'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { NotificationSeverity } from 'src/features/notifications/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -64,6 +66,15 @@ export function DevScreen({ navigation }: any) {
     })
   }
 
+  const onPressShowError = () => {
+    dispatch(
+      pushNotification({
+        message: 'A scary new error has happened. Be afraid!!',
+        severity: NotificationSeverity.error,
+      })
+    )
+  }
+
   return (
     <SheetScreen>
       <Box justifyContent="flex-end" flexDirection="row" py="sm" px="md">
@@ -103,6 +114,9 @@ export function DevScreen({ navigation }: any) {
           </TextButton>
           <TextButton onPress={onPressComputeFee} mt="sm">
             Compute fee
+          </TextButton>
+          <TextButton onPress={onPressShowError} mt="sm">
+            Show global error
           </TextButton>
           <Text textAlign="center" mt="xl">
             {`Active Chains: ${activeChains}`}
