@@ -38,6 +38,6 @@ export default function useTokenList(list?: string | TokenInfo[]): TokenMap {
   }, [chainId, library, list, setChainTokenMap])
 
   return useMemo(() => {
-    return chainTokenMap[chainId || 1] || {}
+    return (chainId && chainTokenMap[chainId]) || {}
   }, [chainId, chainTokenMap])
 }
