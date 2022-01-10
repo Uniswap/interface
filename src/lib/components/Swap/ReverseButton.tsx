@@ -8,8 +8,8 @@ import Button from '../Button'
 import Row from '../Row'
 
 const ReverseRow = styled(Row)`
-  bottom: -1.5em;
   position: absolute;
+  top: 118px;
   width: 100%;
   z-index: ${Layer.OVERLAY};
 `
