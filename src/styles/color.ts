@@ -1,6 +1,6 @@
 // Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx
 
-interface Palette {
+export interface Palette {
   primary1: string
   primary2: string
   primary3: string

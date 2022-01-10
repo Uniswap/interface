@@ -1,5 +1,7 @@
 import React, { ComponentProps } from 'react'
-import { Box, Flex as FlexBase, Inset } from 'src/components/layout'
+import { Box, Flex, Flex as FlexBase, Inset } from 'src/components/layout'
+import { Text } from 'src/components/Text'
+import { colorsDark, colorsLight, Palette } from 'src/styles/color'
 
 export function FlexWithChildren(props: ComponentProps<typeof FlexBase>) {
   return (
@@ -19,3 +21,25 @@ export function FlexWithChildren(props: ComponentProps<typeof FlexBase>) {
     </FlexBase>
   )
 }
+
+export function _Palette(colors: Palette) {
+  return () => (
+    <Flex flexDirection="column" gap="none">
+      {Object.entries(colors).map(([color, value], i, arr) => (
+        <Box
+          p="sm"
+          style={{ backgroundColor: value }}
+          borderTopLeftRadius={i === 0 || i === arr.length - 1 ? 'sm' : 'none'}
+          borderTopRightRadius={i === 0 || i === arr.length - 1 ? 'sm' : 'none'}>
+          <Flex justifyContent="space-between">
+            <Text variant="bodySm">{color}</Text>
+            <Text variant="bodySm">{value}</Text>
+          </Flex>
+        </Box>
+      ))}
+    </Flex>
+  )
+}
+
+export const PaletteLight = _Palette(colorsLight)
+export const PaletteDark = _Palette(colorsDark)

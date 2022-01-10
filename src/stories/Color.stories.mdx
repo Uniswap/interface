@@ -1,0 +1,23 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+import { Box, Flex, Inset } from 'src/components/layout'
+import { Text } from 'src/components/Text'
+import { PaletteLight, PaletteDark } from './Fixtures'
+
+<Meta title="Color/Palette" />
+
+## Light
+
+<Canvas>
+  <Story name="light">
+    <PaletteLight />
+  </Story>
+</Canvas>
+
+## Dark
+
+<Canvas>
+  <Story name="dark">
+    <PaletteDark />
+  </Story>
+</Canvas>

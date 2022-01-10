@@ -1,0 +1,28 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+import { Box, Flex, Inset } from 'src/components/layout'
+import { Text } from 'src/components/Text'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { FlexWithChildren } from './Fixtures'
+
+<Meta title="Button/Primary" component={PrimaryButton} />
+
+export const Template = (args) => <PrimaryButton {...args} onPress={() => void 0} />
+
+# `PrimaryButton`
+
+<!-- TODO: variants are not rendering -->
+
+<Canvas>
+  <Story
+    name="default"
+    args={{
+      label: 'Connect a wallet',
+      variant: 'palePink',
+      bg: 'black',
+    }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="default" />
