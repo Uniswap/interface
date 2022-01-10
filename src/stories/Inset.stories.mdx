@@ -1,6 +1,6 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
 
-import { Box, Inset } from 'src/components/layout'
+import { Box, Flex, Inset } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 
 <Meta
@@ -22,7 +22,7 @@ export const Template = (args) => (
   <Box bg="primary2">
     <Inset {...args}>
       <Box bg="primary1">
-        <Text color="white">Light pink is the inset</Text>
+        <Text color="white">This is the default inset</Text>
       </Box>
     </Inset>
   </Box>
@@ -30,11 +30,27 @@ export const Template = (args) => (
 
 # Inset
 
-`Inset` offers spacing _around_ children. Think of it as a picture frame aroundn a set of children.
-
 <Canvas>
   <Story name="default" args={{}}>
     {Template.bind({})}
+  </Story>
+</Canvas>
+
+`Inset` offers spacing _around_ children. Think of it as a picture frame aroundn a set of children.
+
+<Canvas>
+  <Story name="variants" args={{}}>
+    <Flex>
+      {['xs', 'sm', 'md', 'lg', 'xl'].map((size) => (
+        <Box bg="black">
+          <Inset all={size}>
+            <Box bg="gray50">
+              <Text>This is the {size} inset</Text>
+            </Box>
+          </Inset>
+        </Box>
+      ))}
+    </Flex>
   </Story>
 </Canvas>
 
