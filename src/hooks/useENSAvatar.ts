@@ -1,9 +1,9 @@
 import { namehash } from '@ethersproject/hash'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
 import { safeNamehash } from 'utils/safeNamehash'
 
-import { useSingleCallResult } from '../state/multicall/hooks'
 import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract, useERC721Contract, useERC1155Contract } from './useContract'

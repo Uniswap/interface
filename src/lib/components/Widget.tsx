@@ -2,8 +2,10 @@ import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
+import { store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
 import { ComponentProps, JSXElementConstructor, PropsWithChildren, StrictMode, useRef } from 'react'
+import { Provider as ReduxProvider } from 'react-redux'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
@@ -98,11 +100,13 @@ export default function Widget({
           <WidgetWrapper width={width} className={className} ref={wrapper}>
             <DialogProvider value={dialog || wrapper.current}>
               <ErrorBoundary onError={onError}>
-                <AtomProvider>
-                  <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                    {children}
-                  </Web3Provider>
-                </AtomProvider>
+                <ReduxProvider store={multicallStore}>
+                  <AtomProvider>
+                    <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                      {children}
+                    </Web3Provider>
+                  </AtomProvider>
+                </ReduxProvider>
               </ErrorBoundary>
             </DialogProvider>
           </WidgetWrapper>
