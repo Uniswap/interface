@@ -58,14 +58,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
   )
 
   return (
-    <Flex
-      borderRadius="md"
-      flexDirection="column"
-      gap="sm"
-      mt="md"
-      pb="md"
-      pt={title ? 'lg' : 'md'}
-      {...transformedProps}>
+    <Flex borderRadius="md" gap="sm" mt="md" pb="md" pt={title ? 'lg' : 'md'} {...transformedProps}>
       {title && (
         <Box mx="md" flexDirection="row">
           <Text variant="body" color="gray400">
@@ -73,7 +66,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           </Text>
         </Box>
       )}
-      <Flex centered gap="sm">
+      <Flex centered flexDirection="row" gap="sm">
         <AmountInput
           backgroundColor="none"
           borderWidth={0}
@@ -106,7 +99,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           showNonZeroBalancesOnly={showNonZeroBalancesOnly}
         />
       </Flex>
-      <Flex alignContent="center" justifyContent="space-between">
+      <Flex alignContent="center" flexDirection="row" justifyContent="space-between">
         {price && (
           <Text variant="body" ml="sm" color="gray400">
             {formatPrice(price)}

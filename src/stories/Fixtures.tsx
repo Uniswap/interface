@@ -24,14 +24,14 @@ export function FlexWithChildren(props: ComponentProps<typeof FlexBase>) {
 
 export function _Palette(colors: Palette) {
   return () => (
-    <Flex flexDirection="column" gap="none">
+    <Flex gap="none">
       {Object.entries(colors).map(([color, value], i, arr) => (
         <Box
           p="sm"
           style={{ backgroundColor: value }}
           borderTopLeftRadius={i === 0 || i === arr.length - 1 ? 'sm' : 'none'}
           borderTopRightRadius={i === 0 || i === arr.length - 1 ? 'sm' : 'none'}>
-          <Flex justifyContent="space-between">
+          <Flex flexDirection="row" justifyContent="space-between">
             <Text variant="bodySm">{color}</Text>
             <Text variant="bodySm">{value}</Text>
           </Flex>

@@ -26,7 +26,7 @@ export function Flex({
   centered = false,
   children,
   flexBasis = 'auto',
-  flexDirection = 'row',
+  flexDirection = 'column',
   flexGrow = 0,
   flexShrink = 0,
   flexWrap = 'nowrap',

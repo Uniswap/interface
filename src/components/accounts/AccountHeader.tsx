@@ -42,7 +42,7 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
         alignItems="center"
         onPress={onPressAccount}
         testID="account_header/manage/button">
-        <Flex gap="sm" centered>
+        <Flex gap="sm" flexDirection="row" centered>
           <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={30} />
           <Text variant="h4">
             {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}
