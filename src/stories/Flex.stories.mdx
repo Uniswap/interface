@@ -1,0 +1,46 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+import { Box, Flex, Inset } from 'src/components/layout'
+import { Text } from 'src/components/Text'
+import { FlexWithChildren } from './Fixtures'
+
+<Meta
+  title="Layout/Flex"
+  component={Flex}
+  decorators={[
+    (Story) => (
+      <Box bg="gray50" borderRadius="md">
+        <Inset>
+          {/* calls function directly to preserve displayName */}
+          {Story()}
+        </Inset>
+      </Box>
+    ),
+  ]}
+/>
+
+export const Template = (args) => <FlexWithChildren {...args} />
+
+# Flex
+
+`Flex` offers horizontal or vertical spacing _between_ children.
+
+<Canvas>
+  <Story name="default" args={{}}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+`Flex` exposes the following:
+
+- `centered` as a shorthand for `alignItems='center' justifyContent='center'`
+- `gap`: spacing between children as defined in theme
+- and every `BoxProps`
+
+<Canvas>
+  <Story name="args" args={{ centered: true, flexDirection: 'column', gap: 'lg' }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="default" />

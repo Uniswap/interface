@@ -9,6 +9,7 @@ type CenteredProps =
     }
   | {
       alignItems?: 'center'
+      /** shorthand for `alignItems='center' justifyContent='center'` */
       centered: true
       justifyContent?: 'center'
     }

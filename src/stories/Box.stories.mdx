@@ -1,0 +1,29 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+import { Box } from '../components/layout/Box'
+import { Text } from '../components/Text'
+
+<Meta title="Layout/Box" component={Box} />
+
+export const Template = (args) => <Box {...args} />
+
+# Box
+
+`Box` is the most low-level layout component. Its job is to render an individual element on the screen.
+
+For example, if you wanted to create a container element with small spacing on all sides:
+
+<Canvas>
+  <Story
+    name="Box"
+    args={{
+      children: <Text color="white">Lorem ipsum dolor sit amet</Text>,
+      backgroundColor: 'black',
+      borderRadius: 'md',
+      padding: 'md',
+    }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Box" />

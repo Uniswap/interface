@@ -1,0 +1,41 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+import { Box, Inset } from 'src/components/layout'
+import { Text } from 'src/components/Text'
+
+<Meta
+  title="Layout/Inset"
+  component={Inset}
+  decorators={[
+    (Story) => (
+      <Box bg="gray50" borderRadius="md">
+        <Inset>
+          {/* calls function directly to preserve displayName */}
+          {Story()}
+        </Inset>
+      </Box>
+    ),
+  ]}
+/>
+
+export const Template = (args) => (
+  <Box bg="primary2">
+    <Inset {...args}>
+      <Box bg="primary1">
+        <Text color="white">Light pink is the inset</Text>
+      </Box>
+    </Inset>
+  </Box>
+)
+
+# Inset
+
+`Inset` offers spacing _around_ children. Think of it as a picture frame aroundn a set of children.
+
+<Canvas>
+  <Story name="default" args={{}}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="default" />
