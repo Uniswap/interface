@@ -318,6 +318,7 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
                                     <StyledA href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/address/${item.account}`}>
                                         {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
                                     </StyledA>
+                                    {item.account && <StyledInternalLink to={`/details/${item.account}`}><ChevronRight /></StyledInternalLink>}
                                 </td>
                                 <td >
                                     <div style={{
