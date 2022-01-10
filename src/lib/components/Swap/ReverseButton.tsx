@@ -10,7 +10,7 @@ import Row from '../Row'
 const ReverseRow = styled(Row)`
   left: 50%;
   position: absolute;
-  top: 118px;
+  top: 7.45em;
   transform: translateX(-50%);
   z-index: ${Layer.OVERLAY};
 `

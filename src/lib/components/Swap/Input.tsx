@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAtomValue } from 'jotai/utils'
-import JSBI from 'jsbi'
 import { inputAtom, useUpdateInputToken, useUpdateInputValue } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 
@@ -10,9 +9,8 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
-const mockAmount = JSBI.BigInt(134108514895957704114061)
 const mockToken = new Token(1, '0x8b3192f5eebd8579568a2ed41e6feb402f93f73f', 9, 'STM', 'Saitama')
-const mockCurrencyAmount = CurrencyAmount.fromRawAmount(mockToken, mockAmount)
+const mockCurrencyAmount = CurrencyAmount.fromRawAmount(mockToken, '134108514895957704114061')
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
   margin: 0.75em;
