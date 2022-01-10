@@ -74,6 +74,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     e.token = value
     e.ref = ref.current ?? undefined
   }
+  // TODO(zzmp): Disable already selected tokens
   return (
     <TokenButton
       data-index={index}
