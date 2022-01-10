@@ -58,7 +58,7 @@
     "@uniswap/merkle-distributor": "1.0.1",
     "@uniswap/router-sdk": "^1.0.3",
     "@uniswap/sdk-core": "^3.0.1",
-    "@uniswap/smart-order-router": "^2.5.4",
+    "@uniswap/smart-order-router": "^2.5.9",
     "@uniswap/token-lists": "^1.0.0-beta.27",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
@@ -192,9 +192,9 @@
     "wicg-inert": "^3.1.1",
     "widgets-web3-react/core": "npm:@web3-react/core@8.0.15-alpha.0",
     "widgets-web3-react/eip1193": "npm:@web3-react/eip1193@8.0.15-alpha.0",
-    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.15-alpha.0",
-    "widgets-web3-react/url": "npm:@web3-react/url@8.0.16-alpha.0",
     "widgets-web3-react/empty": "npm:@web3-react/empty@8.0.16-alpha.0",
-    "widgets-web3-react/types": "npm:@web3-react/types@8.0.15-alpha.0"
+    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.15-alpha.0",
+    "widgets-web3-react/types": "npm:@web3-react/types@8.0.15-alpha.0",
+    "widgets-web3-react/url": "npm:@web3-react/url@8.0.16-alpha.0"
   }
 }
