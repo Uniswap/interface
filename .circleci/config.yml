@@ -1,0 +1,90 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@6.15.3
+
+jobs:
+  test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:12.8.0
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      # Download and cache dependencies
+      # - restore_cache:
+      #     keys:
+      #       - v1-dependencies-{{ checksum "package.json" }}
+      #       # fallback to using the latest cache if no exact match is found
+      #       - v1-dependencies-
+      # - run: npm install
+      # - save_cache:
+      #     paths:
+      #       - node_modules
+      #     key: v1-dependencies-{{ checksum "package.json" }}
+      # - run: npm test
+
+  deploy:
+    working_directory: ~/repo
+
+    docker:
+      - image: tryroll/circleci:latest
+
+    steps:
+      - checkout
+
+      - run:
+          name: Select environment
+          command: make -f cloud.mk select-environment
+
+      - run:
+          name: K8s deploy
+          command: make -f cloud.mk k8s-eks-apply
+
+workflows:
+  test_and_deploy:
+    jobs:
+      - test
+
+      - aws-ecr/build-and-push-image:
+          name: push-to-ecr
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          context: aws-ecr
+          region: AWS_DEFAULT_REGION
+          repo: uniswap-exchange
+          tag: '${CIRCLE_BRANCH}-ci-latest,${CIRCLE_BRANCH}-ci-${CIRCLE_WORKFLOW_ID}'
+          extra-build-args: '--build-arg CURRENT_BRANCH=${CIRCLE_BRANCH} --build-arg REACT_APP_NETWORK_URL=${REACT_APP_NETWORK_URL} --build-arg REACT_APP_PORTIS_ID=${REACT_APP_PORTIS_ID} --build-arg REACT_APP_FORTMATIC_KEY=${REACT_APP_FORTMATIC_KEY}'
+          filters:
+            branches:
+              only:
+                - develop
+                - sandbox
+                - staging
+                - master
+          requires:
+            - test
+
+      - deploy:
+          context: aws-ecr
+          filters:
+            branches:
+              only:
+                - develop
+                - sandbox
+                - staging
+                - master
+          requires:
+            - test
+            - push-to-ecr
