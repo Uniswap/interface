@@ -20618,9 +20618,9 @@ vinyl@^2.0.0, vinyl@~2.2.1:
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
 
-"vision-camera-ocr@git://github.com/UN-ICC/vision-camera-ocr#a9c1531":
+"vision-camera-ocr@https://github.com/UN-ICC/vision-camera-ocr#a9c1531":
   version "0.1.0"
-  resolved "git://github.com/UN-ICC/vision-camera-ocr#a9c15311b9c0fec5ae4eabafa98d7e4f9c40e3f1"
+  resolved "https://github.com/UN-ICC/vision-camera-ocr#a9c15311b9c0fec5ae4eabafa98d7e4f9c40e3f1"
 
 vlq@^1.0.0:
   version "1.0.1"
