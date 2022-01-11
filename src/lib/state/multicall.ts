@@ -1,7 +1,8 @@
 import { createMulticall } from '@uniswap/redux-multicall'
-import { createStore } from 'redux'
+import { combineReducers, createStore } from 'redux'
 
 export const multicall = createMulticall()
-export const store = createStore(multicall.reducer)
+const reducer = combineReducers({ [multicall.reducerPath]: multicall.reducer })
+export const store = createStore(reducer)
 
 export default multicall

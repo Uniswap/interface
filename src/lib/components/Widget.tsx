@@ -1,5 +1,6 @@
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
+import { BlockUpdater } from 'lib/hooks/useBlockNumber'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { store as multicallStore } from 'lib/state/multicall'
@@ -66,6 +67,14 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
+function Updaters() {
+  return (
+    <>
+      <BlockUpdater />
+    </>
+  )
+}
+
 export type WidgetProps<T extends JSXElementConstructor<any> | undefined = undefined> = {
   theme?: Theme
   locale?: SupportedLocale
@@ -103,6 +112,7 @@ export default function Widget({
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
                     <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                      <Updaters />
                       {children}
                     </Web3Provider>
                   </AtomProvider>

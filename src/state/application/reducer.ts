@@ -51,14 +51,6 @@ const applicationSlice = createSlice({
       const { chainId } = action.payload
       state.chainId = chainId
     },
-    updateBlockNumber(state, action) {
-      const { chainId, blockNumber } = action.payload
-      if (typeof state.blockNumber[chainId] !== 'number') {
-        state.blockNumber[chainId] = blockNumber
-      } else {
-        state.blockNumber[chainId] = Math.max(blockNumber, state.blockNumber[chainId])
-      }
-    },
     setOpenModal(state, action) {
       state.openModal = action.payload
     },
@@ -82,5 +74,5 @@ const applicationSlice = createSlice({
   },
 })
 
-export const { updateChainId, updateBlockNumber, setOpenModal, addPopup, removePopup } = applicationSlice.actions
+export const { updateChainId, setOpenModal, addPopup, removePopup } = applicationSlice.actions
 export default applicationSlice.reducer
