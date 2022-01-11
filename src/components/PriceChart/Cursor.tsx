@@ -2,9 +2,9 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import {
+  SharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
-  useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
 import { getYForX } from 'react-native-redash'
@@ -18,13 +18,13 @@ import {
 const CURSOR_SIZE = 50
 
 interface CursorProps {
-  index: AnimatedNumber
-  translation: AnimatedTranslation
   graphs: GraphMetadatas
+  index: AnimatedNumber
+  isActive: SharedValue<boolean>
+  translation: AnimatedTranslation
 }
 
-export const Cursor = ({ index, translation, graphs }: CursorProps) => {
-  const isActive = useSharedValue(false)
+export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) => {
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: () => {
       isActive.value = true
@@ -34,12 +34,12 @@ export const Cursor = ({ index, translation, graphs }: CursorProps) => {
       translation.y.value = getYForX(graphs[index.value].data.path, translation.x.value) || 0
     },
     onEnd: () => {
-      //TODO(judo): reset cursor
       isActive.value = false
     },
   })
 
-  const style = useAnimatedStyle(() => {
+  // cursor position and scale animation
+  const cursorAnimatedStyles = useAnimatedStyle(() => {
     const translateX = translation.x.value - CURSOR_SIZE / 2
     const translateY = translation.y.value - CURSOR_SIZE / 2
     return {
@@ -56,7 +56,7 @@ export const Cursor = ({ index, translation, graphs }: CursorProps) => {
             borderRadius="full"
             height={CURSOR_SIZE}
             justifyContent="center"
-            style={[styles.cursor, style]}
+            style={[styles.cursor, cursorAnimatedStyles]}
             width={CURSOR_SIZE}>
             <Box width={15} height={15} borderRadius="full" bg="primary1" />
           </AnimatedBox>

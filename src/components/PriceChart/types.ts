@@ -6,6 +6,8 @@ export type AnimatedNumber = Animated.SharedValue<number>
 export type AnimatedTranslation = Vector<Animated.SharedValue<number>>
 
 export type GraphData = {
+  openDate: number
+  closeDate: number
   lowPrice: number
   highPrice: number
   openPrice: number

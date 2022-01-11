@@ -1,71 +1,92 @@
-import { createRestyleComponent, createVariant, useTheme, VariantProps } from '@shopify/restyle'
+import {
+  color,
+  ColorProps,
+  createRestyleComponent,
+  createVariant,
+  typography,
+  TypographyProps,
+  useTheme,
+  VariantProps,
+} from '@shopify/restyle'
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { interpolate, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+  useDerivedValue,
+} from 'react-native-reanimated'
 import { ReText, round } from 'react-native-redash'
-import { Box } from 'src/components/layout/Box'
-import { HEIGHT } from 'src/components/PriceChart/Model'
+import { Flex } from 'src/components/layout/Flex'
+import { HEIGHT, WIDTH } from 'src/components/PriceChart/Model'
 import {
   AnimatedNumber,
   AnimatedTranslation,
   GraphMetadatas,
 } from 'src/components/PriceChart/types'
-import { fontFamily } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
+import { formatDate } from 'src/utils/format'
 
 interface HeaderProps {
-  translation: AnimatedTranslation
-  index: AnimatedNumber
   graphs: GraphMetadatas
+  index: AnimatedNumber
+  isPanning: SharedValue<boolean>
+  title: string
+  translation: AnimatedTranslation
 }
 
-// const StyledReText = createBox<Theme,  & typeof ReText.arguments>(ReText)
-
 const StyledReText = createRestyleComponent<
-  VariantProps<Theme, 'textVariants'> & React.ComponentProps<typeof ReText>,
+  VariantProps<Theme, 'textVariants'> &
+    TypographyProps<Theme> &
+    ColorProps<Theme> &
+    React.ComponentProps<typeof ReText>,
   Theme
->([createVariant({ themeKey: 'textVariants' })], ReText)
+>([createVariant({ themeKey: 'textVariants' }), typography, color], ReText)
 
-export const Header = ({ translation, index, graphs }: HeaderProps) => {
+export const Header = ({ graphs, index, isPanning, title, translation }: HeaderProps) => {
   const theme = useTheme<Theme>()
 
   const data = useDerivedValue(() => graphs[index.value].data)
 
+  // retrieves price and formats it
   const price = useDerivedValue(() =>
-    translation.y.value === 0
-      ? data.value.closePrice
-      : interpolate(translation.y.value, [0, HEIGHT], [data.value.highPrice, data.value.lowPrice])
+    isPanning.value
+      ? interpolate(translation.y.value, [0, HEIGHT], [data.value.highPrice, data.value.lowPrice])
+      : data.value.closePrice
   )
+  const priceFormatted = useDerivedValue(() => {
+    // note. block runs inside a worklet, cannot re-use the existing price formatters as-is
+    return `$${round(price.value, 2).toLocaleString('en-US', { currency: 'USD' })}`
+  })
+
+  // retrieves percent change and format it
   const percentChange = useDerivedValue(
     () => ((price.value - data.value.openPrice) / data.value.openPrice) * 100
   )
-
-  const priceFormatted = useDerivedValue(() => {
-    return `$${round(price.value, 2).toLocaleString('en-US', { currency: 'USD' })}`
-  })
-  const percentChangeFormatted = useDerivedValue(() => `${round(percentChange.value, 3)}%`)
-
-  const style = useAnimatedStyle(() => ({
+  const percentChangeFormatted = useDerivedValue(() =>
+    isNaN(percentChange.value) ? '-' : `${round(percentChange.value, 2)}%`
+  )
+  const percentChangeLabelStyle = useAnimatedStyle(() => ({
     color: percentChange.value > 0 ? theme.colors.green : theme.colors.red,
   }))
 
+  // retrieves date and formats it
+  const header = useDerivedValue(() => {
+    if (!isPanning.value) return title
+
+    const unix = interpolate(
+      translation.x.value,
+      [0, WIDTH],
+      [data.value.openDate, data.value.closeDate]
+    )
+
+    return formatDate(new Date(unix * 1000))
+  })
+
   return (
-    <Box flex={1} padding="md" justifyContent="center">
-      <Box flex={1} alignItems="center">
-        <StyledReText
-          style={{ ...styles.homeBalanceLabel, color: theme.colors.mainForeground }}
-          text={priceFormatted}
-        />
-        <StyledReText variant="h3" style={style} text={percentChangeFormatted} />
-      </Box>
-    </Box>
+    <Flex flex={1} flexDirection="column" centered gap="xs">
+      <StyledReText color="gray200" text={header} variant="h4" />
+      <StyledReText color="mainForeground" fontSize={45} text={priceFormatted} />
+      <StyledReText style={percentChangeLabelStyle} text={percentChangeFormatted} variant="h3" />
+    </Flex>
   )
 }
-
-const styles = StyleSheet.create({
-  homeBalanceLabel: {
-    fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 45,
-    lineHeight: 45,
-  },
-})

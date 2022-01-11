@@ -120,9 +120,10 @@ export function buildGraph(datapoints: PriceList | undefined, precision: number)
   const openPrice = prices[0]
   const closePrice = prices[prices.length - 1]
 
-  const scaleX = scaleLinear()
-    .domain([dates[0], dates[dates.length - 1]])
-    .range([0, WIDTH])
+  const openDate = dates[0]
+  const closeDate = dates[dates.length - 1]
+
+  const scaleX = scaleLinear().domain([openDate, closeDate]).range([0, WIDTH])
   const scaleY = scaleLinear().domain([lowPrice, highPrice]).range([HEIGHT, 0])
 
   // normalize brings all paths to the same precision (number of points)
@@ -138,6 +139,8 @@ export function buildGraph(datapoints: PriceList | undefined, precision: number)
   )
 
   return {
+    openDate,
+    closeDate,
     lowPrice,
     highPrice,
     openPrice,

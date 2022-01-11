@@ -22,17 +22,23 @@ const BUTTON_WIDTH = SELECTION_WIDTH / NUM_GRAPHS
 
 interface GraphProps {
   graphs: GraphMetadatas
+  title: string
 }
 
 /**
  * Displays a set of graphs with header, scrubbable chart and navigation row.
  * Inspired by https://github.com/wcandillon/can-it-be-done-in-react-native/tree/master/season4/src/Rainbow
  */
-export const Graph = ({ graphs }: GraphProps) => {
+export const Graph = ({ graphs, title }: GraphProps) => {
+  // whether the graph pan gesture is active
+  const isPanning = useSharedValue(false)
+  // pan gesture x and y
   const translation = useVector()
+  // used in animations
   const transition = useSharedValue(1)
-
+  // previous graph index used in animations
   const previousGraphIndex = useSharedValue<number>(0)
+  // graph index used to display the current graph
   const currentGraphIndex = useSharedValue<number>(0)
 
   // mixes graph paths on index change
@@ -45,7 +51,6 @@ export const Graph = ({ graphs }: GraphProps) => {
     return d
   })
   const graphTransitionClosedAnimatedProps = useAnimatedProps(() => {
-    //TODO(judo): figure out a way to merge with `graphTransitionAnimatedProps`
     const previousPath = graphs[previousGraphIndex.value].data.path
     const currentPath = graphs[currentGraphIndex.value].data.path
     return {
@@ -57,13 +62,20 @@ export const Graph = ({ graphs }: GraphProps) => {
     }
   })
 
+  // animates slider (time range label background) on press
   const sliderStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: withTiming(BUTTON_WIDTH * currentGraphIndex.value) }],
   }))
 
   return (
     <Box flex={1}>
-      <Header translation={translation} index={currentGraphIndex} graphs={graphs} />
+      <Header
+        graphs={graphs}
+        index={currentGraphIndex}
+        isPanning={isPanning}
+        title={title}
+        translation={translation}
+      />
       <View>
         <Svg width={WIDTH} height={HEIGHT}>
           <AnimatedPath
@@ -87,7 +99,12 @@ export const Graph = ({ graphs }: GraphProps) => {
             strokeWidth={3}
           />
         </Svg>
-        <Cursor translation={translation} index={currentGraphIndex} graphs={graphs} />
+        <Cursor
+          graphs={graphs}
+          index={currentGraphIndex}
+          isActive={isPanning}
+          translation={translation}
+        />
       </View>
       <Box flexDirection="row" width={SELECTION_WIDTH} alignSelf="center">
         <View style={StyleSheet.absoluteFill}>

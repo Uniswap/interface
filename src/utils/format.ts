@@ -50,3 +50,17 @@ export function formatPrice(
 
   return formatter.format(parseFloat(price.toSignificant()))
 }
+
+/**
+ * Very simple date formatter
+ * Feel free to add more options / adapt to your needs.
+ */
+export function formatDate(date: Date) {
+  return date.toLocaleString('en-US', {
+    day: 'numeric', // numeric, 2-digit
+    year: 'numeric', // numeric, 2-digit
+    month: 'short', // numeric, 2-digit, long, short, narrow
+    hour: 'numeric', // numeric, 2-digit
+    minute: 'numeric', // numeric, 2-digit
+  })
+}

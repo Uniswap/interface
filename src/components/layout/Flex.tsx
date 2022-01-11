@@ -20,7 +20,12 @@ type FlexProps = ComponentProps<typeof Box> &
     gap?: keyof Theme['spacing']
   }
 
-/** Layout component to place child items with spacing between them */
+/**
+ * Layout component to place child items with spacing between them
+ * TODO:
+ *  - shorthand for flexDirection (and other props?)
+ *  - make `flex` a boolean prop to set `flex={1}`
+ * */
 export function Flex({
   alignItems = 'stretch',
   centered = false,

@@ -81,13 +81,8 @@ export function TokenDetailsScreen({
   return (
     <Screen>
       <TokenDetailsHeader currency={currency} />
-      <CenterBox>
-        <Text variant="h4" color="gray200">
-          {currency.name ?? t('Unknown token')}
-        </Text>
-      </CenterBox>
       <ScrollView>
-        <PriceChart token={currency.wrapped} />
+        <PriceChart currency={currency} />
         <Box mt="xl">
           <Text variant="h5" color="gray200" mx="lg">
             {t('Your balance')}

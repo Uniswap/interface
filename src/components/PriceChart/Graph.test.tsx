@@ -39,7 +39,7 @@ const graphs = [
 it('renders correctly', () => {
   const tree = render(
     <ThemeProvider theme={theme}>
-      <Graph graphs={graphs} />
+      <Graph graphs={graphs} title="My Token" />
     </ThemeProvider>
   ).toJSON()
   expect(tree).toMatchSnapshot()
@@ -48,7 +48,7 @@ it('renders correctly', () => {
 it('navigates between ranges', () => {
   const { getByText } = render(
     <ThemeProvider theme={theme}>
-      <Graph graphs={graphs} />
+      <Graph graphs={graphs} title="My token" />
     </ThemeProvider>
   )
 

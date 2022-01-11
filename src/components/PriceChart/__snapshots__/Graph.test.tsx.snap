@@ -15,68 +15,102 @@ exports[`renders correctly 1`] = `
     style={
       Array [
         Object {
+          "alignItems": "center",
           "display": "flex",
           "flex": 1,
+          "flexBasis": "auto",
+          "flexDirection": "column",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "flexWrap": "nowrap",
           "justifyContent": "center",
-          "padding": 16,
         },
       ]
     }
   >
+    <TextInput
+      animatedStyle={
+        Object {
+          "value": Object {},
+        }
+      }
+      collapsable={false}
+      editable={false}
+      style={
+        Object {
+          "color": "#B8B8B8",
+          "fontFamily": "UniswapSansBeta3-Medium",
+          "fontSize": 18,
+        }
+      }
+      text="My Token"
+      underlineColorAndroid="transparent"
+      value="My Token"
+    />
     <View
       style={
         Array [
           Object {
-            "alignItems": "center",
             "display": "flex",
-            "flex": 1,
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "height": 6,
           },
         ]
       }
-    >
-      <TextInput
-        animatedStyle={
-          Object {
-            "value": Object {},
-          }
+    />
+    <TextInput
+      animatedStyle={
+        Object {
+          "value": Object {},
         }
-        collapsable={false}
-        editable={false}
-        style={
-          Object {
-            "color": "#27252E",
-            "fontFamily": "UniswapSansBeta3-Medium",
-            "fontSize": 45,
-            "lineHeight": 45,
-          }
+      }
+      collapsable={false}
+      editable={false}
+      style={
+        Object {
+          "color": "#27252E",
+          "fontSize": 45,
         }
-        text="$100"
-        underlineColorAndroid="transparent"
-        value="$100"
-      />
-      <TextInput
-        animatedStyle={
+      }
+      text="$100"
+      underlineColorAndroid="transparent"
+      value="$100"
+    />
+    <View
+      style={
+        Array [
           Object {
-            "value": Object {
-              "color": "#DA2D2B",
-            },
-          }
-        }
-        collapsable={false}
-        editable={false}
-        style={
-          Object {
+            "display": "flex",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "height": 6,
+          },
+        ]
+      }
+    />
+    <TextInput
+      animatedStyle={
+        Object {
+          "value": Object {
             "color": "#DA2D2B",
-            "fontFamily": "UniswapSansBeta3-Medium",
-            "fontSize": 20,
-            "lineHeight": 26,
-          }
+          },
         }
-        text="-50%"
-        underlineColorAndroid="transparent"
-        value="-50%"
-      />
-    </View>
+      }
+      collapsable={false}
+      editable={false}
+      style={
+        Object {
+          "color": "#DA2D2B",
+          "fontFamily": "UniswapSansBeta3-Medium",
+          "fontSize": 20,
+          "lineHeight": 26,
+        }
+      }
+      text="-50%"
+      underlineColorAndroid="transparent"
+      value="-50%"
+    />
   </View>
   <View>
     <RNSVGSvgView
