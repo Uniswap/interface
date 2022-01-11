@@ -8,12 +8,14 @@
       {
         "paths": [
           {
-            "name": "styled-components/macro",
-            "message": "Please import styled from lib/theme to get the correct typings."
-          },
-          {
             "name": "react-feather",
             "message": "Please import from lib/icons to ensure performant usage."
+          }
+        ],
+        "patterns": [
+          {
+            "group": ["styled-components"],
+            "message": "Please import styled from lib/theme to get the correct typings."
           }
         ]
       }

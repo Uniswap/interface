@@ -1,4 +1,4 @@
-import { namehash } from '@ethersproject/hash'
+import { namehash } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 
 import { useSingleCallResult } from '../state/multicall/hooks'

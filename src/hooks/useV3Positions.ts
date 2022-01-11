@@ -1,4 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
 import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { PositionDetails } from 'types/position'

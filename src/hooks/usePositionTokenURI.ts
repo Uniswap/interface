@@ -1,4 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 

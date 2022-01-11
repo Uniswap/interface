@@ -1,6 +1,6 @@
-import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { isAddress } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { Text } from 'rebass'
