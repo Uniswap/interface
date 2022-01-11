@@ -1,3 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { hexZeroPad } from '@ethersproject/bytes'
 import { namehash } from '@ethersproject/hash'
 import { useEffect, useMemo, useState } from 'react'
 import { safeNamehash } from 'utils/safeNamehash'
@@ -134,11 +136,14 @@ function useERC1155Uri(
   const contract = useERC1155Contract(contractAddress)
   const balance = useSingleCallResult(contract, 'balanceOf', accountArgument)
   const uri = useSingleCallResult(contract, 'uri', idArgument)
+  // ERC-1155 allows a generic {id} in the URL, so prepare to replace if relevant,
+  //   in lowercase hexadecimal (with no 0x prefix) and leading zero padded to 64 hex characters.
+  const idHex = id ? hexZeroPad(BigNumber.from(id).toHexString(), 32).substring(2) : id
   return useMemo(
     () => ({
-      uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0] : undefined,
+      uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0]?.replaceAll('{id}', idHex) : undefined,
       loading: balance.loading || uri.loading,
     }),
-    [balance.loading, balance.result, enforceOwnership, uri.loading, uri.result]
+    [balance.loading, balance.result, enforceOwnership, uri.loading, uri.result, idHex]
   )
 }
