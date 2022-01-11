@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-05 20:06\n"
+"PO-Revision-Date: 2022-01-11 21:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1294,8 +1294,8 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "請連接到以太坊 Layer 1"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "請連接到適當的以太坊網絡。"
+msgid "Please connect to a supported network in the dropdown menu or in your wallet."
+msgstr "請在下拉菜單或您的錢包中連接到支持的網絡。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-05 20:06\n"
+"PO-Revision-Date: 2022-01-11 21:06\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -1294,8 +1294,8 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Lütfen Katman 1 Ethereum'a bağlanın"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "Lütfen uygun Ethereum ağına bağlanın."
+msgid "Please connect to a supported network in the dropdown menu or in your wallet."
+msgstr "Lütfen açılır menüden veya cüzdanınızdan desteklenen bir ağa bağlanın."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

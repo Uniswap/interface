@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-05 20:06\n"
+"PO-Revision-Date: 2022-01-11 21:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -1294,8 +1294,8 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "레이어 1 이더 리움에 연결하세요"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "적절한 이더리움 네트워크에 연결하십시오."
+msgid "Please connect to a supported network in the dropdown menu or in your wallet."
+msgstr "드롭다운 메뉴 또는 지갑에서 지원되는 네트워크에 연결하십시오."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

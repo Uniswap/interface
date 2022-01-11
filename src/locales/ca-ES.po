@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-05 20:06\n"
+"PO-Revision-Date: 2022-01-11 21:06\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -1294,8 +1294,8 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Connecteu-vos a la capa 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "Connecteu-vos a la xarxa Ethereum adequada."
+msgid "Please connect to a supported network in the dropdown menu or in your wallet."
+msgstr "Connecteu-vos a una xarxa compatible al menú desplegable o a la vostra cartera."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
