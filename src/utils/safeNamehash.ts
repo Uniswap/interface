@@ -1,4 +1,4 @@
-import { namehash } from '@ethersproject/hash'
+import { namehash } from 'ethers/lib/utils'
 
 export function safeNamehash(name?: string): string | undefined {
   if (name === undefined) return undefined

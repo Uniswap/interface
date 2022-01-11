@@ -1,5 +1,5 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import type { providers } from 'ethers'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 
@@ -165,7 +165,7 @@ export function useClaimCallback(account: string | null | undefined): {
     return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
-        .then((response: TransactionResponse) => {
+        .then((response: providers.TransactionResponse) => {
           addTransaction(response, {
             type: TransactionType.CLAIM,
             recipient: account,

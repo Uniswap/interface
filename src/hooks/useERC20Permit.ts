@@ -1,8 +1,8 @@
-import { splitSignature } from '@ethersproject/bytes'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { splitSignature } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 

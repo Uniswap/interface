@@ -1,5 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
@@ -16,6 +14,8 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
+import type { providers } from 'ethers'
+import { BigNumber } from 'ethers'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTheme from 'hooks/useTheme'
@@ -145,7 +145,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         return library
           .getSigner()
           .sendTransaction(newTxn)
-          .then((response: TransactionResponse) => {
+          .then((response: providers.TransactionResponse) => {
             ReactGA.event({
               category: 'Liquidity',
               action: 'RemoveV3',

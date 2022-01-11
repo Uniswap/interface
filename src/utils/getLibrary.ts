@@ -1,4 +1,4 @@
-import { Web3Provider } from '@ethersproject/providers'
+import { providers } from 'ethers'
 import ms from 'ms.macro'
 
 import { SupportedChainId } from '../constants/chains'
@@ -10,8 +10,8 @@ const NETWORK_POLLING_INTERVALS: { [chainId: number]: number } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: ms`1s`,
 }
 
-export default function getLibrary(provider: any): Web3Provider {
-  const library = new Web3Provider(
+export default function getLibrary(provider: any): providers.Web3Provider {
+  const library = new providers.Web3Provider(
     provider,
     typeof provider.chainId === 'number'
       ? provider.chainId
