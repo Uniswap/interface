@@ -24,7 +24,6 @@ import {
   GraphMetadatas,
 } from 'src/components/PriceChart/types'
 import { Theme } from 'src/styles/theme'
-import { formatDate } from 'src/utils/format'
 
 interface HeaderProps {
   graphs: GraphMetadatas
@@ -79,7 +78,13 @@ export const Header = ({ graphs, index, isPanning, title, translation }: HeaderP
       [data.value.openDate, data.value.closeDate]
     )
 
-    return formatDate(new Date(unix * 1000))
+    return new Date(unix * 1000).toLocaleString('en-US', {
+      day: 'numeric', // numeric, 2-digit
+      year: 'numeric', // numeric, 2-digit
+      month: 'short', // numeric, 2-digit, long, short, narrow
+      hour: 'numeric', // numeric, 2-digit
+      minute: 'numeric', // numeric, 2-digit
+    })
   })
 
   return (
