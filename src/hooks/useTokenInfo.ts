@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 
 import { ChainId, Token, WETH } from '@dynamic-amm/sdk'
-import { COINGECKO_NATIVE_TOKEN_ID, COINGECKO_NETWORK_ID } from 'constants/index'
+import { COINGECKO_API_URL, COINGECKO_NATIVE_TOKEN_ID, COINGECKO_NETWORK_ID } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 
 interface TokenInfo {
@@ -26,9 +26,9 @@ export default function useTokenInfo(token: Token | undefined): { data: TokenInf
 
   if (tokenAddress?.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()) {
     // If the token is native token, we have to use different endpoint
-    url = `https://api.coingecko.com/api/v3/coins/${COINGECKO_NATIVE_TOKEN_ID[chainId || ChainId.MAINNET]}`
+    url = `${COINGECKO_API_URL}/coins/${COINGECKO_NATIVE_TOKEN_ID[chainId || ChainId.MAINNET]}`
   } else {
-    url = `https://api.coingecko.com/api/v3/coins/${
+    url = `${COINGECKO_API_URL}/coins/${
       COINGECKO_NETWORK_ID[chainId || ChainId.MAINNET]
     }/contract/${tokenAddress?.toLowerCase()}`
   }
