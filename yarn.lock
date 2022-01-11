@@ -5008,10 +5008,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^2.5.9":
-  version "2.5.9"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.5.9.tgz#00cd6e43f9a47ff4a5e3b7ff51dba65886776db1"
-  integrity sha512-xbD/J9M68KpvcaOSP9MMzTS6JN4iRjOessyBEYLgk/sYQpLwNDqvviE1TL0vsNnr+xlizMGsttpUzAgAJpjbwA==
+"@uniswap/smart-order-router@^2.5.10":
+  version "2.5.10"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.5.10.tgz#b7d1147797c68a24c8d42f07e5a36d740bf4f63f"
+  integrity sha512-0wXgVBjhb+v6ONINEuL//SVOk0qLeS54Br/yzjtu6nV7wA70jkqE+EZ84QqW8dpdG0AUUQ3qNDKoTSH3VSv9aw==
   dependencies:
     "@bitauth/libauth" "^1.17.1"
     "@ethersproject/bignumber" "^5.1.1"
