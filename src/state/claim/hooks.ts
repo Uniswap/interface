@@ -1,6 +1,7 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import type { providers } from 'ethers'
 import JSBI from 'jsbi'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
 
 import { UNI } from '../../constants/tokens'
@@ -8,7 +9,6 @@ import { useMerkleDistributorContract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { useSingleCallResult } from '../multicall/hooks'
 import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
 
@@ -165,7 +165,7 @@ export function useClaimCallback(account: string | null | undefined): {
     return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
-        .then((response: TransactionResponse) => {
+        .then((response: providers.TransactionResponse) => {
           addTransaction(response, {
             type: TransactionType.CLAIM,
             recipient: account,

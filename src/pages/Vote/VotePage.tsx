@@ -1,10 +1,11 @@
-import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
@@ -27,7 +28,7 @@ import {
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
+import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import {
   ProposalData,

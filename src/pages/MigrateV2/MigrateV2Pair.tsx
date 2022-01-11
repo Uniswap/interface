@@ -1,5 +1,3 @@
-import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
@@ -12,12 +10,15 @@ import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
 import SettingsTab from 'components/Settings'
 import { Dots } from 'components/swap/styleds'
+import type { providers } from 'ethers'
+import { Contract } from 'ethers'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { PoolState, usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
+import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -43,7 +44,6 @@ import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, ThemedText } from '../../theme'
@@ -335,7 +335,7 @@ function V2PairMigration({
       .then((gasEstimate) => {
         return migrator
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
-          .then((response: TransactionResponse) => {
+          .then((response: providers.TransactionResponse) => {
             ReactGA.event({
               category: 'Migrate',
               action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,

@@ -26,7 +26,7 @@ export default function TransactionTtlInput() {
           <IntegerInput
             placeholder={TRANSACTION_TTL_DEFAULT.toString()}
             value={transactionTtl}
-            onChange={(value) => setTransactionTtl(value ?? 0)}
+            onChange={(value) => setTransactionTtl(value && typeof value === 'string' ? parseFloat(value) : 0)}
             ref={input}
           />
           <Trans>minutes</Trans>

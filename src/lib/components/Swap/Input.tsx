@@ -3,7 +3,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
-import { ReactNode } from 'react'
 import { useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 
 import Column from '../Column'
@@ -23,10 +22,9 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
 
 interface InputProps {
   disabled?: boolean
-  children: ReactNode
 }
 
-export default function Input({ disabled, children }: InputProps) {
+export default function Input({ disabled }: InputProps) {
   const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const {
     currencies: { [Field.INPUT]: inputCurrency },
@@ -65,7 +63,6 @@ export default function Input({ disabled, children }: InputProps) {
         </ThemedText.Body2>
       </TokenInput>
       <Row />
-      {children}
     </InputColumn>
   )
 }

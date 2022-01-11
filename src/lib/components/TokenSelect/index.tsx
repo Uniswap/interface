@@ -14,9 +14,7 @@ import Rule from '../Rule'
 import TokenBase from './TokenBase'
 import TokenButton from './TokenButton'
 import TokenOptions from './TokenOptions'
-
-// TODO: integrate with web3-react context
-const mockTokens = COMMON_BASES[ChainId.MAINNET]
+import useQueriedTokenList from './useQueriedTokenList'
 
 const SearchInput = styled(StringInput)`
   ${inputCss}
@@ -24,9 +22,9 @@ const SearchInput = styled(StringInput)`
 
 export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) => void }) {
   const baseTokens = COMMON_BASES[ChainId.MAINNET]
-  const tokens = mockTokens
 
-  const [search, setSearch] = useState('')
+  const [query, setQuery] = useState('')
+  const tokens = useQueriedTokenList(query)
 
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus(), [input])
@@ -40,8 +38,8 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) =>
         <Row pad={0.75} grow>
           <ThemedText.Body1>
             <SearchInput
-              value={search}
-              onChange={setSearch}
+              value={query}
+              onChange={setQuery}
               placeholder={t`Search by token name or address`}
               onKeyDown={options?.onKeyDown}
               onBlur={options?.blur}
@@ -59,6 +57,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) =>
             <Rule padded />
           </>
         )}
+        <Rule padded />
       </Column>
       <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
     </>

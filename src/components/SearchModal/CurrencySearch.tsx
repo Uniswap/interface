@@ -5,6 +5,7 @@ import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
+import { createTokenFilterFunction, tokenComparator, useSortedTokensByQuery } from 'lib/components/TokenSelect/utils'
 import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Edit } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -21,15 +22,14 @@ import {
   useToken,
 } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { useAllTokenBalances } from '../../state/wallet/hooks'
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens, useSortedTokensByQuery } from './filtering'
 import ImportRow from './ImportRow'
-import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
 const ContentWrapper = styled(Column)`
@@ -84,8 +84,6 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const [invertSearchOrder] = useState<boolean>(false)
-
   const allTokens = useAllTokens()
 
   // if they input an address, use it
@@ -105,15 +103,15 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
-  const tokenComparator = useTokenComparator(invertSearchOrder)
+  const filteredTokens: Token[] = useMemo(
+    () => Object.values(allTokens).filter(createTokenFilterFunction(debouncedQuery)),
+    [allTokens, debouncedQuery]
+  )
 
-  const filteredTokens: Token[] = useMemo(() => {
-    return filterTokens(Object.values(allTokens), debouncedQuery)
-  }, [allTokens, debouncedQuery])
-
+  const balances = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(() => {
-    return filteredTokens.sort(tokenComparator)
-  }, [filteredTokens, tokenComparator])
+    return filteredTokens.sort(tokenComparator.bind(null, balances))
+  }, [balances, filteredTokens])
 
   const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 

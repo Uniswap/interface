@@ -4,9 +4,9 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+// eslint-disable-next-line no-restricted-imports
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
-import { JsonRpcProvider } from '@ethersproject/providers'
-import { Wallet } from '@ethersproject/wallet'
+import { providers, Wallet } from 'ethers'
 
 // todo: figure out how env vars actually work in CI
 // const TEST_PRIVATE_KEY = Cypress.env('INTEGRATION_TEST_PRIVATE_KEY')
@@ -81,7 +81,7 @@ Cypress.Commands.overwrite('visit', (original, url, options) => {
     onBeforeLoad(win) {
       options && options.onBeforeLoad && options.onBeforeLoad(win)
       win.localStorage.clear()
-      const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
+      const provider = new providers.JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
       const signer = new Wallet(TEST_PRIVATE_KEY, provider)
       win.ethereum = new CustomizedBridge(signer, provider)
     },

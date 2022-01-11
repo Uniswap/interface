@@ -5,7 +5,7 @@ import Vibrant from 'node-vibrant/lib/bundle'
 import { useLayoutEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-const colors = new Map<string, string>()
+const colors = new Map<string, string | undefined>()
 
 function UriForEthToken(address: string) {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png?color`
@@ -24,26 +24,23 @@ async function getColorFromToken(token: Token, cb: (color: string | undefined | 
   if (!logoURI) {
     return cb(null)
   }
+  const key = chainId + address
+  let color = colors.get(key)
 
-  // Color extraction must use a CORS-compatible resource, but the resource is already cached.
-  // Add a dummy parameter to force a different browser resource cache entry.
-  // Without this, color extraction prevents resource caching.
-  const uri = uriToHttp(logoURI)[0] + '?color'
-
-  let color = colors.get(uri)
-  if (color) {
-    return cb(color)
+  if (!color && logoURI) {
+    // Color extraction must use a CORS-compatible resource, but the resource is already cached.
+    // Add a dummy parameter to force a different browser resource cache entry.
+    // Without this, color extraction prevents resource caching.
+    const uri = uriToHttp(logoURI)[0] + '?color'
+    color = await getColorFromUriPath(uri)
   }
 
-  color = await getColorFromUriPath(uri)
   if (!color && chainId === 1) {
     const fallbackUri = UriForEthToken(address)
     color = await getColorFromUriPath(fallbackUri)
   }
-  if (color) {
-    colors.set(uri, color)
-  }
 
+  colors.set(key, color)
   return cb(color)
 }
 

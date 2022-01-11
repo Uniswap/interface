@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-05 20:06\n"
+"PO-Revision-Date: 2022-01-11 21:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -232,7 +232,7 @@ msgstr "批准 {0}"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approve {0} first"
-msgstr "先批准 {0}"
+msgstr "先授权 {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -587,7 +587,7 @@ msgstr "当前 {0} 兑换率："
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Custom"
-msgstr "风俗"
+msgstr "自定义"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
@@ -933,7 +933,7 @@ msgstr "现有流动量不足以支持此交易。"
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Insufficient {0}"
-msgstr "不足 {0}"
+msgstr "{0} 不足"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
@@ -1294,8 +1294,8 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "请连接到以太坊 Layer 1"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "请连接到适当的以太坊网络。"
+msgid "Please connect to a supported network in the dropdown menu or in your wallet."
+msgstr "请在下拉菜单或您的钱包中连接到支持的网络。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1510,7 +1510,7 @@ msgstr "功能建议"
 
 #: src/lib/components/Swap/Settings/index.tsx
 msgid "Reset"
-msgstr "重启"
+msgstr "重置"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1520,11 +1520,11 @@ msgstr "返回"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Review swap"
-msgstr "审查交换"
+msgstr "检查交易"
 
 #: src/lib/components/TokenSelect/index.tsx
 msgid "Search by token name or address"
-msgstr "按令牌名称或地址搜索"
+msgstr "按代币名称或地址搜索"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1672,7 +1672,7 @@ msgstr "仍要兑换"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
-msgstr "交换详情"
+msgstr "交易详情"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
@@ -1685,7 +1685,7 @@ msgstr "兑换失败： {0}"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
-msgstr "交换摘要"
+msgstr "交易摘要"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1851,7 +1851,7 @@ msgstr "交易路由"
 
 #: src/lib/components/Swap/Input.tsx
 msgid "Trading"
-msgstr "贸易"
+msgstr "交易"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1879,7 +1879,7 @@ msgstr "交易截止期限"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Transaction pending"
-msgstr "交易待定"
+msgstr "交易等待中"
 
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1900,7 +1900,7 @@ msgstr "再试一次"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "尝试增加您的滑点容限。<0/>注意：转移和变基代币的费用与 Uniswap V3 不兼容。"
+msgstr "尝试增加您的滑点容限。<0/>注意：在转账和rebase时产生费用的代币与 Uniswap V3 不兼容。"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2564,7 +2564,7 @@ msgstr "{label} 代币桥"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "{min}m {sec}s"
-msgstr "{min}米 {sec}秒"
+msgstr "{min}分 {sec}秒"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

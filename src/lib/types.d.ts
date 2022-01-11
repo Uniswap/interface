@@ -4,5 +4,5 @@ export interface Token {
   chainId: number
   decimals: number
   address: string
-  logoURI: string
+  logoURI?: string
 }

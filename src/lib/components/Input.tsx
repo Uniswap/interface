@@ -144,6 +144,7 @@ const decimalEnforcer = (nextUserInput: string) => {
   }
   return null
 }
+
 export const DecimalInput = forwardRef(function DecimalInput(props: NumericInputProps, ref) {
   return <NumericInput pattern="^[0-9]*[.,]?[0-9]*$" enforcer={decimalEnforcer} ref={ref as any} {...props} />
 })

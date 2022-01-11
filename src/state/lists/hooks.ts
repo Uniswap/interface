@@ -1,4 +1,4 @@
-import { TokenList } from '@uniswap/token-lists'
+import { ChainTokenMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
@@ -7,38 +7,11 @@ import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/unsupported.tokenlist.json'
 import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
-import { WrappedTokenInfo } from './wrappedTokenInfo'
 
-export type TokenAddressMap = Readonly<{
-  [chainId: number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }>
-}>
+export type TokenAddressMap = ChainTokenMap
 
 type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>
-}
-
-const listCache: WeakMap<TokenList, TokenAddressMap> | null =
-  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
-
-function listToTokenMap(list: TokenList): TokenAddressMap {
-  const result = listCache?.get(list)
-  if (result) return result
-
-  const map = list.tokens.reduce<Mutable<TokenAddressMap>>((tokenMap, tokenInfo) => {
-    const token = new WrappedTokenInfo(tokenInfo, list)
-    if (tokenMap[token.chainId]?.[token.address] !== undefined) {
-      console.error(`Duplicate token! ${token.address}`)
-      return tokenMap
-    }
-    if (!tokenMap[token.chainId]) tokenMap[token.chainId] = {}
-    tokenMap[token.chainId][token.address] = {
-      token,
-      list,
-    }
-    return tokenMap
-  }, {}) as TokenAddressMap
-  listCache?.set(list, map)
-  return map
 }
 
 export function useAllLists(): AppState['lists']['byUrl'] {
@@ -84,7 +57,7 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
           const current = lists[currentUrl]?.current
           if (!current) return allTokens
           try {
-            return combineMaps(allTokens, listToTokenMap(current))
+            return combineMaps(allTokens, tokensToChainTokenMap(current))
           } catch (error) {
             console.error('Could not show token list due to error', error)
             return allTokens
@@ -119,10 +92,10 @@ export function useCombinedActiveList(): TokenAddressMap {
 // list of tokens not supported on interface for various reasons, used to show warnings and prevent swaps and adds
 export function useUnsupportedTokenList(): TokenAddressMap {
   // get hard-coded broken tokens
-  const brokenListMap = useMemo(() => listToTokenMap(BROKEN_LIST), [])
+  const brokenListMap = useMemo(() => tokensToChainTokenMap(BROKEN_LIST), [])
 
   // get hard-coded list of unsupported tokens
-  const localUnsupportedListMap = useMemo(() => listToTokenMap(UNSUPPORTED_TOKEN_LIST), [])
+  const localUnsupportedListMap = useMemo(() => tokensToChainTokenMap(UNSUPPORTED_TOKEN_LIST), [])
 
   // get dynamic list of unsupported tokens
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)

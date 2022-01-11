@@ -1,6 +1,6 @@
-import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { parseUnits } from 'ethers/lib/utils'
 import { useBestTrade } from 'hooks/useBestTrade'
 import { useAtomValue } from 'jotai/utils'
 import JSBI from 'jsbi'

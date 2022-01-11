@@ -1,9 +1,12 @@
 import { Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useAtom } from 'jotai'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 
 import { TextButton } from '../Button'
@@ -22,23 +25,28 @@ function RoutingTooltip() {
 }
 
 interface LoadedStateProps {
-  input: FilledInput
-  output: FilledInput
+  inputAmount: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<Currency>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 }
 
-function LoadedState({ input, output }: LoadedStateProps) {
+function LoadedState({ inputAmount, outputAmount, trade }: LoadedStateProps) {
   const [flip, setFlip] = useState(true)
+  const executionPrice = trade?.executionPrice
+  const usdcValue = useUSDCPrice(inputAmount.currency)
+
   const ratio = useMemo(() => {
-    const [a, b] = flip ? [output, input] : [input, output]
-    const ratio = `1 ${a.token.symbol} = ${b.value / a.value} ${b.token.symbol}`
-    const usdc = a.usdc && ` ($${(a.usdc / a.value).toLocaleString('en')})`
+    const [a, b] = flip ? [outputAmount, inputAmount] : [inputAmount, outputAmount]
+
+    const ratio = `1 ${a.currency.symbol} = ${executionPrice?.toSignificant(6)} ${b.currency.symbol}`
+    const usdc = usdcValue ? ` ($${usdcValue.toSignificant(2)})` : null
     return (
       <Row gap={0.25} style={{ userSelect: 'text' }}>
         {ratio}
         {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
       </Row>
     )
-  }, [flip, input, output])
+  }, [executionPrice, flip, inputAmount, outputAmount, usdcValue])
 
   return (
     <TextButton color="primary" onClick={() => setFlip(!flip)}>
@@ -91,7 +99,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         return (
           <>
             <RoutingTooltip />
-            {/* <LoadedState input={filledInput} output={filledOutput} /> */}
+            <LoadedState inputAmount={inputAmount} outputAmount={outputAmount} trade={trade?.trade} />
           </>
         )
       }
@@ -102,7 +110,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         <Trans>Enter an amount</Trans>
       </>
     )
-  }, [activeInput, balance, disabled, input, output, swap])
+  }, [balance, disabled, independentField, inputAmount, inputCurrency, outputAmount, outputCurency, trade?.trade])
 
   return (
     <>
