@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
 import { namehash } from '@ethersproject/hash'
+import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
 import { safeNamehash } from 'utils/safeNamehash'
-import uriToHttp from 'utils/uriToHttp'
 
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { isAddress } from '../utils'

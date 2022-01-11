@@ -3,7 +3,7 @@ import { Provider as AtomProvider } from 'jotai'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
-import { ReactNode, StrictMode, useRef } from 'react'
+import { ComponentProps, JSXElementConstructor, PropsWithChildren, StrictMode, useRef } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
@@ -64,8 +64,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-export interface WidgetProps {
-  children: ReactNode
+export type WidgetProps<T extends JSXElementConstructor<any> | undefined = undefined> = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: EthProvider
@@ -74,7 +73,10 @@ export interface WidgetProps {
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
-}
+} & (T extends JSXElementConstructor<any>
+  ? ComponentProps<T>
+  : // eslint-disable-next-line @typescript-eslint/ban-types
+    {})
 
 export default function Widget({
   children,
@@ -86,7 +88,7 @@ export default function Widget({
   dialog,
   className,
   onError,
-}: WidgetProps) {
+}: PropsWithChildren<WidgetProps>) {
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (

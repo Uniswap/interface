@@ -7,6 +7,7 @@
       "lib/*": ["./*"],
       "constants/*": ["../constants/*"],
       "hooks/*": ["../hooks/*"],
+      "state/*": ["../state/*"],
     },
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],

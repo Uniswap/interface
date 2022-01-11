@@ -1,7 +1,6 @@
 import useNativeEvent from 'lib/hooks/useNativeEvent'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import styled, { ThemedText } from 'lib/theme'
-import { Token } from 'lib/types'
 import {
   ComponentClass,
   CSSProperties,
@@ -17,6 +16,7 @@ import {
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import invariant from 'tiny-invariant'
 
 import { BaseButton } from '../Button'
@@ -31,7 +31,7 @@ const TokenButton = styled(BaseButton)`
 `
 
 const ITEM_SIZE = 56
-type ItemData = Token[]
+type ItemData = WrappedTokenInfo[]
 interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
 const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
   hover: number
@@ -55,13 +55,13 @@ const OnHover = styled.div<{ hover: number }>`
 
 interface TokenOptionProps {
   index: number
-  value: Token
+  value: WrappedTokenInfo
   style: CSSProperties
 }
 
 interface BubbledEvent extends SyntheticEvent {
   index?: number
-  token?: Token
+  token?: WrappedTokenInfo
   ref?: HTMLButtonElement
 }
 
@@ -121,8 +121,8 @@ interface TokenOptionsHandle {
 }
 
 interface TokenOptionsProps {
-  tokens: Token[]
-  onSelect: (token: Token) => void
+  tokens: WrappedTokenInfo[]
+  onSelect: (token: WrappedTokenInfo) => void
 }
 
 const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function TokenOptions(

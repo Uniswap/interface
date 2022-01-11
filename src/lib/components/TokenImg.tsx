@@ -1,16 +1,21 @@
 import useNativeEvent from 'lib/hooks/useNativeEvent'
 import styled from 'lib/theme'
-import { Token } from 'lib/types'
+import uriToHttp from 'lib/utils/uriToHttp'
 import { useState } from 'react'
 
 interface TokenImgProps {
   className?: string
-  token: Token
+  token: {
+    name?: string
+    symbol: string
+    logoURI?: string
+  }
 }
 const TRANSPARENT_SRC = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 
 function TokenImg({ className, token }: TokenImgProps) {
   const [img, setImg] = useState<HTMLImageElement | null>(null)
+  const src = token.logoURI ? uriToHttp(token.logoURI)[0] : TRANSPARENT_SRC
   useNativeEvent(img, 'error', () => {
     if (img) {
       // Use a local transparent gif to avoid the browser-dependent broken img icon.
@@ -18,7 +23,7 @@ function TokenImg({ className, token }: TokenImgProps) {
       img.src = TRANSPARENT_SRC
     }
   })
-  return <img className={className} src={token.logoURI} alt={token.name || token.symbol} ref={setImg} />
+  return <img className={className} src={src} alt={token.name || token.symbol} ref={setImg} />
 }
 
 export default styled(TokenImg)<{ size?: number }>`
