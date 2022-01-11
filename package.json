@@ -188,11 +188,11 @@
     "tiny-invariant": "^1.2.0",
     "wcag-contrast": "^3.0.0",
     "wicg-inert": "^3.1.1",
-    "widgets-web3-react/core": "npm:@web3-react/core@8.0.16-alpha.0",
-    "widgets-web3-react/eip1193": "npm:@web3-react/eip1193@8.0.16-alpha.0",
-    "widgets-web3-react/empty": "npm:@web3-react/empty@8.0.17-alpha.0",
-    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.16-alpha.0",
-    "widgets-web3-react/types": "npm:@web3-react/types@8.0.16-alpha.0",
-    "widgets-web3-react/url": "npm:@web3-react/url@8.0.17-alpha.0"
+    "widgets-web3-react/core": "npm:@web3-react/core@8.0.0-beta.0",
+    "widgets-web3-react/eip1193": "npm:@web3-react/eip1193@8.0.0-beta.0",
+    "widgets-web3-react/empty": "npm:@web3-react/empty@8.0.0-beta.0",
+    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.0-beta.0",
+    "widgets-web3-react/types": "npm:@web3-react/types@8.0.0-beta.0",
+    "widgets-web3-react/url": "npm:@web3-react/url@8.0.0-beta.0"
   }
 }
