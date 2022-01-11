@@ -119,7 +119,7 @@
     "workbox-routing": "^6.1.0"
   },
   "resolutions": {
-    "@walletconnect/ethereum-provider": "1.6.5"
+    "@walletconnect/ethereum-provider": "1.7.1"
   },
   "scripts": {
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
