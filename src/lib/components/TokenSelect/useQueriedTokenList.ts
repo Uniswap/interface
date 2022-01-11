@@ -4,7 +4,7 @@ import useTokenList from 'lib/hooks/useTokenList'
 import { useMemo } from 'react'
 import { useTokenBalances } from 'state/wallet/hooks'
 
-import { createTokenFilterFunction, tokenComparator, useSortedTokensByQuery } from './utils'
+import { getTokenFilter, tokenComparator, useSortTokensByQuery } from './utils'
 
 // TODO: Include balance
 
@@ -21,12 +21,12 @@ export default function useQueriedTokenList(query: string) {
   // Filters tokens
   const debouncedQuery = useDebounce(query, 200)
   const filteredTokens = useMemo(
-    () => sortedTokens.filter(createTokenFilterFunction(debouncedQuery)),
+    () => sortedTokens.filter(getTokenFilter(debouncedQuery)),
     [debouncedQuery, sortedTokens]
   )
 
   // Re-sorts tokens (ie to bump up exact matches)
-  const sortedFilteredTokens = useSortedTokensByQuery(filteredTokens, debouncedQuery)
+  const sortedFilteredTokens = useSortTokensByQuery(debouncedQuery, filteredTokens)
 
   // TODO(zzmp): Include native Currency
   return sortedFilteredTokens

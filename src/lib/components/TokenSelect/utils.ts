@@ -33,7 +33,7 @@ export function tokenComparator(balances: ReturnType<typeof useTokenBalances>, a
 const alwaysTrue = () => true
 
 /** Creates a filter function that filters tokens that do not match the query. */
-export function createTokenFilterFunction<T extends Token | TokenInfo>(query: string): (tokens: T) => boolean {
+export function getTokenFilter<T extends Token | TokenInfo>(query: string): (token: T) => boolean {
   const searchingAddress = isAddress(query)
 
   if (searchingAddress) {
@@ -61,7 +61,7 @@ export function createTokenFilterFunction<T extends Token | TokenInfo>(query: st
 }
 
 /** Sorts tokens by query, giving precedence to exact matches and partial matches. */
-export function useSortedTokensByQuery<T extends Token | TokenInfo>(tokens: T[] | undefined, query: string): T[] {
+export function useSortTokensByQuery<T extends Token | TokenInfo>(query: string, tokens?: T[]): T[] {
   return useMemo(() => {
     if (!tokens) {
       return []

@@ -5,7 +5,7 @@ import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
-import { createTokenFilterFunction, tokenComparator, useSortedTokensByQuery } from 'lib/components/TokenSelect/utils'
+import { getTokenFilter, tokenComparator, useSortTokensByQuery } from 'lib/components/TokenSelect/utils'
 import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Edit } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -104,7 +104,7 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const filteredTokens: Token[] = useMemo(
-    () => Object.values(allTokens).filter(createTokenFilterFunction(debouncedQuery)),
+    () => Object.values(allTokens).filter(getTokenFilter(debouncedQuery)),
     [allTokens, debouncedQuery]
   )
 
@@ -113,7 +113,7 @@ export function CurrencySearch({
     return filteredTokens.sort(tokenComparator.bind(null, balances))
   }, [balances, filteredTokens])
 
-  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
+  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency()
 

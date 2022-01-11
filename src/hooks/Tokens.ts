@@ -1,7 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { arrayify, parseBytes32String } from 'ethers/lib/utils'
-import { createTokenFilterFunction } from 'lib/components/TokenSelect/utils'
+import { getTokenFilter } from 'lib/components/TokenSelect/utils'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 
@@ -115,7 +115,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
   const activeTokens = useAllTokens()
   return useMemo(() => {
     if (!search || search.trim().length === 0) return []
-    const tokenFilter = createTokenFilterFunction(search)
+    const tokenFilter = getTokenFilter(search)
     const result: WrappedTokenInfo[] = []
     const addressSet: { [address: string]: true } = {}
     for (const url of inactiveUrls) {
