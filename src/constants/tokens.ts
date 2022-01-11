@@ -35,16 +35,16 @@ export const UNI: { [chainId in ChainId]: Token } = {
 export const WETH9 = {
   [ChainId.MAINNET]: new Token(
     ChainId.MAINNET,
-    '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    '0xbc0b8C49443E309528a7F21211933A58096B866c',
     18,
     'WETH9',
-    'Wrapped Ether'
+    'Wrapped Evmos'
   ),
   [ChainId.TESTNET]: new Token(
     ChainId.TESTNET,
-    '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+    '0xbc0b8C49443E309528a7F21211933A58096B866c',
     18,
     'WETH9',
-    'Wrapped Ether'
+    'Wrapped Evmos'
   ),
 }
