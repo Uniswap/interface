@@ -29,6 +29,10 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   const map = list.tokens.reduce<TokenAddressMap>(
     (tokenMap, tokenInfo) => {
       const token = new WrappedTokenInfo(tokenInfo, list)
+      if (!tokenMap[token.chainId]) {
+        console.warn(`Trying to add token for unsuppored chain: ${token.chainId}`)
+        return tokenMap
+      }
       if (tokenMap[token.chainId][token.address] !== undefined) {
         console.error(new Error(`Duplicate token! ${token.address}`))
         return tokenMap
@@ -76,16 +80,14 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
         .reduce((allTokens, currentUrl) => {
           const current = lists[currentUrl]?.current
           if (!current) return allTokens
-          return allTokens
-          /**
-           * @TODO: get the tokenlist in here
-           */
-          // try {
-          //   return combineMaps(allTokens, listToTokenMap(current))
-          // } catch (error) {
-          //   console.error('Could not show token list due to error', error)
-          //   return allTokens
-          // }
+
+          try {
+            const combined = combineMaps(allTokens, listToTokenMap(current))
+            return combined
+          } catch (error) {
+            console.error('Could not show token list due to error', error)
+            return allTokens
+          }
         }, EMPTY_LIST)
     )
   }, [lists, urls])
@@ -106,11 +108,9 @@ export function useInactiveListUrls(): string[] {
 
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList(): TokenAddressMap {
-  return EMPTY_LIST
-  // @TODO: MH: activate again
-  // const activeListUrls = useActiveListUrls()
-  // const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-  // return combineMaps(activeTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
+  const activeListUrls = useActiveListUrls()
+  const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
+  return combineMaps(activeTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
 }
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds

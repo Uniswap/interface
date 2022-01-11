@@ -14,9 +14,10 @@ const DIFFUSION_LIST = 'https://raw.githubusercontent.com/diffusion-fi/tokenlist
 // const CMC_STABLECOIN = 'stablecoin.cmc.eth'
 // const KLEROS_LIST = 't2crtokens.eth'
 // const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
-const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
+// const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
 
-export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
+export const UNSUPPORTED_LIST_URLS: string[] = []
+// export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
