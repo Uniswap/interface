@@ -1,5 +1,6 @@
 import styled, { css, ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
+// eslint-disable-next-line no-restricted-imports
 import { AnyStyledComponent } from 'styled-components'
 
 import Row from '../../Row'

@@ -1,7 +1,6 @@
-import { arrayify } from '@ethersproject/bytes'
-import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { arrayify, parseBytes32String } from 'ethers/lib/utils'
 import { createTokenFilterFunction } from 'lib/components/TokenSelect/utils'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'

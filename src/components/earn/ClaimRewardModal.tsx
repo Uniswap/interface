@@ -1,5 +1,5 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import type { providers } from 'ethers'
 import { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -47,7 +47,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       setAttempting(true)
       await stakingContract
         .getReward({ gasLimit: 350000 })
-        .then((response: TransactionResponse) => {
+        .then((response: providers.TransactionResponse) => {
           addTransaction(response, {
             type: TransactionType.CLAIM,
             recipient: account,

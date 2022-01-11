@@ -1,5 +1,5 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import type { providers } from 'ethers'
 import { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -48,7 +48,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       setAttempting(true)
       await stakingContract
         .exit({ gasLimit: 300000 })
-        .then((response: TransactionResponse) => {
+        .then((response: providers.TransactionResponse) => {
           addTransaction(response, {
             type: TransactionType.WITHDRAW_LIQUIDITY_STAKING,
             token0Address: stakingInfo.tokens[0].address,

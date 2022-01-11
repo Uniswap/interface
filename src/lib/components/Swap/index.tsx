@@ -56,9 +56,8 @@ export default function Swap({ defaults }: SwapProps) {
       </Header>
       <div ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <Input disabled={!active}>
-            <ReverseButton disabled={!active} />
-          </Input>
+          <Input disabled={!active} />
+          <ReverseButton disabled={!active} />
           <Output disabled={!active}>
             <Toolbar disabled={!active} />
             <SwapButton />
