@@ -37,7 +37,7 @@ export default function OpticsV1Warning() {
 
   return (
     <TopSection gap="md">
-      {opticsV1TokensWithBalances && (
+      {opticsV1TokensWithBalances && opticsV1TokensWithBalances.length > 0 && (
         <WarningCard>
           <CardSection>
             <RowStart>
