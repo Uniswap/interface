@@ -6,6 +6,8 @@ import { useTokenBalances } from 'state/wallet/hooks'
 
 import { createTokenFilterFunction, tokenComparator, useSortedTokensByQuery } from './utils'
 
+// TODO: Include balance
+
 export default function useQueriedTokenList(query: string) {
   const tokenMap = useTokenList()
   const tokens = useMemo(() => Object.values(tokenMap).map(({ token }) => token), [tokenMap])
