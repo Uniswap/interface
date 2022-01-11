@@ -931,6 +931,9 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
   [ChainId.CRONOS]: []
 }
 
+export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
+export const KNC_COINGECKO_ID = 'kyber-network-crystal'
+
 export const COINGECKO_NETWORK_ID = {
   [ChainId.MAINNET]: 'ethereum',
   [ChainId.BSCMAINNET]: 'binance-smart-chain',
