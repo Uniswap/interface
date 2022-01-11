@@ -92,7 +92,7 @@ export const Dots = styled.span`
 `
 
 const SwapCallbackErrorInner = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
+  background-color: #fff;
   border-radius: 1rem;
   display: flex;
   align-items: center;
