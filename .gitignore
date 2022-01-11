@@ -76,3 +76,6 @@ src/abis/uniswapV3
 
 # hardhat network fork
 /cache/
+
+# Storybook
+build-storybook.log
