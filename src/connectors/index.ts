@@ -34,6 +34,7 @@ export const walletconnect = new WalletConnectConnector({
   supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
   rpc: INFURA_NETWORK_URLS,
   qrcode: true,
+  chaiId: 1,
 })
 
 // mainnet only
