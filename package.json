@@ -174,7 +174,6 @@
     "cids": "^1.0.0",
     "immer": "^9.0.6",
     "jotai": "^1.3.7",
-    "lodash": "^4.17.21",
     "make-plural": "^7.0.0",
     "multicodec": "^3.0.1",
     "multihashes": "^4.0.2",
