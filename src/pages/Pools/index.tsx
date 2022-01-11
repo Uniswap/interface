@@ -122,6 +122,8 @@ const Pools = ({
 
   const popularPairs: PopularPair[] = POPULAR_PAIRS[chainId as ChainId]
 
+  const uniquePairs: { [key: string]: boolean } = {}
+
   return (
     <>
       <PageWrapper>
@@ -291,6 +293,11 @@ const Pools = ({
 
           {Object.values(farms)
             .flat()
+            .filter(farm => {
+              if (uniquePairs[`${farm.token0?.symbol}-${farm.token1?.symbol}`]) return false
+              uniquePairs[`${farm.token0?.symbol}-${farm.token1?.symbol}`] = true
+              return true
+            })
             .map((farm, index) => (
               <PoolFarm key={index} farm={farm} />
             ))}

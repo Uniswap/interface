@@ -478,7 +478,13 @@ export const KNC: { [chainId in ChainId]: Token } = {
     'Kyber Network Crystal'
   ),
   [ChainId.AVAXTESTNET]: new Token(ChainId.AVAXTESTNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
-  [ChainId.AVAXMAINNET]: new Token(ChainId.AVAXMAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
+  [ChainId.AVAXMAINNET]: new Token(
+    ChainId.AVAXMAINNET,
+    '0x39fC9e94Caeacb435842FADeDeCB783589F50f5f',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
   [ChainId.FANTOM]: new Token(ChainId.FANTOM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.CRONOSTESTNET]: new Token(
     ChainId.CRONOSTESTNET,
@@ -836,6 +842,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
         ],
   [ChainId.AVAXTESTNET]: ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'],
   [ChainId.AVAXMAINNET]: [
+    '0xD169410524Ab1c3C51F56a856a2157B88d4D4FF5',
     '0x3133C5C35947dBcA7A76Ee05f106a7c63BFD5C3F',
     '0x98910F7f13496fcDE2ade93648F05b4854Fc99D9',
     '0x854Cf246b09c7366AEe5abce92fA167bfE7f3E75'
@@ -914,10 +921,10 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
         ],
   [ChainId.AVAXTESTNET]: ['0x2b4b833864f75fc23f96b5a0cbde8a4046c710b6', '0x0cfc06499dab780aab7775dc260117ec5ca106b4'],
   [ChainId.AVAXMAINNET]: [
+    '0x44d1b2974b3b8CE93B261f6D15DcE5ad57f8933B',
     '0xe1dAd9E06380bC8962e259dDd6a5257A4f56d525',
     '0x0f0FC5a5029E3d155708356b422D22Cc29f8b3D4',
-    '0x535a99a079d64b8c3f4cc264eba70d82992b224b',
-    '0x44d1b2974b3b8CE93B261f6D15DcE5ad57f8933B'
+    '0x535a99a079d64b8c3f4cc264eba70d82992b224b'
   ],
   [ChainId.FANTOM]: [],
   [ChainId.CRONOSTESTNET]: [],

@@ -3,13 +3,13 @@ export const AVAX_MAINNET_TOKEN_LIST = {
   keywords: ['kyberswap', 'dmmexchange'],
   timestamp: '2020-12-12T00:00:00+00:00',
   tokens: [
-    // {
-    //   chainId: 43113,
-    //   address: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
-    //   symbol: 'KNC',
-    //   name: 'Kyber Network Crystal',
-    //   decimals: 18
-    // },
+    {
+      chainId: 43114,
+      address: '0x39fC9e94Caeacb435842FADeDeCB783589F50f5f',
+      symbol: 'KNC',
+      name: 'Kyber Network Crystal',
+      decimals: 18
+    },
     {
       chainId: 43114,
       address: '0x938fe3788222a74924e062120e7bfac829c719fb',
