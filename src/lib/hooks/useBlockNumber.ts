@@ -57,6 +57,8 @@ export function BlockUpdater() {
 }
 
 /** Requires that BlockUpdater be installed in the DOM tree. */
-export default function useBlockNumber() {
-  return useAtomValue(blockAtom)
+export default function useBlockNumber(): number | undefined {
+  const { chainId } = useActiveWeb3React()
+  const block = useAtomValue(blockAtom)
+  return chainId ? block : undefined
 }
