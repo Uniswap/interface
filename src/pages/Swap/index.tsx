@@ -46,10 +46,9 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
-import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
-import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
