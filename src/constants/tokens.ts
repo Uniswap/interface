@@ -62,5 +62,5 @@ export const PHOTON = new NativeToken(
   '0x09a3ecafa817268f77be1283176b946c4ff2e608',
   18,
   'PHOTON',
-  'Photon'
+  'Evmos'
 )
