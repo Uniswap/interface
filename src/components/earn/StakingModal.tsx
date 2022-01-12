@@ -1,7 +1,7 @@
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import type { providers } from 'ethers'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -105,7 +105,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             signatureData.s,
             { gasLimit: 350000 }
           )
-          .then((response: providers.TransactionResponse) => {
+          .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.DEPOSIT_LIQUIDITY_STAKING,
               token0Address: stakingInfo.tokens[0].address,

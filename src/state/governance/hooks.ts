@@ -1,20 +1,15 @@
+import { defaultAbiCoder, Interface } from '@ethersproject/abi'
+import { isAddress } from '@ethersproject/address'
+import { Contract } from '@ethersproject/contracts'
+import { TransactionResponse } from '@ethersproject/providers'
+import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
+import { formatUnits } from '@ethersproject/units'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import type { providers } from 'ethers'
-import { Contract } from 'ethers'
-import {
-  defaultAbiCoder,
-  formatUnits,
-  Interface,
-  isAddress,
-  toUtf8String,
-  Utf8ErrorFuncs,
-  Utf8ErrorReason,
-} from 'ethers/lib/utils'
 import {
   useGovernanceBravoContract,
   useGovernanceV0Contract,
@@ -325,7 +320,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
       return uniContract.estimateGas.delegate(...args, {}).then((estimatedGasLimit) => {
         return uniContract
           .delegate(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
-          .then((response: providers.TransactionResponse) => {
+          .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.DELEGATE,
               delegatee,
@@ -354,7 +349,7 @@ export function useVoteCallback(): {
       return latestGovernanceContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
           .castVote(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
-          .then((response: providers.TransactionResponse) => {
+          .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.VOTE,
               decision: voteOption,
@@ -394,7 +389,7 @@ export function useCreateProposalCallback(): (
       return latestGovernanceContract.estimateGas.propose(...args).then((estimatedGasLimit) => {
         return latestGovernanceContract
           .propose(...args, { gasLimit: calculateGasMargin(estimatedGasLimit) })
-          .then((response: providers.TransactionResponse) => {
+          .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.SUBMIT_PROPOSAL,
             })

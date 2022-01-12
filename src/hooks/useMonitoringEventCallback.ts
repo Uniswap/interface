@@ -1,4 +1,4 @@
-import { providers } from 'ethers'
+import { TransactionResponse } from '@ethersproject/providers'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, push, ref } from 'firebase/database'
 import { useCallback } from 'react'
@@ -6,7 +6,7 @@ import { TransactionInfo, TransactionType } from 'state/transactions/actions'
 
 import { useActiveWeb3React } from './web3'
 
-type PartialTransactionResponse = Pick<providers.TransactionResponse, 'hash' | 'v' | 'r' | 's'>
+type PartialTransactionResponse = Pick<TransactionResponse, 'hash' | 'v' | 'r' | 's'>
 
 const SUPPORTED_TRANSACTION_TYPES = [
   TransactionType.ADD_LIQUIDITY_V2_POOL,
@@ -61,7 +61,7 @@ export function useTransactionMonitoringEventCallback() {
   const log = useMonitoringEventCallback()
 
   return useCallback(
-    (info: TransactionInfo, transactionResponse: providers.TransactionResponse) => {
+    (info: TransactionInfo, transactionResponse: TransactionResponse) => {
       if (SUPPORTED_TRANSACTION_TYPES.includes(info.type)) {
         log(TransactionType[info.type], {
           transactionResponse: (({ hash, v, r, s }: PartialTransactionResponse) => ({ hash, v, r, s }))(

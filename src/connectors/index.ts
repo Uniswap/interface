@@ -1,9 +1,9 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import type { providers } from 'ethers'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 import { ALL_SUPPORTED_CHAIN_IDS, INFURA_NETWORK_URLS, SupportedChainId } from '../constants/chains'
@@ -19,8 +19,8 @@ export const network = new NetworkConnector({
   defaultChainId: 1,
 })
 
-let networkLibrary: providers.Web3Provider | undefined
-export function getNetworkLibrary(): providers.Web3Provider {
+let networkLibrary: Web3Provider | undefined
+export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? getLibrary(network.provider))
 }
 

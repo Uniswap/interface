@@ -1,5 +1,6 @@
-import { BigNumber } from 'ethers'
-import { hexZeroPad, namehash } from 'ethers/lib/utils'
+import { BigNumber } from '@ethersproject/bignumber'
+import { hexZeroPad } from '@ethersproject/bytes'
+import { namehash } from '@ethersproject/hash'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
 import { safeNamehash } from 'utils/safeNamehash'

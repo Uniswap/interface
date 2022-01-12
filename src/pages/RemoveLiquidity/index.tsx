@@ -1,7 +1,8 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import type { providers } from 'ethers'
-import { BigNumber, Contract } from 'ethers'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -261,7 +262,7 @@ export default function RemoveLiquidity({
       await router[methodName](...args, {
         gasLimit: safeGasEstimate,
       })
-        .then((response: providers.TransactionResponse) => {
+        .then((response: TransactionResponse) => {
           setAttemptingTxn(false)
 
           addTransaction(response, {

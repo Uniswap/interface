@@ -1,5 +1,5 @@
+import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import { isAddress } from 'ethers/lib/utils'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'

@@ -1,9 +1,9 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import type { providers } from 'ethers'
-import { BigNumber } from 'ethers'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -272,7 +272,7 @@ export default function AddLiquidity({
           return library
             .getSigner()
             .sendTransaction(newTxn)
-            .then((response: providers.TransactionResponse) => {
+            .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               addTransaction(response, {
                 type: TransactionType.ADD_LIQUIDITY_V3_POOL,
