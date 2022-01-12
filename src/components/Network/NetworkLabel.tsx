@@ -2,7 +2,7 @@ import React from 'react'
 import { Image } from 'react-native'
 import { Pill } from 'src/components/text/Pill'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
-import { getNetworkColors } from 'src/utils/colors'
+import { useNetworkColors } from 'src/utils/colors'
 
 interface NetworkLabelProps {
   chainId: ChainId
@@ -11,7 +11,7 @@ interface NetworkLabelProps {
 
 export function NetworkLabel({ chainId, showBorder = false }: NetworkLabelProps) {
   const info = CHAIN_INFO[chainId]
-  const colors = getNetworkColors(chainId)
+  const colors = useNetworkColors(chainId)
 
   return (
     <Pill

@@ -16,8 +16,8 @@ exports[`renders a NetworkLabel with border 1`] = `
         "paddingVertical": 6,
       },
       Object {
-        "backgroundColor": "#F9AC1410",
-        "borderColor": "#F9AC14",
+        "backgroundColor": "blue",
+        "borderColor": "blue",
       },
     ]
   }
@@ -42,7 +42,7 @@ exports[`renders a NetworkLabel with border 1`] = `
           "lineHeight": 24,
         },
         Object {
-          "color": "#F9AC14",
+          "color": "blue",
         },
       ]
     }
@@ -68,7 +68,7 @@ exports[`renders a NetworkLabel without image 1`] = `
         "paddingVertical": 6,
       },
       Object {
-        "backgroundColor": "#F9AC1410",
+        "backgroundColor": "blue",
         "borderColor": "transparent",
       },
     ]
@@ -94,7 +94,7 @@ exports[`renders a NetworkLabel without image 1`] = `
           "lineHeight": 24,
         },
         Object {
-          "color": "#F9AC14",
+          "color": "blue",
         },
       ]
     }

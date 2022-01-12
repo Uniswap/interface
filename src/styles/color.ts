@@ -28,6 +28,16 @@ export interface Palette {
   warning: string
   error: string
   none: string
+
+  chain_1: string
+  chain_3: string
+  chain_4: string
+  chain_5: string
+  chain_10: string
+  chain_42: string
+  chain_69: string
+  chain_42161: string
+  chain_421611: string
 }
 
 export const colorsLight: Palette = {
@@ -58,6 +68,16 @@ export const colorsLight: Palette = {
   warning: '#FF8F00',
   error: '#DF1F38',
   none: 'transparent',
+
+  chain_1: '#627EEA',
+  chain_3: 'yellow',
+  chain_4: 'blue',
+  chain_5: 'green',
+  chain_10: '#ff0420',
+  chain_42: 'orange',
+  chain_69: '#ff0420',
+  chain_42161: '#f22020',
+  chain_421611: '#f22020',
 }
 
 export const colorsDark: Palette = {
@@ -88,4 +108,14 @@ export const colorsDark: Palette = {
   warning: '#FF8F00',
   error: '#FD4040',
   none: 'transparent',
+
+  chain_1: '#627EEA',
+  chain_3: 'yellow',
+  chain_4: 'blue',
+  chain_5: 'green',
+  chain_10: '#ff0420',
+  chain_42: 'orange',
+  chain_69: '#ff0420',
+  chain_42161: '#f22020',
+  chain_421611: '#f22020',
 }

@@ -28,12 +28,12 @@ exports[`renders a currency logo with network logo 1`] = `
       style={
         Array [
           Object {
-            "borderRadius": "full",
+            "borderRadius": 999999,
             "borderWidth": 2,
             "display": "flex",
           },
           Object {
-            "borderColor": "#F9AC14",
+            "borderColor": "blue",
           },
         ]
       }

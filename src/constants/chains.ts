@@ -60,7 +60,6 @@ export interface L1ChainInfo {
   readonly infoLink: string
   readonly label: string
   readonly logoUrl?: string
-  readonly primaryColor?: string
   readonly rpcUrls?: string[]
   readonly subgraphUrl?: string
   readonly nativeCurrency: {
@@ -107,7 +106,6 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
-    primaryColor: '#627EEA',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     subgraphUrl: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   },
@@ -118,7 +116,6 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Rinkeby',
     logoUrl:
       'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
-    primaryColor: '#F9AC14',
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
     subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-rinkeby',
   },
@@ -129,7 +126,6 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Ropsten',
     logoUrl:
       'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
-    primaryColor: '#FF0420',
     nativeCurrency: { name: 'Ropsten ETH', symbol: 'ropETH', decimals: 18 },
   },
   [ChainId.KOVAN]: {
@@ -139,7 +135,6 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Kovan',
     logoUrl:
       'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
-    primaryColor: '#32B830',
     nativeCurrency: { name: 'Kovan ETH', symbol: 'kovETH', decimals: 18 },
   },
   [ChainId.GOERLI]: {
@@ -161,7 +156,6 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'OΞ',
     logoUrl:
       'https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/images/Profile-Logo.png',
-    primaryColor: '#ff0420',
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.optimism.io'],
     statusPage: 'https://optimism.io/status',
@@ -175,7 +169,6 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Optimistic Kovan',
     logoUrl:
       'https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/images/Stylized-Logo.png',
-    primaryColor: '#ff0420',
     rpcUrls: ['https://kovan.optimism.io'],
     nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
     statusPage: 'https://optimism.io/status',

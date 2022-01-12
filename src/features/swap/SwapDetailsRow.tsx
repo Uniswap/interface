@@ -6,7 +6,7 @@ import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { Trade } from 'src/features/swap/useTrade'
 import { formatExecutionPrice } from 'src/features/swap/utils'
-import { getNetworkColors } from 'src/utils/colors'
+import { useNetworkColors } from 'src/utils/colors'
 import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailRowProps {
@@ -18,7 +18,7 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
   const { label, trade } = props
 
   const chainId = trade?.inputAmount.currency.chainId ?? ChainId.MAINNET
-  const networkColors = getNetworkColors(chainId)
+  const networkColors = useNetworkColors(chainId)
 
   return (
     <Box flexDirection="row" justifyContent="space-between" alignSelf="stretch" alignItems="center">

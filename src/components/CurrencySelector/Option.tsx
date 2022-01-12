@@ -6,7 +6,7 @@ import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
-import { getNetworkColors } from 'src/utils/colors'
+import { useNetworkColors } from 'src/utils/colors'
 
 interface OptionProps {
   currency: Currency
@@ -16,7 +16,7 @@ interface OptionProps {
 
 export function Option({ currency, onPress }: OptionProps) {
   const info = CHAIN_INFO[currency.chainId]
-  const colors = getNetworkColors(currency.chainId)
+  const colors = useNetworkColors(currency.chainId)
   return (
     <Pressable onPress={onPress}>
       <Box
