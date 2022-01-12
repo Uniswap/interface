@@ -1,7 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexStripZeros } from '@ethersproject/bytes'
 import { Web3Provider } from '@ethersproject/providers'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 
 interface SwitchNetworkArguments {
   library: Web3Provider

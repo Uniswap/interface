@@ -18,6 +18,7 @@ import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
+import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
@@ -32,13 +33,12 @@ import {
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
+import { UNI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from '../abis/types'
-import { UNI, WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
 
 // returns null on errors
