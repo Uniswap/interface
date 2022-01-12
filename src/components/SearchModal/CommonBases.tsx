@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { Currency, currencyEquals, Token, ETHER } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, Token } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
 import { ChainId } from 'constants/chains'
@@ -9,6 +9,7 @@ import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
+import { PHOTON } from '../../constants/tokens'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -46,15 +47,15 @@ export default function CommonBases({
       <AutoRow gap="4px">
         <BaseWrapper
           onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-              onSelect(ETHER)
+            if (!selectedCurrency || !currencyEquals(selectedCurrency, PHOTON)) {
+              onSelect(PHOTON)
             }
           }}
           disable={selectedCurrency?.isEther}
         >
-          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
+          <CurrencyLogo currency={PHOTON} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
-            ETH
+            PHOTON
           </Text>
         </BaseWrapper>
         {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((token: Token) => {
