@@ -6,6 +6,7 @@ import { EMPTY } from 'widgets-web3-react/empty'
 
 export default function ErrorGenerator() {
   const [connector] = useAtomValue(providerAtom)
+  console.log(connector, connector === EMPTY)
   useEffect(() => {
     if (connector === EMPTY) {
       throw missingProviderError
