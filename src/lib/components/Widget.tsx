@@ -11,6 +11,7 @@ import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
+import ErrorGenerator from './Error/ErrorGenerator'
 import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
@@ -114,6 +115,7 @@ export default function Widget({
                   <AtomProvider>
                     <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
                       <Updaters />
+                      <ErrorGenerator />
                       {children}
                     </Web3Provider>
                   </AtomProvider>
