@@ -124,7 +124,7 @@ export function NetworkAlert() {
   const [darkMode] = useDarkModeManager()
   const [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
   const [locallyDismissed, setLocallyDimissed] = useState(false)
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const userEthBalance = useETHBalances(account ? [account?.toLowerCase()] : [])?.[account?.toLowerCase() ?? '']
 
   const dismiss = useCallback(() => {
     if (userEthBalance?.greaterThan(0)) {
