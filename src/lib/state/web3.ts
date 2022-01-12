@@ -1,4 +1,5 @@
 import { createMulticall } from '@uniswap/redux-multicall'
+import { atom } from 'jotai'
 import { atomWithStore } from 'jotai/redux'
 import { atomWithDefault } from 'jotai/utils'
 import { createStore } from 'redux'
@@ -12,6 +13,7 @@ export type Web3ReactState = [Connector, Web3ReactHooks]
 
 export const urlAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
 export const injectedAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
+export const providerAtom = atom((get) => get(injectedAtom) || get(urlAtom))
 
 export const multicall = createMulticall()
 const multicallStore = createStore(multicall.reducer)

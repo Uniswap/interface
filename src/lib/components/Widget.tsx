@@ -8,6 +8,7 @@ import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
+import ErrorReporter from './Error/ErrorReporter'
 import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
@@ -100,6 +101,7 @@ export default function Widget({
               <ErrorBoundary onError={onError}>
                 <AtomProvider>
                   <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                    <ErrorReporter />
                     {children}
                   </Web3Provider>
                 </AtomProvider>
