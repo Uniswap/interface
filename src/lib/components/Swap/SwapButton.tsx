@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { useDerivedSwapInfo } from 'lib/hooks/swap'
 import { Field } from 'lib/state/swap'
 import { useCallback, useMemo, useState } from 'react'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'

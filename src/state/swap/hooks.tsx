@@ -2,9 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import { useBestTrade } from 'hooks/useBestTrade'
-import { useAtomValue } from 'jotai/utils'
 import JSBI from 'jsbi'
-import { stateAtom, useSwitchCurrencies, useUpdateCurrency, useUpdateTypedInput } from 'lib/state/swap'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -22,15 +20,7 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 
 export function useSwapState(): AppState['swap'] {
-  const widgetState = useAtomValue(stateAtom)
-  const appState = useAppSelector((state) => state.swap)
-
-  // split path for widget state if widget
-  if (process.env.REACT_APP_IS_WIDGET) {
-    return widgetState
-  }
-
-  return appState
+  return useAppSelector((state) => state.swap)
 }
 
 export function useSwapActionHandlers(): {
@@ -39,52 +29,30 @@ export function useSwapActionHandlers(): {
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
-  // split path for widget state if widget
-  if (process.env.REACT_APP_IS_WIDGET) {
-  }
-
   const dispatch = useAppDispatch()
-  const updateCurrency = useUpdateCurrency()
 
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
       const currencyId = currency.isToken ? currency.address : currency.isNative ? 'ETH' : ''
-      if (process.env.REACT_APP_IS_WIDGET) {
-        updateCurrency({
+      dispatch(
+        selectCurrency({
           field,
           currencyId,
         })
-      } else {
-        dispatch(
-          selectCurrency({
-            field,
-            currencyId,
-          })
-        )
-      }
+      )
     },
-    [dispatch, updateCurrency]
+    [dispatch]
   )
 
-  const switchCurrenciesWidget = useSwitchCurrencies()
   const onSwitchTokens = useCallback(() => {
-    if (process.env.REACT_APP_IS_WIDGET) {
-      switchCurrenciesWidget()
-    } else {
-      dispatch(switchCurrencies())
-    }
-  }, [dispatch, switchCurrenciesWidget])
+    dispatch(switchCurrencies())
+  }, [dispatch])
 
-  const updateTypedInputWidget = useUpdateTypedInput()
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
-      if (process.env.REACT_APP_IS_WIDGET) {
-        updateTypedInputWidget({ field, typedValue })
-      } else {
-        dispatch(typeInput({ field, typedValue }))
-      }
+      dispatch(typeInput({ field, typedValue }))
     },
-    [dispatch, updateTypedInputWidget]
+    [dispatch]
   )
 
   const onChangeRecipient = useCallback(

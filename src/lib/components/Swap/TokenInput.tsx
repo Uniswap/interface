@@ -75,7 +75,7 @@ export default function TokenInput({
       <TokenInputRow gap={0.5} onBlur={onBlur}>
         <ThemedText.H2>
           <ValueInput
-            value={amount?.toSignificant(6) ?? ''}
+            value={amount?.toExact() ?? ''}
             onFocus={onFocus}
             onChange={onChangeInput}
             disabled={disabled || !currency}

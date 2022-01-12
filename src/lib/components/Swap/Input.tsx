@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
+import { useDerivedSwapInfo, useSwapActionHandlers } from 'lib/hooks/swap'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
-import { useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 
 import Column from '../Column'
 import Row from '../Row'
@@ -48,7 +48,7 @@ export default function Input({ disabled }: InputProps) {
         amount={inputAmount}
         disabled={disabled}
         onMax={balance ? () => onUserInput(Field.INPUT, balance.toExact()) : undefined}
-        onChangeInput={(val) => (val ? onUserInput(Field.INPUT, val?.toString()) : null)}
+        onChangeInput={(val) => onUserInput(Field.INPUT, val ?? '')}
         onChangeCurrency={(currency: Currency) => onCurrencySelection(Field.INPUT, currency)}
       >
         <ThemedText.Body2 color="secondary">

@@ -1,10 +1,10 @@
 import { ChainId } from '@uniswap/smart-order-router'
 import { DAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
+import { useDerivedSwapInfo, useSwapActionHandlers } from 'lib/hooks/swap'
 import { Field } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
-import { useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 
 import Swap from '.'
 import { colorAtom } from './Output'

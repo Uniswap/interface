@@ -82,7 +82,7 @@ export default function TokenSelect({ value, collapsed, disabled, onSelect }: To
   )
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={() => setOpen(true)} />
+      <TokenButton currency={value} collapsed={collapsed} disabled={disabled} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <TokenSelectDialog onSelect={selectAndClose} />

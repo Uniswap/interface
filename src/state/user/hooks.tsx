@@ -107,7 +107,7 @@ export function useExpertModeManager(): [boolean, () => void] {
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
   const dispatch = useAppDispatch()
 
-  const clientSideRouter = useAppSelector((state) => Boolean(state.user.userClientSideRouter))
+  const clientSideRouter = useAppSelector((state) => Boolean(state?.user?.userClientSideRouter))
 
   const setClientSideRouter = useCallback(
     (newClientSideRouter: boolean) => {
@@ -146,11 +146,12 @@ export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'au
  */
 export function useUserSlippageTolerance(): Percent | 'auto' {
   const userSlippageTolerance = useAppSelector((state) => {
-    return state.user.userSlippageTolerance
+    return state?.user?.userSlippageTolerance
   })
 
   return useMemo(
-    () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
+    () =>
+      userSlippageTolerance === 'auto' || !userSlippageTolerance ? 'auto' : new Percent(userSlippageTolerance, 10_000),
     [userSlippageTolerance]
   )
 }

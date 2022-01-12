@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { IconButton } from 'lib/components/Button'
+import { useDerivedSwapInfo } from 'lib/hooks/swap'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useState } from 'react'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'

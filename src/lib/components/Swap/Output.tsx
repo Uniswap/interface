@@ -3,11 +3,11 @@ import { Currency } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
+import { useDerivedSwapInfo, useSwapActionHandlers } from 'lib/hooks/swap'
 import useColor, { usePrefetchColor } from 'lib/hooks/useColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
-import { useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 
 import Column from '../Column'
 import Row from '../Row'
@@ -78,8 +78,8 @@ export default function Output({ disabled, children }: OutputProps) {
           currency={outputCurrency}
           amount={outputAmount}
           disabled={disabled}
-          onChangeInput={(val) => (val ? onUserInput(Field.INPUT, val?.toString()) : null)}
-          onChangeCurrency={(currency: Currency) => onCurrencySelection(Field.INPUT, currency)}
+          onChangeInput={(val) => (val ? onUserInput(Field.OUTPUT, val?.toString()) : null)}
+          onChangeCurrency={(currency: Currency) => onCurrencySelection(Field.OUTPUT, currency)}
         >
           <ThemedText.Body2 color="secondary">
             <Row>

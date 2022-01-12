@@ -1,5 +1,5 @@
 import styled, { css } from 'lib/theme'
-import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
+import { forwardRef, HTMLProps, useCallback, useState } from 'react'
 
 const Input = styled.input`
   -webkit-appearance: textfield;
@@ -82,11 +82,6 @@ const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(fun
 ) {
   // Allow value/onChange to use number by preventing a  trailing decimal separator from triggering onChange
   const [state, setState] = useState(value ?? '')
-  useEffect(() => {
-    if (state !== value) {
-      setState(value ?? '')
-    }
-  }, [value, state, setState])
 
   const validateChange = useCallback(
     (event) => {
@@ -130,7 +125,7 @@ const integerEnforcer = (nextUserInput: string) => {
   return null
 }
 export const IntegerInput = forwardRef(function IntegerInput(props: NumericInputProps, ref) {
-  return <NumericInput pattern="^[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
+  return <NumericInput pattern="^[0-9]*[.,]?[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
 })
 
 const decimalRegexp = /^\d*(?:[.])?\d*$/
@@ -146,7 +141,24 @@ const decimalEnforcer = (nextUserInput: string) => {
 }
 
 export const DecimalInput = forwardRef(function DecimalInput(props: NumericInputProps, ref) {
-  return <NumericInput pattern="^[0-9]*[.,]?[0-9]*$" enforcer={decimalEnforcer} ref={ref as any} {...props} />
+  return (
+    <NumericInput
+      // universal input options
+      inputMode="decimal"
+      autoComplete="off"
+      autoCorrect="off"
+      // text-specific options
+      type="text"
+      pattern="^[0-9]*[.,]?[0-9]*$"
+      placeholder={'0.0'}
+      minLength={1}
+      maxLength={79}
+      spellCheck="false"
+      enforcer={decimalEnforcer}
+      ref={ref as any}
+      {...props}
+    />
+  )
 })
 
 export const inputCss = css`

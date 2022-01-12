@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { ChevronDown } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
-import { currencyId } from 'utils/currencyId'
 
 import Button from '../Button'
 import Row from '../Row'
@@ -28,21 +27,26 @@ const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
 `
 
 interface TokenButtonProps {
-  value?: Currency | null | undefined
+  currency: Currency | null | undefined
   collapsed: boolean
   disabled?: boolean
   onClick: () => void
 }
 
-export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
+export default function TokenButton({ currency, collapsed, disabled, onClick }: TokenButtonProps) {
   return (
-    <StyledTokenButton onClick={onClick} empty={!value} color={value ? 'interactive' : 'accent'} disabled={disabled}>
+    <StyledTokenButton
+      onClick={onClick}
+      empty={!currency}
+      color={currency ? 'interactive' : 'accent'}
+      disabled={disabled}
+    >
       <ThemedText.ButtonLarge color="onInteractive">
-        <TokenButtonRow gap={0.4} collapsed={Boolean(value) && collapsed}>
-          {value ? (
+        <TokenButtonRow gap={0.4} collapsed={Boolean(currency) && collapsed}>
+          {currency ? (
             <>
-              <TokenImg token={value} size={1.2} />
-              {currencyId(value)}
+              <TokenImg token={currency} size={1.2} />
+              {currency.symbol}
             </>
           ) : (
             <Trans>Select a token</Trans>
