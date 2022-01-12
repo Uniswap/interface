@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
@@ -99,7 +99,8 @@ export default function App() {
 
                 <Route exact strict path="/find" component={PoolFinder} />
                 <Route exact strict path="/pool/v2" component={PoolV2} />
-                <Route exact strict path="/pool" component={Pool} />
+                {/* <Route exact strict path="/pool" component={Pool} /> */}
+                <Redirect from="/pool" to="/pool/v2" />
                 <Route exact strict path="/pool/:tokenId" component={PositionPage} />
 
                 <Route
@@ -108,12 +109,12 @@ export default function App() {
                   path="/add/v2/:currencyIdA?/:currencyIdB?"
                   component={RedirectDuplicateTokenIdsV2}
                 />
-                <Route
+                {/* <Route
                   exact
                   strict
                   path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
                   component={RedirectDuplicateTokenIds}
-                />
+                /> */}
 
                 <Route
                   exact
