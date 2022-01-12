@@ -18,6 +18,7 @@ import {
   useLatestGovernanceContract,
   useUniContract,
 } from 'hooks/useContract'
+import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
@@ -30,7 +31,6 @@ import {
 } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
-import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
 import { VoteOption } from './types'
