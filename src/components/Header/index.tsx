@@ -301,7 +301,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const userEthBalance = useETHBalances(account ? [account] : [])?.[account?.toLowerCase() ?? '']
   const [darkMode] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
