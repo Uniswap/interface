@@ -37,9 +37,9 @@ import { Contract } from 'ethers'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
-import { getContract } from 'utils'
 
-import { useActiveWeb3React } from './web3'
+import { getContract } from '../utils'
+import useActiveWeb3React from './useActiveWeb3React'
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
