@@ -6,7 +6,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
 
-import { CHAIN_INFO } from '../../constants/chains'
+import { CHAIN_INFO } from '../../constants/chainInfo'
 import { AutoRow } from '../Row'
 
 const L2Icon = styled.img`

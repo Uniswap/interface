@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useRef } from 'react'

@@ -2,7 +2,8 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useTokenBalances } from 'state/wallet/hooks'
-import { isAddress } from 'utils'
+
+import { isAddress } from '../../../utils'
 
 /** Sorts currency amounts (descending). */
 function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Currency>) {

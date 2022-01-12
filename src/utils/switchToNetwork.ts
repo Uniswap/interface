@@ -1,4 +1,5 @@
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import type { providers } from 'ethers'
 import { BigNumber } from 'ethers'
 import { hexStripZeros } from 'ethers/lib/utils'

@@ -1,5 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { arrayify, parseBytes32String } from 'ethers/lib/utils'
 import { getTokenFilter } from 'lib/components/TokenSelect/utils'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
