@@ -8,11 +8,14 @@ import { useMemo } from 'react'
 
 import { nativeOnChain, UNI } from '../../constants/tokens'
 import { useAllTokens } from '../../hooks/Tokens'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 import { useInterfaceMulticall } from '../../hooks/useContract'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { useUserUnclaimedAmount } from '../claim/hooks'
 import { useTotalUniEarned } from '../stake/hooks'
+
+// TODO(zzmp): Split non-state-related functionality to lib
+
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
