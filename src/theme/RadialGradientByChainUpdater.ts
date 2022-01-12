@@ -1,4 +1,4 @@
-import { useActiveWeb3React } from 'hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
 

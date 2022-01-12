@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContext, useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
 import { CustomLightSpinner, ThemedText } from '../../theme'

@@ -4,6 +4,7 @@ import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useMemo } from 'react'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
@@ -13,7 +14,6 @@ import { useHasPendingApproval, useTransactionAdder } from '../state/transaction
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
 import { useTokenAllowance } from './useTokenAllowance'
-import { useActiveWeb3React } from './web3'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',

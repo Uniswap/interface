@@ -1,8 +1,8 @@
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { useActiveWeb3React } from '../../hooks/web3'
 import { AppState } from '../index'
 import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal } from './reducer'
 

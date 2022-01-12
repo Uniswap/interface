@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { ReactNode, useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import useENS from '../../hooks/useENS'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, ThemedText } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { AutoColumn } from '../Column'

@@ -10,6 +10,7 @@ import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import {
   useGovernanceBravoContract,
   useGovernanceV0Contract,
@@ -17,7 +18,6 @@ import {
   useLatestGovernanceContract,
   useUniContract,
 } from 'hooks/useContract'
-import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 

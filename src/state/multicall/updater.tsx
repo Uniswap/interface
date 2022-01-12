@@ -1,5 +1,6 @@
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+
 import { useInterfaceMulticall } from '../../hooks/useContract'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../application/hooks'
 import { multicall } from './instance'
 
