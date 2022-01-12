@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
@@ -6,6 +6,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens, useToken, useIsUserAddedToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
+import { PHOTON } from '../../constants/tokens'
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -108,8 +109,8 @@ export function CurrencySearch({
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
-    if (s === '' || s === 'e' || s === 'et' || s === 'eth') {
-      return [ETHER, ...filteredSortedTokens]
+    if (['', 'p', 'ph', 'pho', 'phot', 'photo', 'photon', 'e', 'ev', 'evm', 'evmo', 'evmos'].includes(s)) {
+      return [PHOTON, ...filteredSortedTokens]
     }
     return filteredSortedTokens
   }, [debouncedQuery, filteredSortedTokens])
@@ -140,8 +141,8 @@ export function CurrencySearch({
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         const s = debouncedQuery.toLowerCase().trim()
-        if (s === 'eth') {
-          handleCurrencySelect(ETHER)
+        if (s === 'evmos') {
+          handleCurrencySelect(PHOTON)
         } else if (filteredSortedTokensWithETH.length > 0) {
           if (
             filteredSortedTokensWithETH[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||

@@ -48,3 +48,19 @@ export const WETH9 = {
     'Wrapped Evmos'
   ),
 }
+
+class NativeToken extends Token {
+  isEther = true as any
+  isToken = false as any
+  constructor(chainId: number, address: string, decimals: number, symbol: string, name: string) {
+    super(chainId, address, decimals, symbol, name)
+  }
+}
+
+export const PHOTON = new NativeToken(
+  ChainId.TESTNET,
+  '0x09a3ecafa817268f77be1283176b946c4ff2e608',
+  18,
+  'PHOTON',
+  'Photon'
+)

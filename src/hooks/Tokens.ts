@@ -1,5 +1,5 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, currencyEquals, ETHER, Token } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, Token } from '@uniswap/sdk-core'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
@@ -9,6 +9,7 @@ import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
+import { PHOTON } from '../constants/tokens'
 
 import { useActiveWeb3React } from './web3'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
@@ -172,7 +173,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 }
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
-  const isETH = currencyId?.toUpperCase() === 'ETH'
+  const isETH = currencyId?.toUpperCase() === 'PHOTON'
   const token = useToken(isETH ? undefined : currencyId)
-  return isETH ? ETHER : token
+  return isETH ? PHOTON : token
 }
