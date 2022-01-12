@@ -117,9 +117,7 @@ export default function ErrorDialog({ header, error, action, onAction }: ErrorDi
         <Rule />
         <ErrorColumn>
           <Column gap={0.5} ref={setDetails} css={scrollbar}>
-            <ThemedText.Code>
-              {error.name}: {error.message}
-            </ThemedText.Code>
+            <ThemedText.Code>{error.message}</ThemedText.Code>
           </Column>
         </ErrorColumn>
         <ActionButton onClick={onAction}>{action}</ActionButton>
