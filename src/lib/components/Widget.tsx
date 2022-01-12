@@ -3,7 +3,7 @@ import { Provider as AtomProvider } from 'jotai'
 import { BlockUpdater } from 'lib/hooks/useBlockNumber'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
-import { store as multicallStore } from 'lib/state/multicall'
+import { store as multicallStore, Updater as MulticallUpdater } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
 import { ComponentProps, JSXElementConstructor, PropsWithChildren, StrictMode, useRef } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -71,6 +71,7 @@ function Updaters() {
   return (
     <>
       <BlockUpdater />
+      <MulticallUpdater />
     </>
   )
 }
