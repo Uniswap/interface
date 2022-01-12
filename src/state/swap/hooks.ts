@@ -37,7 +37,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency.isToken ? currency.address : currency.isEther ? 'ETH' : '',
+          currencyId: currency.isToken ? currency.address : currency.isEther ? 'EVMOS' : '',
         })
       )
     },
@@ -119,7 +119,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: string
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
-  v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
+  // v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
   toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
@@ -155,11 +155,11 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     maxHops: singleHopOnly ? 1 : undefined,
   })
 
-  const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  // const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  // const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
-  const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
+  // const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -197,7 +197,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     }
   }
 
-  const toggledTrade = (toggledVersion === Version.v2 ? v2Trade : v3Trade.trade) ?? undefined
+  const toggledTrade = v2Trade ? v2Trade : undefined
   const allowedSlippage = useSwapSlippageTolerance(toggledTrade)
 
   // compare input balance to max input based on version
@@ -213,7 +213,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     parsedAmount,
     inputError,
     v2Trade: v2Trade ?? undefined,
-    v3TradeState: v3Trade,
+    // v3TradeState: v3Trade,
     toggledTrade,
     allowedSlippage,
   }
