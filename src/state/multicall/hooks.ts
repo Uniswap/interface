@@ -1,7 +1,7 @@
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 
 import { SkipFirst } from '../../types/tuple'
-import { useBlockNumber } from '../application/hooks'
 import { multicall } from './instance'
 export type { CallStateResult } from '@uniswap/redux-multicall' // re-export for convenience
 export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for convenience
