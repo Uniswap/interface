@@ -6,35 +6,34 @@ import { SkipFirst } from 'lib/types/tuple'
 export type { CallStateResult } from '@uniswap/redux-multicall' // re-export for convenience
 export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for convenience
 
-const {
-  useMultipleContractSingleData: _useMultipleContractSingleData,
-  useSingleCallResult: _useSingleCallResult,
-  useSingleContractMultipleData: _useSingleContractMultipleData,
-  useSingleContractWithCallData: _useSingleContractWithCallData,
-} = multicall.hooks
-
 // Create wrappers for hooks so consumers don't need to get latest block themselves
 
 type SkipFirstTwoParams<T extends (...args: any) => any> = SkipFirst<Parameters<T>, 2>
 
-export function useMultipleContractSingleData(...args: SkipFirstTwoParams<typeof _useMultipleContractSingleData>) {
+export function useMultipleContractSingleData(
+  ...args: SkipFirstTwoParams<typeof multicall.hooks.useMultipleContractSingleData>
+) {
   const { chainId, latestBlock } = useCallContext()
-  return _useMultipleContractSingleData(chainId, latestBlock, ...args)
+  return multicall.hooks.useMultipleContractSingleData(chainId, latestBlock, ...args)
 }
 
-export function useSingleCallResult(...args: SkipFirstTwoParams<typeof _useSingleCallResult>) {
+export function useSingleCallResult(...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleCallResult>) {
   const { chainId, latestBlock } = useCallContext()
-  return _useSingleCallResult(chainId, latestBlock, ...args)
+  return multicall.hooks.useSingleCallResult(chainId, latestBlock, ...args)
 }
 
-export function useSingleContractMultipleData(...args: SkipFirstTwoParams<typeof _useSingleContractMultipleData>) {
+export function useSingleContractMultipleData(
+  ...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleContractMultipleData>
+) {
   const { chainId, latestBlock } = useCallContext()
-  return _useSingleContractMultipleData(chainId, latestBlock, ...args)
+  return multicall.hooks.useSingleContractMultipleData(chainId, latestBlock, ...args)
 }
 
-export function useSingleContractWithCallData(...args: SkipFirstTwoParams<typeof _useSingleContractWithCallData>) {
+export function useSingleContractWithCallData(
+  ...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleContractWithCallData>
+) {
   const { chainId, latestBlock } = useCallContext()
-  return _useSingleContractWithCallData(chainId, latestBlock, ...args)
+  return multicall.hooks.useSingleContractWithCallData(chainId, latestBlock, ...args)
 }
 
 function useCallContext() {
