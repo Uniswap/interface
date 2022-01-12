@@ -5,9 +5,11 @@
     "baseUrl": "src/lib",
     "paths": {
       "lib/*": ["./*"],
+      "abis/*": ["../abis/*"],
       "constants/*": ["../constants/*"],
       "hooks/*": ["../hooks/*"],
       "state/*": ["../state/*"],
+      "types/*": ["../types/*"]
     },
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],
