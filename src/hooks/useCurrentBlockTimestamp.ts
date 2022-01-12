@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useInterfaceMulticall } from './useContract'

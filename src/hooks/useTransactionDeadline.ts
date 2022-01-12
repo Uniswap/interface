@@ -1,6 +1,6 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
-import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
