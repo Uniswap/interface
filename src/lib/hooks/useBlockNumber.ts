@@ -62,3 +62,7 @@ export default function useBlockNumber(): number | undefined {
   const block = useAtomValue(blockAtom)
   return chainId ? block : undefined
 }
+
+export function useFastForwardBlockNumber(): (block: number) => void {
+  return useUpdateAtom(blockAtom)
+}

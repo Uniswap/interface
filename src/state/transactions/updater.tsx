@@ -1,5 +1,5 @@
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
+import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
@@ -45,6 +45,7 @@ export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React()
 
   const lastBlockNumber = useBlockNumber()
+  const fastForwardBlockNumber = useFastForwardBlockNumber()
 
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.transactions)
@@ -112,6 +113,11 @@ export default function Updater(): null {
                 hash,
                 isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
               )
+
+              if (receipt.blockNumber > lastBlockNumber) {
+                // the receipt was fetched before the block, fast forward to that block to trigger updates
+                fastForwardBlockNumber(receipt.blockNumber)
+              }
             } else {
               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
             }
@@ -127,7 +133,7 @@ export default function Updater(): null {
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt, isL2])
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt, isL2, fastForwardBlockNumber])
 
   return null
 }
