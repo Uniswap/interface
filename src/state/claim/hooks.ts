@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 
 import { UNI } from '../../constants/tokens'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
-import { useActiveWeb3React } from '../../hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useSingleCallResult } from '../multicall/hooks'

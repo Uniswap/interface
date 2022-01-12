@@ -3,7 +3,7 @@ import { Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 
 import { useV3SwapPools } from './useV3SwapPools'
-import { useActiveWeb3React } from './web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 /**
  * Returns true if poolA is equivalent to poolB

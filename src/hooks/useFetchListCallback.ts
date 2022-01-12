@@ -7,7 +7,7 @@ import { useAppDispatch } from 'state/hooks'
 
 import { getNetworkLibrary } from '../connectors'
 import { fetchTokenList } from '../state/lists/actions'
-import { useActiveWeb3React } from './web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
   const { chainId, library } = useActiveWeb3React()

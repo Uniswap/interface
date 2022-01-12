@@ -4,7 +4,7 @@ import { getDatabase, push, ref } from 'firebase/database'
 import { useCallback } from 'react'
 import { TransactionInfo, TransactionType } from 'state/transactions/actions'
 
-import { useActiveWeb3React } from './web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 type PartialTransactionResponse = Pick<TransactionResponse, 'hash' | 'v' | 'r' | 's'>
 

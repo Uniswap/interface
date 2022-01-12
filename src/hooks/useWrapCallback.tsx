@@ -9,7 +9,7 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useNativeCurrency } from './Tokens'
 import { useWETHContract } from './useContract'
-import { useActiveWeb3React } from './web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 export enum WrapType {
   NOT_APPLICABLE,

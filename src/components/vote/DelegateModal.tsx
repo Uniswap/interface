@@ -7,7 +7,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { UNI } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
-import { useActiveWeb3React } from '../../hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useDelegateCallback } from '../../state/governance/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ThemedText } from '../../theme'

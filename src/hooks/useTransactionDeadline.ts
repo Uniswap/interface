@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
 import useCurrentBlockTimestamp from './useCurrentBlockTimestamp'
-import { useActiveWeb3React } from './web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 // combines the block timestamp with the user setting to give the deadline that should be used for any submitted transaction
 export default function useTransactionDeadline(): BigNumber | undefined {

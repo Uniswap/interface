@@ -8,7 +8,7 @@ import { useAllLists } from 'state/lists/hooks'
 
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { useActiveWeb3React } from '../../hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { acceptListUpdate, enableList } from './actions'
 import { useActiveListUrls } from './hooks'
 

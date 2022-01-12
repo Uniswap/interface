@@ -17,7 +17,7 @@ import {
   useLatestGovernanceContract,
   useUniContract,
 } from 'hooks/useContract'
-import { useActiveWeb3React } from 'hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 

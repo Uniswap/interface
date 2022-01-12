@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { L2_CHAIN_IDS, SupportedChainId } from '../../constants/chains'
-import { useActiveWeb3React } from '../../hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { retry, RetryableError, RetryOptions } from '../../utils/retry'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { updateBlockNumber } from '../application/reducer'

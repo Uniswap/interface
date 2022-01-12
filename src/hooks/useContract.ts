@@ -34,12 +34,11 @@ import {
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
 import { UNI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
-
-import { useActiveWeb3React } from './web3'
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(

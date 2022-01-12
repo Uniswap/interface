@@ -6,7 +6,7 @@ import ReactGA from 'react-ga'
 import styled, { keyframes } from 'styled-components/macro'
 
 import tokenLogo from '../../assets/images/token-logo.png'
-import { useActiveWeb3React } from '../../hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import {
   useModalOpen,
   useShowClaimPopup,

@@ -20,7 +20,7 @@ import {
   useSearchInactiveTokenLists,
   useToken,
 } from '../../hooks/Tokens'
-import { useActiveWeb3React } from '../../hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'

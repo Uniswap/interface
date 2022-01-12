@@ -4,7 +4,7 @@ import { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { useStakingContract } from '../../hooks/useContract'
-import { useActiveWeb3React } from '../../hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { StakingInfo } from '../../state/stake/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
