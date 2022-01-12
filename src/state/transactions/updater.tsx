@@ -133,7 +133,7 @@ export default function Updater(): null {
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt, isL2])
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt, isL2, fastForwardBlockNumber])
 
   return null
 }
