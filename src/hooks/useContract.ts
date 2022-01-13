@@ -38,7 +38,8 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
-import { getContract } from 'utils'
+
+import { getContract } from '../utils'
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(

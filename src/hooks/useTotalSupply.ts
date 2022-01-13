@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 
-import { useSingleCallResult } from '../state/multicall/hooks'
 import { useTokenContract } from './useContract'
 
 // returns undefined if input token is undefined, or fails to get token contract,

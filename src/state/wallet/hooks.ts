@@ -4,6 +4,7 @@ import ERC20ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 
 import { nativeOnChain, UNI } from '../../constants/tokens'
@@ -11,7 +12,6 @@ import { useAllTokens } from '../../hooks/Tokens'
 import { useInterfaceMulticall } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { useUserUnclaimedAmount } from '../claim/hooks'
-import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 import { useTotalUniEarned } from '../stake/hooks'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.

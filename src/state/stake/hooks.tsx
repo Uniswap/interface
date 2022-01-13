@@ -6,10 +6,10 @@ import { Pair } from '@uniswap/v2-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
+import { NEVER_RELOAD, useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { ReactNode, useMemo } from 'react'
 
 import { DAI, UNI, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 
 const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
