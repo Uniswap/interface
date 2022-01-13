@@ -35,9 +35,11 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         : [otherCurrency, amountSpecified?.currency],
     [tradeType, amountSpecified, otherCurrency]
   )
+
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, currencyOut)
 
   const quoter = useV3Quoter()
+
   const { chainId } = useActiveWeb3React()
   const quotesResults = useSingleContractWithCallData(
     quoter,

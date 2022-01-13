@@ -33,7 +33,9 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
 
   const tokenContract = useTokenContract(address ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
-  const tokenInfo: TokenInfo | undefined = address ? allTokens[address].token.tokenInfo : undefined
+  const tokenInfo: TokenInfo | undefined = useMemo(() => {
+    return address ? allTokens[address].token.tokenInfo : undefined
+  }, [address, allTokens])
   const token = useMemo(() => {
     return tokenInfo
       ? new Token(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)

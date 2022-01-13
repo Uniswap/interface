@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { useBestTrade } from 'hooks/useBestTrade'
 import { useAtomValue } from 'jotai/utils'
 import {
   Field,
@@ -20,6 +19,7 @@ import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { useCurrency } from './tokens'
+import { useBestTrade } from './trade'
 
 export function useSwapState(): SwapState {
   return useAtomValue(stateAtom)
