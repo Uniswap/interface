@@ -15,7 +15,7 @@ const replacements = {
 }
 
 // This is necessary because some nested imports (eg jotai/*) would otherwise not resolve.
-function external(source) {
+function external(source: string) {
   const dep = deps.find((dep) => source === dep || source.startsWith(dep + '/'))
   return Boolean(dep)
 }

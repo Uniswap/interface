@@ -137,7 +137,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
-    "bundle": "rollup --config --failAfterWarnings",
+    "bundle": "rollup --config --failAfterWarnings --configPlugin typescript2",
     "cosmos": "cross-env FAST_REFRESH=false REACT_APP_IS_WIDGET=true cosmos"
   },
   "browserslist": {
