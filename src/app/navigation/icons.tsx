@@ -11,7 +11,7 @@ export function SwapButton(props: BottomTabBarButtonProps) {
   return (
     <IconButton
       mb="sm"
-      variant={'primary'}
+      variant="primary"
       onPress={props.onPress}
       icon={<SwapIcon height={24} width={24} fill="white" />}
     />

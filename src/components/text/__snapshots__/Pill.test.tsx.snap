@@ -1,23 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders a NetworkLabel with border 1`] = `
+exports[`renders a Pill with border 1`] = `
 <View
   style={
     Array [
       Object {
         "alignItems": "center",
         "backgroundColor": "#B8B8B8",
-        "borderColor": "transparent",
+        "borderColor": "#28CD88",
         "borderRadius": 999999,
         "borderWidth": 1,
         "display": "flex",
+        "flexBasis": "auto",
+        "flexDirection": "row",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "flexWrap": "nowrap",
         "justifyContent": "center",
         "paddingHorizontal": 16,
         "paddingVertical": 6,
       },
       Object {
         "backgroundColor": undefined,
-        "borderColor": "green",
+        "borderColor": undefined,
       },
     ]
   }
@@ -33,6 +38,18 @@ exports[`renders a NetworkLabel with border 1`] = `
   >
     Icon
   </Text>
+  <View
+    style={
+      Array [
+        Object {
+          "display": "flex",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "width": 6,
+        },
+      ]
+    }
+  />
   <Text
     style={
       Array [
@@ -54,23 +71,28 @@ exports[`renders a NetworkLabel with border 1`] = `
 </View>
 `;
 
-exports[`renders a NetworkLabel without image 1`] = `
+exports[`renders a Pill without image 1`] = `
 <View
   style={
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#B8B8B8",
+        "backgroundColor": "#FD4040",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
         "display": "flex",
+        "flexBasis": "auto",
+        "flexDirection": "row",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "flexWrap": "nowrap",
         "justifyContent": "center",
         "paddingHorizontal": 16,
         "paddingVertical": 6,
       },
       Object {
-        "backgroundColor": "orange",
+        "backgroundColor": undefined,
         "borderColor": "blue",
       },
     ]

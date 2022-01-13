@@ -15,6 +15,7 @@ import { Box } from 'src/components/layout/Box'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { TOP_THIRD_SNAP_POINTS } from 'src/styles/bottomSheet'
 import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -22,8 +23,6 @@ interface Props {
   onClose: () => void
   isVisible: boolean
 }
-
-const WALLET_MODAL_SNAP_POINTS = ['70%']
 
 export function WalletQRCode({ isVisible, onClose }: React.PropsWithChildren<Props>) {
   const activeAccount = useActiveAccount()
@@ -33,7 +32,7 @@ export function WalletQRCode({ isVisible, onClose }: React.PropsWithChildren<Pro
   if (!activeAccount) return null
 
   return (
-    <BottomSheetModal onClose={onClose} isVisible={isVisible} snapPoints={WALLET_MODAL_SNAP_POINTS}>
+    <BottomSheetModal onClose={onClose} isVisible={isVisible} snapPoints={TOP_THIRD_SNAP_POINTS}>
       <Box backgroundColor="white" justifyContent="center" padding="sm" borderRadius="lg">
         <Box alignItems="center" marginTop="sm">
           <Text color="gray400" variant="body">

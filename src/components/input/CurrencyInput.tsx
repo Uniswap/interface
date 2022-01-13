@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
-import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { useUSDCPrice } from 'src/features/prices/useUSDCPrice'
@@ -60,13 +59,11 @@ export function CurrencyInput(props: CurrencyInputProps) {
   return (
     <Flex borderRadius="md" gap="sm" mt="md" pb="md" pt={title ? 'lg' : 'md'} {...transformedProps}>
       {title && (
-        <Box mx="md" flexDirection="row">
-          <Text variant="body" color="gray400">
-            {title}
-          </Text>
-        </Box>
+        <Text variant="body" ml="lg" color="gray400">
+          {title}
+        </Text>
       )}
-      <Flex centered flexDirection="row" gap="sm">
+      <Flex centered mx="sm" flexDirection="row" gap="sm">
         <AmountInput
           backgroundColor="none"
           borderWidth={0}
@@ -99,7 +96,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           showNonZeroBalancesOnly={showNonZeroBalancesOnly}
         />
       </Flex>
-      <Flex alignContent="center" flexDirection="row" justifyContent="space-between">
+      <Flex alignContent="center" mx="md" flexDirection="row" justifyContent="space-between">
         {price && (
           <Text variant="body" ml="sm" color="gray400">
             {formatPrice(price)}

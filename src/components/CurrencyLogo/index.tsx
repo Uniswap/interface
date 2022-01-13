@@ -25,7 +25,7 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
       <CurrencyLogoOnly size={currencyLogoSize} currency={currency} />
       {currency.chainId !== ChainId.MAINNET && (
         <Box position="absolute" bottom={0} right={0}>
-          <NetworkLogo chainId={currency.chainId} size={networkSize} />
+          <NetworkLogo chainId={currency.chainId} size={networkSize} borderWidth={2} />
         </Box>
       )}
     </Box>

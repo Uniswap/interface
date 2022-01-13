@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { selectionAsync } from 'expo-haptics'
 import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppStackNavigation } from 'src/app/navigation/types'
@@ -29,6 +30,7 @@ export function CurrencySelector({
   const { t } = useTranslation()
 
   const selectCurrency = () => {
+    selectionAsync()
     navigation.navigate(Screens.CurrencySelector, {
       onSelectCurrency,
       otherCurrencyAddress: otherSelectedCurrency ? currencyId(otherSelectedCurrency) : undefined,

@@ -1,6 +1,8 @@
 import React from 'react'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
+import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -29,18 +31,19 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
         </Text>
       </Box>
       {trade && (
-        <Box flexDirection="row">
-          <Button
-            borderRadius="sm"
-            style={{ backgroundColor: networkColors.background }}
-            onPress={() => {
-              // TODO: implement gas price setting ui
-            }}>
-            <Text style={{ color: networkColors.foreground }} p="xs">
+        <Button
+          borderRadius="sm"
+          style={{ backgroundColor: networkColors.background }}
+          onPress={() => {
+            // TODO: implement gas price setting ui
+          }}>
+          <Flex flexDirection="row" gap="xxs" m="sm" centered>
+            <NetworkLogo chainId={trade.inputAmount.wrapped.currency.chainId} size={15} />
+            <Text style={{ color: networkColors.foreground }}>
               {formatPrice(trade.quote?.gasUseEstimateUSD?.toString())}
             </Text>
-          </Button>
-        </Box>
+          </Flex>
+        </Button>
       )}
     </Box>
   )

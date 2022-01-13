@@ -81,10 +81,10 @@ export function HomeScreen({ navigation }: Props) {
           <AccountHeader />
           <Box flexDirection="row" mr="md">
             <Button onPress={onPressSettings} mr="md">
-              <Settings height={24} width={24} />
+              <Settings stroke="gray100" height={24} width={24} />
             </Button>
             <Button onPress={onPressNotifications}>
-              <Clock height={24} width={24} />
+              <Clock stroke="gray100" height={24} width={24} />
             </Button>
           </Box>
         </Box>

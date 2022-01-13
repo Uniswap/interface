@@ -35,6 +35,11 @@ export const textVariants = {
   },
   h5: {
     fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 16,
+    color: 'mainForeground',
+  },
+  h6: {
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 14,
     color: 'mainForeground',
   },

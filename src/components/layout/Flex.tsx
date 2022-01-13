@@ -14,7 +14,7 @@ type CenteredProps =
       justifyContent?: 'center'
     }
 
-type FlexProps = ComponentProps<typeof Box> &
+export type FlexProps = ComponentProps<typeof Box> &
   CenteredProps & {
     /** spacing _between_ elements */
     gap?: keyof Theme['spacing']

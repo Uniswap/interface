@@ -7,6 +7,7 @@ export const dimensions = {
 
 export const spacing = {
   none: 0,
+  xxs: 3,
   xs: 6,
   sm: 10,
   md: 16,

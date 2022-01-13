@@ -1,32 +1,48 @@
 import React, { ReactNode } from 'react'
-import { CenterBox } from 'src/components/layout/CenterBox'
+import { Flex, FlexProps } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 
-interface PillProps {
-  backgroundColor?: string
-  borderColor?: string
+type PillProps = {
+  customBackgroundColor?: string
+  customBorderColor?: string
   foregroundColor?: string
   icon?: ReactNode
   label: string
-}
+} & FlexProps
 
-export function Pill({ backgroundColor, borderColor, foregroundColor, icon, label }: PillProps) {
+export function Pill({
+  customBackgroundColor,
+  customBorderColor,
+  borderRadius = 'full',
+  foregroundColor,
+  flexDirection = 'row',
+  icon,
+  label,
+  px = 'md',
+  py = 'xs',
+  ...rest
+}: PillProps) {
   return (
-    <CenterBox
+    <Flex
       backgroundColor="gray200"
       borderColor="none"
-      borderRadius="full"
+      borderRadius={borderRadius}
       borderWidth={1}
-      px="md"
-      py="xs"
+      flexDirection={flexDirection}
+      px={px}
+      py={py}
       style={{
-        backgroundColor: backgroundColor,
-        borderColor: borderColor ?? foregroundColor,
-      }}>
-      {icon && icon}
+        backgroundColor: customBackgroundColor,
+        borderColor: customBorderColor ?? foregroundColor,
+      }}
+      gap="xs"
+      justifyContent="center"
+      alignItems="center"
+      {...rest}>
+      {icon}
       <Text variant="body" color="black" style={{ color: foregroundColor }}>
         {label}
       </Text>
-    </CenterBox>
+    </Flex>
   )
 }

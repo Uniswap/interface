@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box } from 'src/components/layout/Box'
+import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { ChainId, MAINNET_CHAIN_IDS } from 'src/constants/chains'
 import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
@@ -48,11 +48,9 @@ export default function TotalBalance({ balances }: TotalBalanceViewProps) {
   const totalBalance = useTotalBalance(balances, tokenPricesByChain)
 
   return (
-    <Box mt="sm" mb="lg" mx="lg">
-      <Text variant="h5" color="gray400" mb="xs">
-        {t('Total balance')}
-      </Text>
+    <Flex mt="sm" mb="lg" mx="lg" gap="sm">
+      <Text variant="h5">{t('Total balance')}</Text>
       <Text variant="h1">{`${formatPrice(totalBalance)}`}</Text>
-    </Box>
+    </Flex>
   )
 }

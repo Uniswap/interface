@@ -214,14 +214,18 @@ exports[`renders correctly 1`] = `
         onGestureHandlerEvent={[Function]}
         onGestureHandlerStateChange={[Function]}
         style={
-          Object {
-            "bottom": 0,
-            "display": "flex",
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          }
+          Array [
+            Object {
+              "display": "flex",
+            },
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+          ]
         }
       >
         <View
@@ -244,26 +248,30 @@ exports[`renders correctly 1`] = `
           }
           collapsable={false}
           style={
-            Object {
-              "alignItems": "center",
-              "backgroundColor": "rgba(243, 71, 191, 0.171)",
-              "borderRadius": 999999,
-              "display": "flex",
-              "height": 50,
-              "justifyContent": "center",
-              "transform": Array [
-                Object {
-                  "translateX": -25,
-                },
-                Object {
-                  "translateY": -25,
-                },
-                Object {
-                  "scale": 0,
-                },
-              ],
-              "width": 50,
-            }
+            Array [
+              Object {
+                "alignItems": "center",
+                "borderRadius": 999999,
+                "display": "flex",
+                "height": 50,
+                "justifyContent": "center",
+                "width": 50,
+              },
+              Object {
+                "backgroundColor": "rgba(243, 71, 191, 0.171)",
+                "transform": Array [
+                  Object {
+                    "translateX": -25,
+                  },
+                  Object {
+                    "translateY": -25,
+                  },
+                  Object {
+                    "scale": 0,
+                  },
+                ],
+              },
+            ]
           }
         >
           <View
@@ -320,22 +328,26 @@ exports[`renders correctly 1`] = `
         }
         collapsable={false}
         style={
-          Object {
-            "backgroundColor": "#FF007A",
-            "borderRadius": 20,
-            "bottom": 0,
-            "display": "flex",
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-            "transform": Array [
-              Object {
-                "translateX": 0,
-              },
-            ],
-            "width": 140,
-          }
+          Array [
+            Object {
+              "backgroundColor": "#FF007A",
+              "borderRadius": 20,
+              "display": "flex",
+              "width": 140,
+            },
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+              "transform": Array [
+                Object {
+                  "translateX": 0,
+                },
+              ],
+            },
+          ]
         }
       />
     </View>

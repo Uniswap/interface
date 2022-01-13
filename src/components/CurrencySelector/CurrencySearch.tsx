@@ -8,7 +8,7 @@ import { filter } from 'src/components/CurrencySelector/util'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
-import { NetworkButtonGroup } from 'src/components/Network/NetworkButtonGroup'
+import { NetworkButtonGroup, NetworkButtonType } from 'src/components/Network/NetworkButtonGroup'
 import { Text } from 'src/components/Text'
 import { Pill } from 'src/components/text/Pill'
 import { ChainId } from 'src/constants/chains'
@@ -66,6 +66,7 @@ export function CurrencySearch({
             <NetworkButtonGroup
               selected={chainFilter}
               onPress={onChainPress}
+              type={NetworkButtonType.PILL}
               customButton={
                 showNonZeroBalancesOnly ? (
                   <Button mr="sm" onPress={() => onChainPress(null)}>

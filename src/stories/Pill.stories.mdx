@@ -1,0 +1,22 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+import { Pill } from 'src/components/text/Pill'
+
+<Meta title="Pill/Primary" component={Pill} />
+
+export const Template = (args) => <Pill {...args} onPress={() => void 0} />
+
+# `Pill`
+
+<Canvas>
+  <Story
+    name="default"
+    args={{
+      label: 'Your tokens',
+      borderColor: 'black',
+    }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="default" />
