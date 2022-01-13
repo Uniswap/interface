@@ -1,3 +1,5 @@
+import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import useNativeEvent from 'lib/hooks/useNativeEvent'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import styled, { ThemedText } from 'lib/theme'
@@ -74,6 +76,10 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     e.token = value
     e.ref = ref.current ?? undefined
   }
+
+  const { account } = useActiveWeb3React()
+  const balance = useCurrencyBalance(account, value)
+
   return (
     <TokenButton
       data-index={index}
@@ -94,7 +100,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
               <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
             </Column>
           </Row>
-          1.234
+          {balance?.greaterThan(0) && balance?.toFixed(2)}
         </Row>
       </ThemedText.Body1>
     </TokenButton>
