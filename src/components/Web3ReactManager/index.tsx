@@ -7,6 +7,7 @@ import { network } from '../../connectors'
 import { useEagerConnect, useInactiveListener } from '../../hooks'
 import { NetworkContextName } from '../../constants'
 import Loader from '../Loader'
+import LocalLoader from 'components/LocalLoader'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -50,7 +51,7 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
 
   // on page load, do nothing until we've tried to connect to the injected connector
   if (!triedEager) {
-    return null
+    return <LocalLoader />
   }
 
   // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error

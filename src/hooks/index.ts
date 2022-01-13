@@ -51,12 +51,43 @@ export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & 
   }
 }
 
+async function isAuthorized(): Promise<boolean> {
+  if (!window.ethereum) {
+    return false
+  }
+
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+
+    if (accounts?.length > 0) {
+      return true
+    }
+    return false
+  } catch {
+    return false
+  }
+}
+
+let globalTried = false
+
 export function useEagerConnect() {
   const { activate, active } = useWeb3ReactCore() // specifically using useWeb3ReactCore because of what this hook does
   const [tried, setTried] = useState(false)
 
   useEffect(() => {
-    injected.isAuthorized().then(isAuthorized => {
+    globalTried = tried
+  }, [tried])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!globalTried) window.location.reload()
+    }, 3000)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
+  useEffect(() => {
+    isAuthorized().then(isAuthorized => {
       if (isAuthorized) {
         activate(injected, undefined, true).catch(() => {
           setTried(true)

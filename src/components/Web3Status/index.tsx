@@ -58,7 +58,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
+const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   background-color: ${({ pending, theme }) => (pending ? theme.primary : theme.bg2)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.primary : theme.bg3)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text)};

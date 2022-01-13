@@ -162,13 +162,16 @@ export function useActiveNetwork() {
       }
 
       try {
-        await library?.send('wallet_switchEthereumChain', [switchNetworkParams, account])
+        await window.ethereum?.request({
+          method: 'wallet_switchEthereumChain',
+          params: [switchNetworkParams, account]
+        })
         history.push(target)
       } catch (switchError) {
         // This error code indicates that the chain has not been added to MetaMask.
         if (switchError.code === 4902 || switchError.code === -32603) {
           try {
-            await library?.send('wallet_addEthereumChain', [addNetworkParams, account])
+            await window.ethereum?.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams, account] })
             history.push(target)
           } catch (addError) {
             console.error(addError)
