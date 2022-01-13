@@ -32,8 +32,8 @@ export function Pill({
       px={px}
       py={py}
       style={{
-        backgroundColor: customBackgroundColor,
-        borderColor: customBorderColor ?? foregroundColor,
+        ...(customBackgroundColor ? { backgroundColor: customBackgroundColor } : {}),
+        ...(customBorderColor ? { borderColor: customBorderColor } : {}),
       }}
       gap="xs"
       justifyContent="center"

@@ -55,6 +55,17 @@ export const textVariants = {
     lineHeight: 24,
     color: 'mainForeground',
   },
+  bodyBold: {
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 16,
+    lineHeight: 24,
+    color: 'mainForeground',
+  },
+  bodyMd: {
+    fontFamily: fontFamily.sansSerif.regular,
+    fontSize: 14,
+    color: 'mainForeground',
+  },
   bodySm: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 13,

@@ -6,7 +6,7 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
-import { formatCurrencyAmount } from 'src/utils/format'
+import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 
 interface TokenBalanceItemProps {
   currencyAmount: CurrencyAmount<Currency>
@@ -39,9 +39,10 @@ export function TokenBalanceItem({
   })()
 
   // TODO: not all tokens have data from the Graph
-  const balance = currencyPrice
-    ? currencyPrice * parseFloat(currencyAmount.toSignificant())
-    : undefined
+  const balance =
+    currencyPrice !== undefined
+      ? currencyPrice * parseFloat(currencyAmount.toSignificant())
+      : undefined
 
   const onPress = () => {
     onPressToken?.(currencyAmount)
@@ -65,8 +66,7 @@ export function TokenBalanceItem({
         </Box>
       </Box>
       <Box alignItems="flex-end">
-        {/* TODO: make currency amount and format */}
-        <Text variant="h4">{balance?.toPrecision(6)}</Text>
+        <Text variant="h4">{formatUSDPrice(balance)}</Text>
         <Text
           variant="bodySm"
           color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
-import ArrowLeft from 'src/assets/icons/arrow-left.svg'
+import ChevronLeft from 'src/assets/icons/chevron-left.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Theme } from 'src/styles/theme'
 
@@ -17,7 +17,7 @@ export function BackButton({ onPressBack, size, ...rest }: Props) {
 
   return (
     <Button onPress={goBack} {...rest}>
-      <ArrowLeft width={size ?? 26} height={size ?? 26} />
+      <ChevronLeft width={size ?? 16} height={size ?? 16} />
     </Button>
   )
 }

@@ -8,7 +8,7 @@ import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyId } from 'src/utils/currencyId'
-import { formatPrice } from 'src/utils/format'
+import { formatUSDPrice } from 'src/utils/format'
 
 interface TotalBalanceViewProps {
   balances: CurrencyAmount<Currency>[]
@@ -50,7 +50,7 @@ export default function TotalBalance({ balances }: TotalBalanceViewProps) {
   return (
     <Flex mt="sm" mb="lg" mx="lg" gap="sm">
       <Text variant="h5">{t('Total balance')}</Text>
-      <Text variant="h1">{`${formatPrice(totalBalance)}`}</Text>
+      <Text variant="h1">{`${formatUSDPrice(totalBalance)}`}</Text>
     </Flex>
   )
 }

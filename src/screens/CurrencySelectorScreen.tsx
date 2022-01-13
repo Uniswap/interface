@@ -79,7 +79,7 @@ function CurrencySearchOwnedCurrencies({
         onSelectCurrency(currency)
         navigation.goBack()
       }}
-      showNonZeroBalancesOnly={true}
+      showNonZeroBalancesOnly
     />
   )
 }

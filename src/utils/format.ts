@@ -27,7 +27,7 @@ export function formatCurrencyAmount(
   return formatter.format(parseFloat(amount.toSignificant()))
 }
 
-const baseFormatOptions = {
+const baseFormatOptions: Intl.NumberFormatOptions = {
   style: 'currency',
   notation: 'compact',
   currency: 'USD',
@@ -35,7 +35,7 @@ const baseFormatOptions = {
 }
 
 export function formatPrice(
-  price?: Price<Currency, Currency> | string | null,
+  price?: Price<Currency, Currency> | string | null | number,
   options: Intl.NumberFormatOptions = {}
 ) {
   if (!price) {
@@ -46,6 +46,10 @@ export function formatPrice(
 
   if (typeof price === 'string') {
     return formatter.format(parseFloat(price))
+  }
+
+  if (typeof price === 'number') {
+    return formatter.format(price)
   }
 
   return formatter.format(parseFloat(price.toSignificant()))
@@ -63,4 +67,9 @@ export function formatDate(date: Date) {
     hour: 'numeric', // numeric, 2-digit
     minute: 'numeric', // numeric, 2-digit
   })
+}
+
+export function formatUSDPrice(price?: number | string) {
+  const options: Intl.NumberFormatOptions = { notation: 'standard' }
+  return formatPrice(price, options)
 }
