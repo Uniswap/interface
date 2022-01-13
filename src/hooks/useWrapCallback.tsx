@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
@@ -9,7 +10,6 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useNativeCurrency } from './Tokens'
 import { useWETHContract } from './useContract'
-import { useActiveWeb3React } from './web3'
 
 export enum WrapType {
   NOT_APPLICABLE,

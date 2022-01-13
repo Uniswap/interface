@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
+import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { useActiveWeb3React } from 'hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { ArrowUpRight } from 'react-feather'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
 
-import { CHAIN_INFO } from '../../constants/chains'
 import { AutoRow } from '../Row'
 
 const L2Icon = styled.img`

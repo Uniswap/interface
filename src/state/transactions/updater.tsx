@@ -1,10 +1,14 @@
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
+<<<<<<< HEAD
 import useBlockNumber from 'lib/hooks/useBlockNumber'
+=======
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
+>>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { L2_CHAIN_IDS, SupportedChainId } from '../../constants/chains'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { retry, RetryableError, RetryOptions } from '../../utils/retry'
 import { useAddPopup } from '../application/hooks'
 import { checkedTransaction, finalizeTransaction } from './actions'
@@ -45,6 +49,7 @@ export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React()
 
   const lastBlockNumber = useBlockNumber()
+  const fastForwardBlockNumber = useFastForwardBlockNumber()
 
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.transactions)
@@ -112,6 +117,14 @@ export default function Updater(): null {
                 hash,
                 isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
               )
+<<<<<<< HEAD
+=======
+
+              // the receipt was fetched before the block, fast forward to that block to trigger balance updates
+              if (receipt.blockNumber > lastBlockNumber) {
+                fastForwardBlockNumber(receipt.blockNumber)
+              }
+>>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
             } else {
               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
             }
@@ -127,7 +140,7 @@ export default function Updater(): null {
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt, isL2])
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt, isL2, fastForwardBlockNumber])
 
   return null
 }

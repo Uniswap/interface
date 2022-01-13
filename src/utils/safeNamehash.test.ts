@@ -1,4 +1,4 @@
-import { namehash } from 'ethers/lib/utils'
+import { namehash } from '@ethersproject/hash'
 
 import { safeNamehash } from './safeNamehash'
 

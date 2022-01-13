@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContext } from 'react'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { CloseIcon, CustomLightSpinner, ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'

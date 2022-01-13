@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { BigNumber } from 'ethers'
+=======
+import { BigNumber } from '@ethersproject/bignumber'
+>>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'

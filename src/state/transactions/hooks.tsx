@@ -1,21 +1,21 @@
-import type { providers } from 'ethers'
+import { TransactionResponse } from '@ethersproject/providers'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useTransactionMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { useActiveWeb3React } from '../../hooks/web3'
 import { addTransaction, TransactionInfo, TransactionType } from './actions'
 import { TransactionDetails } from './reducer'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
-export function useTransactionAdder(): (response: providers.TransactionResponse, info: TransactionInfo) => void {
+export function useTransactionAdder(): (response: TransactionResponse, info: TransactionInfo) => void {
   const { chainId, account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
   const logMonitoringEvent = useTransactionMonitoringEventCallback()
 
   return useCallback(
-    (response: providers.TransactionResponse, info: TransactionInfo) => {
+    (response: TransactionResponse, info: TransactionInfo) => {
       if (!account) return
       if (!chainId) return
 

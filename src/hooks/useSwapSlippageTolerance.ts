@@ -2,6 +2,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'components/swap/GasEstimateBadge'
 import { L2_CHAIN_IDS } from 'constants/chains'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -10,7 +11,6 @@ import { useUserSlippageToleranceWithDefault } from '../state/user/hooks'
 import { useNativeCurrency } from './Tokens'
 import useGasPrice from './useGasPrice'
 import useUSDCPrice, { useUSDCValue } from './useUSDCPrice'
-import { useActiveWeb3React } from './web3'
 
 const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
 const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%

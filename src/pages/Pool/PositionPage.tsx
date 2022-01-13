@@ -1,3 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
@@ -12,16 +14,18 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import type { providers } from 'ethers'
-import { BigNumber } from 'ethers'
 import { useToken } from 'hooks/Tokens'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
+<<<<<<< HEAD
 import { useActiveWeb3React } from 'hooks/web3'
+=======
+>>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
@@ -448,7 +452,7 @@ export function PositionPage({
         return library
           .getSigner()
           .sendTransaction(newTxn)
-          .then((response: providers.TransactionResponse) => {
+          .then((response: TransactionResponse) => {
             setCollectMigrationHash(response.hash)
             setCollecting(false)
 

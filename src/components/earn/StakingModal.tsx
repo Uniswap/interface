@@ -1,7 +1,8 @@
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import type { providers } from 'ethers'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -9,7 +10,6 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { usePairContract, useStakingContract, useV2RouterContract } from '../../hooks/useContract'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -105,7 +105,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             signatureData.s,
             { gasLimit: 350000 }
           )
-          .then((response: providers.TransactionResponse) => {
+          .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.DEPOSIT_LIQUIDITY_STAKING,
               token0Address: stakingInfo.tokens[0].address,

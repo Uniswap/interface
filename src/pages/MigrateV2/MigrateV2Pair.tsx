@@ -1,3 +1,5 @@
+import { Contract } from '@ethersproject/contracts'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
@@ -10,8 +12,7 @@ import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
 import SettingsTab from 'components/Settings'
 import { Dots } from 'components/swap/styleds'
-import type { providers } from 'ethers'
-import { Contract } from 'ethers'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -43,7 +44,10 @@ import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
+<<<<<<< HEAD
 import { useActiveWeb3React } from '../../hooks/web3'
+=======
+>>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { TransactionType } from '../../state/transactions/actions'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, ThemedText } from '../../theme'
@@ -335,7 +339,7 @@ function V2PairMigration({
       .then((gasEstimate) => {
         return migrator
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
-          .then((response: providers.TransactionResponse) => {
+          .then((response: TransactionResponse) => {
             ReactGA.event({
               category: 'Migrate',
               action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,

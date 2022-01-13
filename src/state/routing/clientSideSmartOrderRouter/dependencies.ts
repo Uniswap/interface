@@ -1,5 +1,6 @@
 import { AlphaRouterParams, IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
-import { INFURA_NETWORK_URLS, SupportedChainId } from 'constants/chains'
+import { INFURA_NETWORK_URLS } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { providers } from 'ethers/lib/ethers'
 import ReactGA from 'react-ga'
 

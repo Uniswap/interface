@@ -1,5 +1,5 @@
 import { SupportedChainId } from 'constants/chains'
-import { useActiveWeb3React } from 'hooks/web3'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 

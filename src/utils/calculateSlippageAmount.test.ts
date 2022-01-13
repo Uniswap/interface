@@ -1,11 +1,11 @@
+import { AddressZero } from '@ethersproject/constants'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { constants } from 'ethers'
 
 import { calculateSlippageAmount } from './calculateSlippageAmount'
 
 describe('#calculateSlippageAmount', () => {
   it('bounds are correct', () => {
-    const tokenAmount = CurrencyAmount.fromRawAmount(new Token(1, constants.AddressZero, 0), '100')
+    const tokenAmount = CurrencyAmount.fromRawAmount(new Token(1, AddressZero, 0), '100')
     expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow('Unexpected slippage')
     expect(() => calculateSlippageAmount(tokenAmount, new Percent(10_001, 10_000))).toThrow('Unexpected slippage')
     expect(calculateSlippageAmount(tokenAmount, new Percent(0, 10_000)).map((bound) => bound.toString())).toEqual([
@@ -30,7 +30,7 @@ describe('#calculateSlippageAmount', () => {
     ])
   })
   it('works for 18 decimals', () => {
-    const tokenAmount = CurrencyAmount.fromRawAmount(new Token(1, constants.AddressZero, 18), '100')
+    const tokenAmount = CurrencyAmount.fromRawAmount(new Token(1, AddressZero, 18), '100')
     expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow('Unexpected slippage')
     expect(() => calculateSlippageAmount(tokenAmount, new Percent(10_001, 10_000))).toThrow('Unexpected slippage')
     expect(calculateSlippageAmount(tokenAmount, new Percent(0, 10_000)).map((bound) => bound.toString())).toEqual([

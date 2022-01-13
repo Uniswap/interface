@@ -1,6 +1,9 @@
+import { arrayify } from '@ethersproject/bytes'
+import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
-import { arrayify, parseBytes32String } from 'ethers/lib/utils'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { createTokenFilterFunction } from 'lib/components/TokenSelect/utils'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
@@ -12,7 +15,6 @@ import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
-import { useActiveWeb3React } from './web3'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {

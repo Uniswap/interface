@@ -1,10 +1,11 @@
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import type { providers } from 'ethers'
-import { BigNumber } from 'ethers'
-import { hexStripZeros } from 'ethers/lib/utils'
+import { BigNumber } from '@ethersproject/bignumber'
+import { hexStripZeros } from '@ethersproject/bytes'
+import { Web3Provider } from '@ethersproject/providers'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 
 interface SwitchNetworkArguments {
-  library: providers.Web3Provider
+  library: Web3Provider
   chainId: SupportedChainId
 }
 

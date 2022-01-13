@@ -6,8 +6,6 @@ import { gnosisSafe, injected } from '../connectors'
 import { IS_IN_IFRAME } from '../constants/misc'
 import { isMobile } from '../utils/userAgent'
 
-export { default as useActiveWeb3React } from './useActiveWeb3React'
-
 export function useEagerConnect() {
   const { activate, active } = useWeb3React()
   const [tried, setTried] = useState(false)

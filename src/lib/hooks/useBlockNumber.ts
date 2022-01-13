@@ -42,7 +42,8 @@ function useBlock() {
     return undefined
   }, [chainId, library, onBlock, windowVisible])
 
-  return useDebounce(state.block, 100)
+  const debouncedBlock = useDebounce(state.block, 100)
+  return state.block ? debouncedBlock : undefined
 }
 
 const blockAtom = atom<number | undefined>(undefined)
@@ -57,6 +58,12 @@ export function BlockUpdater() {
 }
 
 /** Requires that BlockUpdater be installed in the DOM tree. */
-export default function useBlockNumber() {
-  return useAtomValue(blockAtom)
+export default function useBlockNumber(): number | undefined {
+  const { chainId } = useActiveWeb3React()
+  const block = useAtomValue(blockAtom)
+  return chainId ? block : undefined
+}
+
+export function useFastForwardBlockNumber(): (block: number) => void {
+  return useUpdateAtom(blockAtom)
 }

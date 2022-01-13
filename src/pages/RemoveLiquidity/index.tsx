@@ -1,7 +1,9 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import type { providers } from 'ethers'
-import { BigNumber, Contract } from 'ethers'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -28,7 +30,6 @@ import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
@@ -261,7 +262,7 @@ export default function RemoveLiquidity({
       await router[methodName](...args, {
         gasLimit: safeGasEstimate,
       })
-        .then((response: providers.TransactionResponse) => {
+        .then((response: TransactionResponse) => {
           setAttemptingTxn(false)
 
           addTransaction(response, {

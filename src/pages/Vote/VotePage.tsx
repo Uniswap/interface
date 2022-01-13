@@ -1,8 +1,9 @@
+import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -27,7 +28,10 @@ import {
 } from '../../constants/governance'
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
+<<<<<<< HEAD
 import { useActiveWeb3React } from '../../hooks/web3'
+=======
+>>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import {

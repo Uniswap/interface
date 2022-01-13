@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 import { BigNumber } from 'ethers'
 import { hexZeroPad, namehash } from 'ethers/lib/utils'
+=======
+import { BigNumber } from '@ethersproject/bignumber'
+import { hexZeroPad } from '@ethersproject/bytes'
+import { namehash } from '@ethersproject/hash'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+>>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
@@ -10,7 +17,6 @@ import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract, useERC721Contract, useERC1155Contract } from './useContract'
 import useDebounce from './useDebounce'
 import useENSName from './useENSName'
-import { useActiveWeb3React } from './web3'
 
 /**
  * Returns the ENS avatar URI, if available.

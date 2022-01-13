@@ -1,9 +1,10 @@
+import { MaxUint256 } from '@ethersproject/constants'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
-import type { providers } from 'ethers'
-import { constants } from 'ethers'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useMemo } from 'react'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
@@ -13,7 +14,6 @@ import { useHasPendingApproval, useTransactionAdder } from '../state/transaction
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
 import { useTokenAllowance } from './useTokenAllowance'
-import { useActiveWeb3React } from './web3'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -111,17 +111,17 @@ export function useApproveCallback(
     }
 
     let useExact = false
-    const estimatedGas = await tokenContract.estimateGas.approve(spender, constants.MaxUint256).catch(() => {
+    const estimatedGas = await tokenContract.estimateGas.approve(spender, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
       useExact = true
       return tokenContract.estimateGas.approve(spender, amountToApprove.quotient.toString())
     })
 
     return tokenContract
-      .approve(spender, useExact ? amountToApprove.quotient.toString() : constants.MaxUint256, {
+      .approve(spender, useExact ? amountToApprove.quotient.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas),
       })
-      .then((response: providers.TransactionResponse) => {
+      .then((response: TransactionResponse) => {
         addTransaction(response, { type: TransactionType.APPROVAL, tokenAddress: token.address, spender })
       })
       .catch((error: Error) => {

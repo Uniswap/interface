@@ -30,14 +30,12 @@ export enum ApplicationModal {
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
-  readonly blockNumber: { readonly [chainId: number]: number }
   readonly chainId: number | null
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
 }
 
 const initialState: ApplicationState = {
-  blockNumber: {},
   chainId: null,
   openModal: null,
   popupList: [],

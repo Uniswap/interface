@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, Token } from '@uniswap/sdk-core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
@@ -21,8 +22,11 @@ import {
   useSearchInactiveTokenLists,
   useToken,
 } from '../../hooks/Tokens'
+<<<<<<< HEAD
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokenBalances } from '../../state/wallet/hooks'
+=======
+>>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'

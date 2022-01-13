@@ -11,6 +11,7 @@ import {
   TickMath,
   tickToPrice,
 } from '@uniswap/v3-sdk'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -19,7 +20,6 @@ import { getTickToPrice } from 'utils/getTickToPrice'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
-import { useActiveWeb3React } from '../../../hooks/web3'
 import { AppState } from '../../index'
 import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'

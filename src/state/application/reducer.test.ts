@@ -14,9 +14,6 @@ describe('application reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, {
-      blockNumber: {
-        1: 3,
-      },
       chainId: null,
       openModal: null,
       popupList: [],

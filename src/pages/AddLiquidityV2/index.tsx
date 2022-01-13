@@ -1,9 +1,10 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import type { providers } from 'ethers'
-import { BigNumber } from 'ethers'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -28,7 +29,6 @@ import { useV2RouterContract } from '../../hooks/useContract'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { PairState } from '../../hooks/useV2Pairs'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
@@ -147,7 +147,7 @@ export default function AddLiquidity({
     }
 
     let estimate,
-      method: (...args: any) => Promise<providers.TransactionResponse>,
+      method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA.isNative || currencyB.isNative) {
