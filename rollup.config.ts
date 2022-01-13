@@ -1,3 +1,8 @@
+/**
+ * Bundles the widgets library, which is released independently of the interface application.
+ * This library lives in src/lib, but shares code with the interface application.
+ */
+
 import eslint from '@rollup/plugin-eslint'
 import json from '@rollup/plugin-json'
 import replace from '@rollup/plugin-replace'
