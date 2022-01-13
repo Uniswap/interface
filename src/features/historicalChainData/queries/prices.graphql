@@ -6,7 +6,7 @@
 #
 # Note. `chainId` is only used to guarantee unique keys across chains.
 
-query hourlyTokenPrices($address: String, $periodStartUnix: Int, $chainId: Int) {
+query hourlyTokenPrices($address: String, $chainId: Int, $periodStartUnix: Int) {
   tokenHourDatas(
     first: 1000
     where: { token: $address, periodStartUnix_gt: $periodStartUnix }

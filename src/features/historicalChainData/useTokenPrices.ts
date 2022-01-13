@@ -72,13 +72,13 @@ function useChainTokenPrices({
 
   const tokensResult = useTokensQuery(
     client!,
-    { tokenList },
+    { chainId, tokenList },
     { enabled: Boolean(isEnabled && client && tokenList && tokenList.length > 0) }
   )
 
   const ethPricesResult = useEthPricesQuery(
     client!,
-    {},
+    { chainId },
     { enabled: Boolean(isEnabled && client && currencies.length > 0) }
   )
 

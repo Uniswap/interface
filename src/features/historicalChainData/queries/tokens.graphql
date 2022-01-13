@@ -1,5 +1,5 @@
 # Queries token data in bulk
-query tokens($tokenList: [ID!]!) {
+query tokens($chainId: Int!, $tokenList: [ID!]!) {
   tokens(
     where: { id_in: $tokenList }
     orderBy: totalValueLockedUSD

@@ -4211,7 +4211,9 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
-export type EthPricesQueryVariables = Exact<{ [key: string]: never }>
+export type EthPricesQueryVariables = Exact<{
+  chainId: Scalars['Int']
+}>
 
 export type EthPricesQuery = {
   __typename?: 'Query'
@@ -4220,8 +4222,8 @@ export type EthPricesQuery = {
 
 export type HourlyTokenPricesQueryVariables = Exact<{
   address?: Maybe<Scalars['String']>
-  periodStartUnix?: Maybe<Scalars['Int']>
   chainId?: Maybe<Scalars['Int']>
+  periodStartUnix?: Maybe<Scalars['Int']>
 }>
 
 export type HourlyTokenPricesQuery = {
@@ -4254,6 +4256,7 @@ export type DailyTokenPricesQuery = {
 }
 
 export type TokensQueryVariables = Exact<{
+  chainId: Scalars['Int']
   tokenList: Array<Scalars['ID']> | Scalars['ID']
 }>
 
@@ -4263,7 +4266,7 @@ export type TokensQuery = {
 }
 
 export const EthPricesDocument = `
-    query ethPrices {
+    query ethPrices($chainId: Int!) {
   current: bundles(first: 1, subgraphError: allow) {
     ethPriceUSD
   }
@@ -4271,17 +4274,17 @@ export const EthPricesDocument = `
     `
 export const useEthPricesQuery = <TData = EthPricesQuery, TError = unknown>(
   client: GraphQLClient,
-  variables?: EthPricesQueryVariables,
+  variables: EthPricesQueryVariables,
   options?: UseQueryOptions<EthPricesQuery, TError, TData>,
   headers?: RequestInit['headers']
 ) =>
   useQuery<EthPricesQuery, TError, TData>(
-    variables === undefined ? ['ethPrices'] : ['ethPrices', variables],
+    ['ethPrices', variables],
     fetcher<EthPricesQuery, EthPricesQueryVariables>(client, EthPricesDocument, variables, headers),
     options
   )
 export const HourlyTokenPricesDocument = `
-    query hourlyTokenPrices($address: String, $periodStartUnix: Int, $chainId: Int) {
+    query hourlyTokenPrices($address: String, $chainId: Int, $periodStartUnix: Int) {
   tokenHourDatas(
     first: 1000
     where: {token: $address, periodStartUnix_gt: $periodStartUnix}
@@ -4345,7 +4348,7 @@ export const useDailyTokenPricesQuery = <TData = DailyTokenPricesQuery, TError =
     options
   )
 export const TokensDocument = `
-    query tokens($tokenList: [ID!]!) {
+    query tokens($chainId: Int!, $tokenList: [ID!]!) {
   tokens(
     where: {id_in: $tokenList}
     orderBy: totalValueLockedUSD

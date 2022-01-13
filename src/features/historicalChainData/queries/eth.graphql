@@ -1,4 +1,4 @@
-query ethPrices {
+query ethPrices($chainId: Int!) {
   current: bundles(first: 1, subgraphError: allow) {
     ethPriceUSD
   }
