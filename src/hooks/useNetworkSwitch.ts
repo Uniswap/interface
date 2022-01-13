@@ -2,13 +2,13 @@ import { useCallback } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { isMobile } from 'react-device-detect'
 import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 
 import { useActiveWeb3React } from '.'
 import { NETWORK_DETAIL } from '../constants'
 import { switchOrAddNetwork } from '../utils'
 import { CustomNetworkConnector } from '../connectors/CustomNetworkConnector'
 import { useEthereumOptionPopoverToggle } from '../state/application/hooks'
+import { CustomWalletLinkConnector } from '../connectors/CustomWalletLinkConnector'
 
 export type UseNetworkSwitchProps = {
   onSelectNetworkCallback?: () => void
@@ -21,8 +21,11 @@ export const useNetworkSwitch = ({ onSelectNetworkCallback }: UseNetworkSwitchPr
     (optionChainId?: ChainId) => {
       if (optionChainId === undefined || optionChainId === chainId) return
       if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
-      else if (connector instanceof InjectedConnector || connector instanceof WalletLinkConnector)
+      else if (connector instanceof InjectedConnector)
         switchOrAddNetwork(NETWORK_DETAIL[optionChainId], account || undefined)
+      else if (connector instanceof CustomWalletLinkConnector)
+        connector.changeChainId(NETWORK_DETAIL[optionChainId], account || undefined)
+
       if (onSelectNetworkCallback) onSelectNetworkCallback()
     },
     [account, chainId, connector, onSelectNetworkCallback]
