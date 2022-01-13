@@ -10,7 +10,7 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
-import Logo from '../../assets/images/logo.png'
+import Logo from '../../assets/images/dark-logo.png'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
@@ -172,14 +172,13 @@ const Title = styled.a`
 `
 
 const UniIcon = styled.div`
-  background: #ffffff62;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: transform 0.3s ease;
   :hover {
-    transform: rotate(-180deg);
+    transform: rotate(-180deg) scale(1.1);
   }
 `
 
@@ -238,7 +237,7 @@ export default function Header() {
       </Modal>
       <Title href=".">
         <UniIcon>
-          <img src={Logo} alt="logo" height="34px" width="100%" />
+          <img src={Logo} alt="logo" height="44px" width="44px" />
         </UniIcon>
       </Title>
       <HeaderLinks>

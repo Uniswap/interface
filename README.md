@@ -50,7 +50,7 @@ The Uniswap Interface supports swapping, adding liquidity, removing liquidity an
 The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
 linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
 
-## XinFin Apothem Contracts 
+## XinFin Apothem Contracts
 - factory: *0x78CAafCB80d9E635196322d989e82753d0d229B8*
 - weth: *0xEE3C205346923a989F82827A25778FB6FdfE84d0*
 - router: *0x0cDf7c990F4D16a235aFb4279F75A8e35d9c2cFB*
@@ -58,3 +58,11 @@ linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/re
 - token-wbnb pair: *0x81915D0460CBA23fb15d5A7A4bBd5E06799C3DF3*
 - multicall: *0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB*
 - obossanniy: *0x14956774a1ab82F3655A4df20686C1FF54fD7D53*
+
+## XinFin V2 Apothem Contracts
+- factory: *0xCae66ac135d6489BDF5619Ae8F8f1e724765eb8f*
+- weth: *0x2a5c77b016Df1b3b0AE4E79a68F8adF64Ee741ba*
+- router: *0x3F11A24EB45d3c3737365b97A996949dA6c2EdDf*
+- ERC20 XTest (XT): *0xc33BfDD2211dD9A61355B08dc19A68d0e3816f65*
+- token-wbnb pair: *0x9C4649580fF7754F5213F57e65692689742b7909*
+- multicall: *0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB*

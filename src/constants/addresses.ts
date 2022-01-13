@@ -4,10 +4,10 @@ import { SupportedChainId } from './chains'
 type AddressMap = { [chainId: number]: string }
 
 export const XSP_ADDRESS: AddressMap = constructSameAddressMap('0xbC4979e749c28F81F22f95B603B350D9Ab0F172A')
-export const WXDC_ADDRESS: AddressMap = constructSameAddressMap('0xEE3C205346923a989F82827A25778FB6FdfE84d0')
+export const WXDC_ADDRESS: AddressMap = constructSameAddressMap('0x2a5c77b016Df1b3b0AE4E79a68F8adF64Ee741ba')
 export const MULTICALL_ADDRESS: AddressMap = constructSameAddressMap('0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB')
-export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap('0x78CAafCB80d9E635196322d989e82753d0d229B8')
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x0cDf7c990F4D16a235aFb4279F75A8e35d9c2cFB')
+export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap('0xCae66ac135d6489BDF5619Ae8F8f1e724765eb8f')
+export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x3F11A24EB45d3c3737365b97A996949dA6c2EdDf')
 // 0xbC4979e749c28F81F22f95B603B350D9Ab0F172A
 
 /**

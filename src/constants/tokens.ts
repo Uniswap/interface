@@ -31,6 +31,7 @@ export const TT = new Token(
   'TT',
   'Test Token'
 )
+export const XT = new Token(SupportedChainId.TESTNET, '0xc33BfDD2211dD9A61355B08dc19A68d0e3816f65', 18, 'XT', 'XTest')
 export const USDT = new Token(
   SupportedChainId.MAINNET,
   '0xdAC17F958D2ee523a2206206994597C13D831ec7',
