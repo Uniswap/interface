@@ -1,8 +1,8 @@
 import { ChainId } from '@swapr/sdk'
 
 import EthereumLogo from '../../assets/svg/ethereum-logo.svg'
-import XDAILogo from '../../assets/svg/xdai-logo.svg'
 import ArbitrumLogo from '../../assets/svg/arbitrum-one-logo.svg'
+import GnosisLogo from '../../assets/svg/gnosis-chain-logo.svg'
 
 export const networkOptionsPreset = [
   // no tag - mainnets
@@ -36,8 +36,8 @@ export const networkOptionsPreset = [
   // COMING SOON
   {
     chainId: ChainId.XDAI,
-    name: 'xDai',
-    logoSrc: XDAILogo,
+    name: 'Gnosis Chain',
+    logoSrc: GnosisLogo,
     color: '#49A9A7',
     tag: 'coming soon'
   }
