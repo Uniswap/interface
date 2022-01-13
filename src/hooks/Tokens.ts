@@ -5,9 +5,9 @@ import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useMemo } from 'react'
 
-import { createTokenFilterFunction } from '../components/SearchModal/filtering'
 import { nativeOnChain } from '../constants/tokens'
 import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
@@ -117,7 +117,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
   const activeTokens = useAllTokens()
   return useMemo(() => {
     if (!search || search.trim().length === 0) return []
-    const tokenFilter = createTokenFilterFunction(search)
+    const tokenFilter = getTokenFilter(search)
     const result: WrappedTokenInfo[] = []
     const addressSet: { [address: string]: true } = {}
     for (const url of inactiveUrls) {

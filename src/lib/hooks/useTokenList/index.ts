@@ -3,16 +3,18 @@ import { atom, useAtom } from 'jotai'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useEffect, useMemo, useState } from 'react'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import fetchTokenList from './fetchTokenList'
-import { ChainTokenMap, TokenMap, tokensToChainTokenMap } from './utils'
+import { useQueryTokens } from './querying'
+import { ChainTokenMap, tokensToChainTokenMap } from './utils'
 import { validateTokens } from './validateTokenList'
 
 export { DEFAULT_TOKEN_LIST } from './fetchTokenList'
 
 const chainTokenMapAtom = atom<ChainTokenMap>({})
 
-export default function useTokenList(list?: string | TokenInfo[]): TokenMap {
+export default function useTokenList(list?: string | TokenInfo[]): WrappedTokenInfo[] {
   const { chainId, library } = useActiveWeb3React()
   const [chainTokenMap, setChainTokenMap] = useAtom(chainTokenMapAtom)
 
@@ -38,6 +40,10 @@ export default function useTokenList(list?: string | TokenInfo[]): TokenMap {
   }, [chainId, library, list, setChainTokenMap])
 
   return useMemo(() => {
-    return (chainId && chainTokenMap[chainId]) || {}
+    return Object.values((chainId && chainTokenMap[chainId]) || {}).map(({ token }) => token)
   }, [chainId, chainTokenMap])
+}
+
+export function useQueryTokenList(query: string) {
+  return useQueryTokens(query, useTokenList())
 }

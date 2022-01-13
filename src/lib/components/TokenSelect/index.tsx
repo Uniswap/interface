@@ -1,8 +1,8 @@
 import { t, Trans } from '@lingui/macro'
-import useTokenList from 'lib/hooks/useTokenList'
+import { useQueryTokenList } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
 import { Token } from 'lib/types'
-import { ElementRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -18,17 +18,12 @@ const SearchInput = styled(StringInput)`
 `
 
 export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {
-  const tokenMap = useTokenList()
-  const tokens = useMemo(() => Object.values(tokenMap).map(({ token }) => token), [tokenMap])
+  const [query, setQuery] = useState('')
+  const tokens = useQueryTokenList(query)
+
   const baseTokens: Token[] = [] // TODO(zzmp): Add base tokens to token list functionality
 
-  // TODO(zzmp): Load token balances
-  // TODO(zzmp): Sort tokens
-  // TODO(zzmp): Disable already selected tokens
-  // TODO(zzmp): Include native Currency
-
-  // TODO(zzmp): Filter tokens by search
-  const [search, setSearch] = useState('')
+  // TODO(zzmp): Disable already selected tokens (passed as props?)
 
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus(), [input])
@@ -42,8 +37,8 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
         <Row pad={0.75} grow>
           <ThemedText.Body1>
             <SearchInput
-              value={search}
-              onChange={setSearch}
+              value={query}
+              onChange={setQuery}
               placeholder={t`Search by token name or address`}
               onKeyDown={options?.onKeyDown}
               onBlur={options?.blur}
