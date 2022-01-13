@@ -134,8 +134,8 @@ export const WXDC_CONFIG: {
     chainId: SupportedChainId.TESTNET,
     address: WXDC_ADDRESS[SupportedChainId.TESTNET],
     decimals: 18,
-    symbol: 'WTXDC',
-    name: 'Wrapped TXDC',
+    symbol: 'WXDC',
+    name: 'Wrapped XDC',
   },
 }
 
