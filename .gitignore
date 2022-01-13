@@ -20,7 +20,7 @@
 # production
 /build
 
-# bundle
+# widgets
 /dist
 
 # misc

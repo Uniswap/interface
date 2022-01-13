@@ -24,13 +24,13 @@ const config = {
   input: 'src/lib/index.tsx',
   output: [
     {
-      file: 'dist/interface.js',
+      file: 'dist/widgets.js',
       format: 'cjs',
       inlineDynamicImports: true,
       sourcemap: true,
     },
     {
-      file: 'dist/interface.esm.js',
+      file: 'dist/widgets.esm.js',
       format: 'esm',
       inlineDynamicImports: true,
       sourcemap: true,

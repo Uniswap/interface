@@ -1,4 +1,4 @@
-name: Bundle
+name: Widgets
 on:
   push:
     branches:
@@ -8,8 +8,8 @@ on:
       - main
 
 jobs:
-  bundle:
-    name: Bundle library
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,5 +36,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Bundle
-        run: yarn bundle
+      - name: Build
+        run: yarn widgets:build
