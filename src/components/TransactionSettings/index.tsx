@@ -3,14 +3,20 @@ import styled, { css, ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Text, Flex } from 'rebass'
 import { X } from 'react-feather'
-
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-
 import { darken } from 'polished'
-import { useExpertModeManager, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import {
+  useExpertModeManager,
+  useUserSlippageTolerance,
+  useUserTransactionTTL,
+  useShowLiveChart,
+  useShowTradeRoutes,
+  useToggleLiveChart,
+  useToggleTradeRoutes
+} from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useModalOpen, useToggleTransactionSettingsMenu } from 'state/application/hooks'
 import Toggle from 'components/Toggle'
@@ -20,7 +26,7 @@ import { ApplicationModal } from 'state/application/actions'
 import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
 import Tooltip from 'components/Tooltip'
 import MenuFlyout from 'components/MenuFlyout'
-
+import { isMobile } from 'react-device-detect'
 enum SlippageError {
   InvalidInput = 'InvalidInput',
   RiskyLow = 'RiskyLow',
@@ -37,12 +43,12 @@ const FancyButton = styled.button`
   text-align: center;
   height: 2rem;
   border-radius: 36px;
-  font-size: 1rem;
   width: auto;
   min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid transparent;
   outline: none;
-  background: ${({ theme }) => theme.bg1};
+  font-size: 16px;
+  background: ${({ theme }) => theme.buttonBlack};
   :hover {
     border: 1px solid ${({ theme }) => theme.bg4};
   }
@@ -56,12 +62,12 @@ const Option = styled(FancyButton)<{ active: boolean }>`
   :hover {
     cursor: pointer;
   }
-  background-color: ${({ active, theme }) => active && theme.primary};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text)};
+  background-color: ${({ active, theme }) => (active ? theme.primary : theme.buttonBlack)};
+  color: ${({ active, theme }) => (active ? theme.textReverse : theme.text)};
 `
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.bg1};
+  background: transparent;
   font-size: 16px;
   width: auto;
   outline: none;
@@ -74,11 +80,10 @@ const Input = styled.input`
 `
 
 const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }>`
-  height: 2rem;
   position: relative;
-  min-width: 6rem;
   padding: 0 0.75rem;
   flex: 1;
+  min-width: 70px;
   border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary}`};
   :hover {
     border: ${({ theme, active, warning }) =>
@@ -165,9 +170,10 @@ const StyledMenu = styled.div`
 const MenuFlyoutBrowserStyle = css`
   min-width: 322px;
   right: -10px;
+  top: 3.25rem;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    top: 4rem;
+    top: 3.25rem;
     bottom: unset;
     & > div:after {
       top: -40px;
@@ -191,6 +197,16 @@ const StyledInput = styled.input`
   &:placeholder {
     color: ${({ theme }) => theme.disableText};
   }
+`
+const StyledTitle = styled.div`
+  font-size: ${isMobile ? '16px' : '16px'};
+  font-weight: 500;
+`
+const StyledLabel = styled.div`
+  font-size: ${isMobile ? '14px' : '12px'};
+  color: ${({ theme }) => theme.text};
+  font-weigh: 400;
+  line-height: 20px;
 `
 
 export interface SlippageTabsProps {
@@ -246,7 +262,7 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
 
     try {
       const valueAsInt: number = Number.parseInt(value) * 60
-      if (!Number.isNaN(valueAsInt) && valueAsInt > 0) {
+      if (!Number.isNaN(valueAsInt) && valueAsInt > 0 && valueAsInt <= 9999 * 60) {
         setDeadline(valueAsInt)
       }
     } catch {}
@@ -254,11 +270,11 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
 
   return (
     <AutoColumn gap="md">
-      <AutoColumn gap="sm">
+      <AutoColumn gap="md" style={{ padding: '6px 0' }}>
         <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
+          <StyledLabel>
             <Trans>Max Slippage</Trans>
-          </TYPE.black>
+          </StyledLabel>
           <QuestionHelper
             text={t`Transaction will revert if there is an adverse rate change that is higher than this %`}
           />
@@ -289,7 +305,7 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
             }}
             active={rawSlippage === 100}
           >
-            1%
+            1.0%
           </Option>
           <OptionCustom active={![10, 50, 100].includes(rawSlippage)} warning={!slippageInputIsValid} tabIndex={-1}>
             <RowBetween>
@@ -335,13 +351,13 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
 
       <AutoColumn gap="sm">
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400} color={theme.text11}>
+          <StyledLabel>
             <Trans>Transaction time limit</Trans>
-          </TYPE.black>
+          </StyledLabel>
           <QuestionHelper text={t`Transaction will revert if it is pending for longer than the indicated time`} />
         </RowFixed>
         <RowFixed>
-          <OptionCustom style={{ width: '80px' }} tabIndex={-1}>
+          <OptionCustom style={{ width: '100px' }} tabIndex={-1}>
             <Input
               color={!!deadlineError ? 'red' : undefined}
               onBlur={() => {
@@ -361,7 +377,7 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
   )
 }
 
-export default function TransactionSettings() {
+export default function TransactionSettings({ tradeValid = false }: { tradeValid?: boolean }) {
   const theme = useTheme()
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
   const [ttl, setTtl] = useUserTransactionTTL()
@@ -377,6 +393,11 @@ export default function TransactionSettings() {
   const hideTooltip = useCallback(() => setIsShowTooltip(false), [setIsShowTooltip])
 
   const [confirmText, setConfirmText] = useState('')
+
+  const isShowLiveChart = useShowLiveChart()
+  const isShowTradeRoutes = useShowTradeRoutes()
+  const toggleLiveChart = useToggleLiveChart()
+  const toggleTradeRoutes = useToggleTradeRoutes()
 
   return (
     <>
@@ -468,6 +489,7 @@ export default function TransactionSettings() {
           isOpen={open}
           toggle={toggle}
           translatedTitle={t`Advanced Settings`}
+          mobileCustomStyle={{ paddingBottom: '40px' }}
           hasArrow
         >
           <>
@@ -478,11 +500,11 @@ export default function TransactionSettings() {
               setDeadline={setTtl}
             />
 
-            <RowBetween>
+            <RowBetween margin="14px 0">
               <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
+                <StyledLabel>
                   <Trans>Advanced Mode</Trans>
-                </TYPE.black>
+                </StyledLabel>
                 <QuestionHelper text={t`Enables high slippage trades. Use at your own risk.`} />
               </RowFixed>
               <Toggle
@@ -499,8 +521,49 @@ export default function TransactionSettings() {
                         setShowConfirmation(true)
                       }
                 }
+                size={isMobile ? 'md' : 'sm'}
               />
             </RowBetween>
+            {isShowLiveChart !== undefined &&
+              isShowTradeRoutes !== undefined &&
+              !!toggleLiveChart &&
+              !!toggleTradeRoutes && (
+                <>
+                  <StyledTitle style={{ borderTop: '1px solid ' + theme.border, padding: '16px 0' }}>
+                    <Trans>Display Settings</Trans>
+                  </StyledTitle>
+                  <AutoColumn gap="md">
+                    <RowBetween>
+                      <RowFixed>
+                        <StyledLabel>Live Chart</StyledLabel>
+                        <QuestionHelper text={t`Turn on to display live chart.`} />
+                      </RowFixed>
+                      <Toggle
+                        isActive={isShowLiveChart}
+                        toggle={() => {
+                          toggleLiveChart()
+                          isMobile && toggle()
+                        }}
+                        size={isMobile ? 'md' : 'sm'}
+                      />
+                    </RowBetween>
+                    <RowBetween>
+                      <RowFixed>
+                        <StyledLabel>Trade Route</StyledLabel>
+                        <QuestionHelper text={t`Turn on to display trade route.`} />
+                      </RowFixed>
+                      <Toggle
+                        isActive={isShowTradeRoutes && tradeValid}
+                        toggle={() => {
+                          toggleTradeRoutes()
+                          isMobile && toggle()
+                        }}
+                        size={isMobile ? 'md' : 'sm'}
+                      />
+                    </RowBetween>
+                  </AutoColumn>
+                </>
+              )}
           </>
         </MenuFlyout>
       </StyledMenu>

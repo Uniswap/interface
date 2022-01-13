@@ -8,6 +8,7 @@ export interface Colors {
 
   // text
   text: Color
+  darkText: Color
   textReverse: Color
   subText: Color
   text2: Color
@@ -123,5 +124,6 @@ declare module 'styled-components' {
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation
+    darkMode: boolean
   }
 }

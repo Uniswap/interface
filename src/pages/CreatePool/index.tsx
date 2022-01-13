@@ -92,7 +92,6 @@ export default function CreatePool({
     error,
     unAmplifiedPairAddress
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, undefined)
-
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B])
 

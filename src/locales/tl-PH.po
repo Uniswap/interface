@@ -42,10 +42,6 @@ msgstr ""
 msgid "- Remove send"
 msgstr ""
 
-#: src/pages/SwapV2/index.tsx
-msgid "24H Trading Volume"
-msgstr ""
-
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr ""
@@ -309,6 +305,10 @@ msgstr ""
 msgid "Change"
 msgstr ""
 
+#: src/components/LiveChart/index.tsx
+msgid "Chart is unavailable"
+msgstr ""
+
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Checking allowance..."
@@ -524,6 +524,10 @@ msgstr ""
 #: src/components/Popups/ListUpdatePopup.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Display Settings"
 msgstr ""
 
 #: src/components/Menu/index.tsx
@@ -1446,7 +1450,6 @@ msgid "Rewards: {0} {1}"
 msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swapv2/AdvancedSwapDetails.tsx
 msgid "Route"
 msgstr ""
 
@@ -1735,7 +1738,6 @@ msgid "Total Supply"
 msgstr ""
 
 #: src/pages/About/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
 msgstr ""
 
@@ -1788,6 +1790,14 @@ msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display live chart."
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display trade route."
 msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
@@ -1886,10 +1896,6 @@ msgstr ""
 msgid "View transaction on Etherscan"
 msgstr ""
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "View your trade route"
-msgstr ""
-
 #: src/components/PositionCard/index.tsx
 msgid "Volume (24H)"
 msgstr ""
@@ -1952,6 +1958,10 @@ msgstr ""
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr ""
 
+#: src/components/LiveChart/index.tsx
+msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+msgstr ""
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr ""
@@ -2011,6 +2021,7 @@ msgstr ""
 msgid "Your total pool tokens:"
 msgstr ""
 
+#: src/pages/SwapV2/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr ""

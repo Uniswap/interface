@@ -942,6 +942,7 @@ export const COINGECKO_NETWORK_ID = {
   [ChainId.FANTOM]: 'fantom',
   [ChainId.CRONOS]: 'cronos',
 
+  //set mainnet for testing purpose
   [ChainId.ROPSTEN]: '',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',

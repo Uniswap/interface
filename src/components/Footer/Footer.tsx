@@ -91,7 +91,7 @@ export const FooterSocialLink = () => {
         <TwitterIcon color={theme.subText} />
       </ExternalLink>
       <ExternalLink href={KYBER_NETWORK_DISCORD_URL}>
-        <Discord width={16} height={12} />
+        <Discord width={16} height={12} color={theme.subText} />
       </ExternalLink>
       <ExternalLink href={`https://blog.kyber.network`}>
         <Medium />

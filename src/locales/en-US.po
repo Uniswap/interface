@@ -42,10 +42,6 @@ msgstr "- Remove Recipient"
 msgid "- Remove send"
 msgstr "- Remove send"
 
-#: src/pages/SwapV2/index.tsx
-msgid "24H Trading Volume"
-msgstr "24H Trading Volume"
-
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
@@ -309,6 +305,10 @@ msgstr "Chains"
 msgid "Change"
 msgstr "Change"
 
+#: src/components/LiveChart/index.tsx
+msgid "Chart is unavailable"
+msgstr "Chart is unavailable"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Checking allowance..."
@@ -525,6 +525,10 @@ msgstr "Disconnect"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Dismiss"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Display Settings"
+msgstr "Display Settings"
 
 #: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
@@ -1446,7 +1450,6 @@ msgid "Rewards: {0} {1}"
 msgstr "Rewards: {0} {1}"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swapv2/AdvancedSwapDetails.tsx
 msgid "Route"
 msgstr "Route"
 
@@ -1735,7 +1738,6 @@ msgid "Total Supply"
 msgstr "Total Supply"
 
 #: src/pages/About/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
 msgstr "Total Trading Volume"
 
@@ -1789,6 +1791,14 @@ msgstr "Transaction will revert if there is an adverse rate change that is highe
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Try Again"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display live chart."
+msgstr "Turn on to display live chart."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display trade route."
+msgstr "Turn on to display trade route."
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "UNKNOWN"
@@ -1886,10 +1896,6 @@ msgstr "View list"
 msgid "View transaction on Etherscan"
 msgstr "View transaction on Etherscan"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "View your trade route"
-msgstr "View your trade route"
-
 #: src/components/PositionCard/index.tsx
 msgid "Volume (24H)"
 msgstr "Volume (24H)"
@@ -1952,6 +1958,10 @@ msgstr "You are creating a pool"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 
+#: src/components/LiveChart/index.tsx
+msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+msgstr "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "You don’t have liquidity in this {type} pool yet."
@@ -2011,6 +2021,7 @@ msgstr "Your total harvested rewards. Each time you harvest new rewards, they ar
 msgid "Your total pool tokens:"
 msgstr "Your total pool tokens:"
 
+#: src/pages/SwapV2/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "Your trade route"

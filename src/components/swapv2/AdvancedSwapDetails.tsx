@@ -26,7 +26,7 @@ const IconWrapper = styled.div<{ show: boolean }>`
 interface TradeSummaryProps {
   trade: Aggregator
   allowedSlippage: number
-  toggleRoute: () => void
+  toggleRoute?: () => void
 }
 
 function TradeSummary({ trade, allowedSlippage, toggleRoute }: TradeSummaryProps) {
@@ -98,7 +98,7 @@ function TradeSummary({ trade, allowedSlippage, toggleRoute }: TradeSummaryProps
               </TYPE.black>
             </RowBetween>
 
-            <RowBetween>
+            {/* <RowBetween>
               <RowFixed>
                 <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
                   <Trans>Route</Trans>
@@ -110,7 +110,7 @@ function TradeSummary({ trade, allowedSlippage, toggleRoute }: TradeSummaryProps
                 </Text>
                 <Eye size={16} />
               </ButtonEmpty>
-            </RowBetween>
+            </RowBetween> */}
           </>
         )}
       </AutoColumn>
@@ -120,17 +120,16 @@ function TradeSummary({ trade, allowedSlippage, toggleRoute }: TradeSummaryProps
 
 export interface AdvancedSwapDetailsProps {
   trade?: Aggregator
-  toggleRoute: () => void
 }
 
-export function AdvancedSwapDetails({ trade, toggleRoute }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
 
   return (
     <AutoColumn gap="md">
       {trade && (
         <>
-          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} toggleRoute={toggleRoute} />
+          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
         </>
       )}
     </AutoColumn>

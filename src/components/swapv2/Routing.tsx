@@ -13,13 +13,46 @@ import { useCurrencyConvertedToNative } from '../../utils/dmm'
 import { Text, Flex } from 'rebass'
 import { useAllTokens } from 'hooks/Tokens'
 
+const Shadow = styled.div<{ backgroundColor?: string }>`
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    z-index: 3;
+    pointer-events: none;
+    position: absolute;
+    height: 90px;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.2s ease;
+    opacity: 0;
+  }
+
+  &:before {
+    background: linear-gradient(to bottom, ${({ backgroundColor }) => backgroundColor}, transparent);
+    top: 0;
+  }
+
+  &:after {
+    background: linear-gradient(to top, ${({ backgroundColor }) => backgroundColor}, transparent);
+    bottom: 0;
+  }
+  &.top:before,
+  &.bottom:after {
+    opacity: 1;
+  }
+`
 const StyledContainer = styled.div`
   flex: 1;
+  max-height: 100%;
   max-width: 100%;
   margin-left: 0;
   overflow-y: scroll;
   overflow-x: hidden;
-
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -39,7 +72,7 @@ const StyledContainer = styled.div`
 
 const StyledPair = styled.div`
   position: relative;
-  padding-top: 15px;
+  padding-top: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -73,14 +106,15 @@ const StyledToken = styled.a<{ reverse?: boolean }>`
   align-items: center;
   white-space: nowrap;
   text-decoration: none;
-  color: inherit;
+  color: ${({ theme }) => theme.subText};
   ${({ reverse }) =>
     reverse &&
     css`
       flex-direction: row-reverse;
       justify-content: flex-start;
     `}
-
+  padding-bottom:7px;
+  border-bottom: 1px solid ${({ theme }) => theme.border};
   & > span {
     margin-left: 4px;
     margin-right: 4px;
@@ -102,7 +136,7 @@ const StyledRoutes = styled.div`
 `
 const StyledRoute = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   position: relative;
   align-items: center;
 
@@ -134,42 +168,45 @@ const StyledRoute = styled.div`
 const StyledRouteLine = styled.div`
   position: absolute;
   border-bottom: 1px solid ${({ theme }) => theme.border};
-  width: 100%;
+  width: calc(100% - 68px);
+  left: 43px;
 `
 const StyledHops = styled.div<{ length: string | number }>`
-  width: 100%;
   z-index: 1;
-  display: grid;
-  grid-column-gap: 20px;
-  grid-template-columns: repeat(${({ length }) => length}, 1fr);
+  display: flex;
   align-items: center;
 `
 
 const StyledHop = styled.div`
-  flex: 1;
   padding: 8px;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.bg6};
   border: 1px solid ${({ theme }) => theme.border};
   height: fit-content;
   position: relative;
+  flex: 0 0 146px;
+  margin: auto;
+  transition: filter 0.15s ease;
+  cursor: pointer;
+  :hover {
+    filter: ${({ theme }) => (theme.darkMode ? 'brightness(130%)' : 'brightness(97%)')};
+  }
 `
 const StyledExchange = styled.a`
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 4px;
+  padding: 4px 0;
   margin-top: 4px;
   font-size: 10px;
   border-radius: 8px;
-  color: ${({ theme }) => theme.text11};
-  background-color: ${({ theme }) => theme.bg12};
+  color: ${({ theme }) => theme.subText};
   line-height: 20px;
   white-space: nowrap;
   text-decoration: none;
 
   &:hover {
-    text-decoration: underline;
+    color: ${({ theme }) => (theme.darkMode ? theme.white : theme.black)};
   }
 
   & > .img--sm {
@@ -187,12 +224,11 @@ const StyledExchangeStatic = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 4px;
+  padding: 4px 0;
   margin-top: 4px;
   font-size: 10px;
   border-radius: 8px;
-  color: ${({ theme }) => theme.text11};
-  background-color: ${({ theme }) => theme.bg12};
+  color: ${({ theme }) => theme.subText};
   line-height: 20px;
   white-space: nowrap;
   text-decoration: none;
@@ -209,7 +245,7 @@ const StyledExchangeStatic = styled.div`
   }
 `
 
-const StyledPercent = styled.div`
+const StyledPercent = styled.div<{ backgroundColor?: string }>`
   font-size: 12px;
   line-height: 14px;
   font-weight: 700;
@@ -219,7 +255,7 @@ const StyledPercent = styled.div`
   transform: translateY(50%);
   z-index: 2;
   color: ${({ theme }) => theme.secondary4};
-  background: ${({ theme }) => theme.background};
+  background: ${({ backgroundColor }) => backgroundColor};
 `
 const StyledDot = styled.i<{ out?: boolean }>`
   display: inline-block;
@@ -234,11 +270,11 @@ const StyledDot = styled.i<{ out?: boolean }>`
   background-color: ${({ theme }) => theme.secondary4};
 `
 const StyledWrap = styled.div`
-  width: calc(100% - 76px);
+  width: calc(100% - 68px);
   margin: 10px 0 10px 6px;
-
-  &.left-visible:after,
-  &.right-visible:before {
+  &:after,
+  &:before {
+    transition: all 0.1s ease;
     content: '';
     display: block;
     z-index: 2;
@@ -249,29 +285,36 @@ const StyledWrap = styled.div`
     height: calc(100% - 20px);
     top: 50%;
     transform: translateY(-50%);
+    opacity: 0;
   }
-
-  &.left-visible:after {
+  &:after {
     background: linear-gradient(to right, ${({ theme }) => theme.bg12}, transparent);
-    left: 35px;
+    left: 42px;
   }
-
-  &.right-visible:before {
+  &:before {
     background: linear-gradient(to left, ${({ theme }) => theme.bg12}, transparent);
-    right: 35px;
+    right: 24px;
+  }
+  &.left-visible:after,
+  &.right-visible:before {
+    opacity: 1;
   }
 `
 
 const StyledHopChevronRight = styled.div`
-  position: absolute;
-  left: -13px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   border-left: 5px solid ${({ theme }) => theme.secondary4};
+`
+
+const StyledHopChevronWrapper = styled.div<{ backgroundColor?: string }>`
+  min-width: 24px;
+  height: 24px;
+  background: ${({ backgroundColor }) => backgroundColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 `
 
 const getSwapPercent = (percent?: number, routeNumber = 0): string | null => {
@@ -288,9 +331,10 @@ const getSwapPercent = (percent?: number, routeNumber = 0): string | null => {
 interface RouteRowProps {
   route: SwapRouteV2
   chainId: ChainId
+  backgroundColor?: string
 }
 
-const RouteRow = ({ route, chainId }: RouteRowProps) => {
+const RouteRow = ({ route, chainId, backgroundColor }: RouteRowProps) => {
   const scrollRef = useRef(null)
   const contentRef: any = useRef(null)
   const shadowRef: any = useRef(null)
@@ -303,7 +347,7 @@ const RouteRow = ({ route, chainId }: RouteRowProps) => {
       shadowRef.current?.classList.remove('left-visible')
     }
 
-    if (contentRef.current?.scrollWidth - element?.scrollLeft > element?.clientWidth) {
+    if (Math.floor(contentRef.current?.scrollWidth - element?.scrollLeft) > Math.floor(element?.clientWidth)) {
       shadowRef.current?.classList.add('right-visible')
     } else {
       shadowRef.current?.classList.remove('right-visible')
@@ -324,45 +368,50 @@ const RouteRow = ({ route, chainId }: RouteRowProps) => {
     <StyledWrap ref={shadowRef}>
       <ScrollContainer innerRef={scrollRef} vertical={false} onScroll={handleShadow}>
         <StyledHops length={route?.subRoutes?.length} ref={contentRef}>
-          {route.subRoutes.map((subRoute, index) => {
+          {route.subRoutes.map((subRoute, index, arr) => {
             const token = route.path[index + 1]
-
             return (
-              <StyledHop key={index}>
-                {index !== 0 ? <StyledHopChevronRight /> : null}
-                <StyledToken
-                  style={{ marginRight: 0 }}
-                  href={getEtherscanLink(chainId, token?.address, 'token')}
-                  target="_blank"
-                >
-                  <CurrencyLogo currency={token} size={'16px'} />
-                  <span>{token?.symbol}</span>
-                </StyledToken>
-                {Array.isArray(subRoute)
-                  ? subRoute.map(pool => {
-                      const dex = getExchangeConfig(pool.exchange, chainId)
-                      const link = (i => {
-                        return pool.id.length === 42 ? (
-                          <StyledExchange
-                            key={`${i}-${pool.id}`}
-                            href={getEtherscanLink(chainId, pool.id, 'address')}
-                            target="_blank"
-                          >
-                            {i}
-                          </StyledExchange>
-                        ) : (
-                          <StyledExchangeStatic key={`${i}-${pool.id}`}>{i}</StyledExchangeStatic>
+              <React.Fragment key={index}>
+                <StyledHop>
+                  <StyledToken
+                    style={{ marginRight: 0 }}
+                    href={getEtherscanLink(chainId, token?.address, 'token')}
+                    target="_blank"
+                  >
+                    <CurrencyLogo currency={token} size={'16px'} />
+                    <span>{token?.symbol}</span>
+                  </StyledToken>
+                  {Array.isArray(subRoute)
+                    ? subRoute.map(pool => {
+                        const dex = getExchangeConfig(pool.exchange, chainId)
+                        const link = (i => {
+                          return pool.id.length === 42 ? (
+                            <StyledExchange
+                              key={`${i}-${pool.id}`}
+                              href={getEtherscanLink(chainId, pool.id, 'address')}
+                              target="_blank"
+                            >
+                              {i}
+                            </StyledExchange>
+                          ) : (
+                            <StyledExchangeStatic key={`${i}-${pool.id}`}>{i}</StyledExchangeStatic>
+                          )
+                        })(
+                          <>
+                            {dex.icon ? <img src={dex.icon} alt="" className="img--sm" /> : <i className="img--sm" />}
+                            {`${dex?.name || '--'}: ${pool.swapPercentage}%`}
+                          </>
                         )
-                      })(
-                        <>
-                          {dex.icon ? <img src={dex.icon} alt="" className="img--sm" /> : <i className="img--sm" />}
-                          {`${dex?.name || '--'}: ${pool.swapPercentage}%`}
-                        </>
-                      )
-                      return link
-                    })
-                  : null}
-              </StyledHop>
+                        return link
+                      })
+                    : null}
+                </StyledHop>
+                {index !== arr.length - 1 && (
+                  <StyledHopChevronWrapper backgroundColor={backgroundColor}>
+                    <StyledHopChevronRight />
+                  </StyledHopChevronWrapper>
+                )}
+              </React.Fragment>
             )
           })}
         </StyledHops>
@@ -375,10 +424,15 @@ interface RoutingProps {
   trade?: Aggregator
   currencies: { [field in Field]?: Currency }
   parsedAmounts: { [Field.INPUT]: CurrencyAmount | undefined; [Field.OUTPUT]: CurrencyAmount | undefined }
+  maxHeight?: string
+  backgroundColor?: string
 }
 
-const Routing = ({ trade, currencies, parsedAmounts }: RoutingProps) => {
+const Routing = ({ trade, currencies, parsedAmounts, maxHeight, backgroundColor }: RoutingProps) => {
   const { chainId } = useActiveWeb3React()
+  const shadowRef: any = useRef(null)
+  const wrapperRef: any = useRef(null)
+  const contentRef: any = useRef(null)
 
   const nativeInputCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT] || undefined)
   const nativeOutputCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT] || undefined)
@@ -413,7 +467,7 @@ const Routing = ({ trade, currencies, parsedAmounts }: RoutingProps) => {
 
     if (chainId && currency) {
       return (
-        <StyledToken as={'div'} reverse={isOutput}>
+        <StyledToken as={'div'} reverse={isOutput} style={{ border: 'none' }}>
           <CurrencyLogo currency={currency} size={'20px'} />
           <span>{`${formattedNum(currencyAmount.toSignificant(6))} ${currency.symbol}`}</span>
         </StyledToken>
@@ -424,30 +478,62 @@ const Routing = ({ trade, currencies, parsedAmounts }: RoutingProps) => {
 
   const hasRoutes = trade && chainId && tradeComposition && tradeComposition.length > 0
 
-  return (
-    <StyledContainer>
-      <StyledPair>
-        <StyledWrapToken>{renderTokenInfo(trade?.inputAmount, Field.INPUT)}</StyledWrapToken>
-        {!hasRoutes && <StyledPairLine />}
-        <StyledWrapToken>{renderTokenInfo(trade?.outputAmount, Field.OUTPUT)}</StyledWrapToken>
-      </StyledPair>
+  const handleScroll = () => {
+    const element = wrapperRef?.current
+    if (element?.scrollTop > 0) {
+      shadowRef?.current?.classList.add('top')
+    } else {
+      shadowRef?.current?.classList.remove('top')
+    }
+    if (contentRef.current?.scrollHeight - element?.scrollTop > element?.clientHeight) {
+      shadowRef.current?.classList.add('bottom')
+    } else {
+      shadowRef.current?.classList.remove('bottom')
+    }
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleScroll)
+    return () => window.removeEventListener('resize', handleScroll)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  useEffect(() => {
+    handleScroll()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trade, maxHeight])
 
-      {trade && chainId && tradeComposition && tradeComposition.length > 0 ? (
-        <div>
-          <StyledRoutes>
-            <StyledDot />
-            <StyledDot out />
-            {tradeComposition.map((route, index) => (
-              <StyledRoute key={index}>
-                <StyledPercent>{getSwapPercent(route.swapPercentage, tradeComposition.length)}</StyledPercent>
-                <StyledRouteLine />
-                <RouteRow route={route} chainId={chainId} />
-              </StyledRoute>
-            ))}
-          </StyledRoutes>
+  return (
+    <Shadow ref={shadowRef as any} backgroundColor={backgroundColor}>
+      <StyledContainer ref={wrapperRef as any} onScroll={handleScroll} style={{ maxHeight: maxHeight || '100%' }}>
+        <div ref={contentRef as any}>
+          <StyledPair>
+            <StyledWrapToken>{renderTokenInfo(trade?.inputAmount, Field.INPUT)}</StyledWrapToken>
+            {!hasRoutes && <StyledPairLine />}
+            <StyledWrapToken>{renderTokenInfo(trade?.outputAmount, Field.OUTPUT)}</StyledWrapToken>
+          </StyledPair>
+
+          {trade && chainId && tradeComposition && tradeComposition.length > 0 ? (
+            <div>
+              <StyledRoutes>
+                <StyledDot />
+                <StyledDot out />
+                {tradeComposition.map((route, index) => (
+                  <StyledRoute key={index}>
+                    <StyledPercent backgroundColor={backgroundColor}>
+                      {getSwapPercent(route.swapPercentage, tradeComposition.length)}
+                    </StyledPercent>
+                    <StyledRouteLine />
+                    <RouteRow route={route} chainId={chainId} backgroundColor={backgroundColor} />
+                    <StyledHopChevronWrapper backgroundColor={backgroundColor} style={{ marginRight: '2px' }}>
+                      <StyledHopChevronRight />
+                    </StyledHopChevronWrapper>
+                  </StyledRoute>
+                ))}
+              </StyledRoutes>
+            </div>
+          ) : null}
         </div>
-      ) : null}
-    </StyledContainer>
+      </StyledContainer>
+    </Shadow>
   )
 }
 

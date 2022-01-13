@@ -42,10 +42,6 @@ msgstr "- Alıcıyı Kaldır"
 msgid "- Remove send"
 msgstr "- Gönderimi Kaldır"
 
-#: src/pages/SwapV2/index.tsx
-msgid "24H Trading Volume"
-msgstr "24 Saatlik İşlem Hacmi"
-
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>Gelişmiş Mod</0> 'Onayla’ seçeneği düşük oranlara ve fon kaybına neden olabilecek yüksek yüzdeli kayma yaşanabilecek işlemlere izin verir."
@@ -269,7 +265,7 @@ msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Bridge Assets"
-msgstr "Köprü Varlıkları"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Bug Bounty"
@@ -308,6 +304,10 @@ msgstr "Zincirler"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Değişim"
+
+#: src/components/LiveChart/index.tsx
+msgid "Chart is unavailable"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -525,6 +525,10 @@ msgstr "Bağlantıyı Kes"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Reddet"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Display Settings"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
@@ -1446,7 +1450,6 @@ msgid "Rewards: {0} {1}"
 msgstr "Ödüller: {0} {1}"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swapv2/AdvancedSwapDetails.tsx
 msgid "Route"
 msgstr "Rota"
 
@@ -1508,7 +1511,7 @@ msgstr "Likiditenizi bulmak için bir token seçin."
 
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
-msgstr "Havuz Payı"
+msgstr "Havuz Payı<<<<<<< HEAD"
 
 #: src/components/ShareModal/index.tsx
 msgid "Share this pool with your friends!"
@@ -1735,7 +1738,6 @@ msgid "Total Supply"
 msgstr ""
 
 #: src/pages/About/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
 msgstr "Toplam İşlem Hacmi"
 
@@ -1789,6 +1791,14 @@ msgstr "Bu %'den daha yüksek bir olumsuz oran değişikliği olursa işlem geri
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Tekrar deneyin"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display live chart."
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display trade route."
+msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "UNKNOWN"
@@ -1886,10 +1896,6 @@ msgstr "Listeyi Gör"
 msgid "View transaction on Etherscan"
 msgstr "Etherscan ile işlemi görüntüle"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "View your trade route"
-msgstr "Alım-satım rotanızı görüntüleyin"
-
 #: src/components/PositionCard/index.tsx
 msgid "Volume (24H)"
 msgstr "Hacim (24s)"
@@ -1952,6 +1958,10 @@ msgstr "Bir havuz oluşturuyorsunuz"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "Tek bir token (token çiftinden istediğiniz token) sağlayarak havuza likidite ekleyebilirsiniz. Sizin için otomatik olarak LP token’ları oluşturacağız ve bunları likidite havuzuna ekleyeceğiz - Hem de hepsi sadece tek bir işlemde"
 
+#: src/components/LiveChart/index.tsx
+msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+msgstr ""
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "Bu {type} havuzunda henüz likiditeniz yok."
@@ -2011,6 +2021,7 @@ msgstr "Toplam hasat edilmiş ödüllerinizdir. Her yeni ödül toplamanızda, b
 msgid "Your total pool tokens:"
 msgstr "Toplam havuz token’ları:"
 
+#: src/pages/SwapV2/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "Alım-satım rotanız"

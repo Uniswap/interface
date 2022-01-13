@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI, Token } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, X, AlertTriangle, Share2 } from 'react-feather'
+import { ArrowDown, X, AlertTriangle, Share2, MoreHorizontal } from 'react-feather'
 import { Text, Flex, Box } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
@@ -27,7 +27,9 @@ import {
   Wrapper,
   KyberTag,
   PriceImpactHigh,
-  ShareButton
+  LiveChartWrapper,
+  RoutesWrapper,
+  StyledFlex
 } from '../../components/swapv2/styleds'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -41,7 +43,14 @@ import { useWalletModalToggle, useToggleTransactionSettingsMenu } from '../../st
 import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useDerivedSwapInfoV2 } from '../../state/swap/useAggregator'
-import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
+import {
+  useExpertModeManager,
+  useUserSlippageTolerance,
+  useShowLiveChart,
+  useShowTradeRoutes,
+  useToggleLiveChart,
+  useToggleTradeRoutes
+} from '../../state/user/hooks'
 import { LinkStyledButton, TYPE, ButtonText } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
@@ -52,22 +61,14 @@ import { useSwapV2Callback } from '../../hooks/useSwapV2Callback'
 import Routing from '../../components/swapv2/Routing'
 import RefreshButton from '../../components/swapv2/RefreshButton'
 import TradeTypeSelection from 'components/swapv2/TradeTypeSelection'
-import {
-  PageWrapper,
-  Container,
-  AggregatorStatsContainer,
-  AggregatorStatsItem,
-  AggregatorStatsItemTitle,
-  AggregatorStatsItemValue
-} from 'components/swapv2/styleds'
+import { PageWrapper, Container, MobileModalWrapper, ShareButton } from 'components/swapv2/styleds'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
 import { formattedNum } from 'utils'
 import TransactionSettings from 'components/TransactionSettings'
-import { formatBigLiquidity } from 'utils/formatBalance'
 import { Swap as SwapIcon } from 'components/Icons'
 import TradePrice from 'components/swapv2/TradePrice'
-import Modal from 'components/Modal'
 import InfoHelper from 'components/InfoHelper'
+import LiveChart from 'components/LiveChart'
 import ShareModal from 'components/ShareModal'
 import TokenInfo from 'components/swapv2/TokenInfo'
 
@@ -79,16 +80,21 @@ enum ACTIVE_TAB {
 const AppBodyWrapped = styled(AppBody)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   z-index: 1;
-  padding: 1.875rem 1.25rem;
+  padding: 30px 24px;
+  margin-top: 0;
+  @media only screen and (min-width: 768px) {
+    width: 404px;
+  }
 `
 
 export default function Swap({ history }: RouteComponentProps) {
   const [rotate, setRotate] = useState(false)
   const [showInverted, setShowInverted] = useState<boolean>(false)
-  const [showRoute, setShowRoute] = useState<boolean>(false)
+  const isShowLiveChart = useShowLiveChart()
+  const isShowTradeRoutes = useShowTradeRoutes()
+  const toggleLiveChart = useToggleLiveChart()
+  const toggleTradeRoutes = useToggleTradeRoutes()
   const [activeTab, setActiveTab] = useState<ACTIVE_TAB>(ACTIVE_TAB.SWAP)
-
-  const toggleShowRoute = () => setShowRoute(prev => !prev)
 
   const loadedUrlParams = useDefaultsFromURLSearch()
   // token warning stuff
@@ -139,6 +145,7 @@ export default function Swap({ history }: RouteComponentProps) {
     tradeComparer,
     onRefresh
   } = useDerivedSwapInfoV2()
+
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -176,6 +183,12 @@ export default function Swap({ history }: RouteComponentProps) {
     setDismissTokenWarning(true)
     history.push('/swapv2/')
   }, [history])
+
+  const handleRotateClick = useCallback(() => {
+    setApprovalSubmitted(false) // reset 2 step UI for approvals
+    setRotate(prev => !prev)
+    onSwitchTokensV2()
+  }, [])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -292,28 +305,8 @@ export default function Swap({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
       <PageWrapper>
-        <AggregatorStatsContainer>
-          <AggregatorStatsItem>
-            <AggregatorStatsItemTitle>
-              <Trans>Total Trading Volume</Trans>
-            </AggregatorStatsItemTitle>
-            <AggregatorStatsItemValue>
-              {aggregatorVolume ? formatBigLiquidity(aggregatorVolume.totalVolume, 2, true) : <Loader />}
-            </AggregatorStatsItemValue>
-          </AggregatorStatsItem>
-
-          <AggregatorStatsItem>
-            <AggregatorStatsItemTitle>
-              <Trans>24H Trading Volume</Trans>
-            </AggregatorStatsItemTitle>
-            <AggregatorStatsItemValue>
-              {aggregatorVolume ? formattedNum(aggregatorVolume.last24hVolume, true) : <Loader />}
-            </AggregatorStatsItemValue>
-          </AggregatorStatsItem>
-        </AggregatorStatsContainer>
-
         <Container>
-          <div>
+          <StyledFlex justifyContent={'center'} alignItems={'flex-start'}>
             <AppBodyWrapped>
               <RowBetween mb={'16px'}>
                 <TabContainer>
@@ -329,7 +322,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
                 <SwapFormActions>
                   <RefreshButton isConfirming={showConfirm} trade={trade} onClick={onRefresh} />
-                  <TransactionSettings />
+                  <TransactionSettings tradeValid={!!trade} />
                   <ShareModal currencies={currencies} />
                 </SwapFormActions>
               </RowBetween>
@@ -390,7 +383,12 @@ export default function Swap({ history }: RouteComponentProps) {
                       <Box sx={{ position: 'relative' }}>
                         {tradeComparer?.tradeSaved?.usd && (
                           <KyberTag>
-                            <Trans>You Save</Trans> {formattedNum(tradeComparer.tradeSaved.usd, true)}
+                            <Trans>You Save</Trans>{' '}
+                            {formattedNum(tradeComparer.tradeSaved.usd, true) +
+                              ` (${tradeComparer?.tradeSaved?.percent &&
+                                (tradeComparer.tradeSaved.percent < 0.01
+                                  ? '<0.01'
+                                  : tradeComparer.tradeSaved.percent.toFixed(2))}%)`}
                             <InfoHelper
                               text={
                                 <Text>
@@ -613,35 +611,73 @@ export default function Swap({ history }: RouteComponentProps) {
                       {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </BottomGrouping>
                   </Wrapper>
-                  <AdvancedSwapDetailsDropdown trade={trade} toggleRoute={toggleShowRoute} />
+                  <AdvancedSwapDetailsDropdown trade={trade} />
                 </>
               ) : (
                 <TokenInfo currencies={currencies} />
               )}
             </AppBodyWrapped>
-            <SwitchLocaleLink />
-          </div>
+            {(isShowLiveChart || isShowTradeRoutes) && !isMobile && (
+              <div style={{ paddingTop: '20px' }}>
+                {isShowLiveChart && (
+                  <LiveChartWrapper>
+                    <LiveChart currencies={currencies} onRotateClick={handleRotateClick} />
+                  </LiveChartWrapper>
+                )}
+                {isShowTradeRoutes && Boolean(trade) && (
+                  <RoutesWrapper isOpenChart={isShowLiveChart}>
+                    <Flex flexDirection="column" width="100%">
+                      <RowBetween>
+                        <Text fontSize={18} fontWeight={500} color={theme.subText}>
+                          <Trans>Your trade route</Trans>
+                        </Text>
+                      </RowBetween>
+                      <Routing
+                        trade={trade}
+                        currencies={currencies}
+                        parsedAmounts={parsedAmounts}
+                        maxHeight={!isShowLiveChart ? '700px' : '332px'}
+                        backgroundColor={theme.buttonBlack}
+                      />
+                    </Flex>
+                  </RoutesWrapper>
+                )}
+              </div>
+            )}
+          </StyledFlex>
+          <SwitchLocaleLink />
         </Container>
       </PageWrapper>
-      <Modal
-        isOpen={showRoute}
-        onDismiss={toggleShowRoute}
-        maxWidth={900}
-        maxHeight="80vh"
-        {...(isMobile && { minHeight: 60 })}
+      <MobileModalWrapper isOpen={isShowLiveChart && isMobile} onDismiss={toggleLiveChart}>
+        <Flex flexDirection="column" padding="20px" alignItems={'center'} width="100%">
+          <ButtonText onClick={toggleLiveChart} style={{ alignSelf: 'flex-end' }}>
+            <X color={theme.text} />
+          </ButtonText>
+          <LiveChart currencies={currencies} onRotateClick={handleRotateClick} />
+        </Flex>
+      </MobileModalWrapper>
+      <MobileModalWrapper
+        isOpen={isShowTradeRoutes && isMobile && Boolean(trade)}
+        onDismiss={toggleTradeRoutes}
+        height="80vh"
       >
-        <Flex flexDirection="column" padding="28px 24px" width="100%">
-          <RowBetween>
-            <Text fontSize={18} fontWeight={500}>
+        <Flex flexDirection="column" width="100%" padding="20px">
+          <RowBetween padding="5px 0">
+            <Text fontSize={18} fontWeight={500} color={theme.subText}>
               <Trans>Your trade route</Trans>
             </Text>
-            <ButtonText onClick={toggleShowRoute}>
+            <ButtonText onClick={toggleTradeRoutes} style={{ alignSelf: 'flex-end' }}>
               <X color={theme.text} />
             </ButtonText>
           </RowBetween>
-          <Routing trade={trade} currencies={currencies} parsedAmounts={parsedAmounts} />
+          <Routing
+            trade={trade}
+            currencies={currencies}
+            parsedAmounts={parsedAmounts}
+            backgroundColor={theme.background}
+          />
         </Flex>
-      </Modal>
+      </MobileModalWrapper>
     </>
   )
 }

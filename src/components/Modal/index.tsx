@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { animated, useTransition, useSpring } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { isMobile } from 'react-device-detect'
@@ -45,12 +45,12 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
     max-width: ${({ maxWidth }) => (maxWidth && !isNaN(maxWidth) ? `${maxWidth}px` : maxWidth)};
     ${({ maxHeight }) =>
       maxHeight &&
-      css`
+      `
         max-height: ${maxHeight && !isNaN(maxHeight) ? `${maxHeight}vh` : maxHeight};
       `}
     ${({ minHeight }) =>
       minHeight &&
-      css`
+      `
         min-height: ${minHeight}vh;
       `}
     display: flex;
@@ -62,7 +62,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
       width:  85vw;
       ${mobile &&
-        css`
+        `
           width: 100vw;
           border-radius: 20px;
           border-bottom-left-radius: 0;
@@ -79,6 +79,7 @@ interface ModalProps {
   maxHeight?: number | string
   maxWidth?: number | string
   initialFocusRef?: React.RefObject<any>
+  className?: string
   children?: React.ReactNode
 }
 
@@ -89,6 +90,7 @@ export default function Modal({
   maxHeight = 90,
   maxWidth = 420,
   initialFocusRef,
+  className,
   children
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, null, {
@@ -128,6 +130,7 @@ export default function Modal({
                 maxHeight={maxHeight}
                 maxWidth={maxWidth}
                 mobile={isMobile}
+                className={className}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}

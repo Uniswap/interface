@@ -135,6 +135,7 @@
     "@sushiswap/sdk": "^5.0.0-canary.6",
     "@types/big.js": "^6.0.0",
     "@types/react-copy-to-clipboard": "^5.0.2",
+    "@types/recharts": "^1.8.23",
     "@uniswap/default-token-list": "^2.0.0",
     "@uniswap/sdk": "^3.0.3",
     "dayjs": "^1.10.7",
@@ -150,6 +151,7 @@
     "react-indiana-drag-scroll": "^2.0.1",
     "react-player": "^2.9.0",
     "react-use": "^15.3.4",
+    "recharts": "^2.1.6",
     "swr": "^1.0.1"
   }
 }

@@ -42,10 +42,6 @@ msgstr "- 删除接收者"
 msgid "- Remove send"
 msgstr "-删除发送"
 
-#: src/pages/SwapV2/index.tsx
-msgid "24H Trading Volume"
-msgstr "24小时交易量"
-
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>高級模式</0> 關閉\"\""
@@ -269,7 +265,7 @@ msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Bridge Assets"
-msgstr "桥接资产"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Bug Bounty"
@@ -308,6 +304,10 @@ msgstr "链"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "改变"
+
+#: src/components/LiveChart/index.tsx
+msgid "Chart is unavailable"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -525,6 +525,10 @@ msgstr "断开"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "驳回"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Display Settings"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
@@ -1446,7 +1450,6 @@ msgid "Rewards: {0} {1}"
 msgstr "奖励: {0} {1}"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swapv2/AdvancedSwapDetails.tsx
 msgid "Route"
 msgstr "路由"
 
@@ -1735,7 +1738,6 @@ msgid "Total Supply"
 msgstr ""
 
 #: src/pages/About/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
 msgstr "总交易量"
 
@@ -1789,6 +1791,14 @@ msgstr "如果出现高于此 % 的不利利率变化，交易将恢复"
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "再试一次"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display live chart."
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display trade route."
+msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "UNKNOWN"
@@ -1886,10 +1896,6 @@ msgstr "查看列表"
 msgid "View transaction on Etherscan"
 msgstr "在 Etherscan 上查看交易"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "View your trade route"
-msgstr "查看您的交易路由"
-
 #: src/components/PositionCard/index.tsx
 msgid "Volume (24H)"
 msgstr "交易量(24小时)"
@@ -1952,6 +1958,10 @@ msgstr "您正在创建一个池"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "您可以通过提供单一代币(来自代币对的任一代币)向池中添加流动性。我们将自动为您创建LP代币，并将其添加到流动性池中--所有操作都在一次交易中完成。"
 
+#: src/components/LiveChart/index.tsx
+msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+msgstr ""
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "您在这个 {type} 池中还没有流动性。"
@@ -2011,6 +2021,7 @@ msgstr "您收获的总奖励。每次您收获新的奖励时，它们都会被
 msgid "Your total pool tokens:"
 msgstr "您全部的池代币："
 
+#: src/pages/SwapV2/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "您的交易路由"

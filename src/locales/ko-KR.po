@@ -42,10 +42,6 @@ msgstr "- 받는 사람 제거"
 msgid "- Remove send"
 msgstr "- 보내기 제거"
 
-#: src/pages/SwapV2/index.tsx
-msgid "24H Trading Volume"
-msgstr "24시간 거래량"
-
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>고급 모드</0> 슬립피지가 높더라도 항상 거래를 허용합니다. 높은 슬립피지로 보다 적은 금액을 교환 받을 위험이 있습니다. "
@@ -269,7 +265,7 @@ msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Bridge Assets"
-msgstr "브릿지 애셋"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Bug Bounty"
@@ -308,6 +304,10 @@ msgstr "체인 네트워크"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "변경"
+
+#: src/components/LiveChart/index.tsx
+msgid "Chart is unavailable"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -525,6 +525,10 @@ msgstr "연결 해제"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "무시"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Display Settings"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
@@ -1446,7 +1450,6 @@ msgid "Rewards: {0} {1}"
 msgstr "보상: {0} {1}"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swapv2/AdvancedSwapDetails.tsx
 msgid "Route"
 msgstr "경로"
 
@@ -1735,7 +1738,6 @@ msgid "Total Supply"
 msgstr ""
 
 #: src/pages/About/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
 msgstr "총 거래량"
 
@@ -1789,6 +1791,14 @@ msgstr "이 %보다 높은 비율 변경이 있는 경우 거래가 거절됩니
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "다시 시도"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display live chart."
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display trade route."
+msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "UNKNOWN"
@@ -1886,10 +1896,6 @@ msgstr "목록 보기"
 msgid "View transaction on Etherscan"
 msgstr "Etherscan에서 거래 보기"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "View your trade route"
-msgstr "거래 루트 보기"
-
 #: src/components/PositionCard/index.tsx
 msgid "Volume (24H)"
 msgstr "볼륨(24시간)"
@@ -1952,6 +1958,10 @@ msgstr "풀 생성 중"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "단일 토큰(토큰 쌍의 토큰)을 제공하여 풀에 유동성을 추가할 수 있습니다. 한번의 트랜잭션으로 유동성 풀을 추가하고 LP 토큰을 생성합니다. "
 
+#: src/components/LiveChart/index.tsx
+msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+msgstr ""
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "이 {type} 풀에는 아직 유동성이 없습니다."
@@ -2011,6 +2021,7 @@ msgstr "총 수확 보상입니다. 새로운 보상을 획득할 때마다 짧�
 msgid "Your total pool tokens:"
 msgstr "총 풀 토큰:"
 
+#: src/pages/SwapV2/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "거래 경로"

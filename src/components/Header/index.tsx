@@ -189,7 +189,7 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.subText};
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px;
@@ -216,7 +216,7 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.subText};
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px;
@@ -225,7 +225,7 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme }) => theme.subText};
   }
 
   :hover {
@@ -234,7 +234,7 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
   }
 
   :focus {
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme }) => theme.subText};
     text-decoration: none;
   }
 

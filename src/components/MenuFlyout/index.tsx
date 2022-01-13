@@ -48,7 +48,7 @@ const BrowserDefaultStyle = css`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 4rem;
+  top: 3.5rem;
   right: 0rem;
   z-index: 100;
   padding: 20px;
@@ -101,7 +101,7 @@ const MenuFlyout = (props: {
     <>
       <BrowserView>
         <BrowserStyle>
-          <MenuTitleWrapper toggle={props.toggle} translatedTitle={props.translatedTitle}>
+          <MenuTitleWrapper toggle={props.toggle} translatedTitle={props.translatedTitle} fontSize={16}>
             {props.children}
           </MenuTitleWrapper>
         </BrowserStyle>
@@ -109,7 +109,7 @@ const MenuFlyout = (props: {
       <MobileView>
         <Modal isOpen={true} onDismiss={props.toggle} maxWidth={900}>
           <MobileStyle>
-            <MenuTitleWrapper toggle={props.toggle} translatedTitle={props.translatedTitle}>
+            <MenuTitleWrapper toggle={props.toggle} translatedTitle={props.translatedTitle} fontSize={16}>
               {props.children}
             </MenuTitleWrapper>
           </MobileStyle>
@@ -137,29 +137,27 @@ const CloseColor = styled(Close)`
   }
 `
 
-const MenuTitleWrapper = (props: { toggle: () => void; translatedTitle?: string; children: React.ReactNode }) => {
+const MenuTitleWrapper = (props: {
+  toggle: () => void
+  translatedTitle?: string
+  children: React.ReactNode
+  fontSize?: string | number
+}) => {
   const theme = useTheme()
 
   if (!props.translatedTitle) return <>{props.children}</>
 
   return (
-    <AutoColumn gap="16px">
+    <AutoColumn gap={isMobile ? '14px' : '10px'}>
       {isMobile && (
         <CloseIcon onClick={props.toggle}>
           <CloseColor />
         </CloseIcon>
       )}
-      <Text fontWeight={600} fontSize={16} color={theme.text11}>
+      <Text fontWeight={500} fontSize={props.fontSize || 16} color={theme.text}>
         {props.translatedTitle}
       </Text>
-      <AutoColumn
-        style={{
-          borderTop: `1px solid ${theme.border}`,
-          paddingTop: '1rem'
-        }}
-      >
-        {props.children}
-      </AutoColumn>
+      <AutoColumn>{props.children}</AutoColumn>
     </AutoColumn>
   )
 }

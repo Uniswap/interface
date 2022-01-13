@@ -3,6 +3,7 @@ import { useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
 import { stringify } from 'qs'
 import { Check } from 'react-feather'
+import { isMobile } from 'react-device-detect'
 
 import { LOCALE_LABEL, SupportedLocale } from 'constants/locales'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -21,6 +22,13 @@ const StyledLanguageSelector = styled.div`
 const OptionTitle = styled.div<{ isSelected?: boolean }>`
   color: ${({ theme, isSelected }) => (isSelected ? theme.primary : theme.subText)};
   font-size: 14px;
+`
+
+const GridWrapper = styled.div`
+  display: grid;
+  grid-gap: 1rem 3rem;
+  grid-template-columns: 1fr ${isMobile ? '1fr' : ''};
+  width: 100%;
 `
 
 export default function LanguageSelector({
@@ -54,28 +62,29 @@ export default function LanguageSelector({
       >
         <ArrowLeft />
       </ButtonEmpty>
+      <GridWrapper>
+        {Object.entries(LOCALE_LABEL).map(([locale, label], index) => {
+          const isLastItem = index + 1 === Object.keys(LOCALE_LABEL).length
 
-      {Object.entries(LOCALE_LABEL).map(([locale, label], index) => {
-        const isLastItem = index + 1 === Object.keys(LOCALE_LABEL).length
+          return (
+            <ButtonEmpty
+              key={locale}
+              padding="0"
+              onClick={() => handleSelectLanguage(locale as SupportedLocale)}
+              style={{
+                textDecoration: 'none',
+                marginBottom: isLastItem ? '0' : '16px',
+                display: 'flex',
+                justifyContent: 'space-between'
+              }}
+            >
+              <OptionTitle isSelected={locale === userLocale}>{label}</OptionTitle>
 
-        return (
-          <ButtonEmpty
-            key={locale}
-            padding="0"
-            onClick={() => handleSelectLanguage(locale as SupportedLocale)}
-            style={{
-              textDecoration: 'none',
-              marginBottom: isLastItem ? '0' : '16px',
-              display: 'flex',
-              justifyContent: 'space-between'
-            }}
-          >
-            <OptionTitle isSelected={locale === userLocale}>{label}</OptionTitle>
-
-            {locale === userLocale && <Check color={theme.primary}></Check>}
-          </ButtonEmpty>
-        )
-      })}
+              {locale === userLocale && <Check color={theme.primary}></Check>}
+            </ButtonEmpty>
+          )
+        })}
+      </GridWrapper>
     </StyledLanguageSelector>
   )
 }

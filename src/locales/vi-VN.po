@@ -42,10 +42,6 @@ msgstr "- Xoá Người Nhận"
 msgid "- Remove send"
 msgstr "- Gửi Lệnh Xoá"
 
-#: src/pages/SwapV2/index.tsx
-msgid "24H Trading Volume"
-msgstr "Khối Lượng Giao Dịch 24H"
-
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>Chế Độ Nâng Cao</0> tắt lời nhắc giao dịch 'Xác nhận' và cho phép các giao dịch có độ trượt giá cao có thể dẫn đến tỷ giá xấu và mất thanh khoản."
@@ -269,7 +265,7 @@ msgstr "Đảm báo giá tốt nhất"
 
 #: src/components/Menu/index.tsx
 msgid "Bridge Assets"
-msgstr "Cầu Nối"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Bug Bounty"
@@ -308,6 +304,10 @@ msgstr "Các Chuỗi"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Thay đổi"
+
+#: src/components/LiveChart/index.tsx
+msgid "Chart is unavailable"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -525,6 +525,10 @@ msgstr "Ngắt kết nối"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Bỏ qua"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Display Settings"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 #: src/pages/About/index.tsx
@@ -1446,7 +1450,6 @@ msgid "Rewards: {0} {1}"
 msgstr "Phần thưởng: {0} {1}"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swapv2/AdvancedSwapDetails.tsx
 msgid "Route"
 msgstr "Route"
 
@@ -1508,7 +1511,7 @@ msgstr "Chọn một token để tìm thanh khoản của bạn."
 
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
-msgstr "Chia sẽ của Pool"
+msgstr "Chia sẽ của Pool<<<<<<< HEAD"
 
 #: src/components/ShareModal/index.tsx
 msgid "Share this pool with your friends!"
@@ -1735,7 +1738,6 @@ msgid "Total Supply"
 msgstr ""
 
 #: src/pages/About/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume"
 msgstr "Tổng Khối lượng Giao dịch"
 
@@ -1789,6 +1791,14 @@ msgstr "Giao dịch sẽ hoàn nguyên nếu có sự thay đổi tỷ giá bấ
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Thử lại"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display live chart."
+msgstr ""
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Turn on to display trade route."
+msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "UNKNOWN"
@@ -1886,10 +1896,6 @@ msgstr "Xem danh sách"
 msgid "View transaction on Etherscan"
 msgstr "Xem giao dịch trên Etherscan"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "View your trade route"
-msgstr "Xem Trade Route của bạn"
-
 #: src/components/PositionCard/index.tsx
 msgid "Volume (24H)"
 msgstr "Khối lượng (24H)"
@@ -1952,6 +1958,10 @@ msgstr "Bạn đang tạo một Pool"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "Bạn có thể thêm thanh khoản cho Pool bằng cách cung cấp một token duy nhất (một token trong cặp đôi token). Chúng tôi sẽ tự động tạo mã thông báo LP cho bạn và thêm chúng vào nhóm thanh khoản - tất cả chỉ trong một giao dịch"
 
+#: src/components/LiveChart/index.tsx
+msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+msgstr ""
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "Bạn chưa có thanh khoản trong Pool {type} này."
@@ -2011,6 +2021,7 @@ msgstr "Tổng số phần thưởng đã thu hoạch của bạn. Mỗi khi b�
 msgid "Your total pool tokens:"
 msgstr "Tổng số Token pool của bạn:"
 
+#: src/pages/SwapV2/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "Trade Route của bạn"

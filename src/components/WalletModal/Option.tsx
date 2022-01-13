@@ -2,75 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { ExternalLink } from '../../theme'
 
-const InfoCard = styled.button<{ active?: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.bg7 : theme.bg10)};
-  outline: none;
-  border: none;
-  border-radius: 8px;
-  text-transform: uppercase;
-  &:nth-child(2n) {
-    margin-right: 0;
-  }
-  padding: 0 !important;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
-    margin: 0 0 8px 0;
-  `};
-`
-
-const OptionCard = styled(InfoCard as any)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 2rem;
-  padding: 1rem;
-`
-
-const OptionCardLeft = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  justify-content: center;
-  height: 100%;
-`
-
-const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
-  margin-top: 0;
-  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'not-allowed')};
-  transition: all 0.2s;
-  &:hover {
-    background-color: ${({ theme }) => theme.bg7};
-
-    > div:first-child {
-      background-color: ${({ theme }) => theme.bg8};
-    }
-  }
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
-`
-
-const StyledLink = styled(ExternalLink)`
-  width: 100%;
-`
-
-const HeaderText = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary : ({ theme }) => theme.text)};
-  font-size: 14px;
-  font-weight: 500;
-`
-
-const SubHeader = styled.div`
-  color: ${({ theme }) => theme.text};
-  margin-top: 10px;
-  font-size: 12px;
-`
-
-const IconWrapper = styled.div<{ size?: number | null; active?: boolean }>`
+const IconWrapper = styled.div<{ size?: number | null }>`
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 15px;
   padding: 15px 21px;
-  background-color: ${({ theme, active }) => (active ? theme.bg8 : theme.bg9)};
+  background-color: ${({ theme }) => theme.bg9};
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   transition: all 0.2s;
@@ -85,11 +23,69 @@ const IconWrapper = styled.div<{ size?: number | null; active?: boolean }>`
   `};
 `
 
+const HeaderText = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  color: ${({ theme }) => theme.text};
+  font-size: 14px;
+  font-weight: 500;
+`
+
+const OptionCardClickable = styled.button<{ active?: boolean; clickable?: boolean }>`
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  text-transform: uppercase;
+  &:nth-child(2n) {
+    margin-right: 0;
+  }
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 2rem;
+  margin-top: 0;
+  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'not-allowed')};
+  transition: all 0.2s;
+  background-color: ${({ theme }) => theme.bg10};
+
+  ${({ active }) => (active ? '&' : ':hover')} {
+    background-color: ${({ theme }) => theme.bg7};
+    & ${HeaderText} {
+      color: ${({ theme }) => theme.darkText} !important;
+    }
+    > ${IconWrapper} {
+      background-color: ${({ theme }) => theme.bg8};
+    }
+  }
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+    margin: 0 0 8px 0;
+  `};
+`
+
+const OptionCardLeft = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  justify-content: center;
+  height: 100%;
+`
+
+const StyledLink = styled(ExternalLink)`
+  width: 100%;
+`
+
+const SubHeader = styled.div`
+  color: ${({ theme }) => theme.text};
+  margin-top: 10px;
+  font-size: 12px;
+`
+
 export default function Option({
   link = null,
   clickable = true,
   size,
-  onClick = null,
+  onClick = undefined,
   color,
   header,
   subheader = null,
@@ -100,7 +96,7 @@ export default function Option({
   link?: string | null
   clickable?: boolean
   size?: number | null
-  onClick?: null | (() => void)
+  onClick?: undefined | (() => void)
   color: string
   header: React.ReactNode
   subheader: React.ReactNode | null
@@ -116,11 +112,11 @@ export default function Option({
       active={active}
       disabled={clickable === false}
     >
-      <IconWrapper size={size} active={active}>
+      <IconWrapper size={size}>
         <img src={icon} alt={'Icon'} />
       </IconWrapper>
       <OptionCardLeft>
-        <HeaderText color={color}>{header}</HeaderText>
+        <HeaderText>{header}</HeaderText>
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </OptionCardLeft>
     </OptionCardClickable>

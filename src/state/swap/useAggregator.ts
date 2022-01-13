@@ -75,7 +75,10 @@ export function useDerivedSwapInfoV2(): {
           // const savedUsd = parseFloat(diffAmount.toFixed()) * parseFloat(baseTradeComparer.outputPriceUSD.toString())
           if (savedUsd) {
             return Object.assign({}, baseTradeComparer, {
-              tradeSaved: { usd: savedUsd.toString() }
+              tradeSaved: {
+                usd: savedUsd.toString(),
+                percent: (savedUsd / parseFloat(bestTradeExactIn.receivedUsd)) * 100
+              }
             })
           }
         }
@@ -91,10 +94,12 @@ export function useDerivedSwapInfoV2(): {
     [Field.OUTPUT]: relevantTokenBalances[1]
   }
 
-  const currencies: { [field in Field]?: Currency } = {
-    [Field.INPUT]: inputCurrency ?? undefined,
-    [Field.OUTPUT]: outputCurrency ?? undefined
-  }
+  const currencies: { [field in Field]?: Currency } = useMemo(() => {
+    return {
+      [Field.INPUT]: inputCurrency ?? undefined,
+      [Field.OUTPUT]: outputCurrency ?? undefined
+    }
+  }, [inputCurrency, outputCurrency])
 
   let inputError: string | undefined
   if (!account) {

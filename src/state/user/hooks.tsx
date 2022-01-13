@@ -24,7 +24,9 @@ import {
   updateUserSlippageTolerance,
   toggleURLWarning,
   updateUserLocale,
-  toggleRebrandingAnnouncement
+  toggleRebrandingAnnouncement,
+  toggleLiveChart,
+  toggleTradeRoutes
 } from './actions'
 import { convertChainIdFromDmmToSushi } from 'utils/dmm'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
@@ -32,7 +34,7 @@ import { useAllTokens } from 'hooks/Tokens'
 import { isAddress } from 'utils'
 import { useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-
+import { isMobile } from 'react-device-detect'
 function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo): SerializedToken {
   return {
     chainId: token.chainId,
@@ -444,4 +446,21 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
 
     return Object.keys(keyed).map(key => keyed[key])
   }, [combinedList])
+}
+
+export function useShowLiveChart(): boolean {
+  const showLiveChart = useSelector((state: AppState) => state.user.showLiveChart)
+  return showLiveChart === undefined ? (isMobile ? false : true) : showLiveChart
+}
+export function useShowTradeRoutes(): boolean {
+  const showTradeRoutes = useSelector((state: AppState) => state.user.showTradeRoutes)
+  return showTradeRoutes === undefined ? (isMobile ? false : true) : showTradeRoutes
+}
+export function useToggleLiveChart(): () => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(() => dispatch(toggleLiveChart()), [dispatch])
+}
+export function useToggleTradeRoutes(): () => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(() => dispatch(toggleTradeRoutes()), [dispatch])
 }

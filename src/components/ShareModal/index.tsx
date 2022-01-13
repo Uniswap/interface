@@ -4,7 +4,6 @@ import Discord from 'components/Icons/Discord'
 import { Telegram } from 'components/Icons'
 import Facebook from 'components/Icons/Facebook'
 import { ExternalLink } from 'theme'
-import { KYBER_NETWORK_DISCORD_URL, KYBER_NETWORK_TWITTER_URL } from 'constants/index'
 import Modal from 'components/Modal'
 import { Text, Flex } from 'rebass'
 import { RowBetween } from '../Row'
@@ -19,6 +18,7 @@ import { Currency } from '@dynamic-amm/sdk'
 import { useActiveWeb3React } from 'hooks'
 import { useLocation } from 'react-router-dom'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { isMobile } from 'react-device-detect'
 
 const ButtonWrapper = styled.div`
   text-align: center;
@@ -152,7 +152,7 @@ export default function ShareModal({ currencies }: { currencies?: { [field in Fi
         <Share2 size={16} color={theme.text} />
       </ShareButton>
 
-      <Modal isOpen={isShow} onDismiss={() => setIsShow(false)}>
+      <Modal isOpen={isShow} onDismiss={() => setIsShow(false)} minHeight={isMobile && 50}>
         <Flex flexDirection="column" alignItems="center" padding="25px" width="100%">
           <RowBetween>
             <Text fontSize={18} fontWeight={500}>

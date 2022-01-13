@@ -1,18 +1,19 @@
 import { transparentize } from 'polished'
 import React, { useContext, useState } from 'react'
 import styled, { ThemeContext, css } from 'styled-components'
-import { Text } from 'rebass'
+import { Text, Flex } from 'rebass'
 
 import { ButtonEmpty } from 'components/Button'
 import { AutoColumn } from '../Column'
 import { errorFriendly } from 'utils/dmm'
 import { ReactComponent as Alert } from '../../assets/images/alert.svg'
+import Modal from 'components/Modal'
 
 export const PageWrapper = styled.div`
   display: flex;
   flex-direction: column-reverse;
+  padding: 24px 16px 100px;
   width: 100%;
-  padding: 0 16px 100px;
 
   @media only screen and (min-width: 768px) {
     flex-direction: column;
@@ -24,11 +25,11 @@ export const PageWrapper = styled.div`
   }
 
   @media only screen and (min-width: 1366px) {
-    padding: 24px 215px 50px;
+    padding: 24px 155px 50px;
   }
 
   @media only screen and (min-width: 1440px) {
-    padding: 24px 252px 50px;
+    padding: 24px 202px 50px;
   }
 `
 
@@ -98,7 +99,6 @@ export const Container = styled.div`
 
   & > div:first-child {
     width: 100%;
-    max-width: 425px;
   }
 `
 
@@ -110,7 +110,6 @@ export const Wrapper = styled.div`
 
 export const AggregatorStatsContainer = styled.div`
   width: 100%;
-  max-width: 425px;
   margin: auto;
   display: flex;
   gap: 24px;
@@ -349,12 +348,35 @@ export const PriceImpactHigh = styled.div<{ veryHigh?: boolean }>`
   font-size: 12px;
 `
 
+export const LiveChartWrapper = styled.div`
+  width: 580px;
+  display: none;
+  @media screen and (min-width: 900px) {
+    display: block;
+  }
+`
+
+export const RoutesWrapper = styled(LiveChartWrapper)<{ isOpenChart: boolean }>`
+  margin-bottom: 30px;
+  margin-top: 4px;
+  max-height: ${({ isOpenChart }) => (isOpenChart ? '354px' : '700px')};
+`
+
+export const MobileModalWrapper = styled(Modal)<{ height?: string }>`
+  &[data-reach-dialog-content] {
+    width: 100vw;
+    max-width: 100vw;
+    max-height: ${({ height }) => height || '80vh'};
+    min-height: 50vh;
+  }
+`
+
 export const IconButton = styled.button`
   cursor: pointer;
   height: 36px;
   width: 36px;
   border-radius: 4px;
-  //transition: background 0.2s;
+  transition: background 0.2s;
   outline: none;
   border: none;
   padding: 0;
@@ -377,5 +399,11 @@ export const ShareButton = styled(IconButton)`
     circle {
       fill: ${({ theme }) => theme.text};
     }
+  }
+`
+
+export const StyledFlex = styled(Flex)`
+  @media only screen and (min-width: 900px) {
+    gap: 48px;
   }
 `
