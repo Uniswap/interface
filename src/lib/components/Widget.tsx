@@ -67,7 +67,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-function Updater() {
+function Updaters() {
   return (
     <>
       <BlockUpdater />
@@ -113,7 +113,7 @@ export default function Widget({
                 <ReduxProvider store={multicallStore}>
                   <AtomProvider>
                     <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                      <Updater />
+                      <Updaters />
                       {children}
                     </Web3Provider>
                   </AtomProvider>
