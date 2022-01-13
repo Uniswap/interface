@@ -4,6 +4,7 @@ import 'polyfills'
 import 'components/analytics'
 
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
+import { BlockUpdater } from 'lib/hooks/useBlockNumber'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
@@ -39,6 +40,7 @@ function Updaters() {
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
+      <BlockUpdater />
       <MulticallUpdater />
       <LogsUpdater />
     </>
