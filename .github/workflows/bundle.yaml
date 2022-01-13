@@ -1,4 +1,4 @@
-name: Bundle Dependency Check
+name: Bundle
 on:
   push:
     branches:
@@ -8,8 +8,8 @@ on:
       - main
 
 jobs:
-  depcheck:
-    name: Bundle depcheck
+  bundle:
+    name: Bundle library
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,6 +38,3 @@ jobs:
 
       - name: Bundle
         run: yarn bundle
-
-      - name: Depcheck
-        run: yarn bundle:depcheck
