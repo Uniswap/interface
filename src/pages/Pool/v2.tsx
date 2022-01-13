@@ -2,7 +2,7 @@ import { Pair } from '@genesisprotocol/sdk'
 import { Trans } from '@lingui/macro'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
-import { useContext, useEffect, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -89,8 +89,6 @@ export default function Pool() {
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
 
-  useEffect(() => console.log('Tracked Pairs: ', trackedTokenPairs), [trackedTokenPairs])
-
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
@@ -105,8 +103,6 @@ export default function Pool() {
     liquidityTokens
   )
 
-  // useEffect(() => console.log('V2 PAIR BALANCES: ', v2PairsBalances), [v2PairsBalances])
-
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
@@ -117,7 +113,6 @@ export default function Pool() {
   )
 
   const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-  useEffect(() => console.log('V2 PAIRS: ', v2Pairs), [v2Pairs])
 
   const v2IsLoading =
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some((V2Pair) => !V2Pair)

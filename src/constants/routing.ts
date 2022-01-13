@@ -159,8 +159,8 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
   [SupportedChainId.POLYGON_MUMBAI]: [
     [
-      new Token(SupportedChainId.POLYGON_MUMBAI, '0x62ca00b6e212413F62FCBDf649DcE8C697d40930', 18, 'TK0', 'Token1'),
-      new Token(SupportedChainId.POLYGON_MUMBAI, '0xB37f76e1BE2e67A4Bd0B1764E61DaC820152dEDb', 18, 'TK0', 'Token2'),
+      new Token(SupportedChainId.POLYGON_MUMBAI, '0x62ca00b6e212413f62fcbdf649dce8c697d40930', 18, 'TK0', 'Token1'),
+      new Token(SupportedChainId.POLYGON_MUMBAI, '0x230e8b7232124436e9be24a8ea5ff1b2861dcfd1', 18, 'TK0', 'Token2'),
     ],
   ],
   [SupportedChainId.MAINNET]: [

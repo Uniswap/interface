@@ -38,5 +38,3 @@ export const BETTER_TRADE_LESS_HOPS_THRESHOLD = new Percent(JSBI.BigInt(50), BIP
 export const ZERO_PERCENT = new Percent('0')
 export const TWO_PERCENT = new Percent(JSBI.BigInt(200), BIPS_BASE)
 export const ONE_HUNDRED_PERCENT = new Percent('1')
-
-export const GENESIS_INIT_CODE_HASH = '0x4dbdc37154496a29d1134352f2c75d85759d7d20f86c63f16083ab8686476c45'
