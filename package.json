@@ -109,6 +109,7 @@
     "babel-plugin-react-native-web": "^0.17.5",
     "chromatic": "^6.3.4",
     "cross-env": "^7.0.3",
+    "danger": "^10.8.0",
     "detox": "^18.23.1",
     "eslint": "^7.14.0",
     "eslint-plugin-detox": "^1.0.0",
