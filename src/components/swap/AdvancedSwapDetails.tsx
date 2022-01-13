@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContext, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -12,7 +13,6 @@ import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from './GasEstimateBadge'
 
 const StyledCard = styled(Card)`
   padding: 0;
