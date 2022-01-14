@@ -14,7 +14,7 @@ type Props = {
 export function Identicon({ address, size = 36, ...rest }: Props) {
   if (!isValidAddress(address)) throw new Error(`Invalid address for identicon ${address}`)
   const color = useAddressColor(address)
-  return <Box width={size} height={size} borderRadius="full" backgroundColor={color} {...rest} />
+  return <Box backgroundColor={color} borderRadius="full" height={size} width={size} {...rest} />
 }
 
 function useAddressColor(address: string): keyof Theme['colors'] {

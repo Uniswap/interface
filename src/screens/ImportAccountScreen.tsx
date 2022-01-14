@@ -32,17 +32,17 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
 
   return (
     <SheetScreen>
-      <KeyboardAvoidingView style={flex.fill} behavior="padding">
-        <Box px="lg" flex={1}>
-          <Box flexDirection="row" alignItems="center" mb="lg">
-            <BackButton size={30} mr="md" />
-            <Text variant="bodyLg" color="black">
+      <KeyboardAvoidingView behavior="padding" style={flex.fill}>
+        <Box flex={1} px="lg">
+          <Box alignItems="center" flexDirection="row" mb="lg">
+            <BackButton mr="md" size={30} />
+            <Text color="black" variant="bodyLg">
               {t('Import Account')}
             </Text>
           </Box>
           {!importDone ? (
             <>
-              <Text variant="body" color="gray600" mt="sm" mb="xl">
+              <Text color="gray600" mb="xl" mt="sm" variant="body">
                 {t(
                   'Watch or manage an account by inputting its ENS name, address, or secret phrase.'
                 )}
@@ -51,12 +51,12 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
             </>
           ) : (
             <>
-              <Text variant="body" color="gray600" mt="sm" mb="xl">
+              <Text color="gray600" mb="xl" mt="sm" variant="body">
                 {t('Set a name for this account to help you stay organized.')}
               </Text>
               <NameAccountForm
-                onSuccess={onNamingSuccess}
                 address={activeAccount?.address ?? NULL_ADDRESS}
+                onSuccess={onNamingSuccess}
               />
             </>
           )}

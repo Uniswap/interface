@@ -38,17 +38,17 @@ export function NetworkButtonGroup({
     <Box flexDirection="row" mt="md">
       <ScrollView
         horizontal
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        directionalLockEnabled={true}
         contentInset={{ top: 0, left: 20, bottom: 0, right: 20 }}
-        contentOffset={{ x: -20, y: 0 }}>
+        contentOffset={{ x: -20, y: 0 }}
+        directionalLockEnabled={true}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
         {customButton}
         {activeChains.map((chainId) => {
           return (
             <Button
-              mr="sm"
               key={chainId}
+              mr="sm"
               onPress={() => {
                 selectionAsync()
                 onPress(chainId)

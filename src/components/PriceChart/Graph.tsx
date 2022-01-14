@@ -77,7 +77,7 @@ export const Graph = ({ graphs, title }: GraphProps) => {
         translation={translation}
       />
       <View>
-        <Svg width={WIDTH} height={HEIGHT}>
+        <Svg height={HEIGHT} width={WIDTH}>
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
@@ -86,9 +86,9 @@ export const Graph = ({ graphs, title }: GraphProps) => {
           />
 
           <Defs>
-            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="gradient">
-              <Stop stopColor="#FF007A" offset="0%" stopOpacity="0.2" />
-              <Stop stopColor="#FF007A" offset="100%" stopOpacity="0" />
+            <LinearGradient id="gradient" x1="50%" x2="50%" y1="0%" y2="100%">
+              <Stop offset="0%" stopColor="#FF007A" stopOpacity="0.2" />
+              <Stop offset="100%" stopColor="#FF007A" stopOpacity="0" />
             </LinearGradient>
           </Defs>
 
@@ -106,13 +106,13 @@ export const Graph = ({ graphs, title }: GraphProps) => {
           translation={translation}
         />
       </View>
-      <Box flexDirection="row" width={SELECTION_WIDTH} alignSelf="center">
+      <Box alignSelf="center" flexDirection="row" width={SELECTION_WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
             bg="pink"
             borderRadius="lg"
-            width={BUTTON_WIDTH}
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
+            width={BUTTON_WIDTH}
           />
         </View>
         {graphs.map((graph, index) => {

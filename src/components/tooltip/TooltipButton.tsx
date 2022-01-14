@@ -18,11 +18,11 @@ export function TooltipButton({ title, lines, size, ...rest }: Props) {
   return (
     <>
       <Button onPress={() => setShowModal(true)} {...rest}>
-        <Tooltip width={size ?? 20} height={size ?? 20} />
+        <Tooltip height={size ?? 20} width={size ?? 20} />
       </Button>
-      <Modal title={title} hide={() => setShowModal(false)} visible={showModal}>
+      <Modal hide={() => setShowModal(false)} title={title} visible={showModal}>
         {lines.map((l) => (
-          <Text textAlign="center" variant="body" mt="sm">
+          <Text mt="sm" textAlign="center" variant="body">
             {l}
           </Text>
         ))}

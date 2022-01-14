@@ -30,14 +30,14 @@ function PhraseButton({ word, idx, onPress, removable }: PhraseButtonProps) {
   }
 
   return (
-    <TouchableOpacity onPress={onPressBox} disabled={!removable}>
+    <TouchableOpacity disabled={!removable} onPress={onPressBox}>
       <Box
-        margin="sm"
+        backgroundColor="white"
         borderColor="black"
-        borderWidth={2}
         borderRadius="lg"
-        padding="xs"
-        backgroundColor="white">
+        borderWidth={2}
+        margin="sm"
+        padding="xs">
         {removable && <Text style={xStyle}>X</Text>}
         <Text>{word}</Text>
       </Box>
@@ -77,14 +77,14 @@ export function SeedPhraseScreen({
   return (
     <Screen>
       <Box
+        alignItems="flex-start"
         flexDirection="row"
         flexWrap="wrap"
-        alignItems="flex-start"
-        padding="lg"
-        justifyContent="flex-start">
+        justifyContent="flex-start"
+        padding="lg">
         {removable && <Text>{t('Extra words detected - tap to remove them')}</Text>}
         {currentPhrase.map((word: string, idx: number) => (
-          <PhraseButton onPress={onPress} idx={idx} word={word} removable={removable} />
+          <PhraseButton idx={idx} removable={removable} word={word} onPress={onPress} />
         ))}
       </Box>
       <Box alignItems="center">

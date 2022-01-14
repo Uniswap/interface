@@ -27,10 +27,10 @@ export function _Palette(colors: Palette) {
     <Flex gap="none">
       {Object.entries(colors).map(([color, value], i, arr) => (
         <Box
-          p="sm"
-          style={{ backgroundColor: value }}
           borderTopLeftRadius={i === 0 || i === arr.length - 1 ? 'sm' : 'none'}
-          borderTopRightRadius={i === 0 || i === arr.length - 1 ? 'sm' : 'none'}>
+          borderTopRightRadius={i === 0 || i === arr.length - 1 ? 'sm' : 'none'}
+          p="sm"
+          style={{ backgroundColor: value }}>
           <Flex flexDirection="row" justifyContent="space-between">
             <Text variant="bodySm">{color}</Text>
             <Text variant="bodySm">{value}</Text>

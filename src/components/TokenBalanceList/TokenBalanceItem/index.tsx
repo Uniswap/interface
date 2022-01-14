@@ -50,17 +50,17 @@ export function TokenBalanceItem({
 
   return (
     <Button
-      onPress={onPress}
+      bg="white"
       flexDirection="row"
       justifyContent="space-between"
-      py="md"
       px="lg"
-      bg="white">
+      py="md"
+      onPress={onPress}>
       <Box flexDirection="row">
         <CurrencyLogo currency={currency} size={35} />
-        <Box mx="md" alignItems="flex-start">
+        <Box alignItems="flex-start" mx="md">
           <Text variant="h4">{currency.symbol}</Text>
-          <Text variant="bodySm" color="gray400">{`${formatCurrencyAmount(currencyAmount)} ${
+          <Text color="gray400" variant="bodySm">{`${formatCurrencyAmount(currencyAmount)} ${
             currency.symbol
           }`}</Text>
         </Box>
@@ -68,8 +68,8 @@ export function TokenBalanceItem({
       <Box alignItems="flex-end">
         <Text variant="h4">{formatUSDPrice(balance)}</Text>
         <Text
-          variant="bodySm"
-          color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}>
+          color={percentChange ? (percentChange > 0 ? 'green' : 'red') : 'gray600'}
+          variant="bodySm">
           {percentChange ? `${percentChange.toFixed(1)}%` : '-'}
         </Text>
       </Box>

@@ -28,28 +28,28 @@ export function NotificationsScreen() {
 
   const { t } = useTranslation()
   return (
-    <SheetScreen px="lg" flex={1}>
-      <Flex flexDirection="row" alignItems="center" gap="md">
+    <SheetScreen flex={1} px="lg">
+      <Flex alignItems="center" flexDirection="row" gap="md">
         <BackButton size={30} />
         <Text variant="bodyLg">{t('Transaction History')}</Text>
       </Flex>
       {activeAccount && (
         <TextButton
-          onPress={onPressEtherscan}
-          textVariant="body"
-          textColor="gray600"
           mt="md"
-          px="xs">
+          px="xs"
+          textColor="gray600"
+          textVariant="body"
+          onPress={onPressEtherscan}>
           {t('View details on Etherscan')}
         </TextButton>
       )}
       <Spacer y="lg" />
       <FlatList
-        data={transactions}
-        renderItem={ListItem}
         ListEmptyComponent={EmptyList}
-        keyExtractor={getTxKey}
         contentContainerStyle={flex.fill}
+        data={transactions}
+        keyExtractor={getTxKey}
+        renderItem={ListItem}
       />
     </SheetScreen>
   )
@@ -63,7 +63,7 @@ function EmptyList() {
   const { t } = useTranslation()
   return (
     <CenterBox flex={1}>
-      <Text variant="body" color="gray600" textAlign="center" p="lg">
+      <Text color="gray600" p="lg" textAlign="center" variant="body">
         {t('No transactions yet, try making a swap from this wallet!')}
       </Text>
     </CenterBox>

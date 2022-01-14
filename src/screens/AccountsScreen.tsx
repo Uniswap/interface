@@ -127,48 +127,48 @@ export function AccountsScreen() {
       behind the screen because AccountStack is itself in a sheet/modal. */}
       <BottomSheetModalProvider>
         <ScrollView contentContainerStyle={flex.fill}>
-          <Box flexDirection="row" alignItems="center" justifyContent="space-between" mb="lg">
+          <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
             <BackButton size={30} />
-            <Text variant="bodyLg" color="gray400">
+            <Text color="gray400" variant="bodyLg">
               {t('Switch Accounts')}
             </Text>
             {!isEditMode ? (
-              <TextButton textVariant="bodyLg" textColor="pink" onPress={() => setIsEditMode(true)}>
+              <TextButton textColor="pink" textVariant="bodyLg" onPress={() => setIsEditMode(true)}>
                 {t('Edit')}
               </TextButton>
             ) : (
               <TextButton
-                textVariant="bodyLg"
                 textColor="pink"
+                textVariant="bodyLg"
                 onPress={() => setIsEditMode(false)}>
                 {t('Done')}
               </TextButton>
             )}
           </Box>
           {Object.values(signerAccounts).map((account) => (
-            <Box mb="xl" key={account.address}>
+            <Box key={account.address} mb="xl">
               <AccountCard
                 account={account}
                 isActive={!!activeAccount && activeAccount.address === account.address}
                 isEditable={isEditMode}
-                onPress={onPressActivate}
                 onEdit={onPressEdit}
+                onPress={onPressActivate}
               />
             </Box>
           ))}
           {!!readOnlyAccounts.length && (
             <>
-              <Text variant="body" color="gray400" mb="lg">
+              <Text color="gray400" mb="lg" variant="body">
                 {t('Watching')}
               </Text>
               {Object.values(readOnlyAccounts).map((account) => (
-                <Box mb="xl" key={account.address}>
+                <Box key={account.address} mb="xl">
                   <AccountCard
                     account={account}
                     isActive={!!activeAccount && activeAccount.address === account.address}
                     isEditable={isEditMode}
-                    onPress={onPressActivate}
                     onEdit={onPressEdit}
+                    onPress={onPressActivate}
                   />
                 </Box>
               ))}
@@ -177,60 +177,60 @@ export function AccountsScreen() {
         </ScrollView>
         <CenterBox flexDirection="row" py="md">
           <PrimaryButton
-            variant="palePink"
-            label={t('Import Account')}
-            onPress={onPressImport}
-            testID="accounts/add/button"
-            mr="lg"
             disabled={isLoading}
+            label={t('Import Account')}
+            mr="lg"
+            testID="accounts/add/button"
+            variant="palePink"
+            onPress={onPressImport}
           />
           <PrimaryButton
-            label={t('Create Account')}
-            onPress={onPressCreate}
-            testID="accounts/create/button"
             disabled={isLoading}
+            label={t('Create Account')}
+            testID="accounts/create/button"
+            onPress={onPressCreate}
           />
         </CenterBox>
         <BottomSheetModal
           ref={editAccountModalRef}
           snapPoints={BOTTOM_SHEET_SNAP_POINTS}
           style={bottomSheetStyles.bottomSheet}>
-          <CenterBox px="md" pt="xs" pb="sm" flex={1} justifyContent="space-between">
-            <Text variant="bodySm" color="gray400">
+          <CenterBox flex={1} justifyContent="space-between" pb="sm" pt="xs" px="md">
+            <Text color="gray400" variant="bodySm">
               {t('Edit or rename your account')}
             </Text>
             <PrimaryButton
-              variant="palePink"
+              disabled={isLoading}
+              icon={<EditIcon height={18} width={18} />}
               label={t('Rename Account')}
-              icon={<EditIcon width={18} height={18} />}
-              onPress={onPressRename}
-              width="100%"
-              disabled={isLoading}
-            />
-            <PrimaryButton
               variant="palePink"
-              label={t('Copy Address')}
-              icon={<CopyIcon width={18} height={18} stroke={theme.colors.pink} />}
-              onPress={onPressCopyAddress}
               width="100%"
-              disabled={isLoading}
+              onPress={onPressRename}
             />
             <PrimaryButton
-              variant="paleOrange"
-              label={t('Remove Account')}
-              onPress={onPressRemove}
-              width="100%"
               disabled={isLoading}
+              icon={<CopyIcon height={18} stroke={theme.colors.pink} width={18} />}
+              label={t('Copy Address')}
+              variant="palePink"
+              width="100%"
+              onPress={onPressCopyAddress}
+            />
+            <PrimaryButton
+              disabled={isLoading}
+              label={t('Remove Account')}
+              variant="paleOrange"
+              width="100%"
+              onPress={onPressRemove}
             />
             <TextButton
-              onPress={onPressEditCancel}
-              textVariant="body"
-              textColor="pink"
-              textAlign="center"
-              width="100%"
-              pt="xs"
+              disabled={isLoading}
               pb="sm"
-              disabled={isLoading}>
+              pt="xs"
+              textAlign="center"
+              textColor="pink"
+              textVariant="body"
+              width="100%"
+              onPress={onPressEditCancel}>
               {t('Cancel')}
             </TextButton>
           </CenterBox>

@@ -24,18 +24,18 @@ function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: 
 
   return (
     <Button
-      flexDirection="row"
       alignItems="center"
-      justifyContent="center"
       borderRadius="lg"
-      py="sm"
-      px="md"
-      style={style}
       disabled={disabled}
+      flexDirection="row"
+      justifyContent="center"
       opacity={disabled ? 0.5 : 1}
+      px="md"
+      py="sm"
+      style={style}
       {...rest}>
       {icon && <Box mr="sm">{icon}</Box>}
-      <Text variant={textVariant ?? 'buttonLabel'} textAlign="center" style={{ color: textColor }}>
+      <Text style={{ color: textColor }} textAlign="center" variant={textVariant ?? 'buttonLabel'}>
         {label}
       </Text>
     </Button>

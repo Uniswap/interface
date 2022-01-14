@@ -16,10 +16,10 @@ export function Spacer({ x, y, ...rest }: SpacerProps) {
   const theme = useTheme<Theme>()
   return (
     <Box
-      width={x ? theme.spacing[x] : undefined}
-      height={y ? theme.spacing[y] : undefined}
       flexGrow={0}
       flexShrink={0}
+      height={y ? theme.spacing[y] : undefined}
+      width={x ? theme.spacing[x] : undefined}
       {...rest}
     />
   )

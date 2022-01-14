@@ -17,7 +17,7 @@ export function BackButton({ onPressBack, size, ...rest }: Props) {
 
   return (
     <Button onPress={goBack} {...rest}>
-      <Chevron direction="w" width={size ?? 16} height={size ?? 16} />
+      <Chevron direction="w" height={size ?? 16} width={size ?? 16} />
     </Button>
   )
 }

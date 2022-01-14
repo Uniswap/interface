@@ -18,33 +18,33 @@ export function SwapConfigScreen() {
   return (
     <Screen>
       <Box>
-        <Box my="md" alignItems="center" justifyContent="flex-start" flexDirection="row">
+        <Box alignItems="center" flexDirection="row" justifyContent="flex-start" my="md">
           <BackButton ml="sm" />
-          <Text variant="h3" ml="md">
+          <Text ml="md" variant="h3">
             {t('Transaction Settings')}
           </Text>
         </Box>
         <Box alignItems="center" flexDirection="row">
           <Text variant="body">Gas Price</Text>
           <TooltipButton
-            title={t('About Gas Price')}
             lines={[
               t(
                 'Gas price determines the priority with which your transaction is handled by the network.'
               ),
               t('Higher fees will result in faster transaction processing.'),
             ]}
+            title={t('About Gas Price')}
           />
         </Box>
         <Box alignItems="center" flexDirection="row">
-          <CheckmarkCircle size={20} backgroundColor="blue" />
+          <CheckmarkCircle backgroundColor="blue" size={20} />
         </Box>
         <Box
           alignItems="center"
-          justifyContent="space-between"
           flexDirection="row"
-          width="100%"
-          px="md">
+          justifyContent="space-between"
+          px="md"
+          width="100%">
           <Text variant="body">Expert Mode</Text>
           <Switch value={expertMode} onValueChange={setExpertMode} />
         </Box>

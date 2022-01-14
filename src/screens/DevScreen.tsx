@@ -77,62 +77,62 @@ export function DevScreen({ navigation }: any) {
 
   return (
     <SheetScreen>
-      <Box justifyContent="flex-end" flexDirection="row" py="sm" px="md">
+      <Box flexDirection="row" justifyContent="flex-end" px="md" py="sm">
         <BackX />
       </Box>
       <ScrollView>
         <Box alignItems="center">
-          <Text variant="h3" textAlign="center">
+          <Text textAlign="center" variant="h3">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
-          <Text variant="h3" mt="md" textAlign="center">
+          <Text mt="md" textAlign="center" variant="h3">
             🌀🌀Screen Stargate🌀🌀
           </Text>
-          <Box flexDirection="row" alignItems="center" justifyContent="center" flexWrap="wrap">
+          <Box alignItems="center" flexDirection="row" flexWrap="wrap" justifyContent="center">
             {Object.values(Screens).map((s) => (
               <TextButton
-                testID={`dev_screen/${s}`}
-                onPress={() => activateWormhole(s)}
+                key={s}
                 m="xs"
-                key={s}>
+                testID={`dev_screen/${s}`}
+                onPress={() => activateWormhole(s)}>
                 {s}
               </TextButton>
             ))}
           </Box>
-          <Text variant="body" mt="sm" textAlign="center">
+          <Text mt="sm" textAlign="center" variant="body">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
 
-          <TextButton onPress={onPressCreate} mt="md">
+          <TextButton mt="md" onPress={onPressCreate}>
             Create Account
           </TextButton>
-          <TextButton onPress={onPressGetBalance} mt="sm">
+          <TextButton mt="sm" onPress={onPressGetBalance}>
             Get Balance
           </TextButton>
-          <TextButton onPress={onPressToggleTestnets} mt="sm">
+          <TextButton mt="sm" onPress={onPressToggleTestnets}>
             Toggle Testnets
           </TextButton>
-          <TextButton onPress={onPressComputeFee} mt="sm">
+          <TextButton mt="sm" onPress={onPressComputeFee}>
             Compute fee
           </TextButton>
-          <TextButton onPress={onPressShowError} mt="sm">
+          <TextButton mt="sm" onPress={onPressShowError}>
             Show global error
           </TextButton>
-          <Text textAlign="center" mt="xl">
+          <Text mt="xl" textAlign="center">
             {`Active Chains: ${activeChains}`}
           </Text>
-          <Text textAlign="center" mt="sm">
+          <Text mt="sm" textAlign="center">
             {`Current Chain: ${currentChain}`}
           </Text>
-          <Text textAlign="center" mt="sm">
+          <Text mt="sm" textAlign="center">
             {`Block Timestamp: ${blockTimestamp}`}
           </Text>
           {gasInfoReady && (
-            <Text textAlign="center" mt="sm">
+            <Text mt="sm" textAlign="center">
               {`Normal fee: ${gasInfo.fee.normal}`}
             </Text>
           )}
-          <Text textAlign="center" mt="sm">
+          <Text mt="sm" textAlign="center">
             {`Config: ${config.apiUrl} - Debug: ${config.debug}`}
           </Text>
         </Box>

@@ -35,14 +35,14 @@ export function TransactionSummaryCard({ tx }: { tx: TransactionDetails }) {
 
   return (
     <Flex
-      flexDirection="row"
       alignItems="center"
-      justifyContent="space-between"
-      p="md"
+      borderColor="gray200"
       borderRadius="lg"
       borderWidth={1}
-      borderColor="gray200"
-      gap="md">
+      flexDirection="row"
+      gap="md"
+      justifyContent="space-between"
+      p="md">
       <Flex gap="sm">
         <Text variant="body">{getNotificationName(tx, t)}</Text>
         <Text variant="bodySm">

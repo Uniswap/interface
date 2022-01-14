@@ -6,6 +6,7 @@ export const TOP_THIRD_SNAP_POINTS = ['66%']
 
 export const bottomSheetStyles = StyleSheet.create({
   bottomSheet: {
+    elevation: 5,
     shadowColor: 'black',
     shadowOffset: {
       width: 0,
@@ -13,6 +14,5 @@ export const bottomSheetStyles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5,
   },
 })

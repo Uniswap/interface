@@ -44,20 +44,20 @@ export function CurrencySelector({
   return (
     <Box>
       <Toggle
+        filled={!selectedCurrency}
         onToggle={() => {
           selectCurrency()
-        }}
-        filled={!selectedCurrency}>
-        <CenterBox px="sm" height={25}>
+        }}>
+        <CenterBox height={25} px="sm">
           {selectedCurrency ? (
             <CenterBox flexDirection="row">
               <CurrencyLogo currency={selectedCurrency} size={30} />
-              <Text variant="h3" color="black" ml="sm">
+              <Text color="black" ml="sm" variant="h3">
                 {selectedCurrency.symbol}
               </Text>
             </CenterBox>
           ) : (
-            <Text variant="h4" color="white">
+            <Text color="white" variant="h4">
               {t('Select a token')}
             </Text>
           )}

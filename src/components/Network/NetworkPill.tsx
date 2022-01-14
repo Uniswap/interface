@@ -14,7 +14,7 @@ export function NetworkPill({ chainId, showBorder = false }: NetworkLabelProps) 
       customBackgroundColor={colors?.background}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
-      icon={<NetworkLogo chainId={chainId} size={20} mr="xs" />}
+      icon={<NetworkLogo chainId={chainId} mr="xs" size={20} />}
       label={info.label}
     />
   )

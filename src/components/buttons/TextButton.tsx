@@ -19,7 +19,7 @@ export function TextButton({
 }: PropsWithChildren<Props>) {
   return (
     <Button {...rest}>
-      <Text variant={textVariant} color={textColor} textAlign={textAlign}>
+      <Text color={textColor} textAlign={textAlign} variant={textVariant}>
         {children}
       </Text>
     </Button>

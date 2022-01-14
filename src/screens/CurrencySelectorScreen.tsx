@@ -30,14 +30,14 @@ export function CurrencySelectorScreen({
     <SheetScreen>
       {showNonZeroBalancesOnly ? (
         <CurrencySearchOwnedCurrencies
-          selectedCurrency={selectedCurrency}
           otherCurrency={otherCurrency}
+          selectedCurrency={selectedCurrency}
           onSelectCurrency={onSelectCurrency}
         />
       ) : (
         <CurrencySearchAllCurrencies
-          selectedCurrency={selectedCurrency}
           otherCurrency={otherCurrency}
+          selectedCurrency={selectedCurrency}
           onSelectCurrency={onSelectCurrency}
         />
       )}
@@ -72,14 +72,14 @@ function CurrencySearchOwnedCurrencies({
 
   return (
     <CurrencySearch
+      showNonZeroBalancesOnly
       currencies={currenciesWithBalance}
-      selectedCurrency={selectedCurrency}
       otherCurrency={otherCurrency}
+      selectedCurrency={selectedCurrency}
       onSelectCurrency={(currency: Currency) => {
         onSelectCurrency(currency)
         navigation.goBack()
       }}
-      showNonZeroBalancesOnly
     />
   )
 }
@@ -102,13 +102,13 @@ function CurrencySearchAllCurrencies({
   return (
     <CurrencySearch
       currencies={currencies}
-      selectedCurrency={selectedCurrency}
       otherCurrency={otherCurrency}
+      selectedCurrency={selectedCurrency}
+      showNonZeroBalancesOnly={false}
       onSelectCurrency={(currency: Currency) => {
         onSelectCurrency(currency)
         navigation.goBack()
       }}
-      showNonZeroBalancesOnly={false}
     />
   )
 }

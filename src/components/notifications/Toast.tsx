@@ -24,21 +24,21 @@ export function Toast({ label, variant }: ToastProps) {
 
   return (
     <Box
-      justifyContent="space-between"
       alignContent="center"
+      alignSelf="stretch"
+      backgroundColor="white"
+      borderRadius="md"
+      borderWidth={1}
       flexDirection="row"
+      justifyContent="space-between"
       m="sm"
       px="md"
       py="sm"
-      style={{ borderColor: opacify(60, color) }}
-      borderWidth={1}
-      borderRadius="md"
-      backgroundColor="white"
+      shadowOffset={{ width: 0, height: 6 }}
       shadowOpacity={0.05}
       shadowRadius={4}
-      shadowOffset={{ width: 0, height: 6 }}
-      alignSelf="stretch">
-      <Text variant="body" style={{ color }}>
+      style={{ borderColor: opacify(60, color) }}>
+      <Text style={{ color }} variant="body">
         {label}
       </Text>
       <ToastIcon variant={variant} />
@@ -51,11 +51,11 @@ export function ToastIcon({ variant }: { variant: ToastVariant }) {
 
   switch (variant) {
     case ToastVariant.Pending:
-      return <ActivityIndicator size="small" color={color} />
+      return <ActivityIndicator color={color} size="small" />
     case ToastVariant.Success:
-      return <Checkmark height={23} width={23} stroke={color} />
+      return <Checkmark height={23} stroke={color} width={23} />
     case ToastVariant.Failed:
-      return <AlertTriangle height={23} width={23} stroke={color} />
+      return <AlertTriangle height={23} stroke={color} width={23} />
   }
 }
 

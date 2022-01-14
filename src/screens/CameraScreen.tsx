@@ -102,11 +102,11 @@ export function CameraScreen({ navigation }: any) {
   return (
     <Screen>
       <Camera
-        style={StyleSheet.absoluteFill}
         device={device}
-        isActive={true}
         frameProcessor={frameProcessor}
         frameProcessorFps={5}
+        isActive={true}
+        style={StyleSheet.absoluteFill}
       />
       <View
         style={[

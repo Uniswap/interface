@@ -32,66 +32,66 @@ export function WalletQRCode({ isVisible, onClose }: Props) {
   if (!activeAccount) return null
 
   return (
-    <BottomSheetModal onClose={onClose} isVisible={isVisible} snapPoints={TOP_THIRD_SNAP_POINTS}>
-      <Box backgroundColor="white" justifyContent="center" padding="sm" borderRadius="lg">
+    <BottomSheetModal isVisible={isVisible} snapPoints={TOP_THIRD_SNAP_POINTS} onClose={onClose}>
+      <Box backgroundColor="white" borderRadius="lg" justifyContent="center" padding="sm">
         <Box alignItems="center" marginTop="sm">
           <Text color="gray400" variant="body">
             {t`Receive funds`}
           </Text>
         </Box>
         <Box
-          position="relative"
           alignItems="center"
-          padding="lg"
           borderRadius="lg"
-          /* forces gradient background to inherit border radius */
+          marginVertical="lg"
           overflow="hidden"
-          marginVertical="lg">
+          /* forces gradient background to inherit border radius */
+          padding="lg"
+          position="relative">
           <GradientBackground>
             <PinkToBlueLinear />
           </GradientBackground>
 
           <Box
-            flexDirection="row"
             alignItems="flex-end"
-            marginTop="xs"
-            marginBottom="md"
             backgroundColor="white"
+            borderRadius="md"
+            flexDirection="row"
+            marginBottom="md"
+            marginTop="xs"
             paddingHorizontal="md"
-            paddingVertical="xs"
-            borderRadius="md">
-            <WalletIcon height={20} width={20} fill={theme.colors.black} />
+            paddingVertical="xs">
+            <WalletIcon fill={theme.colors.black} height={20} width={20} />
             <Text marginLeft="md" variant="h5">
               {t`Wallet`}
             </Text>
           </Box>
 
-          <Box padding="lg" backgroundColor="white" borderRadius="lg">
+          <Box backgroundColor="white" borderRadius="lg" padding="lg">
             <QRCode size={200} value={activeAccount.address} />
           </Box>
 
-          <Box flexDirection="row" alignItems="center">
+          <Box alignItems="center" flexDirection="row">
             <Text marginRight="sm" marginVertical="md">
               {shortenAddress(activeAccount.address)}
             </Text>
-            <QRCodeIcon height={15} width={15} stroke="gray" />
+            <QRCodeIcon height={15} stroke="gray" width={15} />
           </Box>
 
           <Box flexDirection="row" justifyContent="space-between">
             <PrimaryCopyTextButton
-              label={t`Copy`}
-              flex={1}
-              variant="gray"
-              style={copyButtonStyle}
               copyText={activeAccount.address}
+              flex={1}
+              icon={<CopySheets height={18} stroke="black" width={18} />}
+              label={t`Copy`}
+              style={copyButtonStyle}
               textColor="black"
-              icon={<CopySheets width={18} height={18} stroke="black" />}
+              variant="gray"
             />
             <PrimaryButton
-              marginLeft="sm"
               flex={1}
+              icon={<ShareIcon height={18} stroke="white" width={18} />}
               label={t`Share`}
-              icon={<ShareIcon width={18} height={18} stroke="white" />}
+              marginLeft="sm"
             />
           </Box>
         </Box>

@@ -25,32 +25,32 @@ export function AccountCard({
   onEdit,
 }: Props) {
   return (
-    <Button onPress={onPress ? () => onPress(address) : undefined} width="100%">
+    <Button width="100%" onPress={onPress ? () => onPress(address) : undefined}>
       <Box
-        width="100%"
-        flexDirection="row"
         alignItems="center"
-        justifyContent="space-between"
         backgroundColor="white"
-        testID={`account_item/${address.toLowerCase()}`}>
+        flexDirection="row"
+        justifyContent="space-between"
+        testID={`account_item/${address.toLowerCase()}`}
+        width="100%">
         <CenterBox flexDirection="row">
-          <Identicon address={address} size={50} mr="md" />
+          <Identicon address={address} mr="md" size={50} />
           <Box>
-            <Text variant="body" fontWeight="500">
+            <Text fontWeight="500" variant="body">
               {name || shortenAddress(address)}
             </Text>
             {/* TODO get real total */}
-            <Text variant="bodySm" color="gray400" mt="xs">
+            <Text color="gray400" mt="xs" variant="bodySm">
               {shortenAddress(address)}
             </Text>
           </Box>
         </CenterBox>
         {isEditable && onEdit && (
-          <Button onPress={() => onEdit(address)} mx="sm" my="md">
-            <TripleDots width={22} height={12} />
+          <Button mx="sm" my="md" onPress={() => onEdit(address)}>
+            <TripleDots height={12} width={22} />
           </Button>
         )}
-        {!isEditable && isActive && <CheckmarkCircle size={30} backgroundColor="green" />}
+        {!isEditable && isActive && <CheckmarkCircle backgroundColor="green" size={30} />}
       </Box>
     </Button>
   )

@@ -39,13 +39,13 @@ export function BalancesScreen() {
               ))}
             </View>
           ))}
-          <Text variant="h2" mt="lg">
+          <Text mt="lg" variant="h2">
             {t('Accounts')}
           </Text>
           {Object.values(accounts).map((account) => (
             <Text key={account.address}>{account.address}</Text>
           ))}
-          <PrimaryButton label={t('Refresh')} onPress={onPressRefresh} mt="md" />
+          <PrimaryButton label={t('Refresh')} mt="md" onPress={onPressRefresh} />
         </Box>
       </ScrollView>
     </Screen>

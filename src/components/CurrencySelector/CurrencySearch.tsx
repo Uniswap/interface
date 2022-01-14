@@ -75,26 +75,38 @@ export function CurrencySearch({
   return (
     <Box flex={1} width="100%">
       <FlatList
-        data={filteredCurrencies}
+        ListEmptyComponent={
+          <Flex centered gap="sm" padding="lg">
+            <Text variant="h4">😔</Text>
+            <Text color="gray200" textAlign="center" variant="h4">
+              {searchFilter
+                ? t('No tokens found for ”{{searchFilter}}”', { searchFilter })
+                : t('No tokens found')}
+            </Text>
+            <TextButton textColor="blue" onPress={onClearSearchFilter}>
+              {t('Clear Search')}
+            </TextButton>
+          </Flex>
+        }
         ListHeaderComponent={
           <Box mb="md">
             <Inset all="sm">
-              <Flex gap="sm" flexDirection="row" centered>
+              <Flex centered flexDirection="row" gap="sm">
                 <BackButton />
                 <Box
-                  style={styles.inputContainer}
                   backgroundColor="gray50"
-                  paddingRight="sm"
+                  borderRadius="lg"
                   flexDirection="row"
-                  borderRadius="lg">
+                  paddingRight="sm"
+                  style={styles.inputContainer}>
                   <TextInput
+                    backgroundColor="none"
+                    borderWidth={0}
                     padding="md"
-                    onChangeText={onChangeText}
-                    value={searchFilter ?? undefined}
                     placeholder={t('Search token symbols or address')}
                     style={styles.input}
-                    borderWidth={0}
-                    backgroundColor="none"
+                    value={searchFilter ?? undefined}
+                    onChangeText={onChangeText}
                   />
                   <SearchIcon
                     stroke={theme.colors.gray200}
@@ -106,9 +118,6 @@ export function CurrencySearch({
             </Inset>
 
             <NetworkButtonGroup
-              selected={chainFilter}
-              onPress={onChainPress}
-              type={NetworkButtonType.PILL}
               customButton={
                 <Button mr="sm" onPress={onClearChainFilter}>
                   <Pill
@@ -118,39 +127,30 @@ export function CurrencySearch({
                   />
                 </Button>
               }
+              selected={chainFilter}
+              type={NetworkButtonType.PILL}
+              onPress={onChainPress}
             />
           </Box>
         }
+        data={filteredCurrencies}
+        keyExtractor={getKey}
         renderItem={({ item }: ListRenderItemInfo<Currency>) => {
           const tokenAddress = currencyId(item)
           const cAmount = balances?.[item.chainId as ChainId]?.[tokenAddress]
           return (
             <Option
+              currency={item as Currency}
+              currencyAmount={cAmount}
               currencyPrice={
                 chainIdToPrices?.[item.chainId as ChainId]?.addressToPrice?.[currencyId(item)]
                   ?.priceUSD
               }
-              currencyAmount={cAmount}
-              currency={item as Currency}
-              onPress={() => onSelectCurrency?.(item)}
               selected={Boolean(selectedCurrency?.equals(item))}
+              onPress={() => onSelectCurrency?.(item)}
             />
           )
         }}
-        ListEmptyComponent={
-          <Flex centered gap="sm" padding="lg">
-            <Text variant="h4">😔</Text>
-            <Text variant="h4" color="gray200" textAlign="center">
-              {searchFilter
-                ? t('No tokens found for ”{{searchFilter}}”', { searchFilter })
-                : t('No tokens found')}
-            </Text>
-            <TextButton textColor="blue" onPress={onClearSearchFilter}>
-              {t('Clear Search')}
-            </TextButton>
-          </Flex>
-        }
-        keyExtractor={getKey}
       />
     </Box>
   )
@@ -161,16 +161,16 @@ function getKey(currency: Currency) {
 }
 
 const styles = StyleSheet.create({
+  input: {
+    flex: 1,
+  },
   inputContainer: {
+    flex: 1,
+    fontSize: 17,
     height: 50,
     minHeight: 48,
-    fontSize: 17,
-    flex: 1,
   },
   inputIcon: {
     alignSelf: 'center',
-  },
-  input: {
-    flex: 1,
   },
 })

@@ -17,15 +17,15 @@ export function Header({ chainId, onPressBack, onPressNetwork }: HeaderProps) {
   const { t } = useTranslation()
 
   return (
-    <Box px="lg" flexDirection="row" justifyContent="space-between" alignItems="center">
+    <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="lg">
       <Text variant="h3">{t`Swap`}</Text>
-      <Box flexDirection="row" alignContent="center" justifyContent="flex-end" flex={1}>
+      <Box alignContent="center" flex={1} flexDirection="row" justifyContent="flex-end">
         {chainId && (
-          <Button ml="md" onPress={onPressNetwork} alignSelf="center">
+          <Button alignSelf="center" ml="md" onPress={onPressNetwork}>
             <NetworkPill chainId={chainId} />
           </Button>
         )}
-        <Button ml="md" onPress={onPressBack} alignSelf="center">
+        <Button alignSelf="center" ml="md" onPress={onPressBack}>
           <X height={20} width={20} />
         </Button>
       </Box>

@@ -45,20 +45,20 @@ export function NameAccountForm({ address, onSuccess }: Props) {
     <CenterBox mt="md">
       <Identicon address={address} size={50} />
       <TextInput
-        value={newAccountName}
-        onChangeText={setNewAccountName}
+        fontSize={20}
         mt="lg"
         placeholder={t('New account name')}
-        fontSize={20}
+        value={newAccountName}
+        onChangeText={setNewAccountName}
       />
       <PrimaryButton
-        label={t('Done')}
-        onPress={onPressDone}
         disabled={isLoading}
+        label={t('Done')}
         mt="lg"
         width="100%"
+        onPress={onPressDone}
       />
-      <TextButton onPress={onSuccess} textVariant="body" textColor="pink" mt="lg">
+      <TextButton mt="lg" textColor="pink" textVariant="body" onPress={onSuccess}>
         {t('Skip')}
       </TextButton>
     </CenterBox>

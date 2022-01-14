@@ -19,7 +19,7 @@ export function SwapNetworkModal({ chainId, setChainId, onPressClose }: SwapNetw
   return (
     <SheetScreen py="sm">
       <Box flex={1} justifyContent="space-between" pb="lg">
-        <Box justifyContent="space-between" alignItems="center">
+        <Box alignItems="center" justifyContent="space-between">
           <Text variant="h5">{t('Select Network')}</Text>
           <NetworkButtonGroup
             selected={chainId ?? 0}
@@ -30,7 +30,7 @@ export function SwapNetworkModal({ chainId, setChainId, onPressClose }: SwapNetw
             }}
           />
         </Box>
-        <TextButton alignSelf="center" textVariant="h4" textColor="blue" onPress={onPressClose}>
+        <TextButton alignSelf="center" textColor="blue" textVariant="h4" onPress={onPressClose}>
           {t('Close')}
         </TextButton>
       </Box>

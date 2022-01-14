@@ -60,7 +60,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
 
   const { t } = useTranslation()
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit} validate={validateForm(t)}>
+    <Formik initialValues={initialValues} validate={validateForm(t)} onSubmit={onSubmit}>
       {({
         handleChange,
         handleBlur,
@@ -72,50 +72,50 @@ export function ImportAccountForm({ onSuccess }: Props) {
         isSubmitting,
       }) => (
         <CenterBox>
-          <Text variant="body" color="warning" textAlign="center" px="md">
+          <Text color="warning" px="md" textAlign="center" variant="body">
             {t('Warning: this wallet is still experimental. Use with caution.')}
           </Text>
           <CenterBox
-            px="md"
-            pt="lg"
-            mt="lg"
             backgroundColor="gray50"
             borderRadius="lg"
+            mt="lg"
+            pt="lg"
+            px="md"
             width="100%">
             <TextInput
               autoCapitalize="none"
-              onChangeText={handleChange('input')}
-              onBlur={handleBlur('input')}
-              value={values.input}
-              placeholder={t('Secret Phrase, ENS name, or address')}
+              backgroundColor="gray50"
+              fontSize={18}
+              height={140}
               multiline={true}
               numberOfLines={5}
+              placeholder={t('Secret Phrase, ENS name, or address')}
               returnKeyType="done"
-              onSubmitEditing={() => Keyboard.dismiss()}
-              width="100%"
-              height={140}
-              textAlign="center"
-              fontSize={18}
-              backgroundColor="gray50"
               testID="import_account_form/input"
+              textAlign="center"
+              value={values.input}
+              width="100%"
+              onBlur={handleBlur('input')}
+              onChangeText={handleChange('input')}
+              onSubmitEditing={() => Keyboard.dismiss()}
             />
             <PasteButton />
           </CenterBox>
 
           {touched.input && errors.input && (
-            <Text variant="body" color="error" mt="md">
+            <Text color="error" mt="md" variant="body">
               {errors.input}
             </Text>
           )}
 
           {/* TODO show spinner in button while loading */}
           <PrimaryButton
-            onPress={handleSubmit}
-            label={t('Next')}
             disabled={!values.input || !isValid || isSubmitting || isLoading}
+            label={t('Next')}
             mt="lg"
-            width="100%"
             testID="import_account_form/submit"
+            width="100%"
+            onPress={handleSubmit}
           />
 
           <ENSResolver />
@@ -135,7 +135,7 @@ function PasteButton() {
   }
   const { t } = useTranslation()
   return (
-    <TextButton onPress={onPress} textColor="pink" textVariant="buttonLabel" p="md">
+    <TextButton p="md" textColor="pink" textVariant="buttonLabel" onPress={onPress}>
       {t('Paste')}
     </TextButton>
   )

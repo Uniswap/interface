@@ -68,51 +68,51 @@ export function SwapForm(props: SwapFormProps) {
 
   return (
     <Button flex={1} onPress={() => Keyboard.dismiss()}>
-      <Box px="md" flex={1} justifyContent="space-between">
+      <Box flex={1} justifyContent="space-between" px="md">
         <Box>
           <CurrencyInput
             currency={currencies[CurrencyField.INPUT]}
             currencyAmount={currencyAmounts[CurrencyField.INPUT]}
             currencyBalance={currencyBalances[CurrencyField.INPUT]}
+            otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
+            showNonZeroBalancesOnly={true}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }
             onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
-            otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
-            showNonZeroBalancesOnly={true}
           />
           <Box zIndex="popover">
-            <Box style={StyleSheet.absoluteFill} alignItems="center" height={40}>
+            <Box alignItems="center" height={40} style={StyleSheet.absoluteFill}>
               <Box
+                alignItems="center"
                 bg="background1"
-                borderRadius="md"
                 borderColor="white"
+                borderRadius="md"
                 borderWidth={4}
                 justifyContent="center"
-                alignItems="center"
                 p="xs">
-                <Button onPress={onSwitchCurrencies} justifyContent="center" alignItems="center">
+                <Button alignItems="center" justifyContent="center" onPress={onSwitchCurrencies}>
                   <SwapArrow height={20} width={20} />
                 </Button>
               </Box>
             </Box>
           </Box>
           <CurrencyInput
+            backgroundColor="background1"
             currency={currencies[CurrencyField.OUTPUT]}
-            currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
             currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+            currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+            otherSelectedCurrency={currencies[CurrencyField.INPUT]}
+            showNonZeroBalancesOnly={false}
+            title={t("You'll receive")}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
             }
             onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
-            showNonZeroBalancesOnly={false}
-            otherSelectedCurrency={currencies[CurrencyField.INPUT]}
-            title={t("You'll receive")}
-            backgroundColor="background1"
           />
           {!isWrapAction(wrapType) && (
             <Box mt="md">
-              <SwapDetailRow trade={trade} label={swapInputStatusMessage} />
+              <SwapDetailRow label={swapInputStatusMessage} trade={trade} />
             </Box>
           )}
         </Box>
@@ -126,6 +126,13 @@ export function SwapForm(props: SwapFormProps) {
           )}
           <PrimaryButton
             alignSelf="stretch"
+            bg={actionButtonDisabled ? 'gray400' : undefined}
+            disabled={actionButtonDisabled}
+            icon={
+              quoteStatus === 'loading' ? (
+                <ActivityIndicator color={theme.colors.white} size={25} />
+              ) : undefined
+            }
             label={
               wrapType === WrapType.WRAP
                 ? t('Wrap')
@@ -133,11 +140,7 @@ export function SwapForm(props: SwapFormProps) {
                 ? t('Unwrap')
                 : t('Swap')
             }
-            icon={
-              quoteStatus === 'loading' ? (
-                <ActivityIndicator size={25} color={theme.colors.white} />
-              ) : undefined
-            }
+            mt="md"
             onPress={() => {
               notificationAsync()
               if (isWrapAction(wrapType)) {
@@ -146,9 +149,6 @@ export function SwapForm(props: SwapFormProps) {
                 swapCallback()
               }
             }}
-            disabled={actionButtonDisabled}
-            mt="md"
-            bg={actionButtonDisabled ? 'gray400' : undefined}
           />
         </Box>
       </Box>

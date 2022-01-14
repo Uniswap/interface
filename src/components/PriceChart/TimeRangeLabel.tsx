@@ -28,11 +28,11 @@ export function TimeRangeLabel({ label, selected, transition }: Props) {
 
   return (
     <AnimatedText
-      variant="buttonLabel"
-      textAlign="center"
       // react-native supports number values https://reactnative.dev/docs/colors#color-ints
       // @ts-expect-error style.color will be an integer
-      style={style}>
+      style={style}
+      textAlign="center"
+      variant="buttonLabel">
       {label}
     </AnimatedText>
   )

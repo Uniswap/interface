@@ -23,10 +23,10 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
   const networkColors = useNetworkColors(chainId)
 
   return (
-    <Box flexDirection="row" justifyContent="space-between" alignSelf="stretch" alignItems="center">
-      <Box flexDirection="row" justifyContent="center" alignItems="center">
+    <Box alignItems="center" alignSelf="stretch" flexDirection="row" justifyContent="space-between">
+      <Box alignItems="center" flexDirection="row" justifyContent="center">
         <InfoCircle height={20} width={20} />
-        <Text variant="bodySm" fontWeight="500" ml="sm" color="gray400">
+        <Text color="gray400" fontWeight="500" ml="sm" variant="bodySm">
           {label || formatExecutionPrice(trade?.executionPrice)}
         </Text>
       </Box>
@@ -37,7 +37,7 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
           onPress={() => {
             // TODO: implement gas price setting ui
           }}>
-          <Flex flexDirection="row" gap="xxs" m="sm" centered>
+          <Flex centered flexDirection="row" gap="xxs" m="sm">
             <NetworkLogo chainId={trade.inputAmount.wrapped.currency.chainId} size={15} />
             <Text style={{ color: networkColors.foreground }}>
               {formatPrice(trade.quote?.gasUseEstimateUSD?.toString())}

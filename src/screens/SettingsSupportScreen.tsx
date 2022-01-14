@@ -16,15 +16,15 @@ export function SettingsSupportScreen() {
   return (
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box flexDirection="row" alignItems="center" mb="lg">
-          <BackButton size={30} mr="md" />
+        <Box alignItems="center" flexDirection="row" mb="lg">
+          <BackButton mr="md" size={30} />
           <Text variant="bodyLg">{t('Wallet Support')}</Text>
         </Box>
-        <Text variant="bodyLg" mb="sm">
+        <Text mb="sm" variant="bodyLg">
           {t('Recent logs')}
         </Text>
         <ScrollView>
-          <Text variant="bodyXs" mt="md">
+          <Text mt="md" variant="bodyXs">
             {recentLogs.join('\n\n')}
           </Text>
         </ScrollView>

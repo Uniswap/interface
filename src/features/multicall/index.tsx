@@ -77,7 +77,7 @@ export function MulticallUpdaters() {
   return (
     <>
       {activeChains.map((chainId) => (
-        <SingleChainUpdater chainId={chainId} key={chainId} />
+        <SingleChainUpdater key={chainId} chainId={chainId} />
       ))}
     </>
   )
@@ -87,5 +87,5 @@ export function MulticallUpdaters() {
 function SingleChainUpdater({ chainId }: { chainId: ChainId }) {
   const contract = useMulticall2Contract(chainId)
   const latestBlock = useLatestBlock(chainId)
-  return <Updater chainId={chainId} latestBlockNumber={latestBlock} contract={contract} />
+  return <Updater chainId={chainId} contract={contract} latestBlockNumber={latestBlock} />
 }

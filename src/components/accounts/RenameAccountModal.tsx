@@ -31,27 +31,27 @@ export function RenameAccountModal({ address, onCancel, onConfirm }: RenameAccou
   const { t } = useTranslation()
   return (
     <Modal
-      visible={!!address}
-      width={dimensions.fullWidth * 0.85}
       dimBackground={true}
-      hide={onPressCancel}>
+      hide={onPressCancel}
+      visible={!!address}
+      width={dimensions.fullWidth * 0.85}>
       <CenterBox mt="md">
         <Identicon address={address || NULL_ADDRESS} size={50} />
         <TextInput
-          value={newAccountName}
-          onChangeText={setNewAccountName}
+          fontSize={20}
           mt="md"
           placeholder={t('New account name')}
-          fontSize={20}
+          value={newAccountName}
+          onChangeText={setNewAccountName}
         />
         <PrimaryButton
-          variant="palePink"
           label={t('Done')}
-          onPress={onPressConfirm}
           mt="md"
+          variant="palePink"
           width={150}
+          onPress={onPressConfirm}
         />
-        <TextButton onPress={onPressCancel} textVariant="body" textColor="pink" mt="lg">
+        <TextButton mt="lg" textColor="pink" textVariant="body" onPress={onPressCancel}>
           {t('Cancel')}
         </TextButton>
       </CenterBox>

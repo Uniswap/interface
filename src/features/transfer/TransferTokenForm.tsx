@@ -37,27 +37,27 @@ export function TransferTokenForm() {
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {({ handleChange, handleBlur, handleSubmit, values }) => (
           <Box alignItems="center" justifyContent="center">
-            <Box flexDirection="row" alignItems="center" justifyContent="flex-end" mt="md">
+            <Box alignItems="center" flexDirection="row" justifyContent="flex-end" mt="md">
               <Text>Address: </Text>
               <AddressInput
-                onChangeText={handleChange('toAddress')}
-                onBlur={handleBlur('toAddress')}
                 value={values.toAddress}
+                onBlur={handleBlur('toAddress')}
+                onChangeText={handleChange('toAddress')}
               />
             </Box>
-            <Box flexDirection="row" alignItems="center" justifyContent="flex-end" my="md">
+            <Box alignItems="center" flexDirection="row" justifyContent="flex-end" my="md">
               <Text>Amount: </Text>
               <AmountInput
-                onChangeText={handleChange('amount')}
-                onBlur={handleBlur('amount')}
                 value={values.amount}
+                onBlur={handleBlur('amount')}
+                onChangeText={handleChange('amount')}
               />
             </Box>
-            <PrimaryButton onPress={handleSubmit} label="Send" />
+            <PrimaryButton label="Send" onPress={handleSubmit} />
           </Box>
         )}
       </Formik>
-      <Modal title="Importing" hide={() => setShowModal(false)} visible={showModal}>
+      <Modal hide={() => setShowModal(false)} title="Importing" visible={showModal}>
         <ActivityIndicator />
       </Modal>
     </>

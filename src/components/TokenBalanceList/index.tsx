@@ -28,8 +28,8 @@ export function TokenBalanceList({
 
   if (loading) {
     return (
-      <Box padding="lg" mt="lg">
-        <ActivityIndicator color="grey" animating={loading} />
+      <Box mt="lg" padding="lg">
+        <ActivityIndicator animating={loading} color="grey" />
       </Box>
     )
   }
@@ -52,10 +52,10 @@ export function TokenBalanceList({
 
   return (
     <FlatList
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       data={balances}
-      renderItem={renderItem}
       keyExtractor={key}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      renderItem={renderItem}
     />
   )
 }

@@ -22,10 +22,10 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
   const networkSize = currencyLogoSize / 2.5
   return (
     <Box height={size} width={size}>
-      <CurrencyLogoOnly size={currencyLogoSize} currency={currency} />
+      <CurrencyLogoOnly currency={currency} size={currencyLogoSize} />
       {currency.chainId !== ChainId.MAINNET && (
-        <Box position="absolute" bottom={0} right={0}>
-          <NetworkLogo chainId={currency.chainId} size={networkSize} borderWidth={2} />
+        <Box bottom={0} position="absolute" right={0}>
+          <NetworkLogo borderWidth={2} chainId={currency.chainId} size={networkSize} />
         </Box>
       )}
     </Box>
@@ -38,8 +38,8 @@ function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
   if (currency?.isNative) {
     return (
       <Image
-        style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
         source={ETHEREUM_LOGO}
+        style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
       />
     )
   }
@@ -49,12 +49,12 @@ function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
   if (srcs.length > 0) {
     const src = srcs[0].toLowerCase()
     if (src.includes('.svg')) {
-      return <SvgUri width={size} height={size} uri={srcs[0]} />
+      return <SvgUri height={size} uri={srcs[0]} width={size} />
     }
     return (
       <Image
-        style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
         source={srcs.map(maybeReplaceIPFSScheme)}
+        style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
       />
     )
   }

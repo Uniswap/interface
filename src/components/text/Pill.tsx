@@ -24,23 +24,23 @@ export function Pill({
 }: PillProps) {
   return (
     <Flex
+      alignItems="center"
       backgroundColor="gray200"
       borderColor="none"
       borderRadius={borderRadius}
       borderWidth={1}
       flexDirection={flexDirection}
+      gap="xs"
+      justifyContent="center"
       px={px}
       py={py}
       style={{
         ...(customBackgroundColor ? { backgroundColor: customBackgroundColor } : {}),
         ...(customBorderColor ? { borderColor: customBorderColor } : {}),
       }}
-      gap="xs"
-      justifyContent="center"
-      alignItems="center"
       {...rest}>
       {icon}
-      <Text variant="body" color="black" style={{ color: foregroundColor }}>
+      <Text color="black" style={{ color: foregroundColor }} variant="body">
         {label}
       </Text>
     </Flex>

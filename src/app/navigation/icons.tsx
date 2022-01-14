@@ -10,10 +10,10 @@ import { Theme } from 'src/styles/theme'
 export function SwapButton(props: BottomTabBarButtonProps) {
   return (
     <IconButton
+      icon={<SwapIcon fill="white" height={24} width={24} />}
       mb="sm"
       variant="primary"
       onPress={props.onPress}
-      icon={<SwapIcon height={24} width={24} fill="white" />}
     />
   )
 }
@@ -24,7 +24,7 @@ interface NavIconProps {
 
 export function WalletTabIcon({ focused }: NavIconProps) {
   const { primaryColor, secondaryColor } = useTabNavColors()
-  return <WalletIcon height={30} width={30} fill={focused ? primaryColor : secondaryColor} />
+  return <WalletIcon fill={focused ? primaryColor : secondaryColor} height={30} width={30} />
 }
 
 export function ExploreTabIcon({ focused }: NavIconProps) {
@@ -32,9 +32,9 @@ export function ExploreTabIcon({ focused }: NavIconProps) {
   return (
     <SearchIcon
       height={30}
-      width={30}
       stroke={focused ? primaryColor : secondaryColor}
       strokeWidth={2.2}
+      width={30}
     />
   )
 }

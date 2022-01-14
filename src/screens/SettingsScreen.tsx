@@ -42,17 +42,17 @@ export function SettingsScreen() {
         screen: Screens.SettingsChains,
         text: t('Chains'),
         // TODO use chains icon when available
-        icon: <ChatBubbleIcon width={20} height={20} />,
+        icon: <ChatBubbleIcon height={20} width={20} />,
       },
       {
         screen: Screens.SettingsSupport,
         text: t('Support'),
-        icon: <ChatBubbleIcon width={20} height={20} />,
+        icon: <ChatBubbleIcon height={20} width={20} />,
       },
       {
         screen: Screens.Dev,
         text: t('Dev Options'),
-        icon: <CoffeeIcon width={20} height={20} />,
+        icon: <CoffeeIcon height={20} width={20} />,
       },
     ],
     [t]
@@ -61,13 +61,13 @@ export function SettingsScreen() {
   return (
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box flexDirection="row" alignItems="center" mb="lg">
-          <BackButton size={30} mr="md" />
+        <Box alignItems="center" flexDirection="row" mb="lg">
+          <BackButton mr="md" size={30} />
           <Text variant="bodyLg">{t('Settings')}</Text>
         </Box>
         {<ActiveAccountSummary />}
         {pages.map((o) => (
-          <SettingsRow page={o} navigation={navigation} theme={theme} key={o.screen} />
+          <SettingsRow key={o.screen} navigation={navigation} page={o} theme={theme} />
         ))}
       </ScrollView>
     </SheetScreen>
@@ -82,15 +82,15 @@ interface SettingsRowProps {
 
 function SettingsRow({ page: { screen, icon, text }, navigation, theme }: SettingsRowProps) {
   return (
-    <Button onPress={() => navigation.navigate(screen)} mt="md" px="sm" py="sm">
-      <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-        <Box flexDirection="row" alignItems="center">
+    <Button mt="md" px="sm" py="sm" onPress={() => navigation.navigate(screen)}>
+      <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+        <Box alignItems="center" flexDirection="row">
           {icon}
-          <Text variant="bodyLg" fontWeight="500" ml="md">
+          <Text fontWeight="500" ml="md" variant="bodyLg">
             {text}
           </Text>
         </Box>
-        <Chevron direction="e" width={16} height={16} color={theme.colors.gray200} />
+        <Chevron color={theme.colors.gray200} direction="e" height={16} width={16} />
       </Box>
     </Button>
   )
@@ -100,15 +100,15 @@ function ActiveAccountSummary() {
   const activeAccount = useActiveAccount()
   if (!activeAccount) return null
   return (
-    <Box borderRadius="lg" alignItems="center" p="md" overflow="hidden">
+    <Box alignItems="center" borderRadius="lg" overflow="hidden" p="md">
       <GradientBackground opacity={0.5}>
         <BlueToPinkRadial />
       </GradientBackground>
       <Identicon address={activeAccount.address} size={50} />
-      <Text variant="h4" mt="md">
+      <Text mt="md" variant="h4">
         {activeAccount.name}
       </Text>
-      <CopyTextButton textVariant="bodySm" mt="sm" copyText={activeAccount.address}>
+      <CopyTextButton copyText={activeAccount.address} mt="sm" textVariant="bodySm">
         {shortenAddress(activeAccount.address, 4)}
       </CopyTextButton>
     </Box>

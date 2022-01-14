@@ -9,10 +9,10 @@ interface ToggleProps {
 export function Toggle({ children, filled, onToggle }: PropsWithChildren<ToggleProps>) {
   return (
     <Button
-      p="sm"
-      onPress={onToggle}
       bg={filled ? 'primary1' : 'tokenSelector'}
-      borderRadius="full">
+      borderRadius="full"
+      p="sm"
+      onPress={onToggle}>
       {children}
     </Button>
   )

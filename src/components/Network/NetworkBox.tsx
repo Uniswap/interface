@@ -11,16 +11,16 @@ export function NetworkBox({ chainId, showBorder }: NetworkLabelProps) {
 
   return (
     <Pill
+      borderRadius="md"
       customBackgroundColor={colors?.background}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
+      flexDirection="column"
       foregroundColor={colors.foreground}
+      gap="sm"
       icon={<NetworkLogo chainId={chainId} size={30} />}
       label={info.label}
-      flexDirection="column"
-      borderRadius="md"
       px="md"
       py="md"
-      gap="sm"
     />
   )
 }

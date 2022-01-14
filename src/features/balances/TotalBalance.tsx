@@ -48,7 +48,7 @@ export default function TotalBalance({ balances }: TotalBalanceViewProps) {
   const totalBalance = useTotalBalance(balances, tokenPricesByChain)
 
   return (
-    <Flex mt="sm" mb="lg" mx="lg" gap="sm">
+    <Flex gap="sm" mb="lg" mt="sm" mx="lg">
       <Text variant="h5">{t('Total balance')}</Text>
       <Text variant="h1">{`${formatUSDPrice(totalBalance)}`}</Text>
     </Flex>

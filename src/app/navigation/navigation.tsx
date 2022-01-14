@@ -58,22 +58,22 @@ function TabNavigator() {
     <BottomSheetModalProvider>
       <Tab.Navigator screenOptions={navOptions.tabBar}>
         <Tab.Screen
-          name={Tabs.Home}
           component={HomeScreen}
+          listeners={genericTabListeners}
+          name={Tabs.Home}
           options={navOptions.tabHome}
-          listeners={genericTabListeners}
         />
         <Tab.Screen
-          name={Tabs.Swap}
           component={View}
-          options={navOptions.tabSwap}
           listeners={swapTabListeners}
+          name={Tabs.Swap}
+          options={navOptions.tabSwap}
         />
         <Tab.Screen
-          name={Tabs.Explore}
           component={ExploreScreen}
-          options={navOptions.tabExplore}
           listeners={genericTabListeners}
+          name={Tabs.Explore}
+          options={navOptions.tabExplore}
         />
       </Tab.Navigator>
     </BottomSheetModalProvider>
@@ -83,8 +83,8 @@ function TabNavigator() {
 function AccountStackGroup() {
   return (
     <AccountStack.Navigator screenOptions={navOptions.noHeader}>
-      <AccountStack.Screen name={Screens.Accounts} component={AccountsScreen} />
-      <AccountStack.Screen name={Screens.ImportAccount} component={ImportAccountScreen} />
+      <AccountStack.Screen component={AccountsScreen} name={Screens.Accounts} />
+      <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
     </AccountStack.Navigator>
   )
 }
@@ -92,10 +92,10 @@ function AccountStackGroup() {
 function SettingsStackGroup() {
   return (
     <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
-      <SettingsStack.Screen name={Screens.Settings} component={SettingsScreen} />
-      <SettingsStack.Screen name={Screens.SettingsChains} component={SettingsChainsScreen} />
-      <SettingsStack.Screen name={Screens.SettingsSupport} component={SettingsSupportScreen} />
-      <SettingsStack.Screen name={Screens.Dev} component={DevScreen} />
+      <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
+      <SettingsStack.Screen component={SettingsChainsScreen} name={Screens.SettingsChains} />
+      <SettingsStack.Screen component={SettingsSupportScreen} name={Screens.SettingsSupport} />
+      <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
     </SettingsStack.Navigator>
   )
 }
@@ -103,16 +103,16 @@ function SettingsStackGroup() {
 export function AppStackNavigator() {
   return (
     <AppStack.Navigator screenOptions={navOptions.noHeader}>
-      <AppStack.Screen name={Screens.TabNavigator} component={TabNavigator} />
+      <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
       <AppStack.Group>
-        <AppStack.Screen name={Screens.TokenDetails} component={TokenDetailsScreen} />
+        <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       </AppStack.Group>
       <AppStack.Group screenOptions={navOptions.presentationModal}>
-        <AppStack.Screen name={Screens.AccountStack} component={AccountStackGroup} />
-        <AppStack.Screen name={Screens.Notifications} component={NotificationsScreen} />
-        <AppStack.Screen name={Screens.Swap} component={SwapScreen} />
-        <AppStack.Screen name={Screens.CurrencySelector} component={CurrencySelectorScreen} />
-        <AppStack.Screen name={Screens.SettingsStack} component={SettingsStackGroup} />
+        <AppStack.Screen component={AccountStackGroup} name={Screens.AccountStack} />
+        <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />
+        <AppStack.Screen component={SwapScreen} name={Screens.Swap} />
+        <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
+        <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       </AppStack.Group>
     </AppStack.Navigator>
   )

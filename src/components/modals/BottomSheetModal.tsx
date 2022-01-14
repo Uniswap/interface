@@ -33,10 +33,10 @@ export function BottomSheetModal({
 
   return (
     <BaseModal
-      onChange={onChange}
       ref={modalRef}
+      snapPoints={snapPoints}
       style={bottomSheetStyles.bottomSheet}
-      snapPoints={snapPoints}>
+      onChange={onChange}>
       {children}
     </BaseModal>
   )

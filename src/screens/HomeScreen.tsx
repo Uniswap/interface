@@ -72,39 +72,39 @@ export function HomeScreen({ navigation }: Props) {
         <PinkToBlueLinear />
       </GradientBackground>
       <Box>
-        <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="md" my="sm">
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between" mx="md" my="sm">
           <AccountHeader />
           <Box flexDirection="row" mr="md">
-            <Button onPress={onPressSettings} mr="md">
-              <Settings stroke="gray100" height={24} width={24} />
+            <Button mr="md" onPress={onPressSettings}>
+              <Settings height={24} stroke="gray100" width={24} />
             </Button>
             <Button onPress={onPressNotifications}>
-              <Clock stroke="gray100" height={24} width={24} />
+              <Clock height={24} stroke="gray100" width={24} />
             </Button>
           </Box>
         </Box>
         <TransactionStatusBanner />
-        <Box flexDirection="row" alignItems="flex-end" justifyContent="space-between">
+        <Box alignItems="flex-end" flexDirection="row" justifyContent="space-between">
           <TotalBalance balances={balances} />
           <Button
-            onPress={onPressQRCode}
+            backgroundColor="white"
             mx="lg"
             my="lg"
             padding="md"
             style={headerButtonStyle}
-            backgroundColor="white">
-            <QrCode stroke={theme.colors.pink} height={15} width={15} />
+            onPress={onPressQRCode}>
+            <QrCode height={15} stroke={theme.colors.pink} width={15} />
           </Button>
         </Box>
         <WalletQRCode isVisible={showQRModal} onClose={onCloseQrCode} />
       </Box>
-      <Box flex={1} backgroundColor="mainBackground">
+      <Box backgroundColor="mainBackground" flex={1}>
         <TokenBalanceList
-          loading={loading && !allCurrencyAmounts.length}
           balances={balances}
+          loading={loading && !allCurrencyAmounts.length}
           refreshing={refreshing}
-          onRefresh={onRefresh}
           onPressToken={onPressToken}
+          onRefresh={onRefresh}
         />
       </Box>
     </Screen>

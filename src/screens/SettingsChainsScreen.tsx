@@ -25,8 +25,8 @@ export function SettingsChainsScreen() {
   return (
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box flexDirection="row" alignItems="center" mb="lg">
-          <BackButton size={30} mr="md" />
+        <Box alignItems="center" flexDirection="row" mb="lg">
+          <BackButton mr="md" size={30} />
           <Text variant="bodyLg">{t('Chain Settings')}</Text>
         </Box>
         <Box px="sm">
@@ -35,11 +35,11 @@ export function SettingsChainsScreen() {
             const isActive = activeChains.includes(chainId)
             return (
               <Box
-                flexDirection="row"
+                key={chainId}
                 alignItems="center"
+                flexDirection="row"
                 justifyContent="space-between"
-                mt="lg"
-                key={chainId}>
+                mt="lg">
                 <Text variant="body">{CHAIN_INFO[chainId].label}</Text>
                 <Switch value={isActive} onValueChange={onToggleChain(chainId)} />
               </Box>

@@ -49,13 +49,13 @@ export function Flex({
   )
   return (
     <Box
-      flexDirection={flexDirection}
-      flexShrink={flexShrink}
-      flexGrow={flexGrow}
+      alignItems={centered ? 'center' : alignItems}
       flexBasis={flexBasis}
+      flexDirection={flexDirection}
+      flexGrow={flexGrow}
+      flexShrink={flexShrink}
       flexWrap={flexWrap}
       justifyContent={centered ? 'center' : justifyContent}
-      alignItems={centered ? 'center' : alignItems}
       {...boxProps}>
       {childrenArr.map((child, index, array) => (
         <React.Fragment key={index}>

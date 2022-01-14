@@ -20,11 +20,11 @@ type Props = {
 function _DashCircle({ size, ...rest }: Props) {
   return (
     <Box
-      width={size}
-      height={size}
-      borderRadius="full"
       alignItems="center"
+      borderRadius="full"
+      height={size}
       justifyContent="center"
+      width={size}
       {...rest}>
       <Dash height={size / 2} width={size / 2} />
     </Box>

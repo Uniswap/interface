@@ -36,26 +36,26 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
   const theme = useTheme<Theme>()
 
   return (
-    <Box flexDirection="row" alignItems="center" justifyContent="space-between" mx="sm" my="sm">
+    <Box alignItems="center" flexDirection="row" justifyContent="space-between" mx="sm" my="sm">
       <Button
-        flexDirection="row"
         alignItems="center"
-        onPress={onPressAccount}
-        testID="account_header/manage/button">
-        <Flex gap="sm" flexDirection="row" centered>
+        flexDirection="row"
+        testID="account_header/manage/button"
+        onPress={onPressAccount}>
+        <Flex centered flexDirection="row" gap="sm">
           <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={30} />
           <Text variant="h4">
             {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}
           </Text>
           <Chevron
             color={theme.colors.gray200}
+            direction={chevronDirection ?? 's'}
             height="9"
             width="18"
-            direction={chevronDirection ?? 's'}
           />
         </Flex>
       </Button>
-      <Box flexDirection="row" alignItems="center" justifyContent="flex-end">
+      <Box alignItems="center" flexDirection="row" justifyContent="flex-end">
         {children}
       </Box>
     </Box>

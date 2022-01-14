@@ -25,15 +25,15 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
 
   return (
-    <CenterBox flexDirection="row" my="md" justifyContent="space-between">
+    <CenterBox flexDirection="row" justifyContent="space-between" my="md">
       <BackButton ml="lg" size={30} />
       <Box alignItems="center" flexDirection="row">
         <CurrencyLogo currency={currency} size={30} />
-        <Text variant="h2" ml="sm">
+        <Text ml="sm" variant="h2">
           {currency.symbol ?? t('Unknown token')}
         </Text>
       </Box>
-      <Box width={40} height={40} mr="lg" />
+      <Box height={40} mr="lg" width={40} />
     </CenterBox>
   )
 }
@@ -84,7 +84,7 @@ export function TokenDetailsScreen({
       <ScrollView>
         <PriceChart currency={currency} />
         <Box mt="xl">
-          <Text variant="h5" color="gray200" mx="lg">
+          <Text color="gray200" mx="lg" variant="h5">
             {t('Your balance')}
           </Text>
           {balance ? (
@@ -92,19 +92,19 @@ export function TokenDetailsScreen({
           ) : (
             <TokenBalanceItem currencyAmount={ethBalance} currencyPrice={undefined} />
           )}
-          <Box flexDirection="row" my="md" mx="lg">
+          <Box flexDirection="row" mx="lg" my="md">
             <PrimaryButton
               flex={1}
               label={t('Buy')}
+              mr="sm"
               textVariant="buttonLabelLg"
               onPress={onPressBuy}
-              mr="sm"
             />
             <PrimaryButton
-              variant="gray"
               flex={1}
               label={t('Sell')}
               textVariant="buttonLabelLg"
+              variant="gray"
               onPress={onPressSell}
             />
           </Box>

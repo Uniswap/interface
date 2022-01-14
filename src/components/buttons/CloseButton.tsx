@@ -13,7 +13,7 @@ type Props = {
 export function CloseButton({ onPress, size, ...rest }: Props) {
   return (
     <Button onPress={onPress} {...rest}>
-      <XIcon width={size ?? 20} height={size ?? 20} />
+      <XIcon height={size ?? 20} width={size ?? 20} />
     </Button>
   )
 }

@@ -20,13 +20,13 @@ type Props = {
 function _CheckmarkCircle({ size, ...rest }: Props) {
   return (
     <Box
-      width={size}
-      height={size}
-      borderRadius="full"
       alignItems="center"
+      borderRadius="full"
+      height={size}
       justifyContent="center"
+      width={size}
       {...rest}>
-      <Checkmark height={size / 2} width={size / 2} stroke="white" />
+      <Checkmark height={size / 2} stroke="white" width={size / 2} />
     </Box>
   )
 }

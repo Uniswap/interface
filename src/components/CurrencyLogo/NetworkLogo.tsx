@@ -20,11 +20,12 @@ export function NetworkLogo({ chainId, borderWidth = 0, size = 10, ...rest }: Ne
 
   return (
     <Box
+      borderRadius="full"
       borderWidth={borderWidth}
       style={{ borderColor: foreground }}
-      borderRadius="full"
       {...rest}>
       <Image
+        source={{ uri: logoUrl }}
         style={[
           style.image,
           {
@@ -33,7 +34,6 @@ export function NetworkLogo({ chainId, borderWidth = 0, size = 10, ...rest }: Ne
             borderRadius: size / 2,
           },
         ]}
-        source={{ uri: logoUrl }}
       />
     </Box>
   )

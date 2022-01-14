@@ -31,41 +31,41 @@ export function SwapDetails({ currencyOut, trade }: SwapDetailsProps) {
 
   return (
     <AnimatedBox entering={FadeIn.duration(FADE_DURATION)}>
-      <Flex gap="xs" borderRadius="md" borderColor="gray100" borderWidth={1} p="md" my="sm">
-        <Text variant="h6" color="black">
+      <Flex borderColor="gray100" borderRadius="md" borderWidth={1} gap="xs" my="sm" p="md">
+        <Text color="black" variant="h6">
           {t('Transaction Details')}
         </Text>
-        <Box my="xs" height={1} bg="gray100" />
+        <Box bg="gray100" height={1} my="xs" />
         <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="h6" color="gray600">
+          <Text color="gray600" variant="h6">
             {t('Expected Output')}
           </Text>
-          <Text variant="h6" color="gray600">
+          <Text color="gray600" variant="h6">
             {`${formatCurrencyAmount(currencyOut)} ${currencyOut?.currency.symbol}`}
           </Text>
         </Box>
         <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="h6" color="gray600">
+          <Text color="gray600" variant="h6">
             {t('Price Impact')}
           </Text>
-          <Text variant="h6" color="gray600">
+          <Text color="gray600" variant="h6">
             {trade.priceImpact ? `${trade.priceImpact.multiply(-1).toFixed(2)}%` : '-'}
           </Text>
         </Box>
-        <Box my="xs" height={1} bg="gray100" />
+        <Box bg="gray100" height={1} my="xs" />
         <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="h6" color="gray600">
+          <Text color="gray600" variant="h6">
             {`${t('Min. received after slippage')} (${DEFAULT_SLIPPAGE_TOLERANCE}%)`}
           </Text>
-          <Text variant="h6" color="gray600">
+          <Text color="gray600" variant="h6">
             {`${formatPrice(minReceived)} ${currencyOut?.currency.symbol}`}
           </Text>
         </Box>
         <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="h6" color="gray600">
+          <Text color="gray600" variant="h6">
             {t('Network Fee')}
           </Text>
-          <Text variant="h6" color="gray600">
+          <Text color="gray600" variant="h6">
             {`~$${gasFeeUSD}`}
           </Text>
         </Box>

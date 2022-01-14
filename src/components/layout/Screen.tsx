@@ -9,7 +9,7 @@ type Props = BackgroundColorShorthandProps<Theme> & NativeSafeAreaViewProps
 
 export function Screen(props: PropsWithChildren<Props>) {
   return (
-    <SafeAreaBox flex={1} bg="mainBackground" {...props}>
+    <SafeAreaBox bg="mainBackground" flex={1} {...props}>
       {props.children}
     </SafeAreaBox>
   )

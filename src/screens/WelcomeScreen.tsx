@@ -27,15 +27,15 @@ export function WelcomeScreen() {
   return (
     <Screen>
       <Box alignItems="center">
-        <Text variant="h1" textAlign="center">
+        <Text textAlign="center" variant="h1">
           {t('Uniswap Wallet')}
         </Text>
-        <PrimaryButton label={t('Create New Account')} onPress={onPressCreate} mt="lg" />
+        <PrimaryButton label={t('Create New Account')} mt="lg" onPress={onPressCreate} />
         <PrimaryButton
           label={t('Import Account')}
-          onPress={onPressImport}
           mt="lg"
           testID="import-account-button"
+          onPress={onPressImport}
         />
       </Box>
     </Screen>

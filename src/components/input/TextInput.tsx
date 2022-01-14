@@ -52,5 +52,5 @@ export function TextInput({ onChangeText, onBlur, ...rest }: TextInputProps) {
   rest.borderRadius ??= 'md'
   const transformedProps = useRestyle(restyleFunctions, rest)
 
-  return <TextInputBase onChangeText={onChangeText} onBlur={onBlur} {...transformedProps} />
+  return <TextInputBase onBlur={onBlur} onChangeText={onChangeText} {...transformedProps} />
 }

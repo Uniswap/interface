@@ -9,7 +9,7 @@ type Props = ComponentProps<typeof Box>
 // top-bottom padding appearance on different iOS devices
 export function SheetScreen(props: PropsWithChildren<Props>) {
   return (
-    <Box flex={1} bg="mainBackground" py="lg" {...props}>
+    <Box bg="mainBackground" flex={1} py="lg" {...props}>
       {props.children}
     </Box>
   )

@@ -59,11 +59,11 @@ export function CurrencyInput(props: CurrencyInputProps) {
   return (
     <Flex borderRadius="md" gap="sm" mt="md" pb="md" pt={title ? 'lg' : 'md'} {...transformedProps}>
       {title && (
-        <Text variant="body" ml="lg" color="gray400">
+        <Text color="gray400" ml="lg" variant="body">
           {title}
         </Text>
       )}
-      <Flex centered mx="sm" flexDirection="row" gap="sm">
+      <Flex centered flexDirection="row" gap="sm" mx="sm">
         <AmountInput
           backgroundColor="none"
           borderWidth={0}
@@ -71,39 +71,39 @@ export function CurrencyInput(props: CurrencyInputProps) {
           fontFamily={theme.textVariants.h1.fontFamily}
           fontSize={theme.textVariants.h1.fontSize}
           height={48}
-          onChangeText={(newAmount: string) => onSetAmount(newAmount)}
           placeholder="0.0"
           value={currencyAmount?.toExact()}
+          onChangeText={(newAmount: string) => onSetAmount(newAmount)}
         />
         {
           // TODO: use `soft` button variant when available
           showMaxButton && maxInputAmount && (
             <PrimaryButton
-              onPress={() => onSetAmount(maxInputAmount.toSignificant())}
-              variant="blue"
               borderRadius="sm"
+              label={t('MAX')}
               px="xs"
               py="xs"
-              label={t('MAX')}
               textVariant="body"
+              variant="blue"
+              onPress={() => onSetAmount(maxInputAmount.toSignificant())}
             />
           )
         }
         <CurrencySelector
-          onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
           otherSelectedCurrency={otherSelectedCurrency}
           selectedCurrency={currency}
           showNonZeroBalancesOnly={showNonZeroBalancesOnly}
+          onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
         />
       </Flex>
-      <Flex alignContent="center" mx="md" flexDirection="row" justifyContent="space-between">
+      <Flex alignContent="center" flexDirection="row" justifyContent="space-between" mx="md">
         {price && (
-          <Text variant="body" ml="sm" color="gray400">
+          <Text color="gray400" ml="sm" variant="body">
             {formatPrice(price)}
           </Text>
         )}
         {currency && (
-          <Text variant="body" color="gray400">{`${t('Balance')} ${formatCurrencyAmount(
+          <Text color="gray400" variant="body">{`${t('Balance')} ${formatCurrencyAmount(
             currencyBalance
           )}`}</Text>
         )}

@@ -51,7 +51,7 @@ export function NotificationBannerWrapper({ children }: PropsWithChildren<any>) 
   return (
     <>
       {firstNotification && (
-        <AnimatedBox position="absolute" top={0} left={0} right={0} zIndex="modal" style={style}>
+        <AnimatedBox left={0} position="absolute" right={0} style={style} top={0} zIndex="modal">
           <NotificationBanner appNotification={firstNotification} onPress={onPressNotification} />
         </AnimatedBox>
       )}
@@ -70,15 +70,15 @@ function NotificationBanner({
   const { message, severity = NotificationSeverity.info } = appNotification
   return (
     <Button
-      onPress={onPress}
+      alignItems="center"
+      bg={getNotificationColor(severity)}
       flex={1}
       flexDirection="row"
-      alignItems="center"
       pt="xl"
       px="lg"
-      bg={getNotificationColor(severity)}>
-      <AlertCircle width={24} height={24} />
-      <Text variant="bodySm" fontWeight="500" ml="md">
+      onPress={onPress}>
+      <AlertCircle height={24} width={24} />
+      <Text fontWeight="500" ml="md" variant="bodySm">
         {message}
       </Text>
     </Button>

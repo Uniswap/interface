@@ -6,7 +6,7 @@ type Props = ComponentProps<typeof Box>
 // Fills up entire parent by default
 export function GradientBackground({ children, ...rest }: PropsWithChildren<Props>) {
   return (
-    <Box position="absolute" top={0} left={0} bottom={0} right={0} zIndex="background" {...rest}>
+    <Box bottom={0} left={0} position="absolute" right={0} top={0} zIndex="background" {...rest}>
       {children}
     </Box>
   )

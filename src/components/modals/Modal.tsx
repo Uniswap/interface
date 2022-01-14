@@ -38,26 +38,26 @@ React.PropsWithChildren<Props>) {
 
   return (
     <BaseModal
-      visible={visible}
       animationType="none"
+      presentationStyle="overFullScreen"
       transparent={true}
-      presentationStyle="overFullScreen" /* {...rest} */
+      visible={visible} /* {...rest} */
     >
       <Button
         alignItems="center"
-        justifyContent={justifyContent}
         flexGrow={1}
+        justifyContent={justifyContent}
         style={dimBackground && style.bgDimmed}
         onPress={dismissable ? hide : undefined}>
-        <Box style={style.modalBox} backgroundColor="mainBackground" width={width}>
+        <Box backgroundColor="mainBackground" style={style.modalBox} width={width}>
           {title && (
-            <Text variant="h3" px="md" mb="sm">
+            <Text mb="sm" px="md" variant="h3">
               {title}
             </Text>
           )}
           {hide && showCloseButton && (
             <View style={style.closeButtonContainer}>
-              <CloseButton onPress={hide} size={14} />
+              <CloseButton size={14} onPress={hide} />
             </View>
           )}
           {children}
@@ -68,12 +68,21 @@ React.PropsWithChildren<Props>) {
 }
 
 const style = StyleSheet.create({
+  bgDimmed: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  closeButtonContainer: {
+    position: 'absolute',
+    right: 20,
+    top: 20,
+  },
   modalBox: {
-    position: 'relative',
-    margin: 20,
-    borderRadius: 15,
-    padding: 20,
     alignItems: 'center',
+    borderRadius: 15,
+    elevation: 5,
+    margin: 20,
+    padding: 20,
+    position: 'relative',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -81,14 +90,5 @@ const style = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5,
-  },
-  bgDimmed: {
-    backgroundColor: 'rgba(0,0,0,0.3)',
-  },
-  closeButtonContainer: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
   },
 })

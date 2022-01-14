@@ -6,13 +6,13 @@ function _BlueToPinkRadial() {
     // TODO still needs a bit more tweaking, bit too much blue
     <Svg height="100%" width="100%">
       <Defs>
-        <RadialGradient id="background" rx="4" ry="1" cy="-0.1">
+        <RadialGradient cy="-0.1" id="background" rx="4" ry="1">
           <Stop offset="0" stopColor="#28A0F0" stopOpacity="1" />
           <Stop offset="1" stopColor="#FF007A" stopOpacity="0" />
         </RadialGradient>
       </Defs>
-      <Rect x="0" y="0" width="100%" height="100%" fill="#F5F4F5" />
-      <Rect x="0" y="0" width="100%" height="100%" fill="url(#background)" opacity={0.2} />
+      <Rect fill="#F5F4F5" height="100%" width="100%" x="0" y="0" />
+      <Rect fill="url(#background)" height="100%" opacity={0.2} width="100%" x="0" y="0" />
     </Svg>
   )
 }

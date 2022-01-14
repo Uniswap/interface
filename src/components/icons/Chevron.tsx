@@ -40,13 +40,13 @@ function _Chevron({ width, height, direction, color, ...rest }: Props) {
 
   return (
     <CenterBox borderRadius="full" style={{ transform: [{ rotate: degree }] }} {...rest}>
-      <Svg fill="none" viewBox="0 0 14 8" width={width} height={height}>
+      <Svg fill="none" height={height} viewBox="0 0 14 8" width={width}>
         <Path
           d="M13 7 7 1 1 7"
           stroke={color || '#000000'}
-          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          strokeWidth="2"
         />
       </Svg>
     </CenterBox>

@@ -41,18 +41,18 @@ export function SwapScreen({ route, navigation }: AppStackScreenProp<Screens.Swa
     <SheetScreen>
       <BottomSheetModalProvider>
         <KeyboardAvoidingView
-          keyboardVerticalOffset={headerHeight + 70}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={headerHeight + 70}
           style={flex.fill}>
           <Header
             chainId={chainId}
+            onPressBack={() => navigation.goBack()}
             onPressNetwork={() => {
               impactAsync()
               swapNetworkModalRef.current?.present()
             }}
-            onPressBack={() => navigation.goBack()}
           />
-          <SwapForm state={state} dispatch={dispatch} />
+          <SwapForm dispatch={dispatch} state={state} />
         </KeyboardAvoidingView>
         <BottomSheetModal
           ref={swapNetworkModalRef}
@@ -60,11 +60,11 @@ export function SwapScreen({ route, navigation }: AppStackScreenProp<Screens.Swa
           snapPoints={BOTTOM_THIRD_SNAP_POINTS}
           style={bottomSheetStyles.bottomSheet}>
           <SwapNetworkModal
+            chainId={chainId}
+            setChainId={setChainId}
             onPressClose={() => {
               swapNetworkModalRef.current?.dismiss()
             }}
-            chainId={chainId}
-            setChainId={setChainId}
           />
         </BottomSheetModal>
       </BottomSheetModalProvider>

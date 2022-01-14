@@ -24,9 +24,9 @@ function TransactionStatus() {
     return (
       <Box p="sm">
         <Toast
-          variant={ToastVariant.Failed}
-          // TODO: actually format these
           label={getNotificationName(recentlyFailedTransactions[0], t) + t(' failed')}
+          // TODO: actually format these
+          variant={ToastVariant.Failed}
         />
       </Box>
     )
@@ -34,8 +34,8 @@ function TransactionStatus() {
     return (
       <Box p="sm">
         <Toast
-          variant={ToastVariant.Success}
           label={getNotificationName(recentlySuccessfulTransactions[0], t) + t(' successful!')}
+          variant={ToastVariant.Success}
         />
       </Box>
     )
@@ -43,7 +43,6 @@ function TransactionStatus() {
     return (
       <Box p="sm">
         <Toast
-          variant={ToastVariant.Pending}
           label={
             pendingTransactions.length +
             ' ' +
@@ -51,6 +50,7 @@ function TransactionStatus() {
             ' ' +
             getNotificationName(pendingTransactions[0], t).toLowerCase()
           }
+          variant={ToastVariant.Pending}
         />
       </Box>
     )

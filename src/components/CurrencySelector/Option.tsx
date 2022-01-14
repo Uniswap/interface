@@ -27,16 +27,16 @@ export function Option({ currency, onPress, currencyAmount, currencyPrice }: Opt
   return (
     <Pressable onPress={onPress}>
       <Box
+        alignItems="center"
         flexDirection="row"
         justifyContent="space-between"
-        alignItems="center"
-        width="100%"
         my="xs"
-        px="lg">
-        <Box flexDirection="row" alignItems="center">
-          <Box alignItems="center" justifyContent="center" flexDirection="row">
+        px="lg"
+        width="100%">
+        <Box alignItems="center" flexDirection="row">
+          <Box alignItems="center" flexDirection="row" justifyContent="center">
             <CurrencyLogo currency={currency} size={40} />
-            <Text variant="h4" ml="sm">
+            <Text ml="sm" variant="h4">
               {currency.symbol}
             </Text>
           </Box>
@@ -46,7 +46,7 @@ export function Option({ currency, onPress, currencyAmount, currencyPrice }: Opt
               ml="sm"
               p="xs"
               style={{ backgroundColor: colors?.background }}>
-              <Text variant="bodySm" style={{ color: colors?.foreground }}>
+              <Text style={{ color: colors?.foreground }} variant="bodySm">
                 {info.label}
               </Text>
             </CenterBox>

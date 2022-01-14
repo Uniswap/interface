@@ -31,8 +31,26 @@ module.exports = {
         ],
       },
     ],
+    // React Plugin
+    // Overrides rules from @react-native-community:
+    // https://github.com/facebook/react-native/blob/3cf0291008dfeed4d967ebb95bdccbe2d52c5b81/packages/eslint-config-react-native-community/index.js#L287
+    'react/jsx-sort-props': [
+      'error',
+      {
+        callbacksLast: true,
+        shorthandFirst: true,
+        ignoreCase: false,
+        noSortAlphabetically: false,
+        reservedFirst: true,
+      },
+    ],
+    // React-Native Plugin
+    // Overrides rules from @react-native-community:
+    // https://github.com/facebook/react-native/blob/3cf0291008dfeed4d967ebb95bdccbe2d52c5b81/packages/eslint-config-react-native-community/index.js#L313
+    'react-native/no-unused-styles': 'error',
+    'react-native/sort-styles': 'error',
   },
-  plugins: ['detox', 'jest'],
+  plugins: ['detox', 'jest', 'react', 'react-native'],
   overrides: [
     {
       files: ['*.e2e.js'],

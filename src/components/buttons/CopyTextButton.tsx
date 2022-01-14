@@ -23,7 +23,7 @@ export function CopyTextButton({
     else if (typeof children === 'string') setClipboard(children)
   }
 
-  return <TextButton onPress={onPress} children={children} {...rest} />
+  return <TextButton children={children} onPress={onPress} {...rest} />
 }
 
 export function PrimaryCopyTextButton({ copyText, children, ...rest }: PrimaryButtonProps) {
@@ -33,5 +33,5 @@ export function PrimaryCopyTextButton({ copyText, children, ...rest }: PrimaryBu
     else if (typeof children === 'string') setClipboard(children)
   }
 
-  return <PrimaryButton onPress={onPress} children={children} {...rest} />
+  return <PrimaryButton children={children} onPress={onPress} {...rest} />
 }

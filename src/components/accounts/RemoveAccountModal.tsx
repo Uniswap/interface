@@ -19,20 +19,20 @@ export function RemoveAccountModal({ address, onCancel, onConfirm }: RemoveAccou
   const { t } = useTranslation()
   return (
     <Modal
-      visible={!!address}
-      width={dimensions.fullWidth * 0.85}
       dimBackground={true}
-      hide={onCancel}>
+      hide={onCancel}
+      visible={!!address}
+      width={dimensions.fullWidth * 0.85}>
       <Identicon address={address || NULL_ADDRESS} size={50} />
-      <Text variant="bodyLg" textAlign="center" mt="md">
+      <Text mt="md" textAlign="center" variant="bodyLg">
         {t('Remove this account?')}
       </Text>
-      <Text variant="bodyXs" textAlign="center" mt="md">
+      <Text mt="md" textAlign="center" variant="bodyXs">
         {address}
       </Text>
       <CenterBox mt="md">
-        <PrimaryButton variant="paleOrange" label={t('Remove')} onPress={onConfirm} width={150} />
-        <TextButton onPress={onCancel} textVariant="body" mt="md">
+        <PrimaryButton label={t('Remove')} variant="paleOrange" width={150} onPress={onConfirm} />
+        <TextButton mt="md" textVariant="body" onPress={onCancel}>
           {t('Cancel')}
         </TextButton>
       </CenterBox>
