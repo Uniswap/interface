@@ -210,6 +210,13 @@ export const UNI: { [chainId: number]: Token } = {
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   ...WETH9,
+  [SupportedChainId.KINTSUGI]: new Token(
+    SupportedChainId.KINTSUGI,
+    '0xd80C550B2F686af298954f46A92cF22F64Dc5829',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
   [SupportedChainId.OPTIMISM]: new Token(
     SupportedChainId.OPTIMISM,
     '0x4200000000000000000000000000000000000006',

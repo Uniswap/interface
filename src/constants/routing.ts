@@ -116,6 +116,10 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [SupportedChainId.GOERLI]: [nativeOnChain(SupportedChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[SupportedChainId.GOERLI]],
   [SupportedChainId.KOVAN]: [nativeOnChain(SupportedChainId.KOVAN), WRAPPED_NATIVE_CURRENCY[SupportedChainId.KOVAN]],
+  [SupportedChainId.KINTSUGI]: [
+    nativeOnChain(SupportedChainId.KINTSUGI),
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.KINTSUGI],
+  ],
   [SupportedChainId.ARBITRUM_ONE]: [
     nativeOnChain(SupportedChainId.ARBITRUM_ONE),
     DAI_ARBITRUM_ONE,

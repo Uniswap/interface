@@ -21,6 +21,7 @@ export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.KINTSUGI]: `https://rpc.kintsugi.themerge.dev`, // no Infura support yet
   [SupportedChainId.OPTIMISM]: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.OPTIMISTIC_KOVAN]: `https://optimism-kovan.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ARBITRUM_ONE]: `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
@@ -134,6 +135,18 @@ export const CHAIN_INFO: ChainInfoMap = {
     addNetworkInfo: {
       nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
       rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.GOERLI],
+    },
+  },
+  [SupportedChainId.KINTSUGI]: {
+    networkType: NetworkType.L1,
+    docs: 'https://docs.uniswap.org/',
+    explorer: 'https://explorer.kintsugi.themerge.dev ',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'Kintsugi',
+    logoUrl: ethereumLogoUrl,
+    addNetworkInfo: {
+      nativeCurrency: { name: 'Kintsugi Ether', symbol: 'kintETH', decimals: 18 },
+      rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.KINTSUGI],
     },
   },
   [SupportedChainId.OPTIMISM]: {

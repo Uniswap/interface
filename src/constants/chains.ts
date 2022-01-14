@@ -7,6 +7,7 @@ export enum SupportedChainId {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
+  KINTSUGI = 1337702,
 
   ARBITRUM_ONE = 42161,
   ARBITRUM_RINKEBY = 421611,
@@ -36,6 +37,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
+  SupportedChainId.KINTSUGI,
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
 ] as const
