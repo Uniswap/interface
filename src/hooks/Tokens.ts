@@ -5,10 +5,10 @@ import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useMemo } from 'react'
 
-import { nativeOnChain } from '../constants/tokens'
 import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { useUserAddedTokens } from '../state/user/hooks'
@@ -224,18 +224,6 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
     tokenName.result,
     tokenNameBytes32.result,
   ])
-}
-
-export function useNativeCurrency(): Currency {
-  const { chainId } = useActiveWeb3React()
-  return useMemo(
-    () =>
-      chainId
-        ? nativeOnChain(chainId)
-        : // display mainnet when not connected
-          nativeOnChain(SupportedChainId.MAINNET),
-    [chainId]
-  )
 }
 
 export function useCurrency(currencyId: string | null | undefined): Currency | null | undefined {

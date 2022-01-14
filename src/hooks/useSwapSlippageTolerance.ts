@@ -4,11 +4,11 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 import { useUserSlippageToleranceWithDefault } from '../state/user/hooks'
-import { useNativeCurrency } from './Tokens'
 import useGasPrice from './useGasPrice'
 import useUSDCPrice, { useUSDCValue } from './useUSDCPrice'
 
