@@ -73,7 +73,7 @@ export default function SurveyPopup() {
 
   // limit survey to 24 hours based on timestamp
   const timestamp = useCurrentBlockTimestamp()
-  const durationOver = timestamp ? timestamp.toNumber() < END_TIMESTAMP : false
+  const durationOver = timestamp ? timestamp.toNumber() > END_TIMESTAMP : false
 
   return (
     <>
