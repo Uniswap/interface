@@ -73,11 +73,11 @@ export default function SurveyPopup() {
 
   // limit survey to 24 hours based on timestamp
   const timestamp = useCurrentBlockTimestamp()
-  const durationOver = timestamp && timestamp.toNumber() < END_TIMESTAMP
+  const durationOver = timestamp ? timestamp.toNumber() < END_TIMESTAMP : false
 
   return (
     <>
-      {showPopup && !durationOver ? (
+      {!showPopup || durationOver ? null : (
         <Wrapper gap="10px">
           <WrappedCloseIcon
             onClick={() => {
@@ -101,7 +101,7 @@ export default function SurveyPopup() {
             Take a 10 minute survey to help us improve your experience in the Uniswap app.
           </ThemedText.Black>
         </Wrapper>
-      ) : null}
+      )}
     </>
   )
 }
