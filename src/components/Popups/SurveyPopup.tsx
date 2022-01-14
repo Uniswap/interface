@@ -1,5 +1,6 @@
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useEffect } from 'react'
 import { MessageCircle, X } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -47,6 +48,8 @@ const WrappedCloseIcon = styled(X)`
   }
 `
 
+const END_TIMESTAMP = 1642215971
+
 export default function SurveyPopup() {
   const theme = useTheme()
   const [showPopup, setShowSurveyPopup] = useShowSurveyPopup()
@@ -66,11 +69,15 @@ export default function SurveyPopup() {
         setShowSurveyPopup(true)
       }
     }
-  })
+  }, [setShowSurveyPopup, showPopup])
+
+  // limit survey to 24 hours based on timestamp
+  const timestamp = useCurrentBlockTimestamp()
+  const durationOver = timestamp && timestamp.toNumber() < END_TIMESTAMP
 
   return (
     <>
-      {showPopup ? (
+      {showPopup && !durationOver ? (
         <Wrapper gap="10px">
           <WrappedCloseIcon
             onClick={() => {
