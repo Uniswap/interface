@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-14 07:07\n"
+"PO-Revision-Date: 2022-01-14 08:11\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -288,7 +288,7 @@ msgstr "預け入れ可能： {0}"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
-msgstr "バランス： {0}"
+msgstr "残高： {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -1460,7 +1460,7 @@ msgstr "受取人"
 
 #: src/lib/components/Error/ErrorBoundary.tsx
 msgid "Reload the page"
-msgstr "ページをリロード"
+msgstr "ページを再読み込みする"
 
 #: src/lib/components/Error/ErrorBoundary.tsx
 msgid "Reload the page to try again"
@@ -1617,7 +1617,7 @@ msgstr "何らかの問題が発生しました"
 
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
-msgstr "何かがうまくいかなかった。"
+msgstr "問題が発生しました。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1705,15 +1705,15 @@ msgstr "Uniswap不変式 x * y = kはスワップで満たされませんでし�
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
-msgstr "アプリは、グラフのホストされたサービスからブロックチェーンデータをフェッチします。"
+msgstr "アプリはThe Graphがホストするサービスからブロックチェーンデータを取得します。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
-msgstr "アプリはオンチェーンデータをフェッチし、InfuraAPIを使用してコントラクト呼び出しを構築します。"
+msgstr "アプリはオンチェーンデータを取得し、InfuraAPIを使用してコントラクト呼び出しを構築します。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "アプリは、UniswapLabsサーバーから最適な取引ルートを取得します。"
+msgstr "アプリは、Uniswap Labsサーバーから最適な取引ルートを取得します。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
@@ -1721,11 +1721,11 @@ msgstr "アプリは、時間の経過とともに改善するために、匿名
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
-msgstr "アプリはウォレットアドレスを安全に収集し、リスクとコンプライアンスの理由からTRM LabsInc。と共有します。"
+msgstr "アプリはリスクとコンプライアンスの理由からウォレットアドレスを安全に収集し、TRM LabsInc. と共有します。"
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "The cost of sending this transaction is more than half of the value of the input amount."
-msgstr "このトランザクションを送信するコストは、入力金額の値の半分以上です。"
+msgstr "この取引を送信するコストは、入力した数量の価値の半分以上です。"
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
@@ -1793,7 +1793,7 @@ msgstr "このトークンはご利用中のトークンリストに存在しま
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
-msgstr "このトークンは、UniswapLabsアプリではサポートされていません"
+msgstr "このトークンは、Uniswap Labsアプリでは対応しておりません"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1823,7 +1823,7 @@ msgstr "買うトークン（少なくとも）"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
-msgstr "トークンはサポートされていません"
+msgstr "トークンは対応していません"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1879,7 +1879,7 @@ msgstr "取引期限"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Transaction pending"
-msgstr "保留中のトランザクション"
+msgstr "保留中の取引"
 
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1888,7 +1888,7 @@ msgstr "取引が拒否されました"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Transaction submitted"
-msgstr "提出された取引"
+msgstr "取引は送信されました"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -1900,7 +1900,7 @@ msgstr "もう一度試す"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "スリッページの許容範囲を広げてみてください。<0/>注：転送およびリベーストークンの料金は、UniswapV3と互換性がありません。"
+msgstr "スリッページの許容範囲を広げてみてください。<0/>注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2012,7 +2012,7 @@ msgstr "アンラップ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr "<0/> から {0}アンラップします"
+msgstr "<0/> から {0} にアンラップ"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2131,7 +2131,7 @@ msgstr "投票は {0} 頃に終了します"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting starts approximately {0}"
-msgstr "投票は約 {0}"
+msgstr "投票はおよそ {0} から始まります"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2188,7 +2188,7 @@ msgstr "ラップ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr "<0/> から {0}ラップ"
+msgstr "<0/> から {0} にラップ"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2237,7 +2237,7 @@ msgstr "ネットワーク接続が失われた可能性があります。"
 
 #: src/components/swap/SwapWarningDropdown.tsx
 msgid "You might consider waiting until the network fees go down to complete this transaction."
-msgstr "このトランザクションを完了するには、ネットワーク料金が下がるまで待つことを検討してください。"
+msgstr "この取引を完了するには、ネットワーク料金が下がるまで待つことを検討してください。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2266,7 +2266,7 @@ msgstr "受け取る数量"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "あなたは、少なくとも受信します {0} {1} またはトランザクションが戻ります。"
+msgstr "少なくとも {0} {1} を受け取るか、取引は元に戻ります。"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will send at most {0} {1} or the transaction will revert."
@@ -2366,7 +2366,7 @@ msgstr "未請求のUNI"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
-msgstr "すべり後"
+msgstr "スリッページ後"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2378,7 +2378,7 @@ msgstr "賛成 {0}"
 
 #: src/components/Header/Polling.tsx
 msgid "gwei"
-msgstr "gwei"
+msgstr "Gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
