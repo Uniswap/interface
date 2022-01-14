@@ -59,7 +59,7 @@ if (danger.github.pr.additions + danger.github.pr.deletions > bigPRThreshold) {
 
 // No PR is too small to warrant a paragraph or two of summary
 if (danger.github.pr.body.length === 0) {
-  warn('There is no PR description. Gett faster and better reviews by explaning what changed.')
+  warn('There is no PR description. Get faster and better reviews by explaining what changed.')
 }
 
 // Congratulate when code was deleted
