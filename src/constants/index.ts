@@ -991,6 +991,16 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
   [ChainId.AVAXMAINNET]: [
     {
       token0: {
+        id: '0x39fC9e94Caeacb435842FADeDeCB783589F50f5f',
+        symbol: 'KNC'
+      },
+      token1: {
+        id: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+        symbol: 'AVAX'
+      }
+    },
+    {
+      token0: {
         id: '0x130966628846bfd36ff31a822705796e8cb8c18d',
         symbol: 'MIM'
       },
@@ -1007,6 +1017,16 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
       token1: {
         id: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
         symbol: 'AVAX'
+      }
+    },
+    {
+      token0: {
+        id: '0x130966628846BFd36ff31a822705796e8cb8C18D',
+        symbol: 'MIM'
+      },
+      token1: {
+        id: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
+        symbol: 'USDC'
       }
     }
   ],
