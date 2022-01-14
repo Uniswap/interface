@@ -12,6 +12,7 @@ import {
   SerializedToken,
   updateHideClosedPositions,
   updateMatchesDarkMode,
+  updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -60,6 +61,9 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+
+  // undefined means has not gone through A/B split yet
+  showSurveyPopup: boolean | undefined
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -80,6 +84,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
+  showSurveyPopup: undefined,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -146,6 +151,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
+    })
+    .addCase(updateShowSurveyPopup, (state, action) => {
+      state.showSurveyPopup = action.payload.showSurveyPopup
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
       if (!state.tokens) {
