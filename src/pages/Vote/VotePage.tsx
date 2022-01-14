@@ -28,10 +28,6 @@ import {
 } from '../../constants/governance'
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
-<<<<<<< HEAD
-import { useActiveWeb3React } from '../../hooks/web3'
-=======
->>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import {

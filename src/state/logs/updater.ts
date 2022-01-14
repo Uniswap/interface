@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-import useBlockNumber from 'lib/hooks/useBlockNumber'
-import { useEffect, useMemo } from 'react'
-
-import { useActiveWeb3React } from '../../hooks/web3'
-=======
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 
->>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { fetchedLogs, fetchedLogsError, fetchingLogs } from './slice'
 import { EventFilter, keyToFilter } from './utils'

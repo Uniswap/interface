@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-import { useEffect } from 'react'
-import { api, CHAIN_TAG } from 'state/data/enhanced'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-=======
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
@@ -12,7 +7,6 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 
 import { updateChainId } from './reducer'
->>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
@@ -28,9 +22,6 @@ function useQueryCacheInvalidator() {
 }
 
 export default function Updater(): null {
-<<<<<<< HEAD
-  useQueryCacheInvalidator()
-=======
   const { chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const windowVisible = useIsWindowVisible()
@@ -52,6 +43,5 @@ export default function Updater(): null {
     dispatch(updateChainId({ chainId }))
   }, [dispatch, debouncedChainId])
 
->>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
   return null
 }
