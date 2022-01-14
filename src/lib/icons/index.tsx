@@ -1,8 +1,4 @@
 /* eslint-disable no-restricted-imports */
-import CheckIcon from 'lib/assets/svg/Check'
-import ExpandoIcon from 'lib/assets/svg/Expando'
-import LogoIcon from 'lib/assets/svg/Logo'
-import SpinnerIcon from 'lib/assets/svg/Spinner'
 import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
 import { Icon as FeatherIcon } from 'react-feather'
@@ -21,6 +17,11 @@ import {
   Trash2 as Trash2Icon,
   X as XIcon,
 } from 'react-feather'
+
+import { ReactComponent as CheckIcon } from '../assets/svg/check.svg'
+import { ReactComponent as ExpandoIcon } from '../assets/svg/expando.svg'
+import { ReactComponent as LogoIcon } from '../assets/svg/logo.svg'
+import { ReactComponent as SpinnerIcon } from '../assets/svg/spinner.svg'
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 

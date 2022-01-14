@@ -20,6 +20,7 @@ import {
   SerializedPair,
   SerializedToken,
   updateHideClosedPositions,
+  updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -102,6 +103,18 @@ export function useExpertModeManager(): [boolean, () => void] {
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
+}
+
+export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const showSurveyPopup = useAppSelector((state) => state.user.showSurveyPopup)
+  const toggleShowSurveyPopup = useCallback(
+    (showPopup: boolean) => {
+      dispatch(updateShowSurveyPopup({ showSurveyPopup: showPopup }))
+    },
+    [dispatch]
+  )
+  return [showSurveyPopup, toggleShowSurveyPopup]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {

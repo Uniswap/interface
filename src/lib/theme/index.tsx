@@ -1,4 +1,4 @@
-import '../assets/fonts/index.css' // microbundle requires relative css paths
+import '../assets/fonts.scss'
 
 import { mix, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'

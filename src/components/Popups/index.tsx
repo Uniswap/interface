@@ -4,10 +4,11 @@ import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 
 import { useActivePopups } from '../../state/application/hooks'
-import { useURLWarningVisible } from '../../state/user/hooks'
+import { useShowSurveyPopup, useURLWarningVisible } from '../../state/user/hooks'
 import { AutoColumn } from '../Column'
 import ClaimPopup from './ClaimPopup'
 import PopupItem from './PopupItem'
+import SurveyPopup from './SurveyPopup'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;
@@ -59,6 +60,9 @@ export default function Popups() {
   // get all popups
   const activePopups = useActivePopups()
 
+  // show survey popup if user has not closed
+  const [showSurveyPopup] = useShowSurveyPopup()
+
   const urlWarningActive = useURLWarningVisible()
 
   // need extra padding if network is not L1 Ethereum
@@ -69,12 +73,14 @@ export default function Popups() {
     <>
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet}>
         <ClaimPopup />
+        <SurveyPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
-      <MobilePopupWrapper height={activePopups?.length > 0 ? 'fit-content' : 0}>
+      <MobilePopupWrapper height={activePopups?.length > 0 || showSurveyPopup ? 'fit-content' : 0}>
         <MobilePopupInner>
+          <SurveyPopup />
           {activePopups // reverse so new items up front
             .slice(0)
             .reverse()

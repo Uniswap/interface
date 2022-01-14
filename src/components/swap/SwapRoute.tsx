@@ -7,6 +7,7 @@ import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { memo, useState } from 'react'
@@ -16,7 +17,6 @@ import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { Separator, ThemedText } from 'theme'
 
-import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from './GasEstimateBadge'
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Wrapper = styled(AutoColumn)<{ darkMode?: boolean; fixedOpen?: boolean }>`

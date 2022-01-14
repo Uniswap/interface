@@ -18,6 +18,7 @@ export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>(
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
+export const updateShowSurveyPopup = createAction<{ showSurveyPopup: boolean }>('user/updateShowSurveyPopup')
 export const updateUserClientSideRouter = createAction<{ userClientSideRouter: boolean }>(
   'user/updateUserClientSideRouter'
 )

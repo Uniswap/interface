@@ -31,6 +31,8 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) =>
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
+  // TODO(zzmp): Disable already selected tokens (passed as props?)
+
   return (
     <>
       <Header title={<Trans>Select a token</Trans>} />
