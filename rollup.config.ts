@@ -45,7 +45,7 @@ const library = {
     url(), // imports files (including svgs) as data URIs
     svgr({ exportType: 'named', svgo: false }), // imports svgs as React components
     sass(), // imports sass styles
-    typescript({ tsconfig: './tsconfig.lib.json' }),
+    typescript({ tsconfig: './tsconfig.lib.json', useTsconfigDeclarationDir: true }),
   ],
 }
 
