@@ -1,14 +1,15 @@
+import { arrayify } from '@ethersproject/bytes'
+import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { TokenInfo } from '@uniswap/token-lists'
-import { arrayify, parseBytes32String } from 'ethers/lib/utils'
-import { useNativeCurrency } from 'hooks/Tokens'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
-import { isAddress } from 'utils'
 
-import useActiveWeb3React from './useActiveWeb3React'
-import useTokenList from './useTokenList'
+import { isAddress } from '../../utils'
+import { useTokenMap } from './useTokenList'
+import { TokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
@@ -22,25 +23,19 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
     : defaultValue
 }
 
-// undefined if invalid or does not exist
-// null if loading or null was passed
-// otherwise returns the token
-export function useToken(tokenAddress?: string | null): Token | undefined | null {
+/**
+ * Returns a Token from the tokenAddress.
+ * Returns null if token is loading or null was passed.
+ * Returns undefined if tokenAddress is invalid or token does not exist.
+ */
+export function useTokenFromMap(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
   const { chainId } = useActiveWeb3React()
-  const allTokens = useTokenList()
 
   const address = isAddress(tokenAddress)
 
   const tokenContract = useTokenContract(address ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
-  const tokenInfo: TokenInfo | undefined = useMemo(() => {
-    return address ? allTokens[address].token.tokenInfo : undefined
-  }, [address, allTokens])
-  const token = useMemo(() => {
-    return tokenInfo
-      ? new Token(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)
-      : undefined
-  }, [tokenInfo])
+  const token: Token | undefined = address ? tokens[address] : undefined
 
   const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
   const tokenNameBytes32 = useSingleCallResult(
@@ -84,10 +79,25 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
   ])
 }
 
-export function useCurrency(currencyId: string | null | undefined): Currency | null | undefined {
+/**
+ * Returns a Token from the tokenAddress.
+ * Returns null if token is loading or null was passed.
+ * Returns undefined if tokenAddress is invalid or token does not exist.
+ */
+export function useToken(tokenAddress?: string | null): Token | null | undefined {
+  const tokens = useTokenMap()
+  return useTokenFromMap(tokens, tokenAddress)
+}
+
+/**
+ * Returns a Currency from the currencyId.
+ * Returns null if currency is loading or null was passed.
+ * Returns undefined if currencyId is invalid or token does not exist.
+ */
+export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null): Currency | null | undefined {
   const nativeCurrency = useNativeCurrency()
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
-  const token = useToken(isNative ? undefined : currencyId)
+  const token = useTokenFromMap(tokens, isNative ? undefined : currencyId)
 
   if (currencyId === null || currencyId === undefined) return currencyId
 
@@ -96,4 +106,14 @@ export function useCurrency(currencyId: string | null | undefined): Currency | n
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
 
   return isNative ? nativeCurrency : token
+}
+
+/**
+ * Returns a Currency from the currencyId.
+ * Returns null if currency is loading or null was passed.
+ * Returns undefined if currencyId is invalid or token does not exist.
+ */
+export default function useCurrency(currencyId?: string | null): Currency | null | undefined {
+  const tokens = useTokenMap()
+  return useCurrencyFromMap(tokens, currencyId)
 }

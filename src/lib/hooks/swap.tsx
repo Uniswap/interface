@@ -17,9 +17,9 @@ import { useCurrencyBalances } from 'state/wallet/hooks'
 import useENS from '../../hooks/useENS'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import { isAddress } from '../../utils'
-import { useCurrency } from './tokens'
 import { useBestTrade } from './trade'
 import useActiveWeb3React from './useActiveWeb3React'
+import useCurrency from './useCurrency'
 
 export function useSwapState(): SwapState {
   return useAtomValue(stateAtom)
