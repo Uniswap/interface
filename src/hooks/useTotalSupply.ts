@@ -1,9 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-<<<<<<< HEAD
-import { BigNumber } from 'ethers'
-=======
->>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { useSingleCallResult } from 'lib/hooks/multicall'
 
 import { useTokenContract } from './useContract'

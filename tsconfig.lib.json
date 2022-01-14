@@ -10,7 +10,11 @@
       "hooks/*": ["../hooks/*"],
       "state/*": ["../state/*"],
       "types/*": ["../types/*"]
+<<<<<<< HEAD
     }
+=======
+    },
+>>>>>>> dda30444410853fd4af8615ae92c116874673fa9
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],
   "include": ["src/lib/**/*"]

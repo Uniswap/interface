@@ -1,8 +1,8 @@
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import multicall from 'lib/state/multicall'
 
 import { useInterfaceMulticall } from '../../hooks/useContract'
-import { useActiveWeb3React } from '../../hooks/web3'
 
 // Create Updater wrappers that pull needed info from store
 export default function Updater() {

@@ -6,13 +6,15 @@ import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
-import { createTokenFilterFunction, tokenComparator, useSortedTokensByQuery } from 'lib/components/TokenSelect/utils'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
+import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Edit } from 'react-feather'
 import ReactGA from 'react-ga'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import { useAllTokenBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
 import {
@@ -22,11 +24,6 @@ import {
   useSearchInactiveTokenLists,
   useToken,
 } from '../../hooks/Tokens'
-<<<<<<< HEAD
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useAllTokenBalances } from '../../state/wallet/hooks'
-=======
->>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -107,17 +104,16 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
-  const filteredTokens: Token[] = useMemo(
-    () => Object.values(allTokens).filter(createTokenFilterFunction(debouncedQuery)),
-    [allTokens, debouncedQuery]
-  )
+  const filteredTokens: Token[] = useMemo(() => {
+    return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
+  }, [allTokens, debouncedQuery])
 
   const balances = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(() => {
     return filteredTokens.sort(tokenComparator.bind(null, balances))
   }, [balances, filteredTokens])
 
-  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
+  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency()
 

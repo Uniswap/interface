@@ -5,10 +5,7 @@ import 'components/analytics'
 
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { BlockUpdater } from 'lib/hooks/useBlockNumber'
-<<<<<<< HEAD
-=======
 import { MulticallUpdater } from 'lib/state/multicall'
->>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'

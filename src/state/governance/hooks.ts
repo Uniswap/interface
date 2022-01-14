@@ -18,10 +18,6 @@ import {
   useLatestGovernanceContract,
   useUniContract,
 } from 'hooks/useContract'
-<<<<<<< HEAD
-import { useActiveWeb3React } from 'hooks/web3'
-=======
->>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'

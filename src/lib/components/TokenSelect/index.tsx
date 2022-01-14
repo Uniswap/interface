@@ -50,7 +50,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) =>
         {Boolean(baseTokens.length) && (
           <>
             <Row pad={0.75} gap={0.25} justify="flex-start" flex>
-              {baseTokens.map((token) => (
+              {baseTokens.map((token: Currency) => (
                 <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
               ))}
             </Row>

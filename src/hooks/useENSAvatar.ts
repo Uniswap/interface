@@ -6,7 +6,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
 import { namehash } from '@ethersproject/hash'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+<<<<<<< HEAD
 >>>>>>> e52c73526b6a11445570f0ba8615a65dd7a6d840
+=======
+>>>>>>> dda30444410853fd4af8615ae92c116874673fa9
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
