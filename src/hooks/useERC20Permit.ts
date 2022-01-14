@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Trade } from '@genesisprotocol/router-sdk'
+import { Trade as V2Trade } from '@genesisprotocol/sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'

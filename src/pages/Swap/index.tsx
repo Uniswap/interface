@@ -1,7 +1,7 @@
 import { Trade } from '@genesisprotocol/router-sdk'
+import { Trade as V2Trade } from '@genesisprotocol/sdk'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
@@ -370,6 +370,22 @@ export default function Swap({ history }: RouteComponentProps) {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+
+  useEffect(() => {
+    // console.log(
+    //   'NOT VALID: ',
+    //   !isValid,
+    //   'ROUTE SYNCING: ',
+    //   routeIsSyncing,
+    //   'ROUTE LOADING: ',
+    //   routeIsLoading,
+    //   'TOO HIGH: ',
+    //   priceImpactTooHigh,
+    //   'CALLBACK ERROR: ',
+    //   !!swapCallbackError,
+    //   swapCallbackError
+    // )
+  }, [isValid, routeIsSyncing, routeIsLoading, priceImpactTooHigh, swapCallbackError])
 
   return (
     <>

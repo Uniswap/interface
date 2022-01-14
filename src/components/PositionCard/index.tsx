@@ -313,17 +313,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   padding="8px"
                   $borderRadius="8px"
                   as={Link}
-                  to={`/migrate/v2/${pair.liquidityToken.address}`}
-                  width="32%"
-                >
-                  <Trans>Migrate</Trans>
-                </ButtonPrimary>
-                <ButtonPrimary
-                  padding="8px"
-                  $borderRadius="8px"
-                  as={Link}
                   to={`/add/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
-                  width="32%"
+                  width="48%"
                 >
                   <Trans>Add</Trans>
                 </ButtonPrimary>
@@ -331,7 +322,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   padding="8px"
                   $borderRadius="8px"
                   as={Link}
-                  width="32%"
+                  width="48%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
                   <Trans>Remove</Trans>

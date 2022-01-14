@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { SwapRouter, Trade } from '@genesisprotocol/router-sdk'
+import { Router as V2SwapRouter, Trade as V2Trade } from '@genesisprotocol/sdk'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode, useMemo } from 'react'
 
@@ -302,6 +302,7 @@ export function useSwapCallback(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   return useMemo(() => {
+    // console.log(trade, library, account, chainId)
     if (!trade || !library || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: <Trans>Missing dependencies</Trans> }
     }
