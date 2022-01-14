@@ -13,7 +13,7 @@ import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailRowProps {
   trade: Trade | undefined | null
-  label: string
+  label: string | null
 }
 
 export function SwapDetailRow(props: SwapDetailRowProps) {

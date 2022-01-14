@@ -1,4 +1,4 @@
-import { danger, fail, markdown, message, warn } from 'danger'
+import { danger, markdown, message, warn } from 'danger'
 
 // Other ideas:
 //  - verify TODO have work items linked

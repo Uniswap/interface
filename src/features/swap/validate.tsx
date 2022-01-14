@@ -1,9 +1,11 @@
 import { TFunction } from 'i18next'
+import { UseQueryResult } from 'react-query'
 import { ChainId } from 'src/constants/chains'
-import { useDerivedSwapInfo } from 'src/features/swap/hooks'
+import { DerivedSwapInfo } from 'src/features/swap/hooks'
 import { CurrencyField } from 'src/features/swap/swapFormSlice'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
-export enum FieldError {
+enum FieldError {
   INSUFFICIENT_FUNDS,
   MISSING_INPUT_AMOUNT,
   MISSING_INPUT_CURRENCY,
@@ -12,8 +14,41 @@ export enum FieldError {
   UNSUPPORTED_NETWORK,
 }
 
-export function stringifySwapInfoError(error: FieldError | null, t: TFunction) {
-  if (error === null) return ''
+/** Validates the entire DeriveSwapInfo payload for errors  */
+export function getHumanReadableSwapInputStatus(
+  activeAccount: Account | null,
+  derivedSwapInfo: DerivedSwapInfo,
+  t: TFunction
+) {
+  // chain function calls for early exits
+  return (
+    getHumanReadableInputError(validateSwapInfo(derivedSwapInfo), t) ??
+    getHumanReadbleContextError(activeAccount, t) ??
+    getHumanReadableQuoteStatus(derivedSwapInfo.trade.status, t)
+  )
+}
+
+/** Errors specific to the current in which the swap is executing */
+function getHumanReadbleContextError(activeAccount: Account | null, t: TFunction) {
+  if (activeAccount && activeAccount.type === AccountType.readonly) {
+    return t('Cannot swap on watched account')
+  }
+  return null
+}
+
+function getHumanReadableQuoteStatus(status: UseQueryResult['status'], t: TFunction) {
+  switch (status) {
+    case 'error':
+      return t('Failed to fetch a quote')
+    case 'loading':
+      return t('Fetching best price...')
+  }
+
+  return null
+}
+
+function getHumanReadableInputError(error: FieldError | null, t: TFunction) {
+  if (error === null) return null
 
   switch (error) {
     case FieldError.MISSING_INPUT_AMOUNT:
@@ -28,14 +63,10 @@ export function stringifySwapInfoError(error: FieldError | null, t: TFunction) {
       return t('Insufficient funds')
     case FieldError.UNSUPPORTED_NETWORK:
       return t('Switch to Rinkeby')
-    default:
-      return t('Something went wrong')
   }
 }
 
-export function validateSwapInfo(
-  swapInfo: ReturnType<typeof useDerivedSwapInfo>
-): FieldError | null {
+function validateSwapInfo(swapInfo: DerivedSwapInfo) {
   const { currencies, currencyAmounts, currencyBalances, exactCurrencyField } = swapInfo
 
   // Note. order matters here
@@ -57,7 +88,8 @@ export function validateSwapInfo(
   }
 
   const exactCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
-  if (exactCurrencyAmount && currencyBalances[CurrencyField.INPUT]?.lessThan(exactCurrencyAmount)) {
+  const balance = currencyBalances[CurrencyField.INPUT]
+  if (!balance || (exactCurrencyAmount && balance.lessThan(exactCurrencyAmount))) {
     return FieldError.INSUFFICIENT_FUNDS
   }
 
@@ -65,14 +97,6 @@ export function validateSwapInfo(
   if (currencies[exactCurrencyField]?.chainId !== ChainId.RINKEBY) {
     return FieldError.UNSUPPORTED_NETWORK
   }
-
-  // price impact
-  // ...
-  // TODO <InputError type={SwapInputErrorType={insufficient_funds, etc.}}
-  // Interface leverages this to set the button text // act as a CTA
-  // no parsed amount yet -> enter an amount
-  // no currencies -> select a token
-  // TODO: insufficient fund is input balance < max input based on quote
 
   return null
 }

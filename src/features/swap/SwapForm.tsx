@@ -1,112 +1,52 @@
+import { StackActions } from '@react-navigation/native'
 import { useTheme } from '@shopify/restyle'
-import {
-  Currency,
-  CurrencyAmount,
-  NativeCurrency,
-  Percent,
-  Token,
-  TradeType,
-} from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Keyboard, StyleSheet } from 'react-native'
-import { FadeIn } from 'react-native-reanimated'
 import { AnyAction } from 'redux'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
-import { AnimatedBox, Box } from 'src/components/layout/Box'
-import { Flex } from 'src/components/layout/Flex'
-import { Text } from 'src/components/Text'
-import { FADE_DURATION } from 'src/constants/animations'
-import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
+import { Box } from 'src/components/layout/Box'
 import {
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapCallback,
   useWrapCallback,
 } from 'src/features/swap/hooks'
+import { SwapDetails } from 'src/features/swap/SwapDetails'
 import { SwapDetailRow } from 'src/features/swap/SwapDetailsRow'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
-import { Trade } from 'src/features/swap/useTrade'
 import { isWrapAction } from 'src/features/swap/utils'
-import { stringifySwapInfoError, validateSwapInfo } from 'src/features/swap/validate'
+import { getHumanReadableSwapInputStatus } from 'src/features/swap/validate'
 import { WrapType } from 'src/features/swap/wrapSaga'
-import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
-import { formatCurrencyAmount, formatPrice } from 'src/utils/format'
-import { SagaStatus } from 'src/utils/saga'
 
 interface SwapFormProps {
   state: SwapFormState
   dispatch: React.Dispatch<AnyAction>
 }
 
-interface SwapDetailsProps {
-  currencyIn: CurrencyAmount<NativeCurrency | Token> | null | undefined
-  currencyOut: CurrencyAmount<NativeCurrency | Token> | null | undefined
-  trade: Trade<Currency, Currency, TradeType>
-}
-
-function SwapDetails({ currencyOut, trade }: SwapDetailsProps) {
-  const { t } = useTranslation()
-
-  const minReceived = trade.worstExecutionPrice(new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100))
-  const gasFeeUSD = parseFloat(trade.quote!.gasUseEstimateUSD).toFixed(2)
-
-  return (
-    <AnimatedBox entering={FadeIn.duration(FADE_DURATION)}>
-      <Flex gap="xs" borderRadius="md" borderColor="gray100" borderWidth={1} p="md" my="sm">
-        <Text variant="h6" color="black">
-          {t('Transaction Details')}
-        </Text>
-        <Box my="xs" height={1} bg="gray100" />
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="h6" color="gray600">
-            {t('Expected Output')}
-          </Text>
-          <Text variant="h6" color="gray600">
-            {`${formatCurrencyAmount(currencyOut)} ${currencyOut?.currency.symbol}`}
-          </Text>
-        </Box>
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="h6" color="gray600">
-            {t('Price Impact')}
-          </Text>
-          <Text variant="h6" color="gray600">
-            {trade.priceImpact ? `${trade.priceImpact.multiply(-1).toFixed(2)}%` : '-'}
-          </Text>
-        </Box>
-        <Box my="xs" height={1} bg="gray100" />
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="h6" color="gray600">
-            {`${t('Min. received after slippage')} (${DEFAULT_SLIPPAGE_TOLERANCE}%)`}
-          </Text>
-          <Text variant="h6" color="gray600">
-            {`${formatPrice(minReceived)} ${currencyOut?.currency.symbol}`}
-          </Text>
-        </Box>
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="h6" color="gray600">
-            {t('Network Fee')}
-          </Text>
-          <Text variant="h6" color="gray600">
-            {`~$${gasFeeUSD}`}
-          </Text>
-        </Box>
-      </Flex>
-    </AnimatedBox>
-  )
-}
-
+// TODO:
+// -check erc20 permits
+// -handle price impact too high
 // TODO: token warnings
 export function SwapForm(props: SwapFormProps) {
   const { state, dispatch } = props
 
   const activeAccount = useActiveAccount()
+  const navigation = useAppStackNavigation()
+  const theme = useTheme<Theme>()
+  const { t } = useTranslation()
+
+  const onSubmit = useCallback(() => {
+    navigation.dispatch(StackActions.popToTop())
+  }, [navigation])
 
   const derivedSwapInfo = useDerivedSwapInfo(state)
 
@@ -117,52 +57,14 @@ export function SwapForm(props: SwapFormProps) {
     trade: { trade: trade, status: quoteStatus },
     wrapType,
   } = derivedSwapInfo
-  const swapInfoError = validateSwapInfo(derivedSwapInfo)
 
   const { onSelectCurrency, onSwitchCurrencies, onEnterExactAmount } =
     useSwapActionHandlers(dispatch)
-  const { swapCallback, swapState } = useSwapCallback(trade)
-  const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType)
+  const { swapCallback } = useSwapCallback(trade, onSubmit)
+  const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onSubmit)
 
-  // TODO:
-  // -check erc20 permits
-  // -handle max amount input/show max amount button
-  // -handle price impact too high
-
-  const theme = useTheme<Theme>()
-
-  const { t } = useTranslation()
-
-  // TODO: clear redux state on unmount?
-  // useEffect(() => {
-  //   return () => {
-  //     dispatched(reset())
-  //   }
-  // }, [])
-
-  // TODO: move to a helper function
-  let errorLabel: string = ''
-  if (swapInfoError !== null) {
-    errorLabel = stringifySwapInfoError(swapInfoError, t)
-  } else if (quoteStatus === 'loading') {
-    errorLabel = t('Fetching best price...')
-  } else if (quoteStatus === 'error') {
-    errorLabel = t('Failed to fetch a quote')
-  } else if (activeAccount && activeAccount.type === AccountType.readonly) {
-    // TODO: move check somewhere else?
-    errorLabel = t('Cannot swap on watched account')
-  } else if (swapState?.status === SagaStatus.Failure) {
-    errorLabel = t('Swap unsuccessful')
-  }
-
-  let swapStatusLabel = ''
-  if (swapState?.status === SagaStatus.Success) {
-    swapStatusLabel = t('Swap successful')
-  } else if (swapState?.status === SagaStatus.Started) {
-    swapStatusLabel = t('Swapping...')
-  }
-
-  const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || errorLabel)
+  const swapInputStatusMessage = getHumanReadableSwapInputStatus(activeAccount, derivedSwapInfo, t)
+  const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
 
   return (
     <Button flex={1} onPress={() => Keyboard.dismiss()}>
@@ -210,7 +112,7 @@ export function SwapForm(props: SwapFormProps) {
           />
           {!isWrapAction(wrapType) && (
             <Box mt="md">
-              <SwapDetailRow trade={trade} label={errorLabel ?? swapStatusLabel} />
+              <SwapDetailRow trade={trade} label={swapInputStatusMessage} />
             </Box>
           )}
         </Box>

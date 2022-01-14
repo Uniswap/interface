@@ -1,19 +1,17 @@
-import { StackActions } from '@react-navigation/native'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { useAppStackNavigation } from 'src/app/navigation/types'
+import { useAppDispatch } from 'src/app/hooks'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
 import { CurrencyField, swapFormActions, SwapFormState } from 'src/features/swap/swapFormSlice'
-import { swapActions } from 'src/features/swap/swapSaga'
+import { swapActions, swapSagaName } from 'src/features/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/swap/useTrade'
 import { getWrapType, isWrapAction } from 'src/features/swap/utils'
-import { tokenWrapActions, WrapType } from 'src/features/swap/wrapSaga'
+import { tokenWrapActions, tokenWrapSagaName, WrapType } from 'src/features/swap/wrapSaga'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   ExactInputSwapTransactionInfo,
@@ -25,11 +23,30 @@ import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaState, SagaStatus } from 'src/utils/saga'
 import { tryParseAmount } from 'src/utils/tryParseAmount'
+import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 
+export interface DerivedSwapInfo {
+  currencies: {
+    [CurrencyField.INPUT]: Currency | null | undefined
+    [CurrencyField.OUTPUT]: Currency | null | undefined
+  }
+  currencyAmounts: {
+    [CurrencyField.INPUT]: CurrencyAmount<Currency> | null | undefined
+    [CurrencyField.OUTPUT]: CurrencyAmount<Currency> | null | undefined
+  }
+  currencyBalances: {
+    [CurrencyField.INPUT]: CurrencyAmount<Currency> | null | undefined
+    [CurrencyField.OUTPUT]: CurrencyAmount<Currency> | null | undefined
+  }
+  exactCurrencyField: CurrencyField
+  trade: ReturnType<typeof useTrade>
+  wrapType: WrapType
+}
+
 /** Returns information derived from the current swap state */
-export function useDerivedSwapInfo(state: SwapFormState) {
+export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
   const {
     exactCurrencyField,
     exactAmount,
@@ -72,11 +89,7 @@ export function useDerivedSwapInfo(state: SwapFormState) {
   const otherCurrency = isExactIn ? currencyOut : currencyIn
 
   const skipQuote = isWrapAction(wrapType)
-  const {
-    status,
-    error: quoteError,
-    trade,
-  } = useTrade({
+  const { status, error, trade } = useTrade({
     amountSpecified: skipQuote ? null : amountSpecified,
     otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
@@ -103,7 +116,7 @@ export function useDerivedSwapInfo(state: SwapFormState) {
     },
     exactCurrencyField,
     trade: {
-      quoteError,
+      error,
       status,
       trade,
     },
@@ -134,15 +147,14 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
 
 /** Callback to submit trades and track progress */
 export function useSwapCallback(
-  trade?: Trade | undefined | null,
-  onSuccess?: () => void
+  trade: Trade | undefined | null,
+  onSubmit: () => void
 ): {
   swapState: SagaState | null
   swapCallback: () => void
 } {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-  const navigation = useAppStackNavigation()
 
   const { amount, methodParameters } = trade?.quote || {}
   const chainId = trade?.inputAmount.currency.chainId
@@ -153,15 +165,13 @@ export function useSwapCallback(
     trade?.inputAmount.currency.isToken ? trade?.inputAmount.currency.wrapped.address : undefined
   )
 
-  // TODO: use useSagaStatus?
-  const swapState = useAppSelector((state) => state.saga.swap)
+  const swapState = useSagaStatus(swapSagaName, onSubmit)
 
   useEffect(() => {
-    if (swapState.status === SagaStatus.Success || swapState.status === SagaStatus.Failure) {
-      onSuccess?.()
-      appDispatch(swapActions.reset())
+    if (swapState.status === SagaStatus.Started) {
+      onSubmit()
     }
-  }, [appDispatch, onSuccess, swapState])
+  }, [onSubmit, swapState])
 
   return useMemo(() => {
     if (!account || !amount || !chainId || !methodParameters) {
@@ -190,30 +200,27 @@ export function useSwapCallback(
             txAmount: amount,
           })
         )
-        navigation.dispatch(StackActions.popToTop())
       },
       swapState,
     }
-  }, [
-    account,
-    amount,
-    chainId,
-    methodParameters,
-    tokenContract,
-    swapState,
-    appDispatch,
-    trade,
-    navigation,
-  ])
+  }, [account, amount, chainId, methodParameters, tokenContract, swapState, appDispatch, trade])
 }
 
 export function useWrapCallback(
   inputCurrencyAmount: CurrencyAmount<Currency> | null | undefined,
-  wrapType: WrapType
+  wrapType: WrapType,
+  onSuccess: () => void
 ) {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-  const navigation = useAppStackNavigation()
+
+  const wrapState = useSagaStatus(tokenWrapSagaName, onSuccess)
+
+  useEffect(() => {
+    if (wrapState.status === SagaStatus.Started) {
+      onSuccess()
+    }
+  })
 
   return useMemo(() => {
     if (!isWrapAction(wrapType)) {
@@ -242,10 +249,9 @@ export function useWrapCallback(
             inputCurrencyAmount,
           })
         )
-        navigation.goBack()
       },
     }
-  }, [account, appDispatch, inputCurrencyAmount, navigation, wrapType])
+  }, [account, appDispatch, inputCurrencyAmount, wrapType])
 }
 
 function tradeToTransactionInfo(
