@@ -49,7 +49,7 @@ const WrappedCloseIcon = styled(X)`
   }
 `
 
-const END_TIMESTAMP = 1642215971 // Jan 15th
+const END_TIMESTAMP = 1642272346 // Jan 15th
 
 export default function SurveyPopup() {
   const theme = useTheme()
