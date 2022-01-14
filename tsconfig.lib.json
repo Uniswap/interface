@@ -1,15 +1,18 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "preserve",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationDir": "dist/dts",
     "baseUrl": "src/lib",
     "paths": {
       "lib/*": ["./*"],
       "abis/*": ["../abis/*"],
+      "assets/*": ["../assets/*"],
       "constants/*": ["../constants/*"],
       "hooks/*": ["../hooks/*"],
       "state/*": ["../state/*"],
-      "types/*": ["../types/*"]
+      "types/*": ["../types/*"],
     },
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],

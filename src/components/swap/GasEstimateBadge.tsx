@@ -10,7 +10,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
-import { SupportedChainId } from '../../constants/chains'
 import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 
@@ -31,8 +30,6 @@ const StyledGasIcon = styled(GasIcon)`
     stroke: ${({ theme }) => theme.text3};
   }
 `
-
-export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.POLYGON]
 
 export default function GasEstimateBadge({
   trade,

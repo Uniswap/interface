@@ -1,4 +1,4 @@
-name: Bundle Dependency Check
+name: Widgets
 on:
   push:
     branches:
@@ -8,8 +8,8 @@ on:
       - main
 
 jobs:
-  depcheck:
-    name: Bundle depcheck
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,8 +36,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Bundle
-        run: yarn bundle
-
-      - name: Depcheck
-        run: yarn bundle:depcheck
+      - name: Build
+        run: yarn widgets:build
