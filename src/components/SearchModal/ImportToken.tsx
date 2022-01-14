@@ -1,4 +1,4 @@
-import { Plural, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { ButtonPrimary } from 'components/Button'
@@ -6,11 +6,13 @@ import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { SectionBreak } from 'components/swap/styleds'
 import { useUnsupportedTokens } from 'hooks/Tokens'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from 'hooks/useTheme'
 import { AlertCircle, ArrowLeft } from 'react-feather'
 import { useAddUserToken } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { CloseIcon, ThemedText } from 'theme'
+import { CloseIcon, ExternalLink, ThemedText } from 'theme'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import BlockedToken from './BlockedToken'
 import { PaddedColumn } from './styleds'
@@ -33,6 +35,7 @@ interface ImportProps {
 export function ImportToken(props: ImportProps) {
   const { tokens, list, onBack, onDismiss, handleCurrencySelect } = props
   const theme = useTheme()
+  const { chainId } = useActiveWeb3React()
 
   const addToken = useAddUserToken()
 
@@ -47,9 +50,7 @@ export function ImportToken(props: ImportProps) {
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
-          <ThemedText.MediumHeader>
-            <Plural value={tokens.length} one="Import token" other="Import tokens" />
-          </ThemedText.MediumHeader>
+          <ThemedText.MediumHeader>Import token</ThemedText.MediumHeader>
           {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div />}
         </RowBetween>
       </PaddedColumn>
@@ -57,12 +58,17 @@ export function ImportToken(props: ImportProps) {
       <AutoColumn gap="md" style={{ marginBottom: '32px', padding: '1rem' }}>
         <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
           <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
-          <ThemedText.Body fontWeight={400} fontSize={16}>
-            <Trans>
-              This token doesn&apos;t appear on the active token list(s). Make sure this is the token that you want to
-              trade.
-            </Trans>
-          </ThemedText.Body>
+          {chainId && (
+            <ThemedText.Body fontWeight={400} fontSize={16}>
+              <Trans>
+                This token is not on your active token lists. Please check the{' '}
+                <ExternalLink href={getExplorerLink(chainId, tokens[0].address, ExplorerDataType.ADDRESS)}>
+                  Etherscan page
+                </ExternalLink>{' '}
+                to verify this is the right token.
+              </Trans>
+            </ThemedText.Body>
+          )}
         </AutoColumn>
         {tokens.map((token) => (
           <TokenImportCard token={token} list={list} key={'import' + token.address} />

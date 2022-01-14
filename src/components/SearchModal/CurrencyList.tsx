@@ -9,7 +9,6 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
-import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useCombinedActiveList } from '../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
@@ -166,18 +165,11 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
       <LightGreyCard padding="8px 12px" $borderRadius="8px">
         <RowBetween>
           <RowFixed>
-            <TokenListLogoWrapper src={TokenListLogo} />
             <ThemedText.Main ml="6px" fontSize="12px" color={theme.text1}>
               <Trans>Expanded results from inactive Token Lists</Trans>
             </ThemedText.Main>
           </RowFixed>
-          <QuestionHelper
-            text={
-              <Trans>
-                Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists.
-              </Trans>
-            }
-          />
+          <QuestionHelper text={<Trans>Import tokens below or click Manage to enable more token lists.</Trans>} />
         </RowBetween>
       </LightGreyCard>
     </FixedContentRow>
