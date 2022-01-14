@@ -151,7 +151,7 @@ export default function Pool() {
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 target="_blank"
-                href="https://uniswap.org/docs/v2/core-concepts/pools/"
+                href="https://xspswap.finance/"
               >
                 <ThemedText.White fontSize={14}>
                   <Trans>Read more about providing liquidity</Trans>
@@ -203,16 +203,6 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                <ButtonSecondary>
-                  <RowBetween>
-                    <Trans>
-                      <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
-                        Account analytics and accrued fees
-                      </ExternalLink>
-                      <span> ↗ </span>
-                    </Trans>
-                  </RowBetween>
-                </ButtonSecondary>
                 {v2PairsWithoutStakedAmount.map((v2Pair) => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}
