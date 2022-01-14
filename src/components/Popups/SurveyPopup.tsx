@@ -48,19 +48,19 @@ const WrappedCloseIcon = styled(X)`
   }
 `
 
-const END_TIMESTAMP = 1642215971
+const END_TIMESTAMP = 1642215971 // Jan 15th
 
 export default function SurveyPopup() {
   const theme = useTheme()
   const [showPopup, setShowSurveyPopup] = useShowSurveyPopup()
 
-  // show popup to 2% of users
+  // show popup to 1% of users
   useEffect(() => {
     // has not visited page during A/B testing if undefined
     if (showPopup === undefined) {
       const id = Math.floor(Math.random() * 101) // random between 0 -> 100
       console.log(id)
-      if (id < 2) {
+      if (id === 1) {
         // log a case of succesful view
         ReactGA.event({
           category: 'Survey',

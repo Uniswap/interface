@@ -80,7 +80,7 @@ export default function Popups() {
       </FixedPopupColumn>
       <MobilePopupWrapper height={activePopups?.length > 0 || showSurveyPopup ? 'fit-content' : 0}>
         <MobilePopupInner>
-          {showSurveyPopup ? <SurveyPopup /> : null}
+          <SurveyPopup />
           {activePopups // reverse so new items up front
             .slice(0)
             .reverse()
