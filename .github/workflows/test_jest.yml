@@ -48,6 +48,7 @@ jobs:
         run: yarn contracts:compile
       - name: Jest
         run: yarn test
-        - name: Danger
+      - name: Danger
         run: yarn danger ci
-        env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
