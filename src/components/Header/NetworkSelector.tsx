@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { CHAIN_INFO } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import usePrevious from 'hooks/usePrevious'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
@@ -13,7 +14,6 @@ import { addPopup, ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
-import { supportedChainId } from 'utils/supportedChainId'
 
 import { useAppDispatch } from '../../state/hooks'
 import { switchToNetwork } from '../../utils/switchToNetwork'
@@ -217,17 +217,28 @@ function Row({
 }
 
 const getParsedChainId = (parsedQs?: ParsedQs) => {
-  const chainId = parsedQs?.chainId
-  if (!chainId || typeof chainId !== 'string') return undefined
+  const chain = parsedQs?.chain
+  if (!chain || typeof chain !== 'string') return { urlChain: undefined, urlChainId: undefined }
 
-  const parsedChainId = parseInt(chainId, 10)
-  return supportedChainId(parsedChainId)
+  return { urlChain: chain.toLowerCase(), urlChainId: getChainIdFromName(chain) }
+}
+
+const getChainIdFromName = (name: string) => {
+  const entry = Object.entries(CHAIN_IDS_TO_NAMES).find(([_, n]) => n === name)
+  const chainId = entry?.[0]
+  return chainId ? parseInt(chainId) : undefined
+}
+
+const getChainNameFromId = (id: string | number) => {
+  // casting here may not be right but fine to return undefined if it's not a supported chain ID
+  return CHAIN_IDS_TO_NAMES[id as SupportedChainId] || ''
 }
 
 export default function NetworkSelector() {
   const { chainId, library } = useActiveWeb3React()
   const parsedQs = useParsedQueryString()
-  const [lastNetworkChange, setLastNetworkChange] = useState<number | null>(null)
+  const { urlChain, urlChainId } = getParsedChainId(parsedQs)
+  const prevChainId = usePrevious(chainId)
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
@@ -247,7 +258,9 @@ export default function NetworkSelector() {
           if (!skipToggle) {
             toggle()
           }
-          history.push({ search: replaceURLParam(history.location.search, 'chainId', targetChain.toString()) })
+          history.replace({
+            search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(targetChain)),
+          })
         })
         .catch((error) => {
           console.error('Failed to switch networks', error)
@@ -255,7 +268,7 @@ export default function NetworkSelector() {
           // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
           // but the request fails, revert the URL back to current chainId
           if (chainId) {
-            history.push({ search: replaceURLParam(history.location.search, 'chainId', chainId.toString()) })
+            history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
           }
 
           if (!skipToggle) {
@@ -269,22 +282,21 @@ export default function NetworkSelector() {
   )
 
   useEffect(() => {
-    if (!chainId || lastNetworkChange === chainId) return
-    const newChainId = getParsedChainId(parsedQs)
-
-    if (newChainId && chainId !== newChainId) {
-      handleChainSwitch(newChainId, true)
-      setLastNetworkChange(chainId)
+    // when network change originates from wallet or dropdown selector, just update URL
+    if (chainId && chainId !== prevChainId) {
+      history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
+      // otherwise assume network change originates from URL
+    } else if (urlChainId) {
+      handleChainSwitch(urlChainId, true)
     }
-  }, [handleChainSwitch, lastNetworkChange, chainId, parsedQs])
+  }, [chainId, urlChainId, prevChainId, handleChainSwitch, history])
 
-  // set chainId parameter on initial load if not there
+  // set chain parameter on initial load if not there
   useEffect(() => {
-    const newChainId = getParsedChainId(parsedQs)
-    if (chainId && !newChainId) {
-      history.push({ search: replaceURLParam(history.location.search, 'chainId', chainId.toString()) })
+    if (chainId && !urlChainId) {
+      history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
     }
-  }, [chainId, history, parsedQs])
+  }, [chainId, history, urlChainId, urlChain])
 
   if (!chainId || !info || !library) {
     return null
