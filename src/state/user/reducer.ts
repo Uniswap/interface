@@ -20,6 +20,7 @@ import {
   toggleTradeRoutes
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
+import { isMobile } from 'react-device-detect'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
@@ -75,8 +76,8 @@ export const initialState: UserState = {
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
   rebrandingAnnouncement: true,
-  showLiveChart: true,
-  showTradeRoutes: true
+  showLiveChart: isMobile ? false : true,
+  showTradeRoutes: isMobile ? false : true
 }
 
 export default createReducer(initialState, builder =>

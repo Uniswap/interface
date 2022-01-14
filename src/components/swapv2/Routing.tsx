@@ -269,7 +269,7 @@ const StyledDot = styled.i<{ out?: boolean }>`
   z-index: 1;
   background-color: ${({ theme }) => theme.secondary4};
 `
-const StyledWrap = styled.div`
+const StyledWrap = styled.div<{ backgroundColor?: string }>`
   width: calc(100% - 68px);
   margin: 10px 0 10px 6px;
   &:after,
@@ -288,11 +288,11 @@ const StyledWrap = styled.div`
     opacity: 0;
   }
   &:after {
-    background: linear-gradient(to right, ${({ theme }) => theme.bg12}, transparent);
+    background: linear-gradient(to right, ${({ backgroundColor }) => backgroundColor}, transparent);
     left: 42px;
   }
   &:before {
-    background: linear-gradient(to left, ${({ theme }) => theme.bg12}, transparent);
+    background: linear-gradient(to left, ${({ backgroundColor }) => backgroundColor}, transparent);
     right: 24px;
   }
   &.left-visible:after,
@@ -365,7 +365,7 @@ const RouteRow = ({ route, chainId, backgroundColor }: RouteRowProps) => {
   }, [route])
 
   return (
-    <StyledWrap ref={shadowRef}>
+    <StyledWrap ref={shadowRef} backgroundColor={backgroundColor}>
       <ScrollContainer innerRef={scrollRef} vertical={false} onScroll={handleShadow}>
         <StyledHops length={route?.subRoutes?.length} ref={contentRef}>
           {route.subRoutes.map((subRoute, index, arr) => {

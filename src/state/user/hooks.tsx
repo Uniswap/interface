@@ -450,11 +450,11 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
 
 export function useShowLiveChart(): boolean {
   const showLiveChart = useSelector((state: AppState) => state.user.showLiveChart)
-  return showLiveChart === undefined ? (isMobile ? false : true) : showLiveChart
+  return showLiveChart
 }
 export function useShowTradeRoutes(): boolean {
   const showTradeRoutes = useSelector((state: AppState) => state.user.showTradeRoutes)
-  return showTradeRoutes === undefined ? (isMobile ? false : true) : showTradeRoutes
+  return showTradeRoutes
 }
 export function useToggleLiveChart(): () => void {
   const dispatch = useDispatch<AppDispatch>()
