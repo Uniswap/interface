@@ -1,5 +1,7 @@
+import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { atom, useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useEffect, useMemo, useState } from 'react'
@@ -41,6 +43,19 @@ export default function useTokenList(list?: string | TokenInfo[]): WrappedTokenI
 
   return useMemo(() => {
     return Object.values((chainId && chainTokenMap[chainId]) || {}).map(({ token }) => token)
+  }, [chainId, chainTokenMap])
+}
+
+export type TokenMap = { [address: string]: Token }
+
+export function useTokenMap(): TokenMap {
+  const { chainId } = useActiveWeb3React()
+  const chainTokenMap = useAtomValue(chainTokenMapAtom)
+  return useMemo(() => {
+    return Object.entries((chainId && chainTokenMap[chainId]) || {}).reduce((map, [address, { token }]) => {
+      map[address] = token
+      return map
+    }, {} as TokenMap)
   }, [chainId, chainTokenMap])
 }
 
