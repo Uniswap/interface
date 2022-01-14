@@ -2,7 +2,8 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist/dts",
     "baseUrl": "src/lib",
     "paths": {
       "lib/*": ["./*"],

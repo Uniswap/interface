@@ -8,6 +8,7 @@ import json from '@rollup/plugin-json'
 import replace from '@rollup/plugin-replace'
 import url from '@rollup/plugin-url'
 import svgr from '@svgr/rollup'
+import dts from 'rollup-plugin-dts'
 import sass from 'rollup-plugin-scss'
 import typescript from 'rollup-plugin-typescript2'
 
@@ -19,13 +20,7 @@ const replacements = {
   'process.env.REACT_APP_IS_WIDGET': true,
 }
 
-// This is necessary because some nested imports (eg jotai/*) would otherwise not resolve.
-function external(source: string) {
-  const dep = deps.find((dep) => source === dep || source.startsWith(dep + '/'))
-  return Boolean(dep)
-}
-
-const config = {
+const library = {
   input: 'src/lib/index.tsx',
   output: [
     {
@@ -41,8 +36,8 @@ const config = {
       sourcemap: true,
     },
   ],
-  context: undefined,
-  external,
+  // necessary because some nested imports (eg jotai/*) would otherwise not resolve.
+  external: (source: string) => Boolean(deps.find((dep) => source === dep || source.startsWith(dep + '/'))),
   plugins: [
     eslint({ include: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'] }),
     json(), // imports json
@@ -53,4 +48,16 @@ const config = {
     typescript({ tsconfig: './tsconfig.lib.json' }),
   ],
 }
+
+const typings = {
+  input: 'dist/dts/lib/index.d.ts',
+  output: {
+    file: 'dist/widgets.d.ts',
+    format: 'es',
+  },
+  external: (source: string) => source.endsWith('.scss'),
+  plugins: [dts({ compilerOptions: { baseUrl: 'dist/dts' } })],
+}
+
+const config = [library, typings]
 export default config

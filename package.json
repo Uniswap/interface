@@ -104,6 +104,7 @@
     "react-use-gesture": "^6.0.14",
     "redux-localstorage-simple": "^2.3.1",
     "rollup": "^2.63.0",
+    "rollup-plugin-dts": "^4.1.0",
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-typescript2": "^0.31.1",
     "sass": "^1.45.1",
