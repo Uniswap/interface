@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-11 21:06\n"
+"PO-Revision-Date: 2022-01-14 07:07\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -1155,7 +1155,7 @@ msgstr "もっと見る"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
-msgstr "ネットワーク料金"
+msgstr "ネットワーク手数料"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
@@ -1303,7 +1303,7 @@ msgstr "エキスパートモードを有効にするには、単語\"{confirmWo
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr "ポリゴンブリッジ"
+msgstr "Polygonブリッジ"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
