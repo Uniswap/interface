@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -6,7 +7,7 @@ import { MessageCircle, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useShowSurveyPopup } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText, Z_INDEX } from 'theme'
 
 import BGImage from '../../assets/images/survey-orb.svg'
 import useTheme from '../../hooks/useTheme'
@@ -31,7 +32,7 @@ const BGOrb = styled.img`
   right: -64px;
   top: -64px;
   width: 180px;
-  z-index: 1;
+  z-index: ${Z_INDEX.sticky};
 `
 
 const WrappedCloseIcon = styled(X)`
@@ -41,7 +42,7 @@ const WrappedCloseIcon = styled(X)`
   width: 20px;
   height: 20px;
   stroke: #7c7c80;
-  z-index: 2;
+  z-index: ${Z_INDEX.fixed};
   :hover {
     cursor: pointer;
     opacity: 0.8;
@@ -58,20 +59,18 @@ export default function SurveyPopup() {
   useEffect(() => {
     // has not visited page during A/B testing if undefined
     if (showPopup === undefined) {
-      const id = Math.floor(Math.random() * 101) // random between 0 -> 100
-      console.log(id)
-      if (id === 1) {
+      if (Math.random() < 0.01) {
+        setShowSurveyPopup(true)
         // log a case of succesful view
         ReactGA.event({
           category: 'Survey',
           action: 'Saw Survey',
         })
-        setShowSurveyPopup(true)
       }
     }
   }, [setShowSurveyPopup, showPopup])
 
-  // limit survey to 24 hours based on timestamp
+  // limit survey to 24 hours based on timestamps
   const timestamp = useCurrentBlockTimestamp()
   const durationOver = timestamp ? timestamp.toNumber() > END_TIMESTAMP : false
 
@@ -93,12 +92,12 @@ export default function SurveyPopup() {
             <RowFixed>
               <MessageCircle stroke={theme.black} size="20px" strokeWidth="1px" />
               <ThemedText.White fontWeight={600} color={theme.black} ml="6px">
-                Tell us what you think ↗
+                <Trans>Tell us what you think ↗</Trans>
               </ThemedText.White>
             </RowFixed>
           </ExternalLink>
-          <ThemedText.Black style={{ zIndex: 3 }} fontWeight={400} fontSize="12px" color={theme.black}>
-            Take a 10 minute survey to help us improve your experience in the Uniswap app.
+          <ThemedText.Black style={{ zIndex: Z_INDEX.fixed }} fontWeight={400} fontSize="12px" color={theme.black}>
+            <Trans>Take a 10 minute survey to help us improve your experience in the Uniswap app.</Trans>
           </ThemedText.Black>
         </Wrapper>
       )}
