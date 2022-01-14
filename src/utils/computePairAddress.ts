@@ -15,6 +15,7 @@ export const computePairAddress = ({
   return getCreate2Address(
     factoryAddress,
     keccak256(['bytes'], [pack(['address', 'address'], [token0.address, token1.address])]),
-    '0xfc06b5b82f8a10ef64adcca4f7882b85f7a766960874989d055c18ea1d8d56a5'
+    '0x49d4a9f22dc2d1b9235b28fa91cd830a3dcadb8771a6c0393d88d7d2d07d896d'
   )
 }
+//0xfc06b5b82f8a10ef64adcca4f7882b85f7a766960874989d055c18ea1d8d56a5 - old when WETH not WXDC
