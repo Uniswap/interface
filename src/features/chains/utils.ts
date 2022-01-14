@@ -24,8 +24,8 @@ export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>) {
 }
 
 export function chainListToStateMap(chainIds: ChainId[]) {
-  return chainIds.reduce((memo, chainId) => {
+  return chainIds.reduce<ChainIdTo<ChainState>>((memo, chainId) => {
     memo[chainId] = { isActive: true }
     return memo
-  }, {} as ChainIdTo<ChainState>)
+  }, {})
 }

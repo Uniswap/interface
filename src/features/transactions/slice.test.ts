@@ -3,12 +3,13 @@ import { ChainId } from 'src/constants/chains'
 import {
   addTransaction,
   checkTransaction,
-  clearAllTransactions,
   finalizeTransaction,
   initialState,
+  resetTransactions,
   transactionReducer,
+  TransactionState,
 } from 'src/features/transactions/slice'
-import { TransactionState, TransactionType } from 'src/features/transactions/types'
+import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 
 describe('transaction reducer', () => {
   let store: Store<TransactionState>
@@ -32,7 +33,7 @@ describe('transaction reducer', () => {
           },
         })
       )
-      const txs = store.getState()
+      const txs = store.getState().byChainId
       expect(txs[ChainId.MAINNET]).toBeTruthy()
       expect(txs[ChainId.MAINNET]?.['0x0']).toBeTruthy()
       const tx = txs[ChainId.MAINNET]?.['0x0']
@@ -55,7 +56,7 @@ describe('transaction reducer', () => {
           chainId: ChainId.RINKEBY,
           hash: '0x0',
           receipt: {
-            status: 1,
+            status: TransactionStatus.Success,
             transactionIndex: 1,
             transactionHash: '0x0',
             to: '0x0',
@@ -66,7 +67,7 @@ describe('transaction reducer', () => {
           },
         })
       )
-      expect(store.getState()).toEqual({})
+      expect(store.getState().byChainId).toEqual({})
     })
     it('sets receipt', () => {
       store.dispatch(
@@ -83,7 +84,7 @@ describe('transaction reducer', () => {
           chainId: ChainId.RINKEBY,
           hash: '0x0',
           receipt: {
-            status: 1,
+            status: TransactionStatus.Success,
             transactionIndex: 1,
             transactionHash: '0x0',
             to: '0x0',
@@ -94,10 +95,10 @@ describe('transaction reducer', () => {
           },
         })
       )
-      const tx = store.getState()[4]?.['0x0']
+      const tx = store.getState().byChainId[4]?.['0x0']
       expect(tx?.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
       expect(tx?.receipt).toEqual({
-        status: 1,
+        status: TransactionStatus.Success,
         transactionIndex: 1,
         transactionHash: '0x0',
         to: '0x0',
@@ -118,7 +119,7 @@ describe('transaction reducer', () => {
           blockNumber: 1,
         })
       )
-      expect(store.getState()).toEqual({})
+      expect(store.getState().byChainId).toEqual({})
     })
     it('sets lastCheckedBlockNumber', () => {
       store.dispatch(
@@ -136,7 +137,7 @@ describe('transaction reducer', () => {
           blockNumber: 1,
         })
       )
-      const tx = store.getState()[4]?.['0x0']
+      const tx = store.getState().byChainId[4]?.['0x0']
       expect(tx?.lastCheckedBlockNumber).toEqual(1)
     })
     it('never decreases', () => {
@@ -162,7 +163,7 @@ describe('transaction reducer', () => {
           blockNumber: 1,
         })
       )
-      const tx = store.getState()[ChainId.RINKEBY]?.['0x0']
+      const tx = store.getState().byChainId[ChainId.RINKEBY]?.['0x0']
       expect(tx?.lastCheckedBlockNumber).toEqual(3)
     })
   })
@@ -185,12 +186,13 @@ describe('transaction reducer', () => {
           from: 'abc',
         })
       )
-      expect(Object.keys(store.getState())).toHaveLength(2)
-      expect(Object.keys(store.getState())).toEqual([String(1), String(4)])
-      expect(Object.keys(store.getState()[1] ?? {})).toEqual(['0x0'])
-      expect(Object.keys(store.getState()[4] ?? {})).toEqual(['0x1'])
-      store.dispatch(clearAllTransactions())
-      expect(Object.keys(store.getState())).toHaveLength(0)
+      const txs = store.getState().byChainId
+      expect(Object.keys(txs)).toHaveLength(2)
+      expect(Object.keys(txs)).toEqual([String(1), String(4)])
+      expect(Object.keys(txs[1] ?? {})).toEqual(['0x0'])
+      expect(Object.keys(txs[4] ?? {})).toEqual(['0x1'])
+      store.dispatch(resetTransactions())
+      expect(Object.keys(store.getState().byChainId)).toHaveLength(0)
     })
   })
 })

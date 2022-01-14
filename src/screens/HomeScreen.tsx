@@ -1,7 +1,6 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ViewStyle } from 'react-native'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
@@ -22,9 +21,7 @@ import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { Screens } from 'src/screens/Screens'
-import { bottomSheetStyles, FULL_SNAP_POINTS } from 'src/styles/bottomSheet'
 import { theme } from 'src/styles/theme'
 import { sleep } from 'src/utils/timing'
 
@@ -42,25 +39,23 @@ export function HomeScreen({ navigation }: Props) {
     activeAccount?.address
   )
   const [refreshing, setRefreshing] = useState(false)
-  const [showQRModal, setShowQRModal] = useState(false)
-
   const onRefresh = useCallback(() => {
     setRefreshing(true)
     // TODO: this is a callback to give illusion of refreshing, in future we can spin until the next block number has updated
     sleep(300).then(() => setRefreshing(false))
   }, [])
 
+  const [showQRModal, setShowQRModal] = useState(false)
+  const onPressQRCode = () => setShowQRModal(true)
+  const onCloseQrCode = () => setShowQRModal(false)
+
+  const onPressNotifications = () => navigation.navigate(Screens.Notifications)
+
   const onPressToken = (currencyAmount: CurrencyAmount<Currency>) =>
     navigation.navigate(Screens.TokenDetails, { currency: currencyAmount.currency })
 
   const onPressSettings = () =>
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
-
-  const onPressQRCode = () => setShowQRModal(true)
-
-  const notificationsModalRef = useRef<BottomSheetModal>(null)
-  const onPressNotifications = () => notificationsModalRef.current?.present()
-  const onCloseNotifications = () => notificationsModalRef.current?.dismiss()
 
   if (!activeAccount)
     return (
@@ -101,7 +96,7 @@ export function HomeScreen({ navigation }: Props) {
             <QrCode stroke={theme.colors.pink} height={15} width={15} />
           </Button>
         </Box>
-        <WalletQRCode isVisible={showQRModal} onClose={() => setShowQRModal(false)} />
+        <WalletQRCode isVisible={showQRModal} onClose={onCloseQrCode} />
       </Box>
       <Box flex={1} backgroundColor="mainBackground">
         <TokenBalanceList
@@ -111,13 +106,6 @@ export function HomeScreen({ navigation }: Props) {
           onRefresh={onRefresh}
           onPressToken={onPressToken}
         />
-        <BottomSheetModal
-          ref={notificationsModalRef}
-          index={0}
-          snapPoints={FULL_SNAP_POINTS}
-          style={bottomSheetStyles.bottomSheet}>
-          <NotificationsScreen onPressClose={onCloseNotifications} />
-        </BottomSheetModal>
       </Box>
     </Screen>
   )

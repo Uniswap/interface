@@ -1,32 +1,13 @@
 import { providers } from 'ethers'
 import { transactionActions } from 'src/features/transactions/slice'
 import { TransactionInfo } from 'src/features/transactions/types'
+import { getSerializableTxReceipt } from 'src/features/transactions/utils'
 import { put } from 'typed-redux-saga'
 
 export function* addTransaction(response: providers.TransactionResponse, info: TransactionInfo) {
   const { chainId, hash, from } = response
   yield* put(transactionActions.addTransaction({ chainId, hash, from, info }))
 }
-
-const serializeTransactionReceipt = ({
-  blockHash,
-  blockNumber,
-  contractAddress,
-  from,
-  status,
-  to,
-  transactionHash,
-  transactionIndex,
-}: providers.TransactionReceipt) => ({
-  blockHash,
-  blockNumber,
-  contractAddress,
-  from,
-  status,
-  to,
-  transactionHash,
-  transactionIndex,
-})
 
 export function* finalizeTransaction(
   response: providers.TransactionResponse,
@@ -37,7 +18,7 @@ export function* finalizeTransaction(
     transactionActions.finalizeTransaction({
       chainId,
       hash,
-      receipt: serializeTransactionReceipt(receipt),
+      receipt: getSerializableTxReceipt(receipt),
     })
   )
 }

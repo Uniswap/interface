@@ -23,30 +23,28 @@ export function SettingsChainsScreen() {
   }
 
   return (
-    <SheetScreen>
+    <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box px="lg">
-          <Box flexDirection="row" alignItems="center" mb="lg">
-            <BackButton size={30} mr="md" />
-            <Text variant="bodyLg">{t('Chain Settings')}</Text>
-          </Box>
-          <Box px="sm">
-            <Text variant="bodyLg">{t('Configure active chains (networks)')}</Text>
-            {ALL_SUPPORTED_CHAIN_IDS.map((chainId) => {
-              const isActive = activeChains.includes(chainId)
-              return (
-                <Box
-                  flexDirection="row"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  mt="lg"
-                  key={chainId}>
-                  <Text variant="body">{CHAIN_INFO[chainId].label}</Text>
-                  <Switch value={isActive} onValueChange={onToggleChain(chainId)} />
-                </Box>
-              )
-            })}
-          </Box>
+        <Box flexDirection="row" alignItems="center" mb="lg">
+          <BackButton size={30} mr="md" />
+          <Text variant="bodyLg">{t('Chain Settings')}</Text>
+        </Box>
+        <Box px="sm">
+          <Text variant="bodyLg">{t('Configure active chains (networks)')}</Text>
+          {ALL_SUPPORTED_CHAIN_IDS.map((chainId) => {
+            const isActive = activeChains.includes(chainId)
+            return (
+              <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                mt="lg"
+                key={chainId}>
+                <Text variant="body">{CHAIN_INFO[chainId].label}</Text>
+                <Switch value={isActive} onValueChange={onToggleChain(chainId)} />
+              </Box>
+            )
+          })}
         </Box>
       </ScrollView>
     </SheetScreen>

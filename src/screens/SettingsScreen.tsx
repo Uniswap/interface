@@ -59,18 +59,16 @@ export function SettingsScreen() {
   )
 
   return (
-    <SheetScreen>
+    <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box px="lg">
-          <Box flexDirection="row" alignItems="center" mb="lg">
-            <BackButton size={30} mr="md" />
-            <Text variant="bodyLg">{t('Settings')}</Text>
-          </Box>
-          {<ActiveAccountSummary />}
-          {pages.map((o) => (
-            <SettingsRow page={o} navigation={navigation} theme={theme} key={o.screen} />
-          ))}
+        <Box flexDirection="row" alignItems="center" mb="lg">
+          <BackButton size={30} mr="md" />
+          <Text variant="bodyLg">{t('Settings')}</Text>
         </Box>
+        {<ActiveAccountSummary />}
+        {pages.map((o) => (
+          <SettingsRow page={o} navigation={navigation} theme={theme} key={o.screen} />
+        ))}
       </ScrollView>
     </SheetScreen>
   )

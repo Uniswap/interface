@@ -2,7 +2,7 @@ import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box } from 'src/components/layout/Box'
-import { Toast } from 'src/components/notifications/Toast'
+import { Toast, ToastVariant } from 'src/components/notifications/Toast'
 import { usePendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 
@@ -24,7 +24,7 @@ function TransactionStatus() {
     return (
       <Box p="sm">
         <Toast
-          variant="failed"
+          variant={ToastVariant.Failed}
           // TODO: actually format these
           label={getNotificationName(recentlyFailedTransactions[0], t) + t(' failed')}
         />
@@ -34,7 +34,7 @@ function TransactionStatus() {
     return (
       <Box p="sm">
         <Toast
-          variant="successful"
+          variant={ToastVariant.Success}
           label={getNotificationName(recentlySuccessfulTransactions[0], t) + t(' successful!')}
         />
       </Box>
@@ -43,7 +43,7 @@ function TransactionStatus() {
     return (
       <Box p="sm">
         <Toast
-          variant="pending"
+          variant={ToastVariant.Pending}
           label={
             pendingTransactions.length +
             ' ' +
@@ -59,7 +59,7 @@ function TransactionStatus() {
   return null
 }
 
-function getNotificationName(transaction: TransactionDetails, t: TFunction) {
+export function getNotificationName(transaction: TransactionDetails, t: TFunction) {
   switch (transaction.info.type) {
     case TransactionType.APPROVE:
       return t('Approve')

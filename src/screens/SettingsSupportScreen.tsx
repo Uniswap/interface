@@ -14,22 +14,20 @@ export function SettingsSupportScreen() {
   const recentLogs = getLogBuffer().reverse()
 
   return (
-    <SheetScreen>
+    <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box px="lg">
-          <Box flexDirection="row" alignItems="center" mb="lg">
-            <BackButton size={30} mr="md" />
-            <Text variant="bodyLg">{t('Wallet Support')}</Text>
-          </Box>
-          <Text variant="bodyLg" mb="sm">
-            {t('Recent logs')}
-          </Text>
-          <ScrollView>
-            <Text variant="bodyXs" mt="md">
-              {recentLogs.join('\n\n')}
-            </Text>
-          </ScrollView>
+        <Box flexDirection="row" alignItems="center" mb="lg">
+          <BackButton size={30} mr="md" />
+          <Text variant="bodyLg">{t('Wallet Support')}</Text>
         </Box>
+        <Text variant="bodyLg" mb="sm">
+          {t('Recent logs')}
+        </Text>
+        <ScrollView>
+          <Text variant="bodyXs" mt="md">
+            {recentLogs.join('\n\n')}
+          </Text>
+        </ScrollView>
       </ScrollView>
     </SheetScreen>
   )

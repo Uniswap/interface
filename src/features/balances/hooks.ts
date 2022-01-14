@@ -82,11 +82,11 @@ export function useTokenBalances(
   // Memoize inputs
   const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
   const chainToAddresses = useMemo(() => {
-    return chainIds.reduce((result, chainId) => {
+    return chainIds.reduce<Record<number, Address[]>>((result, chainId) => {
       const tokenAddrs = Object.keys(chainIdToTokens[chainId] ?? {})
       result[chainId] = tokenAddrs
       return result
-    }, {} as Record<number, Address[]>)
+    }, {})
   }, [chainIds, chainIdToTokens])
 
   // Subscribe to multichain multicall
@@ -139,7 +139,7 @@ export function useEthBalances(
   // Memoize inputs
   const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
   const chainToAddresses = useMemo(() => {
-    return chainIds.reduce((result, chainId) => {
+    return chainIds.reduce<Record<number, Address>>((result, chainId) => {
       const address = MULTICALL_ADDRESS[chainId]
       if (address) {
         result[chainId] = address
@@ -147,7 +147,7 @@ export function useEthBalances(
         logger.error('balances/hooks', 'useEthBalances', 'Multicall address missing for:', chainId)
       }
       return result
-    }, {} as Record<number, Address>)
+    }, {})
   }, [chainIds])
 
   // Subscribe to multichain multicall
@@ -203,13 +203,13 @@ export function useAllBalancesByChainId(
 
   const loading = tokenBalancesLoading || ethBalancesLoading
   const balances = useMemo(() => {
-    return chainIds.reduce((result, chainId) => {
+    return chainIds.reduce<ChainIdToAddressToCurrencyAmount>((result, chainId) => {
       result[chainId] = {
         ...ethBalances[chainId],
         ...tokenBalances[chainId],
       }
       return result
-    }, {} as ChainIdToAddressToCurrencyAmount)
+    }, {})
   }, [chainIds, tokenBalances, ethBalances])
   return { balances, loading }
 }

@@ -1,9 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 
-// data structure optimized for index access
-// TODO: hash is not sufficient
-export type TransactionState = ChainIdTo<{ [txHash: string]: TransactionDetails }>
+export type ChainIdToHashToDetails = ChainIdTo<{ [txHash: string]: TransactionDetails }>
 
 export interface TransactionDetails {
   chainId: ChainId
@@ -13,12 +11,12 @@ export interface TransactionDetails {
   addedTime: number
 
   confirmedTime?: number
-  receipt?: SerializableTransactionReceipt
+  receipt?: SerializableTxReceipt
 
   lastCheckedBlockNumber?: number // updater periodically checks tx status
 }
 
-export interface SerializableTransactionReceipt {
+export interface SerializableTxReceipt {
   to: string
   from: string
   contractAddress: string
@@ -26,7 +24,7 @@ export interface SerializableTransactionReceipt {
   blockHash: string
   transactionHash: string
   blockNumber: number
-  status?: number
+  status: TransactionStatus
 }
 
 /**
@@ -34,11 +32,11 @@ export interface SerializableTransactionReceipt {
  * These values is persisted in state and if you change the value it will cause errors
  */
 export enum TransactionType {
-  APPROVE = 0,
-  SWAP = 1,
-  WRAP = 2,
-  SEND = 3,
-  RECEIVED = 4,
+  APPROVE = 'approve',
+  SWAP = 'swap',
+  WRAP = 'wrap',
+  SEND = 'send',
+  RECEIVE = 'receive',
 }
 
 export interface BaseTransactionInfo {
@@ -84,7 +82,7 @@ export interface SendTransactionInfo extends BaseTransactionInfo {
 }
 
 export interface ReceiveTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.RECEIVED
+  type: TransactionType.RECEIVE
   currencyAmountRaw: string
 }
 
@@ -95,3 +93,10 @@ export type TransactionInfo =
   | WrapTransactionInfo
   | SendTransactionInfo
   | ReceiveTransactionInfo
+
+export enum TransactionStatus {
+  Pending = 'pending',
+  Success = 'success',
+  Failed = 'failed',
+  // May want more granular options here later like InMemPool
+}

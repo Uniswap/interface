@@ -122,65 +122,60 @@ export function AccountsScreen() {
   const isLoading = status === SagaStatus.Started
 
   return (
-    <SheetScreen>
+    <SheetScreen px="lg">
       {/* This provider is needed here in the screen directly otherwise the sheet is rendered
       behind the screen because AccountStack is itself in a sheet/modal. */}
       <BottomSheetModalProvider>
         <ScrollView contentContainerStyle={flex.fill}>
-          <Box px="lg">
-            <Box flexDirection="row" alignItems="center" justifyContent="space-between" mb="lg">
-              <BackButton size={30} />
-              <Text variant="bodyLg" color="gray400">
-                {t('Switch Accounts')}
-              </Text>
-              {!isEditMode ? (
-                <TextButton
-                  textVariant="bodyLg"
-                  textColor="pink"
-                  onPress={() => setIsEditMode(true)}>
-                  {t('Edit')}
-                </TextButton>
-              ) : (
-                <TextButton
-                  textVariant="bodyLg"
-                  textColor="pink"
-                  onPress={() => setIsEditMode(false)}>
-                  {t('Done')}
-                </TextButton>
-              )}
-            </Box>
-            {Object.values(signerAccounts).map((account) => (
-              <Box mb="xl" key={account.address}>
-                <AccountCard
-                  account={account}
-                  isActive={!!activeAccount && activeAccount.address === account.address}
-                  isEditable={isEditMode}
-                  onPress={onPressActivate}
-                  onEdit={onPressEdit}
-                />
-              </Box>
-            ))}
-            {!!readOnlyAccounts.length && (
-              <>
-                <Text variant="body" color="gray400" mb="lg">
-                  {t('Watching')}
-                </Text>
-                {Object.values(readOnlyAccounts).map((account) => (
-                  <Box mb="xl" key={account.address}>
-                    <AccountCard
-                      account={account}
-                      isActive={!!activeAccount && activeAccount.address === account.address}
-                      isEditable={isEditMode}
-                      onPress={onPressActivate}
-                      onEdit={onPressEdit}
-                    />
-                  </Box>
-                ))}
-              </>
+          <Box flexDirection="row" alignItems="center" justifyContent="space-between" mb="lg">
+            <BackButton size={30} />
+            <Text variant="bodyLg" color="gray400">
+              {t('Switch Accounts')}
+            </Text>
+            {!isEditMode ? (
+              <TextButton textVariant="bodyLg" textColor="pink" onPress={() => setIsEditMode(true)}>
+                {t('Edit')}
+              </TextButton>
+            ) : (
+              <TextButton
+                textVariant="bodyLg"
+                textColor="pink"
+                onPress={() => setIsEditMode(false)}>
+                {t('Done')}
+              </TextButton>
             )}
           </Box>
+          {Object.values(signerAccounts).map((account) => (
+            <Box mb="xl" key={account.address}>
+              <AccountCard
+                account={account}
+                isActive={!!activeAccount && activeAccount.address === account.address}
+                isEditable={isEditMode}
+                onPress={onPressActivate}
+                onEdit={onPressEdit}
+              />
+            </Box>
+          ))}
+          {!!readOnlyAccounts.length && (
+            <>
+              <Text variant="body" color="gray400" mb="lg">
+                {t('Watching')}
+              </Text>
+              {Object.values(readOnlyAccounts).map((account) => (
+                <Box mb="xl" key={account.address}>
+                  <AccountCard
+                    account={account}
+                    isActive={!!activeAccount && activeAccount.address === account.address}
+                    isEditable={isEditMode}
+                    onPress={onPressActivate}
+                    onEdit={onPressEdit}
+                  />
+                </Box>
+              ))}
+            </>
+          )}
         </ScrollView>
-        <CenterBox flexDirection="row" px="md" py="md">
+        <CenterBox flexDirection="row" py="md">
           <PrimaryButton
             variant="palePink"
             label={t('Import Account')}

@@ -11,10 +11,10 @@ export function useLatestBlockChainMap(chainIds: ChainId[]): ChainIdTo<number> {
   const byChainId = useAppSelector((state) => state.blocks.byChainId)
   return useMemo(
     () =>
-      chainIds.reduce((result, chainId) => {
+      chainIds.reduce<ChainIdTo<number>>((result, chainId) => {
         result[chainId] = byChainId[chainId]?.latestBlockNumber || 0
         return result
-      }, {} as ChainIdTo<number>),
+      }, {}),
     [chainIds, byChainId]
   )
 }

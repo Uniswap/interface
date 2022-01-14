@@ -8,10 +8,17 @@ import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 import { opacify } from 'src/utils/colors'
 
-type ToastProps = {
-  label: string
-  variant: 'pending' | 'successful' | 'failed'
+export enum ToastVariant {
+  Pending,
+  Success,
+  Failed,
 }
+
+interface ToastProps {
+  label: string
+  variant: ToastVariant
+}
+
 export function Toast({ label, variant }: ToastProps) {
   const color = useVariantColor(variant)
 
@@ -39,15 +46,15 @@ export function Toast({ label, variant }: ToastProps) {
   )
 }
 
-function ToastIcon({ variant }: { variant: ToastProps['variant'] }) {
+export function ToastIcon({ variant }: { variant: ToastVariant }) {
   const color = useVariantColor(variant)
 
   switch (variant) {
-    case 'pending':
+    case ToastVariant.Pending:
       return <ActivityIndicator size="small" color={color} />
-    case 'successful':
+    case ToastVariant.Success:
       return <Checkmark height={23} width={23} stroke={color} />
-    case 'failed':
+    case ToastVariant.Failed:
       return <AlertTriangle height={23} width={23} stroke={color} />
   }
 }
@@ -56,11 +63,11 @@ function useVariantColor(variant: ToastProps['variant']) {
   const theme = useTheme<Theme>()
 
   switch (variant) {
-    case 'pending':
+    case ToastVariant.Pending:
       return theme.colors.yellow
-    case 'successful':
+    case ToastVariant.Success:
       return theme.colors.success
-    case 'failed':
+    case ToastVariant.Failed:
       return theme.colors.error
   }
 }

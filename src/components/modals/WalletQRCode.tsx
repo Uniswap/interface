@@ -20,11 +20,11 @@ import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 
 interface Props {
-  onClose: () => void
   isVisible: boolean
+  onClose: () => void
 }
 
-export function WalletQRCode({ isVisible, onClose }: React.PropsWithChildren<Props>) {
+export function WalletQRCode({ isVisible, onClose }: Props) {
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
   const theme = useTheme<Theme>()
