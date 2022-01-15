@@ -15,7 +15,6 @@ import { Box } from 'src/components/layout/Box'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { TOP_THIRD_SNAP_POINTS } from 'src/styles/bottomSheet'
 import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -32,8 +31,8 @@ export function WalletQRCode({ isVisible, onClose }: Props) {
   if (!activeAccount) return null
 
   return (
-    <BottomSheetModal isVisible={isVisible} snapPoints={TOP_THIRD_SNAP_POINTS} onClose={onClose}>
-      <Box backgroundColor="white" borderRadius="lg" justifyContent="center" padding="sm">
+    <BottomSheetModal isVisible={isVisible} onClose={onClose}>
+      <Box p="sm">
         <Box alignItems="center" marginTop="sm">
           <Text color="gray400" variant="body">
             {t`Receive funds`}

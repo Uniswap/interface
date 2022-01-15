@@ -1,4 +1,3 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { impactAsync } from 'expo-haptics'
@@ -55,28 +54,26 @@ function TabNavigator() {
   )
 
   return (
-    <BottomSheetModalProvider>
-      <Tab.Navigator screenOptions={navOptions.tabBar}>
-        <Tab.Screen
-          component={HomeScreen}
-          listeners={genericTabListeners}
-          name={Tabs.Home}
-          options={navOptions.tabHome}
-        />
-        <Tab.Screen
-          component={View}
-          listeners={swapTabListeners}
-          name={Tabs.Swap}
-          options={navOptions.tabSwap}
-        />
-        <Tab.Screen
-          component={ExploreScreen}
-          listeners={genericTabListeners}
-          name={Tabs.Explore}
-          options={navOptions.tabExplore}
-        />
-      </Tab.Navigator>
-    </BottomSheetModalProvider>
+    <Tab.Navigator screenOptions={navOptions.tabBar}>
+      <Tab.Screen
+        component={HomeScreen}
+        listeners={genericTabListeners}
+        name={Tabs.Home}
+        options={navOptions.tabHome}
+      />
+      <Tab.Screen
+        component={View}
+        listeners={swapTabListeners}
+        name={Tabs.Swap}
+        options={navOptions.tabSwap}
+      />
+      <Tab.Screen
+        component={ExploreScreen}
+        listeners={genericTabListeners}
+        name={Tabs.Explore}
+        options={navOptions.tabExplore}
+      />
+    </Tab.Navigator>
   )
 }
 
