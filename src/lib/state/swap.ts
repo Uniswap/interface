@@ -1,10 +1,11 @@
+import { Currency } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { atom, WritableAtom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { useUpdateAtom } from 'jotai/utils'
 import { atomWithReset } from 'jotai/utils'
-import { ETH } from 'lib/mocks'
 import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/state/atoms'
-import { Token } from 'lib/types'
 import { useMemo } from 'react'
 
 /** Max slippage, as a percentage. */
@@ -42,7 +43,7 @@ export enum Field {
 
 export interface Input {
   value?: number
-  token?: Token
+  token?: Currency
   usdc?: number
 }
 
@@ -62,7 +63,7 @@ export interface State {
 
 export const stateAtom = atomWithImmer<State>({
   activeInput: Field.INPUT,
-  input: { token: ETH },
+  input: { token: nativeOnChain(SupportedChainId.MAINNET) },
   output: {},
 })
 

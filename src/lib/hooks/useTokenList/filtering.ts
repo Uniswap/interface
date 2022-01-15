@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 
 import { isAddress } from '../../../utils'
@@ -6,12 +6,12 @@ import { isAddress } from '../../../utils'
 const alwaysTrue = () => true
 
 /** Creates a filter function that filters tokens that do not match the query. */
-export function getTokenFilter<T extends Token | TokenInfo>(query: string): (token: T) => boolean {
+export function getTokenFilter<T extends Token | TokenInfo>(query: string): (token: T | NativeCurrency) => boolean {
   const searchingAddress = isAddress(query)
 
   if (searchingAddress) {
-    const lower = searchingAddress.toLowerCase()
-    return (t: T) => ('isToken' in t ? searchingAddress === t.address : lower === t.address.toLowerCase())
+    const address = searchingAddress.toLowerCase()
+    return (t: T | NativeCurrency) => 'address' in t && address === t.address.toLowerCase()
   }
 
   const queryParts = query
@@ -30,5 +30,5 @@ export function getTokenFilter<T extends Token | TokenInfo>(query: string): (tok
     return queryParts.every((p) => p.length === 0 || parts.some((sp) => sp.startsWith(p) || sp.endsWith(p)))
   }
 
-  return ({ name, symbol }: T): boolean => Boolean((symbol && match(symbol)) || (name && match(name)))
+  return ({ name, symbol }: T | NativeCurrency): boolean => Boolean((symbol && match(symbol)) || (name && match(name)))
 }

@@ -14,6 +14,7 @@ import {
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
   Settings as SettingsIcon,
+  Slash as SlashIcon,
   Trash2 as Trash2Icon,
   X as XIcon,
 } from 'react-feather'
@@ -77,6 +78,7 @@ export const CreditCard = icon(CreditCardIcon)
 export const HelpCircle = icon(HelpCircleIcon)
 export const Info = icon(InfoIcon)
 export const Settings = icon(SettingsIcon)
+export const Slash = icon(SlashIcon)
 export const Trash2 = icon(Trash2Icon)
 export const X = icon(XIcon)
 
