@@ -10,7 +10,7 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
-import Logo from '../../assets/images/dark-logo.png'
+import Logo from '../../assets/images/logo.png'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
