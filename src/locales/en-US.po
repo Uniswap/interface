@@ -1768,6 +1768,10 @@ msgstr "Tradable token pair price range for this pool based on AMP. If the price
 msgid "Trade"
 msgstr "Trade"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Trade Route"
+msgstr "Trade Route"
+
 #: src/components/swapv2/TokenInfo.tsx
 msgid "Trading Volume (24H)"
 msgstr "Trading Volume (24H)"
@@ -2021,7 +2025,7 @@ msgstr "Your total harvested rewards. Each time you harvest new rewards, they ar
 msgid "Your total pool tokens:"
 msgstr "Your total pool tokens:"
 
-#: src/pages/SwapV2/index.tsx
+#: src/components/swapv2/MobileTradeRoutes.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "Your trade route"

@@ -5,16 +5,24 @@ import { ButtonText } from 'theme/components'
 import { X } from 'react-feather'
 import { ThemeContext } from 'styled-components'
 import { MobileView } from 'react-device-detect'
-import { useDerivedSwapInfoV2 } from '../../state/swap/useAggregator'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { RowBetween } from 'components/Row'
 import Routing from './Routing'
 import { Trans } from '@lingui/macro'
+import { Field } from 'state/swap/actions'
+import { Currency } from '@dynamic-amm/sdk'
 
-function MobileTradeRoutes({ trade, parsedAmounts }: { trade: any; parsedAmounts: any }) {
+function MobileTradeRoutes({
+  trade,
+  parsedAmounts,
+  currencies
+}: {
+  trade: any
+  parsedAmounts: any
+  currencies: { [field in Field]?: Currency }
+}) {
   const theme = useContext(ThemeContext)
-  const { currencies } = useDerivedSwapInfoV2()
   const isOpen = useModalOpen(ApplicationModal.MOBILE_TRADE_ROUTES)
   const toggle = useToggleModal(ApplicationModal.MOBILE_TRADE_ROUTES)
 

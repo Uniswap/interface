@@ -1768,6 +1768,10 @@ msgstr "基于AMP的池的可交易代币对价格范围。如果价格低于或
 msgid "Trade"
 msgstr "交易"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Trade Route"
+msgstr ""
+
 #: src/components/swapv2/TokenInfo.tsx
 msgid "Trading Volume (24H)"
 msgstr ""
@@ -2021,7 +2025,7 @@ msgstr "您收获的总奖励。每次您收获新的奖励时，它们都会被
 msgid "Your total pool tokens:"
 msgstr "您全部的池代币："
 
-#: src/pages/SwapV2/index.tsx
+#: src/components/swapv2/MobileTradeRoutes.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "您的交易路由"

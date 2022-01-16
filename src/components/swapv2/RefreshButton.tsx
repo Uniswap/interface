@@ -103,10 +103,10 @@ const StyledArrowLocatorLoading = styled(ArrowLocatorLoading)`
 interface RefreshButtonProps {
   isConfirming?: boolean
   trade?: Aggregator
-  onClick: () => void
+  onRefresh: (value?: boolean) => void
 }
 
-export default function RefreshButton({ isConfirming, trade, onClick }: RefreshButtonProps) {
+export default function RefreshButton({ isConfirming, trade, onRefresh }: RefreshButtonProps) {
   const svgLoadingRef = useRef<SVGSVGElement>(null)
 
   const hasOutput = useMemo((): boolean => {
@@ -120,7 +120,7 @@ export default function RefreshButton({ isConfirming, trade, onClick }: RefreshB
         // reset svg animate duration to 0 and UNPAUSE animations
         svgLoadingRef.current.setCurrentTime(0)
         svgLoadingRef.current.unpauseAnimations()
-        interval = setInterval(onClick, TIME_TO_REFRESH_SWAP_RATE * 1000)
+        interval = setInterval(() => onRefresh(false), TIME_TO_REFRESH_SWAP_RATE * 1000)
       } else {
         interval && clearInterval(interval)
         // reset svg animate duration to 0 and PAUSE animations
@@ -129,12 +129,12 @@ export default function RefreshButton({ isConfirming, trade, onClick }: RefreshB
       }
     }
     return () => {
-      clearInterval(interval)
+      interval && clearInterval(interval)
     }
-  }, [hasOutput, isConfirming, onClick])
+  }, [hasOutput, isConfirming, onRefresh])
 
   return (
-    <IconButton onClick={onClick}>
+    <IconButton onClick={() => onRefresh(false)}>
       <StyledArrowLocatorLoading ref={svgLoadingRef} />
     </IconButton>
   )

@@ -24,7 +24,8 @@ export function useDerivedSwapInfoV2(): {
   v2Trade: Aggregator | undefined
   tradeComparer: AggregationComparer | undefined
   inputError?: string
-  onRefresh: () => void
+  onRefresh: (value?: boolean) => void
+  loading: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
 
@@ -48,9 +49,12 @@ export function useDerivedSwapInfoV2(): {
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
-  const { trade: bestTradeExactIn, comparer: baseTradeComparer, onUpdateCallback } = useTradeExactInV2(
+  const parsedAmount = useMemo(() => {
+    return tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+  }, [typedValue, isExactIn, inputCurrency, outputCurrency])
+
+  const { trade: bestTradeExactIn, comparer: baseTradeComparer, onUpdateCallback, loading } = useTradeExactInV2(
     isExactIn ? parsedAmount : undefined,
     outputCurrency ?? undefined,
     saveGas
@@ -145,6 +149,7 @@ export function useDerivedSwapInfoV2(): {
     v2Trade: v2Trade ?? undefined,
     tradeComparer,
     inputError,
-    onRefresh: onUpdateCallback
+    onRefresh: onUpdateCallback,
+    loading
   }
 }

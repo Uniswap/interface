@@ -6,13 +6,19 @@ import { X } from 'react-feather'
 import LiveChart from 'components/LiveChart'
 import { ThemeContext } from 'styled-components'
 import { MobileView } from 'react-device-detect'
-import { useDerivedSwapInfoV2 } from '../../state/swap/useAggregator'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
+import { Field } from 'state/swap/actions'
+import { Currency } from '@dynamic-amm/sdk'
 
-function MobileLiveChart({ handleRotateClick }: { handleRotateClick: () => void }) {
+function MobileLiveChart({
+  handleRotateClick,
+  currencies
+}: {
+  handleRotateClick: () => void
+  currencies: { [field in Field]?: Currency }
+}) {
   const theme = useContext(ThemeContext)
-  const { currencies } = useDerivedSwapInfoV2()
   const isOpen = useModalOpen(ApplicationModal.MOBILE_LIVE_CHART)
   const toggle = useToggleModal(ApplicationModal.MOBILE_LIVE_CHART)
 

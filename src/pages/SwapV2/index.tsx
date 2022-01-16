@@ -5,7 +5,7 @@ import { Text, Flex, Box } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
-import { isMobile, BrowserView } from 'react-device-detect'
+import { BrowserView } from 'react-device-detect'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
@@ -47,11 +47,9 @@ import {
   useExpertModeManager,
   useUserSlippageTolerance,
   useShowLiveChart,
-  useShowTradeRoutes,
-  useToggleLiveChart,
-  useToggleTradeRoutes
+  useShowTradeRoutes
 } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE, ButtonText } from '../../theme'
+import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
@@ -61,8 +59,8 @@ import { useSwapV2Callback } from '../../hooks/useSwapV2Callback'
 import Routing from '../../components/swapv2/Routing'
 import RefreshButton from '../../components/swapv2/RefreshButton'
 import TradeTypeSelection from 'components/swapv2/TradeTypeSelection'
-import { PageWrapper, Container, MobileModalWrapper } from 'components/swapv2/styleds'
-import useAggregatorVolume from 'hooks/useAggregatorVolume'
+import { PageWrapper, Container } from 'components/swapv2/styleds'
+// import useAggregatorVolume from 'hooks/useAggregatorVolume'
 import { formattedNum } from 'utils'
 import TransactionSettings from 'components/TransactionSettings'
 import { Swap as SwapIcon } from 'components/Icons'
@@ -94,8 +92,6 @@ export default function Swap({ history }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const isShowLiveChart = useShowLiveChart()
   const isShowTradeRoutes = useShowTradeRoutes()
-  const toggleLiveChart = useToggleLiveChart()
-  const toggleTradeRoutes = useToggleTradeRoutes()
   const [activeTab, setActiveTab] = useState<ACTIVE_TAB>(ACTIVE_TAB.SWAP)
 
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -145,7 +141,8 @@ export default function Swap({ history }: RouteComponentProps) {
     currencies,
     inputError: swapInputError,
     tradeComparer,
-    onRefresh
+    onRefresh,
+    loading: loadingAPI
   } = useDerivedSwapInfoV2()
 
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
@@ -167,6 +164,7 @@ export default function Swap({ history }: RouteComponentProps) {
       }
 
   const { onSwitchTokensV2, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -289,14 +287,18 @@ export default function Swap({ history }: RouteComponentProps) {
     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
-    onCurrencySelection
-  ])
+  const handleOutputSelect = useCallback(
+    outputCurrency => {
+      onCurrencySelection(Field.OUTPUT, outputCurrency)
+    },
+    [onCurrencySelection]
+  )
 
   const isLoading =
-    (!currencyBalances[Field.INPUT] || !currencyBalances[Field.OUTPUT]) && userHasSpecifiedInputOutput && !v2Trade
+    loadingAPI ||
+    ((!currencyBalances[Field.INPUT] || !currencyBalances[Field.OUTPUT]) && userHasSpecifiedInputOutput && !v2Trade)
 
-  const aggregatorVolume = useAggregatorVolume()
+  // const aggregatorVolume = useAggregatorVolume()
 
   return (
     <>
@@ -323,7 +325,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 </TabContainer>
 
                 <SwapFormActions>
-                  <RefreshButton isConfirming={showConfirm} trade={trade} onClick={onRefresh} />
+                  <RefreshButton isConfirming={showConfirm} trade={trade} onRefresh={onRefresh} />
                   <TransactionSettings tradeValid={!!trade} isSwapPage />
                   <ShareModal currencies={currencies} />
                 </SwapFormActions>
@@ -623,10 +625,10 @@ export default function Swap({ history }: RouteComponentProps) {
               <BrowserView style={{ paddingTop: '30px' }}>
                 {isShowLiveChart && (
                   <LiveChartWrapper>
-                    <LiveChart currencies={currencies} onRotateClick={handleRotateClick} />
+                    <LiveChart onRotateClick={handleRotateClick} currencies={currencies} />
                   </LiveChartWrapper>
                 )}
-                {isShowTradeRoutes && Boolean(trade) && (
+                {isShowTradeRoutes && (
                   <RoutesWrapper isOpenChart={isShowLiveChart}>
                     <Flex flexDirection="column" width="100%">
                       <RowBetween>
@@ -650,8 +652,8 @@ export default function Swap({ history }: RouteComponentProps) {
           <SwitchLocaleLink />
         </Container>
       </PageWrapper>
-      <MobileLiveChart handleRotateClick={handleRotateClick} />
-      <MobileTradeRoutes trade={trade} parsedAmounts={parsedAmounts} />
+      <MobileLiveChart handleRotateClick={handleRotateClick} currencies={currencies} />
+      <MobileTradeRoutes trade={trade} parsedAmounts={parsedAmounts} currencies={currencies} />
     </>
   )
 }

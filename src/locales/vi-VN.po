@@ -1768,6 +1768,10 @@ msgstr "Phạm vi giá của cặp token có thể giao dịch cho Pool này đ�
 msgid "Trade"
 msgstr "Giao dịch"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Trade Route"
+msgstr ""
+
 #: src/components/swapv2/TokenInfo.tsx
 msgid "Trading Volume (24H)"
 msgstr ""
@@ -2021,7 +2025,7 @@ msgstr "Tổng số phần thưởng đã thu hoạch của bạn. Mỗi khi b�
 msgid "Your total pool tokens:"
 msgstr "Tổng số Token pool của bạn:"
 
-#: src/pages/SwapV2/index.tsx
+#: src/components/swapv2/MobileTradeRoutes.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "Trade Route của bạn"

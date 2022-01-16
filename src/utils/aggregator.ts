@@ -261,7 +261,8 @@ export class Aggregator {
     currencyOut: Currency,
     saveGas = false,
     dexes = '',
-    gasPrice?: GasPrice
+    gasPrice?: GasPrice,
+    signal?: AbortSignal
   ): Promise<Aggregator | null> {
     const chainId: ChainId | undefined =
       currencyAmountIn instanceof TokenAmount
@@ -294,7 +295,7 @@ export class Aggregator {
         ...(dexes ? { dexes } : {})
       })
       try {
-        const response = await fetch(`${baseURL}?${search}`)
+        const response = await fetch(`${baseURL}?${search}`, { signal })
         const result = await response.json()
         if (
           !result?.inputAmount ||
@@ -344,7 +345,8 @@ export class Aggregator {
   public static async compareDex(
     baseURL: string,
     currencyAmountIn: CurrencyAmount,
-    currencyOut: Currency
+    currencyOut: Currency,
+    signal?: AbortSignal
   ): Promise<AggregationComparer | null> {
     const chainId: ChainId | undefined =
       currencyAmountIn instanceof TokenAmount
@@ -386,7 +388,7 @@ export class Aggregator {
         //   return null
         // }
 
-        const response = await fetch(`${baseURL}?${search}`)
+        const response = await fetch(`${baseURL}?${search}`, { signal })
         const swapData = await response.json()
 
         if (!swapData?.inputAmount || !swapData?.outputAmount) {

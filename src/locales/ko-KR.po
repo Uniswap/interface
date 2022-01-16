@@ -1768,6 +1768,10 @@ msgstr "AMP에 따른 거래 가능 한 토큰 가격 범위입니다. 이 범�
 msgid "Trade"
 msgstr "거래"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Trade Route"
+msgstr ""
+
 #: src/components/swapv2/TokenInfo.tsx
 msgid "Trading Volume (24H)"
 msgstr ""
@@ -2021,7 +2025,7 @@ msgstr "총 수확 보상입니다. 새로운 보상을 획득할 때마다 짧�
 msgid "Your total pool tokens:"
 msgstr "총 풀 토큰:"
 
-#: src/pages/SwapV2/index.tsx
+#: src/components/swapv2/MobileTradeRoutes.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "거래 경로"

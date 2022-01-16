@@ -1768,6 +1768,10 @@ msgstr ""
 msgid "Trade"
 msgstr ""
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Trade Route"
+msgstr ""
+
 #: src/components/swapv2/TokenInfo.tsx
 msgid "Trading Volume (24H)"
 msgstr ""
@@ -2021,7 +2025,7 @@ msgstr ""
 msgid "Your total pool tokens:"
 msgstr ""
 
-#: src/pages/SwapV2/index.tsx
+#: src/components/swapv2/MobileTradeRoutes.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr ""

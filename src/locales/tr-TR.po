@@ -1768,6 +1768,10 @@ msgstr "AMP'ye dayalı olarak bu havuz için takas edilebilir token çifti fiyat
 msgid "Trade"
 msgstr "Al-Sat"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Trade Route"
+msgstr ""
+
 #: src/components/swapv2/TokenInfo.tsx
 msgid "Trading Volume (24H)"
 msgstr ""
@@ -2021,7 +2025,7 @@ msgstr "Toplam hasat edilmiş ödüllerinizdir. Her yeni ödül toplamanızda, b
 msgid "Your total pool tokens:"
 msgstr "Toplam havuz token’ları:"
 
-#: src/pages/SwapV2/index.tsx
+#: src/components/swapv2/MobileTradeRoutes.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Your trade route"
 msgstr "Alım-satım rotanız"

@@ -7,7 +7,6 @@ import { PopupContent } from 'state/application/actions'
 import { useRemovePopup } from 'state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
 import TransactionPopup from './TransactionPopup'
-import { HideSmall } from 'theme/components'
 
 export const StyledClose = styled(X)`
   position: absolute;
@@ -77,7 +76,7 @@ const PopupWrapper = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: min(calc(100vw - 32px), 425px);
-    
+
     &:not(:first-of-type) {
       margin-top: 10px;
     }

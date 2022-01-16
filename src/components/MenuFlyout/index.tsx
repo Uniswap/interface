@@ -86,7 +86,7 @@ const MenuFlyout = (props: {
       ${props.hasArrow ? Arrow : ''}
       ${props.browserCustomStyle}
     `,
-    [props.browserCustomStyle]
+    [props.browserCustomStyle, props.hasArrow]
   )
   const MobileStyle = useMemo(
     () => styled.span`

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from '@dynamic-amm/sdk'
+import { Currency, CurrencyAmount, Pair, Token, Trade, ETHER } from '@dynamic-amm/sdk'
 import { useMemo, useEffect, useState, useCallback } from 'react'
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
@@ -200,6 +200,7 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
   // }, [allowedPairs, currencyIn, currencyAmountOut])
 }
 
+let controller = new AbortController()
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
@@ -210,56 +211,69 @@ export function useTradeExactInV2(
 ): {
   trade: Aggregator | null
   comparer: AggregationComparer | null
-  onUpdateCallback: () => void
+  onUpdateCallback: (resetRoute?: boolean) => void
+  loading: boolean
 } {
   const { chainId } = useActiveWeb3React()
   const parsedQs: { dexes?: string } = useParsedQueryString()
 
   const [trade, setTrade] = useState<Aggregator | null>(null)
   const [comparer, setComparer] = useState<AggregationComparer | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const debouncedCurrencyAmountIn = useDebounce(currencyAmountIn?.toSignificant(10), 300)
-  const debouncedCurrencyIn = useDebounce(currencyAmountIn?.currency, 300)
+  const debounceCurrencyAmountIn = useDebounce(currencyAmountIn, 300)
 
   const routerApi = useMemo((): string => {
     return (chainId && routerUri[chainId]) || ''
   }, [chainId])
 
   const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
-  const onUpdateCallback = useCallback(async () => {
-    if (currencyAmountIn && currencyOut) {
-      const state = await Aggregator.bestTradeExactIn(
-        routerApi,
-        currencyAmountIn,
-        currencyOut,
-        saveGas,
-        parsedQs.dexes,
-        gasPrice
-      )
-      setComparer(null)
-      setTrade(state)
-      const comparedResult = await Aggregator.compareDex(routerApi, currencyAmountIn, currencyOut)
-      setComparer(comparedResult)
-    } else {
-      setTrade(null)
-      setComparer(null)
-    }
-  }, [debouncedCurrencyAmountIn, debouncedCurrencyIn, currencyOut, routerApi, saveGas, gasPrice])
+  const onUpdateCallback = useCallback(
+    async (resetRoute = true) => {
+      if (
+        debounceCurrencyAmountIn &&
+        currencyOut &&
+        (debounceCurrencyAmountIn.currency as Token)?.address !== (currencyOut as Token)?.address
+      ) {
+        if (resetRoute) setTrade(null)
+        controller.abort()
+
+        controller = new AbortController()
+        const signal = controller.signal
+
+        setLoading(true)
+
+        const [state, comparedResult] = await Promise.all([
+          Aggregator.bestTradeExactIn(
+            routerApi,
+            debounceCurrencyAmountIn,
+            currencyOut,
+            saveGas,
+            parsedQs.dexes,
+            gasPrice,
+            signal
+          ),
+          Aggregator.compareDex(routerApi, debounceCurrencyAmountIn, currencyOut, signal)
+        ])
+        setTrade(state)
+        setComparer(comparedResult)
+        setLoading(false)
+      } else {
+        setTrade(null)
+        setComparer(null)
+      }
+    },
+    [debounceCurrencyAmountIn, currencyOut, routerApi, saveGas, gasPrice, parsedQs.dexes]
+  )
 
   useEffect(() => {
-    let timeout: any
-    const fn = function() {
-      timeout = setTimeout(onUpdateCallback, 100)
-    }
-    fn()
-    return () => {
-      clearTimeout(timeout)
-    }
+    onUpdateCallback()
   }, [onUpdateCallback])
 
   return {
     trade,
     comparer,
-    onUpdateCallback
+    onUpdateCallback,
+    loading
   }
 }

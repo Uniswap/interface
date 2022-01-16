@@ -5,6 +5,14 @@ import { COINGECKO_NETWORK_ID } from 'constants/index'
 import useSWR from 'swr'
 import { getUnixTime, subHours } from 'date-fns'
 
+export enum LiveDataTimeframeEnum {
+  HOUR = '1H',
+  FOUR_HOURS = '4H',
+  DAY = '1D',
+  WEEK = '1W',
+  MONTH = '1M'
+}
+
 const getTimeFrameHours = (timeFrame: LiveDataTimeframeEnum) => {
   switch (timeFrame) {
     case LiveDataTimeframeEnum.HOUR:
@@ -42,14 +50,6 @@ const getClosestPrice = (prices: any[], time: number) => {
     }
   })
   return prices[closestIndex][0] - time > 10000000 ? 0 : prices[closestIndex][1]
-}
-
-export enum LiveDataTimeframeEnum {
-  HOUR = '1H',
-  FOUR_HOURS = '4H',
-  DAY = '1D',
-  WEEK = '1W',
-  MONTH = '1M'
 }
 
 export interface ChartDataInfo {
@@ -93,7 +93,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
 
   const isReverse = useMemo(() => {
     if (!tokens || !tokens[0] || !tokens[1] || tokens[0].equals(tokens[1])) return false
-    const [token0, token1] = tokens[0].sortsBefore(tokens[1]) ? [tokens[0], tokens[1]] : [tokens[1], tokens[0]]
+    const [token0] = tokens[0].sortsBefore(tokens[1]) ? [tokens[0], tokens[1]] : [tokens[1], tokens[0]]
     return token0 !== tokens[0]
   }, [tokens])
 
@@ -102,7 +102,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
       tokens
         .filter(Boolean)
         .map(token => (token === ETHER ? WETH[chainId || ChainId.MAINNET].address : token?.address)?.toLowerCase()),
-    [tokens]
+    [tokens, chainId]
   )
   const { data: kyberData, error: kyberError } = useSWR(
     tokenAddresses[0] && tokenAddresses[1]
@@ -123,7 +123,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
     if (
       kyberData &&
       kyberData.length > 0 &&
-      kyberData.every((item: any) => !item.token0Price || item.token0Price == '0')
+      kyberData.every((item: any) => !item.token0Price || item.token0Price === '0')
     )
       return true
     return false
@@ -156,10 +156,10 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
         return { time: item[0], value: closestPrice > 0 ? parseFloat((item[1] / closestPrice).toPrecision(6)) : 0 }
       })
     } else return []
-  }, [kyberData, coingeckoData, isKyberDataNotValid])
+  }, [kyberData, coingeckoData, isKyberDataNotValid, isReverse])
   const error = kyberError && coingeckoError
 
-  const { data: liveKyberData, error: liveKyberDataError } = useSWR(
+  const { data: liveKyberData } = useSWR(
     !isKyberDataNotValid && kyberData && chainId
       ? liveDataApi[chainId] + `?ids=${tokenAddresses[0]},${tokenAddresses[1]}`
       : null,
@@ -171,7 +171,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
       revalidateIfStale: false
     }
   )
-  const { data: liveCoingeckoData, error: liveCoingeckoDataError } = useSWR(
+  const { data: liveCoingeckoData } = useSWR(
     isKyberDataNotValid && coingeckoData ? [tokenAddresses, chainId, 'live'] : null,
     fetchCoingeckoDataSWR,
     {
@@ -202,7 +202,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
       }
     }
     return null
-  }, [liveKyberData, liveCoingeckoData])
+  }, [liveKyberData, liveCoingeckoData, isKyberDataNotValid])
   return {
     data: useMemo(() => (latestData ? [...chartData, latestData] : chartData), [latestData, chartData]),
     error: error,
