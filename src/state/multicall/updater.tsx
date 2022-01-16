@@ -35,6 +35,28 @@ async function fetchChunk(
   try {
     ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(chunk.map(obj => [obj.address, obj.callData]))
   } catch (error) {
+    if (
+      error.code === -32000 ||
+      (error?.data?.message && error?.data?.message?.indexOf('header not found') !== -1) ||
+      error.message?.indexOf('header not found') !== -1
+    ) {
+      throw new RetryableError(`header not found for block number ${minBlockNumber}`)
+    } else {
+      if (chunk.length > 1) {
+        if (process.env.NODE_ENV === 'development') {
+          console.debug('Splitting a chunk in 2', chunk)
+        }
+        const half = Math.floor(chunk.length / 2)
+        const [c0, c1] = await Promise.all([
+          fetchChunk(multicallContract, chunk.slice(0, half), minBlockNumber),
+          fetchChunk(multicallContract, chunk.slice(half, chunk.length), minBlockNumber)
+        ])
+        return {
+          results: c0.results.concat(c1.results),
+          blockNumber: c1.blockNumber
+        }
+      }
+    }
     console.debug('Failed to fetch chunk inside retry', error)
     throw error
   }
