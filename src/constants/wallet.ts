@@ -3,6 +3,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 import METAMASK_ICON_URL from '../assets/images/metamask.png'
 import WALLETCONNECT_ICON_URL from '../assets/images/walletConnectIcon.svg'
+import XDCPAY_ICON_URL from '../assets/images/xdc.svg'
 import { injected, walletconnect } from '../connectors'
 
 interface WalletInfo {
@@ -29,9 +30,17 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   METAMASK: {
     connector: injected,
-    name: 'MetaMask/XDCPay',
+    name: 'MetaMask',
     iconURL: METAMASK_ICON_URL,
     description: 'Easy-to-use browser extension.',
+    href: null,
+    color: '#E8831D',
+  },
+  XDCPAY: {
+    connector: injected,
+    name: 'XDCPay',
+    iconURL: XDCPAY_ICON_URL,
+    description: 'XDC Pay extension.',
     href: null,
     color: '#E8831D',
   },
