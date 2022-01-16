@@ -292,16 +292,15 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     ) : null
   }
 
-  useEffect(() => {
-    setMaxPage(1) // edit this to do modular
-    setPage(1)
-  }, [poolsList])
-
   const pools = useMemo(() => {
     return poolsList
       .map(pair => pair) // Clone to a new array to prevent "in-place" sort that mutate the poolsList
       .sort(sortList)
   }, [poolsList, sortList])
+
+  useEffect(() => {
+    if (page > maxPage) setPage(maxPage)
+  }, [maxPage])
 
   useEffect(() => {
     if (poolsList) {
