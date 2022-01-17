@@ -29,13 +29,10 @@ interface SwapDefaults {
   output: DefaultTokenAmount
 }
 
-const DEFAULT_INPUT: DefaultTokenAmount = { address: 'ETH' }
-const DEFAULT_OUTPUT: DefaultTokenAmount = {}
-
 function useSwapDefaults(defaults: Partial<SwapDefaults> = {}): SwapDefaults {
   const tokenList = defaults.tokenList || DEFAULT_TOKEN_LIST
-  const input: DefaultTokenAmount = defaults.input || DEFAULT_INPUT
-  const output: DefaultTokenAmount = defaults.output || DEFAULT_OUTPUT
+  const input: DefaultTokenAmount = defaults.input || {}
+  const output: DefaultTokenAmount = defaults.output || {}
   input.amount = input.amount || 0
   output.amount = output.amount || 0
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,22 +45,28 @@ export interface SwapProps {
   defaults?: Partial<SwapDefaults>
 }
 
-export default function Swap({ defaults }: SwapProps) {
-  const { tokenList } = useSwapDefaults(defaults)
-  useTokenList(tokenList)
+export default function Swap({ defaults: userDefaults }: SwapProps) {
+  const defaults = useSwapDefaults(userDefaults)
 
+  useTokenList(defaults.tokenList)
+
+  const { active, account, chainId } = useActiveWeb3React()
+  const [lastChainId, setLastChainId] = useState<number | undefined>(chainId)
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const { chainId, active, account } = useActiveWeb3React()
 
   // Switch to on-chain currencies if/when chain changes to prevent chain mismatched currencies.
   const [, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
   const [, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
   const [, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
+
   useLayoutEffect(() => {
-    if (chainId) {
-      updateSwapInputCurrency(nativeOnChain(chainId))
-      updateSwapOutputCurrency()
-      updateSwapInputAmount('')
+    if (chainId !== lastChainId) {
+      setLastChainId(chainId)
+      if (chainId) {
+        updateSwapInputCurrency(nativeOnChain(chainId))
+        updateSwapOutputCurrency()
+        updateSwapInputAmount('')
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId])
