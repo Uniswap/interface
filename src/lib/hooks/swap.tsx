@@ -19,7 +19,7 @@ import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import { isAddress } from '../../utils'
 import { useBestTrade } from './trade'
 import useActiveWeb3React from './useActiveWeb3React'
-import { useCurrency } from './useCurrency'
+import useCurrency from './useCurrency'
 
 export function useSwapState(): SwapState {
   return useAtomValue(stateAtom)
