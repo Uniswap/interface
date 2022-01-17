@@ -2,7 +2,7 @@ import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useQueryTokenList } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
-import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
+import { ElementRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -17,9 +17,15 @@ const SearchInput = styled(StringInput)`
   ${inputCss}
 `
 
-export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) => void }) {
+interface TokenSelectDialogProps {
+  value?: Currency
+  onSelect: (token: Currency) => void
+}
+
+export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
-  const tokens = useQueryTokenList(query)
+  const queriedTokens = useQueryTokenList(query)
+  const tokens = useMemo(() => queriedTokens.filter((token) => token !== value), [queriedTokens, value])
 
   const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
 
@@ -48,9 +54,11 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) =>
         </Row>
         {Boolean(baseTokens.length) && (
           <Row pad={0.75} gap={0.25} justify="flex-start" flex>
-            {baseTokens.map((token) => (
-              <TokenBase value={token} onClick={onSelect} key={token.wrapped.address} />
-            ))}
+            {baseTokens
+              .filter((token) => token !== value)
+              .map((token) => (
+                <TokenBase value={token} onClick={onSelect} key={token.wrapped.address} />
+              ))}
           </Row>
         )}
         <Rule padded />
@@ -81,7 +89,7 @@ export default function TokenSelect({ value, collapsed, disabled, onSelect }: To
       <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
-          <TokenSelectDialog onSelect={selectAndClose} />
+          <TokenSelectDialog value={value} onSelect={selectAndClose} />
         </Dialog>
       )}
     </>
