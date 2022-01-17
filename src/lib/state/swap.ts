@@ -41,6 +41,15 @@ export enum Field {
   OUTPUT = 'output',
 }
 
+function otherField(field: Field): Field {
+  switch (field) {
+    case Field.INPUT:
+      return Field.OUTPUT
+    case Field.OUTPUT:
+      return Field.INPUT
+  }
+}
+
 export interface Input {
   value?: number
   token?: Currency
@@ -69,25 +78,28 @@ export const stateAtom = atomWithImmer<State>({
 
 export const swapAtom = pickAtom(stateAtom, 'swap')
 
+function setInputAtom(field: Field, update: Input, state: State) {
+  state.activeInput = field
+  if (update.token && update.token === state[otherField(field)].token) {
+    // If selecting the other field's token, swap the fields
+    update.value = state[otherField(field)].value
+    state[otherField(field)] = { token: state[field].token, value: state[field].value }
+  }
+  state[field] = update
+  state.swap = undefined
+}
+
 export const inputAtom = atom(
   (get) => get(stateAtom).input,
-  (get, set, update: Input & { approved?: boolean }) => {
-    set(stateAtom, (state) => {
-      state.activeInput = Field.INPUT
-      state.input = update
-      state.swap = undefined
-    })
+  (get, set, update: Input) => {
+    set(stateAtom, (state) => setInputAtom(Field.INPUT, update, state))
   }
 )
 
 export const outputAtom = atom(
   (get) => get(stateAtom).output,
   (get, set, update: Input) => {
-    set(stateAtom, (state) => {
-      state.activeInput = Field.OUTPUT
-      state.output = update
-      state.swap = undefined
-    })
+    set(stateAtom, (state) => setInputAtom(Field.OUTPUT, update, state))
   }
 )
 
