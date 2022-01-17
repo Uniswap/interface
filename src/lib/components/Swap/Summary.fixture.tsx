@@ -10,7 +10,7 @@ import { SummaryDialog } from './Summary'
 
 function Fixture() {
   const setState = useUpdateAtom(stateAtom)
-  const [, setInitialized] = useState(false)
+  const [initialized, setInitialized] = useState(false)
   const nativeCurrency = useNativeCurrency()
   const token = useToken()
   useEffect(() => {
@@ -35,11 +35,11 @@ function Fixture() {
     setState((state) => ({ ...state, output: { token, value: price, usdc: price } }))
   }, [token, price, setOutput, setState])
 
-  return (
+  return initialized ? (
     <Modal color="dialog">
       <SummaryDialog onConfirm={() => void 0} />
     </Modal>
-  )
+  ) : null
 }
 
 export default <Fixture />
