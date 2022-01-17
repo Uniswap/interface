@@ -53,6 +53,7 @@ export default function Swap({ defaults: userDefaults }: SwapProps) {
   const setState = useUpdateAtom(stateAtom)
   const tokenMap = useTokenMap()
   useLayoutEffect(() => {
+    // Only revert to defaults if chainId is defined to prevent reverts when web3 connection is lost and recovered.
     if (chainId && chainId !== lastChainId) {
       setLastChainId(chainId)
 
