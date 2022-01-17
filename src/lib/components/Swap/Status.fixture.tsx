@@ -1,43 +1,35 @@
-import { tokens } from '@uniswap/default-token-list'
-import { SupportedChainId } from 'constants/chains'
-import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
+import useToken from 'lib/cosmos/hooks/useToken'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { transactionAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import invariant from 'tiny-invariant'
 
 import { Modal } from '../Dialog'
 import { StatusDialog } from './Status'
 
-const ETH = nativeOnChain(SupportedChainId.MAINNET)
-const UNI = (function () {
-  const token = tokens.find(({ symbol }) => symbol === 'UNI')
-  invariant(token)
-  return new WrappedTokenInfo(token)
-})()
-
 function Fixture() {
   const setTransaction = useUpdateAtom(transactionAtom)
-
   const [state] = useSelect('state', {
     options: ['PENDING', 'ERROR', 'SUCCESS'],
   })
+  const nativeCurrency = useNativeCurrency()
+  const token = useToken()
   useEffect(() => {
     setTransaction({
-      input: { token: ETH, value: 1 },
-      output: { token: UNI, value: 42 },
+      input: { token: nativeCurrency, value: 1 },
+      output: { token, value: 42 },
       receipt: '',
       timestamp: Date.now(),
     })
-  }, [setTransaction])
+  }, [token, nativeCurrency, setTransaction])
   useEffect(() => {
     switch (state) {
       case 'PENDING':
         setTransaction({
-          input: { token: ETH, value: 1 },
-          output: { token: UNI, value: 42 },
+          input: { token: nativeCurrency, value: 1 },
+          output: { token, value: 42 },
           receipt: '',
           timestamp: Date.now(),
         })
@@ -59,7 +51,7 @@ function Fixture() {
         })
         break
     }
-  }, [setTransaction, state])
+  }, [token, nativeCurrency, setTransaction, state])
   return <StatusDialog onClose={() => void 0} />
 }
 
