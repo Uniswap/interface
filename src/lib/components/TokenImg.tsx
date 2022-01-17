@@ -1,32 +1,29 @@
 import { Currency } from '@uniswap/sdk-core'
-import { getTokenLogoURL } from 'components/CurrencyLogo'
-import useNativeEvent from 'lib/hooks/useNativeEvent'
+import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
+import { Slash } from 'lib/icons'
 import styled from 'lib/theme'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+
+// Use a local transparent gif to avoid the browser-dependent broken img icon.
+const badSrcs = new Set<string>()
 
 interface TokenImgProps {
   className?: string
   token: Currency
 }
-const TRANSPARENT_SRC = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 
 function TokenImg({ className, token }: TokenImgProps) {
-  const [img, setImg] = useState<HTMLImageElement | null>(null)
-  useNativeEvent(img, 'error', () => {
-    if (img) {
-      // Use a local transparent gif to avoid the browser-dependent broken img icon.
-      // The icon may still flash, but using a native event further reduces the duration.
-      img.src = TRANSPARENT_SRC
-    }
-  })
-  return (
-    <img
-      className={className}
-      src={getTokenLogoURL(token.wrapped.address, token.wrapped.chainId) ?? undefined}
-      alt={token.name || token.symbol}
-      ref={setImg}
-    />
-  )
+  const srcs = useCurrencyLogoURIs(token)
+  const [src, setSrc] = useState(srcs.find((src) => !badSrcs.has(src)))
+  const onError = useCallback(() => {
+    if (src) badSrcs.add(src)
+    setSrc(srcs.find((src) => !badSrcs.has(src)))
+  }, [src, srcs])
+
+  if (src) {
+    return <img className={className} src={src} alt={token.name || token.symbol} onError={onError} />
+  }
+  return <Slash className={className} color="secondary" />
 }
 
 export default styled(TokenImg)<{ size?: number }>`

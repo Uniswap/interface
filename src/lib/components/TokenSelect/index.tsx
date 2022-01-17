@@ -2,6 +2,7 @@ import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
 import { COMMON_BASES } from 'constants/routing'
+import { useQueryTokenList } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 import { currencyId } from 'utils/currencyId'
@@ -14,7 +15,6 @@ import Rule from '../Rule'
 import TokenBase from './TokenBase'
 import TokenButton from './TokenButton'
 import TokenOptions from './TokenOptions'
-import useQueriedTokenList from './useQueriedTokenList'
 
 const SearchInput = styled(StringInput)`
   ${inputCss}
@@ -22,9 +22,8 @@ const SearchInput = styled(StringInput)`
 
 export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) => void }) {
   const baseTokens = COMMON_BASES[ChainId.MAINNET]
-
   const [query, setQuery] = useState('')
-  const tokens = useQueriedTokenList(query)
+  const tokens = useQueryTokenList(query)
 
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus(), [input])

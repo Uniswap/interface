@@ -6,6 +6,7 @@ import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -17,13 +18,7 @@ import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
-import {
-  useAllTokens,
-  useIsUserAddedToken,
-  useNativeCurrency,
-  useSearchInactiveTokenLists,
-  useToken,
-} from '../../hooks/Tokens'
+import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'

@@ -4,7 +4,7 @@ import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useDerivedSwapInfo, useSwapActionHandlers } from 'lib/hooks/swap'
-import useColor, { usePrefetchColor } from 'lib/hooks/useColor'
+import useCurrencyColor, { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
@@ -38,14 +38,14 @@ interface OutputProps {
 export default function Output({ disabled, children }: OutputProps) {
   const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const {
-    currencies: { [Field.OUTPUT]: outputCurrency },
+    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
     parsedAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
     currencyBalances: { [Field.OUTPUT]: balance },
   } = useDerivedSwapInfo()
 
   const overrideColor = useAtomValue(colorAtom)
-  const dynamicColor = useColor(outputCurrency?.wrapped)
-  usePrefetchColor(outputCurrency) // extract eagerly in case of reversal
+  const dynamicColor = useCurrencyColor(outputCurrency)
+  usePrefetchCurrencyColor(inputCurrency) // extract eagerly in case of reversal
   const color = overrideColor || dynamicColor
   const hasColor = outputCurrency ? Boolean(color) || null : false
 
@@ -56,7 +56,6 @@ export default function Output({ disabled, children }: OutputProps) {
       return parseFloat(inputUSDCValue.divide(outputUSDCValue).quotient.toString())
     }
     return ''
-    return undefined
   }, [inputUSDCValue, outputUSDCValue])
 
   const usdc = useMemo(() => {
