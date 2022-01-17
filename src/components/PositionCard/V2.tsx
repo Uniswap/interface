@@ -1,6 +1,6 @@
+import { Pair } from '@genesisprotocol/sdk'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import { transparentize } from 'polished'
 import { useState } from 'react'

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-12-23 21:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "$<0/>"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -31,17 +36,9 @@ msgstr "${0}"
 msgid "(${0})"
 msgstr "(${0})"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(최대)"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(탐색기에서보기)"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "(claim)"
-msgstr "(청구)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -206,10 +203,6 @@ msgstr "Uniswap 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
 msgid "Allowed"
 msgstr "허용됨"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "허용된 미끄러짐"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "금액"
@@ -280,20 +273,16 @@ msgid "Auto"
 msgstr "자동"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "자동 라우터"
+msgid "Auto Router API"
+msgstr "자동 라우터 API"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "입금 가능 : {0}"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Balance:"
-msgstr "잔액:"
-
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "잔액 : {0} {1}"
+msgid "Balance: {0}"
+msgstr "균형: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +299,10 @@ msgstr "안정적인 쌍에 가장 적합합니다."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "매우 안정적인 쌍에 가장 적합합니다."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "최고의 가격 경로 비용은 ~{formattedGasPriceString} 가스입니다."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -463,10 +456,6 @@ msgstr "수수료 징수"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "수수료를 징수하면 현재 사용 가능한 수수료가 인출됩니다."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "공통 기준"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "확인"
@@ -616,10 +605,6 @@ msgstr "예치"
 msgid "Deposit Amounts"
 msgstr "입금액"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit Assets"
-msgstr "예금 자산"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP 토큰 예치"
@@ -627,6 +612,10 @@ msgstr "UNI-V2 LP 토큰 예치"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "예금 유동성"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "{label} 네트워크에 토큰을 예치합니다."
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -722,6 +711,11 @@ msgstr "유효한 목록 위치를 입력하세요."
 msgid "Enter valid token address"
 msgstr "유효한 토큰 주소를 입력하세요."
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "{0} 금액을 입력하세요"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -741,6 +735,18 @@ msgstr "연결 오류. 페이지를 새로 고침 해보세요."
 msgid "Error importing list"
 msgstr "목록을 가져 오는 중에 오류가 발생했습니다."
 
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "지갑 가스 설정에 따라 견적이 다를 수 있습니다."
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "예상 네트워크 요금"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr "이더스캔"
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "실행"
@@ -748,6 +754,10 @@ msgstr "실행"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "비활성 토큰 목록에서 확장된 결과"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "예상 출력"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -762,12 +772,12 @@ msgid "Expired"
 msgstr "만료 됨"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap Analytics에서 인기있는 풀을 살펴보십시오."
+msgid "Explore Uniswap Analytics."
+msgstr "Uniswap 분석을 살펴보십시오."
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Explorer"
-msgstr "탐침"
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "Uniswap 인터페이스에서 네트워크를 전환하지 못했습니다. {0}에서 Uniswap을 사용하려면 지갑에서 네트워크를 변경해야 합니다."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -777,6 +787,10 @@ msgstr "수수료 등급"
 msgid "Fee tier"
 msgstr "수수료 등급"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "최저가를 가져오는 중..."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "찬성"
@@ -785,7 +799,6 @@ msgstr "찬성"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "아래 표시된 각 풀에 대해 마이그레이션을 클릭하여 Uniswap V2에서 유동성을 제거하고 Uniswap V3에 입금하십시오."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "스왑 전"
@@ -814,6 +827,10 @@ msgstr "지원 센터"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "숨는 장소"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "마감된 포지션 숨기기"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -884,6 +901,8 @@ msgstr "메타 마스크 설치"
 msgid "Insufficient liquidity for this trade."
 msgstr "이 거래에 대한 유동성이 충분하지 않습니다."
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -927,14 +946,11 @@ msgstr "언어"
 msgid "Learn"
 msgstr "학습"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Learn More"
-msgstr "더 알아보기"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "유동성 제공에 대해 알아보기"
 
+#: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "더 알아보기"
@@ -953,10 +969,6 @@ msgstr "밝은 테마"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
 msgstr "유동성"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "유동성 제공자 수수료"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -985,9 +997,12 @@ msgstr "로딩 됨"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "로딩 중"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "최대"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1043,10 +1058,6 @@ msgstr "메뉴"
 msgid "Migrate"
 msgstr "마이그레이션"
 
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "유동성 마이그레이션"
-
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
 msgstr "유동성을 V3로 마이그레이션"
@@ -1093,9 +1104,17 @@ msgstr "누락된 종속성"
 msgid "More"
 msgstr "추가"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "네트워크 요금"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "네트워크 경고"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "네트워크 수수료가 스왑 금액의 50%를 초과합니다!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1175,8 +1194,8 @@ msgid "Optimism Gateway"
 msgstr "낙관 게이트웨이"
 
 #: src/components/DowntimeWarning/index.tsx
-msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "낙관적 이더리움은 베타 버전이며 가동 중지 시간이 발생할 수 있습니다. 낙관론은 가까운 장래에 네트워크를 업그레이드하기 위해 계획된 다운타임을 예상합니다. 다운타임 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
+msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "낙관론은 베타 버전이며 가동 중지 시간이 발생할 수 있습니다. 낙관론자는 가까운 장래에 네트워크를 업그레이드하기 위해 계획된 다운타임을 예상합니다. 다운타임 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1227,6 +1246,14 @@ msgstr "적절한 이더리움 네트워크에 연결하십시오."
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "전문가 모드를 사용하려면{confirmWord}\"이라는 단어를 입력하십시오."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr "폴리곤 브리지"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr "다각형 스캔"
+
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
@@ -1268,7 +1295,6 @@ msgstr "풀 개요"
 msgid "Preview"
 msgstr "시사"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "가격"
@@ -1495,10 +1521,6 @@ msgstr "일부 자산은 스마트 계약과 잘 작동하지 않거나 법적 �
 msgid "Something went wrong"
 msgstr "문제가 발생했습니다"
 
-#: src/components/PositionList/index.tsx
-msgid "Status"
-msgstr "상태"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1 단계. UNI-V2 유동성 토큰 받기"
@@ -1534,6 +1556,7 @@ msgstr "{0} {1} 및 {2} {3} 공급 중"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1593,6 +1616,18 @@ msgstr "앱은 시간이 지남에 따라 개선하기 위해 익명화된 사�
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "앱은 위험 및 규정 준수를 위해 지갑 주소를 안전하게 수집하고 TRM Labs Inc.와 공유합니다."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "이 거래를 보내는 비용은 입력 금액의 절반 이상입니다."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
+msgstr "L1에서 트랜잭션을 보내기 위한 현재 빠른 가스 양입니다. 가스 요금은 Ethereum의 기본 통화인 Ether(ETH)로 지불되며 GWEI로 표시됩니다."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "입력 금액과 출력 금액의 USD 값 간의 예상 차이입니다."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "입력 토큰을 이체할 수 없습니다. 입력 토큰에 문제가 있을 수 있습니다."
@@ -1600,6 +1635,10 @@ msgstr "입력 토큰을 이체할 수 없습니다. 입력 토큰에 문제가 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "시장 가격이 지정된 가격 범위를 벗어났습니다. 단일 자산 예금만."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "이 네트워크의 가장 최근 블록 번호입니다. 가격은 모든 블록에서 업데이트됩니다."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1629,10 +1668,6 @@ msgstr "기한이 지났기 때문에 거래를 보낼 수 없습니다. 거래 
 msgid "There is no liquidity data."
 msgstr "유동성 데이터가 없습니다."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "이러한 토큰은 일반적으로 다른 토큰과 쌍을 이룹니다."
-
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "이 앱은 다음 타사 API를 사용합니다."
@@ -1642,8 +1677,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "유동성을 추가하려면 이 풀을 초기화해야 합니다. 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오. 초기화 트랜잭션으로 인해 가스 요금이 평소보다 높아집니다."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "이 경로는 분할 경로, 다중 홉 및 가스 비용을 고려하여 가격을 최적화합니다."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "이 경로는 분할 경로, 다중 홉 및 각 단계의 가스 비용을 고려하여 총 출력을 최적화합니다."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1704,6 @@ msgstr "이 거래는 가격 변동이나 이체 수수료로 인해 성공하�
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "팁 : 사용자 지정 토큰은 브라우저에 로컬로 저장됩니다."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1679,10 +1713,6 @@ msgstr "스왑 후"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "스왑 후(최소)"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "{0}에서 거래를 시작하려면 먼저 자산을 L1에서 L2로 연결하십시오. {1}을 사용하기 전에 위험에 대해 알아보십시오."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1700,10 +1730,6 @@ msgstr "비활성 목록의 토큰. 아래에서 특정 토큰을 가져 오거�
 msgid "Top pools"
 msgstr "상위 풀"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Total Supply"
-msgstr "총 공급"
-
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
 msgstr "총 입금"
@@ -1715,10 +1741,6 @@ msgstr "총 입금"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "무역로"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "상세 거래 내역"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1764,14 +1786,6 @@ msgstr "전문가 모드 켜기"
 msgid "UNI has arrived"
 msgstr "UNI가 도착했습니다"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "유통중인 UNI :"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "UNI 가격 :"
-
 #: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅니다. 각 제안에 대해 직접 투표하거나 제3자에게 투표를 위임할 수 있습니다."
@@ -1796,10 +1810,6 @@ msgstr "미 청구 UNI"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
 msgstr "미 청구 수수료"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Unclaimed:"
-msgstr "미 청구:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -1836,10 +1846,6 @@ msgstr "Uniswap 유동성 채굴"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap 마이그레이션 계약 ↗"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
-msgstr "{0}Uniswap"
 
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
@@ -1881,8 +1887,8 @@ msgid "Unwrap"
 msgstr "언랩"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Unwrap <0/> to ETH"
-msgstr "<0/>을 ETH로 풀기"
+msgid "Unwrap <0/> to {0}"
+msgstr "<0/> 에서 {0}풀기"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -1893,16 +1899,12 @@ msgid "Update list"
 msgstr "목록 업데이트"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Uniswap Labs API를 사용하여 보다 효율적인 경로를 통해 더 나은 가격을 얻으십시오."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Uniswap Labs API를 사용하여 더 빠른 견적을 받으세요."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "사용자"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1912,22 +1914,10 @@ msgstr "V2는 레이어 2에서 사용할 수 없습니다. 레이어 1 이더 �
 msgid "V2 liquidity"
 msgstr "V2 유동성"
 
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "V3 {0} 가격 :"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "UNI 분석보기"
-
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "V2 유동성보기"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -2072,8 +2062,8 @@ msgid "Wrap"
 msgstr "랩"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Wrap <0/> to WETH"
-msgstr "<0/>을 WETH로 래핑"
+msgid "Wrap <0/> to {0}"
+msgstr "<0/> 에서 {0}바꿈"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2120,6 +2110,10 @@ msgstr "네트워크 연결이 끊어졌거나 {label} 이 다운되었을 수 �
 msgid "You may have lost your network connection."
 msgstr "네트워크 연결이 끊어졌을 수 있습니다."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "이 거래를 완료하기 위해 네트워크 수수료가 내려갈 때까지 기다리는 것을 고려할 수 있습니다."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "계정을 연결해야합니다."
@@ -2145,17 +2139,13 @@ msgstr "이 포지션에서 얻은 수수료도 징수합니다."
 msgid "You will receive"
 msgstr "다음을 받게 됩니다"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "UNI 고장"
-
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "V2 유동성"
 
 #: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "V3 유동성 포지션이 여기에 표시됩니다."
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "활성 V3 유동성 위치가 여기에 표시됩니다."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2236,6 +2226,10 @@ msgstr "거래 내역이 여기에 표시됩니다 ..."
 msgid "Your unclaimed UNI"
 msgstr "내 미 청구 UNI"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "미끄러진 후"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "확인"
@@ -2243,6 +2237,10 @@ msgstr "확인"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "{0}에 찬성"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "그웨이"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2297,7 +2295,6 @@ msgstr "{0} 사용자 지정 토큰"
 msgid "{0} Deposited"
 msgstr "{0} 예치됨"
 
-#: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
@@ -2362,6 +2359,10 @@ msgstr "{0} 토큰"
 msgid "{0} {1} Price:"
 msgstr "{0} {1} 가격 :"
 
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr "{0} {nativeCurrencySymbol}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • 사용자가 추가"
@@ -2381,6 +2382,10 @@ msgstr "{0}%"
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
 msgstr "{0}% 수수료 등급"
+
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% 풀"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
@@ -2410,6 +2415,10 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} 토큰"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} 토큰 브릿지"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
@@ -2417,10 +2426,6 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} / {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

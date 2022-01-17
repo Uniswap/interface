@@ -1,7 +1,7 @@
+import { Trade } from '@genesisprotocol/router-sdk'
+import { Pair } from '@genesisprotocol/sdk'
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
@@ -83,23 +83,27 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
               routes={routes}
             />
           )}
-          <Separator />
-          {autoRouterSupported &&
-            (syncing ? (
-              <LoadingRows>
-                <div style={{ width: '250px', height: '15px' }} />
-              </LoadingRows>
-            ) : (
-              <ThemedText.Main fontSize={12} width={400} margin={0}>
-                {trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? (
-                  <Trans>Best price route costs ~{formattedGasPriceString} in gas. </Trans>
-                ) : null}{' '}
-                <Trans>
-                  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of
-                  each step.
-                </Trans>
-              </ThemedText.Main>
-            ))}
+
+          {autoRouterSupported && (
+            <>
+              <Separator />
+              {syncing ? (
+                <LoadingRows>
+                  <div style={{ width: '250px', height: '15px' }} />
+                </LoadingRows>
+              ) : (
+                <ThemedText.Main fontSize={12} width={400} margin={0}>
+                  {trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? (
+                    <Trans>Best price route costs ~{formattedGasPriceString} in gas. </Trans>
+                  ) : null}{' '}
+                  <Trans>
+                    This route optimizes your total output by considering split routes, multiple hops, and the gas cost
+                    of each step.
+                  </Trans>
+                </ThemedText.Main>
+              )}
+            </>
+          )}
         </AutoRow>
       </AnimatedDropdown>
     </Wrapper>

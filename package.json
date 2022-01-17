@@ -5,13 +5,12 @@
   "main": "dist/interface.js",
   "module": "dist/interface.esm.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "lib",
-    "dist"
-  ],
+  "files": ["lib", "dist"],
   "private": true,
   "devDependencies": {
+    "@ethersproject/address": "^5.0.0",
     "@ethersproject/experimental": "^5.4.0",
+    "@ethersproject/solidity": "^5.0.0",
     "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
     "@graphql-codegen/cli": "1.21.5",
     "@graphql-codegen/typescript": "1.22.3",
@@ -60,7 +59,7 @@
     "@uniswap/redux-multicall": "^1.0.0",
     "@uniswap/router-sdk": "^1.0.1",
     "@uniswap/sdk-core": "^3.0.1",
-    "@uniswap/smart-order-router": "^2.5.4",
+    "@uniswap/smart-order-router": "^2.5.7",
     "@uniswap/token-lists": "^1.0.0-beta.27",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
@@ -156,17 +155,12 @@
     "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {
+    "@genesisprotocol/router-sdk": "^1.0.8",
+    "@genesisprotocol/sdk": "^3.0.3"
+  }
 }

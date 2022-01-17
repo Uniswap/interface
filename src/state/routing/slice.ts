@@ -1,5 +1,5 @@
+import { Protocol } from '@genesisprotocol/router-sdk'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
-import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
 import ms from 'ms.macro'
 import qs from 'qs'
@@ -63,7 +63,8 @@ async function getClientSideQuote({
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v1/',
+    // baseUrl: 'https://api.uniswap.org/v1/',
+    baseUrl: 'http://localhost:3001',
   }),
   endpoints: (build) => ({
     getQuote: build.query<

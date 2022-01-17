@@ -111,7 +111,7 @@ const HoverText = styled.div`
 
 const LinkCard = styled(Card)`
   background-color: ${({ theme }) => theme.bg1};
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.text3};
 
   :hover {
     cursor: pointer;
@@ -416,9 +416,9 @@ export default function WalletModal({
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.White fontSize={14}>
+                  <ThemedText.Label fontSize={14}>
                     <Trans>How this app uses APIs</Trans>
-                  </ThemedText.White>
+                  </ThemedText.Label>
                 </AutoRow>
                 <ArrowRight size={16} />
               </RowBetween>
