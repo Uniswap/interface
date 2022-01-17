@@ -17,9 +17,13 @@ async function getColorFromLogoURIs(logoURIs: string[], cb: (color: string | und
 
   if (!color) {
     for (const logoURI of logoURIs) {
-      // Color extraction must use a CORS-compatible resource, but the resource may already be cached.
-      // Adds a dummy parameter to force a different browser resource cache entry. Without this, color extraction prevents resource caching.
-      const uri = logoURI + '?color'
+      let uri = logoURI
+      if (logoURI.startsWith('http')) {
+        // Color extraction must use a CORS-compatible resource, but the resource may already be cached.
+        // Adds a dummy parameter to force a different browser resource cache entry. Without this, color extraction prevents resource caching.
+        uri += '?color'
+      }
+
       color = await getColorFromUriPath(uri)
       if (color) break
     }
