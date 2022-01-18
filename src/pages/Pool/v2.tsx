@@ -189,7 +189,7 @@ export default function Pool() {
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
                 <HideSmall>
                   <ThemedText.MediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                    <Trans>Your V2 liquidity</Trans>
+                    <Trans>Your liquidity</Trans>
                   </ThemedText.MediumHeader>
                 </HideSmall>
                 <ButtonRow>
@@ -200,7 +200,7 @@ export default function Pool() {
                   </ResponsiveButtonSecondary>
                   <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH" padding="6px 8px">
                     <Text fontWeight={500} fontSize={16}>
-                      <Trans>Add V2 Liquidity</Trans>
+                      <Trans>Add Liquidity</Trans>
                     </Text>
                   </ResponsiveButtonPrimary>
                 </ButtonRow>
