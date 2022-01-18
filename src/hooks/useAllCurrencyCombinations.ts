@@ -6,7 +6,9 @@ import { ADDITIONAL_BASES, BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '.
 export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Currency): [Token, Token][] {
   const chainId = currencyA?.chainId
 
-  const [tokenA, tokenB] = chainId ? [currencyA?.wrapped, currencyB?.wrapped] : [undefined, undefined]
+  const [tokenA, tokenB] = useMemo(() => {
+    return chainId ? [currencyA?.wrapped, currencyB?.wrapped] : [undefined, undefined]
+  }, [chainId, currencyA, currencyB])
 
   const bases: Token[] = useMemo(() => {
     if (!chainId || chainId !== tokenB?.chainId) return []

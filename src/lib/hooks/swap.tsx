@@ -117,15 +117,19 @@ export function useDerivedSwapInfo(): {
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
 
-  const currencyBalances = {
-    [Field.INPUT]: relevantTokenBalances[0],
-    [Field.OUTPUT]: relevantTokenBalances[1],
-  }
+  const currencyBalances = useMemo(() => {
+    return {
+      [Field.INPUT]: relevantTokenBalances[0],
+      [Field.OUTPUT]: relevantTokenBalances[1],
+    }
+  }, [relevantTokenBalances])
 
-  const currencies: { [field in Field]?: Currency | null } = {
-    [Field.INPUT]: inputCurrency,
-    [Field.OUTPUT]: outputCurrency,
-  }
+  const currencies: { [field in Field]?: Currency | null } = useMemo(() => {
+    return {
+      [Field.INPUT]: inputCurrency,
+      [Field.OUTPUT]: outputCurrency,
+    }
+  }, [inputCurrency, outputCurrency])
 
   const parsedAmounts = useMemo(() => {
     return {
@@ -165,13 +169,16 @@ export function useDerivedSwapInfo(): {
     inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
   }
 
-  return {
-    currencies,
-    currencyBalances,
-    parsedAmount,
-    parsedAmounts,
-    inputError,
-    trade,
-    allowedSlippage,
-  }
+  return useMemo(
+    () => ({
+      currencies,
+      currencyBalances,
+      parsedAmount,
+      parsedAmounts,
+      inputError,
+      trade,
+      allowedSlippage,
+    }),
+    [allowedSlippage, currencies, currencyBalances, inputError, parsedAmount, parsedAmounts, trade]
+  )
 }

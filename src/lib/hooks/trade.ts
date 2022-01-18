@@ -19,6 +19,7 @@ export function useBestTrade(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce([amountSpecified, otherCurrency], 200)
+
   const isLoading = useMemo(() => {
     return amountSpecified !== undefined && debouncedAmount === undefined
   }, [amountSpecified, debouncedAmount])
@@ -26,9 +27,11 @@ export function useBestTrade(
   const bestV3Trade = useClientSideV3Trade(tradeType, debouncedAmount, debouncedOtherCurrency)
 
   // only return gas estimate from api if routing api trade is used
-  return {
-    ...bestV3Trade,
-    ...{ state: TradeState.SYNCING },
-    ...(isLoading ? { state: TradeState.LOADING } : {}),
-  }
+  return useMemo(
+    () => ({
+      ...bestV3Trade,
+      state: isLoading ? TradeState.LOADING : TradeState.SYNCING,
+    }),
+    [bestV3Trade, isLoading]
+  )
 }

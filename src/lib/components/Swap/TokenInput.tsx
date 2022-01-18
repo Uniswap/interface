@@ -71,13 +71,12 @@ export default function TokenInput({
     }
   }, [])
 
-  console.log(amount)
   return (
     <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
         <ThemedText.H2>
           <ValueInput
-            value={amount?.toSignificant(6) ?? ''}
+            value={amount?.toSignificant(6)}
             onFocus={onFocus}
             onChange={onChangeInput}
             disabled={disabled || !currency}
