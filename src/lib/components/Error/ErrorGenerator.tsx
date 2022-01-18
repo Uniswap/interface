@@ -1,17 +1,13 @@
-import { useAtomValue } from 'jotai/utils'
-import { providerAtom } from 'lib/state/web3'
+import { SwapWidgetProps } from 'lib'
+import { IntegrationError } from 'lib/errors'
 import { useEffect } from 'react'
-import { EMPTY } from 'widgets-web3-react/empty'
 
-export default function ErrorGenerator() {
-  const [connector] = useAtomValue(providerAtom)
+export default function ErrorGenerator(swapWidgetProps: SwapWidgetProps) {
+  const { jsonRpcEndpoint, provider } = swapWidgetProps
   useEffect(() => {
-    if (connector === EMPTY) {
-      console.log('empty connector')
-      // throw new MissingProviderError()
-    } else {
-      console.log('not empty connector')
+    if (!provider && !jsonRpcEndpoint) {
+      throw new IntegrationError('No provider or jsonRpcEndpoint provided')
     }
-  }, [connector])
+  }, [provider, jsonRpcEndpoint])
   return null
 }

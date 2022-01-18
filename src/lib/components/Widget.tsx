@@ -91,19 +91,19 @@ export type WidgetProps<T extends JSXElementConstructor<any> | undefined = undef
   : // eslint-disable-next-line @typescript-eslint/ban-types
     {})
 
-export default function Widget({
-  children,
-  theme,
-  locale = DEFAULT_LOCALE,
-  provider,
-  jsonRpcEndpoint,
-  width = 360,
-  dialog,
-  className,
-  onError,
-}: PropsWithChildren<WidgetProps>) {
+export default function Widget(props: PropsWithChildren<WidgetProps>) {
+  const {
+    children,
+    theme,
+    locale = DEFAULT_LOCALE,
+    provider,
+    jsonRpcEndpoint,
+    width = 360,
+    dialog,
+    className,
+    onError,
+  } = props
   const wrapper = useRef<HTMLDivElement>(null)
-
   return (
     <StrictMode>
       <I18nProvider locale={locale}>
@@ -115,7 +115,7 @@ export default function Widget({
                   <AtomProvider>
                     <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
                       <Updaters />
-                      <ErrorGenerator />
+                      <ErrorGenerator {...props} />
                       {children}
                     </Web3Provider>
                   </AtomProvider>

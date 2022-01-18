@@ -1,4 +1,3 @@
-import { atom } from 'jotai'
 import { atomWithDefault } from 'jotai/utils'
 import { initializeConnector, Web3ReactHooks } from 'widgets-web3-react/core'
 import { EMPTY } from 'widgets-web3-react/empty'
@@ -10,7 +9,3 @@ export type Web3ReactState = [Connector, Web3ReactHooks]
 
 export const urlAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
 export const injectedAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
-export const providerAtom = atom<Web3ReactState>((get) => {
-  const injected = get(injectedAtom)
-  return injected[0] !== EMPTY ? injected : get(urlAtom)
-})
