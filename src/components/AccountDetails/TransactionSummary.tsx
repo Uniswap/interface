@@ -137,16 +137,17 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
 
   if (unwrapped) {
     return (
-      <Trans>
-        Unwrap{' '}
+      <>
+        <Trans>Unwrap {''} </Trans>
         <FormattedCurrencyAmount
           rawAmount={currencyAmountRaw}
           symbol={native?.wrapped?.symbol ?? 'WETH'}
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {native?.symbol ?? 'ETH'}
-      </Trans>
+        <Trans>to</Trans>
+        {native?.symbol ?? 'ETH'}
+      </>
     )
   } else {
     return (
@@ -264,11 +265,13 @@ function AddLiquidityV2PoolSummary({
   info: AddLiquidityV2PoolTransactionInfo
 }) {
   return (
-    <Trans>
-      Add <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} />{' '}
-      and <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />{' '}
-      to Uniswap V2
-    </Trans>
+    <>
+      <Trans>Add</Trans>{' '}
+      <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} />{' '}
+      <Trans>and</Trans>{' '}
+      <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />{' '}
+      <Trans>to Genesis</Trans>
+    </>
   )
 }
 

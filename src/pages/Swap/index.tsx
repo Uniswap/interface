@@ -371,22 +371,6 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
-  useEffect(() => {
-    // console.log(
-    //   'NOT VALID: ',
-    //   !isValid,
-    //   'ROUTE SYNCING: ',
-    //   routeIsSyncing,
-    //   'ROUTE LOADING: ',
-    //   routeIsLoading,
-    //   'TOO HIGH: ',
-    //   priceImpactTooHigh,
-    //   'CALLBACK ERROR: ',
-    //   !!swapCallbackError,
-    //   swapCallbackError
-    // )
-  }, [isValid, routeIsSyncing, routeIsLoading, priceImpactTooHigh, swapCallbackError])
-
   return (
     <>
       <TokenWarningModal

@@ -251,25 +251,6 @@ export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
 }
 
-// export function computePairAddress({
-//   factoryAddress,
-//   tokenA,
-//   tokenB,
-// }: {
-//   factoryAddress: string
-//   tokenA: Token
-//   tokenB: Token
-// }): string {
-//   console.log('FACTORY ADDRESS: ', factoryAddress, 'INIT_CODE: ', GENESIS_INIT_CODE_HASH)
-//   const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
-//   return getCreate2Address(
-//     // factoryAddress,
-//     '0x373Df4Ea54035326A47Bb4A6098EDf683EBa1804',
-//     keccak256(['bytes'], [pack(['address', 'address'], [token0.address, token1.address])]),
-//     GENESIS_INIT_CODE_HASH
-//   )
-// }
-
 /**
  * Given two tokens return the liquidity token that represents its liquidity shares
  * @param tokenA one of the two tokens
