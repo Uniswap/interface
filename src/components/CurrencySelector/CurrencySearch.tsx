@@ -9,7 +9,7 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { Option } from 'src/components/CurrencySelector/Option'
 import { filter } from 'src/components/CurrencySelector/util'
 import { TextInput } from 'src/components/input/TextInput'
-import { Flex, Inset } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { NetworkButtonGroup, NetworkButtonType } from 'src/components/Network/NetworkButtonGroup'
 import { Text } from 'src/components/Text'
@@ -29,6 +29,7 @@ interface CurrencySearchProps {
   otherCurrency?: Currency | null
   selectedCurrency?: Currency | null
   showNonZeroBalancesOnly?: boolean
+  showBackButton?: boolean
 }
 
 export function CurrencySearch({
@@ -37,6 +38,7 @@ export function CurrencySearch({
   otherCurrency,
   selectedCurrency,
   showNonZeroBalancesOnly,
+  showBackButton = false,
 }: CurrencySearchProps) {
   const [chainFilter, setChainFilter] = useState<ChainId | null>(otherCurrency?.chainId ?? null)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
@@ -90,32 +92,30 @@ export function CurrencySearch({
         }
         ListHeaderComponent={
           <Box mb="md">
-            <Inset all="sm">
-              <Flex centered flexDirection="row" gap="sm">
-                <BackButton />
-                <Box
-                  backgroundColor="gray50"
-                  borderRadius="lg"
-                  flexDirection="row"
-                  paddingRight="sm"
-                  style={styles.inputContainer}>
-                  <TextInput
-                    backgroundColor="none"
-                    borderWidth={0}
-                    padding="md"
-                    placeholder={t('Search token symbols or address')}
-                    style={styles.input}
-                    value={searchFilter ?? undefined}
-                    onChangeText={onChangeText}
-                  />
-                  <SearchIcon
-                    stroke={theme.colors.gray200}
-                    strokeWidth={2.2}
-                    style={styles.inputIcon}
-                  />
-                </Box>
-              </Flex>
-            </Inset>
+            <Flex centered flexDirection="row" gap="sm" mb="sm" mx="lg">
+              {showBackButton ? <BackButton /> : null}
+              <Box
+                backgroundColor="gray50"
+                borderRadius="lg"
+                flexDirection="row"
+                paddingRight="sm"
+                style={styles.inputContainer}>
+                <TextInput
+                  backgroundColor="none"
+                  borderWidth={0}
+                  padding="md"
+                  placeholder={t('Search token symbols or address')}
+                  style={styles.input}
+                  value={searchFilter ?? undefined}
+                  onChangeText={onChangeText}
+                />
+                <SearchIcon
+                  stroke={theme.colors.gray200}
+                  strokeWidth={2.2}
+                  style={styles.inputIcon}
+                />
+              </Box>
+            </Flex>
 
             <NetworkButtonGroup
               customButton={

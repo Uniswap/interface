@@ -72,6 +72,7 @@ function CurrencySearchOwnedCurrencies({
 
   return (
     <CurrencySearch
+      showBackButton
       showNonZeroBalancesOnly
       currencies={currenciesWithBalance}
       otherCurrency={otherCurrency}
@@ -101,6 +102,7 @@ function CurrencySearchAllCurrencies({
 
   return (
     <CurrencySearch
+      showBackButton
       currencies={currencies}
       otherCurrency={otherCurrency}
       selectedCurrency={selectedCurrency}
