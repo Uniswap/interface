@@ -2,9 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { Slash } from 'lib/icons'
 import styled from 'lib/theme'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-// Use a local transparent gif to avoid the browser-dependent broken img icon.
 const badSrcs = new Set<string>()
 
 interface TokenImgProps {
@@ -14,7 +13,10 @@ interface TokenImgProps {
 
 function TokenImg({ className, token }: TokenImgProps) {
   const srcs = useCurrencyLogoURIs(token)
-  const [src, setSrc] = useState(srcs.find((src) => !badSrcs.has(src)))
+  const [src, setSrc] = useState<string | undefined>()
+  useEffect(() => {
+    setSrc(srcs.find((src) => !badSrcs.has(src)))
+  }, [srcs])
   const onError = useCallback(() => {
     if (src) badSrcs.add(src)
     setSrc(srcs.find((src) => !badSrcs.has(src)))

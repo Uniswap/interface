@@ -56,6 +56,7 @@
     "@types/wcag-contrast": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
+    "@uniswap/default-token-list": "^3.0.0",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
@@ -94,7 +95,7 @@
     "prettier": "^2.2.1",
     "qs": "^6.9.4",
     "react-confetti": "^6.0.0",
-    "react-cosmos": "^5.6.3",
+    "react-cosmos": "^5.6.6",
     "react-ga": "^2.5.7",
     "react-is": "^17.0.2",
     "react-markdown": "^4.3.1",
@@ -138,7 +139,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
-    "widgets:start": "cross-env FAST_REFRESH=false REACT_APP_IS_WIDGET=true cosmos",
+    "widgets:start": "cosmos",
     "widgets:build": "rollup --config --failAfterWarnings --configPlugin typescript2"
   },
   "browserslist": {

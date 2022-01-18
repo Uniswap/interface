@@ -1,3 +1,4 @@
+import { tokens } from '@uniswap/default-token-list'
 import { ChainId } from '@uniswap/smart-order-router'
 import { DAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
@@ -46,7 +47,7 @@ function Fixture() {
     }
   }, [color, setColor])
 
-  return <Swap />
+  return <Swap defaults={{ tokenList: tokens }} />
 }
 
 export default <Fixture />

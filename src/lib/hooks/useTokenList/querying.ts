@@ -12,10 +12,8 @@ export function useQueryTokens(query: string, tokens: WrappedTokenInfo[]) {
   const { account } = useActiveWeb3React()
   const balances = useTokenBalances(account, tokens)
   const sortedTokens = useMemo(
-    () => [
-      // spread to create a new memo, because sort is in-place and returns referentially equivalent
-      ...tokens.sort(tokenComparator.bind(null, balances)),
-    ],
+    // Create a new array because sort is in-place and returns a referentially equivalent array.
+    () => Array.from(tokens).sort(tokenComparator.bind(null, balances)),
     [balances, tokens]
   )
 
