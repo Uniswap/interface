@@ -249,6 +249,8 @@ export function ManageLists({
 
   const lists = useAllLists()
 
+  console.log('LISTS: ', lists)
+
   const tokenCountByListName = useMemo<Record<string, number>>(
     () =>
       Object.values(lists).reduce((acc, { current: list }) => {
@@ -257,11 +259,23 @@ export function ManageLists({
         }
         return {
           ...acc,
-          [list.name]: list.tokens.reduce((count: number, token) => (token.chainId === chainId ? count + 1 : count), 0),
+          [list.name]: list.tokens.reduce((count: number, token) => {
+            console.log(
+              'CHAIN ID: ',
+              chainId,
+              'TOKEN CHAIN ID: ',
+              token.chainId,
+              'SAME CHAIN: ',
+              token.chainId === chainId
+            )
+            return token.chainId === chainId ? count + 1 : count
+          }, 0),
         }
       }, {}),
     [chainId, lists]
   )
+
+  useEffect(() => console.log('TOKEN COUNT BY LIST NAME: ', tokenCountByListName), [tokenCountByListName])
 
   // sort by active but only if not visible
   const activeListUrls = useActiveListUrls()
