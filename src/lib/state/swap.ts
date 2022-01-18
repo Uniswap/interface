@@ -91,7 +91,7 @@ function setInputAtom(field: Field, update: Input, state: State) {
 
 export const inputAtom = atom(
   (get) => get(stateAtom).input,
-  (get, set, update: Input) => {
+  (get, set, update: Input & { approved?: boolean }) => {
     set(stateAtom, (state) => setInputAtom(Field.INPUT, update, state))
   }
 )
