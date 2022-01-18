@@ -1,15 +1,16 @@
 import { useAtomValue } from 'jotai/utils'
-import { missingProviderError } from 'lib/errors'
 import { providerAtom } from 'lib/state/web3'
 import { useEffect } from 'react'
 import { EMPTY } from 'widgets-web3-react/empty'
 
 export default function ErrorGenerator() {
   const [connector] = useAtomValue(providerAtom)
-  console.log(connector, connector === EMPTY)
   useEffect(() => {
     if (connector === EMPTY) {
-      throw missingProviderError
+      console.log('empty connector')
+      // throw new MissingProviderError()
+    } else {
+      console.log('not empty connector')
     }
   }, [connector])
   return null

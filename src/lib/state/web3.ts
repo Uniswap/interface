@@ -11,10 +11,6 @@ export type Web3ReactState = [Connector, Web3ReactHooks]
 export const urlAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
 export const injectedAtom = atomWithDefault<Web3ReactState>(() => EMPTY_CONNECTOR)
 export const providerAtom = atom<Web3ReactState>((get) => {
-  const url = get(urlAtom)
   const injected = get(injectedAtom)
-  if (injected[0] !== EMPTY) {
-    return get(injectedAtom)
-  }
-  return url
+  return injected[0] !== EMPTY ? injected : get(urlAtom)
 })
