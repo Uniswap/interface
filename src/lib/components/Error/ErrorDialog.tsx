@@ -118,7 +118,8 @@ export default function ErrorDialog({ header, error, action, onAction }: ErrorDi
         <ErrorColumn>
           <Column gap={0.5} ref={setDetails} css={scrollbar}>
             <ThemedText.Code>
-              {error.name}: {error.message}
+              {error.name}
+              {error.message ? `: ${error.message}` : ''}
             </ThemedText.Code>
           </Column>
         </ErrorColumn>

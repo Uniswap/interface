@@ -1,12 +1,12 @@
 export class IntegrationError extends Error {
   constructor(message: string) {
     super(message)
-    this.name = 'INTEGRATION ERROR'
+    this.name = 'Integration Error'
   }
 }
-
-export class MissingProviderError extends IntegrationError {
-  constructor() {
-    super(`Missing provider`)
+export class ChainIdError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'Unsupported network'
   }
 }

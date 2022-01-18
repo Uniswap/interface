@@ -39,6 +39,8 @@ function useSwapDefaults(defaults: Partial<SwapDefaults> = {}): SwapDefaults {
 }
 
 export interface SwapProps {
+  convenienceFee?: number
+  convenienceFeeRecipient?: string // todo: improve typing to require recipient when fee is set
   defaults?: Partial<SwapDefaults>
 }
 
