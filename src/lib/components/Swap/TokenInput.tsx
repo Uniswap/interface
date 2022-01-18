@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import { Input } from 'lib/state/swap'
 import styled, { keyframes, ThemedText } from 'lib/theme'
-import { Token } from 'lib/types'
 import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
 
 import Button from '../Button'
@@ -49,7 +49,7 @@ interface TokenInputProps {
   disabled?: boolean
   onMax?: () => void
   onChangeInput: (input: number | undefined) => void
-  onChangeToken: (token: Token) => void
+  onChangeToken: (token: Currency) => void
   children: ReactNode
 }
 

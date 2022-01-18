@@ -1,3 +1,4 @@
+import { tokens } from '@uniswap/default-token-list'
 import { useAtom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { inputAtom, outputAtom, swapAtom } from 'lib/state/swap'
@@ -61,7 +62,7 @@ function Fixture() {
     }
   }, [color, setColor])
 
-  return <Swap />
+  return <Swap defaults={{ tokenList: tokens }} />
 }
 
 export default <Fixture />

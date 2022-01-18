@@ -1,11 +1,22 @@
+import { tokens } from '@uniswap/default-token-list'
+import { SupportedChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
-import { DAI, ETH } from 'lib/mocks'
 import { Field, outputAtom, stateAtom } from 'lib/state/swap'
 import { useEffect, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import invariant from 'tiny-invariant'
 
 import { Modal } from '../Dialog'
 import { SummaryDialog } from './Summary'
+
+const ETH = nativeOnChain(SupportedChainId.MAINNET)
+const UNI = (function () {
+  const token = tokens.find(({ symbol }) => symbol === 'UNI')
+  invariant(token)
+  return new WrappedTokenInfo(token)
+})()
 
 function Fixture() {
   const setState = useUpdateAtom(stateAtom)
@@ -15,7 +26,7 @@ function Fixture() {
     setState({
       activeInput: Field.INPUT,
       input: { token: ETH, value: 1, usdc: 4195 },
-      output: { token: DAI, value: 4200, usdc: 4200 },
+      output: { token: UNI, value: 42, usdc: 42 },
       swap: {
         lpFee: 0.0005,
         integratorFee: 0.00025,
@@ -30,7 +41,7 @@ function Fixture() {
   const setOutput = useUpdateAtom(outputAtom)
   const [price] = useValue('output value', { defaultValue: 4200 })
   useEffect(() => {
-    setState((state) => ({ ...state, output: { token: DAI, value: price, usdc: price } }))
+    setState((state) => ({ ...state, output: { token: UNI, value: price, usdc: price } }))
   }, [price, setOutput, setState])
 
   return (

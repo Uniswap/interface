@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import useColor, { usePrefetchColor } from 'lib/hooks/useColor'
+import useCurrencyColor, { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { inputAtom, outputAtom, useUpdateInputToken, useUpdateInputValue } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
@@ -40,8 +40,8 @@ export default function Output({ disabled, children }: OutputProps) {
   const balance = 123.45
 
   const overrideColor = useAtomValue(colorAtom)
-  const dynamicColor = useColor(output.token)
-  usePrefetchColor(input.token) // extract eagerly in case of reversal
+  const dynamicColor = useCurrencyColor(output.token)
+  usePrefetchCurrencyColor(input.token) // extract eagerly in case of reversal
   const color = overrideColor || dynamicColor
   const hasColor = output.token ? Boolean(color) || null : false
 

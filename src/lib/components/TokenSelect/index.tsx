@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import { useQueryTokenList } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
-import { Token } from 'lib/types'
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 
 import Column from '../Column'
@@ -17,11 +17,11 @@ const SearchInput = styled(StringInput)`
   ${inputCss}
 `
 
-export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {
+export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) => void }) {
   const [query, setQuery] = useState('')
   const tokens = useQueryTokenList(query)
 
-  const baseTokens: Token[] = [] // TODO(zzmp): Add base tokens to token list functionality
+  const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
 
   // TODO(zzmp): Disable already selected tokens (passed as props?)
 
@@ -49,7 +49,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
         {Boolean(baseTokens.length) && (
           <Row pad={0.75} gap={0.25} justify="flex-start" flex>
             {baseTokens.map((token) => (
-              <TokenBase value={token} onClick={onSelect} key={token.address} />
+              <TokenBase value={token} onClick={onSelect} key={token.wrapped.address} />
             ))}
           </Row>
         )}
@@ -61,16 +61,16 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
 }
 
 interface TokenSelectProps {
-  value?: Token
+  value?: Currency
   collapsed: boolean
   disabled?: boolean
-  onSelect: (value: Token) => void
+  onSelect: (value: Currency) => void
 }
 
 export default function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
   const selectAndClose = useCallback(
-    (value: Token) => {
+    (value: Currency) => {
       onSelect(value)
       setOpen(false)
     },

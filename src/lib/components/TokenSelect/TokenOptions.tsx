@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import useNativeEvent from 'lib/hooks/useNativeEvent'
@@ -18,7 +19,6 @@ import {
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import invariant from 'tiny-invariant'
 
 import { BaseButton } from '../Button'
@@ -33,7 +33,7 @@ const TokenButton = styled(BaseButton)`
 `
 
 const ITEM_SIZE = 56
-type ItemData = WrappedTokenInfo[]
+type ItemData = Currency[]
 interface FixedSizeTokenList extends FixedSizeList<ItemData>, ComponentClass<FixedSizeListProps<ItemData>> {}
 const TokenList = styled(FixedSizeList as unknown as FixedSizeTokenList)<{
   hover: number
@@ -57,13 +57,13 @@ const OnHover = styled.div<{ hover: number }>`
 
 interface TokenOptionProps {
   index: number
-  value: WrappedTokenInfo
+  value: Currency
   style: CSSProperties
 }
 
 interface BubbledEvent extends SyntheticEvent {
   index?: number
-  token?: WrappedTokenInfo
+  token?: Currency
   ref?: HTMLButtonElement
 }
 
@@ -107,7 +107,10 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
   )
 }
 
-const itemKey = (index: number, tokens: ItemData) => tokens[index]?.address
+const itemKey = (index: number, tokens: ItemData) => {
+  if (tokens[index].isNative) return 'native'
+  return tokens[index].wrapped.address
+}
 const ItemRow = memo(function ItemRow({
   data: tokens,
   index,
@@ -127,8 +130,8 @@ interface TokenOptionsHandle {
 }
 
 interface TokenOptionsProps {
-  tokens: WrappedTokenInfo[]
-  onSelect: (token: WrappedTokenInfo) => void
+  tokens: Currency[]
+  onSelect: (token: Currency) => void
 }
 
 const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function TokenOptions(

@@ -1,12 +1,22 @@
+import { tokens } from '@uniswap/default-token-list'
+import { SupportedChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
-import { DAI, ETH } from 'lib/mocks'
 import { transactionAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import invariant from 'tiny-invariant'
 
 import { Modal } from '../Dialog'
 import { StatusDialog } from './Status'
+
+const ETH = nativeOnChain(SupportedChainId.MAINNET)
+const UNI = (function () {
+  const token = tokens.find(({ symbol }) => symbol === 'UNI')
+  invariant(token)
+  return new WrappedTokenInfo(token)
+})()
 
 function Fixture() {
   const setTransaction = useUpdateAtom(transactionAtom)
@@ -17,7 +27,7 @@ function Fixture() {
   useEffect(() => {
     setTransaction({
       input: { token: ETH, value: 1 },
-      output: { token: DAI, value: 4200 },
+      output: { token: UNI, value: 42 },
       receipt: '',
       timestamp: Date.now(),
     })
@@ -27,7 +37,7 @@ function Fixture() {
       case 'PENDING':
         setTransaction({
           input: { token: ETH, value: 1 },
-          output: { token: DAI, value: 4200 },
+          output: { token: UNI, value: 42 },
           receipt: '',
           timestamp: Date.now(),
         })
