@@ -30,7 +30,11 @@ We do not check in Flipper into source. To prevent `pod install` from adding Fli
 export USE_FLIPPER=1
 ```
 
-Run `yarn` to install packages, then run `pod install` in the `/ios` directory. 
+Run `yarn` to install packages, then run `pod install` in the `/ios` directory.
+
+#### Storybook
+
+See [stories/README.md](https://github.com/Uniswap/mobile/tree/main/src/stories/README.md)
 
 ### Running
 
