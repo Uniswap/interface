@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { PositionDetails } from 'types/position'
 
 import { useV3NFTPositionManagerContract } from './useContract'

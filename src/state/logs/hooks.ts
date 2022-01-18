@@ -1,7 +1,7 @@
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useBlockNumber } from '../application/hooks'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addListener, removeListener } from './slice'
 import { EventFilter, filterToKey, Log } from './utils'

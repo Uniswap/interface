@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v3-sdk'
+import { useSingleCallResult } from 'lib/hooks/multicall'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useState } from 'react'
-import { useBlockNumber } from 'state/application/hooks'
-import { useSingleCallResult } from 'state/multicall/hooks'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { useV3NFTPositionManagerContract } from './useContract'

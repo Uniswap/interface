@@ -1,9 +1,9 @@
 import { TransactionResponse } from '@ethersproject/providers'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useTransactionMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { useActiveWeb3React } from '../../hooks/web3'
 import { addTransaction, TransactionInfo, TransactionType } from './actions'
 import { TransactionDetails } from './reducer'
 

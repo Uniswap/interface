@@ -6,6 +6,7 @@ import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
+import { Connector } from 'widgets-web3-react/types'
 
 import { NetworkContextName } from '../../constants/misc'
 import useENSName from '../../hooks/useENSName'
@@ -35,9 +36,12 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   width: 100%;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   user-select: none;
+  height: 36px;
+  margin-right: 2px;
+  margin-left: 1px;
   :focus {
     outline: none;
   }
@@ -82,7 +86,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg0)};
+  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
   font-weight: 500;
@@ -127,7 +131,7 @@ function Sock() {
   )
 }
 
-function WrappedStatusIcon({ connector }: { connector: AbstractConnector }) {
+function WrappedStatusIcon({ connector }: { connector: AbstractConnector | Connector }) {
   return (
     <IconWrapper size={16}>
       <StatusIcon connector={connector} />

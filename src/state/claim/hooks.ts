@@ -1,14 +1,14 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
 
 import { UNI } from '../../constants/tokens'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { useSingleCallResult } from '../multicall/hooks'
 import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
 

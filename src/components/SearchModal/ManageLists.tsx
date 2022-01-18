@@ -3,8 +3,10 @@ import { t, Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
 import Card from 'components/Card'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useListColor } from 'hooks/useColor'
-import { useActiveWeb3React } from 'hooks/web3'
+import parseENSAddress from 'lib/utils/parseENSAddress'
+import uriToHttp from 'lib/utils/uriToHttp'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle, Settings } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -20,8 +22,6 @@ import { acceptListUpdate, disableList, enableList, removeList } from '../../sta
 import { useActiveListUrls, useAllLists, useIsListActive } from '../../state/lists/hooks'
 import { ExternalLink, IconWrapper, LinkStyledButton, ThemedText } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
-import { parseENSAddress } from '../../utils/parseENSAddress'
-import uriToHttp from '../../utils/uriToHttp'
 import { ButtonEmpty, ButtonPrimary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
@@ -31,7 +31,8 @@ import { CurrencyModalView } from './CurrencySearchModal'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 
 const Wrapper = styled(Column)`
-  height: 100%;
+  flex: 1;
+  overflow-y: hidden;
 `
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
@@ -229,7 +230,7 @@ const ListContainer = styled.div`
   padding: 1rem;
   height: 100%;
   overflow: auto;
-  padding-bottom: 80px;
+  flex: 1;
 `
 
 export function ManageLists({

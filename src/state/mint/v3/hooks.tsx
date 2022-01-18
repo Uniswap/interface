@@ -11,6 +11,7 @@ import {
   TickMath,
   tickToPrice,
 } from '@uniswap/v3-sdk'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -19,7 +20,6 @@ import { getTickToPrice } from 'utils/getTickToPrice'
 
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
-import { useActiveWeb3React } from '../../../hooks/web3'
 import { AppState } from '../../index'
 import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'
@@ -194,14 +194,14 @@ export function useV3DerivedMintInfo(
   // check for invalid price input (converts to invalid ratio)
   const invalidPrice = useMemo(() => {
     const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.numerator, price.denominator) : undefined
-    const invalid =
+    return (
       price &&
       sqrtRatioX96 &&
       !(
         JSBI.greaterThanOrEqual(sqrtRatioX96, TickMath.MIN_SQRT_RATIO) &&
         JSBI.lessThan(sqrtRatioX96, TickMath.MAX_SQRT_RATIO)
       )
-    return invalid
+    )
   }, [price])
 
   // used for ratio calculation when pool not initialized

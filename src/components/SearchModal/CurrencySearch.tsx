@@ -1,30 +1,31 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, Token } from '@uniswap/sdk-core'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
+import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Edit } from 'react-feather'
 import ReactGA from 'react-ga'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import { useAllTokenBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
-import { ExtendedEther } from '../../constants/tokens'
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens, useSortedTokensByQuery } from './filtering'
 import ImportRow from './ImportRow'
-import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
 const ContentWrapper = styled(Column)`
@@ -79,8 +80,6 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const [invertSearchOrder] = useState<boolean>(false)
-
   const allTokens = useAllTokens()
 
   // if they input an address, use it
@@ -100,27 +99,28 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
-  const tokenComparator = useTokenComparator(invertSearchOrder)
-
   const filteredTokens: Token[] = useMemo(() => {
-    return filterTokens(Object.values(allTokens), debouncedQuery)
+    return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
   }, [allTokens, debouncedQuery])
 
+  const balances = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(() => {
-    return filteredTokens.sort(tokenComparator)
-  }, [filteredTokens, tokenComparator])
+    return filteredTokens.sort(tokenComparator.bind(null, balances))
+  }, [balances, filteredTokens])
 
-  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
+  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
-  const ether = useMemo(() => chainId && ExtendedEther.onChain(chainId), [chainId])
+  const native = useNativeCurrency()
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
+    if (!native) return filteredSortedTokens
+
     const s = debouncedQuery.toLowerCase().trim()
-    if (s === '' || s === 'e' || s === 'et' || s === 'eth') {
-      return ether ? [ether, ...filteredSortedTokens] : filteredSortedTokens
+    if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
+      return native ? [native, ...filteredSortedTokens] : filteredSortedTokens
     }
     return filteredSortedTokens
-  }, [debouncedQuery, ether, filteredSortedTokens])
+  }, [debouncedQuery, native, filteredSortedTokens])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -148,8 +148,8 @@ export function CurrencySearch({
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         const s = debouncedQuery.toLowerCase().trim()
-        if (s === 'eth' && ether) {
-          handleCurrencySelect(ether)
+        if (s === native?.symbol?.toLowerCase()) {
+          handleCurrencySelect(native)
         } else if (filteredSortedTokensWithETH.length > 0) {
           if (
             filteredSortedTokensWithETH[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
@@ -160,7 +160,7 @@ export function CurrencySearch({
         }
       }
     },
-    [debouncedQuery, ether, filteredSortedTokensWithETH, handleCurrencySelect]
+    [debouncedQuery, native, filteredSortedTokensWithETH, handleCurrencySelect]
   )
 
   // menu ui

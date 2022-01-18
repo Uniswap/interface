@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { ButtonText } from 'components/Button'
 import PositionListItem from 'components/PositionListItem'
 import React from 'react'
 import styled from 'styled-components/macro'
@@ -14,9 +15,7 @@ const DesktopHeader = styled.div`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     align-items: center;
     display: flex;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
     & > div:last-child {
       text-align: right;
       margin-right: 12px;
@@ -36,9 +35,15 @@ const MobileHeader = styled.div`
 
 type PositionListProps = React.PropsWithChildren<{
   positions: PositionDetails[]
+  setUserHideClosedPositions: any
+  userHideClosedPositions: boolean
 }>
 
-export default function PositionList({ positions }: PositionListProps) {
+export default function PositionList({
+  positions,
+  setUserHideClosedPositions,
+  userHideClosedPositions,
+}: PositionListProps) {
   return (
     <>
       <DesktopHeader>
@@ -46,9 +51,9 @@ export default function PositionList({ positions }: PositionListProps) {
           <Trans>Your positions</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
-        <div>
-          <Trans>Status</Trans>
-        </div>
+        <ButtonText style={{ opacity: 0.6 }} onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
+          <Trans>Hide closed positions</Trans>
+        </ButtonText>
       </DesktopHeader>
       <MobileHeader>
         <Trans>Your positions</Trans>

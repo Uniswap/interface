@@ -1,14 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { Connector } from 'widgets-web3-react/types'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, portis, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { clearAllTransactions } from '../../state/transactions/actions'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
 import { shortenAddress } from '../../utils'
@@ -176,7 +177,7 @@ const IconWrapper = styled.div<{ size?: number }>`
   `};
 `
 
-function WrappedStatusIcon({ connector }: { connector: AbstractConnector }) {
+function WrappedStatusIcon({ connector }: { connector: AbstractConnector | Connector }) {
   return (
     <IconWrapper size={16}>
       <StatusIcon connector={connector} />

@@ -13,8 +13,6 @@ interface Window {
     // value that is populated and returns true by the Coinbase Wallet mobile dapp browser
     isCoinbaseWallet?: true
     isMetaMask?: true
-    on?: (...args: any[]) => void
-    removeListener?: (...args: any[]) => void
     autoRefreshOnNetworkChange?: boolean
   }
   web3?: Record<string, unknown>

@@ -1,8 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
-import QuestionHelper from 'components/QuestionHelper'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
@@ -46,12 +44,6 @@ export default function CommonBases({
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
-      <AutoRow>
-        <Text fontWeight={500} fontSize={14}>
-          <Trans>Common bases</Trans>
-        </Text>
-        <QuestionHelper text={<Trans>These tokens are commonly paired with other tokens.</Trans>} />
-      </AutoRow>
       <AutoRow gap="4px">
         {bases.map((currency: Currency) => {
           const isSelected = selectedCurrency?.equals(currency)

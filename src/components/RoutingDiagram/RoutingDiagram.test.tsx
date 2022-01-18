@@ -1,3 +1,4 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DAI, USDC, WBTC } from 'constants/tokens'
@@ -7,16 +8,21 @@ import RoutingDiagram, { RoutingDiagramEntry } from './RoutingDiagram'
 
 const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[0]), 100)
 
-const singleRoute: RoutingDiagramEntry = { percent: percent`100`, path: [[USDC, DAI, FeeAmount.LOW]] }
+const singleRoute: RoutingDiagramEntry = {
+  percent: percent`100`,
+  path: [[USDC, DAI, FeeAmount.LOW]],
+  protocol: Protocol.V3,
+}
 
 const multiRoute: RoutingDiagramEntry[] = [
-  { percent: percent`75`, path: [[USDC, DAI, FeeAmount.LOWEST]] },
+  { percent: percent`75`, path: [[USDC, DAI, FeeAmount.LOWEST]], protocol: Protocol.V2 },
   {
     percent: percent`25`,
     path: [
       [USDC, WBTC, FeeAmount.MEDIUM],
       [WBTC, DAI, FeeAmount.HIGH],
     ],
+    protocol: Protocol.V3,
   },
 ]
 

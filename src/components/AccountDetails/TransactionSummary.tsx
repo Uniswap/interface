@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
+import { nativeOnChain } from '../../constants/tokens'
 import { useCurrency, useToken } from '../../hooks/Tokens'
 import useENSName from '../../hooks/useENSName'
 import { VoteOption } from '../../state/governance/types'
@@ -130,18 +131,33 @@ function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInf
   return <Trans>Delegate voting power to {ENSName ?? delegatee}</Trans>
 }
 
-function WrapSummary({ info: { currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
+function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
+  const native = chainId ? nativeOnChain(chainId) : undefined
+
   if (unwrapped) {
     return (
       <Trans>
-        Unwrap <FormattedCurrencyAmount rawAmount={currencyAmountRaw} symbol={'WETH'} decimals={18} sigFigs={6} /> to
-        ETH
+        Unwrap{' '}
+        <FormattedCurrencyAmount
+          rawAmount={currencyAmountRaw}
+          symbol={native?.wrapped?.symbol ?? 'WETH'}
+          decimals={18}
+          sigFigs={6}
+        />{' '}
+        to {native?.symbol ?? 'ETH'}
       </Trans>
     )
   } else {
     return (
       <Trans>
-        Wrap <FormattedCurrencyAmount rawAmount={currencyAmountRaw} symbol={'ETH'} decimals={18} sigFigs={6} /> to WETH
+        Wrap{' '}
+        <FormattedCurrencyAmount
+          rawAmount={currencyAmountRaw}
+          symbol={native?.symbol ?? 'ETH'}
+          decimals={18}
+          sigFigs={6}
+        />{' '}
+        to {native?.wrapped?.symbol ?? 'WETH'}
       </Trans>
     )
   }

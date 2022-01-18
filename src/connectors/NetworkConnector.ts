@@ -36,11 +36,14 @@ class MiniRpcProvider implements AsyncSendable {
   public readonly path: string
   public readonly batchWaitTimeMs: number
 
+  private readonly connector: NetworkConnector
+
   private nextId = 1
   private batchTimeoutId: ReturnType<typeof setTimeout> | null = null
   private batch: BatchItem[] = []
 
-  constructor(chainId: number, url: string, batchWaitTimeMs?: number) {
+  constructor(connector: NetworkConnector, chainId: number, url: string, batchWaitTimeMs?: number) {
+    this.connector = connector
     this.chainId = chainId
     this.url = url
     const parsed = new URL(url)
@@ -52,7 +55,21 @@ class MiniRpcProvider implements AsyncSendable {
 
   public readonly clearBatch = async () => {
     console.debug('Clearing batch', this.batch)
-    const batch = this.batch
+    let batch = this.batch
+
+    batch = batch.filter((b) => {
+      if (b.request.method === 'wallet_switchEthereumChain') {
+        try {
+          this.connector.changeChainId(parseInt((b.request.params as [{ chainId: string }])[0].chainId))
+          b.resolve({ id: b.request.id })
+        } catch (error) {
+          b.reject(error)
+        }
+        return false
+      }
+      return true
+    })
+
     this.batch = []
     this.batchTimeoutId = null
     let response: Response
@@ -148,9 +165,9 @@ export class NetworkConnector extends AbstractConnector {
     invariant(defaultChainId || Object.keys(urls).length === 1, 'defaultChainId is a required argument with >1 url')
     super({ supportedChainIds: Object.keys(urls).map((k): number => Number(k)) })
 
-    this.currentChainId = defaultChainId || Number(Object.keys(urls)[0])
+    this.currentChainId = defaultChainId ?? Number(Object.keys(urls)[0])
     this.providers = Object.keys(urls).reduce<{ [chainId: number]: MiniRpcProvider }>((accumulator, chainId) => {
-      accumulator[Number(chainId)] = new MiniRpcProvider(Number(chainId), urls[Number(chainId)])
+      accumulator[Number(chainId)] = new MiniRpcProvider(this, Number(chainId), urls[Number(chainId)])
       return accumulator
     }, {})
   }
@@ -177,5 +194,22 @@ export class NetworkConnector extends AbstractConnector {
 
   public deactivate() {
     return
+  }
+
+  /**
+   * Meant to be called only by MiniRpcProvider
+   * @param chainId the new chain id
+   */
+  public changeChainId(chainId: number) {
+    if (chainId in this.providers) {
+      this.currentChainId = chainId
+      this.emitUpdate({
+        chainId,
+        account: null,
+        provider: this.providers[chainId],
+      })
+    } else {
+      throw new Error(`Unsupported chain ID: ${chainId}`)
+    }
   }
 }

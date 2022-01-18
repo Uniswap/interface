@@ -1,16 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import DowntimeWarning from 'components/DowntimeWarning'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { L2_CHAIN_IDS } from 'constants/chains'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { useActiveWeb3React } from 'hooks/web3'
 import { useContext } from 'react'
 import { BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -20,6 +17,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
+import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
@@ -109,24 +107,24 @@ const MainContentWrapper = styled.main`
   flex-direction: column;
 `
 
-const ShowInactiveToggle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-items: end;
-  grid-column-gap: 4px;
-  padding: 0 8px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-bottom: 12px;
-  `};
-`
-
-const ResponsiveRow = styled(RowFixed)`
-  justify-content: space-between;
-  width: 100%;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: column-reverse;
-  `};
-`
+function PositionsLoadingPlaceholder() {
+  return (
+    <LoadingRows>
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+    </LoadingRows>
+  )
+}
 
 export default function Pool() {
   const { account, chainId } = useActiveWeb3React()
@@ -147,7 +145,7 @@ export default function Pool() {
 
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
   const showConnectAWallet = Boolean(!account)
-  const showV2Features = !!chainId && !L2_CHAIN_IDS.includes(chainId)
+  const showV2Features = Boolean(chainId && V2_FACTORY_ADDRESSES[chainId])
 
   const menuItems = [
     {
@@ -223,38 +221,31 @@ export default function Pool() {
               </ButtonRow>
             </TitleRow>
 
-            <HideSmall>
-              <NetworkAlert thin />
-              <DowntimeWarning />
-              <CTACards />
-            </HideSmall>
-
             <MainContentWrapper>
               {positionsLoading ? (
-                <LoadingRows>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRows>
-              ) : filteredPositions && filteredPositions.length > 0 ? (
-                <PositionList positions={filteredPositions} />
+                <PositionsLoadingPlaceholder />
+              ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (
+                <PositionList
+                  positions={filteredPositions}
+                  setUserHideClosedPositions={setUserHideClosedPositions}
+                  userHideClosedPositions={userHideClosedPositions}
+                />
               ) : (
                 <NoLiquidity>
                   <ThemedText.Body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
-                      <Trans>Your V3 liquidity positions will appear here.</Trans>
+                      <Trans>Your active V3 liquidity positions will appear here.</Trans>
                     </div>
                   </ThemedText.Body>
+                  {!showConnectAWallet && closedPositions.length > 0 && (
+                    <ButtonText
+                      style={{ marginTop: '.5rem' }}
+                      onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
+                    >
+                      <Trans>Show closed positions</Trans>
+                    </ButtonText>
+                  )}
                   {showConnectAWallet && (
                     <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
                       <Trans>Connect a wallet</Trans>
@@ -263,61 +254,9 @@ export default function Pool() {
                 </NoLiquidity>
               )}
             </MainContentWrapper>
-
-            <ResponsiveRow>
-              {showV2Features && (
-                <RowFixed>
-                  <ButtonOutlined
-                    as={Link}
-                    to="/pool/v2"
-                    id="import-pool-link"
-                    style={{
-                      padding: '8px 16px',
-                      margin: '0 4px',
-                      borderRadius: '12px',
-                      width: 'fit-content',
-                      fontSize: '14px',
-                    }}
-                  >
-                    <Layers size={14} style={{ marginRight: '8px' }} />
-
-                    <Trans>View V2 Liquidity</Trans>
-                  </ButtonOutlined>
-                  {positions && positions.length > 0 && (
-                    <ButtonOutlined
-                      as={Link}
-                      to="/migrate/v2"
-                      id="import-pool-link"
-                      style={{
-                        padding: '8px 16px',
-                        margin: '0 4px',
-                        borderRadius: '12px',
-                        width: 'fit-content',
-                        fontSize: '14px',
-                      }}
-                    >
-                      <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-
-                      <Trans>Migrate Liquidity</Trans>
-                    </ButtonOutlined>
-                  )}
-                </RowFixed>
-              )}
-              {closedPositions.length > 0 ? (
-                <ShowInactiveToggle>
-                  <label>
-                    <ThemedText.Body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
-                      <Trans>Show closed positions</Trans>
-                    </ThemedText.Body>
-                  </label>
-                  <input
-                    type="checkbox"
-                    onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
-                    checked={!userHideClosedPositions}
-                  />
-                </ShowInactiveToggle>
-              ) : null}
-            </ResponsiveRow>
+            <HideSmall>
+              <CTACards />
+            </HideSmall>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>

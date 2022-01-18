@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2022-01-14 19:07\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -21,7 +21,12 @@ msgstr ""
 msgid "$-"
 msgstr "$-"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "$<0/>"
+msgstr "<0/>USD"
+
 #: src/components/earn/PoolCard.tsx
+#: src/components/swap/GasEstimateBadge.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
@@ -31,17 +36,9 @@ msgstr "${0}"
 msgid "(${0})"
 msgstr "(${0})"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "(Max)"
-msgstr "(Max)"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(Vezi pe Explorer)"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "(claim)"
-msgstr "(revendicare)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -124,6 +121,7 @@ msgid "About"
 msgstr "Despre"
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/lib/components/Swap/Summary/index.tsx
 msgid "Accept"
 msgstr "Acceptă"
 
@@ -206,10 +204,6 @@ msgstr "Permite Protocolului Uniswap să îți utilizeze {0}"
 msgid "Allowed"
 msgstr "Permis"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Allowed Slippage"
-msgstr "Glisare permisă"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Sumă"
@@ -219,6 +213,7 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "A apărut o eroare la încercarea de a executa acest swap. Este posibil să fie nevoie să vă măriți toleranța la alunecare. Dacă acest lucru nu funcționează, poate exista o incompatibilitate cu jetonul pe care îl tranzacționați. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
 
 #: src/components/earn/StakingModal.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Aprobă"
@@ -234,6 +229,10 @@ msgstr "Aprobați jetonul"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Aprobă {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve {0} first"
+msgstr "Aprobați mai întâi {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -280,20 +279,16 @@ msgid "Auto"
 msgstr "Automat"
 
 #: src/components/Settings/index.tsx
-msgid "Auto Router"
-msgstr "Router auto"
+msgid "Auto Router API"
+msgstr "Auto Router API"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "Disponibil pentru depunere: {0}"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Balance:"
-msgstr "Sold:"
-
 #: src/components/CurrencyInputPanel/index.tsx
-msgid "Balance: {0} {1}"
-msgstr "Sold: {0} {1}"
+msgid "Balance: {0}"
+msgstr "Sold: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -310,6 +305,10 @@ msgstr "Cel mai bun pentru perechi stabile."
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
 msgstr "Cel mai bun pentru perechi foarte stabile."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{formattedGasPriceString} in gas."
+msgstr "Ruta cu cel mai bun preț costă ~{formattedGasPriceString} în benzină."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -422,6 +421,7 @@ msgstr "Șterge tot"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Close"
 msgstr "Închide"
 
@@ -463,10 +463,6 @@ msgstr "Colectarea taxelor"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Colectarea taxelor va retrage taxele disponibile în prezent pentru tine."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "Baze comune"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Confirmare"
@@ -479,6 +475,10 @@ msgstr "Confirmă Aprovizionarea"
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
 msgstr "Confirmă Schimbul"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Confirm swap"
+msgstr "Confirmați schimbul"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -524,6 +524,10 @@ msgstr "Conectează-te la un portofel pentru a vizualiza lichiditatea V2 a ta."
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Conectează-te la un portofel pentru a vizualiza lichiditatea ta."
+
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Connect wallet to swap"
+msgstr "Conectați portofelul pentru a schimba"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -581,6 +585,10 @@ msgstr "Prețul actual"
 msgid "Current {0} Price:"
 msgstr "Prețul actual {0}:"
 
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Custom"
+msgstr "Personalizat"
+
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Tema întunecată"
@@ -616,10 +624,6 @@ msgstr "Depozit"
 msgid "Deposit Amounts"
 msgstr "Sume de depozit"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit Assets"
-msgstr "Activele de depozit"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Depune Jetoane UNI-V2 LP"
@@ -627,6 +631,10 @@ msgstr "Depune Jetoane UNI-V2 LP"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Lichiditate de depozit"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "Depuneți jetoane în rețeaua {label}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -665,6 +673,7 @@ msgid "Discord"
 msgstr "Discordanță"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Dismiss"
 msgstr "Respinge"
 
@@ -706,6 +715,7 @@ msgstr "Introdu o adresă pentru a declanșa o revendicare UNI. Dacă adresa are
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -722,6 +732,11 @@ msgstr "Introdu o listă valabilă a locației"
 msgid "Enter valid token address"
 msgstr "Introdu o adresă valabilă a grupului"
 
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "Introduceți {0} sumă"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -737,9 +752,25 @@ msgstr "Eroare de conectare"
 msgid "Error connecting. Try refreshing the page."
 msgstr "Eroare la conectare. Încearcă să reîncarci pagina."
 
+#: src/lib/components/Error/ErrorDialog.tsx
+msgid "Error details"
+msgstr "Detalii despre eroare"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Eroare la importarea listei"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimate may differ due to your wallet gas settings"
+msgstr "Estimarea poate diferi din cauza setărilor de gaz pentru portofel"
+
+#: src/components/swap/GasEstimateBadge.tsx
+msgid "Estimated network fee"
+msgstr "Taxa de rețea estimată"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Etherscan"
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
@@ -748,6 +779,10 @@ msgstr "Executat"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Rezultate extinse din Listele de Jetoane/Grupuri inactive"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Expected Output"
+msgstr "Rezultat așteptat"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -762,12 +797,12 @@ msgid "Expired"
 msgstr "Expirat"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Explorează grupurile populare pe Uniswap Analytics."
+msgid "Explore Uniswap Analytics."
+msgstr "Explorați Uniswap Analytics."
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Explorer"
-msgstr "Explorator"
+#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
+msgstr "Schimbarea rețelelor de la interfața Uniswap a eșuat. Pentru a utiliza Uniswap pe {0}, trebuie să schimbați rețeaua din portofel."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -777,6 +812,15 @@ msgstr "Nivelul Taxei"
 msgid "Fee tier"
 msgstr "Nivelul taxei"
 
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Se aduc cel mai bun preț..."
+
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Fetching best price…"
+msgstr "Preluare cel mai bun preț…"
+
+#: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Pentru"
@@ -785,7 +829,6 @@ msgstr "Pentru"
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Pentru fiecare grup indicat mai jos, dă clic pe migrare pentru a elimina lichiditatea de la Uniswap V2 și depune-l în Uniswap V3."
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
 msgstr "De la"
@@ -814,6 +857,10 @@ msgstr "Centru de ajutor"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Ascunde"
+
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Ascunde pozițiile închise"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -884,6 +931,12 @@ msgstr "Instalează Metamask"
 msgid "Insufficient liquidity for this trade."
 msgstr "Lichiditate insuficientă pentru această tranzacție."
 
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Insufficient {0}"
+msgstr "Insuficient {0}"
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -927,14 +980,11 @@ msgstr "Limba"
 msgid "Learn"
 msgstr "Învață"
 
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Learn More"
-msgstr "Aflați mai multe"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Aflați despre furnizarea de lichiditate"
 
+#: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
 msgstr "Află mai multe"
@@ -954,13 +1004,13 @@ msgstr "Tema luminii"
 msgid "Liquidity"
 msgstr "Lichiditate"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Liquidity Provider Fee"
-msgstr "Taxa Furnizorului de Lichiditate"
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Datele privind lichiditatea nu sunt disponibile."
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Comision furnizor de lichiditate"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -985,9 +1035,12 @@ msgstr "Încărcat"
 #: src/pages/MigrateV2/index.tsx
 #: src/pages/Pool/v2.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "Se încarcă"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAX"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1010,6 +1063,7 @@ msgstr "Gestionează Lista de Jetoane"
 msgid "Manage this pool."
 msgstr "Gestionează acest grup."
 
+#: src/lib/components/Swap/TokenInput.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Maxim"
@@ -1023,11 +1077,16 @@ msgstr "Preț Maxim"
 msgid "Max price"
 msgstr "Preț maxim"
 
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Max slippage"
+msgstr "Alunecare maximă"
+
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
 msgstr "Max:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Maximum trimis"
 
@@ -1042,10 +1101,6 @@ msgstr "Meniul"
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
 msgstr "Migrare"
-
-#: src/pages/Pool/index.tsx
-msgid "Migrate Liquidity"
-msgstr "Migrare Lichiditate"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
@@ -1082,6 +1137,7 @@ msgid "Min:"
 msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimum primit"
 
@@ -1089,13 +1145,25 @@ msgstr "Minimum primit"
 msgid "Missing dependencies"
 msgstr "Dependențe lipsă"
 
+#: src/lib/components/Swap/Settings/MockToggle.tsx
+msgid "Mock Toggle"
+msgstr "Comutare simulată"
+
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Mai mult"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Network Fee"
+msgstr "Taxa de retea"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Avertisment rețea"
+
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "Network fees exceed 50% of the swap amount!"
+msgstr "Taxele de rețea depășesc 50% din valoarea swapului!"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1139,10 +1207,12 @@ msgid "Not created"
 msgstr "Nu a fost creat"
 
 #: src/components/Toggle/ListToggle.tsx
+#: src/lib/components/Toggle.tsx
 msgid "OFF"
 msgstr "DEZACTIVAT"
 
 #: src/components/Toggle/ListToggle.tsx
+#: src/lib/components/Toggle.tsx
 msgid "ON"
 msgstr "PORNIT"
 
@@ -1175,8 +1245,8 @@ msgid "Optimism Gateway"
 msgstr "Optimism Gateway"
 
 #: src/components/DowntimeWarning/index.tsx
-msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Ethereum optimist este în versiune beta și poate avea perioade de nefuncționare. Optimismul se așteaptă ca perioadele de nefuncționare planificate să actualizeze rețeaua în viitorul apropiat. În timpul perioadelor de nefuncționare, poziția dvs. nu va câștiga taxe și nu veți putea elimina lichiditatea. <0> Citiți mai multe.</0>"
+msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimismul este în versiune beta și poate avea timp de nefuncționare. Optimism se așteaptă ca timpul de nefuncționare planificat să actualizeze rețeaua în viitorul apropiat. În timpul nefuncționării, poziția dvs. nu va câștiga comisioane și nu veți putea elimina lichiditatea. <0>Citește mai mult.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1185,6 +1255,10 @@ msgstr "Etherscan optimist"
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
 msgstr "Prea departe"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated."
+msgstr "Ieșirea este estimată."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1220,12 +1294,20 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Vă rugăm să vă conectați la Layer 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "Vă rugăm să vă conectați la rețeaua Ethereum adecvată."
+msgid "Please connect to a supported network in the dropdown menu or in your wallet."
+msgstr "Vă rugăm să vă conectați la o rețea acceptată în meniul drop-down sau în portofel."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Te rugăm să introduci cuvântul \"{confirmWord}\" pentru a activa modul expert."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygon Bridge"
+msgstr "Podul poligonului"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Polygonscan"
+msgstr "Polygonscan"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1268,7 +1350,6 @@ msgstr "Prezentare Generală Grupuri"
 msgid "Preview"
 msgstr "previzualizare"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Preț"
@@ -1289,9 +1370,17 @@ msgstr "Impact de Preț este Prea Mare"
 msgid "Price Updated"
 msgstr "Preț Actualizat"
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Impactul prețului"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Interval de preț"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Price updated"
+msgstr "Preț actualizat"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1361,9 +1450,21 @@ msgstr "Citește mai multe despre activele neacceptate"
 msgid "Recent Transactions"
 msgstr "Tranzacții recente"
 
+#: src/lib/components/RecentTransactionsDialog.tsx
+msgid "Recent transactions"
+msgstr "Tranzactii recente"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Destinatar"
+
+#: src/lib/components/Error/ErrorBoundary.tsx
+msgid "Reload the page"
+msgstr "Reîncărcați pagina"
+
+#: src/lib/components/Error/ErrorBoundary.tsx
+msgid "Reload the page to try again"
+msgstr "Reîncărcați pagina pentru a încerca din nou"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1407,11 +1508,23 @@ msgstr "Se elimină {0} {1} și{2} {3}"
 msgid "Request Features"
 msgstr "Solicitați caracteristici"
 
+#: src/lib/components/Swap/Settings/index.tsx
+msgid "Reset"
+msgstr "Resetați"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Întoarcere"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Review swap"
+msgstr "Schimb de recenzii"
+
+#: src/lib/components/TokenSelect/index.tsx
+msgid "Search by token name or address"
+msgstr "Căutați după nume simbol sau adresă"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1427,6 +1540,8 @@ msgstr "Selectați o rețea"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/lib/components/TokenSelect/TokenButton.tsx
+#: src/lib/components/TokenSelect/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -1463,6 +1578,10 @@ msgstr "Setează Intervalul de Preț"
 msgid "Set Starting Price"
 msgstr "Setează Prețul de Început"
 
+#: src/lib/components/Swap/Settings/index.tsx
+msgid "Settings"
+msgstr "Setări"
+
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
 msgstr "Cota de Grup"
@@ -1484,6 +1603,7 @@ msgid "Simple"
 msgstr "Simplu"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Slippage tolerance"
 msgstr "Toleranță derapaj"
 
@@ -1495,9 +1615,9 @@ msgstr "Unele active nu sunt disponibile prin intermediul acestei interfețe deo
 msgid "Something went wrong"
 msgstr "Ceva nu a funcţionat corect"
 
-#: src/components/PositionList/index.tsx
-msgid "Status"
-msgstr "stare"
+#: src/lib/components/Error/ErrorDialog.tsx
+msgid "Something went wrong."
+msgstr "Ceva n-a mers bine."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1534,6 +1654,8 @@ msgstr "Se furnizează {0} {1} și {2} {3}"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
+#: src/lib/components/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1548,6 +1670,10 @@ msgstr "Schimbați <0 /> pentru exact <1 />"
 msgid "Swap Anyway"
 msgstr "Schimbă Oricum"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Swap details"
+msgstr "Schimbați detalii"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Schimbați exact <0 /> cu <1 />"
@@ -1557,9 +1683,21 @@ msgstr "Schimbați exact <0 /> cu <1 />"
 msgid "Swap failed: {0}"
 msgstr "Schimbarea a eșuat: {0}"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Swap summary"
+msgstr "Rezumat schimb"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Se schimbă {0} {1} cu {2} {3}"
+
+#: src/components/Popups/SurveyPopup.tsx
+msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
+msgstr "Participați la un sondaj de 10 minute pentru a ne ajuta să vă îmbunătățim experiența în aplicația Uniswap."
+
+#: src/components/Popups/SurveyPopup.tsx
+msgid "Tell us what you think ↗"
+msgstr "Spune-ne ce crezi ↗"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1593,6 +1731,18 @@ msgstr "Aplicația înregistrează statistici de utilizare anonimizate pentru a 
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
 msgstr "Aplicația vă colectează în siguranță adresa portofelului și o partajează cu TRM Labs Inc. din motive de risc și de conformitate."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "The cost of sending this transaction is more than half of the value of the input amount."
+msgstr "Costul trimiterii acestei tranzacții este mai mult de jumătate din valoarea sumei de intrare."
+
+#: src/components/Header/Polling.tsx
+msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
+msgstr "Suma curentă rapidă de gaz pentru trimiterea unei tranzacții pe L1. Taxele pentru gaze sunt plătite în moneda nativă Ethereum (ETH) și sunt denominate în GWEI."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Diferența estimată între valorile USD ale sumelor de intrare și de ieșire."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Jetonul de intrare nu poate fi transferat. Este posibil să existe o problemă cu jetonul de intrare."
@@ -1600,6 +1750,10 @@ msgstr "Jetonul de intrare nu poate fi transferat. Este posibil să existe o pro
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Prețul de piață este în afara intervalului de preț specificat. Doar depozitul de active unice."
+
+#: src/components/Header/Polling.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Cel mai recent număr de bloc din această rețea. Prețurile se actualizează la fiecare bloc."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1629,10 +1783,6 @@ msgstr "Tranzacția nu a putut fi trimisă deoarece termenul a trecut. Te rugăm
 msgid "There is no liquidity data."
 msgstr "Nu există date privind lichiditatea."
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "Aceste jetoane sunt de obicei asociate cu alte jetoane."
-
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
 msgstr "Această aplicație folosește următoarele API-uri terță parte:"
@@ -1642,8 +1792,8 @@ msgid "This pool must be initialized before you can add liquidity. To initialize
 msgstr "Acest pool trebuie inițializat înainte de a putea adăuga lichidități. Pentru a inițializa, selectați un preț de pornire pentru piscină. Apoi, introduceți intervalul de preț al lichidității și suma depozitului. Taxele pe gaz vor fi mai mari decât de obicei datorită tranzacției de inițializare."
 
 #: src/components/swap/SwapRoute.tsx
-msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Această rută vă optimizează prețul luând în considerare traseele împărțite, hameiul multiplu și costurile cu benzina."
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Această rută vă optimizează producția totală, luând în considerare rutele împărțite, mai multe salturi și costul gazului pentru fiecare pas."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1669,7 +1819,6 @@ msgstr "Această tranzacție nu va reuși nici din cauza mișcării prețului, n
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Sfat: Jetoanele personalizate sunt stocate local în browser"
 
-#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
@@ -1679,10 +1828,6 @@ msgstr "La"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "La (cel puțin)"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Pentru a începe tranzacționarea pe {0}, mai întâi treceți-vă activele de la L1 la L2. Vă rugăm să tratați aceasta ca pe o versiune beta și aflați despre riscuri înainte de a utiliza {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -1700,10 +1845,6 @@ msgstr "Jetoane din liste inactive. Importă jetoanele specifice de mai jos sau 
 msgid "Top pools"
 msgstr "Grupuri de top"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Total Supply"
-msgstr "Total Aprovizionare"
-
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
 msgstr "Total depozitat"
@@ -1716,9 +1857,9 @@ msgstr "Depozite totale"
 msgid "Trade Route"
 msgstr "Rută comercială"
 
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Transaction Details"
-msgstr "Detalii tranzacție"
+#: src/lib/components/Swap/Input.tsx
+msgid "Trading"
+msgstr "Comercial"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1740,13 +1881,22 @@ msgid "Transaction completed in"
 msgstr "Tranzacție finalizată în"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
 msgstr "Termen limită tranzacție"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction pending"
+msgstr "Tranzacție în așteptare"
 
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Transaction rejected."
 msgstr "Tranzacția respinsă."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction submitted"
+msgstr "Tranzacție trimisă"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -1756,6 +1906,10 @@ msgstr "Jeton de transfer"
 msgid "Try Again"
 msgstr "Încearcă din nou"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Încercați să vă creșteți toleranța la alunecare.<0/>NOTĂ: Taxa pentru jetoanele de transfer și rebazare este incompatibilă cu Uniswap V3."
+
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
 msgstr "Activează Modul Expert"
@@ -1763,14 +1917,6 @@ msgstr "Activează Modul Expert"
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
 msgstr "UNI a sosit"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "UNI în circulație:"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "Preț UNI:"
 
 #: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
@@ -1796,10 +1942,6 @@ msgstr "UNI nesolicitate"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
 msgstr "Taxe nesolicitate"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Unclaimed:"
-msgstr "Nererevendicat:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -1836,10 +1978,6 @@ msgstr "Exploatare de lichidități Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Contract de migrare Uniswap↗"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Uniswap on {0}"
-msgstr "Uniswap pe {0}"
 
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
@@ -1881,8 +2019,8 @@ msgid "Unwrap"
 msgstr "Despachetează"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Unwrap <0/> to ETH"
-msgstr "Desfaceți <0 /> la ETH"
+msgid "Unwrap <0/> to {0}"
+msgstr "Desfaceți <0/> la {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -1893,16 +2031,12 @@ msgid "Update list"
 msgstr "Actualizare listă"
 
 #: src/components/Settings/index.tsx
-msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Utilizați API Uniswap Labs pentru a obține prețuri mai bune printr-un traseu mai eficient."
+msgid "Use the Uniswap Labs API to get faster quotes."
+msgstr "Utilizați API-ul Uniswap Labs pentru a obține cotații mai rapide."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Utilizator"
-
-#: src/components/swap/SwapRoute.tsx
-msgid "V2"
-msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1912,22 +2046,10 @@ msgstr "V2 nu este disponibil în Layer 2. Treceți la Layer 1 Ethereum."
 msgid "V2 liquidity"
 msgstr "Lichiditate V2"
 
-#: src/components/swap/SwapRoute.tsx
-msgid "V3"
-msgstr "V3"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
 msgstr "Preț V3 {0}:"
-
-#: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "Vizualizează Statisticile UNI"
-
-#: src/pages/Pool/index.tsx
-msgid "View V2 Liquidity"
-msgstr "Vizualizează Lichiditatea V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -1937,6 +2059,7 @@ msgstr "Vizualizează taxele acumulate și statisticile<0>↗</0>"
 msgid "View list"
 msgstr "Vizualizează lista"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Vizualizare pe Etherscan"
@@ -2072,8 +2195,8 @@ msgid "Wrap"
 msgstr "Împachetează"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Wrap <0/> to WETH"
-msgstr "Înfășurați <0 /> pe WETH"
+msgid "Wrap <0/> to {0}"
+msgstr "Înfășurați <0/> la {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2120,6 +2243,10 @@ msgstr "Poate că v-ați pierdut conexiunea la rețea sau {label} ar putea fi î
 msgid "You may have lost your network connection."
 msgstr "Este posibil să fi pierdut conexiunea la rețea."
 
+#: src/components/swap/SwapWarningDropdown.tsx
+msgid "You might consider waiting until the network fees go down to complete this transaction."
+msgstr "S-ar putea să vă gândiți să așteptați până când taxele de rețea scad pentru a finaliza această tranzacție."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Trebuie să conectezi un cont."
@@ -2145,17 +2272,21 @@ msgstr "De asemenea, vei colecta taxele câștigate din această poziție."
 msgid "You will receive"
 msgstr "Vei primi"
 
-#: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "Defalcarea ta UNI"
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Veți primi cel puțin {0} {1} sau tranzacția va reveni."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Veți trimite cel mult {0} {1} sau tranzacția va reveni."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "Lichiditatea ta V2"
 
 #: src/pages/Pool/index.tsx
-msgid "Your V3 liquidity positions will appear here."
-msgstr "Pozițiile tale de lichiditate V3 vor apărea aici."
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "Pozițiile dvs. active de lichiditate V3 vor apărea aici."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2220,11 +2351,16 @@ msgstr "Tranzacția poate fi anticipată"
 msgid "Your transaction may fail"
 msgstr "Tranzacția ta poate eșua"
 
+#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
+msgid "Your transaction will revert if it has been pending for longer than this period of time."
+msgstr "Tranzacția dvs. va reveni dacă a fost în așteptare mai mult decât această perioadă de timp."
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
 msgstr "Tranzacția ta va fi reluată dacă este în așteptare mai mult de această perioadă de timp."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Tranzacția dvs. va fi reluată dacă prețul se modifică nefavorabil cu mai mult de acest procent."
 
@@ -2236,6 +2372,10 @@ msgstr "Tranzacțiile tale vor apărea aici..."
 msgid "Your unclaimed UNI"
 msgstr "UNI nerevendicate de tine"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "after slippage"
+msgstr "după alunecare"
+
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "confirmă"
@@ -2243,6 +2383,10 @@ msgstr "confirmă"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "pentru {0}"
+
+#: src/components/Header/Polling.tsx
+msgid "gwei"
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2257,6 +2401,7 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// sau ipfs:// sau numele ENS"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "minutes"
 msgstr "minute"
 
@@ -2297,7 +2442,6 @@ msgstr "{0} Jetoane Personalizate"
 msgid "{0} Deposited"
 msgstr "{0} Depozitate"
 
-#: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
@@ -2362,6 +2506,10 @@ msgstr "{0} jetoane"
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Preț:"
 
+#: src/components/Header/index.tsx
+msgid "{0} {nativeCurrencySymbol}"
+msgstr "{0} {nativeCurrencySymbol}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Adăugat de utilizator"
@@ -2381,6 +2529,10 @@ msgstr "{0}%"
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
 msgstr "Nivel comision {0}"
+
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% bazin"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
@@ -2410,17 +2562,29 @@ msgstr "{USER_AMOUNT} UNI"
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} jetoane"
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "{integrator} fee"
+msgstr "{integrator} taxa"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} token bridge"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "{min}m {sec}s"
+msgstr "{min}m {sec}s"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "{sec}s"
+msgstr "{sec}s"
+
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "~$ <0/>"
-msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

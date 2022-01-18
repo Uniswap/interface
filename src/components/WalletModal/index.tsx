@@ -110,8 +110,8 @@ const HoverText = styled.div`
 `
 
 const LinkCard = styled(Card)`
-  background-color: ${({ theme }) => theme.primary1};
-  color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.bg1};
+  color: ${({ theme }) => theme.text3};
 
   :hover {
     cursor: pointer;
@@ -320,7 +320,7 @@ export default function WalletModal({
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
               <h5>
-                <Trans>Please connect to the appropriate Ethereum network.</Trans>
+                <Trans>Please connect to a supported network in the dropdown menu or in your wallet.</Trans>
               </h5>
             ) : (
               <Trans>Error connecting. Try refreshing the page.</Trans>
@@ -402,17 +402,6 @@ export default function WalletModal({
                 </ThemedText.Black>
               </AutoRow>
             </LightCard>
-            <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
-              <RowBetween>
-                <AutoRow gap="4px">
-                  <Info size={20} />
-                  <ThemedText.White fontSize={14}>
-                    <Trans>How this app uses APIs</Trans>
-                  </ThemedText.White>
-                </AutoRow>
-                <ArrowRight size={16} />
-              </RowBetween>
-            </LinkCard>
             {walletView === WALLET_VIEWS.PENDING ? (
               <PendingView
                 connector={pendingWallet}
@@ -423,6 +412,17 @@ export default function WalletModal({
             ) : (
               <OptionGrid>{getOptions()}</OptionGrid>
             )}
+            <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
+              <RowBetween>
+                <AutoRow gap="4px">
+                  <Info size={20} />
+                  <ThemedText.Label fontSize={14}>
+                    <Trans>How this app uses APIs</Trans>
+                  </ThemedText.Label>
+                </AutoRow>
+                <ArrowRight size={16} />
+              </RowBetween>
+            </LinkCard>
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
