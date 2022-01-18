@@ -286,7 +286,7 @@ export default function NetworkSelector() {
     if (chainId && chainId !== prevChainId) {
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
-    } else if (urlChainId) {
+    } else if (urlChainId && urlChainId !== chainId) {
       handleChainSwitch(urlChainId, true)
     }
   }, [chainId, urlChainId, prevChainId, handleChainSwitch, history])
