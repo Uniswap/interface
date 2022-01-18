@@ -4,10 +4,7 @@ import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 
 export const UNI_ADDRESS = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
 
-/**
- * @TODO: Remove Multicall since we wont have it. (its part of v3a)
- */
-export const MULTICALL2_ADDRESSES = constructSameAddressMap('0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696')
+export const MULTICALL2_ADDRESSES = constructSameAddressMap('0x5FbDB2315678afecb367f032d93F642f64180aa3')
 
 export const V2_ROUTER_ADDRESS = constructSameAddressMap('0xd4C7B8a4fDFE65B8f2199748EEdC909A9CE7c58c') //Updated
 
