@@ -302,7 +302,6 @@ export function useSwapCallback(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   return useMemo(() => {
-    // console.log(trade, library, account, chainId)
     if (!trade || !library || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: <Trans>Missing dependencies</Trans> }
     }
