@@ -294,6 +294,9 @@ export default function Header() {
         >
           <Trans>Pool</Trans>
         </StyledNavLink>
+        <StyledNavLink id={`bond-nav-link`} to={'/bond'}>
+          <Trans>Bond</Trans>
+        </StyledNavLink>
         {(!chainId || chainId === SupportedChainId.MAINNET) && (
           <StyledNavLink id={`vote-nav-link`} to={'/vote'}>
             <Trans>Vote</Trans>

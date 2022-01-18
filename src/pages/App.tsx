@@ -17,6 +17,7 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
+import Bond from './Bond'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
 import MigrateV2 from './MigrateV2'
@@ -104,6 +105,8 @@ export default function App() {
                 <Route exact strict path="/pool/v2" component={PoolV2} />
                 <Route exact strict path="/pool" component={Pool} />
                 <Route exact strict path="/pool/:tokenId" component={PositionPage} />
+
+                <Route exact strict path="/bond" component={Bond} />
 
                 <Route
                   exact
