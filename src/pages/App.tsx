@@ -1,6 +1,6 @@
 import Loader from 'components/Loader'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { lazy, Suspense } from 'react'
+import { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -25,8 +25,6 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-
-const Vote = lazy(() => import('./Vote'))
 
 const AppWrapper = styled.div`
   display: flex;
