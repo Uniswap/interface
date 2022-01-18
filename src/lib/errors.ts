@@ -4,6 +4,7 @@ export class IntegrationError extends Error {
     this.name = 'Integration Error'
   }
 }
+
 export class ChainIdError extends Error {
   constructor(message: string) {
     super(message)
