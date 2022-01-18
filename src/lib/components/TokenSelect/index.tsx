@@ -29,8 +29,6 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
 
   const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
 
-  // TODO(zzmp): Disable already selected tokens (passed as props?)
-
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus(), [input])
 
