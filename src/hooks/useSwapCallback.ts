@@ -52,7 +52,7 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
-  const tradeBestExacInAnyway = useTradeExactIn(trade?.inputAmount, trade?.outputAmount.currency || undefined)
+  const tradeBestExactInAnyway = useTradeExactIn(trade?.inputAmount, trade?.outputAmount.currency || undefined)
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
@@ -79,9 +79,9 @@ function useSwapCallArguments(
           deadline: deadline.toNumber()
         })
       )
-    } else if (!!tradeBestExacInAnyway) {
+    } else if (!!tradeBestExactInAnyway) {
       swapMethods.push(
-        Router.swapCallParameters(tradeBestExacInAnyway, {
+        Router.swapCallParameters(tradeBestExactInAnyway, {
           feeOnTransfer: true,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
@@ -91,7 +91,7 @@ function useSwapCallArguments(
     }
 
     return swapMethods.map(parameters => ({ parameters, contract }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, tradeBestExacInAnyway])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, tradeBestExactInAnyway])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid

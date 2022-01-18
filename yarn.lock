@@ -2149,10 +2149,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
-"@dynamic-amm/sdk@^3.0.20":
-  version "3.0.20"
-  resolved "https://registry.yarnpkg.com/@dynamic-amm/sdk/-/sdk-3.0.20.tgz#5be3d134cc4c284c6bd353624ed9d4671c51157d"
-  integrity sha512-Ehvih6iiI8ForEp4t6/s90bY7zbi8cm6KlZx1o0JBeBzNh9G3ntknVCNTPJKYn26fi1bozgdKCEHe8daMJfHPQ==
+"@dynamic-amm/sdk@3.0.23":
+  version "3.0.23"
+  resolved "https://registry.yarnpkg.com/@dynamic-amm/sdk/-/sdk-3.0.23.tgz#d34acdc6e8a38bd538e5f3715253fdefbbfaf2f3"
+  integrity sha512-o2sfNo0FJMbKAjymKX5TQ+ZROJlAdX9C5ekHQhmG/VIKMg+X8p/ubugh8bQ6+i705YS64w7A5ENPEJgtUGBMHQ==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     "@ethersproject/contracts" "^5.0.2"
@@ -12476,12 +12476,6 @@ jest-resolve@24.9.0, jest-resolve@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/jest-resolve/-/jest-resolve-24.9.0.tgz#dff04c7687af34c4dd7e524892d9cf77e5d17321"
   integrity sha512-TaLeLVL1l08YFZAt3zaPtjiVvyy4oSA6CRe+0AFPPVX3Q/VI0giIWWoAvoS5L96vj9Dqxj4fB5p2qrHCmTU/MQ==
-  dependencies:
-    "@jest/types" "^24.9.0"
-    browser-resolve "^1.11.3"
-    chalk "^2.0.1"
-    jest-pnp-resolver "^1.2.1"
-    realpath-native "^1.1.0"
 
 jest-runner@^24.9.0:
   version "24.9.0"

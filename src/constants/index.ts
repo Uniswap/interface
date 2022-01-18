@@ -56,22 +56,22 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
 
 // TODO-swapv2: change router v2 contract
 export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
-  [ChainId.MATIC]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
-  [ChainId.AVAXMAINNET]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
-  [ChainId.MAINNET]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
-  [ChainId.FANTOM]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
-  [ChainId.CRONOS]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c'
+  [ChainId.BSCMAINNET]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
+  [ChainId.MATIC]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
+  [ChainId.AVAXMAINNET]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
+  [ChainId.MAINNET]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
+  [ChainId.FANTOM]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
+  [ChainId.CRONOS]: '0xdf1a1b60f2d438842916c0adc43748768353ec25'
 }
 
 // TODO-swapv2: change aggregation executor contract
 export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
-  [ChainId.MATIC]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
-  [ChainId.AVAXMAINNET]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
-  [ChainId.MAINNET]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
-  [ChainId.FANTOM]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
-  [ChainId.CRONOS]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225'
+  [ChainId.BSCMAINNET]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
+  [ChainId.MATIC]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
+  [ChainId.AVAXMAINNET]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
+  [ChainId.MAINNET]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
+  [ChainId.FANTOM]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
+  [ChainId.CRONOS]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77'
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {

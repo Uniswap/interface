@@ -16,7 +16,7 @@
                 "type": "uint16"
               }
             ],
-            "internalType": "struct IFireBirdMultihopRouter.Swap[][]",
+            "internalType": "struct IMultihopRouter.Swap[][]",
             "name": "swapSequences",
             "type": "tuple[][]"
           },
@@ -44,6 +44,11 @@
             "internalType": "uint256",
             "name": "deadline",
             "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "destTokenFeeData",
+            "type": "bytes"
           }
         ],
         "internalType": "struct AggregationExecutor.SwapExecutorDescription",
@@ -51,7 +56,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getCallByte",
+    "name": "nameDoesntMatter",
     "outputs": [
       {
         "internalType": "bytes",
