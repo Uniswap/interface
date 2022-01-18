@@ -55,7 +55,7 @@ function useTicksFromTickLens(
   const activeTick = pool?.tickCurrent && tickSpacing ? nearestUsableTick(pool?.tickCurrent, tickSpacing) : undefined
 
   const poolAddress =
-    currencyA && currencyB && feeAmount //&& poolState === PoolState.EXISTS
+    currencyA && currencyB && feeAmount && poolState === PoolState.EXISTS
       ? Pool.getAddress(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
       : undefined
 

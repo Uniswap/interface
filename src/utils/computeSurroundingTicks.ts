@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { tickToPrice } from '@uniswap/v3-sdk'
-import { TickData, TickProcessed } from 'hooks/usePoolActiveLiquidity'
+import { TickData, TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
 const PRICE_FIXED_DIGITS = 8

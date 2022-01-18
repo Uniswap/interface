@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
-import { TickData, TickProcessed } from 'hooks/usePoolActiveLiquidity'
+import { TickData, TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
 import computeSurroundingTicks from './computeSurroundingTicks'
