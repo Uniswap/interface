@@ -3,10 +3,10 @@ import { ChainIdError, IntegrationError } from 'lib/errors'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { SwapWidgetProps } from 'lib/index'
 import { useEffect } from 'react'
-import { isAddress } from 'utils'
+
+import { isAddress } from '../../../utils'
 
 export default function ErrorGenerator(swapWidgetProps: SwapWidgetProps) {
-  const { chainId } = useActiveWeb3React()
   const { jsonRpcEndpoint, provider } = swapWidgetProps
   useEffect(() => {
     if (!provider && !jsonRpcEndpoint) {
@@ -14,6 +14,7 @@ export default function ErrorGenerator(swapWidgetProps: SwapWidgetProps) {
     }
   }, [provider, jsonRpcEndpoint])
 
+  const { chainId } = useActiveWeb3React()
   useEffect(() => {
     if (chainId && !ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
       throw new ChainIdError('Switch to a network supported by the Uniswap Protocol.')
