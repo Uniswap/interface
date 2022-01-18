@@ -5,7 +5,6 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useEffect, useMemo, useState } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import fetchTokenList from './fetchTokenList'
 import { useQueryTokens } from './querying'
@@ -42,16 +41,16 @@ export default function useTokenList(list?: string | TokenInfo[]) {
   }, [chainId, library, list, setChainTokenMap])
 }
 
-export type TokenMap<T extends Token> = { [address: string]: T }
+export type TokenMap = { [address: string]: Token }
 
-export function useTokenMap(): TokenMap<WrappedTokenInfo> {
+export function useTokenMap(): TokenMap {
   const { chainId } = useActiveWeb3React()
   const chainTokenMap = useAtomValue(chainTokenMapAtom)
   return useMemo(() => {
     return Object.entries((chainId && chainTokenMap[chainId]) || {}).reduce((map, [address, { token }]) => {
       map[address] = token
       return map
-    }, {} as TokenMap<WrappedTokenInfo>)
+    }, {} as TokenMap)
   }, [chainId, chainTokenMap])
 }
 

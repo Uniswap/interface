@@ -1,14 +1,14 @@
+import { Token } from '@uniswap/sdk-core'
 import useDebounce from 'hooks/useDebounce'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useTokenBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import { getTokenFilter } from './filtering'
 import { tokenComparator, useSortTokensByQuery } from './sorting'
 
-export function useQueryTokens(query: string, tokens: WrappedTokenInfo[]) {
+export function useQueryTokens(query: string, tokens: Token[]) {
   const { account } = useActiveWeb3React()
   const balances = useTokenBalances(account, tokens)
   const sortedTokens = useMemo(
