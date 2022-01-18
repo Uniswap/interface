@@ -41,7 +41,7 @@ async function getColorFromUriPath(uri: string): Promise<string | undefined> {
   return
 }
 
-export function usePrefetchCurrencyColor(token?: Currency) {
+export function usePrefetchCurrencyColor(token: Currency | null | undefined) {
   const theme = useTheme()
   const logoURIs = useCurrencyLogoURIs(token)
 
@@ -52,7 +52,7 @@ export function usePrefetchCurrencyColor(token?: Currency) {
   }, [token, logoURIs, theme.tokenColorExtraction])
 }
 
-export default function useCurrencyColor(token?: Currency) {
+export default function useCurrencyColor(token?: Currency | null | undefined) {
   const [color, setColor] = useState<string | undefined>(undefined)
   const theme = useTheme()
   const logoURIs = useCurrencyLogoURIs(token)
