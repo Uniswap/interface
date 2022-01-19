@@ -297,15 +297,9 @@ export default function Header() {
         <StyledNavLink id={`bond-nav-link`} to={'/bond'}>
           <Trans>Bond</Trans>
         </StyledNavLink>
-        {(!chainId || chainId === SupportedChainId.MAINNET) && (
-          <StyledNavLink id={`vote-nav-link`} to={'/vote'}>
-            <Trans>Vote</Trans>
-          </StyledNavLink>
-        )}
-        <StyledExternalLink id={`charts-nav-link`} href={infoLink}>
-          <Trans>Charts</Trans>
-          <sup>↗</sup>
-        </StyledExternalLink>
+        <StyledNavLink id={`bond-nav-link`} to={'/stake'}>
+          <Trans>Stake</Trans>
+        </StyledNavLink>
       </HeaderLinks>
 
       <HeaderControls>
