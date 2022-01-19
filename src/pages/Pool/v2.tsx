@@ -3,15 +3,14 @@ import { Trans } from '@lingui/macro'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useContext, useMemo } from 'react'
-import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { CardBGImage, CardNoise, DataCard } from '../../components/earn/styled'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
@@ -23,7 +22,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { ExternalLink, HideSmall, ThemedText } from '../../theme'
+import { HideSmall, ThemedText } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -144,32 +143,32 @@ export default function Pool() {
         <VoteCard>
           <CardBGImage />
           <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <ThemedText.White fontWeight={600}>
-                  <Trans>Liquidity provider rewards</Trans>
-                </ThemedText.White>
-              </RowBetween>
-              <RowBetween>
-                <ThemedText.White fontSize={14}>
-                  <Trans>
-                    Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are
-                    added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-                  </Trans>
-                </ThemedText.White>
-              </RowBetween>
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                target="_blank"
-                href="https://uniswap.org/docs/v2/core-concepts/pools/"
-              >
-                <ThemedText.White fontSize={14}>
-                  <Trans>Read more about providing liquidity</Trans>
-                </ThemedText.White>
-              </ExternalLink>
-            </AutoColumn>
-          </CardSection>
+          {/* <CardSection> */}
+          {/*   <AutoColumn gap="md"> */}
+          {/*     <RowBetween> */}
+          {/*       <ThemedText.White fontWeight={600}> */}
+          {/*         <Trans>Liquidity provider rewards</Trans> */}
+          {/*       </ThemedText.White> */}
+          {/*     </RowBetween> */}
+          {/*     <RowBetween> */}
+          {/*       <ThemedText.White fontSize={14}> */}
+          {/*         <Trans> */}
+          {/*           Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are */}
+          {/*           added to the pool, accrue in real time and can be claimed by withdrawing your liquidity. */}
+          {/*         </Trans> */}
+          {/*       </ThemedText.White> */}
+          {/*     </RowBetween> */}
+          {/*     <ExternalLink */}
+          {/*       style={{ color: 'white', textDecoration: 'underline' }} */}
+          {/*       target="_blank" */}
+          {/*       href="https://uniswap.org/docs/v2/core-concepts/pools/" */}
+          {/*     > */}
+          {/*       <ThemedText.White fontSize={14}> */}
+          {/*         <Trans>Read more about providing liquidity</Trans> */}
+          {/*       </ThemedText.White> */}
+          {/*     </ExternalLink> */}
+          {/*   </AutoColumn> */}
+          {/* </CardSection> */}
           <CardBGImage />
           <CardNoise />
         </VoteCard>
@@ -226,16 +225,6 @@ export default function Pool() {
                 </EmptyProposals>
               ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
                 <>
-                  <ButtonSecondary>
-                    <RowBetween>
-                      <Trans>
-                        <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
-                          Account analytics and accrued fees
-                        </ExternalLink>
-                        <span> ↗ </span>
-                      </Trans>
-                    </RowBetween>
-                  </ButtonSecondary>
                   {v2PairsWithoutStakedAmount.map((v2Pair) => (
                     <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                   ))}
@@ -249,23 +238,6 @@ export default function Pool() {
                         />
                       )
                   )}
-                  <RowFixed justify="center" style={{ width: '100%' }}>
-                    <ButtonOutlined
-                      as={Link}
-                      to="/migrate/v2"
-                      id="import-pool-link"
-                      style={{
-                        padding: '8px 16px',
-                        margin: '0 4px',
-                        borderRadius: '12px',
-                        width: 'fit-content',
-                        fontSize: '14px',
-                      }}
-                    >
-                      <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-                      <Trans>Migrate Liquidity to V3</Trans>
-                    </ButtonOutlined>
-                  </RowFixed>
                 </>
               ) : (
                 <EmptyProposals>

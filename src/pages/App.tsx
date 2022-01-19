@@ -1,7 +1,7 @@
 import Loader from 'components/Loader'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { lazy, Suspense } from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Suspense } from 'react'
+import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -20,19 +20,13 @@ import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Bond from './Bond'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
-import MigrateV2 from './MigrateV2'
-import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
-import Pool from './Pool'
-import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Stake from './Stake'
 import Swap from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-
-const Vote = lazy(() => import('./Vote'))
+import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -90,11 +84,6 @@ export default function App() {
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
               <Switch>
-                <Route strict path="/vote" component={Vote} />
-                <Route exact strict path="/create-proposal">
-                  <Redirect to="/vote/create-proposal" />
-                </Route>
-                <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/uni" component={Earn} />
                 <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
 
@@ -104,11 +93,9 @@ export default function App() {
 
                 <Route exact strict path="/pool/v2/find" component={PoolFinder} />
                 <Route exact strict path="/pool/v2" component={PoolV2} />
-                <Route exact strict path="/pool" component={Pool} />
-                <Route exact strict path="/pool/:tokenId" component={PositionPage} />
 
                 <Route exact strict path="/bond" component={Bond} />
-                <Route exact strict path="/Stake" component={Stake} />
+                <Route exact strict path="/stake" component={Stake} />
 
                 <Route
                   exact
@@ -132,9 +119,6 @@ export default function App() {
 
                 <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
                 <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
-
-                <Route exact strict path="/migrate/v2" component={MigrateV2} />
-                <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
 
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>

@@ -15,6 +15,7 @@ export const GEN_ADDRESS: AddressMap = constructSameAddressMap(GenesisContractAd
 export const S_GEN_ADDRESS: AddressMap = constructSameAddressMap(GenesisContractAddresses.S_GEN_TOKEN)
 export const G_GEN_ADDRESS: AddressMap = constructSameAddressMap(GenesisContractAddresses.G_GEN_TOKEN)
 
+export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0xaBf67FB9ae3A831eAe03529D69B7A2B9418F54C4')
 export const MULTICALL_ADDRESS: AddressMap = {
   ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [
     SupportedChainId.OPTIMISTIC_KOVAN,
