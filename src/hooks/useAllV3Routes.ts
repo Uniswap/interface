@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { Pool, Route } from '@uniswap/v3-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { useV3SwapPools } from './useV3SwapPools'
 
@@ -65,10 +65,6 @@ export function useAllV3Routes(
 ): { loading: boolean; routes: Route<Currency, Currency>[] } {
   const { chainId } = useActiveWeb3React()
   const { pools, loading: poolsLoading } = useV3SwapPools(currencyIn, currencyOut)
-
-  useEffect(() => {
-    console.log('ianlapham', 'currency In updated')
-  }, [currencyIn])
 
   return useMemo(() => {
     if (poolsLoading || !chainId || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [] }

@@ -49,21 +49,21 @@ export default function Output({ disabled, children }: OutputProps) {
   const color = overrideColor || dynamicColor
   const hasColor = outputCurrency ? Boolean(color) || null : false
 
-  const inputUSDCValue = useUSDCValue(inputAmount)
-  const outputUSDCValue = useUSDCValue(outputAmount)
+  const inputUSDC = useUSDCValue(inputAmount)
+  const outputUSDC = useUSDCValue(outputAmount)
   const change = useMemo(() => {
-    if (inputUSDCValue && outputUSDCValue) {
-      return parseFloat(inputUSDCValue.divide(outputUSDCValue).quotient.toString())
+    if (inputUSDC && outputUSDC) {
+      return parseFloat(inputUSDC.divide(outputUSDC).quotient.toString())
     }
     return ''
-  }, [inputUSDCValue, outputUSDCValue])
+  }, [inputUSDC, outputUSDC])
 
   const usdc = useMemo(() => {
-    if (outputUSDCValue) {
-      return `~ $${outputUSDCValue.toFixed(2)}${change}`
+    if (outputUSDC) {
+      return `~ $${outputUSDC.toFixed(2)}${change}`
     }
     return '-'
-  }, [change, outputUSDCValue])
+  }, [change, outputUSDC])
 
   return (
     <DynamicThemeProvider color={color}>
@@ -77,7 +77,7 @@ export default function Output({ disabled, children }: OutputProps) {
           currency={outputCurrency}
           amount={outputAmount}
           disabled={disabled}
-          onChangeInput={(val) => (val ? onUserInput(Field.OUTPUT, val?.toString()) : null)}
+          onChangeInput={(val) => onUserInput(Field.OUTPUT, val ?? '')}
           onChangeCurrency={(currency: Currency) => onCurrencySelection(Field.OUTPUT, currency)}
         >
           <ThemedText.Body2 color="secondary">

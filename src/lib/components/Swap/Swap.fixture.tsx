@@ -1,11 +1,13 @@
 import { tokens } from '@uniswap/default-token-list'
 import { ChainId } from '@uniswap/smart-order-router'
-import { DAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useDerivedSwapInfo, useSwapActionHandlers } from 'lib/hooks/swap'
 import { Field } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import invariant from 'tiny-invariant'
 
 import Swap from '.'
 import { colorAtom } from './Output'
@@ -20,6 +22,11 @@ const validateColor = (() => {
 })()
 
 const ETH = WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
+const UNI = (function () {
+  const token = tokens.find(({ symbol }) => symbol === 'UNI')
+  invariant(token)
+  return new WrappedTokenInfo(token)
+})()
 
 function Fixture() {
   const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
@@ -33,7 +40,7 @@ function Fixture() {
     if (inputCurrency && outputCurrency) {
       if (!(inputAmount && inputCurrency && outputCurrency)) {
         onCurrencySelection(Field.INPUT, ETH)
-        onCurrencySelection(Field.OUTPUT, DAI)
+        onCurrencySelection(Field.OUTPUT, UNI)
         onUserInput(Field.INPUT, '1')
       }
     }

@@ -11,7 +11,7 @@ function URIForEthToken(address: string) {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 }
 
-export async function getColorFromToken(token: Token): Promise<string | null> {
+async function getColorFromToken(token: Token): Promise<string | null> {
   if (!(token instanceof WrappedTokenInfo)) {
     return null
   }

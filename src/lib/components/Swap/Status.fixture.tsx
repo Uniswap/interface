@@ -1,6 +1,7 @@
 import { tokens } from '@uniswap/default-token-list'
-import { ChainId } from '@uniswap/smart-order-router'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { transactionAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
@@ -11,7 +12,7 @@ import invariant from 'tiny-invariant'
 import { Modal } from '../Dialog'
 import { StatusDialog } from './Status'
 
-const ETH = WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
+const ETH = nativeOnChain(SupportedChainId.MAINNET)
 const UNI = (function () {
   const token = tokens.find(({ symbol }) => symbol === 'UNI')
   invariant(token)
@@ -26,8 +27,8 @@ function Fixture() {
   })
   useEffect(() => {
     setTransaction({
-      input: ETH,
-      output: UNI,
+      input: CurrencyAmount.fromRawAmount(ETH, 0),
+      output: CurrencyAmount.fromRawAmount(UNI, 0),
       receipt: '',
       timestamp: Date.now(),
     })
@@ -36,8 +37,8 @@ function Fixture() {
     switch (state) {
       case 'PENDING':
         setTransaction({
-          input: ETH,
-          output: UNI,
+          input: CurrencyAmount.fromRawAmount(ETH, 0),
+          output: CurrencyAmount.fromRawAmount(UNI, 0),
           receipt: '',
           timestamp: Date.now(),
         })

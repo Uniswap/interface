@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { useUpdateAtom } from 'jotai/utils'
@@ -107,8 +107,8 @@ export function useUpdateTypedInput() {
 }
 
 export interface Transaction {
-  input: Currency
-  output: Currency
+  input: CurrencyAmount<Currency>
+  output: CurrencyAmount<Currency>
   receipt: string
   timestamp: number
   elapsedMs?: number

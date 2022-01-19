@@ -127,7 +127,10 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
-            <Trans>Output is estimated.</Trans>{' '}
+            <Trans>Output is estimated.</Trans>
+            {/*
+              @TODO(ianlapam): replace with actual minimum recieved logic
+            */}
             {/* {swap?.minimumReceived && (
               <Trans>
                 You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.

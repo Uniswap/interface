@@ -109,6 +109,7 @@ const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(fun
       pattern={pattern}
       placeholder={props.placeholder || '0'}
       minLength={1}
+      maxLength={79}
       spellCheck="false"
       ref={ref as any}
       {...props}
@@ -125,7 +126,7 @@ const integerEnforcer = (nextUserInput: string) => {
   return null
 }
 export const IntegerInput = forwardRef(function IntegerInput(props: NumericInputProps, ref) {
-  return <NumericInput pattern="^[0-9]*[.,]?[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
+  return <NumericInput pattern="^[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
 })
 
 const decimalRegexp = /^\d*(?:[.])?\d*$/
@@ -141,24 +142,7 @@ const decimalEnforcer = (nextUserInput: string) => {
 }
 
 export const DecimalInput = forwardRef(function DecimalInput(props: NumericInputProps, ref) {
-  return (
-    <NumericInput
-      // universal input options
-      inputMode="decimal"
-      autoComplete="off"
-      autoCorrect="off"
-      // text-specific options
-      type="text"
-      pattern="^[0-9]*[.,]?[0-9]*$"
-      placeholder={'0.0'}
-      minLength={1}
-      maxLength={79}
-      spellCheck="false"
-      enforcer={decimalEnforcer}
-      ref={ref as any}
-      {...props}
-    />
-  )
+  return <NumericInput pattern="^[0-9]*[.,]?[0-9]*$" enforcer={decimalEnforcer} ref={ref as any} {...props} />
 })
 
 export const inputCss = css`

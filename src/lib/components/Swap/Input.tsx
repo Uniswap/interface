@@ -32,8 +32,8 @@ export default function Input({ disabled }: InputProps) {
     parsedAmounts: { [Field.INPUT]: inputAmount },
   } = useDerivedSwapInfo()
 
-  const inputAmountUSDC = useUSDCValue(inputAmount)
-  //@TODO - ianlapham - mimic logic from app swap page
+  const inputUSDC = useUSDCValue(inputAmount)
+  //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
 
   return (
@@ -53,7 +53,7 @@ export default function Input({ disabled }: InputProps) {
       >
         <ThemedText.Body2 color="secondary">
           <Row>
-            {inputAmountUSDC ? `~ $${inputAmountUSDC.toFixed(2)}` : '-'}
+            {inputUSDC ? `~ $${inputUSDC.toFixed(2)}` : '-'}
             {balance && (
               <ThemedText.Body2 color={inputAmount && inputAmount.greaterThan(balance) ? 'error' : undefined}>
                 Balance: <span style={{ userSelect: 'text' }}>{balance}</span>

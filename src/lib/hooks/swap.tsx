@@ -17,9 +17,9 @@ import { useCurrencyBalances } from 'state/wallet/hooks'
 import useENS from '../../hooks/useENS'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import { isAddress } from '../../utils'
-import { useBestTrade } from './trade'
 import useActiveWeb3React from './useActiveWeb3React'
-import useCurrency from './useCurrency'
+import useBestTrade from './useBestTrade'
+import { useCurrency } from './useCurrency'
 
 export function useSwapState(): SwapState {
   return useAtomValue(stateAtom)
@@ -136,7 +136,7 @@ export function useDerivedSwapInfo(): {
       [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.trade?.inputAmount,
       [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.trade?.outputAmount,
     }
-  }, [independentField, parsedAmount, trade])
+  }, [independentField, parsedAmount, trade?.trade?.inputAmount, trade?.trade?.outputAmount])
 
   let inputError: ReactNode | undefined
   if (!account) {
