@@ -1,6 +1,4 @@
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
-import { ChainIdError, IntegrationError } from 'lib/errors'
-import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import { IntegrationError } from 'lib/errors'
 import { SwapWidgetProps } from 'lib/index'
 import { useEffect } from 'react'
 
@@ -13,13 +11,6 @@ export default function ErrorGenerator(swapWidgetProps: SwapWidgetProps) {
       throw new IntegrationError('This widget requires a provider or jsonRpcEndpoint.')
     }
   }, [provider, jsonRpcEndpoint])
-
-  const { chainId } = useActiveWeb3React()
-  useEffect(() => {
-    if (chainId && !ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
-      throw new ChainIdError('Switch to a network supported by the Uniswap Protocol.')
-    }
-  }, [chainId])
 
   // size constraints
   const { width } = swapWidgetProps
