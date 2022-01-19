@@ -81,8 +81,9 @@ export function useSwitchCurrencies() {
       () =>
         atom(null, (_, set) => {
           set(stateAtom, (state) => {
+            const oldOutput = state[Field.OUTPUT]
             state.OUTPUT = state[Field.INPUT]
-            state.INPUT = state[Field.OUTPUT]
+            state.INPUT = oldOutput
           })
         }),
       []

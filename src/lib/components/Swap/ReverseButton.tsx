@@ -1,7 +1,7 @@
 import { ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon } from 'lib/icons'
+import { useSwitchCurrencies } from 'lib/state/swap'
 import styled, { Layer } from 'lib/theme'
 import { useCallback, useState } from 'react'
-import { useSwapActionHandlers } from 'state/swap/hooks'
 
 import Button from '../Button'
 import Row from '../Row'
@@ -48,12 +48,12 @@ const StyledReverseButton = styled(Button)<{ turns: number }>`
 export default function ReverseButton({ disabled }: { disabled?: boolean }) {
   const [turns, setTurns] = useState(0)
 
-  const { onSwitchTokens } = useSwapActionHandlers()
+  const switchCurrencies = useSwitchCurrencies()
 
   const onClick = useCallback(() => {
-    onSwitchTokens()
+    switchCurrencies()
     setTurns((turns) => ++turns)
-  }, [onSwitchTokens])
+  }, [switchCurrencies])
 
   return (
     <ReverseRow justify="center">

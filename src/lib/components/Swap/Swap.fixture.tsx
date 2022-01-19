@@ -1,6 +1,6 @@
 import { tokens } from '@uniswap/default-token-list'
-import { ChainId } from '@uniswap/smart-order-router'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { SupportedChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useDerivedSwapInfo, useSwapActionHandlers } from 'lib/hooks/swap'
 import { Field } from 'lib/state/swap'
@@ -21,7 +21,7 @@ const validateColor = (() => {
   }
 })()
 
-const ETH = WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
+const ETH = nativeOnChain(SupportedChainId.MAINNET)
 const UNI = (function () {
   const token = tokens.find(({ symbol }) => symbol === 'UNI')
   invariant(token)
@@ -31,20 +31,15 @@ const UNI = (function () {
 function Fixture() {
   const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const {
-    trade,
     currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
-    parsedAmounts: { [Field.INPUT]: inputAmount },
   } = useDerivedSwapInfo()
 
   useEffect(() => {
-    if (inputCurrency && outputCurrency) {
-      if (!(inputAmount && inputCurrency && outputCurrency)) {
-        onCurrencySelection(Field.INPUT, ETH)
-        onCurrencySelection(Field.OUTPUT, UNI)
-        onUserInput(Field.INPUT, '1')
-      }
+    if (!(inputCurrency && outputCurrency)) {
+      onCurrencySelection(Field.INPUT, ETH)
+      onCurrencySelection(Field.OUTPUT, UNI)
     }
-  }, [inputAmount, inputCurrency, onCurrencySelection, onUserInput, outputCurrency, trade])
+  }, [inputCurrency, onCurrencySelection, onUserInput, outputCurrency])
 
   const setColor = useUpdateAtom(colorAtom)
   const [color] = useValue('token color', { defaultValue: '' })
