@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           always-auth: true
-          node-version: '14'
+          node-version: '16'
       - name: Yarn Cache
         uses: actions/cache@v2
         with:
