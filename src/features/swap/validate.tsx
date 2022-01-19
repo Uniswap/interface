@@ -1,6 +1,5 @@
 import { TFunction } from 'i18next'
 import { UseQueryResult } from 'react-query'
-import { ChainId } from 'src/constants/chains'
 import { DerivedSwapInfo } from 'src/features/swap/hooks'
 import { CurrencyField } from 'src/features/swap/swapFormSlice'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
@@ -91,11 +90,6 @@ function validateSwapInfo(swapInfo: DerivedSwapInfo) {
   const balance = currencyBalances[CurrencyField.INPUT]
   if (!balance || (exactCurrencyAmount && balance.lessThan(exactCurrencyAmount))) {
     return FieldError.INSUFFICIENT_FUNDS
-  }
-
-  // TODO: temporary check to restrict swapping to Rinkeby
-  if (currencies[exactCurrencyField]?.chainId !== ChainId.RINKEBY) {
-    return FieldError.UNSUPPORTED_NETWORK
   }
 
   return null
