@@ -1,0 +1,2 @@
+export const TRANSACTION_STATUS_POLL_DELAY = 1000 // 1 second
+export const TRANSACTION_TIMEOUT_DURATION = 600_000 // 10 minutes

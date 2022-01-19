@@ -60,13 +60,13 @@ function TransactionStatus() {
 }
 
 export function getNotificationName(transaction: TransactionDetails, t: TFunction) {
-  switch (transaction.info.type) {
+  switch (transaction.typeInfo.type) {
     case TransactionType.APPROVE:
       return t('Approve')
     case TransactionType.SWAP:
       return t('Swap')
     case TransactionType.WRAP:
-      return transaction.info.unwrapped ? t('Unwrapped') : t('Wrap')
+      return transaction.typeInfo.unwrapped ? t('Unwrapped') : t('Wrap')
   }
 
   return t('Transaction')

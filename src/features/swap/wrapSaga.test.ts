@@ -1,18 +1,11 @@
 import { CurrencyAmount, Ether } from '@uniswap/sdk-core'
-import { Signer } from 'ethers'
 import { testSaga } from 'redux-saga-test-plan'
-import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
+import { getWalletProviders } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
-import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { getWethContract, Params, wrap } from 'src/features/swap/wrapSaga'
-import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
+import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { TransactionType, WrapTransactionInfo } from 'src/features/transactions/types'
-import { account, provider, providerManager, signerManager, wethContract } from 'src/test/fixtures'
-
-const mockTransactionResponse = {
-  wait: jest.fn(),
-}
-const mockTransactionReceipt = {}
+import { account, provider, providerManager, wethContract } from 'src/test/fixtures'
 
 const wrapTxInfo: WrapTransactionInfo = {
   type: TransactionType.WRAP,
@@ -30,39 +23,30 @@ const params: Params = {
   inputCurrencyAmount: CurrencyAmount.fromRawAmount(Ether.onChain(ChainId.RINKEBY), '200000'),
 }
 
-let signer: Signer
-let connectedSigner: Signer
+const transaction = {
+  from: account.address,
+  to: '0xabc',
+  data: '0x01',
+}
 
 describe(wrap, () => {
-  beforeAll(async () => {
-    signer = await signerManager.getSignerForAccount(account)
-    connectedSigner = signer.connect(provider)
-  })
-
   it('successfully wrap native eth', () => {
     testSaga(wrap, params)
       .next()
-      .call(getSignerManager)
-      .next(signerManager)
       .call(getWalletProviders)
       .next(providerManager)
-      .call([signerManager, signerManager.getSignerForAccount], account)
-      .next(signer)
-      .call([signer, signer.connect], provider)
-      .next(connectedSigner)
-      .call(getWethContract, ChainId.RINKEBY, connectedSigner)
+      .call(getWethContract, ChainId.RINKEBY, provider)
       .next(wethContract)
-      .call(wethContract.deposit, {
+      .call(wethContract.populateTransaction.deposit, {
         value: `0x30d40`,
       })
-      .next(mockTransactionResponse)
-      .call(addTransaction, mockTransactionResponse, wrapTxInfo)
-      .next(mockTransactionResponse)
-      .call(mockTransactionResponse.wait)
-      .next(mockTransactionReceipt)
-      .call(finalizeTransaction, mockTransactionResponse, mockTransactionReceipt)
-      .next()
-      .put(fetchBalancesActions.trigger(account.address))
+      .next(transaction)
+      .call(sendTransaction, {
+        chainId: ChainId.RINKEBY,
+        account: params.account,
+        typeInfo: wrapTxInfo,
+        options: { request: transaction, fetchBalanceOnSuccess: true },
+      })
       .next()
       .isDone()
   })
@@ -77,25 +61,18 @@ describe(wrap, () => {
     }
     testSaga(wrap, unwrapParams)
       .next()
-      .call(getSignerManager)
-      .next(signerManager)
       .call(getWalletProviders)
       .next(providerManager)
-      .call([signerManager, signerManager.getSignerForAccount], account)
-      .next(signer)
-      .call([signer, signer.connect], provider)
-      .next(connectedSigner)
-      .call(getWethContract, ChainId.RINKEBY, connectedSigner)
+      .call(getWethContract, ChainId.RINKEBY, provider)
       .next(wethContract)
-      .call(wethContract.withdraw, `0x30d40`)
-      .next(mockTransactionResponse)
-      .call(addTransaction, mockTransactionResponse, unwrapTxInfo)
-      .next(mockTransactionResponse)
-      .call(mockTransactionResponse.wait)
-      .next(mockTransactionReceipt)
-      .call(finalizeTransaction, mockTransactionResponse, mockTransactionReceipt)
-      .next()
-      .put(fetchBalancesActions.trigger(account.address))
+      .call(wethContract.populateTransaction.withdraw, `0x30d40`)
+      .next(transaction)
+      .call(sendTransaction, {
+        chainId: ChainId.RINKEBY,
+        account: params.account,
+        typeInfo: unwrapTxInfo,
+        options: { request: transaction, fetchBalanceOnSuccess: true },
+      })
       .next()
       .isDone()
   })

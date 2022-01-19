@@ -2,8 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ChainId } from 'src/constants/chains'
 import {
   ChainIdToHashToDetails,
-  SerializableTxReceipt,
-  TransactionInfo,
+  TransactionOptions,
+  TransactionReceipt,
+  TransactionStatus,
+  TransactionTypeInfo,
 } from 'src/features/transactions/types'
 import { assert } from 'src/utils/validation'
 
@@ -15,8 +17,6 @@ export const initialState: TransactionState = {
   byChainId: {},
 }
 
-// TODO: watcher saga or updater component to async watch tx
-// inspired by https://github.com/Uniswap/interface/tree/main/src/state/transactions
 const slice = createSlice({
   name: 'transactions',
   initialState,
@@ -24,8 +24,14 @@ const slice = createSlice({
     addTransaction: (
       state,
       {
-        payload: { chainId, hash, from, info },
-      }: PayloadAction<{ chainId: ChainId; hash: string; from: string; info: TransactionInfo }>
+        payload: { chainId, hash, from, options, typeInfo },
+      }: PayloadAction<{
+        chainId: ChainId
+        hash: string
+        from: string
+        options: TransactionOptions
+        typeInfo: TransactionTypeInfo
+      }>
     ) => {
       assert(
         !state.byChainId[chainId]?.[hash],
@@ -36,8 +42,10 @@ const slice = createSlice({
         chainId,
         hash,
         from,
-        info,
+        options,
+        typeInfo,
         addedTime: Date.now(),
+        status: TransactionStatus.Pending,
       }
     },
     checkTransaction: (
@@ -51,21 +59,26 @@ const slice = createSlice({
       }>
     ) => {
       const tx = state.byChainId[chainId]?.[hash]
-      if (!tx) return
-      state.byChainId[chainId]![hash].lastCheckedBlockNumber = Math.max(
-        blockNumber,
-        tx.lastCheckedBlockNumber ?? -1
-      )
+      if (!tx || !blockNumber) return
+      state.byChainId[chainId]![hash].lastChecked = {
+        blockNumber: Math.max(blockNumber, tx.lastChecked?.blockNumber ?? -1),
+        time: Date.now(),
+      }
     },
     finalizeTransaction: (
       state,
       {
-        payload: { chainId, hash, receipt },
-      }: PayloadAction<{ chainId: ChainId; hash: string; receipt: SerializableTxReceipt }>
+        payload: { chainId, hash, status, receipt },
+      }: PayloadAction<{
+        chainId: ChainId
+        hash: string
+        status: TransactionStatus
+        receipt: TransactionReceipt
+      }>
     ) => {
       if (!state.byChainId[chainId]?.[hash]) return
+      state.byChainId[chainId]![hash].status = status
       state.byChainId[chainId]![hash].receipt = receipt
-      state.byChainId[chainId]![hash].confirmedTime = Date.now()
     },
     resetTransactions: () => initialState,
   },

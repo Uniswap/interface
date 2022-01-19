@@ -196,7 +196,7 @@ export function useSwapCallback(
             contract: tokenContract,
             methodParameters,
             swapRouterAddress: SWAP_ROUTER_ADDRESSES[chainId],
-            transactionInfo: tradeToTransactionInfo(trade),
+            typeInfo: tradeToTransactionInfo(trade),
             txAmount: amount,
           })
         )

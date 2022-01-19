@@ -2,7 +2,7 @@
 import { useHeaderHeight } from '@react-navigation/elements'
 import { impactAsync } from 'expo-haptics'
 import React, { useReducer, useState } from 'react'
-import { KeyboardAvoidingView, Platform } from 'react-native'
+import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -43,15 +43,17 @@ export function SwapScreen({ route, navigation }: AppStackScreenProp<Screens.Swa
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={headerHeight + 70}
         style={flex.fill}>
-        <Header
-          chainId={chainId}
-          onPressBack={() => navigation.goBack()}
-          onPressNetwork={() => {
-            impactAsync()
-            setShowNetworkModal(true)
-          }}
-        />
-        <SwapForm dispatch={dispatch} state={state} />
+        <ScrollView keyboardShouldPersistTaps="always">
+          <Header
+            chainId={chainId}
+            onPressBack={() => navigation.goBack()}
+            onPressNetwork={() => {
+              impactAsync()
+              setShowNetworkModal(true)
+            }}
+          />
+          <SwapForm dispatch={dispatch} state={state} />
+        </ScrollView>
       </KeyboardAvoidingView>
       <BottomSheetModal isVisible={showNetworkModal} onClose={onCloseNetworkModal}>
         <SwapNetworkModal

@@ -15,13 +15,13 @@ export function usePendingTransactions() {
   const statusToTxs = allTransactions.reduce<
     Partial<Record<TransactionStatus, TransactionDetails[]>>
   >((acc, tx) => {
-    const status = tx.receipt?.status
+    const status = tx.status
 
     // ignore unfinished / unconfirmed txs
-    if (!status || !tx.confirmedTime) return acc
+    if (!status || !tx.receipt?.confirmedTime) return acc
 
     // ignore older confirmed txs
-    if (now - tx.confirmedTime > SHOW_CONFIRMED_TRANSACTION_FOR_MS) return acc
+    if (now - tx.receipt.confirmedTime > SHOW_CONFIRMED_TRANSACTION_FOR_MS) return acc
 
     acc[status] ??= []
     acc[status]!.push(tx)

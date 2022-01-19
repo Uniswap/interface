@@ -9,7 +9,26 @@ import {
   transactionReducer,
   TransactionState,
 } from 'src/features/transactions/slice'
-import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import {
+  TransactionOptions,
+  TransactionStatus,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'src/features/transactions/types'
+
+const approveTxTypeInfo: TransactionTypeInfo = {
+  type: TransactionType.APPROVE,
+  tokenAddress: '0xabc',
+  spender: '0xdef',
+}
+
+const approveTxRequest: TransactionOptions = {
+  request: {
+    from: '0x123',
+    to: '0x456',
+    value: '0x0',
+  },
+}
 
 describe('transaction reducer', () => {
   let store: Store<TransactionState>
@@ -25,12 +44,9 @@ describe('transaction reducer', () => {
         addTransaction({
           chainId: ChainId.MAINNET,
           hash: '0x0',
-          from: 'abc',
-          info: {
-            type: TransactionType.APPROVE,
-            tokenAddress: 'abc',
-            spender: 'def',
-          },
+          from: '0xabc',
+          options: approveTxRequest,
+          typeInfo: approveTxTypeInfo,
         })
       )
       const txs = store.getState().byChainId
@@ -39,12 +55,12 @@ describe('transaction reducer', () => {
       const tx = txs[ChainId.MAINNET]?.['0x0']
       expect(tx).toBeTruthy()
       expect(tx?.hash).toEqual('0x0')
-      expect(tx?.from).toEqual('abc')
+      expect(tx?.from).toEqual('0xabc')
       expect(tx?.addedTime).toBeGreaterThanOrEqual(beforeTime)
-      expect(tx?.info).toEqual({
+      expect(tx?.typeInfo).toEqual({
         type: TransactionType.APPROVE,
-        tokenAddress: 'abc',
-        spender: 'def',
+        tokenAddress: '0xabc',
+        spender: '0xdef',
       })
     })
   })
@@ -55,15 +71,13 @@ describe('transaction reducer', () => {
         finalizeTransaction({
           chainId: ChainId.RINKEBY,
           hash: '0x0',
+          status: TransactionStatus.Success,
           receipt: {
-            status: TransactionStatus.Success,
             transactionIndex: 1,
-            transactionHash: '0x0',
-            to: '0x0',
-            from: '0x0',
-            contractAddress: '0x0',
             blockHash: '0x0',
             blockNumber: 1,
+            confirmations: 1,
+            confirmedTime: 100,
           },
         })
       )
@@ -72,40 +86,34 @@ describe('transaction reducer', () => {
     it('sets receipt', () => {
       store.dispatch(
         addTransaction({
-          hash: '0x0',
           chainId: ChainId.RINKEBY,
-          info: { type: TransactionType.APPROVE, spender: '0x0', tokenAddress: '0x0' },
+          hash: '0x0',
           from: '0x0',
+          options: approveTxRequest,
+          typeInfo: approveTxTypeInfo,
         })
       )
-      const beforeTime = new Date().getTime()
       store.dispatch(
         finalizeTransaction({
           chainId: ChainId.RINKEBY,
           hash: '0x0',
+          status: TransactionStatus.Success,
           receipt: {
-            status: TransactionStatus.Success,
             transactionIndex: 1,
-            transactionHash: '0x0',
-            to: '0x0',
-            from: '0x0',
-            contractAddress: '0x0',
             blockHash: '0x0',
             blockNumber: 1,
+            confirmations: 1,
+            confirmedTime: 100,
           },
         })
       )
       const tx = store.getState().byChainId[4]?.['0x0']
-      expect(tx?.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
       expect(tx?.receipt).toEqual({
-        status: TransactionStatus.Success,
         transactionIndex: 1,
-        transactionHash: '0x0',
-        to: '0x0',
-        from: '0x0',
-        contractAddress: '0x0',
         blockHash: '0x0',
         blockNumber: 1,
+        confirmations: 1,
+        confirmedTime: 100,
       })
     })
   })
@@ -124,10 +132,11 @@ describe('transaction reducer', () => {
     it('sets lastCheckedBlockNumber', () => {
       store.dispatch(
         addTransaction({
-          hash: '0x0',
           chainId: ChainId.RINKEBY,
-          info: { type: TransactionType.APPROVE, spender: '0x0', tokenAddress: '0x0' },
+          hash: '0x0',
           from: '0x0',
+          options: approveTxRequest,
+          typeInfo: approveTxTypeInfo,
         })
       )
       store.dispatch(
@@ -138,15 +147,16 @@ describe('transaction reducer', () => {
         })
       )
       const tx = store.getState().byChainId[4]?.['0x0']
-      expect(tx?.lastCheckedBlockNumber).toEqual(1)
+      expect(tx?.lastChecked?.blockNumber).toEqual(1)
     })
     it('never decreases', () => {
       store.dispatch(
         addTransaction({
-          hash: '0x0',
           chainId: ChainId.RINKEBY,
-          info: { type: TransactionType.APPROVE, spender: '0x0', tokenAddress: '0x0' },
+          hash: '0x0',
           from: '0x0',
+          options: approveTxRequest,
+          typeInfo: approveTxTypeInfo,
         })
       )
       store.dispatch(
@@ -164,7 +174,7 @@ describe('transaction reducer', () => {
         })
       )
       const tx = store.getState().byChainId[ChainId.RINKEBY]?.['0x0']
-      expect(tx?.lastCheckedBlockNumber).toEqual(3)
+      expect(tx?.lastChecked?.blockNumber).toEqual(3)
     })
   })
 
@@ -174,16 +184,18 @@ describe('transaction reducer', () => {
         addTransaction({
           chainId: ChainId.MAINNET,
           hash: '0x0',
-          info: { type: TransactionType.APPROVE, spender: 'abc', tokenAddress: 'def' },
-          from: 'abc',
+          from: '0xabc',
+          options: approveTxRequest,
+          typeInfo: approveTxTypeInfo,
         })
       )
       store.dispatch(
         addTransaction({
           chainId: ChainId.RINKEBY,
           hash: '0x1',
-          info: { type: TransactionType.APPROVE, spender: 'abc', tokenAddress: 'def' },
-          from: 'abc',
+          from: '0xabc',
+          options: approveTxRequest,
+          typeInfo: approveTxTypeInfo,
         })
       )
       const txs = store.getState().byChainId

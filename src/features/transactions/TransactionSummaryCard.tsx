@@ -22,9 +22,9 @@ export function TransactionSummaryCard({ tx }: { tx: TransactionDetails }) {
   }
 
   let toastVariant: ToastVariant
-  if (tx.receipt?.status === TransactionStatus.Success) {
+  if (tx.status === TransactionStatus.Success) {
     toastVariant = ToastVariant.Success
-  } else if (tx.receipt?.status === TransactionStatus.Failed) {
+  } else if (tx.status === TransactionStatus.Failed) {
     toastVariant = ToastVariant.Failed
   } else {
     toastVariant = ToastVariant.Pending

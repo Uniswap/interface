@@ -1,15 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
-import { Signer } from 'ethers'
 import { testSaga } from 'redux-saga-test-plan'
-import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
 import { ApproveParams, maybeApprove } from 'src/features/approve/approveSaga'
-import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
+import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { TransactionType } from 'src/features/transactions/types'
-import { account, provider, providerManager, signerManager, tokenContract } from 'src/test/fixtures'
+import { account, tokenContract } from 'src/test/fixtures'
 
 const approveParams: ApproveParams = {
   account,
@@ -19,31 +17,18 @@ const approveParams: ApproveParams = {
   spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
 }
 
-let signer: Signer
-let connectedSigner: Signer
+const approveTxTypeInfo = {
+  type: TransactionType.APPROVE,
+  tokenAddress: tokenContract.address,
+  spender: approveParams.spender,
+}
 
-const transactionResponse = { hash: '0x123', wait: () => {} }
-const transactionReceipt = {}
+const populatedTx = { from: '0x123', to: '0x456', value: '0x0', data: '0x789' }
 
 describe(maybeApprove, () => {
-  beforeAll(async () => {
-    signer = await signerManager.getSignerForAccount(account)
-    connectedSigner = signer.connect(provider)
-  })
-
   it('skips approval when allowance is sufficient', () => {
     testSaga(maybeApprove, approveParams)
       .next()
-      .call(getSignerManager)
-      .next(signerManager)
-      .call(getWalletProviders)
-      .next(providerManager)
-      .call([signerManager, signerManager.getSignerForAccount], account)
-      .next(signer)
-      .call([signer, signer.connect], provider)
-      .next(connectedSigner)
-      .call([tokenContract, tokenContract.connect], connectedSigner)
-      .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .next(BigNumber.from(approveParams.txAmount).add('1000'))
       .isDone()
@@ -52,51 +37,27 @@ describe(maybeApprove, () => {
   it('ignores failed allowance check', () => {
     testSaga(maybeApprove, approveParams)
       .next()
-      .call(getSignerManager)
-      .next(signerManager)
-      .call(getWalletProviders)
-      .next(providerManager)
-      .call([signerManager, signerManager.getSignerForAccount], account)
-      .next(signer)
-      .call([signer, signer.connect], provider)
-      .next(connectedSigner)
-      .call([tokenContract, tokenContract.connect], connectedSigner)
-      .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .throw(new Error('Failed to get allowance'))
-      .call(approveParams.contract.estimateGas.approve, approveParams.spender, MaxUint256)
   })
 
   it('approves maximum amount', () => {
     testSaga(maybeApprove, approveParams)
       .next()
-      .call(getSignerManager)
-      .next(signerManager)
-      .call(getWalletProviders)
-      .next(providerManager)
-      .call([signerManager, signerManager.getSignerForAccount], account)
-      .next(signer)
-      .call([signer, signer.connect], provider)
-      .next(connectedSigner)
-      .call([tokenContract, tokenContract.connect], connectedSigner)
-      .next(tokenContract)
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .next(BigNumber.from('0'))
       .call(approveParams.contract.estimateGas.approve, approveParams.spender, MaxUint256)
       .next(BigNumber.from(100_000))
-      .call(approveParams.contract.approve, approveParams.spender, MaxUint256, {
+      .call(approveParams.contract.populateTransaction.approve, approveParams.spender, MaxUint256, {
         gasLimit: BigNumber.from(100_000).mul(GAS_INFLATION_FACTOR),
       })
-      .next(transactionResponse)
-      .call(addTransaction, transactionResponse, {
-        type: TransactionType.APPROVE,
-        tokenAddress: tokenContract.address,
-        spender: approveParams.spender,
+      .next(populatedTx)
+      .call(sendTransaction, {
+        chainId: approveParams.chainId,
+        account: approveParams.account,
+        options: { request: populatedTx },
+        typeInfo: approveTxTypeInfo,
       })
-      .next()
-      .call(transactionResponse.wait)
-      .next(transactionReceipt)
-      .call(finalizeTransaction, transactionResponse, transactionReceipt)
       .next()
       .isDone()
   })
@@ -105,36 +66,27 @@ describe(maybeApprove, () => {
     const approvedAmount = BigNumber.from(approveParams.txAmount)
     testSaga(maybeApprove, approveParams)
       .next()
-      .call(getSignerManager)
-      .next(signerManager)
-      .call(getWalletProviders)
-      .next(providerManager)
-      .call([signerManager, signerManager.getSignerForAccount], account)
-      .next(signer)
-      .call([signer, signer.connect], provider)
-      .next(connectedSigner)
-      .call([tokenContract, tokenContract.connect], connectedSigner)
-      .next(tokenContract)
-
       .call(approveParams.contract.allowance, approveParams.account.address, approveParams.spender)
       .next(BigNumber.from('0'))
       .call(approveParams.contract.estimateGas.approve, approveParams.spender, MaxUint256)
       .throw(new Error('Failed to estimate gas'))
       .call(approveParams.contract.estimateGas.approve, approveParams.spender, approvedAmount)
       .next(BigNumber.from(120_000))
-      .call(approveParams.contract.approve, approveParams.spender, approvedAmount, {
-        gasLimit: BigNumber.from(120_000).mul(GAS_INFLATION_FACTOR),
+      .call(
+        approveParams.contract.populateTransaction.approve,
+        approveParams.spender,
+        approvedAmount,
+        {
+          gasLimit: BigNumber.from(120_000).mul(GAS_INFLATION_FACTOR),
+        }
+      )
+      .next(populatedTx)
+      .call(sendTransaction, {
+        chainId: approveParams.chainId,
+        account: approveParams.account,
+        options: { request: populatedTx },
+        typeInfo: approveTxTypeInfo,
       })
-      .next(transactionResponse)
-      .call(addTransaction, transactionResponse, {
-        type: TransactionType.APPROVE,
-        tokenAddress: tokenContract.address,
-        spender: approveParams.spender,
-      })
-      .next()
-      .call(transactionResponse.wait)
-      .next(transactionReceipt)
-      .call(finalizeTransaction, transactionResponse, transactionReceipt)
       .next()
       .isDone()
   })

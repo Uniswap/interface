@@ -1,30 +1,50 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { providers } from 'ethers'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 
 export type ChainIdToHashToDetails = ChainIdTo<{ [txHash: string]: TransactionDetails }>
 
 export interface TransactionDetails {
+  // Basic identifying info
   chainId: ChainId
   hash: string
-  info: TransactionInfo
-  from: string
+  from: Address
+
+  // Info for submitting the tx
+  options: TransactionOptions
+
+  // Specific info for the tx type
+  typeInfo: TransactionTypeInfo
+
+  // Info for status tracking
+  status: TransactionStatus
   addedTime: number
-
-  confirmedTime?: number
-  receipt?: SerializableTxReceipt
-
-  lastCheckedBlockNumber?: number // updater periodically checks tx status
+  lastChecked?: {
+    blockNumber: number
+    time: number
+  }
+  receipt?: TransactionReceipt
 }
 
-export interface SerializableTxReceipt {
-  to: string
-  from: string
-  contractAddress: string
+export enum TransactionStatus {
+  Pending = 'pending',
+  Success = 'success',
+  Failed = 'failed',
+  // May want more granular options here later like InMemPool
+}
+
+export interface TransactionOptions {
+  request: providers.TransactionRequest
+  timeoutMs?: number
+  fetchBalanceOnSuccess?: boolean
+}
+
+export interface TransactionReceipt {
   transactionIndex: number
   blockHash: string
-  transactionHash: string
   blockNumber: number
-  status: TransactionStatus
+  confirmedTime: number
+  confirmations: number
 }
 
 /**
@@ -86,17 +106,10 @@ export interface ReceiveTransactionInfo extends BaseTransactionInfo {
   currencyAmountRaw: string
 }
 
-export type TransactionInfo =
+export type TransactionTypeInfo =
   | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | WrapTransactionInfo
   | SendTransactionInfo
   | ReceiveTransactionInfo
-
-export enum TransactionStatus {
-  Pending = 'pending',
-  Success = 'success',
-  Failed = 'failed',
-  // May want more granular options here later like InMemPool
-}

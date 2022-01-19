@@ -1,27 +1,26 @@
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
 import { Erc20 } from 'src/abis/types'
-import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { maybeApprove } from 'src/features/approve/approveSaga'
-import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
-import { addTransaction, finalizeTransaction } from 'src/features/transactions/sagaHelpers'
+import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  TransactionOptions,
 } from 'src/features/transactions/types'
-import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { Account } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
 import { isZero } from 'src/utils/number'
 import { createMonitoredSaga } from 'src/utils/saga'
-import { call, put } from 'typed-redux-saga'
+import { call } from 'typed-redux-saga'
 
 export type SwapParams = {
   account: Account
   chainId: ChainId
   methodParameters: MethodParameters
   swapRouterAddress: Address
-  transactionInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
+  typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
   txAmount: string
 
   // Optional. provide if input currency requires approval
@@ -36,18 +35,10 @@ export function* approveAndSwap(params: SwapParams) {
     methodParameters: { calldata, value },
     swapRouterAddress,
     txAmount,
-    transactionInfo,
+    typeInfo,
   } = params
 
   try {
-    if (account.type === AccountType.readonly) throw new Error('Account must support signing')
-
-    const signerManager = yield* call(getSignerManager)
-    const providerManager = yield* call(getWalletProviders)
-    const signer = yield* call([signerManager, signerManager.getSignerForAccount], account)
-    const provider = providerManager.getProvider(chainId)
-    const connectedSigner = yield* call([signer, signer.connect], provider)
-
     if (contract) {
       const approved = yield* call(maybeApprove, {
         account,
@@ -61,24 +52,24 @@ export function* approveAndSwap(params: SwapParams) {
       }
     }
 
-    const transaction: providers.TransactionRequest = {
+    const request: providers.TransactionRequest = {
       from: account.address,
       to: swapRouterAddress,
       data: calldata,
       ...(!value || isZero(value) ? {} : { value }),
     }
 
-    const tx = yield* call([connectedSigner, connectedSigner.populateTransaction], transaction)
-    const signedTx = yield* call([connectedSigner, connectedSigner.signTransaction], tx)
-    const transactionResponse = yield* call([provider, provider.sendTransaction], signedTx)
+    const options: TransactionOptions = {
+      request,
+      fetchBalanceOnSuccess: true,
+    }
 
-    yield* call(addTransaction, transactionResponse, transactionInfo)
-
-    const transactionReceipt = yield* call(transactionResponse.wait)
-
-    yield* call(finalizeTransaction, transactionResponse, transactionReceipt)
-
-    yield* put(fetchBalancesActions.trigger(account.address))
+    yield* call(sendTransaction, {
+      chainId,
+      account,
+      options,
+      typeInfo,
+    })
   } catch (e) {
     logger.error('swapSaga', 'approveAndSwap', 'Failed:', e)
     return false
