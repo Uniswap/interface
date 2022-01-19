@@ -26,8 +26,9 @@ const blacklist: Record<string, boolean> = {
 }
 
 const featuredPoolWhitelist: Record<string, boolean> = {
-  '0x6F11B6eA70DEe4f167b1A4ED1F01C903f6781960': true,
-  '0xEfe2f9d62E45815837b4f20c1F44F0A83605B540': true,
+  '0x6F11B6eA70DEe4f167b1A4ED1F01C903f6781960': true, // PACT
+  '0xEfe2f9d62E45815837b4f20c1F44F0A83605B540': false, // ARI
+  '0x155DA6F164D925E3a91F510B50DEC08aA03B4071': true, // IMMO
 }
 
 const CREATION_BLOCK = 9840049
