@@ -36,7 +36,7 @@ export default function Details({ input, output }: DetailsProps) {
   const [integratorFee] = useAtom(integratorFeeAtom)
 
   const details = useMemo((): [string, string][] => {
-    // @TODO ianlapham = update details to pull derived value from useDerivedSwapInfo
+    // @TODO(ianlapham) = update details to pull derived value from useDerivedSwapInfo
     return [
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
       [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(input)}`],
