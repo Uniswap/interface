@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useAtomValue } from 'jotai/utils'
+import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
 import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from 'lib/state/swap'
 import styled, { ThemedText, ThemeProvider } from 'lib/theme'
@@ -65,6 +67,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
   const balance = mockBalance
+  const { chainId } = useActiveWeb3React()
 
   const caption = useMemo(() => {
     const filledInput = asFilledInput(input)
@@ -74,6 +77,14 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         <>
           <AlertTriangle color="secondary" />
           <Trans>Connect wallet to swap</Trans>
+        </>
+      )
+    }
+    if (chainId && !ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
+      return (
+        <>
+          <AlertTriangle color="secondary" />
+          <Trans>Unsupported network&#8211;switch to another to trade.</Trans>
         </>
       )
     }
@@ -109,7 +120,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         <Trans>Enter an amount</Trans>
       </>
     )
-  }, [activeInput, balance, disabled, input, output, swap])
+  }, [activeInput, balance, chainId, disabled, input, output, swap])
 
   return (
     <>
