@@ -4,7 +4,7 @@ import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 
 export const UNI_ADDRESS = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
 
-export const MULTICALL2_ADDRESSES = constructSameAddressMap('0x5FbDB2315678afecb367f032d93F642f64180aa3')
+export const MULTICALL2_ADDRESSES = constructSameAddressMap('0x44e83e9CFE38a970E4110BbE5b7EaC0F953267D8')
 
 export const V2_ROUTER_ADDRESS = constructSameAddressMap('0xd4C7B8a4fDFE65B8f2199748EEdC909A9CE7c58c') //Updated
 
