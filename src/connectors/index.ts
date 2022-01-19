@@ -15,15 +15,15 @@ const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
 
-if (typeof INFURA_KEY === 'undefined') {
-  throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
-}
+// if (typeof INFURA_KEY === 'undefined') {
+//   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
+// }
 
 const NETWORK_URLS: {
   [chainId in ChainId]: string
 } = {
-  [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.TESTNET]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
+  [ChainId.MAINNET]: `https://ethereum.rpc.evmos.dev`,
+  [ChainId.TESTNET]: `https://ethereum.rpc.evmos.dev`,
 }
 
 const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.TESTNET]
