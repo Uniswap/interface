@@ -14,6 +14,7 @@ import {
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
@@ -21,7 +22,6 @@ import { getTickToPrice } from 'utils/getTickToPrice'
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
 import { AppState } from '../../index'
-import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'
 import {
   Bound,
@@ -170,9 +170,9 @@ export function useV3DerivedMintInfo(
   const price: Price<Token, Token> | undefined = useMemo(() => {
     // if no liquidity use typed value
     if (noLiquidity) {
-      const parsedQuoteAmount = tryParseAmount(startPriceTypedValue, invertPrice ? token0 : token1)
+      const parsedQuoteAmount = tryParseCurrencyAmount(startPriceTypedValue, invertPrice ? token0 : token1)
       if (parsedQuoteAmount && token0 && token1) {
-        const baseAmount = tryParseAmount('1', invertPrice ? token1 : token0)
+        const baseAmount = tryParseCurrencyAmount('1', invertPrice ? token1 : token0)
         const price =
           baseAmount && parsedQuoteAmount
             ? new Price(
@@ -294,7 +294,7 @@ export function useV3DerivedMintInfo(
   )
 
   // amounts
-  const independentAmount: CurrencyAmount<Currency> | undefined = tryParseAmount(
+  const independentAmount: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(
     typedValue,
     currencies[independentField]
   )

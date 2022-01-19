@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
-import { tryParseAmount } from 'state/swap/hooks'
 
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC, USDC_ARBITRUM, USDC_POLYGON } from '../constants/tokens'
@@ -87,7 +87,7 @@ export function useStablecoinAmountFromFiatValue(fiatValue: string | null | unde
 
   try {
     // parse USD string into CurrencyAmount based on stablecoin decimals
-    return tryParseAmount(parsedForDecimals, stablecoin)
+    return tryParseCurrencyAmount(parsedForDecimals, stablecoin)
   } catch (error) {
     return undefined
   }
