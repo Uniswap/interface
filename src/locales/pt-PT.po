@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 16:11\n"
+"PO-Revision-Date: 2022-01-19 22:06\n"
 "Last-Translator: \n"
 "Language: pt_PT\n"
 "Language-Team: Portuguese\n"
@@ -2006,6 +2006,10 @@ msgstr "Ativo não suportado"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Ativos não suportados"
+
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Unsupported network–switch to another to trade."
+msgstr "Troca de rede não suportada para outra para negociar."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

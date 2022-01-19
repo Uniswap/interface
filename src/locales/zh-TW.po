@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 16:11\n"
+"PO-Revision-Date: 2022-01-19 22:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -2006,6 +2006,10 @@ msgstr "不支持的資產"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "不支持的資產"
+
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Unsupported network–switch to another to trade."
+msgstr "不支持的網絡——切換到另一個進行交易。"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
