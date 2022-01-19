@@ -12,14 +12,9 @@
       "constants/*": ["../constants/*"],
       "hooks/*": ["../hooks/*"],
       "state/*": ["../state/*"],
-<<<<<<< HEAD
-      "types/*": ["../types/*"]
-    }
-=======
       "types/*": ["../types/*"],
-      "utils/*": ["../utils/*"],
-    },
->>>>>>> d54783a3240ca9b9587d1c1e8fe03bb6f60f2904
+      "utils/*": ["../utils/*"]
+    }
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],
   "include": ["src/lib/**/*"]
