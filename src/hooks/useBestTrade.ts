@@ -14,7 +14,7 @@ import useIsWindowVisible from './useIsWindowVisible'
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-export function useBestTrade(
+export default function useBestTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
@@ -24,6 +24,7 @@ export function useBestTrade(
 } {
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
+  const isWidget = process.env.REACT_APP_IS_WIDGET
 
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
@@ -50,7 +51,8 @@ export function useBestTrade(
         !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
         !debouncedOtherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
 
-  const useFallback = !autoRouterSupported || (!debouncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND)
+  const useFallback =
+    isWidget || !autoRouterSupported || (!debouncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND)
 
   // only use client side router if routing api trade failed or is not supported
   const bestV3Trade = useClientSideV3Trade(
