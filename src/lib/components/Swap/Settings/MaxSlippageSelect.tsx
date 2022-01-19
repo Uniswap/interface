@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { Check, LargeIcon } from 'lib/icons'
-import { MaxSlippage, maxSlippageAtom } from 'lib/state/swap'
+import { MaxSlippage, maxSlippageAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
 
