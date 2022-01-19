@@ -7,6 +7,7 @@ import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
 import React, { useCallback, useMemo, useState } from 'react'
 import {
@@ -18,7 +19,6 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import { tryParseAmount } from 'state/swap/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
@@ -184,7 +184,7 @@ export default function CreateProposal() {
 
     if (!createProposalCallback || !proposalAction || !currencyValue.isToken) return
 
-    const tokenAmount = tryParseAmount(amountValue, currencyValue)
+    const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
     if (!tokenAmount) return
 
     createProposalData.targets = [currencyValue.address]

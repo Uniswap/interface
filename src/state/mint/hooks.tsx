@@ -3,13 +3,13 @@ import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-co
 import { Pair } from '@uniswap/v2-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { AppState } from '../index'
-import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, typeInput } from './actions'
 
@@ -101,14 +101,14 @@ export function useDerivedMintInfo(
   }
 
   // amounts
-  const independentAmount: CurrencyAmount<Currency> | undefined = tryParseAmount(
+  const independentAmount: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(
     typedValue,
     currencies[independentField]
   )
   const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
     if (noLiquidity) {
       if (otherTypedValue && currencies[dependentField]) {
-        return tryParseAmount(otherTypedValue, currencies[dependentField])
+        return tryParseCurrencyAmount(otherTypedValue, currencies[dependentField])
       }
       return undefined
     } else if (independentAmount) {
