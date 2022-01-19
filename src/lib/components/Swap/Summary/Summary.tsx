@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/CurrencyLogo'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
+import TokenImg from 'lib/components/TokenImg'
 import { ArrowRight } from 'lib/icons'
 import styled from 'lib/theme'
 import { ThemedText } from 'lib/theme'
@@ -33,7 +33,7 @@ function TokenValue({ inputAmount, usdc, change }: TokenValueProps) {
   return (
     <Column justify="flex-start">
       <Row gap={0.375} justify="flex-start">
-        <CurrencyLogo currency={inputAmount.currency} />
+        <TokenImg token={inputAmount.currency} />
         <ThemedText.Body2>
           {inputAmount.toSignificant(6)} {inputAmount.currency.symbol}
         </ThemedText.Body2>
