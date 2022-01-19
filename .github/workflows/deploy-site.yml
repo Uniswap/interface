@@ -10,7 +10,6 @@ env:
   REACT_APP_SENTRY_ENVIRONMENT: production
   GIT_COMMIT_SHA: ${{ github.sha }}
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-  GENERATE_SOURCEMAP: 0
 
 jobs:
   deploy-dist:
