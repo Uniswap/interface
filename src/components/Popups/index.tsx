@@ -8,6 +8,7 @@ import { useShowSurveyPopup, useURLWarningVisible } from '../../state/user/hooks
 import { AutoColumn } from '../Column'
 import ClaimPopup from './ClaimPopup'
 import PopupItem from './PopupItem'
+import ReloadPopup from './ReloadPopup'
 import SurveyPopup from './SurveyPopup'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
@@ -74,6 +75,7 @@ export default function Popups() {
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet}>
         <ClaimPopup />
         <SurveyPopup />
+        <ReloadPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
@@ -81,6 +83,7 @@ export default function Popups() {
       <MobilePopupWrapper height={activePopups?.length > 0 || showSurveyPopup ? 'fit-content' : 0}>
         <MobilePopupInner>
           <SurveyPopup />
+          <ReloadPopup />
           {activePopups // reverse so new items up front
             .slice(0)
             .reverse()
