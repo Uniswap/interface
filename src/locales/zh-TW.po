@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-14 19:07\n"
+"PO-Revision-Date: 2022-01-19 16:11\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1462,10 +1462,6 @@ msgstr "接收方"
 msgid "Reload the page"
 msgstr "重新加載頁面"
 
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page to try again"
-msgstr "重新加載頁面以重試"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1615,6 +1611,7 @@ msgstr "有些代幣無法通過此界面使用，因為它們可能無法很好
 msgid "Something went wrong"
 msgstr "出問題了"
 
+#: src/lib/components/Error/ErrorBoundary.tsx
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "出問題了。"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-14 19:07\n"
+"PO-Revision-Date: 2022-01-19 16:11\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -1463,10 +1463,6 @@ msgstr "Befogadó"
 msgid "Reload the page"
 msgstr "Töltse be újra az oldalt"
 
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page to try again"
-msgstr "Az újbóli próbálkozáshoz töltse be újra az oldalt"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1616,6 +1612,7 @@ msgstr "Egyes eszközök nem érhetők el ezen a felületen keresztül, mert el�
 msgid "Something went wrong"
 msgstr "Valami elromlott"
 
+#: src/lib/components/Error/ErrorBoundary.tsx
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Valami elromlott."

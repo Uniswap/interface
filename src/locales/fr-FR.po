@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-14 19:07\n"
+"PO-Revision-Date: 2022-01-19 16:11\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -1462,10 +1462,6 @@ msgstr "Destinataire"
 msgid "Reload the page"
 msgstr "Recharge la page"
 
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page to try again"
-msgstr "Rechargez la page pour réessayer"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1615,6 +1611,7 @@ msgstr "Certains actifs ne sont pas disponibles via cette interface parce qu'ils
 msgid "Something went wrong"
 msgstr "Un problème est survenu"
 
+#: src/lib/components/Error/ErrorBoundary.tsx
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Quelque chose s'est mal passé."

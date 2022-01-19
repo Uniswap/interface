@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-14 19:07\n"
+"PO-Revision-Date: 2022-01-19 16:11\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -1462,10 +1462,6 @@ msgstr "Прималац"
 msgid "Reload the page"
 msgstr "Поново учитај страницу"
 
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page to try again"
-msgstr "Поново учитајте страницу да бисте покушали поново"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1615,6 +1611,7 @@ msgstr "Нека средства нису доступна путем овог 
 msgid "Something went wrong"
 msgstr "Нешто није у реду"
 
+#: src/lib/components/Error/ErrorBoundary.tsx
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Нешто је кренуло наопако."

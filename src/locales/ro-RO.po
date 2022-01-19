@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-14 19:07\n"
+"PO-Revision-Date: 2022-01-19 16:11\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -1462,10 +1462,6 @@ msgstr "Destinatar"
 msgid "Reload the page"
 msgstr "Reîncărcați pagina"
 
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page to try again"
-msgstr "Reîncărcați pagina pentru a încerca din nou"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1615,6 +1611,7 @@ msgstr "Unele active nu sunt disponibile prin intermediul acestei interfețe deo
 msgid "Something went wrong"
 msgstr "Ceva nu a funcţionat corect"
 
+#: src/lib/components/Error/ErrorBoundary.tsx
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Ceva n-a mers bine."

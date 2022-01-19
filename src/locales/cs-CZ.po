@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-14 19:07\n"
+"PO-Revision-Date: 2022-01-19 16:11\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -1462,10 +1462,6 @@ msgstr "Příjemce"
 msgid "Reload the page"
 msgstr "Znovu načtěte stránku"
 
-#: src/lib/components/Error/ErrorBoundary.tsx
-msgid "Reload the page to try again"
-msgstr "Znovu načtěte stránku a zkuste to znovu"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1615,6 +1611,7 @@ msgstr "Některá aktiva nejsou přes toto rozhraní dostupná, protože nemusí
 msgid "Something went wrong"
 msgstr "Něco je špatně"
 
+#: src/lib/components/Error/ErrorBoundary.tsx
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Something went wrong."
 msgstr "Něco se pokazilo."
