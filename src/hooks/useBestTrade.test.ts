@@ -5,7 +5,7 @@ import { TradeState } from 'state/routing/types'
 
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
 import useAutoRouterSupported from './useAutoRouterSupported'
-import { useBestTrade } from './useBestTrade'
+import useBestTrade from './useBestTrade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'

@@ -3,7 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useOutputAmount, useOutputCurrency, useSwapInfo } from 'lib/hooks/swap'
+import { useInputCurrency, useOutputAmount, useOutputCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor, { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
@@ -45,10 +45,11 @@ export default function Output({ disabled, children }: OutputProps) {
 
   const [typedOutputAmount, updateTypedOutputAmount] = useOutputAmount()
   const [outputCurrency, updateOutputCurrency] = useOutputCurrency()
+  const [inputCurrency] = useInputCurrency()
 
   const overrideColor = useAtomValue(colorAtom)
-  const dynamicColor = useCurrencyColor(undefined)
-  usePrefetchCurrencyColor(undefined) // extract eagerly in case of reversal
+  const dynamicColor = useCurrencyColor(outputCurrency)
+  usePrefetchCurrencyColor(inputCurrency) // extract eagerly in case of reversal
   const color = overrideColor || dynamicColor
   const hasColor = outputCurrency ? Boolean(color) || null : false
 

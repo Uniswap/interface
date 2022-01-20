@@ -75,7 +75,6 @@ interface SummaryDialogProps {
 }
 
 export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
-  //@TODO(ianlapham): get real price
   const {
     trade: { trade },
     currencyAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
