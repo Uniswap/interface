@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai/utils'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
-import { Transaction, transactionAtom } from 'lib/state/swap'
+import { SwapTransaction, swapTransactionAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useCallback, useMemo, useState } from 'react'
 
@@ -24,7 +24,7 @@ const TransactionRow = styled(Row)`
   flex-direction: row-reverse;
 `
 
-function ElapsedTime({ tx }: { tx: Transaction | null }) {
+function ElapsedTime({ tx }: { tx: SwapTransaction | null }) {
   const [elapsedMs, setElapsedMs] = useState(0)
   useInterval(
     () => {
@@ -64,7 +64,7 @@ const EtherscanA = styled.a`
 `
 
 interface TransactionStatusProps extends StatusProps {
-  tx: Transaction | null
+  tx: SwapTransaction | null
 }
 
 function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
@@ -100,7 +100,7 @@ interface StatusProps {
 }
 
 export default function TransactionStatusDialog({ onClose }: StatusProps) {
-  const tx = useAtomValue(transactionAtom)
+  const tx = useAtomValue(swapTransactionAtom)
 
   return tx?.status instanceof Error ? (
     <ErrorDialog header={errorMessage} error={tx.status} action={<Trans>Dismiss</Trans>} onAction={onClose} />
