@@ -18,6 +18,8 @@ import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 import SEO from './components/SEO'
 import ReactGA from 'react-ga'
+import * as Sentry from '@sentry/react'
+import { uuid } from 'uuidv4'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -63,6 +65,16 @@ const initGoogleAnalytics = () => {
 
 if (process.env.REACT_APP_MAINNET_ENV === 'production') {
   initGoogleAnalytics()
+}
+
+export const sentryRequestId = uuid()
+if (process.env.REACT_APP_MAINNET_ENV === 'production') {
+  Sentry.init({
+    dsn: 'https://6cd398671bde455f8fadad6dbfe87a67@sentry-v2.knstats.com/48'
+  })
+  Sentry.configureScope(scope => {
+    scope.setTag('request_id', sentryRequestId)
+  })
 }
 
 const preloadhtml = document.querySelector('.preloadhtml')
