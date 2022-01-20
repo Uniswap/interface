@@ -7,6 +7,7 @@ import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
@@ -53,19 +54,17 @@ export default function Output({ disabled, children }: OutputProps) {
   // different state true/null/false allow smoother color transition
   const hasColor = outputCurrency ? Boolean(color) || null : false
 
-  const change = useMemo(() => {
-    if (inputUSDC && outputUSDC) {
-      return parseFloat(inputUSDC.divide(outputUSDC).quotient.toString())
-    }
-    return ''
+  const priceImpact = useMemo(() => {
+    const computedChange = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
+    return computedChange ? parseFloat(computedChange.multiply(-1)?.toSignificant(3)) : undefined
   }, [inputUSDC, outputUSDC])
 
   const usdc = useMemo(() => {
     if (outputUSDC) {
-      return `~ $${outputUSDC.toFixed(2)}${change}`
+      return `~ $${outputUSDC.toFixed(2)}${priceImpact}`
     }
     return '-'
-  }, [change, outputUSDC])
+  }, [priceImpact, outputUSDC])
 
   const onMax = useCallback(() => {
     if (balance) {
