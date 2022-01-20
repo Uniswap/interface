@@ -3003,6 +3003,11 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-firebase/remote-config@^14.2.2":
+  version "14.2.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-14.2.2.tgz#36629ff782b1cb9e48ea0b5418d748aa2eb47c37"
+  integrity sha512-QBnLs0pFd7jPEY4dVHTtdhHqimodNEzoUv58Ly1osXXDcPmBGpRmvc9+0zJlkgJc+aPtKWgK/qfqlm5BLQnnOQ==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"

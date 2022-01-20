@@ -32,6 +32,7 @@
     "@react-native-async-storage/async-storage": "^1.15.9",
     "@react-native-firebase/analytics": "^12.9.3",
     "@react-native-firebase/app": "^12.9.3",
+    "@react-native-firebase/remote-config": "^14.2.2",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",

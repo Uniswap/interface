@@ -31,3 +31,6 @@ require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
 jest.mock('src/features/providers/providerSaga')
 
 jest.mock('src/lib/RNEthersRs')
+
+// Mock Firebase Remote Config
+jest.mock('@react-native-firebase/remote-config', () => {})

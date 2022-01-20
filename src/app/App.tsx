@@ -14,6 +14,7 @@ import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationBannerWrapper } from 'src/features/notifications/NotificationBanner'
+import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { darkTheme, theme } from 'src/styles/theme'
 
@@ -34,6 +35,8 @@ setLogger({
     Sentry.captureException(error)
   },
 })
+
+initializeRemoteConfig()
 
 const queryClient = new QueryClient()
 
