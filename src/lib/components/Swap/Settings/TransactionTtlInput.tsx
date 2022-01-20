@@ -25,8 +25,8 @@ export default function TransactionTtlInput() {
         <Input onClick={() => input.current?.focus()}>
           <IntegerInput
             placeholder={TRANSACTION_TTL_DEFAULT.toString()}
-            value={transactionTtl}
-            onChange={(value) => setTransactionTtl(value ?? 0)}
+            value={transactionTtl?.toString() ?? ''}
+            onChange={(value) => setTransactionTtl(value ? parseFloat(value) : 0)}
             ref={input}
           />
           <Trans>minutes</Trans>
