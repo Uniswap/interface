@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { Check, LargeIcon } from 'lib/icons'
-import { MaxSlippage, maxSlippageAtom } from 'lib/state/swap'
+import { MaxSlippage, maxSlippageAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
 
@@ -78,8 +78,8 @@ export default function MaxSlippageSelect() {
         <InputOption value={custom} onSelect={onInputSelect} selected={maxSlippage === CUSTOM}>
           <DecimalInput
             size={custom === undefined ? undefined : 5}
-            value={custom}
-            onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom })}
+            value={custom?.toString() ?? ''}
+            onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom: custom ? parseFloat(custom) : undefined })}
             placeholder={t`Custom`}
             ref={input}
           />

@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
+import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList, { DEFAULT_TOKEN_LIST } from 'lib/hooks/useTokenList'
 import { useMemo, useState } from 'react'
@@ -52,6 +53,7 @@ export default function Swap({ defaults }: SwapProps) {
   const { active, account } = useActiveWeb3React()
   return (
     <>
+      <SwapInfoUpdater />
       <Header logo title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} />}
         <Settings disabled={!active} />

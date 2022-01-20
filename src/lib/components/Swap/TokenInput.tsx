@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { Input } from 'lib/state/swap'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
 
@@ -45,20 +44,22 @@ const MaxButton = styled(Button)`
 `
 
 interface TokenInputProps {
-  input: Input
+  currency?: Currency
+  amount: string
   disabled?: boolean
   onMax?: () => void
-  onChangeInput: (input: number | undefined) => void
-  onChangeToken: (token: Currency) => void
+  onChangeInput: (input: string) => void
+  onChangeCurrency: (currency: Currency) => void
   children: ReactNode
 }
 
 export default function TokenInput({
-  input: { value, token },
+  currency,
+  amount,
   disabled,
   onMax,
   onChangeInput,
-  onChangeToken,
+  onChangeCurrency,
   children,
 }: TokenInputProps) {
   const max = useRef<HTMLButtonElement>(null)
@@ -74,10 +75,10 @@ export default function TokenInput({
       <TokenInputRow gap={0.5} onBlur={onBlur}>
         <ThemedText.H2>
           <ValueInput
-            value={value}
+            value={amount}
             onFocus={onFocus}
             onChange={onChangeInput}
-            disabled={disabled || !token}
+            disabled={disabled || !currency}
           ></ValueInput>
         </ThemedText.H2>
         {showMax && (
@@ -87,7 +88,7 @@ export default function TokenInput({
             </ThemedText.ButtonMedium>
           </MaxButton>
         )}
-        <TokenSelect value={token} collapsed={showMax} disabled={disabled} onSelect={onChangeToken} />
+        <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onChangeCurrency} />
       </TokenInputRow>
       {children}
     </Column>

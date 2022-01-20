@@ -1,18 +1,25 @@
 import { Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
+import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
+import { useSwapInfo } from 'lib/hooks/swap'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
-import { Field, Input, inputAtom, outputAtom, stateAtom, swapAtom } from 'lib/state/swap'
+import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText, ThemeProvider } from 'lib/theme'
 import { useMemo, useState } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import { TextButton } from '../Button'
 import Row from '../Row'
 import Rule from '../Rule'
 import Tooltip from '../Tooltip'
 
-const mockBalance = 123.45
+const ToolbarRow = styled(Row)`
+  padding: 0.5em 0;
+  ${largeIconCss}
+`
 
 function RoutingTooltip() {
   return (
@@ -24,30 +31,37 @@ function RoutingTooltip() {
   )
 }
 
-type FilledInput = Input & Required<Pick<Input, 'token' | 'value'>>
-
-function asFilledInput(input: Input): FilledInput | undefined {
-  return input.token && input.value ? (input as FilledInput) : undefined
-}
-
 interface LoadedStateProps {
-  input: FilledInput
-  output: FilledInput
+  inputAmount: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<Currency>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 }
 
-function LoadedState({ input, output }: LoadedStateProps) {
+function LoadedState({ inputAmount, outputAmount, trade }: LoadedStateProps) {
   const [flip, setFlip] = useState(true)
+  const executionPrice = trade?.executionPrice
+  const fiatValueInput = useUSDCPrice(inputAmount.currency)
+  const fiatValueOutput = useUSDCPrice(outputAmount.currency)
+
   const ratio = useMemo(() => {
-    const [a, b] = flip ? [output, input] : [input, output]
-    const ratio = `1 ${a.token.symbol} = ${b.value / a.value} ${b.token.symbol}`
-    const usdc = a.usdc && ` ($${(a.usdc / a.value).toLocaleString('en')})`
+    const [a, b] = flip ? [outputAmount, inputAmount] : [inputAmount, outputAmount]
+
+    const ratio = `1 ${a.currency.symbol} = ${executionPrice?.toSignificant(6)} ${b.currency.symbol}`
+    const usdc = !flip
+      ? fiatValueInput
+        ? ` ($${fiatValueInput.toSignificant(2)})`
+        : null
+      : fiatValueOutput
+      ? ` ($${fiatValueOutput.toSignificant(2)})`
+      : null
+
     return (
       <Row gap={0.25} style={{ userSelect: 'text' }}>
         {ratio}
         {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
       </Row>
     )
-  }, [flip, input, output])
+  }, [executionPrice, fiatValueInput, fiatValueOutput, flip, inputAmount, outputAmount])
 
   return (
     <TextButton color="primary" onClick={() => setFlip(!flip)}>
@@ -56,22 +70,17 @@ function LoadedState({ input, output }: LoadedStateProps) {
   )
 }
 
-const ToolbarRow = styled(Row)`
-  padding: 0.5em 0;
-  ${largeIconCss}
-`
-
 export default function Toolbar({ disabled }: { disabled?: boolean }) {
-  const { activeInput } = useAtomValue(stateAtom)
-  const swap = useAtomValue(swapAtom)
-  const input = useAtomValue(inputAtom)
-  const output = useAtomValue(outputAtom)
-  const balance = mockBalance
   const { chainId } = useActiveWeb3React()
+  const {
+    trade,
+    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurency },
+    currencyBalances: { [Field.INPUT]: balance },
+    currencyAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
+  } = useSwapInfo()
+  const independentField = useAtomValue(independentFieldAtom)
 
   const caption = useMemo(() => {
-    const filledInput = asFilledInput(input)
-    const filledOutput = asFilledInput(output)
     if (disabled) {
       return (
         <>
@@ -80,6 +89,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         </>
       )
     }
+
     if (chainId && !ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
       return (
         <>
@@ -88,8 +98,9 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         </>
       )
     }
-    if (activeInput === Field.INPUT ? filledInput && output.token : filledOutput && input.token) {
-      if (!swap) {
+
+    if (independentField === Field.INPUT ? inputCurrency && inputAmount : outputCurency && outputAmount) {
+      if (!trade?.trade) {
         return (
           <>
             <Spinner color="secondary" />
@@ -97,19 +108,19 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
           </>
         )
       }
-      if (filledInput && filledInput.value > balance) {
+      if (inputAmount && balance && inputAmount.greaterThan(balance)) {
         return (
           <>
             <AlertTriangle color="secondary" />
-            <Trans>Insufficient {filledInput.token.symbol}</Trans>
+            <Trans>Insufficient {inputCurrency?.symbol}</Trans>
           </>
         )
       }
-      if (filledInput && filledOutput) {
+      if (inputCurrency && inputAmount && outputCurency && outputAmount) {
         return (
           <>
             <RoutingTooltip />
-            <LoadedState input={filledInput} output={filledOutput} />
+            <LoadedState inputAmount={inputAmount} outputAmount={outputAmount} trade={trade?.trade} />
           </>
         )
       }
@@ -120,7 +131,17 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         <Trans>Enter an amount</Trans>
       </>
     )
-  }, [activeInput, balance, chainId, disabled, input, output, swap])
+  }, [
+    balance,
+    chainId,
+    disabled,
+    independentField,
+    inputAmount,
+    inputCurrency,
+    outputAmount,
+    outputCurency,
+    trade?.trade,
+  ])
 
   return (
     <>

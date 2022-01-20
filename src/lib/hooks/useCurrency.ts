@@ -113,7 +113,7 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
  * Returns null if currency is loading or null was passed.
  * Returns undefined if currencyId is invalid or token does not exist.
  */
-export function useCurrency(currencyId?: string | null): Currency | null | undefined {
+export default function useCurrency(currencyId?: string | null): Currency | null | undefined {
   const tokens = useTokenMap()
   return useCurrencyFromMap(tokens, currencyId)
 }

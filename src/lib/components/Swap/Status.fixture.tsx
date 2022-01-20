@@ -1,8 +1,10 @@
 import { tokens } from '@uniswap/default-token-list'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
-import { transactionAtom } from 'lib/state/swap'
+import JSBI from 'jsbi'
+import { swapTransactionAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -19,15 +21,15 @@ const UNI = (function () {
 })()
 
 function Fixture() {
-  const setTransaction = useUpdateAtom(transactionAtom)
+  const setTransaction = useUpdateAtom(swapTransactionAtom)
 
   const [state] = useSelect('state', {
     options: ['PENDING', 'ERROR', 'SUCCESS'],
   })
   useEffect(() => {
     setTransaction({
-      input: { token: ETH, value: 1 },
-      output: { token: UNI, value: 42 },
+      input: CurrencyAmount.fromRawAmount(ETH, JSBI.BigInt(1)),
+      output: CurrencyAmount.fromRawAmount(UNI, JSBI.BigInt(42)),
       receipt: '',
       timestamp: Date.now(),
     })
@@ -36,8 +38,8 @@ function Fixture() {
     switch (state) {
       case 'PENDING':
         setTransaction({
-          input: { token: ETH, value: 1 },
-          output: { token: UNI, value: 42 },
+          input: CurrencyAmount.fromRawAmount(ETH, JSBI.BigInt(1)),
+          output: CurrencyAmount.fromRawAmount(UNI, JSBI.BigInt(42)),
           receipt: '',
           timestamp: Date.now(),
         })
