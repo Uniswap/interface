@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 16:11\n"
+"PO-Revision-Date: 2022-01-19 22:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -2007,6 +2007,10 @@ msgstr "Nem támogatott eszköz"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Nem támogatott eszközök"
+
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Unsupported network–switch to another to trade."
+msgstr "Nem támogatott hálózat – váltson másikra a kereskedéshez."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

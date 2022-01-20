@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useInputAmount, useInputCurrency, useSwapInfo } from 'lib/hooks/swap'
+import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
+import { useCallback } from 'react'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
 import Row from '../Row'
@@ -34,8 +36,17 @@ export default function Input({ disabled }: InputProps) {
   const [typedInputAmount, updateTypedInputAmount] = useInputAmount()
   const [inputCurrency, updateInputCurrency] = useInputCurrency()
 
+  // extract eagerly in case of reversal
+  usePrefetchCurrencyColor(inputCurrency)
+
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
+
+  const onMax = useCallback(() => {
+    if (balance) {
+      updateTypedInputAmount(balance.toExact())
+    }
+  }, [balance, updateTypedInputAmount])
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
@@ -48,16 +59,16 @@ export default function Input({ disabled }: InputProps) {
         currency={inputCurrency}
         amount={(typedInputAmount !== undefined ? typedInputAmount : inputCurrencyAmount?.toSignificant(6)) ?? ''}
         disabled={disabled}
-        onMax={balance ? () => updateTypedInputAmount(balance.toExact()) : undefined}
-        onChangeInput={(val) => updateTypedInputAmount(val ?? '')}
-        onChangeCurrency={(currency: Currency) => updateInputCurrency(currency)}
+        onMax={onMax}
+        onChangeInput={updateTypedInputAmount}
+        onChangeCurrency={updateInputCurrency}
       >
         <ThemedText.Body2 color="secondary">
           <Row>
             {inputUSDC ? `~ $${inputUSDC.toFixed(2)}` : '-'}
             {balance && (
               <ThemedText.Body2 color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}>
-                Balance: <span style={{ userSelect: 'text' }}>{balance}</span>
+                Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>
               </ThemedText.Body2>
             )}
           </Row>

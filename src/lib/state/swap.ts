@@ -36,4 +36,4 @@ export interface SwapTransaction {
   status?: true | Error
 }
 
-export const transactionAtom = atomWithImmer<SwapTransaction | null>(null)
+export const swapTransactionAtom = atomWithImmer<SwapTransaction | null>(null)

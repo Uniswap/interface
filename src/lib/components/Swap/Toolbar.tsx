@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
+import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText, ThemeProvider } from 'lib/theme'
@@ -38,20 +40,28 @@ interface LoadedStateProps {
 function LoadedState({ inputAmount, outputAmount, trade }: LoadedStateProps) {
   const [flip, setFlip] = useState(true)
   const executionPrice = trade?.executionPrice
-  const usdcValue = useUSDCPrice(inputAmount.currency)
+  const fiatValueInput = useUSDCPrice(inputAmount.currency)
+  const fiatValueOutput = useUSDCPrice(outputAmount.currency)
 
   const ratio = useMemo(() => {
     const [a, b] = flip ? [outputAmount, inputAmount] : [inputAmount, outputAmount]
 
     const ratio = `1 ${a.currency.symbol} = ${executionPrice?.toSignificant(6)} ${b.currency.symbol}`
-    const usdc = usdcValue ? ` ($${usdcValue.toSignificant(2)})` : null
+    const usdc = !flip
+      ? fiatValueInput
+        ? ` ($${fiatValueInput.toSignificant(2)})`
+        : null
+      : fiatValueOutput
+      ? ` ($${fiatValueOutput.toSignificant(2)})`
+      : null
+
     return (
       <Row gap={0.25} style={{ userSelect: 'text' }}>
         {ratio}
         {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
       </Row>
     )
-  }, [executionPrice, flip, inputAmount, outputAmount, usdcValue])
+  }, [executionPrice, fiatValueInput, fiatValueOutput, flip, inputAmount, outputAmount])
 
   return (
     <TextButton color="primary" onClick={() => setFlip(!flip)}>
@@ -61,13 +71,13 @@ function LoadedState({ inputAmount, outputAmount, trade }: LoadedStateProps) {
 }
 
 export default function Toolbar({ disabled }: { disabled?: boolean }) {
+  const { chainId } = useActiveWeb3React()
   const {
     trade,
     currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurency },
     currencyBalances: { [Field.INPUT]: balance },
     currencyAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
   } = useSwapInfo()
-
   const independentField = useAtomValue(independentFieldAtom)
 
   const caption = useMemo(() => {
@@ -79,6 +89,16 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         </>
       )
     }
+
+    if (chainId && !ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
+      return (
+        <>
+          <AlertTriangle color="secondary" />
+          <Trans>Unsupported network&#8211;switch to another to trade.</Trans>
+        </>
+      )
+    }
+
     if (independentField === Field.INPUT ? inputCurrency && inputAmount : outputCurency && outputAmount) {
       if (!trade?.trade) {
         return (
@@ -111,7 +131,17 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         <Trans>Enter an amount</Trans>
       </>
     )
-  }, [balance, disabled, independentField, inputAmount, inputCurrency, outputAmount, outputCurency, trade?.trade])
+  }, [
+    balance,
+    chainId,
+    disabled,
+    independentField,
+    inputAmount,
+    inputCurrency,
+    outputAmount,
+    outputCurency,
+    trade?.trade,
+  ])
 
   return (
     <>

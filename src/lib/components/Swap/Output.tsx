@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useInputCurrency, useOutputAmount, useOutputCurrency, useSwapInfo } from 'lib/hooks/swap'
-import useCurrencyColor, { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
+import { useOutputAmount, useOutputCurrency, useSwapInfo } from 'lib/hooks/swap'
+import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
 import Row from '../Row'
@@ -45,12 +45,12 @@ export default function Output({ disabled, children }: OutputProps) {
 
   const [typedOutputAmount, updateTypedOutputAmount] = useOutputAmount()
   const [outputCurrency, updateOutputCurrency] = useOutputCurrency()
-  const [inputCurrency] = useInputCurrency()
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(outputCurrency)
-  usePrefetchCurrencyColor(inputCurrency) // extract eagerly in case of reversal
   const color = overrideColor || dynamicColor
+
+  // different state true/null/false allow smoother color transition
   const hasColor = outputCurrency ? Boolean(color) || null : false
 
   const change = useMemo(() => {
@@ -67,6 +67,12 @@ export default function Output({ disabled, children }: OutputProps) {
     return '-'
   }, [change, outputUSDC])
 
+  const onMax = useCallback(() => {
+    if (balance) {
+      updateTypedOutputAmount(balance.toExact())
+    }
+  }, [balance, updateTypedOutputAmount])
+
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
@@ -79,16 +85,16 @@ export default function Output({ disabled, children }: OutputProps) {
           currency={outputCurrency}
           amount={(typedOutputAmount !== undefined ? typedOutputAmount : outputCurrencyAmount?.toSignificant(6)) ?? ''}
           disabled={disabled}
-          onMax={balance ? () => updateTypedOutputAmount(balance.toExact()) : undefined}
-          onChangeInput={(val) => updateTypedOutputAmount(val ?? '')}
-          onChangeCurrency={(currency: Currency) => updateOutputCurrency(currency)}
+          onMax={onMax}
+          onChangeInput={updateTypedOutputAmount}
+          onChangeCurrency={updateOutputCurrency}
         >
           <ThemedText.Body2 color="secondary">
             <Row>
               {usdc}
               {balance && (
                 <span>
-                  Balance: <span style={{ userSelect: 'text' }}>{balance}</span>
+                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>
                 </span>
               )}
             </Row>

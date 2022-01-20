@@ -48,7 +48,7 @@ interface TokenInputProps {
   amount: string
   disabled?: boolean
   onMax?: () => void
-  onChangeInput: (input: string | undefined) => void
+  onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
   children: ReactNode
 }

@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai/utils'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
-import { SwapTransaction, transactionAtom } from 'lib/state/swap'
+import { SwapTransaction, swapTransactionAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useCallback, useMemo, useState } from 'react'
 
@@ -100,7 +100,7 @@ interface StatusProps {
 }
 
 export default function TransactionStatusDialog({ onClose }: StatusProps) {
-  const tx = useAtomValue(transactionAtom)
+  const tx = useAtomValue(swapTransactionAtom)
 
   return tx?.status instanceof Error ? (
     <ErrorDialog header={errorMessage} error={tx.status} action={<Trans>Dismiss</Trans>} onAction={onClose} />

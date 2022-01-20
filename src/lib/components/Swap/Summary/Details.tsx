@@ -1,7 +1,8 @@
 import { t } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
-import { maxSlippageAtom } from 'lib/state/settings'
+import { useAtomValue } from 'jotai/utils'
+import { settingsAtom } from 'lib/state/settings'
 import { integratorFeeAtom } from 'lib/state/swap'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
@@ -33,7 +34,7 @@ interface DetailsProps {
 export default function Details({ input, output }: DetailsProps) {
   const integrator = window.location.hostname
 
-  const [slippageTolerance] = useAtom(maxSlippageAtom)
+  const { maxSlippage } = useAtomValue(settingsAtom)
   const [integratorFee] = useAtom(integratorFeeAtom)
 
   const details = useMemo((): [string, string][] => {
@@ -44,13 +45,13 @@ export default function Details({ input, output }: DetailsProps) {
       // [t`Price impact`, `${swap.priceImpact}%`],
       // [t`Maximum sent`, swap.maximumSent && `${swap.maximumSent} ${inputSymbol}`],
       // [t`Minimum received`, swap.minimumReceived && `${swap.minimumReceived} ${outputSymbol}`],
-      [t`Slippage tolerance`, `${slippageTolerance}%`],
+      [t`Slippage tolerance`, `${maxSlippage}%`],
     ].filter(isDetail)
 
     function isDetail(detail: unknown[]): detail is [string, string] {
       return Boolean(detail[1])
     }
-  }, [input, integrator, integratorFee, slippageTolerance])
+  }, [input, integrator, integratorFee, maxSlippage])
   return (
     <>
       {details.map(([label, detail]) => (

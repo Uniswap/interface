@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import useBestTrade from 'hooks/useBestTrade'
+import { useClientSideV3Trade } from 'hooks/useClientSideV3Trade'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
@@ -53,7 +53,7 @@ function useComputeSwapInfo(): SwapInfo {
     [inputCurrency, isExactIn, outputCurrency, amount]
   )
 
-  const trade = useBestTrade(
+  const trade = useClientSideV3Trade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined

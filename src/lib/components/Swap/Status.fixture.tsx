@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import JSBI from 'jsbi'
-import { transactionAtom } from 'lib/state/swap'
+import { swapTransactionAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -21,7 +21,7 @@ const UNI = (function () {
 })()
 
 function Fixture() {
-  const setTransaction = useUpdateAtom(transactionAtom)
+  const setTransaction = useUpdateAtom(swapTransactionAtom)
 
   const [state] = useSelect('state', {
     options: ['PENDING', 'ERROR', 'SUCCESS'],

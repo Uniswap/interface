@@ -1,8 +1,11 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { COMMON_BASES } from 'constants/routing'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useQueryTokenList } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
 import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
+import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -20,8 +23,9 @@ const SearchInput = styled(StringInput)`
 export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) => void }) {
   const [query, setQuery] = useState('')
   const tokens = useQueryTokenList(query)
+  const { chainId } = useActiveWeb3React()
 
-  const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
+  const baseTokens: Currency[] = chainId ? COMMON_BASES[chainId] ?? [] : [] // TODO(zzmp): Add base tokens to token list functionality
 
   // TODO(zzmp): Disable already selected tokens (passed as props?)
 
@@ -49,7 +53,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Currency) =>
         {Boolean(baseTokens.length) && (
           <Row pad={0.75} gap={0.25} justify="flex-start" flex>
             {baseTokens.map((token) => (
-              <TokenBase value={token} onClick={onSelect} key={token.wrapped.address} />
+              <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
             ))}
           </Row>
         )}

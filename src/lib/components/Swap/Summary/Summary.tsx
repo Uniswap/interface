@@ -4,6 +4,7 @@ import { ArrowRight } from 'lib/icons'
 import styled from 'lib/theme'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 
 import Column from '../../Column'
 import Row from '../../Row'
@@ -60,17 +61,16 @@ export default function Summary({ input, output, usdc }: SummaryProps) {
   const inputUSDCValue = useUSDCValue(input)
   const outputUSDCValue = useUSDCValue(output)
 
-  const change = useMemo(() => {
-    if (inputUSDCValue && outputUSDCValue) {
-      return parseFloat(inputUSDCValue.divide(outputUSDCValue).quotient.toString())
-    }
-    return undefined
+  const priceImpact = useMemo(() => {
+    const computedChange = computeFiatValuePriceImpact(inputUSDCValue, outputUSDCValue)
+    return computedChange ? parseFloat(computedChange.multiply(-1)?.toSignificant(3)) : undefined
   }, [inputUSDCValue, outputUSDCValue])
+
   return (
     <Row gap={usdc ? 1 : 0.25}>
       <TokenValue input={input} usdc={usdc} />
       <ArrowRight />
-      <TokenValue input={output} usdc={usdc} change={change} />
+      <TokenValue input={output} usdc={usdc} change={priceImpact} />
     </Row>
   )
 }
