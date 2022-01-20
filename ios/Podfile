@@ -34,6 +34,7 @@ target 'Uniswap' do
   
   if ENV['USE_FLIPPER']
     use_flipper!({'Flipper-Folly' => '2.6.9'})
+    pod 'react-native-flipper', :path =>  '../node_modules/react-native-flipper'
   end
 
   post_install do |installer|

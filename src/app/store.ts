@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore } from '@reduxjs/toolkit'
+import createDebugger from 'redux-flipper'
 import {
   FLUSH,
   PAUSE,
@@ -37,7 +38,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) => {
-    return [
+    const middleware = [
       ...getDefaultMiddleware({
         thunk: false,
         serializableCheck: {
@@ -63,6 +64,11 @@ export const store = configureStore({
       }),
       sagaMiddleware,
     ]
+    if (__DEV__) {
+      middleware.push(createDebugger())
+    }
+
+    return middleware
   },
   devTools: config.debug,
 })
