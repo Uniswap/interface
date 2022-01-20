@@ -42,15 +42,15 @@ export default function Output({ disabled, children }: OutputProps) {
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
 
-  const [typedOutputAmount, updateTypedOutputAmount] = useSwapAmount(Field.OUTPUT)
-  const [outputCurrency, updateOutputCurrency] = useSwapCurrency(Field.OUTPUT)
+  const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
+  const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
   const overrideColor = useAtomValue(colorAtom)
-  const dynamicColor = useCurrencyColor(outputCurrency)
+  const dynamicColor = useCurrencyColor(swapOutputCurrency)
   const color = overrideColor || dynamicColor
 
   // different state true/null/false allow smoother color transition
-  const hasColor = outputCurrency ? Boolean(color) || null : false
+  const hasColor = swapOutputCurrency ? Boolean(color) || null : false
 
   const inputUSDC = useUSDCValue(inputCurrencyAmount)
   const outputUSDC = useUSDCValue(outputCurrencyAmount)
@@ -69,9 +69,9 @@ export default function Output({ disabled, children }: OutputProps) {
 
   const onMax = useCallback(() => {
     if (balance) {
-      updateTypedOutputAmount(balance.toExact())
+      updateSwapOutputAmount(balance.toExact())
     }
-  }, [balance, updateTypedOutputAmount])
+  }, [balance, updateSwapOutputAmount])
 
   return (
     <DynamicThemeProvider color={color}>
@@ -82,12 +82,12 @@ export default function Output({ disabled, children }: OutputProps) {
           </ThemedText.Subhead2>
         </Row>
         <TokenInput
-          currency={outputCurrency}
-          amount={(typedOutputAmount !== undefined ? typedOutputAmount : outputCurrencyAmount?.toSignificant(6)) ?? ''}
+          currency={swapOutputCurrency}
+          amount={(swapOutputAmount !== undefined ? swapOutputAmount : outputCurrencyAmount?.toSignificant(6)) ?? ''}
           disabled={disabled}
           onMax={onMax}
-          onChangeInput={updateTypedOutputAmount}
-          onChangeCurrency={updateOutputCurrency}
+          onChangeInput={updateSwapOutputAmount}
+          onChangeCurrency={updateSwapOutputCurrency}
         >
           <ThemedText.Body2 color="secondary">
             <Row>

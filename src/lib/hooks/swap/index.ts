@@ -27,7 +27,7 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
   return [value, updateAmount]
 }
 
-export function useSwitchCurrencies() {
+export function useSwitchSwapCurrencies() {
   const update = useUpdateAtom(swapAtom)
   return useCallback(() => {
     update((swap) => {

@@ -53,6 +53,9 @@ function useComputeSwapInfo(): SwapInfo {
     [inputCurrency, isExactIn, outputCurrency, amount]
   )
 
+  /**
+   * @TODO (ianlapham): eventually need a strategy for routing API here
+   */
   const trade = useClientSideV3Trade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,

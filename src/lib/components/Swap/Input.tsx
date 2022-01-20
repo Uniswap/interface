@@ -33,20 +33,20 @@ export default function Input({ disabled }: InputProps) {
   } = useSwapInfo()
   const inputUSDC = useUSDCValue(inputCurrencyAmount)
 
-  const [typedInputAmount, updateTypedInputAmount] = useSwapAmount(Field.INPUT)
-  const [inputCurrency, updateInputCurrency] = useSwapCurrency(Field.INPUT)
+  const [swapInputAmount, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
+  const [swapInputCurrency, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
 
   // extract eagerly in case of reversal
-  usePrefetchCurrencyColor(inputCurrency)
+  usePrefetchCurrencyColor(swapInputCurrency)
 
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
 
   const onMax = useCallback(() => {
     if (balance) {
-      updateTypedInputAmount(balance.toExact())
+      updateSwapInputAmount(balance.toExact())
     }
-  }, [balance, updateTypedInputAmount])
+  }, [balance, updateSwapInputAmount])
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
@@ -56,12 +56,12 @@ export default function Input({ disabled }: InputProps) {
         </ThemedText.Subhead2>
       </Row>
       <TokenInput
-        currency={inputCurrency}
-        amount={(typedInputAmount !== undefined ? typedInputAmount : inputCurrencyAmount?.toSignificant(6)) ?? ''}
+        currency={swapInputCurrency}
+        amount={(swapInputAmount !== undefined ? swapInputAmount : inputCurrencyAmount?.toSignificant(6)) ?? ''}
         disabled={disabled}
         onMax={onMax}
-        onChangeInput={updateTypedInputAmount}
-        onChangeCurrency={updateInputCurrency}
+        onChangeInput={updateSwapInputAmount}
+        onChangeCurrency={updateSwapInputCurrency}
       >
         <ThemedText.Body2 color="secondary">
           <Row>
