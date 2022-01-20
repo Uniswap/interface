@@ -22,6 +22,7 @@ import { useAllTokens } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
 import { currencyId } from 'src/utils/currencyId'
+import { useDebounce } from 'src/utils/timing'
 
 interface CurrencySearchProps {
   currencies: Currency[]
@@ -42,6 +43,7 @@ export function CurrencySearch({
 }: CurrencySearchProps) {
   const [chainFilter, setChainFilter] = useState<ChainId | null>(otherCurrency?.chainId ?? null)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
+  const debouncedSearchFilter = useDebounce(searchFilter, 200)
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
   const chainIdToTokens = useAllTokens()
@@ -57,8 +59,8 @@ export function CurrencySearch({
   const { t } = useTranslation()
 
   const filteredCurrencies = useMemo(
-    () => filter(currencies ?? null, chainFilter, searchFilter),
-    [chainFilter, currencies, searchFilter]
+    () => filter(currencies ?? null, chainFilter, debouncedSearchFilter),
+    [chainFilter, currencies, debouncedSearchFilter]
   )
 
   const onChainPress = (newChainFilter: typeof chainFilter) => {
