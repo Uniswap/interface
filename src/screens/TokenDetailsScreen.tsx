@@ -26,7 +26,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
 
   return (
     <CenterBox flexDirection="row" justifyContent="space-between" my="md">
-      <BackButton ml="lg" size={30} />
+      <BackButton ml="lg" />
       <Box alignItems="center" flexDirection="row">
         <CurrencyLogo currency={currency} size={30} />
         <Text ml="sm" variant="h2">

@@ -30,7 +30,7 @@ export function NotificationsScreen() {
   return (
     <SheetScreen flex={1} px="lg">
       <Flex alignItems="center" flexDirection="row" gap="md">
-        <BackButton size={30} />
+        <BackButton />
         <Text variant="bodyLg">{t('Transaction History')}</Text>
       </Flex>
       {activeAccount && (

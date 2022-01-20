@@ -35,7 +35,7 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
       <KeyboardAvoidingView behavior="padding" style={flex.fill}>
         <Box flex={1} px="lg">
           <Box alignItems="center" flexDirection="row" mb="lg">
-            <BackButton mr="md" size={30} />
+            <BackButton mr="md" />
             <Text color="black" variant="bodyLg">
               {t('Import Account')}
             </Text>

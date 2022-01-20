@@ -26,7 +26,7 @@ export function SettingsChainsScreen() {
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
         <Box alignItems="center" flexDirection="row" mb="lg">
-          <BackButton mr="md" size={30} />
+          <BackButton mr="md" />
           <Text variant="bodyLg">{t('Chain Settings')}</Text>
         </Box>
         <Box px="sm">

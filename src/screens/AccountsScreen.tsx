@@ -126,7 +126,7 @@ export function AccountsScreen() {
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
         <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
-          <BackButton size={30} />
+          <BackButton />
           <Text color="gray400" variant="bodyLg">
             {t('Switch Accounts')}
           </Text>

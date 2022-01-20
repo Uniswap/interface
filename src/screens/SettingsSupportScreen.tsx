@@ -17,7 +17,7 @@ export function SettingsSupportScreen() {
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
         <Box alignItems="center" flexDirection="row" mb="lg">
-          <BackButton mr="md" size={30} />
+          <BackButton mr="md" />
           <Text variant="bodyLg">{t('Wallet Support')}</Text>
         </Box>
         <Text mb="sm" variant="bodyLg">
