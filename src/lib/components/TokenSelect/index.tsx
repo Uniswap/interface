@@ -3,6 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { useQueryTokenList } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
 import { ElementRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -53,7 +54,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
         {Boolean(baseTokens.length) && (
           <Row pad={0.75} gap={0.25} justify="flex-start" flex>
             {baseTokens.map((token) => (
-              <TokenBase value={token} onClick={onSelect} key={token.wrapped.address} />
+              <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
             ))}
           </Row>
         )}
