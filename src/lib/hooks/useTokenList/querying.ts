@@ -1,7 +1,7 @@
+import { nativeOnChain } from 'constants/tokens'
 import useDebounce from 'hooks/useDebounce'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useTokenBalances } from 'lib/hooks/useCurrencyBalance'
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
@@ -9,7 +9,7 @@ import { getTokenFilter } from './filtering'
 import { tokenComparator, useSortTokensByQuery } from './sorting'
 
 export function useQueryTokens(query: string, tokens: WrappedTokenInfo[]) {
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const balances = useTokenBalances(account, tokens)
   const sortedTokens = useMemo(
     // Create a new array because sort is in-place and returns a referentially equivalent array.
@@ -23,7 +23,7 @@ export function useQueryTokens(query: string, tokens: WrappedTokenInfo[]) {
 
   const queriedTokens = useSortTokensByQuery(debouncedQuery, filteredTokens)
 
-  const native = useNativeCurrency()
+  const native = useMemo(() => chainId && nativeOnChain(chainId), [chainId])
   return useMemo(() => {
     if (native && filter(native)) {
       return [native, ...queriedTokens]
