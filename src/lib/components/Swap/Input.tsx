@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useInputAmount, useInputCurrency, useSwapInfo } from 'lib/hooks/swap'
+import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
@@ -33,8 +33,8 @@ export default function Input({ disabled }: InputProps) {
   } = useSwapInfo()
   const inputUSDC = useUSDCValue(inputCurrencyAmount)
 
-  const [typedInputAmount, updateTypedInputAmount] = useInputAmount()
-  const [inputCurrency, updateInputCurrency] = useInputCurrency()
+  const [typedInputAmount, updateTypedInputAmount] = useSwapAmount(Field.INPUT)
+  const [inputCurrency, updateInputCurrency] = useSwapCurrency(Field.INPUT)
 
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(inputCurrency)

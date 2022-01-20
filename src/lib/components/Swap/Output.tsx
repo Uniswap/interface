@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useOutputAmount, useOutputCurrency, useSwapInfo } from 'lib/hooks/swap'
+import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
@@ -41,11 +41,9 @@ export default function Output({ disabled, children }: OutputProps) {
     currencyBalances: { [Field.OUTPUT]: balance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
-  const inputUSDC = useUSDCValue(inputCurrencyAmount)
-  const outputUSDC = useUSDCValue(outputCurrencyAmount)
 
-  const [typedOutputAmount, updateTypedOutputAmount] = useOutputAmount()
-  const [outputCurrency, updateOutputCurrency] = useOutputCurrency()
+  const [typedOutputAmount, updateTypedOutputAmount] = useSwapAmount(Field.OUTPUT)
+  const [outputCurrency, updateOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(outputCurrency)
@@ -53,6 +51,9 @@ export default function Output({ disabled, children }: OutputProps) {
 
   // different state true/null/false allow smoother color transition
   const hasColor = outputCurrency ? Boolean(color) || null : false
+
+  const inputUSDC = useUSDCValue(inputCurrencyAmount)
+  const outputUSDC = useUSDCValue(outputCurrencyAmount)
 
   const priceImpact = useMemo(() => {
     const computedChange = computeFiatValuePriceImpact(inputUSDC, outputUSDC)

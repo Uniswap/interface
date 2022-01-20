@@ -6,20 +6,12 @@ import { amountAtom, Field, independentFieldAtom, swapAtom } from 'lib/state/swa
 import { useCallback, useMemo } from 'react'
 export { default as useSwapInfo } from './useSwapInfo'
 
-function useCurrency(field: Field): [Currency | undefined, (currency?: Currency) => void] {
+export function useSwapCurrency(field: Field): [Currency | undefined, (currency?: Currency) => void] {
   const atom = useMemo(() => pickAtom(swapAtom, field), [field])
   return useAtom(atom)
 }
 
-export function useInputCurrency() {
-  return useCurrency(Field.INPUT)
-}
-
-export function useOutputCurrency() {
-  return useCurrency(Field.OUTPUT)
-}
-
-function useAmount(field: Field): [string | undefined, (amount: string) => void] {
+export function useSwapAmount(field: Field): [string | undefined, (amount: string) => void] {
   const amount = useAtomValue(amountAtom)
   const independentField = useAtomValue(independentFieldAtom)
   const value = useMemo(() => (independentField === field ? amount : undefined), [amount, independentField, field])
@@ -33,14 +25,6 @@ function useAmount(field: Field): [string | undefined, (amount: string) => void]
     [field, updateSwap]
   )
   return [value, updateAmount]
-}
-
-export function useInputAmount() {
-  return useAmount(Field.INPUT)
-}
-
-export function useOutputAmount() {
-  return useAmount(Field.OUTPUT)
 }
 
 export function useSwitchCurrencies() {
