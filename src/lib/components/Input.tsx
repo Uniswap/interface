@@ -77,13 +77,22 @@ interface EnforcedNumericInputProps extends NumericInputProps {
   enforcer: (nextUserInput: string) => string | null
 }
 
+function isNumericallyEqual(a: string, b: string) {
+  const [aInteger, aDecimal] = a.split('.')
+  const [bInteger, bDecimal] = b.split('.')
+  return (
+    JSBI.equal(JSBI.BigInt(aInteger ?? 0), JSBI.BigInt(bInteger ?? 0)) &&
+    JSBI.equal(JSBI.BigInt(aDecimal ?? 0), JSBI.BigInt(bDecimal ?? 0))
+  )
+}
+
 const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(function NumericInput(
   { value, onChange, enforcer, pattern, ...props }: EnforcedNumericInputProps,
   ref
 ) {
   const [state, setState] = useState(value ?? '')
   useEffect(() => {
-    if (state !== value) {
+    if (!isNumericallyEqual(state, value)) {
       setState(value ?? '')
     }
   }, [value, state, setState])
@@ -93,14 +102,7 @@ const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(fun
       const nextInput = enforcer(event.target.value.replace(/,/g, '.'))
       if (nextInput !== null) {
         setState(nextInput ?? '')
-        const [nextInputInteger, nextInputDecimal] = nextInput.split('.')
-        const [valueInteger, valueDecimal] = value.split('.')
-        if (
-          !(
-            JSBI.equal(JSBI.BigInt(nextInputInteger ?? 0), JSBI.BigInt(valueInteger ?? 0)) &&
-            JSBI.equal(JSBI.BigInt(nextInputDecimal ?? 0), JSBI.BigInt(valueDecimal ?? 0))
-          )
-        ) {
+        if (!isNumericallyEqual(nextInput, value)) {
           onChange(nextInput)
         }
       }
