@@ -1,10 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import useBestTrade from 'hooks/useBestTrade'
-import useSwapSlippageTolerance from 'hooks/useSwapSlippageTolerance'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import useCurrency from 'lib/hooks/useCurrency'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import { Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -18,7 +16,6 @@ interface SwapInfo {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   currencyAmounts: { [field in Field]?: CurrencyAmount<Currency> }
-  inputError?: ReactNode
   trade: {
     trade?: InterfaceTrade<Currency, Currency, TradeType>
     state: TradeState
@@ -39,12 +36,10 @@ function useComputeSwapInfo(): SwapInfo {
   const {
     independentField,
     amount,
-    [Field.INPUT]: { currencyId: inputCurrencyId },
-    [Field.OUTPUT]: { currencyId: outputCurrencyId },
+    [Field.INPUT]: inputCurrency,
+    [Field.OUTPUT]: outputCurrency,
   } = useAtomValue(swapAtom)
 
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
   const to = account
 
   const relevantTokenBalances = useCurrencyBalances(
@@ -88,7 +83,10 @@ function useComputeSwapInfo(): SwapInfo {
     [trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
-  const allowedSlippage = useSwapSlippageTolerance(trade.trade ?? undefined)
+  // TODO(ianlapham): Fix swap slippage tolerance
+  // const allowedSlippage = useSwapSlippageTolerance(trade.trade ?? undefined)
+  const allowedSlippage = useMemo(() => new Percent(100), [])
+
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
@@ -132,7 +130,7 @@ function useComputeSwapInfo(): SwapInfo {
       trade,
       allowedSlippage,
     }),
-    [allowedSlippage, currencies, currencyBalances, currencyAmounts, inputError, trade]
+    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage]
   )
 }
 

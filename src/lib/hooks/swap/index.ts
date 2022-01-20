@@ -1,43 +1,46 @@
+import { Currency } from '@uniswap/sdk-core'
+import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { pickAtom } from 'lib/state/atoms'
-import { Field, swapAtom } from 'lib/state/swap'
+import { amountAtom, Field, independentFieldAtom, swapAtom } from 'lib/state/swap'
 import { useCallback, useMemo } from 'react'
 export { default as useSwapInfo } from './useSwapInfo'
 
-function useCurrencyId(field: Field): [string | undefined, (currencyId: string) => void] {
+function useCurrency(field: Field): [Currency | undefined, (currency?: Currency) => void] {
   const atom = useMemo(() => pickAtom(swapAtom, field), [field])
-  const value = useAtomValue(atom).currencyId
-  const update = useUpdateAtom(atom)
-  const updateCurrencyId = useCallback((currencyId: string) => update({ currencyId }), [update])
-  return [value, updateCurrencyId]
+  return useAtom(atom)
 }
 
-export function useInputCurrencyId() {
-  return useCurrencyId(Field.INPUT)
+export function useInputCurrency() {
+  return useCurrency(Field.INPUT)
 }
 
-export function useOutputCurrencyId() {
-  return useCurrencyId(Field.OUTPUT)
+export function useOutputCurrency() {
+  return useCurrency(Field.OUTPUT)
 }
 
-function useUpdateCurrencyAmount(field: Field) {
-  const update = useUpdateAtom(swapAtom)
-  return useCallback(
+function useAmount(field: Field): [string | undefined, (amount: string) => void] {
+  const amount = useAtomValue(amountAtom)
+  const independentField = useAtomValue(independentFieldAtom)
+  const value = useMemo(() => (independentField === field ? amount : undefined), [amount, independentField, field])
+  const updateSwap = useUpdateAtom(swapAtom)
+  const updateAmount = useCallback(
     (amount: string) =>
-      update((swap) => {
+      updateSwap((swap) => {
         swap.independentField = field
         swap.amount = amount
       }),
-    [field, update]
+    [field, updateSwap]
   )
+  return [value, updateAmount]
 }
 
-export function useUpdateInputCurrencyAmount() {
-  return useUpdateCurrencyAmount(Field.INPUT)
+export function useInputAmount() {
+  return useAmount(Field.INPUT)
 }
 
-export function useUpdateOutputCurrencyAmount() {
-  return useUpdateCurrencyAmount(Field.OUTPUT)
+export function useOutputAmount() {
+  return useAmount(Field.OUTPUT)
 }
 
 export function useSwitchCurrencies() {

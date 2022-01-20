@@ -1,16 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useAtomValue } from 'jotai/utils'
-import { inputAtom, useUpdateInputToken, useUpdateInputValue } from 'lib/state/swap'
+import { Currency } from '@uniswap/sdk-core'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
+import { useInputAmount, useInputCurrency, useSwapInfo } from 'lib/hooks/swap'
+import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 
 import Column from '../Column'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
-
-const mockToken = new Token(1, '0x8b3192f5eebd8579568a2ed41e6feb402f93f73f', 9, 'STM', 'Saitama')
-const mockCurrencyAmount = CurrencyAmount.fromRawAmount(mockToken, '134108514895957704114061')
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
   margin: 0.75em;
@@ -27,31 +25,41 @@ interface InputProps {
 }
 
 export default function Input({ disabled }: InputProps) {
-  const input = useAtomValue(inputAtom)
-  const setValue = useUpdateInputValue(inputAtom)
-  const setToken = useUpdateInputToken(inputAtom)
-  const balance = mockCurrencyAmount
+  const {
+    currencyBalances: { [Field.INPUT]: balance },
+    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
+  } = useSwapInfo()
+  const inputUSDC = useUSDCValue(inputCurrencyAmount)
+
+  const [typedInputAmount, updateTypedInputAmount] = useInputAmount()
+  const [inputCurrency, updateInputCurrency] = useInputCurrency()
+
+  //TODO(ianlapham): mimic logic from app swap page
+  const mockApproved = true
 
   return (
-    <InputColumn gap={0.5} approved={input.approved !== false}>
+    <InputColumn gap={0.5} approved={mockApproved}>
       <Row>
         <ThemedText.Subhead2 color="secondary">
           <Trans>Trading</Trans>
         </ThemedText.Subhead2>
       </Row>
       <TokenInput
-        input={input}
+        currency={inputCurrency}
+        amount={(typedInputAmount !== undefined ? typedInputAmount : inputCurrencyAmount?.toSignificant(6)) ?? ''}
         disabled={disabled}
-        onMax={balance ? () => setValue(1234) : undefined}
-        onChangeInput={setValue}
-        onChangeToken={setToken}
+        onMax={balance ? () => updateTypedInputAmount(balance.toExact()) : undefined}
+        onChangeInput={(val) => updateTypedInputAmount(val ?? '')}
+        onChangeCurrency={(currency: Currency) => updateInputCurrency(currency)}
       >
         <ThemedText.Body2 color="secondary">
           <Row>
-            {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}
+            {inputUSDC ? `~ $${inputUSDC.toFixed(2)}` : '-'}
             {balance && (
-              <ThemedText.Body2 color={input.value && balance.lessThan(input.value) ? 'error' : undefined}>
-                Balance: <span style={{ userSelect: 'text' }}>{balance.toExact()}</span>
+              <ThemedText.Body2
+                color={inputCurrencyAmount && inputCurrencyAmount.greaterThan(balance) ? 'error' : undefined}
+              >
+                Balance: <span style={{ userSelect: 'text' }}>{balance}</span>
               </ThemedText.Body2>
             )}
           </Row>

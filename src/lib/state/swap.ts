@@ -1,4 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { atomWithImmer } from 'jotai/immer'
 import { pickAtom } from 'lib/state/atoms'
 
@@ -10,20 +12,15 @@ export enum Field {
 export interface Swap {
   independentField: Field
   readonly amount: string
-  readonly [Field.INPUT]: {
-    readonly currencyId?: string
-  }
-  readonly [Field.OUTPUT]: {
-    readonly currencyId?: string
-  }
+  readonly [Field.INPUT]?: Currency
+  readonly [Field.OUTPUT]?: Currency
   integratorFee?: number
 }
 
 export const swapAtom = atomWithImmer<Swap>({
   independentField: Field.INPUT,
   amount: '',
-  [Field.INPUT]: { currencyId: 'ETH' },
-  [Field.OUTPUT]: { currencyId: undefined },
+  [Field.INPUT]: nativeOnChain(SupportedChainId.MAINNET),
 })
 
 export const independentFieldAtom = pickAtom(swapAtom, 'independentField')

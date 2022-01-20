@@ -1,8 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
+import { useOutputAmount, useOutputCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor, { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
-import { inputAtom, outputAtom, useUpdateInputToken, useUpdateInputValue } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
 
@@ -33,32 +36,35 @@ interface OutputProps {
 }
 
 export default function Output({ disabled, children }: OutputProps) {
-  const input = useAtomValue(inputAtom)
-  const output = useAtomValue(outputAtom)
-  const setValue = useUpdateInputValue(outputAtom)
-  const setToken = useUpdateInputToken(outputAtom)
-  const balance = 123.45
+  const {
+    currencyBalances: { [Field.OUTPUT]: balance },
+    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
+  } = useSwapInfo()
+  const inputUSDC = useUSDCValue(inputCurrencyAmount)
+  const outputUSDC = useUSDCValue(outputCurrencyAmount)
+
+  const [typedOutputAmount, updateTypedOutputAmount] = useOutputAmount()
+  const [outputCurrency, updateOutputCurrency] = useOutputCurrency()
 
   const overrideColor = useAtomValue(colorAtom)
-  const dynamicColor = useCurrencyColor(output.token)
-  usePrefetchCurrencyColor(input.token) // extract eagerly in case of reversal
+  const dynamicColor = useCurrencyColor(undefined)
+  usePrefetchCurrencyColor(undefined) // extract eagerly in case of reversal
   const color = overrideColor || dynamicColor
-  const hasColor = output.token ? Boolean(color) || null : false
+  const hasColor = outputCurrency ? Boolean(color) || null : false
 
   const change = useMemo(() => {
-    if (input.usdc && output.usdc) {
-      const change = output.usdc / input.usdc - 1
-      const percent = (change * 100).toPrecision(3)
-      return change > 0 ? ` (+${percent}%)` : `(${percent}%)`
+    if (inputUSDC && outputUSDC) {
+      return parseFloat(inputUSDC.divide(outputUSDC).quotient.toString())
     }
     return ''
-  }, [input, output])
+  }, [inputUSDC, outputUSDC])
+
   const usdc = useMemo(() => {
-    if (output.usdc) {
-      return `~ $${output.usdc.toLocaleString('en')}${change}`
+    if (outputUSDC) {
+      return `~ $${outputUSDC.toFixed(2)}${change}`
     }
     return '-'
-  }, [change, output])
+  }, [change, outputUSDC])
 
   return (
     <DynamicThemeProvider color={color}>
@@ -68,7 +74,14 @@ export default function Output({ disabled, children }: OutputProps) {
             <Trans>For</Trans>
           </ThemedText.Subhead2>
         </Row>
-        <TokenInput input={output} disabled={disabled} onChangeInput={setValue} onChangeToken={setToken}>
+        <TokenInput
+          currency={outputCurrency}
+          amount={(typedOutputAmount !== undefined ? typedOutputAmount : outputCurrencyAmount?.toSignificant(6)) ?? ''}
+          disabled={disabled}
+          onMax={balance ? () => updateTypedOutputAmount(balance.toExact()) : undefined}
+          onChangeInput={(val) => updateTypedOutputAmount(val ?? '')}
+          onChangeCurrency={(currency: Currency) => updateOutputCurrency(currency)}
+        >
           <ThemedText.Body2 color="secondary">
             <Row>
               {usdc}

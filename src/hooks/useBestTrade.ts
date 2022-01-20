@@ -24,18 +24,25 @@ export default function useBestTrade(
 } {
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
-  const isWidget = process.env.REACT_APP_IS_WIDGET
 
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
     200
   )
 
-  const routingAPITrade = useRoutingAPITrade(
-    tradeType,
-    autoRouterSupported && isWindowVisible ? debouncedAmount : undefined,
-    debouncedOtherCurrency
+  // Disable the routing API for widgets. The API uses app state that breaks in widget contexts.
+  let routingAPITrade: ReturnType<typeof useRoutingAPITrade> = useMemo(
+    () => ({ trade: undefined, state: TradeState.NO_ROUTE_FOUND }),
+    []
   )
+  if (!process.env.REACT_APP_IS_WIDGET) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    routingAPITrade = useRoutingAPITrade(
+      tradeType,
+      autoRouterSupported && isWindowVisible ? debouncedAmount : undefined,
+      debouncedOtherCurrency
+    )
+  }
 
   const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
 
@@ -51,8 +58,7 @@ export default function useBestTrade(
         !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
         !debouncedOtherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
 
-  const useFallback =
-    isWidget || !autoRouterSupported || (!debouncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND)
+  const useFallback = !autoRouterSupported || (!debouncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND)
 
   // only use client side router if routing api trade failed or is not supported
   const bestV3Trade = useClientSideV3Trade(
