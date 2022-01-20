@@ -78,8 +78,8 @@ export default function MaxSlippageSelect() {
         <InputOption value={custom} onSelect={onInputSelect} selected={maxSlippage === CUSTOM}>
           <DecimalInput
             size={custom === undefined ? undefined : 5}
-            value={custom}
-            onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom })}
+            value={custom?.toString() ?? ''}
+            onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom: custom ? parseFloat(custom) : undefined })}
             placeholder={t`Custom`}
             ref={input}
           />
