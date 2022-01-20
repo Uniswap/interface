@@ -19,8 +19,8 @@ import { DEX_TO_COMPARE, DexConfig, dexIds, dexListConfig, dexTypes } from '../c
 import invariant from 'tiny-invariant'
 import { AggregationComparer } from 'state/swap/types'
 import { GasPrice } from 'state/application/reducer'
-import { sentryRequestId } from 'index'
 import { reportException } from 'utils/sentry'
+import { sentryRequestId } from 'constants/index'
 
 function dec2bin(dec: number, length: number): string {
   // let bin = (dec >>> 0).toString(2)
