@@ -123,7 +123,17 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         <Trans>Enter an amount</Trans>
       </>
     )
-  }, [balance, disabled, independentField, inputAmount, inputCurrency, outputAmount, outputCurency, trade?.trade])
+  }, [
+    balance,
+    chainId,
+    disabled,
+    independentField,
+    inputAmount,
+    inputCurrency,
+    outputAmount,
+    outputCurency,
+    trade?.trade,
+  ])
 
   return (
     <>
