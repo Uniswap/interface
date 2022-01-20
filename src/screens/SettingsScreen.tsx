@@ -50,6 +50,11 @@ export function SettingsScreen() {
         icon: <ChatBubbleIcon height={20} width={20} />,
       },
       {
+        screen: Screens.SettingsTestConfigs,
+        text: 'Test Configs',
+        icon: <ChatBubbleIcon height={20} width={20} />,
+      },
+      {
         screen: Screens.Dev,
         text: t('Dev Options'),
         icon: <CoffeeIcon height={20} width={20} />,

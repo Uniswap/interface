@@ -22,6 +22,7 @@ import { Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
+import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 
@@ -92,6 +93,7 @@ function SettingsStackGroup() {
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
       <SettingsStack.Screen component={SettingsChainsScreen} name={Screens.SettingsChains} />
       <SettingsStack.Screen component={SettingsSupportScreen} name={Screens.SettingsSupport} />
+      <SettingsStack.Screen component={SettingsTestConfigs} name={Screens.SettingsTestConfigs} />
       <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
     </SettingsStack.Navigator>
   )

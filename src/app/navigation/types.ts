@@ -26,6 +26,7 @@ export type SettingsStackParamList = {
   [Screens.Settings]: undefined
   [Screens.SettingsChains]: undefined
   [Screens.SettingsSupport]: undefined
+  [Screens.SettingsTestConfigs]: undefined
   [Screens.Dev]: undefined
 }
 

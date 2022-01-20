@@ -14,8 +14,18 @@ type CenteredProps =
       justifyContent?: 'center'
     }
 
+type DirectionProps =
+  | {
+      row: true
+    }
+  | {
+      row?: boolean
+      flexDirection?: ComponentProps<typeof Box>['flexDirection']
+    }
+
 export type FlexProps = ComponentProps<typeof Box> &
-  CenteredProps & {
+  CenteredProps &
+  DirectionProps & {
     /** spacing _between_ elements */
     gap?: keyof Theme['spacing']
   }
@@ -37,21 +47,22 @@ export function Flex({
   flexWrap = 'nowrap',
   gap = 'md',
   justifyContent = 'flex-start',
+  row,
   ...boxProps
 }: FlexProps) {
   const childrenArr = useMemo(() => React.Children.toArray(children).filter((c) => !!c), [children])
   const spacerProps = useMemo(
     () => ({
-      x: flexDirection === 'row' || flexDirection === 'row-reverse' ? gap : undefined,
+      x: row || flexDirection === 'row' || flexDirection === 'row-reverse' ? gap : undefined,
       y: flexDirection === 'column' || flexDirection === 'column-reverse' ? gap : undefined,
     }),
-    [flexDirection, gap]
+    [flexDirection, gap, row]
   )
   return (
     <Box
       alignItems={centered ? 'center' : alignItems}
       flexBasis={flexBasis}
-      flexDirection={flexDirection}
+      flexDirection={row ? 'row' : flexDirection}
       flexGrow={flexGrow}
       flexShrink={flexShrink}
       flexWrap={flexWrap}
