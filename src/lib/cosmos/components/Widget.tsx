@@ -1,12 +1,14 @@
+import { INFURA_NETWORK_URLS } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import Widget from 'lib/components/Widget'
 import { darkTheme, defaultTheme, lightTheme } from 'lib/theme'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
+import { initializeConnector } from 'widgets-web3-react/core'
+import { MetaMask } from 'widgets-web3-react/metamask'
 
-import { metaMask } from '../connectors/metaMask'
-import { URLS } from '../connectors/network'
+export const [metaMask] = initializeConnector<MetaMask>((actions) => new MetaMask(actions))
 
 export default function Wrapper({ children }: { children: ReactNode }) {
   const [width] = useValue('width', { defaultValue: 360 })
@@ -21,8 +23,8 @@ export default function Wrapper({ children }: { children: ReactNode }) {
 
   const NO_JSON_RPC = 'None'
   const [jsonRpcEndpoint] = useSelect('JSON-RPC', {
-    defaultValue: URLS[SupportedChainId.MAINNET][0] || NO_JSON_RPC,
-    options: [NO_JSON_RPC, ...Object.values(URLS).flat()],
+    defaultValue: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
+    options: [NO_JSON_RPC, ...Object.values(INFURA_NETWORK_URLS).sort()],
   })
 
   const NO_PROVIDER = 'None'
