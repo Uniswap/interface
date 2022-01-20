@@ -1,6 +1,6 @@
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
-import { useContractKit } from '@celo-tools/use-contractkit'
-import { NomKit } from '@nomspace/nomspace'
+import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import ENS from '@ensdomains/ensjs'
 import { useEffect, useState } from 'react'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>
@@ -22,6 +22,7 @@ export default function useAccountSummary(address?: string | null): {
   const [summary, setSummary] = useState<AccountSummary | null>(null)
   const [nom, setNom] = useState<string | null>(null)
   const { kit } = useContractKit()
+  const provider = useProvider()
 
   useEffect(() => {
     ;(async () => {
@@ -36,14 +37,15 @@ export default function useAccountSummary(address?: string | null): {
         console.error('Could not fetch account summary', e)
       }
 
-      const nomKit = new NomKit(kit as any, '0xABf8faBbC071F320F222A526A2e1fBE26429344d')
+      const nom = new ENS({ provider, ensAddress: '0x3DE51c3960400A0F752d3492652Ae4A0b2A36FB3' })
       try {
-        setNom(await nomKit.allNamesForResolution(address).then((n) => (n[0] ? `${n[0]}.nom` : null)))
+        const { name } = await nom.getName(address)
+        if (name) setNom(`${name}.nom`)
       } catch (e) {
         console.error('Could not fetch nom data', e)
       }
     })()
-  }, [address, kit])
+  }, [address, kit, provider])
 
   return { summary, nom, loading: summary === null }
 }
