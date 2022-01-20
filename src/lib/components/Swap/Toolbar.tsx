@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
+import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText, ThemeProvider } from 'lib/theme'
@@ -61,13 +63,13 @@ function LoadedState({ inputAmount, outputAmount, trade }: LoadedStateProps) {
 }
 
 export default function Toolbar({ disabled }: { disabled?: boolean }) {
+  const { chainId } = useActiveWeb3React()
   const {
     trade,
     currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurency },
     currencyBalances: { [Field.INPUT]: balance },
     currencyAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
   } = useSwapInfo()
-
   const independentField = useAtomValue(independentFieldAtom)
 
   const caption = useMemo(() => {
@@ -79,6 +81,16 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
         </>
       )
     }
+
+    if (chainId && !ALL_SUPPORTED_CHAIN_IDS.includes(chainId)) {
+      return (
+        <>
+          <AlertTriangle color="secondary" />
+          <Trans>Unsupported network&#8211;switch to another to trade.</Trans>
+        </>
+      )
+    }
+
     if (independentField === Field.INPUT ? inputCurrency && inputAmount : outputCurency && outputAmount) {
       if (!trade?.trade) {
         return (

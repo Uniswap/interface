@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 16:11\n"
+"PO-Revision-Date: 2022-01-19 22:06\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -2006,6 +2006,10 @@ msgstr "נכס לא נתמך"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "נכסים שאינם נתמכים"
+
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Unsupported network–switch to another to trade."
+msgstr "רשת לא נתמכת - עבור לרשת אחרת כדי לסחור."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

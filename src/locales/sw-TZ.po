@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 16:11\n"
+"PO-Revision-Date: 2022-01-19 22:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -2006,6 +2006,10 @@ msgstr "Sifa isiyotumika"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Mali zisizoungwa mkono"
+
+#: src/lib/components/Swap/Toolbar.tsx
+msgid "Unsupported network–switch to another to trade."
+msgstr "Mtandao usiotumika–badilisha hadi mwingine ili kufanya biashara."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
