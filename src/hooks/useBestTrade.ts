@@ -14,7 +14,7 @@ import useIsWindowVisible from './useIsWindowVisible'
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-export default function useBestTrade(
+export function useBestTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
@@ -30,19 +30,11 @@ export default function useBestTrade(
     200
   )
 
-  // Disable the routing API for widgets. The API uses app state that breaks in widget contexts.
-  let routingAPITrade: ReturnType<typeof useRoutingAPITrade> = useMemo(
-    () => ({ trade: undefined, state: TradeState.NO_ROUTE_FOUND }),
-    []
+  const routingAPITrade = useRoutingAPITrade(
+    tradeType,
+    autoRouterSupported && isWindowVisible ? debouncedAmount : undefined,
+    debouncedOtherCurrency
   )
-  if (!process.env.REACT_APP_IS_WIDGET) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    routingAPITrade = useRoutingAPITrade(
-      tradeType,
-      autoRouterSupported && isWindowVisible ? debouncedAmount : undefined,
-      debouncedOtherCurrency
-    )
-  }
 
   const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
 
