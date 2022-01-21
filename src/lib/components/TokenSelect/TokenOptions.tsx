@@ -20,6 +20,7 @@ import {
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
 import invariant from 'tiny-invariant'
+import { currencyId } from 'utils/currencyId'
 
 import { BaseButton } from '../Button'
 import Column from '../Column'
@@ -107,10 +108,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
   )
 }
 
-const itemKey = (index: number, tokens: ItemData) => {
-  if (tokens[index].isNative) return 'native'
-  return tokens[index].wrapped.address
-}
+const itemKey = (index: number, tokens: ItemData) => currencyId(tokens[index])
 const ItemRow = memo(function ItemRow({
   data: tokens,
   index,
