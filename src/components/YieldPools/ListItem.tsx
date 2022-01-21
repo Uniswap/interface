@@ -101,16 +101,13 @@ const ListItem = ({ farm }: ListItemProps) => {
       ? farm.startBlock <= currentBlock && currentBlock <= farm.endBlock
       : false
 
-  const [a, b] = farm.totalSupply.split('.')
-  const totalSupply = a + '.' + b.slice(0, lpTokenDecimals)
-
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
     farm.totalStake.toString(),
     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
   ).divide(
     new Fraction(
-      ethers.utils.parseUnits(totalSupply, lpTokenDecimals).toString(),
+      ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
       JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
     )
   )
@@ -121,7 +118,7 @@ const ListItem = ({ farm }: ListItemProps) => {
     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
   ).divide(
     new Fraction(
-      ethers.utils.parseUnits(totalSupply, lpTokenDecimals).toString(),
+      ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
       JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
     )
   )
@@ -135,7 +132,7 @@ const ListItem = ({ farm }: ListItemProps) => {
     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
   ).divide(
     new Fraction(
-      ethers.utils.parseUnits(totalSupply, lpTokenDecimals).toString(),
+      ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
       JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
     )
   )
