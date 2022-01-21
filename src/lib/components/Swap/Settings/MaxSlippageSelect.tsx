@@ -6,7 +6,7 @@ import { maxSlippageAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useState } from 'react'
 
-import { BaseButton } from '../../Button'
+import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
 import { DecimalInput, inputCss } from '../../Input'
 import Row from '../../Row'
@@ -16,22 +16,15 @@ const tooltip = (
   <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
 )
 
+const StyledOption = styled(TextButton)<{ selected: boolean }>`
+  ${({ selected }) => optionCss(selected)}
+`
+
 const StyledInputOption = styled(BaseButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
   ${inputCss}
   border-color: ${({ selected, theme }) => (selected ? theme.active : 'transparent')} !important;
   padding: calc(0.5em - 1px) 0.625em;
-`
-
-const Option = styled(BaseButton)<{ selected: boolean }>`
-  ${({ selected }) => optionCss(selected)}
-  background-color: ${({ selected, theme }) => (selected ? theme.active : theme.container)};
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  :hover {
-    cursor: pointer;
-  }
-  color: ${({ theme, selected }) => (selected ? theme.dialog : theme.secondary)} !important;
-  margin-right: 8px;
 `
 
 interface OptionProps<T> {
@@ -85,14 +78,14 @@ export default function MaxSlippageSelect() {
     <Column gap={0.75}>
       <Label name={<Trans>Max slippage</Trans>} tooltip={tooltip} />
       <Row gap={0.5} grow>
-        <Option
+        <StyledOption
           onClick={() => {
             parseSlippageInput('')
           }}
           selected={maxSlippage === 'auto'}
         >
           <Trans>Auto</Trans>
-        </Option>
+        </StyledOption>
         <InputOption value={slippageInput} selected={maxSlippage !== 'auto'}>
           <DecimalInput
             value={slippageInput.length > 0 ? slippageInput : maxSlippage === 'auto' ? '' : maxSlippage.toFixed(2)}
