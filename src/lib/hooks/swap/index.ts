@@ -41,16 +41,16 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency?
   const otherAtom = useMemo(() => pickAtom(swapAtom, otherField(field)), [field])
   const [currency, setCurrency] = useAtom(atom)
   const otherCurrency = useAtomValue(otherAtom)
-  const switchCurrencies = useSwitchCurrencies()
+  const switchSwapCurrencies = useSwitchSwapCurrencies()
   const setOrSwitchCurrency = useCallback(
     (currency?: Currency) => {
       if (currency === otherCurrency) {
-        switchCurrencies()
+        switchSwapCurrencies()
       } else {
         setCurrency(currency)
       }
     },
-    [otherCurrency, setCurrency, switchCurrencies]
+    [otherCurrency, setCurrency, switchSwapCurrencies]
   )
   return [currency, setOrSwitchCurrency]
 }
