@@ -78,6 +78,43 @@ export function CurrencySearch({
 
   return (
     <Box flex={1} width="100%">
+      <Box mb="md">
+        <Flex centered row gap="sm" mb="sm" mx="lg">
+          {showBackButton ? <BackButton /> : null}
+          <Box
+            backgroundColor="gray50"
+            borderRadius="lg"
+            flexDirection="row"
+            paddingRight="sm"
+            style={styles.inputContainer}>
+            <TextInput
+              backgroundColor="none"
+              borderWidth={0}
+              padding="md"
+              placeholder={t('Search token symbols or address')}
+              style={styles.input}
+              value={searchFilter ?? undefined}
+              onChangeText={onChangeText}
+            />
+            <SearchIcon stroke={theme.colors.gray200} strokeWidth={2.2} style={styles.inputIcon} />
+          </Box>
+        </Flex>
+
+        <NetworkButtonGroup
+          customButton={
+            <Button mr="sm" onPress={onClearChainFilter}>
+              <Pill
+                backgroundColor="gray50"
+                borderColor={chainFilter === null ? 'gray200' : 'gray50'}
+                label={showNonZeroBalancesOnly ? t('Your tokens') : t('All tokens')}
+              />
+            </Button>
+          }
+          selected={chainFilter}
+          type={NetworkButtonType.PILL}
+          onPress={onChainPress}
+        />
+      </Box>
       <FlatList
         ListEmptyComponent={
           <Flex centered gap="sm" padding="lg">
@@ -91,49 +128,6 @@ export function CurrencySearch({
               {t('Clear Search')}
             </TextButton>
           </Flex>
-        }
-        ListHeaderComponent={
-          <Box mb="md">
-            <Flex centered flexDirection="row" gap="sm" mb="sm" mx="lg">
-              {showBackButton ? <BackButton /> : null}
-              <Box
-                backgroundColor="gray50"
-                borderRadius="lg"
-                flexDirection="row"
-                paddingRight="sm"
-                style={styles.inputContainer}>
-                <TextInput
-                  backgroundColor="none"
-                  borderWidth={0}
-                  padding="md"
-                  placeholder={t('Search token symbols or address')}
-                  style={styles.input}
-                  value={searchFilter ?? undefined}
-                  onChangeText={onChangeText}
-                />
-                <SearchIcon
-                  stroke={theme.colors.gray200}
-                  strokeWidth={2.2}
-                  style={styles.inputIcon}
-                />
-              </Box>
-            </Flex>
-
-            <NetworkButtonGroup
-              customButton={
-                <Button mr="sm" onPress={onClearChainFilter}>
-                  <Pill
-                    backgroundColor="gray50"
-                    borderColor={chainFilter === null ? 'gray200' : 'gray50'}
-                    label={showNonZeroBalancesOnly ? t('Your tokens') : t('All tokens')}
-                  />
-                </Button>
-              }
-              selected={chainFilter}
-              type={NetworkButtonType.PILL}
-              onPress={onChainPress}
-            />
-          </Box>
         }
         data={filteredCurrencies}
         keyExtractor={getKey}
