@@ -5,6 +5,7 @@ import { nativeOnChain } from 'constants/tokens'
 import { useSwapAmount, useSwapCurrency } from 'lib/hooks/swap'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import useSwapDefaults from 'lib/hooks/useSwapDefaults'
 import useTokenList from 'lib/hooks/useTokenList'
 import { Field } from 'lib/state/swap'
 import { Theme } from 'lib/theme'
@@ -22,6 +23,7 @@ import Settings from './Settings'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 
+export type DefaultAddress = string | { [chainId: number]: string } | 'NATIVE'
 export interface SwapProps {
   theme?: Theme
   locale?: SupportedLocale
@@ -32,18 +34,19 @@ export interface SwapProps {
   className?: string
   onError?: ErrorHandler
   tokenList?: string | TokenInfo[]
-  defaultInputAddress?: string | { [chainId: number]: string }
-  defaultInputAmount?: number
-  defaultOutputAddress?: string | { [chainId: number]: string }
-  defaultOutputAmount?: number
+  defaultInputAddress?: DefaultAddress
+  defaultInputAmount?: string
+  defaultOutputAddress?: DefaultAddress
+  defaultOutputAmount?: string
   convenienceFee?: number
   convenienceFeeRecipient?: string | { [chainId: number]: string }
 }
 
 export default function Swap(props: SwapProps) {
-  const { tokenList } = props
+  const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount, tokenList } = props
 
   useTokenList(tokenList)
+  useSwapDefaults(defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount)
 
   const { active, account, chainId } = useActiveWeb3React()
   const [lastChainId, setLastChainId] = useState<number | undefined>(chainId)

@@ -1,8 +1,20 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { DefaultAddress } from 'lib/components/Swap'
 import { WidgetProps } from 'lib/components/Widget'
 import { IntegrationError } from 'lib/errors'
 import { useEffect } from 'react'
 
 import { isAddress } from '../../../utils'
+
+function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
+  if (typeof addressOrMap === 'object') {
+    return Object.values(addressOrMap).every((address) => isAddress(address))
+  }
+  if (typeof addressOrMap === 'string') {
+    return typeof isAddress(addressOrMap) === 'string'
+  }
+  return false
+}
 
 export default function PropValidator(swapWidgetProps: WidgetProps) {
   const { jsonRpcEndpoint, provider } = swapWidgetProps
@@ -47,18 +59,19 @@ export default function PropValidator(swapWidgetProps: WidgetProps) {
 
   const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount } = swapWidgetProps
   useEffect(() => {
-    if (defaultInputAddress && !isAddress(defaultInputAddress)) {
-      throw new IntegrationError('defaultInputAddress must be a valid address.')
-    }
-    if (defaultInputAmount && defaultInputAmount < 0) {
+    if (defaultInputAmount && BigNumber.from(defaultInputAmount).lt(0)) {
       throw new IntegrationError('defaultInputAmount must be a positive number.')
     }
-    if (defaultOutputAddress && !isAddress(defaultOutputAddress)) {
-      throw new IntegrationError('defaultOutputAddress must be a valid address.')
-    }
-    if (defaultOutputAmount && defaultOutputAmount < 0) {
+    if (defaultOutputAmount && BigNumber.from(defaultOutputAmount).lt(0)) {
       throw new IntegrationError('defaultOutputAmount must be a positive number.')
     }
+    if (defaultInputAddress && !isAddressOrAddressMap(defaultInputAddress) && defaultInputAddress !== 'NATIVE') {
+      throw new IntegrationError('defaultInputAddress must be a valid address.')
+    }
+    if (defaultOutputAddress && !isAddressOrAddressMap(defaultOutputAddress)) {
+      throw new IntegrationError('defaultOutputAddress must be a valid address.')
+    }
   }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount])
+
   return null
 }
