@@ -92,6 +92,11 @@ msgstr "AMP 계수와 풀에 있는 유동성을 곱한 값."
 msgid "APR"
 msgstr "APR"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "AVAILABLE BALANCE:"
+msgstr ""
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -240,11 +245,6 @@ msgstr ""
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
 msgstr "유동성 마이닝 지정 풀"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "BALANCE:"
-msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
@@ -496,11 +496,6 @@ msgstr "사용자 정의"
 msgid "DEPOSIT"
 msgstr "내 예치금"
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "DEPOSIT:"
-msgstr ""
-
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr "탈중앙 거래소"
@@ -727,13 +722,18 @@ msgstr "가스비"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-msgid "Get pool info"
-msgstr "풀 정보 얻기"
+msgid "Get pool {0} info"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
-msgstr "{0}-{1} LP 받기 ↗"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Get {0}-{1} {2} LP ↗"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Github"
@@ -1457,6 +1457,11 @@ msgstr "경로"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "라우팅을 통해 최고의 토큰 가격으로 거래를 진행할수 있습니다."
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "STAKED BALANCE:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Save time & effort"
 msgstr ""
@@ -1666,6 +1671,10 @@ msgstr ""
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "이러한 토큰은 일반적으로 다른 토큰과 쌍을 이룹니다."
+
+#: src/components/YieldPools/FairLaunchPools.tsx
+msgid "This pool require {0} LP Tokens. Get the LP Tokens <0>here ↗</0>"
+msgstr ""
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."

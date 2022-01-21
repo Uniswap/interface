@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
 import { ChainId, Token, WETH } from '@dynamic-amm/sdk'
-import { KNC, ZERO_ADDRESS } from '../../constants'
+import { KNC, ZERO_ADDRESS, OUTSITE_FARM_REWARDS_QUERY } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -250,6 +250,20 @@ const getTokenPriceByETH = async (tokenAddress: string, apolloClient: ApolloClie
     const derivedETH = result?.data?.tokens[0]?.derivedETH
 
     tokenPriceByETH = parseFloat(derivedETH)
+
+    const temp = OUTSITE_FARM_REWARDS_QUERY[tokenAddress]
+    if (temp) {
+      const res = await fetch(temp.subgraphAPI, {
+        method: 'POST',
+        body: JSON.stringify({
+          query: temp.query
+        })
+      }).then(res => res.json())
+
+      const derivedETH = res?.data?.tokens[0]?.derivedBNB
+
+      tokenPriceByETH = parseFloat(derivedETH)
+    }
   } catch (e) {
     console.log(e)
   }

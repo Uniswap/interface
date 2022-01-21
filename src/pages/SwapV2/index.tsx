@@ -228,6 +228,9 @@ export default function Swap({ history }: RouteComponentProps) {
     if (approval === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
     }
+    if (approval === ApprovalState.NOT_APPROVED) {
+      setApprovalSubmitted(false)
+    }
   }, [approval, approvalSubmitted])
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
