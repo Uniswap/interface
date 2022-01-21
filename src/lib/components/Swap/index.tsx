@@ -1,9 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
+import { nativeOnChain } from 'constants/tokens'
+import { useSwapAmount, useSwapCurrency } from 'lib/hooks/swap'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList, { DEFAULT_TOKEN_LIST } from 'lib/hooks/useTokenList'
-import { useMemo, useState } from 'react'
+import { Field } from 'lib/state/swap'
+import { useLayoutEffect, useMemo, useState } from 'react'
 
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
@@ -50,7 +53,20 @@ export default function Swap({ defaults }: SwapProps) {
   useTokenList(tokenList)
 
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  const { active, account } = useActiveWeb3React()
+  const { chainId, active, account } = useActiveWeb3React()
+
+  // Switch to on-chain currencies if/when chain changes to prevent chain mismatched currencies.
+  const [, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
+  const [, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
+  const [, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
+  useLayoutEffect(() => {
+    if (chainId) {
+      updateSwapInputCurrency(nativeOnChain(chainId))
+      updateSwapOutputCurrency()
+      updateSwapInputAmount('')
+    }
+  }, [chainId, updateSwapInputAmount, updateSwapInputCurrency, updateSwapOutputCurrency])
+
   return (
     <>
       <SwapInfoUpdater />
