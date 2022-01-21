@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
-import useSlippageToleranceFromTrade from 'hooks/useSlippageToleranceFromTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -135,8 +135,8 @@ export function useDerivedSwapInfo(): {
   )
 
   // allowed slippage is either auto slippage, or custom user defined slippage if auto slippage disabled
-  const slippageToleranceFromTrade = useSlippageToleranceFromTrade(trade.trade)
-  const allowedSlippage = useUserSlippageToleranceWithDefault(slippageToleranceFromTrade)
+  const autoSlippageTolerance = useAutoSlippageTolerance(trade.trade)
+  const allowedSlippage = useUserSlippageToleranceWithDefault(autoSlippageTolerance)
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined

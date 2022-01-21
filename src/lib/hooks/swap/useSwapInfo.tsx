@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useClientSideV3Trade } from 'hooks/useClientSideV3Trade'
-import useSlippageToleranceFromTrade from 'hooks/useSlippageToleranceFromTrade'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
@@ -88,15 +88,16 @@ function useComputeSwapInfo(): SwapInfo {
     [trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
-  // if auto slippage enabled, used computed tolerance based on trade, else, user cutsom user input
-  const slippageToleranceFromTrade = useSlippageToleranceFromTrade(trade.trade)
-  const userMaxSlippage = useAtomValue(maxSlippageAtom)
-  const allowedSlippage = useMemo(() => {
-    if (userMaxSlippage === 'auto') {
-      return slippageToleranceFromTrade
-    }
-    return userMaxSlippage
-  }, [slippageToleranceFromTrade, userMaxSlippage])
+  /**
+    If user has enabled 'auto' slippage, use the default best slippage calculated 
+    based on the trade. If user has entered custom slippage, use that instead. 
+   */
+  const auotSlippageTolerance = useAutoSlippageTolerance(trade.trade)
+  const maxSlippage = useAtomValue(maxSlippageAtom)
+  const allowedSlippage = useMemo(
+    () => (maxSlippage === 'auto' ? auotSlippageTolerance : maxSlippage),
+    [auotSlippageTolerance, maxSlippage]
+  )
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined

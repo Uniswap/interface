@@ -48,13 +48,12 @@ export default function MaxSlippageSelect() {
   const { allowedSlippage } = useSwapInfo()
 
   const [slippageInput, setSlippageInput] = useState('')
-  const [slippageError, setSlippageError] = useState<boolean>(false)
+  const [, setSlippageError] = useState<boolean>(false)
 
   function parseSlippageInput(value: string) {
     // populate what the user typed and clear the error
     setSlippageInput(value)
     setSlippageError(false)
-
     if (value.length === 0) {
       setMaxSlippage('auto')
     } else {
@@ -70,9 +69,6 @@ export default function MaxSlippageSelect() {
       }
     }
   }
-
-  const tooLow = maxSlippage !== 'auto' && maxSlippage.lessThan(new Percent(5, 10_000))
-  const tooHigh = maxSlippage !== 'auto' && maxSlippage.greaterThan(new Percent(1, 100))
 
   return (
     <Column gap={0.75}>
@@ -99,19 +95,6 @@ export default function MaxSlippageSelect() {
           %
         </InputOption>
       </Row>
-      {slippageError || tooLow || tooHigh ? (
-        <Row>
-          <ThemedText.Caption color={slippageError ? 'error' : 'warning'}>
-            {slippageError ? (
-              <Trans>Enter a valid slippage percentage</Trans>
-            ) : tooLow ? (
-              <Trans>Your transaction may fail</Trans>
-            ) : (
-              <Trans>Your transaction may be frontrun</Trans>
-            )}
-          </ThemedText.Caption>
-        </Row>
-      ) : null}
     </Column>
   )
 }

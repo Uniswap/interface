@@ -29,12 +29,11 @@ const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 
 /**
- * @param trade
- * @returns slippage tolerance based on values from current trade, gas estimates from api, and active network
+ * returns slippage tolerance based on values from current trade, gas estimates from api, and active network
  */
-export default function useSlippageToleranceFromTrade(
+export default function useAutoSlippageTolerance(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
-) {
+): Percent {
   const { chainId } = useActiveWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useUSDCValue(trade?.outputAmount)
