@@ -254,7 +254,7 @@ export default function Header() {
         </StyledNavLink>
         <StyledNavLink
           id={`pool-nav-link`}
-          to={'/pool/v2'}
+          to={'/pool'}
           isActive={(match, { pathname }) =>
             Boolean(match) ||
             pathname.startsWith('/add') ||

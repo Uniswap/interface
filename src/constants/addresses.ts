@@ -1,4 +1,3 @@
-// import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@genesisprotocol/sdk'
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
 
 import GenesisContractAddresses from '../assets/config/contract-addresses.json'
@@ -7,6 +6,7 @@ import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
+export const DAO_BOND_DEPOSITORY: AddressMap = constructSameAddressMap(GenesisContractAddresses.BOND_DEPOSITORY)
 export const DAO_TREASURY: AddressMap = constructSameAddressMap(GenesisContractAddresses.TREASURY)
 export const DAO_STAKING: AddressMap = constructSameAddressMap(GenesisContractAddresses.STAKING)
 export const DAO_DISTRIBUTOR: AddressMap = constructSameAddressMap(GenesisContractAddresses.DISTRIBUTOR)

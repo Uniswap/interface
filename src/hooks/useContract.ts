@@ -17,11 +17,15 @@ import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
+import BOND_DEPOSITORY_ABI from 'abis/genesis/bond-depository-V2.json'
+import GEN_ERC20_ABI from 'abis/genesis/genesis-erc20-token.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
+  DAO_BOND_DEPOSITORY,
   ENS_REGISTRAR_ADDRESSES,
+  GEN_ADDRESS,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
@@ -159,4 +163,12 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
 
 export function useV3Quoter() {
   return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI)
+}
+
+export function useBondDepository() {
+  return useContract(DAO_BOND_DEPOSITORY, BOND_DEPOSITORY_ABI, true)
+}
+
+export function useGenToken() {
+  return useContract(GEN_ADDRESS, GEN_ERC20_ABI, true)
 }

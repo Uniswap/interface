@@ -198,7 +198,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   $borderRadius="8px"
                   as={Link}
                   width="32%"
-                  to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
                   <Trans>Remove</Trans>
                 </ButtonSecondary>
