@@ -1,9 +1,7 @@
-import Swap from './components/Swap'
-import Widget, { WidgetProps } from './components/Widget'
+import Swap, { SwapProps } from './components/Swap'
+import Widget from './components/Widget'
 
-export type SwapWidgetProps = WidgetProps<typeof Swap>
-
-export function SwapWidget({ ...props }: SwapWidgetProps) {
+export function SwapWidget({ ...props }: SwapProps) {
   return (
     <Widget {...props}>
       <Swap {...props} />

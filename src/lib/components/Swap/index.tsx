@@ -1,13 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
+import { SupportedLocale } from 'constants/locales'
 import { nativeOnChain } from 'constants/tokens'
 import { useSwapAmount, useSwapCurrency } from 'lib/hooks/swap'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
-import useTokenList, { DEFAULT_TOKEN_LIST } from 'lib/hooks/useTokenList'
+import useTokenList from 'lib/hooks/useTokenList'
 import { Field } from 'lib/state/swap'
-import { useLayoutEffect, useMemo, useState } from 'react'
+import { Theme } from 'lib/theme'
+import { useLayoutEffect, useState } from 'react'
+import { Provider as EthProvider } from 'widgets-web3-react/types'
 
+import { ErrorHandler } from '../Error/ErrorBoundary'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
@@ -18,37 +22,33 @@ import Settings from './Settings'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 
-interface DefaultTokenAmount {
-  address?: string | { [chainId: number]: string }
-  amount?: number
+interface BaseSwapProps {
+  theme?: Theme
+  locale?: SupportedLocale
+  provider?: EthProvider
+  jsonRpcEndpoint?: string
+  width?: string | number
+  dialog?: HTMLElement | null
+  className?: string
+  onError?: ErrorHandler
+  tokenList?: string | TokenInfo[]
+  defaultInputAddress?: string | { [chainId: number]: string }
+  defaultInputAmount?: number
+  defaultOutputAddress?: string | { [chainId: number]: string }
+  defaultOutputAmount?: number
 }
 
-interface SwapDefaults {
-  tokenList: string | TokenInfo[]
-  input: DefaultTokenAmount
-  output: DefaultTokenAmount
+interface SwapPropsWithConvenienceFee extends BaseSwapProps {
+  convenienceFee: number
+  convenienceFeeRecipient: string
 }
 
-function useSwapDefaults(defaults: Partial<SwapDefaults> = {}): SwapDefaults {
-  const tokenList = defaults.tokenList || DEFAULT_TOKEN_LIST
-  const input: DefaultTokenAmount = defaults.input || {}
-  const output: DefaultTokenAmount = defaults.output || {}
-  input.amount = input.amount || 0
-  output.amount = output.amount || 0
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useMemo(() => ({ tokenList, input, output }), [])
-}
+export type SwapProps = BaseSwapProps | SwapPropsWithConvenienceFee
 
-export interface SwapProps {
-  convenienceFee?: number
-  convenienceFeeRecipient?: string // TODO: improve typing to require recipient when fee is set
-  defaults?: Partial<SwapDefaults>
-}
+export default function Swap(props: SwapProps) {
+  const { tokenList } = props
 
-export default function Swap({ defaults: userDefaults }: SwapProps) {
-  const defaults = useSwapDefaults(userDefaults)
-
-  useTokenList(defaults.tokenList)
+  useTokenList(tokenList)
 
   const { active, account, chainId } = useActiveWeb3React()
   const [lastChainId, setLastChainId] = useState<number | undefined>(chainId)

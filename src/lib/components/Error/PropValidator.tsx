@@ -1,10 +1,10 @@
+import { WidgetProps } from 'lib/components/Widget'
 import { IntegrationError } from 'lib/errors'
-import { SwapWidgetProps } from 'lib/index'
 import { useEffect } from 'react'
 
 import { isAddress } from '../../../utils'
 
-export default function ErrorGenerator(swapWidgetProps: SwapWidgetProps) {
+export default function PropValidator(swapWidgetProps: WidgetProps) {
   const { jsonRpcEndpoint, provider } = swapWidgetProps
   useEffect(() => {
     if (!provider && !jsonRpcEndpoint) {
@@ -44,5 +44,8 @@ export default function ErrorGenerator(swapWidgetProps: SwapWidgetProps) {
       }
     }
   }, [convenienceFee, convenienceFeeRecipient])
+
+  const { defa } = swapWidgetProps
+  useEffect(() => {}, [])
   return null
 }

@@ -1,17 +1,17 @@
-import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { BlockUpdater } from 'lib/hooks/useBlockNumber'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
-import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
-import { ComponentProps, JSXElementConstructor, PropsWithChildren, StrictMode, useRef } from 'react'
+import styled, { keyframes, ThemeProvider } from 'lib/theme'
+import { PropsWithChildren, StrictMode, useRef } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
-import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
-import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
-import ErrorGenerator from './Error/ErrorGenerator'
+import ErrorBoundary from './Error/ErrorBoundary'
+import PropValidator from './Error/PropValidator'
+import { SwapProps } from './Swap'
 import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
@@ -77,19 +77,7 @@ function Updaters() {
   )
 }
 
-export type WidgetProps<T extends JSXElementConstructor<any> | undefined = undefined> = {
-  theme?: Theme
-  locale?: SupportedLocale
-  provider?: EthProvider
-  jsonRpcEndpoint?: string
-  width?: string | number
-  dialog?: HTMLElement | null
-  className?: string
-  onError?: ErrorHandler
-} & (T extends JSXElementConstructor<any>
-  ? ComponentProps<T>
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-    {})
+export type WidgetProps = SwapProps
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
   const {
@@ -103,6 +91,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     className,
     onError,
   } = props
+
   const wrapper = useRef<HTMLDivElement>(null)
   return (
     <StrictMode>
@@ -115,7 +104,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                   <AtomProvider>
                     <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
                       <Updaters />
-                      <ErrorGenerator {...props} />
+                      <PropValidator {...props} />
                       {children}
                     </Web3Provider>
                   </AtomProvider>
