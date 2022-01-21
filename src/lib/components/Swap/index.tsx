@@ -65,7 +65,8 @@ export default function Swap({ defaults }: SwapProps) {
       updateSwapOutputCurrency()
       updateSwapInputAmount('')
     }
-  }, [chainId, updateSwapInputAmount, updateSwapInputCurrency, updateSwapOutputCurrency])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId])
 
   return (
     <>
