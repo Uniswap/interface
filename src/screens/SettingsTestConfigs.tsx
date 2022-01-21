@@ -1,12 +1,11 @@
 import React from 'react'
 import { ScrollView } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Toggle } from 'src/components/CurrencySelector/Toggle'
+import { Switch } from 'src/components/buttons/Switch'
 import { Flex } from 'src/components/layout'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { isEnabled, useTestConfigManager } from 'src/features/remoteConfig'
-import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { flex } from 'src/styles/flex'
 
 export function SettingsTestConfigs() {
@@ -32,11 +31,9 @@ export function SettingsTestConfigs() {
                 <Flex key={name} row alignItems="center" justifyContent="space-between">
                   <Text variant="body">{name}</Text>
                   {configValue.getSource() === 'default' ? (
-                    <Toggle
-                      filled={enabled}
-                      onToggle={() =>
-                        toggleLocalConfig({ config: name as TestConfig, enabled: !enabled })
-                      }
+                    <Switch
+                      value={enabled}
+                      onValueChange={() => toggleLocalConfig({ config: name, enabled: !enabled })}
                     />
                   ) : (
                     <Text variant="bodySm">Remote only</Text>
