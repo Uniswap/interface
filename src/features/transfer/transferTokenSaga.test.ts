@@ -1,6 +1,6 @@
 import { call } from '@redux-saga/core/effects'
 import { expectSaga } from 'redux-saga-test-plan'
-import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
+import { getProviderManager, getSignerManager } from 'src/app/walletContext'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { transferToken } from 'src/features/transfer/transferTokenSaga'
 import { account, mockProviderManager, mockSignerManager } from 'src/test/fixtures'
@@ -15,7 +15,7 @@ describe('transferTokenSaga', () => {
     })
       .provide([
         [call(getSignerManager), mockSignerManager],
-        [call(getWalletProviders), mockProviderManager],
+        [call(getProviderManager), mockProviderManager],
       ])
       .run()
   })

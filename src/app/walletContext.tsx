@@ -11,7 +11,7 @@ import { ContractManager } from 'src/features/contracts/ContractManager'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { logger } from 'src/utils/logger'
-import { getContext } from 'typed-redux-saga'
+import { call, getContext } from 'typed-redux-saga'
 
 export interface WalletContextValue {
   signers: SignerManager
@@ -62,21 +62,27 @@ export function useWalletSigners(): SignerManager {
 }
 
 export function* getSignerManager() {
-  const value = yield* getContext<SignerManager>('signers')
-  return value
+  const signerManager = yield* getContext<SignerManager>('signers')
+  return signerManager
 }
 
-export function useWalletProviders(): ProviderManager {
+export function useProviderManager(): ProviderManager {
   return useContext(WalletContext).value.providers
 }
 
-export function useWalletProvider(chainId: ChainId) {
-  return useWalletProviders().tryGetProvider(chainId)
+export function useProvider(chainId: ChainId) {
+  return useProviderManager().tryGetProvider(chainId)
 }
 
-export function* getWalletProviders() {
-  const value = yield* getContext<ProviderManager>('providers')
-  return value
+export function* getProviderManager() {
+  const providerManager = yield* getContext<ProviderManager>('providers')
+  return providerManager
+}
+
+export function* getProvider(chainId: ChainId) {
+  const providerManager = yield* call(getProviderManager)
+  // Note, unlike useWalletProvider above, this throws on missing provider
+  return providerManager.getProvider(chainId)
 }
 
 export function useWalletContracts(): ContractManager {
@@ -84,6 +90,6 @@ export function useWalletContracts(): ContractManager {
 }
 
 export function* getWalletContracts() {
-  const value = yield* getContext<ContractManager>('contracts')
-  return value
+  const contracts = yield* getContext<ContractManager>('contracts')
+  return contracts
 }

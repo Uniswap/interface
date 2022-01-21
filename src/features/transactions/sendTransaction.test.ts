@@ -1,17 +1,17 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
+import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { sendTransaction, signAndSendTransaction } from 'src/features/transactions/sendTransaction'
-import { addTransaction, finalizeTransaction } from 'src/features/transactions/slice'
+import { addTransaction } from 'src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
 import { AccountType, ReadOnlyAccount } from 'src/features/wallet/accounts/types'
-import { account, providerManager, signerManager, tokenContract } from 'src/test/fixtures'
+import { account, provider, signerManager, tokenContract } from 'src/test/fixtures'
 
 const txTypeInfo: ApproveTransactionInfo = {
   type: TransactionType.APPROVE,
@@ -58,10 +58,10 @@ describe(sendTransaction, () => {
   it('Sends valid transactions successfully', () => {
     return expectSaga(sendTransaction, sendParams)
       .provide([
+        [call(getProvider, sendParams.chainId), provider],
         [call(getSignerManager), signerManager],
-        [call(getWalletProviders), providerManager],
         [
-          call(signAndSendTransaction, sendParams, signerManager, providerManager as any),
+          call(signAndSendTransaction, sendParams, provider as any, signerManager),
           transactionResponse,
         ],
       ])
@@ -71,6 +71,8 @@ describe(sendTransaction, () => {
           hash: transactionResponse.hash,
           typeInfo: txTypeInfo,
           from: sendParams.account.address,
+          status: TransactionStatus.Pending,
+          addedTime: Date.now(),
           options: {
             request: {
               chainId: sendParams.chainId,
@@ -85,20 +87,6 @@ describe(sendTransaction, () => {
               maxPriorityFeePerGas: undefined,
               maxFeePerGas: undefined,
             },
-          },
-        })
-      )
-      .put(
-        finalizeTransaction({
-          chainId: sendParams.chainId,
-          hash: transactionResponse.hash,
-          status: TransactionStatus.Success,
-          receipt: {
-            blockHash: transactionReceipt.blockHash,
-            blockNumber: transactionReceipt.blockNumber,
-            transactionIndex: transactionReceipt.transactionIndex,
-            confirmations: transactionReceipt.confirmations,
-            confirmedTime: Date.now(),
           },
         })
       )

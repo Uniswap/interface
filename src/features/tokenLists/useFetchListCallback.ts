@@ -5,7 +5,7 @@ import { nanoid } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
-import { useWalletProvider } from 'src/app/walletContext'
+import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { fetchTokenList } from 'src/features/tokenLists/actions'
 import { getTokenList } from 'src/features/tokenLists/getTokenList'
@@ -19,7 +19,7 @@ export function useFetchListCallback(
 ): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList | null> {
   const dispatch = useAppDispatch()
 
-  const provider = useWalletProvider(chainId)
+  const provider = useProvider(chainId)
 
   const ensResolver = useCallback(
     async (ensName: string) => {

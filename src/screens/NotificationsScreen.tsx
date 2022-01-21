@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Spacer } from 'src/components/layout/Spacer'
@@ -24,7 +24,7 @@ export function NotificationsScreen() {
     openUri(`https://etherscan.io/address/${activeAccount?.address}`)
   }
 
-  const transactions = useSortedTransactions()
+  const transactions = useSortedTransactions(true)
 
   const { t } = useTranslation()
   return (
@@ -43,7 +43,7 @@ export function NotificationsScreen() {
           {t('View details on Etherscan')}
         </TextButton>
       )}
-      <Spacer y="lg" />
+      <Spacer y="sm" />
       <FlatList
         ListEmptyComponent={EmptyList}
         contentContainerStyle={flex.fill}
@@ -56,7 +56,11 @@ export function NotificationsScreen() {
 }
 
 function ListItem({ item }: ListRenderItemInfo<TransactionDetails>) {
-  return <TransactionSummaryCard tx={item} />
+  return (
+    <Box mt="sm">
+      <TransactionSummaryCard tx={item} />
+    </Box>
+  )
 }
 
 function EmptyList() {

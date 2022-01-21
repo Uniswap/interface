@@ -1,5 +1,5 @@
 import { appSelect } from 'src/app/hooks'
-import { getWalletProviders } from 'src/app/walletContext'
+import { getProviderManager } from 'src/app/walletContext'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { ChainId } from 'src/constants/chains'
 import { Balance } from 'src/features/balances/types'
@@ -14,7 +14,7 @@ import { updateBalances } from './balancesSlice'
 export const ALL_ACCOUNTS = '__all_accounts__'
 
 export function* fetchBalances(address: Address) {
-  const manager = yield* call(getWalletProviders)
+  const manager = yield* call(getProviderManager)
   const accounts = yield* appSelect((state) => state.wallet.accounts)
   const allAddresses = Object.keys(accounts)
   const addrsToFetch = address === ALL_ACCOUNTS ? allAddresses : [address]

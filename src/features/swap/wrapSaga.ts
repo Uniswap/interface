@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { Contract, PopulatedTransaction, providers } from 'ethers'
 import { Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
-import { getWalletProviders } from 'src/app/walletContext'
+import { getProviderManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
@@ -36,7 +36,7 @@ export function* wrap(params: Params) {
   const { account, inputCurrencyAmount } = params
   const { chainId } = inputCurrencyAmount.currency
 
-  const providerManager = yield* call(getWalletProviders)
+  const providerManager = yield* call(getProviderManager)
   const provider = providerManager.getProvider(chainId)
   // TODO(#303): use contract manager to cache contract
   const connectedWethContract = yield* call(getWethContract, chainId, provider)

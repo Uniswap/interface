@@ -19,17 +19,16 @@ export interface TransactionDetails {
   // Info for status tracking
   status: TransactionStatus
   addedTime: number
-  lastChecked?: {
-    blockNumber: number
-    time: number
-  }
   receipt?: TransactionReceipt
 }
 
 export enum TransactionStatus {
-  Pending = 'pending',
-  Success = 'success',
+  Cancelled = 'cancelled',
+  Cancelling = 'cancelling',
   Failed = 'failed',
+  Pending = 'pending',
+  Replacing = 'replacing',
+  Success = 'success',
   // May want more granular options here later like InMemPool
 }
 

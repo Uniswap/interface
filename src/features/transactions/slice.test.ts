@@ -2,9 +2,9 @@ import { createStore, Store } from '@reduxjs/toolkit'
 import { ChainId } from 'src/constants/chains'
 import {
   addTransaction,
-  checkTransaction,
   finalizeTransaction,
   initialState,
+  replaceTransaction,
   resetTransactions,
   transactionReducer,
   TransactionState,
@@ -47,6 +47,8 @@ describe('transaction reducer', () => {
           from: '0xabc',
           options: approveTxRequest,
           typeInfo: approveTxTypeInfo,
+          status: TransactionStatus.Pending,
+          addedTime: Date.now(),
         })
       )
       const txs = store.getState().byChainId
@@ -91,6 +93,8 @@ describe('transaction reducer', () => {
           from: '0x0',
           options: approveTxRequest,
           typeInfo: approveTxTypeInfo,
+          status: TransactionStatus.Pending,
+          addedTime: Date.now(),
         })
       )
       store.dispatch(
@@ -121,60 +125,12 @@ describe('transaction reducer', () => {
   describe('checkTransaction', () => {
     it('no op if not valid transaction', () => {
       store.dispatch(
-        checkTransaction({
+        replaceTransaction({
           chainId: ChainId.RINKEBY,
           hash: '0x0',
-          blockNumber: 1,
         })
       )
       expect(store.getState().byChainId).toEqual({})
-    })
-    it('sets lastCheckedBlockNumber', () => {
-      store.dispatch(
-        addTransaction({
-          chainId: ChainId.RINKEBY,
-          hash: '0x0',
-          from: '0x0',
-          options: approveTxRequest,
-          typeInfo: approveTxTypeInfo,
-        })
-      )
-      store.dispatch(
-        checkTransaction({
-          chainId: ChainId.RINKEBY,
-          hash: '0x0',
-          blockNumber: 1,
-        })
-      )
-      const tx = store.getState().byChainId[4]?.['0x0']
-      expect(tx?.lastChecked?.blockNumber).toEqual(1)
-    })
-    it('never decreases', () => {
-      store.dispatch(
-        addTransaction({
-          chainId: ChainId.RINKEBY,
-          hash: '0x0',
-          from: '0x0',
-          options: approveTxRequest,
-          typeInfo: approveTxTypeInfo,
-        })
-      )
-      store.dispatch(
-        checkTransaction({
-          chainId: ChainId.RINKEBY,
-          hash: '0x0',
-          blockNumber: 3,
-        })
-      )
-      store.dispatch(
-        checkTransaction({
-          chainId: ChainId.RINKEBY,
-          hash: '0x0',
-          blockNumber: 1,
-        })
-      )
-      const tx = store.getState().byChainId[ChainId.RINKEBY]?.['0x0']
-      expect(tx?.lastChecked?.blockNumber).toEqual(3)
     })
   })
 
@@ -187,6 +143,8 @@ describe('transaction reducer', () => {
           from: '0xabc',
           options: approveTxRequest,
           typeInfo: approveTxTypeInfo,
+          status: TransactionStatus.Pending,
+          addedTime: Date.now(),
         })
       )
       store.dispatch(
@@ -196,6 +154,8 @@ describe('transaction reducer', () => {
           from: '0xabc',
           options: approveTxRequest,
           typeInfo: approveTxTypeInfo,
+          status: TransactionStatus.Pending,
+          addedTime: Date.now(),
         })
       )
       const txs = store.getState().byChainId

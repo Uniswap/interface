@@ -20,6 +20,7 @@ import {
   tokenWrapSaga,
   tokenWrapSagaName,
 } from 'src/features/swap/wrapSaga'
+import { transactionWatcher } from 'src/features/transactions/transactionWatcherSaga'
 import {
   transferTokenActions,
   transferTokenReducer,
@@ -41,7 +42,7 @@ import {
 import { SagaActions, SagaState } from 'src/utils/saga'
 
 // All regular sagas must be included here
-const sagas: any[] = [initProviders]
+const sagas: any[] = [initProviders, transactionWatcher]
 
 interface MonitoredSaga {
   name: string

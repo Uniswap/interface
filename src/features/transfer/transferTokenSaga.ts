@@ -1,5 +1,5 @@
 import { providers, utils } from 'ethers'
-import { getSignerManager, getWalletProviders } from 'src/app/walletContext'
+import { getProviderManager, getSignerManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { TransferTokenParams } from 'src/features/transfer/types'
@@ -12,7 +12,7 @@ import { call } from 'typed-redux-saga'
 export function* transferToken(params: TransferTokenParams) {
   const { account, tokenAddress, amount, toAddress } = params
   const signerManager = yield* call(getSignerManager)
-  const providerManager = yield* call(getWalletProviders)
+  const providerManager = yield* call(getProviderManager)
   yield* call(
     _transferToken,
     account,

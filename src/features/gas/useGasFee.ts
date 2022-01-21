@@ -1,6 +1,6 @@
 import { providers } from 'ethers'
 import { useQuery } from 'react-query'
-import { useWalletProvider } from 'src/app/walletContext'
+import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { GAS_FEE_REFRESH_INTERVAL } from 'src/constants/gas'
 import { computeGasFee } from 'src/features/gas/computeGasFee'
@@ -8,7 +8,7 @@ import { FeeInfo } from 'src/features/gas/types'
 import { logger } from 'src/utils/logger'
 
 export function useGasFee(chainId: ChainId, tx?: providers.TransactionRequest) {
-  const provider = useWalletProvider(chainId)
+  const provider = useProvider(chainId)
 
   return useQuery<FeeInfo>(
     ['gasFee', chainId, tx],

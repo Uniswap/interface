@@ -19,7 +19,7 @@ import {
   UniswapInterfaceMulticall,
 } from 'src/abis/uniswapV3/types'
 import WETH_ABI from 'src/abis/weth.json'
-import { useWalletContracts, useWalletProviders } from 'src/app/walletContext'
+import { useProviderManager, useWalletContracts } from 'src/app/walletContext'
 import {
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESS,
@@ -34,7 +34,7 @@ export function useContract<T extends Contract = Contract>(
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
   ABI: any
 ): T | null {
-  const providerManager = useWalletProviders()
+  const providerManager = useProviderManager()
   const provider = providerManager.tryGetProvider(chainId)
   const contractsManager = useWalletContracts()
 

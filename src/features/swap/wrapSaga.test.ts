@@ -1,6 +1,6 @@
 import { CurrencyAmount, Ether } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
-import { getWalletProviders } from 'src/app/walletContext'
+import { getProviderManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { getWethContract, Params, wrap } from 'src/features/swap/wrapSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
@@ -33,7 +33,7 @@ describe(wrap, () => {
   it('successfully wrap native eth', () => {
     testSaga(wrap, params)
       .next()
-      .call(getWalletProviders)
+      .call(getProviderManager)
       .next(providerManager)
       .call(getWethContract, ChainId.RINKEBY, provider)
       .next(wethContract)
@@ -61,7 +61,7 @@ describe(wrap, () => {
     }
     testSaga(wrap, unwrapParams)
       .next()
-      .call(getWalletProviders)
+      .call(getProviderManager)
       .next(providerManager)
       .call(getWethContract, ChainId.RINKEBY, provider)
       .next(wethContract)

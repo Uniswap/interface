@@ -1,7 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { REHYDRATE } from 'redux-persist'
+import { appSelect } from 'src/app/hooks'
 import { RootState } from 'src/app/rootReducer'
-import { getWalletProviders } from 'src/app/walletContext'
+import { getProviderManager } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { blockChannelWatcher, createBlockChannel } from 'src/features/blocks/blockListeners'
@@ -10,7 +11,7 @@ import { getSortedActiveChainIds } from 'src/features/chains/utils'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { initialized } from 'src/features/providers/providerSlice'
 import { logger } from 'src/utils/logger'
-import { call, cancel, fork, join, put, take, takeEvery } from 'typed-redux-saga'
+import { call, cancel, fork, join, put, spawn, take, takeEvery } from 'typed-redux-saga'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
@@ -20,13 +21,15 @@ export function* initProviders() {
   const activeChains = getSortedActiveChainIds(chains || config.activeChains)
 
   logger.debug('providerSaga', 'initProviders', 'Initializing providers')
-  const manager = yield* call(getWalletProviders)
+  const manager = yield* call(getProviderManager)
   const initTasks = []
   for (const chainId of activeChains) {
     const task = yield* fork(initProvider, chainId, manager)
     initTasks.push(task)
   }
+  logger.debug('providerSaga', 'initProviders', 'Waiting for provider')
   yield* join(initTasks)
+  logger.debug('providerSaga', 'initProviders', 'Providers ready')
   yield* put(initialized())
   yield* takeEvery(setChainActiveStatus.type, modifyProviders)
 }
@@ -40,7 +43,7 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
     }
     const provider = yield* call(createProvider, chainId, manager)
     const blockChannel = createBlockChannel(provider, chainId)
-    const blockWatcher = yield* fork(blockChannelWatcher, blockChannel, chainId)
+    const blockWatcher = yield* spawn(blockChannelWatcher, blockChannel, chainId)
     manager.setProviderBlockWatcher(chainId, blockWatcher)
   } catch (error) {
     // TODO surface to UI when there's a global error modal setup
@@ -69,7 +72,7 @@ function* destroyProvider(chainId: ChainId, manager: ProviderManager) {
 function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: boolean }>) {
   const { chainId, isActive } = action.payload
   try {
-    const manager = yield* call(getWalletProviders)
+    const manager = yield* call(getProviderManager)
     if (isActive) {
       yield* call(initProvider, chainId, manager)
     } else {
@@ -90,4 +93,11 @@ async function createProvider(chainId: ChainId, manager: ProviderManager) {
   logger.debug('providerSaga', 'createProvider', 'Creating a provider for:', chainId)
   const provider = await manager.createProvider(chainId)
   return provider
+}
+
+// Sagas can use this to delay execution until the providers have been initialized
+export function* waitForProvidersInitialized() {
+  const isInitialized = yield* appSelect((state) => state.providers.isInitialized)
+  if (isInitialized) return
+  yield* take(initialized.type)
 }
