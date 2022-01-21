@@ -10,7 +10,8 @@ export enum LiveDataTimeframeEnum {
   FOUR_HOURS = '4H',
   DAY = '1D',
   WEEK = '1W',
-  MONTH = '1M'
+  MONTH = '1M',
+  SIXMONTHS = '6M'
 }
 
 const getTimeFrameHours = (timeFrame: LiveDataTimeframeEnum) => {
@@ -25,6 +26,8 @@ const getTimeFrameHours = (timeFrame: LiveDataTimeframeEnum) => {
       return 7 * 24
     case LiveDataTimeframeEnum.MONTH:
       return 30 * 24
+    case LiveDataTimeframeEnum.SIXMONTHS:
+      return 180 * 24
     default:
       return 7 * 24
   }

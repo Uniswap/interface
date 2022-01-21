@@ -93,6 +93,8 @@ const getTimeFrameText = (timeFrame: LiveDataTimeframeEnum) => {
       return 'Past Week'
     case LiveDataTimeframeEnum.MONTH:
       return 'Past Month'
+    case LiveDataTimeframeEnum.SIXMONTHS:
+      return 'Past 6 Months'
   }
 }
 
