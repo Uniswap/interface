@@ -5069,6 +5069,11 @@
   resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-2.2.0.tgz#d85a5c2520f57f4920bd989dfc9f01e1b701a567"
   integrity sha512-vFPWoGzDjHP4i2l7yLaober/lZMmzOZXXirVF8XNyfNzRxgmYCWKO6SzKtfEUwxpd3/KUebgdK55II4Mnak62A==
 
+"@uniswap/default-token-list@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-3.0.0.tgz#427ff2a65bbc77a5a24e60f6158441956773f684"
+  integrity sha512-t0H96s1Mx2ga6cGMj/wP/3NWdX4c9yZFd0ydiTOWLhWf1i5RjhWWND/ZTdn8QhmNsdHlhrGsWrEU62xoAY11bw==
+
 "@uniswap/governance@^1.0.2":
   version "1.0.2"
   resolved "https://registry.npmjs.org/@uniswap/governance/-/governance-1.0.2.tgz"
@@ -17498,10 +17503,10 @@ react-cosmos-shared2@^5.6.3:
     react-is "^17.0.2"
     socket.io-client "2.2.0"
 
-react-cosmos@^5.6.3:
-  version "5.6.3"
-  resolved "https://registry.yarnpkg.com/react-cosmos/-/react-cosmos-5.6.3.tgz#bd2c0e1334b2c9992ddb3a5d8dfcbe5fc723cbc8"
-  integrity sha512-FG6VIc4prnqnNQ9ToBq2cNPkPxZcZRauL0tMkbi01aoS90c3sNoQt6koL/IsntSpPcR67KRe+OtJspq9OtBjxg==
+react-cosmos@^5.6.6:
+  version "5.6.6"
+  resolved "https://registry.yarnpkg.com/react-cosmos/-/react-cosmos-5.6.6.tgz#93d66e347a63da7dfe046c2cb23221dcf815ce9d"
+  integrity sha512-RMLRjl2gFq9370N6QszjPRMaT5WsEBEkJBsFbz56h00xPnJAxsab8gu5yj6yDDDSFibL/jBgxjJLdqbF00HMNw==
   dependencies:
     "@skidding/launch-editor" "^2.2.3"
     "@skidding/webpack-hot-middleware" "^2.25.0"
@@ -17520,7 +17525,7 @@ react-cosmos@^5.6.3:
     react-cosmos-playground2 "^5.6.3"
     react-cosmos-plugin "^5.6.0"
     react-cosmos-shared2 "^5.6.3"
-    react-error-overlay "^6.0.9"
+    react-error-overlay "6.0.9"
     regenerator-runtime "^0.13.7"
     resolve-from "^5.0.0"
     slash "^3.0.0"
@@ -17584,7 +17589,7 @@ react-error-boundary@^3.1.0:
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-react-error-overlay@^6.0.9:
+react-error-overlay@6.0.9, react-error-overlay@^6.0.9:
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==

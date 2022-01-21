@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
@@ -24,7 +25,10 @@ export function useBestTrade(
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
 
-  const [debouncedAmount, debouncedOtherCurrency] = useDebounce([amountSpecified, otherCurrency], 200)
+  const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
+    useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
+    200
+  )
 
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
@@ -56,9 +60,12 @@ export function useBestTrade(
   )
 
   // only return gas estimate from api if routing api trade is used
-  return {
-    ...(useFallback ? bestV3Trade : routingAPITrade),
-    ...(debouncing ? { state: TradeState.SYNCING } : {}),
-    ...(isLoading ? { state: TradeState.LOADING } : {}),
-  }
+  return useMemo(
+    () => ({
+      ...(useFallback ? bestV3Trade : routingAPITrade),
+      ...(debouncing ? { state: TradeState.SYNCING } : {}),
+      ...(isLoading ? { state: TradeState.LOADING } : {}),
+    }),
+    [bestV3Trade, debouncing, isLoading, routingAPITrade, useFallback]
+  )
 }

@@ -1,8 +1,9 @@
 import { t, Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import { useQueryTokenList } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
-import { Token } from 'lib/types'
-import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
+import { ElementRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -17,13 +18,17 @@ const SearchInput = styled(StringInput)`
   ${inputCss}
 `
 
-export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {
+interface TokenSelectDialogProps {
+  value?: Currency
+  onSelect: (token: Currency) => void
+}
+
+export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
-  const tokens = useQueryTokenList(query)
+  const queriedTokens = useQueryTokenList(query)
+  const tokens = useMemo(() => queriedTokens.filter((token) => token !== value), [queriedTokens, value])
 
-  const baseTokens: Token[] = [] // TODO(zzmp): Add base tokens to token list functionality
-
-  // TODO(zzmp): Disable already selected tokens (passed as props?)
+  const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
 
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus(), [input])
@@ -49,7 +54,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
         {Boolean(baseTokens.length) && (
           <Row pad={0.75} gap={0.25} justify="flex-start" flex>
             {baseTokens.map((token) => (
-              <TokenBase value={token} onClick={onSelect} key={token.address} />
+              <TokenBase value={token} onClick={onSelect} key={currencyId(token)} />
             ))}
           </Row>
         )}
@@ -61,16 +66,16 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
 }
 
 interface TokenSelectProps {
-  value?: Token
+  value?: Currency
   collapsed: boolean
   disabled?: boolean
-  onSelect: (value: Token) => void
+  onSelect: (value: Currency) => void
 }
 
 export default function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
   const selectAndClose = useCallback(
-    (value: Token) => {
+    (value: Currency) => {
       onSelect(value)
       setOpen(false)
     },
@@ -81,7 +86,7 @@ export default function TokenSelect({ value, collapsed, disabled, onSelect }: To
       <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
-          <TokenSelectDialog onSelect={selectAndClose} />
+          <TokenSelectDialog value={value} onSelect={selectAndClose} />
         </Dialog>
       )}
     </>

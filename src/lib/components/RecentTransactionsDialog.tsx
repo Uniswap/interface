@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import { AlertTriangle, ArrowRight, CheckCircle, Spinner, Trash2 } from 'lib/icons'
-import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled, { ThemedText } from 'lib/theme'
-import { Token } from 'lib/types'
 import { useMemo, useState } from 'react'
 
 import Button from './Button'
@@ -13,7 +12,7 @@ import TokenImg from './TokenImg'
 
 interface ITokenAmount {
   value: number
-  token: Token
+  token: Currency
 }
 
 export enum TransactionStatus {
@@ -27,25 +26,6 @@ interface ITransaction {
   output: ITokenAmount
   status: TransactionStatus
 }
-
-// TODO: integrate with web3-react context
-export const mockTxs: ITransaction[] = [
-  {
-    input: { value: 4170.15, token: USDC },
-    output: { value: 4167.44, token: DAI },
-    status: TransactionStatus.SUCCESS,
-  },
-  {
-    input: { value: 1.23, token: ETH },
-    output: { value: 4125.02, token: DAI },
-    status: TransactionStatus.PENDING,
-  },
-  {
-    input: { value: 10, token: UNI },
-    output: { value: 2125.02, token: ETH },
-    status: TransactionStatus.ERROR,
-  },
-]
 
 const TransactionRow = styled(Row)`
   padding: 0.5em 1em;
@@ -94,7 +74,7 @@ function Transaction({ tx }: { tx: ITransaction }) {
 }
 
 export default function RecentTransactionsDialog() {
-  const [txs, setTxs] = useState(mockTxs)
+  const [txs, setTxs] = useState([])
 
   return (
     <>

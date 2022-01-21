@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useAtomValue } from 'jotai/utils'
-import { inputAtom, outputAtom, swapAtom } from 'lib/state/swap'
 import { useCallback, useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
@@ -9,6 +7,8 @@ import { StatusDialog } from './Status'
 import { SummaryDialog } from './Summary'
 
 const mockBalance = 123.45
+const mockInputAmount = 10
+const mockApproved = true
 
 enum Mode {
   NONE,
@@ -17,23 +17,21 @@ enum Mode {
 }
 
 export default function SwapButton() {
-  const swap = useAtomValue(swapAtom)
-  const input = useAtomValue(inputAtom)
-  const output = useAtomValue(outputAtom)
-  const balance = mockBalance
   const [mode, setMode] = useState(Mode.NONE)
+
+  //@TODO(ianlapham): update this to refer to balances and use real symbol
   const actionProps = useMemo(() => {
-    if (swap && input.token && input.value && output.token && output.value && input.value <= balance) {
-      if (input.approved) {
+    if (mockInputAmount < mockBalance) {
+      if (mockApproved) {
         return {}
       } else {
         return {
-          updated: { message: <Trans>Approve {input.token.symbol} first</Trans>, action: <Trans>Approve</Trans> },
+          updated: { message: <Trans>Approve symbol first</Trans>, action: <Trans>Approve</Trans> },
         }
       }
     }
     return { disabled: true }
-  }, [balance, input.approved, input.token, input.value, output.token, output.value, swap])
+  }, [])
   const onConfirm = useCallback(() => {
     // TODO: Send the tx to the connected wallet.
     setMode(Mode.STATUS)

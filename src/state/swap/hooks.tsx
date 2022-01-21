@@ -1,9 +1,8 @@
-import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useBestTrade } from 'hooks/useBestTrade'
-import JSBI from 'jsbi'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -68,24 +67,6 @@ export function useSwapActionHandlers(): {
   }
 }
 
-// try to parse a user entered amount for a given token
-export function tryParseAmount<T extends Currency>(value?: string, currency?: T): CurrencyAmount<T> | undefined {
-  if (!value || !currency) {
-    return undefined
-  }
-  try {
-    const typedValueParsed = parseUnits(value, currency.decimals).toString()
-    if (typedValueParsed !== '0') {
-      return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
-    }
-  } catch (error) {
-    // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
-    console.debug(`Failed to parse input amount: "${value}"`, error)
-  }
-  // necessary for all paths to return a value
-  return undefined
-}
-
 const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f': true, // v2 factory
   '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a': true, // v2 router 01
@@ -126,7 +107,7 @@ export function useDerivedSwapInfo(): {
 
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = useMemo(
-    () => tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
+    () => tryParseCurrencyAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
     [inputCurrency, isExactIn, outputCurrency, typedValue]
   )
 
@@ -136,55 +117,68 @@ export function useDerivedSwapInfo(): {
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
 
-  const currencyBalances = {
-    [Field.INPUT]: relevantTokenBalances[0],
-    [Field.OUTPUT]: relevantTokenBalances[1],
-  }
+  const currencyBalances = useMemo(
+    () => ({
+      [Field.INPUT]: relevantTokenBalances[0],
+      [Field.OUTPUT]: relevantTokenBalances[1],
+    }),
+    [relevantTokenBalances]
+  )
 
-  const currencies: { [field in Field]?: Currency | null } = {
-    [Field.INPUT]: inputCurrency,
-    [Field.OUTPUT]: outputCurrency,
-  }
-
-  let inputError: ReactNode | undefined
-  if (!account) {
-    inputError = <Trans>Connect Wallet</Trans>
-  }
-
-  if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-    inputError = inputError ?? <Trans>Select a token</Trans>
-  }
-
-  if (!parsedAmount) {
-    inputError = inputError ?? <Trans>Enter an amount</Trans>
-  }
-
-  const formattedTo = isAddress(to)
-  if (!to || !formattedTo) {
-    inputError = inputError ?? <Trans>Enter a recipient</Trans>
-  } else {
-    if (BAD_RECIPIENT_ADDRESSES[formattedTo]) {
-      inputError = inputError ?? <Trans>Invalid recipient</Trans>
-    }
-  }
+  const currencies: { [field in Field]?: Currency | null } = useMemo(
+    () => ({
+      [Field.INPUT]: inputCurrency,
+      [Field.OUTPUT]: outputCurrency,
+    }),
+    [inputCurrency, outputCurrency]
+  )
 
   const allowedSlippage = useSwapSlippageTolerance(trade.trade ?? undefined)
+  const inputError = useMemo(() => {
+    let inputError: ReactNode | undefined
 
-  // compare input balance to max input based on version
-  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]
+    if (!account) {
+      inputError = <Trans>Connect Wallet</Trans>
+    }
 
-  if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
-  }
+    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+      inputError = inputError ?? <Trans>Select a token</Trans>
+    }
 
-  return {
-    currencies,
-    currencyBalances,
-    parsedAmount,
-    inputError,
-    trade,
-    allowedSlippage,
-  }
+    if (!parsedAmount) {
+      inputError = inputError ?? <Trans>Enter an amount</Trans>
+    }
+
+    const formattedTo = isAddress(to)
+    if (!to || !formattedTo) {
+      inputError = inputError ?? <Trans>Enter a recipient</Trans>
+    } else {
+      if (BAD_RECIPIENT_ADDRESSES[formattedTo]) {
+        inputError = inputError ?? <Trans>Invalid recipient</Trans>
+      }
+    }
+
+    // compare input balance to max input based on version
+    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]
+
+    if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+      inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
+    }
+
+    return inputError
+  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, to, trade.trade])
+
+  return useMemo(
+    () => ({
+      currencies,
+      currencyBalances,
+      parsedAmount,
+      inputError,
+      trade,
+      allowedSlippage,
+    }),
+    [allowedSlippage, currencies, currencyBalances, inputError, parsedAmount, trade]
+  )
 }
 
 function parseCurrencyFromURLParameter(urlParam: any): string {

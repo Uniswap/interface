@@ -1,3 +1,4 @@
+import JSBI from 'jsbi'
 import styled, { css } from 'lib/theme'
 import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
 
@@ -67,23 +68,31 @@ export const StringInput = forwardRef<HTMLInputElement, StringInputProps>(functi
 })
 
 interface NumericInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
-  value: number | undefined
-  onChange: (input: number | undefined) => void
+  value: string
+  onChange: (input: string) => void
 }
 
 interface EnforcedNumericInputProps extends NumericInputProps {
-  // Validates nextUserInput; returns stringified value or undefined if valid, or null if invalid
-  enforcer: (nextUserInput: string) => string | undefined | null
+  // Validates nextUserInput; returns stringified value, or null if invalid
+  enforcer: (nextUserInput: string) => string | null
+}
+
+function isNumericallyEqual(a: string, b: string) {
+  const [aInteger, aDecimal] = a.split('.')
+  const [bInteger, bDecimal] = b.split('.')
+  return (
+    JSBI.equal(JSBI.BigInt(aInteger ?? 0), JSBI.BigInt(bInteger ?? 0)) &&
+    JSBI.equal(JSBI.BigInt(aDecimal ?? 0), JSBI.BigInt(bDecimal ?? 0))
+  )
 }
 
 const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(function NumericInput(
   { value, onChange, enforcer, pattern, ...props }: EnforcedNumericInputProps,
   ref
 ) {
-  // Allow value/onChange to use number by preventing a  trailing decimal separator from triggering onChange
   const [state, setState] = useState(value ?? '')
   useEffect(() => {
-    if (+state !== value) {
+    if (!isNumericallyEqual(state, value)) {
       setState(value ?? '')
     }
   }, [value, state, setState])
@@ -93,8 +102,8 @@ const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(fun
       const nextInput = enforcer(event.target.value.replace(/,/g, '.'))
       if (nextInput !== null) {
         setState(nextInput ?? '')
-        if (nextInput === undefined || +nextInput !== value) {
-          onChange(nextInput === undefined ? undefined : +nextInput)
+        if (!isNumericallyEqual(nextInput, value)) {
+          onChange(nextInput)
         }
       }
     },
@@ -114,6 +123,7 @@ const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(fun
       pattern={pattern}
       placeholder={props.placeholder || '0'}
       minLength={1}
+      maxLength={79}
       spellCheck="false"
       ref={ref as any}
       {...props}
@@ -125,7 +135,7 @@ const integerRegexp = /^\d*$/
 const integerEnforcer = (nextUserInput: string) => {
   if (nextUserInput === '' || integerRegexp.test(nextUserInput)) {
     const nextInput = parseInt(nextUserInput)
-    return isNaN(nextInput) ? undefined : nextInput.toString()
+    return isNaN(nextInput) ? '' : nextInput.toString()
   }
   return null
 }
@@ -136,7 +146,7 @@ export const IntegerInput = forwardRef(function IntegerInput(props: NumericInput
 const decimalRegexp = /^\d*(?:[.])?\d*$/
 const decimalEnforcer = (nextUserInput: string) => {
   if (nextUserInput === '') {
-    return undefined
+    return ''
   } else if (nextUserInput === '.') {
     return '0.'
   } else if (decimalRegexp.test(nextUserInput)) {

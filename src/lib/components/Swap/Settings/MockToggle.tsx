@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
-import { mockTogglableAtom } from 'lib/state/swap'
+import { mockTogglableAtom } from 'lib/state/settings'
 
 import Row from '../../Row'
 import Toggle from '../../Toggle'

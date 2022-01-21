@@ -1,6 +1,5 @@
-import { useAtom } from 'jotai'
+import { useSwitchSwapCurrencies } from 'lib/hooks/swap'
 import { ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon } from 'lib/icons'
-import { stateAtom } from 'lib/state/swap'
 import styled, { Layer } from 'lib/theme'
 import { useCallback, useState } from 'react'
 
@@ -47,16 +46,12 @@ const StyledReverseButton = styled(Button)<{ turns: number }>`
 `
 
 export default function ReverseButton({ disabled }: { disabled?: boolean }) {
-  const [state, setState] = useAtom(stateAtom)
   const [turns, setTurns] = useState(0)
+  const switchCurrencies = useSwitchSwapCurrencies()
   const onClick = useCallback(() => {
-    const { input, output } = state
-    setState((state) => {
-      state.input = output
-      state.output = input
-    })
+    switchCurrencies()
     setTurns((turns) => ++turns)
-  }, [state, setState])
+  }, [switchCurrencies])
 
   return (
     <ReverseRow justify="center">

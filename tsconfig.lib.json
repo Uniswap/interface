@@ -13,6 +13,7 @@
       "hooks/*": ["../hooks/*"],
       "state/*": ["../state/*"],
       "types/*": ["../types/*"],
+      "utils/*": ["../utils/*"],
     },
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],
