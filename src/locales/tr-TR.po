@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 22:06\n"
+"PO-Revision-Date: 2022-01-21 00:11\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -222,6 +222,10 @@ msgstr "Onayla"
 msgid "Approve Token"
 msgstr "Onay Simgesi"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve symbol first"
+msgstr "Önce sembolü onayla"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -229,10 +233,6 @@ msgstr "Onay Simgesi"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Onayla {0}"
-
-#: src/lib/components/Swap/SwapButton.tsx
-msgid "Approve {0} first"
-msgstr "Önce {0} onayla"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -494,6 +494,7 @@ msgstr "Cüzdandaki işlemi onaylayın"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -701,6 +702,7 @@ msgstr "Verimlilik Karşılaştırması"
 msgid "Enter a percent"
 msgstr "Yüzde girin"
 
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Bir alıcı girin"
@@ -716,6 +718,7 @@ msgstr "Bir UNI talebini tetiklemek için bir adres girin. Adreste talep edilebi
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -937,6 +940,7 @@ msgstr "Yetersiz {0}"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -968,6 +972,7 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Geçersiz aralık seçildi. Minimum fiyat, maksimum fiyattan düşük olmalıdır."
 
 #: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Geçersiz alıcı"
@@ -1007,10 +1012,6 @@ msgstr "Likidite"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Likidite verileri mevcut değil."
-
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Likidite sağlayıcı ücreti"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1086,7 +1087,6 @@ msgid "Max:"
 msgstr "Maksimum:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Maksimum gönderme"
 
@@ -1137,7 +1137,6 @@ msgid "Min:"
 msgstr "Minimum:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimum alınan"
 
@@ -1370,10 +1369,6 @@ msgstr "Fiyat Etkisi Çok Yüksek"
 msgid "Price Updated"
 msgstr "Fiyat Güncellendi"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "Fiyat etkisi"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Fiyat aralığı"
@@ -1538,6 +1533,7 @@ msgstr "Bir ağ seçin"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -2272,14 +2268,6 @@ msgstr "Ayrıca bu pozisyondan kazanılan ücretleri de toplarsınız."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Alacağınız:"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "En az {0} {1} alacaksınız veya işlem geri dönecek."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "En fazla {0} {1} gönderirsiniz yoksa işlem geri döner."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

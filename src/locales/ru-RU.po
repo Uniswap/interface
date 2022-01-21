@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 22:06\n"
+"PO-Revision-Date: 2022-01-21 00:11\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -222,6 +222,10 @@ msgstr "Одобрить"
 msgid "Approve Token"
 msgstr "Одобрить токен"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve symbol first"
+msgstr "Сначала одобрить символ"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -229,10 +233,6 @@ msgstr "Одобрить токен"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Одобрить {0}"
-
-#: src/lib/components/Swap/SwapButton.tsx
-msgid "Approve {0} first"
-msgstr "Сначала одобрить {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -494,6 +494,7 @@ msgstr "Подтвердите транзакцию в кошельке"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -701,6 +702,7 @@ msgstr "Сравнение эффективности"
 msgid "Enter a percent"
 msgstr "Введите процент"
 
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Введите получателя"
@@ -716,6 +718,7 @@ msgstr "Введите адрес, чтобы востребовать UNI. Ес
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -937,6 +940,7 @@ msgstr "Недостаточно {0}"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -968,6 +972,7 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Выбран неверный диапазон. Минимальная цена должна быть меньше, чем максимальная цена."
 
 #: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Неверный получатель"
@@ -1007,10 +1012,6 @@ msgstr "Ликвидность"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Данные о ликвидности отсутствуют."
-
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Комиссия поставщика ликвидности"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1086,7 +1087,6 @@ msgid "Max:"
 msgstr "Макс.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Максимум к продаже"
 
@@ -1137,7 +1137,6 @@ msgid "Min:"
 msgstr "Мин.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Минимум к получению"
 
@@ -1370,10 +1369,6 @@ msgstr "Слишком высокое влияние на цену"
 msgid "Price Updated"
 msgstr "Цена была обновлена"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "Влияние на цену"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Диапазон цен"
@@ -1538,6 +1533,7 @@ msgstr "Выберите сеть"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -2272,14 +2268,6 @@ msgstr "Вы также будете получать комиссию, зара
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Вы получите"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "Вы получите как минимум {0} {1} иначе транзакция будет отменена."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Вы отправите не более {0} {1} иначе транзакция будет отменена."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

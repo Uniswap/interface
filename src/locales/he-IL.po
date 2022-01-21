@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 22:06\n"
+"PO-Revision-Date: 2022-01-21 00:11\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -222,6 +222,10 @@ msgstr "לְאַשֵׁר"
 msgid "Approve Token"
 msgstr "אשר אסימון"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve symbol first"
+msgstr "אשר תחילה סמל"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -229,10 +233,6 @@ msgstr "אשר אסימון"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "אשר {0}"
-
-#: src/lib/components/Swap/SwapButton.tsx
-msgid "Approve {0} first"
-msgstr "אשר {0} תחילה"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -494,6 +494,7 @@ msgstr "אשר עסקה בארנק"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -701,6 +702,7 @@ msgstr "השוואת יעילות"
 msgid "Enter a percent"
 msgstr "הזן אחוז"
 
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "הזן נמען"
@@ -716,6 +718,7 @@ msgstr "הזן כתובת להפעלת תביעה של UNI. אם לכתובת י
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -937,6 +940,7 @@ msgstr "לא מספיק {0}"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -968,6 +972,7 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "נבחר טווח לא חוקי. המחיר המינימלי חייב להיות נמוך מהמחיר המקסימלי."
 
 #: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "נמען לא חוקי"
@@ -1007,10 +1012,6 @@ msgstr "נְזִילוּת"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "נתוני נזילות אינם זמינים."
-
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "עמלת ספק נזילות"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1086,7 +1087,6 @@ msgid "Max:"
 msgstr "מקסימום:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "מקסימום נשלח"
 
@@ -1137,7 +1137,6 @@ msgid "Min:"
 msgstr "דקה:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "מינימום שהתקבל"
 
@@ -1370,10 +1369,6 @@ msgstr "השפעת המחיר גבוהה מדי"
 msgid "Price Updated"
 msgstr "המחיר עודכן"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "השפעה על המחיר"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "טווח מחירים"
@@ -1538,6 +1533,7 @@ msgstr "בחר רשת"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -2272,14 +2268,6 @@ msgstr "אתה גם יגבה עמלות שהרווחת מתפקיד זה."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "אתה תקבל"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "תקבל לפחות {0} {1} או שהעסקה תחזור."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "אתה תשלח לכל היותר {0} {1} או שהעסקה תחזור."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

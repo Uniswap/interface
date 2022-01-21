@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-19 22:06\n"
+"PO-Revision-Date: 2022-01-21 00:11\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -222,6 +222,10 @@ msgstr "Έγκριση"
 msgid "Approve Token"
 msgstr "Έγκριση κουπονιού"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve symbol first"
+msgstr "Πρώτα εγκρίνετε το σύμβολο"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -229,10 +233,6 @@ msgstr "Έγκριση κουπονιού"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Έγκριση {0}"
-
-#: src/lib/components/Swap/SwapButton.tsx
-msgid "Approve {0} first"
-msgstr "Πρώτα εγκρίνετε το {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -494,6 +494,7 @@ msgstr "Επιβεβαίωση συναλλαγής στο πορτοφόλι"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -701,6 +702,7 @@ msgstr "Σύγκριση αποδοτικότητας"
 msgid "Enter a percent"
 msgstr "Εισαγωγή ποσοστού"
 
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Εισαγάγετε έναν παραλήπτη"
@@ -716,6 +718,7 @@ msgstr "Εισάγετε μια διεύθυνση για να εκκινήσε�
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -937,6 +940,7 @@ msgstr "Ανεπαρκές {0}"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -968,6 +972,7 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Επιλέχθηκε μη έγκυρο εύρος. Η ελάχιστη τιμή πρέπει να είναι χαμηλότερη από τη μέγιστη τιμή."
 
 #: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Μη έγκυρος παραλήπτης"
@@ -1007,10 +1012,6 @@ msgstr "Ρευστότητα"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Δεν υπάρχουν διαθέσιμα δεδομένα ρευστότητας."
-
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Liquidity provider fee"
-msgstr "Αμοιβή παρόχου ρευστότητας"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1086,7 +1087,6 @@ msgid "Max:"
 msgstr "Μέγιστο:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Απεστάλη το μέγιστο"
 
@@ -1137,7 +1137,6 @@ msgid "Min:"
 msgstr "Ελάχιστο:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Ελάχιστο λαμβανόμενο"
 
@@ -1370,10 +1369,6 @@ msgstr "Πολύ υψηλή επίδραση σε τιμή"
 msgid "Price Updated"
 msgstr "Η Τιμή Ενημερώθηκε"
 
-#: src/lib/components/Swap/Summary/Details.tsx
-msgid "Price impact"
-msgstr "Επίπτωση στην τιμή"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Εύρος τιμών"
@@ -1538,6 +1533,7 @@ msgstr "Επιλέξτε ένα δίκτυο"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
+#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
@@ -2272,14 +2268,6 @@ msgstr "Θα εισπράξετε επίσης τις χρεώσεις που κ
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Θα λάβετε"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "Θα λάβετε τουλάχιστον {0} {1} ή η συναλλαγή θα επανέλθει."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Θα στείλετε το πολύ {0} {1} ή η συναλλαγή θα επανέλθει."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
