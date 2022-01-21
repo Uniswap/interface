@@ -16,6 +16,7 @@ export const MULTICALL_ADDRESS: AddressMap = {
   ]),
   [SupportedChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
+  [SupportedChainId.KINTSUGI]: '0xF1150E5Ef6d2d95d8B4Cb24d6f72bC0E605D2b3e',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 
@@ -28,14 +29,17 @@ export const V3_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0xE592427A
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
 ])
-export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45', [
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISTIC_KOVAN,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
-  SupportedChainId.POLYGON,
-  SupportedChainId.POLYGON_MUMBAI,
-])
+export const SWAP_ROUTER_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45', [
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.OPTIMISTIC_KOVAN,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.ARBITRUM_RINKEBY,
+    SupportedChainId.POLYGON,
+    SupportedChainId.POLYGON_MUMBAI,
+  ]),
+  [SupportedChainId.KINTSUGI]: '0xD72e9e626064D98C274D92Bf2e915B4dbD04c01B',
+}
 
 /**
  * The oldest V0 governance address
@@ -64,14 +68,17 @@ export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
 export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
   [SupportedChainId.MAINNET]: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
 }
-export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V3_FACTORY_ADDRESS, [
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISTIC_KOVAN,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.POLYGON,
-])
+export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap(V3_FACTORY_ADDRESS, [
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.OPTIMISTIC_KOVAN,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.ARBITRUM_RINKEBY,
+    SupportedChainId.POLYGON_MUMBAI,
+    SupportedChainId.POLYGON,
+  ]),
+  [SupportedChainId.KINTSUGI]: '0x05a993B8ab4Fc612fd984D29F6CE3fB0B44204Cc',
+}
 export const QUOTER_ADDRESSES: AddressMap = constructSameAddressMap('0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', [
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
@@ -80,17 +87,17 @@ export const QUOTER_ADDRESSES: AddressMap = constructSameAddressMap('0xb27308f9F
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.POLYGON,
 ])
-export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = constructSameAddressMap(
-  '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
-  [
+export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0xC36442b4a4522E871399CD717aBDD847Ab11FE88', [
     SupportedChainId.OPTIMISM,
     SupportedChainId.OPTIMISTIC_KOVAN,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.ARBITRUM_RINKEBY,
     SupportedChainId.POLYGON_MUMBAI,
     SupportedChainId.POLYGON,
-  ]
-)
+  ]),
+  [SupportedChainId.KINTSUGI]: '0x6533a14a8cBa275cF5C5D2FB5740D0e843Eb5B46',
+}
 export const ENS_REGISTRAR_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
   [SupportedChainId.ROPSTEN]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
@@ -101,9 +108,12 @@ export const SOCKS_CONTROLLER_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0x65770b5283117639760beA3F867b69b3697a91dd',
 }
 
-export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.POLYGON,
-])
+export const V3_MIGRATOR_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.ARBITRUM_RINKEBY,
+    SupportedChainId.POLYGON_MUMBAI,
+    SupportedChainId.POLYGON,
+  ]),
+  [SupportedChainId.KINTSUGI]: '0xC43464E178C19Bf6D3f4f359df45CB88C578f355',
+}
