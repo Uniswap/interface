@@ -1,11 +1,12 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
-import { Check, LargeIcon } from 'lib/icons'
-import { MaxSlippage, maxSlippageAtom } from 'lib/state/settings'
+import { useSwapInfo } from 'lib/hooks/swap'
+import { maxSlippageAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
-import { ReactNode, useCallback, useRef } from 'react'
+import { ReactNode, useState } from 'react'
 
-import { BaseButton, TextButton } from '../../Button'
+import { BaseButton } from '../../Button'
 import Column from '../../Column'
 import { DecimalInput, inputCss } from '../../Input'
 import Row from '../../Row'
@@ -15,10 +16,6 @@ const tooltip = (
   <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
 )
 
-const StyledOption = styled(TextButton)<{ selected: boolean }>`
-  ${({ selected }) => optionCss(selected)}
-`
-
 const StyledInputOption = styled(BaseButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
   ${inputCss}
@@ -26,26 +23,25 @@ const StyledInputOption = styled(BaseButton)<{ selected: boolean }>`
   padding: calc(0.5em - 1px) 0.625em;
 `
 
+const Option = styled(BaseButton)<{ selected: boolean }>`
+  ${({ selected }) => optionCss(selected)}
+  background-color: ${({ selected, theme }) => (selected ? theme.active : theme.container)};
+  border-radius: ${({ theme }) => theme.borderRadius}em;
+  :hover {
+    cursor: pointer;
+  }
+  color: ${({ theme, selected }) => (selected ? theme.dialog : theme.secondary)} !important;
+  margin-right: 8px;
+`
+
 interface OptionProps<T> {
   value: T
   selected: boolean
-  onSelect: (value: T) => void
 }
 
-function Option<T>({ value, selected, onSelect }: OptionProps<T>) {
+function InputOption<T>({ value, children, selected }: OptionProps<T> & { children: ReactNode }) {
   return (
-    <StyledOption selected={selected} onClick={() => onSelect(value)}>
-      <Row>
-        <ThemedText.Subhead2>{value}%</ThemedText.Subhead2>
-        {selected && <LargeIcon icon={Check} />}
-      </Row>
-    </StyledOption>
-  )
-}
-
-function InputOption<T>({ value, children, selected, onSelect }: OptionProps<T> & { children: ReactNode }) {
-  return (
-    <StyledInputOption color="container" selected={selected} onClick={() => onSelect(value)}>
+    <StyledInputOption color="container" selected={selected}>
       <ThemedText.Subhead2>
         <Row>{children}</Row>
       </ThemedText.Subhead2>
@@ -54,38 +50,75 @@ function InputOption<T>({ value, children, selected, onSelect }: OptionProps<T> 
 }
 
 export default function MaxSlippageSelect() {
-  const { P01, P05, CUSTOM } = MaxSlippage
-  const [{ value: maxSlippage, custom }, setMaxSlippage] = useAtom(maxSlippageAtom)
+  // grab user custom slippage and possible auto slippage from trade
+  const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
+  const { allowedSlippage } = useSwapInfo()
 
-  const input = useRef<HTMLInputElement>(null)
-  const focus = useCallback(() => input.current?.focus(), [input])
-  const onInputSelect = useCallback(
-    (custom) => {
-      focus()
-      if (custom !== undefined) {
-        setMaxSlippage({ value: CUSTOM, custom })
+  const [slippageInput, setSlippageInput] = useState('')
+  const [slippageError, setSlippageError] = useState<boolean>(false)
+
+  function parseSlippageInput(value: string) {
+    // populate what the user typed and clear the error
+    setSlippageInput(value)
+    setSlippageError(false)
+
+    if (value.length === 0) {
+      setMaxSlippage('auto')
+    } else {
+      const parsed = Math.floor(Number.parseFloat(value) * 100)
+
+      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 5000) {
+        setMaxSlippage('auto')
+        if (value !== '.') {
+          setSlippageError(true)
+        }
+      } else {
+        setMaxSlippage(new Percent(parsed, 10_000))
       }
-    },
-    [CUSTOM, focus, setMaxSlippage]
-  )
+    }
+  }
+
+  const tooLow = maxSlippage !== 'auto' && maxSlippage.lessThan(new Percent(5, 10_000))
+  const tooHigh = maxSlippage !== 'auto' && maxSlippage.greaterThan(new Percent(1, 100))
 
   return (
     <Column gap={0.75}>
       <Label name={<Trans>Max slippage</Trans>} tooltip={tooltip} />
       <Row gap={0.5} grow>
-        <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
-        <Option value={P05} onSelect={setMaxSlippage} selected={maxSlippage === P05} />
-        <InputOption value={custom} onSelect={onInputSelect} selected={maxSlippage === CUSTOM}>
+        <Option
+          onClick={() => {
+            parseSlippageInput('')
+          }}
+          selected={maxSlippage === 'auto'}
+        >
+          <Trans>Auto</Trans>
+        </Option>
+        <InputOption value={slippageInput} selected={maxSlippage !== 'auto'}>
           <DecimalInput
-            size={custom === undefined ? undefined : 5}
-            value={custom?.toString() ?? ''}
-            onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom: custom ? parseFloat(custom) : undefined })}
-            placeholder={t`Custom`}
-            ref={input}
+            value={slippageInput.length > 0 ? slippageInput : maxSlippage === 'auto' ? '' : maxSlippage.toFixed(2)}
+            onChange={parseSlippageInput}
+            placeholder={allowedSlippage.toFixed(2)}
+            onBlur={() => {
+              setSlippageInput('')
+              setSlippageError(false)
+            }}
           />
           %
         </InputOption>
       </Row>
+      {slippageError || tooLow || tooHigh ? (
+        <Row>
+          <ThemedText.Caption color={slippageError ? 'error' : 'warning'}>
+            {slippageError ? (
+              <Trans>Enter a valid slippage percentage</Trans>
+            ) : tooLow ? (
+              <Trans>Your transaction may fail</Trans>
+            ) : (
+              <Trans>Your transaction may be frontrun</Trans>
+            )}
+          </ThemedText.Caption>
+        </Row>
+      ) : null}
     </Column>
   )
 }
