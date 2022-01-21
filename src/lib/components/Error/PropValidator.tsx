@@ -45,7 +45,20 @@ export default function PropValidator(swapWidgetProps: WidgetProps) {
     }
   }, [convenienceFee, convenienceFeeRecipient])
 
-  const { defa } = swapWidgetProps
-  useEffect(() => {}, [])
+  const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount } = swapWidgetProps
+  useEffect(() => {
+    if (defaultInputAddress && !isAddress(defaultInputAddress)) {
+      throw new IntegrationError('defaultInputAddress must be a valid address.')
+    }
+    if (defaultInputAmount && defaultInputAmount < 0) {
+      throw new IntegrationError('defaultInputAmount must be a positive number.')
+    }
+    if (defaultOutputAddress && !isAddress(defaultOutputAddress)) {
+      throw new IntegrationError('defaultOutputAddress must be a valid address.')
+    }
+    if (defaultOutputAmount && defaultOutputAmount < 0) {
+      throw new IntegrationError('defaultOutputAmount must be a positive number.')
+    }
+  }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount])
   return null
 }

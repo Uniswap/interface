@@ -22,7 +22,7 @@ import Settings from './Settings'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 
-interface BaseSwapProps {
+export interface SwapProps {
   theme?: Theme
   locale?: SupportedLocale
   provider?: EthProvider
@@ -36,14 +36,9 @@ interface BaseSwapProps {
   defaultInputAmount?: number
   defaultOutputAddress?: string | { [chainId: number]: string }
   defaultOutputAmount?: number
+  convenienceFee?: number
+  convenienceFeeRecipient?: string | { [chainId: number]: string }
 }
-
-interface SwapPropsWithConvenienceFee extends BaseSwapProps {
-  convenienceFee: number
-  convenienceFeeRecipient: string
-}
-
-export type SwapProps = BaseSwapProps | SwapPropsWithConvenienceFee
 
 export default function Swap(props: SwapProps) {
   const { tokenList } = props
