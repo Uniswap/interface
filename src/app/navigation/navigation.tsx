@@ -25,6 +25,7 @@ import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
+import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
 
 const Tab = createBottomTabNavigator<TabParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
@@ -112,6 +113,7 @@ export function AppStackNavigator() {
         <AppStack.Screen component={SwapScreen} name={Screens.Swap} />
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
         <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
+        <AppStack.Screen component={TransferTokenScreen} name={Screens.Transfer} />
       </AppStack.Group>
     </AppStack.Navigator>
   )

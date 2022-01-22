@@ -21,7 +21,7 @@ export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
   }
 
   return (
-    <Screen>
+    <Screen edges={['top', 'left', 'right']}>
       <Box mx="lg" my="lg">
         <Text variant="h3">{t('Explore')}</Text>
       </Box>

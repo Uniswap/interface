@@ -17,7 +17,7 @@ interface Props {
   onEdit?: (address: Address) => void
 }
 
-export function AccountCard({
+export function AccountItem({
   account: { address, name },
   isActive,
   isEditable,

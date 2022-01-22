@@ -1,11 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
 import QrCode from 'src/assets/icons/qr-code.svg'
 import Settings from 'src/assets/icons/settings.svg'
+import { AccountCardList } from 'src/components/AccountCardList/AccountCardList'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
@@ -13,10 +15,13 @@ import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { WalletQRCode } from 'src/components/modals/WalletQRCode'
+import { Text } from 'src/components/Text'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
 import { useAllBalances } from 'src/features/balances/hooks'
-import TotalBalance from 'src/features/balances/TotalBalance'
+import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
+import { isEnabled } from 'src/features/remoteConfig'
+import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
@@ -30,6 +35,9 @@ type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 export function HomeScreen({ navigation }: Props) {
   // imports test account for easy development/testing
   useTestAccount()
+
+  const { t } = useTranslation()
+
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
   const chainIdToTokens = useAllTokens()
@@ -49,6 +57,10 @@ export function HomeScreen({ navigation }: Props) {
   const onPressQRCode = () => setShowQRModal(true)
   const onCloseQrCode = () => setShowQRModal(false)
 
+  const onPressSend = () => {
+    navigation.navigate(Screens.Transfer)
+  }
+
   const onPressNotifications = () => navigation.navigate(Screens.Notifications)
 
   const onPressToken = (currencyAmount: CurrencyAmount<Currency>) =>
@@ -67,7 +79,7 @@ export function HomeScreen({ navigation }: Props) {
     )
 
   return (
-    <Screen>
+    <Screen edges={['top', 'left', 'right']}>
       <GradientBackground height="50%">
         <PinkToBlueLinear />
       </GradientBackground>
@@ -84,21 +96,35 @@ export function HomeScreen({ navigation }: Props) {
           </Box>
         </Box>
         <TransactionStatusBanner />
-        <Box alignItems="flex-end" flexDirection="row" justifyContent="space-between">
-          <TotalBalance balances={balances} />
-          <Button
-            backgroundColor="white"
-            mx="lg"
-            my="lg"
-            padding="md"
-            style={headerButtonStyle}
-            onPress={onPressQRCode}>
-            <QrCode height={15} stroke={theme.colors.pink} width={15} />
-          </Button>
-        </Box>
+        {isEnabled(TestConfig.SWIPEABLE_ACCOUNTS) ? (
+          <AccountCardList
+            balances={balances}
+            onPressQRCode={onPressQRCode}
+            onPressSend={onPressSend}
+          />
+        ) : (
+          <Box alignItems="flex-end" flexDirection="row" justifyContent="space-between">
+            <Box m="lg">
+              <Text mb="md" variant="h4">
+                {t('Total Balance')}
+              </Text>
+              <TotalBalance balances={balances} />
+            </Box>
+            <Button
+              backgroundColor="white"
+              mx="lg"
+              my="lg"
+              padding="md"
+              style={headerButtonStyle}
+              onPress={onPressQRCode}>
+              <QrCode height={15} stroke={theme.colors.pink} width={15} />
+            </Button>
+          </Box>
+        )}
+
         <WalletQRCode isVisible={showQRModal} onClose={onCloseQrCode} />
       </Box>
-      <Box backgroundColor="mainBackground" flex={1}>
+      <Box bg="mainBackground" flex={1}>
         <TokenBalanceList
           balances={balances}
           loading={loading && !allCurrencyAmounts.length}

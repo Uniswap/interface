@@ -5,7 +5,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { useAccountStackNavigation } from 'src/app/navigation/types'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import EditIcon from 'src/assets/icons/pencil-box.svg'
-import { AccountCard } from 'src/components/accounts/AccountCard'
+import { AccountItem } from 'src/components/accounts/AccountItem'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { RenameAccountModal } from 'src/components/accounts/RenameAccountModal'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -142,7 +142,7 @@ export function AccountsScreen() {
         </Box>
         {Object.values(signerAccounts).map((account) => (
           <Box key={account.address} mb="xl">
-            <AccountCard
+            <AccountItem
               account={account}
               isActive={!!activeAccount && activeAccount.address === account.address}
               isEditable={isEditMode}
@@ -158,7 +158,7 @@ export function AccountsScreen() {
             </Text>
             {Object.values(readOnlyAccounts).map((account) => (
               <Box key={account.address} mb="xl">
-                <AccountCard
+                <AccountItem
                   account={account}
                   isActive={!!activeAccount && activeAccount.address === account.address}
                   isEditable={isEditMode}

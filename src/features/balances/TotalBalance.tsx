@@ -1,7 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { ChainId, MAINNET_CHAIN_IDS } from 'src/constants/chains'
 import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
@@ -40,17 +38,10 @@ function useTotalBalance(
   }, [filteredBalances, tokenPricesByChain])
 }
 
-export default function TotalBalance({ balances }: TotalBalanceViewProps) {
-  const { t } = useTranslation()
-
+export function TotalBalance({ balances }: TotalBalanceViewProps) {
   const currenciesToFetch = balances.map((currencyAmount) => currencyAmount.currency)
   const tokenPricesByChain = useTokenPrices(currenciesToFetch)
   const totalBalance = useTotalBalance(balances, tokenPricesByChain)
 
-  return (
-    <Flex gap="sm" mb="lg" mt="sm" mx="lg">
-      <Text variant="h5">{t('Total balance')}</Text>
-      <Text variant="h1">{`${formatUSDPrice(totalBalance)}`}</Text>
-    </Flex>
-  )
+  return <Text variant="h1">{`${formatUSDPrice(totalBalance)}`}</Text>
 }

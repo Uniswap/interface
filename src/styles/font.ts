@@ -12,8 +12,8 @@ export const fontFamily = {
 export const textVariants = {
   h1: {
     fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 34,
-    lineHeight: 42.5,
+    fontSize: 40,
+    lineHeight: 42,
     color: 'mainForeground',
   },
   h2: {

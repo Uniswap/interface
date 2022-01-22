@@ -17,7 +17,7 @@ export function Identicon({ address, size = 36, ...rest }: Props) {
   return <Box backgroundColor={color} borderRadius="full" height={size} width={size} {...rest} />
 }
 
-function useAddressColor(address: string): keyof Theme['colors'] {
+export function useAddressColor(address: string): keyof Theme['colors'] {
   const colorSeed = parseInt(address.at(-1)!, 16)
   if (colorSeed < 4) return 'blue'
   if (colorSeed < 8) return 'green'
