@@ -24,7 +24,7 @@ function Fixture() {
     }
   }, [color, setColor])
 
-  return <Swap defaults={{ tokenList: tokens }} />
+  return <Swap tokenList={tokens} />
 }
 
 export default <Fixture />
