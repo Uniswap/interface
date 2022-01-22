@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-21 00:11\n"
+"PO-Revision-Date: 2022-01-22 10:07\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -224,7 +224,7 @@ msgstr "Odobri žeton"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approve symbol first"
-msgstr "Najprej odobri simbol"
+msgstr "Najprej odobrite simbol"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1686,11 +1686,11 @@ msgstr "Menjava {0} {1} za {2} {3}"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
-msgstr "Izpolnite 10-minutno anketo in nam pomagajte izboljšati vašo izkušnjo v aplikaciji Uniswap."
+msgstr "Izpolnite 10-minutno anketo in nam pomagajte izboljšati vašo izkušnjo aplikacije Uniswap."
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
-msgstr "Povejte nam, kaj mislite ↗"
+msgstr "Povejte nam, kaj si mislite ↗"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -2005,7 +2005,7 @@ msgstr "Nepodprta sredstva"
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Unsupported network–switch to another to trade."
-msgstr "Nepodprto omrežje – za trgovanje preklopite na drugo."
+msgstr "To omrežje ni podprto – za trgovanje preklopite na drugo omrežje."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
