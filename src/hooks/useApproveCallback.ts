@@ -1,7 +1,9 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import useSwapApproval, { useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useCallback } from 'react'
 import invariant from 'tiny-invariant'
@@ -36,4 +38,15 @@ export function useApprovalOptimizedTrade(
   allowedSlippage: Percent
 ) {
   return useSwapApprovalOptimizedTrade(trade, allowedSlippage, useHasPendingApproval)
+}
+
+export function useApproveCallbackFromTrade(
+  trade:
+    | V2Trade<Currency, Currency, TradeType>
+    | V3Trade<Currency, Currency, TradeType>
+    | Trade<Currency, Currency, TradeType>
+    | undefined,
+  allowedSlippage: Percent
+) {
+  return useSwapApproval(trade, allowedSlippage, useHasPendingApproval)
 }
