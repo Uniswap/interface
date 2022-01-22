@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
-import { atom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom, useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useEffect, useMemo, useState } from 'react'
@@ -16,9 +16,9 @@ export { DEFAULT_TOKEN_LIST } from './fetchTokenList'
 
 const chainTokenMapAtom = atom<ChainTokenMap>({})
 
-export default function useTokenList(list?: string | TokenInfo[]) {
+export default function useTokenList(list?: string | TokenInfo[]): WrappedTokenInfo[] {
   const { chainId, library } = useActiveWeb3React()
-  const setChainTokenMap = useUpdateAtom(chainTokenMapAtom)
+  const [chainTokenMap, setChainTokenMap] = useAtom(chainTokenMapAtom)
 
   // Error boundaries will not catch (non-rendering) async errors, but it should still be shown
   const [error, setError] = useState<Error>()
@@ -40,23 +40,25 @@ export default function useTokenList(list?: string | TokenInfo[]) {
       tokens.then(tokensToChainTokenMap).then(setChainTokenMap).catch(setError)
     }
   }, [chainId, library, list, setChainTokenMap])
+
+  return useMemo(() => {
+    return Object.values((chainId && chainTokenMap[chainId]) || {}).map(({ token }) => token)
+  }, [chainId, chainTokenMap])
 }
 
-export type TokenMap<T extends Token> = { [address: string]: T }
+export type TokenMap = { [address: string]: Token }
 
-export function useTokenMap(): TokenMap<WrappedTokenInfo> {
+export function useTokenMap(): TokenMap {
   const { chainId } = useActiveWeb3React()
   const chainTokenMap = useAtomValue(chainTokenMapAtom)
   return useMemo(() => {
     return Object.entries((chainId && chainTokenMap[chainId]) || {}).reduce((map, [address, { token }]) => {
       map[address] = token
       return map
-    }, {} as TokenMap<WrappedTokenInfo>)
+    }, {} as TokenMap)
   }, [chainId, chainTokenMap])
 }
 
 export function useQueryTokenList(query: string) {
-  const map = useTokenMap()
-  const list = useMemo(() => Object.values(map), [map])
-  return useQueryTokens(query, list)
+  return useQueryTokens(query, useTokenList())
 }
