@@ -536,7 +536,7 @@ export default function RemoveLiquidity({
                               currencyB?.isNative ? WETH_EXTENDED[chainId].address : currencyIdB
                             }`}
                           >
-                            Receive WETH
+                            Receive WXDC
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink

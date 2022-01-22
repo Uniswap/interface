@@ -154,7 +154,7 @@ export default function ClaimModal() {
                 As a member of the Uniswap community you may claim XSP to be used for voting and governance.
                 <br />
                 <br />
-                <ExternalLink href="https://uniswap.org/blog/uni">Read more about XSP</ExternalLink>
+                <ExternalLink href="https://docs.xspswap.finance/">Read more about XSP</ExternalLink>
               </Trans>
             </ThemedText.SubHeader>
             <ButtonPrimary

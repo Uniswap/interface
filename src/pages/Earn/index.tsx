@@ -76,11 +76,11 @@ export default function Earn() {
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://uniswap.org/blog/uni/"
+                href="https://docs.xspswap.finance/"
                 target="_blank"
               >
                 <ThemedText.White fontSize={14}>
-                  <Trans>Read more about UNI</Trans>
+                  <Trans>Read more about XSP</Trans>
                 </ThemedText.White>
               </ExternalLink>
             </AutoColumn>

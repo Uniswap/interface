@@ -151,7 +151,7 @@ export default function Pool() {
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 target="_blank"
-                href="https://xspswap.finance/"
+                href="https://docs.xspswap.finance/"
               >
                 <ThemedText.White fontSize={14}>
                   <Trans>Read more about providing liquidity</Trans>

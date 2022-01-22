@@ -231,13 +231,13 @@ export default function Menu() {
                       </div>
                       <Info opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://t.me/romanow_org/">
+                    <MenuItem href="https://t.me/real_XSwapProtocol">
                       <div>
                         <Trans>Help</Trans>
                       </div>
                       <HelpCircle opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://t.me/romanow_org">
+                    <MenuItem href="https://t.me/real_XSwapProtocol">
                       <div>
                         <Trans>Request Features</Trans>
                       </div>
