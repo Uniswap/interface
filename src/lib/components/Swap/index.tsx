@@ -1,15 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
 import { SupportedLocale } from 'constants/locales'
-import { nativeOnChain } from 'constants/tokens'
-import { useSwapAmount, useSwapCurrency } from 'lib/hooks/swap'
+import useSwapDefaults from 'lib/hooks/swap/useSwapDefaults'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
-import useSwapDefaults from 'lib/hooks/useSwapDefaults'
 import useTokenList from 'lib/hooks/useTokenList'
-import { Field } from 'lib/state/swap'
 import { Theme } from 'lib/theme'
-import { useLayoutEffect, useState } from 'react'
+import { useState } from 'react'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { ErrorHandler } from '../Error/ErrorBoundary'
@@ -48,26 +45,8 @@ export default function Swap(props: SwapProps) {
   useTokenList(tokenList)
   useSwapDefaults(defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount)
 
-  const { active, account, chainId } = useActiveWeb3React()
-  const [lastChainId, setLastChainId] = useState<number | undefined>(chainId)
+  const { active, account } = useActiveWeb3React()
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-
-  // Switch to on-chain currencies if/when chain changes to prevent chain mismatched currencies.
-  const [, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
-  const [, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
-  const [, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
-
-  useLayoutEffect(() => {
-    if (chainId !== lastChainId) {
-      setLastChainId(chainId)
-      if (chainId) {
-        updateSwapInputCurrency(nativeOnChain(chainId))
-        updateSwapOutputCurrency()
-        updateSwapInputAmount('')
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId])
 
   return (
     <>

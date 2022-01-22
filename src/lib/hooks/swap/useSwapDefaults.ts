@@ -4,7 +4,7 @@ import { useSwapAmount, useSwapCurrency } from 'lib/hooks/swap'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useToken } from 'lib/hooks/useCurrency'
 import { Field, swapDefaultsAtom } from 'lib/state/swap'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export default function useSwapDefaults(
   defaultInputAddress: DefaultAddress | undefined,
@@ -35,23 +35,47 @@ export default function useSwapDefaults(
       : undefined
   const defaultOutputToken = useToken(outputAddress)
 
+  const [previousChainId, setPreviousChainId] = useState(chainId)
+
+  const setToDefaults = useCallback(() => {
+    if (defaultInputToken) {
+      updateSwapInputCurrency(defaultInputToken)
+    }
+    if (defaultOutputToken) {
+      updateSwapOutputCurrency(defaultOutputToken)
+    }
+
+    if (defaultInputAmount) {
+      updateSwapInputAmount(defaultInputAmount)
+    } else if (defaultOutputAmount) {
+      updateSwapOutputAmount(defaultOutputAmount)
+    }
+  }, [
+    defaultInputToken,
+    defaultOutputToken,
+    defaultInputAmount,
+    defaultOutputAmount,
+    updateSwapInputCurrency,
+    updateSwapOutputCurrency,
+    updateSwapInputAmount,
+    updateSwapOutputAmount,
+  ])
+
   useEffect(() => {
     // alter default values if they have changed
     setDefaults({ defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount })
-    // if no swap fields have been set, set them to defaults
-    if (chainId && !inputCurrency && !outputCurrency && !inputAmount && !outputAmount) {
-      if (defaultInputToken) {
-        updateSwapInputCurrency(defaultInputToken)
-      }
-      if (defaultOutputToken) {
-        updateSwapOutputCurrency(defaultOutputToken)
-      }
-
-      if (defaultInputAmount) {
-        updateSwapInputAmount(defaultInputAmount)
-      } else if (defaultOutputAmount) {
-        updateSwapOutputAmount(defaultOutputAmount)
-      }
-    }
   }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount, setDefaults])
+
+  useEffect(() => {
+    if (chainId && chainId !== previousChainId) {
+      setPreviousChainId(chainId)
+      setToDefaults()
+    }
+    // if no swap fields have been set, set them to defaults
+    else if (chainId && !inputCurrency && !outputCurrency && !inputAmount && !outputAmount) {
+      setToDefaults()
+    }
+    // intentionally omit (set)previousChainId check here
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId, inputCurrency, outputCurrency, inputAmount, outputAmount])
 }
