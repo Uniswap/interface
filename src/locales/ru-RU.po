@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-21 00:11\n"
+"PO-Revision-Date: 2022-01-23 18:09\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -224,7 +224,7 @@ msgstr "Одобрить токен"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approve symbol first"
-msgstr "Сначала одобрить символ"
+msgstr "Сначала одобрите символ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -478,7 +478,7 @@ msgstr "Подтвердить обмен"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
-msgstr "Подтвердить обмен"
+msgstr "Подтвердите обмен"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -528,7 +528,7 @@ msgstr "Подключите кошелёк, чтобы просмотреть �
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Connect wallet to swap"
-msgstr "Подключить кошелек для обмена"
+msgstr "Подключите кошелек, чтобы обменять"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -588,7 +588,7 @@ msgstr "Текущая цена {0}:"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Custom"
-msgstr "Обычай"
+msgstr "Настроить"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
@@ -757,7 +757,7 @@ msgstr "Ошибка подключения. Попробуйте обновит
 
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
-msgstr "Сведения об ошибке"
+msgstr "Описание ошибки"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -1146,7 +1146,7 @@ msgstr "Отсутствуют зависимости"
 
 #: src/lib/components/Swap/Settings/MockToggle.tsx
 msgid "Mock Toggle"
-msgstr "Макет переключения"
+msgstr "Включить симуляцию"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1257,7 +1257,7 @@ msgstr "Вне диапазона"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated."
-msgstr "Выход оценивается."
+msgstr "Сумма к получению — оценочная."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1294,7 +1294,7 @@ msgstr "Пожалуйста, подключитесь к Уровню 1 Ethereu
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Пожалуйста, подключитесь к поддерживаемой сети в раскрывающемся меню или в своем кошельке."
+msgstr "Пожалуйста, подключитесь на поддерживаемую сеть в выпадающем меню или в своём кошельке."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1447,7 +1447,7 @@ msgstr "Последние транзакции"
 
 #: src/lib/components/RecentTransactionsDialog.tsx
 msgid "Recent transactions"
-msgstr "Недавние транзакции"
+msgstr "Последние транзакции"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
@@ -1501,7 +1501,7 @@ msgstr "Предложить идею"
 
 #: src/lib/components/Swap/Settings/index.tsx
 msgid "Reset"
-msgstr "Перезагрузить"
+msgstr "Сбросить"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1511,11 +1511,11 @@ msgstr "Назад"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Review swap"
-msgstr "Обмен отзывами"
+msgstr "Проверьте обмен"
 
 #: src/lib/components/TokenSelect/index.tsx
 msgid "Search by token name or address"
-msgstr "Поиск по имени токена или адресу"
+msgstr "Поиск токена по имени или адресу"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1665,7 +1665,7 @@ msgstr "Всё равно обменять"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
-msgstr "Поменять детали"
+msgstr "Подробности обмена"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
@@ -1678,7 +1678,7 @@ msgstr "Обмен не удался: {0}"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
-msgstr "Сводка по обмену"
+msgstr "Общая информация об обмене"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1686,7 +1686,7 @@ msgstr "Идет обмен {0} {1} на {2} {3}"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
-msgstr "Пройдите 10-минутный опрос, чтобы помочь нам улучшить ваше взаимодействие с приложением Uniswap."
+msgstr "Пройдите 10-минутный опрос — это поможет нам сделать приложение Uniswap более удобным для вас."
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -1852,7 +1852,7 @@ msgstr "Маршрут обмена"
 
 #: src/lib/components/Swap/Input.tsx
 msgid "Trading"
-msgstr "Трейдинг"
+msgstr "Торговля"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1880,7 +1880,7 @@ msgstr "Cрок действия транзакции"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Transaction pending"
-msgstr "Ожидание транзакции"
+msgstr "Транзакция подтверждается"
 
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1901,7 +1901,7 @@ msgstr "Попробовать ещё раз"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Попробуйте увеличить устойчивость к проскальзыванию.<0/>ПРИМЕЧАНИЕ. Плата за передачу и перебазирование токенов несовместима с Uniswap V3."
+msgstr "Попробуйте увеличить допустимое проскальзывание.<0/>ВНИМАНИЕ: токены с комиссией за перевод или изменямой базой несовместимы с Uniswap V3."
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2005,7 +2005,7 @@ msgstr "Неподдерживаемые активы"
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Unsupported network–switch to another to trade."
-msgstr "Неподдерживаемая сеть — переключитесь на другую для торговли."
+msgstr "Сеть не поддерживается; переключитесь на другую, чтобы торговать."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
@@ -2342,7 +2342,7 @@ msgstr "Ваша транзакция может быть неудачной"
 
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "Ваша транзакция будет отменена, если она находится в ожидании дольше этого периода времени."
+msgstr "Ваша транзакция откатится, если её подтверждение займёт больше указанного времени."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
@@ -2553,7 +2553,7 @@ msgstr "{activeTokensOnThisChain} токенов"
 
 #: src/lib/components/Swap/Summary/Details.tsx
 msgid "{integrator} fee"
-msgstr "{integrator} комиссия"
+msgstr "Комиссия {integrator}"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
