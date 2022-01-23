@@ -150,10 +150,10 @@ export default function FeeSelector({
               ) : (
                 <>
                   <TYPE.label className="selected-fee-label">
-                    <Trans>{FeeAmountLabel[feeAmount].label}% fee tier</Trans>
+                    <Trans>{(FeeAmountLabel as any)[feeAmount].label}% fee tier</Trans>
                   </TYPE.label>
                   <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
-                    {distributions && feeAmount && <FeeTierPercentageBadge percentage={distributions[feeAmount]} />}
+                    {distributions && feeAmount && <FeeTierPercentageBadge percentage={( distributions as any )[feeAmount]} />}
                   </Box>
                 </>
               )}

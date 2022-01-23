@@ -278,7 +278,7 @@ export function useSwapCallback(
             return library
               .estimateGas(tx)
               .then((gasEstimate) => {
-                return {
+                return {    
                   call,
                   gasEstimate,
                 }

@@ -140,3 +140,9 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
 export function useV3Quoter() {
   return useContract<any>(QUOTER_ADDRESSES, QuoterABI)
 }
+
+
+
+export function useInterfaceMulticall() {
+  return useContract<any>(MULTICALL_ADDRESS, MulticallABI, false) as UniswapInterfaceMulticall
+}
