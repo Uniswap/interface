@@ -811,7 +811,7 @@ export const OUTSITE_FAIRLAUNCH_ADDRESSES: {
 } = {
   '0x597e3FeDBC02579232799Ecd4B7edeC4827B0435': {
     address: '0x597e3FeDBC02579232799Ecd4B7edeC4827B0435',
-    subgraphAPI: 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2',
+    subgraphAPI: 'https://pancake-subgraph-proxy.kyberswap.com/proxy',
     query: ` { pair(id: "0x4e241e3e76214635eccc7408620b940f0bda267d") {
     id
     token0 {
@@ -853,7 +853,7 @@ export const OUTSITE_FARM_REWARDS_QUERY: {
   }
 } = {
   '0xc04a23149efdF9A63697f3Eb60705147e9f07FfD': {
-    subgraphAPI: 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2',
+    subgraphAPI: 'https://pancake-subgraph-proxy.kyberswap.com/proxy',
     query: `{
       tokens(where: {id_in: ["0xc04a23149efdf9a63697f3eb60705147e9f07ffd"]}){
     id
