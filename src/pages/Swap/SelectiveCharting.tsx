@@ -19,6 +19,7 @@ import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { useHasAccess } from 'components/AccountPage/AccountPage';
 import { TopHolders } from './TopHolders';
 import Swal from 'sweetalert2';
+import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
 
 const StyledDiv = styled.div`
 font-family: 'Bangers', cursive;
@@ -138,9 +139,14 @@ export const SelectiveChart = () => {
 
                 <p style={{ margin: 0 }}>Select a token to view the associated chart/transaction data</p>
             </CardSection>
-
+            
             {!accessDenied && (
-                <> <CardSection>
+
+                <>
+                <CardSection>
+                    <TopTokenHolders address={address} chainId={chainId} />
+                </CardSection>
+                 <CardSection>
 
                     {tokenData && +tokenData?.priceUSD > 0 && <div style={{ marginBottom: 5 }}>
 

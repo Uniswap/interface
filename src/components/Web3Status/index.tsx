@@ -249,9 +249,6 @@ export default function Web3Status() {
 
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
-  const { library, chainId } = useWeb3React()
-  const [isSwitching, setIsSwitching] = React.useState(false)
-  const chainToSwitchTo = React.useMemo(() => chainId && chainId === 1 ? SupportedChainId.BINANCE : SupportedChainId.MAINNET,[chainId])
 
   
   if (!contextNetwork.active && !active) {
@@ -261,15 +258,6 @@ export default function Web3Status() {
   return (
     <>
       <Web3StatusInner />
-      <Badge 
-        variant={BadgeVariant.PRIMARY} 
-        style={{background:"#222"}} 
-        onClick={async () => {
-          await switchToNetwork({library, chainId: chainToSwitchTo, account: account as string})
-        }}>
-          {[1, undefined].includes(chainId) ? 'ETH' : !!chainId && [56].includes(chainId)? 'BSC':'Connect'} 
-          &nbsp; {chainId === 56 ? <ToggleRight/> : <ToggleLeft />} 
-      </Badge>
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )

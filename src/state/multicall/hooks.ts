@@ -7,6 +7,21 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../application/hooks'
 import { addMulticallListeners, ListenerOptions, removeMulticallListeners } from './actions'
 import { Call, parseCallKey, toCallKey } from './utils'
+import multicall from './multicall'
+
+export type TupleSplit<T, N extends number, O extends readonly any[] = readonly []> = O['length'] extends N
+  ? [O, T]
+  : T extends readonly [infer F, ...infer R]
+  ? TupleSplit<readonly [...R], N, readonly [...O, F]>
+  : [O, T]
+
+export type TakeFirst<T extends readonly any[], N extends number> = TupleSplit<T, N>[0]
+
+export type SkipFirst<T extends readonly any[], N extends number> = TupleSplit<T, N>[1]
+
+export type NonNullable<T> = T extends null | undefined ? never : T
+type SkipFirstTwoParams<T extends (...args: any) => any> = SkipFirst<Parameters<T>, 2>
+
 
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
@@ -261,4 +276,19 @@ export function useSingleCallResult(
   return useMemo(() => {
     return toCallState(result, contract?.interface, fragment, latestBlockNumber)
   }, [result, contract, fragment, latestBlockNumber])
+}
+
+// Create wrappers for hooks so consumers don't need to get latest block themselves
+export function useSingleContractWithCallData(
+  ...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleContractWithCallData>
+) {
+  const { chainId, latestBlock } = useCallContext()
+  return multicall.hooks.useSingleContractWithCallData(chainId, latestBlock, ...args)
+}
+
+
+function useCallContext() {
+  const { chainId } = useActiveWeb3React()
+  const latestBlock = useBlockNumber()
+  return { chainId, latestBlock }
 }
