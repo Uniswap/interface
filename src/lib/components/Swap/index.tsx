@@ -1,15 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
-import { SupportedLocale } from 'constants/locales'
 import useSwapDefaults from 'lib/hooks/swap/useSwapDefaults'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList from 'lib/hooks/useTokenList'
-import { Theme } from 'lib/theme'
 import { useState } from 'react'
-import { Provider as EthProvider } from 'widgets-web3-react/types'
 
-import { ErrorHandler } from '../Error/ErrorBoundary'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
@@ -23,14 +19,6 @@ import Toolbar from './Toolbar'
 
 export type DefaultAddress = string | { [chainId: number]: string } | 'NATIVE'
 export interface SwapProps {
-  theme?: Theme
-  locale?: SupportedLocale
-  provider?: EthProvider
-  jsonRpcEndpoint?: string
-  width?: string | number
-  dialog?: HTMLElement | null
-  className?: string
-  onError?: ErrorHandler
   tokenList?: string | TokenInfo[]
   defaultInputAddress?: DefaultAddress
   defaultInputAmount?: string

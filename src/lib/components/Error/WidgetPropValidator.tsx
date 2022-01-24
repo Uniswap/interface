@@ -1,19 +1,6 @@
-import { DefaultAddress } from 'lib/components/Swap'
 import { WidgetProps } from 'lib/components/Widget'
 import { IntegrationError } from 'lib/errors'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
-
-import { isAddress } from '../../../utils'
-
-function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
-  if (typeof addressOrMap === 'object') {
-    return Object.values(addressOrMap).every((address) => isAddress(address))
-  }
-  if (typeof addressOrMap === 'string') {
-    return typeof isAddress(addressOrMap) === 'string'
-  }
-  return false
-}
 
 export default function WidgetPropValidator(props: PropsWithChildren<WidgetProps>) {
   const { jsonRpcEndpoint, provider } = props

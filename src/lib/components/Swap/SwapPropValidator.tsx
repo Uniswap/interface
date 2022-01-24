@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { DefaultAddress } from 'lib/components/Swap'
-import { WidgetProps } from 'lib/components/Widget'
+import { DefaultAddress, SwapProps } from 'lib/components/Swap'
 import { IntegrationError } from 'lib/errors'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 
@@ -16,7 +15,7 @@ function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
   return false
 }
 
-export default function SwapPropValidator(props: PropsWithChildren<WidgetProps>) {
+export default function SwapPropValidator(props: PropsWithChildren<SwapProps>) {
   // convenience fee constraints
   const [convenienceFeeChecked, setConvenienceFeeChecked] = useState(false)
   const { convenienceFee, convenienceFeeRecipient } = props
