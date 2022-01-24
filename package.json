@@ -98,6 +98,7 @@
     "@storybook/addon-links": "^6.4.9",
     "@storybook/addon-react-native-web": "^0.0.16",
     "@storybook/react": "^6.4.9",
+    "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/react-native": "^8.0.0",
     "@typechain/ethers-v5": "^7.2.0",
     "@types/d3-scale": "^4.0.1",

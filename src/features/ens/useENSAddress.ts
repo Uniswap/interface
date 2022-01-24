@@ -18,7 +18,7 @@ export function useENSAddress(
   loading: boolean
   address: string | null
 } {
-  const debouncedName = useDebounce(ensName, 200)
+  const debouncedName = useDebounce(ensName)
   const ensNodeArgument = useMemo(() => {
     if (!debouncedName) return [undefined]
     try {

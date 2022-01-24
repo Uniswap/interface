@@ -43,7 +43,7 @@ export function CurrencySearch({
 }: CurrencySearchProps) {
   const [chainFilter, setChainFilter] = useState<ChainId | null>(otherCurrency?.chainId ?? null)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
-  const debouncedSearchFilter = useDebounce(searchFilter, 200)
+  const debouncedSearchFilter = useDebounce(searchFilter)
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
   const chainIdToTokens = useAllTokens()

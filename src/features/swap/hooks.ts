@@ -89,11 +89,11 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
   const otherCurrency = isExactIn ? currencyOut : currencyIn
 
   const skipQuote = isWrapAction(wrapType)
-  const { status, error, trade } = useTrade({
-    amountSpecified: skipQuote ? null : amountSpecified,
+  const { status, error, trade } = useTrade(
+    skipQuote ? null : amountSpecified,
     otherCurrency,
-    tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-  })
+    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
+  )
 
   const currencyAmounts = skipQuote
     ? {

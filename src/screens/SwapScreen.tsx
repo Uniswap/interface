@@ -1,4 +1,3 @@
-// import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { impactAsync } from 'expo-haptics'
 import React, { useReducer, useState } from 'react'

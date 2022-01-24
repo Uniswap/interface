@@ -22,7 +22,7 @@ export function useENSName(
   chainId: ChainId,
   address?: string
 ): { ENSName: string | null; loading: boolean } {
-  const debouncedAddress = useDebounce(address, 200)
+  const debouncedAddress = useDebounce(address)
   const ensNodeArgument = useMemo(() => {
     if (!isValidAddress(debouncedAddress)) return [undefined]
     try {

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+export const DEFAULT_DELAY = 200
+
 export function sleep(milliseconds: number) {
   return new Promise((resolve) => setTimeout(() => resolve(true), milliseconds))
 }
@@ -70,14 +72,23 @@ export const useTimeout = (
 
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useDebounce.ts
 // Which is modified from https://usehooks.com/useDebounce/
-export function useDebounce<T>(value: T, delay: number): T {
+export function useDebounce<T>(value: T, delay: number = DEFAULT_DELAY): T {
+  const [debouncedValue] = useDebounceWithStatus(value, delay)
+  return debouncedValue
+}
+
+export function useDebounceWithStatus<T>(value: T, delay: number = DEFAULT_DELAY): [T, boolean] {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
+  const [isDebouncing, setIsDebouncing] = useState(false)
 
   useEffect(() => {
     // Update debounced value after delay
     const handler = setTimeout(() => {
       setDebouncedValue(value)
+      setIsDebouncing(false)
     }, delay)
+
+    setIsDebouncing(true)
 
     // Cancel the timeout if value changes (also on delay change or unmount)
     // This is how we prevent debounced value from updating if value is changed ...
@@ -87,5 +98,5 @@ export function useDebounce<T>(value: T, delay: number): T {
     }
   }, [value, delay])
 
-  return debouncedValue
+  return [debouncedValue, isDebouncing]
 }

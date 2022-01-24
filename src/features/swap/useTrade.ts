@@ -4,8 +4,9 @@ import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { QuoteResult } from 'src/features/prices/types'
-import { useQuote, UseQuoteProps } from 'src/features/prices/useQuote'
+import { useQuote } from 'src/features/prices/useQuote'
 import { transformQuoteToTrade } from 'src/features/swap/routeUtils'
+import { useDebounceWithStatus } from 'src/utils/timing'
 
 // TODO: use composition instead of inheritance
 export class Trade<
@@ -37,14 +38,23 @@ export class Trade<
   }
 }
 
-export function useTrade(quoteParams: UseQuoteProps) {
-  const { amountSpecified, otherCurrency, tradeType } = quoteParams
+export function useTrade(
+  amountSpecified: CurrencyAmount<Currency> | null | undefined,
+  otherCurrency: Currency | null | undefined,
+  tradeType: TradeType
+) {
+  const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
-  const { status, error, data } = useQuote(quoteParams)
+  const { status, error, data } = useQuote({
+    amountSpecified: debouncedAmountSpecified,
+    otherCurrency,
+    tradeType,
+  })
 
-  const currencyIn = tradeType === TradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
+  const currencyIn =
+    tradeType === TradeType.EXACT_INPUT ? debouncedAmountSpecified?.currency : otherCurrency
   const currencyOut =
-    tradeType === TradeType.EXACT_OUTPUT ? amountSpecified?.currency : otherCurrency
+    tradeType === TradeType.EXACT_OUTPUT ? debouncedAmountSpecified?.currency : otherCurrency
 
   // TODO: also return status
   return useMemo(() => {
@@ -52,6 +62,10 @@ export function useTrade(quoteParams: UseQuoteProps) {
       return { status, error, trade: null }
     }
 
-    return { status, error, trade: transformQuoteToTrade(currencyIn, currencyOut, tradeType, data) }
-  }, [currencyIn, currencyOut, data, error, status, tradeType])
+    return {
+      status: isDebouncing ? 'loading' : status,
+      error,
+      trade: transformQuoteToTrade(currencyIn, currencyOut, tradeType, data),
+    }
+  }, [currencyIn, currencyOut, data, error, status, tradeType, isDebouncing])
 }
