@@ -8,6 +8,7 @@ import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { useState } from 'react'
+import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
@@ -18,8 +19,6 @@ import Details from './Details'
 import Summary from './Summary'
 
 export default Summary
-
-const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
 
 const SummaryColumn = styled(Column)``
 const ExpandoColumn = styled(Column)``
@@ -82,11 +81,13 @@ interface SummaryDialogProps {
 
 export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
   const { inputAmount, outputAmount } = trade
+
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const price = trade.executionPrice
 
-  const [confirmedPrice, confirmPrice] = useState(price)
+  const [originalTrade, setOriginalTrade] = useState(trade)
+  const tradeMeaningFullyDiffers = Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade))
 
   const [open, setOpen] = useState(true)
 
@@ -140,8 +141,12 @@ export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
           </Estimate>
           <ActionButton
             onClick={onConfirm}
-            onUpdate={() => confirmPrice(price)}
-            updated={price === confirmedPrice ? undefined : updated}
+            onUpdate={() => setOriginalTrade(trade)}
+            updated={
+              tradeMeaningFullyDiffers
+                ? { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
+                : undefined
+            }
           >
             <Trans>Confirm swap</Trans>
           </ActionButton>

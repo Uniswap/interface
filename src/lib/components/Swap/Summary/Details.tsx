@@ -45,7 +45,7 @@ export default function Details({ input, output }: DetailsProps) {
       // [t`Price impact`, `${swap.priceImpact}%`],
       // [t`Maximum sent`, swap.maximumSent && `${swap.maximumSent} ${inputSymbol}`],
       // [t`Minimum received`, swap.minimumReceived && `${swap.minimumReceived} ${outputSymbol}`],
-      [t`Slippage tolerance`, `${maxSlippage}%`],
+      // [t`Slippage tolerance`, `${maxSlippage}%`],
     ].filter(isDetail)
 
     function isDetail(detail: unknown[]): detail is [string, string] {

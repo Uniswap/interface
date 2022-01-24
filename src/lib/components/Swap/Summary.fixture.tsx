@@ -2,6 +2,8 @@ import { tokens } from '@uniswap/default-token-list'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
+import { useSwapInfo } from 'lib/hooks/swap'
+import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import { Field, swapAtom } from 'lib/state/swap'
 import { useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -20,7 +22,11 @@ const UNI = (function () {
 function Fixture() {
   const [initialized, setInitialized] = useState(false)
   const setState = useUpdateAtom(swapAtom)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  const {
+    trade: { trade },
+  } = useSwapInfo()
+
   useEffect(() => {
     setState({
       independentField: Field.INPUT,
@@ -29,13 +35,18 @@ function Fixture() {
       [Field.OUTPUT]: UNI,
     })
     setInitialized(true)
-  })
+  }, [setState])
 
-  return initialized ? (
+  return initialized && trade ? (
     <Modal color="dialog">
-      <SummaryDialog onConfirm={() => void 0} />
+      <SummaryDialog onConfirm={() => void 0} trade={trade} />
     </Modal>
   ) : null
 }
 
-export default <Fixture />
+export default (
+  <>
+    <SwapInfoUpdater />
+    <Fixture />
+  </>
+)
