@@ -117,6 +117,11 @@ function useTicksFromTickLens(
     [callStates]
   )
 
+  // reset on input change
+  useEffect(() => {
+    setTickDataLatestSynced([])
+  }, [currencyA, currencyB, feeAmount])
+
   // return the latest synced tickData even if we are still loading the newest data
   useEffect(() => {
     if (!IsSyncing && !isLoading && !isError && isValid) {
