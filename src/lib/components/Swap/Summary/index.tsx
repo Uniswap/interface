@@ -102,7 +102,7 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
         <SummaryColumn gap={0.75} flex justify="center">
           <Summary input={inputAmount} output={outputAmount} usdc={true} />
           <ThemedText.Caption>
-            1 {inputCurrency.symbol} = {price} {outputCurrency.symbol}
+            1 {inputCurrency.symbol} = {price?.toSignificant(6)} {outputCurrency.symbol}
           </ThemedText.Caption>
         </SummaryColumn>
         <Rule />
