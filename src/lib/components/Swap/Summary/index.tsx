@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { IconButton } from 'lib/components/Button'
-import { useSwapInfo } from 'lib/hooks/swap'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
-import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useState } from 'react'
 
@@ -71,17 +73,18 @@ const Body = styled(Column)<{ open: boolean }>`
 `
 
 interface SummaryDialogProps {
+  trade:
+    | V2Trade<Currency, Currency, TradeType>
+    | V3Trade<Currency, Currency, TradeType>
+    | Trade<Currency, Currency, TradeType>
   onConfirm: () => void
 }
 
-export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
-  const {
-    trade: { trade },
-    currencyAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
-    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
-  } = useSwapInfo()
-
-  const price = trade?.executionPrice
+export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
+  const { inputAmount, outputAmount } = trade
+  const inputCurrency = inputAmount.currency
+  const outputCurrency = outputAmount.currency
+  const price = trade.executionPrice
 
   const [confirmedPrice, confirmPrice] = useState(price)
 

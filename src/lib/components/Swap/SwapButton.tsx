@@ -9,14 +9,7 @@ import Dialog from '../Dialog'
 import { StatusDialog } from './Status'
 import { SummaryDialog } from './Summary'
 
-enum Mode {
-  SWAP,
-  SUMMARY,
-  STATUS,
-}
-
 export default function SwapButton() {
-  const [mode, setMode] = useState(Mode.SWAP)
   const {
     trade,
     allowedSlippage,
@@ -27,7 +20,7 @@ export default function SwapButton() {
   const useIsPendingApproval = () => false
   const optimizedTrade = useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval)
   const [approval, getApproval] = useSwapApproval(optimizedTrade, allowedSlippage, useIsPendingApproval)
-  // TODO(zzmp): Pass optimized trade to SummaryDialog
+  const [activeTrade, setActiveTrade] = useState<typeof optimizedTrade>(undefined)
 
   const actionProps = useMemo(() => {
     if (inputCurrencyAmount && inputCurrencyBalance?.greaterThan(inputCurrencyAmount)) {
@@ -47,22 +40,27 @@ export default function SwapButton() {
     return { disabled: true }
   }, [approval, inputCurrencyAmount, inputCurrencyBalance])
   const onConfirm = useCallback(() => {
-    // TODO: Send the tx to the connected wallet.
-    setMode(Mode.STATUS)
+    // TODO(zzmp)
   }, [])
+
   return (
     <>
-      <ActionButton color="interactive" onClick={() => setMode(Mode.SUMMARY)} onUpdate={getApproval} {...actionProps}>
+      <ActionButton
+        color="interactive"
+        onClick={() => setActiveTrade(optimizedTrade)}
+        onUpdate={getApproval}
+        {...actionProps}
+      >
         <Trans>Review swap</Trans>
       </ActionButton>
-      {mode >= Mode.SUMMARY && (
-        <Dialog color="dialog" onClose={() => setMode(Mode.SWAP)}>
-          <SummaryDialog onConfirm={onConfirm} />
+      {activeTrade && (
+        <Dialog color="dialog" onClose={() => setActiveTrade(undefined)}>
+          <SummaryDialog trade={activeTrade} onConfirm={onConfirm} />
         </Dialog>
       )}
-      {mode >= Mode.STATUS && (
+      {false && (
         <Dialog color="dialog">
-          <StatusDialog onClose={() => setMode(Mode.SWAP)} />
+          <StatusDialog onClose={() => void 0} />
         </Dialog>
       )}
     </>
