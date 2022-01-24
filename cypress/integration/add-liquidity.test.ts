@@ -1,26 +1,31 @@
+import { CONTRACTS } from './contracts'
+
 describe('Add Liquidity', () => {
   it('loads the two correct tokens', () => {
-    cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab/500')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
+    const { MEVMOS, MUSDC } = CONTRACTS
+    cy.visit(`/add/v2/${MUSDC}/${MEVMOS}`)
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MUSDC')
+    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'MEVMOS')
   })
 
-  it('does not crash if ETH is duplicated', () => {
-    cy.visit('/add/0xc778417E063141139Fce010982780140Aa0cD5Ab/0xc778417E063141139Fce010982780140Aa0cD5Ab')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'ETH')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('not.contain.text', 'ETH')
+  it('does not crash if EVMOSis duplicated', () => {
+    const { MEVMOS } = CONTRACTS
+    cy.visit(`/add/v2/${MEVMOS}/${MEVMOS}`)
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MEVMOS')
+    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('not.contain.text', 'MEVMOS')
   })
 
-  it('token not in storage is loaded', () => {
-    cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
+  it.skip('token not in storage is loaded', () => {
+    cy.visit('/add/v2/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'SKL')
     cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'MKR')
   })
 
   it('single token can be selected', () => {
-    cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'SKL')
-    cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
+    const { MEVMOS, MUSDC } = CONTRACTS
+    cy.visit(`/add/v2/${MEVMOS}`)
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MEVMOS')
+    cy.visit(`/add/v2/${MUSDC}`)
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MUSDC')
   })
 })

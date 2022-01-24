@@ -1,7 +1,7 @@
 import { useActiveWeb3React } from 'hooks/web3'
 import React from 'react'
 export function PlaygroundPage() {
-  const { connector, account, library } = useActiveWeb3React()
+  const { library } = useActiveWeb3React()
 
   async function getPairs() {
     try {

@@ -34,7 +34,6 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -97,21 +96,16 @@ export default function Swap({ history }: RouteComponentProps) {
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
 
-  // get version from the url
-  const toggledVersion = useToggledVersion()
-
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v2Trade,
-    // v3TradeState: { trade: v3Trade, state: v3TradeState },
     toggledTrade: trade,
     allowedSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo(toggledVersion)
+  } = useDerivedSwapInfo()
 
   const {
     wrapType,

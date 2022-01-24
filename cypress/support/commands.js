@@ -7,6 +7,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
+import { hexValue } from 'ethers/lib/utils'
 
 const TEST_PRIVATE_KEY = Cypress.env('INTEGRATION_TEST_PRIVATE_KEY')
 
@@ -18,8 +19,10 @@ export const TEST_ADDRESS_NEVER_USE_SHORTENED = `${TEST_ADDRESS_NEVER_USE.substr
   6
 )}...${TEST_ADDRESS_NEVER_USE.substr(-4, 4)}`
 
+const CHAIN_ID = 9000
+
 class CustomizedBridge extends Eip1193Bridge {
-  chainId = 4
+  chainId = CHAIN_ID
 
   async sendAsync(...args) {
     console.debug('sendAsync called', ...args)
@@ -47,10 +50,11 @@ class CustomizedBridge extends Eip1193Bridge {
       }
     }
     if (method === 'eth_chainId') {
+      const asHex = hexValue(CHAIN_ID)
       if (isCallbackForm) {
-        callback(null, { result: '0x4' })
+        callback(null, { result: asHex })
       } else {
-        return Promise.resolve('0x4')
+        return Promise.resolve(asHex)
       }
     }
     try {
@@ -78,7 +82,7 @@ Cypress.Commands.overwrite('visit', (original, url, options) => {
     onBeforeLoad(win) {
       options && options.onBeforeLoad && options.onBeforeLoad(win)
       win.localStorage.clear()
-      const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
+      const provider = new JsonRpcProvider('https://ethereum.rpc.evmos.dev', CHAIN_ID)
       const signer = new Wallet(TEST_PRIVATE_KEY, provider)
       win.ethereum = new CustomizedBridge(signer, provider)
     },
