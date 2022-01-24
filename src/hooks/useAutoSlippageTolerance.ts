@@ -29,7 +29,7 @@ const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 
 /**
- * returns slippage tolerance based on values from current trade, gas estimates from api, and active network
+ * Returns slippage tolerance based on values from current trade, gas estimates from api, and active network.
  */
 export default function useAutoSlippageTolerance(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined

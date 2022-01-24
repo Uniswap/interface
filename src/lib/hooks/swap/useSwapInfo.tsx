@@ -88,15 +88,15 @@ function useComputeSwapInfo(): SwapInfo {
     [trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
-  /**
-    If user has enabled 'auto' slippage, use the default best slippage calculated 
-    based on the trade. If user has entered custom slippage, use that instead. 
+  /*
+   * If user has enabled 'auto' slippage, use the default best slippage calculated
+   * based on the trade. If user has entered custom slippage, use that instead.
    */
-  const auotSlippageTolerance = useAutoSlippageTolerance(trade.trade)
+  const autoSlippageTolerance = useAutoSlippageTolerance(trade.trade)
   const maxSlippage = useAtomValue(maxSlippageAtom)
   const allowedSlippage = useMemo(
-    () => (maxSlippage === 'auto' ? auotSlippageTolerance : maxSlippage),
-    [auotSlippageTolerance, maxSlippage]
+    () => (maxSlippage === 'auto' ? autoSlippageTolerance : maxSlippage),
+    [autoSlippageTolerance, maxSlippage]
   )
 
   const inputError = useMemo(() => {
@@ -163,7 +163,7 @@ export function SwapInfoUpdater() {
   return null
 }
 
-/** Requires that SwapInfoUpdater be installed in the DOM tree. */
+/* Requires that SwapInfoUpdater be installed in the DOM tree. */
 export default function useSwapInfo(): SwapInfo {
   return useAtomValue(swapInfoAtom)
 }
