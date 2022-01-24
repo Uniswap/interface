@@ -19,23 +19,25 @@ export default function useSwapDefaults(
   const [outputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const { chainId } = useActiveWeb3React()
 
+  useEffect(() => {
+    // alter default values if they have changed
+    setDefaults({ defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount })
+  }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount, setDefaults])
+
   const inputAddress =
     typeof defaultInputAddress === 'string'
       ? defaultInputAddress
       : defaultInputAddress && chainId
       ? defaultInputAddress[chainId]
       : undefined
-  const defaultInputToken = useToken(inputAddress)
-
   const outputAddress =
     typeof defaultOutputAddress === 'string'
       ? defaultOutputAddress
       : defaultOutputAddress && chainId
       ? defaultOutputAddress[chainId]
       : undefined
+  const defaultInputToken = useToken(inputAddress)
   const defaultOutputToken = useToken(outputAddress)
-
-  const [previousChainId, setPreviousChainId] = useState(chainId)
 
   const setToDefaults = useCallback(() => {
     if (defaultInputToken) {
@@ -61,11 +63,7 @@ export default function useSwapDefaults(
     updateSwapOutputAmount,
   ])
 
-  useEffect(() => {
-    // alter default values if they have changed
-    setDefaults({ defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount })
-  }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount, setDefaults])
-
+  const [previousChainId, setPreviousChainId] = useState(chainId)
   useEffect(() => {
     if (chainId && chainId !== previousChainId) {
       setPreviousChainId(chainId)

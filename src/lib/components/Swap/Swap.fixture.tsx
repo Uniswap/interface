@@ -24,7 +24,20 @@ function Fixture() {
     }
   }, [color, setColor])
 
-  return <Swap tokenList={tokens} />
+  const [defaultInputAddress] = useValue('default InputAddress', { defaultValue: '' })
+  const [defaultInputAmount] = useValue('default InputAmount', { defaultValue: '' })
+  const [defaultOutputAddress] = useValue('default OutputAddress', { defaultValue: '' })
+  const [defaultOutputAmount] = useValue('default OutputAmount', { defaultValue: '' })
+
+  return (
+    <Swap
+      tokenList={tokens}
+      defaultInputAddress={defaultInputAddress}
+      defaultInputAmount={defaultInputAmount}
+      defaultOutputAddress={defaultOutputAddress}
+      defaultOutputAmount={defaultOutputAmount}
+    />
+  )
 }
 
 export default <Fixture />
