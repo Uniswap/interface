@@ -1,10 +1,10 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
-import { useSwapInfo } from 'lib/hooks/swap'
+import { Check, LargeIcon } from 'lib/icons'
 import { maxSlippageAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useCallback, useRef } from 'react'
 
 import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -30,11 +30,23 @@ const StyledInputOption = styled(BaseButton)<{ selected: boolean }>`
 interface OptionProps<T> {
   value: T
   selected: boolean
+  onSelect: (value: T) => void
 }
 
-function InputOption<T>({ value, children, selected }: OptionProps<T> & { children: ReactNode }) {
+function Option<T>({ value, selected, onSelect }: OptionProps<T>) {
   return (
-    <StyledInputOption color="container" selected={selected}>
+    <StyledOption selected={selected} onClick={() => onSelect(value)}>
+      <Row>
+        <ThemedText.Subhead2>{value}%</ThemedText.Subhead2>
+        {selected && <LargeIcon icon={Check} />}
+      </Row>
+    </StyledOption>
+  )
+}
+
+function InputOption<T>({ value, children, selected, onSelect }: OptionProps<T> & { children: ReactNode }) {
+  return (
+    <StyledInputOption color="container" selected={selected} onClick={() => onSelect(value)}>
       <ThemedText.Subhead2>
         <Row>{children}</Row>
       </ThemedText.Subhead2>
@@ -43,56 +55,31 @@ function InputOption<T>({ value, children, selected }: OptionProps<T> & { childr
 }
 
 export default function MaxSlippageSelect() {
-  // grab user custom slippage and possible auto slippage from trade
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
-  const { allowedSlippage } = useSwapInfo()
 
-  const [slippageInput, setSlippageInput] = useState('')
-  const [, setSlippageError] = useState<boolean>(false)
+  const input = useRef<HTMLInputElement>(null)
+  const focus = useCallback(() => input.current?.focus(), [input])
 
-  function parseSlippageInput(value: string) {
-    // populate what the user typed and clear the error
-    setSlippageInput(value)
-    setSlippageError(false)
-    if (value.length === 0) {
-      setMaxSlippage('auto')
-    } else {
-      const parsed = Math.floor(Number.parseFloat(value) * 100)
+  //@TODO(ianlapham): hook up inputs to either set custom slippage or update to auto
+  //@TODO(ianlapham): update UI to match designs in spec
 
-      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 5000) {
-        setMaxSlippage('auto')
-        if (value !== '.') {
-          setSlippageError(true)
-        }
-      } else {
-        setMaxSlippage(new Percent(parsed, 10_000))
+  const onInputSelect = useCallback(
+    (custom: Percent | 'auto') => {
+      focus()
+      if (custom !== undefined) {
+        setMaxSlippage(custom)
       }
-    }
-  }
+    },
+    [focus, setMaxSlippage]
+  )
 
   return (
     <Column gap={0.75}>
       <Label name={<Trans>Max slippage</Trans>} tooltip={tooltip} />
       <Row gap={0.5} grow>
-        <StyledOption
-          onClick={() => {
-            parseSlippageInput('')
-          }}
-          selected={maxSlippage === 'auto'}
-        >
-          <Trans>Auto</Trans>
-        </StyledOption>
-        <InputOption value={slippageInput} selected={maxSlippage !== 'auto'}>
-          <DecimalInput
-            value={slippageInput.length > 0 ? slippageInput : maxSlippage === 'auto' ? '' : maxSlippage.toFixed(2)}
-            onChange={parseSlippageInput}
-            placeholder={allowedSlippage.toFixed(2)}
-            onBlur={() => {
-              setSlippageInput('')
-              setSlippageError(false)
-            }}
-          />
-          %
+        <Option value={'auto'} onSelect={setMaxSlippage} selected={maxSlippage === 'auto'} />
+        <InputOption value={maxSlippage} onSelect={onInputSelect} selected={maxSlippage !== 'auto'}>
+          <DecimalInput size={5} value={''} onChange={() => null} placeholder={t`Custom`} ref={input} />%
         </InputOption>
       </Row>
     </Column>
