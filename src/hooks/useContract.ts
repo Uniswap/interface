@@ -6,6 +6,7 @@ import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
+import { abi as TickLensABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
@@ -30,13 +31,14 @@ import {
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
+  TICK_LENS_ADDRESSES,
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
 import { UNI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
-import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
+import { NonfungiblePositionManager, Quoter, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 
 import { getContract } from '../utils'
@@ -158,4 +160,10 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
 
 export function useV3Quoter() {
   return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI)
+}
+
+export function useTickLens(): TickLens | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId ? TICK_LENS_ADDRESSES[chainId] : undefined
+  return useContract(address, TickLensABI) as TickLens | null
 }
