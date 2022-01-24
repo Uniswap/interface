@@ -81,7 +81,7 @@ export default function Swap({ defaults }: SwapProps) {
           <ReverseButton disabled={!active} />
           <Output disabled={!active}>
             <Toolbar disabled={!active} />
-            <SwapButton />
+            <SwapButton disabled={!account} />
           </Output>
         </BoundaryProvider>
       </div>

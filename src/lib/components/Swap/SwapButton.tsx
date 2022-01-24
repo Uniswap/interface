@@ -16,12 +16,16 @@ enum Mode {
   STATUS,
 }
 
-export default function SwapButton() {
+interface SwapButtonProps {
+  disabled?: boolean
+}
+
+export default function SwapButton({ disabled }: SwapButtonProps) {
   const [mode, setMode] = useState(Mode.NONE)
 
   //@TODO(ianlapham): update this to refer to balances and use real symbol
   const actionProps = useMemo(() => {
-    if (mockInputAmount < mockBalance) {
+    if (!disabled && mockInputAmount < mockBalance) {
       if (mockApproved) {
         return {}
       } else {
@@ -31,7 +35,7 @@ export default function SwapButton() {
       }
     }
     return { disabled: true }
-  }, [])
+  }, [disabled])
   const onConfirm = useCallback(() => {
     // TODO: Send the tx to the connected wallet.
     setMode(Mode.STATUS)
