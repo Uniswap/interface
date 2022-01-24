@@ -34,43 +34,6 @@ export function pickAtom<Value, Key extends keyof Value & keyof Draft<Value>, Up
   )
 }
 
-/**
- * Typing for a customizable enum; see setCustomizable.
- * This is not exported because an enum may not extend another interface.
- */
-interface CustomizableEnum<T extends number> {
-  CUSTOM: -1
-  DEFAULT: T
-}
-
-/**
- * Typing for a customizable enum; see setCustomizable.
- * The first value is used, unless it is CUSTOM, in which case the second is used.
- */
-export type Customizable<T> = { value: T; custom?: number }
-
-/** Sets a customizable enum, validating the tuple and falling back to the default. */
-export function setCustomizable<T extends number, Enum extends CustomizableEnum<T>>(customizable: Enum) {
-  return (draft: Customizable<T>, update: T | Customizable<T>) => {
-    // normalize the update
-    if (typeof update === 'number') {
-      update = { value: update }
-    }
-
-    draft.value = update.value
-    if (draft.value === customizable.CUSTOM) {
-      draft.custom = update.custom
-
-      // prevent invalid state
-      if (draft.custom === undefined) {
-        draft.value = customizable.DEFAULT
-      }
-    }
-
-    return draft
-  }
-}
-
 /** Sets a togglable atom to invert its state at the next render. */
 export function setTogglable(draft: boolean) {
   return !draft

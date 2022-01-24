@@ -8,7 +8,6 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
-import { useUserSlippageToleranceWithDefault } from '../state/user/hooks'
 import useGasPrice from './useGasPrice'
 import useUSDCPrice, { useUSDCValue } from './useUSDCPrice'
 
@@ -29,7 +28,10 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
 const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 
-export default function useSwapSlippageTolerance(
+/**
+ * Returns slippage tolerance based on values from current trade, gas estimates from api, and active network.
+ */
+export default function useAutoSlippageTolerance(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 ): Percent {
   const { chainId } = useActiveWeb3React()
@@ -41,7 +43,7 @@ export default function useSwapSlippageTolerance(
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyPrice = useUSDCPrice(nativeCurrency ?? undefined)
 
-  const defaultSlippageTolerance = useMemo(() => {
+  return useMemo(() => {
     if (!trade || onL2) return ONE_TENTHS_PERCENT
 
     const nativeGasCost =
@@ -73,6 +75,4 @@ export default function useSwapSlippageTolerance(
 
     return V3_SWAP_DEFAULT_SLIPPAGE
   }, [trade, onL2, nativeGasPrice, gasEstimate, nativeCurrency, nativeCurrencyPrice, chainId, outputDollarValue])
-
-  return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
 }

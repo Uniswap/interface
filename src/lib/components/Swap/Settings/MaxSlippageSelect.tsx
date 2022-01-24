@@ -1,7 +1,8 @@
 import { t, Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { Check, LargeIcon } from 'lib/icons'
-import { MaxSlippage, maxSlippageAtom } from 'lib/state/settings'
+import { maxSlippageAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useRef } from 'react'
 
@@ -54,36 +55,31 @@ function InputOption<T>({ value, children, selected, onSelect }: OptionProps<T> 
 }
 
 export default function MaxSlippageSelect() {
-  const { P01, P05, CUSTOM } = MaxSlippage
-  const [{ value: maxSlippage, custom }, setMaxSlippage] = useAtom(maxSlippageAtom)
+  const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
 
   const input = useRef<HTMLInputElement>(null)
   const focus = useCallback(() => input.current?.focus(), [input])
+
+  //@TODO(ianlapham): hook up inputs to either set custom slippage or update to auto
+  //@TODO(ianlapham): update UI to match designs in spec
+
   const onInputSelect = useCallback(
-    (custom) => {
+    (custom: Percent | 'auto') => {
       focus()
       if (custom !== undefined) {
-        setMaxSlippage({ value: CUSTOM, custom })
+        setMaxSlippage(custom)
       }
     },
-    [CUSTOM, focus, setMaxSlippage]
+    [focus, setMaxSlippage]
   )
 
   return (
     <Column gap={0.75}>
       <Label name={<Trans>Max slippage</Trans>} tooltip={tooltip} />
       <Row gap={0.5} grow>
-        <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
-        <Option value={P05} onSelect={setMaxSlippage} selected={maxSlippage === P05} />
-        <InputOption value={custom} onSelect={onInputSelect} selected={maxSlippage === CUSTOM}>
-          <DecimalInput
-            size={custom === undefined ? undefined : 5}
-            value={custom?.toString() ?? ''}
-            onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom: custom ? parseFloat(custom) : undefined })}
-            placeholder={t`Custom`}
-            ref={input}
-          />
-          %
+        <Option value={'auto'} onSelect={setMaxSlippage} selected={maxSlippage === 'auto'} />
+        <InputOption value={maxSlippage} onSelect={onInputSelect} selected={maxSlippage !== 'auto'}>
+          <DecimalInput size={5} value={''} onChange={() => null} placeholder={t`Custom`} ref={input} />%
         </InputOption>
       </Row>
     </Column>
