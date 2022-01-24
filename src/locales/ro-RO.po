@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-21 00:11\n"
+"PO-Revision-Date: 2022-01-24 19:06\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -222,10 +222,6 @@ msgstr "Aprobă"
 msgid "Approve Token"
 msgstr "Aprobați jetonul"
 
-#: src/lib/components/Swap/SwapButton.tsx
-msgid "Approve symbol first"
-msgstr "Aprobați mai întâi simbolul"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -233,6 +229,10 @@ msgstr "Aprobați mai întâi simbolul"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Aprobă {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve {0} first"
+msgstr "Aprobați mai întâi {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"

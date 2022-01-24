@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-21 00:11\n"
+"PO-Revision-Date: 2022-01-24 19:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -222,10 +222,6 @@ msgstr "승인"
 msgid "Approve Token"
 msgstr "토큰 승인"
 
-#: src/lib/components/Swap/SwapButton.tsx
-msgid "Approve symbol first"
-msgstr "먼저 기호 승인"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -233,6 +229,10 @@ msgstr "먼저 기호 승인"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "{0} 승인"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve {0} first"
+msgstr "{0} 먼저 승인"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
