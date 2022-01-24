@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-22 14:27\n"
+"PO-Revision-Date: 2022-01-24 19:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -222,10 +222,6 @@ msgstr "批准"
 msgid "Approve Token"
 msgstr "批准代币"
 
-#: src/lib/components/Swap/SwapButton.tsx
-msgid "Approve symbol first"
-msgstr "首先批准符号"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -233,6 +229,10 @@ msgstr "首先批准符号"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "批准 {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve {0} first"
+msgstr "先授权 {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-21 10:07\n"
+"PO-Revision-Date: 2022-01-24 19:06\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -222,10 +222,6 @@ msgstr "Approuver"
 msgid "Approve Token"
 msgstr "Approuver le Token"
 
-#: src/lib/components/Swap/SwapButton.tsx
-msgid "Approve symbol first"
-msgstr "Approuver le symbole en premier"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -233,6 +229,10 @@ msgstr "Approuver le symbole en premier"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
 msgstr "Approuver {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approve {0} first"
+msgstr "Approuver {0} premier"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
