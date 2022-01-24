@@ -163,7 +163,7 @@ export function SwapInfoUpdater() {
   return null
 }
 
-/* Requires that SwapInfoUpdater be installed in the DOM tree. */
+/** Requires that SwapInfoUpdater be installed in the DOM tree. **/
 export default function useSwapInfo(): SwapInfo {
   return useAtomValue(swapInfoAtom)
 }
