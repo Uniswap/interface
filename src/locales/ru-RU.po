@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-24 20:08\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -232,7 +232,7 @@ msgstr "Одобрить {0}"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approve {0} first"
-msgstr "Сначала одобрить {0}"
+msgstr "Сначала одобрите {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
