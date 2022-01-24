@@ -18,6 +18,7 @@ import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
 import SwapButton from './SwapButton'
+import SwapPropValidator from './SwapPropValidator'
 import Toolbar from './Toolbar'
 
 export type DefaultAddress = string | { [chainId: number]: string } | 'NATIVE'
@@ -49,7 +50,7 @@ export default function Swap(props: SwapProps) {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
 
   return (
-    <>
+    <SwapPropValidator {...props}>
       <SwapInfoUpdater />
       <Header logo title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} />}
@@ -65,6 +66,6 @@ export default function Swap(props: SwapProps) {
           </Output>
         </BoundaryProvider>
       </div>
-    </>
+    </SwapPropValidator>
   )
 }

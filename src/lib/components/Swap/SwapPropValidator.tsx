@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { DefaultAddress } from 'lib/components/Swap'
 import { WidgetProps } from 'lib/components/Widget'
 import { IntegrationError } from 'lib/errors'
-import { useEffect } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 
 import { isAddress } from '../../../utils'
 
@@ -16,25 +16,12 @@ function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
   return false
 }
 
-export default function PropValidator(swapWidgetProps: WidgetProps) {
-  const { jsonRpcEndpoint, provider } = swapWidgetProps
-  useEffect(() => {
-    if (!provider && !jsonRpcEndpoint) {
-      throw new IntegrationError('This widget requires a provider or jsonRpcEndpoint.')
-    }
-  }, [provider, jsonRpcEndpoint])
-
-  // size constraints
-  const { width } = swapWidgetProps
-  useEffect(() => {
-    if (width && width < 300) {
-      throw new IntegrationError('Set widget width to at least 300px.')
-    }
-  }, [width])
-
+export default function SwapPropValidator(props: PropsWithChildren<WidgetProps>) {
   // convenience fee constraints
-  const { convenienceFee, convenienceFeeRecipient } = swapWidgetProps
+  const [convenienceFeeChecked, setConvenienceFeeChecked] = useState(false)
+  const { convenienceFee, convenienceFeeRecipient } = props
   useEffect(() => {
+    setConvenienceFeeChecked(false)
     if (convenienceFee) {
       if (convenienceFee > 100 || convenienceFee < 0) {
         throw new IntegrationError('Set widget convenienceFee to at least 400px.')
@@ -55,10 +42,17 @@ export default function PropValidator(swapWidgetProps: WidgetProps) {
         })
       }
     }
+    setConvenienceFeeChecked(true)
   }, [convenienceFee, convenienceFeeRecipient])
 
-  const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount } = swapWidgetProps
+  const [defaultsChecked, setDefaultsChecked] = useState(false)
+  const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount } = props
   useEffect(() => {
+    setDefaultsChecked(false)
+    if (defaultOutputAmount && defaultInputAmount) {
+      throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
+    }
+    // TODO: ensure inputAmounts are valid BigNumbers
     if (defaultInputAmount && BigNumber.from(defaultInputAmount).lt(0)) {
       throw new IntegrationError('defaultInputAmount must be a positive number.')
     }
@@ -71,7 +65,15 @@ export default function PropValidator(swapWidgetProps: WidgetProps) {
     if (defaultOutputAddress && !isAddressOrAddressMap(defaultOutputAddress)) {
       throw new IntegrationError('defaultOutputAddress must be a valid address.')
     }
+    setDefaultsChecked(true)
   }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount])
 
+  const propsChecked = useMemo(
+    () => convenienceFeeChecked && defaultsChecked && defaultsChecked,
+    [convenienceFeeChecked, defaultsChecked]
+  )
+  if (propsChecked) {
+    return <>{props.children}</>
+  }
   return null
 }

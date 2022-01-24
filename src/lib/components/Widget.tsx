@@ -10,7 +10,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 
 import { Provider as DialogProvider } from './Dialog'
 import ErrorBoundary from './Error/ErrorBoundary'
-import PropValidator from './Error/PropValidator'
+import WidgetPropValidator from './Error/WidgetPropValidator'
 import { SwapProps } from './Swap'
 import Web3Provider from './Web3Provider'
 
@@ -100,15 +100,16 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
           <WidgetWrapper width={width} className={className} ref={wrapper}>
             <DialogProvider value={dialog || wrapper.current}>
               <ErrorBoundary onError={onError}>
-                <ReduxProvider store={multicallStore}>
-                  <AtomProvider>
-                    <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                      <Updaters />
-                      <PropValidator {...props} />
-                      {children}
-                    </Web3Provider>
-                  </AtomProvider>
-                </ReduxProvider>
+                <WidgetPropValidator {...props}>
+                  <ReduxProvider store={multicallStore}>
+                    <AtomProvider>
+                      <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                        <Updaters />
+                        {children}
+                      </Web3Provider>
+                    </AtomProvider>
+                  </ReduxProvider>
+                </WidgetPropValidator>
               </ErrorBoundary>
             </DialogProvider>
           </WidgetWrapper>

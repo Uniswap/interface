@@ -1,7 +1,8 @@
 import { tokens } from '@uniswap/default-token-list'
+import { DAI, USDC } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
-import { useValue } from 'react-cosmos/fixture'
+import { useSelect, useValue } from 'react-cosmos/fixture'
 
 import Swap from '.'
 import { colorAtom } from './Output'
@@ -24,10 +25,24 @@ function Fixture() {
     }
   }, [color, setColor])
 
-  const [defaultInputAddress] = useValue('default InputAddress', { defaultValue: '' })
-  const [defaultInputAmount] = useValue('default InputAmount', { defaultValue: '' })
-  const [defaultOutputAddress] = useValue('default OutputAddress', { defaultValue: '' })
-  const [defaultOutputAmount] = useValue('default OutputAmount', { defaultValue: '' })
+  const addressOptions = ['', 'NATIVE', DAI.address, USDC.address]
+  const inputOptions = ['', '0', '-1', '100']
+  const [defaultInputAddress] = useSelect('default InputAddress', {
+    options: addressOptions,
+    defaultValue: addressOptions[2],
+  })
+  const [defaultInputAmount] = useSelect('default InputAmount', {
+    options: inputOptions,
+    defaultValue: inputOptions[3],
+  })
+  const [defaultOutputAddress] = useSelect('default OutputAddress', {
+    options: addressOptions,
+    defaultValue: addressOptions[3],
+  })
+  const [defaultOutputAmount] = useSelect('default OutputAmount', {
+    options: inputOptions,
+    defaultValue: inputOptions[0],
+  })
 
   return (
     <Swap

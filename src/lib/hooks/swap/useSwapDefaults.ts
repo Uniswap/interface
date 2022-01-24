@@ -13,10 +13,10 @@ export default function useSwapDefaults(
   defaultOutputAmount: string | undefined
 ) {
   const setDefaults = useUpdateAtom(swapDefaultsAtom)
-  const [inputCurrency, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
-  const [outputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
-  const [inputAmount, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
-  const [outputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
+  const [, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
+  const [, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
+  const [, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
+  const [, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const { chainId } = useActiveWeb3React()
 
   useEffect(() => {
@@ -69,11 +69,7 @@ export default function useSwapDefaults(
       setPreviousChainId(chainId)
       setToDefaults()
     }
-    // if no swap fields have been set, set them to defaults
-    else if (chainId && !inputCurrency && !outputCurrency && !inputAmount && !outputAmount) {
-      setToDefaults()
-    }
     // intentionally omit (set)previousChainId check here
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId, inputCurrency, outputCurrency, inputAmount, outputAmount])
+  }, [chainId])
 }
