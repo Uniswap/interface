@@ -1,9 +1,8 @@
-import { useUpdateAtom } from 'jotai/utils'
 import { DefaultAddress } from 'lib/components/Swap'
 import { useSwapAmount, useSwapCurrency } from 'lib/hooks/swap'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useToken } from 'lib/hooks/useCurrency'
-import { Field, swapDefaultsAtom } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import { useCallback, useEffect, useState } from 'react'
 
 export default function useSwapDefaults(
@@ -12,17 +11,11 @@ export default function useSwapDefaults(
   defaultOutputAddress: DefaultAddress | undefined,
   defaultOutputAmount: string | undefined
 ) {
-  const setDefaults = useUpdateAtom(swapDefaultsAtom)
   const [, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
   const [, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
   const [, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
   const [, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const { chainId } = useActiveWeb3React()
-
-  useEffect(() => {
-    // alter default values if they have changed
-    setDefaults({ defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount })
-  }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount, setDefaults])
 
   const inputAddress =
     typeof defaultInputAddress === 'string'
