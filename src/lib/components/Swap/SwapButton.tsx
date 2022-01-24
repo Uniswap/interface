@@ -45,9 +45,8 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
             action: <Trans>Approve</Trans>,
           },
         }
-      } else {
-        return {}
       }
+      return {}
     }
 
     return { disabled: true }
