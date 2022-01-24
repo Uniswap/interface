@@ -15,7 +15,10 @@ enum Mode {
   STATUS,
 }
 
-export default function SwapButton() {
+interface SwapButtonProps {
+  disabled?: boolean
+}
+export default function SwapButton({ disabled }: SwapButtonProps) {
   const [mode, setMode] = useState(Mode.SWAP)
   const {
     trade,
@@ -30,8 +33,12 @@ export default function SwapButton() {
   // TODO(zzmp): Pass optimized trade to SummaryDialog
 
   const actionProps = useMemo(() => {
+    if (disabled) return { disabled: true }
+
     if (inputCurrencyAmount && inputCurrencyBalance?.greaterThan(inputCurrencyAmount)) {
-      if (approval === ApprovalState.NOT_APPROVED) {
+      if (approval === ApprovalState.PENDING) {
+        return { disabled: true }
+      } else if (approval === ApprovalState.NOT_APPROVED) {
         return {
           updated: {
             message: <Trans>Approve {inputCurrencyAmount.currency.symbol} first</Trans>,
@@ -39,13 +46,11 @@ export default function SwapButton() {
           },
         }
       }
-      if (approval === ApprovalState.PENDING) {
-        return { disabled: true }
-      }
       return {}
     }
+
     return { disabled: true }
-  }, [approval, inputCurrencyAmount, inputCurrencyBalance])
+  }, [disabled, approval, inputCurrencyAmount, inputCurrencyBalance])
   const onConfirm = useCallback(() => {
     // TODO: Send the tx to the connected wallet.
     setMode(Mode.STATUS)
