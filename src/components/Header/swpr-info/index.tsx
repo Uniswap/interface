@@ -2,7 +2,6 @@ import { TokenAmount } from '@swapr/sdk'
 import React from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../../hooks'
-import useIsClaimAvailable from '../../../hooks/swpr/useIsClaimAvailable'
 import { useIsOldSwaprLp } from '../../../hooks/swpr/useIsOldSwaprLp'
 import useDebounce from '../../../hooks/useDebounce'
 import { Amount } from '../index'
@@ -52,22 +51,11 @@ interface SwprInfoProps {
 
 export function SwprInfo({ onToggleClaimPopup, oldSwprBalance, newSwprBalance, hasActiveCampaigns }: SwprInfoProps) {
   const { account } = useActiveWeb3React()
-  const { available: claimAvailable } = useIsClaimAvailable(account)
   const { isOldSwaprLp } = useIsOldSwaprLp(account || undefined)
 
-  const debouncedClaimAvailable = useDebounce(claimAvailable, 1000)
   const debouncedOldSwprBalance = useDebounce(oldSwprBalance, 1000)
   const debouncedIsOldSwaprLp = useDebounce(isOldSwaprLp, 1000)
 
-  if (debouncedClaimAvailable)
-    return (
-      <AirdropSign onClick={onToggleClaimPopup}>
-        <span role="img" aria-label="Airdrop emoji">
-          ✨
-        </span>{' '}
-        Claim SWPR airdrop and convert
-      </AirdropSign>
-    )
   if (debouncedIsOldSwaprLp || debouncedOldSwprBalance?.greaterThan('0'))
     return (
       <AirdropSign onClick={onToggleClaimPopup}>

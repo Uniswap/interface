@@ -1,26 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
-import Row, { RowBetween } from '../Row'
-import { TYPE, CloseIcon, ExternalLink } from '../../theme'
+import { RowBetween } from '../Row'
+import { TYPE, CloseIcon } from '../../theme'
 import { ButtonDark1, ButtonPrimary, ButtonPurple } from '../Button'
 import { useActiveWeb3React } from '../../hooks'
-import useUnclaimedSWPRBalance from '../../hooks/swpr/useUnclaimedSWPRBalance'
-import { useCloseModals, useShowClaimPopup, useToggleModal } from '../../state/application/hooks'
+import { useShowClaimPopup } from '../../state/application/hooks'
 import { transparentize } from 'polished'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 import { ChainId, TokenAmount } from '@swapr/sdk'
-import useClaimCallback from '../../hooks/swpr/useClaimCallback'
-import useIsClaimAvailable from '../../hooks/swpr/useIsClaimAvailable'
 import { ExternalLink as ExternalLinkIcon } from 'react-feather'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { switchOrAddNetwork } from '../../utils'
-import { NETWORK_DETAIL } from '../../constants'
-import { ApplicationModal } from '../../state/application/actions'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useNativeCurrencyBalance } from '../../state/wallet/hooks'
-import { useClaimTxConfirmedUpdater } from '../../state/claim/hooks'
-import { ActionButton } from './ActionButton'
 import { useIsOldSwaprLp } from '../../hooks/swpr/useIsOldSwaprLp'
 import { ConvertFlow } from './ConvertFlow'
 import useDebounce from '../../hooks/useDebounce'
@@ -44,20 +34,6 @@ const BottomAutoColumn = styled(AutoColumn)`
   border: 1px solid ${props => props.theme.bg3};
   border-radius: 8px;
   padding: 26px;
-`
-
-const NetworkWarning = styled.div`
-  width: 100%;
-  background-color: rgba(242, 153, 74, 0.25);
-  border-radius: 12px;
-  padding: 20px;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 20px;
-  letter-spacing: 0em;
-  margin-bottom: 12px;
-  text-align: center;
-  color: #f2994a;
 `
 
 const NativeCurrencyWarning = styled.div`
@@ -87,7 +63,7 @@ export default function ClaimModal({
   stakedAmount?: string | null
   singleSidedCampaignLink?: string
 }) {
-  const { account, chainId, connector } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const { push } = useHistory()
   const [attempting, setAttempting] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
@@ -95,45 +71,15 @@ export default function ClaimModal({
   const [correctNetwork, setCorrectNetwork] = useState(false)
   const open = useShowClaimPopup()
 
-  const addTransaction = useTransactionAdder()
   const nativeCurrencyBalance = useNativeCurrencyBalance()
   const { loading: loadingIsOldSwaprLp, isOldSwaprLp } = useIsOldSwaprLp(account || undefined)
-  const claimCallback = useClaimCallback(account || undefined)
-  const updateClaimTxConfirmed = useClaimTxConfirmedUpdater()
-  const { unclaimedBalance } = useUnclaimedSWPRBalance(account || undefined)
-  const { available: availableClaim } = useIsClaimAvailable(account || undefined)
-  const closeModals = useCloseModals()
-  const toggleWalletConnectionModal = useToggleModal(ApplicationModal.WALLET_SWITCHER)
 
-  const debouncedUnclaimedBalance = useDebounce(unclaimedBalance, 1000)
-  const debouncedAvailableClaim = useDebounce(availableClaim, 1000)
   const debouncedLoadingIsOldSwaprLP = useDebounce(loadingIsOldSwaprLp, 1000)
   const debouncedIsOldSwaprLP = useDebounce(isOldSwaprLp, 1000)
 
   useEffect(() => {
     setCorrectNetwork(chainId === ChainId.ARBITRUM_ONE)
   }, [chainId])
-
-  const onClaim = useCallback(() => {
-    setAttempting(true)
-    claimCallback()
-      .then(transaction => {
-        setHash(transaction.hash)
-        addTransaction(transaction, {
-          summary: `Claim ${debouncedUnclaimedBalance?.toFixed(3)} SWPR`
-        })
-        transaction.wait().then(() => {
-          updateClaimTxConfirmed(true)
-        })
-      })
-      .catch(error => {
-        setError(true)
-        console.log(error)
-      })
-      .finally(() => {
-        setAttempting(false)
-      })
-  }, [addTransaction, claimCallback, debouncedUnclaimedBalance, updateClaimTxConfirmed])
 
   const handleConversionError = useCallback(() => {
     setError(true)
@@ -145,16 +91,6 @@ export default function ClaimModal({
     setHash(undefined)
     onDismiss()
   }, [onDismiss])
-
-  const onSwitchToArbitrum = useCallback(() => {
-    if (connector instanceof InjectedConnector)
-      switchOrAddNetwork(NETWORK_DETAIL[ChainId.ARBITRUM_ONE], account || undefined)
-  }, [account, connector])
-
-  const onConnectWallet = useCallback(() => {
-    closeModals()
-    toggleWalletConnectionModal()
-  }, [closeModals, toggleWalletConnectionModal])
 
   const handleStakeUnstakeClick = () => {
     if (singleSidedCampaignLink) {
@@ -199,11 +135,6 @@ export default function ClaimModal({
             </RowBetween>
           </UpperAutoColumn>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            {debouncedAvailableClaim && !correctNetwork && (
-              <NetworkWarning>
-                Receive your SWPR airdrop on Arbitrum One. Please switch network to claim.
-              </NetworkWarning>
-            )}
             {correctNetwork && debouncedIsOldSwaprLP && (
               <NativeCurrencyWarning>
                 Seems like you have provided liquidity on the old Swapr build. Please pull all the provided liquidity
@@ -211,7 +142,7 @@ export default function ClaimModal({
               </NativeCurrencyWarning>
             )}
 
-            {oldSwprBalance?.greaterThan('0') && debouncedUnclaimedBalance?.greaterThan('0') && (
+            {oldSwprBalance?.greaterThan('0') && (
               <BottomAutoColumn gap="8px">
                 <RowBetween>
                   <div>
@@ -219,7 +150,7 @@ export default function ClaimModal({
                       UNCLAIMED SWPR (OLD)
                     </TYPE.small>
                     <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
-                      {debouncedUnclaimedBalance?.toFixed(3) || '0'}
+                      0
                     </TYPE.white>
                   </div>
                   <div>
@@ -248,42 +179,17 @@ export default function ClaimModal({
                     </ButtonPrimary>
                   </>
                 )}
-                {(debouncedAvailableClaim || !correctNetwork || debouncedIsOldSwaprLP) && (
-                  <ActionButton
-                    availableClaim={debouncedAvailableClaim}
-                    nativeCurrencyBalance={nativeCurrencyBalance}
-                    correctNetwork={correctNetwork}
-                    isOldSwaprLp={debouncedIsOldSwaprLP}
-                    onConnectWallet={onConnectWallet}
-                    onSwitchToArbitrum={onSwitchToArbitrum}
-                    onClaim={onClaim}
-                  />
-                )}
                 {correctNetwork && (oldSwprBalance?.greaterThan('0') || isOldSwaprLp) && (
                   <ConvertFlow
-                    disabled={debouncedLoadingIsOldSwaprLP || debouncedIsOldSwaprLP || debouncedAvailableClaim}
+                    disabled={debouncedLoadingIsOldSwaprLP || debouncedIsOldSwaprLP}
                     oldSwprBalance={oldSwprBalance}
                     onError={handleConversionError}
                   />
                 )}
               </BottomAutoColumn>
             )}
-
-            <ExternalLink href="https://medium.com/swapr/announcing-swpr-token-e8ab12dbad45">
-              <Row justifyContent="center" width="100%">
-                <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
-                  Read about the airdrop
-                </TYPE.small>
-                <ExternalLinkIcon style={{ marginLeft: 3 }} size="12px" />
-              </Row>
-            </ExternalLink>
             <AddTokenButton
-              active={
-                !debouncedAvailableClaim &&
-                !debouncedIsOldSwaprLP &&
-                oldSwprBalance?.equalTo('0') &&
-                newSwprBalance?.greaterThan('0')
-              }
+              active={!debouncedIsOldSwaprLP && oldSwprBalance?.equalTo('0') && newSwprBalance?.greaterThan('0')}
             />
           </AutoColumn>
         </ContentWrapper>
@@ -297,7 +203,7 @@ export default function ClaimModal({
       attemptingTxn={attempting}
       hash={hash}
       content={content}
-      pendingText={`Claiming ${debouncedUnclaimedBalance?.toFixed(3)} SWPR`}
+      pendingText={`Claiming 0 SWPR`}
     />
   )
 }
