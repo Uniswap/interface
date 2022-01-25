@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, { ApprovalState, useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
 import { Field } from 'lib/state/swap'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
@@ -20,11 +20,18 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
   } = useSwapInfo()
+
+  const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>(undefined)
+  useEffect(() => {
+    setActiveTrade((activeTrade) => activeTrade && trade.trade)
+  }, [trade])
+
   // TODO(zzmp): Track pending approval
   const useIsPendingApproval = () => false
+
+  // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade = useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval)
   const [approval, getApproval] = useSwapApproval(optimizedTrade, allowedSlippage, useIsPendingApproval)
-  const [activeTrade, setActiveTrade] = useState<typeof optimizedTrade>(undefined)
 
   const actionProps = useMemo(() => {
     if (disabled) return { disabled: true }
@@ -44,16 +51,17 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     }
 
     return { disabled: true }
-  }, [disabled, approval, inputCurrencyAmount, inputCurrencyBalance])
+  }, [approval, disabled, inputCurrencyAmount, inputCurrencyBalance])
+
   const onConfirm = useCallback(() => {
-    // TODO(zzmp)
+    // TODO(zzmp): Transact the trade.
   }, [])
 
   return (
     <>
       <ActionButton
         color="interactive"
-        onClick={() => setActiveTrade(optimizedTrade)}
+        onClick={() => setActiveTrade(trade.trade)}
         onUpdate={getApproval}
         {...actionProps}
       >

@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { IconButton } from 'lib/components/Button'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
@@ -73,10 +71,7 @@ const Body = styled(Column)<{ open: boolean }>`
 `
 
 interface SummaryDialogProps {
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
+  trade: Trade<Currency, Currency, TradeType>
   onConfirm: () => void
 }
 
