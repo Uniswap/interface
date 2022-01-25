@@ -1,4 +1,5 @@
 import { tokens } from '@uniswap/default-token-list'
+import { Token } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
@@ -16,6 +17,8 @@ const validateColor = (() => {
   }
 })()
 
+const UNSUPPORTED_TOKEN = new Token(1, '0xeb57bf569ad976974c1f861a5923a59f40222451', 18, 'LOOMI', 'Loomi')
+
 function Fixture() {
   const setColor = useUpdateAtom(colorAtom)
   const [color] = useValue('token color', { defaultValue: '' })
@@ -25,21 +28,21 @@ function Fixture() {
     }
   }, [color, setColor])
 
-  const addressOptions = ['', 'NATIVE', DAI.address, USDC.address]
+  const addressOptions = ['', 'NATIVE', DAI.address, USDC.address, UNSUPPORTED_TOKEN.address]
   const inputOptions = ['', '0', '-1', '100']
-  const [defaultInputAddress] = useSelect('default InputAddress', {
+  const [defaultInputAddress] = useSelect('defaultInputAddress', {
     options: addressOptions,
     defaultValue: addressOptions[2],
   })
-  const [defaultInputAmount] = useSelect('default InputAmount', {
+  const [defaultInputAmount] = useSelect('defaultInputAmount', {
     options: inputOptions,
     defaultValue: inputOptions[3],
   })
-  const [defaultOutputAddress] = useSelect('default OutputAddress', {
+  const [defaultOutputAddress] = useSelect('defaultOutputAddress', {
     options: addressOptions,
-    defaultValue: addressOptions[3],
+    defaultValue: addressOptions[1],
   })
-  const [defaultOutputAmount] = useSelect('default OutputAmount', {
+  const [defaultOutputAmount] = useSelect('defaultOutputAmount', {
     options: inputOptions,
     defaultValue: inputOptions[0],
   })

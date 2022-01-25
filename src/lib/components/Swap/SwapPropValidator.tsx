@@ -51,7 +51,6 @@ export default function SwapPropValidator(props: PropsWithChildren<SwapProps>) {
     if (defaultOutputAmount && defaultInputAmount) {
       throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
     }
-    // TODO: ensure inputAmounts are valid BigNumbers
     if (defaultInputAmount && BigNumber.from(defaultInputAmount).lt(0)) {
       throw new IntegrationError('defaultInputAmount must be a positive number.')
     }
@@ -59,10 +58,10 @@ export default function SwapPropValidator(props: PropsWithChildren<SwapProps>) {
       throw new IntegrationError('defaultOutputAmount must be a positive number.')
     }
     if (defaultInputAddress && !isAddressOrAddressMap(defaultInputAddress) && defaultInputAddress !== 'NATIVE') {
-      throw new IntegrationError('defaultInputAddress must be a valid address.')
+      throw new IntegrationError('defaultInputAddress(s) must be a valid address or "NATIVE".')
     }
-    if (defaultOutputAddress && !isAddressOrAddressMap(defaultOutputAddress)) {
-      throw new IntegrationError('defaultOutputAddress must be a valid address.')
+    if (defaultOutputAddress && !isAddressOrAddressMap(defaultOutputAddress) && defaultOutputAddress !== 'NATIVE') {
+      throw new IntegrationError('defaultOutputAddress(s) must be a valid address or "NATIVE".')
     }
     setDefaultsChecked(true)
   }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount])
