@@ -167,8 +167,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB.isEther
-    const oneCurrencyIsETH = currencyA.isEther || currencyBIsETH
+    const currencyBIsETH = currencyB.isNative
+    const oneCurrencyIsETH = currencyA.isNative || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -387,7 +387,7 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH = currencyA?.isEther || currencyB?.isEther
+  const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH9[chainId], currencyA)) ||
@@ -530,8 +530,8 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.isEther ? WETH9[chainId].address : currencyIdA}/${
-                              currencyB?.isEther ? WETH9[chainId].address : currencyIdB
+                            to={`/remove/v2/${currencyA?.isNative ? WETH9[chainId].address : currencyIdA}/${
+                              currencyB?.isNative ? WETH9[chainId].address : currencyIdB
                             }`}
                           >
                             Receive WETH

@@ -50,7 +50,7 @@ export const WETH9 = {
 }
 
 class NativeToken extends Token {
-  isEther = true as any
+  isNative = true as any
   isToken = false as any
   constructor(chainId: number, address: string, decimals: number, symbol: string, name: string) {
     super(chainId, address, decimals, symbol, name)

@@ -1,9 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { getTradeVersion } from '../utils/getTradeVersion'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -11,11 +9,9 @@ import { isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './web3'
 import { useV2RouterContract } from './useContract'
-import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
-import { ChainId } from 'constants/chains'
 
 export enum SwapCallbackState {
   INVALID,
@@ -51,10 +47,9 @@ interface FailedCall extends SwapCallEstimate {
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
 function useSwapCallArguments(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  trade: V2Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
-  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | null | undefined
+  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -66,73 +61,33 @@ function useSwapCallArguments(
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
-    if (trade instanceof V2Trade) {
-      if (!routerContract) return []
-      const swapMethods = []
+    if (!routerContract) return []
+    const swapMethods = []
+    swapMethods.push(
+      Router.swapCallParameters(trade, {
+        feeOnTransfer: false,
+        allowedSlippage,
+        recipient,
+        deadline: deadline.toNumber(),
+      })
+    )
+
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
       swapMethods.push(
         Router.swapCallParameters(trade, {
-          feeOnTransfer: false,
+          feeOnTransfer: true,
           allowedSlippage,
           recipient,
           deadline: deadline.toNumber(),
         })
       )
-
-      if (trade.tradeType === TradeType.EXACT_INPUT) {
-        swapMethods.push(
-          Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage,
-            recipient,
-            deadline: deadline.toNumber(),
-          })
-        )
-      }
-      return swapMethods.map(({ methodName, args, value }) => ({
-        address: routerContract.address,
-        calldata: routerContract.interface.encodeFunctionData(methodName, args),
-        value,
-      }))
-    } else {
-      // trade is V3Trade
-      const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
-      if (!swapRouterAddress) return []
-
-      const { value, calldata } = SwapRouter.swapCallParameters(trade, {
-        recipient,
-        slippageTolerance: allowedSlippage,
-        deadline: deadline.toString(),
-        ...(signatureData
-          ? {
-              inputTokenPermit:
-                'allowed' in signatureData
-                  ? {
-                      expiry: signatureData.deadline,
-                      nonce: signatureData.nonce,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    }
-                  : {
-                      deadline: signatureData.deadline,
-                      amount: signatureData.amount,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    },
-            }
-          : {}),
-      })
-
-      return [
-        {
-          address: swapRouterAddress,
-          calldata,
-          value,
-        },
-      ]
     }
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, signatureData, trade])
+    return swapMethods.map(({ methodName, args, value }) => ({
+      address: routerContract.address,
+      calldata: routerContract.interface.encodeFunctionData(methodName, args),
+      value,
+    }))
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, trade])
 }
 
 /**
@@ -181,14 +136,13 @@ export function swapErrorToUserReadableMessage(error: any): string {
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  trade: V2Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
-  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | undefined | null
+  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
 
   const addTransaction = useTransactionAdder()
 

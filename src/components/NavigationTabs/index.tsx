@@ -11,7 +11,6 @@ import SettingsTab from '../Settings'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { resetMintState } from 'state/mint/actions'
-import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import { TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
 
@@ -111,7 +110,6 @@ export function AddRemoveTabs({
             if (adding) {
               // not 100% sure both of these are needed
               dispatch(resetMintState())
-              dispatch(resetMintV3State())
             }
           }}
         >

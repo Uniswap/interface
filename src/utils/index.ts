@@ -2,9 +2,9 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { ChainId, Token } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk/dist/'
+import { Token } from '@uniswap/sdk-core'
 import { TokenAddressMap } from '../state/lists/hooks'
+import { ChainId } from 'constants/chains'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -49,8 +49,4 @@ export function escapeRegExp(string: string): string {
 
 export function isTokenOnList(tokenAddressMap: TokenAddressMap, token?: Token): boolean {
   return Boolean(token?.isToken && tokenAddressMap[token.chainId as ChainId]?.[token.address])
-}
-
-export function formattedFeeAmount(feeAmount: FeeAmount): number {
-  return feeAmount / 10000
 }

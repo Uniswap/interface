@@ -1,7 +1,8 @@
 import JSBI from 'jsbi'
-import { ChainId, Percent, Token, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Percent, Token, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade, Pair, Route } from '@uniswap/v2-sdk'
 import { computeRealizedLPFeeAmount, warningSeverity } from './prices'
+import { ChainId } from 'constants/chains'
 
 describe('prices', () => {
   const token1 = new Token(ChainId.MAINNET, '0x0000000000000000000000000000000000000001', 18)

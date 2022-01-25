@@ -1,5 +1,4 @@
 import JSBI from 'jsbi'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
@@ -35,7 +34,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency.isToken ? currency.address : currency.isEther ? 'EVMOS' : '',
+          currencyId: currency.isToken ? currency.address : currency.isNative ? 'EVMOS' : '',
         })
       )
     },
@@ -97,11 +96,8 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
  * @param trade to check for the given address
  * @param checksummedAddress address to check in the pairs and tokens
  */
-function involvesAddress(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>,
-  checksummedAddress: string
-): boolean {
-  const path = trade instanceof V2Trade ? trade.route.path : trade.route.tokenPath
+function involvesAddress(trade: V2Trade<Currency, Currency, TradeType>, checksummedAddress: string): boolean {
+  const path = trade.route.path
   return (
     path.some((token) => token.address === checksummedAddress) ||
     (trade instanceof V2Trade
@@ -118,7 +114,7 @@ export function useDerivedSwapInfo(): {
   inputError?: string
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   // v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
-  toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  toggledTrade: V2Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
   const { account } = useActiveWeb3React()
@@ -153,11 +149,7 @@ export function useDerivedSwapInfo(): {
     maxHops: singleHopOnly ? 1 : undefined,
   })
 
-  // const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  // const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
-
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
-  // const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],

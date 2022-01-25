@@ -51,7 +51,7 @@ export default function CommonBases({
               onSelect(PHOTON)
             }
           }}
-          disable={selectedCurrency?.isEther}
+          disable={selectedCurrency?.isNative}
         >
           <CurrencyLogo currency={PHOTON} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>

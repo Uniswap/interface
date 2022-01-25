@@ -38,7 +38,7 @@ export default function useWrapCallback(
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency.isEther && currencyEquals(WETH9[chainId], outputCurrency)) {
+    if (inputCurrency.isNative && currencyEquals(WETH9[chainId], outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -54,7 +54,7 @@ export default function useWrapCallback(
             : undefined,
         inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient ETH balance' : 'Enter ETH amount',
       }
-    } else if (currencyEquals(WETH9[chainId], inputCurrency) && outputCurrency.isEther) {
+    } else if (currencyEquals(WETH9[chainId], inputCurrency) && outputCurrency.isNative) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:

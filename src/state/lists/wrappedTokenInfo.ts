@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
 import { isAddress } from '../../utils'
@@ -11,7 +11,7 @@ export interface TagInfo extends TagDetails {
  * Token instances created from token info on a token list.
  */
 export class WrappedTokenInfo implements Token {
-  public readonly isEther: false = false
+  public readonly isNative: false = false
   public readonly isToken: true = true
   public readonly list: TokenList
 
@@ -31,7 +31,7 @@ export class WrappedTokenInfo implements Token {
     return (this._checksummedAddress = checksummedAddress)
   }
 
-  public get chainId(): ChainId | number {
+  public get chainId(): number {
     return this.tokenInfo.chainId
   }
 
@@ -73,5 +73,12 @@ export class WrappedTokenInfo implements Token {
   sortsBefore(other: Token): boolean {
     if (this.equals(other)) throw new Error('Addresses should not be equal')
     return this.address.toLowerCase() < other.address.toLowerCase()
+  }
+
+  /**
+   * Return this token, which does not need to be wrapped
+   */
+  public get wrapped(): Token {
+    return this
   }
 }

@@ -1,12 +1,11 @@
 import { ZERO_PERCENT, ONE_HUNDRED_PERCENT } from '../constants/misc'
 import { Percent, currencyEquals, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 
 // returns whether tradeB is better than tradeA by at least a threshold percentage amount
 export function isTradeBetter(
-  tradeA: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined | null,
-  tradeB: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined | null,
+  tradeA: V2Trade<Currency, Currency, TradeType> | undefined | null,
+  tradeB: V2Trade<Currency, Currency, TradeType> | undefined | null,
   minimumDelta: Percent = ZERO_PERCENT
 ): boolean | undefined {
   if (tradeA && !tradeB) return false

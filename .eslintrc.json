@@ -8,7 +8,7 @@
       "jsx": true
     }
   },
-  "ignorePatterns": ["node_modules/**/*"],
+  "ignorePatterns": ["node_modules/**/*", "tsconfig.json"],
   "settings": {
     "react": {
       "version": "detect"

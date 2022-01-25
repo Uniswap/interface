@@ -149,8 +149,8 @@ export default function AddLiquidity({
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
-    if (currencyA.isEther || currencyB.isEther) {
-      const tokenBIsETH = currencyB.isEther
+    if (currencyA.isNative || currencyB.isNative) {
+      const tokenBIsETH = currencyB.isNative
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [

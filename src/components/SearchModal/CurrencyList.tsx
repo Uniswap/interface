@@ -23,7 +23,7 @@ import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
 
-function currencyKey(currency: Currency): string {
+function currencyKey(currency: Currency | WrappedTokenInfo): string {
   return currency.isToken ? currency.address : 'PHOTON'
 }
 
@@ -133,7 +133,7 @@ function CurrencyRow({
           {currency.symbol}
         </Text>
         <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
-          {currency.name} {!currency.isEther && !isOnSelectedList && customAdded && '• Added by user'}
+          {currency.name} {!currency.isNative && !isOnSelectedList && customAdded && '• Added by user'}
         </TYPE.darkGray>
       </Column>
       <TokenTags currency={currency} />
@@ -190,7 +190,7 @@ export default function CurrencyList({
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
-  const itemData: (Currency | BreakLine)[] = useMemo(() => {
+  const itemData: (Currency | WrappedTokenInfo | BreakLine)[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
       return [...currencies, BREAK_LINE, ...otherListTokens]
     }

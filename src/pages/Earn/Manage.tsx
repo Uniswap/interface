@@ -114,8 +114,8 @@ export default function Manage({
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = currencyA?.isEther ? tokenB : tokenA
-  const WETH = currencyA?.isEther ? tokenA : tokenB
+  const token = currencyA?.isNative ? tokenB : tokenA
+  const WETH = currencyA?.isNative ? tokenA : tokenB
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens

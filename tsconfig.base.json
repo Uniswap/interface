@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@uniswap/v2-sdk": ["./v2-sdk"],
+      "@uniswap/sdk-core": ["./sdk-core"]
+    }
+  }
+}
