@@ -53,7 +53,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       trade.tradeType === TradeType.EXACT_OUTPUT
         ? [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`]
         : [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`],
-      [(t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`)],
+      [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`],
     ].filter(isDetail)
 
     function isDetail(detail: unknown[]): detail is [string, string] {
