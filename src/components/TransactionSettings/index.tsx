@@ -118,7 +118,7 @@ export default function SlippageTabs({
     slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
   const preferredGasPriceInputIsValid =
     preferredGasPriceInput === '' ||
-    (!Number.isNaN(preferredGasPriceInput) &&
+    (!Number.isNaN(Number(preferredGasPriceInput)) &&
       rawPreferredGasPrice ===
         new Decimal(Number.parseFloat(preferredGasPriceInput).toFixed(10)).times('1000000000').toString())
   const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
@@ -141,7 +141,7 @@ export default function SlippageTabs({
     mainnetGasPrices &&
     preferredGasPriceInput !== '' &&
     preferredGasPriceInputIsValid &&
-    !Number.isNaN(rawPreferredGasPrice) &&
+    !Number.isNaN(Number(rawPreferredGasPrice)) &&
     BigNumber.from(rawPreferredGasPrice).lte(mainnetGasPrices[MainnetGasPrice.NORMAL])
   ) {
     preferredGasPriceError = PreferredGasPriceError.RiskyLow
