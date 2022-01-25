@@ -180,6 +180,7 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://kovan.optimism.io'],
     nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
     statusPage: 'https://optimism.io/status',
+    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism-dev',
   },
 }
 
