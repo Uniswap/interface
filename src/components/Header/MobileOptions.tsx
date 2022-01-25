@@ -108,7 +108,7 @@ export default function MobileOptions() {
     const path = location.pathname
     if (path.includes('/swap')) return t('swap')
     if (path.includes('/bridge')) return t('bridge')
-    if (/^\/(pools|add|remove|create|liquidity-mining)/.test(path)) return 'Liqudity'
+    if (/^\/(pools|add|remove|create|liquidity-mining)/.test(path)) return t('pool')
     return ''
   }
 
@@ -125,20 +125,14 @@ export default function MobileOptions() {
                   {t('swap')}
                 </StyledNavLink>
               </ListItem>
-
-              <ListItem>
-                <StyledNavLink id="pool-nav-link" to="/pools" onClick={closeModals} activeClassName="active">
-                  Liquidity
-                </StyledNavLink>
-              </ListItem>
-              <ListItem>
-                <StyledNavLink id="pool-nav-link" to="/rewards" onClick={closeModals} activeClassName="active">
-                  REWARDS
-                </StyledNavLink>
-              </ListItem>
               <ListItem>
                 <StyledNavLink id="bridge-nav-link" to="/bridge" onClick={closeModals} activeClassName="active">
                   {t('bridge')}
+                </StyledNavLink>
+              </ListItem>
+              <ListItem>
+                <StyledNavLink id="pool-nav-link" to="/pools" onClick={closeModals} activeClassName="active">
+                  {t('pool')}
                 </StyledNavLink>
               </ListItem>
               <ListItem>

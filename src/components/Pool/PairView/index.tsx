@@ -10,7 +10,8 @@ import { ButtonGrey } from '../../Button'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
 import Skeleton from 'react-loading-skeleton'
 import { usePair24hVolumeUSD } from '../../../hooks/usePairVolume24hUSD'
-import { usePairCampaignIndicatorAndLiquidityUSD } from '../../../hooks/usePairCampaignIndicatorAndLiquidityUSD'
+import { usePairLiquidityUSD } from '../../../hooks/usePairLiquidityUSD'
+import LiquidityMiningCampaigns from './LiquidityMiningCampaigns'
 import { useActiveWeb3React } from '../../../hooks'
 import { useHistory } from 'react-router-dom'
 import { usePrevious } from 'react-use'
@@ -37,17 +38,6 @@ const DataText = styled.div`
   font-weight: 500;
   color: ${props => props.theme.purple2};
 `
-const RewardsCampaignsIndicator = styled.div`
-  margin-left: 10px;
-  font-size: 11.4286px;
-  font-weight: 500;
-  color: ${props => props.theme.white};
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  background: ${props => props.theme.green2};
-  text-align: center;
-`
 
 interface DataRowProps {
   loading?: boolean
@@ -73,8 +63,8 @@ function PairView({ loading, pair }: PairViewProps) {
   const { account, chainId } = useActiveWeb3React()
   const history = useHistory()
   const previousChainId = usePrevious(chainId)
-  const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair?.liquidityToken.address)
-  const { loading: liquidityLoading, liquidityUSD, numberOfCampaigns } = usePairCampaignIndicatorAndLiquidityUSD(pair)
+  const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
+  const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
   const switchingToCorrectChain = useIsSwitchingToCorrectChain()
 
@@ -93,6 +83,7 @@ function PairView({ loading, pair }: PairViewProps) {
 
   return (
     <>
+      {liquidityMiningEnabled && <LiquidityMiningCampaigns pair={pair || undefined} />}
       <StyledDarkCard padding="32px">
         <Flex flexDirection="column">
           <Flex mb="18px" alignItems="center">
@@ -141,25 +132,10 @@ function PairView({ loading, pair }: PairViewProps) {
           )}
           <RowBetween mt="18px">
             <ButtonGrey
-              id="rewards-campaign-for-pair"
-              onClick={() => {
-                history.push(`/rewards/${pair?.token0.address}/${pair?.token1.address}`)
-              }}
-              disabled={!liquidityMiningEnabled || loading}
-              padding="8px"
-              marginRight="18px"
-              width="50%"
-            >
-              <Text fontSize="12px" fontWeight="bold" lineHeight="15px">
-                REWARD CAMPAIGNS
-              </Text>
-              {numberOfCampaigns > 0 && <RewardsCampaignsIndicator>{numberOfCampaigns}</RewardsCampaignsIndicator>}
-            </ButtonGrey>
-            <ButtonGrey
               padding="8px"
               disabled
               style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-              width="50%"
+              width="100%"
             >
               GOVERNANCE (COMING SOON)
             </ButtonGrey>

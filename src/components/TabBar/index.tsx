@@ -4,9 +4,8 @@ import styled from 'styled-components'
 const TabContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: fit-content;
+  width: 100%;
   height: 50px;
-  align-items: center;
   overflow-x: auto;
 `
 

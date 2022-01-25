@@ -72,7 +72,6 @@ export function useTokenBalances(
 export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
   const memoizedTokenArray = useMemo(() => [token], [token])
   const tokenBalances = useTokenBalances(account, memoizedTokenArray)
-
   return useMemo(() => {
     if (!token) return undefined
     return tokenBalances[token.address]

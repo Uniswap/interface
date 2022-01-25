@@ -5,7 +5,7 @@ interface EmptyProps {
   children: ReactNode
 }
 
-export function Empty({ children }: EmptyProps) {
+export default function Empty({ children }: EmptyProps) {
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center" width="100%" height="100%">
       <Box>{children}</Box>

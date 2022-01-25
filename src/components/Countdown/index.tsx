@@ -6,10 +6,9 @@ import { useInterval } from 'react-use'
 interface CountdownProps {
   to: number
   onEnd?: () => void
-  excludeSeconds?: boolean
 }
 
-export default function Countdown({ to, onEnd, excludeSeconds = false }: CountdownProps) {
+export default function Countdown({ to, onEnd }: CountdownProps) {
   const [isRunning, setIsRunning] = useState(false)
   const [duration, setDuration] = useState(Duration.fromMillis(0))
   const [durationText, setDurationText] = useState('')
@@ -34,10 +33,8 @@ export default function Countdown({ to, onEnd, excludeSeconds = false }: Countdo
   useEffect(() => {
     const rawText = duration.toFormat('dd/hh/mm/ss')
     const splitRawText = rawText.split('/')
-    setDurationText(
-      `${splitRawText[0]}D ${splitRawText[1]}H ${splitRawText[2]}M ${!excludeSeconds ? `${splitRawText[3]}S` : ''}`
-    )
-  }, [duration, excludeSeconds])
+    setDurationText(`${splitRawText[0]}D ${splitRawText[1]}H ${splitRawText[2]}M ${splitRawText[3]}S`)
+  }, [duration])
 
   return <>{durationText}</>
 }

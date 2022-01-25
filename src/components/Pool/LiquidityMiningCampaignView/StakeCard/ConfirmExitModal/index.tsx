@@ -1,4 +1,4 @@
-import { Pair, PricedTokenAmount, Token } from '@swapr/sdk'
+import { Pair, PricedTokenAmount } from '@swapr/sdk'
 import React, { useCallback } from 'react'
 import { Box, Flex } from 'rebass'
 import { TYPE } from '../../../../../theme'
@@ -11,7 +11,7 @@ import ConfirmStakingModalFooter from '../ModalBase/Footer'
 interface ConfirmExitModalProps {
   isOpen: boolean
   attemptingTxn: boolean
-  stakablePair?: Pair | Token
+  stakablePair?: Pair
   stakedTokenBalance?: PricedTokenAmount
   claimableRewards?: PricedTokenAmount[]
   txHash: string
@@ -36,10 +36,8 @@ export default function ConfirmExitModal({
       <Flex mt="16px">
         <Box>
           <TYPE.body fontWeight={500} fontSize="12px" color="text5">
-            Confirming will withdraw {stakedTokenBalance?.toSignificant(4)}
-            {stakablePair instanceof Token && stakablePair.symbol}
-            {stakablePair instanceof Pair && `${stakablePair?.token0.symbol}/${stakablePair?.token1.symbol}`}
-            LP tokens and claim{' '}
+            Confirming will withdraw {stakedTokenBalance?.toSignificant(4)} {stakablePair?.token0.symbol}/
+            {stakablePair?.token1.symbol} LP tokens and claim{' '}
             {claimableRewards?.map(claimable => `${claimable.toSignificant(4)} ${claimable.token.symbol}`).join(', ')}.
           </TYPE.body>
         </Box>

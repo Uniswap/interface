@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { LiquidityMiningCampaign } from '@swapr/sdk'
 import { DarkCard } from '../../Card'
 import Information from './Information'
 import StakeCard from './StakeCard'
@@ -10,7 +11,6 @@ import { useActiveWeb3React } from '../../../hooks'
 import { usePrevious } from 'react-use'
 import { useIsSwitchingToCorrectChain } from '../../../state/multi-chain-links/hooks'
 import { RowBetween } from '../../Row'
-import { SingleSidedLiquidityMiningCampaign, LiquidityMiningCampaign } from '@swapr/sdk'
 
 const GoBackContainer = styled.div`
   font-size: 11px;
@@ -52,14 +52,13 @@ const StyledCard = styled(DarkCard)`
 `
 
 interface PairViewProps {
-  campaign?: SingleSidedLiquidityMiningCampaign | LiquidityMiningCampaign | null
+  campaign?: LiquidityMiningCampaign | null
   containsKpiToken?: boolean
-  isSingleSidedStake: boolean
 }
 
-function LiquidityMiningCampaignView({ campaign, containsKpiToken, isSingleSidedStake }: PairViewProps) {
+function LiquidityMiningCampaignView({ campaign, containsKpiToken }: PairViewProps) {
   const history = useHistory()
-  const { chainId, account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const previousChainId = usePrevious(chainId)
   const switchingToCorrectChain = useIsSwitchingToCorrectChain()
 
@@ -72,15 +71,17 @@ function LiquidityMiningCampaignView({ campaign, containsKpiToken, isSingleSided
       history.push('/pools')
     }
   }, [chainId, history, previousChainId, switchingToCorrectChain])
+
   const handleUSDValueClick = useCallback(() => {
     setShowUSDValue(!showUSDValue)
   }, [showUSDValue])
+
   return (
     <AutoColumn gap="18px">
       <RowBetween>
         <GoBackContainer onClick={history.goBack}>
           <StyledChevronLeft />
-          Back to rewards
+          Back to pair
         </GoBackContainer>
         <USDValueSwitcherContainer onClick={handleUSDValueClick}>
           Value in {showUSDValue ? 'crypto' : 'USD'}
@@ -90,9 +91,7 @@ function LiquidityMiningCampaignView({ campaign, containsKpiToken, isSingleSided
       <StyledCard padding="32px">
         <AutoColumn gap="36px">
           <Information
-            targetedPairOrToken={
-              campaign instanceof SingleSidedLiquidityMiningCampaign ? campaign?.stakeToken : campaign?.targetedPair
-            }
+            targetedPair={campaign?.targetedPair}
             stakingCap={campaign?.stakingCap}
             rewards={campaign?.rewards}
             remainingRewards={campaign?.remainingRewards}
@@ -104,16 +103,7 @@ function LiquidityMiningCampaignView({ campaign, containsKpiToken, isSingleSided
             containsKpiToken={containsKpiToken}
             showUSDValue={showUSDValue}
           />
-          {account && (
-            <StakeCard
-              isSingleSided={isSingleSidedStake}
-              campaign={campaign || undefined}
-              showUSDValue={showUSDValue}
-              targetedPairOrToken={
-                campaign instanceof SingleSidedLiquidityMiningCampaign ? campaign?.stakeToken : campaign?.targetedPair
-              }
-            />
-          )}
+          {account && <StakeCard campaign={campaign || undefined} showUSDValue={showUSDValue} />}
         </AutoColumn>
       </StyledCard>
     </AutoColumn>

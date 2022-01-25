@@ -68,6 +68,10 @@ interface SubgraphToken {
   decimals: string
 }
 
+interface SubgraphLiquidityMiningCampaignWithPositions extends SubgraphLiquidityMiningCampaign {
+  liquidityMiningPositions: { id: string }[]
+}
+
 interface SubgraphPair {
   address: string
   reserve0: string
@@ -77,7 +81,7 @@ interface SubgraphPair {
   totalSupply: string
   token0: SubgraphToken
   token1: SubgraphToken
-  liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
+  liquidityMiningCampaigns: SubgraphLiquidityMiningCampaignWithPositions[]
 }
 
 interface QueryResult {
@@ -91,7 +95,6 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
   wrappedPairs: {
     pair: Pair
     reserveUSD: CurrencyAmount
-    hasFarming: boolean
     staked: boolean
   }[]
 } {
@@ -102,7 +105,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
     () =>
       Math.floor(
         DateTime.utc()
-          .minus(Duration.fromObject({ days: 150 }))
+          .minus(Duration.fromObject({ days: 30 }))
           .toSeconds()
       ),
     []
@@ -207,12 +210,10 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
           )
         })
         pair.liquidityMiningCampaigns = campaigns
-
         return {
           pair,
           // campaign.liquidityMiningPositions only has length > 0 if the user has staked positions in the campaign itself
           staked: rawPair.liquidityMiningCampaigns.some(campaign => campaign.liquidityMiningPositions.length > 0),
-          hasFarming: pair.liquidityMiningCampaigns.some(campaign => campaign.currentlyActive),
           reserveUSD: CurrencyAmount.usd(
             parseUnits(new Decimal(reserveUSD).toFixed(USD.decimals), USD.decimals).toString()
           )

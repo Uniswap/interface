@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { CurrencyAmount } from '@swapr/sdk'
 import { useDispatch } from 'react-redux'
+
 import { Tabs } from './Tabs'
 import AppBody from '../AppBody'
 import { AssetSelector } from './AssetsSelector'

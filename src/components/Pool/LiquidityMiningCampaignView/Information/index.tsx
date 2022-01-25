@@ -1,4 +1,4 @@
-import { Percent, PricedTokenAmount, TokenAmount, KpiToken, Token, Pair } from '@swapr/sdk'
+import { Pair, Percent, PricedTokenAmount, TokenAmount, KpiToken } from '@swapr/sdk'
 import { commify } from 'ethers/lib/utils'
 import { DateTime } from 'luxon'
 import { transparentize } from 'polished'
@@ -155,7 +155,7 @@ const CarrotSectionContainer = styled(AutoColumn)`
 `
 
 interface InformationProps {
-  targetedPairOrToken?: Token | Pair
+  targetedPair?: Pair
   stakingCap?: TokenAmount
   rewards?: PricedTokenAmount[]
   remainingRewards?: PricedTokenAmount[]
@@ -169,7 +169,7 @@ interface InformationProps {
 }
 
 function Information({
-  targetedPairOrToken: targetedPair,
+  targetedPair,
   stakingCap,
   rewards,
   remainingRewards,
@@ -183,7 +183,6 @@ function Information({
 }: InformationProps) {
   const { chainId } = useActiveWeb3React()
   const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
-
   const [upcoming, setUpcoming] = useState(false)
   const [expired, setExpired] = useState(false)
   const [currentPeriodEnded, setCurrentPeriodEnded] = useState(false)
@@ -208,25 +207,19 @@ function Information({
             data={
               <Flex alignItems="center">
                 <Box mr="8px">
-                  {targetedPair instanceof Pair && (
-                    <DoubleCurrencyLogo
-                      loading={!targetedPair}
-                      size={26}
-                      currency0={targetedPair?.token0}
-                      currency1={targetedPair?.token1}
-                    />
-                  )}
+                  <DoubleCurrencyLogo
+                    loading={!targetedPair}
+                    size={26}
+                    currency0={targetedPair?.token0}
+                    currency1={targetedPair?.token1}
+                  />
                 </Box>
                 <Box>
                   <Text fontSize="18px" fontWeight="600" lineHeight="20px">
                     {!targetedPair ? (
                       <Skeleton width="60px" height="18px" />
-                    ) : targetedPair instanceof Token ? (
-                      targetedPair.symbol
-                    ) : targetedPair instanceof Pair ? (
-                      `${targetedPair.token0.symbol}/${targetedPair.token1.symbol}`
                     ) : (
-                      ''
+                      `${targetedPair.token0.symbol}/${targetedPair.token1.symbol}`
                     )}
                   </Text>
                 </Box>

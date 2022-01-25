@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   position: relative;
 `
 export const PageWrapper = styled(AutoColumn)`
-  max-width: 832px;
+  max-width: 652px;
   width: 100%;
   margin-top: -30px;
 `

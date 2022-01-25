@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { ChainId } from '@swapr/sdk'
-
 import { InjectedConnector } from '@web3-react/injected-connector'
 
 import { useActiveWeb3React } from '.'

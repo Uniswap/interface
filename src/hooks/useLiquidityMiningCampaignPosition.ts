@@ -1,4 +1,4 @@
-import { LiquidityMiningCampaign, PricedTokenAmount, SingleSidedLiquidityMiningCampaign } from '@swapr/sdk'
+import { LiquidityMiningCampaign, PricedTokenAmount } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { useStakingRewardsDistributionContract } from './useContract'
 import { useSingleCallResult } from '../state/multicall/hooks'
@@ -13,7 +13,7 @@ interface UseLiquidityMiningCampaignUserPositionHookResult {
 }
 
 export function useLiquidityMiningCampaignPosition(
-  campaign?: LiquidityMiningCampaign | SingleSidedLiquidityMiningCampaign,
+  campaign?: LiquidityMiningCampaign,
   account?: string
 ): UseLiquidityMiningCampaignUserPositionHookResult {
   const { chainId } = useActiveWeb3React()

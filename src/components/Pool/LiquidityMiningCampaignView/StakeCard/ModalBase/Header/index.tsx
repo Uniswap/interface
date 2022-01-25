@@ -1,4 +1,4 @@
-import { PricedTokenAmount, TokenAmount, Token, Pair } from '@swapr/sdk'
+import { Pair, PricedTokenAmount, TokenAmount } from '@swapr/sdk'
 import React, { useState } from 'react'
 import { AutoColumn } from '../../../../../Column'
 import CurrencyInputPanel from '../../../../../CurrencyInputPanel'
@@ -14,7 +14,7 @@ const AlertIcon = styled(AlertTriangle)`
 `
 
 interface ConfirmStakeModalHeaderProps {
-  stakablePair?: Token | Pair
+  stakablePair?: Pair | null
   maximumAmount?: TokenAmount | PricedTokenAmount
   timelocked?: boolean
   endingTimestamp?: number
@@ -44,16 +44,12 @@ export default function ConfirmStakingWithdrawingModalHeader({
           </Box>
         </Flex>
       )}
-
       <CurrencyInputPanel
         value={typedAmount}
         onUserInput={input => {
           if (!stakablePair) return
           setTypedAmount(input)
-          const parsedAmount = tryParseAmount(
-            input,
-            stakablePair instanceof Token ? stakablePair : stakablePair.liquidityToken
-          ) as TokenAmount | undefined
+          const parsedAmount = tryParseAmount(input, stakablePair.liquidityToken) as TokenAmount | undefined
           if (parsedAmount) {
             onAmountChange(parsedAmount)
           }
@@ -64,8 +60,7 @@ export default function ConfirmStakingWithdrawingModalHeader({
           onAmountChange(new TokenAmount(maximumAmount.token, maximumAmount.raw))
         }}
         showMaxButton
-        currency={stakablePair instanceof Token ? stakablePair : undefined}
-        pair={stakablePair instanceof Pair ? stakablePair : undefined}
+        pair={stakablePair}
         id="staked-amount"
         disableCurrencySelect
         customBalanceText="Stakable: "

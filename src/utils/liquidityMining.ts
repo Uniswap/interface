@@ -11,11 +11,10 @@ import {
   PricedToken,
   PricedTokenAmount,
   TokenAmount,
-  KpiToken,
-  SingleSidedLiquidityMiningCampaign
+  KpiToken
 } from '@swapr/sdk'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
-import { SubgraphLiquidityMiningCampaign, SubgraphSingleSidedStakingCampaign } from '../apollo'
+import { SubgraphLiquidityMiningCampaign } from '../apollo'
 import { ZERO_USD } from '../constants'
 import { getLpTokenPrice } from './prices'
 
@@ -54,107 +53,7 @@ export function getBestApyPairCampaign(pair: Pair): LiquidityMiningCampaign | nu
     return campaign
   }, null)
 }
-export function tokenToPricedTokenAmount(
-  campaign: any,
-  token: Token,
-  amount: string,
-  nativeCurrency: Currency,
-  chainId: ChainId
-): PricedTokenAmount {
-  const price = new Price(
-    token,
-    nativeCurrency,
-    parseUnits('1', nativeCurrency.decimals).toString(),
-    parseUnits(
-      //chekc urself before u wreck urself
-      new Decimal(campaign.token.derivedNativeCurrency).toFixed(nativeCurrency.decimals),
-      nativeCurrency.decimals
-    ).toString()
-  )
-  const pricedRewardToken = new PricedToken(
-    chainId,
-    getAddress(token.address),
-    token.decimals,
-    price,
-    token.symbol,
-    token.name
-  )
-  return new PricedTokenAmount(
-    pricedRewardToken,
-    parseUnits(new Decimal(amount).toFixed(token.decimals), token.decimals).toString()
-  )
-}
-export function toSingleSidedStakeCampaign(
-  chainId: ChainId,
-  campaign: SubgraphSingleSidedStakingCampaign,
-  stakeToken: Token,
-  totalSupplyStakeToken: string,
-  nativeCurrency: Currency,
-  derivedNativeCurrency: string
-): SingleSidedLiquidityMiningCampaign {
-  const rewards = campaign.rewards.map(reward => {
-    const rewardToken = new Token(
-      chainId,
-      getAddress(reward.token.address),
-      parseInt(reward.token.decimals),
-      reward.token.symbol,
-      reward.token.name
-    )
 
-    const rewardTokenPriceNativeCurrency = new Price(
-      rewardToken,
-      nativeCurrency,
-      parseUnits('1', nativeCurrency.decimals).toString(),
-      parseUnits(
-        new Decimal(reward.token.derivedNativeCurrency).toFixed(nativeCurrency.decimals),
-        nativeCurrency.decimals
-      ).toString()
-    )
-    const pricedRewardToken = new PricedToken(
-      chainId,
-      getAddress(rewardToken.address),
-      rewardToken.decimals,
-      rewardTokenPriceNativeCurrency,
-      rewardToken.symbol,
-      rewardToken.name
-    )
-    return new PricedTokenAmount(
-      pricedRewardToken,
-      parseUnits(new Decimal(reward.amount).toFixed(rewardToken.decimals), rewardToken.decimals).toString()
-    )
-  })
-
-  const derivedNative = new Price(
-    stakeToken,
-    nativeCurrency,
-    parseUnits('1', nativeCurrency.decimals).toString(),
-    parseUnits(new Decimal(derivedNativeCurrency).toFixed(nativeCurrency.decimals), nativeCurrency.decimals).toString()
-  )
-
-  const stakedPricedToken = new PricedToken(
-    chainId,
-    getAddress(stakeToken.address),
-    stakeToken.decimals,
-    derivedNative,
-    stakeToken.symbol,
-    stakeToken.name
-  )
-
-  const staked = new PricedTokenAmount(
-    stakedPricedToken,
-    parseUnits(campaign.stakedAmount, stakedPricedToken.decimals).toString()
-  )
-  return new SingleSidedLiquidityMiningCampaign(
-    campaign.startsAt,
-    campaign.endsAt,
-    stakeToken,
-    rewards,
-    staked,
-    campaign.locked,
-    new TokenAmount(stakeToken, parseUnits(campaign.stakingCap, stakeToken.decimals).toString()),
-    getAddress(campaign.id)
-  )
-}
 export function toLiquidityMiningCampaign(
   chainId: ChainId,
   targetedPair: Pair,
@@ -206,7 +105,6 @@ export function toLiquidityMiningCampaign(
     targetedPairLpTokenTotalSupply,
     targetedPairReserveNativeCurrency
   )
-
   const stakedPricedToken = new PricedToken(
     chainId,
     getAddress(targetedPair.liquidityToken.address),
@@ -234,8 +132,11 @@ export function toLiquidityMiningCampaign(
   )
 }
 
-export function getStakedAmountUSD(campaign: CurrencyAmount, nativeCurrencyUSDPrice: Price): CurrencyAmount {
+export function getStakedAmountUSD(campaign: LiquidityMiningCampaign, nativeCurrencyUSDPrice: Price): CurrencyAmount {
   return CurrencyAmount.usd(
-    parseUnits(campaign.multiply(nativeCurrencyUSDPrice).toFixed(USD.decimals), USD.decimals).toString()
+    parseUnits(
+      campaign.staked.nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toFixed(USD.decimals),
+      USD.decimals
+    ).toString()
   )
 }
