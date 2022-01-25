@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-25 19:07\n"
+"PO-Revision-Date: 2022-01-25 20:07\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -2281,7 +2281,7 @@ msgstr "Вы получите как минимум {0} {1}, иначе тран
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Вы отправите не более {0} {1} иначе транзакция будет отменена."
+msgstr "Вы отправите не более {0} {1}, иначе транзакция откатится."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
