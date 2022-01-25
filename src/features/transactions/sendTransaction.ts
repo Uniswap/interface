@@ -1,6 +1,8 @@
 import { providers } from 'ethers'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { logEvent } from 'src/features/telemetry'
+import { EventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -87,4 +89,5 @@ function* addTransaction(
     },
   }
   yield* put(transactionActions.addTransaction(transaction))
+  yield* call(logEvent, EventName.Transaction, { chainId, ...typeInfo })
 }

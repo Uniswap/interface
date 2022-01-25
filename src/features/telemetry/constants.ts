@@ -1,7 +1,8 @@
 /** High-level event names as used by Firebase */
 export enum EventName {
-  UserEvent = 'user-event',
   Impression = 'impression',
+  Transaction = 'transaction',
+  UserEvent = 'user-event',
 }
 
 /**
