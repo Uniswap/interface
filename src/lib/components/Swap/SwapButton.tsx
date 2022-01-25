@@ -69,6 +69,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     signatureData
   )
 
+  //@TODO(ianlapham): add a loading state, process errors
   const onConfirm = useCallback(() => {
     if (!swapCallback) {
       return
