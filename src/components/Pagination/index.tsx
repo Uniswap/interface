@@ -9,7 +9,7 @@ interface PaginationProps {
   onPageChange: (newPage: number) => void
 }
 
-export default function Pagination({ page, totalItems, itemsPerPage, onPageChange }: PaginationProps) {
+export function Pagination({ page, totalItems, itemsPerPage, onPageChange }: PaginationProps) {
   return (
     <RcPagination
       className="swapr-pagination"

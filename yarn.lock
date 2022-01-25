@@ -2024,6 +2024,16 @@
     "@ethersproject/properties" "^5.5.0"
     "@ethersproject/strings" "^5.5.0"
 
+"@fontsource/fira-code@^4.5.1":
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/@fontsource/fira-code/-/fira-code-4.5.2.tgz#532ef612aa15b40970e696b3546348ed49512a86"
+  integrity sha512-wNUvcqmm1dZYTbJlkbFZL9Huu7p+Hwaa4CLNTPql3CG90Rh9dSi43wNg5AnVHxjAhWQOGlCpSrEswnnHu1CkxA==
+
+"@fontsource/fira-mono@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/fira-mono/-/fira-mono-4.5.0.tgz#bea97a54b60dc269d1c78469b007835af44dfa7f"
+  integrity sha512-KE+d3wmgq/YKM0BqgUF7p2yeBNi805Nfof1lC1wJ7E9i2EWoC363sGdKG+MQBVm+ei3GYZu+Bo8Xha1w1pkB7g==
+
 "@fontsource/montserrat@^4.5.1":
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/@fontsource/montserrat/-/montserrat-4.5.1.tgz#64a33ffdb77bbc63484c0321710bed272cc5b16f"
@@ -2732,10 +2742,10 @@
   dependencies:
     "@swapr/core" "^0.3.17"
 
-"@swapr/sdk@^0.10.11":
-  version "0.10.11"
-  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.11.tgz#53a7436b5c7a0887f401c2c216656670fcb904c9"
-  integrity sha512-vqUcFWZ/88laBVBtf6ieCn/UGTYbSeE/IdxF9eC9BvbK1u2dejDuhqD+c2FXnGUIPRkGMEab/FY+9pD0rH9O+A==
+"@swapr/sdk@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.11.0.tgz#60effd91cf3be4689b5fc18b01740c0d3e90a1cf"
+  integrity sha512-0qpLIEiD0y2rCCLuX2GybBoBzWbkveXm/PfG4Bc4QVuH1PSNHCY13eTx0vh8aPVTEQ4hFuWEP2sOv1c7J0HJZQ==
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     "@swapr/core" "^0.3.18"

@@ -3,7 +3,7 @@ import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import Row, { RowBetween } from '../Row'
 import { TYPE, CloseIcon, ExternalLink } from '../../theme'
-import { ButtonPrimary } from '../Button'
+import { ButtonDark1, ButtonPrimary, ButtonPurple } from '../Button'
 import { useActiveWeb3React } from '../../hooks'
 import useUnclaimedSWPRBalance from '../../hooks/swpr/useUnclaimedSWPRBalance'
 import { useCloseModals, useShowClaimPopup, useToggleModal } from '../../state/application/hooks'
@@ -25,6 +25,8 @@ import { useIsOldSwaprLp } from '../../hooks/swpr/useIsOldSwaprLp'
 import { ConvertFlow } from './ConvertFlow'
 import useDebounce from '../../hooks/useDebounce'
 import { AddTokenButton } from '../AddTokenButton/AddTokenButton'
+import { Flex } from 'rebass'
+import { useHistory } from 'react-router'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -75,14 +77,18 @@ const SpacedExternalLinkIcon = styled(ExternalLinkIcon)`
 export default function ClaimModal({
   onDismiss,
   oldSwprBalance,
-  newSwprBalance
+  newSwprBalance,
+  stakedAmount,
+  singleSidedCampaignLink
 }: {
   onDismiss: () => void
   oldSwprBalance?: TokenAmount
   newSwprBalance?: TokenAmount
+  stakedAmount?: string | null
+  singleSidedCampaignLink?: string
 }) {
   const { account, chainId, connector } = useActiveWeb3React()
-
+  const { push } = useHistory()
   const [attempting, setAttempting] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [hash, setHash] = useState<string | undefined>()
@@ -150,33 +156,47 @@ export default function ClaimModal({
     toggleWalletConnectionModal()
   }, [closeModals, toggleWalletConnectionModal])
 
+  const handleStakeUnstakeClick = () => {
+    if (singleSidedCampaignLink) {
+      push({ pathname: '/rewards', state: { showSwpr: true } })
+      wrappedOnDismiss()
+    }
+  }
+
   const content = () => {
     if (error) {
       return <TransactionErrorContent onDismiss={wrappedOnDismiss} message="The operation wasn't successful" />
     } else
       return (
         <ContentWrapper gap="lg">
-          <UpperAutoColumn gap="16px">
+          <UpperAutoColumn gap="26px">
             <RowBetween>
               <TYPE.white fontWeight={500} fontSize="20px" lineHeight="24px" color="text4">
                 Your SWPR details
               </TYPE.white>
               <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} />
             </RowBetween>
-            <TYPE.white fontWeight={700} fontSize={36}>
-              {newSwprBalance?.toFixed(3) || '0.000'}
-            </TYPE.white>
-            <TYPE.white fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text4">
-              TOTAL SWPR ON CURRENT NETWORK
-            </TYPE.white>
-            <AddTokenButton
-              active={
-                !debouncedAvailableClaim &&
-                !debouncedIsOldSwaprLP &&
-                oldSwprBalance?.equalTo('0') &&
-                newSwprBalance?.greaterThan('0')
-              }
-            />
+            <RowBetween>
+              <Flex width="50%" flexDirection="column">
+                <TYPE.white fontWeight={700} fontSize={26}>
+                  {newSwprBalance?.toFixed(3) || '0.000'}
+                </TYPE.white>
+                <TYPE.body marginTop="4px" marginBottom="11px" fontWeight="600" fontSize="11px">
+                  SWPR
+                </TYPE.body>
+                <ButtonPurple onClick={handleStakeUnstakeClick}>STAKE</ButtonPurple>
+              </Flex>
+
+              <Flex width="50%" flexDirection="column">
+                <TYPE.white fontWeight={700} fontSize={26}>
+                  {stakedAmount ? parseFloat(stakedAmount).toFixed(3) : '0.000'}
+                </TYPE.white>
+                <TYPE.body marginTop="4px" marginBottom="11px" fontWeight="600" fontSize="11px">
+                  STAKED SWPR
+                </TYPE.body>
+                <ButtonDark1 onClick={handleStakeUnstakeClick}>UNSTAKE</ButtonDark1>
+              </Flex>
+            </RowBetween>
           </UpperAutoColumn>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             {debouncedAvailableClaim && !correctNetwork && (
@@ -190,61 +210,65 @@ export default function ClaimModal({
                 and come back to swapr.eth to proceed.
               </NativeCurrencyWarning>
             )}
-            <BottomAutoColumn gap="8px">
-              <RowBetween>
-                <div>
-                  <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
-                    UNCLAIMED SWPR (OLD)
-                  </TYPE.small>
-                  <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
-                    {debouncedUnclaimedBalance?.toFixed(3) || '0'}
-                  </TYPE.white>
-                </div>
-                <div>
-                  <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
-                    UNCONVERTED SWPR (OLD)
-                  </TYPE.small>
-                  <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
-                    {oldSwprBalance?.toFixed(3) || '0'}
-                  </TYPE.white>
-                </div>
-              </RowBetween>
-              {!debouncedIsOldSwaprLP && correctNetwork && nativeCurrencyBalance?.equalTo('0') && (
-                <>
-                  <NativeCurrencyWarning>
-                    You have no Arbitrum ETH to perform the operation. Please make sure to transfer enough ETH to
-                    Arbitrum using the official bridge in order to complete the transaction.
-                  </NativeCurrencyWarning>
-                  <ButtonPrimary
-                    as="a"
-                    href="http://bridge.arbitrum.io/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    padding="16px 16px"
-                  >
-                    Arbitrum bridge <SpacedExternalLinkIcon size="12px" />
-                  </ButtonPrimary>
-                </>
-              )}
-              {(debouncedAvailableClaim || !correctNetwork || debouncedIsOldSwaprLP) && (
-                <ActionButton
-                  availableClaim={debouncedAvailableClaim}
-                  nativeCurrencyBalance={nativeCurrencyBalance}
-                  correctNetwork={correctNetwork}
-                  isOldSwaprLp={debouncedIsOldSwaprLP}
-                  onConnectWallet={onConnectWallet}
-                  onSwitchToArbitrum={onSwitchToArbitrum}
-                  onClaim={onClaim}
-                />
-              )}
-              {correctNetwork && (oldSwprBalance?.greaterThan('0') || isOldSwaprLp) && (
-                <ConvertFlow
-                  disabled={debouncedLoadingIsOldSwaprLP || debouncedIsOldSwaprLP || debouncedAvailableClaim}
-                  oldSwprBalance={oldSwprBalance}
-                  onError={handleConversionError}
-                />
-              )}
-            </BottomAutoColumn>
+
+            {oldSwprBalance?.greaterThan('0') && debouncedUnclaimedBalance?.greaterThan('0') && (
+              <BottomAutoColumn gap="8px">
+                <RowBetween>
+                  <div>
+                    <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
+                      UNCLAIMED SWPR (OLD)
+                    </TYPE.small>
+                    <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
+                      {debouncedUnclaimedBalance?.toFixed(3) || '0'}
+                    </TYPE.white>
+                  </div>
+                  <div>
+                    <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
+                      UNCONVERTED SWPR (OLD)
+                    </TYPE.small>
+                    <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
+                      {oldSwprBalance?.toFixed(3) || '0'}
+                    </TYPE.white>
+                  </div>
+                </RowBetween>
+                {!debouncedIsOldSwaprLP && correctNetwork && nativeCurrencyBalance?.equalTo('0') && (
+                  <>
+                    <NativeCurrencyWarning>
+                      You have no Arbitrum ETH to perform the operation. Please make sure to transfer enough ETH to
+                      Arbitrum using the official bridge in order to complete the transaction.
+                    </NativeCurrencyWarning>
+                    <ButtonPrimary
+                      as="a"
+                      href="http://bridge.arbitrum.io/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      padding="16px 16px"
+                    >
+                      Arbitrum bridge <SpacedExternalLinkIcon size="12px" />
+                    </ButtonPrimary>
+                  </>
+                )}
+                {(debouncedAvailableClaim || !correctNetwork || debouncedIsOldSwaprLP) && (
+                  <ActionButton
+                    availableClaim={debouncedAvailableClaim}
+                    nativeCurrencyBalance={nativeCurrencyBalance}
+                    correctNetwork={correctNetwork}
+                    isOldSwaprLp={debouncedIsOldSwaprLP}
+                    onConnectWallet={onConnectWallet}
+                    onSwitchToArbitrum={onSwitchToArbitrum}
+                    onClaim={onClaim}
+                  />
+                )}
+                {correctNetwork && (oldSwprBalance?.greaterThan('0') || isOldSwaprLp) && (
+                  <ConvertFlow
+                    disabled={debouncedLoadingIsOldSwaprLP || debouncedIsOldSwaprLP || debouncedAvailableClaim}
+                    oldSwprBalance={oldSwprBalance}
+                    onError={handleConversionError}
+                  />
+                )}
+              </BottomAutoColumn>
+            )}
+
             <ExternalLink href="https://medium.com/swapr/announcing-swpr-token-e8ab12dbad45">
               <Row justifyContent="center" width="100%">
                 <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
@@ -253,14 +277,14 @@ export default function ClaimModal({
                 <ExternalLinkIcon style={{ marginLeft: 3 }} size="12px" />
               </Row>
             </ExternalLink>
-            <ExternalLink href="https://medium.com/swapr/swpr-conversion-and-farming-plan-update-db8a13f6cd91">
-              <Row justifyContent="center" width="100%">
-                <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
-                  Read about the conversion
-                </TYPE.small>
-                <ExternalLinkIcon style={{ marginLeft: 3 }} size="12px" />
-              </Row>
-            </ExternalLink>
+            <AddTokenButton
+              active={
+                !debouncedAvailableClaim &&
+                !debouncedIsOldSwaprLP &&
+                oldSwprBalance?.equalTo('0') &&
+                newSwprBalance?.greaterThan('0')
+              }
+            />
           </AutoColumn>
         </ContentWrapper>
       )

@@ -10,6 +10,6 @@ export function useResponsiveItemsPerPage(): number {
   return useMemo(() => {
     if (!width) return 0
     if (width <= upToMedium) return 6
-    return 9
+    return 8
   }, [width])
 }
