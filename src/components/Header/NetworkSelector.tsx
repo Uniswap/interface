@@ -6,7 +6,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
@@ -239,7 +239,6 @@ export default function NetworkSelector() {
   const parsedQs = useParsedQueryString()
   const { urlChain, urlChainId } = getParsedChainId(parsedQs)
   const prevChainId = usePrevious(chainId)
-  const [isSwitchingNetwork, setIsSwitchingNetwork] = useState(false)
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
@@ -253,12 +252,10 @@ export default function NetworkSelector() {
 
   const handleChainSwitch = useCallback(
     (targetChain: number, skipToggle?: boolean) => {
-      if (!library || isSwitchingNetwork) return
+      if (!library) return
 
-      setIsSwitchingNetwork(true)
       switchToNetwork({ library, chainId: targetChain })
         .then(() => {
-          setIsSwitchingNetwork(false)
           if (!skipToggle) {
             toggle()
           }
@@ -267,7 +264,6 @@ export default function NetworkSelector() {
           })
         })
         .catch((error) => {
-          setIsSwitchingNetwork(false)
           console.error('Failed to switch networks', error)
 
           // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
@@ -283,12 +279,14 @@ export default function NetworkSelector() {
           dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
         })
     },
-    [dispatch, library, toggle, history, chainId, isSwitchingNetwork]
+    [dispatch, library, toggle, history, chainId]
   )
 
   useEffect(() => {
+    if (!chainId || !prevChainId) return
+
     // when network change originates from wallet or dropdown selector, just update URL
-    if (chainId && prevChainId && chainId !== prevChainId) {
+    if (chainId !== prevChainId) {
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
     } else if (urlChainId && urlChainId !== chainId) {
