@@ -13,7 +13,7 @@ import Row from '../../Row'
 
 interface DetailProps {
   label: string
-  value: string | JSX.Element
+  value: string
 }
 
 function Detail({ label, value }: DetailProps) {
@@ -50,7 +50,7 @@ export default function Details({ trade }: DetailsProps) {
   }, [trade])
 
   const details = useMemo((): [string, string][] => {
-    // @TODO(ianlapham) check that provdier fee is even a valid list item
+    // @TODO(ianlapham) check that provider fee is even a valid list item
     return [
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
       [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(inputCurrency)}`],
