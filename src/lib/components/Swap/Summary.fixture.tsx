@@ -22,6 +22,7 @@ const UNI = (function () {
 function Fixture() {
   const setState = useUpdateAtom(swapAtom)
   const {
+    allowedSlippage,
     trade: { trade },
   } = useSwapInfo()
 
@@ -36,7 +37,7 @@ function Fixture() {
 
   return trade ? (
     <Modal color="dialog">
-      <SummaryDialog onConfirm={() => void 0} trade={trade} />
+      <SummaryDialog onConfirm={() => void 0} trade={trade} allowedSlippage={allowedSlippage} />
     </Modal>
   ) : null
 }

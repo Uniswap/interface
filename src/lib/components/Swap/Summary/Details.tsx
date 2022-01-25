@@ -50,10 +50,10 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
       [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(inputCurrency)}`],
       [t`Price impact`, `${priceImpact.toFixed(2)}%`],
-      trade.tradeType === TradeType.EXACT_INPUT
-        ? [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`]
-        : [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`],
-      [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`],
+      trade.tradeType === TradeType.EXACT_OUTPUT
+        ? [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`]
+        : [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`],
+      [(t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`)],
     ].filter(isDetail)
 
     function isDetail(detail: unknown[]): detail is [string, string] {
