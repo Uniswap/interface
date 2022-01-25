@@ -17,7 +17,7 @@ import SwapButton from './SwapButton'
 import SwapPropValidator from './SwapPropValidator'
 import Toolbar from './Toolbar'
 
-export type DefaultAddress = string | { [chainId: number]: string } | 'NATIVE'
+export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } | 'NATIVE'
 export interface SwapProps {
   tokenList?: string | TokenInfo[]
   defaultInputAddress?: DefaultAddress

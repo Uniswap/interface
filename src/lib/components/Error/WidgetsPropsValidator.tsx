@@ -2,7 +2,7 @@ import { WidgetProps } from 'lib/components/Widget'
 import { IntegrationError } from 'lib/errors'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 
-export default function WidgetPropValidator(props: PropsWithChildren<WidgetProps>) {
+export default function WidgetsPropsValidator(props: PropsWithChildren<WidgetProps>) {
   const { jsonRpcEndpoint, provider } = props
 
   const [providerChecked, setProviderChecked] = useState(false)

@@ -23,20 +23,20 @@ export default function SwapPropValidator(props: PropsWithChildren<SwapProps>) {
     setConvenienceFeeChecked(false)
     if (convenienceFee) {
       if (convenienceFee > 100 || convenienceFee < 0) {
-        throw new IntegrationError('Set widget convenienceFee to at least 400px.')
+        throw new IntegrationError('convenienceFee must be between 0 and 100')
       }
       if (!convenienceFeeRecipient) {
         throw new IntegrationError('convenienceFeeRecipient is required when convenienceFee is set.')
       }
-      const MustBeValidAddressError = new IntegrationError('convenienceFeeRecipient must be a valid address.')
+
       if (typeof convenienceFeeRecipient === 'string') {
         if (!isAddress(convenienceFeeRecipient)) {
-          throw MustBeValidAddressError
+          throw new IntegrationError('convenienceFeeRecipient must be a valid address.')
         }
       } else if (typeof convenienceFeeRecipient === 'object') {
         Object.values(convenienceFeeRecipient).forEach((recipient) => {
           if (!isAddress(recipient)) {
-            throw MustBeValidAddressError
+            throw new IntegrationError('All values in convenienceFeeRecipient must be valid addresses.')
           }
         })
       }
