@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Trans } from '@lingui/macro'
 
 import { ChainId } from '@dynamic-amm/sdk'
@@ -31,13 +31,16 @@ import { Text } from 'rebass'
 import UpcomingFarms from 'components/UpcomingFarms'
 import History from 'components/Icons/History'
 import { UPCOMING_POOLS } from 'constants/upcoming-pools'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useHistory } from 'react-router-dom'
 
 const Farms = () => {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const { loading, data: farms } = useFarmsData()
+  const { tab } = useParsedQueryString()
+  const history = useHistory()
 
-  const [activeTab, setActiveTab] = useState(0)
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
   const vestingLoading = useSelector<AppState, boolean>(state => state.vesting.loading)
 
@@ -69,15 +72,17 @@ const Farms = () => {
     })
 
   const renderTabContent = () => {
-    switch (activeTab) {
-      case 0:
+    switch (tab) {
+      case 'active':
         return <YieldPools loading={loading} active />
-      case 2:
-        return <UpcomingFarms setActiveTab={setActiveTab} />
-      case 1:
+      case 'comming':
+        return <UpcomingFarms />
+      case 'ended':
         return <YieldPools loading={loading} active={false} />
-      default:
+      case 'vesting':
         return <Vesting loading={vestingLoading} />
+      default:
+        return <YieldPools loading={loading} active />
     }
   }
 
@@ -94,7 +99,7 @@ const Farms = () => {
 
         <TabContainer>
           <TabWrapper>
-            <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
+            <Tab onClick={() => history.push('/farms?tab=active')} isActive={!tab || tab === 'active'}>
               <PoolTitleContainer>
                 <span>
                   <Trans>Active</Trans>
@@ -102,7 +107,7 @@ const Farms = () => {
                 {loading && <Loader style={{ marginLeft: '4px' }} />}
               </PoolTitleContainer>
             </Tab>
-            <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
+            <Tab onClick={() => history.push('/farms?tab=ended')} isActive={tab === 'ended'}>
               <PoolTitleContainer>
                 <span>
                   <Trans>Ended</Trans>
@@ -110,7 +115,7 @@ const Farms = () => {
               </PoolTitleContainer>
             </Tab>
 
-            <Tab onClick={() => setActiveTab(2)} isActive={activeTab === 2}>
+            <Tab onClick={() => history.push('/farms?tab=comming')} isActive={tab === 'comming'}>
               <UpcomingPoolsWrapper>
                 <Trans>Upcoming</Trans>
                 {UPCOMING_POOLS.length > 0 && (
@@ -123,7 +128,7 @@ const Farms = () => {
 
             <Divider />
 
-            <Tab onClick={() => setActiveTab(3)} isActive={activeTab === 3}>
+            <Tab onClick={() => history.push('/farms?tab=vesting')} isActive={tab === 'vesting'}>
               <PoolTitleContainer>
                 <Text>
                   <Trans>My Vesting</Trans>

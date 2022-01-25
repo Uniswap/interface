@@ -30,6 +30,7 @@ export interface Farm {
     rewards?: string[]
   }
   time: string
+  isEnded?: boolean
 }
 
 export interface Reward {

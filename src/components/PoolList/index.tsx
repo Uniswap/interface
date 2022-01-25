@@ -300,7 +300,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
 
   useEffect(() => {
     if (page > maxPage) setPage(maxPage)
-  }, [maxPage])
+  }, [maxPage, page])
 
   useEffect(() => {
     if (poolsList) {

@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount, Pair } from '@dynamic-amm/sdk'
-import React, { useState, useContext, useCallback, ReactNode, useEffect } from 'react'
+import { Currency, Pair } from '@dynamic-amm/sdk'
+import React, { useState, useContext, useCallback, ReactNode, useEffect, useRef } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken, lighten } from 'polished'
 import { Trans } from '@lingui/macro'
@@ -178,20 +178,18 @@ export default function CurrencyInputPanel({
   const [modalOpen, setModalOpen] = useState(false)
   const { chainId, account } = useActiveWeb3React()
 
-  const [selectedCurrencyBalanceHasValue, setSelectedCurrencyBalanceHasValue] = useState<CurrencyAmount | undefined>(
-    undefined
-  )
+  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+
+  const balanceRef = useRef(selectedCurrencyBalance?.toSignificant(10))
 
   useEffect(() => {
-    setSelectedCurrencyBalanceHasValue(undefined)
+    balanceRef.current = undefined
   }, [chainId])
 
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+  // Keep previous value of balance if rpc node was down
   useEffect(() => {
-    if (!!selectedCurrencyBalance) {
-      setSelectedCurrencyBalanceHasValue(selectedCurrencyBalance)
-    }
-  }, [selectedCurrencyBalance?.toSignificant(20)])
+    if (!!selectedCurrencyBalance) balanceRef.current = selectedCurrencyBalance.toSignificant(10)
+  }, [selectedCurrencyBalance])
 
   const theme = useContext(ThemeContext)
 
@@ -225,10 +223,10 @@ export default function CurrencyInputPanel({
               ) : (
                 <div />
               )}
-              <Flex>
+              <Flex onClick={() => onMax && onMax()} style={{ cursor: onMax ? 'pointer' : undefined }}>
                 <Wallet color={theme.subText} />
                 <Text fontWeight={500} color={theme.subText} marginLeft="4px">
-                  {customBalanceText || selectedCurrencyBalanceHasValue?.toSignificant(10) || 0}
+                  {customBalanceText || selectedCurrencyBalance?.toSignificant(10) || balanceRef.current || 0}
                 </Text>
               </Flex>
             </Flex>

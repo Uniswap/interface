@@ -13,10 +13,6 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "Plural-Forms: \n"
 
-#: src/components/PositionCard/index.tsx
-msgid "+ Add"
-msgstr ""
-
 #: src/pages/SwapV2/index.tsx
 msgid "+ Add Recipient (optional)"
 msgstr "+ 添加收件人（可选）"
@@ -29,10 +25,6 @@ msgstr "+添加发送（可选）"
 #: src/pages/Pools/index.tsx
 msgid "+ Create New Pool"
 msgstr "+ 创建新的池"
-
-#: src/components/PositionCard/index.tsx
-msgid "- Remove"
-msgstr "- 移除"
 
 #: src/pages/SwapV2/index.tsx
 msgid "- Remove Recipient"
@@ -86,7 +78,6 @@ msgstr "AMP 系数 x 池中的流动性。 放大池具有更高的资本效率�
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 msgid "APR"
@@ -126,6 +117,7 @@ msgid "Active Price Range"
 msgstr "活跃的价格范围"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 msgid "Add Liquidity"
 msgstr "添加流动性"
 
@@ -240,6 +232,10 @@ msgstr "您确定吗?"
 
 #: src/components/Footer/Footer.tsx
 msgid "Audited By"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Available LP Tokens"
 msgstr ""
 
 #: src/components/PoolList/ListItem.tsx
@@ -480,7 +476,6 @@ msgstr "当前价格:"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
 msgstr "池的当前代币对比率。 比率根据池交易而变化。 按照这个比率添加流动性。"
 
@@ -531,6 +526,9 @@ msgstr ""
 msgid "Docs"
 msgstr "文挡"
 
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Don't see a pool you joined?"
@@ -645,7 +643,6 @@ msgstr "您的交易的估计网络费用"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Estimated return based on yearly fees of the pool"
 msgstr "根据池的年费的估计回报"
@@ -677,10 +674,6 @@ msgstr "费用(24小时)"
 #: src/components/PoolList/ListItem.tsx
 msgid "Fee Range"
 msgstr "费用范围"
-
-#: src/components/PositionCard/index.tsx
-msgid "Fees (24H)"
-msgstr "费用(24小时)"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -739,6 +732,15 @@ msgstr ""
 msgid "Github"
 msgstr "Github"
 
+#: src/components/PositionCard/index.tsx
+msgid "Go to farm"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Go to farm ↗"
+msgstr ""
+
 #: src/components/FarmHistoryModal/index.tsx
 msgid "HARVEST"
 msgstr "收获"
@@ -757,8 +759,8 @@ msgid "Harvest All"
 msgstr "收成全部"
 
 #: src/pages/Pool/index.tsx
-msgid "Here you can view all your liquidity positions and add/remove more liquidity."
-msgstr "在这里，您可以查看您所有的流动性头寸，并添加/删除更多的流动性。"
+msgid "Here you can view all your liquidity and staked balances"
+msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 #: src/pages/Yield/index.tsx
@@ -785,6 +787,7 @@ msgid "Import List"
 msgstr "导入列表"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Import Pool"
 msgstr "导入池"
 
@@ -800,6 +803,9 @@ msgstr "导入代币"
 msgid "Import at your own risk"
 msgstr "导入的风险自负"
 
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Import it."
@@ -957,7 +963,6 @@ msgid "Loaded"
 msgstr "已加载"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1092,12 +1097,9 @@ msgstr "收到的最小值"
 msgid "My Deposit"
 msgstr "我的存款"
 
-#: src/pages/Pool/index.tsx
-msgid "My Liquidity Pools"
-msgstr "我的流动性池"
-
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "My Pools"
 msgstr "我的池"
 
@@ -1145,10 +1147,13 @@ msgstr "不需要KYC或注册"
 msgid "No extra deposit or withdrawal fees"
 msgstr "没有额外的存款或提款费用"
 
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "No liquidity found."
 msgstr "没有发现流动性。"
+
+#: src/pages/Pool/index.tsx
+msgid "No liquidity found. Check out our <0>Pools.</0>"
+msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "No records found."
@@ -1157,6 +1162,10 @@ msgstr "没有找到记录。"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "未找到结果。"
+
+#: src/pages/Pool/index.tsx
+msgid "No staked liquidity found. Check out our <0>Farms.</0>"
+msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "No vesting schedule!"
@@ -1259,10 +1268,6 @@ msgstr "池的地址"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "池已找到!"
-
-#: src/components/PositionCard/index.tsx
-msgid "Pool Info"
-msgstr "池的信息"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -1396,7 +1401,6 @@ msgstr "Rainmaker 流动性挖矿"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Ratio"
 msgstr "比率"
 
@@ -1424,6 +1428,8 @@ msgid "Remove Anyway"
 msgstr "仍然删除"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
 msgid "Remove Liquidity"
 msgstr "删除流动性"
 
@@ -1476,7 +1482,7 @@ msgstr "按池地址搜索"
 
 #: src/components/YieldPools/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Search by tokens or pool address"
+msgid "Search by token or pool address"
 msgstr ""
 
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1543,6 +1549,10 @@ msgstr "单一代币"
 msgid "Something went wrong"
 msgstr "出了问题"
 
+#: src/components/PositionCard/index.tsx
+msgid "Staked LP Tokens"
+msgstr ""
+
 #: src/components/YieldPools/index.tsx
 msgid "Staked Only"
 msgstr "仅质押"
@@ -1551,6 +1561,11 @@ msgstr "仅质押"
 #: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "质押的总锁定价值"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Staked {0}"
+msgstr ""
 
 #: src/constants/index.ts
 msgid "Stands for amplification factor. Each pool can have its own AMP. Pools with a higher AMP provide higher capital efficiency within a particular price range"
@@ -1909,10 +1924,6 @@ msgstr "查看列表"
 msgid "View transaction on Etherscan"
 msgstr "在 Etherscan 上查看交易"
 
-#: src/components/PositionCard/index.tsx
-msgid "Volume (24H)"
-msgstr "交易量(24小时)"
-
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 msgid "Volume (24h)"
@@ -1971,6 +1982,10 @@ msgstr "您正在创建一个池"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "您可以通过提供单一代币(来自代币对的任一代币)向池中添加流动性。我们将自动为您创建LP代币，并将其添加到流动性池中--所有操作都在一次交易中完成。"
 
+#: src/pages/Pool/index.tsx
+msgid "You can manually import your pool"
+msgstr ""
+
 #: src/components/LiveChart/index.tsx
 msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
 msgstr ""
@@ -1993,9 +2008,18 @@ msgstr "您目前的头寸"
 msgid "Your Liquidity"
 msgstr "您的流动性"
 
+#: src/components/PositionCard/index.tsx
+msgid "Your Liquidity Balance"
+msgstr ""
+
 #: src/pages/AddLiquidity/ZapIn.tsx
 msgid "Your Pool Allocation"
 msgstr "您的池分配"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your Share Of Pool"
+msgstr ""
 
 #: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/PoolPriceBar/index.tsx
@@ -2003,8 +2027,16 @@ msgid "Your Share of Pool"
 msgstr "您在池中的份额"
 
 #: src/components/PositionCard/index.tsx
-msgid "Your deposit"
-msgstr "您的存款"
+msgid "Your Staked"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Your Staked Balance"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Your available LP Token balance after staking (if applicable)"
+msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardSUSHI.tsx
@@ -2019,11 +2051,6 @@ msgstr "您的池份额："
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
 msgstr "您的头寸"
-
-#: src/components/PositionCard/index.tsx
-#: src/components/PositionCard/index.tsx
-msgid "Your share of pool"
-msgstr "您在池中的份额"
 
 #: src/components/Vesting/index.tsx
 msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
@@ -2116,6 +2143,7 @@ msgstr "{0} 移除"
 msgid "{0} tokens"
 msgstr "{0} 代币"
 
+#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"

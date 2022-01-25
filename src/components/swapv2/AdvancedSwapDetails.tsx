@@ -12,9 +12,8 @@ import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { Aggregator } from '../../utils/aggregator'
 import { formattedNum } from '../../utils'
 import { Text } from 'rebass'
-import { ChevronUp, Eye } from 'react-feather'
+import { ChevronUp } from 'react-feather'
 import Divider from 'components/Divider'
-import { ButtonEmpty } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
 
 const IconWrapper = styled.div<{ show: boolean }>`
@@ -26,10 +25,9 @@ const IconWrapper = styled.div<{ show: boolean }>`
 interface TradeSummaryProps {
   trade: Aggregator
   allowedSlippage: number
-  toggleRoute?: () => void
 }
 
-function TradeSummary({ trade, allowedSlippage, toggleRoute }: TradeSummaryProps) {
+function TradeSummary({ trade, allowedSlippage }: TradeSummaryProps) {
   const theme = useContext(ThemeContext)
   const [show, setShow] = useState(false)
 

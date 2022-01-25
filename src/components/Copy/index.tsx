@@ -4,10 +4,11 @@ import { CheckCircle, Copy } from 'react-feather'
 
 import useCopyClipboard from '../../hooks/useCopyClipboard'
 
-const CopyIcon = styled.div`
+const CopyIcon = styled.div<{ margin?: string }>`
   flex-shrink: 0;
   margin-right: 1rem;
   margin-left: 2px;
+  ${({ margin }) => `margin: ${margin};`}
   text-decoration: none;
   :hover,
   :active,
@@ -25,11 +26,18 @@ const TransactionStatusText = styled.span`
   align-items: center;
 `
 
-export default function CopyHelper({ toCopy }: { toCopy: string; children?: React.ReactNode }) {
+export default function CopyHelper({
+  toCopy,
+  margin
+}: {
+  toCopy: string
+  children?: React.ReactNode
+  margin?: string
+}) {
   const [isCopied, setCopied] = useCopyClipboard()
 
   return (
-    <CopyIcon onClick={() => setCopied(toCopy)}>
+    <CopyIcon onClick={() => setCopied(toCopy)} margin={margin}>
       {isCopied ? (
         <TransactionStatusText>
           <CheckCircle size={'14'} />

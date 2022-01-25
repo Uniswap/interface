@@ -202,7 +202,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
       }
     }
     return null
-  }, [liveKyberData, liveCoingeckoData, isKyberDataNotValid])
+  }, [liveKyberData, liveCoingeckoData, isKyberDataNotValid, tokenAddresses])
   return {
     data: useMemo(() => (latestData ? [...chartData, latestData] : chartData), [latestData, chartData]),
     error: error,

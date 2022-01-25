@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from 'react'
+import React, { useRef } from 'react'
 import {
   Info,
   PieChart,
@@ -15,7 +15,7 @@ import {
 import styled, { css } from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { Trans, t } from '@lingui/macro'
-import { Text, Flex } from 'rebass'
+import { Text } from 'rebass'
 import { ChainId } from '@dynamic-amm/sdk'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
@@ -74,7 +74,7 @@ const StyledMenu = styled.div`
 
 const NavMenuItem = styled(NavLink)`
   flex: 1;
-  padding-top: 1.5rem;
+  padding: 0.75rem 0;
   text-decoration: none;
   display: flex;
   font-weight: 500;
@@ -92,7 +92,7 @@ const NavMenuItem = styled(NavLink)`
 
 const MenuItem = styled(ExternalLink)`
   flex: 1;
-  padding-top: 1.5rem;
+  padding: 0.75rem 0;
   display: flex;
   font-weight: 500;
   align-items: center;
@@ -183,19 +183,19 @@ export default function Menu() {
         )}
 
         {!above768 && (
-          <NavMenuItem to="/myPools">
+          <NavMenuItem to="/myPools" onClick={toggle}>
             <Monitor size={14} />
             <Trans>My Pools</Trans>
           </NavMenuItem>
         )}
         {!above1320 && (
-          <NavMenuItem to="/about">
+          <NavMenuItem to="/about" onClick={toggle}>
             <Info size={14} />
             <Trans>About</Trans>
           </NavMenuItem>
         )}
         {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
-          <NavMenuItem to="/migration">
+          <NavMenuItem to="/migration" onClick={toggle}>
             <Zap size={14} />
             <Trans>Migrate Liquidity</Trans>
           </NavMenuItem>
@@ -220,7 +220,7 @@ export default function Menu() {
           <Trans>Terms</Trans>
         </MenuItem>
         {process.env.REACT_APP_MAINNET_ENV !== 'production' && (
-          <NavMenuItem to="/swap-legacy">
+          <NavMenuItem to="/swap-legacy" onClick={toggle}>
             <Triangle size={14} />
             <Trans>Swap Legacy</Trans>
           </NavMenuItem>
@@ -228,27 +228,6 @@ export default function Menu() {
         <MenuItem id="link" href="https://forms.gle/gLiNsi7iUzHws2BY8">
           <Edit size={14} />
           <Trans>Contact Us</Trans>
-        </MenuItem>
-      </MenuFlyout>
-    </StyledMenu>
-  )
-}
-
-// TODO: no reference, remove this
-export function FlyoutPriceRange({ header, content }: { header: ReactNode; content: ReactNode }) {
-  const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.PRICE_RANGE)
-  const toggle = useToggleModal(ApplicationModal.PRICE_RANGE)
-
-  return (
-    <StyledMenu ref={node as any}>
-      <span style={{ width: '100%' }} onClick={toggle}>
-        {header}
-      </span>
-
-      <MenuFlyout node={node} isOpen={open} toggle={toggle} translatedTitle="">
-        <MenuItem id="link" href="https://dmm.exchange/">
-          {content}
         </MenuItem>
       </MenuFlyout>
     </StyledMenu>

@@ -284,7 +284,7 @@ export const SlideToUnlock = styled.div`
   -webkit-text-size-adjust: none;
 `
 
-const getPoolsMenuLink = (chainId?: ChainId) => {
+export const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
     case ChainId.MAINNET:
       return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
@@ -339,7 +339,11 @@ export default function Header() {
             <Trans>Swap</Trans>
           </StyledNavLink>
 
-          <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
+          <StyledNavLink
+            id={`pools-nav-link`}
+            to={poolsMenuLink}
+            isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/pools')}
+          >
             <Trans>Pools</Trans>
           </StyledNavLink>
 

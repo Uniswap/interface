@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/PositionCard/index.tsx
-msgid "+ Add"
-msgstr "+ Add"
-
 #: src/pages/SwapV2/index.tsx
 msgid "+ Add Recipient (optional)"
 msgstr "+ Add Recipient (optional)"
@@ -29,10 +25,6 @@ msgstr "+ Add a send (optional)"
 #: src/pages/Pools/index.tsx
 msgid "+ Create New Pool"
 msgstr "+ Create New Pool"
-
-#: src/components/PositionCard/index.tsx
-msgid "- Remove"
-msgstr "- Remove"
 
 #: src/pages/SwapV2/index.tsx
 msgid "- Remove Recipient"
@@ -86,7 +78,6 @@ msgstr "AMP factor x Liquidity in the pool. Amplified pools have higher capital 
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 msgid "APR"
@@ -126,6 +117,7 @@ msgid "Active Price Range"
 msgstr "Active Price Range"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 msgid "Add Liquidity"
 msgstr "Add Liquidity"
 
@@ -241,6 +233,10 @@ msgstr "Are you sure?"
 #: src/components/Footer/Footer.tsx
 msgid "Audited By"
 msgstr "Audited By"
+
+#: src/components/PositionCard/index.tsx
+msgid "Available LP Tokens"
+msgstr "Available LP Tokens"
 
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
@@ -480,7 +476,6 @@ msgstr "Current Price:"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
 msgstr "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
 
@@ -531,6 +526,9 @@ msgstr "Display Settings"
 msgid "Docs"
 msgstr "Docs"
 
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Don't see a pool you joined?"
@@ -645,7 +643,6 @@ msgstr "Estimated network fee for your transaction"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Estimated return based on yearly fees of the pool"
 msgstr "Estimated return based on yearly fees of the pool"
@@ -677,10 +674,6 @@ msgstr "Fee (24h)"
 #: src/components/PoolList/ListItem.tsx
 msgid "Fee Range"
 msgstr "Fee Range"
-
-#: src/components/PositionCard/index.tsx
-msgid "Fees (24H)"
-msgstr "Fees (24H)"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -739,6 +732,15 @@ msgstr "Get {0}-{1} {2} LP ↗"
 msgid "Github"
 msgstr "Github"
 
+#: src/components/PositionCard/index.tsx
+msgid "Go to farm"
+msgstr "Go to farm"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Go to farm ↗"
+msgstr "Go to farm ↗"
+
 #: src/components/FarmHistoryModal/index.tsx
 msgid "HARVEST"
 msgstr "HARVEST"
@@ -757,8 +759,8 @@ msgid "Harvest All"
 msgstr "Harvest All"
 
 #: src/pages/Pool/index.tsx
-msgid "Here you can view all your liquidity positions and add/remove more liquidity."
-msgstr "Here you can view all your liquidity positions and add/remove more liquidity."
+msgid "Here you can view all your liquidity and staked balances"
+msgstr "Here you can view all your liquidity and staked balances"
 
 #: src/components/FarmHistoryModal/index.tsx
 #: src/pages/Yield/index.tsx
@@ -785,6 +787,7 @@ msgid "Import List"
 msgstr "Import List"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Import Pool"
 msgstr "Import Pool"
 
@@ -800,6 +803,9 @@ msgstr "Import Tokens"
 msgid "Import at your own risk"
 msgstr "Import at your own risk"
 
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Import it."
@@ -957,7 +963,6 @@ msgid "Loaded"
 msgstr "Loaded"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1092,12 +1097,9 @@ msgstr "Minimum received"
 msgid "My Deposit"
 msgstr "My Deposit"
 
-#: src/pages/Pool/index.tsx
-msgid "My Liquidity Pools"
-msgstr "My Liquidity Pools"
-
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "My Pools"
 msgstr "My Pools"
 
@@ -1145,10 +1147,13 @@ msgstr "No KYC or sign-ups required"
 msgid "No extra deposit or withdrawal fees"
 msgstr "No extra deposit or withdrawal fees"
 
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "No liquidity found."
 msgstr "No liquidity found."
+
+#: src/pages/Pool/index.tsx
+msgid "No liquidity found. Check out our <0>Pools.</0>"
+msgstr "No liquidity found. Check out our <0>Pools.</0>"
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "No records found."
@@ -1157,6 +1162,10 @@ msgstr "No records found."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "No results found."
+
+#: src/pages/Pool/index.tsx
+msgid "No staked liquidity found. Check out our <0>Farms.</0>"
+msgstr "No staked liquidity found. Check out our <0>Farms.</0>"
 
 #: src/components/Vesting/index.tsx
 msgid "No vesting schedule!"
@@ -1259,10 +1268,6 @@ msgstr "Pool Address"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "Pool Found!"
-
-#: src/components/PositionCard/index.tsx
-msgid "Pool Info"
-msgstr "Pool Info"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -1396,7 +1401,6 @@ msgstr "Rainmaker Yield Farming"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Ratio"
 msgstr "Ratio"
 
@@ -1424,6 +1428,8 @@ msgid "Remove Anyway"
 msgstr "Remove Anyway"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
 msgid "Remove Liquidity"
 msgstr "Remove Liquidity"
 
@@ -1476,8 +1482,8 @@ msgstr "Search by pool address"
 
 #: src/components/YieldPools/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Search by tokens or pool address"
-msgstr "Search by tokens or pool address"
+msgid "Search by token or pool address"
+msgstr "Search by token or pool address"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1543,6 +1549,10 @@ msgstr "Single Token"
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
+#: src/components/PositionCard/index.tsx
+msgid "Staked LP Tokens"
+msgstr "Staked LP Tokens"
+
 #: src/components/YieldPools/index.tsx
 msgid "Staked Only"
 msgstr "Staked Only"
@@ -1551,6 +1561,11 @@ msgstr "Staked Only"
 #: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "Staked TVL"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Staked {0}"
+msgstr "Staked {0}"
 
 #: src/constants/index.ts
 msgid "Stands for amplification factor. Each pool can have its own AMP. Pools with a higher AMP provide higher capital efficiency within a particular price range"
@@ -1909,10 +1924,6 @@ msgstr "View list"
 msgid "View transaction on Etherscan"
 msgstr "View transaction on Etherscan"
 
-#: src/components/PositionCard/index.tsx
-msgid "Volume (24H)"
-msgstr "Volume (24H)"
-
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 msgid "Volume (24h)"
@@ -1971,6 +1982,10 @@ msgstr "You are creating a pool"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 
+#: src/pages/Pool/index.tsx
+msgid "You can manually import your pool"
+msgstr "You can manually import your pool"
+
 #: src/components/LiveChart/index.tsx
 msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
 msgstr "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
@@ -1993,9 +2008,18 @@ msgstr "Your Current Position"
 msgid "Your Liquidity"
 msgstr "Your Liquidity"
 
+#: src/components/PositionCard/index.tsx
+msgid "Your Liquidity Balance"
+msgstr "Your Liquidity Balance"
+
 #: src/pages/AddLiquidity/ZapIn.tsx
 msgid "Your Pool Allocation"
 msgstr "Your Pool Allocation"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your Share Of Pool"
+msgstr "Your Share Of Pool"
 
 #: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/PoolPriceBar/index.tsx
@@ -2003,8 +2027,16 @@ msgid "Your Share of Pool"
 msgstr "Your Share of Pool"
 
 #: src/components/PositionCard/index.tsx
-msgid "Your deposit"
-msgstr "Your deposit"
+msgid "Your Staked"
+msgstr "Your Staked"
+
+#: src/components/PositionCard/index.tsx
+msgid "Your Staked Balance"
+msgstr "Your Staked Balance"
+
+#: src/components/PositionCard/index.tsx
+msgid "Your available LP Token balance after staking (if applicable)"
+msgstr "Your available LP Token balance after staking (if applicable)"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardSUSHI.tsx
@@ -2019,11 +2051,6 @@ msgstr "Your pool share:"
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
 msgstr "Your position"
-
-#: src/components/PositionCard/index.tsx
-#: src/components/PositionCard/index.tsx
-msgid "Your share of pool"
-msgstr "Your share of pool"
 
 #: src/components/Vesting/index.tsx
 msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
@@ -2116,6 +2143,7 @@ msgstr "{0} removed"
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
+#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"

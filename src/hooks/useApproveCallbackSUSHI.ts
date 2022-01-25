@@ -90,7 +90,7 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, chainId])
 
   return [approvalState, approve]
 }

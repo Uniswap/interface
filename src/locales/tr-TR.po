@@ -13,10 +13,6 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "Plural-Forms: \n"
 
-#: src/components/PositionCard/index.tsx
-msgid "+ Add"
-msgstr ""
-
 #: src/pages/SwapV2/index.tsx
 msgid "+ Add Recipient (optional)"
 msgstr "+ Alıcı Ekle (isteğe bağlı)"
@@ -29,10 +25,6 @@ msgstr "+ Gönderim ekle (isteğe bağlı)"
 #: src/pages/Pools/index.tsx
 msgid "+ Create New Pool"
 msgstr "+ Yeni Havuz Oluştur"
-
-#: src/components/PositionCard/index.tsx
-msgid "- Remove"
-msgstr "- Kaldır"
 
 #: src/pages/SwapV2/index.tsx
 msgid "- Remove Recipient"
@@ -86,7 +78,6 @@ msgstr "AMP faktörü x Havuzdaki likidite. Güçlendirilmiş havuzlar daha yük
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 msgid "APR"
@@ -126,6 +117,7 @@ msgid "Active Price Range"
 msgstr "Aktif Fiyat Aralığı"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 msgid "Add Liquidity"
 msgstr "Likidite Ekle"
 
@@ -240,6 +232,10 @@ msgstr "Emin misiniz?"
 
 #: src/components/Footer/Footer.tsx
 msgid "Audited By"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Available LP Tokens"
 msgstr ""
 
 #: src/components/PoolList/ListItem.tsx
@@ -480,7 +476,6 @@ msgstr "Mevcut fiyat:"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
 msgstr "Havuzun mevcut token çifti oranı. Havuz işlemlerine göre oran değişmektedir. Bu orana göre likidite ekleyiniz."
 
@@ -531,6 +526,9 @@ msgstr ""
 msgid "Docs"
 msgstr "Dokümanlar"
 
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Don't see a pool you joined?"
@@ -645,7 +643,6 @@ msgstr "İşleminiz için tahmini ağ ücreti"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Estimated return based on yearly fees of the pool"
 msgstr "Havuzun yıllık ücretlere dayalı tahmini getiri"
@@ -677,10 +674,6 @@ msgstr "Ücret (24s)"
 #: src/components/PoolList/ListItem.tsx
 msgid "Fee Range"
 msgstr "Ücret Aralığı"
-
-#: src/components/PositionCard/index.tsx
-msgid "Fees (24H)"
-msgstr "Ücretler (24s)"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -739,6 +732,15 @@ msgstr ""
 msgid "Github"
 msgstr "Github"
 
+#: src/components/PositionCard/index.tsx
+msgid "Go to farm"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Go to farm ↗"
+msgstr ""
+
 #: src/components/FarmHistoryModal/index.tsx
 msgid "HARVEST"
 msgstr "TOPLA"
@@ -757,8 +759,8 @@ msgid "Harvest All"
 msgstr "Tümünü Topla"
 
 #: src/pages/Pool/index.tsx
-msgid "Here you can view all your liquidity positions and add/remove more liquidity."
-msgstr "Burada tüm likidite pozisyonlarınızı görebilir ve daha fazla likidite ekleyebilir, likiditeyi kaldırabilirsiniz."
+msgid "Here you can view all your liquidity and staked balances"
+msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 #: src/pages/Yield/index.tsx
@@ -785,6 +787,7 @@ msgid "Import List"
 msgstr "İçe Aktarma Listesi"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Import Pool"
 msgstr "Havuzu İçe Aktar"
 
@@ -800,6 +803,9 @@ msgstr "Token’ları İçe Aktar"
 msgid "Import at your own risk"
 msgstr "Kendi sorumluluğunuzda içe aktarınız"
 
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Import it."
@@ -957,7 +963,6 @@ msgid "Loaded"
 msgstr "Yüklendi"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1092,12 +1097,9 @@ msgstr "Minimum alındı"
 msgid "My Deposit"
 msgstr "Yatırdıklarım"
 
-#: src/pages/Pool/index.tsx
-msgid "My Liquidity Pools"
-msgstr "Likidite Havuzlarım"
-
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "My Pools"
 msgstr "Havuzlarım"
 
@@ -1145,10 +1147,13 @@ msgstr "KYC veya kayıt gerekmez"
 msgid "No extra deposit or withdrawal fees"
 msgstr "Ekstra para yatırma veya çekme ücreti yoktur"
 
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "No liquidity found."
 msgstr "Likidite bulunamadı."
+
+#: src/pages/Pool/index.tsx
+msgid "No liquidity found. Check out our <0>Pools.</0>"
+msgstr ""
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "No records found."
@@ -1157,6 +1162,10 @@ msgstr "Kayıt bulunamadı."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Sonuç bulunamadı."
+
+#: src/pages/Pool/index.tsx
+msgid "No staked liquidity found. Check out our <0>Farms.</0>"
+msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "No vesting schedule!"
@@ -1259,10 +1268,6 @@ msgstr "Havuz Adresi"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "Havuz Bulundu!"
-
-#: src/components/PositionCard/index.tsx
-msgid "Pool Info"
-msgstr "Havuz Bilgisi"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -1396,7 +1401,6 @@ msgstr "Rainmaker Getiri Çiftçiliği"
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Ratio"
 msgstr "Oran"
 
@@ -1424,6 +1428,8 @@ msgid "Remove Anyway"
 msgstr "Yine de Kaldır"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
 msgid "Remove Liquidity"
 msgstr "Likiditeyi Kaldır"
 
@@ -1476,7 +1482,7 @@ msgstr "Havuz adresine göre ara"
 
 #: src/components/YieldPools/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Search by tokens or pool address"
+msgid "Search by token or pool address"
 msgstr ""
 
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1543,6 +1549,10 @@ msgstr "Tek Token"
 msgid "Something went wrong"
 msgstr "Bir şeyler yanlış gitti"
 
+#: src/components/PositionCard/index.tsx
+msgid "Staked LP Tokens"
+msgstr ""
+
 #: src/components/YieldPools/index.tsx
 msgid "Staked Only"
 msgstr "Sadece Stake Edilen"
@@ -1551,6 +1561,11 @@ msgstr "Sadece Stake Edilen"
 #: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "Stake edilen TVL"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Staked {0}"
+msgstr ""
 
 #: src/constants/index.ts
 msgid "Stands for amplification factor. Each pool can have its own AMP. Pools with a higher AMP provide higher capital efficiency within a particular price range"
@@ -1909,10 +1924,6 @@ msgstr "Listeyi Gör"
 msgid "View transaction on Etherscan"
 msgstr "Etherscan ile işlemi görüntüle"
 
-#: src/components/PositionCard/index.tsx
-msgid "Volume (24H)"
-msgstr "Hacim (24s)"
-
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 msgid "Volume (24h)"
@@ -1971,6 +1982,10 @@ msgstr "Bir havuz oluşturuyorsunuz"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "Tek bir token (token çiftinden istediğiniz token) sağlayarak havuza likidite ekleyebilirsiniz. Sizin için otomatik olarak LP token’ları oluşturacağız ve bunları likidite havuzuna ekleyeceğiz - Hem de hepsi sadece tek bir işlemde"
 
+#: src/pages/Pool/index.tsx
+msgid "You can manually import your pool"
+msgstr ""
+
 #: src/components/LiveChart/index.tsx
 msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
 msgstr ""
@@ -1993,9 +2008,18 @@ msgstr "Mevcut Pozisyonunuz"
 msgid "Your Liquidity"
 msgstr "Likiditeniz"
 
+#: src/components/PositionCard/index.tsx
+msgid "Your Liquidity Balance"
+msgstr ""
+
 #: src/pages/AddLiquidity/ZapIn.tsx
 msgid "Your Pool Allocation"
 msgstr "Havuzdaki Dağılımınız"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your Share Of Pool"
+msgstr ""
 
 #: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/PoolPriceBar/index.tsx
@@ -2003,8 +2027,16 @@ msgid "Your Share of Pool"
 msgstr "Havuz Payınız"
 
 #: src/components/PositionCard/index.tsx
-msgid "Your deposit"
-msgstr "Yatırdıklarınız"
+msgid "Your Staked"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Your Staked Balance"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Your available LP Token balance after staking (if applicable)"
+msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardSUSHI.tsx
@@ -2019,11 +2051,6 @@ msgstr "Havuz paylaşımınız:"
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
 msgstr "Pozisyonunuz"
-
-#: src/components/PositionCard/index.tsx
-#: src/components/PositionCard/index.tsx
-msgid "Your share of pool"
-msgstr "Havuzdaki payınız"
 
 #: src/components/Vesting/index.tsx
 msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
@@ -2116,6 +2143,7 @@ msgstr "{0} kaldırıldı"
 msgid "{0} tokens"
 msgstr "{0} token varlıkları"
 
+#: src/components/PositionCard/index.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"

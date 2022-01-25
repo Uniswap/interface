@@ -138,7 +138,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         <HeadingRight>
           <SearchContainer>
             <SearchInput
-              placeholder={t`Search by tokens or pool address`}
+              placeholder={t`Search by token or pool address`}
               maxLength={255}
               value={searchText}
               onChange={e => setSearchText(e.target.value)}

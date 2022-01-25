@@ -138,7 +138,7 @@ export default function ShareModal({ currencies }: { currencies?: { [field in Fi
       )
     }
     return window.location.href
-  }, [currencies, isSwapPage])
+  }, [currencies, isSwapPage, chainId])
 
   const [showAlert, setShowAlert] = useState(false)
   const handleCopyClick = () => {

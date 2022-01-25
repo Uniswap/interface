@@ -11,7 +11,7 @@ import NoFarms from './NoFarms'
 import ListItem from './ListItem'
 import { TableWrapper, TableHeader, RowsWrapper } from './styled'
 
-const UpcomingFarms = ({ setActiveTab }: { setActiveTab: (activeTab: number) => void }) => {
+const UpcomingFarms = () => {
   const lgBreakpoint = useMedia('(min-width: 1000px)')
 
   const renderHeader = () => {
@@ -74,7 +74,7 @@ const UpcomingFarms = ({ setActiveTab }: { setActiveTab: (activeTab: number) => 
           </RowsWrapper>
         </TableWrapper>
       ) : (
-        <NoFarms setActiveTab={setActiveTab} />
+        <NoFarms />
       )}
     </>
   )

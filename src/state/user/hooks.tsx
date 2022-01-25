@@ -34,7 +34,7 @@ import { useAllTokens } from 'hooks/Tokens'
 import { isAddress } from 'utils'
 import { useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-import { isMobile } from 'react-device-detect'
+
 function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo): SerializedToken {
   return {
     chainId: token.chainId,

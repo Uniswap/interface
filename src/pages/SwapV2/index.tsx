@@ -188,7 +188,7 @@ export default function Swap({ history }: RouteComponentProps) {
     setApprovalSubmitted(false) // reset 2 step UI for approvals
     setRotate(prev => !prev)
     onSwitchTokensV2()
-  }, [])
+  }, [onSwitchTokensV2])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{

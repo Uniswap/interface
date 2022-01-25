@@ -125,7 +125,7 @@ const LineChart = ({ data, setHoverValue, color, timeFrame }: LineChartProps) =>
       data.filter((item: any) => !!item.value),
       timeFrame
     )
-  }, [data])
+  }, [data, timeFrame])
   const dataMax = useMemo(() => Math.max(...formattedData.map((item: any) => parseFloat(item.value))), [formattedData])
   const dataMin = useMemo(() => Math.min(...formattedData.map((item: any) => parseFloat(item.value))), [formattedData])
   const ticks = useMemo(() => {
