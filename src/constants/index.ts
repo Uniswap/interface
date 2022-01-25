@@ -799,6 +799,74 @@ export const DEFAULT_REWARDS: { [key: string]: string[] } = {
   [ChainId.MAINNET]: ['0x9F52c8ecbEe10e00D9faaAc5Ee9Ba0fF6550F511']
 }
 
+export const OUTSITE_FAIRLAUNCH_ADDRESSES: {
+  // key: fairlaunch address
+  [key: string]: {
+    address: string
+    subgraphAPI: string
+    query: string
+    name: string
+    poolInfoLink: string
+    getLPTokenLink: string
+  }
+} = {
+  '0x597e3FeDBC02579232799Ecd4B7edeC4827B0435': {
+    address: '0x597e3FeDBC02579232799Ecd4B7edeC4827B0435',
+    subgraphAPI: 'https://pancake-subgraph-proxy.kyberswap.com/proxy',
+    query: ` { pair(id: "0x4e241e3e76214635eccc7408620b940f0bda267d") {
+    id
+    token0 {
+      id
+      symbol
+      name
+      totalLiquidity
+      derivedUSD
+      derivedBNB
+    }
+    token1 {
+      id
+      symbol
+      name
+      totalLiquidity
+      derivedUSD
+    }
+    reserve0
+    reserve1
+    reserveUSD
+    totalSupply
+    volumeUSD
+    untrackedVolumeUSD
+    trackedReserveBNB
+    token0Price
+    token1Price
+  }}`,
+    name: 'PancakeSwap',
+    poolInfoLink: 'https://pancakeswap.finance/info/pool/0x4e241E3E76214635ecCC7408620b940f0bDA267D',
+    getLPTokenLink:
+      'https://pancakeswap.finance/add/0xc04a23149efdf9a63697f3eb60705147e9f07ffd/0xe9e7cea3dedca5984780bafc599bd69add087d56'
+  }
+}
+
+export const OUTSITE_FARM_REWARDS_QUERY: {
+  [key: string]: {
+    subgraphAPI: string
+    query: string
+  }
+} = {
+  '0xc04a23149efdF9A63697f3Eb60705147e9f07FfD': {
+    subgraphAPI: 'https://pancake-subgraph-proxy.kyberswap.com/proxy',
+    query: `{
+      tokens(where: {id_in: ["0xc04a23149efdf9a63697f3eb60705147e9f07ffd"]}){
+    id
+    name
+    symbol
+    derivedUSD
+    derivedBNB
+  }
+  }`
+  }
+}
+
 export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
@@ -835,6 +903,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD', '0xf530a090EF6481cfB33F98c63532E7745abab58A']
       : [
+          '0x597e3FeDBC02579232799Ecd4B7edeC4827B0435',
           '0x3D88bDa6ed7dA31E15E86A41CA015Ea50771448E',
           '0x829c27fd3013b944cbE76E92c3D6c45767c0C789',
           '0xc49b3b43565b76E5ba7A98613263E7bFdEf1140c',

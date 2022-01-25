@@ -297,9 +297,15 @@ export const FairLaunchPoolsWrapper = styled.div`
 export const FairLaunchPoolsTitle = styled.div<{ backgroundColor: string }>`
   padding: 24px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   background-color: ${({ backgroundColor }) => backgroundColor};
+  gap: 24px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: column;
+  align-items: flex-end;
+  `}
 `
 
 export const ListItemWrapper = styled.div`

@@ -2,7 +2,7 @@ import React from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { ChainId } from '@dynamic-amm/sdk'
-import { AVERAGE_BLOCK_TIME_IN_SECS } from 'constants/index'
+import { AVERAGE_BLOCK_TIME_IN_SECS, OUTSITE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useFairLaunch from 'hooks/useFairLaunch'
 import { useAppDispatch } from 'state/hooks'
@@ -16,6 +16,9 @@ import HarvestAll from './HarvestAll'
 import { FairLaunchPoolsWrapper, FairLaunchPoolsTitle, HarvestAllSection, ListItemWrapper } from './styleds'
 import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
+import { Text } from 'rebass'
+import { Trans } from '@lingui/macro'
+import { ExternalLink } from 'theme'
 
 interface FarmsListProps {
   fairLaunchAddress: string
@@ -88,11 +91,22 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
 
   const displayFarms = farmsList.sort((a, b) => b.endBlock - a.endBlock)
 
+  const outsiteFarm = OUTSITE_FAIRLAUNCH_ADDRESSES[fairLaunchAddress]
+
   return (
     <FairLaunchPoolsWrapper>
       {!!displayFarms.length && (
         <>
           <FairLaunchPoolsTitle backgroundColor={isDarkMode ? `${theme.bg12}40` : `${theme.bg12}80`}>
+            <Text fontSize={14} fontStyle="italic" color={theme.subText}>
+              {outsiteFarm && (
+                <Trans>
+                  This pool require {outsiteFarm.name} LP Tokens. Get the LP Tokens{' '}
+                  <ExternalLink href={outsiteFarm.getLPTokenLink}>here ↗</ExternalLink>{' '}
+                </Trans>
+              )}
+            </Text>
+
             <HarvestAllSection>
               <HarvestAll totalRewards={totalRewards} onHarvestAll={handleHarvestAll} />
             </HarvestAllSection>

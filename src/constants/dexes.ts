@@ -30,6 +30,16 @@ export const dexListConfig: DexList = {
     icon: 'https://sushi.com/favicon.ico',
     chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM]
   },
+  shibaswap: {
+    name: 'ShibaSwap',
+    icon: 'https://shibaswap.com/images/logo_shiba_swap.png',
+    chainIds: [ChainId.MAINNET]
+  },
+  defiswap: {
+    name: 'DefiSwap',
+    icon: 'https://crypto.com/defi/swap/favicon.c5a5b109.png',
+    chainIds: [ChainId.MAINNET]
+  },
   quickswap: {
     name: 'QuickSwap',
     icon: 'https://quickswap.exchange/logo_circle.png',
@@ -90,6 +100,11 @@ export const dexListConfig: DexList = {
     icon: 'https://swap.cometh.io/favicon.ico',
     chainIds: [ChainId.MATIC]
   },
+  dinoswap: {
+    name: 'DinoSwap',
+    icon: 'https://dinoswap.exchange/favicon.ico',
+    chainIds: [ChainId.MATIC]
+  },
   pancake: {
     name: 'PancakeSwap',
     icon: 'https://pancakeswap.finance/favicon.ico',
@@ -113,11 +128,21 @@ export const dexListConfig: DexList = {
   apeswap: {
     name: 'ApeSwap',
     icon: 'https://apeswap.finance/favicon.ico',
-    chainIds: [ChainId.BSCMAINNET]
+    chainIds: [ChainId.MATIC, ChainId.BSCMAINNET]
   },
   ellipsis: {
     name: 'Ellipsis',
     icon: 'https://ellipsis.finance/ellipsis-light.png',
+    chainIds: [ChainId.BSCMAINNET]
+  },
+  safeswap: {
+    name: 'SafeSwap',
+    icon: 'https://safeswap.yfdai.finance/favicon.png',
+    chainIds: [ChainId.BSCMAINNET]
+  },
+  pantherswap: {
+    name: 'PantherSwap',
+    icon: 'https://pantherswap.com/favicon.ico',
     chainIds: [ChainId.BSCMAINNET]
   },
   nerve: {
@@ -148,6 +173,16 @@ export const dexListConfig: DexList = {
   paintswap: {
     name: 'PaintSwap',
     icon: 'https://paintswap.finance/favicon.png',
+    chainIds: [ChainId.FANTOM]
+  },
+  morpheus: {
+    name: 'MorpheusSwap',
+    icon: 'https://morpheusswap.app/favicon.ico',
+    chainIds: [ChainId.FANTOM]
+  },
+  beethovenx: {
+    name: 'beethoven-x',
+    icon: 'https://app.beets.fi/favicon.ico',
     chainIds: [ChainId.FANTOM]
   },
   synapse: {
@@ -194,12 +229,32 @@ export const dexListConfig: DexList = {
     name: 'Crodex',
     icon: 'https://swap.crodex.app/favicon.png',
     chainIds: [ChainId.CRONOS]
+  },
+  mmf: {
+    name: 'Mad Meerkat Finance',
+    icon: 'https://mm.finance/favicon.ico',
+    chainIds: [ChainId.CRONOS]
+  },
+  kryptodex: {
+    name: 'KryptoDEX',
+    icon: 'https://www.kryptodex.org/favicon.svg',
+    chainIds: [ChainId.CRONOS]
+  },
+  empiredex: {
+    name: 'Empire Dex',
+    icon: 'https://bsc.empiredex.org/favicon.png',
+    chainIds: [ChainId.CRONOS]
+  },
+  photonswap: {
+    name: 'PhotonSwap',
+    icon: 'https://photonswap.finance/logo.png',
+    chainIds: [ChainId.CRONOS]
   }
 }
 
 type DexTypes = {
   [chainId in ChainId | 'all']?: {
-    [dex: string]: 0 | 1 | 2 | 3 | 4 | 5 | 6
+    [dex: string]: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
   }
 }
 /*
@@ -210,6 +265,9 @@ type DexTypes = {
 4 - 15
 5 - 10
 6 - 5
+7 - 17 = 0.17%
+8 - 18 = 0.18%
+9 - 50 = 0.5%
 */
 export const dexIds: DexTypes = {
   all: {
@@ -226,7 +284,14 @@ export const dexIds: DexTypes = {
     axial: 3,
     cronaswap: 2,
     gravity: 2,
-    kyberswap: 0
+    kyberswap: 0,
+    mmf: 7,
+    kryptodex: 3,
+    cometh: 9,
+    dinoswap: 8,
+    safeswap: 2,
+    pantherswap: 3,
+    morpheus: 4
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
@@ -245,7 +310,8 @@ export const dexTypes: DexTypes = {
     'iron-stable': 4,
     balancer: 6,
     synapse: 4,
-    axial: 4
+    axial: 4,
+    beethovenx: 6
   },
   [ChainId.MAINNET]: {},
   [ChainId.BSCMAINNET]: {},

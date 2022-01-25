@@ -92,6 +92,11 @@ msgstr "AMP factor x Liquidity in the pool. Amplified pools have higher capital 
 msgid "APR"
 msgstr "APR"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "AVAILABLE BALANCE:"
+msgstr "AVAILABLE BALANCE:"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -240,11 +245,6 @@ msgstr "Audited By"
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
 msgstr "Available for yield farming"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "BALANCE:"
-msgstr "BALANCE:"
 
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
@@ -496,11 +496,6 @@ msgstr "Custom"
 msgid "DEPOSIT"
 msgstr "DEPOSIT"
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "DEPOSIT:"
-msgstr "DEPOSIT:"
-
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr "DEXs"
@@ -727,13 +722,18 @@ msgstr "Gas Fee"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-msgid "Get pool info"
-msgstr "Get pool info"
+msgid "Get pool {0} info"
+msgstr "Get pool {0} info"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
 msgstr "Get {0}-{1} LP ↗"
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Get {0}-{1} {2} LP ↗"
+msgstr "Get {0}-{1} {2} LP ↗"
 
 #: src/pages/About/index.tsx
 msgid "Github"
@@ -1457,6 +1457,11 @@ msgstr "Route"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Routing through these tokens resulted in the best price for your trade."
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "STAKED BALANCE:"
+msgstr "STAKED BALANCE:"
+
 #: src/pages/About/index.tsx
 msgid "Save time & effort"
 msgstr "Save time & effort"
@@ -1666,6 +1671,10 @@ msgstr "There is no existing pool for this token pair. You will be creating a ne
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "These tokens are commonly paired with other tokens."
+
+#: src/components/YieldPools/FairLaunchPools.tsx
+msgid "This pool require {0} LP Tokens. Get the LP Tokens <0>here ↗</0>"
+msgstr "This pool require {0} LP Tokens. Get the LP Tokens <0>here ↗</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."

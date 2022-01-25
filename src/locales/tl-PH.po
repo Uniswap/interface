@@ -92,6 +92,11 @@ msgstr ""
 msgid "APR"
 msgstr ""
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "AVAILABLE BALANCE:"
+msgstr ""
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -239,11 +244,6 @@ msgstr ""
 
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
-msgstr ""
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "BALANCE:"
 msgstr ""
 
 #: src/pages/About/index.tsx
@@ -496,11 +496,6 @@ msgstr ""
 msgid "DEPOSIT"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "DEPOSIT:"
-msgstr ""
-
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr ""
@@ -727,12 +722,17 @@ msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-msgid "Get pool info"
+msgid "Get pool {0} info"
 msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Get {0}-{1} {2} LP ↗"
 msgstr ""
 
 #: src/pages/About/index.tsx
@@ -1457,6 +1457,11 @@ msgstr ""
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr ""
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "STAKED BALANCE:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Save time & effort"
 msgstr ""
@@ -1665,6 +1670,10 @@ msgstr ""
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
+msgstr ""
+
+#: src/components/YieldPools/FairLaunchPools.tsx
+msgid "This pool require {0} LP Tokens. Get the LP Tokens <0>here ↗</0>"
 msgstr ""
 
 #: src/components/SearchModal/ImportToken.tsx

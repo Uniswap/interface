@@ -41,8 +41,8 @@ export const CRONOS_TOKEN_LIST = {
     {
       chainId: 25,
       address: '0xe44Fd7fCb2b1581822D0c862B68222998a0c299a',
-      symbol: 'ETH',
-      name: 'Ether',
+      symbol: 'WETH',
+      name: 'Wrapped Ether',
       decimals: 18
     },
     {
@@ -65,6 +65,29 @@ export const CRONOS_TOKEN_LIST = {
       symbol: 'WBTC',
       name: 'Wrapped BTC',
       decimals: 8
+    },
+    {
+      chainId: 25,
+      address: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
+      symbol: 'CRONA',
+      name: 'CronaSwap Token',
+      decimals: 18,
+      logoURI: 'https://app.cronaswap.org/images/tokens/0xadbd1231fb360047525BEdF962581F3eee7b49fe.svg'
+    },
+    {
+      chainId: 25,
+      address: '0x97749c9B61F878a880DfE312d2594AE07AEd7656',
+      symbol: 'MMF',
+      name: 'Mad Meerkat Finance',
+      decimals: 18,
+      logoURI: 'https://mm.finance//images/tokens/0x97749c9B61F878a880DfE312d2594AE07AEd7656.svg'
+    },
+    {
+      chainId: 25,
+      address: '0xB888d8Dd1733d72681b30c00ee76BDE93ae7aa93',
+      symbol: 'ATOM',
+      name: 'ATOM',
+      decimals: 6
     }
   ],
   version: {

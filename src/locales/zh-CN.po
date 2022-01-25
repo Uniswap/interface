@@ -92,6 +92,11 @@ msgstr "AMP 系数 x 池中的流动性。 放大池具有更高的资本效率�
 msgid "APR"
 msgstr "APR"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "AVAILABLE BALANCE:"
+msgstr ""
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -240,11 +245,6 @@ msgstr ""
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
 msgstr "可用于流动性挖矿"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "BALANCE:"
-msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
@@ -496,11 +496,6 @@ msgstr "自定义"
 msgid "DEPOSIT"
 msgstr "存款"
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "DEPOSIT:"
-msgstr ""
-
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr "去中心化交易所"
@@ -727,13 +722,18 @@ msgstr "燃料费用"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-msgid "Get pool info"
-msgstr "获取池的信息"
+msgid "Get pool {0} info"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
-msgstr "获得 {0}-{1} LP ↗"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Get {0}-{1} {2} LP ↗"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Github"
@@ -1457,6 +1457,11 @@ msgstr "路由"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "通过这些代币的路由为您的交易带来了最好的价格。"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "STAKED BALANCE:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Save time & effort"
 msgstr ""
@@ -1666,6 +1671,10 @@ msgstr ""
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "这些代币通常与其他代币配对。"
+
+#: src/components/YieldPools/FairLaunchPools.tsx
+msgid "This pool require {0} LP Tokens. Get the LP Tokens <0>here ↗</0>"
+msgstr ""
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."

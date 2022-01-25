@@ -131,6 +131,14 @@ export const BSC_MAINNET_TOKEN_LIST = {
       name: 'Parallel',
       decimals: 18,
       logoURI: 'https://i.imgur.com/99UaEcO.png'
+    },
+    {
+      chainId: 56,
+      address: '0xc04a23149efdF9A63697f3Eb60705147e9f07FfD',
+      symbol: 'GENI',
+      name: 'GemUni',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/f5JZgpy.png'
     }
   ],
   version: {

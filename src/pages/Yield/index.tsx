@@ -36,6 +36,7 @@ const Farms = () => {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const { loading, data: farms } = useFarmsData()
+
   const [activeTab, setActiveTab] = useState(0)
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
   const vestingLoading = useSelector<AppState, boolean>(state => state.vesting.loading)

@@ -92,6 +92,11 @@ msgstr "AMP faktörü x Havuzdaki likidite. Güçlendirilmiş havuzlar daha yük
 msgid "APR"
 msgstr "YYO"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "AVAILABLE BALANCE:"
+msgstr ""
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -240,11 +245,6 @@ msgstr ""
 #: src/components/PoolList/ListItem.tsx
 msgid "Available for yield farming"
 msgstr "Getiri çiftçiliği için kullanılabilir"
-
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "BALANCE:"
-msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
@@ -496,11 +496,6 @@ msgstr "Özel"
 msgid "DEPOSIT"
 msgstr "YATIR"
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "DEPOSIT:"
-msgstr ""
-
 #: src/pages/About/index.tsx
 msgid "DEXs"
 msgstr "DEX’ler"
@@ -727,13 +722,18 @@ msgstr "Gas Ücreti"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-msgid "Get pool info"
-msgstr "Havuz bilgisini al"
+msgid "Get pool {0} info"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
-msgstr "{0}-{1} LP alın ↗"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Get {0}-{1} {2} LP ↗"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Github"
@@ -1457,6 +1457,11 @@ msgstr "Rota"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Bu token’lar aracılığıyla yönlendirme, işleminiz için en iyi fiyatı sağladı."
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "STAKED BALANCE:"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Save time & effort"
 msgstr ""
@@ -1666,6 +1671,10 @@ msgstr ""
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Bu token’lar genellikle diğer token’lar ile eşleştirilir."
+
+#: src/components/YieldPools/FairLaunchPools.tsx
+msgid "This pool require {0} LP Tokens. Get the LP Tokens <0>here ↗</0>"
+msgstr ""
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
