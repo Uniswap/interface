@@ -34,6 +34,10 @@ msgstr "- 받는 사람 제거"
 msgid "- Remove send"
 msgstr "- 보내기 제거"
 
+#: src/pages/About/index.tsx
+msgid "24H Trading Volume"
+msgstr ""
+
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>고급 모드</0> 슬립피지가 높더라도 항상 거래를 허용합니다. 높은 슬립피지로 보다 적은 금액을 교환 받을 위험이 있습니다. "

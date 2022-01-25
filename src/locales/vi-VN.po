@@ -34,6 +34,10 @@ msgstr "- Xoá Người Nhận"
 msgid "- Remove send"
 msgstr "- Gửi Lệnh Xoá"
 
+#: src/pages/About/index.tsx
+msgid "24H Trading Volume"
+msgstr "Khối lượng Giao dịch 24H"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>Chế Độ Nâng Cao</0> tắt lời nhắc giao dịch 'Xác nhận' và cho phép các giao dịch có độ trượt giá cao có thể dẫn đến tỷ giá xấu và mất thanh khoản."

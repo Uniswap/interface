@@ -34,6 +34,10 @@ msgstr ""
 msgid "- Remove send"
 msgstr ""
 
+#: src/pages/About/index.tsx
+msgid "24H Trading Volume"
+msgstr ""
+
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr ""

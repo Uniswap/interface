@@ -34,6 +34,10 @@ msgstr "- Alıcıyı Kaldır"
 msgid "- Remove send"
 msgstr "- Gönderimi Kaldır"
 
+#: src/pages/About/index.tsx
+msgid "24H Trading Volume"
+msgstr ""
+
 #: src/components/TransactionSettings/index.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>Gelişmiş Mod</0> 'Onayla’ seçeneği düşük oranlara ve fon kaybına neden olabilecek yüksek yüzdeli kayma yaşanabilecek işlemlere izin verir."

@@ -42,6 +42,14 @@ export const BtnPrimary = styled(ButtonPrimary)`
   `};
 `
 
+export const OverflowStatisticWrapper = styled.div`
+  margin: 160px calc(400px - 40vw) 0;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-left: 0;
+    margin-right: 0;
+  `}
+`
+
 export const StatisticWrapper = styled.div`
   display: flex;
   gap: 16px;

@@ -71,7 +71,8 @@ import {
   GridWrapper,
   BackgroundBottom,
   VerticalDivider,
-  CommittedToSecurityDivider
+  CommittedToSecurityDivider,
+  OverflowStatisticWrapper
 } from './styleds'
 import { ButtonEmpty } from 'components/Button'
 import { FooterSocialLink } from 'components/Footer/Footer'
@@ -313,73 +314,80 @@ function About() {
             </BtnOutlined>
           </Flex>
 
-          <StatisticWrapper>
-            <StatisticItem>
-              <Text fontSize={['24px', '28px']} fontWeight={600}>
-                {aggregatorData?.totalVolume ? formatBigLiquidity(aggregatorData.totalVolume, 2, true) : <Loader />}
-              </Text>
-              <Text color={theme.subText} marginTop="8px">
-                <Trans>Total Trading Volume</Trans>*
-              </Text>
-            </StatisticItem>
-            <Flex sx={{ gap: '16px' }} flex={2}>
-              <StatisticItem>
-                <Text fontSize={['24px', '28px']} fontWeight={600}>
-                  {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
-                </Text>
-                <Text color={theme.subText} marginTop="8px">
-                  <Trans>Total Value Locked</Trans>
-                </Text>
-              </StatisticItem>
-              <StatisticItem>
-                <Text fontSize={['24px', '28px']} fontWeight={600}>
-                  {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
-                </Text>
-                <Text color={theme.subText} marginTop="8px">
-                  <Trans>Total AMP Liquidity</Trans>**
-                </Text>
-              </StatisticItem>
-            </Flex>
-
-            <Flex
-              sx={{ gap: '16px' }}
-              flex={
-                maxApr[chainId as ChainId] >= 0 && totalRewardsUSD > 0
-                  ? 2
-                  : maxApr[chainId as ChainId] >= 0 || totalRewardsUSD > 0
-                  ? 1
-                  : 0
-              }
-            >
-              {totalRewardsUSD > 0 && (
+          <OverflowStatisticWrapper>
+            <StatisticWrapper>
+              <Flex sx={{ gap: '16px' }} flex={2}>
                 <StatisticItem>
                   <Text fontSize={['24px', '28px']} fontWeight={600}>
-                    {formatBigLiquidity(totalRewardsUSD.toString(), 2, true)}
+                    {aggregatorData?.totalVolume ? formatBigLiquidity(aggregatorData.totalVolume, 2, true) : <Loader />}
                   </Text>
                   <Text color={theme.subText} marginTop="8px">
-                    <Trans>Total Earnings</Trans>
+                    <Trans>Total Trading Volume</Trans>*
                   </Text>
                 </StatisticItem>
-              )}
-              {maxApr[chainId as ChainId] >= 0 && (
                 <StatisticItem>
                   <Text fontSize={['24px', '28px']} fontWeight={600}>
-                    {maxApr[chainId as ChainId] >= 0 ? maxApr[chainId as ChainId].toFixed(2) + '%' : <Loader />}
+                    {aggregatorData?.last24hVolume ? (
+                      formatBigLiquidity(aggregatorData.last24hVolume, 2, true)
+                    ) : (
+                      <Loader />
+                    )}
                   </Text>
                   <Text color={theme.subText} marginTop="8px">
-                    <Trans>Max APR Available</Trans>
+                    <Trans>24H Trading Volume</Trans>*
                   </Text>
                 </StatisticItem>
+              </Flex>
+              <Flex sx={{ gap: '16px' }} flex={2}>
+                <StatisticItem>
+                  <Text fontSize={['24px', '28px']} fontWeight={600}>
+                    {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
+                  </Text>
+                  <Text color={theme.subText} marginTop="8px">
+                    <Trans>Total Value Locked</Trans>
+                  </Text>
+                </StatisticItem>
+                <StatisticItem>
+                  <Text fontSize={['24px', '28px']} fontWeight={600}>
+                    {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
+                  </Text>
+                  <Text color={theme.subText} marginTop="8px">
+                    <Trans>Total AMP Liquidity</Trans>**
+                  </Text>
+                </StatisticItem>
+              </Flex>
+              {(maxApr[chainId as ChainId] >= 0 || totalRewardsUSD > 0) && (
+                <Flex sx={{ gap: '16px' }} flex={maxApr[chainId as ChainId] >= 0 && totalRewardsUSD > 0 ? 2 : 1}>
+                  {totalRewardsUSD > 0 && (
+                    <StatisticItem>
+                      <Text fontSize={['24px', '28px']} fontWeight={600}>
+                        {formatBigLiquidity(totalRewardsUSD.toString(), 2, true)}
+                      </Text>
+                      <Text color={theme.subText} marginTop="8px">
+                        <Trans>Total Earnings</Trans>
+                      </Text>
+                    </StatisticItem>
+                  )}
+                  {maxApr[chainId as ChainId] >= 0 && (
+                    <StatisticItem>
+                      <Text fontSize={['24px', '28px']} fontWeight={600}>
+                        {maxApr[chainId as ChainId] >= 0 ? maxApr[chainId as ChainId].toFixed(2) + '%' : <Loader />}
+                      </Text>
+                      <Text color={theme.subText} marginTop="8px">
+                        <Trans>Max APR Available</Trans>
+                      </Text>
+                    </StatisticItem>
+                  )}
+                </Flex>
               )}
-            </Flex>
-          </StatisticWrapper>
-
-          <Text fontStyle="italic" textAlign="right" fontSize="12px" marginTop="12px" color={theme.subText}>
-            *<Trans>Includes DEX aggregation</Trans>
-          </Text>
-          <Text fontStyle="italic" textAlign="right" fontSize="12px" marginTop="8px" color={theme.subText}>
-            **<Trans>TVL equivalent compared to AMMs</Trans>
-          </Text>
+            </StatisticWrapper>
+            <Text fontStyle="italic" textAlign="right" fontSize="12px" marginTop="12px" color={theme.subText}>
+              *<Trans>Includes DEX aggregation</Trans>
+            </Text>
+            <Text fontStyle="italic" textAlign="right" fontSize="12px" marginTop="8px" color={theme.subText}>
+              **<Trans>TVL equivalent compared to AMMs</Trans>
+            </Text>
+          </OverflowStatisticWrapper>
 
           <ForTrader>
             <Flex flex={1} flexDirection="column" height="max-content">
