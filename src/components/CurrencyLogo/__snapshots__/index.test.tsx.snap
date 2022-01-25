@@ -29,7 +29,7 @@ exports[`renders a currency logo with network logo 1`] = `
         Array [
           Object {
             "borderRadius": 999999,
-            "borderWidth": 2,
+            "borderWidth": 0,
             "display": "flex",
           },
           Object {
@@ -37,28 +37,7 @@ exports[`renders a currency logo with network logo 1`] = `
           },
         ]
       }
-    >
-      <Image
-        source={
-          Object {
-            "uri": "https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png",
-          }
-        }
-        style={
-          Array [
-            Object {
-              "backgroundColor": "slategrey",
-              "resizeMode": "cover",
-            },
-            Object {
-              "borderRadius": 3.2,
-              "height": 6.4,
-              "width": 6.4,
-            },
-          ]
-        }
-      />
-    </View>
+    />
   </View>
 </View>
 `;

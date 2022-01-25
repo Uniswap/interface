@@ -15,7 +15,7 @@ type NetworkLogoProps = {
   SpacingShorthandProps<Theme>
 
 export function NetworkLogo({ chainId, borderWidth = 0, size = 10, ...rest }: NetworkLogoProps) {
-  const { logoUrl } = CHAIN_INFO[chainId]
+  const { logo } = CHAIN_INFO[chainId]
   const { foreground } = useNetworkColors(chainId)
 
   return (
@@ -24,17 +24,19 @@ export function NetworkLogo({ chainId, borderWidth = 0, size = 10, ...rest }: Ne
       borderWidth={borderWidth}
       style={{ borderColor: foreground }}
       {...rest}>
-      <Image
-        source={{ uri: logoUrl }}
-        style={[
-          style.image,
-          {
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-          },
-        ]}
-      />
+      {logo && (
+        <Image
+          source={logo}
+          style={[
+            style.image,
+            {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+            },
+          ]}
+        />
+      )}
     </Box>
   )
 }

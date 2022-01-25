@@ -19,13 +19,13 @@ interface CurrencyLogoProps {
 export function CurrencyLogo(props: CurrencyLogoProps) {
   const { size, currency } = props
   const currencyLogoSize = (size ?? DEFAULT_SIZE) - 4
-  const networkSize = currencyLogoSize / 2.5
+  const networkSize = currencyLogoSize / 2
   return (
     <Box height={size} width={size}>
       <CurrencyLogoOnly currency={currency} size={currencyLogoSize} />
       {currency.chainId !== ChainId.MAINNET && (
         <Box bottom={0} position="absolute" right={0}>
-          <NetworkLogo borderWidth={2} chainId={currency.chainId} size={networkSize} />
+          <NetworkLogo chainId={currency.chainId} size={networkSize} />
         </Box>
       )}
     </Box>

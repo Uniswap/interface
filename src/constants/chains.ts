@@ -1,5 +1,16 @@
 // Based on https://github.com/Uniswap/interface/blob/main/src/constants/chains.ts
 
+import {
+  ARBITRUM_LOGO,
+  ETHEREUM_LOGO,
+  GOERLI_LOGO,
+  KOVAN_LOGO,
+  OPTIMISM_LOGO,
+  OPTIMISTIC_KOVAN_LOGO,
+  RINKEBY_LOGO,
+  ROPSTEN_LOGO,
+} from 'src/assets'
+
 export type ChainIdTo<T> = Partial<Record<ChainId, T>>
 export type ChainIdToAddressTo<T> = ChainIdTo<AddressTo<T>>
 
@@ -60,6 +71,7 @@ export interface L1ChainInfo {
   readonly infoLink: string
   readonly label: string
   readonly logoUrl?: string
+  readonly logo?: any
   readonly rpcUrls?: string[]
   readonly subgraphUrl?: string
   readonly nativeCurrency: {
@@ -86,6 +98,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
+    logo: ARBITRUM_LOGO,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
     subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
@@ -106,6 +119,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
+    logo: ETHEREUM_LOGO,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     subgraphUrl: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   },
@@ -114,8 +128,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://rinkeby.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Rinkeby',
-    logoUrl:
-      'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
+    logo: RINKEBY_LOGO,
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
     subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-rinkeby',
   },
@@ -124,8 +137,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://ropsten.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ropsten',
-    logoUrl:
-      'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
+    logo: ROPSTEN_LOGO,
     nativeCurrency: { name: 'Ropsten ETH', symbol: 'ropETH', decimals: 18 },
   },
   [ChainId.KOVAN]: {
@@ -133,8 +145,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://kovan.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Kovan',
-    logoUrl:
-      'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
+    logo: KOVAN_LOGO,
     nativeCurrency: { name: 'Kovan ETH', symbol: 'kovETH', decimals: 18 },
   },
   [ChainId.GOERLI]: {
@@ -143,8 +154,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://goerli.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
-    logoUrl:
-      'https://ethereum.org/static/655aaefb744ae2f9f818095a436d38b5/31987/eth-diamond-purple-purple.png',
+    logo: GOERLI_LOGO,
     nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
   },
   [ChainId.OPTIMISM]: {
@@ -154,8 +164,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'OΞ',
-    logoUrl:
-      'https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/images/Profile-Logo.png',
+    logo: OPTIMISM_LOGO,
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.optimism.io'],
     statusPage: 'https://optimism.io/status',
@@ -167,8 +176,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'Optimistic Kovan',
-    logoUrl:
-      'https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/images/Stylized-Logo.png',
+    logo: OPTIMISTIC_KOVAN_LOGO,
     rpcUrls: ['https://kovan.optimism.io'],
     nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
     statusPage: 'https://optimism.io/status',

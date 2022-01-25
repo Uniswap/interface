@@ -1,2 +1,10 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-export const ETHEREUM_LOGO = require('./ethereum-logo.png')
+export const ETHEREUM_LOGO = require('./logos/ethereum-logo.png')
+export const OPTIMISM_LOGO = require('./logos/optimism-logo.png')
+export const ARBITRUM_LOGO = require('./logos/arbitrum-logo.png')
+export const POLYGON_LOGO = require('./logos/polygon-matic-logo.png')
+export const OPTIMISTIC_KOVAN_LOGO = require('./logos/optimistic-kovan-logo.png')
+export const GOERLI_LOGO = require('./logos/goerli-logo.png')
+export const KOVAN_LOGO = require('./logos/ropsten-logo.png')
+export const RINKEBY_LOGO = require('./logos/rinkeby-logo.png')
+export const ROPSTEN_LOGO = require('./logos/ropsten-logo.png')
