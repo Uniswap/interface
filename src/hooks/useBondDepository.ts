@@ -2,13 +2,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { BOND_DETAILS, IBondDetails } from 'constants/bonds'
 import { SupportedChainId } from 'constants/chains'
-import { DAI_POLYGON_MUMBAI, GEN } from 'constants/tokens'
-import { useV2Pair } from 'hooks/useV2Pairs'
+import { usePairContract } from 'hooks/useContract'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useEffect, useState } from 'react'
 
 import { useBondDepository } from './useContract'
-// import useUSDCPrice from './useUSDCPrice'
 
 interface IBond {
   quoteToken: string
@@ -44,17 +42,33 @@ interface IProcessMarketArgs {
   terms: ITerms
   metadata: IMetadata
   depository: Contract | null
-  // genPrice: Price<Currency, Token> | undefined
+  genPrice: BigNumber
 }
 
+// TOKEN 0 => Genesis
+// TOKEN 1 => Dai
 function useGenTokenPrice() {
-  const pair = useV2Pair(DAI_POLYGON_MUMBAI, GEN)
-  console.log('THE PAIR: ', pair)
+  const [genPrice, setGenPrice] = useState<BigNumber>(BigNumber.from('0'))
+
+  const DAI_GEN_PAIR = '0x3d90706560b2fcb29d0a41aeeed551c96b62f608'
+  const pair = usePairContract(DAI_GEN_PAIR)
+
+  const getGenPrice = useCallback(() => {
+    pair?.getReserves().then((reserves: any) => {
+      const genReserves = reserves.reserve0.mul(BigNumber.from('10').pow(BigNumber.from('9')))
+      const daiReserves = reserves.reserve1
+      const price = genReserves.div(daiReserves)
+      setGenPrice(price)
+    })
+  }, [pair])
+
+  useEffect(() => getGenPrice(), [getGenPrice])
+
+  return genPrice
 }
 
 export function useGetAllBonds() {
   const genPrice = useGenTokenPrice()
-
   const depository = useBondDepository()
   const { chainId } = useActiveWeb3React()
 
@@ -83,13 +97,14 @@ export function useGetAllBonds() {
         terms,
         metadata,
         depository,
+        genPrice,
       })
 
       liveBonds.push({ terms, bond, metadata })
     }
 
     return liveBonds
-  }, [depository, chainId])
+  }, [depository])
 
   useEffect(() => {
     setIsLoading(true)
@@ -106,16 +121,14 @@ export function useGetAllBonds() {
 }
 
 // TODO create a liquidity pool with gen token to make sure it has a USD price
-async function processBond({ chainId, bond, terms, metadata, index, depository }: IProcessMarketArgs) {
+async function processBond({ chainId, bond, terms, metadata, index, depository, genPrice }: IProcessMarketArgs) {
+  console.log('BOND: ', bond)
   // TODO change the hard coded change
   const bondDetails: IBondDetails = BOND_DETAILS[SupportedChainId.POLYGON_MUMBAI][bond.quoteToken]
   // TODO call the actual pricing function
   const quoteTokenPrice = bondDetails.priceUSD
   const bondPrice = await depository?.marketPrice(index)
   const bondPriceUSD = BigNumber.from(quoteTokenPrice * +bondPrice)
-  // const bondDiscount = genPrice.
-}
-
-function getGenTokenPrice() {
-  const pairs = useV2Pair
+  const bondDiscount = genPrice.sub(bondPriceUSD).div(genPrice)
+  console.log('BOND DISCOUNT: ', bondDiscount)
 }

@@ -8,10 +8,12 @@ import {
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
   DAI_POLYGON,
+  DAI_POLYGON_MUMBAI,
   ETH2X_FLI,
   FEI,
   FRAX,
   FXS,
+  GEN,
   nativeOnChain,
   renBTC,
   rETH2,
@@ -148,6 +150,8 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],
     WETH_POLYGON_MUMBAI,
+    DAI_POLYGON_MUMBAI,
+    GEN,
   ],
 }
 
@@ -155,6 +159,11 @@ export const COMMON_BASES: ChainCurrencyList = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
   [SupportedChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [SupportedChainId.POLYGON_MUMBAI]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.POLYGON_MUMBAI],
+    DAI_POLYGON_MUMBAI,
+    GEN,
+  ],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
   [SupportedChainId.POLYGON_MUMBAI]: [
@@ -162,19 +171,5 @@ export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
       new Token(SupportedChainId.POLYGON_MUMBAI, '0x62ca00b6e212413f62fcbdf649dce8c697d40930', 18, 'TK0', 'Token1'),
       new Token(SupportedChainId.POLYGON_MUMBAI, '0x230e8b7232124436e9be24a8ea5ff1b2861dcfd1', 18, 'TK0', 'Token2'),
     ],
-  ],
-  [SupportedChainId.MAINNET]: [
-    [
-      new Token(SupportedChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
-      new Token(
-        SupportedChainId.MAINNET,
-        '0x39AA39c021dfbaE8faC545936693aC917d5E7563',
-        8,
-        'cUSDC',
-        'Compound USD Coin'
-      ),
-    ],
-    [USDC, USDT],
-    [DAI, USDT],
   ],
 }
