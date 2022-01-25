@@ -45,7 +45,7 @@ export function useApproveCallbackFromTrade(
     | Trade<Currency, Currency, TradeType>
     | undefined,
   allowedSlippage: Percent
-) {
+): [ApprovalState, () => Promise<void>] {
   const [approval, getApproval] = useSwapApproval(trade, allowedSlippage, useHasPendingApproval)
   return [approval, useGetAndTrackApproval(getApproval)]
 }
