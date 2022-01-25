@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "최대 :"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "최대 이체"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "최소 :"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "최소 수령됨"
 
@@ -1368,6 +1370,10 @@ msgstr "가격 영향이 너무 높음"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "가격 업데이트됨"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "가격 영향"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "이 포지션에서 얻은 수수료도 징수합니다."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "다음을 받게 됩니다"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "당신은 적어도 {0} {1} 을 받게 될 것입니다. 그렇지 않으면 거래가 되돌릴 것입니다."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "{0} {1} 을 보내지 않으면 거래가 취소됩니다."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

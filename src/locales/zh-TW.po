@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "最大值："
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "發送的最大值"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "最小值："
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "收到的最低數額"
 
@@ -1368,6 +1370,10 @@ msgstr "兌換率影響太高"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "兌換率已更新"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "價格影響"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "您還將從此倉位中領取已賺取的手續費。"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "您將收到"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "您將收到至少 {0} {1} 或交易將恢復。"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "您最多發送 {0} {1} 或交易將恢復。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

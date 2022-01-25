@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "Tối đa:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Đã gửi tối đa"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "Tối thiểu:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Số tiền nhận được tối thiểu"
 
@@ -1368,6 +1370,10 @@ msgstr "Tác động giá quá cao"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Đã cập nhật giá"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Tác động giá"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "Bạn cũng sẽ thu phí kiếm được từ vị trí này."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Bạn sẽ nhận"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Bạn sẽ nhận được ít nhất {0} {1} hoặc giao dịch sẽ hoàn nguyên."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Bạn sẽ gửi nhiều nhất là {0} {1} hoặc giao dịch sẽ hoàn nguyên."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

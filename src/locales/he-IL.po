@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "מקסימום:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "מקסימום נשלח"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "דקה:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "מינימום שהתקבל"
 
@@ -1368,6 +1370,10 @@ msgstr "השפעת המחיר גבוהה מדי"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "המחיר עודכן"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "השפעה על המחיר"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "אתה גם יגבה עמלות שהרווחת מתפקיד זה."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "אתה תקבל"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "תקבל לפחות {0} {1} או שהעסקה תחזור."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "אתה תשלח לכל היותר {0} {1} או שהעסקה תחזור."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

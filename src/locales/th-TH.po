@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "สูงสุด:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "ส่งสูงสุด"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "นาที:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "รับขั้นต่ำ"
 
@@ -1368,6 +1370,10 @@ msgstr "ผลกระทบของราคาสูงเกินไป"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "อัพเดทราคา"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "ผลกระทบของราคา"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "คุณจะเก็บค่าธรรมเนียมที่
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "คุณจะได้รับ"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "คุณจะได้รับอย่างน้อย {0} {1} ฉะนั้นธุรกรรมจะเปลี่ยนกลับ"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "คุณจะส่งไม่เกิน {0} {1} ฉะนั้นธุรกรรมจะเปลี่ยนกลับ"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

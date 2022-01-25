@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "Upeo:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Upeo umetumwa"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "Dak:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Kiwango cha chini kimepokelewa"
 
@@ -1368,6 +1370,10 @@ msgstr "Athari za Bei Juu sana"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Bei Imesasishwa"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Athari ya bei"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "Pia utakusanya ada inayopatikana kutoka kwa nafasi hii."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Utapokea"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Utapokea angalau {0} {1} au muamala utarejeshwa."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Utatuma angalau {0} {1} au muamala utarejeshwa."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

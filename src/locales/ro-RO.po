@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "Max:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Maximum trimis"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimum primit"
 
@@ -1368,6 +1370,10 @@ msgstr "Impact de Preț este Prea Mare"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Preț Actualizat"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Impactul prețului"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "De asemenea, vei colecta taxele câștigate din această poziție."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Vei primi"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Veți primi cel puțin {0} {1} sau tranzacția va reveni."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Veți trimite cel mult {0} {1} sau tranzacția va reveni."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

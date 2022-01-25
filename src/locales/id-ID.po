@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "Maks:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Maksimum dikirim"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimum diterima"
 
@@ -1368,6 +1370,10 @@ msgstr "Dampak Harga Terlalu Tinggi"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Harga Diperbarui"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Dampak harga"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "Anda juga akan memungut biaya yang diperoleh dari posisi ini."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Anda akan menerima"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Anda akan menerima setidaknya {0} {1} atau transaksi akan dibatalkan."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Anda akan mengirimkan paling banyak {0} {1} atau transaksi akan kembali."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

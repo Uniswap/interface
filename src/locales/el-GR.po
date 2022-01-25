@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "Μέγιστο:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Απεστάλη το μέγιστο"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "Ελάχιστο:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Ελάχιστο λαμβανόμενο"
 
@@ -1368,6 +1370,10 @@ msgstr "Πολύ υψηλή επίδραση σε τιμή"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Η Τιμή Ενημερώθηκε"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Επίπτωση στην τιμή"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "Θα εισπράξετε επίσης τις χρεώσεις που κ
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Θα λάβετε"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Θα λάβετε τουλάχιστον {0} {1} ή η συναλλαγή θα επανέλθει."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Θα στείλετε το πολύ {0} {1} ή η συναλλαγή θα επανέλθει."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 20:08\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "Макс.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Максимум к продаже"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "Мин.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Минимум к получению"
 
@@ -1368,6 +1370,10 @@ msgstr "Слишком высокое влияние на цену"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Цена была обновлена"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Влияние на цену"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "Вы также будете получать комиссию, зара
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Вы получите"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Вы получите как минимум {0} {1}, иначе транзакция откатится."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Вы отправите не более {0} {1} иначе транзакция будет отменена."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

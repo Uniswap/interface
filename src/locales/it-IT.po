@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -1087,6 +1087,7 @@ msgid "Max:"
 msgstr "Max:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Massimo inviato"
 
@@ -1137,6 +1138,7 @@ msgid "Min:"
 msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimo ricevuto"
 
@@ -1368,6 +1370,10 @@ msgstr "Impatto Prezzo Troppo Alto"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Prezzo Aggiornato"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Impatto sui prezzi"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2268,6 +2274,14 @@ msgstr "Raccoglierai anche le commissioni guadagnate da questa posizione."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Riceverai"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "Riceverai almeno {0} {1} o la transazione verrà annullata."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "Invierai al massimo {0} {1} o la transazione verrà annullata."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-24 19:06\n"
+"PO-Revision-Date: 2022-01-25 19:07\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -1088,6 +1088,7 @@ msgid "Max:"
 msgstr "Max:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Maximum sent"
 msgstr "Maximum elküldve"
 
@@ -1138,6 +1139,7 @@ msgid "Min:"
 msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/lib/components/Swap/Summary/Details.tsx
 msgid "Minimum received"
 msgstr "Minimum beérkezett"
 
@@ -1369,6 +1371,10 @@ msgstr "Az ár hatása túl nagy"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Ár frissítve"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Price impact"
+msgstr "Árhatás"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -2269,6 +2275,14 @@ msgstr "Ezen a pozíción megszerzett díjakat is beszedi."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Kapni fog"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will receive at least {0} {1} or the transaction will revert."
+msgstr "{0} {1} fog kapni, különben a tranzakció visszaáll."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "You will send at most {0} {1} or the transaction will revert."
+msgstr "{0} {1} küld, vagy a tranzakció visszaáll."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
