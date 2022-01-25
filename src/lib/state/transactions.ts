@@ -42,12 +42,12 @@ export interface OutputSwapTransactionInfo extends SwapTransactionInfo {
 export type TransactionInfo = ApprovalTransactionInfo | SwapTransactionInfo
 
 export interface Transaction<T extends TransactionInfo = TransactionInfo> {
-  dateAdded: number
+  addedTime: number
+  lastCheckedBlockNumber?: number
   receipt?: TransactionReceipt
-  status?: true | Error
   info: T
 }
 
 export const transactionsAtom = atomWithImmer<{
-  [chainId: string]: { [hash: string]: Transaction | undefined } | undefined
+  [chainId: string]: { [hash: string]: Transaction }
 }>({})

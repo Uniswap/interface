@@ -1,5 +1,6 @@
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
+import { TransactionsUpdater } from 'lib/hooks/transactions'
 import { BlockUpdater } from 'lib/hooks/useBlockNumber'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
@@ -73,6 +74,7 @@ function Updaters() {
     <>
       <BlockUpdater />
       <MulticallUpdater />
+      <TransactionsUpdater />
     </>
   )
 }
