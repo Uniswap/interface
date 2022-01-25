@@ -1,32 +1,45 @@
 import { Trans } from '@lingui/macro'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, { ApprovalState, useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
 import { Field } from 'lib/state/swap'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
 import { StatusDialog } from './Status'
 import { SummaryDialog } from './Summary'
 
-export default function SwapButton() {
+interface SwapButtonProps {
+  disabled?: boolean
+}
+
+export default function SwapButton({ disabled }: SwapButtonProps) {
   const {
     trade,
     allowedSlippage,
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
   } = useSwapInfo()
+
+  const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>(undefined)
+  useEffect(() => {
+    setActiveTrade((activeTrade) => activeTrade && trade.trade)
+  }, [trade])
+
   // TODO(zzmp): Track pending approval
   const useIsPendingApproval = () => false
+
+  // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade = useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval)
   const [approval, getApproval] = useSwapApproval(optimizedTrade, allowedSlippage, useIsPendingApproval)
-  const [activeTrade, setActiveTrade] = useState<Trade<Currency, Currency, TradeType> | undefined>(undefined)
 
   const actionProps = useMemo(() => {
+    if (disabled) return { disabled: true }
+
     if (inputCurrencyAmount && inputCurrencyBalance?.greaterThan(inputCurrencyAmount)) {
-      if (approval === ApprovalState.NOT_APPROVED) {
+      if (approval === ApprovalState.PENDING) {
+        return { disabled: true }
+      } else if (approval === ApprovalState.NOT_APPROVED) {
         return {
           updated: {
             message: <Trans>Approve {inputCurrencyAmount.currency.symbol} first</Trans>,
@@ -34,22 +47,21 @@ export default function SwapButton() {
           },
         }
       }
-      if (approval === ApprovalState.PENDING) {
-        return { disabled: true }
-      }
       return {}
     }
+
     return { disabled: true }
-  }, [approval, inputCurrencyAmount, inputCurrencyBalance])
+  }, [approval, disabled, inputCurrencyAmount, inputCurrencyBalance])
+
   const onConfirm = useCallback(() => {
-    // TODO(zzmp)
+    // TODO(zzmp): Transact the trade.
   }, [])
 
   return (
     <>
       <ActionButton
         color="interactive"
-        onClick={() => setActiveTrade(trade?.trade)}
+        onClick={() => setActiveTrade(trade.trade)}
         onUpdate={getApproval}
         {...actionProps}
       >
