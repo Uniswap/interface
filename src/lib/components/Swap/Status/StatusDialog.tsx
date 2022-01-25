@@ -1,16 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { useAtomValue } from 'jotai/utils'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
-import { SwapTransaction, swapTransactionAtom } from 'lib/state/swap'
+import { SwapTransactionInfo, Transaction } from 'lib/state/transactions'
 import styled, { ThemedText } from 'lib/theme'
 import { useCallback, useMemo, useState } from 'react'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
 import Row from '../../Row'
-import Summary from '../Summary'
 
 const errorMessage = (
   <Trans>
@@ -24,17 +22,17 @@ const TransactionRow = styled(Row)`
   flex-direction: row-reverse;
 `
 
-function ElapsedTime({ tx }: { tx: SwapTransaction | null }) {
+function ElapsedTime({ tx }: { tx: Transaction<SwapTransactionInfo> }) {
   const [elapsedMs, setElapsedMs] = useState(0)
   useInterval(
     () => {
-      if (tx?.elapsedMs) {
-        setElapsedMs(tx.elapsedMs)
-      } else if (tx?.timestamp) {
-        setElapsedMs(Date.now() - tx.timestamp)
+      if (tx.info.response.timestamp) {
+        setElapsedMs(tx.info.response.timestamp - tx.dateAdded)
+      } else {
+        setElapsedMs(Date.now() - tx.dateAdded)
       }
     },
-    elapsedMs === tx?.elapsedMs ? null : 1000
+    elapsedMs === tx.info.response.timestamp ? null : 1000
   )
   const toElapsedTime = useCallback((ms: number) => {
     let sec = Math.floor(ms / 1000)
@@ -63,8 +61,9 @@ const EtherscanA = styled.a`
   text-decoration: none;
 `
 
-interface TransactionStatusProps extends StatusProps {
-  tx: SwapTransaction | null
+interface TransactionStatusProps {
+  tx: Transaction<SwapTransactionInfo>
+  onClose: () => void
 }
 
 function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
@@ -78,7 +77,9 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={Icon} iconColor={tx?.status && 'success'}>
         <ThemedText.Subhead1>{heading}</ThemedText.Subhead1>
-        {tx ? <Summary input={tx.input} output={tx.output} /> : <div style={{ height: '1.25em' }} />}
+        {/* TODO(zzmp): Display actual transaction.
+          <Summary input={tx.info.inputCurrency} output={tx.info.outputCurrency} />
+        */}
       </StatusHeader>
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
@@ -95,13 +96,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   )
 }
 
-interface StatusProps {
-  onClose: () => void
-}
-
-export default function TransactionStatusDialog({ onClose }: StatusProps) {
-  const tx = useAtomValue(swapTransactionAtom)
-
+export default function TransactionStatusDialog({ tx, onClose }: TransactionStatusProps) {
   return tx?.status instanceof Error ? (
     <ErrorDialog header={errorMessage} error={tx.status} action={<Trans>Dismiss</Trans>} onAction={onClose} />
   ) : (
