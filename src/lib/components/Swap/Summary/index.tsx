@@ -131,18 +131,18 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
           </DetailsColumn>
           <Estimate color="secondary">
             <Trans>Output is estimated.</Trans>
-            {independentField === Field.INPUT ? (
+            {independentField === Field.INPUT && (
               <Trans>
                 You will send at most {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {inputCurrency.symbol}{' '}
                 or the transaction will revert.
               </Trans>
-            ) : null}
-            {independentField === Field.OUTPUT ? (
+            )}
+            {independentField === Field.OUTPUT && (
               <Trans>
                 You will receive at least {trade.minimumAmountOut(allowedSlippage).toSignificant(6)}{' '}
                 {outputCurrency.symbol} or the transaction will revert.
               </Trans>
-            ) : null}
+            )}
           </Estimate>
           <ActionButton
             onClick={onConfirm}
