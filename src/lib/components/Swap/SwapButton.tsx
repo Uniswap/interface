@@ -29,8 +29,10 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   }, [trade])
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
-  const optimizedTrade = useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval)
-  const [approval, getApproval] = useSwapApproval(optimizedTrade || trade.trade, allowedSlippage, useIsPendingApproval)
+  const optimizedTrade =
+    // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
+    useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval) || trade.trade
+  const [approval, getApproval] = useSwapApproval(optimizedTrade, allowedSlippage, useIsPendingApproval)
 
   const addTransaction = useAddTransaction()
   const addApprovalTransaction = useCallback(() => {
