@@ -62,7 +62,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const { signatureData } = useERC20PermitFromTrade(approvalOptimizedTrade, allowedSlippage, undefined)
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
+  const { callback: swapCallback } = useSwapCallback(
     approvalOptimizedTrade,
     allowedSlippage,
     account ?? null,
@@ -70,7 +70,6 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   )
 
   const onConfirm = useCallback(() => {
-    console.log('confirming')
     if (!swapCallback) {
       return
     }
