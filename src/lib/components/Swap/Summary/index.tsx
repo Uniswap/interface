@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { IconButton } from 'lib/components/Button'
+import { useSwapInfo } from 'lib/hooks/swap'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
@@ -23,7 +22,9 @@ export default Summary
 const SummaryColumn = styled(Column)``
 const ExpandoColumn = styled(Column)``
 const DetailsColumn = styled(Column)``
-const Estimate = styled(ThemedText.Caption)``
+const Estimate = styled(ThemedText.Caption)`
+  overflow: scroll;
+`
 const Body = styled(Column)<{ open: boolean }>`
   height: calc(100% - 2.5em);
 
@@ -60,7 +61,7 @@ const Body = styled(Column)<{ open: boolean }>`
     }
 
     ${Estimate} {
-      max-height: ${({ open }) => (open ? 0 : 56 / 12)}em; // 2 * line-height + padding
+      max-height: ${({ open }) => (open ? 0 : 6)}em; // 2 * line-height + padding
       overflow-y: hidden;
       padding: ${({ open }) => (open ? 0 : '1em 0')};
       transition: ${({ open }) =>
@@ -72,19 +73,17 @@ const Body = styled(Column)<{ open: boolean }>`
 `
 
 interface SummaryDialogProps {
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
+  trade: Trade<Currency, Currency, TradeType>
   onConfirm: () => void
 }
 
 export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
   const { inputAmount, outputAmount } = trade
-
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const price = trade.executionPrice
+
+  const { allowedSlippage } = useSwapInfo()
 
   const [originalTrade, setOriginalTrade] = useState(trade)
   const tradeMeaningFullyDiffers = Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade))
@@ -123,21 +122,19 @@ export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
           <Rule />
           <DetailsColumn>
             <Column gap={0.5} ref={setDetails} css={scrollbar}>
-              <Details input={inputCurrency} output={outputCurrency} />
+              <Details trade={trade} />
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
             <Trans>Output is estimated.</Trans> {/* //@TODO(ianlapham): update with actual recieved values */}
-            {/* {swap?.minimumReceived && (
-              <Trans>
-                You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.
-              </Trans>
-            )}
-            {swap?.maximumSent && (
-              <Trans>
-                You will send at most {swap.maximumSent} {input.token.symbol} or the transaction will revert.
-              </Trans>
-            )} */}
+            <Trans>
+              You will receive at least {trade.minimumAmountOut(allowedSlippage).toSignificant(6)}{' '}
+              {outputCurrency.symbol} or the transaction will revert.
+            </Trans>
+            <Trans>
+              You will send at most {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {inputCurrency.symbol} or
+              the transaction will revert.
+            </Trans>
           </Estimate>
           <ActionButton
             onClick={onConfirm}

@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, { ApprovalState, useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
 import { Field } from 'lib/state/swap'
@@ -20,7 +22,7 @@ export default function SwapButton() {
   const useIsPendingApproval = () => false
   const optimizedTrade = useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval)
   const [approval, getApproval] = useSwapApproval(optimizedTrade, allowedSlippage, useIsPendingApproval)
-  const [activeTrade, setActiveTrade] = useState<typeof optimizedTrade>(undefined)
+  const [activeTrade, setActiveTrade] = useState<Trade<Currency, Currency, TradeType> | undefined>(undefined)
 
   const actionProps = useMemo(() => {
     if (inputCurrencyAmount && inputCurrencyBalance?.greaterThan(inputCurrencyAmount)) {
@@ -47,7 +49,7 @@ export default function SwapButton() {
     <>
       <ActionButton
         color="interactive"
-        onClick={() => setActiveTrade(optimizedTrade)}
+        onClick={() => setActiveTrade(trade?.trade)}
         onUpdate={getApproval}
         {...actionProps}
       >
