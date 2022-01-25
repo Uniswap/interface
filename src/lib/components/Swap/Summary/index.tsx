@@ -22,9 +22,7 @@ export default Summary
 const SummaryColumn = styled(Column)``
 const ExpandoColumn = styled(Column)``
 const DetailsColumn = styled(Column)``
-const Estimate = styled(ThemedText.Caption)`
-  overflow: scroll;
-`
+const Estimate = styled(ThemedText.Caption)``
 const Body = styled(Column)<{ open: boolean }>`
   height: calc(100% - 2.5em);
 
