@@ -1,8 +1,7 @@
 import { t } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
-import { useSwapInfo } from 'lib/hooks/swap'
 import { integratorFeeAtom } from 'lib/state/swap'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
@@ -29,12 +28,11 @@ function Detail({ label, value }: DetailProps) {
 
 interface DetailsProps {
   trade: Trade<Currency, Currency, TradeType>
+  allowedSlippage: Percent
 }
 
-export default function Details({ trade }: DetailsProps) {
+export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const integrator = window.location.hostname
-
-  const { allowedSlippage } = useSwapInfo()
 
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
@@ -43,10 +41,8 @@ export default function Details({ trade }: DetailsProps) {
   const [integratorFee] = useAtom(integratorFeeAtom)
 
   const priceImpact = useMemo(() => {
-    if (!trade) return undefined
     const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-    const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent)
-    return priceImpact
+    return trade.priceImpact.subtract(realizedLpFeePercent)
   }, [trade])
 
   const details = useMemo((): [string, string][] => {
@@ -54,7 +50,7 @@ export default function Details({ trade }: DetailsProps) {
     return [
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
       [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(inputCurrency)}`],
-      [t`Price impact`, `${priceImpact?.toFixed(2)}%`],
+      [t`Price impact`, `${priceImpact.toFixed(2)}%`],
       [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`],
       [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`],
       [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`],

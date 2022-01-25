@@ -5,7 +5,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import { Field, swapAtom } from 'lib/state/swap'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import invariant from 'tiny-invariant'
 
@@ -20,7 +20,6 @@ const UNI = (function () {
 })()
 
 function Fixture() {
-  const [initialized, setInitialized] = useState(false)
   const setState = useUpdateAtom(swapAtom)
 
   const {
@@ -34,10 +33,9 @@ function Fixture() {
       [Field.INPUT]: ETH,
       [Field.OUTPUT]: UNI,
     })
-    setInitialized(true)
   }, [setState])
 
-  return initialized && trade ? (
+  return trade ? (
     <Modal color="dialog">
       <SummaryDialog onConfirm={() => void 0} trade={trade} />
     </Modal>

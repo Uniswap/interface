@@ -1,12 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
+import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton from '../../ActionButton'
@@ -70,6 +72,8 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
+const updateMessage = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
+
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
   onConfirm: () => void
@@ -82,10 +86,13 @@ export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
   const price = trade.executionPrice
 
   const { allowedSlippage } = useSwapInfo()
+  const independentField = useAtomValue(independentFieldAtom)
 
   const [originalTrade, setOriginalTrade] = useState(trade)
-  const tradeMeaningFullyDiffers = Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade))
-
+  const doesTradeDiffer = useMemo(
+    () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
+    [originalTrade, trade]
+  )
   const [open, setOpen] = useState(true)
 
   const [details, setDetails] = useState<HTMLDivElement | null>(null)
@@ -120,28 +127,27 @@ export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
           <Rule />
           <DetailsColumn>
             <Column gap={0.5} ref={setDetails} css={scrollbar}>
-              <Details trade={trade} />
+              <Details trade={trade} allowedSlippage={allowedSlippage} />
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
-            <Trans>Output is estimated.</Trans> {/* //@TODO(ianlapham): update with actual recieved values */}
-            <Trans>
-              You will receive at least {trade.minimumAmountOut(allowedSlippage).toSignificant(6)}{' '}
-              {outputCurrency.symbol} or the transaction will revert.
-            </Trans>
-            <Trans>
-              You will send at most {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {inputCurrency.symbol} or
-              the transaction will revert.
-            </Trans>
+            <Trans>Output is estimated.</Trans>
+            {independentField === Field.OUTPUT ? (
+              <Trans>
+                You will receive at least {trade.minimumAmountOut(allowedSlippage).toSignificant(6)}{' '}
+                {outputCurrency.symbol} or the transaction will revert.
+              </Trans>
+            ) : (
+              <Trans>
+                You will send at most {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {inputCurrency.symbol}{' '}
+                or the transaction will revert.
+              </Trans>
+            )}
           </Estimate>
           <ActionButton
             onClick={onConfirm}
             onUpdate={() => setOriginalTrade(trade)}
-            updated={
-              tradeMeaningFullyDiffers
-                ? { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
-                : undefined
-            }
+            updated={doesTradeDiffer ? updateMessage : undefined}
           >
             <Trans>Confirm swap</Trans>
           </ActionButton>
