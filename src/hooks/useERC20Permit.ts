@@ -3,6 +3,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { BigNumber } from 'ethers/node_modules/@ethersproject/abstract-signer/node_modules/@ethersproject/bignumber'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -119,6 +120,7 @@ const PERMIT_ALLOWED_TYPE = [
 function useERC20Permit(
   currencyAmount: CurrencyAmount<Currency> | null | undefined,
   spender: string | null | undefined,
+  transactionDeadline: BigNumber | undefined,
   overridePermitInfo: PermitInfo | undefined | null
 ): {
   signatureData: SignatureData | null
@@ -126,7 +128,6 @@ function useERC20Permit(
   gatherPermitSignature: null | (() => Promise<void>)
 } {
   const { account, chainId, library } = useActiveWeb3React()
-  const transactionDeadline = useTransactionDeadline()
   const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
   const eip2612Contract = useEIP2612Contract(tokenAddress)
   const isArgentWallet = useIsArgentWallet()
@@ -269,7 +270,8 @@ export function useV2LiquidityTokenPermit(
   liquidityAmount: CurrencyAmount<Token> | null | undefined,
   spender: string | null | undefined
 ) {
-  return useERC20Permit(liquidityAmount, spender, REMOVE_V2_LIQUIDITY_PERMIT_INFO)
+  const transactionDeadline = useTransactionDeadline()
+  return useERC20Permit(liquidityAmount, spender, transactionDeadline, REMOVE_V2_LIQUIDITY_PERMIT_INFO)
 }
 
 export function useERC20PermitFromTrade(
@@ -278,7 +280,8 @@ export function useERC20PermitFromTrade(
     | V3Trade<Currency, Currency, TradeType>
     | Trade<Currency, Currency, TradeType>
     | undefined,
-  allowedSlippage: Percent
+  allowedSlippage: Percent,
+  transactionDeadline: BigNumber | undefined
 ) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = chainId
@@ -294,5 +297,5 @@ export function useERC20PermitFromTrade(
     [trade, allowedSlippage]
   )
 
-  return useERC20Permit(amountToApprove, swapRouterAddress, null)
+  return useERC20Permit(amountToApprove, swapRouterAddress, transactionDeadline, null)
 }

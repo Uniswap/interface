@@ -58,17 +58,17 @@ interface FailedCall extends SwapCallEstimate {
  * @param recipientAddressOrName the ENS name or address of the recipient of the swap output
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
-function useSwapCallArguments(
+export function useSwapCallArguments(
   trade: AnyTrade | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | null | undefined
+  signatureData: SignatureData | null | undefined,
+  deadline: BigNumber | undefined
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
-  const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
   const argentWalletContract = useArgentWalletContract()
 
@@ -212,7 +212,7 @@ function useSwapCallArguments(
  * This object seems to be undocumented by ethers.
  * @param error an error from the ethers provider
  */
-function swapErrorToUserReadableMessage(error: any): ReactNode {
+export function swapErrorToUserReadableMessage(error: any): ReactNode {
   let reason: string | undefined
   while (Boolean(error)) {
     reason = error.reason ?? error.message ?? reason
@@ -294,7 +294,9 @@ export function useSwapCallback(
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
+  const deadline = useTransactionDeadline()
+
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData, deadline)
 
   const addTransaction = useTransactionAdder()
 
