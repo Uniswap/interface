@@ -44,7 +44,10 @@ export function useApproval(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean
-): [ApprovalState, () => Promise<TransactionResponse | undefined>] {
+): [
+  ApprovalState,
+  () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
+] {
   const { chainId } = useActiveWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
@@ -53,7 +56,7 @@ export function useApproval(
 
   const tokenContract = useTokenContract(token?.address)
 
-  const approve = useCallback(async (): Promise<TransactionResponse | undefined> => {
+  const approve = useCallback(async () => {
     function logFailure(error: Error | string): undefined {
       console.warn(`${token?.symbol || 'Token'} approval failed:`, error)
       return
@@ -85,6 +88,11 @@ export function useApproval(
       .approve(spender, useExact ? amountToApprove.quotient.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas),
       })
+      .then((response) => ({
+        response,
+        tokenAddress: token.address,
+        spenderAddress: spender,
+      }))
       .catch((error: Error) => {
         logFailure(error)
         throw error
