@@ -7,6 +7,7 @@ import { NetworkBox } from 'src/components/Network/NetworkBox'
 import { NetworkPill } from 'src/components/Network/NetworkPill'
 import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
+import { ElementName } from 'src/features/telemetry/constants'
 
 export enum NetworkButtonType {
   PILL,
@@ -49,6 +50,7 @@ export function NetworkButtonGroup({
             <Button
               key={chainId}
               mr="sm"
+              name={`${ElementName.NetworkButtonGroupPrefix}-${chainId}`}
               onPress={() => {
                 selectionAsync()
                 onPress(chainId)

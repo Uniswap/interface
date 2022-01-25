@@ -18,6 +18,8 @@ interface TokenPricesProps {
 
 export function useHourlyTokenPrices({
   token,
+  // TODO(judo): should also allow periodEnd to get exactly 1 data point. ditto below
+  // periodEndUnix
   periodStartUnix,
 }: WithPeriodStartUnix<TokenPricesProps>) {
   const client = useV3SubgraphClient(token?.chainId)

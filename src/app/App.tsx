@@ -1,4 +1,3 @@
-import { NavigationContainer } from '@react-navigation/native'
 import * as Sentry from '@sentry/react-native'
 import { ThemeProvider } from '@shopify/restyle'
 import React, { StrictMode } from 'react'
@@ -9,12 +8,14 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
+import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationBannerWrapper } from 'src/features/notifications/NotificationBanner'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
+import { enableAnalytics } from 'src/features/telemetry'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { darkTheme, theme } from 'src/styles/theme'
 
@@ -37,6 +38,7 @@ setLogger({
 })
 
 initializeRemoteConfig()
+enableAnalytics()
 
 const queryClient = new QueryClient()
 

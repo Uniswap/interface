@@ -34,3 +34,4 @@ jest.mock('src/lib/RNEthersRs')
 
 // Mock Firebase Remote Config
 jest.mock('@react-native-firebase/remote-config', () => {})
+jest.mock('@react-native-firebase/analytics', () => {})

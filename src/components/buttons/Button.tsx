@@ -1,14 +1,29 @@
 import { createBox } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren } from 'react'
 import { Pressable, PressableProps } from 'react-native'
+import { ActionProps, ElementName } from 'src/features/telemetry/constants'
+import { TraceEvent } from 'src/features/telemetry/TraceEvent'
 import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
-const PressableBox = createBox<Theme, PressableProps>(Pressable)
+const ButtonActionProps = (({ onPress, onLongPress }) => ({ onPress, onLongPress }))(ActionProps)
 
-export type ButtonProps = ComponentProps<typeof PressableBox>
+export const PressableBox = createBox<Theme, PressableProps>(Pressable)
 
-export function Button({ children, ...rest }: PropsWithChildren<ButtonProps>) {
+export type ButtonProps = ComponentProps<typeof PressableBox> & {
+  name?: ElementName | string
+}
+
+export function Button({ children, name: elementName, ...rest }: PropsWithChildren<ButtonProps>) {
   const baseProps = { hitSlop: defaultHitslopInset, ...rest }
-  return <PressableBox {...baseProps}>{children}</PressableBox>
+
+  if (!elementName) {
+    return <PressableBox {...baseProps}>{children}</PressableBox>
+  }
+
+  return (
+    <TraceEvent actionProps={ButtonActionProps} elementName={elementName} elementType="button">
+      <PressableBox {...baseProps}>{children}</PressableBox>
+    </TraceEvent>
+  )
 }

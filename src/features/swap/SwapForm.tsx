@@ -24,6 +24,8 @@ import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { isWrapAction } from 'src/features/swap/utils'
 import { getHumanReadableSwapInputStatus } from 'src/features/swap/validate'
 import { WrapType } from 'src/features/swap/wrapSaga'
+import { SectionName } from 'src/features/telemetry/constants'
+import { Trace } from 'src/features/telemetry/Trace'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 
@@ -70,17 +72,19 @@ export function SwapForm(props: SwapFormProps) {
     <Button flex={1} onPress={() => Keyboard.dismiss()}>
       <Box flex={1} justifyContent="space-between" px="md">
         <Box>
-          <CurrencyInput
-            currency={currencies[CurrencyField.INPUT]}
-            currencyAmount={currencyAmounts[CurrencyField.INPUT]}
-            currencyBalance={currencyBalances[CurrencyField.INPUT]}
-            otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
-            showNonZeroBalancesOnly={true}
-            onSelectCurrency={(newCurrency: Currency) =>
-              onSelectCurrency(CurrencyField.INPUT, newCurrency)
-            }
-            onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
-          />
+          <Trace section={SectionName.CurrencyInputPanel}>
+            <CurrencyInput
+              currency={currencies[CurrencyField.INPUT]}
+              currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+              currencyBalance={currencyBalances[CurrencyField.INPUT]}
+              otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
+              showNonZeroBalancesOnly={true}
+              onSelectCurrency={(newCurrency: Currency) =>
+                onSelectCurrency(CurrencyField.INPUT, newCurrency)
+              }
+              onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
+            />
+          </Trace>
           <Box zIndex="popover">
             <Box alignItems="center" height={40} style={StyleSheet.absoluteFill}>
               <Box
@@ -97,19 +101,21 @@ export function SwapForm(props: SwapFormProps) {
               </Box>
             </Box>
           </Box>
-          <CurrencyInput
-            backgroundColor="background1"
-            currency={currencies[CurrencyField.OUTPUT]}
-            currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
-            currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-            otherSelectedCurrency={currencies[CurrencyField.INPUT]}
-            showNonZeroBalancesOnly={false}
-            title={t("You'll receive")}
-            onSelectCurrency={(newCurrency: Currency) =>
-              onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
-            }
-            onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
-          />
+          <Trace section={SectionName.CurrencyOutputPanel}>
+            <CurrencyInput
+              backgroundColor="background1"
+              currency={currencies[CurrencyField.OUTPUT]}
+              currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+              currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+              otherSelectedCurrency={currencies[CurrencyField.INPUT]}
+              showNonZeroBalancesOnly={false}
+              title={t("You'll receive")}
+              onSelectCurrency={(newCurrency: Currency) =>
+                onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
+              }
+              onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
+            />
+          </Trace>
           {!isWrapAction(wrapType) && (
             <Box mt="md">
               <SwapDetailRow label={swapInputStatusMessage} trade={trade} />

@@ -33,7 +33,7 @@ export function TokenBalanceItem({
     // TODO: process as `Price`
     const closePrice = currencyPrice
 
-    if (startPrice === 0 && closePrice === 0) return null
+    if (startPrice === 0 || closePrice === 0) return null
 
     return ((closePrice - startPrice) / startPrice) * 100
   })()

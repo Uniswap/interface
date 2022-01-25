@@ -22,6 +22,7 @@ import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
+import { ElementName } from 'src/features/telemetry/constants'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
@@ -114,6 +115,7 @@ export function HomeScreen({ navigation }: Props) {
               backgroundColor="white"
               mx="lg"
               my="lg"
+              name={ElementName.QRCodeModalToggle}
               padding="md"
               style={headerButtonStyle}
               onPress={onPressQRCode}>

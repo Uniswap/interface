@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import { Button } from 'src/components/buttons/Button'
+import { ElementName } from 'src/features/telemetry/constants'
 
 interface ToggleProps {
   onToggle: () => void
@@ -11,6 +12,7 @@ export function Toggle({ children, filled, onToggle }: PropsWithChildren<ToggleP
     <Button
       bg={filled ? 'primary1' : 'tokenSelector'}
       borderRadius="full"
+      name={ElementName.CurrencySelectorToggle}
       p="sm"
       onPress={onToggle}>
       {children}

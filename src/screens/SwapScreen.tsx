@@ -15,6 +15,7 @@ import {
   initialSwapFormState,
   swapFormReducer,
 } from 'src/features/swap/swapFormSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
@@ -54,7 +55,10 @@ export function SwapScreen({ route, navigation }: AppStackScreenProp<Screens.Swa
           <SwapForm dispatch={dispatch} state={state} />
         </ScrollView>
       </KeyboardAvoidingView>
-      <BottomSheetModal isVisible={showNetworkModal} onClose={onCloseNetworkModal}>
+      <BottomSheetModal
+        isVisible={showNetworkModal}
+        name={ModalName.NetworkSelector}
+        onClose={onCloseNetworkModal}>
         <SwapNetworkModal
           chainId={chainId}
           setChainId={setChainId}

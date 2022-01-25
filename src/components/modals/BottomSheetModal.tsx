@@ -2,13 +2,16 @@ import React, { PropsWithChildren } from 'react'
 import { ViewStyle } from 'react-native'
 import Modal, { Direction } from 'react-native-modal'
 import { Box } from 'src/components/layout'
+import { ModalName } from 'src/features/telemetry/constants'
+import { Trace } from 'src/features/telemetry/Trace'
 
 type Props = {
-  isVisible: boolean
   children: PropsWithChildren<any>
-  onClose: () => void
   disableSwipe?: boolean
   hideHandlebar?: boolean
+  isVisible: boolean
+  name: ModalName
+  onClose: () => void
 }
 
 const HandleBar = () => {
@@ -30,6 +33,7 @@ const SWIPE_DOWN: Direction[] = ['down']
 export function BottomSheetModal({
   isVisible,
   children,
+  name,
   onClose,
   disableSwipe,
   hideHandlebar,
@@ -43,10 +47,12 @@ export function BottomSheetModal({
       swipeThreshold={50}
       onBackdropPress={onClose}
       onSwipeComplete={onClose}>
-      <Box backgroundColor="mainBackground" borderRadius="lg">
-        {!hideHandlebar ? <HandleBar /> : null}
-        {children}
-      </Box>
+      <Trace logImpression section={name}>
+        <Box backgroundColor="mainBackground" borderRadius="lg">
+          {!hideHandlebar ? <HandleBar /> : null}
+          {children}
+        </Box>
+      </Trace>
     </Modal>
   )
 }

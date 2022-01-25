@@ -14,6 +14,7 @@ import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
 import { Box } from 'src/components/layout/Box'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
@@ -31,7 +32,7 @@ export function WalletQRCode({ isVisible, onClose }: Props) {
   if (!activeAccount) return null
 
   return (
-    <BottomSheetModal isVisible={isVisible} onClose={onClose}>
+    <BottomSheetModal isVisible={isVisible} name={ModalName.WalletQRCode} onClose={onClose}>
       <Box p="sm">
         <Box alignItems="center" marginTop="sm">
           <Text color="gray400" variant="body">

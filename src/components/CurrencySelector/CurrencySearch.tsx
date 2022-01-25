@@ -18,6 +18,7 @@ import { ChainId } from 'src/constants/chains'
 import { useAllBalancesByChainId } from 'src/features/balances/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
+import { ElementName } from 'src/features/telemetry/constants'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
@@ -102,7 +103,12 @@ export function CurrencySearch({
 
         <NetworkButtonGroup
           customButton={
-            <Button mr="sm" onPress={onClearChainFilter}>
+            <Button
+              mr="sm"
+              name={`${ElementName.NetworkButtonGroupPrefix}-${
+                showNonZeroBalancesOnly ? 'your-tokens' : 'all-tokens'
+              }`}
+              onPress={onClearChainFilter}>
               <Pill
                 backgroundColor="gray50"
                 borderColor={chainFilter === null ? 'gray200' : 'gray50'}
@@ -124,7 +130,10 @@ export function CurrencySearch({
                 ? t('No tokens found for ”{{searchFilter}}”', { searchFilter })
                 : t('No tokens found')}
             </Text>
-            <TextButton textColor="blue" onPress={onClearSearchFilter}>
+            <TextButton
+              name={ElementName.ClearSearch}
+              textColor="blue"
+              onPress={onClearSearchFilter}>
               {t('Clear Search')}
             </TextButton>
           </Flex>

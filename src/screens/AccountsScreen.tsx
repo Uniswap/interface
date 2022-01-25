@@ -18,6 +18,7 @@ import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import {
   EditAccountAction,
@@ -131,11 +132,19 @@ export function AccountsScreen() {
             {t('Switch Accounts')}
           </Text>
           {!isEditMode ? (
-            <TextButton textColor="pink" textVariant="bodyLg" onPress={() => setIsEditMode(true)}>
+            <TextButton
+              name={ElementName.Edit}
+              textColor="pink"
+              textVariant="bodyLg"
+              onPress={() => setIsEditMode(true)}>
               {t('Edit')}
             </TextButton>
           ) : (
-            <TextButton textColor="pink" textVariant="bodyLg" onPress={() => setIsEditMode(false)}>
+            <TextButton
+              name={ElementName.Done}
+              textColor="pink"
+              textVariant="bodyLg"
+              onPress={() => setIsEditMode(false)}>
               {t('Done')}
             </TextButton>
           )}
@@ -175,6 +184,7 @@ export function AccountsScreen() {
           disabled={isLoading}
           label={t('Import Account')}
           mr="lg"
+          name={ElementName.Import}
           testID="accounts/add/button"
           variant="palePink"
           onPress={onPressImport}
@@ -182,12 +192,14 @@ export function AccountsScreen() {
         <PrimaryButton
           disabled={isLoading}
           label={t('Create Account')}
+          name={ElementName.Create}
           testID="accounts/create/button"
           onPress={onPressCreate}
         />
       </CenterBox>
       <BottomSheetModal
         isVisible={showEditAccountModal}
+        name={ModalName.Account}
         onClose={() => setShowEditAccountModal(false)}>
         <Flex centered gap="sm" p="md">
           <Text color="gray400" variant="bodySm">
@@ -197,6 +209,7 @@ export function AccountsScreen() {
             disabled={isLoading}
             icon={<EditIcon height={18} width={18} />}
             label={t('Rename Account')}
+            name={ElementName.Rename}
             variant="palePink"
             width="100%"
             onPress={onPressRename}
@@ -205,6 +218,7 @@ export function AccountsScreen() {
             disabled={isLoading}
             icon={<CopyIcon height={18} stroke={theme.colors.pink} width={18} />}
             label={t('Copy Address')}
+            name={ElementName.Copy}
             variant="palePink"
             width="100%"
             onPress={onPressCopyAddress}
@@ -212,12 +226,14 @@ export function AccountsScreen() {
           <PrimaryButton
             disabled={isLoading}
             label={t('Remove Account')}
+            name={ElementName.Remove}
             variant="paleOrange"
             width="100%"
             onPress={onPressRemove}
           />
           <TextButton
             disabled={isLoading}
+            name={ElementName.EditCancel}
             pb="sm"
             pt="xs"
             textAlign="center"
