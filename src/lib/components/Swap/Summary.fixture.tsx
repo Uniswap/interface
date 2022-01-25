@@ -21,7 +21,6 @@ const UNI = (function () {
 
 function Fixture() {
   const setState = useUpdateAtom(swapAtom)
-
   const {
     trade: { trade },
   } = useSwapInfo()

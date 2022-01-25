@@ -69,7 +69,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       </ActionButton>
       {activeTrade && (
         <Dialog color="dialog" onClose={() => setActiveTrade(undefined)}>
-          <SummaryDialog trade={activeTrade} onConfirm={onConfirm} />
+          <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>
       )}
       {false && (

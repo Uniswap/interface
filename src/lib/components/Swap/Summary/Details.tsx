@@ -32,12 +32,11 @@ interface DetailsProps {
 }
 
 export default function Details({ trade, allowedSlippage }: DetailsProps) {
-  const integrator = window.location.hostname
-
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
 
+  const integrator = window.location.hostname
   const [integratorFee] = useAtom(integratorFeeAtom)
 
   const priceImpact = useMemo(() => {
@@ -46,13 +45,14 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   }, [trade])
 
   const details = useMemo((): [string, string][] => {
-    // @TODO(ianlapham) check that provider fee is even a valid list item
+    // @TODO(ianlapham): Check that provider fee is even a valid list item
     return [
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
       [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(inputCurrency)}`],
       [t`Price impact`, `${priceImpact.toFixed(2)}%`],
-      [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`],
-      [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`],
+      trade.tradeType === TradeType.EXACT_INPUT
+        ? [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`]
+        : [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`],
       [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`],
     ].filter(isDetail)
 

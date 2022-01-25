@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
-import { useSwapInfo } from 'lib/hooks/swap'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
 import { Field, independentFieldAtom } from 'lib/state/swap'
@@ -61,7 +60,7 @@ const Body = styled(Column)<{ open: boolean }>`
     }
 
     ${Estimate} {
-      max-height: ${({ open }) => (open ? 0 : 6)}em; // 2 * line-height + padding
+      max-height: ${({ open }) => (open ? 0 : 56 / 12)}em; // 2 * line-height + padding
       overflow-y: hidden;
       padding: ${({ open }) => (open ? 0 : '1em 0')};
       transition: ${({ open }) =>
@@ -72,26 +71,26 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
-const updateMessage = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
+const priceUpdate = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
 
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
+  allowedSlippage: Percent
   onConfirm: () => void
 }
 
-export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
+export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDialogProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const price = trade.executionPrice
 
-  const { allowedSlippage } = useSwapInfo()
   const independentField = useAtomValue(independentFieldAtom)
 
-  const [originalTrade, setOriginalTrade] = useState(trade)
+  const [confirmedTrade, setConfirmedTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
-    () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
-    [originalTrade, trade]
+    () => Boolean(trade && confirmedTrade && tradeMeaningfullyDiffers(trade, confirmedTrade)),
+    [confirmedTrade, trade]
   )
   const [open, setOpen] = useState(true)
 
@@ -146,8 +145,8 @@ export function SummaryDialog({ trade, onConfirm }: SummaryDialogProps) {
           </Estimate>
           <ActionButton
             onClick={onConfirm}
-            onUpdate={() => setOriginalTrade(trade)}
-            updated={doesTradeDiffer ? updateMessage : undefined}
+            onUpdate={() => setConfirmedTrade(trade)}
+            updated={doesTradeDiffer ? priceUpdate : undefined}
           >
             <Trans>Confirm swap</Trans>
           </ActionButton>
