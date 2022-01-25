@@ -1,11 +1,14 @@
 import { Trans } from '@lingui/macro'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
-import { useSwapInfo } from 'lib/hooks/swap'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Expando, Info } from 'lib/icons'
-import { Field } from 'lib/state/swap'
+import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
@@ -16,8 +19,6 @@ import Details from './Details'
 import Summary from './Summary'
 
 export default Summary
-
-const updated = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
 
 const SummaryColumn = styled(Column)``
 const ExpandoColumn = styled(Column)``
@@ -70,21 +71,27 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
+const priceUpdate = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
+
 interface SummaryDialogProps {
+  trade: Trade<Currency, Currency, TradeType>
+  allowedSlippage: Percent
   onConfirm: () => void
 }
 
-export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
-  const {
-    trade: { trade },
-    currencyAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
-    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
-  } = useSwapInfo()
+export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDialogProps) {
+  const { inputAmount, outputAmount } = trade
+  const inputCurrency = inputAmount.currency
+  const outputCurrency = outputAmount.currency
+  const price = trade.executionPrice
 
-  const price = trade?.executionPrice
+  const independentField = useAtomValue(independentFieldAtom)
 
-  const [confirmedPrice, confirmPrice] = useState(price)
-
+  const [confirmedTrade, setConfirmedTrade] = useState(trade)
+  const doesTradeDiffer = useMemo(
+    () => Boolean(trade && confirmedTrade && tradeMeaningfullyDiffers(trade, confirmedTrade)),
+    [confirmedTrade, trade]
+  )
   const [open, setOpen] = useState(true)
 
   const [details, setDetails] = useState<HTMLDivElement | null>(null)
@@ -119,26 +126,28 @@ export function SummaryDialog({ onConfirm }: SummaryDialogProps) {
           <Rule />
           <DetailsColumn>
             <Column gap={0.5} ref={setDetails} css={scrollbar}>
-              <Details input={inputCurrency} output={outputCurrency} />
+              <Details trade={trade} allowedSlippage={allowedSlippage} />
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
-            <Trans>Output is estimated.</Trans> {/* //@TODO(ianlapham): update with actual recieved values */}
-            {/* {swap?.minimumReceived && (
+            <Trans>Output is estimated.</Trans>
+            {independentField === Field.INPUT && (
               <Trans>
-                You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.
+                You will send at most {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {inputCurrency.symbol}{' '}
+                or the transaction will revert.
               </Trans>
             )}
-            {swap?.maximumSent && (
+            {independentField === Field.OUTPUT && (
               <Trans>
-                You will send at most {swap.maximumSent} {input.token.symbol} or the transaction will revert.
+                You will receive at least {trade.minimumAmountOut(allowedSlippage).toSignificant(6)}{' '}
+                {outputCurrency.symbol} or the transaction will revert.
               </Trans>
-            )} */}
+            )}
           </Estimate>
           <ActionButton
             onClick={onConfirm}
-            onUpdate={() => confirmPrice(price)}
-            updated={price === confirmedPrice ? undefined : updated}
+            onUpdate={() => setConfirmedTrade(trade)}
+            updated={doesTradeDiffer ? priceUpdate : undefined}
           >
             <Trans>Confirm swap</Trans>
           </ActionButton>

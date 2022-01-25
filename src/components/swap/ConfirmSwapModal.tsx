@@ -3,6 +3,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -10,23 +11,6 @@ import TransactionConfirmationModal, {
 } from '../TransactionConfirmationModal'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
-
-/**
- * Returns true if the trade requires a confirmation of details before we can submit it
- * @param args either a pair of V2 trades or a pair of V3 trades
- */
-function tradeMeaningfullyDiffers(
-  ...args: [Trade<Currency, Currency, TradeType>, Trade<Currency, Currency, TradeType>]
-): boolean {
-  const [tradeA, tradeB] = args
-  return (
-    tradeA.tradeType !== tradeB.tradeType ||
-    !tradeA.inputAmount.currency.equals(tradeB.inputAmount.currency) ||
-    !tradeA.inputAmount.equalTo(tradeB.inputAmount) ||
-    !tradeA.outputAmount.currency.equals(tradeB.outputAmount.currency) ||
-    !tradeA.outputAmount.equalTo(tradeB.outputAmount)
-  )
-}
 
 export default function ConfirmSwapModal({
   trade,

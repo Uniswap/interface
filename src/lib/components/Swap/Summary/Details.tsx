@@ -1,12 +1,12 @@
 import { t } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
-import { settingsAtom } from 'lib/state/settings'
 import { integratorFeeAtom } from 'lib/state/swap'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
+import { computeRealizedLPFeePercent } from 'utils/prices'
 
 import Row from '../../Row'
 
@@ -27,31 +27,42 @@ function Detail({ label, value }: DetailProps) {
 }
 
 interface DetailsProps {
-  input: Currency
-  output: Currency
+  trade: Trade<Currency, Currency, TradeType>
+  allowedSlippage: Percent
 }
 
-export default function Details({ input, output }: DetailsProps) {
-  const integrator = window.location.hostname
+export default function Details({ trade, allowedSlippage }: DetailsProps) {
+  const { inputAmount, outputAmount } = trade
+  const inputCurrency = inputAmount.currency
+  const outputCurrency = outputAmount.currency
 
-  const { maxSlippage } = useAtomValue(settingsAtom)
+  const integrator = window.location.hostname
   const [integratorFee] = useAtom(integratorFeeAtom)
 
+  const priceImpact = useMemo(() => {
+    const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
+    return trade.priceImpact.subtract(realizedLpFeePercent)
+  }, [trade])
+
   const details = useMemo((): [string, string][] => {
-    // @TODO(ianlapham) = update details to pull derived value from useDerivedSwapInfo
+    // @TODO(ianlapham): Check that provider fee is even a valid list item
     return [
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
-      [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(input)}`],
-      // [t`Price impact`, `${swap.priceImpact}%`],
-      // [t`Maximum sent`, swap.maximumSent && `${swap.maximumSent} ${inputSymbol}`],
-      // [t`Minimum received`, swap.minimumReceived && `${swap.minimumReceived} ${outputSymbol}`],
-      [t`Slippage tolerance`, `${maxSlippage}%`],
+      [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(inputCurrency)}`],
+      [t`Price impact`, `${priceImpact.toFixed(2)}%`],
+      trade.tradeType === TradeType.EXACT_INPUT
+        ? [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`]
+        : [],
+      trade.tradeType === TradeType.EXACT_OUTPUT
+        ? [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`]
+        : [],
+      [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`],
     ].filter(isDetail)
 
     function isDetail(detail: unknown[]): detail is [string, string] {
       return Boolean(detail[1])
     }
-  }, [input, integrator, integratorFee, maxSlippage])
+  }, [allowedSlippage, inputCurrency, integrator, integratorFee, outputCurrency.symbol, priceImpact, trade])
   return (
     <>
       {details.map(([label, detail]) => (

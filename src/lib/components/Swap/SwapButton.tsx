@@ -2,35 +2,36 @@ import { Trans } from '@lingui/macro'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, { ApprovalState, useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
 import { Field } from 'lib/state/swap'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
 import { StatusDialog } from './Status'
 import { SummaryDialog } from './Summary'
 
-enum Mode {
-  SWAP,
-  SUMMARY,
-  STATUS,
-}
-
 interface SwapButtonProps {
   disabled?: boolean
 }
+
 export default function SwapButton({ disabled }: SwapButtonProps) {
-  const [mode, setMode] = useState(Mode.SWAP)
   const {
     trade,
     allowedSlippage,
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
   } = useSwapInfo()
+
+  const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>(undefined)
+  useEffect(() => {
+    setActiveTrade((activeTrade) => activeTrade && trade.trade)
+  }, [trade])
+
   // TODO(zzmp): Track pending approval
   const useIsPendingApproval = () => false
+
+  // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade = useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval)
   const [approval, getApproval] = useSwapApproval(optimizedTrade, allowedSlippage, useIsPendingApproval)
-  // TODO(zzmp): Pass optimized trade to SummaryDialog
 
   const actionProps = useMemo(() => {
     if (disabled) return { disabled: true }
@@ -50,24 +51,30 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     }
 
     return { disabled: true }
-  }, [disabled, approval, inputCurrencyAmount, inputCurrencyBalance])
+  }, [approval, disabled, inputCurrencyAmount, inputCurrencyBalance])
+
   const onConfirm = useCallback(() => {
-    // TODO: Send the tx to the connected wallet.
-    setMode(Mode.STATUS)
+    // TODO(zzmp): Transact the trade.
   }, [])
+
   return (
     <>
-      <ActionButton color="interactive" onClick={() => setMode(Mode.SUMMARY)} onUpdate={getApproval} {...actionProps}>
+      <ActionButton
+        color="interactive"
+        onClick={() => setActiveTrade(trade.trade)}
+        onUpdate={getApproval}
+        {...actionProps}
+      >
         <Trans>Review swap</Trans>
       </ActionButton>
-      {mode >= Mode.SUMMARY && (
-        <Dialog color="dialog" onClose={() => setMode(Mode.SWAP)}>
-          <SummaryDialog onConfirm={onConfirm} />
+      {activeTrade && (
+        <Dialog color="dialog" onClose={() => setActiveTrade(undefined)}>
+          <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>
       )}
-      {mode >= Mode.STATUS && (
+      {false && (
         <Dialog color="dialog">
-          <StatusDialog onClose={() => setMode(Mode.SWAP)} />
+          <StatusDialog onClose={() => void 0} />
         </Dialog>
       )}
     </>
