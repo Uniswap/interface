@@ -55,7 +55,7 @@ const SwitchNetworkButton = styled.button`
   cursor: ${({ disabled }) => (disabled ? 'text' : 'pointer')};
 `
 
-const Button = styled.button`
+export const Button = styled.button`
   height: 29px;
   padding: 10.5px 14px;
   margin: 0 0 0 auto;
