@@ -134,7 +134,7 @@ export default function List({ loading, items = [] }: LiquidityMiningCampaignsLi
           )}
         </Box>
         <Box alignSelf="flex-end" mt="16px">
-          {!overallLoading && (
+          {!overallLoading && itemsPage.length > 0 && (
             <Pagination
               page={page}
               totalItems={items?.length ?? 0}
