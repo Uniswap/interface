@@ -24,6 +24,10 @@ import { setGasPrice } from 'state/application/actions'
 import KyberSwapAnnounce from 'components/Header/KyberSwapAnnounce'
 import Footer from 'components/Footer/Footer'
 import GoogleAnalyticsReporter from 'components/GoogleAnalyticsReporter'
+import { useIsDarkMode } from 'state/user/hooks'
+import { Sidetab, Popover } from '@typeform/embed-react'
+import useTheme from 'hooks/useTheme'
+import { useWindowSize } from 'hooks/useWindowSize'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -123,8 +127,27 @@ export default function App() {
     }
   }, [chainId, dispatch])
 
+  const theme = useTheme()
+  const isDarkTheme = useIsDarkMode()
+
+  const { width } = useWindowSize()
+
   return (
     <>
+      {width && width > 500 ? (
+        <Sidetab
+          id={isDarkTheme ? 'W5TeOyyH' : 'K0dtSO0v'}
+          buttonText="Feedback"
+          buttonColor={theme.primary}
+          customIcon={isDarkTheme ? 'https://i.imgur.com/iTOOKnr.png' : 'https://i.imgur.com/aPCpnGg.png'}
+        />
+      ) : (
+        <Popover
+          id={isDarkTheme ? 'W5TeOyyH' : 'K0dtSO0v'}
+          customIcon={isDarkTheme ? 'https://i.imgur.com/iTOOKnr.png' : 'https://i.imgur.com/aPCpnGg.png'}
+        />
+      )}
+
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
         <ApolloProvider client={apolloClient || defaultExchangeClient}>
           <Route component={GoogleAnalyticsReporter} />

@@ -65,6 +65,7 @@ const InstructionText = styled.div`
   width: 100%;
   padding: 16px 20px;
   background-color: ${({ theme }) => theme.bg17};
+  text-align: center;
   border-radius: 5px;
   font-size: 14px;
   line-height: 1.5;

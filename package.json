@@ -133,6 +133,7 @@
     "@rebass/forms": "^4.0.6",
     "@sushiswap/core": "^1.4.2",
     "@sushiswap/sdk": "^5.0.0-canary.6",
+    "@typeform/embed-react": "^1.2.4",
     "@types/big.js": "^6.0.0",
     "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/recharts": "^1.8.23",
