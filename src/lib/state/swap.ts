@@ -14,7 +14,6 @@ export interface Swap {
   readonly amount: string
   readonly [Field.INPUT]?: Currency
   readonly [Field.OUTPUT]?: Currency
-  integratorFee?: number
 }
 
 export const swapAtom = atomWithImmer<Swap>({
@@ -24,5 +23,3 @@ export const swapAtom = atomWithImmer<Swap>({
 })
 
 export const independentFieldAtom = pickAtom(swapAtom, 'independentField')
-export const integratorFeeAtom = pickAtom(swapAtom, 'integratorFee')
-export const amountAtom = pickAtom(swapAtom, 'amount')
