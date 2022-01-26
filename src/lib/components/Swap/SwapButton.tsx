@@ -77,12 +77,16 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
 
   //@TODO(ianlapham): add a loading state, process errors
   const onConfirm = useCallback(() => {
-    if (!swapCallback) {
-      return
-    }
-    swapCallback().then((hash) => {
-      console.log(hash)
-    })
+    swapCallback?.()
+      .then((hash) => {
+        // TODO(ianlapham): Add the swap tx to transactionsAtom
+        // TODO(ianlapham): Add the pending swap tx to a new swap state
+        console.log(hash)
+      })
+      .catch((error) => {
+        //@TODO(ianlapham): add error handling
+        console.log(error)
+      })
   }, [swapCallback])
 
   return (

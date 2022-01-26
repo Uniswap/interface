@@ -1,22 +1,22 @@
-import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { BigNumber } from 'ethers/node_modules/@ethersproject/abstract-signer/node_modules/@ethersproject/bignumber'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'
 import { useSwapCallArguments } from 'hooks/useSwapCallArguments'
+import { useAtomValue } from 'jotai/utils'
+import { transactionTtlAtom } from 'lib/state/settings'
 import { ReactNode, useMemo } from 'react'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
-import isZero from 'utils/isZero'
-import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
-type AnyTrade =
+import useActiveWeb3React from '../useActiveWeb3React'
+import useSendSwapTransaction from './useSendSwapTransaction'
+
+export type AnyTrade =
   | V2Trade<Currency, Currency, TradeType>
   | V3Trade<Currency, Currency, TradeType>
   | Trade<Currency, Currency, TradeType>
@@ -27,49 +27,28 @@ enum SwapCallbackState {
   VALID,
 }
 
-interface SwapCall {
-  address: string
-  calldata: string
-  value: string
-}
-
-interface SwapCallEstimate {
-  call: SwapCall
-}
-
-interface SuccessfulCall extends SwapCallEstimate {
-  call: SwapCall
-  gasEstimate: BigNumber
-}
-
-interface FailedCall extends SwapCallEstimate {
-  call: SwapCall
-  error: Error
-}
-
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade: AnyTrade | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | undefined | null
+  signatureData: SignatureData | null
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  // @TODO(ianlapham): update to use deadline from settings and related hooks
   const currentBlockTimestamp = useCurrentBlockTimestamp()
-  const deadline = currentBlockTimestamp
-    ? currentBlockTimestamp.add(BigNumber.from(DEFAULT_DEADLINE_FROM_NOW))
-    : undefined
+  const userDeadline = useAtomValue(transactionTtlAtom)
+  const deadline = currentBlockTimestamp?.add(BigNumber.from(userDeadline))
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData, deadline)
+  const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls)
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   return useMemo(() => {
-    if (!trade || !library || !account || !chainId) {
+    if (!trade || !library || !account || !chainId || !callback) {
       return { state: SwapCallbackState.INVALID, callback: null, error: <Trans>Missing dependencies</Trans> }
     }
     if (!recipient) {
@@ -83,93 +62,11 @@ export function useSwapCallback(
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {
-        const estimatedCalls: SwapCallEstimate[] = await Promise.all(
-          swapCalls.map((call) => {
-            const { address, calldata, value } = call
-
-            const tx =
-              !value || isZero(value)
-                ? { from: account, to: address, data: calldata }
-                : {
-                    from: account,
-                    to: address,
-                    data: calldata,
-                    value,
-                  }
-
-            return library
-              .estimateGas(tx)
-              .then((gasEstimate) => {
-                return {
-                  call,
-                  gasEstimate,
-                }
-              })
-              .catch((gasError) => {
-                console.debug('Gas estimate failed, trying eth_call to extract error', call)
-
-                return library
-                  .call(tx)
-                  .then((result) => {
-                    console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    return { call, error: <Trans>Unexpected issue with estimating the gas. Please try again.</Trans> }
-                  })
-                  .catch((callError) => {
-                    console.debug('Call threw error', call, callError)
-                    return { call, error: swapErrorToUserReadableMessage(callError) }
-                  })
-              })
-          })
-        )
-
-        // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
-        let bestCallOption: SuccessfulCall | SwapCallEstimate | undefined = estimatedCalls.find(
-          (el, ix, list): el is SuccessfulCall =>
-            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
-        )
-
-        // check if any calls errored with a recognizable error
-        if (!bestCallOption) {
-          const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
-          if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-          const firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
-            (call): call is SwapCallEstimate => !('error' in call)
-          )
-          if (!firstNoErrorCall) throw new Error(t`Unexpected error. Could not estimate gas for the swap.`)
-          bestCallOption = firstNoErrorCall
-        }
-
-        const {
-          call: { address, calldata, value },
-        } = bestCallOption
-
-        return library
-          .getSigner()
-          .sendTransaction({
-            from: account,
-            to: address,
-            data: calldata,
-            // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
-            ...(value && !isZero(value) ? { value } : {}),
-          })
-          .then((response) => {
-            //@TODO(ianlapham): Use widget txn adding state to add transaction here
-            return response.hash
-          })
-          .catch((error) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error(t`Transaction rejected.`)
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, address, calldata, value)
-
-              throw new Error(t`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
-            }
-          })
+        return callback().then((response) => {
+          return response.hash
+        })
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls])
+  }, [trade, library, account, chainId, callback, recipient, recipientAddressOrName])
 }
