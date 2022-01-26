@@ -66,7 +66,7 @@ if (process.env.REACT_APP_MAINNET_ENV === 'production') {
   initGoogleAnalytics()
 }
 
-if (process.env.REACT_APP_MAINNET_ENV === 'production') {
+if (window.location.href.includes('kyberswap')) {
   Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DNS
   })
