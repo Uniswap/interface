@@ -10,10 +10,11 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'
-import { swapErrorToUserReadableMessage, useSwapCallArguments } from 'hooks/useSwapCallback'
+import { useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
+import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 type AnyTrade =
   | V2Trade<Currency, Currency, TradeType>
