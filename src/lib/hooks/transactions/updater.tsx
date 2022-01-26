@@ -2,6 +2,7 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
+import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
 import { retry, RetryableError, RetryOptions } from 'utils/retry'
 
@@ -16,12 +17,12 @@ export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
   if (!tx.lastCheckedBlockNumber) return true
   const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber
   if (blocksSinceCheck < 1) return false
-  const minutesPending = (new Date().getTime() - tx.addedTime) / 1000 / 60
+  const minutesPending = (new Date().getTime() - tx.addedTime) / ms`1m`
   if (minutesPending > 60) {
-    // every 10 blocks if pending for longer than an hour
+    // every 10 blocks if pending longer than an hour
     return blocksSinceCheck > 9
   } else if (minutesPending > 5) {
-    // every 3 blocks if pending more than 5 minutes
+    // every 3 blocks if pending longer than 5 minutes
     return blocksSinceCheck > 2
   } else {
     // otherwise every block
