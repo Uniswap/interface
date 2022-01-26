@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { DefaultAddress, SwapProps } from 'lib/components/Swap'
 import { IntegrationError } from 'lib/errors'
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 
 import { isAddress } from '../../../utils'
 
@@ -15,12 +15,12 @@ function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
   return false
 }
 
-export default function SwapPropValidator(props: PropsWithChildren<SwapProps>) {
+type ValidatorProps = PropsWithChildren<SwapProps>
+
+export default function SwapPropValidator(props: ValidatorProps) {
   // convenience fee constraints
-  const [convenienceFeeChecked, setConvenienceFeeChecked] = useState(false)
   const { convenienceFee, convenienceFeeRecipient } = props
   useEffect(() => {
-    setConvenienceFeeChecked(false)
     if (convenienceFee) {
       if (convenienceFee > 100 || convenienceFee < 0) {
         throw new IntegrationError('convenienceFee must be between 0 and 100')
@@ -41,13 +41,10 @@ export default function SwapPropValidator(props: PropsWithChildren<SwapProps>) {
         })
       }
     }
-    setConvenienceFeeChecked(true)
   }, [convenienceFee, convenienceFeeRecipient])
 
-  const [defaultsChecked, setDefaultsChecked] = useState(false)
   const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount } = props
   useEffect(() => {
-    setDefaultsChecked(false)
     if (defaultOutputAmount && defaultInputAmount) {
       throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
     }
@@ -63,15 +60,7 @@ export default function SwapPropValidator(props: PropsWithChildren<SwapProps>) {
     if (defaultOutputAddress && !isAddressOrAddressMap(defaultOutputAddress) && defaultOutputAddress !== 'NATIVE') {
       throw new IntegrationError('defaultOutputAddress(s) must be a valid address or "NATIVE".')
     }
-    setDefaultsChecked(true)
   }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount])
 
-  const propsChecked = useMemo(
-    () => convenienceFeeChecked && defaultsChecked && defaultsChecked,
-    [convenienceFeeChecked, defaultsChecked]
-  )
-  if (propsChecked) {
-    return <>{props.children}</>
-  }
-  return null
+  return <>{props.children}</>
 }
