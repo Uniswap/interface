@@ -32,9 +32,9 @@ interface SwapCall {
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
 export function useSwapCallArguments(
-  trade: AnyTrade | undefined, // trade to execute, required
-  allowedSlippage: Percent, // in bips
-  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  trade: AnyTrade | undefined,
+  allowedSlippage: Percent,
+  recipientAddressOrName: string | null | undefined,
   signatureData: SignatureData | null | undefined,
   deadline: BigNumber | undefined
 ): SwapCall[] {

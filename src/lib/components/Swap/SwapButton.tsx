@@ -1,7 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
+import { BigNumber } from 'ethers/node_modules/@ethersproject/abstract-signer/node_modules/@ethersproject/bignumber'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
+import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, {
   ApprovalState,
@@ -13,6 +16,7 @@ import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { Link, Spinner } from 'lib/icons'
+import { transactionTtlAtom } from 'lib/state/settings'
 import { Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
@@ -109,16 +113,26 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   // @TODO(ianlapham): connect deadline from state instead of passing undefined.
   const { signatureData } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, undefined)
 
+  const currentBlockTimestamp = useCurrentBlockTimestamp()
+  const userDeadline = useAtomValue(transactionTtlAtom)
+  const deadline = currentBlockTimestamp?.add(BigNumber.from(userDeadline))
+
   // the callback to execute the swap
-  const { callback: swapCallback } = useSwapCallback(optimizedTrade, allowedSlippage, account ?? null, signatureData)
+  const { callback: swapCallback } = useSwapCallback(
+    optimizedTrade,
+    allowedSlippage,
+    account ?? null,
+    signatureData,
+    deadline
+  )
 
   //@TODO(ianlapham): add a loading state, process errors
   const onConfirm = useCallback(() => {
     swapCallback?.()
-      .then((hash) => {
+      .then((transactionResponse) => {
         // TODO(ianlapham): Add the swap tx to transactionsAtom
         // TODO(ianlapham): Add the pending swap tx to a new swap state
-        console.log(hash)
+        console.log(transactionResponse)
       })
       .catch((error) => {
         //@TODO(ianlapham): add error handling
