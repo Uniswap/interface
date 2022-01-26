@@ -11,6 +11,7 @@ import {
   ChevronDown as ChevronDownIcon,
   Clock as ClockIcon,
   CreditCard as CreditCardIcon,
+  ExternalLink as LinkIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
   Settings as SettingsIcon,
@@ -77,6 +78,7 @@ export const Clock = icon(ClockIcon)
 export const CreditCard = icon(CreditCardIcon)
 export const HelpCircle = icon(HelpCircleIcon)
 export const Info = icon(InfoIcon)
+export const Link = icon(LinkIcon)
 export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)
 export const Trash2 = icon(Trash2Icon)

@@ -1,4 +1,4 @@
-import { AlertTriangle, LargeIcon } from 'lib/icons'
+import { AlertTriangle, Icon, LargeIcon } from 'lib/icons'
 import styled, { Color, css, keyframes, ThemedText } from 'lib/theme'
 import { ReactNode } from 'react'
 
@@ -9,6 +9,10 @@ const StyledButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-grow: 1;
   transition: background-color 0.25s ease-out, flex-grow 0.25s ease-out, padding 0.25s ease-out;
+
+  :disabled {
+    margin: -1px;
+  }
 `
 
 const UpdateRow = styled(Row)``
@@ -24,7 +28,7 @@ const grow = keyframes`
   }
 `
 
-const updatedCss = css`
+const updateCss = css`
   border: 1px solid ${({ theme }) => theme.outline};
   padding: calc(0.25em - 1px);
   padding-left: calc(0.75em - 1px);
@@ -41,19 +45,19 @@ const updatedCss = css`
   }
 `
 
-export const Overlay = styled(Row)<{ updated?: boolean }>`
+export const Overlay = styled(Row)<{ update?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
   min-height: 3.5em;
   transition: padding 0.25s ease-out;
 
-  ${({ updated }) => updated && updatedCss}
+  ${({ update }) => update && updateCss}
 `
 
 export interface ActionButtonProps {
   color?: Color
   disabled?: boolean
-  updated?: { message: ReactNode; action: ReactNode }
+  update?: { message: ReactNode; action: ReactNode; icon?: Icon }
   onClick: () => void
   onUpdate?: () => void
   children: ReactNode
@@ -62,22 +66,22 @@ export interface ActionButtonProps {
 export default function ActionButton({
   color = 'accent',
   disabled,
-  updated,
+  update,
   onClick,
   onUpdate,
   children,
 }: ActionButtonProps) {
   return (
-    <Overlay updated={Boolean(updated)} flex align="stretch">
-      <StyledButton color={color} disabled={disabled} onClick={updated ? onUpdate : onClick}>
-        <ThemedText.TransitionButton buttonSize={updated ? 'medium' : 'large'} color="currentColor">
-          {updated ? updated.action : children}
+    <Overlay update={Boolean(update)} flex align="stretch">
+      <StyledButton color={color} disabled={disabled} onClick={update ? onUpdate : onClick}>
+        <ThemedText.TransitionButton buttonSize={update ? 'medium' : 'large'} color="currentColor">
+          {update ? update.action : children}
         </ThemedText.TransitionButton>
       </StyledButton>
-      {updated && (
+      {update && (
         <UpdateRow gap={0.5}>
-          <LargeIcon icon={AlertTriangle} />
-          <ThemedText.Subhead2>{updated?.message}</ThemedText.Subhead2>
+          <LargeIcon color="currentColor" icon={update.icon || AlertTriangle} />
+          <ThemedText.Subhead2>{update?.message}</ThemedText.Subhead2>
         </UpdateRow>
       )}
     </Overlay>

@@ -40,15 +40,16 @@ export function useAddTransaction() {
   )
 }
 
-export function useIsPendingApproval(token?: Token, spender?: string) {
+/** Returns the hash of a pending approval transaction, if it exists. */
+export function usePendingApproval(token?: Token, spender?: string): string | undefined {
   const { chainId } = useActiveWeb3React()
   const txs = useAtomValue(transactionsAtom)
-  if (!chainId || !token || !spender) return false
+  if (!chainId || !token || !spender) return undefined
 
   const chainTxs = txs[chainId]
-  if (!chainTxs) return false
+  if (!chainTxs) return undefined
 
-  return Object.values(chainTxs).some(
+  return Object.values(chainTxs).find(
     (tx) =>
       tx &&
       tx.receipt === undefined &&
@@ -56,7 +57,7 @@ export function useIsPendingApproval(token?: Token, spender?: string) {
       tx.info.tokenAddress === token.address &&
       tx.info.spenderAddress === spender &&
       isTransactionRecent(tx)
-  )
+  )?.info.response.hash
 }
 
 export function TransactionsUpdater() {

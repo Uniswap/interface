@@ -147,7 +147,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
           <ActionButton
             onClick={onConfirm}
             onUpdate={() => setConfirmedTrade(trade)}
-            updated={doesTradeDiffer ? priceUpdate : undefined}
+            update={doesTradeDiffer ? priceUpdate : undefined}
           >
             <Trans>Confirm swap</Trans>
           </ActionButton>

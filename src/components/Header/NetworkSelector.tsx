@@ -282,8 +282,10 @@ export default function NetworkSelector() {
   )
 
   useEffect(() => {
+    if (!chainId || !prevChainId) return
+
     // when network change originates from wallet or dropdown selector, just update URL
-    if (chainId && chainId !== prevChainId) {
+    if (chainId !== prevChainId) {
       history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
       // otherwise assume network change originates from URL
     } else if (urlChainId && urlChainId !== chainId) {

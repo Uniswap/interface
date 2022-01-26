@@ -1,34 +1,53 @@
 import { Trans } from '@lingui/macro'
+import { Token } from '@uniswap/sdk-core'
+import { CHAIN_INFO } from 'constants/chainInfo'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useSwapInfo } from 'lib/hooks/swap'
-import useSwapApproval, { ApprovalState, useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
+import useSwapApproval, {
+  ApprovalState,
+  useSwapApprovalOptimizedTrade,
+  useSwapRouterAddress,
+} from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import { useAddTransaction } from 'lib/hooks/transactions'
-import { useIsPendingApproval } from 'lib/hooks/transactions'
+import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import { Link, Spinner } from 'lib/icons'
 import { Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
+import styled from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
+import Row from '../Row'
 import { SummaryDialog } from './Summary'
 
 interface SwapButtonProps {
   disabled?: boolean
 }
 
+const EtherscanA = styled.a`
+  color: currentColor;
+  text-decoration: none;
+`
+
+function useIsPendingApproval(token?: Token, spender?: string): boolean {
+  return Boolean(usePendingApproval(token, spender))
+}
+
 export default function SwapButton({ disabled }: SwapButtonProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
     trade,
     allowedSlippage,
+    currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
   } = useSwapInfo()
 
-  const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>(undefined)
+  const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>()
   useEffect(() => {
     setActiveTrade((activeTrade) => activeTrade && trade.trade)
   }, [trade])
@@ -38,6 +57,10 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
     useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval) || trade.trade
   const [approval, getApproval] = useSwapApproval(optimizedTrade, allowedSlippage, useIsPendingApproval)
+  const approvalHash = usePendingApproval(
+    inputCurrency?.isToken ? inputCurrency : undefined,
+    useSwapRouterAddress(optimizedTrade)
+  )
 
   const addTransaction = useAddTransaction()
   const addApprovalTransaction = useCallback(() => {
@@ -51,13 +74,27 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const actionProps = useMemo(() => {
     if (disabled) return { disabled: true }
 
-    if (inputCurrencyAmount && inputCurrencyBalance?.greaterThan(inputCurrencyAmount)) {
-      // TODO(zzmp): Update UI for pending approvals.
+    if (chainId && inputCurrencyAmount && inputCurrencyBalance?.greaterThan(inputCurrencyAmount)) {
       if (approval === ApprovalState.PENDING) {
-        return { disabled: true }
+        return {
+          disabled: true,
+          update: {
+            message: (
+              <EtherscanA href={approvalHash && `${CHAIN_INFO[chainId].explorer}tx/${approvalHash}`} target="_blank">
+                <Row gap={0.25}>
+                  <Trans>
+                    Approval pending <Link />
+                  </Trans>
+                </Row>
+              </EtherscanA>
+            ),
+            action: <Trans>Approve</Trans>,
+            icon: Spinner,
+          },
+        }
       } else if (approval === ApprovalState.NOT_APPROVED) {
         return {
-          updated: {
+          update: {
             message: <Trans>Approve {inputCurrencyAmount.currency.symbol} first</Trans>,
             action: <Trans>Approve</Trans>,
           },
@@ -67,7 +104,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     }
 
     return { disabled: true }
-  }, [approval, disabled, inputCurrencyAmount, inputCurrencyBalance])
+  }, [approval, approvalHash, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance])
 
   // @TODO(ianlapham): connect deadline from state instead of passing undefined.
   const { signatureData } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, undefined)

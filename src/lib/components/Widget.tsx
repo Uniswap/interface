@@ -6,13 +6,13 @@ import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
-import { ComponentProps, JSXElementConstructor, PropsWithChildren, StrictMode, useRef } from 'react'
+import { PropsWithChildren, StrictMode, useRef } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
 import { Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
-import ErrorGenerator from './Error/ErrorGenerator'
+import WidgetPropValidator from './Error/WidgetsPropsValidator'
 import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
@@ -79,7 +79,7 @@ function Updaters() {
   )
 }
 
-export type WidgetProps<T extends JSXElementConstructor<any> | undefined = undefined> = {
+export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
   provider?: EthProvider
@@ -88,10 +88,7 @@ export type WidgetProps<T extends JSXElementConstructor<any> | undefined = undef
   dialog?: HTMLElement | null
   className?: string
   onError?: ErrorHandler
-} & (T extends JSXElementConstructor<any>
-  ? ComponentProps<T>
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-    {})
+}
 
 export default function Widget(props: PropsWithChildren<WidgetProps>) {
   const {
@@ -105,6 +102,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     className,
     onError,
   } = props
+
   const wrapper = useRef<HTMLDivElement>(null)
   return (
     <StrictMode>
@@ -113,15 +111,16 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
           <WidgetWrapper width={width} className={className} ref={wrapper}>
             <DialogProvider value={dialog || wrapper.current}>
               <ErrorBoundary onError={onError}>
-                <ReduxProvider store={multicallStore}>
-                  <AtomProvider>
-                    <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
-                      <Updaters />
-                      <ErrorGenerator {...props} />
-                      {children}
-                    </Web3Provider>
-                  </AtomProvider>
-                </ReduxProvider>
+                <WidgetPropValidator {...props}>
+                  <ReduxProvider store={multicallStore}>
+                    <AtomProvider>
+                      <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                        <Updaters />
+                        {children}
+                      </Web3Provider>
+                    </AtomProvider>
+                  </ReduxProvider>
+                </WidgetPropValidator>
               </ErrorBoundary>
             </DialogProvider>
           </WidgetWrapper>

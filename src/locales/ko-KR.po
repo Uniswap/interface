@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-25 19:07\n"
+"PO-Revision-Date: 2022-01-26 03:35\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -38,7 +38,7 @@ msgstr "(${0})"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
-msgstr "(탐색기에서보기)"
+msgstr "(Explorer에서 보기)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -114,7 +114,7 @@ msgstr "<0> 🎉</0> Unicorn 팀에 오신 것을 환영합니다. :) <1> 🎉</
 
 #: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "제안서를 제출하려면 총 UNI 공급량의 최소 0.25 %가 필요합니다."
+msgstr "제안서를 제출하려면 총 UNI 수량의 최소 0.25 %가 필요합니다."
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -210,9 +210,14 @@ msgstr "금액"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
+msgstr "교환을 실행하는 중에 오류가 발생했습니다. 가격변동 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 교환중인 토큰이 Uniswap과 호환되지 않는 것일 수 있습니다. 참고: 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approval pending <0/>"
+msgstr "승인 대기 중 <0/>"
 
 #: src/components/earn/StakingModal.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -252,15 +257,15 @@ msgstr "{0} 승인 중"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbiscan"
-msgstr "아르비스칸"
+msgstr "Arbiscan"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbitrum Bridge"
-msgstr "아비트룸 브리지"
+msgstr "Arbitrum 브리지"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrum은 베타 버전이며 다운타임이 발생할 수 있습니다. 다운타임 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
+msgstr "Arbitrum은 베타 버전이며 가동 중지 시간이 발생할 수 있습니다. 가동 중지 시간 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -288,11 +293,11 @@ msgstr "입금 가능 : {0}"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
-msgstr "균형: {0}"
+msgstr "잔액: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
-msgstr "이국적인 쌍에 가장 적합합니다."
+msgstr "색다른 쌍에 가장 적합합니다."
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
@@ -316,7 +321,7 @@ msgstr "차단된 주소"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
-msgstr "다리"
+msgstr "브릿지"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -328,11 +333,11 @@ msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시적
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "지갑을 연결하면 Uniswap Labs의 <0>서비스 약관</0> <1>프로토콜 면책 조항</1>읽고 이해했음을 인정합니다."
+msgstr "지갑을 연결하면 Uniswap Labs의 <0>서비스 약관</0>을 읽고 이해하여 <1>프로토콜 면책 조항</1>을 인정하는 것입니다."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
-msgstr "취소 된"
+msgstr "취소됨"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -358,7 +363,7 @@ msgstr "청구"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "제 <0 />에 대한 {0}"
+msgstr "{0} 에 대한 <0/> 청구"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -374,7 +379,7 @@ msgstr "UNI 토큰 청구"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "{0}대한 UNI 보상 받기"
+msgstr "{0} 에 대한 UNI 청구"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -395,7 +400,7 @@ msgstr "청구된 UNI!"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "주장!"
+msgstr "청구됨!"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -445,7 +450,7 @@ msgstr "수수료 징수"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
-msgstr "{0}/{1} 수수료를 수집"
+msgstr "{0}/{1} 수수료가 수집"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -490,7 +495,7 @@ msgstr "지갑에서 이 거래를 확인하세요"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Confirm transaction in wallet"
-msgstr "지갑에서 거래 확인"
+msgstr "지갑에서 트랜잭션 승인"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -528,7 +533,7 @@ msgstr "유동성을 보려면 지갑에 연결하십시오."
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Connect wallet to swap"
-msgstr "스왑에 지갑 연결"
+msgstr "교환에 지갑 연결"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -575,7 +580,7 @@ msgstr "풀을 만듭니다."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
-msgstr "작성 {0}/{1} V3 풀을"
+msgstr "V3 풀 {0}/{1} 생성"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -588,7 +593,7 @@ msgstr "현재 {0} 가격 :"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Custom"
-msgstr "관습"
+msgstr "사용자 정의"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
@@ -604,7 +609,7 @@ msgstr "위임 투표"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Delegate voting power to {0}"
-msgstr "투표권을 {0}"
+msgstr "{0} 에게 위임한 투표권"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
@@ -692,7 +697,7 @@ msgstr "획득한 UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅�
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
-msgstr "편집하다"
+msgstr "편집"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Efficiency Comparison"
@@ -757,7 +762,7 @@ msgstr "연결 오류. 페이지를 새로 고침 해보세요."
 
 #: src/lib/components/Error/ErrorDialog.tsx
 msgid "Error details"
-msgstr "오류 정보"
+msgstr "오류 상세"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -765,15 +770,15 @@ msgstr "목록을 가져 오는 중에 오류가 발생했습니다."
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimate may differ due to your wallet gas settings"
-msgstr "지갑 가스 설정에 따라 견적이 다를 수 있습니다."
+msgstr "지갑의 가스 설정에 따라 예상 값이 다를 수 있습니다"
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
-msgstr "예상 네트워크 요금"
+msgstr "예상 네트워크 수수료"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Etherscan"
-msgstr "이더스캔"
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
@@ -801,11 +806,11 @@ msgstr "만료 됨"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
-msgstr "Uniswap 분석을 살펴보십시오."
+msgstr "Uniswap 분석 정보를 살펴보세요."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Uniswap 인터페이스에서 네트워크를 전환하지 못했습니다. {0}에서 Uniswap을 사용하려면 지갑에서 네트워크를 변경해야 합니다."
+msgstr "Uniswap 인터페이스에서 네트워크를 전환하지 못했습니다. Uniswap을 {0} 에서 사용하려면 지갑에서 네트워크를 변경해야 합니다."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -817,11 +822,11 @@ msgstr "수수료 등급"
 
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
-msgstr "최저가를 가져오는 중..."
+msgstr "최적 가격을 가져오는 중..."
 
 #: src/lib/components/Swap/Toolbar.tsx
 msgid "Fetching best price…"
-msgstr "가장 좋은 가격을 가져오는 중…"
+msgstr "최적 가격을 가져오는 중…"
 
 #: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -846,7 +851,7 @@ msgstr "전체 범위"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "전체 범위 포지션은 집중 포지션보다 적은 수수료를 받을 수 있습니다. 여기에서 <0>자세히 알아보기</0> ."
+msgstr "전체 범위 포지션은 집중 포지션보다 적은 수수료를 받을 수 있습니다. 여기에서 <0>자세히 알아보기</0>."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -855,15 +860,15 @@ msgstr "Discord에서 지원 받기"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
-msgstr "지원 센터"
+msgstr "도움말 센터"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
-msgstr "숨는 장소"
+msgstr "숨기기"
 
 #: src/components/PositionList/index.tsx
 msgid "Hide closed positions"
-msgstr "마감된 포지션 숨기기"
+msgstr "닫은 포지션 숨기기"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1080,7 +1085,7 @@ msgstr "최고 가격"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Max slippage"
-msgstr "최대 미끄러짐"
+msgstr "최대 가격 변동"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
@@ -1118,7 +1123,7 @@ msgstr "유동성 토큰을 Uniswap V2에서 Uniswap V3로 마이그레이션하
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
-msgstr "마이그레이션 {0}/{1} V3 유동성"
+msgstr "유동성 {0}/{1} V3로 마이그레이션"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
@@ -1156,7 +1161,7 @@ msgstr "추가"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
-msgstr "네트워크 요금"
+msgstr "네트워크 수수료"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
@@ -1243,15 +1248,15 @@ msgstr "죄송합니다! 알 수없는 오류가 발생했습니다. 페이지�
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Gateway"
-msgstr "낙관 게이트웨이"
+msgstr "Optimism 게이트웨이"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "낙관론은 베타 버전이며 가동 중지 시간이 발생할 수 있습니다. 낙관론자는 가까운 장래에 네트워크를 업그레이드하기 위해 계획된 다운타임을 예상합니다. 다운타임 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
+msgstr "Optimism은 베타 버전이며 가동 중지 시간이 발생할 수 있습니다. Optimism은 가까운 장래에 네트워크를 업그레이드하기 위해 계획된 가동 중지 시간이 예상됩니다. 가동 중지 시간 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
-msgstr "낙관적 Etherscan"
+msgstr "Optimistic Etherscan"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1259,7 +1264,7 @@ msgstr "범위를 벗어남"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated."
-msgstr "출력이 예상됩니다."
+msgstr "예상되는 결과값."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1284,15 +1289,15 @@ msgstr "참여 풀"
 
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
-msgstr "보류 중"
+msgstr "대기 중"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
-msgstr "REMOVE를 입력하여 이 목록을 제거할 것인지 확인하십시오."
+msgstr "REMOVE를 입력하여 이 목록을 제거할 것인지 확인해주세요."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
-msgstr "레이어 1 이더 리움에 연결하세요"
+msgstr "레이어 1 Ethereum에 연결하세요"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
@@ -2389,7 +2394,7 @@ msgstr "{0}에 찬성"
 
 #: src/components/Header/Polling.tsx
 msgid "gwei"
-msgstr "그웨이"
+msgstr "기가웨이"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
