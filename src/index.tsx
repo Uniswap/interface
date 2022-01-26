@@ -4,7 +4,7 @@ import React, { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import { NetworkContextName } from './constants'
+import { NetworkContextName, sentryRequestId } from './constants'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
@@ -18,6 +18,7 @@ import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 import SEO from './components/SEO'
 import ReactGA from 'react-ga'
+import * as Sentry from '@sentry/react'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -63,6 +64,15 @@ const initGoogleAnalytics = () => {
 
 if (process.env.REACT_APP_MAINNET_ENV === 'production') {
   initGoogleAnalytics()
+}
+
+if (window.location.href.includes('kyberswap')) {
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DNS
+  })
+  Sentry.configureScope(scope => {
+    scope.setTag('request_id', sentryRequestId)
+  })
 }
 
 const preloadhtml = document.querySelector('.preloadhtml')

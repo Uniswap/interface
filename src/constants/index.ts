@@ -3,6 +3,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'
 import { t } from '@lingui/macro'
+import { uuid } from 'uuidv4'
 
 export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]:
@@ -1109,3 +1110,5 @@ export const AMP_HINT = t`Stands for amplification factor. Each pool can have it
 export const CREATE_POOL_AMP_HINT = t`Stands for amplification factor. Pools with a higher AMP provide higher capital efficiency within a particular price range. We recommend higher AMP for stable token pairs and lower AMP for volatile token pairs`
 export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
   '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'
+
+export const sentryRequestId = uuid()
