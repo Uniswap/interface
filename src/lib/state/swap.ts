@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { atomWithImmer } from 'jotai/immer'
@@ -26,14 +26,3 @@ export const swapAtom = atomWithImmer<Swap>({
 export const independentFieldAtom = pickAtom(swapAtom, 'independentField')
 export const integratorFeeAtom = pickAtom(swapAtom, 'integratorFee')
 export const amountAtom = pickAtom(swapAtom, 'amount')
-
-export interface SwapTransaction {
-  input: CurrencyAmount<Currency>
-  output: CurrencyAmount<Currency>
-  receipt: string
-  timestamp: number
-  elapsedMs?: number
-  status?: true | Error
-}
-
-export const swapTransactionAtom = atomWithImmer<SwapTransaction | null>(null)
