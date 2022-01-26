@@ -44,7 +44,7 @@
   "plugins": ["simple-import-sort", "unused-imports"],
   "rules": {
     "unused-imports/no-unused-imports": "error",
-    "simple-import-sort/imports": "error",
+    "simple-import-sort/imports": "off",
     "simple-import-sort/exports": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
     "prettier/prettier": "error",

@@ -3,75 +3,33 @@
  * This library lives in src/lib, but shares code with the interface application.
  */
 
-// import eslint from '@rollup/plugin-eslint'
+import eslint from '@rollup/plugin-eslint'
+// import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 // import resolve from '@rollup/plugin-node-resolve'
-import babel from '@rollup/plugin-babel'
-
-import { DEFAULT_EXTENSIONS } from '@babel/core'
-// import replace from '@rollup/plugin-replace'
 import url from '@rollup/plugin-url'
 import svgr from '@svgr/rollup'
 import dts from 'rollup-plugin-dts'
-// import external from 'rollup-plugin-peer-deps-external'
 import sass from 'rollup-plugin-scss'
+// import { DEFAULT_EXTENSIONS } from '@babel/core'
+
 import typescript from 'rollup-plugin-typescript2'
+
+// import babel from '@rollup/plugin-babel'
+// import { DEFAULT_EXTENSIONS } from '@babel/core'
+import replace from '@rollup/plugin-replace'
+// import external from 'rollup-plugin-peer-deps-external'
 
 // import { dependencies } from './package.json'
 
 // const deps = Object.keys(dependencies)
 
-// const replacements = {
-//   'process.env.REACT_APP_IS_WIDGET': true,
-// }
-// process.env.BABEL_ENV === 'production'
+const replacements = {
+  'process.env.REACT_APP_IS_WIDGET': false,
+}
 
 // const ignore = ['styled-components']
-const babelConfig = {
-  extensions: [...DEFAULT_EXTENSIONS, '.ts', 'tsx'],
-
-  exclude: '/node_modules/**',
-  babelrc: false,
-  configFile: false,
-  presets: [
-    [
-      require.resolve('babel-preset-react-app'),
-      {
-        runtime: 'automatic',
-      },
-    ],
-  ],
-  // plugins: [
-  //   [
-  //     require.resolve('babel-plugin-named-asset-import'),
-  //     {
-  //       loaderMap: {
-  //         svg: {
-  //           ReactComponent: '@svgr/webpack?-svgo,+titleProp,+ref![path]',
-  //         },
-  //       },
-  //     },
-  //   ],
-  // ],
-}
-// const babelPlugins = [
-//   // These plugins filter out non-ES2015.
-//   '@babel/plugin-transform-flow-strip-types',
-//   ['@babel/plugin-proposal-class-properties', { loose: true }],
-//   'syntax-trailing-function-commas',
-//   // These use loose mode which avoids embedding a runtime.
-//   // TODO: Remove object spread from the source. Prefer Object.assign instead.
-//   ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
-//   ['@babel/plugin-transform-template-literals', { loose: true }],
-//   // TODO: Remove for...of from the source. It requires a runtime to be embedded.
-//   '@babel/plugin-transform-for-of',
-//   // TODO: Remove array spread from the source. Prefer .apply instead.
-//   ['@babel/plugin-transform-spread', { loose: true, useBuiltIns: true }],
-//   '@babel/plugin-transform-parameters',
-//   // TODO: Remove array destructuring from the source. Requires runtime.
-//   ['@babel/plugin-transform-destructuring', { loose: true, useBuiltIns: true }],
-// ]
 
 const library = {
   input: 'src/snowflake.ts',
@@ -95,12 +53,20 @@ const library = {
   // external: (source: string) => ignore.includes(source),
   plugins: [
     // external(),
+    eslint({ include: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'] }),
+    replace({ ...replacements, preventAssignment: true }),
+
+    typescript({ tsconfig: './tsconfig.json', useTsconfigDeclarationDir: true }),
+    commonjs({ esmExternals: true, requireReturnsDefault: false }),
     // resolve(),
-    typescript({ tsconfig: './tsconfig.json', useTsconfigDeclarationDir: false }),
-    commonjs(),
+
+    // babel({
+    //   extensions: [...DEFAULT_EXTENSIONS, '.ts', 'tsx'],
+    //   babelHelpers: 'runtime',
+    //   exclude: /node_modules/,
+    // }),
     // commonjs({ ignore: ['node_modules/styled-components/**/*.js'] }),
     // eslint({ include: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'] }),
-    // babel(babelConfig),
     json(), // imports json
     // replace({ ...replacements, preventAssignment: true }),
     url(), // imports files (including svgs) as data URIs

@@ -6,10 +6,7 @@ var jsxRuntime = require('react/jsx-runtime');
 var macro = require('@lingui/macro');
 var v2Sdk = require('@uniswap/v2-sdk');
 var v3Sdk = require('@uniswap/v3-sdk');
-var core$1 = require('@web3-react/core');
-var utils = require('jotai/utils');
-var core = require('widgets-web3-react/core');
-var empty = require('widgets-web3-react/empty');
+var core = require('@web3-react/core');
 var sdkCore = require('@uniswap/sdk-core');
 var JSBI = require('jsbi');
 var reactFeather = require('react-feather');
@@ -21,8 +18,11 @@ var address = require('@ethersproject/address');
 var constants = require('@ethersproject/constants');
 var contracts = require('@ethersproject/contracts');
 var jotai = require('jotai');
+var utils = require('jotai/utils');
 var reduxMulticall = require('@uniswap/redux-multicall');
 var redux = require('redux');
+var core$1 = require('widgets-web3-react/core');
+var empty = require('widgets-web3-react/empty');
 var hash = require('@ethersproject/hash');
 var CID = require('cids');
 var multicodec = require('multicodec');
@@ -538,24 +538,6 @@ var CHAIN_INFO = (_b$6 = {},
     _b$6);
 var templateObject_1$X, templateObject_2$E, templateObject_3$x, templateObject_4$n, templateObject_5$k, templateObject_6$e;
 
-var EMPTY_CONNECTOR = core.initializeConnector(function () { return empty.EMPTY; });
-var urlAtom = utils.atomWithDefault(function () { return EMPTY_CONNECTOR; });
-var injectedAtom = utils.atomWithDefault(function () { return EMPTY_CONNECTOR; });
-
-function useActiveWeb3ReactState() {
-    var injected = utils.useAtomValue(injectedAtom);
-    var url = utils.useAtomValue(urlAtom);
-    return injected[1].useIsActive() ? injected : url;
-}
-function useActiveWeb3ReactHooks() {
-    var _a = __read(useActiveWeb3ReactState(), 2), hooks = _a[1];
-    return hooks;
-}
-function useActiveWeb3React$1() {
-    var _a = useActiveWeb3ReactHooks(), useProvider = _a.useProvider, useWeb3React = _a.useWeb3React;
-    return useWeb3React(useProvider());
-}
-
 var NetworkContextName = 'NETWORK';
 // 30 minutes, denominated in seconds
 var DEFAULT_DEADLINE_FROM_NOW = 60 * 30;
@@ -582,11 +564,11 @@ new sdkCore.Percent(JSBI__default["default"].BigInt(200), BIPS_BASE);
 var ONE_HUNDRED_PERCENT = new sdkCore.Percent('1');
 
 function useActiveWeb3React() {
-    if (process.env.REACT_APP_IS_WIDGET) {
-        return useActiveWeb3React$1();
-    }
-    var interfaceContext = core$1.useWeb3React();
-    var interfaceNetworkContext = core$1.useWeb3React(process.env.REACT_APP_IS_WIDGET ? undefined : NetworkContextName);
+    // if (false) {
+    //   return useWidgetsWeb3React()
+    // }
+    var interfaceContext = core.useWeb3React();
+    var interfaceNetworkContext = core.useWeb3React(NetworkContextName);
     if (interfaceContext.active) {
         return interfaceContext;
     }
@@ -5634,6 +5616,10 @@ function useNativeCurrency() {
                 nativeOnChain(SupportedChainId.MAINNET);
     }, [chainId]);
 }
+
+var EMPTY_CONNECTOR = core$1.initializeConnector(function () { return empty.EMPTY; });
+utils.atomWithDefault(function () { return EMPTY_CONNECTOR; });
+utils.atomWithDefault(function () { return EMPTY_CONNECTOR; });
 
 var REGISTRAR_ABI = [
     {

@@ -161,6 +161,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@babel/runtime": "^7.16.7",
     "@ethersproject/abi": "^5.4.1",
     "@ethersproject/abstract-provider": "^5.4.1",
     "@ethersproject/address": "^5.4.0",
