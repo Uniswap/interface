@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router'
 import { stringify } from 'qs'
 
@@ -138,6 +138,10 @@ export function useActiveNetwork() {
     ...location,
     search: stringify({ ...qsWithoutNetworkId })
   }
+  const targetRef = useRef(target)
+  useEffect(() => {
+    targetRef.current = target
+  }, [target])
 
   const changeNetwork = useCallback(
     async (chainId: ChainId) => {
@@ -156,7 +160,7 @@ export function useActiveNetwork() {
         dispatch(updateChainIdWhenNotConnected(chainId))
 
         setTimeout(() => {
-          history.push(target)
+          history.push(targetRef.current)
         }, 3000)
         return
       }
