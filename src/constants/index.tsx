@@ -301,7 +301,7 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
   },
   [ChainId.XDAI]: {
     chainId: `0x${ChainId.XDAI.toString(16)}`,
-    chainName: 'xDAI',
+    chainName: 'Gnosis Chain',
     nativeCurrency: {
       name: Currency.XDAI.name || 'xDAI',
       symbol: Currency.XDAI.symbol || 'xDAI',
@@ -381,7 +381,7 @@ export const ChainLabel: any = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ARBITRUM_ONE]: 'Arbitrum One',
   [ChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
-  [ChainId.XDAI]: 'xDai'
+  [ChainId.XDAI]: 'Gnosis Chain'
 }
 
 export const OLD_SWPR: { [key: number]: Token } = {

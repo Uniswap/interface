@@ -7,7 +7,8 @@ import Radio from '../../Radio'
 export enum PairsFilterType {
   ALL = 'ALL',
   REWARDS = 'REWARDS',
-  MY = 'MY'
+  MY = 'MY',
+  SWPR = 'SWPR'
 }
 
 const StyledRoot = styled(Flex)<{ disabled?: boolean }>`

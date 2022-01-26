@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Box, Flex } from 'rebass'
-import { NumberBadge, NumberBadgeProps } from '../../../../NumberBadge'
+import { NumberBadge, NumberBadgeProps } from '../../NumberBadge'
 
 interface TabTitleProps extends NumberBadgeProps {
   itemsAmount?: number

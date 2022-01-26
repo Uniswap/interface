@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { ButtonPrimary } from '../../../components/Button'
 import { useNetworkSwitch } from '../../../hooks/useNetworkSwitch'
-import { useWalletSwitcherPopoverToggle } from '../../../state/application/hooks'
+import { useModalOpen, useWalletSwitcherPopoverToggle } from '../../../state/application/hooks'
 import { BridgeStep } from '../utils'
 import { NetworkSwitcher } from './NetworkSwitcher'
 import { BridgeButton } from './BridgeButton'
@@ -15,6 +15,7 @@ import ProgressSteps from '../../../components/ProgressSteps'
 import Column from '../../../components/Column'
 import { useBridgeActionPanel } from './useBridgeActionPanel'
 import { ApprovalState } from '../../../hooks/useApproveCallback'
+import { ApplicationModal } from '../../../state/application/actions'
 
 export type BridgeActionPanelProps = {
   account: string | null | undefined
@@ -36,7 +37,7 @@ export const BridgeActionPanel = ({
   fromNetworkChainId,
   isNetworkConnected
 }: BridgeActionPanelProps) => {
-  const { selectEthereum, selectNetwork } = useNetworkSwitch()
+  const { selectNetwork } = useNetworkSwitch()
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const {
     approvalState,
@@ -47,21 +48,30 @@ export const BridgeActionPanel = ({
     isArbitrum,
     hasAmount
   } = useBridgeActionPanel()
+  const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
+
+  const handleSelectFromNetwork = useCallback(() => {
+    selectNetwork(fromNetworkChainId)
+  }, [fromNetworkChainId, selectNetwork])
+
+  const handleSelectToNetwork = useCallback(() => {
+    selectNetwork(toNetworkChainId)
+  }, [selectNetwork, toNetworkChainId])
 
   const selectPanel = () => {
     // No wallet
     if (!account) {
-      return <ButtonPrimary onClick={toggleWalletSwitcherPopover}>Connect wallet</ButtonPrimary>
+      return (
+        <ButtonPrimary onClick={toggleWalletSwitcherPopover} disabled={networkSwitcherPopoverOpen}>
+          {networkSwitcherPopoverOpen ? 'Switch network' : 'Connect wallet'}
+        </ButtonPrimary>
+      )
     }
 
     // Change network
     if (!isNetworkConnected && step !== BridgeStep.Collect) {
       return (
-        <ButtonPrimary
-          onClick={() =>
-            fromNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(fromNetworkChainId)
-          }
-        >
+        <ButtonPrimary onClick={handleSelectFromNetwork}>
           Connect to {networkOptionsPreset.find(network => network.chainId === fromNetworkChainId)?.name}
         </ButtonPrimary>
       )
@@ -72,9 +82,7 @@ export const BridgeActionPanel = ({
       return (
         <NetworkSwitcher
           sendToId={toNetworkChainId}
-          onSwitchClick={() =>
-            toNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(toNetworkChainId)
-          }
+          onSwitchClick={handleSelectToNetwork}
           onCollectClick={handleCollect}
         />
       )
