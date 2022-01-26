@@ -56,7 +56,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const [approval, getApproval] = useSwapApproval(optimizedTrade, allowedSlippage, useIsPendingApproval)
   const approvalHash = usePendingApproval(
     inputCurrency?.isToken ? inputCurrency : undefined,
-    useSwapRouterAddress(optimizedTrade || trade.trade)
+    useSwapRouterAddress(optimizedTrade)
   )
 
   const addTransaction = useAddTransaction()
