@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
+import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { pickAtom } from 'lib/state/atoms'
 
@@ -23,3 +24,6 @@ export const swapAtom = atomWithImmer<Swap>({
 })
 
 export const independentFieldAtom = pickAtom(swapAtom, 'independentField')
+
+// If set to a transaction hash, displays that transaction's status.
+export const pendingTxHashAtom = atom<string | undefined>(undefined)

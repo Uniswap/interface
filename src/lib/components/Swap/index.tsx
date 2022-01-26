@@ -1,13 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
 import { nativeOnChain } from 'constants/tokens'
+import { useAtom } from 'jotai'
 import { useSwapAmount, useSwapCurrency } from 'lib/hooks/swap'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
+import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList, { DEFAULT_TOKEN_LIST } from 'lib/hooks/useTokenList'
-import { Field } from 'lib/state/swap'
+import { Field, pendingTxHashAtom } from 'lib/state/swap'
+import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
 import { useLayoutEffect, useMemo, useState } from 'react'
 
+import Dialog from '../Dialog'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
@@ -15,6 +19,7 @@ import Input from './Input'
 import Output from './Output'
 import ReverseButton from './ReverseButton'
 import Settings from './Settings'
+import { StatusDialog } from './Status'
 import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 
@@ -40,6 +45,16 @@ function useSwapDefaults(defaults: Partial<SwapDefaults> = {}): SwapDefaults {
   output.amount = output.amount || 0
   // eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(() => ({ tokenList, input, output }), [])
+}
+
+function getSwapTx(txs: { [hash: string]: Transaction }, hash?: string): Transaction<SwapTransactionInfo> | undefined {
+  if (hash) {
+    const tx = txs[hash]
+    if (tx.info.type === TransactionType.SWAP) {
+      return tx as Transaction<SwapTransactionInfo>
+    }
+  }
+  return
 }
 
 export interface SwapProps {
@@ -68,6 +83,10 @@ export default function Swap({ defaults }: SwapProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId])
 
+  const [pendingTxHash, setPendingTxHash] = useAtom(pendingTxHashAtom)
+  const pendingTxs = usePendingTransactions()
+  const pendingTx = getSwapTx(pendingTxs, pendingTxHash)
+
   return (
     <>
       <SwapInfoUpdater />
@@ -85,6 +104,11 @@ export default function Swap({ defaults }: SwapProps) {
           </Output>
         </BoundaryProvider>
       </div>
+      {pendingTx && (
+        <Dialog color="dialog">
+          <StatusDialog tx={pendingTx} onClose={() => setPendingTxHash()} />
+        </Dialog>
+      )}
     </>
   )
 }

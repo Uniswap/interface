@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
+import { useUpdateAtom } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, {
   ApprovalState,
@@ -11,7 +12,7 @@ import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { Link, Spinner } from 'lib/icons'
-import { Field } from 'lib/state/swap'
+import { Field, pendingTxHashAtom } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -103,9 +104,11 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     return { disabled: true }
   }, [approval, approvalHash, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance])
 
+  const setPendingTxHash = useUpdateAtom(pendingTxHashAtom)
   const onConfirm = useCallback(() => {
     // TODO(zzmp): Transact the trade.
-  }, [])
+    setPendingTxHash(/* TODO(zzmp): Set the pending trade's hash */)
+  }, [setPendingTxHash])
 
   return (
     <>
@@ -122,11 +125,6 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
           <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>
       )}
-      {/* TODO(zzmp): Pass the completed tx, possibly at a different level of the DOM.
-        <Dialog color="dialog">
-          <StatusDialog onClose={() => void 0} />
-        </Dialog>
-      */}
     </>
   )
 }
