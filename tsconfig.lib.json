@@ -3,7 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "declaration": true,
-    "declarationDir": "dist/dts",
+    "declarationDir": "dist2/dts",
     "baseUrl": "src/lib",
     "paths": {
       "lib/*": ["./*"],
@@ -13,8 +13,8 @@
       "hooks/*": ["../hooks/*"],
       "state/*": ["../state/*"],
       "types/*": ["../types/*"],
-      "utils/*": ["../utils/*"],
-    },
+      "utils/*": ["../utils/*"]
+    }
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],
   "include": ["src/lib/**/*"]

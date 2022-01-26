@@ -1,0 +1,11 @@
+import { Contract } from '@ethersproject/contracts';
+import { Web3Provider } from '@ethersproject/providers';
+import { Token } from '@uniswap/sdk-core';
+import { FeeAmount } from '@uniswap/v3-sdk';
+import { ChainTokenMap } from 'lib/hooks/useTokenList/utils';
+export declare function isAddress(value: any): string | false;
+export declare function shortenAddress(address: string, chars?: number): string;
+export declare function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract;
+export declare function escapeRegExp(string: string): string;
+export declare function isTokenOnList(chainTokenMap: ChainTokenMap, token?: Token): boolean;
+export declare function formattedFeeAmount(feeAmount: FeeAmount): number;

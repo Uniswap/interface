@@ -1,0 +1,15 @@
+import { AppState } from '../index';
+import { ApplicationModal, PopupContent } from './reducer';
+export declare function useModalOpen(modal: ApplicationModal): boolean;
+export declare function useToggleModal(modal: ApplicationModal): () => void;
+export declare function useWalletModalToggle(): () => void;
+export declare function useToggleSettingsMenu(): () => void;
+export declare function useShowClaimPopup(): boolean;
+export declare function useToggleShowClaimPopup(): () => void;
+export declare function useToggleSelfClaimModal(): () => void;
+export declare function useToggleDelegateModal(): () => void;
+export declare function useToggleVoteModal(): () => void;
+export declare function useTogglePrivacyPolicy(): () => void;
+export declare function useAddPopup(): (content: PopupContent, key?: string, removeAfterMs?: number) => void;
+export declare function useRemovePopup(): (key: string) => void;
+export declare function useActivePopups(): AppState['application']['popupList'];
