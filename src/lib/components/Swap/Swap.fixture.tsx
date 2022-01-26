@@ -36,7 +36,6 @@ function Fixture() {
     options: addressOptions,
     defaultValue: addressOptions[2],
   })
-
   const inputOptions = ['', '0', '100', '-1']
   const [defaultInputAmount] = useSelect('defaultInputAmount', {
     options: inputOptions,

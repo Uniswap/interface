@@ -4,7 +4,7 @@ import useSwapDefaults from 'lib/hooks/swap/useSwapDefaults'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList from 'lib/hooks/useTokenList'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
@@ -29,13 +29,8 @@ export interface SwapProps {
 }
 
 export default function Swap(props: SwapProps) {
-  const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount, tokenList } = props
-  useTokenList(tokenList)
-  const useSwapDefaultsArgs = useMemo(
-    () => ({ defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount }),
-    [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount]
-  )
-  useSwapDefaults(useSwapDefaultsArgs)
+  useTokenList(props.tokenList)
+  useSwapDefaults(props)
 
   const { active, account } = useActiveWeb3React()
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)

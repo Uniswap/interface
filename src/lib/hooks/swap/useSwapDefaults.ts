@@ -25,10 +25,10 @@ function useDefaultToken(
 }
 
 interface UseSwapDefaultsArgs {
-  defaultInputAddress: DefaultAddress | undefined
-  defaultInputAmount: string | undefined
-  defaultOutputAddress: DefaultAddress | undefined
-  defaultOutputAmount: string | undefined
+  defaultInputAddress?: DefaultAddress
+  defaultInputAmount?: string
+  defaultOutputAddress?: DefaultAddress
+  defaultOutputAmount?: string
 }
 
 export default function useSwapDefaults({
@@ -62,7 +62,6 @@ export default function useSwapDefaults({
   useLayoutEffect(() => {
     setPreviousChainId(chainId)
   }, [chainId])
-
   useLayoutEffect(() => {
     if (chainId && chainId !== previousChainId) {
       setToDefaults()

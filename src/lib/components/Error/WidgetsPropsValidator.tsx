@@ -11,11 +11,10 @@ export default function WidgetsPropsValidator(props: PropsWithChildren<WidgetPro
     }
   }, [provider, jsonRpcEndpoint])
 
-  // size constraints
   const { width } = props
   useEffect(() => {
     if (width && width < 300) {
-      throw new IntegrationError('Set widget width to at least 300px.')
+      throw new IntegrationError(`Set widget width to at least 300px. (You set it to ${width}.)`)
     }
   }, [width])
 
