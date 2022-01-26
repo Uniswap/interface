@@ -1,66 +1,17 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { formatUnits } from '@ethersproject/units'
-import { BOND_DETAILS, IBondDetails } from 'constants/bonds'
+import { BASE_TOKEN_DECIMALS, BOND_DETAILS, IBondDetails } from 'constants/bonds'
 import { SupportedChainId } from 'constants/chains'
-import { usePairContract } from 'hooks/useContract'
+import { useDaiGenPair } from 'hooks/useContract'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useEffect, useState } from 'react'
+import { IBond, IBondCore, IMetadata, ITerms } from 'types/bonds'
+import { prettifySeconds } from 'utils'
 
 import { useBondDepository } from './useContract'
 
-// TODO move to a constants file
-const BASE_TOKEN_DECIMALS = 9
-
-export interface IBond extends IBondCore, IMetadata, ITerms {
-  index: number
-  displayName: string
-  priceUSD: BigNumber
-  priceToken: number
-  priceTokenBigNumber: BigNumber
-  discount: string
-  duration: string
-  expiration: string
-  isLP: boolean
-  lpUrl: string
-  marketPrice: BigNumber
-  soldOut: boolean
-  capacityInBaseToken: string
-  capacityInQuoteToken: string
-  maxPayoutInBaseToken: string
-  maxPayoutInQuoteToken: string
-  maxPayoutOrCapacityInQuote: string
-  maxPayoutOrCapacityInBase: string
-}
-
-interface IBondCore {
-  quoteToken: string
-  capacityInQuote: boolean
-  capacity: BigNumber
-  totalDebt: BigNumber
-  maxPayout: BigNumber
-  purchased: BigNumber
-  sold: BigNumber
-}
-
-interface IMetadata {
-  lastTune: number
-  lastDecay: number
-  length: number
-  depositInterval: number
-  tuneInterval: number
-  quoteDecimals: number
-}
-
-interface ITerms {
-  fixedTerm: boolean
-  controlVariable: BigNumber
-  vesting: number
-  conclusion: number
-  maxDebt: BigNumber
-}
-
-interface IProcessMarketArgs {
+export interface IProcessBondArgs {
   index: number
   chainId: number
   bond: IBondCore
@@ -70,39 +21,11 @@ interface IProcessMarketArgs {
   genPrice: BigNumber
 }
 
-// TODO move this function to a helper file
-export function prettifySeconds(seconds: number, resolution?: string) {
-  if (seconds !== 0 && !seconds) {
-    return ''
-  }
-
-  const d = Math.floor(seconds / (3600 * 24))
-  const h = Math.floor((seconds % (3600 * 24)) / 3600)
-  const m = Math.floor((seconds % 3600) / 60)
-
-  if (resolution === 'day') {
-    return d + (d == 1 ? ' day' : ' days')
-  }
-
-  const dDisplay = d > 0 ? d + (d == 1 ? ' day, ' : ' days, ') : ''
-  const hDisplay = h > 0 ? h + (h == 1 ? ' hr, ' : ' hrs, ') : ''
-  const mDisplay = m > 0 ? m + (m == 1 ? ' min' : ' mins') : ''
-
-  let result = dDisplay + hDisplay + mDisplay
-  if (mDisplay === '') {
-    result = result.slice(0, result.length - 2)
-  }
-
-  return result
-}
-
-// TOKEN 0 => Genesis
-// TOKEN 1 => Dai
+// token0 -> Genesis
+// token1 -> Dai
 function useGenTokenPrice() {
+  const pair = useDaiGenPair()
   const [genPrice, setGenPrice] = useState<BigNumber>(BigNumber.from('0'))
-
-  const DAI_GEN_PAIR = '0x3d90706560b2fcb29d0a41aeeed551c96b62f608'
-  const pair = usePairContract(DAI_GEN_PAIR)
 
   const getGenPrice = useCallback(() => {
     pair?.getReserves().then((reserves: any) => {
@@ -124,7 +47,7 @@ export function useGetAllBonds() {
   const { chainId } = useActiveWeb3React()
 
   const [error, setError] = useState<string | null>(null)
-  const [bonds, setBonds] = useState<IBondDetails[]>([])
+  const [bonds, setBonds] = useState<IBond[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getMarkets = useCallback(async () => {
@@ -132,7 +55,9 @@ export function useGetAllBonds() {
 
     const liveBondIndexes = await depository?.liveMarkets()
 
-    const termPromises = liveBondIndexes.map(async (index: number) => depository?.markets(index))
+    console.log('LIVE BOND INDEXES:', liveBondIndexes)
+
+    const termPromises = liveBondIndexes.map(async (index: number) => depository?.terms(index))
     const bondPromises = liveBondIndexes.map(async (index: number) => depository?.markets(index))
     const metadataPromises = liveBondIndexes.map(async (index: number) => depository?.metadata(index))
 
@@ -154,8 +79,8 @@ export function useGetAllBonds() {
       liveBonds.push(finalBond)
     }
 
-    return liveBonds
-  }, [depository])
+    return liveBonds.filter((bond) => !!bond)
+  }, [depository, genPrice])
 
   useEffect(() => {
     setIsLoading(true)
@@ -165,7 +90,7 @@ export function useGetAllBonds() {
         setBonds(data)
       })
       .catch((err) => {
-        console.log(err)
+        console.log('ERROR: ', err)
         setError(err.message)
       })
       .finally(() => setIsLoading(false))
@@ -174,7 +99,6 @@ export function useGetAllBonds() {
   return { bonds, isLoading, error }
 }
 
-// TODO create a liquidity pool with gen token to make sure it has a USD price
 async function processBond({
   chainId,
   bond,
@@ -183,22 +107,22 @@ async function processBond({
   index,
   depository,
   genPrice,
-}: IProcessMarketArgs): Promise<IBond | null> {
+}: IProcessBondArgs): Promise<IBond | null> {
+  if (genPrice.eq(BigNumber.from('0'))) {
+    return null
+  }
+
   const currentTime = Date.now() / 1000
-  // TODO change the hard coded change
+  // TODO change the hard coded details
   const bondDetails: IBondDetails = BOND_DETAILS[SupportedChainId.POLYGON_MUMBAI][bond.quoteToken]
   // TODO call the actual pricing function
-  const quoteTokenPrice = bondDetails.priceUSD
+  console.log('PRICE QUOTE SHIT: ', `${(await bondDetails.pricingFunction()) * 1e18}`)
+  const quoteTokenPrice = BigNumber.from(`${(await bondDetails.pricingFunction()) * 1e18}`)
+  console.log('QUOTE TOKEN PRICE: ', quoteTokenPrice)
   const bondPriceBigNumber = await depository?.marketPrice(index)
-  // const _bondPrice = +bondPriceBigNumber / Math.pow(10, BASE_TOKEN_DECIMALS)
-  // const _bondPriceUSD = quoteTokenPrice * +bondPrice
-
-  const bondPrice = bondPriceBigNumber.div(BigNumber.from('10').mul(BigNumber.from(BASE_TOKEN_DECIMALS)))
+  const bondPrice = bondPriceBigNumber.div(BigNumber.from('10').mul(BigNumber.from(BASE_TOKEN_DECIMALS))) // TODO check this op
   const bondPriceUSD = quoteTokenPrice.mul(bondPrice)
-  // const bondDiscount = genPrice.sub(bondPriceUSD).div(genPrice)
   const bondDiscount = genPrice.sub(bondPriceUSD).div(genPrice)
-
-  console.log('Bond Discount', bondDiscount)
 
   let capacityInBaseToken: string, capacityInQuoteToken: string
 
@@ -253,12 +177,11 @@ async function processBond({
     priceUSD: bondPriceUSD,
     priceToken: bondPrice,
     priceTokenBigNumber: bondPriceBigNumber,
-    discount: `${bondDiscount}`,
+    discount: bondDiscount,
     expiration: new Date(terms.vesting * 1000).toDateString(),
     duration,
     isLP: bondDetails.isLP,
-    // lpUrl: bondDetails.isLP ? bondDetails.lpUrl[chainId] : '',
-    lpUrl: '', // TODO check what lpUrl is used for
+    lpUrl: '',
     marketPrice: genPrice,
     quoteToken: bond.quoteToken.toLowerCase(),
     maxPayoutInQuoteToken,
@@ -268,5 +191,6 @@ async function processBond({
     soldOut,
     maxPayoutOrCapacityInQuote,
     maxPayoutOrCapacityInBase,
+    bondIconSvg: bondDetails.bondIconSvg,
   }
 }

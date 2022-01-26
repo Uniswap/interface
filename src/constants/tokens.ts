@@ -71,7 +71,7 @@ export const DAI_POLYGON_MUMBAI = new Token(
   '0xc00f6b6414289283F9942a32EB0c6C15dB63AEB8',
   18,
   'DAI',
-  'Dai Stablecoin'
+  'Dai'
 )
 export const USDT_POLYGON = new Token(
   SupportedChainId.POLYGON,

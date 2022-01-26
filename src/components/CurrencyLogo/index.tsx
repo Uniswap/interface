@@ -62,15 +62,19 @@ export default function CurrencyLogo({
   currency,
   size = '24px',
   style,
+  url,
   ...rest
 }: {
   currency?: Currency | null
   size?: string
+  url?: string
   style?: React.CSSProperties
 }) {
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
+    if (url) return [url]
+
     if (!currency || currency.isNative) return []
 
     if (currency.isToken) {
@@ -85,7 +89,7 @@ export default function CurrencyLogo({
       return defaultUrls
     }
     return []
-  }, [currency, uriLocations])
+  }, [currency, uriLocations, url])
 
   if (currency?.isNative) {
     let nativeLogoUrl: string

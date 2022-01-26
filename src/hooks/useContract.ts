@@ -23,6 +23,7 @@ import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
+  DAI_GEN_PAIR_ADDRESS,
   DAO_BOND_DEPOSITORY,
   ENS_REGISTRAR_ADDRESSES,
   GEN_ADDRESS,
@@ -171,4 +172,8 @@ export function useBondDepository() {
 
 export function useGenToken() {
   return useContract(GEN_ADDRESS, GEN_ERC20_ABI, true)
+}
+
+export function useDaiGenPair() {
+  return usePairContract(DAI_GEN_PAIR_ADDRESS)
 }
