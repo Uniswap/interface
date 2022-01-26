@@ -34,22 +34,15 @@ function useSwapApprovalStates(
   return useMemo(() => ({ v2, v3, v2V3 }), [v2, v2V3, v3])
 }
 
-// wraps useApproveCallback in the context of a swap
-export default function useSwapApproval(
+export function useSwapRouterAddress(
   trade:
     | V2Trade<Currency, Currency, TradeType>
     | V3Trade<Currency, Currency, TradeType>
     | Trade<Currency, Currency, TradeType>
-    | undefined,
-  allowedSlippage: Percent,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean
+    | undefined
 ) {
   const { chainId } = useActiveWeb3React()
-  const amountToApprove = useMemo(
-    () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [trade, allowedSlippage]
-  )
-  const spender = useMemo(
+  return useMemo(
     () =>
       chainId
         ? trade instanceof V2Trade
@@ -60,6 +53,23 @@ export default function useSwapApproval(
         : undefined,
     [chainId, trade]
   )
+}
+
+// wraps useApproveCallback in the context of a swap
+export default function useSwapApproval(
+  trade:
+    | V2Trade<Currency, Currency, TradeType>
+    | V3Trade<Currency, Currency, TradeType>
+    | Trade<Currency, Currency, TradeType>
+    | undefined,
+  allowedSlippage: Percent,
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean
+) {
+  const amountToApprove = useMemo(
+    () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
+    [trade, allowedSlippage]
+  )
+  const spender = useSwapRouterAddress(trade)
 
   const approval = useApproval(amountToApprove, spender, useIsPendingApproval)
   if (trade instanceof V2Trade || trade instanceof V3Trade) {
