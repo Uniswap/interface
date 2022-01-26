@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-25 19:07\n"
+"PO-Revision-Date: 2022-01-26 01:30\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -212,7 +212,12 @@ msgstr "Määrä"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tapahtui virhe yritettäessä suorittaa tämä vaihto. Saatat joutua lisäämään luistonsietokykyäsi. Jos se ei toimi, kaupankäynnin kohteena olevan tunnuksen kanssa saattaa olla ristiriita. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Uniswap V3: n kanssa."
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Approval pending <0/>"
+msgstr "Hyväksyntä odottaa <0/>"
+
 #: src/components/earn/StakingModal.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
