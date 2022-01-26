@@ -1,7 +1,7 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
-import { BigNumber } from 'ethers/node_modules/@ethersproject/abstract-signer/node_modules/@ethersproject/bignumber'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useAtomValue } from 'jotai/utils'
