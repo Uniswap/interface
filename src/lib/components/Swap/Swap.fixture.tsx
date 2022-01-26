@@ -28,17 +28,24 @@ function Fixture() {
     }
   }, [color, setColor])
 
-  const addressOptions = ['', 'NATIVE', DAI.address, USDC.address, UNSUPPORTED_TOKEN.address]
-  const inputOptions = ['', '0', '-1', '100']
-  const [defaultInputAddress] = useSelect('defaultInputAddress', {
+  const optionsToAddressMap: Record<string, string> = {
+    none: '',
+    Native: 'NATIVE',
+    DAI: DAI.address,
+    USDC: USDC.address,
+  }
+  const addressOptions = Object.keys(optionsToAddressMap)
+  const [defaultInput] = useSelect('defaultInputAddress', {
     options: addressOptions,
-    defaultValue: addressOptions[2],
+    defaultValue: addressOptions[0],
   })
+
+  const inputOptions = ['', '0', '100']
   const [defaultInputAmount] = useSelect('defaultInputAmount', {
     options: inputOptions,
     defaultValue: inputOptions[3],
   })
-  const [defaultOutputAddress] = useSelect('defaultOutputAddress', {
+  const [defaultOutput] = useSelect('defaultOutputAddress', {
     options: addressOptions,
     defaultValue: addressOptions[1],
   })
@@ -50,9 +57,9 @@ function Fixture() {
   return (
     <Swap
       tokenList={tokens}
-      defaultInputAddress={defaultInputAddress}
+      defaultInputAddress={optionsToAddressMap[defaultInput]}
       defaultInputAmount={defaultInputAmount}
-      defaultOutputAddress={defaultOutputAddress}
+      defaultOutputAddress={optionsToAddressMap[defaultOutput]}
       defaultOutputAmount={defaultOutputAmount}
     />
   )
