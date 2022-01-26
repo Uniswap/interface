@@ -299,9 +299,9 @@ export const getPoolsMenuLink = (chainId?: ChainId) => {
     case ChainId.BSCMAINNET:
       return `/pools/BNB/${KNC[chainId as ChainId].address}`
     case ChainId.AVAXTESTNET:
-      return `/pools/AVAX`
+      return `/pools/AVAX/${KNC[chainId as ChainId].address}`
     case ChainId.AVAXMAINNET:
-      return `/pools/AVAX`
+      return `/pools/AVAX/${KNC[chainId as ChainId].address}`
     case ChainId.FANTOM:
       return `/pools/FTM`
     case ChainId.CRONOSTESTNET:

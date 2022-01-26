@@ -296,9 +296,13 @@ export function useDefaultsFromURLSearch():
   useEffect(() => {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs, chainId)
-    const outputCurrencyAddress = [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.BSCMAINNET, ChainId.MATIC].includes(
-      chainId
-    )
+    const outputCurrencyAddress = [
+      ChainId.MAINNET,
+      ChainId.ROPSTEN,
+      ChainId.BSCMAINNET,
+      ChainId.MATIC,
+      ChainId.AVAXMAINNET
+    ].includes(chainId)
       ? KNC[chainId].address
       : USDC[chainId].address
 
