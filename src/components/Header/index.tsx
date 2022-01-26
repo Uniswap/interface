@@ -24,7 +24,6 @@ import ClaimModal from '../claim/ClaimModal'
 import Skeleton from 'react-loading-skeleton'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
-import { OLD_SWPR } from '../../constants'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 
 const HeaderFrame = styled.div`
@@ -213,20 +212,14 @@ function Header() {
 
   const toggleClaimPopup = useToggleShowClaimPopup()
   const accountOrUndefined = useMemo(() => account || undefined, [account])
-  const { newSwpr, oldSwpr } = useMemo(
-    () =>
-      chainId ? { newSwpr: SWPR[chainId], oldSwpr: OLD_SWPR[chainId] } : { newSwpr: undefined, oldSwpr: undefined },
-    [chainId]
-  )
+  const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
-  const oldSwprBalance = useTokenBalance(accountOrUndefined, oldSwpr)
   const isMobileByMedia = useIsMobileByMedia()
 
   return (
     <HeaderFrame>
       <ClaimModal
         onDismiss={toggleClaimPopup}
-        oldSwprBalance={oldSwprBalance}
         newSwprBalance={newSwprBalance}
         stakedAmount={stakedAmount}
         singleSidedCampaignLink={
@@ -279,7 +272,6 @@ function Header() {
         <HeaderSubRow>
           <SwprInfo
             hasActiveCampaigns={!loading && !!data}
-            oldSwprBalance={oldSwprBalance}
             newSwprBalance={newSwprBalance}
             onToggleClaimPopup={toggleClaimPopup}
           />
