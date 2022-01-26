@@ -40,7 +40,7 @@ export function useAddTransaction() {
   )
 }
 
-/** Returns the hashes of any pending approval transaction. */
+/** Returns the hash of a pending approval transaction, if it exists. */
 export function usePendingApproval(token?: Token, spender?: string): string | undefined {
   const { chainId } = useActiveWeb3React()
   const txs = useAtomValue(transactionsAtom)
