@@ -22,7 +22,6 @@ import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import TokenListUpdater from './state/lists/updater'
 import MultiChainLinksUpdater from './state/multi-chain-links/updater'
-import ClaimUpdater from './state/claim/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 import { BridgeProviders } from './contexts'
@@ -47,7 +46,6 @@ function Updaters() {
       <MulticallUpdater />
       <FeesUpdater />
       <TokenListUpdater />
-      <ClaimUpdater />
     </>
   )
 }
