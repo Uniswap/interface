@@ -30,9 +30,8 @@ export interface SwapProps {
 
 export default function Swap(props: SwapProps) {
   const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount, tokenList } = props
-
   useTokenList(tokenList)
-  useSwapDefaults(defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount)
+  useSwapDefaults({ defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount })
 
   const { active, account } = useActiveWeb3React()
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)

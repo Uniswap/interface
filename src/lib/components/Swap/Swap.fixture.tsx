@@ -1,5 +1,4 @@
 import { tokens } from '@uniswap/default-token-list'
-import { Token } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
@@ -16,8 +15,6 @@ const validateColor = (() => {
     return validator.color !== ''
   }
 })()
-
-const UNSUPPORTED_TOKEN = new Token(1, '0xeb57bf569ad976974c1f861a5923a59f40222451', 18, 'LOOMI', 'Loomi')
 
 function Fixture() {
   const setColor = useUpdateAtom(colorAtom)
@@ -37,13 +34,13 @@ function Fixture() {
   const addressOptions = Object.keys(optionsToAddressMap)
   const [defaultInput] = useSelect('defaultInputAddress', {
     options: addressOptions,
-    defaultValue: addressOptions[0],
+    defaultValue: addressOptions[2],
   })
 
-  const inputOptions = ['', '0', '100']
+  const inputOptions = ['', '0', '100', '-1']
   const [defaultInputAmount] = useSelect('defaultInputAmount', {
     options: inputOptions,
-    defaultValue: inputOptions[3],
+    defaultValue: inputOptions[2],
   })
   const [defaultOutput] = useSelect('defaultOutputAddress', {
     options: addressOptions,

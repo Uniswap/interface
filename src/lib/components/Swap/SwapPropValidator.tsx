@@ -36,7 +36,7 @@ export default function SwapPropValidator(props: ValidatorProps) {
       } else if (typeof convenienceFeeRecipient === 'object') {
         Object.values(convenienceFeeRecipient).forEach((recipient) => {
           if (!isAddress(recipient)) {
-            throw new IntegrationError('All values in convenienceFeeRecipient must be valid addresses.')
+            throw new IntegrationError('All values in convenienceFeeRecipient object must be valid addresses.')
           }
         })
       }
@@ -55,10 +55,10 @@ export default function SwapPropValidator(props: ValidatorProps) {
       throw new IntegrationError('defaultOutputAmount must be a positive number.')
     }
     if (defaultInputAddress && !isAddressOrAddressMap(defaultInputAddress) && defaultInputAddress !== 'NATIVE') {
-      throw new IntegrationError('defaultInputAddress(s) must be a valid address or "NATIVE".')
+      throw new IntegrationError('defaultInputAddress(es) must be a valid address or "NATIVE".')
     }
     if (defaultOutputAddress && !isAddressOrAddressMap(defaultOutputAddress) && defaultOutputAddress !== 'NATIVE') {
-      throw new IntegrationError('defaultOutputAddress(s) must be a valid address or "NATIVE".')
+      throw new IntegrationError('defaultOutputAddress(es) must be a valid address or "NATIVE".')
     }
   }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount])
 
