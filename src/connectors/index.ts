@@ -1,12 +1,12 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { AuthereumConnector } from '@web3-react/authereum-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { CustomNetworkConnector } from './CustomNetworkConnector'
 import { CustomWalletConnectConnector } from './CustomWalletConnectConnector'
 import { ChainId } from '@swapr/sdk'
 import { providers } from 'ethers'
 import swprLogo from '../assets/images/swpr-logo.png'
 import getLibrary from '../utils/getLibrary'
+import { CustomWalletLinkConnector } from './CustomWalletLinkConnector'
 
 export const INFURA_PROJECT_ID = '0ebf4dd05d6740f482938b8a80860d13'
 
@@ -44,7 +44,7 @@ export function getNetworkLibrary(): providers.Web3Provider {
 
 // walletLink implements Metamask's RPC and should respond to most it's methods: window.ethereum.isMetaMask === true
 // More info: https://github.com/walletlink/walletlink
-export const walletLink = new WalletLinkConnector({
+export const walletLink = new CustomWalletLinkConnector({
   url: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
   appName: "Swapr",
   appLogoUrl: swprLogo,

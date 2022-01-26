@@ -15,10 +15,10 @@ import { TriangleIcon } from '../Icons'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainLabel } from '../../constants'
 import { ENSAvatarData } from '../../hooks/useENSAvatar'
+import { CustomWalletLinkConnector } from '../../connectors/CustomWalletLinkConnector'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -152,7 +152,9 @@ export function AccountStatus({
 
   useEffect(() => {
     setNetworkSwitchingActive(
-      connector instanceof CustomNetworkConnector || connector instanceof InjectedConnector || connector instanceof WalletLinkConnector
+      connector instanceof CustomNetworkConnector ||
+        connector instanceof InjectedConnector ||
+        connector instanceof CustomWalletLinkConnector
     )
   }, [connector])
 
