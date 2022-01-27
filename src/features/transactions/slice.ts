@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ChainId } from 'src/constants/chains'
+import { providers } from 'ethers'
 import {
-  ChainIdToHashToDetails,
+  ChainIdToTxIdToDetails,
   TransactionDetails,
+  TransactionId,
   TransactionReceipt,
   TransactionStatus,
 } from 'src/features/transactions/types'
 import { assert } from 'src/utils/validation'
 
 export interface TransactionState {
-  byChainId: ChainIdToHashToDetails
+  byChainId: ChainIdToTxIdToDetails
 }
 
 export const initialState: TransactionState = {
@@ -21,52 +22,57 @@ const slice = createSlice({
   initialState,
   reducers: {
     addTransaction: (state, { payload: transaction }: PayloadAction<TransactionDetails>) => {
-      const { chainId, hash } = transaction
+      const { chainId, id } = transaction
       assert(
-        !state.byChainId[chainId]?.[hash],
-        `AddTransaction: Attempted to overwrite tx with hash ${hash}`
+        !state.byChainId[chainId]?.[id],
+        `addTransaction: Attempted to overwrite tx with id ${id}`
       )
       state.byChainId[chainId] ??= {}
-      state.byChainId[chainId]![hash] = transaction
+      state.byChainId[chainId]![id] = transaction
+    },
+    updateTransaction: (state, { payload: transaction }: PayloadAction<TransactionDetails>) => {
+      const { chainId, id } = transaction
+      assert(
+        state.byChainId[chainId]?.[id],
+        `updateTransaction: Attempted to update missing tx with id ${id}`
+      )
+      state.byChainId[chainId]![id] = transaction
     },
     finalizeTransaction: (
       state,
       {
-        payload: { chainId, hash, status, receipt },
-      }: PayloadAction<{
-        chainId: ChainId
-        hash: string
-        status: TransactionStatus
-        receipt: TransactionReceipt
-      }>
+        payload: { chainId, id, status, receipt },
+      }: PayloadAction<
+        TransactionId & {
+          status: TransactionStatus
+          receipt: TransactionReceipt
+        }
+      >
     ) => {
-      if (!state.byChainId[chainId]?.[hash]) return
-      state.byChainId[chainId]![hash].status = status
-      state.byChainId[chainId]![hash].receipt = receipt
+      if (!state.byChainId[chainId]?.[id]) return
+      state.byChainId[chainId]![id].status = status
+      state.byChainId[chainId]![id].receipt = receipt
     },
-    cancelTransaction: (
-      state,
-      {
-        payload: { chainId, hash },
-      }: PayloadAction<{
-        chainId: ChainId
-        hash: string
-      }>
-    ) => {
-      if (!state.byChainId[chainId]?.[hash]) return
-      state.byChainId[chainId]![hash].status = TransactionStatus.Cancelling
+    cancelTransaction: (state, { payload: { chainId, id } }: PayloadAction<TransactionId>) => {
+      if (!state.byChainId[chainId]?.[id]) return
+      state.byChainId[chainId]![id].status = TransactionStatus.Cancelling
     },
     replaceTransaction: (
       state,
       {
-        payload: { chainId, hash },
-      }: PayloadAction<{
-        chainId: ChainId
-        hash: string
-      }>
+        payload: { chainId, id },
+      }: PayloadAction<
+        TransactionId & {
+          newTxParams: providers.TransactionRequest
+        }
+      >
     ) => {
-      if (!state.byChainId[chainId]?.[hash]) return
-      state.byChainId[chainId]![hash].status = TransactionStatus.Replacing
+      if (!state.byChainId[chainId]?.[id]) return
+      state.byChainId[chainId]![id].status = TransactionStatus.Replacing
+    },
+    failTransaction: (state, { payload: { chainId, id } }: PayloadAction<TransactionId>) => {
+      if (!state.byChainId[chainId]?.[id]) return
+      state.byChainId[chainId]![id].status = TransactionStatus.Failed
     },
     resetTransactions: () => initialState,
   },
@@ -74,9 +80,11 @@ const slice = createSlice({
 
 export const {
   addTransaction,
+  updateTransaction,
   finalizeTransaction,
   cancelTransaction,
   replaceTransaction,
+  failTransaction,
   resetTransactions,
 } = slice.actions
 export const { reducer: transactionReducer, actions: transactionActions } = slice

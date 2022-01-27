@@ -2,12 +2,15 @@ import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 
-export type ChainIdToHashToDetails = ChainIdTo<{ [txHash: string]: TransactionDetails }>
+export type ChainIdToTxIdToDetails = ChainIdTo<{ [txId: string]: TransactionDetails }>
 
-export interface TransactionDetails {
-  // Basic identifying info
+// Basic identifying info for a transaction
+export interface TransactionId {
   chainId: ChainId
-  hash: string
+  id: string
+}
+
+export interface TransactionDetails extends TransactionId {
   from: Address
 
   // Info for submitting the tx
@@ -19,6 +22,9 @@ export interface TransactionDetails {
   // Info for status tracking
   status: TransactionStatus
   addedTime: number
+  // Note: hash is mandatory for now but may be made optional if
+  // we start tracking txs before their actually sent
+  hash: string
   receipt?: TransactionReceipt
 }
 

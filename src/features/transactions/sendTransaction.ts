@@ -1,4 +1,5 @@
 import { providers } from 'ethers'
+import { appSelect } from 'src/app/hooks'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { logEvent } from 'src/features/telemetry'
@@ -10,6 +11,10 @@ import {
   TransactionStatus,
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
+import {
+  getSerializableTransactionRequest,
+  getTransactionCount,
+} from 'src/features/transactions/utils'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
@@ -26,44 +31,52 @@ interface SendTransactionParams {
 // All outgoing transactions should go through here
 export function* sendTransaction(params: SendTransactionParams) {
   const { chainId, account, options } = params
+  const request = options.request
 
-  logger.debug(
-    'sendTransaction',
-    '',
-    `Sending tx on ${CHAIN_INFO[chainId].label} to ${options.request.to}`
-  )
+  logger.debug('sendTransaction', '', `Sending tx on ${CHAIN_INFO[chainId].label} to ${request.to}`)
 
   if (account.type === AccountType.readonly) throw new Error('Account must support signing')
   // Sign and send the transaction
   const provider = yield* call(getProvider, chainId)
   const signerManager = yield* call(getSignerManager)
-  const txResponse = yield* call(signAndSendTransaction, params, provider, signerManager)
-  logger.debug('sendTransaction', '', 'Tx submitted:', txResponse.hash)
+  const { transactionResponse, populatedRequest } = yield* call(
+    signAndSendTransaction,
+    request,
+    account,
+    provider,
+    signerManager
+  )
+  logger.debug('sendTransaction', '', 'Tx submitted:', transactionResponse.hash)
 
   // Register the tx in the store
-  yield* call(addTransaction, params, txResponse.hash)
+  yield* call(addTransaction, params, transactionResponse.hash, populatedRequest)
 }
 
 export async function signAndSendTransaction(
-  { account, options }: SendTransactionParams,
+  request: providers.TransactionRequest,
+  account: Account,
   provider: providers.Provider,
   signerManager: SignerManager
 ) {
   const signer = await signerManager.getSignerForAccount(account)
   const connectedSigner = signer.connect(provider)
-  const populatedTx = await connectedSigner.populateTransaction(options.request)
-  const signedTx = await connectedSigner.signTransaction(populatedTx)
-  const txResponse = await provider.sendTransaction(signedTx)
-  return txResponse
+  const populatedRequest = await connectedSigner.populateTransaction(request)
+  const signedTx = await connectedSigner.signTransaction(populatedRequest)
+  const transactionResponse = await provider.sendTransaction(signedTx)
+  return { transactionResponse, populatedRequest }
 }
 
 function* addTransaction(
   { chainId, typeInfo, account, options }: SendTransactionParams,
-  hash: string
+  hash: string,
+  populatedRequest: providers.TransactionRequest
 ) {
-  // prettier-ignore
-  const { to, from, nonce, gasLimit, gasPrice, data, value, maxPriorityFeePerGas, maxFeePerGas, type } = options.request
+  const txsByChainId = yield* appSelect((state) => state.transactions.byChainId)
+  const txCount = getTransactionCount(txsByChainId)
+  const id = txCount.toString() // 0 indexed so count is actually next id
+  const request = getSerializableTransactionRequest(populatedRequest, chainId)
   const transaction: TransactionDetails = {
+    id,
     chainId,
     hash,
     typeInfo,
@@ -72,20 +85,7 @@ function* addTransaction(
     status: TransactionStatus.Pending,
     options: {
       ...options,
-      // Manually restructure the txParams to ensure values going into store are serializable
-      request: {
-        chainId,
-        type,
-        to,
-        from,
-        nonce: nonce ? parseInt(nonce.toString(), 10) : undefined,
-        gasLimit: gasLimit?.toString(),
-        gasPrice: gasPrice?.toString(),
-        data: data?.toString(),
-        value: value?.toString(),
-        maxPriorityFeePerGas: maxPriorityFeePerGas?.toString(),
-        maxFeePerGas: maxFeePerGas?.toString(),
-      },
+      request,
     },
   }
   yield* put(transactionActions.addTransaction(transaction))

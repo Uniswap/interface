@@ -3,9 +3,16 @@ import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20, Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
+import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { ContractManager } from 'src/features/contracts/ContractManager'
+import {
+  ApproveTransactionInfo,
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'src/features/transactions/types'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
@@ -56,3 +63,59 @@ export const wethContract = contractManager.getContract(
   ChainId.RINKEBY,
   WETH9[ChainId.RINKEBY].address
 ) as Weth
+
+/**
+ * Transactions
+ */
+export const txRequest: providers.TransactionRequest = {
+  from: '0x123',
+  to: '0x456',
+  value: '0x0',
+  data: '0x789',
+  nonce: 10,
+}
+
+export const txReceipt = {
+  transactionHash: '0x123',
+  blockHash: '0x123',
+  blockNumber: 1,
+  transactionIndex: 1,
+  confirmations: 1,
+  status: 1,
+}
+
+export const txResponse = {
+  hash: '0x123',
+  wait: jest.fn(() => txReceipt),
+}
+
+export const txTypeInfo: ApproveTransactionInfo = {
+  type: TransactionType.APPROVE,
+  tokenAddress: tokenContract.address,
+  spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
+}
+
+export const txDetailsPending: TransactionDetails = {
+  chainId: ChainId.MAINNET,
+  id: '0',
+  from: account.address,
+  options: {
+    request: txRequest,
+  },
+  typeInfo: txTypeInfo,
+  status: TransactionStatus.Pending,
+  addedTime: 1487076708000,
+  hash: '0x123',
+}
+
+export const txDetailsConfirmed: TransactionDetails = {
+  ...txDetailsPending,
+  status: TransactionStatus.Success,
+  receipt: {
+    transactionIndex: 0,
+    blockHash: '0x123',
+    blockNumber: 456,
+    confirmedTime: 1487076808000,
+    confirmations: 1,
+  },
+}

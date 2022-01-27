@@ -43,6 +43,7 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           chainId: ChainId.MAINNET,
+          id: '0',
           hash: '0x0',
           from: '0xabc',
           options: approveTxRequest,
@@ -53,8 +54,8 @@ describe('transaction reducer', () => {
       )
       const txs = store.getState().byChainId
       expect(txs[ChainId.MAINNET]).toBeTruthy()
-      expect(txs[ChainId.MAINNET]?.['0x0']).toBeTruthy()
-      const tx = txs[ChainId.MAINNET]?.['0x0']
+      expect(txs[ChainId.MAINNET]?.['0']).toBeTruthy()
+      const tx = txs[ChainId.MAINNET]?.['0']
       expect(tx).toBeTruthy()
       expect(tx?.hash).toEqual('0x0')
       expect(tx?.from).toEqual('0xabc')
@@ -72,7 +73,7 @@ describe('transaction reducer', () => {
       store.dispatch(
         finalizeTransaction({
           chainId: ChainId.RINKEBY,
-          hash: '0x0',
+          id: '0',
           status: TransactionStatus.Success,
           receipt: {
             transactionIndex: 1,
@@ -89,6 +90,7 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           chainId: ChainId.RINKEBY,
+          id: '0',
           hash: '0x0',
           from: '0x0',
           options: approveTxRequest,
@@ -100,7 +102,7 @@ describe('transaction reducer', () => {
       store.dispatch(
         finalizeTransaction({
           chainId: ChainId.RINKEBY,
-          hash: '0x0',
+          id: '0',
           status: TransactionStatus.Success,
           receipt: {
             transactionIndex: 1,
@@ -111,7 +113,7 @@ describe('transaction reducer', () => {
           },
         })
       )
-      const tx = store.getState().byChainId[4]?.['0x0']
+      const tx = store.getState().byChainId[4]?.['0']
       expect(tx?.receipt).toEqual({
         transactionIndex: 1,
         blockHash: '0x0',
@@ -122,12 +124,15 @@ describe('transaction reducer', () => {
     })
   })
 
-  describe('checkTransaction', () => {
+  describe('replaceTransaction', () => {
     it('no op if not valid transaction', () => {
       store.dispatch(
         replaceTransaction({
           chainId: ChainId.RINKEBY,
-          hash: '0x0',
+          id: '0',
+          newTxParams: {
+            gasPrice: '0x123',
+          },
         })
       )
       expect(store.getState().byChainId).toEqual({})
@@ -139,6 +144,7 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           chainId: ChainId.MAINNET,
+          id: '0',
           hash: '0x0',
           from: '0xabc',
           options: approveTxRequest,
@@ -150,6 +156,7 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           chainId: ChainId.RINKEBY,
+          id: '1',
           hash: '0x1',
           from: '0xabc',
           options: approveTxRequest,
@@ -161,8 +168,8 @@ describe('transaction reducer', () => {
       const txs = store.getState().byChainId
       expect(Object.keys(txs)).toHaveLength(2)
       expect(Object.keys(txs)).toEqual([String(1), String(4)])
-      expect(Object.keys(txs[1] ?? {})).toEqual(['0x0'])
-      expect(Object.keys(txs[4] ?? {})).toEqual(['0x1'])
+      expect(Object.keys(txs[1] ?? {})).toEqual(['0'])
+      expect(Object.keys(txs[4] ?? {})).toEqual(['1'])
       store.dispatch(resetTransactions())
       expect(Object.keys(store.getState().byChainId)).toHaveLength(0)
     })
