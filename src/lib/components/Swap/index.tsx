@@ -7,7 +7,7 @@ import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList, { DEFAULT_TOKEN_LIST } from 'lib/hooks/useTokenList'
-import { Field, pendingTxHashAtom } from 'lib/state/swap'
+import { displayTxHashAtom, Field } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
 import { useLayoutEffect, useMemo, useState } from 'react'
 
@@ -83,9 +83,9 @@ export default function Swap({ defaults }: SwapProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId])
 
-  const [pendingTxHash, setPendingTxHash] = useAtom(pendingTxHashAtom)
+  const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
-  const pendingTx = getSwapTx(pendingTxs, pendingTxHash)
+  const displayTx = getSwapTx(pendingTxs, displayTxHash)
 
   return (
     <>
@@ -104,9 +104,9 @@ export default function Swap({ defaults }: SwapProps) {
           </Output>
         </BoundaryProvider>
       </div>
-      {pendingTx && (
+      {displayTx && (
         <Dialog color="dialog">
-          <StatusDialog tx={pendingTx} onClose={() => setPendingTxHash()} />
+          <StatusDialog tx={displayTx} onClose={() => setDisplayTxHash()} />
         </Dialog>
       )}
     </>

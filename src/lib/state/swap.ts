@@ -25,5 +25,5 @@ export const swapAtom = atomWithImmer<Swap>({
 
 export const independentFieldAtom = pickAtom(swapAtom, 'independentField')
 
-// If set to a transaction hash, displays that transaction's status.
-export const pendingTxHashAtom = atom<string | undefined>(undefined)
+// If set to a transaction hash, that transaction will display in a status dialog.
+export const displayTxHashAtom = atom<string | undefined>(undefined)

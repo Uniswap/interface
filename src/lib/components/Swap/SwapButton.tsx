@@ -12,7 +12,7 @@ import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { Link, Spinner } from 'lib/icons'
-import { Field, pendingTxHashAtom } from 'lib/state/swap'
+import { displayTxHashAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -104,11 +104,11 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     return { disabled: true }
   }, [approval, approvalHash, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance])
 
-  const setPendingTxHash = useUpdateAtom(pendingTxHashAtom)
+  const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
   const onConfirm = useCallback(() => {
     // TODO(zzmp): Transact the trade.
-    setPendingTxHash(/* TODO(zzmp): Set the pending trade's hash */)
-  }, [setPendingTxHash])
+    setDisplayTxHash(/* TODO(zzmp): Set the pending trade's hash */)
+  }, [setDisplayTxHash])
 
   return (
     <>
