@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
+import { Token, TradeType } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
@@ -17,7 +17,7 @@ import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { Link, Spinner } from 'lib/icons'
 import { transactionTtlAtom } from 'lib/state/settings'
-import { Field } from 'lib/state/swap'
+import { Field, independentFieldAtom } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -46,10 +46,12 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const {
     trade,
     allowedSlippage,
-    currencies: { [Field.INPUT]: inputCurrency },
+    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
   } = useSwapInfo()
+
+  const independentField = useAtomValue(independentFieldAtom)
 
   const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>()
   useEffect(() => {
@@ -129,16 +131,33 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   //@TODO(ianlapham): add a loading state, process errors
   const onConfirm = useCallback(() => {
     swapCallback?.()
-      .then((transactionResponse) => {
-        // TODO(ianlapham): Add the swap tx to transactionsAtom
-        // TODO(ianlapham): Add the pending swap tx to a new swap state
-        console.log(transactionResponse)
+      .then((response) => {
+        if (inputCurrency && outputCurrency) {
+          if (independentField === Field.INPUT) {
+            addTransaction({
+              response,
+              type: TransactionType.SWAP,
+              tradeType: TradeType.EXACT_INPUT,
+              inputCurrencyAddress: inputCurrency?.wrapped.address,
+              outputCurrencyAddress: outputCurrency?.wrapped.address,
+            })
+          }
+          if (independentField === Field.OUTPUT) {
+            addTransaction({
+              response,
+              type: TransactionType.SWAP,
+              tradeType: TradeType.EXACT_OUTPUT,
+              inputCurrencyAddress: inputCurrency?.wrapped.address,
+              outputCurrencyAddress: outputCurrency?.wrapped.address,
+            })
+          }
+        }
       })
       .catch((error) => {
         //@TODO(ianlapham): add error handling
         console.log(error)
       })
-  }, [swapCallback])
+  }, [addTransaction, independentField, inputCurrency, outputCurrency, swapCallback])
 
   return (
     <>
