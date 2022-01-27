@@ -649,7 +649,7 @@ export default function FullPositionCard({
             </Text>
           </ButtonPrimary>
 
-          {!!usdValue ? (
+          {userDefaultPoolBalance?.greaterThan(JSBI.BigInt(0)) ? (
             <ButtonOutlined
               style={{
                 padding: '9px',
