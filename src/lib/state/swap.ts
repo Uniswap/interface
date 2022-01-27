@@ -12,9 +12,9 @@ export enum Field {
 
 export interface Swap {
   independentField: Field
-  readonly amount: string
-  readonly [Field.INPUT]?: Currency
-  readonly [Field.OUTPUT]?: Currency
+  amount: string
+  [Field.INPUT]?: Currency
+  [Field.OUTPUT]?: Currency
 }
 
 export const swapAtom = atomWithImmer<Swap>({
