@@ -91,7 +91,7 @@ describe(maybeApprove, () => {
       .isDone()
   })
 
-  // TODO: switch to integration testing with redux-saga-test-poaan
+  // TODO: switch to integration testing with redux-saga-test-plan
   // The sample `expectSaga` test redux-saga-test-plan does not pass for me.. figure out why
   // xit('skips approval when allowance is sufficient', () => {
   //   return expectSaga(approveSaga)
