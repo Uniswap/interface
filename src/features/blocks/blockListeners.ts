@@ -10,7 +10,7 @@ import { ChainId } from 'src/constants/chains'
 import { updateLatestBlock } from 'src/features/blocks/blocksSlice'
 import { BlockUpdate } from 'src/features/blocks/types'
 import { logger } from 'src/utils/logger'
-import { put, take } from 'typed-redux-saga'
+import { debounce, join, put } from 'typed-redux-saga'
 
 export function createBlockChannel(provider: providers.Provider, chainId: ChainId) {
   return eventChannel<BlockUpdate>((emit) => {
@@ -29,15 +29,18 @@ export function createBlockChannel(provider: providers.Provider, chainId: ChainI
 export function* blockChannelWatcher(channel: EventChannel<BlockUpdate>, chainId: ChainId) {
   try {
     logger.debug('blockListeners', 'blockChannelWatcher', 'Watching block channel for:', chainId)
-    while (true) {
-      const block = yield* take(channel)
-      // TODO validate block
-      yield* put(
-        updateLatestBlock({ chainId: block.chainId, latestBlockNumber: block.blockNumber })
-      )
-    }
+    // Note, the updates from the block channel are debounced because Ethers.js
+    // always emits for each new block, causing thrashing when the app wakes
+    const task = yield* debounce(500, channel, updateBlock)
+    yield* join(task)
   } finally {
     logger.debug('blockListeners', 'blockChannelWatcher', 'Closing block channel for:', chainId)
     channel.close()
   }
+}
+
+function* updateBlock(blockUpdate: BlockUpdate) {
+  yield* put(
+    updateLatestBlock({ chainId: blockUpdate.chainId, latestBlockNumber: blockUpdate.blockNumber })
+  )
 }
