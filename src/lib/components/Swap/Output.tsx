@@ -4,6 +4,7 @@ import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
+import { Logo } from 'lib/icons'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -28,6 +29,30 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   * {
     // When color is loading, delay the color/stroke so that it seems to transition from the last state.
     transition: ${({ hasColor }) => (hasColor === null ? 'color 0.25s ease-in, stroke 0.25s ease-in' : undefined)};
+  }
+`
+
+const UniswapA = styled.a`
+  align-items: center;
+  color: ${({ theme }) => theme.secondary};
+  cursor: pointer;
+  display: flex;
+  font-size: 0.75em;
+  justify-content: center;
+  line-height: 1.25em;
+  text-decoration: none;
+
+  ${Logo} {
+    fill: ${({ theme }) => theme.secondary};
+    height: 1em;
+    transition: transform 0.25s ease;
+    width: 1em;
+    will-change: transform;
+
+    :hover {
+      fill: ${({ theme }) => theme.onHover(theme.secondary)};
+      transform: rotate(-5deg);
+    }
   }
 `
 
@@ -101,6 +126,11 @@ export default function Output({ disabled, children }: OutputProps) {
           </ThemedText.Body2>
         </TokenInput>
         {children}
+        <UniswapA href={`https://app.uniswap.org/`}>
+          <Logo />
+          &nbsp;
+          <Trans>Powered by the Uniswap protocol</Trans>
+        </UniswapA>
       </OutputColumn>
     </DynamicThemeProvider>
   )
