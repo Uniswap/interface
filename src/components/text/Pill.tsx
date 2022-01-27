@@ -40,7 +40,7 @@ export function Pill({
       }}
       {...rest}>
       {icon}
-      <Text color="black" style={{ color: foregroundColor }} variant="body">
+      <Text color="black" style={{ color: foregroundColor }} variant="bodyMd">
         {label}
       </Text>
     </Flex>

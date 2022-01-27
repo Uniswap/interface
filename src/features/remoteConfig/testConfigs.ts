@@ -14,6 +14,7 @@ type ConfigValue = 'disabled' | 'enabled'
  * Local test configs can also be added to this list.
  */
 export enum TestConfig {
+  // TODO(#387): remove swipeable accounts
   SWIPEABLE_ACCOUNTS = 'swipeable-accounts',
 }
 

@@ -6,6 +6,8 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { CurrencySearch } from 'src/components/CurrencySelector/CurrencySearch'
 import { Toggle } from 'src/components/CurrencySelector/Toggle'
+import { Chevron } from 'src/components/icons/Chevron'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
@@ -48,18 +50,22 @@ export function CurrencySelector({
         onToggle={() => {
           selectCurrency()
         }}>
-        <CenterBox height={25} px="sm">
+        <CenterBox>
           {selectedCurrency ? (
-            <CenterBox flexDirection="row">
-              <CurrencyLogo currency={selectedCurrency} size={30} />
-              <Text color="black" ml="sm" variant="h3">
+            <Flex centered row flexDirection="row" gap="sm" px="sm" py="xs">
+              <CurrencyLogo currency={selectedCurrency} size={25} />
+              <Text color="black" variant="h3">
                 {selectedCurrency.symbol}
               </Text>
-            </CenterBox>
+              <Chevron color="black" direction="e" height={10} width={16} />
+            </Flex>
           ) : (
-            <Text color="white" variant="h4">
-              {t('Select a token')}
-            </Text>
+            <Flex centered row gap="xs" px="md" py="xs">
+              <Text color="white" lineHeight={20} variant="h4">
+                {t('Select a token')}
+              </Text>
+              <Chevron color="white" direction="e" height={12} width={12} />
+            </Flex>
           )}
         </CenterBox>
       </Toggle>

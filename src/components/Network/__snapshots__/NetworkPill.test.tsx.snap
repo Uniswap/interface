@@ -82,8 +82,7 @@ exports[`renders a NetworkPill with border 1`] = `
           "color": "#27252E",
           "display": "flex",
           "fontFamily": "UniswapSansBeta3-Regular",
-          "fontSize": 16,
-          "lineHeight": 24,
+          "fontSize": 14,
         },
         Object {
           "color": "#FF007A",
@@ -178,8 +177,7 @@ exports[`renders a NetworkPill without image 1`] = `
           "color": "#27252E",
           "display": "flex",
           "fontFamily": "UniswapSansBeta3-Regular",
-          "fontSize": 16,
-          "lineHeight": 24,
+          "fontSize": 14,
         },
         Object {
           "color": "#FF007A",

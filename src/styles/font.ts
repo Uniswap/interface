@@ -12,20 +12,17 @@ export const fontFamily = {
 export const textVariants = {
   h1: {
     fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 40,
-    lineHeight: 42,
+    fontSize: 32,
     color: 'mainForeground',
   },
   h2: {
     fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 28,
-    lineHeight: 36,
+    fontSize: 24,
     color: 'mainForeground',
   },
   h3: {
     fontFamily: fontFamily.sansSerif.medium,
     fontSize: 20,
-    lineHeight: 26,
     color: 'mainForeground',
   },
   h4: {

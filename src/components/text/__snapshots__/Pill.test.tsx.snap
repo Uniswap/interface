@@ -54,8 +54,7 @@ exports[`renders a Pill with border 1`] = `
           "color": "#27252E",
           "display": "flex",
           "fontFamily": "UniswapSansBeta3-Regular",
-          "fontSize": 16,
-          "lineHeight": 24,
+          "fontSize": 14,
         },
         Object {
           "color": undefined,
@@ -99,8 +98,7 @@ exports[`renders a Pill without image 1`] = `
           "color": "#27252E",
           "display": "flex",
           "fontFamily": "UniswapSansBeta3-Regular",
-          "fontSize": 16,
-          "lineHeight": 24,
+          "fontSize": 14,
         },
         Object {
           "color": "blue",

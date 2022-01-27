@@ -12,6 +12,7 @@ import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { WalletQRCode } from 'src/components/modals/WalletQRCode'
@@ -81,20 +82,20 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <GradientBackground height="50%">
+      <GradientBackground height="30%">
         <PinkToBlueLinear />
       </GradientBackground>
-      <Box>
-        <Box alignItems="center" flexDirection="row" justifyContent="space-between" mx="md" my="sm">
+      <Flex gap="md" m="lg">
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between">
           <AccountHeader />
-          <Box flexDirection="row" mr="md">
-            <Button mr="md" onPress={onPressSettings}>
+          <Flex flexDirection="row">
+            <Button onPress={onPressSettings}>
               <Settings height={24} stroke="gray100" width={24} />
             </Button>
             <Button onPress={onPressNotifications}>
               <Clock height={24} stroke="gray100" width={24} />
             </Button>
-          </Box>
+          </Flex>
         </Box>
         <TransactionStatusBanner />
         {isEnabled(TestConfig.SWIPEABLE_ACCOUNTS) ? (
@@ -105,16 +106,15 @@ export function HomeScreen({ navigation }: Props) {
           />
         ) : (
           <Box alignItems="flex-end" flexDirection="row" justifyContent="space-between">
-            <Box m="lg">
-              <Text mb="md" variant="h4">
+            <Flex gap="xxs">
+              <Text color="gray400" variant="bodySm">
                 {t('Total Balance')}
               </Text>
               <TotalBalance balances={balances} />
-            </Box>
+            </Flex>
             <Button
               backgroundColor="white"
-              mx="lg"
-              my="lg"
+              borderWidth={1}
               name={ElementName.QRCodeModalToggle}
               padding="md"
               style={headerButtonStyle}
@@ -125,7 +125,7 @@ export function HomeScreen({ navigation }: Props) {
         )}
 
         <WalletQRCode isVisible={showQRModal} onClose={onCloseQrCode} />
-      </Box>
+      </Flex>
       <Box bg="mainBackground" flex={1}>
         <TokenBalanceList
           balances={balances}
@@ -140,7 +140,6 @@ export function HomeScreen({ navigation }: Props) {
 }
 
 const headerButtonStyle: ViewStyle = {
-  borderRadius: 16,
   borderColor: 'rgba(255, 0, 122, 0.2)',
-  borderWidth: 1,
+  borderRadius: 16,
 }

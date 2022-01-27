@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
@@ -50,21 +51,22 @@ export function TokenBalanceItem({
 
   return (
     <Button
+      alignItems="center"
       bg="white"
       flexDirection="row"
       justifyContent="space-between"
       px="lg"
-      py="md"
+      py="sm"
       onPress={onPress}>
-      <Box flexDirection="row">
-        <CurrencyLogo currency={currency} size={35} />
-        <Box alignItems="flex-start" mx="md">
+      <Flex centered row gap="sm">
+        <CurrencyLogo currency={currency} size={32} />
+        <Box alignItems="flex-start">
           <Text variant="h4">{currency.symbol}</Text>
           <Text color="gray400" variant="bodySm">{`${formatCurrencyAmount(currencyAmount)} ${
             currency.symbol
           }`}</Text>
         </Box>
-      </Box>
+      </Flex>
       <Box alignItems="flex-end">
         <Text variant="h4">{formatUSDPrice(balance)}</Text>
         <Text

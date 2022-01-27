@@ -13,7 +13,6 @@ export function Toggle({ children, filled, onToggle }: PropsWithChildren<ToggleP
       bg={filled ? 'primary1' : 'tokenSelector'}
       borderRadius="full"
       name={ElementName.CurrencySelectorToggle}
-      p="sm"
       onPress={onToggle}>
       {children}
     </Button>

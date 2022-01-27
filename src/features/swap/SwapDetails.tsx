@@ -56,7 +56,7 @@ export function SwapDetails({ currencyOut, trade }: SwapDetailsProps) {
             {`${t('Min. received after slippage')} (${DEFAULT_SLIPPAGE_TOLERANCE}%)`}
           </Text>
           <Text color="gray600" variant="h6">
-            {`${formatPrice(minReceived)} ${currencyOut?.currency.symbol}`}
+            {`${formatPrice(minReceived).replace('$', '')} ${currencyOut?.currency.symbol}`}
           </Text>
         </Box>
         <Box flexDirection="row" justifyContent="space-between">

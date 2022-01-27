@@ -114,7 +114,6 @@ exports[`renders correctly 1`] = `
           "initial": Object {
             "color": "#DA2D2B",
           },
-          "lineHeight": 26,
           "viewDescriptor": MutableValue {
             "_animation": null,
             "_id": 18,

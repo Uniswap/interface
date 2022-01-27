@@ -1,3 +1,4 @@
+import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
@@ -8,28 +9,35 @@ import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { Trade } from 'src/features/swap/useTrade'
 import { formatExecutionPrice } from 'src/features/swap/utils'
+import { Theme } from 'src/styles/theme'
 import { useNetworkColors } from 'src/utils/colors'
 import { formatPrice } from 'src/utils/format'
 
-interface SwapDetailRowProps {
+interface QuickDetailsProps {
   trade: Trade | undefined | null
   label: string | null
 }
 
-export function SwapDetailRow(props: SwapDetailRowProps) {
+export function QuickDetails(props: QuickDetailsProps) {
   const { label, trade } = props
 
   const chainId = trade?.inputAmount.currency.chainId ?? ChainId.MAINNET
   const networkColors = useNetworkColors(chainId)
 
+  const theme = useTheme<Theme>()
+
   return (
     <Box alignItems="center" alignSelf="stretch" flexDirection="row" justifyContent="space-between">
-      <Box alignItems="center" flexDirection="row" justifyContent="center">
-        <InfoCircle height={20} width={20} />
-        <Text color="gray400" fontWeight="500" ml="sm" variant="bodySm">
+      <Flex centered row gap="xs">
+        <InfoCircle
+          color={label ? theme.colors.gray400 : theme.colors.black}
+          height={20}
+          width={20}
+        />
+        <Text color={label ? 'gray400' : 'black'} fontWeight="500" variant="bodyMd">
           {label || formatExecutionPrice(trade?.executionPrice)}
         </Text>
-      </Box>
+      </Flex>
       {trade && (
         <Button
           borderRadius="sm"
@@ -37,9 +45,9 @@ export function SwapDetailRow(props: SwapDetailRowProps) {
           onPress={() => {
             // TODO: implement gas price setting ui
           }}>
-          <Flex centered flexDirection="row" gap="xxs" m="sm">
+          <Flex centered flexDirection="row" gap="xs" m="sm">
             <NetworkLogo chainId={trade.inputAmount.wrapped.currency.chainId} size={15} />
-            <Text style={{ color: networkColors.foreground }}>
+            <Text style={{ color: networkColors.foreground }} variant="bodyMd">
               {formatPrice(trade.quote?.gasUseEstimateUSD?.toString())}
             </Text>
           </Flex>

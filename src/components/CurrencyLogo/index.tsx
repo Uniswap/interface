@@ -1,3 +1,4 @@
+import { ShadowProps } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { Image } from 'react-native'
@@ -8,8 +9,12 @@ import { style } from 'src/components/CurrencyLogo/styles'
 import { getCurrencyLogoSrcs, maybeReplaceIPFSScheme } from 'src/components/CurrencyLogo/utils'
 import { Box } from 'src/components/layout/Box'
 import { ChainId } from 'src/constants/chains'
+import { Theme } from 'src/styles/theme'
 
 const DEFAULT_SIZE = 40
+const NETWORK_LOGO_SIZE = 12
+
+const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 
 interface CurrencyLogoProps {
   currency: Currency
@@ -19,12 +24,19 @@ interface CurrencyLogoProps {
 export function CurrencyLogo(props: CurrencyLogoProps) {
   const { size, currency } = props
   const currencyLogoSize = (size ?? DEFAULT_SIZE) - 4
-  const networkSize = currencyLogoSize / 2
+  const networkSize = NETWORK_LOGO_SIZE
   return (
-    <Box height={size} width={size}>
+    <Box alignItems="center" height={size} justifyContent="center" width={size}>
       <CurrencyLogoOnly currency={currency} size={currencyLogoSize} />
       {currency.chainId !== ChainId.MAINNET && (
-        <Box bottom={0} position="absolute" right={0}>
+        <Box
+          bottom={0}
+          position="absolute"
+          right={0}
+          shadowColor="black"
+          shadowOffset={SHADOW_OFFSET}
+          shadowOpacity={0.1}
+          shadowRadius={4}>
           <NetworkLogo chainId={currency.chainId} size={networkSize} />
         </Box>
       )}

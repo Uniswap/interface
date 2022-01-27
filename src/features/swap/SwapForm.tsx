@@ -19,7 +19,7 @@ import {
   useWrapCallback,
 } from 'src/features/swap/hooks'
 import { SwapDetails } from 'src/features/swap/SwapDetails'
-import { SwapDetailRow } from 'src/features/swap/SwapDetailsRow'
+import { QuickDetails } from 'src/features/swap/SwapDetailsRow'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { isWrapAction } from 'src/features/swap/utils'
 import { getHumanReadableSwapInputStatus } from 'src/features/swap/validate'
@@ -74,6 +74,7 @@ export function SwapForm(props: SwapFormProps) {
         <Box>
           <Trace section={SectionName.CurrencyInputPanel}>
             <CurrencyInput
+              autofocus
               currency={currencies[CurrencyField.INPUT]}
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -93,10 +94,12 @@ export function SwapForm(props: SwapFormProps) {
                 borderColor="white"
                 borderRadius="md"
                 borderWidth={4}
+                bottom={18}
                 justifyContent="center"
-                p="xs">
+                p="xs"
+                position="relative">
                 <Button alignItems="center" justifyContent="center" onPress={onSwitchCurrencies}>
-                  <SwapArrow height={20} width={20} />
+                  <SwapArrow height={18} width={18} />
                 </Button>
               </Box>
             </Box>
@@ -118,7 +121,7 @@ export function SwapForm(props: SwapFormProps) {
           </Trace>
           {!isWrapAction(wrapType) && (
             <Box mt="md">
-              <SwapDetailRow label={swapInputStatusMessage} trade={trade} />
+              <QuickDetails label={swapInputStatusMessage} trade={trade} />
             </Box>
           )}
         </Box>

@@ -16,6 +16,7 @@ const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
 
 type CurrencyInputProps = {
+  autofocus?: boolean
   currency: Currency | null | undefined
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   currencyBalance: CurrencyAmount<Currency> | null | undefined
@@ -28,6 +29,7 @@ type CurrencyInputProps = {
 
 export function CurrencyInput(props: CurrencyInputProps) {
   const {
+    autofocus,
     currency,
     currencyAmount,
     currencyBalance,
@@ -57,14 +59,15 @@ export function CurrencyInput(props: CurrencyInputProps) {
   )
 
   return (
-    <Flex borderRadius="md" gap="sm" mt="md" pb="md" pt={title ? 'lg' : 'md'} {...transformedProps}>
+    <Flex borderRadius="md" gap="sm" p="md" {...transformedProps}>
       {title && (
-        <Text color="gray400" ml="lg" variant="body">
+        <Text color="gray400" variant="body">
           {title}
         </Text>
       )}
-      <Flex centered flexDirection="row" gap="sm" mx="sm">
+      <Flex centered flexDirection="row" gap="sm">
         <AmountInput
+          autoFocus={autofocus}
           backgroundColor="none"
           borderWidth={0}
           flex={1}
@@ -72,6 +75,8 @@ export function CurrencyInput(props: CurrencyInputProps) {
           fontSize={theme.textVariants.h1.fontSize}
           height={48}
           placeholder="0.0"
+          px="none"
+          py="none"
           value={currencyAmount?.toExact()}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
         />
@@ -79,11 +84,11 @@ export function CurrencyInput(props: CurrencyInputProps) {
           // TODO: use `soft` button variant when available
           showMaxButton && maxInputAmount && (
             <PrimaryButton
-              borderRadius="sm"
+              borderRadius="md"
               label={t('MAX')}
               px="xs"
               py="xs"
-              textVariant="body"
+              textVariant="bodyBold"
               variant="blue"
               onPress={() => onSetAmount(maxInputAmount.toSignificant())}
             />
@@ -96,9 +101,9 @@ export function CurrencyInput(props: CurrencyInputProps) {
           onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
         />
       </Flex>
-      <Flex alignContent="center" flexDirection="row" justifyContent="space-between" mx="md">
+      <Flex alignContent="center" flexDirection="row" justifyContent="space-between">
         {price && (
-          <Text color="gray400" ml="sm" variant="body">
+          <Text color="gray400" variant="body">
             {formatPrice(price)}
           </Text>
         )}

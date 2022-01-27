@@ -36,15 +36,15 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
   const theme = useTheme<Theme>()
 
   return (
-    <Box alignItems="center" flexDirection="row" justifyContent="space-between" mx="sm" my="sm">
+    <Box alignItems="center" flexDirection="row" justifyContent="space-between">
       <Button
         alignItems="center"
         flexDirection="row"
         testID="account_header/manage/button"
         onPress={onPressAccount}>
-        <Flex centered flexDirection="row" gap="sm">
-          <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={30} />
-          <Text variant="h4">
+        <Flex centered flexDirection="row" gap="xs">
+          <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={24} />
+          <Text variant="buttonLabel">
             {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}
           </Text>
           <Chevron
