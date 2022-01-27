@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:31\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -208,7 +208,7 @@ msgstr "İzin veriliyor"
 msgid "Amount"
 msgstr "Miktar"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Bu takas yürütülmeye çalışılırken bir hata oluştu. Kayma toleransınızı artırmanız gerekebilir. Bu işe yaramazsa, işlem yaptığınız token ile uyumsuzluk olabilir. Not: Transfer ve rebase jetonlarındaki ücret, Uniswap V3 ile uyumlu değildir."
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Seçilen fiyat aralığından en az {0} {1} ve {2} {3} cüzdanınıza iade edilecektir."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Otomatik"
 
@@ -976,7 +977,7 @@ msgstr "Geçersiz fiyat girişi"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Geçersiz aralık seçildi. Minimum fiyat, maksimum fiyattan düşük olmalıdır."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "Minimum:"
 msgid "Minimum received"
 msgstr "Minimum alınan"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Eksik bağımlılıklar"
 
@@ -1682,8 +1683,8 @@ msgstr "Ayrıntıları değiştir"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Tam olarak <0/> ile <1/> arasında geçiş yapın"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Değiştirilemedi: {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "Uniswap topluluğunun bir parçası olduğunuz için teşekkürler <0/>"
 msgid "The % you will earn in fees."
 msgstr "Ücretlerde kazanacağınız yüzde."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap değişmez değeri x*y=k, swap ile sağlanmadı. Bu genellikle, swap ettiğiniz jetonlardan birinin aktarım sırasında özel davranış içerdiği anlamına gelir."
 
@@ -1747,7 +1748,7 @@ msgstr "L1'de işlem göndermek için geçerli hızlı gaz miktarı. Gaz ücretl
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Girdi ve çıktı miktarlarının USD değerleri arasındaki tahmini fark."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Giriş jetonu aktarılamaz. Giriş jetonuyla ilgili bir sorun olabilir."
 
@@ -1759,11 +1760,11 @@ msgstr "Piyasa fiyatı, belirttiğiniz fiyat aralığının dışında. Yalnızc
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "Bu ağdaki en son blok numarası. Fiyatlar her blokta güncellenir."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Çıkış jetonu aktarılamaz. Çıkış jetonuyla ilgili bir sorun olabilir."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Çıkış jetonu aktarılamaz. Çıkış belirteciyle ilgili bir sorun olabilir. Not: Transfer ve rebase jetonlarındaki ücret, Uniswap V3 ile uyumlu değildir."
 
@@ -1779,7 +1780,7 @@ msgstr "Bu havuzun fiyatı seçtiğiniz aralık dahilinde. Pozisyonunuz şu anda
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Eklediğiniz jeton oranı, bu havuzun fiyatını belirleyecektir."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Son tarih geçtiği için işlem gönderilemedi. Lütfen işlem sürenizin çok kısa olmadığından emin olun."
 
@@ -1811,11 +1812,11 @@ msgstr "Bu belirteç, Uniswap Labs uygulamasında desteklenmiyor"
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Bu araç, {0} likiditenizi güvenli bir şekilde V3'e geçirecektir. Bu süreç şunun sayesinde sayesinde tamamen güvensizdir:"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Bu işlem, fiyat hareketi nedeniyle başarılı olamayacak. Kayma toleransınızı artırmayı deneyin. Not: Transfer ve rebase jetonlarındaki ücret, Uniswap V3 ile uyumlu değildir."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Bu işlem, ya fiyat hareketinden dolayı ya da transfer ücretinden dolayı başarılı olmayacak. Kayma toleransınızı artırmayı deneyin."
 
@@ -1893,8 +1894,8 @@ msgstr "İşlem son tarihi"
 msgid "Transaction pending"
 msgstr "İşlem beklemede"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "İşlem reddedildi."
 
@@ -1951,11 +1952,11 @@ msgstr "Talep edilmemiş ücretler"
 msgid "Undetermined"
 msgstr "belirsiz"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "Beklenmeyen hata. Takas için gaz tahmin edilemedi."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Gaz tahmininde beklenmeyen bir sorun. Lütfen tekrar deneyin."
 
@@ -1987,7 +1988,7 @@ msgstr "Uniswap geçiş sözleşmesi↗"
 msgid "Unknown Source"
 msgstr "Bilinmeyen Kaynak"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Bilinmeyen hata{0}. Kayma toleransınızı artırmayı deneyin. Not: Transfer ve rebase jetonlarındaki ücret, Uniswap V3 ile uyumlu değildir."
 

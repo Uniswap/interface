@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:31\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -208,7 +208,7 @@ msgstr "Дозвољен"
 msgid "Amount"
 msgstr "Износ"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ћете морати повећати толеранцију клизања. Ако то не успе, можда постоји некомпатибилност са токеном којим тргујете. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Најмање {0} {1} и {2} {3} ће бити враћени у ваш новчаник због изабраног распона цена."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Аutomatski"
 
@@ -976,7 +977,7 @@ msgstr "Неважећи унос цене"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Изабран је неважећи опсег. Минимална цена мора бити нижа од максималне."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "Мин:"
 msgid "Minimum received"
 msgstr "Минимално примљено"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Недостају зависности"
 
@@ -1682,8 +1683,8 @@ msgstr "Замени детаље"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Замените тачно <0/> за <1/>"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Замена није успела: {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "Хвала вам што сте део заједнице Uniswap <0/>"
 msgid "The % you will earn in fees."
 msgstr "% Који ћете зарадити на накнадама."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap непроменљива x*y=k није испоштована разменом. То обично значи да један од токена које замењујете укључује прилагођено понашање приликом преноса."
 
@@ -1747,7 +1748,7 @@ msgstr "Тренутна количина брзог гаса за слање т
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Процењена разлика између вредности улазних и излазних износа у УСД."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Токен за унос није могуће пренети. Можда постоји проблем са улазним токеном."
 
@@ -1759,11 +1760,11 @@ msgstr "Тржишна цена је изван наведеног распон�
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "Најновији број блока на овој мрежи. Цене се ажурирају за сваки блок."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Излазни токен се не може пренети. Можда постоји проблем са излазним токеном."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Излазни токен се не може пренети. Можда постоји проблем са излазним токеном. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
@@ -1779,7 +1780,7 @@ msgstr "Цена овог фонда је у вашем одабраном оп�
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Однос жетона које додате ће одредити цену овог фонда."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Трансакција није могла бити послата јер је рок истекао. Молимо вас да проверите да ваш рок за трансакцију није пренизак."
 
@@ -1811,11 +1812,11 @@ msgstr "Ovaj token nije podržan u aplikaciji Uniswap Labs"
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Овај алат ће безбедно пребацити вашу {0} ликвидност на V3. Процес је потпуно неповерљив захваљујући"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ова трансакција неће успети због кретања цена. Покушајте да повећате толеранцију на клизање. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Ова трансакција неће успети или због кретања цена или због накнаде за пренос. Покушајте да повећате клизну толеранцију."
 
@@ -1893,8 +1894,8 @@ msgstr "Крајњи рок за трансакцију"
 msgid "Transaction pending"
 msgstr "Трансакција је на чекању"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Трансакција је одбијена."
 
@@ -1951,11 +1952,11 @@ msgstr "Ненаплаћене накнаде"
 msgid "Undetermined"
 msgstr "Неодређено"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "Неочекивана грешка. Није могуће проценити гас за замену."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Неочекивани проблем са проценом гаса. Молим вас, покушајте поново."
 
@@ -1987,7 +1988,7 @@ msgstr "Uniswap уговор о миграцији↗"
 msgid "Unknown Source"
 msgstr "Непознат извор"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Непозната грешка{0}. Покушајте повећати толеранцију клизања. Напомена: накнада за токене за пренос и поновну надоградњу није компатибилна са Унисвап В3."
 

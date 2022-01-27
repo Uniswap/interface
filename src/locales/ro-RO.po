@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:30\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -208,7 +208,7 @@ msgstr "Permis"
 msgid "Amount"
 msgstr "Sumă"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "A apărut o eroare la încercarea de a executa acest swap. Este posibil să fie nevoie să vă măriți toleranța la alunecare. Dacă acest lucru nu funcționează, poate exista o incompatibilitate cu jetonul pe care îl tranzacționați. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Cel puțin {0} {1} și {2} {3} vor fi rambursați în portofelul tău datorită intervalului de preț selectat."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Automat"
 
@@ -976,7 +977,7 @@ msgstr "Introducere de preț nevalidă"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Interval invalid selectat. Prețul minim trebuie să fie mai mic decât prețul maxim."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "Min:"
 msgid "Minimum received"
 msgstr "Minimum primit"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Dependențe lipsă"
 
@@ -1682,8 +1683,8 @@ msgstr "Schimbați detalii"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Schimbați exact <0 /> cu <1 />"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Schimbarea a eșuat: {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "Îți mulțumim că faci parte din comunitatea Uniswap <0/>"
 msgid "The % you will earn in fees."
 msgstr "Procentul pe care îl veți câștiga în taxe."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Invariantul Uniswap x*y=k nu a fost satisfăcut de schimbare. Acest lucru înseamnă, de obicei, că unul dintre jetoanele pe care le schimbi încorporează un comportament personalizat la transfer."
 
@@ -1747,7 +1748,7 @@ msgstr "Suma curentă rapidă de gaz pentru trimiterea unei tranzacții pe L1. T
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Diferența estimată între valorile USD ale sumelor de intrare și de ieșire."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Jetonul de intrare nu poate fi transferat. Este posibil să existe o problemă cu jetonul de intrare."
 
@@ -1759,11 +1760,11 @@ msgstr "Prețul de piață este în afara intervalului de preț specificat. Doar
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "Cel mai recent număr de bloc din această rețea. Prețurile se actualizează la fiecare bloc."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Jetonul de ieșire nu poate fi transferat. S-ar putea să existe o problemă cu simbolul de ieșire."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Jetonul de ieșire nu poate fi transferat. S-ar putea să existe o problemă cu simbolul de ieșire. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
 
@@ -1779,7 +1780,7 @@ msgstr "Prețul acestui pool se încadrează în intervalul selectat. Poziția d
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Raportul dintre jetoanele adăugate va stabili prețul acestui grup."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Tranzacția nu a putut fi trimisă deoarece termenul a trecut. Te rugăm să verifici dacă termenul limită al acestei tranzacției nu este prea mic."
 
@@ -1811,11 +1812,11 @@ msgstr "Acest simbol nu este acceptat în aplicația Uniswap Labs"
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Acest instrument va migra în siguranță lichiditatea ta {0} în V3. Procesul este complet lipsit de încredere datorită"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Această tranzacție nu va reuși din cauza mișcării prețurilor. Încercați să vă măriți toleranța la alunecare. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Această tranzacție nu va reuși nici din cauza mișcării prețului, nici a comisioanelor la transfer. Încearcă să îți sporești toleranța la alunecare."
 
@@ -1893,8 +1894,8 @@ msgstr "Termen limită tranzacție"
 msgid "Transaction pending"
 msgstr "Tranzacție în așteptare"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Tranzacția respinsă."
 
@@ -1951,11 +1952,11 @@ msgstr "Taxe nesolicitate"
 msgid "Undetermined"
 msgstr "Nedeterminat"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "Eroare neașteptată. Nu s-a putut estima gazul pentru swap."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Problemă neașteptată cu estimarea gazului. Vă rugăm să încercați din nou."
 
@@ -1987,7 +1988,7 @@ msgstr "Contract de migrare Uniswap↗"
 msgid "Unknown Source"
 msgstr "Sursă Necunoscută"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Eroare necunoscută{0}. Încercați să vă măriți toleranța la alunecare. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
 

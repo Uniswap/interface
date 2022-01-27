@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:30\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -208,13 +208,13 @@ msgstr "已允许"
 msgid "Amount"
 msgstr "数额"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Uniswap不兼容。注：Uniswap V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approval pending <0/>"
-msgstr "待批 <0/>"
+msgstr "等待授权 <0/>"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "根据选定的兑换率范围，至少会有 {0} {1} 和 {2} {3} 将退还到您的钱包。"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "自动"
 
@@ -976,7 +977,7 @@ msgstr "无效的兑换率输入"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "选择的范围无效。最小兑换率必须低于最大兑换率。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "最小值："
 msgid "Minimum received"
 msgstr "收到的最低数额"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "缺少依赖套件"
 
@@ -1682,8 +1683,8 @@ msgstr "交易详情"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "将恰好 <0/> 兑换成 <1/>"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "兑换失败： {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "感谢您加入 Uniswap 社区 <0/>"
 msgid "The % you will earn in fees."
 msgstr "您将赚取的手续费百分比。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "兑换交易不满足 Uniswap 不变量 X × Y = K 的要求。这通常意味着您要兑换的代币之一在代币转账过程中带有一些自定义代币合约特性。"
 
@@ -1747,7 +1748,7 @@ msgstr "当前用于在 L1 上发送交易的快速 gas 量。 Gas 费用以以�
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "输入和输出金额的美元价值之间的估计差异。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "输入代币无法进行转账。输入代币可能有些问题。"
 
@@ -1759,11 +1760,11 @@ msgstr "市场兑换率超出您指定的范围。将只注入单项代币。"
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "此网络上的最新区块编号。兑换率会每区块都更新。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "输出代币无法进行转账。输出代币可能有些问题。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "无法对输出代币进行转账。输出代币可能有些问题。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
 
@@ -1779,7 +1780,7 @@ msgstr "此流动池的兑换率在您选定的范围内。因此您的流动资
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "您注入的代币比率将决定此流动池的初始兑换率。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "由于期限已过，因此无法发送交易。请检查您的交易截止期限设置。"
 
@@ -1811,11 +1812,11 @@ msgstr "Uniswap Labs 应用程序不支持此代币"
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "该工具将安全地将您的 {0} 流动资金迁移到 V3。该过程完全不依赖任何信任需求"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "由于兑换率变动，此交易将不会成功。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "由于兑换率变动或代币带有转账时的扣除费用（fee-on-transfer），该交易将不会成功。请尝试增加滑点容差。"
 
@@ -1893,8 +1894,8 @@ msgstr "交易截止期限"
 msgid "Transaction pending"
 msgstr "交易等待中"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "交易被拒绝。"
 
@@ -1951,11 +1952,11 @@ msgstr "未领取的手续费"
 msgid "Undetermined"
 msgstr "未定"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "错误。无法估计兑换所需的gas。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "估计 gas 时遇到问题。请再试一次。"
 
@@ -1987,7 +1988,7 @@ msgstr "Uniswap 迁移合约↗"
 msgid "Unknown Source"
 msgstr "未知来源"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "未知错误{0}。可以尝试增加滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
 
@@ -2282,11 +2283,11 @@ msgstr "您将收到"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "您将收到至少 {0} {1} 或交易将恢复。"
+msgstr "您将收到至少 {0} {1} 或交易将回滚。"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "您最多发送 {0} {1} 或交易将恢复。"
+msgstr "您最多发送 {0} {1} 或交易将回滚。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

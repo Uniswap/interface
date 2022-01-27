@@ -1,6 +1,7 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -12,9 +13,8 @@ import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from '../constants/addresses
 import { DAI, UNI, USDC } from '../constants/tokens'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
-import useTransactionDeadline from './useTransactionDeadline'
 
-enum PermitType {
+export enum PermitType {
   AMOUNT = 1,
   ALLOWED = 2,
 }
@@ -22,7 +22,7 @@ enum PermitType {
 // 20 minutes to submit after signing
 const PERMIT_VALIDITY_BUFFER = 20 * 60
 
-interface PermitInfo {
+export interface PermitInfo {
   type: PermitType
   name: string
   // version is optional, and if omitted, will not be included in the domain
@@ -116,9 +116,10 @@ const PERMIT_ALLOWED_TYPE = [
   { name: 'allowed', type: 'bool' },
 ]
 
-function useERC20Permit(
+export function useERC20Permit(
   currencyAmount: CurrencyAmount<Currency> | null | undefined,
   spender: string | null | undefined,
+  transactionDeadline: BigNumber | undefined,
   overridePermitInfo: PermitInfo | undefined | null
 ): {
   signatureData: SignatureData | null
@@ -126,7 +127,6 @@ function useERC20Permit(
   gatherPermitSignature: null | (() => Promise<void>)
 } {
   const { account, chainId, library } = useActiveWeb3React()
-  const transactionDeadline = useTransactionDeadline()
   const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
   const eip2612Contract = useEIP2612Contract(tokenAddress)
   const isArgentWallet = useIsArgentWallet()
@@ -259,26 +259,14 @@ function useERC20Permit(
   ])
 }
 
-const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
-  version: '1',
-  name: 'Uniswap V2',
-  type: PermitType.AMOUNT,
-}
-
-export function useV2LiquidityTokenPermit(
-  liquidityAmount: CurrencyAmount<Token> | null | undefined,
-  spender: string | null | undefined
-) {
-  return useERC20Permit(liquidityAmount, spender, REMOVE_V2_LIQUIDITY_PERMIT_INFO)
-}
-
 export function useERC20PermitFromTrade(
   trade:
     | V2Trade<Currency, Currency, TradeType>
     | V3Trade<Currency, Currency, TradeType>
     | Trade<Currency, Currency, TradeType>
     | undefined,
-  allowedSlippage: Percent
+  allowedSlippage: Percent,
+  transactionDeadline: BigNumber | undefined
 ) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = chainId
@@ -294,5 +282,5 @@ export function useERC20PermitFromTrade(
     [trade, allowedSlippage]
   )
 
-  return useERC20Permit(amountToApprove, swapRouterAddress, null)
+  return useERC20Permit(amountToApprove, swapRouterAddress, transactionDeadline, null)
 }

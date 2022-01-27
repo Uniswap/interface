@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:31\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -208,7 +208,7 @@ msgstr "Được phép"
 msgid "Amount"
 msgstr "Số tiền"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Đã xảy ra lỗi khi cố gắng thực hiện hoán đổi này. Bạn có thể cần phải tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Ít nhất {0} {1} và {2} {3} sẽ được hoàn lại vào ví của bạn do phạm vi giá đã chọn."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Tự động"
 
@@ -976,7 +977,7 @@ msgstr "Giá đầu vào không hợp lệ"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Đã chọn dải ô không hợp lệ. Giá tối thiểu phải thấp hơn giá tối đa."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "Tối thiểu:"
 msgid "Minimum received"
 msgstr "Số tiền nhận được tối thiểu"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Thiếu phụ thuộc"
 
@@ -1682,8 +1683,8 @@ msgstr "Hoán đổi chi tiết"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Hoán đổi chính xác <0 /> lấy <1 />"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Hoán đổi không thành công: {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "Cảm ơn bạn đã tham gia cộng đồng Uniswap <0/>"
 msgid "The % you will earn in fees."
 msgstr "% Bạn sẽ kiếm được từ phí."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Bất biến Uniswap x * y = k không được thỏa mãn bởi hoán đổi. Điều này thường có nghĩa là một trong những mã token bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
 
@@ -1747,7 +1748,7 @@ msgstr "Lượng gas nhanh hiện tại để gửi một giao dịch trên L1. 
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Chênh lệch ước tính giữa giá trị USD của lượng đầu vào và đầu ra."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố với mã token đầu vào."
 
@@ -1759,11 +1760,11 @@ msgstr "Giá thị trường nằm ngoài phạm vi giá đã chỉ định củ
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "Số khối gần đây nhất trên mạng này. Giá cập nhật trên mọi khối."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Không thể chuyển mã token đầu ra. Có thể có sự cố với mã token đầu ra."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Không thể chuyển mã thông báo đầu ra. Có thể có sự cố với mã thông báo đầu ra. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
@@ -1779,7 +1780,7 @@ msgstr "Giá của pool này nằm trong phạm vi bạn đã chọn. Vị trí 
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Tỷ lệ mã token bạn thêm vào sẽ thiết lập giá của nhóm này."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng kiểm tra xem thời hạn giao dịch của bạn không quá thấp."
 
@@ -1811,11 +1812,11 @@ msgstr "Mã thông báo này không được hỗ trợ trong ứng dụng Unisw
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Công cụ này sẽ chuyển thanh khoản {0} sang V3. Quá trình này hoàn toàn không đáng tin cậy nhờ vào"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Giao dịch này sẽ không thành công do biến động giá. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Giao dịch này sẽ không thành công do biến động giá hoặc phí chuyển nhượng. Hãy thử tăng khả năng chịu trượt của bạn."
 
@@ -1893,8 +1894,8 @@ msgstr "Thời hạn giao dịch"
 msgid "Transaction pending"
 msgstr "Giao dịch đang chờ xử lý"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Giao dịch bị từ chối."
 
@@ -1951,11 +1952,11 @@ msgstr "Phí chưa nhận"
 msgid "Undetermined"
 msgstr "Không xác định"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "Lỗi không mong đợi. Không thể ước tính khí cho hoán đổi."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Vấn đề không mong muốn với ước tính khí. Vui lòng thử lại."
 
@@ -1987,7 +1988,7 @@ msgstr "Hợp đồng di chuyển Uniswap↗"
 msgid "Unknown Source"
 msgstr "Nguồn không rõ"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Lỗi không xác định{0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:30\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -208,7 +208,7 @@ msgstr "Sallittu"
 msgid "Amount"
 msgstr "Määrä"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tapahtui virhe yritettäessä suorittaa tämä vaihto. Saatat joutua lisäämään luistonsietokykyäsi. Jos se ei toimi, kaupankäynnin kohteena olevan tunnuksen kanssa saattaa olla ristiriita. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Uniswap V3: n kanssa."
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Vähintään {0} {1} ja {2} {3} palautetaan lompakkoosi valitun hinta-alueen vuoksi."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Automaattinen"
 
@@ -976,7 +977,7 @@ msgstr "Virheellinen hintatieto"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Virheellinen vaihteluväli valittu. Minimihinnan on oltava pienempi kuin maksimihinta."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "Minimi:"
 msgid "Minimum received"
 msgstr "Minimi vastaanotettu"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Puuttuvat riippuvuudet"
 
@@ -1682,8 +1683,8 @@ msgstr "Vaihda tiedot"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Vaihda täsmälleen <0/> arvoon <1/>"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Vaihto epäonnistui: {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "Kiitos, että olet osa Uniswap-yhteisöä <0/>"
 msgid "The % you will earn in fees."
 msgstr "% Ansaitset palkkioita."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Vaihto ei tyydyttänyt Uniswap-invarianttia x*y=k. Tämä tarkoittaa yleensä sitä, että yksi vaihtamistasi rahakkeista käyttäytyy mukautetusti siirron yhteydessä."
 
@@ -1747,7 +1748,7 @@ msgstr "Nykyinen nopea kaasun määrä tapahtuman lähettämiseksi L1:ssä. Kaas
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Arvioitu ero panosten ja tulosten USD-arvojen välillä."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Syöterahaketta ei voida siirtää. Syöterahakkeessa voi olla ongelma."
 
@@ -1759,11 +1760,11 @@ msgstr "Markkinahinta on määritellyn hintaluokan ulkopuolella. Vain yksittäis
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "Viimeisin lohkonumero tässä verkossa. Hinnat päivitetään joka lohkossa."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Tulosrahaketta ei voida siirtää. Tulosrahakkeessa voi olla ongelma."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tulostunnusta ei voi siirtää. Tulostunnuksessa voi olla ongelma. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Uniswap V3: n kanssa."
 
@@ -1779,7 +1780,7 @@ msgstr "Tämän poolin hinta sopii vallittuun hintaluokkaan. Positiosi ansaitsee
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Lisäämiesi rahakkeiden suhde määrittää tämän poolin hinnan."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Tapahtumaa ei voitu lähettää, koska määräaika on ohi. Tarkista, että tapahtumasi määräaika ei ole liian lyhyt."
 
@@ -1811,11 +1812,11 @@ msgstr "Uniswap Labs -sovellus ei tue tätä tunnusta"
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Tämä työkalu siirtää {0} likviditeettisi turvallisesti V3:lle. Prosessi on täysin luotettava kiitos"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tämä kauppa ei onnistu hintaliikkeen vuoksi. Yritä lisätä liukastumistoleranssia. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Uniswap V3: n kanssa."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Tämä tapahtuma ei onnistu joko hinnanmuutoksen tai siirtopalkkion vuoksi. Yritä nostaa luistonsietoprosenttia."
 
@@ -1893,8 +1894,8 @@ msgstr "Tapahtuman määräaika"
 msgid "Transaction pending"
 msgstr "Tapahtuma vireillä"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Tapahtuma hylätty."
 
@@ -1951,11 +1952,11 @@ msgstr "Lunastamattomat palkkiot"
 msgid "Undetermined"
 msgstr "Ei määritelty"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "Odottamaton virhe. Vaihdon kaasua ei voitu arvioida."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Odottamaton ongelma kaasun arvioinnissa. Yritä uudelleen."
 
@@ -1987,7 +1988,7 @@ msgstr "Uniswapin siirtosopimus ↗"
 msgid "Unknown Source"
 msgstr "Tuntematon lähde"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tuntematon virhe{0}. Yritä lisätä liukastumissietokykyäsi. Huomaa: siirto- ja uudelleenkorotusmaksut eivät ole yhteensopivia Uniswap V3: n kanssa."
 

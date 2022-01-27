@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:30\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -208,7 +208,7 @@ msgstr "Povoleno"
 msgid "Amount"
 msgstr "Částka"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Při pokusu o provedení tohoto swapu došlo k chybě. Možná budete muset zvýšit toleranci skluzu. Pokud to nefunguje, může dojít k nekompatibilitě s tokenem, s nímž obchodujete. Poznámka: Poplatky za tokeny za převody a rebase nejsou kompatibilní s Uniswap V3."
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Alespoň {0} {1} a {2} {3} budou kvůli vybranému cenovému rozpětí vráceny do Vaší peněženky."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Automaticky"
 
@@ -976,7 +977,7 @@ msgstr "Neplatné zadání ceny"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Vybrán neplatný rozsah. Minimální cena musí být nižší než maximální cena."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "Minimum:"
 msgid "Minimum received"
 msgstr "Minimum přijato"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Chybějící závislosti"
 
@@ -1682,8 +1683,8 @@ msgstr "Vyměňte si detaily"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Vyměňte přesně <0/> za <1/>"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Výměna se nezdařila: {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "Děkujeme, že jste součástí komunity Uniswap <0/>"
 msgid "The % you will earn in fees."
 msgstr "Procento, které získáte na poplatcích."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Konstanta Uniswap x*y=k nebyla swapem splněna. To obvykle znamená, že jeden z žetonů, které prohazujete, zahrnuje vlastní chování při přenosu."
 
@@ -1747,7 +1748,7 @@ msgstr "Aktuální rychlé množství plynu pro odeslání transakce na L1. Popl
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Odhadovaný rozdíl mezi hodnotami vstupů a výstupů v USD."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Vstupní žeton nelze přenést. Možná je se vstupním žetonem nějaký problém."
 
@@ -1759,11 +1760,11 @@ msgstr "Tržní cena je mimo Vámi stanovené cenové rozmezí. Pouze vklad na j
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "Poslední číslo bloku v této síti. Ceny se aktualizují na každém bloku."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Výstupní žeton nelze přenést. Možná je s výstupním žetonem nějaký problém."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Výstupní žeton nelze přenést. Může dojít k problému s výstupním žetonem. Poznámka: Poplatky za žetony za převody a rebase nejsou kompatibilní s Uniswap V3."
 
@@ -1779,7 +1780,7 @@ msgstr "Cena tohoto fondu je ve Vámi vybraném rozsahu. Vaše pozice nyní vyn�
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Cenu tohoto fondu stanoví poměr žetonů, které přidáte."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Transakci nebylo možno odeslat, protože uplynula lhůta. Zkontrolujte, zda není Vaše lhůta pro transakce příliš krátká."
 
@@ -1811,11 +1812,11 @@ msgstr "Tento token není podporován v aplikaci Uniswap Labs"
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Tento nástroj bezpečně migruje vaši {0} likviditu do V3. Proces je zcela bez důvěry, a to díky"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tato transakce nebude úspěšná z důvodu cenového pohybu. Zkuste zvýšit toleranci skluzu. Poznámka: Poplatky za žetony za převody a rebase nejsou kompatibilní s Uniswap V3."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Tato transakce nebude úspěšná buďto z důvodu pohybu ceny, nebo z důvodu poplatku za převod. Zkuste zvýšit svou toleranci skluzu."
 
@@ -1893,8 +1894,8 @@ msgstr "Lhůta pro transakce"
 msgid "Transaction pending"
 msgstr "Transakce čeká na vyřízení"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Transakce zamítnuta."
 
@@ -1951,11 +1952,11 @@ msgstr "Nenárokované poplatky"
 msgid "Undetermined"
 msgstr "Neurčeno"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "Neočekávaná chyba. Plyn pro výměnu se nepodařilo odhadnout."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Neočekávaný problém s odhadem plynu. Prosím zkuste to znovu."
 
@@ -1987,7 +1988,7 @@ msgstr "Migrační kontrakt Uniswap↗"
 msgid "Unknown Source"
 msgstr "Neznámý zdroj"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Neznámá chyba{0}. Zkuste zvýšit toleranci skluzu. Poznámka: Poplatky za žetony za převody a rebase nejsou kompatibilní s Uniswap V3."
 

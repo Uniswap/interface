@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:30\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: pt_PT\n"
 "Language-Team: Portuguese\n"
@@ -208,7 +208,7 @@ msgstr "Permitido"
 msgid "Amount"
 msgstr "Quantia"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ocorreu um erro ao tentar executar esta troca. Pode ser necessário aumentar sua tolerância ao deslizamento. Se isso não funcionar, pode haver uma incompatibilidade com o token que você está negociando. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Pelo menos {0} {1} e {2} {3} serão reembolsados para a sua carteira devido à faixa de preço selecionada."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Automático"
 
@@ -976,7 +977,7 @@ msgstr "Entrada de preço inválida"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Intervalo selecionado inválido. O preço mínimo deve ser inferior ao preço máximo."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "Mín:"
 msgid "Minimum received"
 msgstr "Mínimo recebido"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Dependências ausentes"
 
@@ -1682,8 +1683,8 @@ msgstr "Trocar detalhes"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Troque exatamente <0 /> por <1 />"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "A troca falhou: {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "Obrigado por fazer parte da comunidade Uniswap <0 />"
 msgid "The % you will earn in fees."
 msgstr "A% que você receberá em taxas."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "O invariante Uniswap x * y = k não foi satisfeito pela troca. Isso geralmente significa que um dos tokens que está a trocar incorpora um comportamento personalizado aquando da transferência."
 
@@ -1747,7 +1748,7 @@ msgstr "A quantidade atual de gás rápido para enviar uma transação em L1. As
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "A diferença estimada entre os valores em dólares dos valores de entrada e saída."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "O token de entrada não pode ser transferido. Pode haver um problema com o token de entrada."
 
@@ -1759,11 +1760,11 @@ msgstr "O preço de mercado está fora do seu intervalo de preços especificado.
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "O número de bloqueio mais recente nesta rede. Preços atualizados em cada bloco."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "O token de saída não pode ser transferido. Pode haver um problema com o token de saída."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "O token de saída não pode ser transferido. Pode haver um problema com o token de saída. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
 
@@ -1779,7 +1780,7 @@ msgstr "O preço desta pool está dentro do seu intervalo selecionado. A sua pos
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "A proporção de tokens que adicionar irá definir o preço desta pool."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "A transação não pôde ser enviada porque o prazo expirou. Verifique se o prazo da transação não é muito reduzido."
 
@@ -1811,11 +1812,11 @@ msgstr "Este token não é compatível com o aplicativo Uniswap Labs"
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Esta ferramenta migrará com segurança a sua liquidez {0} para V3. O processo é completamente autónomo graças à"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Esta transação não terá sucesso devido ao movimento do preço. Tente aumentar sua tolerância ao deslizamento. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Esta transação não terá sucesso devido ao movimento do preço ou à comissão sobre transferência. Tente aumentar a sua tolerância ao deslizamento."
 
@@ -1893,8 +1894,8 @@ msgstr "Prazo de transação"
 msgid "Transaction pending"
 msgstr "Transação pendente"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Transação rejeitada."
 
@@ -1951,11 +1952,11 @@ msgstr "Comissões não reivindicadas"
 msgid "Undetermined"
 msgstr "Indeterminado"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "Erro inesperado. Não foi possível estimar o gás para a troca."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Problema inesperado com a estimativa do gás. Por favor, tente novamente."
 
@@ -1987,7 +1988,7 @@ msgstr "Uniswap contrato de migração↗"
 msgid "Unknown Source"
 msgstr "Fonte desconhecida"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Erro desconhecido{0}. Tente aumentar sua tolerância ao deslizamento. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
 
