@@ -208,13 +208,15 @@ function Information({
             data={
               <Flex alignItems="center">
                 <Box mr="8px">
-                  {targetedPair instanceof Pair && (
+                  {targetedPair instanceof Pair ? (
                     <DoubleCurrencyLogo
                       loading={!targetedPair}
                       size={26}
                       currency0={targetedPair?.token0}
                       currency1={targetedPair?.token1}
                     />
+                  ) : (
+                    <CurrencyLogo currency={targetedPair} loading={!targetedPair} />
                   )}
                 </Box>
                 <Box>

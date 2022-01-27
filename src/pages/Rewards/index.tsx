@@ -173,7 +173,7 @@ export default function Rewards({
                         : wrappedPair[0] === PairState.LOADING
                         ? 'LOADING'
                         : aggregatedDataFilter === PairsFilterType.MY
-                        ? 'MY PAIRS'
+                        ? 'ALL'
                         : aggregatedDataFilter === PairsFilterType.SWPR
                         ? 'SWAPR'
                         : 'ALL'}
