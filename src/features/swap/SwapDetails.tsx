@@ -8,11 +8,9 @@ import {
 } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn } from 'react-native-reanimated'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
-import { FADE_DURATION } from 'src/constants/animations'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { Trade } from 'src/features/swap/useTrade'
 import { formatCurrencyAmount, formatPrice } from 'src/utils/format'
@@ -30,7 +28,7 @@ export function SwapDetails({ currencyOut, trade }: SwapDetailsProps) {
   const gasFeeUSD = parseFloat(trade.quote!.gasUseEstimateUSD).toFixed(2)
 
   return (
-    <AnimatedBox entering={FadeIn.duration(FADE_DURATION)}>
+    <AnimatedBox>
       <Flex borderColor="gray100" borderRadius="md" borderWidth={1} gap="xs" my="sm" p="md">
         <Text color="black" variant="h6">
           {t('Transaction Details')}
