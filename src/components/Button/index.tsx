@@ -80,6 +80,9 @@ export const ButtonPrimary = styled(Base)`
 `
 
 export const ButtonLight = styled(Base)`
+  background: transparent
+    linear-gradient(264deg, ${({ theme }) => theme.primary1_30} 0%, ${({ theme }) => theme.secondary1_30} 100%) 0% 0%
+    no-repeat padding-box;
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
   font-size: 16px;

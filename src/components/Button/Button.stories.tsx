@@ -137,13 +137,7 @@ export const Gray = () => (
     <Unicorn />
   </ButtonGray>
 )
-export const Light = () => (
-  <ButtonLight>
-    <Unicorn />
-    &nbsp;UNISWAP&nbsp;
-    <Unicorn />
-  </ButtonLight>
-)
+export const Light = () => <ButtonLight>Connect Wallet</ButtonLight>
 export const Primary = () => (
   <ButtonPrimary>
     <Unicorn />
