@@ -7,14 +7,13 @@ import { useSwapInfo } from 'lib/hooks/swap'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
 import { Field, independentFieldAtom } from 'lib/state/swap'
-import styled, { ThemedText, ThemeProvider } from 'lib/theme'
+import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 import { TextButton } from '../Button'
 import Row from '../Row'
 import Rule from '../Rule'
-import Tooltip from '../Tooltip'
 
 const ToolbarRow = styled(Row)`
   padding: 0.5em 0;
@@ -22,6 +21,8 @@ const ToolbarRow = styled(Row)`
 `
 
 function RoutingTooltip() {
+  return <Info color="secondary" />
+  /* TODO(zzmp): Implement post-beta launch.
   return (
     <Tooltip icon={Info} placement="bottom">
       <ThemeProvider>
@@ -29,6 +30,7 @@ function RoutingTooltip() {
       </ThemeProvider>
     </Tooltip>
   )
+  */
 }
 
 interface LoadedStateProps {
