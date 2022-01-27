@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant'
 import JSBI from 'jsbi'
 import { Currency } from '../currency'
-import { Ether } from '../ether'
+import { Photon } from 'constants/native-token'
 import { NativeCurrency } from '../nativeCurrency'
 import { Token } from '../token'
 import { Fraction } from './fraction'
@@ -45,7 +45,7 @@ export class CurrencyAmount<T extends Currency> extends Fraction {
    * @param rawAmount ether amount in wei
    */
   public static ether(chainId: number, rawAmount: BigintIsh): CurrencyAmount<NativeCurrency> {
-    return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), rawAmount)
+    return CurrencyAmount.fromRawAmount(Photon.onChain(chainId), rawAmount)
   }
 
   protected constructor(currency: T, numerator: BigintIsh, denominator?: BigintIsh) {

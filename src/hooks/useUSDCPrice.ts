@@ -7,7 +7,7 @@ import { ChainId } from 'constants/chains'
 
 // USDC amount used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC, 100_000e6)
+const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC[ChainId.MAINNET], 100_000e6)
 
 /**
  * Returns the price in USDC of the input currency
@@ -39,7 +39,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     // use v2 price if available, v3 as fallback
     if (v2USDCTrade) {
       const { numerator, denominator } = v2USDCTrade.route.midPrice
-      return new Price(currency, USDC, denominator, numerator)
+      return new Price(currency, USDC[ChainId.MAINNET], denominator, numerator)
     }
 
     return undefined

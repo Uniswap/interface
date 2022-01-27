@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { UNI } from '../../constants/tokens'
+import { DIFFUSION } from '../../constants/tokens'
 
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -56,7 +56,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   const { address: parsedAddress } = useENS(activeDelegate)
 
   // get the number of votes available to delegate
-  const uniBalance = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
+  const uniBalance = useTokenBalance(account ?? undefined, chainId ? DIFFUSION[chainId] : undefined)
 
   const delegateCallback = useDelegateCallback()
 

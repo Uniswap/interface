@@ -22,7 +22,7 @@ import WETH_ABI from 'abis/weth.json'
 import EIP_2612 from 'abis/eip_2612.json'
 
 import { ChainId } from 'constants/chains'
-import { WETH9 } from 'constants/tokens'
+import { WPHOTON, DIFFUSION } from 'constants/tokens'
 
 import {
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -44,7 +44,7 @@ import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Multicall2, Weth } from '../abis/types'
-import { UNI } from '../constants/tokens'
+
 import { useActiveWeb3React } from './web3'
 
 // returns null on errors
@@ -80,7 +80,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
   const { chainId } = useActiveWeb3React()
-  return useContract<Weth>(chainId ? WETH9[chainId]?.address : undefined, WETH_ABI, withSignerIfPossible)
+  return useContract<Weth>(chainId ? WPHOTON[chainId]?.address : undefined, WETH_ABI, withSignerIfPossible)
 }
 
 export function useArgentWalletDetectorContract() {
@@ -125,7 +125,7 @@ export function useGovernanceContract() {
 
 export function useUniContract() {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? UNI[chainId]?.address : undefined, UNI_ABI, true)
+  return useContract(chainId ? DIFFUSION[chainId]?.address : undefined, UNI_ABI, true)
 }
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean) {

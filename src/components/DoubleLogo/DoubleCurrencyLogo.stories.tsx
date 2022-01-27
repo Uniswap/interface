@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react/types-6-0'
 import React from 'react'
-import { DAI, WBTC } from '../../constants/tokens'
+import { ATOM, OSMOSIS } from '../../constants/tokens'
 import Component, { DoubleCurrencyLogoProps } from './index'
 
 export default {
@@ -12,7 +12,7 @@ const Template: Story<DoubleCurrencyLogoProps> = (args) => <Component {...args} 
 
 export const DoubleCurrencyLogo = Template.bind({})
 DoubleCurrencyLogo.args = {
-  currency0: DAI,
-  currency1: WBTC,
+  currency0: ATOM[9000],
+  currency1: OSMOSIS[9000],
   size: 220,
 }

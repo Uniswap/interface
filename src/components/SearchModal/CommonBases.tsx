@@ -9,7 +9,7 @@ import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-import { PHOTON } from '../../constants/tokens'
+import { Photon, PHOTON } from '../../constants/tokens'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -47,8 +47,11 @@ export default function CommonBases({
       <AutoRow gap="4px">
         <BaseWrapper
           onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, PHOTON)) {
-              onSelect(PHOTON)
+            if (chainId) {
+              const photon = Photon.onChain(chainId || ChainId.MAINNET)
+              if (!selectedCurrency || !currencyEquals(selectedCurrency, photon)) {
+                onSelect(photon)
+              }
             }
           }}
           disable={selectedCurrency?.isNative}

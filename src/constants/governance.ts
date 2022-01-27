@@ -1,16 +1,18 @@
 import { ChainId } from 'constants/chains'
-import { GOVERNANCE_ADDRESS, TIMELOCK_ADDRESS, UNI_ADDRESS } from './addresses'
+import //  GOVERNANCE_ADDRESS, TIMELOCK_ADDRESS, UNI_ADDRESS
+'./addresses'
 
 export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]?: { [address: string]: string } } = {
   [ChainId.MAINNET]: {
-    [UNI_ADDRESS[ChainId.MAINNET]]: 'UNI',
-    [GOVERNANCE_ADDRESS[ChainId.MAINNET]]: 'Governance',
-    [TIMELOCK_ADDRESS[ChainId.MAINNET]]: 'Timelock',
+    //@TODO: MH - Check where used and how
+    // [UNI_ADDRESS[ChainId.MAINNET]]: 'UNI',
+    // [GOVERNANCE_ADDRESS[ChainId.MAINNET]]: 'Governance',
+    // [TIMELOCK_ADDRESS[ChainId.MAINNET]]: 'Timelock',
   },
   [ChainId.TESTNET]: {
-    [UNI_ADDRESS[ChainId.TESTNET]]: 'Rinkeby UNI',
-    [GOVERNANCE_ADDRESS[ChainId.TESTNET]]: 'Rinkeby Governance',
-    [TIMELOCK_ADDRESS[ChainId.TESTNET]]: 'Rinkeby Timelock',
+    // [UNI_ADDRESS[ChainId.TESTNET]]: 'Rinkeby UNI',
+    // [GOVERNANCE_ADDRESS[ChainId.TESTNET]]: 'Rinkeby Governance',
+    // [TIMELOCK_ADDRESS[ChainId.TESTNET]]: 'Rinkeby Timelock',
   },
 }
 

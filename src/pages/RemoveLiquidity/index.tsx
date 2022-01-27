@@ -16,7 +16,7 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
-import { WETH9 } from 'constants/tokens'
+import { WPHOTON } from 'constants/tokens'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
@@ -340,7 +340,7 @@ export default function RemoveLiquidity({
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
+            {'DIFF ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
@@ -390,8 +390,8 @@ export default function RemoveLiquidity({
   const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      ((currencyA && currencyEquals(WETH9[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH9[chainId], currencyB)))
+      ((currencyA && currencyEquals(WPHOTON[chainId], currencyA)) ||
+        (currencyB && currencyEquals(WPHOTON[chainId], currencyB)))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -530,8 +530,8 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.isNative ? WETH9[chainId].address : currencyIdA}/${
-                              currencyB?.isNative ? WETH9[chainId].address : currencyIdB
+                            to={`/remove/v2/${currencyA?.isNative ? WPHOTON[chainId].address : currencyIdA}/${
+                              currencyB?.isNative ? WPHOTON[chainId].address : currencyIdB
                             }`}
                           >
                             Receive WETH
@@ -539,8 +539,8 @@ export default function RemoveLiquidity({
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
                             to={`/remove/v2/${
-                              currencyA && currencyEquals(currencyA, WETH9[chainId]) ? 'ETH' : currencyIdA
-                            }/${currencyB && currencyEquals(currencyB, WETH9[chainId]) ? 'ETH' : currencyIdB}`}
+                              currencyA && currencyEquals(currencyA, WPHOTON[chainId]) ? 'ETH' : currencyIdA
+                            }/${currencyB && currencyEquals(currencyB, WPHOTON[chainId]) ? 'ETH' : currencyIdB}`}
                           >
                             Receive ETH
                           </StyledInternalLink>

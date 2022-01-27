@@ -6,7 +6,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens, useToken, useIsUserAddedToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
-import { PHOTON } from '../../constants/tokens'
+import { Photon } from '../../constants/tokens'
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -24,6 +24,7 @@ import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
 import { Edit } from 'react-feather'
 import useDebounce from 'hooks/useDebounce'
+import { ChainId } from 'constants/chains'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -110,10 +111,10 @@ export function CurrencySearch({
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
     if (['', 'p', 'ph', 'pho', 'phot', 'photo', 'photon', 'e', 'ev', 'evm', 'evmo', 'evmos'].includes(s)) {
-      return [PHOTON, ...filteredSortedTokens]
+      return [Photon.onChain(chainId || ChainId.MAINNET), ...filteredSortedTokens]
     }
     return filteredSortedTokens
-  }, [debouncedQuery, filteredSortedTokens])
+  }, [chainId, debouncedQuery, filteredSortedTokens])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -141,8 +142,8 @@ export function CurrencySearch({
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         const s = debouncedQuery.toLowerCase().trim()
-        if (s === 'evmos') {
-          handleCurrencySelect(PHOTON)
+        if (s === 'evmos' && chainId) {
+          handleCurrencySelect(Photon.onChain(chainId))
         } else if (filteredSortedTokensWithETH.length > 0) {
           if (
             filteredSortedTokensWithETH[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
@@ -153,7 +154,7 @@ export function CurrencySearch({
         }
       }
     },
-    [filteredSortedTokensWithETH, handleCurrencySelect, debouncedQuery]
+    [debouncedQuery, filteredSortedTokensWithETH, handleCurrencySelect, chainId]
   )
 
   // menu ui

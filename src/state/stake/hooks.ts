@@ -2,7 +2,7 @@ import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { DAI, UNI, USDC, USDT, WBTC, WETH9 } from '../../constants/tokens'
+import { DIFFUSION } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
@@ -24,22 +24,22 @@ export const STAKING_REWARDS_INFO: {
   }[]
 } = {
   [ChainId.MAINNET]: [
-    {
-      tokens: [WETH9[ChainId.MAINNET], DAI],
-      stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711',
-    },
-    {
-      tokens: [WETH9[ChainId.MAINNET], USDC],
-      stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b',
-    },
-    {
-      tokens: [WETH9[ChainId.MAINNET], USDT],
-      stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a',
-    },
-    {
-      tokens: [WETH9[ChainId.MAINNET], WBTC],
-      stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e',
-    },
+    // {
+    //   tokens: [WETH9[ChainId.MAINNET], DAI],
+    //   stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711',
+    // },
+    // {
+    //   tokens: [WETH9[ChainId.MAINNET], USDC],
+    //   stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b',
+    // },
+    // {
+    //   tokens: [WETH9[ChainId.MAINNET], USDT],
+    //   stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a',
+    // },
+    // {
+    //   tokens: [WETH9[ChainId.MAINNET], WBTC],
+    //   stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e',
+    // },
   ],
 }
 
@@ -93,7 +93,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     [chainId, pairToFilterBy]
   )
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? DIFFUSION[chainId] : undefined
 
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 
@@ -228,7 +228,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
 export function useTotalUniEarned(): CurrencyAmount<Token> | undefined {
   const { chainId } = useActiveWeb3React()
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? DIFFUSION[chainId] : undefined
   const stakingInfos = useStakingInfo()
 
   return useMemo(() => {
