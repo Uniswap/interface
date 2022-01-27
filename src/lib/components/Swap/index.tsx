@@ -59,7 +59,7 @@ export default function Swap(props: SwapProps) {
   return (
     <SwapPropValidator {...props}>
       <SwapInfoUpdater />
-      <Header logo title={<Trans>Swap</Trans>}>
+      <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} />}
         <Settings disabled={!active} />
       </Header>
