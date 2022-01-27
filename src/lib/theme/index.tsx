@@ -67,7 +67,7 @@ export const defaultTheme = {
   fontFamily: '"Inter", sans-serif',
   fontFamilyVariable: '"InterVariable", sans-serif',
   fontFamilyCode: 'IBM Plex Mono',
-  tokenColorExtraction: true,
+  tokenColorExtraction: false,
   ...lightTheme,
 }
 
