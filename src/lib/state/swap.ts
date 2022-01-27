@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
+import { atom } from 'jotai'
 import { atomWithImmer } from 'jotai/immer'
 import { pickAtom } from 'lib/state/atoms'
 
@@ -14,7 +15,6 @@ export interface Swap {
   amount: string
   [Field.INPUT]?: Currency
   [Field.OUTPUT]?: Currency
-  integratorFee?: number
 }
 
 export const swapAtom = atomWithImmer<Swap>({
@@ -24,5 +24,6 @@ export const swapAtom = atomWithImmer<Swap>({
 })
 
 export const independentFieldAtom = pickAtom(swapAtom, 'independentField')
-export const integratorFeeAtom = pickAtom(swapAtom, 'integratorFee')
-export const amountAtom = pickAtom(swapAtom, 'amount')
+
+// If set to a transaction hash, that transaction will display in a status dialog.
+export const displayTxHashAtom = atom<string | undefined>(undefined)

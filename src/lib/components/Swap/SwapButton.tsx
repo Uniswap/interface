@@ -4,6 +4,7 @@ import { Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
+import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, {
@@ -17,7 +18,7 @@ import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { Link, Spinner } from 'lib/icons'
 import { transactionTtlAtom } from 'lib/state/settings'
-import { Field } from 'lib/state/swap'
+import { displayTxHashAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -127,18 +128,19 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   )
 
   //@TODO(ianlapham): add a loading state, process errors
+  const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
   const onConfirm = useCallback(() => {
     swapCallback?.()
       .then((transactionResponse) => {
         // TODO(ianlapham): Add the swap tx to transactionsAtom
-        // TODO(ianlapham): Add the pending swap tx to a new swap state
         console.log(transactionResponse)
+        setDisplayTxHash(transactionResponse.hash)
       })
       .catch((error) => {
         //@TODO(ianlapham): add error handling
         console.log(error)
       })
-  }, [swapCallback])
+  }, [setDisplayTxHash, swapCallback])
 
   return (
     <>
@@ -155,11 +157,6 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
           <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>
       )}
-      {/* TODO(zzmp): Pass the completed tx, possibly at a different level of the DOM.
-        <Dialog color="dialog">
-          <StatusDialog onClose={() => void 0} />
-        </Dialog>
-      */}
     </>
   )
 }

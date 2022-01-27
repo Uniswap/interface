@@ -2,9 +2,11 @@ import { Currency } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { pickAtom } from 'lib/state/atoms'
-import { amountAtom, Field, independentFieldAtom, swapAtom } from 'lib/state/swap'
+import { Field, independentFieldAtom, swapAtom } from 'lib/state/swap'
 import { useCallback, useMemo } from 'react'
 export { default as useSwapInfo } from './useSwapInfo'
+
+export const amountAtom = pickAtom(swapAtom, 'amount')
 
 function otherField(field: Field) {
   switch (field) {
