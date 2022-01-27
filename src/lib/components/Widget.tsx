@@ -39,6 +39,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
+  height: 376px;
   min-width: 300px;
   overflow-y: hidden;
   padding: 0.25em;
