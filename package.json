@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@diffusion-fi/interface",
+  "description": "Diffusion Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {
