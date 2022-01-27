@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
+import { Token, TradeType } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
@@ -18,10 +18,11 @@ import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { Link, Spinner } from 'lib/icons'
 import { transactionTtlAtom } from 'lib/state/settings'
-import { displayTxHashAtom, Field } from 'lib/state/swap'
+import { displayTxHashAtom, Field, independentFieldAtom } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import invariant from 'tiny-invariant'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
@@ -49,8 +50,10 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     allowedSlippage,
     currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
-    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
+    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
+
+  const independentField = useAtomValue(independentFieldAtom)
 
   const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>()
   useEffect(() => {
@@ -129,18 +132,25 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
 
   //@TODO(ianlapham): add a loading state, process errors
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
+
   const onConfirm = useCallback(() => {
     swapCallback?.()
-      .then((transactionResponse) => {
-        // TODO(ianlapham): Add the swap tx to transactionsAtom
-        console.log(transactionResponse)
-        setDisplayTxHash(transactionResponse.hash)
+      .then((response) => {
+        setDisplayTxHash(response.hash)
+        invariant(inputCurrencyAmount && outputCurrencyAmount)
+        addTransaction({
+          response,
+          type: TransactionType.SWAP,
+          tradeType: independentField === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+          inputCurrencyAmount,
+          outputCurrencyAmount,
+        })
       })
       .catch((error) => {
         //@TODO(ianlapham): add error handling
         console.log(error)
       })
-  }, [setDisplayTxHash, swapCallback])
+  }, [addTransaction, independentField, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback])
 
   return (
     <>
