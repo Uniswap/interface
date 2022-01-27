@@ -8,7 +8,7 @@ export declare const Overlay: import("styled-components").StyledComponent<"div",
     pad?: number | undefined;
     gap?: number | undefined;
     flex?: true | undefined;
-    grow?: true | undefined;
+    grow?: true | "first" | "last" | undefined;
     children?: ReactNode;
     theme: import("lib/theme").Theme;
 } & {

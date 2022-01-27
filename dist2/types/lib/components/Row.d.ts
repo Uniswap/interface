@@ -7,7 +7,7 @@ declare const Row: import("styled-components").StyledComponent<"div", import("..
     pad?: number | undefined;
     gap?: number | undefined;
     flex?: true | undefined;
-    grow?: true | undefined;
+    grow?: true | "first" | "last" | undefined;
     children?: ReactNode;
     theme: Theme;
 }, never>;

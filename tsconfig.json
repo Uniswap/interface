@@ -2,12 +2,12 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "baseUrl": "src"
-    // "outDir": "dist2",
-    // "moduleResolution": "node",
-    // "declaration": true,
-    // "declarationDir": "dist2/types"
-    // "emitDeclarationOnly": true
+    "baseUrl": "src",
+    "outDir": "dist2",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "dist2/types",
+    "emitDeclarationOnly": true
   },
   "exclude": ["node_modules", "cypress", "src/**/*.test.*"],
   "include": ["src/**/*"]

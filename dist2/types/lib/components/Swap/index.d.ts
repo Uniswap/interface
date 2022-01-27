@@ -1,20 +1,17 @@
 /// <reference types="react" />
 import { TokenInfo } from '@uniswap/token-lists';
-interface DefaultTokenAmount {
-    address?: string | {
+export declare type DefaultAddress = string | {
+    [chainId: number]: string | 'NATIVE';
+} | 'NATIVE';
+export interface SwapProps {
+    tokenList?: string | TokenInfo[];
+    defaultInputAddress?: DefaultAddress;
+    defaultInputAmount?: string;
+    defaultOutputAddress?: DefaultAddress;
+    defaultOutputAmount?: string;
+    convenienceFee?: number;
+    convenienceFeeRecipient?: string | {
         [chainId: number]: string;
     };
-    amount?: number;
 }
-interface SwapDefaults {
-    tokenList: string | TokenInfo[];
-    input: DefaultTokenAmount;
-    output: DefaultTokenAmount;
-}
-export interface SwapProps {
-    convenienceFee?: number;
-    convenienceFeeRecipient?: string;
-    defaults?: Partial<SwapDefaults>;
-}
-export default function Swap({ defaults }: SwapProps): JSX.Element;
-export {};
+export default function Swap(props: SwapProps): JSX.Element;
