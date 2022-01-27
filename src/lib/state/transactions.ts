@@ -1,5 +1,5 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider'
-import { TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { atomWithImmer } from 'jotai/immer'
 
 export enum TransactionType {
@@ -21,20 +21,20 @@ export interface ApprovalTransactionInfo extends BaseTransactionInfo {
 export interface SwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SWAP
   tradeType: TradeType
-  inputCurrencyAddress: string
-  outputCurrencyAddress: string
+  inputCurrencyAmount: CurrencyAmount<Currency>
+  outputCurrencyAmount: CurrencyAmount<Currency>
 }
 
 export interface InputSwapTransactionInfo extends SwapTransactionInfo {
   tradeType: TradeType.EXACT_INPUT
-  inputCurrencyAmount: string
+  inputCurrencyAmount: CurrencyAmount<Currency>
   expectedOutputCurrencyAmount: string
   minimumOutputCurrencyAmount: string
 }
 
 export interface OutputSwapTransactionInfo extends SwapTransactionInfo {
   tradeType: TradeType.EXACT_OUTPUT
-  outputCurrencyAmount: string
+  outputCurrencyAmount: CurrencyAmount<Currency>
   expectedInputCurrencyAmount: string
   maximumInputCurrencyAmount: string
 }

@@ -9,6 +9,7 @@ import { useCallback, useMemo, useState } from 'react'
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
 import Row from '../../Row'
+import Summary from '../Summary'
 
 const errorMessage = (
   <Trans>
@@ -77,9 +78,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
         <ThemedText.Subhead1>{heading}</ThemedText.Subhead1>
-        {/* TODO(zzmp): Display actual transaction.
-          <Summary input={tx.info.inputCurrency} output={tx.info.outputCurrency} />
-        */}
+        <Summary input={tx.info.inputCurrencyAmount} output={tx.info.outputCurrencyAmount} />
       </StatusHeader>
       <TransactionRow flex>
         <ThemedText.ButtonSmall>

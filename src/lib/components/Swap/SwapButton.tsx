@@ -4,6 +4,7 @@ import { Token, TradeType } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
+import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, {
@@ -17,7 +18,7 @@ import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { Link, Spinner } from 'lib/icons'
 import { transactionTtlAtom } from 'lib/state/settings'
-import { Field, independentFieldAtom } from 'lib/state/swap'
+import { displayTxHashAtom, Field, independentFieldAtom } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -48,7 +49,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     allowedSlippage,
     currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
-    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
+    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
 
   const independentField = useAtomValue(independentFieldAtom)
@@ -129,17 +130,20 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   )
 
   //@TODO(ianlapham): add a loading state, process errors
+  const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
+
   const onConfirm = useCallback(() => {
     swapCallback?.()
       .then((response) => {
-        if (inputCurrency && outputCurrency) {
+        setDisplayTxHash(response.hash)
+        if (inputCurrency && outputCurrency && inputCurrencyAmount && outputCurrencyAmount) {
           if (independentField === Field.INPUT) {
             addTransaction({
               response,
               type: TransactionType.SWAP,
               tradeType: TradeType.EXACT_INPUT,
-              inputCurrencyAddress: inputCurrency?.wrapped.address,
-              outputCurrencyAddress: outputCurrency?.wrapped.address,
+              inputCurrencyAmount,
+              outputCurrencyAmount,
             })
           }
           if (independentField === Field.OUTPUT) {
@@ -147,8 +151,8 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
               response,
               type: TransactionType.SWAP,
               tradeType: TradeType.EXACT_OUTPUT,
-              inputCurrencyAddress: inputCurrency?.wrapped.address,
-              outputCurrencyAddress: outputCurrency?.wrapped.address,
+              inputCurrencyAmount,
+              outputCurrencyAmount,
             })
           }
         }
@@ -157,7 +161,16 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
         //@TODO(ianlapham): add error handling
         console.log(error)
       })
-  }, [addTransaction, independentField, inputCurrency, outputCurrency, swapCallback])
+  }, [
+    addTransaction,
+    independentField,
+    inputCurrency,
+    inputCurrencyAmount,
+    outputCurrency,
+    outputCurrencyAmount,
+    setDisplayTxHash,
+    swapCallback,
+  ])
 
   return (
     <>
@@ -174,11 +187,6 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
           <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>
       )}
-      {/* TODO(zzmp): Pass the completed tx, possibly at a different level of the DOM.
-        <Dialog color="dialog">
-          <StatusDialog onClose={() => void 0} />
-        </Dialog>
-      */}
     </>
   )
 }
