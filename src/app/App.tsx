@@ -12,6 +12,7 @@ import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
+import { BiometricCheck } from 'src/features/biometrics'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationBannerWrapper } from 'src/features/notifications/NotificationBanner'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
@@ -83,6 +84,7 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
     <NavigationContainer>
       <AppStackNavigator />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <BiometricCheck />
     </NavigationContainer>
   )
 }

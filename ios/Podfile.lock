@@ -8,6 +8,8 @@ PODS:
     - ExpoModulesCore
   - EXHaptics (11.0.3):
     - ExpoModulesCore
+  - EXLocalAuthentication (12.1.0):
+    - ExpoModulesCore
   - Expo (43.0.3):
     - ExpoModulesCore
   - ExpoModulesCore (0.4.8):
@@ -486,6 +488,7 @@ DEPENDENCIES:
   - EXApplication (from `../node_modules/expo-application/ios`)
   - EXClipboard (from `../node_modules/expo-clipboard/ios`)
   - EXHaptics (from `../node_modules/expo-haptics/ios`)
+  - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - Expo (from `../node_modules/expo/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
   - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
@@ -575,6 +578,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-clipboard/ios"
   EXHaptics:
     :path: "../node_modules/expo-haptics/ios"
+  EXLocalAuthentication:
+    :path: "../node_modules/expo-local-authentication/ios"
   Expo:
     :path: "../node_modules/expo/ios"
   ExpoModulesCore:
@@ -675,6 +680,7 @@ SPEC CHECKSUMS:
   EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   EXHaptics: f52df335f17192e440d9639c971ebcbb3fb91dec
+  EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
   Expo: 5316c3ecdc34eb0cad340d01dc8beec97c7e879e
   ExpoModulesCore: a9a9bf32b2da35cd9b7299c80790c03a91ac7d15
   EXSecureStore: 919bf7c28472862020d2cd7b59b69aae160b5d40

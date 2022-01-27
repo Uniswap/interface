@@ -12,6 +12,7 @@ import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
 import { Box } from 'src/components/layout/Box'
+import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import {
   useDerivedSwapInfo,
   useSwapActionHandlers,
@@ -43,7 +44,6 @@ export function SwapForm(props: SwapFormProps) {
 
   const activeAccount = useActiveAccount()
   const navigation = useAppStackNavigation()
-  const theme = useTheme<Theme>()
   const { t } = useTranslation()
 
   const onSubmit = useCallback(() => {
@@ -62,6 +62,7 @@ export function SwapForm(props: SwapFormProps) {
 
   const { onSelectCurrency, onSwitchCurrencies, onEnterExactAmount } =
     useSwapActionHandlers(dispatch)
+
   const { swapCallback } = useSwapCallback(trade, onSubmit)
   const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onSubmit)
 
@@ -133,15 +134,9 @@ export function SwapForm(props: SwapFormProps) {
               trade={trade}
             />
           )}
-          <PrimaryButton
-            alignSelf="stretch"
-            bg={actionButtonDisabled ? 'gray400' : undefined}
+          <ActionButton
+            callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
             disabled={actionButtonDisabled}
-            icon={
-              quoteStatus === 'loading' ? (
-                <ActivityIndicator color={theme.colors.white} size={25} />
-              ) : undefined
-            }
             label={
               wrapType === WrapType.WRAP
                 ? t('Wrap')
@@ -149,18 +144,42 @@ export function SwapForm(props: SwapFormProps) {
                 ? t('Unwrap')
                 : t('Swap')
             }
-            mt="md"
-            onPress={() => {
-              notificationAsync()
-              if (isWrapAction(wrapType)) {
-                wrapCallback()
-              } else {
-                swapCallback()
-              }
-            }}
+            loading={quoteStatus === 'loading'}
           />
         </Box>
       </Box>
     </Button>
+  )
+}
+
+type ActionButtonProps = {
+  disabled: boolean
+  label: string
+  loading: boolean
+  callback: () => void
+}
+
+function ActionButton({ callback, disabled, label, loading }: ActionButtonProps) {
+  const theme = useTheme<Theme>()
+
+  const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(callback)
+
+  return (
+    <>
+      <PrimaryButton
+        alignSelf="stretch"
+        bg={disabled ? 'gray400' : undefined}
+        disabled={disabled}
+        icon={loading ? <ActivityIndicator color={theme.colors.white} size={25} /> : undefined}
+        label={label}
+        mt="md"
+        onPress={() => {
+          notificationAsync()
+          actionButtonTrigger()
+        }}
+      />
+
+      {BiometricModal}
+    </>
   )
 }

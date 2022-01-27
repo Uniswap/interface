@@ -44,6 +44,7 @@ export const enum ElementName {
   QRCodeModalToggle = 'qr-code-modal-toggle',
   Remove = 'remove',
   Rename = 'rename',
+  TryAgain = 'try-again',
 }
 
 /**

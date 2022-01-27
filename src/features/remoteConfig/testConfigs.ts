@@ -14,10 +14,11 @@ type ConfigValue = 'disabled' | 'enabled'
  * Local test configs can also be added to this list.
  */
 export enum TestConfig {
-  // TODO(#387): remove swipeable accounts
+  BIOMETRIC_PROMPT = 'Biometric Prompt (__DEV__)',
   SWIPEABLE_ACCOUNTS = 'swipeable-accounts',
 }
 
 export const TestConfigValues: Record<TestConfig, ConfigValue> = {
+  [TestConfig.BIOMETRIC_PROMPT]: 'disabled',
   [TestConfig.SWIPEABLE_ACCOUNTS]: 'disabled',
 }

@@ -188,7 +188,7 @@ export function useSwapCallback(
     }
 
     return {
-      swapCallback: () => {
+      swapCallback: async () => {
         appDispatch(
           swapActions.trigger({
             account,

@@ -1,5 +1,5 @@
 import { Formik, FormikErrors, useFormikContext } from 'formik'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -9,6 +9,7 @@ import { TextInput } from 'src/components/input/TextInput'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
+import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { isValidEnsName } from 'src/features/ens/parseENSAddress'
 import { useENSAddress } from 'src/features/ens/useENSAddress'
 import { importAccountActions, importAccountSagaName } from 'src/features/import/importAccountSaga'
@@ -37,40 +38,36 @@ interface Props {
 
 export function ImportAccountForm({ onSuccess }: Props) {
   const dispatch = useAppDispatch()
-  const onSubmit = ({ input: rawInput, resolvedAddress }: FormValues) => {
-    const input = normalizeTextInput(rawInput)
-    const inputType = validateInput(input, resolvedAddress)
-    if (inputType === ImportAccountInputType.Address) {
-      dispatch(importAccountActions.trigger({ type: ImportAccountType.Address, address: input }))
-    } else if (inputType === ImportAccountInputType.ENS && resolvedAddress) {
-      dispatch(
-        importAccountActions.trigger({ type: ImportAccountType.Address, address: resolvedAddress })
-      )
-    } else if (inputType === ImportAccountInputType.Mnemonic) {
-      dispatch(importAccountActions.trigger({ type: ImportAccountType.Mnemonic, mnemonic: input }))
-    } else if (inputType === ImportAccountInputType.PrivateKey) {
-      dispatch(
-        importAccountActions.trigger({ type: ImportAccountType.PrivateKey, privateKey: input })
-      )
-    }
-  }
-
-  const { status } = useSagaStatus(importAccountSagaName, onSuccess)
-  const isLoading = status === SagaStatus.Started
+  const onSubmit = useCallback(
+    ({ input: rawInput, resolvedAddress }: FormValues) => {
+      const input = normalizeTextInput(rawInput)
+      const inputType = validateInput(input, resolvedAddress)
+      if (inputType === ImportAccountInputType.Address) {
+        dispatch(importAccountActions.trigger({ type: ImportAccountType.Address, address: input }))
+      } else if (inputType === ImportAccountInputType.ENS && resolvedAddress) {
+        dispatch(
+          importAccountActions.trigger({
+            type: ImportAccountType.Address,
+            address: resolvedAddress,
+          })
+        )
+      } else if (inputType === ImportAccountInputType.Mnemonic) {
+        dispatch(
+          importAccountActions.trigger({ type: ImportAccountType.Mnemonic, mnemonic: input })
+        )
+      } else if (inputType === ImportAccountInputType.PrivateKey) {
+        dispatch(
+          importAccountActions.trigger({ type: ImportAccountType.PrivateKey, privateKey: input })
+        )
+      }
+    },
+    [dispatch]
+  )
 
   const { t } = useTranslation()
   return (
     <Formik initialValues={initialValues} validate={validateForm(t)} onSubmit={onSubmit}>
-      {({
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-        touched,
-        errors,
-        isValid,
-        isSubmitting,
-      }) => (
+      {({ handleChange, handleBlur, values, touched, errors }) => (
         <CenterBox>
           <Text color="warning" px="md" textAlign="center" variant="body">
             {t('Warning: this wallet is still experimental. Use with caution.')}
@@ -108,20 +105,42 @@ export function ImportAccountForm({ onSuccess }: Props) {
             </Text>
           )}
 
-          {/* TODO show spinner in button while loading */}
-          <PrimaryButton
-            disabled={!values.input || !isValid || isSubmitting || isLoading}
-            label={t('Next')}
-            mt="lg"
-            testID="import_account_form/submit"
-            width="100%"
-            onPress={handleSubmit}
-          />
+          <SubmitButton onSuccess={onSuccess} />
 
           <ENSResolver />
         </CenterBox>
       )}
     </Formik>
+  )
+}
+
+interface SubmitButtonProps {
+  onSuccess: Props['onSuccess']
+}
+
+function SubmitButton({ onSuccess }: SubmitButtonProps) {
+  const { status } = useSagaStatus(importAccountSagaName, onSuccess)
+  const isLoading = status === SagaStatus.Started
+
+  const { handleSubmit, values, isValid, isSubmitting } = useFormikContext<FormValues>()
+
+  const { trigger, modal } = useBiometricPrompt(handleSubmit)
+
+  const { t } = useTranslation()
+
+  return (
+    <>
+      {/* TODO show spinner in button while loading */}
+      <PrimaryButton
+        disabled={!values.input || !isValid || isSubmitting || isLoading}
+        label={t('Next')}
+        mt="lg"
+        testID="import_account_form/submit"
+        width="100%"
+        onPress={trigger}
+      />
+      {modal}
+    </>
   )
 }
 
