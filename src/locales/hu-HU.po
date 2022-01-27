@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:30\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -208,7 +208,7 @@ msgstr "Engedélyezve"
 msgid "Amount"
 msgstr "Összeg"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "Legalább {0} {1} és {2} {3} visszatérítésre kerül a pénztárcájába a kiválasztott árkategória miatt."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Auto"
 
@@ -977,7 +978,7 @@ msgstr "Érvénytelen ár input"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Érvénytelen tartományt választott ki. A minimális árnak alacsonyabbnak kell lennie, mint a maximális ár."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1148,7 +1149,7 @@ msgstr "Min:"
 msgid "Minimum received"
 msgstr "Minimum beérkezett"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Hiányzó függőségek"
 
@@ -1683,8 +1684,8 @@ msgstr "Cserélje ki a részleteket"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Pontosan cserélje ki a <0/> értéket a <1/> értékre"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "A csere nem sikerült: {0}"
 
@@ -1712,7 +1713,7 @@ msgstr "Köszönjük, hogy az Uniswap közösség tagja <0/>"
 msgid "The % you will earn in fees."
 msgstr "A díjakban keresett%."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "A Uniswap invariáns x*y=k nem teljesült a swap során. Ez általában azt jelenti, hogy a cserélendő tokenek egyike egyéni viselkedést tartalmaz az átadáskor."
 
@@ -1748,7 +1749,7 @@ msgstr "Az aktuális gyorsgáz-összeg az L1-es tranzakció elküldéséhez. A g
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "Az input és output összegek USD-értékei közötti becsült különbség."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Az input token nem transzferálható. Probléma lehet az input tokennel."
 
@@ -1760,11 +1761,11 @@ msgstr "A piaci ár kívül esik a megadott ártartományon. Csak egy eszközzel
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "A hálózat legutóbbi blokkszáma. Az árak minden blokkon frissülnek."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Az output token nem transzferálható. Probléma lehet az output tokennel."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "A kimeneti token nem vihető át. Probléma lehet a kimeneti tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
@@ -1780,7 +1781,7 @@ msgstr "Ennek a poolnak az ára az Ön által kiválasztott tartományon belül 
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Az Ön által hozzáadott tokenek aránya határozza meg ennek a poolnak az árát."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "A tranzakciót nem sikerült elküldeni, mert a határidő lejárt. Kérjük, ellenőrizze, hogy a tranzakció határideje nem túl alacsony-e."
 
@@ -1812,11 +1813,11 @@ msgstr "Ezt a tokent nem támogatja az Uniswap Labs alkalmazás"
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Ez az eszköz biztonságosan migrálja a {0} likviditását a V3-ba. A folyamat teljesen megbízhatatlan köszönhetően"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ez a tranzakció az ármozgás miatt nem fog sikerülni. Próbáld meg növelni a csúszástűrést. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Ez a tranzakció sem az ármozgás, sem az átutalási díj miatt nem lesz sikeres. Próbáld meg növelni a csúszástűrést."
 
@@ -1894,8 +1895,8 @@ msgstr "Tranzakció határideje"
 msgid "Transaction pending"
 msgstr "Tranzakció függőben"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "A tranzakció elutasítva."
 
@@ -1952,11 +1953,11 @@ msgstr "Nem igényelt díjak"
 msgid "Undetermined"
 msgstr "Meghatározatlan"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "Váratlan hiba. Nem sikerült megbecsülni a cseréhez szükséges gázt."
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Váratlan probléma a gáz becslésével. Kérlek próbáld újra."
 
@@ -1988,7 +1989,7 @@ msgstr "Uniswap migrációs szerződés↗"
 msgid "Unknown Source"
 msgstr "Ismeretlen forrás"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ismeretlen hiba{0}. Próbálja meg növelni a csúszástűrést. Megjegyzés: az átutalási és újbóli alapkivonási díjak nem kompatibilisek az Uniswap V3 -mal."
 

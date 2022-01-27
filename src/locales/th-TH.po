@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:31\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -208,7 +208,7 @@ msgstr "อนุญาต"
 msgid "Amount"
 msgstr "จำนวน"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "อย่างน้อย {0} {1} และ {2} {3} จะถูกคืนไปยังกระเป๋าเงินของคุณเนื่องจากช่วงราคาที่เลือก"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "รถยนต์"
 
@@ -976,7 +977,7 @@ msgstr "ใส่ราคาไม่ถูกต้อง"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "เลือกช่วงที่ไม่ถูกต้อง ราคาขั้นต่ำต้องต่ำกว่าราคาสูงสุด"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "นาที:"
 msgid "Minimum received"
 msgstr "รับขั้นต่ำ"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "ไม่มีการพึ่งพา"
 
@@ -1682,8 +1683,8 @@ msgstr "รายละเอียดการสลับ"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "สลับเฉพาะ <0/> เป็น <1/>"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "สลับล้มเหลว: {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "ขอบคุณที่เป็นส่วนหนึ่งขอ
 msgid "The % you will earn in fees."
 msgstr "% ที่คุณจะได้รับเป็นค่าธรรมเนียม"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "ค่าคงที่ Uniswap x*y=k ไม่พอใจโดยการแลกเปลี่ยน ซึ่งมักจะหมายถึงหนึ่งในโทเค็นที่คุณกำลังแลกเปลี่ยนรวมลักษณะการทำงานที่กำหนดเองในการโอน"
 
@@ -1747,7 +1748,7 @@ msgstr "ปริมาณก๊าซที่รวดเร็วในปั
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "ค่าความแตกต่างโดยประมาณระหว่างค่า USD ของจำนวนเงินเข้าและออก"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "ไม่สามารถโอนโทเค็นอินพุตได้ อาจมีปัญหากับโทเค็นอินพุต"
 
@@ -1759,11 +1760,11 @@ msgstr "ราคาตลาดอยู่นอกช่วงราคาท
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "หมายเลขบล็อกล่าสุดในเครือข่ายนี้ ราคาอัพเดททุกบล็อค"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "ไม่สามารถโอนโทเค็นเอาต์พุตได้ อาจมีปัญหากับโทเค็นเอาต์พุต"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "ไม่สามารถโอนโทเค็นเอาต์พุตได้ อาจมีปัญหากับโทเค็นเอาต์พุต หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
@@ -1779,7 +1780,7 @@ msgstr "ราคาของพูลนี้อยู่ในช่วงท
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "อัตราส่วนของโทเค็นที่คุณเพิ่มจะกำหนดราคาของพูลนี้"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "ไม่สามารถส่งธุรกรรมได้เนื่องจากเลยกำหนดส่งแล้ว โปรดตรวจสอบว่ากำหนดเวลาในการทำธุรกรรมของคุณไม่ต่ำเกินไป"
 
@@ -1811,11 +1812,11 @@ msgstr "ไม่รองรับโทเค็นนี้ในแอป Un
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "เครื่องมือนี้จะย้าย {0} ของคุณไปยัง V3 อย่างปลอดภัย กระบวนการนี้ไม่น่าเชื่อถืออย่างสมบูรณ์ต้องขอบคุณ"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "ธุรกรรมนี้จะไม่สำเร็จเนื่องจากการเคลื่อนไหวของราคา ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "ธุรกรรมนี้จะไม่สำเร็จเนื่องจากการเคลื่อนไหวของราคาหรือค่าธรรมเนียมในการโอน ลองเพิ่มความทนทานต่อการเลื่อนหลุด"
 
@@ -1893,8 +1894,8 @@ msgstr "กำหนดเวลาการทำธุรกรรม"
 msgid "Transaction pending"
 msgstr "ธุรกรรมที่รอดำเนินการ"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "ธุรกรรมถูกปฏิเสธ"
 
@@ -1951,11 +1952,11 @@ msgstr "ค่าธรรมเนียมที่ไม่มีการอ
 msgid "Undetermined"
 msgstr "ไม่แน่นอน"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "ข้อผิดพลาดที่ไม่คาดคิด ไม่สามารถประมาณค่าก๊าซสำหรับการแลกเปลี่ยนได้"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "ปัญหาที่ไม่คาดคิดกับการประมาณค่าก๊าซ กรุณาลองอีกครั้ง."
 
@@ -1987,7 +1988,7 @@ msgstr "สัญญาการโยกย้าย Uniswap↗"
 msgid "Unknown Source"
 msgstr "ไม่ทราบแหล่งที่มา"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "ข้อผิดพลาดที่ไม่รู้จัก{0}ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-26 01:30\n"
+"PO-Revision-Date: 2022-01-27 01:28\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -208,7 +208,7 @@ msgstr "許可"
 msgid "Amount"
 msgstr "数量"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "スワップ実行時にエラーが発生しました。スリッページの許容範囲を広げる必要がある可能性があります。それでも上手くいかない場合、取引しているトークンとの互換性がない可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
@@ -280,6 +280,7 @@ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selec
 msgstr "少なくとも {0} の {1} と {2} の {3} は設定した価格範囲のため、ウォレットに返金されます。"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "自動"
 
@@ -976,7 +977,7 @@ msgstr "無効な価格入力"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "設定した価格範囲が間違っています。最小価格は最大価格より低くしてください。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
@@ -1147,7 +1148,7 @@ msgstr "最小:"
 msgid "Minimum received"
 msgstr "最小購入数"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "依存関係がありません"
 
@@ -1682,8 +1683,8 @@ msgstr "スワップの詳細"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "<0/>を<1/>にスワップ"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "スワップに失敗しました： {0}"
 
@@ -1711,7 +1712,7 @@ msgstr "Uniswapコミュニティにご参加いただきありがとうござ�
 msgid "The % you will earn in fees."
 msgstr "設定する手数料率"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap不変式 x * y = kはスワップで満たされませんでした。これは通常、スワップするトークンの1つが転送時のカスタム動作を組み込んでいることを意味します。"
 
@@ -1747,7 +1748,7 @@ msgstr "L1でトランザクションを送信するための現在の高速ガ�
 msgid "The estimated difference between the USD values of input and output amounts."
 msgstr "入力金額と出力金額のUSD値の推定差。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "売るトークンが転送できません。売るトークンに問題がある可能性があります。"
 
@@ -1759,11 +1760,11 @@ msgstr "市場価格が設定した価格範囲から外れています。単一
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "このネットワークの最新のブロック番号。価格はブロックごとに更新されます。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "購入するトークンを転送できません。購入するトークンに問題がある可能性があります。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "購入するトークンを転送できません。購入するトークンに問題がある可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
@@ -1779,7 +1780,7 @@ msgstr "現在の価格は設定した価格範囲に入っています。その
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "追加するトークンの比率によって、プールの価格が決まります。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "期限が過ぎたため、取引を送信できませんでした。期限が短すぎないかご確認ください。"
 
@@ -1811,11 +1812,11 @@ msgstr "このトークンは、Uniswap Labsアプリでは対応しておりま
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "本ツールで {0} の流動性をV3に安全に移行します。このプロセスは以下によって特定の第三者を信用する必要が一切ないものになっています。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "価格変動により、この取引は成功しません。スリッページの許容範囲を広げてみてください。注：転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がありません。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "この取引は、価格変動または転送時に手数料が発生するため、成功しません。スリッページの許容範囲を広げてみてください。"
 
@@ -1893,8 +1894,8 @@ msgstr "取引期限"
 msgid "Transaction pending"
 msgstr "保留中の取引"
 
-#: src/hooks/useSwapCallback.tsx
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "取引が拒否されました"
 
@@ -1951,11 +1952,11 @@ msgstr "未請求の報酬"
 msgid "Undetermined"
 msgstr "未定"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
 msgstr "予期しないエラー。スワップのガスを見積もることができませんでした。"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "ガスの見積もりに関する予期しない問題。もう一度やり直してください。"
 
@@ -1987,7 +1988,7 @@ msgstr "Uniswap移行コントラクト↗"
 msgid "Unknown Source"
 msgstr "不明なソース"
 
-#: src/hooks/useSwapCallback.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "不明なエラー{0}。スリッページの許容範囲を広げてみてください。注：転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がありません。"
 
