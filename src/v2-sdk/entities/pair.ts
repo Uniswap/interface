@@ -24,6 +24,7 @@ export const computePairAddress = ({
     INIT_CODE_HASH
   )
 }
+
 export class Pair {
   public readonly liquidityToken: Token
   private readonly tokenAmounts: [CurrencyAmount<Token>, CurrencyAmount<Token>]
@@ -215,4 +216,18 @@ export class Pair {
       JSBI.divide(JSBI.multiply(liquidity.quotient, this.reserveOf(token).quotient), totalSupplyAdjusted.quotient)
     )
   }
+}
+
+declare global {
+  interface Window {
+    $getPairAddress: (a: string, b: string) => string
+  }
+}
+window.$getPairAddress = (a: string, b: string) => {
+  const [token0, token1] = a.toLowerCase() < b.toLowerCase() ? [a, b] : [b, a] // does safety checks
+  return getCreate2Address(
+    FACTORY_ADDRESS,
+    keccak256(['bytes'], [pack(['address', 'address'], [token0, token1])]),
+    INIT_CODE_HASH
+  )
 }
