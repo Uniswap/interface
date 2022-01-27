@@ -11,10 +11,10 @@ import { useTotalSupply } from '../../hooks/useTotalSupply'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty } from '../Button'
+import { ButtonPrimary, ButtonEmpty } from '../Button'
 import { transparentize } from 'polished'
 import { CardNoise } from '../earn/styled'
 
@@ -293,6 +293,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               </Text>
             </FixedHeightRow>
 
+            {/* 
+            @TODO: Add analytics link
             <ButtonSecondary padding="8px" borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
@@ -300,24 +302,15 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
-            </ButtonSecondary>
+            </ButtonSecondary> */}
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
               <RowBetween marginTop="10px">
                 <ButtonPrimary
                   padding="8px"
                   borderRadius="8px"
                   as={Link}
-                  to={`/migrate/v2/${pair.liquidityToken.address}`}
-                  width="32%"
-                >
-                  Migrate
-                </ButtonPrimary>
-                <ButtonPrimary
-                  padding="8px"
-                  borderRadius="8px"
-                  as={Link}
                   to={`/add/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
-                  width="32%"
+                  width="48%"
                 >
                   Add
                 </ButtonPrimary>
@@ -325,7 +318,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   padding="8px"
                   borderRadius="8px"
                   as={Link}
-                  width="32%"
+                  width="48%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
                   Remove

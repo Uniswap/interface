@@ -4,13 +4,12 @@ import JSBI from 'jsbi'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE, HideSmall } from '../../theme'
+import { useTokenBalancesWithLoadingIndicator } from 'x../../state/wallet/hooks'
+import { TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import Card from '../../components/Card'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary, ButtonOutlined } from '../../components/Button'
-import { ChevronsRight } from 'react-feather'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 
 import { AutoColumn } from '../../components/Column'
 
@@ -142,13 +141,13 @@ export default function Pool() {
                   {`Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.`}
                 </TYPE.white>
               </RowBetween>
-              <ExternalLink
+              {/* <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 target="_blank"
                 href="https://uniswap.org/docs/v2/core-concepts/pools/"
               >
                 <TYPE.white fontSize={14}>Read more about providing liquidity</TYPE.white>
-              </ExternalLink>
+              </ExternalLink> */}
             </AutoColumn>
           </CardSection>
           <CardBGImage />
@@ -160,7 +159,7 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your V2 liquidity
+                  Your liquidity
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
@@ -175,7 +174,7 @@ export default function Pool() {
                   to="/add/v2/ETH"
                 >
                   <Text fontWeight={500} fontSize={16}>
-                    Add V2 Liquidity
+                    Add Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -195,6 +194,8 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
+                {/* 
+                @TODO: LINK to analytics
                 <ButtonSecondary>
                   <RowBetween>
                     <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
@@ -202,7 +203,7 @@ export default function Pool() {
                     </ExternalLink>
                     <span> ↗</span>
                   </RowBetween>
-                </ButtonSecondary>
+                </ButtonSecondary> */}
                 {v2PairsWithoutStakedAmount.map((v2Pair) => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}
@@ -216,23 +217,6 @@ export default function Pool() {
                       />
                     )
                 )}
-                <RowFixed justify="center" style={{ width: '100%' }}>
-                  <ButtonOutlined
-                    as={Link}
-                    to="/migrate/v2"
-                    id="import-pool-link"
-                    style={{
-                      padding: '8px 16px',
-                      margin: '0 4px',
-                      borderRadius: '12px',
-                      width: 'fit-content',
-                      fontSize: '14px',
-                    }}
-                  >
-                    <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-                    Migrate Liquidity to V3
-                  </ButtonOutlined>
-                </RowFixed>
               </>
             ) : (
               <EmptyProposals>
