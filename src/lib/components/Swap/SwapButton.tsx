@@ -22,6 +22,7 @@ import { displayTxHashAtom, Field, independentFieldAtom } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import invariant from 'tiny-invariant'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
@@ -47,7 +48,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const {
     trade,
     allowedSlippage,
-    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
+    currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
@@ -136,41 +137,31 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     swapCallback?.()
       .then((response) => {
         setDisplayTxHash(response.hash)
-        if (inputCurrency && outputCurrency && inputCurrencyAmount && outputCurrencyAmount) {
-          if (independentField === Field.INPUT) {
-            addTransaction({
-              response,
-              type: TransactionType.SWAP,
-              tradeType: TradeType.EXACT_INPUT,
-              inputCurrencyAmount,
-              outputCurrencyAmount,
-            })
-          }
-          if (independentField === Field.OUTPUT) {
-            addTransaction({
-              response,
-              type: TransactionType.SWAP,
-              tradeType: TradeType.EXACT_OUTPUT,
-              inputCurrencyAmount,
-              outputCurrencyAmount,
-            })
-          }
+        invariant(inputCurrencyAmount && outputCurrencyAmount)
+        if (independentField === Field.INPUT) {
+          addTransaction({
+            response,
+            type: TransactionType.SWAP,
+            tradeType: TradeType.EXACT_INPUT,
+            inputCurrencyAmount,
+            outputCurrencyAmount,
+          })
+        }
+        if (independentField === Field.OUTPUT) {
+          addTransaction({
+            response,
+            type: TransactionType.SWAP,
+            tradeType: TradeType.EXACT_OUTPUT,
+            inputCurrencyAmount,
+            outputCurrencyAmount,
+          })
         }
       })
       .catch((error) => {
         //@TODO(ianlapham): add error handling
         console.log(error)
       })
-  }, [
-    addTransaction,
-    independentField,
-    inputCurrency,
-    inputCurrencyAmount,
-    outputCurrency,
-    outputCurrencyAmount,
-    setDisplayTxHash,
-    swapCallback,
-  ])
+  }, [addTransaction, independentField, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback])
 
   return (
     <>

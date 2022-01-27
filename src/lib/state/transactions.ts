@@ -27,14 +27,12 @@ export interface SwapTransactionInfo extends BaseTransactionInfo {
 
 export interface InputSwapTransactionInfo extends SwapTransactionInfo {
   tradeType: TradeType.EXACT_INPUT
-  inputCurrencyAmount: CurrencyAmount<Currency>
   expectedOutputCurrencyAmount: string
   minimumOutputCurrencyAmount: string
 }
 
 export interface OutputSwapTransactionInfo extends SwapTransactionInfo {
   tradeType: TradeType.EXACT_OUTPUT
-  outputCurrencyAmount: CurrencyAmount<Currency>
   expectedInputCurrencyAmount: string
   maximumInputCurrencyAmount: string
 }
