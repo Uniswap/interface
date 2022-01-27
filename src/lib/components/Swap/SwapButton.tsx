@@ -138,24 +138,13 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       .then((response) => {
         setDisplayTxHash(response.hash)
         invariant(inputCurrencyAmount && outputCurrencyAmount)
-        if (independentField === Field.INPUT) {
-          addTransaction({
-            response,
-            type: TransactionType.SWAP,
-            tradeType: TradeType.EXACT_INPUT,
-            inputCurrencyAmount,
-            outputCurrencyAmount,
-          })
-        }
-        if (independentField === Field.OUTPUT) {
-          addTransaction({
-            response,
-            type: TransactionType.SWAP,
-            tradeType: TradeType.EXACT_OUTPUT,
-            inputCurrencyAmount,
-            outputCurrencyAmount,
-          })
-        }
+        addTransaction({
+          response,
+          type: TransactionType.SWAP,
+          tradeType: independentField === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+          inputCurrencyAmount,
+          outputCurrencyAmount,
+        })
       })
       .catch((error) => {
         //@TODO(ianlapham): add error handling
