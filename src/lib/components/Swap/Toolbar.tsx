@@ -80,8 +80,8 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     currencyAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
   } = useSwapInfo()
 
-  const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
-    () => [!trade?.trade?.swaps, TradeState.LOADING === trade?.state, TradeState.SYNCING === trade?.state],
+  const [routeFound, routeIsLoading, routeIsSyncing] = useMemo(
+    () => [Boolean(trade?.trade?.swaps), TradeState.LOADING === trade?.state, TradeState.SYNCING === trade?.state],
     [trade]
   )
 
@@ -121,7 +121,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
           </>
         )
       }
-      if (routeNotFound && inputCurrency && outputCurency && !routeIsLoading && !routeIsSyncing) {
+      if (inputCurrency && outputCurency && !routeFound && !routeIsLoading && !routeIsSyncing) {
         return (
           <>
             <AlertTriangle color="secondary" />
@@ -152,9 +152,9 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     inputCurrency,
     outputAmount,
     outputCurency,
+    routeFound,
     routeIsLoading,
     routeIsSyncing,
-    routeNotFound,
     trade?.trade,
   ])
 
