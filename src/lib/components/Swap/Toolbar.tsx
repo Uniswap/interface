@@ -2,14 +2,13 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import useUSDCPrice from 'hooks/useUSDCPrice'
-import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { AlertTriangle, Info, largeIconCss, Spinner } from 'lib/icons'
-import { Field, independentFieldAtom } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { TextButton } from '../Button'
 import Row from '../Row'
@@ -80,7 +79,11 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     currencyBalances: { [Field.INPUT]: balance },
     currencyAmounts: { [Field.INPUT]: inputAmount, [Field.OUTPUT]: outputAmount },
   } = useSwapInfo()
-  const independentField = useAtomValue(independentFieldAtom)
+
+  const [routeFound, routeIsLoading, routeIsSyncing] = useMemo(
+    () => [Boolean(trade?.trade?.swaps), TradeState.LOADING === trade?.state, TradeState.SYNCING === trade?.state],
+    [trade]
+  )
 
   const caption = useMemo(() => {
     if (disabled) {
@@ -101,8 +104,8 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
       )
     }
 
-    if (independentField === Field.INPUT ? inputCurrency && inputAmount : outputCurency && outputAmount) {
-      if (!trade?.trade) {
+    if (inputCurrency && outputCurency) {
+      if (!trade?.trade || routeIsLoading || routeIsSyncing) {
         return (
           <>
             <Spinner color="secondary" />
@@ -115,6 +118,14 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
           <>
             <AlertTriangle color="secondary" />
             <Trans>Insufficient {inputCurrency?.symbol}</Trans>
+          </>
+        )
+      }
+      if (inputCurrency && outputCurency && !routeFound && !routeIsLoading && !routeIsSyncing) {
+        return (
+          <>
+            <AlertTriangle color="secondary" />
+            <Trans>Insufficient liquidity for this trade.</Trans>
           </>
         )
       }
@@ -137,11 +148,13 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     balance,
     chainId,
     disabled,
-    independentField,
     inputAmount,
     inputCurrency,
     outputAmount,
     outputCurency,
+    routeFound,
+    routeIsLoading,
+    routeIsSyncing,
     trade?.trade,
   ])
 

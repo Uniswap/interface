@@ -3,7 +3,9 @@ import { atomWithReset } from 'jotai/utils'
 
 import { pickAtom, setTogglable } from './atoms'
 
-export const TRANSACTION_TTL_DEFAULT = 40
+// transaction deadline in minutes, needs to be adjusted to seconds before use
+// @TODO(ianlapham): update this to be stored as seconds
+export const TRANSACTION_TTL_DEFAULT = 30
 
 interface Settings {
   maxSlippage: Percent | 'auto' // auto will cause slippage to resort to default calculation

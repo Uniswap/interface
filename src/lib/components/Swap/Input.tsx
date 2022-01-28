@@ -65,7 +65,7 @@ export default function Input({ disabled }: InputProps) {
       >
         <ThemedText.Body2 color="secondary">
           <Row>
-            {inputUSDC ? `~ $${inputUSDC.toFixed(2)}` : '-'}
+            {inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}
             {balance && (
               <ThemedText.Body2 color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}>
                 Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>

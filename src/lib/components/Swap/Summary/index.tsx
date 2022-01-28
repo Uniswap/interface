@@ -92,7 +92,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
     () => Boolean(trade && confirmedTrade && tradeMeaningfullyDiffers(trade, confirmedTrade)),
     [confirmedTrade, trade]
   )
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   const [details, setDetails] = useState<HTMLDivElement | null>(null)
 
