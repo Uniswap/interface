@@ -19,7 +19,7 @@ function makeToken(name: string, symbol: string, decimals: number, mainAddress: 
 
 export class Photon extends NativeCurrency {
   protected constructor(chainId: number) {
-    super(chainId, 18, 'ETH', 'Ether')
+    super(chainId, 18, 'PHOTON', 'Photon')
   }
 
   public get wrapped(): Token {
