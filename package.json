@@ -137,7 +137,10 @@
     "postinstall": "yarn compile-contract-types",
     "start": "yarn compile-contract-types && craco start",
     "storybook": "start-storybook -p 6006",
-    "test": "craco test --env=jsdom"
+    "build-storybook": "build-storybook",
+    "test": "craco test --env=jsdom",
+    "upload-storybook": "yarn build-storybook; chromatic",
+    "chromatic": "dotenv -e .env.local -- npx chromatic --storybook-build-dir=storybook-static"
   },
   "eslintConfig": {
     "extends": "react-app",
