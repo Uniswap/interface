@@ -24,6 +24,7 @@ import {
   USDC_ARBITRUM,
   USDC_OPTIMISM,
   USDC_POLYGON,
+  USDC_POLYGON_MUMBAI,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_OPTIMISM,
@@ -163,6 +164,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.POLYGON_MUMBAI],
     DAI_POLYGON_MUMBAI,
     GEN,
+    USDC_POLYGON_MUMBAI,
   ],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {

@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { formatUnits } from '@ethersproject/units'
+import { DAO_TREASURY } from 'constants/addresses'
 import { BASE_TOKEN_DECIMALS, BOND_DETAILS, IBondDetails } from 'constants/bonds'
 import { SupportedChainId } from 'constants/chains'
 import { useDaiGenPair } from 'hooks/useContract'
@@ -20,6 +21,20 @@ export interface IProcessBondArgs {
   depository: Contract | null
   genPrice: BigNumber
 }
+
+export interface IPurchaseBondArgs {
+  account: string | null | undefined
+  bond: IBond
+  amount: number
+  maxPrice: number
+}
+
+export interface IPurchaseBondCallbackReturn {
+  success: boolean
+  txHash: string | null
+}
+
+export type PurchaseBondCallback = (args: IPurchaseBondArgs) => Promise<IPurchaseBondCallbackReturn>
 
 // token0 -> Genesis
 // token1 -> Dai
@@ -112,7 +127,6 @@ async function processBond({
   }
 
   const currentTime = Date.now() / 1000
-  // TODO change the hard coded details
   const bondDetails: IBondDetails = BOND_DETAILS[SupportedChainId.POLYGON_MUMBAI][bond.quoteToken.toLowerCase()]
 
   if (!bondDetails) {
@@ -120,9 +134,7 @@ async function processBond({
     return null
   }
 
-  const quoteTokenPrice = bondDetails.isLP
-    ? await bondDetails.pricingFunction(bond.quoteToken.toLowerCase())
-    : await bondDetails.pricingFunction()
+  const quoteTokenPrice = await bondDetails.pricingFunction()
   const bondPriceBigNumber = await depository?.marketPrice(index)
   const bondPrice = +bondPriceBigNumber / Math.pow(10, BASE_TOKEN_DECIMALS)
   const bondPriceUSD = quoteTokenPrice * +bondPrice
@@ -197,4 +209,43 @@ async function processBond({
     maxPayoutOrCapacityInBase,
     bondIconSvg: bondDetails.bondIconSvg,
   }
+}
+
+export function usePurchaseBondCallback(): PurchaseBondCallback {
+  const depository = useBondDepository()
+
+  return useCallback<PurchaseBondCallback>(
+    async ({ account, bond, amount, maxPrice }: IPurchaseBondArgs): Promise<IPurchaseBondCallbackReturn> => {
+      if (!account) return { success: false, txHash: null }
+
+      try {
+        let txHash = null
+
+        if (!depository) return { success: false, txHash }
+
+        const amountBigNumber = BigNumber.from(amount)
+        const maxPriceBignNumber = BigNumber.from(maxPrice)
+
+        console.log(DAO_TREASURY[SupportedChainId.POLYGON_MUMBAI])
+
+        const depositTx = await depository.deposit(
+          bond.index,
+          amountBigNumber,
+          maxPriceBignNumber,
+          account,
+          DAO_TREASURY[SupportedChainId.POLYGON_MUMBAI]
+        )
+
+        await depositTx.wait()
+
+        txHash = depositTx.hash
+        console.log('Transaction successful with tx', txHash)
+        return { success: true, txHash }
+      } catch (error) {
+        console.error('GENESIS: Error on purchasing Bond', error)
+        return { success: false, txHash: null }
+      }
+    },
+    [depository]
+  )
 }

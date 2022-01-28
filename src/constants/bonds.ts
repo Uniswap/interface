@@ -26,12 +26,8 @@ export const BOND_DETAILS = {
     [DAI_USDC_POLYGON_MUMBAI_PAIR.address.toLowerCase()]: {
       name: 'DAI-USDC',
       isLP: true,
-      pricingFunction: async (pairAddress: string) => getLpTokenPrice(pairAddress),
+      pricingFunction: async () => getLpTokenPrice(DAI_USDC_POLYGON_MUMBAI_PAIR.address.toLowerCase()),
       bondIconSvg: 'https://s2.coinmarketcap.com/static/img/coins/200x200/3408.png',
-      // bondIconSvg: [
-      //   'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
-      //   'https://s2.coinmarketcap.com/static/img/coins/200x200/3408.png',
-      // ],
     } as IBondDetails,
   },
 }

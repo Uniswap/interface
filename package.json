@@ -173,6 +173,7 @@
   "dependencies": {
     "@genesisprotocol/router-sdk": "^1.0.8",
     "@genesisprotocol/sdk": "^3.0.3",
-    "bignumber.js": "^9.0.2"
+    "bignumber.js": "^9.0.2",
+    "dexguru-sdk": "^1.0.8"
   }
 }

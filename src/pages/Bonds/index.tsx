@@ -4,7 +4,8 @@ import { CardBGImage, CardNoise } from 'components/earn/styled'
 import BondPositionCard from 'components/PositionCard/Bond'
 import { RowBetween } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
-import { useGetAllBonds } from 'hooks/useBondDepository'
+import { useGetAllBonds, usePurchaseBondCallback } from 'hooks/useBondDepository'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
@@ -36,7 +37,8 @@ const EmptyProposals = styled.div`
 
 export default function Bonds() {
   const theme = useContext(ThemeContext)
-
+  const { account } = useActiveWeb3React()
+  const purchaseBondCallback = usePurchaseBondCallback()
   const { bonds, isLoading, error } = useGetAllBonds()
 
   return (
@@ -63,7 +65,7 @@ export default function Bonds() {
         ) : (
           <>
             {bonds.map((bond: IBond, index: number) => (
-              <BondPositionCard bond={bond} key={index} />
+              <BondPositionCard bond={bond} account={account} purchaseCallback={purchaseBondCallback} key={index} />
             ))}
           </>
         )}

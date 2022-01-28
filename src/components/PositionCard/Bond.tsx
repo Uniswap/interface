@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { PurchaseBondCallback } from 'hooks/useBondDepository'
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -22,12 +23,23 @@ const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   overflow: hidden;
 `
 
-interface IBondPositionCardArgs {
+interface IBondPositionCardProps {
+  account: string | null | undefined
   bond: IBond
+  purchaseCallback: PurchaseBondCallback
 }
 
-function BondPositionCard({ bond }: IBondPositionCardArgs) {
+function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCardProps) {
   const [showMore, setShowMore] = useState<boolean>(false)
+
+  const handlePurchase = async () => {
+    console.log('Handling bond purchase')
+    try {
+      await purchaseCallback({ account, bond, amount: 10, maxPrice: 1 })
+    } catch (error) {
+      console.log('AN ERROR HAS OCCURED', error)
+    }
+  }
 
   return (
     <StyledPositionCard border="#cccccc" bgColor="#000000">
@@ -87,7 +99,7 @@ function BondPositionCard({ bond }: IBondPositionCardArgs) {
               </Text>
             </FixedHeightRow>
 
-            <ButtonPrimary padding="8px" $borderRadius="8px" width="100%">
+            <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={handlePurchase}>
               <Trans>Bond</Trans>
             </ButtonPrimary>
           </AutoColumn>

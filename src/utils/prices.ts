@@ -1,12 +1,13 @@
 import { Trade } from '@genesisprotocol/router-sdk'
 import { Pair } from '@genesisprotocol/sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import axios from 'axios'
 import { getNetworkLibrary } from 'connectors'
+import { V2_FACTORY_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
-import { DAI_POLYGON_MUMBAI, USDC_POLYGON_MUMBAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import DexGuru from 'dexguru-sdk'
 import JSBI from 'jsbi'
 
 import {
@@ -95,19 +96,18 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
   return 0
 }
 
-export async function getLpTokenPrice(pairAddress: string): Promise<number> {
-  console.log('GETTING TOKEN PAIR ADDRESS: ', pairAddress)
+// TODO: move DexGuru instance to it's own file, add the key to env file and connection string to a const file
+const dexGuru = new DexGuru('PFowZ20Pm5oQifPah3s5e0NlJVr0gR_k_o_oQGTDMpA', 'https://api.dev.dex.guru')
 
+// TODO: check if chain is testnet, if it is use mainnet addresses to get the price
+export async function getLpTokenPrice(pairAddress: string): Promise<number> {
   if (!pairAddress) return 0
 
   const library = getNetworkLibrary()
 
-  console.log('LIBRARY: ', library)
-
   try {
     const pair = getContract(pairAddress, IUniswapV2PairABI, library)
     const [token0, token1]: [string, string] = await Promise.all([pair.token0(), pair.token1()])
-    const [connectorPair0, connectorPair1] = await Promise.all([getConnectorPair(token0), getConnectorPair(token1)])
 
     return 1
   } catch (error) {
@@ -116,12 +116,12 @@ export async function getLpTokenPrice(pairAddress: string): Promise<number> {
   }
 }
 
-const CONNNECTORS: Token[] = [
-  DAI_POLYGON_MUMBAI,
-  USDC_POLYGON_MUMBAI,
-  WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],
-]
-async function getConnectorPair(tokenAddress: string): Promise<void> {
+async function getTokenPairAddress(tokenAddress: string, connectorAddress: string): Promise<string | boolean> {
+  const library = getNetworkLibrary()
+  const factory = getContract(V2_FACTORY_ADDRESSES[SupportedChainId.POLYGON_MUMBAI], IUniswapV2PairABI, library)
+  const pairAddress = await factory.getPair(tokenAddress, connectorAddress)
+
+  return false
 }
 
 export async function getTokenPrice(tokenId: string): Promise<number> {
