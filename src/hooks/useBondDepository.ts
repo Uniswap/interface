@@ -25,7 +25,7 @@ export interface IProcessBondArgs {
 // token1 -> Dai
 function useGenTokenPrice() {
   const pair = useDaiGenPair()
-  const [genPrice, setGenPrice] = useState<BigNumber>(BigNumber.from('0'))
+  const [genPrice, setGenPrice] = useState<BigNumber>(BigNumber.from(0))
 
   const getGenPrice = useCallback(() => {
     pair?.getReserves().then((reserves: any) => {
@@ -50,24 +50,23 @@ export function useGetAllBonds() {
   const [bonds, setBonds] = useState<IBond[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const getMarkets = useCallback(async () => {
+  const getMarkets = useCallback(async (): Promise<IBond[]> => {
     const liveBonds = []
 
+    if (!depository) return []
+
     const liveBondIndexes = await depository?.liveMarkets()
-
-    console.log('LIVE BOND INDEXES:', liveBondIndexes)
-
     const termPromises = liveBondIndexes.map(async (index: number) => depository?.terms(index))
     const bondPromises = liveBondIndexes.map(async (index: number) => depository?.markets(index))
     const metadataPromises = liveBondIndexes.map(async (index: number) => depository?.metadata(index))
 
-    for (const index of liveBondIndexes) {
+    for (let index = 0; index < liveBondIndexes.length; index++) {
       const terms: ITerms = await termPromises[index]
       const bond: IBondCore = await bondPromises[index]
       const metadata: IMetadata = await metadataPromises[index]
 
       const finalBond = await processBond({
-        index,
+        index: +liveBondIndexes[index],
         chainId: SupportedChainId.POLYGON_MUMBAI,
         bond,
         terms,
@@ -79,21 +78,21 @@ export function useGetAllBonds() {
       liveBonds.push(finalBond)
     }
 
-    return liveBonds.filter((bond) => !!bond)
+    return liveBonds.filter((bond) => bond !== null) as IBond[]
   }, [depository, genPrice])
 
   useEffect(() => {
     setIsLoading(true)
-
-    getMarkets()
-      .then((data: any) => {
-        setBonds(data)
-      })
-      .catch((err) => {
+    ;(async () => {
+      try {
+        setBonds(await getMarkets())
+      } catch (err) {
         console.log('ERROR: ', err)
         setError(err.message)
-      })
-      .finally(() => setIsLoading(false))
+      } finally {
+        setIsLoading(false)
+      }
+    })()
   }, [setIsLoading, getMarkets, chainId])
 
   return { bonds, isLoading, error }
@@ -114,15 +113,20 @@ async function processBond({
 
   const currentTime = Date.now() / 1000
   // TODO change the hard coded details
-  const bondDetails: IBondDetails = BOND_DETAILS[SupportedChainId.POLYGON_MUMBAI][bond.quoteToken]
-  // TODO call the actual pricing function
-  console.log('PRICE QUOTE SHIT: ', `${(await bondDetails.pricingFunction()) * 1e18}`)
-  const quoteTokenPrice = BigNumber.from(`${(await bondDetails.pricingFunction()) * 1e18}`)
-  console.log('QUOTE TOKEN PRICE: ', quoteTokenPrice)
+  const bondDetails: IBondDetails = BOND_DETAILS[SupportedChainId.POLYGON_MUMBAI][bond.quoteToken.toLowerCase()]
+
+  if (!bondDetails) {
+    console.error('GENESIS: Details of the quote token not present on the front-end')
+    return null
+  }
+
+  const quoteTokenPrice = bondDetails.isLP
+    ? await bondDetails.pricingFunction(bond.quoteToken.toLowerCase())
+    : await bondDetails.pricingFunction()
   const bondPriceBigNumber = await depository?.marketPrice(index)
-  const bondPrice = bondPriceBigNumber.div(BigNumber.from('10').mul(BigNumber.from(BASE_TOKEN_DECIMALS))) // TODO check this op
-  const bondPriceUSD = quoteTokenPrice.mul(bondPrice)
-  const bondDiscount = genPrice.sub(bondPriceUSD).div(genPrice)
+  const bondPrice = +bondPriceBigNumber / Math.pow(10, BASE_TOKEN_DECIMALS)
+  const bondPriceUSD = quoteTokenPrice * +bondPrice
+  const bondDiscount = (+genPrice - bondPriceUSD) / +genPrice
 
   let capacityInBaseToken: string, capacityInQuoteToken: string
 
@@ -182,7 +186,7 @@ async function processBond({
     duration,
     isLP: bondDetails.isLP,
     lpUrl: '',
-    marketPrice: genPrice,
+    marketPrice: +genPrice,
     quoteToken: bond.quoteToken.toLowerCase(),
     maxPayoutInQuoteToken,
     maxPayoutInBaseToken,

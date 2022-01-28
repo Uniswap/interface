@@ -1,9 +1,11 @@
 import { getAddress } from '@ethersproject/address'
+import { BigNumber as BNET } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import BigNumber from 'bignumber.js'
 
 import { TokenAddressMap } from '../state/lists/hooks'
 
@@ -90,4 +92,20 @@ export function prettifySeconds(seconds: number, resolution?: string) {
   }
 
   return result
+}
+
+export function changeNumberBase(num: BigNumber, fromDecimals: number, toDecimals: number): BigNumber {
+  return num.times(new BigNumber(10).pow(fromDecimals)).div(new BigNumber(10).pow(toDecimals))
+}
+
+export function getBigNumber(decimals: number | string) {
+  return new BigNumber(10).pow(decimals)
+}
+
+export function toDecimal(num: number | string, decimals: number): BigNumber {
+  return new BigNumber(num).div(Math.pow(10, decimals))
+}
+
+export function fromEthersToBigNumber(num: BNET): BigNumber {
+  return new BigNumber(num.toString())
 }

@@ -3,15 +3,15 @@ import { BigNumber } from '@ethersproject/bignumber'
 export interface IBond extends IBondCore, IMetadata, ITerms {
   index: number
   displayName: string
-  priceUSD: BigNumber
+  priceUSD: number
   priceToken: number
   priceTokenBigNumber: BigNumber
-  discount: BigNumber
+  discount: number
   duration: string
   expiration: string
   isLP: boolean
   lpUrl: string
-  marketPrice: BigNumber
+  marketPrice: number
   soldOut: boolean
   capacityInBaseToken: string
   capacityInQuoteToken: string

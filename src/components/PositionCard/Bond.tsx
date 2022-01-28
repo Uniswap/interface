@@ -1,5 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { formatUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { transparentize } from 'polished'
 import { useState } from 'react'
@@ -7,7 +5,6 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { IBond } from 'types/bonds'
-import { trim } from 'utils'
 
 import { ButtonEmpty, ButtonPrimary } from '../Button'
 import { LightCard } from '../Card'
@@ -68,7 +65,7 @@ function BondPositionCard({ bond }: IBondPositionCardArgs) {
                 <Trans>Price:</Trans>
               </Text>
               <Text fontSize={16} fontWeight={500}>
-                $ {formatUnits(bond.priceUSD, 9)}
+                $ {bond.priceUSD}
               </Text>
             </FixedHeightRow>
 
@@ -77,7 +74,7 @@ function BondPositionCard({ bond }: IBondPositionCardArgs) {
                 <Trans>ROI:</Trans>
               </Text>
               <Text fontSize={16} fontWeight={500}>
-                {trim(formatUnits(bond.discount.mul(BigNumber.from('100')), 9), 2)} %
+                {bond.discount} %
               </Text>
             </FixedHeightRow>
 

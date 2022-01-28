@@ -16,7 +16,7 @@ const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
 export const network = new NetworkConnector({
   urls: INFURA_NETWORK_URLS,
-  defaultChainId: 1,
+  defaultChainId: 80001,
 })
 
 let networkLibrary: Web3Provider | undefined

@@ -44,28 +44,30 @@ export default function Bonds() {
       <CardBGImage />
       <CardNoise />
 
-      <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-        <HideSmall>
-          <ThemedText.MediumHeader style={{ marginTop: '0.5rem', marginBottom: '0.5rem', justifySelf: 'flex-start' }}>
-            <Trans>Bonds available</Trans>
-          </ThemedText.MediumHeader>
-        </HideSmall>
-      </TitleRow>
-      {isLoading ? (
-        <EmptyProposals>
-          <ThemedText.Body color={theme.text3} textAlign="center">
-            <Dots>
-              <Trans>Loading</Trans>
-            </Dots>
-          </ThemedText.Body>
-        </EmptyProposals>
-      ) : (
-        <AutoColumn>
-          {bonds.map((bond: IBond, index: number) => (
-            <BondPositionCard bond={bond} key={index} />
-          ))}
-        </AutoColumn>
-      )}
+      <AutoColumn gap="md">
+        <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+          <HideSmall>
+            <ThemedText.MediumHeader style={{ marginTop: '0.5rem', marginBottom: '0.5rem', justifySelf: 'flex-start' }}>
+              <Trans>Bonds available</Trans>
+            </ThemedText.MediumHeader>
+          </HideSmall>
+        </TitleRow>
+        {isLoading ? (
+          <EmptyProposals>
+            <ThemedText.Body color={theme.text3} textAlign="center">
+              <Dots>
+                <Trans>Loading</Trans>
+              </Dots>
+            </ThemedText.Body>
+          </EmptyProposals>
+        ) : (
+          <>
+            {bonds.map((bond: IBond, index: number) => (
+              <BondPositionCard bond={bond} key={index} />
+            ))}
+          </>
+        )}
+      </AutoColumn>
     </PageWrapper>
   )
 }

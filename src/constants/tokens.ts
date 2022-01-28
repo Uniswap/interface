@@ -3,6 +3,13 @@ import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core
 import { GEN_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
+export const DAI_USDC_POLYGON_MUMBAI_PAIR = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0x8412e1036841a9d1e86e24c315f7ce27e4fcb7dd',
+  18,
+  'GEN-LP',
+  'Genesis LP'
+)
 export const GEN = new Token(
   SupportedChainId.POLYGON_MUMBAI,
   '0x516DF9c8D7F87773D2d57E61DE39cBbBC6EAD2EA',
@@ -59,6 +66,13 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0xc33f8f8a10dcde714753b99d9f0d61cfedfb9410',
+  18, // beware with the decimals
+  'USDC',
+  'USD//C'
+)
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -68,7 +82,7 @@ export const DAI_POLYGON = new Token(
 )
 export const DAI_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
-  '0xc00f6b6414289283F9942a32EB0c6C15dB63AEB8',
+  '0xc00f6b6414289283f9942a32eb0c6c15db63aeb8',
   18,
   'DAI',
   'Dai'

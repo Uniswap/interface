@@ -1,7 +1,12 @@
 import { Trade } from '@genesisprotocol/router-sdk'
 import { Pair } from '@genesisprotocol/sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import axios from 'axios'
+import { getNetworkLibrary } from 'connectors'
+import { SupportedChainId } from 'constants/chains'
+import { DAI_POLYGON_MUMBAI, USDC_POLYGON_MUMBAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import JSBI from 'jsbi'
 
 import {
@@ -12,7 +17,9 @@ import {
   ONE_HUNDRED_PERCENT,
   ZERO_PERCENT,
 } from '../constants/misc'
+import { getContract } from './index'
 
+// import { getLibrary } from './getLibrary'
 const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
 
@@ -86,4 +93,48 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
     impact--
   }
   return 0
+}
+
+export async function getLpTokenPrice(pairAddress: string): Promise<number> {
+  console.log('GETTING TOKEN PAIR ADDRESS: ', pairAddress)
+
+  if (!pairAddress) return 0
+
+  const library = getNetworkLibrary()
+
+  console.log('LIBRARY: ', library)
+
+  try {
+    const pair = getContract(pairAddress, IUniswapV2PairABI, library)
+    const [token0, token1]: [string, string] = await Promise.all([pair.token0(), pair.token1()])
+    const [connectorPair0, connectorPair1] = await Promise.all([getConnectorPair(token0), getConnectorPair(token1)])
+
+    return 1
+  } catch (error) {
+    console.error(error)
+    return 0
+  }
+}
+
+const CONNNECTORS: Token[] = [
+  DAI_POLYGON_MUMBAI,
+  USDC_POLYGON_MUMBAI,
+  WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],
+]
+async function getConnectorPair(tokenAddress: string): Promise<void> {
+}
+
+export async function getTokenPrice(tokenId: string): Promise<number> {
+  try {
+    const resp = (await axios.get(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
+    )) as {
+      data: { [id: string]: { usd: number } }
+    }
+    const tokenPrice: number = resp.data[tokenId].usd
+    return tokenPrice
+  } catch (error) {
+    console.log('coingecko api error: ', error)
+    return 0
+  }
 }
