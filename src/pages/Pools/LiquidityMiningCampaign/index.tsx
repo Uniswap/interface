@@ -22,6 +22,7 @@ import { useTokenBalance } from '../../../state/wallet/hooks'
 import CurrencyLogo from '../../../components/CurrencyLogo'
 import { useSingleSidedCampaign } from '../../../hooks/singleSidedStakeCampaigns/useSingleSidedCampaign'
 import { Location } from 'history'
+import { currencyId } from '../../../utils/currencyId'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -130,7 +131,7 @@ export default function LiquidityMiningCampaign({
                   if (token0 && token1) {
                     return {
                       ...location,
-                      pathname: `/swap/${token0.address}`
+                      pathname: `/add/${currencyId(token0)}/${currencyId(token1)}`
                     }
                   }
 
