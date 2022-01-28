@@ -9,7 +9,7 @@ import Loader from '../Loader'
 import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
 import { RowBetween } from '../Row'
 import EthereumLogo from '../../assets/svg/ethereum-logo.svg'
-import XDAILogo from '../../assets/svg/xdai-logo.svg'
+import GnosisLogo from '../../assets/svg/gnosis-chain-logo.svg'
 import ArbitrumLogo from '../../assets/svg/arbitrum-one-logo.svg'
 import { TriangleIcon } from '../Icons'
 import { AbstractConnector } from '@web3-react/abstract-connector'
@@ -18,13 +18,14 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainLabel } from '../../constants'
 import { ENSAvatarData } from '../../hooks/useENSAvatar'
+import { CustomWalletLinkConnector } from '../../connectors/CustomWalletLinkConnector'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
   [ChainId.ARBITRUM_ONE]: ArbitrumLogo,
   [ChainId.ARBITRUM_RINKEBY]: ArbitrumLogo,
-  [ChainId.XDAI]: XDAILogo
+  [ChainId.XDAI]: GnosisLogo
 }
 
 const View = styled.div`
@@ -150,7 +151,11 @@ export function AccountStatus({
   const [networkSwitchingActive, setNetworkSwitchingActive] = useState(false)
 
   useEffect(() => {
-    setNetworkSwitchingActive(connector instanceof CustomNetworkConnector || connector instanceof InjectedConnector)
+    setNetworkSwitchingActive(
+      connector instanceof CustomNetworkConnector ||
+        connector instanceof InjectedConnector ||
+        connector instanceof CustomWalletLinkConnector
+    )
   }, [connector])
 
   if (!networkConnectorChainId) return null

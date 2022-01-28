@@ -13,7 +13,7 @@ import {
   RoutablePlatform,
   SWPR
 } from '@swapr/sdk'
-import { authereum, injected, walletConnect } from '../connectors'
+import { authereum, injected, walletConnect, walletLink } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
 import SushiswapLogo from '../assets/svg/sushiswap-logo.svg'
@@ -228,6 +228,15 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#4196FC',
     mobile: true
+  },
+  COINBASE: {
+    connector: walletLink,
+    name: 'Coinbase',
+    iconName: 'coinbase.svg',
+    description: 'Connect using Coinbase.',
+    href: null,
+    color: '#4196FC',
+    mobile: true
   }
 }
 
@@ -292,7 +301,7 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
   },
   [ChainId.XDAI]: {
     chainId: `0x${ChainId.XDAI.toString(16)}`,
-    chainName: 'xDAI',
+    chainName: 'Gnosis Chain',
     nativeCurrency: {
       name: Currency.XDAI.name || 'xDAI',
       symbol: Currency.XDAI.symbol || 'xDAI',
@@ -372,7 +381,7 @@ export const ChainLabel: any = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ARBITRUM_ONE]: 'Arbitrum One',
   [ChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
-  [ChainId.XDAI]: 'xDai'
+  [ChainId.XDAI]: 'Gnosis Chain'
 }
 
 export const OLD_SWPR: { [key: number]: Token } = {

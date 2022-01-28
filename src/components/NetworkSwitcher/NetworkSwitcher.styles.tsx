@@ -60,6 +60,7 @@ export const Text = styled.p`
   line-height: 17px;
   color: ${({ theme }) => theme.text2};
   opacity: 0.8;
+  text-align: center;
 `
 
 export const CloseButton = styled.button`
@@ -85,4 +86,17 @@ export const NetworkTagRow = styled.div`
   line-height: 12px;
   text-transform: uppercase;
   color: ${props => props.theme.purple3};
+`
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 24px 12px 12px;
+  background: #181920;
+  text-align: center;
+`
+export const TitleWrapper = styled.div`
+  margin: 10px 0px;
 `

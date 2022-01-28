@@ -26,6 +26,7 @@ function TokenAmountDisplayer({
 }: TokenAmountDisplayerProps) {
   const theme = useContext(ThemeContext)
   const { nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
+
   const tooltipIcons = (token: any) => {
     return (
       <AutoRow>

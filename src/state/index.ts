@@ -11,7 +11,6 @@ import mint from './mint/reducer'
 import burn from './burn/reducer'
 import multicall from './multicall/reducer'
 import multiChainLinks from './multi-chain-links/reducer'
-import claim from './claim/reducer'
 import lists from './lists/reducer'
 import bridge from './bridge/reducer'
 import bridgeTransactions from './bridgeTransactions/reducer'
@@ -31,7 +30,6 @@ const store = configureStore({
     multicall,
     multiChainLinks,
     lists,
-    claim,
     bridge,
     bridgeTransactions
   },

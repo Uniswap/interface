@@ -1,4 +1,4 @@
-import { Pair, TokenAmount } from '@swapr/sdk'
+import { TokenAmount, Token, Pair } from '@swapr/sdk'
 import React, { useCallback, useState } from 'react'
 import { ApprovalState, useApproveCallback } from '../../../../../hooks/useApproveCallback'
 import TransactionConfirmationModal, {
@@ -9,7 +9,7 @@ import ConfirmStakingModalFooter from '../ModalBase/Footer'
 import ConfirmStakingWithdrawingModalHeader from '../ModalBase/Header'
 
 interface ConfirmStakingModalProps {
-  stakablePair?: Pair | null
+  stakablePair?: any
   isOpen: boolean
   stakableTokenBalance?: TokenAmount
   attemptingTxn: boolean
@@ -20,6 +20,7 @@ interface ConfirmStakingModalProps {
   onConfirm: (amount: TokenAmount) => void
   onDismiss: () => void
   errorMessage: string
+  isSingleSide: boolean
 }
 
 export default function ConfirmStakingModal({
@@ -33,14 +34,22 @@ export default function ConfirmStakingModal({
   timelocked,
   endingTimestamp,
   onDismiss,
+  isSingleSide,
   onConfirm
 }: ConfirmStakingModalProps) {
   const [stakedAmount, setStakedAmount] = useState<TokenAmount | null>(null)
   const [approvalState, approveCallback] = useApproveCallback(
-    stakablePair ? new TokenAmount(stakablePair.liquidityToken, '100000000000000000000000') : undefined,
+    stakablePair
+      ? new TokenAmount(isSingleSide ? stakablePair : stakablePair.liquidityToken, '100000000000000000000000')
+      : undefined,
     distributionContractAddress
   )
-
+  const transactionModalText =
+    stakablePair instanceof Token
+      ? `${stakablePair.symbol}`
+      : stakablePair instanceof Pair
+      ? `${stakablePair.token0.symbol}/${stakablePair.token1.symbol}`
+      : ''
   const handleStakedAmountChange = useCallback(amount => {
     setStakedAmount(amount)
   }, [])
@@ -82,7 +91,7 @@ export default function ConfirmStakingModal({
                 approvalState !== ApprovalState.APPROVED
               }
               showApprove
-              stakablePair={stakablePair}
+              text={transactionModalText}
               approvalState={approvalState}
               onConfirm={handleConfirm}
               onApprove={approveCallback}
@@ -96,10 +105,10 @@ export default function ConfirmStakingModal({
       errorMessage,
       handleConfirm,
       onDismiss,
-      stakablePair,
       stakableTokenBalance,
       stakedAmount,
-      topContent
+      topContent,
+      transactionModalText
     ]
   )
 
@@ -110,9 +119,9 @@ export default function ConfirmStakingModal({
       attemptingTxn={attemptingTxn}
       hash={txHash}
       content={content}
-      pendingText={`Staking ${stakedAmount?.toSignificant(6)} ${stakablePair?.token0.symbol}/${
-        stakablePair?.token1.symbol
-      } LP tokens`}
+      pendingText={`Staking ${stakedAmount?.toSignificant(6)} ${transactionModalText}${' '} ${
+        isSingleSide ? 'TOKENS' : 'LP TOKENS'
+      }`}
     />
   )
 }
