@@ -4,6 +4,7 @@ import { utils } from 'ethers'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { useENSRegistrarContract, useENSResolverContract } from 'src/features/contracts/useContract'
+import { useENSAddress } from 'src/features/ens/useENSAddress'
 import { useSingleCallResult } from 'src/features/multicall'
 import {
   AddressStringFormat,
@@ -46,11 +47,22 @@ export function useENSName(
     chainId,
     resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined
   )
-  const name = useSingleCallResult(chainId, resolverContract, 'name', ensNodeArgument)
+  const nameCallRes = useSingleCallResult(chainId, resolverContract, 'name', ensNodeArgument)
+  const name = nameCallRes.result?.[0]
 
+  /* ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy
+     and recommends that you perform a match on the forward resolution
+     see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
+  */
+  const fwdAddr = useENSAddress(ChainId.MAINNET, name)
+  const checkedName = address === fwdAddr?.address ? name : null
   const changed = debouncedAddress !== address
-  return {
-    ENSName: changed ? null : name.result?.[0] ?? null,
-    loading: changed || resolverAddress.loading || name.loading,
-  }
+
+  return useMemo(
+    () => ({
+      ENSName: changed ? null : checkedName,
+      loading: changed || resolverAddress.loading || nameCallRes.loading,
+    }),
+    [changed, nameCallRes.loading, checkedName, resolverAddress.loading]
+  )
 }

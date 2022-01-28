@@ -1,6 +1,7 @@
 import React from 'react'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
 import { Identicon } from 'src/components/accounts/Identicon'
+import { useAccountDisplayName } from 'src/components/accounts/useAccountDisplayName'
 import { Button } from 'src/components/buttons/Button'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Box } from 'src/components/layout/Box'
@@ -19,13 +20,9 @@ interface Props {
   onEdit?: (address: Address) => void
 }
 
-export function AccountItem({
-  account: { address, name },
-  isActive,
-  isEditable,
-  onPress,
-  onEdit,
-}: Props) {
+export function AccountItem({ account, isActive, isEditable, onPress, onEdit }: Props) {
+  const { address } = account
+  const displayName = useAccountDisplayName(account)
   return (
     <Trace section={SectionName.AccountCard}>
       <Button
@@ -43,7 +40,7 @@ export function AccountItem({
             <Identicon address={address} mr="md" size={50} />
             <Box>
               <Text fontWeight="500" variant="body">
-                {name || shortenAddress(address)}
+                {displayName}
               </Text>
               {/* TODO get real total */}
               <Text color="gray400" mt="xs" variant="bodySm">

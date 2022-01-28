@@ -8,7 +8,7 @@ export enum AccountType {
 export interface AccountBase {
   type: AccountType
   address: Address
-  name: string
+  name?: string
 }
 
 export interface LocalAccount extends AccountBase {

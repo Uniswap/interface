@@ -15,23 +15,23 @@ export function* importAccount(params: ImportAccountParams) {
   logger.debug('importAccountSaga', 'importAccount', 'Importing type:', type)
 
   if (type === ImportAccountType.Address) {
-    yield* call(importAddressAccount, params.address, name ?? 'Watched Account')
+    yield* call(importAddressAccount, params.address, name)
   } else if (type === ImportAccountType.Mnemonic) {
-    yield* call(importMnemonicAccount, params.mnemonic, name ?? 'Imported Account')
+    yield* call(importMnemonicAccount, params.mnemonic, name)
   } else if (type === ImportAccountType.PrivateKey) {
-    yield* call(importPrivateKeyAccount, params.privateKey, name ?? 'Imported Account')
+    yield* call(importPrivateKeyAccount, params.privateKey, name)
   } else {
     throw new Error('Unsupported import account type')
   }
 }
 
-function* importAddressAccount(address: string, name: string) {
+function* importAddressAccount(address: string, name?: string) {
   const formattedAddress = normalizeAddress(address)
   const account = { type: AccountType.readonly, address: formattedAddress, name }
   yield* call(onAccountImport, account)
 }
 
-function* importMnemonicAccount(mnemonic: string, name: string) {
+function* importMnemonicAccount(mnemonic: string, name?: string) {
   const formattedMnemonic = normalizeMnemonic(mnemonic)
   const address = yield* call(importMnemonic, formattedMnemonic)
   yield* call(generateAndStorePrivateKey, address, 0)
@@ -39,7 +39,7 @@ function* importMnemonicAccount(mnemonic: string, name: string) {
   yield* call(onAccountImport, account)
 }
 
-function* importPrivateKeyAccount(privateKey: string, name: string) {
+function* importPrivateKeyAccount(privateKey: string, name?: string) {
   const wallet = new Wallet(ensureLeading0x(privateKey))
   const address = wallet.address
   const account: Account = { type: AccountType.local, privateKey, name, address }

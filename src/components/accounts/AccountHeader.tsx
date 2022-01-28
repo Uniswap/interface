@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { useAccountStackNavigation } from 'src/app/navigation/types'
 import { Identicon } from 'src/components/accounts/Identicon'
+import { useAccountDisplayName } from 'src/components/accounts/useAccountDisplayName'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout/Box'
@@ -11,7 +12,6 @@ import { Text } from 'src/components/Text'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { shortenAddress } from 'src/utils/addresses'
 
 type AccountHeaderProps = PropsWithChildren<{
   onPress?: () => void
@@ -19,9 +19,9 @@ type AccountHeaderProps = PropsWithChildren<{
 }>
 
 export function AccountHeader({ children, onPress, chevronDirection }: AccountHeaderProps) {
-  // TODO: get ENS Name
   const activeAccount = useActiveAccount()
 
+  const displayName = useAccountDisplayName(activeAccount)
   const navigation = useAccountStackNavigation()
   const onPressAccount = useCallback(() => {
     if (onPress) {
@@ -43,9 +43,7 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
         onPress={onPressAccount}>
         <Flex centered flexDirection="row" gap="xs">
           <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={24} />
-          <Text variant="buttonLabel">
-            {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}
-          </Text>
+          <Text variant="buttonLabel">{displayName || t('Connect Wallet')}</Text>
           <Chevron
             color={theme.colors.gray200}
             direction={chevronDirection ?? 's'}
