@@ -1,8 +1,6 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Token, TradeType } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai/utils'
@@ -16,8 +14,8 @@ import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Link, Spinner } from 'lib/icons'
-import { transactionTtlAtom } from 'lib/state/settings'
 import { displayTxHashAtom, Field, independentFieldAtom } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import styled from 'lib/theme'
@@ -116,10 +114,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
 
   // @TODO(ianlapham): connect deadline from state instead of passing undefined.
   const { signatureData } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, undefined)
-
-  const currentBlockTimestamp = useCurrentBlockTimestamp()
-  const userDeadline = useAtomValue(transactionTtlAtom)
-  const deadline = currentBlockTimestamp?.add(BigNumber.from(userDeadline))
+  const deadline = useTransactionDeadline()
 
   // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback(
