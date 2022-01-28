@@ -1,11 +1,11 @@
 import { StackActions } from '@react-navigation/native'
-import { useTheme } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Keyboard, StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
+import { useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { Button } from 'src/components/buttons/Button'
@@ -28,7 +28,6 @@ import { WrapType } from 'src/features/swap/wrapSaga'
 import { SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { Theme } from 'src/styles/theme'
 
 interface SwapFormProps {
   state: SwapFormState
@@ -160,7 +159,7 @@ type ActionButtonProps = {
 }
 
 function ActionButton({ callback, disabled, label, loading }: ActionButtonProps) {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
   const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(callback)
 

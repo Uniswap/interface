@@ -5,12 +5,12 @@ import {
   createVariant,
   typography,
   TypographyProps,
-  useTheme,
   VariantProps,
 } from '@shopify/restyle'
 import React from 'react'
 import Animated, { interpolate, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ReText, round } from 'react-native-redash'
+import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout/Flex'
 import { HEIGHT, WIDTH } from 'src/components/PriceChart/Model'
 import {
@@ -37,7 +37,7 @@ const StyledReText = createRestyleComponent<
 >([createVariant({ themeKey: 'textVariants' }), typography, color], ReText)
 
 export const Header = ({ graphs, index, isPanning, title, translation }: HeaderProps) => {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
   const data = useDerivedValue(() => graphs[index.value].data)
 

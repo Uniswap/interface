@@ -1,5 +1,5 @@
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
+import { useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
@@ -9,7 +9,6 @@ import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { Trade } from 'src/features/swap/useTrade'
 import { formatExecutionPrice } from 'src/features/swap/utils'
-import { Theme } from 'src/styles/theme'
 import { useNetworkColors } from 'src/utils/colors'
 import { formatPrice } from 'src/utils/format'
 
@@ -24,7 +23,7 @@ export function QuickDetails(props: QuickDetailsProps) {
   const chainId = trade?.inputAmount.currency.chainId ?? ChainId.MAINNET
   const networkColors = useNetworkColors(chainId)
 
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
   return (
     <Box alignItems="center" alignSelf="stretch" flexDirection="row" justifyContent="space-between">

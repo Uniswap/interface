@@ -1,9 +1,8 @@
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import { interpolateColor, useAnimatedStyle } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
 import { AnimatedNumber } from 'src/components/PriceChart/types'
 import { AnimatedText } from 'src/components/Text'
-import { Theme } from 'src/styles/theme'
 
 interface Props {
   label: string
@@ -12,7 +11,7 @@ interface Props {
 }
 
 export function TimeRangeLabel({ label, selected, transition }: Props) {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
   const style = useAnimatedStyle(() => {
     if (!selected) return { color: theme.colors.primary1 }

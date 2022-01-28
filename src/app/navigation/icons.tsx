@@ -1,11 +1,10 @@
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs'
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
+import { useAppTheme } from 'src/app/hooks'
 import SearchIcon from 'src/assets/icons/search.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { IconButton } from 'src/components/buttons/IconButton'
-import { Theme } from 'src/styles/theme'
 
 export function SwapButton(props: BottomTabBarButtonProps) {
   return (
@@ -40,7 +39,7 @@ export function ExploreTabIcon({ focused }: NavIconProps) {
 }
 
 function useTabNavColors() {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
   const primaryColor = theme.colors.primary1
   const secondaryColor = theme.colors.black
   return { primaryColor, secondaryColor }

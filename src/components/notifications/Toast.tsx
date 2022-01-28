@@ -1,11 +1,10 @@
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import { ActivityIndicator } from 'react-native'
+import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import Checkmark from 'src/assets/icons/checkmark.svg'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
-import { Theme } from 'src/styles/theme'
 import { opacify } from 'src/utils/colors'
 
 export enum ToastVariant {
@@ -60,7 +59,7 @@ export function ToastIcon({ variant }: { variant: ToastVariant }) {
 }
 
 function useVariantColor(variant: ToastProps['variant']) {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
   switch (variant) {
     case ToastVariant.Pending:

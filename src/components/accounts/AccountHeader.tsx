@@ -1,6 +1,6 @@
-import { useTheme } from '@shopify/restyle'
 import React, { PropsWithChildren, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import { useAccountStackNavigation } from 'src/app/navigation/types'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { Button } from 'src/components/buttons/Button'
@@ -11,7 +11,6 @@ import { Text } from 'src/components/Text'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 
 type AccountHeaderProps = PropsWithChildren<{
@@ -33,7 +32,7 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
   }, [onPress, navigation])
 
   const { t } = useTranslation()
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="space-between">

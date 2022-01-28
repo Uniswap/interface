@@ -1,5 +1,5 @@
-import { useTheme } from '@shopify/restyle'
 import React, { ComponentProps } from 'react'
+import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
 
@@ -13,7 +13,7 @@ type SpacerProps = ComponentProps<typeof Box> & {
  * Useful to avoid using margin props which break component isolation
  */
 export function Spacer({ x, y, ...rest }: SpacerProps) {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
   return (
     <Box
       flexGrow={0}

@@ -1,8 +1,8 @@
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
+import { useAppTheme } from 'src/app/hooks'
 import CopySheets from 'src/assets/icons/copy-sheets.svg'
 import QRCodeIcon from 'src/assets/icons/qr-code.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
@@ -16,7 +16,6 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { Theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 
 interface Props {
@@ -27,7 +26,7 @@ interface Props {
 export function WalletQRCode({ isVisible, onClose }: Props) {
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
   if (!activeAccount) return null
 

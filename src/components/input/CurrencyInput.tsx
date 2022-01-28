@@ -1,7 +1,8 @@
-import { backgroundColor, BackgroundColorProps, useRestyle, useTheme } from '@shopify/restyle'
+import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencySelector } from 'src/components/CurrencySelector'
 import { AmountInput } from 'src/components/input/AmountInput'
@@ -45,7 +46,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
 
   const price = useUSDCPrice(currency ?? undefined)
 
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
   const { t } = useTranslation()
 
   const maxInputAmount = maxAmountSpend(currencyBalance)
