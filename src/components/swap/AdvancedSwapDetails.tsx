@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-// eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
@@ -65,7 +63,12 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip
-              text={t`The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.`}
+              text={
+                <Trans>
+                  The amount you expect to receive at the current market price. You may receive less or more if the
+                  market price changes while your transaction is pending.
+                </Trans>
+              }
             >
               <ThemedText.SubHeader color={theme.text1}>
                 <Trans>Expected Output</Trans>
@@ -82,7 +85,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <MouseoverTooltip text={t`The impact your trade has on the market price of this pool.`}>
+            <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
               <ThemedText.SubHeader color={theme.text1}>
                 <Trans>Price Impact</Trans>
               </ThemedText.SubHeader>
@@ -98,7 +101,12 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
             <MouseoverTooltip
-              text={t`The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.`}
+              text={
+                <Trans>
+                  The minimum amount you are guaranteed to receive. If the price slips any further, your transaction
+                  will revert.
+                </Trans>
+              }
             >
               <ThemedText.SubHeader color={theme.text3}>
                 {trade.tradeType === TradeType.EXACT_INPUT ? (
@@ -121,9 +129,12 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
           <RowBetween>
             <MouseoverTooltip
-              text={t`The fee paid to miners who process your transaction. This must be paid in ${
-                CHAIN_INFO[chainId ?? 1].addNetworkInfo.nativeCurrency.symbol
-              }.`}
+              text={
+                <Trans>
+                  The fee paid to miners who process your transaction. This must be paid in{' '}
+                  {CHAIN_INFO[chainId ?? 1].addNetworkInfo.nativeCurrency.symbol}.
+                </Trans>
+              }
             >
               <ThemedText.SubHeader color={theme.text3}>
                 <Trans>Network Fee</Trans>
