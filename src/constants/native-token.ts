@@ -3,7 +3,11 @@ import { Token } from '../sdk-core/entities/token'
 import { NativeCurrency } from '../sdk-core/entities/nativeCurrency'
 import invariant from 'tiny-invariant'
 
-export const WPHOTON = makeToken('Wrapped Evmos', 'WEVMOS', 18, '0xbc0b8C49443E309528a7F21211933A58096B866c')
+export const WPHOTON = {
+  // Mainly for unit tests
+  1: new Token(1, '0xbc0b8C49443E309528a7F21211933A58096B866c', 18, 'WEVMOS', 'Wrapped Evmos'),
+  ...makeToken('Wrapped Evmos', 'WEVMOS', 18, '0xbc0b8C49443E309528a7F21211933A58096B866c'),
+}
 export const WETH9 = WPHOTON
 
 function makeToken(name: string, symbol: string, decimals: number, mainAddress: string, testNetAddress?: string) {

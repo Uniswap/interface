@@ -1,4 +1,5 @@
-import { Ether, Token } from './index'
+import { Token } from './index'
+import { Photon } from 'constants/native-token'
 
 describe('Currency', () => {
   const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
@@ -9,10 +10,10 @@ describe('Currency', () => {
 
   describe('#equals', () => {
     it('ether on same chains is ether', () => {
-      expect(Ether.onChain(1).equals(Ether.onChain(1)))
+      expect(Photon.onChain(1).equals(Photon.onChain(1)))
     })
     it('ether is not token0', () => {
-      expect(Ether.onChain(1).equals(t0)).toStrictEqual(false)
+      expect(Photon.onChain(1).equals(t0)).toStrictEqual(false)
     })
     it('token1 is not token0', () => {
       expect(t1.equals(t0)).toStrictEqual(false)

@@ -35,7 +35,7 @@ export class Token extends BaseCurrency {
    * @throws if the tokens are on different chains
    */
   public sortsBefore(other: Token): boolean {
-    invariant(this.chainId === other.chainId, 'CHAIN_IDS')
+    invariant(this.chainId === other.chainId, `CHAIN_IDS got:${this.chainId} - ${other.chainId} `)
     invariant(this.address !== other.address, 'ADDRESSES')
     return this.address.toLowerCase() < other.address.toLowerCase()
   }

@@ -1,8 +1,9 @@
-import { Ether, Token, WETH9, CurrencyAmount } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair, Route } from './index'
+import { Photon, WETH9 } from 'constants/native-token'
 
 describe('Route', () => {
-  const ETHER = Ether.onChain(1)
+  const ETHER = Photon.onChain(1)
   const token0 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 't0')
   const token1 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 't1')
   const weth = WETH9[1]

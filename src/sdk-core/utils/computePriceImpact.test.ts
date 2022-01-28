@@ -1,4 +1,5 @@
-import { CurrencyAmount, Ether, Percent, Price, Token } from '../entities'
+import { CurrencyAmount, Percent, Price, Token } from '../entities'
+import { Photon } from 'constants/native-token'
 import { computePriceImpact } from './computePriceImpact'
 
 describe('#computePriceImpact', () => {
@@ -11,7 +12,7 @@ describe('#computePriceImpact', () => {
   it('is correct for zero', () => {
     expect(
       computePriceImpact(
-        new Price(Ether.onChain(1), t0, 10, 100),
+        new Price(Photon.onChain(1), t0, 10, 100),
         CurrencyAmount.ether(1, 10),
         CurrencyAmount.fromRawAmount(t0, 100)
       )
