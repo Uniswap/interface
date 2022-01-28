@@ -62,7 +62,7 @@ export default function Output({ disabled, children }: OutputProps) {
 
   const usdc = useMemo(() => {
     if (outputUSDC) {
-      return `~ $${outputUSDC.toFixed(2)} (${priceImpact && priceImpact > 0 ? '+' : ''}${priceImpact}%)`
+      return `$${outputUSDC.toFixed(2)} (${priceImpact && priceImpact > 0 ? '+' : ''}${priceImpact}%)`
     }
     return ''
   }, [priceImpact, outputUSDC])

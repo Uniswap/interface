@@ -42,7 +42,7 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
       {usdc && usdcAmount && (
         <Row justify="flex-start">
           <ThemedText.Caption color="secondary">
-            ~ ${usdcAmount.toFixed(2)}
+            ${usdcAmount.toFixed(2)}
             {change && <Percent gain={change > 0}> {percent}</Percent>}
           </ThemedText.Caption>
         </Row>
