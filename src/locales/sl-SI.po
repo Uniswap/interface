@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:07\n"
+"PO-Revision-Date: 2022-01-28 20:07\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -1356,7 +1356,7 @@ msgstr "Pregled skladov"
 
 #: src/lib/components/BrandedFooter.tsx
 msgid "Powered by the Uniswap protocol"
-msgstr "Poganja protokol Uniswap"
+msgstr "Zgrajeno na protokolu Uniswap"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
