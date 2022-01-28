@@ -60,8 +60,6 @@ export function AccountsScreen() {
     dispatch(importAccountActions.reset())
     navigation.navigate(Screens.ImportAccount)
   }
-  const onPressCreate = onPressImport // TODO implement for realsies
-
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
 
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
@@ -183,19 +181,20 @@ export function AccountsScreen() {
         <PrimaryButton
           disabled={isLoading}
           label={t('Import Account')}
-          mr="lg"
+          // mr="lg"
           name={ElementName.Import}
           testID="accounts/add/button"
-          variant="palePink"
+          // variant="palePink"
+          width="100%"
           onPress={onPressImport}
         />
-        <PrimaryButton
+        {/* <PrimaryButton
           disabled={isLoading}
           label={t('Create Account')}
           name={ElementName.Create}
           testID="accounts/create/button"
           onPress={onPressCreate}
-        />
+        /> */}
       </CenterBox>
       <BottomSheetModal
         isVisible={showEditAccountModal}
