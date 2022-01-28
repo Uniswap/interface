@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-27 01:28\n"
+"PO-Revision-Date: 2022-01-28 17:10\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -1352,6 +1352,10 @@ msgstr "Συγκεντρώθηκε(αν) {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Επισκόπηση Δεξαμενών"
+
+#: src/lib/components/BrandedFooter.tsx
+msgid "Powered by the Uniswap protocol"
+msgstr "Τροφοδοτείται από το πρωτόκολλο Uniswap"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"

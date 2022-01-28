@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-27 01:28\n"
+"PO-Revision-Date: 2022-01-28 17:10\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1352,6 +1352,10 @@ msgstr "流動池匯集 {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "流動池概覽"
+
+#: src/lib/components/BrandedFooter.tsx
+msgid "Powered by the Uniswap protocol"
+msgstr "由 Uniswap 協議提供支持"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
