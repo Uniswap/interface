@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import BrandingFooter from 'lib/components/BrandingFooter'
+import BrandedFooter from 'lib/components/BrandedFooter'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
@@ -102,7 +102,7 @@ export default function Output({ disabled, children }: OutputProps) {
           </ThemedText.Body2>
         </TokenInput>
         {children}
-        <BrandingFooter />
+        <BrandedFooter />
       </OutputColumn>
     </DynamicThemeProvider>
   )
