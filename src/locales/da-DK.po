@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 17:10\n"
+"PO-Revision-Date: 2022-01-28 18:06\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -936,6 +936,7 @@ msgstr "Input er estimeret. Du vil sælge ved højst <0>{0} {1}</0> ellers vil t
 msgid "Install Metamask"
 msgstr "Installer Metamask"
 
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Utilstrækkelig likviditet til denne handel."

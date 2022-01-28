@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 17:10\n"
+"PO-Revision-Date: 2022-01-28 18:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -936,6 +936,7 @@ msgstr "输入数额仅为估值。您最多会售出<0>{0} {1}</0> 否则将还
 msgid "Install Metamask"
 msgstr "安装Metamask"
 
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "现有流动量不足以支持此交易。"

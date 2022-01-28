@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 17:10\n"
+"PO-Revision-Date: 2022-01-28 18:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -936,6 +936,7 @@ msgstr "입력이 추정됩니다. 최대 <0>{0} {1}</0>을(를) 팔거나 그�
 msgid "Install Metamask"
 msgstr "메타 마스크 설치"
 
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "이 거래에 대한 유동성이 충분하지 않습니다."

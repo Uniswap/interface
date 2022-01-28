@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 17:10\n"
+"PO-Revision-Date: 2022-01-28 18:06\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -936,6 +936,7 @@ msgstr "تم تقدير الإدخال. سوف تبيع على الأكثر <0>{
 msgid "Install Metamask"
 msgstr "تثبيت Metamask"
 
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "السيولة غير كافية لهذه التجارة."

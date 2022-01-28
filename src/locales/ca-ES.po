@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 17:10\n"
+"PO-Revision-Date: 2022-01-28 18:06\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -936,6 +936,7 @@ msgstr "S’estima l’entrada. Vindràs com a màxim <0>{0} {1}</0> o la transa
 msgid "Install Metamask"
 msgstr "Instal·leu Metamask"
 
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Liquiditat insuficient per a aquest comerç."

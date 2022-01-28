@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 17:10\n"
+"PO-Revision-Date: 2022-01-28 18:07\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -936,6 +936,7 @@ msgstr "Đầu vào được ước tính. Bạn sẽ bán nhiều nhất <0>{0}
 msgid "Install Metamask"
 msgstr "Cài đặt Metamask"
 
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Không đủ thanh khoản cho giao dịch này."

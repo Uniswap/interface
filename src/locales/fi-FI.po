@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 17:10\n"
+"PO-Revision-Date: 2022-01-28 18:06\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -936,6 +936,7 @@ msgstr "Syöte on arvioitu. Myyt korkeintaan <0>{0} {1}</0> tai tapahtuma peruta
 msgid "Install Metamask"
 msgstr "Asenna Metamask"
 
+#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Ei riittävästi likviditeettiä tälle kaupalle."
