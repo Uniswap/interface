@@ -473,7 +473,7 @@ export const ShowSellTaxComponent = () => {
 						onMouseLeave={() => setShowTool(false)} />
 				</Tooltip>
 			</span>
-			<Badge style={{ background: Number(salesTax) > 8 ? 'red' : 'green', color: "#FFF", display: 'flex', justifyContent: 'flex-end', width: 'max-content', textAlign: 'right' }}>
+			<Badge style={{ background: Number(salesTax) < 8 ? 'red' : '#779681', color: "#FFF", display: 'flex', justifyContent: 'flex-end', width: 'max-content', textAlign: 'right' }}>
 				{timeHolding} hours holding
 			</Badge>
 

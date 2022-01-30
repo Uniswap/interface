@@ -8,7 +8,7 @@ import { AutoColumn } from '../Column'
 
 export const Wrapper = styled.div`
   position: relative;
-  padding: 8px;
+  padding: 40px;
 
   > [aria-modal="true"] {
     background: #222;
@@ -24,15 +24,39 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   height: 32px;
   width: 32px;
   position: relative;
-  margin-top: -14px;
-  margin-bottom: -14px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   left: calc(50% - 16px);
   display:flex;
   justify-content:center;
   align-items:center;
   /* transform: rotate(90deg); */
-  background: radial-gradient(rgb(239, 146, 56), rgba(129, 3, 3, 0.95));
+  background: 'transparent';
   border: 4px solid ${({ theme }) => theme.bg0};
+  z-index: 2;
+  ${({ clickable }) =>
+    clickable
+      ? css`
+          :hover {
+            cursor: pointer;
+            color:yellow !important;
+          }
+        `
+      : null}
+`
+export const MajgicWrapper = styled.div<{ clickable: boolean }>`
+  padding: 10px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -5px;
+  margin-bottom: -5px;
+  left: calc(50% - 16px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  /* transform: rotate(90deg); */
+  background: ${({ theme }) => theme.bg6};
   z-index: 2;
   ${({ clickable }) =>
     clickable

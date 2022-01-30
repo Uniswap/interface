@@ -92,13 +92,13 @@ export const DetailsModal = ({
                                     </li>}
                                     {!!tokenData?.totalLiquidityUSD && tokenData?.totalLiquidityUSD > 0 && <li style={{marginBottom:10}}>
                                         <StyledHeader>Liquidity (USD)</StyledHeader>
-                                        <Badge variant={BadgeVariant.POSITIVE}>{Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</Badge>
+                                        <Badge variant={BadgeVariant.HOLLOW}>{Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</Badge>
                                     </li>}
-                                    {lockedMap && <li style={{marginBottom:10}}><StyledHeader>Circulating Supply</StyledHeader> <Badge variant={BadgeVariant.DEFAULT}>{Number(lockedMap?.token?.tokenCirculatingSupply).toLocaleString()}</Badge>
+                                    {lockedMap && <li style={{marginBottom:10}}><StyledHeader>Circulating Supply</StyledHeader> <Badge variant={BadgeVariant.HOLLOW}>{Number(lockedMap?.token?.tokenCirculatingSupply).toLocaleString()}</Badge>
                                     </li>}
                                     {[NaN, 0].includes(Number(tokenData?.priceUSD))===false && <li style={{marginBottom:10}}>
                                         <StyledHeader>Price (USD)</StyledHeader>
-                                        <Badge variant={BadgeVariant.DEFAULT}>{Number(tokenData?.priceUSD).toFixed(18)}</Badge>
+                                        <Badge variant={BadgeVariant.HOLLOW}>{Number(tokenData?.priceUSD).toFixed(18)}</Badge>
                                     </li>}
                                 </ul>
                                 {!lockedMap && <ul style={{ listStyle: 'none', padding: 3 }}>
@@ -115,15 +115,15 @@ export const DetailsModal = ({
                                         </li>
                                         <li style={{marginBottom:10}}> 
                                             <StyledHeader>Locked Amount (USD)</StyledHeader>
-                                            <Badge variant={BadgeVariant.DEFAULT}>${Number(lockedMap.token?.liquidityLockedInUsd).toLocaleString()}</Badge>
+                                            <Badge variant={BadgeVariant.HOLLOW}>${Number(lockedMap.token?.liquidityLockedInUsd).toLocaleString()}</Badge>
                                         </li>
                                         <li style={{marginBottom:10}}>
                                             <StyledHeader>Locked Percentage</StyledHeader>
-                                            <Badge variant={BadgeVariant.DEFAULT}>{Number(lockedMap.token?.liquidityLockedInPercent * 100).toLocaleString() === '1' ? `100` : Number(lockedMap.token?.liquidityLockedInPercent * 100).toLocaleString()} <Percent /></Badge>
+                                            <Badge variant={BadgeVariant.HOLLOW}>{Number(lockedMap.token?.liquidityLockedInPercent * 100).toLocaleString() === '1' ? `100` : Number(lockedMap.token?.liquidityLockedInPercent * 100).toLocaleString()} <Percent /></Badge>
                                         </li>
                                         <li style={{marginBottom:10}}>
                                             <StyledHeader>Unlock Date</StyledHeader>
-                                            <Badge variant={BadgeVariant.DEFAULT}>{moment(+lockedMap.event?.unlockTime * 1000).toDate().toLocaleString()}</Badge>
+                                            <Badge variant={BadgeVariant.HOLLOW}>{moment(+lockedMap.event?.unlockTime * 1000).toDate().toLocaleString()}</Badge>
                                         </li>
                                     </ul>}
                             </div>
