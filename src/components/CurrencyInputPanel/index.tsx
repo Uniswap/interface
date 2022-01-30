@@ -2,7 +2,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { useState, useCallback, ReactNode } from 'react'
 import styled from 'styled-components/macro'
-import { darken } from 'polished'
+import { darken, lighten, opacify } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
@@ -24,11 +24,12 @@ import Tooltip from 'components/Tooltip'
 import React from 'react'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import Swal from 'sweetalert2'
+import { opacity } from 'styled-system'
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.bg2)};
+  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '5px')};
+  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.bg6)};
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
 `
@@ -42,7 +43,7 @@ const FixedContainer = styled.div`
   height: 100%;
   position: absolute;
   border-radius: 20px;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg0};
   opacity: 0.95;
   display: flex;
   align-items: center;
@@ -51,13 +52,13 @@ const FixedContainer = styled.div`
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
-  background-color: ${({ theme }) => theme.bg1};
+  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '5px')};
+  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : ' transparent' )};
+  background-color: ${({ theme }) => theme.bg6};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   :focus,
   :hover {
-    border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
+    border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : opacify(0.5, theme.bg2))};
   }
 `
 
@@ -65,23 +66,20 @@ const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boole
   align-items: center;
   font-size: 24px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg0 : theme.primary1)};
+  background-color: '${({ selected, theme }) => (selected ? theme.bg6 : theme.bg6)}';
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 16px;
-  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   outline: none;
   cursor: pointer;
   user-select: none;
   border: none;
-  height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
+  height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.8rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  padding: 0 8px;
   justify-content: space-between;
   margin-right: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
+    background-color: ${({ selected, theme }) => (selected ? theme.bg6 : darken(0.00, theme.bg6))};
   }
 `
 
@@ -97,10 +95,10 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.text1};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0 1rem 1rem;
+  padding: 0 1rem 0.5rem;
   span:hover {
     cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.text2)};
+    color: ${({ theme }) => darken(0.2, theme.text1)};
   }
 `
 
@@ -127,7 +125,9 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '18px' : '18px')};
+  font-size:  ${({ active }) => (active ? '20px' : '20px')};
+  font-family: ${({ active }) => (active ? 'Archivo Narrow' : 'Archivo Narrow')};
+  font-weight: ${({ active }) => (active ? '700' : '500')};
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
@@ -135,10 +135,10 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   border: none;
   border-radius: 12px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   padding: 0;
-  color: ${({ theme }) => theme.primaryText1};
+  color: ${({ theme }) => theme.text1};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
   margin-left: 0.25rem;
@@ -214,12 +214,13 @@ export default function CurrencyInputPanel({
         <FixedContainer>
           <AutoColumn gap="sm" justify="center">
             <Lock />
-            <TYPE.label fontSize="12px" textAlign="center" padding="0 12px">
+            <TYPE.label fontSize="14px" textAlign="center" padding="0 14px">
               <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
             </TYPE.label>
           </AutoColumn>
         </FixedContainer>
       )}
+      
       <Container hideInput={hideInput}>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           <CurrencySelect
@@ -240,10 +241,10 @@ export default function CurrencyInputPanel({
                     <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                   </span>
                 ) : currency ? (
-                  <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={'24px'} />
+                  <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={'30px'} />
                 ) : null}
                 {pair ? (
-                  <StyledTokenName className="pair-name-container">
+                  <StyledTokenName className="pair-name-container" >
                     {pair?.token0.symbol}:{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
@@ -265,23 +266,13 @@ export default function CurrencyInputPanel({
           {currency && <RowFixed style={{
             marginRight:15
           }}>
-            <Tooltip placement={'top'}
-              show={showMetaTip} 
-              text={`Add ${currency?.name} (${currency?.symbol}) to Metamask`}>
-              <StyledLogo 
-                onClick={() => {
-                  addToken();
-                }}
-                style={{cursor:'pointer'}}
-                onMouseEnter={() => setShowMetaTip(true)} 
-                onMouseLeave={() => setShowMetaTip(false)} 
-                src={MetaMaskLogo} />
-            </Tooltip>
+            
           </RowFixed>}
           {!hideInput && (
             <>
               <NumericalInput
                 className="token-amount-input"
+                style={{ backgroundColor: theme.bg6 }}
                 value={value}
                 onUserInput={(val) => {
                   onUserInput(val)
@@ -294,7 +285,7 @@ export default function CurrencyInputPanel({
           <FiatRow>
             <RowBetween>
               {account ? (
-                <RowFixed style={{ height: '17px' }}>
+                <RowFixed style={{ height: '14px' }}>
                   <TYPE.body
                     onClick={onMax}
                     color={theme.text2}

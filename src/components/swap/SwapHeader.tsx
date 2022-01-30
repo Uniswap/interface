@@ -22,7 +22,7 @@ const HeaderType = styled(TYPE.black)`
 font-family:'Bangers', cursive !important;
 &:hover {
   transition: all ease 0.2s;
-  color:pink;
+  color:#F76C1D;
 }`
 
 export default function SwapHeader({ allowedSlippage, view, onViewChange }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit' | 'flooz', onViewChange: (view: "bridge"  | "swap" | 'limit' | 'flooz') => void }) {

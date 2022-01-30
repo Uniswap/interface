@@ -7,8 +7,9 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider} from "@apollo/client";
-  import logo from '../assets/images/download.png'
-
+import logo from '../assets/images/download.png'
+import btok from '../assets/sponsors/btok2.svg' 
+import bg4 from '../assets/images/bg4.jpg' 
 import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import React, { useState } from 'react'
@@ -51,7 +52,7 @@ import { TrumpVote } from './Vote/TrumpVote'
 import VotePage from './Vote/VotePage'
 import { useKiba } from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
-
+import cart from '../assets/sponsors/cryptocart.svg'
 import Swal from 'sweetalert2'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
 import { DarkCard, DarkGreyCard } from 'components/Card'
@@ -130,9 +131,9 @@ const VideoWrapper = styled.div`
   position: absolute;
   left: 0;
   min-width: 100%;
-  min-height:120vh;
-  background: url(https://i.gyazo.com/27d5b738ac3276e87c1daafe803e2af8.png)  center center !important;
-  background-size:cover;
+  min-height:150vh;
+  background: url(${bg4}) center center !important;
+  background-size:contain;
   background-position:center center;
   background-repeat:no-repeat;
 `
@@ -573,15 +574,12 @@ export default function App() {
 
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
-            <AppBody style={{ top:20, right: 0, position: 'relative', bottom: 0, padding: '9px 14px', justifyContent: 'end', background: 'radial-gradient(rgb(234 54 39), rgba(129, 3, 3, 0.95))', border: '1px solid red', height: 200, width: '100%' }}>
-        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Featured Sponsors
-          <span>
-            <img style={{ maxWidth: 100 }} src={logo} />
-          </span>
+            <AppBody style={{ top:0, right: 0, position: 'relative', bottom: 0, padding: '9px 14px', justifyContent: 'end', backgroundColor: 'theme.bg0' , height: 'flex', width: 'flex', minWidth: '45%' }}>
+        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '10px', paddingTop: '10px' }}>Kibaswap Featured Sponsors
         </StyledDiv>
         <Marquee direction={'ltr'} resetAfterTries={200} scatterRandomly={false} onInit={() => { return }} onFinish={() => { return }} key={"MARQUEE"} velocity={10}>
           <></>
-          <FixedContainer style={{ background: 'rgb(0 0 1 / 50%)', width: '100%' }} gap="xs">
+          <FixedContainer style={{ backgroundColor: 'transparent', width: '100%', paddingBottom: '10px' }} gap="xs">
             <ScrollableRow>
               {[
                 {
@@ -593,10 +591,10 @@ export default function App() {
                 },
                 {
                   title: "CryptoCart",
-                  img: 'https://s2.coinmarketcap.com/static/img/coins/64x64/15891.png',
+                  img: cart,
                   text: "Learn more",
                   link: 'https://cryptocart.cc/',
-                  style: { height: 32, maxWidth: 32 }
+                  style: {}
                 },
                 {
                   title: "KIBA INU",
@@ -607,20 +605,22 @@ export default function App() {
                 },
                 {
                   title: "Btok",
-                  img: 'data:image/png;base64,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',
+                  img: btok,
                   text: "Jabba Inu is a meme coin offering culture to its holders.",
                   link: 'https://www.btok.com/',
                   style: {}
                 }].map((sponsor) => (
                   <CardWrapper key={sponsor.title} href={sponsor.link}>
-                    <DarkGreyCard style={{ background: '#fff', border: `1px solid red`, padding: 3 }}>
+                    <DarkGreyCard style={{  padding: 3 }}>
                       <Flex flexDirection="column" alignItems={'center'} justifyContent={'center'}>
                         <Flex alignItems={'center'} flexDirection={'row'}>
-                          <TYPE.mediumHeader>{sponsor.title}</TYPE.mediumHeader>
+                          
                         </Flex>
-                        <Flex style={{ height: 60, padding: '10'}} alignItems={'center'} justifyContent={'space-between'}>
-                            <img style={{ maxWidth: 60, ...sponsor?.style }} src={sponsor.img} />
-                            <TYPE.small alignItems={'center'} justifyContent={'center'}><ExternalLinkIcon href={sponsor.link} /></TYPE.small>
+                        <Flex style={{ height: 'flex', padding: '5'}} alignItems={'center'} justifyContent={'space-between'}>
+                            <a href={sponsor.link}>
+                            <img style={{ maxWidth: 80, ...sponsor?.style }} src={sponsor.img} />
+                            </a>
+                            <TYPE.small alignItems={'center'} justifyContent={'center'}></TYPE.small>
                           </Flex>
                       </Flex>
                     </DarkGreyCard>

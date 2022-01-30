@@ -66,8 +66,11 @@ export const ButtonPrimary = styled(Base)`
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.primary1 : theme.bg2) : theme.bg2};
+      altDisabledStyle ? (disabled ? theme.primary1 : theme.bg5) : theme.bg5};
     color: ${({ theme }) => theme.text2};
+    font-family: 'Archivo Narrow';
+    font-size: 20px;
+    font-weight: 700;
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
@@ -78,14 +81,15 @@ export const ButtonPrimary = styled(Base)`
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
-  font-size: 16px;
-  font-weight: 500;
+  font-family: 'Archivo Narrow';
+  font-size: 20px;
+  font-weight: 700;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
     background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
   }
   &:hover {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.bg4)};
   }
   &:active {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
@@ -104,10 +108,11 @@ export const ButtonLight = styled(Base)`
 `
 
 export const ButtonGray = styled(Base)`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg6};
   color: ${({ theme }) => theme.text2};
-  font-size: 16px;
-  font-weight: 500;
+  font-family: 'Archivo Narrow';
+  font-size: 18px;
+  font-weight: 600;
 
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
@@ -121,7 +126,9 @@ export const ButtonSecondary = styled(Base)`
   border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
   background-color: transparent;
-  font-size: 16px;
+  font-family: 'Archivo Narrow';
+  font-size: 20px;
+  font-weight: 700;
   border-radius: 12px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
@@ -149,6 +156,9 @@ export const ButtonOutlined = styled(Base)`
   border: 1px solid ${({ theme }) => theme.bg2};
   background-color: transparent;
   color: ${({ theme }) => theme.text1};
+  font-family: 'Archivo Narrow';
+  font-size: 20px;
+  font-weight: 700;
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
   }
@@ -232,6 +242,9 @@ export const ButtonText = styled(Base)`
 const ButtonConfirmedStyle = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text1};
+  font-family: 'Archivo Narrow';
+  font-size: 20px;
+  font-weight: 700;
   /* border: 1px solid ${({ theme }) => theme.green1}; */
 
   &:disabled {

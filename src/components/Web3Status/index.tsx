@@ -17,7 +17,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
-import { ButtonSecondary } from '../Button'
+import { ButtonLight } from '../Button'
 import React from 'react' 
 import Identicon from '../Identicon'
 import Loader from '../Loader'
@@ -40,12 +40,12 @@ const IconWrapper = styled.div<{ size?: number }>`
   }
 `
 
-const Web3StatusGeneric = styled(ButtonSecondary)`
+const Web3StatusGeneric = styled(ButtonLight)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
-  padding: 0.5rem;
-  border-radius: 12px;
+  padding: 0.35rem;
+  border-radius: 10px;
   cursor: pointer;
   user-select: none;
   :focus {
@@ -53,13 +53,13 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
+  background-color: ${({ theme }) => theme.bg5};
+  border: 1px solid ${({ theme }) => theme.bg5};
   color: ${({ theme }) => theme.white};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+    background-color: ${({ theme }) => darken(0.1, theme.bg5)};
   }
 `
 
@@ -101,11 +101,11 @@ const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
     z-index: -1;
     margin: -$border; /* !importanté */
     border-radius: inherit; /* !importanté */
-
-    background: linear-gradient(to right, red, orange);
   }
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
-  font-weight: 500;
+  color: ${({ pending, theme }) => (pending ? theme.bg4 : theme.text1)};
+  font-family: 'Archivo Narrow';
+  font-size: 16px;
+  font-weight: 600;
   :hover,
   :focus {
     border: 1px solid ${({ theme }) => darken(0.05, theme.bg3)};
@@ -124,7 +124,9 @@ const Text = styled.p`
   margin: 0 0.5rem 0 0.25rem;
   font-size: 1rem;
   width: fit-content;
-  font-weight: 500;
+  font-family: 'Archivo Narrow';
+  font-size: 16px;
+  font-weight: 600;
 `
 
 const NetworkIcon = styled(Activity)`
