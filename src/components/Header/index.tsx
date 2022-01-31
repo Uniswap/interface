@@ -130,7 +130,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg1)};
+  background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg0)};
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -147,7 +147,7 @@ const UNIAmount = styled(AccountElement)`
   height: 36px;
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
+  background: #252632;
 `
 
 const UNIWrapper = styled.span`
@@ -242,7 +242,7 @@ const StyledNavLink = styled(NavLink).attrs({
     font-weight: 600;
     justify-content: center;
     color: ${({ theme }) => theme.text1};
-    background-color: radial-gradient(#f5b642, rgba(129,3,3,.95));
+    background-color: ${({ theme }) => theme.bg0};
   }
 
   :hover,
@@ -475,7 +475,7 @@ export default function Header() {
         <HeaderControls>
 
 
-          <NetworkCard />
+        {!!account ? <NetworkCard /> : ''} 
 
           <HeaderElement>
             {availableClaim && !showClaimPopup && (

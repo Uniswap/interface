@@ -406,7 +406,9 @@ export const Chart = () => {
     const locale = useUserLocale()
     return (
         <FrameWrapper style={{
-            background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))'
+            background: '#252632',
+            borderRadius: 30,
+            padding: 10
         }} >
             <div style={{
                 display: 'block',
@@ -444,8 +446,8 @@ export const Chart = () => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <StyledDiv style={{ color: "#222" }}>
-                        You must own Kiba Inu tokens to use this feature.
+                    <StyledDiv style={{ color: "#fff" }}>
+                        You must own Kiba Inu tokens to use this feature!
                     </StyledDiv>
                 </div>}
 
