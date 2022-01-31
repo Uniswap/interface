@@ -1,8 +1,7 @@
-import { AlphaRouterParams, IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
+import { AlphaRouterParams } from '@uniswap/smart-order-router'
 import { INFURA_NETWORK_URLS } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { providers } from 'ethers/lib/ethers'
-import ReactGA from 'react-ga'
 
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from './constants'
 
@@ -24,20 +23,3 @@ export function buildDependencies(): Dependencies {
 
   return dependenciesByChain
 }
-
-class GAMetric extends IMetric {
-  putDimensions() {
-    return
-  }
-
-  putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    ReactGA.timing({
-      category: 'Routing API',
-      variable: `${key} | ${unit}`,
-      value,
-      label: 'client',
-    })
-  }
-}
-
-setGlobalMetric(new GAMetric())

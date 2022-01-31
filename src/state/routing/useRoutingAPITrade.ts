@@ -1,10 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
+import ReactGA from 'react-ga'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useClientSideRouter } from 'state/user/hooks'
 
@@ -114,3 +116,21 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     }
   }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, gasUseEstimateUSD])
 }
+
+// only want to enable this when app hook called
+class GAMetric extends IMetric {
+  putDimensions() {
+    return
+  }
+
+  putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
+    ReactGA.timing({
+      category: 'Routing API',
+      variable: `${key} | ${unit}`,
+      value,
+      label: 'client',
+    })
+  }
+}
+
+setGlobalMetric(new GAMetric())
