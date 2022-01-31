@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '.'
 
 const QUERY = gql`
   query {
-    pairs {
+    pairs(first: 1000) {
       reserve0
       reserve1
       token0 {
