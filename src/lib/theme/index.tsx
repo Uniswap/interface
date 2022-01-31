@@ -14,9 +14,11 @@ export * from './layer'
 export * from './styled'
 export * as ThemedText from './type'
 
+export const brand = '#FF007A'
+
 export const lightTheme: Colors = {
   // surface
-  accent: '#FF007A',
+  accent: brand,
   container: '#F7F8FA',
   module: '#E2E3E9',
   interactive: '#CED0D9',
