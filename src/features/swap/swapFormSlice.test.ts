@@ -1,4 +1,6 @@
+import { Ether } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
+import { currencyId } from 'src/utils/currencyId'
 import {
   CurrencyField,
   enterExactAmount,
@@ -9,6 +11,7 @@ import {
 } from './swapFormSlice'
 
 const chainId = ChainId.RINKEBY
+const ethAddress = currencyId(Ether.onChain(ChainId.RINKEBY))
 
 test('should return the initial state', () => {
   expect(swapFormReducer(undefined, {} as any)).toEqual(initialSwapFormState)
@@ -20,12 +23,16 @@ describe(selectCurrency, () => {
     expect(
       swapFormReducer(
         previousState,
-        selectCurrency({ field: CurrencyField.INPUT, address: 'ETH', chainId })
+        selectCurrency({
+          field: CurrencyField.INPUT,
+          address: ethAddress,
+          chainId,
+        })
       )
     ).toEqual({
       ...previousState,
       [CurrencyField.INPUT]: {
-        address: 'ETH',
+        address: ethAddress,
         chainId,
       },
     })
@@ -50,19 +57,23 @@ describe(selectCurrency, () => {
   test('should set other currency to null when selecting the other one', () => {
     const previousState = {
       ...initialSwapFormState,
-      [CurrencyField.INPUT]: { address: 'ETH', chainId },
+      [CurrencyField.INPUT]: { address: ethAddress, chainId },
     }
     expect(
       swapFormReducer(
         previousState,
-        selectCurrency({ field: CurrencyField.OUTPUT, address: 'ETH', chainId })
+        selectCurrency({
+          field: CurrencyField.OUTPUT,
+          address: ethAddress,
+          chainId,
+        })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        address: 'ETH',
+        address: ethAddress,
         chainId,
       },
     })
@@ -71,20 +82,24 @@ describe(selectCurrency, () => {
   test('should swap currencies when selecting the other one', () => {
     const previousState = {
       ...initialSwapFormState,
-      [CurrencyField.INPUT]: { address: 'ETH', chainId },
+      [CurrencyField.INPUT]: { address: ethAddress, chainId },
       [CurrencyField.OUTPUT]: { address: 'DAI', chainId },
     }
     expect(
       swapFormReducer(
         previousState,
-        selectCurrency({ field: CurrencyField.OUTPUT, address: 'ETH', chainId })
+        selectCurrency({
+          field: CurrencyField.OUTPUT,
+          address: ethAddress,
+          chainId,
+        })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: { address: 'DAI', chainId },
       [CurrencyField.OUTPUT]: {
-        address: 'ETH',
+        address: ethAddress,
         chainId,
       },
     })
@@ -94,20 +109,24 @@ describe(selectCurrency, () => {
     const otherChainId = chainId + 1
     const previousState = {
       ...initialSwapFormState,
-      [CurrencyField.INPUT]: { address: 'ETH', chainId },
+      [CurrencyField.INPUT]: { address: ethAddress, chainId },
       [CurrencyField.OUTPUT]: { address: 'DAI', chainId },
     }
     expect(
       swapFormReducer(
         previousState,
-        selectCurrency({ field: CurrencyField.OUTPUT, address: 'ETH', chainId: otherChainId })
+        selectCurrency({
+          field: CurrencyField.OUTPUT,
+          address: ethAddress,
+          chainId: otherChainId,
+        })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        address: 'ETH',
+        address: ethAddress,
         chainId: otherChainId,
       },
     })
@@ -120,13 +139,13 @@ describe(switchCurrencySides, () => {
       ...initialSwapFormState,
       exactCurrencyField: CurrencyField.INPUT,
       [CurrencyField.INPUT]: { address: 'DAI', chainId },
-      [CurrencyField.OUTPUT]: { address: 'ETH', chainId },
+      [CurrencyField.OUTPUT]: { address: ethAddress, chainId },
     }
 
     expect(swapFormReducer(previousState, switchCurrencySides())).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
-      [CurrencyField.INPUT]: { address: 'ETH', chainId },
+      [CurrencyField.INPUT]: { address: ethAddress, chainId },
       [CurrencyField.OUTPUT]: { address: 'DAI', chainId },
     })
   })

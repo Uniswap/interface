@@ -1,8 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
+import { ChainId } from 'src/constants/chains'
 
-// TODO: include chainId in currency Id
 export function currencyId(currency: Currency): string {
-  if (currency.isNative) return 'ETH'
-  if (currency.isToken) return currency.address
+  const chainId = currency.chainId as ChainId
+  if (currency.isNative) return `${chainId}-NATIVE`
+  if (currency.isToken) return `${chainId}-${currency.address}`
   throw new Error('invalid currency')
 }

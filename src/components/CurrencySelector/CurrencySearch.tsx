@@ -139,7 +139,7 @@ export function CurrencySearch({
           </Flex>
         }
         data={filteredCurrencies}
-        keyExtractor={getKey}
+        keyExtractor={key}
         renderItem={({ item }: ListRenderItemInfo<Currency>) => {
           const tokenAddress = currencyId(item)
           const cAmount = balances?.[item.chainId as ChainId]?.[tokenAddress]
@@ -161,8 +161,8 @@ export function CurrencySearch({
   )
 }
 
-function getKey(currency: Currency) {
-  return `${currency.chainId}-${currency.isNative ? 'ETH' : currency.wrapped.address}`
+function key(currency: Currency) {
+  return currencyId(currency)
 }
 
 const styles = StyleSheet.create({

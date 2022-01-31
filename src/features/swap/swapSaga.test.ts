@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { Ether, TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { testSaga } from 'redux-saga-test-plan'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
@@ -8,6 +8,7 @@ import { approveAndSwap, SwapParams } from 'src/features/swap/swapSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, tokenContract } from 'src/test/fixtures'
+import { currencyId } from 'src/utils/currencyId'
 
 const methodParameters: MethodParameters = {
   value: '0x00',
@@ -17,7 +18,7 @@ const methodParameters: MethodParameters = {
 const transactionTypeInfo: ExactInputSwapTransactionInfo = {
   type: TransactionType.SWAP,
   tradeType: TradeType.EXACT_INPUT,
-  inputCurrencyId: 'ETH',
+  inputCurrencyId: currencyId(Ether.onChain(ChainId.RINKEBY)),
   outputCurrencyId: '0xabc',
   inputCurrencyAmountRaw: '10000',
   expectedOutputCurrencyAmountRaw: '200000',

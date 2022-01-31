@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Ether } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
+import { currencyId } from 'src/utils/currencyId'
 
 export enum CurrencyField {
   INPUT,
@@ -10,11 +12,11 @@ export interface SwapFormState {
   exactCurrencyField: CurrencyField
   exactAmount: string
   [CurrencyField.INPUT]: {
-    address: Address | 'ETH'
+    address: Address
     chainId: number
   } | null
   [CurrencyField.OUTPUT]: {
-    address: Address | 'ETH'
+    address: Address
     chainId: number
   } | null
 }
@@ -24,7 +26,7 @@ export const initialSwapFormState: Readonly<SwapFormState> = {
   exactCurrencyField: CurrencyField.INPUT,
   exactAmount: '',
   [CurrencyField.INPUT]: {
-    address: 'ETH',
+    address: currencyId(Ether.onChain(ChainId.RINKEBY)),
     chainId: ChainId.RINKEBY,
   },
   [CurrencyField.OUTPUT]: null,

@@ -10,8 +10,11 @@ export function useCurrency(
   currencyId: string | null | undefined,
   chainId: ChainId | null | undefined
 ): Currency | null | undefined {
-  const isETH = currencyId?.toUpperCase() === 'ETH'
-  const token = useTokenInfoFromAddress(chainId ?? ChainId.MAINNET, isETH ? undefined : currencyId)
+  const isNative = currencyId?.toUpperCase().includes('NATIVE')
+  const token = useTokenInfoFromAddress(
+    chainId ?? ChainId.MAINNET,
+    isNative ? undefined : currencyId
+  )
   const extendedEther = useMemo(
     // `Ether.onChain` returns a new object each render
     // memoize to avoid unnecessary renders
@@ -25,5 +28,5 @@ export function useCurrency(
   const weth = chainId ? WETH9[chainId] : undefined
   if (currencyId === null || currencyId === undefined) return currencyId
   if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
-  return isETH ? extendedEther : token
+  return isNative ? extendedEther : token
 }

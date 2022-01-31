@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Ether } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
@@ -12,10 +12,12 @@ import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
+import { ChainId } from 'src/constants/chains'
 import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { currencyId } from 'src/utils/currencyId'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -59,7 +61,9 @@ export function TokenDetailsScreen({
       exactAmount: '0',
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        address: currency.isToken ? currency.wrapped.address : 'ETH',
+        address: currency.isToken
+          ? currency.wrapped.address
+          : currencyId(Ether.onChain(ChainId.RINKEBY)),
         chainId: currency.wrapped.chainId,
       },
     }
@@ -71,7 +75,7 @@ export function TokenDetailsScreen({
       exactCurrencyField: CurrencyField.INPUT,
       exactAmount: '0',
       [CurrencyField.INPUT]: {
-        address: currency.isToken ? currency.wrapped.address : 'ETH',
+        address: currency.isToken ? currency.wrapped.address : currencyId(currency),
         chainId: currency.wrapped.chainId,
       },
       [CurrencyField.OUTPUT]: null,

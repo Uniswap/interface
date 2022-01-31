@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Ether, Percent, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
@@ -130,7 +130,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(
       swapFormActions.selectCurrency({
         field,
-        address: currency.isToken ? currency.address : 'ETH',
+        address: currency.isToken ? currency.address : currencyId(Ether.onChain(currency.chainId)),
         chainId: currency.chainId,
       })
     )
