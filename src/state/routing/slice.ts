@@ -15,7 +15,7 @@ const DEFAULT_QUERY_PARAMS = {
   // minSplits: '5',
 }
 
-async function getClientSideQuote({
+export async function getClientSideQuote({
   tokenInAddress,
   tokenInChainId,
   tokenInDecimals,

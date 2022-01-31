@@ -1,34 +1,13 @@
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
-import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
-import ms from 'ms.macro'
-import { useMemo } from 'react'
-import { useGetQuoteQuery } from 'state/routing/slice'
-import { useClientSideRouter } from 'state/user/hooks'
+import { useEffect, useMemo, useState } from 'react'
+import { getClientSideQuote } from 'state/routing/slice'
+import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
+import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
-import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
-import { computeRoutes, transformRoutesToTrade } from './utils'
+import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
-function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
-  const localBlockNumber = useBlockNumber()
-
-  if (!localBlockNumber) return undefined
-  if (localBlockNumber - dataBlockNumber > maxBlockAge) {
-    return undefined
-  }
-
-  return data
-}
-
-/**
- * Returns the best trade by invoking the routing api or the smart order router on the client
- * @param tradeType whether the swap is an exact in/out
- * @param amountSpecified the exact amount to swap in/out
- * @param otherCurrency the desired output/payment currency
- */
-export function useRoutingAPITrade<TTradeType extends TradeType>(
+export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
@@ -44,22 +23,41 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const [clientSideRouter] = useClientSideRouter()
-
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
-    useClientSideRouter: clientSideRouter,
+    useClientSideRouter: true,
   })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
-    pollingInterval: ms`15s`,
-    refetchOnFocus: true,
-  })
+  const [loading, setLoading] = useState(false)
+  const [fetchedResult, setFetchedResult] = useState<
+    | {
+        data: GetQuoteResult
+        error?: unknown
+      }
+    | undefined
+  >()
 
-  const quoteResult: GetQuoteResult | undefined = useFreshData(data, Number(data?.blockNumber) || 0)
+  useEffect(() => {
+    async function fetchQuote() {
+      if (queryArgs) {
+        setLoading(false)
+        const result = await getClientSideQuote(queryArgs)
+        setFetchedResult({
+          data: result.data,
+          error: result.error,
+        })
+      }
+    }
+    setLoading(true)
+    fetchQuote()
+  }, [queryArgs])
+
+  const [quoteResult, error] = useMemo(() => {
+    return fetchedResult ? [fetchedResult.data, fetchedResult.error] : [undefined, undefined]
+  }, [fetchedResult])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -77,7 +75,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     }
 
-    if (isLoading && !quoteResult) {
+    if (loading && !quoteResult) {
       // only on first hook render
       return {
         state: TradeState.LOADING,
@@ -94,7 +92,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
         : undefined
 
-    if (isError || !otherAmount || !route || route.length === 0 || !queryArgs) {
+    if (error || !otherAmount || !route || route.length === 0 || !queryArgs) {
       return {
         state: TradeState.NO_ROUTE_FOUND,
         trade: undefined,
@@ -112,5 +110,5 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       console.debug('transformRoutesToTrade failed: ', e)
       return { state: TradeState.INVALID, trade: undefined }
     }
-  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, gasUseEstimateUSD])
+  }, [currencyIn, currencyOut, loading, quoteResult, tradeType, error, route, queryArgs, gasUseEstimateUSD])
 }
