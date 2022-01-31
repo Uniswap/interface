@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useEffect, useMemo, useState } from 'react'
-import { getClientSideQuote } from 'state/routing/slice'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
+import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
