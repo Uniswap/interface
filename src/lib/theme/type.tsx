@@ -5,8 +5,10 @@ import { Color } from './theme'
 
 type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { color?: Color }
 
-const TextWrapper = styled(Text)<{ color?: Color }>`
+const TextWrapper = styled(Text)<{ color?: Color; lineHeight: string }>`
   color: ${({ color = 'currentColor', theme }) => theme[color as Color]};
+  // Avoid the need for placeholders by setting min-height to line-height.
+  min-height: ${({ lineHeight }) => lineHeight};
 `
 
 const TransitionTextWrapper = styled(TextWrapper)`
