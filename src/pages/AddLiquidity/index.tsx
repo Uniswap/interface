@@ -150,6 +150,31 @@ export default function AddLiquidity({
 
   useEffect(() => setShowCapitalEfficiencyWarning(false), [baseCurrency, quoteCurrency, feeAmount])
 
+  useEffect(() => {
+    if (history.location.search) {
+      const search = new URLSearchParams(history.location.search)
+      let updated = false
+
+      const minPrice = search.get('minPrice')
+      if (minPrice) {
+        updated = true
+        onLeftRangeInput(minPrice)
+        search.delete('minPrice')
+      }
+
+      const maxPrice = search.get('maxPrice')
+      if (maxPrice) {
+        updated = true
+        onRightRangeInput(maxPrice)
+        search.delete('maxPrice')
+      }
+
+      if (updated) {
+        history.replace({ search: search.toString() })
+      }
+    }
+  }, [history, onRightRangeInput, onLeftRangeInput])
+
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
 
