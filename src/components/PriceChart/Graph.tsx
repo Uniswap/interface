@@ -12,8 +12,8 @@ import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Cursor } from 'src/components/PriceChart/Cursor'
 import { Header } from 'src/components/PriceChart/Header'
 import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/Model'
-import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
+import { GraphMetadatas } from 'src/components/PriceChart/types'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
