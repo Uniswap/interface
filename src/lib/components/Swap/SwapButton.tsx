@@ -18,7 +18,7 @@ import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Link, Spinner } from 'lib/icons'
 import { displayTxHashAtom, Field, independentFieldAtom } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
-import styled from 'lib/theme'
+import styled, { useTheme } from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 
@@ -42,6 +42,8 @@ function useIsPendingApproval(token?: Token, spender?: string): boolean {
 
 export default function SwapButton({ disabled }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
+
+  const { tokenColorExtraction } = useTheme()
 
   const {
     trade,
@@ -150,7 +152,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   return (
     <>
       <ActionButton
-        color="interactive"
+        color={tokenColorExtraction ? 'interactive' : 'accent'}
         onClick={() => setActiveTrade(trade.trade)}
         onUpdate={addApprovalTransaction}
         {...actionProps}
