@@ -78,7 +78,6 @@ export function useSwaprSinglelSidedStakeCampaigns(
     if (error || !data || data.singleSidedStakingCampaigns.length === 0) {
       return { loading: false, data: undefined, stakedAmount: '0' }
     }
-
     const wrapped = data.singleSidedStakingCampaigns[data.singleSidedStakingCampaigns.length - 1]
     const stakeToken = new Token(
       chainId,
