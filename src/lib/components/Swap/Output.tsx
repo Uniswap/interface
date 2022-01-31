@@ -92,7 +92,7 @@ export default function Output({ disabled, children }: OutputProps) {
         >
           <ThemedText.Body2 color="secondary">
             <Row>
-              {usdc}
+              <span>{usdc}</span>
               {balance && (
                 <span>
                   Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>
