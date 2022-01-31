@@ -17,7 +17,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
-import { ButtonLight } from '../Button'
+import { ButtonOutlined } from '../Button'
 import React from 'react' 
 import Identicon from '../Identicon'
 import Loader from '../Loader'
@@ -40,7 +40,7 @@ const IconWrapper = styled.div<{ size?: number }>`
   }
 `
 
-const Web3StatusGeneric = styled(ButtonLight)`
+const Web3StatusGeneric = styled(ButtonOutlined)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
@@ -92,7 +92,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg0)};
+  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
   border: 3px solid transparent;
   :before {
     content: '';

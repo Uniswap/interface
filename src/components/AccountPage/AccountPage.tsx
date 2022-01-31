@@ -100,7 +100,7 @@ export const AccountPage = () => {
     if (!account) return null;
 
     return (
-        <DarkCard style={{ maxWidth: 850, background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))' }}>
+        <DarkCard style={{ maxWidth: 850, background: '#252632' }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between' }}>
                 <Badge><StyledHeader>Transaction History</StyledHeader></Badge>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
@@ -171,7 +171,7 @@ export const AccountPageWithAccount = () => {
     if (!account) return null;
 
     return (
-        <DarkCard style={{ maxWidth: 850, background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))' }}>
+        <DarkCard style={{ maxWidth: 850, background: '#252632' }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between',rowGap: 10, columnGap: 15 }}>
                 <Badge><StyledHeader>Transaction History </StyledHeader></Badge>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
