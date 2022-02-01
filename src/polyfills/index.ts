@@ -8,3 +8,5 @@ import 'react-native-get-random-values'
 import '@ethersproject/shims'
 // Add .at() method to Array if necessary (missing before iOS 15)
 import 'src/polyfills/arrayAt'
+// Import the Intl polyfills for Hermes
+import 'src/polyfills/intl'

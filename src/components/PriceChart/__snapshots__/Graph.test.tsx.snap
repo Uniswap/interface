@@ -101,32 +101,9 @@ exports[`renders correctly 1`] = `
       editable={false}
       style={
         Object {
-          "animatedStyle": Object {
-            "current": Object {
-              "value": Object {
-                "color": "#DA2D2B",
-              },
-            },
-          },
-          "color": "#27252E",
+          "color": "#DA2D2B",
           "fontFamily": "UniswapSansBeta3-Medium",
           "fontSize": 20,
-          "initial": Object {
-            "color": "#DA2D2B",
-          },
-          "viewDescriptor": MutableValue {
-            "_animation": null,
-            "_id": 18,
-            "_listeners": Array [],
-            "_setter": [Function],
-            "_value": Object {
-              "name": undefined,
-              "tag": undefined,
-            },
-          },
-          "viewRef": Object {
-            "current": null,
-          },
         }
       }
       text="-50%"

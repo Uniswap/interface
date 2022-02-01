@@ -1,7 +1,8 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
-import Animated, {
+import {
+  SharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   withSpring,
@@ -19,7 +20,7 @@ const CURSOR_SIZE = 50
 interface CursorProps {
   graphs: GraphMetadatas
   index: AnimatedNumber
-  isActive: Animated.SharedValue<boolean>
+  isActive: SharedValue<boolean>
   translation: AnimatedTranslation
 }
 

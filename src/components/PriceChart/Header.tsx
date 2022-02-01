@@ -8,7 +8,12 @@ import {
   VariantProps,
 } from '@shopify/restyle'
 import React from 'react'
-import Animated, { interpolate, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+  useDerivedValue,
+} from 'react-native-reanimated'
 import { ReText, round } from 'react-native-redash'
 import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout/Flex'
@@ -23,7 +28,7 @@ import { Theme } from 'src/styles/theme'
 interface HeaderProps {
   graphs: GraphMetadatas
   index: AnimatedNumber
-  isPanning: Animated.SharedValue<boolean>
+  isPanning: SharedValue<boolean>
   title: string
   translation: AnimatedTranslation
 }

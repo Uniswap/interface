@@ -227,6 +227,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				4E62BDF20514810D028A5FBF /* [CP] Copy Pods Resources */,
+				64CF547590F75CAF12D47EF6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -250,6 +251,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				ADC9DDC32298B72B3CF5DC8E /* [CP] Copy Pods Resources */,
 				74AFE1BA0C9151DB3A1BA401 /* [CP-User] [RNFB] Core Configuration */,
+				60C5747C6F6B56A2AC3D0078 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -373,6 +375,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		60C5747C6F6B56A2AC3D0078 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Uniswap/Pods-Uniswap-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Uniswap/Pods-Uniswap-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Uniswap/Pods-Uniswap-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		64CF547590F75CAF12D47EF6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		74AFE1BA0C9151DB3A1BA401 /* [CP-User] [RNFB] Core Configuration */ = {
@@ -635,7 +671,7 @@
 				DEVELOPMENT_TEAM = CGCYLJG7GA;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -701,7 +737,7 @@
 				DEVELOPMENT_TEAM = CGCYLJG7GA;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
