@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { Check, LargeIcon } from 'lib/icons'
@@ -15,6 +15,8 @@ import { Label, optionCss } from './components'
 const tooltip = (
   <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
 )
+
+const placeholder = '0.10'
 
 const Button = styled(TextButton)<{ selected: boolean }>`
   ${({ selected }) => optionCss(selected)}
@@ -79,7 +81,14 @@ export default function MaxSlippageSelect() {
         </Option>
         <Option wrapper={Custom} onSelect={onInputSelect} selected={maxSlippage !== 'auto'}>
           <Row>
-            <DecimalInput value={custom} onChange={onInputChange} placeholder={t`Custom`} ref={input} />%
+            <DecimalInput
+              size={Math.max(custom.length, 3)}
+              value={custom}
+              onChange={onInputChange}
+              placeholder={placeholder}
+              ref={input}
+            />
+            %
           </Row>
         </Option>
       </Row>

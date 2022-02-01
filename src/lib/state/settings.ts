@@ -17,7 +17,7 @@ interface Settings {
 
 const initialSettings: Settings = {
   maxSlippage: 'auto',
-  transactionTtl: TRANSACTION_TTL_DEFAULT,
+  transactionTtl: undefined,
   integratorFee: undefined,
   mockTogglable: true,
   clientSideRouter: false,

@@ -11,6 +11,8 @@ import { Label } from './components'
 
 const tooltip = <Trans>Your transaction will revert if it has been pending for longer than this period of time.</Trans>
 
+const placeholder = TRANSACTION_TTL_DEFAULT.toString()
+
 const Input = styled(Row)`
   ${inputCss}
 `
@@ -22,11 +24,12 @@ export default function TransactionTtlInput() {
     <Column gap={0.75}>
       <Label name={<Trans>Transaction deadline</Trans>} tooltip={tooltip} />
       <ThemedText.Body1>
-        <Input onClick={() => input.current?.focus()}>
+        <Input justify="start" onClick={() => input.current?.focus()}>
           <IntegerInput
-            placeholder={TRANSACTION_TTL_DEFAULT.toString()}
+            placeholder={placeholder}
             value={transactionTtl?.toString() ?? ''}
             onChange={(value) => setTransactionTtl(value ? parseFloat(value) : 0)}
+            size={Math.max(transactionTtl?.toString().length || 0, placeholder.length)}
             ref={input}
           />
           <Trans>minutes</Trans>
