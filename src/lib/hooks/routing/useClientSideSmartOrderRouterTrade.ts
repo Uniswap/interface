@@ -43,8 +43,8 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   useEffect(() => {
     async function fetchQuote() {
       if (queryArgs) {
-        setLoading(false)
         const result = await getClientSideQuote(queryArgs)
+        setLoading(false)
         setFetchedResult({
           data: result.data,
           error: result.error,
