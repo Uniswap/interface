@@ -1,17 +1,18 @@
-import { Currency, CurrencyAmount, Ether, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import React, { useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
-import { useEthBalance, useTokenBalance } from 'src/features/balances/hooks'
+import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useTokenContract } from 'src/features/contracts/useContract'
 import { CurrencyField, swapFormActions, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { swapActions, swapSagaName } from 'src/features/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/swap/useTrade'
 import { getWrapType, isWrapAction } from 'src/features/swap/utils'
 import { tokenWrapActions, tokenWrapSagaName, WrapType } from 'src/features/swap/wrapSaga'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   ExactInputSwapTransactionInfo,
@@ -69,11 +70,11 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
     currencyOut?.isToken ? currencyOut : undefined,
     activeAccount?.address
   )
-  const { balance: nativeInBalance } = useEthBalance(
+  const { balance: nativeInBalance } = useNativeCurrencyBalance(
     currencyIn?.chainId ?? ChainId.MAINNET,
     activeAccount?.address
   )
-  const { balance: nativeOutBalance } = useEthBalance(
+  const { balance: nativeOutBalance } = useNativeCurrencyBalance(
     currencyOut?.chainId ?? ChainId.MAINNET,
     activeAccount?.address
   )
@@ -130,7 +131,9 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(
       swapFormActions.selectCurrency({
         field,
-        address: currency.isToken ? currency.address : currencyId(Ether.onChain(currency.chainId)),
+        address: currency.isToken
+          ? currency.address
+          : currencyId(NativeCurrency.onChain(currency.chainId)),
         chainId: currency.chainId,
       })
     )

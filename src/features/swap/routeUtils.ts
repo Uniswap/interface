@@ -1,7 +1,8 @@
-import { Currency, CurrencyAmount, Ether, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { Trade } from 'src/features/swap/useTrade'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { QuoteResult, V2PoolInRoute, V3PoolInRoute } from '../prices/types'
 
 export function transformQuoteToTrade(
@@ -49,11 +50,11 @@ export function computeRoutes(
   if (quoteResult.route.length === 0) return []
 
   const parsedCurrencyIn = currencyIn.isNative
-    ? Ether.onChain(currencyIn.chainId)
+    ? NativeCurrency.onChain(currencyIn.chainId)
     : parseToken(quoteResult.route[0][0].tokenIn)
 
   const parsedCurrencyOut = currencyOut.isNative
-    ? Ether.onChain(currencyOut.chainId)
+    ? NativeCurrency.onChain(currencyOut.chainId)
     : parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
 
   try {

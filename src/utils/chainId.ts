@@ -1,4 +1,5 @@
 import { ChainId } from 'src/constants/chains'
+import { logger } from 'src/utils/logger'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
 
@@ -7,8 +8,7 @@ const supportedChains = Object.values(ChainId).map((c) => c.toString())
 export function toSupportedChain(chainId: number | string) {
   if (!supportedChains.includes(chainId.toString())) {
     // Too noisy as lists include Polygon tokens.
-    // TODO uncomment when polygon is supported
-    // logger.debug('chainId', 'toSupportedChain', 'Unsupported chain:', chainId)
+    logger.debug('chainId', 'toSupportedChain', 'Unsupported chain:', chainId)
     return null
   }
   return parseInt(chainId.toString(), 10) as ChainId

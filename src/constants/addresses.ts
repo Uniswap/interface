@@ -5,6 +5,15 @@ import { ChainId, L1_CHAIN_IDS } from 'src/constants/chains'
 
 type AddressMap = { [chainId: number]: string }
 
+const SUPPORTED_L1_L2_CHAINS = [
+  ChainId.OPTIMISM,
+  ChainId.OPTIMISTIC_KOVAN,
+  ChainId.ARBITRUM_ONE,
+  ChainId.ARBITRUM_RINKEBY,
+  ChainId.POLYGON,
+  ChainId.POLYGON_MUMBAI,
+]
+
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap(
   '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 )
@@ -12,13 +21,16 @@ export const MULTICALL_ADDRESS: AddressMap = {
   ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [
     ChainId.OPTIMISTIC_KOVAN,
     ChainId.OPTIMISM,
+    ChainId.POLYGON,
+    ChainId.POLYGON_MUMBAI,
   ]),
   [ChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
   [ChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap(
-  '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap(
+  '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
+  SUPPORTED_L1_L2_CHAINS
 )
 
 /**
@@ -50,19 +62,17 @@ export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
 export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
   [ChainId.MAINNET]: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
 }
-export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V3_FACTORY_ADDRESS, [
-  ChainId.OPTIMISM,
-  ChainId.OPTIMISTIC_KOVAN,
-  ChainId.ARBITRUM_ONE,
-  ChainId.ARBITRUM_RINKEBY,
-])
+export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(
+  V3_FACTORY_ADDRESS,
+  SUPPORTED_L1_L2_CHAINS
+)
 export const QUOTER_ADDRESSES: AddressMap = constructSameAddressMap(
   '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6',
-  [ChainId.OPTIMISM, ChainId.OPTIMISTIC_KOVAN, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_RINKEBY]
+  SUPPORTED_L1_L2_CHAINS
 )
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = constructSameAddressMap(
   '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
-  [ChainId.OPTIMISM, ChainId.OPTIMISTIC_KOVAN, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_RINKEBY]
+  SUPPORTED_L1_L2_CHAINS
 )
 export const ENS_REGISTRAR_ADDRESSES: AddressMap = {
   [ChainId.MAINNET]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
@@ -73,13 +83,9 @@ export const ENS_REGISTRAR_ADDRESSES: AddressMap = {
 export const SOCKS_CONTROLLER_ADDRESSES: AddressMap = {
   [ChainId.MAINNET]: '0x65770b5283117639760beA3F867b69b3697a91dd',
 }
-export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap(
-  '0x075B36dE1Bd11cb361c5B3B1E80A9ab0e7aa8a60',
-  [ChainId.OPTIMISM, ChainId.OPTIMISTIC_KOVAN, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_RINKEBY]
-)
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap(
   '0xA5644E29708357803b5A882D272c41cC0dF92B34',
-  [ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_RINKEBY]
+  [ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_RINKEBY, ChainId.POLYGON, ChainId.POLYGON_MUMBAI]
 )
 
 export function constructSameAddressMap<T extends string>(

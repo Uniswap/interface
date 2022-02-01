@@ -1,5 +1,5 @@
-import { Ether } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { currencyId } from 'src/utils/currencyId'
 import {
   CurrencyField,
@@ -11,7 +11,7 @@ import {
 } from './swapFormSlice'
 
 const chainId = ChainId.RINKEBY
-const ethAddress = currencyId(Ether.onChain(ChainId.RINKEBY))
+const ethAddress = currencyId(NativeCurrency.onChain(ChainId.RINKEBY))
 
 test('should return the initial state', () => {
   expect(swapFormReducer(undefined, {} as any)).toEqual(initialSwapFormState)

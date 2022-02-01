@@ -1,7 +1,8 @@
-import { Ether, WETH9 } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { getWrapType, serializeQueryParams } from 'src/features/swap/utils'
 import { WrapType } from 'src/features/swap/wrapSaga'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 
 describe(serializeQueryParams, () => {
   it('handles the correct types', () => {
@@ -16,11 +17,11 @@ describe(serializeQueryParams, () => {
 })
 
 describe(getWrapType, () => {
-  const eth = Ether.onChain(ChainId.MAINNET)
-  const weth = WETH9[ChainId.MAINNET]
+  const eth = NativeCurrency.onChain(ChainId.MAINNET)
+  const weth = WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
 
-  const rinkEth = Ether.onChain(ChainId.RINKEBY)
-  const rinkWeth = WETH9[ChainId.RINKEBY]
+  const rinkEth = NativeCurrency.onChain(ChainId.RINKEBY)
+  const rinkWeth = WRAPPED_NATIVE_CURRENCY[ChainId.RINKEBY]
 
   it('handles undefined args', () => {
     expect(getWrapType(undefined, weth)).toEqual(WrapType.NOT_APPLICABLE)

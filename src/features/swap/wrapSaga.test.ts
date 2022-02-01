@@ -1,8 +1,9 @@
-import { CurrencyAmount, Ether } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
 import { getProviderManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { getWethContract, Params, wrap } from 'src/features/swap/wrapSaga'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { TransactionType, WrapTransactionInfo } from 'src/features/transactions/types'
 import { account, provider, providerManager, wethContract } from 'src/test/fixtures'
@@ -20,7 +21,10 @@ const unwrapTxInfo: WrapTransactionInfo = {
 
 const params: Params = {
   account,
-  inputCurrencyAmount: CurrencyAmount.fromRawAmount(Ether.onChain(ChainId.RINKEBY), '200000'),
+  inputCurrencyAmount: CurrencyAmount.fromRawAmount(
+    NativeCurrency.onChain(ChainId.RINKEBY),
+    '200000'
+  ),
 }
 
 const transaction = {
@@ -55,7 +59,7 @@ describe(wrap, () => {
     const unwrapParams: Params = {
       ...params,
       inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-        Ether.onChain(ChainId.RINKEBY).wrapped,
+        NativeCurrency.onChain(ChainId.RINKEBY).wrapped,
         '200000'
       ),
     }

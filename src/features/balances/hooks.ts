@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { utils } from 'ethers'
 import { useMemo } from 'react'
@@ -11,6 +11,7 @@ import {
   useMultiChainSingleContractSingleData,
   useSingleCallResult,
 } from 'src/features/multicall'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ChainIdToAddressToToken } from 'src/features/tokens/types'
 import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
@@ -49,7 +50,7 @@ export function useTokenBalance(
   return { balance: currencyAmount, loading: callState.loading }
 }
 
-export function useEthBalance(
+export function useNativeCurrencyBalance(
   chainId: ChainId,
   accountAddress?: Address
 ): { balance: CurrencyAmount<Currency>; loading: boolean } {
@@ -67,8 +68,8 @@ export function useEthBalance(
   const loading = callState.loading
   const balance = useMemo(() => {
     const value = callState.result?.[0]
-    if (!value) return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), 0)
-    return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), value.toString())
+    if (!value) return CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), 0)
+    return CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), value.toString())
   }, [callState, chainId])
 
   return { balance, loading }
@@ -132,10 +133,10 @@ export function useTokenBalances(
   }, [chainIds, chainToAddresses, chainIdToTokens, chainToCallStates])
 }
 
-export function useEthBalances(
+export function useNativeCurrencyBalances(
   chainIds: ChainId[],
   accountAddress?: Address
-): { balances: ChainIdToAddressTo<CurrencyAmount<Ether>>; loading: boolean } {
+): { balances: ChainIdToAddressTo<CurrencyAmount<Currency>>; loading: boolean } {
   // Memoize inputs
   const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
   const chainToAddresses = useMemo(() => {
@@ -144,7 +145,12 @@ export function useEthBalances(
       if (address) {
         result[chainId] = address
       } else {
-        logger.error('balances/hooks', 'useEthBalances', 'Multicall address missing for:', chainId)
+        logger.error(
+          'balances/hooks',
+          'useNativeCurrencyBalances',
+          'Multicall address missing for:',
+          chainId
+        )
       }
       return result
     }, {})
@@ -162,7 +168,7 @@ export function useEthBalances(
 
   // Transform outputs
   return useMemo(() => {
-    const balances: ChainIdToAddressTo<CurrencyAmount<Ether>> = {}
+    const balances: ChainIdToAddressTo<CurrencyAmount<Currency>> = {}
     let loading = false
 
     for (const chainId of chainIds) {
@@ -172,7 +178,7 @@ export function useEthBalances(
       const amount = callState?.result?.[0]?.toString()
       if (!amount) continue
 
-      const currencyAmount = CurrencyAmount.fromRawAmount(Ether.onChain(chainId), amount)
+      const currencyAmount = CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), amount)
       balances[chainId] = {
         [currencyId(currencyAmount.currency)]: currencyAmount,
       }
@@ -196,21 +202,21 @@ export function useAllBalancesByChainId(
     accountAddress
   )
 
-  const { balances: ethBalances, loading: ethBalancesLoading } = useEthBalances(
+  const { balances: nativeBalances, loading: nativeBalancesLoading } = useNativeCurrencyBalances(
     chainIds,
     accountAddress
   )
 
-  const loading = tokenBalancesLoading || ethBalancesLoading
+  const loading = tokenBalancesLoading || nativeBalancesLoading
   const balances = useMemo(() => {
     return chainIds.reduce<ChainIdToAddressToCurrencyAmount>((result, chainId) => {
       result[chainId] = {
-        ...ethBalances[chainId],
+        ...nativeBalances[chainId],
         ...tokenBalances[chainId],
       }
       return result
     }, {})
-  }, [chainIds, tokenBalances, ethBalances])
+  }, [chainIds, tokenBalances, nativeBalances])
   return { balances, loading }
 }
 

@@ -1,9 +1,10 @@
-import { Currency, Ether } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { filter } from 'src/components/CurrencySelector/util'
 import { ChainId } from 'src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE } from 'src/constants/tokens'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 
-const ETH = Ether.onChain(ChainId.MAINNET)
+const ETH = NativeCurrency.onChain(ChainId.MAINNET)
 
 const TEST_TOKEN_INPUT: Currency[] = [DAI, ETH, DAI_ARBITRUM_ONE]
 

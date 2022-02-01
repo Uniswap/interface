@@ -7,6 +7,7 @@ import {
   KOVAN_LOGO,
   OPTIMISM_LOGO,
   OPTIMISTIC_KOVAN_LOGO,
+  POLYGON_LOGO,
   RINKEBY_LOGO,
   ROPSTEN_LOGO,
 } from 'src/assets'
@@ -26,6 +27,8 @@ export enum ChainId {
   ARBITRUM_RINKEBY = 421611,
   OPTIMISM = 10,
   OPTIMISTIC_KOVAN = 69,
+  POLYGON = 137,
+  POLYGON_MUMBAI = 80001,
 }
 
 export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
@@ -39,6 +42,8 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.ARBITRUM_RINKEBY,
   ChainId.OPTIMISM,
   ChainId.OPTIMISTIC_KOVAN,
+  ChainId.POLYGON,
+  ChainId.POLYGON_MUMBAI,
 ]
 
 export const L1_CHAIN_IDS = [
@@ -47,6 +52,8 @@ export const L1_CHAIN_IDS = [
   ChainId.RINKEBY,
   ChainId.GOERLI,
   ChainId.KOVAN,
+  ChainId.POLYGON,
+  ChainId.POLYGON_MUMBAI,
 ] as const
 
 // Renamed from SupportedL1ChainId in web app
@@ -62,10 +69,16 @@ export const L2_CHAIN_IDS = [
 // Renamed from SupportedL2ChainId in web app
 export type L2ChainId = typeof L2_CHAIN_IDS[number]
 
-export const MAINNET_CHAIN_IDS = [ChainId.MAINNET, ChainId.ARBITRUM_ONE, ChainId.OPTIMISM]
+export const MAINNET_CHAIN_IDS = [
+  ChainId.MAINNET,
+  ChainId.ARBITRUM_ONE,
+  ChainId.OPTIMISM,
+  ChainId.POLYGON,
+]
 
 export interface L1ChainInfo {
   readonly blockWaitMsBeforeWarning?: number
+  readonly bridge?: string
   readonly docs: string
   readonly explorer: string
   readonly infoLink: string
@@ -182,9 +195,35 @@ export const CHAIN_INFO: ChainInfo = {
     statusPage: 'https://optimism.io/status',
     subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism-dev',
   },
+  [ChainId.POLYGON]: {
+    blockWaitMsBeforeWarning: 600000, // 10 minutes
+    bridge: 'https://wallet.polygon.technology/bridge',
+    docs: 'https://polygon.io/',
+    explorer: 'https://polygonscan.com/',
+    infoLink: 'https://info.uniswap.org/#/polygon/',
+    label: 'Polygon',
+    logo: POLYGON_LOGO,
+    nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
+    rpcUrls: ['https://polygon-rpc.com/'],
+    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
+  },
+  [ChainId.POLYGON_MUMBAI]: {
+    blockWaitMsBeforeWarning: 600000, // 10 minutes
+    bridge: 'https://wallet.polygon.technology/bridge',
+    docs: 'https://polygon.io/',
+    explorer: 'https://mumbai.polygonscan.com/',
+    infoLink: 'https://info.uniswap.org/#/polygon/',
+    label: 'Polygon Mumbai',
+    nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
+    rpcUrls: ['https://rpc-endpoints.superfluid.dev/mumbai'],
+  },
 }
 
 export const ARBITRUM_HELP_CENTER_LINK =
   'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum'
 export const OPTIMISM_HELP_CENTER_LINK =
   'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ'
+
+export function isMatic(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
+  return chainId === ChainId.POLYGON_MUMBAI || chainId === ChainId.POLYGON
+}

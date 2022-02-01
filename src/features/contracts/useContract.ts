@@ -1,6 +1,5 @@
 // Based partly on https://github.com/Uniswap/interface/blob/main/src/hooks/useContract.ts
 
-import { WETH9 } from '@uniswap/sdk-core'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
@@ -27,6 +26,7 @@ import {
   QUOTER_ADDRESSES,
 } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { logger } from 'src/utils/logger'
 
 export function useContract<T extends Contract = Contract>(
@@ -96,5 +96,5 @@ export function useV3Quoter(chainId: ChainId) {
 }
 
 export function useWETHContract(chainId: ChainId) {
-  return useContract<Weth>(chainId, WETH9[chainId]?.address, WETH_ABI)
+  return useContract<Weth>(chainId, WRAPPED_NATIVE_CURRENCY[chainId]?.address, WETH_ABI)
 }

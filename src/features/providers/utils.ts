@@ -20,6 +20,10 @@ export function getInfuraChainName(chainId: ChainId) {
       return 'optimism'
     case ChainId.OPTIMISTIC_KOVAN:
       return 'optimism-kovan'
+    case ChainId.POLYGON:
+      return 'matic'
+    case ChainId.POLYGON_MUMBAI:
+      return 'maticmum'
     default:
       throw new Error(`Unsupported eth infura chainId for ${chainId}`)
   }

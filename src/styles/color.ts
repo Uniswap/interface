@@ -34,10 +34,12 @@ export interface Palette {
   chain_4: string
   chain_5: string
   chain_10: string
+  chain_137: string
   chain_42: string
   chain_69: string
   chain_42161: string
   chain_421611: string
+  chain_80001: string
 }
 
 export const colorsLight: Palette = {
@@ -74,10 +76,12 @@ export const colorsLight: Palette = {
   chain_4: '#FF007A',
   chain_5: '#007D35',
   chain_10: '#ff0420',
+  chain_137: '#7B3FE4',
   chain_42: '#426CFF',
   chain_69: '#ff0420',
   chain_42161: '#f22020',
   chain_421611: '#f22020',
+  chain_80001: '#7B3FE4',
 }
 
 export const colorsDark: Palette = {
@@ -114,8 +118,10 @@ export const colorsDark: Palette = {
   chain_4: '#FF007A',
   chain_5: '#007D35',
   chain_10: '#ff0420',
+  chain_137: '#7B3FE4',
   chain_42: '#426CFF',
   chain_69: '#ff0420',
   chain_42161: '#f22020',
   chain_421611: '#f22020',
+  chain_80001: '#7B3FE4',
 }

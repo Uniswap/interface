@@ -1,9 +1,10 @@
-import { Currency, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Contract, PopulatedTransaction, providers } from 'ethers'
 import { Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
 import { getProviderManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
   TransactionOptions,
@@ -29,7 +30,7 @@ export async function getWethContract(
   chainId: ChainId,
   provider: providers.Provider
 ): Promise<Weth> {
-  return new Contract(WETH9[chainId].address, WETH_ABI, provider) as Weth
+  return new Contract(WRAPPED_NATIVE_CURRENCY[chainId].address, WETH_ABI, provider) as Weth
 }
 
 export function* wrap(params: Params) {

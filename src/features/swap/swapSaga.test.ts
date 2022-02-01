@@ -1,10 +1,11 @@
-import { Ether, TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { testSaga } from 'redux-saga-test-plan'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { maybeApprove } from 'src/features/approve/approveSaga'
 import { approveAndSwap, SwapParams } from 'src/features/swap/swapSaga'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, tokenContract } from 'src/test/fixtures'
@@ -15,10 +16,12 @@ const methodParameters: MethodParameters = {
   calldata: '0x01',
 }
 
+const CHAIN_ID = ChainId.RINKEBY
+
 const transactionTypeInfo: ExactInputSwapTransactionInfo = {
   type: TransactionType.SWAP,
   tradeType: TradeType.EXACT_INPUT,
-  inputCurrencyId: currencyId(Ether.onChain(ChainId.RINKEBY)),
+  inputCurrencyId: currencyId(NativeCurrency.onChain(CHAIN_ID)),
   outputCurrencyId: '0xabc',
   inputCurrencyAmountRaw: '10000',
   expectedOutputCurrencyAmountRaw: '200000',
@@ -30,7 +33,7 @@ const swapParams: SwapParams = {
   chainId: ChainId.RINKEBY,
   contract: tokenContract,
   methodParameters,
-  swapRouterAddress: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
+  swapRouterAddress: SWAP_ROUTER_ADDRESSES[CHAIN_ID],
   typeInfo: transactionTypeInfo,
   txAmount: '1',
 }

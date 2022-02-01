@@ -1,6 +1,7 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
-import { Currency, NativeCurrency as NativeCurrencyClass, Token, WETH9 } from '@uniswap/sdk-core'
-import { CHAIN_INFO } from 'src/constants/chains'
+import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
+import { CHAIN_INFO, isMatic } from 'src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 
 export const DUMMY_ADDRESS = '-1'
 
@@ -30,7 +31,7 @@ export class NativeCurrency implements NativeCurrencyClass {
   }
 
   public get wrapped(): Token {
-    if (this.chainId in WETH9) return WETH9[this.chainId]
+    if (this.chainId in WRAPPED_NATIVE_CURRENCY) return WRAPPED_NATIVE_CURRENCY[this.chainId]
     throw new Error('Unsupported chain ID')
   }
 
@@ -39,7 +40,25 @@ export class NativeCurrency implements NativeCurrencyClass {
   public static onChain(chainId: number): NativeCurrency {
     return (
       this._cachedNativeCurrency[chainId] ??
-      (this._cachedNativeCurrency[chainId] = new NativeCurrency(chainId))
+      (this._cachedNativeCurrency[chainId] = isMatic(chainId)
+        ? new MaticNativeCurrency(chainId)
+        : new NativeCurrency(chainId))
     )
+  }
+}
+
+class MaticNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isMatic(this.chainId)) throw new Error('Not matic')
+    return WRAPPED_NATIVE_CURRENCY[this.chainId]
+  }
+
+  public constructor(chainId: number) {
+    if (!isMatic(chainId)) throw new Error('Not matic')
+    super(chainId)
   }
 }

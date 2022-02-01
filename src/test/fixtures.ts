@@ -1,11 +1,10 @@
-import { WETH9 } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20, Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { DAI } from 'src/constants/tokens'
+import { DAI, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import {
   ApproveTransactionInfo,
@@ -54,14 +53,14 @@ export const contractManager = new ContractManager()
 contractManager.getOrCreateContract(ChainId.RINKEBY, DAI.address, provider, ERC20_ABI)
 contractManager.getOrCreateContract(
   ChainId.RINKEBY,
-  WETH9[ChainId.RINKEBY].address,
+  WRAPPED_NATIVE_CURRENCY[ChainId.RINKEBY].address,
   provider,
   WETH_ABI
 )
 export const tokenContract = contractManager.getContract(ChainId.RINKEBY, DAI.address) as Erc20
 export const wethContract = contractManager.getContract(
   ChainId.RINKEBY,
-  WETH9[ChainId.RINKEBY].address
+  WRAPPED_NATIVE_CURRENCY[ChainId.RINKEBY].address
 ) as Weth
 
 /**

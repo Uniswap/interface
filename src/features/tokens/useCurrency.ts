@@ -1,6 +1,8 @@
-import { Currency, Ether, WETH9 } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
 
 /**
@@ -10,22 +12,22 @@ export function useCurrency(
   currencyId: string | null | undefined,
   chainId: ChainId | null | undefined
 ): Currency | null | undefined {
-  const isNative = currencyId?.toUpperCase().includes('NATIVE')
+  const isNative = currencyId?.toUpperCase().endsWith('NATIVE')
   const token = useTokenInfoFromAddress(
     chainId ?? ChainId.MAINNET,
     isNative ? undefined : currencyId
   )
   const extendedEther = useMemo(
-    // `Ether.onChain` returns a new object each render
+    // `NativeCurrency.onChain` returns a new object each render
     // memoize to avoid unnecessary renders
     () =>
       chainId
-        ? Ether.onChain(chainId)
+        ? NativeCurrency.onChain(chainId)
         : // display mainnet when not connected
-          Ether.onChain(ChainId.MAINNET),
+          NativeCurrency.onChain(ChainId.MAINNET),
     [chainId]
   )
-  const weth = chainId ? WETH9[chainId] : undefined
+  const weth = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
   if (currencyId === null || currencyId === undefined) return currencyId
   if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
   return isNative ? extendedEther : token

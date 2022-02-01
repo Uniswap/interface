@@ -1,4 +1,5 @@
-import { Currency, Price, WETH9 } from '@uniswap/sdk-core'
+import { Currency, Price } from '@uniswap/sdk-core'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { WrapType } from 'src/features/swap/wrapSaga'
 import { formatPrice } from 'src/utils/format'
 
@@ -28,7 +29,7 @@ export function getWrapType(
     return WrapType.NOT_APPLICABLE
   }
 
-  const weth = WETH9[inputCurrency.chainId]
+  const weth = WRAPPED_NATIVE_CURRENCY[inputCurrency.chainId]
 
   if (inputCurrency.isNative && outputCurrency.equals(weth)) {
     return WrapType.WRAP
