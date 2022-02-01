@@ -148,7 +148,7 @@ export default function MaxSlippageSelect() {
           icon={<Warning state={warning} showTooltip={showTooltip} />}
           {...tooltipProps}
         >
-          <Row>
+          <Row color={warning === WarningState.INVALID_SLIPPAGE ? 'error' : undefined}>
             <DecimalInput
               size={Math.max(custom.length, 3)}
               value={custom}
