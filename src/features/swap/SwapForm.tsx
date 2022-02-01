@@ -7,9 +7,9 @@ import { ActivityIndicator, Keyboard, StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
 import { useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import SwapArrow from 'src/assets/icons/swap-arrow.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { SwapArrow } from 'src/components/icons/SwapArrow'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
 import { Box } from 'src/components/layout/Box'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
@@ -19,8 +19,8 @@ import {
   useSwapCallback,
   useWrapCallback,
 } from 'src/features/swap/hooks'
+import { QuickDetails } from 'src/features/swap/QuickDetails'
 import { SwapDetails } from 'src/features/swap/SwapDetails'
-import { QuickDetails } from 'src/features/swap/SwapDetailsRow'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { isWrapAction } from 'src/features/swap/utils'
 import { getHumanReadableSwapInputStatus } from 'src/features/swap/validate'
@@ -91,15 +91,27 @@ export function SwapForm(props: SwapFormProps) {
               <Box
                 alignItems="center"
                 bg="background1"
-                borderColor="white"
+                borderColor="mainBackground"
                 borderRadius="md"
                 borderWidth={4}
                 bottom={18}
                 justifyContent="center"
                 p="xs"
                 position="relative">
-                <Button alignItems="center" justifyContent="center" onPress={onSwitchCurrencies}>
-                  <SwapArrow height={18} width={18} />
+                <Button
+                  alignItems="center"
+                  borderRadius="md"
+                  justifyContent="center"
+                  px="xxs"
+                  py="xs"
+                  onPress={onSwitchCurrencies}>
+                  <SwapArrow
+                    color="textColor"
+                    height={18}
+                    strokeLinecap="round"
+                    strokeWidth="1.5"
+                    width={18}
+                  />
                 </Button>
               </Box>
             </Box>
@@ -171,7 +183,9 @@ function ActionButton({ callback, disabled, label, loading }: ActionButtonProps)
         disabled={disabled}
         icon={loading ? <ActivityIndicator color={theme.colors.white} size={25} /> : undefined}
         label={label}
-        mt="md"
+        mt="lg"
+        py="md"
+        textVariant="buttonLabelLg"
         onPress={() => {
           notificationAsync()
           actionButtonTrigger()

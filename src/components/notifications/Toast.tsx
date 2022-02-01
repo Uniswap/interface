@@ -30,7 +30,6 @@ export function Toast({ label, variant }: ToastProps) {
       borderWidth={1}
       flexDirection="row"
       justifyContent="space-between"
-      m="sm"
       px="md"
       py="sm"
       shadowOffset={{ width: 0, height: 6 }}

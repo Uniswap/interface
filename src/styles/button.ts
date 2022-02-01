@@ -1,19 +1,19 @@
 export const primaryButtonVariants = {
   defaults: {
-    backgroundColor: 'pink',
+    backgroundColor: 'primary1',
     color: 'white',
   },
   gray: {
-    backgroundColor: 'gray200',
-    color: 'white',
+    backgroundColor: 'gray100',
+    color: 'textColor',
   },
   green: {
     backgroundColor: 'green',
     color: 'white',
   },
   palePink: {
-    backgroundColor: 'palePink',
-    color: 'pink',
+    backgroundColor: 'secondary1',
+    color: 'primary1',
   },
   paleOrange: {
     backgroundColor: 'paleOrange',

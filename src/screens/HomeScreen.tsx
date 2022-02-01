@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useTheme } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ViewStyle } from 'react-native'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
 import QrCode from 'src/assets/icons/qr-code.svg'
@@ -29,7 +29,7 @@ import { TransactionStatusBanner } from 'src/features/transactions/TransactionSt
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { theme } from 'src/styles/theme'
+import { Theme } from 'src/styles/theme'
 import { sleep } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
@@ -39,6 +39,7 @@ export function HomeScreen({ navigation }: Props) {
   useTestAccount()
 
   const { t } = useTranslation()
+  const theme = useTheme<Theme>()
 
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
@@ -107,19 +108,18 @@ export function HomeScreen({ navigation }: Props) {
         ) : (
           <Box alignItems="flex-end" flexDirection="row" justifyContent="space-between">
             <Flex gap="xxs">
-              <Text color="gray400" variant="bodySm">
+              <Text color="gray600" variant="bodySm">
                 {t('Total Balance')}
               </Text>
               <TotalBalance balances={balances} />
             </Flex>
             <Button
-              backgroundColor="white"
-              borderWidth={1}
+              backgroundColor="mainBackground"
               name={ElementName.QRCodeModalToggle}
               padding="md"
-              style={headerButtonStyle}
+              style={buttonStyle}
               onPress={onPressQRCode}>
-              <QrCode height={15} stroke={theme.colors.pink} width={15} />
+              <QrCode height={16} stroke={theme.colors.textColor} width={16} />
             </Button>
           </Box>
         )}
@@ -139,7 +139,4 @@ export function HomeScreen({ navigation }: Props) {
   )
 }
 
-const headerButtonStyle: ViewStyle = {
-  borderColor: 'rgba(255, 0, 122, 0.2)',
-  borderRadius: 16,
-}
+const buttonStyle = { borderRadius: 16 }

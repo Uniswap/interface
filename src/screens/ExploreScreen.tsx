@@ -23,7 +23,7 @@ export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
   return (
     <Screen edges={['top', 'left', 'right']}>
       <Box mx="lg" my="lg">
-        <Text variant="h3">{t('Explore')}</Text>
+        <Text variant="bodyBold">{t('Explore')}</Text>
       </Box>
       <CenterBox flex={1}>
         <CurrencySearch

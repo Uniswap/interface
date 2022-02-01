@@ -1,3 +1,4 @@
+import { useTheme } from '@shopify/restyle'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
@@ -8,7 +9,7 @@ import EditIcon from 'src/assets/icons/pencil-box.svg'
 import { AccountItem } from 'src/components/accounts/AccountItem'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { RenameAccountModal } from 'src/components/accounts/RenameAccountModal'
-import { BackButton } from 'src/components/buttons/BackButton'
+import { BackX } from 'src/components/buttons/BackX'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Flex } from 'src/components/layout'
@@ -29,15 +30,15 @@ import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
-import { theme } from 'src/styles/theme'
+import { Theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
 import { SagaStatus } from 'src/utils/saga'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 export function AccountsScreen() {
-  const [isEditMode, setIsEditMode] = useState(false)
   const navigation = useAccountStackNavigation()
   const { t } = useTranslation()
+  const theme = useTheme<Theme>()
 
   const addressToAccount = useAccounts()
   const [signerAccounts, readOnlyAccounts] = useMemo(() => {
@@ -125,34 +126,16 @@ export function AccountsScreen() {
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
         <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
-          <BackButton />
-          <Text color="gray400" variant="bodyLg">
+          <Text color="textColor" variant="bodyBold">
             {t('Switch Accounts')}
           </Text>
-          {!isEditMode ? (
-            <TextButton
-              name={ElementName.Edit}
-              textColor="pink"
-              textVariant="bodyLg"
-              onPress={() => setIsEditMode(true)}>
-              {t('Edit')}
-            </TextButton>
-          ) : (
-            <TextButton
-              name={ElementName.Done}
-              textColor="pink"
-              textVariant="bodyLg"
-              onPress={() => setIsEditMode(false)}>
-              {t('Done')}
-            </TextButton>
-          )}
+          <BackX size={16} onPressBack={() => navigation.goBack()} />
         </Box>
         {Object.values(signerAccounts).map((account) => (
           <Box key={account.address} mb="xl">
             <AccountItem
               account={account}
               isActive={!!activeAccount && activeAccount.address === account.address}
-              isEditable={isEditMode}
               onEdit={onPressEdit}
               onPress={onPressActivate}
             />
@@ -160,7 +143,7 @@ export function AccountsScreen() {
         ))}
         {!!readOnlyAccounts.length && (
           <>
-            <Text color="gray400" mb="lg" variant="body">
+            <Text color="textColor" mb="lg" variant="body">
               {t('Watching')}
             </Text>
             {Object.values(readOnlyAccounts).map((account) => (
@@ -168,7 +151,6 @@ export function AccountsScreen() {
                 <AccountItem
                   account={account}
                   isActive={!!activeAccount && activeAccount.address === account.address}
-                  isEditable={isEditMode}
                   onEdit={onPressEdit}
                   onPress={onPressActivate}
                 />
@@ -201,12 +183,14 @@ export function AccountsScreen() {
         name={ModalName.Account}
         onClose={() => setShowEditAccountModal(false)}>
         <Flex centered gap="sm" p="md">
-          <Text color="gray400" variant="bodySm">
+          <Text color="gray400" paddingBottom="sm" variant="bodySm">
             {t('Edit or rename your account')}
           </Text>
           <PrimaryButton
             disabled={isLoading}
-            icon={<EditIcon height={18} width={18} />}
+            icon={
+              <EditIcon height={18} stroke={theme.colors.primary1} strokeWidth={2} width={18} />
+            }
             label={t('Rename Account')}
             name={ElementName.Rename}
             variant="palePink"
@@ -215,7 +199,7 @@ export function AccountsScreen() {
           />
           <PrimaryButton
             disabled={isLoading}
-            icon={<CopyIcon height={18} stroke={theme.colors.pink} width={18} />}
+            icon={<CopyIcon height={18} stroke={theme.colors.primary1} width={18} />}
             label={t('Copy Address')}
             name={ElementName.Copy}
             variant="palePink"
@@ -236,7 +220,7 @@ export function AccountsScreen() {
             pb="sm"
             pt="xs"
             textAlign="center"
-            textColor="pink"
+            textColor="primary1"
             textVariant="body"
             width="100%"
             onPress={onPressEditCancel}>

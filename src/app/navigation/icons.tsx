@@ -41,6 +41,6 @@ export function ExploreTabIcon({ focused }: NavIconProps) {
 function useTabNavColors() {
   const theme = useAppTheme()
   const primaryColor = theme.colors.primary1
-  const secondaryColor = theme.colors.black
+  const secondaryColor = theme.colors.secondary2
   return { primaryColor, secondaryColor }
 }

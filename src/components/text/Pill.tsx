@@ -18,7 +18,7 @@ export function Pill({
   flexDirection = 'row',
   icon,
   label,
-  px = 'md',
+  px = 'sm',
   py = 'xs',
   ...rest
 }: PillProps) {
@@ -40,7 +40,7 @@ export function Pill({
       }}
       {...rest}>
       {icon}
-      <Text color="black" style={{ color: foregroundColor }} variant="bodyMd">
+      <Text style={{ color: foregroundColor }} variant="bodyMd">
         {label}
       </Text>
     </Flex>

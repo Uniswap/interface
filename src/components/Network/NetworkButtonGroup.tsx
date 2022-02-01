@@ -49,6 +49,7 @@ export function NetworkButtonGroup({
           return (
             <Button
               key={chainId}
+              height={36}
               mr="sm"
               name={`${ElementName.NetworkButtonGroupPrefix}-${chainId}`}
               onPress={() => {

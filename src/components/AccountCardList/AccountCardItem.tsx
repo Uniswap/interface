@@ -47,13 +47,7 @@ export function AccountCardItem({
         testID={`account_item/${address.toLowerCase()}`}>
         <Flex borderRadius="lg" gap="lg" p="lg" style={accountCardStyle}>
           <Box flexDirection="row" justifyContent="space-between">
-            <Flex
-              alignItems="center"
-              bg="white"
-              borderRadius="sm"
-              flexDirection="row"
-              px="sm"
-              py="xxs">
+            <Flex alignItems="center" borderRadius="sm" flexDirection="row" px="sm" py="xxs">
               <Text fontWeight="600" variant="bodySm">
                 {t('Wallet')}
               </Text>
@@ -75,7 +69,6 @@ export function AccountCardItem({
       <Flex flexDirection="row" gap="sm" justifyContent="flex-end" px="lg">
         <Button
           alignItems="center"
-          bg="white"
           height={50}
           justifyContent="center"
           padding="sm"

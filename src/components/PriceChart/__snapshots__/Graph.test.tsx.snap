@@ -38,7 +38,7 @@ exports[`renders correctly 1`] = `
       editable={false}
       style={
         Object {
-          "color": "#B8B8B8",
+          "color": "#CED0D9",
           "fontFamily": "UniswapSansBeta3-Medium",
           "fontSize": 18,
         }

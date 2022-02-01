@@ -12,7 +12,7 @@ export const fontFamily = {
 export const textVariants = {
   h1: {
     fontFamily: fontFamily.sansSerif.medium,
-    fontSize: 32,
+    fontSize: 36,
     color: 'mainForeground',
   },
   h2: {
@@ -59,18 +59,18 @@ export const textVariants = {
     color: 'mainForeground',
   },
   bodyMd: {
-    fontFamily: fontFamily.sansSerif.regular,
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 14,
     color: 'mainForeground',
   },
   bodySm: {
     fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 13,
+    fontSize: 12,
     color: 'mainForeground',
   },
   bodyXs: {
     fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 11,
+    fontSize: 10,
     color: 'mainForeground',
   },
   buttonLabel: {

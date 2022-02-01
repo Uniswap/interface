@@ -1,3 +1,4 @@
+import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
@@ -14,6 +15,7 @@ import { Header } from 'src/components/PriceChart/Header'
 import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/Model'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
+import { Theme } from 'src/styles/theme'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
@@ -66,6 +68,7 @@ export const Graph = ({ graphs, title }: GraphProps) => {
   const sliderStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: withTiming(BUTTON_WIDTH * currentGraphIndex.value) }],
   }))
+  const theme = useTheme<Theme>()
 
   return (
     <Box flex={1}>
@@ -81,14 +84,14 @@ export const Graph = ({ graphs, title }: GraphProps) => {
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
-            stroke="#FF007A"
+            stroke={theme.colors.primary1}
             strokeWidth={2}
           />
 
           <Defs>
             <LinearGradient id="gradient" x1="50%" x2="50%" y1="0%" y2="100%">
-              <Stop offset="0%" stopColor="#FF007A" stopOpacity="0.2" />
-              <Stop offset="100%" stopColor="#FF007A" stopOpacity="0" />
+              <Stop offset="0%" stopColor={theme.colors.primary1} stopOpacity="0.2" />
+              <Stop offset="100%" stopColor={theme.colors.primary1} stopOpacity="0" />
             </LinearGradient>
           </Defs>
 
@@ -109,7 +112,7 @@ export const Graph = ({ graphs, title }: GraphProps) => {
       <Box alignSelf="center" flexDirection="row" width={SELECTION_WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
-            bg="pink"
+            bg="primary1"
             borderRadius="lg"
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
             width={BUTTON_WIDTH}

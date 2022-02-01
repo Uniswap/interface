@@ -34,7 +34,7 @@ export const darkTheme: Theme = {
   colors: {
     mainBackground: colorsDark.black,
     mainForeground: colorsDark.white,
-    tokenSelector: colorsLight.paleBlue,
+    tokenSelector: colorsLight.black,
     ...colorsDark,
   },
 }

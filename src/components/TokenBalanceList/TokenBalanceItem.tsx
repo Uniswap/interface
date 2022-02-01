@@ -51,8 +51,7 @@ export function TokenBalanceItem({
 
   return (
     <Button
-      alignItems="center"
-      bg="white"
+      bg="none"
       flexDirection="row"
       justifyContent="space-between"
       px="lg"
@@ -62,7 +61,7 @@ export function TokenBalanceItem({
         <CurrencyLogo currency={currency} size={32} />
         <Box alignItems="flex-start">
           <Text variant="h4">{currency.symbol}</Text>
-          <Text color="gray400" variant="bodySm">{`${formatCurrencyAmount(currencyAmount)} ${
+          <Text color="gray600" variant="bodySm">{`${formatCurrencyAmount(currencyAmount)} ${
             currency.symbol
           }`}</Text>
         </Box>

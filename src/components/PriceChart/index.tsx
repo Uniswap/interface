@@ -21,7 +21,7 @@ export const PriceChart = ({ currency }: PriceChartProps) => {
   const { t } = useTranslation()
 
   return (
-    <Box flex={1}>
+    <Box flex={1} margin="lg" overflow="hidden">
       {loading || !graphs ? (
         <Inset all="xxl">
           <ActivityIndicator />

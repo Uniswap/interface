@@ -30,12 +30,12 @@ export function Option({ currency, onPress, currencyAmount, currencyPrice }: Opt
         alignItems="center"
         flexDirection="row"
         justifyContent="space-between"
-        my="xs"
+        my="sm"
         px="lg"
         width="100%">
         <Box alignItems="center" flexDirection="row">
           <Box alignItems="center" flexDirection="row" justifyContent="center">
-            <CurrencyLogo currency={currency} size={40} />
+            <CurrencyLogo currency={currency} size={36} />
             <Text ml="sm" variant="h4">
               {currency.symbol}
             </Text>
@@ -55,7 +55,7 @@ export function Option({ currency, onPress, currencyAmount, currencyPrice }: Opt
         {currencyAmount && !currencyAmount.equalTo(0) ? (
           <Box alignItems="flex-end">
             <Text variant="bodyBold">{formatCurrencyAmount(currencyAmount)}</Text>
-            <Text color="gray200" variant="bodySm">
+            <Text color="gray400" variant="bodySm">
               {formatUSDPrice(balance)}
             </Text>
           </Box>

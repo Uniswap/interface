@@ -1,9 +1,9 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import { BackButton } from 'src/components/buttons/BackButton'
+import { BackX } from 'src/components/buttons/BackX'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { Box, Flex } from 'src/components/layout'
+import { Box } from 'src/components/layout'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Spacer } from 'src/components/layout/Spacer'
@@ -29,10 +29,10 @@ export function NotificationsScreen() {
   const { t } = useTranslation()
   return (
     <SheetScreen flex={1} px="lg">
-      <Flex alignItems="center" flexDirection="row" gap="md">
-        <BackButton />
-        <Text variant="bodyLg">{t('Transaction History')}</Text>
-      </Flex>
+      <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
+        <Text variant="bodyBold">{t('Transaction History')}</Text>
+        <BackX size={16} />
+      </Box>
       {activeAccount && (
         <TextButton
           mt="md"

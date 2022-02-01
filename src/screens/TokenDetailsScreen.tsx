@@ -89,7 +89,7 @@ export function TokenDetailsScreen({
       <ScrollView>
         <PriceChart currency={currency} />
         <Box mt="xl">
-          <Text color="gray200" mx="lg" variant="h5">
+          <Text color="gray600" mx="lg" variant="bodyMd">
             {t('Your balance')}
           </Text>
           {balance ? (

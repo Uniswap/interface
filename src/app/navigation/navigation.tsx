@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { useTheme } from '@shopify/restyle'
 import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { View } from 'react-native'
@@ -26,6 +27,7 @@ import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
 import { SwapScreen } from 'src/screens/SwapScreen'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
+import { Theme } from 'src/styles/theme'
 
 const Tab = createBottomTabNavigator<TabParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
@@ -34,6 +36,7 @@ const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 
 function TabNavigator() {
   const navigation = useAppStackNavigation()
+  const theme = useTheme<Theme>()
 
   const genericTabListeners = useMemo(
     () => ({
@@ -56,7 +59,16 @@ function TabNavigator() {
   )
 
   return (
-    <Tab.Navigator screenOptions={navOptions.tabBar}>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 100,
+          paddingTop: 20,
+          backgroundColor: theme.colors.mainBackground,
+          borderTopColor: theme.colors.gray100,
+        },
+      }}>
       <Tab.Screen
         component={HomeScreen}
         listeners={genericTabListeners}

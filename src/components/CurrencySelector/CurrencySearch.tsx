@@ -1,3 +1,4 @@
+import { useTheme } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +22,7 @@ import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { theme } from 'src/styles/theme'
+import { Theme } from 'src/styles/theme'
 import { currencyId } from 'src/utils/currencyId'
 import { useDebounce } from 'src/utils/timing'
 
@@ -58,6 +59,7 @@ export function CurrencySearch({
   const { chainIdToPrices } = useTokenPrices(currencies)
 
   const { t } = useTranslation()
+  const theme = useTheme<Theme>()
 
   const filteredCurrencies = useMemo(
     () => filter(currencies ?? null, chainFilter, debouncedSearchFilter),
@@ -80,24 +82,25 @@ export function CurrencySearch({
   return (
     <Box flex={1} width="100%">
       <Box mb="md">
-        <Flex centered row gap="sm" mb="sm" mx="lg">
+        <Flex centered row gap="sm" mb="sm" mx="md">
           {showBackButton ? <BackButton /> : null}
           <Box
             backgroundColor="gray50"
             borderRadius="lg"
             flexDirection="row"
-            paddingRight="sm"
+            paddingRight="md"
             style={styles.inputContainer}>
             <TextInput
               backgroundColor="none"
               borderWidth={0}
-              padding="md"
+              fontSize={16}
+              fontWeight={'500'}
               placeholder={t('Search token symbols or address')}
               style={styles.input}
               value={searchFilter ?? undefined}
               onChangeText={onChangeText}
             />
-            <SearchIcon stroke={theme.colors.gray200} strokeWidth={2.2} style={styles.inputIcon} />
+            <SearchIcon stroke={theme.colors.gray600} strokeWidth={2} style={styles.inputIcon} />
           </Box>
         </Flex>
 
@@ -110,8 +113,10 @@ export function CurrencySearch({
               }`}
               onPress={onClearChainFilter}>
               <Pill
-                backgroundColor="gray50"
-                borderColor={chainFilter === null ? 'gray200' : 'gray50'}
+                backgroundColor="gray100"
+                borderColor={chainFilter === null ? 'gray600' : 'gray50'}
+                foregroundColor={theme.colors.textColor}
+                height={36}
                 label={showNonZeroBalancesOnly ? t('Your tokens') : t('All tokens')}
               />
             </Button>

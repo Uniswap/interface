@@ -10,7 +10,8 @@ import {
 import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
 import { Identicon } from 'src/components/accounts/Identicon'
-import { BackButton } from 'src/components/buttons/BackButton'
+import { useAccountDisplayName } from 'src/components/accounts/useAccountDisplayName'
+import { BackX } from 'src/components/buttons/BackX'
 import { Button } from 'src/components/buttons/Button'
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { BlueToPinkRadial } from 'src/components/gradients/BlueToPinkRadial'
@@ -42,33 +43,65 @@ export function SettingsScreen() {
         screen: Screens.SettingsChains,
         text: t('Chains'),
         // TODO use chains icon when available
-        icon: <ChatBubbleIcon height={20} width={20} />,
+        icon: (
+          <ChatBubbleIcon
+            height={20}
+            stroke={theme.colors.textColor}
+            strokeLinecap="round"
+            strokeWidth="1.5"
+            width={20}
+          />
+        ),
       },
       {
         screen: Screens.SettingsSupport,
         text: t('Support'),
-        icon: <ChatBubbleIcon height={20} width={20} />,
+        icon: (
+          <ChatBubbleIcon
+            height={20}
+            stroke={theme.colors.textColor}
+            strokeLinecap="round"
+            strokeWidth="1.5"
+            width={20}
+          />
+        ),
       },
       {
         screen: Screens.SettingsTestConfigs,
         text: 'Test Configs',
-        icon: <ChatBubbleIcon height={20} width={20} />,
+        icon: (
+          <ChatBubbleIcon
+            height={20}
+            stroke={theme.colors.textColor}
+            strokeLinecap="round"
+            strokeWidth="1.5"
+            width={20}
+          />
+        ),
       },
       {
         screen: Screens.Dev,
         text: t('Dev Options'),
-        icon: <CoffeeIcon height={20} width={20} />,
+        icon: (
+          <CoffeeIcon
+            height={20}
+            stroke={theme.colors.textColor}
+            strokeLinecap="round"
+            strokeWidth="1.5"
+            width={20}
+          />
+        ),
       },
     ],
-    [t]
+    [t, theme]
   )
 
   return (
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={flex.fill}>
-        <Box alignItems="center" flexDirection="row" mb="lg">
-          <BackButton mr="md" />
-          <Text variant="bodyLg">{t('Settings')}</Text>
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
+          <Text variant="bodyBold">{t('Settings')}</Text>
+          <BackX size={16} onPressBack={() => navigation.goBack()} />
         </Box>
         {<ActiveAccountSummary />}
         {pages.map((o) => (
@@ -103,15 +136,16 @@ function SettingsRow({ page: { screen, icon, text }, navigation, theme }: Settin
 
 function ActiveAccountSummary() {
   const activeAccount = useActiveAccount()
+  const displayName = useAccountDisplayName(activeAccount)
   if (!activeAccount) return null
   return (
     <Box alignItems="center" borderRadius="lg" overflow="hidden" p="md">
-      <GradientBackground opacity={0.5}>
+      <GradientBackground opacity={0.2}>
         <BlueToPinkRadial />
       </GradientBackground>
       <Identicon address={activeAccount.address} size={50} />
       <Text mt="md" variant="h4">
-        {activeAccount.name}
+        {displayName}
       </Text>
       <CopyTextButton copyText={activeAccount.address} mt="sm" textVariant="bodySm">
         {shortenAddress(activeAccount.address, 4)}

@@ -1,3 +1,4 @@
+import { useTheme } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import { selectionAsync } from 'expo-haptics'
 import React, { ComponentProps } from 'react'
@@ -12,6 +13,7 @@ import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
 import { Screens } from 'src/screens/Screens'
+import { Theme } from 'src/styles/theme'
 import { currencyId } from 'src/utils/currencyId'
 
 interface CurrencySelectorProps {
@@ -30,6 +32,7 @@ export function CurrencySelector({
   const navigation = useAppStackNavigation()
 
   const { t } = useTranslation()
+  const theme = useTheme<Theme>()
 
   const selectCurrency = () => {
     selectionAsync()
@@ -54,10 +57,10 @@ export function CurrencySelector({
           {selectedCurrency ? (
             <Flex centered row flexDirection="row" gap="sm" px="sm" py="xs">
               <CurrencyLogo currency={selectedCurrency} size={25} />
-              <Text color="black" variant="h3">
+              <Text color="mainForeground" variant="h3">
                 {selectedCurrency.symbol}
               </Text>
-              <Chevron color="black" direction="e" height={10} width={16} />
+              <Chevron color={theme.colors.textColor} direction="e" height={8} width={12} />
             </Flex>
           ) : (
             <Flex centered row gap="xs" px="md" py="xs">

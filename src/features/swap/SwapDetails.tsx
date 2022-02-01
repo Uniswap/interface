@@ -31,7 +31,7 @@ export function SwapDetails({ currencyOut, trade }: SwapDetailsProps) {
   return (
     <AnimatedBox entering={FadeIn}>
       <Flex borderColor="gray100" borderRadius="md" borderWidth={1} gap="xs" my="sm" p="md">
-        <Text color="black" variant="h6">
+        <Text color="textColor" variant="h6">
           {t('Transaction Details')}
         </Text>
         <Box bg="gray100" height={1} my="xs" />

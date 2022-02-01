@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react-native'
 import { ThemeProvider } from '@shopify/restyle'
 import React, { StrictMode } from 'react'
-import { StatusBar } from 'react-native'
+import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClient, QueryClientProvider, setLogger } from 'react-query'
 import { Provider } from 'react-redux'
@@ -44,7 +44,7 @@ enableAnalytics()
 const queryClient = new QueryClient()
 
 export function App() {
-  const isDarkMode = false // useColorScheme() === 'dark'
+  const isDarkMode = useColorScheme() === 'dark'
 
   return (
     <StrictMode>

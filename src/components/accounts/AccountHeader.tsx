@@ -43,9 +43,11 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
         onPress={onPressAccount}>
         <Flex centered flexDirection="row" gap="xs">
           <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={24} />
-          <Text variant="buttonLabel">{displayName || t('Connect Wallet')}</Text>
+          <Text color="textColor" variant="buttonLabel">
+            {displayName || t('Connect Wallet')}
+          </Text>
           <Chevron
-            color={theme.colors.gray200}
+            color={theme.colors.gray400}
             direction={chevronDirection ?? 's'}
             height="9"
             width="18"

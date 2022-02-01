@@ -15,6 +15,7 @@ import {
   typography,
   TypographyProps,
   useRestyle,
+  useTheme,
 } from '@shopify/restyle'
 import React from 'react'
 import { TextInput as TextInputBase, TextInputProps as BaseTextInputProps } from 'react-native'
@@ -44,12 +45,15 @@ export type TextInputProps = RestyleProps &
   Required<Pick<BaseTextInputProps, 'onChangeText'>>
 
 export function TextInput({ onChangeText, onBlur, ...rest }: TextInputProps) {
+  const theme = useTheme<Theme>()
+
   // Set defaults for style values
   rest.backgroundColor ??= 'mainBackground'
   rest.px ??= 'md'
   rest.py ??= 'sm'
   rest.color ??= 'mainForeground'
   rest.borderRadius ??= 'md'
+  rest.placeholderTextColor = theme.colors.gray600
   const transformedProps = useRestyle(restyleFunctions, rest)
 
   return <TextInputBase onBlur={onBlur} onChangeText={onChangeText} {...transformedProps} />

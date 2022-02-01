@@ -22,7 +22,7 @@ function TransactionStatus() {
 
   if (recentlyFailedTransactions.length > 0) {
     return (
-      <Box p="sm">
+      <Box>
         <Toast
           label={getNotificationName(recentlyFailedTransactions[0], t) + t(' failed')}
           // TODO: actually format these
@@ -32,7 +32,7 @@ function TransactionStatus() {
     )
   } else if (recentlySuccessfulTransactions.length > 0) {
     return (
-      <Box p="sm">
+      <Box>
         <Toast
           label={getNotificationName(recentlySuccessfulTransactions[0], t) + t(' successful!')}
           variant={ToastVariant.Success}
@@ -41,7 +41,7 @@ function TransactionStatus() {
     )
   } else if (pendingTransactions.length > 0) {
     return (
-      <Box p="sm">
+      <Box>
         <Toast
           label={
             pendingTransactions.length +

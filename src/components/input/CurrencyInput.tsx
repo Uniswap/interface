@@ -60,9 +60,9 @@ export function CurrencyInput(props: CurrencyInputProps) {
   )
 
   return (
-    <Flex borderRadius="md" gap="sm" p="md" {...transformedProps}>
+    <Flex borderRadius="lg" gap="sm" mb="sm" p="md" px="md" {...transformedProps}>
       {title && (
-        <Text color="gray400" variant="body">
+        <Text color="gray600" variant="bodyMd">
           {title}
         </Text>
       )}
@@ -75,7 +75,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           fontFamily={theme.textVariants.h1.fontFamily}
           fontSize={theme.textVariants.h1.fontSize}
           height={48}
-          placeholder="0.0"
+          placeholder="0"
           px="none"
           py="none"
           value={currencyAmount?.toExact()}
@@ -102,18 +102,21 @@ export function CurrencyInput(props: CurrencyInputProps) {
           onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
         />
       </Flex>
-      <Flex alignContent="center" flexDirection="row" justifyContent="space-between">
-        {price && (
-          <Text color="gray400" variant="body">
-            {formatPrice(price)}
-          </Text>
-        )}
-        {currency && (
-          <Text color="gray400" variant="body">{`${t('Balance')} ${formatCurrencyAmount(
-            currencyBalance
-          )}`}</Text>
-        )}
-      </Flex>
+
+      {currency && (
+        <Flex alignContent="center" flexDirection="row" justifyContent="space-between">
+          {price && (
+            <Text color="gray600" variant="bodyMd">
+              {formatPrice(price)}
+            </Text>
+          )}
+          {currency && (
+            <Text color="gray600" variant="bodyMd">{`${t('Balance')} ${formatCurrencyAmount(
+              currencyBalance
+            )}`}</Text>
+          )}
+        </Flex>
+      )}
     </Flex>
   )
 }
