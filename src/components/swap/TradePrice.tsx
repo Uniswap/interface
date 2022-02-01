@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Price } from '@uniswap/sdk-core'
-import useUSDCPrice from 'hooks/useUSDCPrice'
-import { useCallback, useContext } from 'react'
+import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
+import { useCallback, useContext, useMemo } from 'react'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -32,7 +32,13 @@ const StyledPriceContainer = styled.button`
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
 
-  const usdcPrice = useUSDCPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
+  const quoteAmount = useMemo(() => {
+    const currency = showInverted ? price.baseCurrency : price.quoteCurrency
+    return (showInverted ? price : price.invert()).quote(
+      CurrencyAmount.fromFractionalAmount(currency, 10 ** currency.decimals, 1)
+    )
+  }, [price, showInverted])
+  const usdValue = useUSDCValue(quoteAmount)
 
   let formattedPrice: string
   try {
@@ -58,9 +64,9 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       <Text fontWeight={500} color={theme.text1}>
         {text}
       </Text>{' '}
-      {usdcPrice && (
+      {usdValue && (
         <ThemedText.DarkGray>
-          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>
+          <Trans>(${usdValue.toSignificant(6, { groupSeparator: ',' })})</Trans>
         </ThemedText.DarkGray>
       )}
     </StyledPriceContainer>
