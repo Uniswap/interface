@@ -161,7 +161,7 @@
     "@ethersproject/constants": "^5.4.0",
     "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/hash": "^5.4.0",
-    "@ethersproject/providers": "^5.4.5",
+    "@ethersproject/providers": "5.5.3",
     "@ethersproject/solidity": "^5.4.0",
     "@ethersproject/strings": "^5.4.0",
     "@ethersproject/units": "^5.4.0",
