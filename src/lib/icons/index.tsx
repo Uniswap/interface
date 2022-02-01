@@ -52,22 +52,22 @@ const LargeWrapper = styled.div<{ iconSize: number }>`
   ${largeIconCss}
 `
 
+export type Icon = ReturnType<typeof icon> | typeof LargeIcon
+
 interface LargeIconProps {
-  icon: ReturnType<typeof icon>
+  icon?: Icon
   color?: Color
   size?: number
   className?: string
 }
 
-export function LargeIcon({ icon: Icon, color, size = 1.2, className }: LargeIconProps) {
+export function LargeIcon({ icon: Icon = Info, color, size = 1.2, className }: LargeIconProps) {
   return (
     <LargeWrapper color={color} iconSize={size} className={className}>
       <Icon color={color} />
     </LargeWrapper>
   )
 }
-
-export type Icon = ReturnType<typeof icon> | typeof LargeIcon
 
 export const AlertTriangle = icon(AlertTriangleIcon)
 export const ArrowDown = icon(ArrowDownIcon)
