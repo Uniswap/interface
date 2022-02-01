@@ -10,7 +10,6 @@
     "lib",
     "dist"
   ],
-  "private": true,
   "devDependencies": {
     "@ethersproject/experimental": "^5.4.0",
     "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
