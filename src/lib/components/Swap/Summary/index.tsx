@@ -45,6 +45,7 @@ const Body = styled(Column)<{ open: boolean }>`
 
       ${Column} {
         height: 100%;
+        grid-template-rows: repeat(auto-fill, 1em);
         padding: ${({ open }) => (open ? '0.5em 0' : 0)};
         transition: padding 0.25s;
 
@@ -62,6 +63,7 @@ const Body = styled(Column)<{ open: boolean }>`
 
     ${Estimate} {
       max-height: ${({ open }) => (open ? 0 : 56 / 12)}em; // 2 * line-height + padding
+      min-height: 0;
       overflow-y: hidden;
       padding: ${({ open }) => (open ? 0 : '1em 0')};
       transition: ${({ open }) =>
