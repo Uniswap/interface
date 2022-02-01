@@ -34,7 +34,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   const [loading, setLoading] = useState(false)
   const [fetchedResult, setFetchedResult] = useState<
     | {
-        data: GetQuoteResult
+        data: GetQuoteResult | undefined
         error?: unknown
       }
     | undefined
@@ -43,12 +43,20 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   useEffect(() => {
     async function fetchQuote() {
       if (queryArgs) {
-        const result = await getClientSideQuote(queryArgs)
-        setLoading(false)
-        setFetchedResult({
-          data: result.data,
-          error: result.error,
-        })
+        try {
+          const result = await getClientSideQuote(queryArgs)
+          setLoading(false)
+          setFetchedResult({
+            data: result.data,
+            error: result.error,
+          })
+        } catch (e) {
+          setLoading(false)
+          setFetchedResult({
+            data: undefined,
+            error: true,
+          })
+        }
       }
     }
     setLoading(true)
