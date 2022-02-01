@@ -30,9 +30,7 @@ const Arrow = styled.div`
 
   ::before {
     background: ${({ theme }) => theme.dialog};
-    border: 1px solid ${({ theme }) => theme.outline};
     content: '';
-
     height: 8px;
     position: absolute;
     transform: rotate(45deg);
@@ -40,35 +38,19 @@ const Arrow = styled.div`
   }
 
   &.arrow-top {
-    bottom: -5px;
-    ::before {
-      border-left: none;
-      border-top: none;
-    }
+    bottom: -4px;
   }
 
   &.arrow-bottom {
-    top: -5px;
-    ::before {
-      border-bottom: none;
-      border-right: none;
-    }
+    top: -4px;
   }
 
   &.arrow-left {
-    right: -5px;
-    ::before {
-      border-bottom: none;
-      border-left: none;
-    }
+    right: -4px;
   }
 
   &.arrow-right {
-    left: -5px;
-    ::before {
-      border-right: none;
-      border-top: none;
-    }
+    left: -4px;
   }
 `
 
@@ -77,10 +59,11 @@ export interface PopoverProps {
   show: boolean
   children: React.ReactNode
   placement: Placement
+  offset?: number
   contained?: true
 }
 
-export default function Popover({ content, show, children, placement, contained }: PopoverProps) {
+export default function Popover({ content, show, children, placement, offset, contained }: PopoverProps) {
   const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
@@ -90,8 +73,8 @@ export default function Popover({ content, show, children, placement, contained 
 
   const options = useMemo((): Options => {
     const modifiers: Options['modifiers'] = [
-      { name: 'offset', options: { offset: [5, 5] } },
-      { name: 'arrow', options: { element: arrow, padding: 6 } },
+      { name: 'offset', options: { offset: [5, offset || 5] } },
+      { name: 'arrow', options: { element: arrow, padding: 4 } },
     ]
     if (contained) {
       modifiers.push(
@@ -118,7 +101,7 @@ export default function Popover({ content, show, children, placement, contained 
       strategy: 'absolute',
       modifiers,
     }
-  }, [arrow, boundary, placement, contained])
+  }, [offset, arrow, contained, placement, boundary])
 
   const { styles, attributes } = usePopper(reference.current, popover, options)
 
