@@ -11,7 +11,7 @@ import useActiveWeb3React from './useActiveWeb3React'
 // combines the block timestamp with the user setting to give the deadline that should be used for any submitted transaction
 export default function useTransactionDeadline(): BigNumber | undefined {
   const { chainId } = useActiveWeb3React()
-  const userDeadline = useAtomValue(transactionTtlAtom) || TRANSACTION_TTL_DEFAULT
+  const userDeadline: number = useAtomValue(transactionTtlAtom) || TRANSACTION_TTL_DEFAULT
   const blockTimestamp = useCurrentBlockTimestamp()
   return useMemo(() => {
     if (blockTimestamp && chainId && L2_CHAIN_IDS.includes(chainId)) return blockTimestamp.add(L2_DEADLINE_FROM_NOW)
