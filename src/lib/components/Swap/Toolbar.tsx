@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useSwapInfo } from 'lib/hooks/swap'
@@ -9,27 +10,30 @@ import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { getTokenPath } from 'utils/getTokenPath'
 
 import { TextButton } from '../Button'
 import Row from '../Row'
 import Rule from '../Rule'
+import Tooltip from '../Tooltip'
 
 const ToolbarRow = styled(Row)`
   padding: 0.5em 0;
   ${largeIconCss}
 `
 
-function RoutingTooltip() {
-  return <Info color="secondary" />
-  /* TODO(zzmp): Implement post-beta launch.
+function RoutingTooltip({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
+  const routes = useMemo(() => getTokenPath(trade), [trade])
+
   return (
     <Tooltip icon={Info} placement="bottom">
-      <ThemeProvider>
-        <ThemedText.Subhead2>TODO: Routing Tooltip</ThemedText.Subhead2>
-      </ThemeProvider>
+      <RoutingDiagram
+        currencyIn={trade.inputAmount.currency}
+        currencyOut={trade.outputAmount.currency}
+        routes={routes}
+      />
     </Tooltip>
   )
-  */
 }
 
 interface LoadedStateProps {
@@ -132,7 +136,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
       if (inputCurrency && inputAmount && outputCurency && outputAmount) {
         return (
           <>
-            <RoutingTooltip />
+            <RoutingTooltip trade={trade?.trade} />
             <LoadedState inputAmount={inputAmount} outputAmount={outputAmount} trade={trade?.trade} />
           </>
         )
@@ -155,7 +159,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     routeFound,
     routeIsLoading,
     routeIsSyncing,
-    trade?.trade,
+    trade,
   ])
 
   return (
