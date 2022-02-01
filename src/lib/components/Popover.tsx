@@ -23,6 +23,8 @@ const Reference = styled.div`
   display: inline-block;
 `
 
+const SQRT_8 = Math.sqrt(8)
+
 const Arrow = styled.div`
   height: 8px;
   width: 8px;
@@ -38,19 +40,31 @@ const Arrow = styled.div`
   }
 
   &.arrow-top {
-    bottom: -4px;
+    bottom: -${SQRT_8}px;
+    ::before {
+      border-bottom-right-radius: 1px;
+    }
   }
 
   &.arrow-bottom {
-    top: -4px;
+    top: -${SQRT_8}px;
+    ::before {
+      border-top-left-radius: 1px;
+    }
   }
 
   &.arrow-left {
-    right: -4px;
+    right: -${SQRT_8}px;
+    ::before {
+      border-top-right-radius: 1px;
+    }
   }
 
   &.arrow-right {
-    left: -4px;
+    left: -${SQRT_8}px;
+    ::before {
+      border-bottom-left-radius: 1px;
+    }
   }
 `
 
@@ -73,7 +87,7 @@ export default function Popover({ content, show, children, placement, offset, co
 
   const options = useMemo((): Options => {
     const modifiers: Options['modifiers'] = [
-      { name: 'offset', options: { offset: [5, offset || 5] } },
+      { name: 'offset', options: { offset: [4, offset || 4] } },
       { name: 'arrow', options: { element: arrow, padding: 4 } },
     ]
     if (contained) {
