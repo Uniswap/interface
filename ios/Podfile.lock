@@ -493,7 +493,7 @@ PODS:
   - vision-camera-ocr (0.1.0):
     - GoogleMLKit/TextRecognition
     - React-Core
-  - VisionCamera (2.8.3):
+  - VisionCamera (2.12.0):
     - React
     - React-callinvoker
     - React-Core
@@ -777,7 +777,7 @@ SPEC CHECKSUMS:
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   Sentry: 9a4e621430e2dae4477d791f2f7e905720b6efbf
   vision-camera-ocr: 4a70ae5bbc6a8ed83b607bfb27bf1ccfbe7fc25d
-  VisionCamera: 41b059e8993e263efbac83eebb953ba6121c8e85
+  VisionCamera: e3f4eea37f32f9a2ab40ce560940174a5258abaf
   Yoga: c11abbf5809216c91fcd62f5571078b83d9b6720
 
 PODFILE CHECKSUM: f46fdd7e1022e9b945435aa08b28c086fe2bf3de
