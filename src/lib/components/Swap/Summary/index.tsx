@@ -4,7 +4,8 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import useScrollbar from 'lib/hooks/useScrollbar'
-import { Expando, Info } from 'lib/icons'
+import { AlertTriangle, Expando, Info } from 'lib/icons'
+import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
@@ -87,6 +88,8 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
 
   const independentField = useAtomValue(independentFieldAtom)
 
+  const slippageWarning = useMemo(() => allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE), [allowedSlippage])
+
   const [confirmedTrade, setConfirmedTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && confirmedTrade && tradeMeaningfullyDiffers(trade, confirmedTrade)),
@@ -115,7 +118,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         <Rule />
         <Row>
           <Row gap={0.5}>
-            <Info color="secondary" />
+            {slippageWarning ? <AlertTriangle color="warning" /> : <Info color="secondary" />}
             <ThemedText.Subhead2 color="secondary">
               <Trans>Swap details</Trans>
             </ThemedText.Subhead2>

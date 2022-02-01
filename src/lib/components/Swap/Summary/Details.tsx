@@ -2,8 +2,8 @@ import { t } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
-import { integratorFeeAtom } from 'lib/state/settings'
-import { ThemedText } from 'lib/theme'
+import { integratorFeeAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
+import { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
 import { computeRealizedLPFeePercent } from 'utils/prices'
@@ -13,11 +13,12 @@ import Row from '../../Row'
 interface DetailProps {
   label: string
   value: string
+  color?: Color
 }
 
-function Detail({ label, value }: DetailProps) {
+function Detail({ label, value, color }: DetailProps) {
   return (
-    <ThemedText.Caption>
+    <ThemedText.Caption color={color}>
       <Row gap={2}>
         <span>{label}</span>
         <span style={{ whiteSpace: 'nowrap' }}>{value}</span>
@@ -44,7 +45,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     return trade.priceImpact.subtract(realizedLpFeePercent)
   }, [trade])
 
-  const details = useMemo((): [string, string][] => {
+  const details = useMemo(() => {
     // @TODO(ianlapham): Check that provider fee is even a valid list item
     return [
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
@@ -56,17 +57,21 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       trade.tradeType === TradeType.EXACT_OUTPUT
         ? [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`]
         : [],
-      [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`],
+      [
+        t`Slippage tolerance`,
+        `${allowedSlippage.toFixed(2)}%`,
+        allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE) && 'warning',
+      ],
     ].filter(isDetail)
 
-    function isDetail(detail: unknown[]): detail is [string, string] {
+    function isDetail(detail: unknown[]): detail is [string, string, Color | undefined] {
       return Boolean(detail[1])
     }
   }, [allowedSlippage, inputCurrency, integrator, integratorFee, outputCurrency.symbol, priceImpact, trade])
   return (
     <>
-      {details.map(([label, detail]) => (
-        <Detail key={label} label={label} value={detail} />
+      {details.map(([label, detail, color]) => (
+        <Detail key={label} label={label} value={detail} color={color} />
       ))}
     </>
   )
