@@ -6,14 +6,17 @@ import { AnimatedText } from 'src/components/Text'
 
 interface Props {
   label: string
-  selected: boolean
+  index: number
+  selectedIndex: AnimatedNumber
   transition: AnimatedNumber
 }
 
-export function TimeRangeLabel({ label, selected, transition }: Props) {
+export function TimeRangeLabel({ index, label, selectedIndex, transition }: Props) {
   const theme = useAppTheme()
 
   const style = useAnimatedStyle(() => {
+    const selected = index === selectedIndex.value
+
     if (!selected) return { color: theme.colors.primary1 }
 
     const color = interpolateColor(

@@ -32,6 +32,8 @@ interface GraphProps {
  * Inspired by https://github.com/wcandillon/can-it-be-done-in-react-native/tree/master/season4/src/Rainbow
  */
 export const Graph = ({ graphs, title }: GraphProps) => {
+  const theme = useTheme<Theme>()
+
   // whether the graph pan gesture is active
   const isPanning = useSharedValue(false)
   // pan gesture x and y
@@ -68,7 +70,6 @@ export const Graph = ({ graphs, title }: GraphProps) => {
   const sliderStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: withTiming(BUTTON_WIDTH * currentGraphIndex.value) }],
   }))
-  const theme = useTheme<Theme>()
 
   return (
     <Box flex={1}>
@@ -130,8 +131,9 @@ export const Graph = ({ graphs, title }: GraphProps) => {
               }}>
               <Box padding="xs" width={BUTTON_WIDTH}>
                 <TimeRangeLabel
+                  index={index}
                   label={graph.label}
-                  selected={currentGraphIndex.value === index}
+                  selectedIndex={currentGraphIndex}
                   transition={transition}
                 />
               </Box>
