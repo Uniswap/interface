@@ -18,6 +18,7 @@ import {
   Slash as SlashIcon,
   Trash2 as Trash2Icon,
   X as XIcon,
+  XOctagon as XOctagonIcon,
 } from 'react-feather'
 
 import { ReactComponent as CheckIcon } from '../assets/svg/check.svg'
@@ -36,8 +37,6 @@ function icon(Icon: FeatherIcon | SVGIcon) {
   `
 }
 
-export type Icon = ReturnType<typeof icon>
-
 export const largeIconCss = css<{ iconSize: number }>`
   display: flex;
 
@@ -50,11 +49,14 @@ export const largeIconCss = css<{ iconSize: number }>`
 
 const LargeWrapper = styled.div<{ iconSize: number }>`
   height: 1em;
+  width: ${({ iconSize }) => iconSize}em;
   ${largeIconCss}
 `
 
+export type Icon = ReturnType<typeof icon> | typeof LargeIcon
+
 interface LargeIconProps {
-  icon: Icon
+  icon?: Icon
   color?: Color
   size?: number
   className?: string
@@ -63,7 +65,7 @@ interface LargeIconProps {
 export function LargeIcon({ icon: Icon, color, size = 1.2, className }: LargeIconProps) {
   return (
     <LargeWrapper color={color} iconSize={size} className={className}>
-      <Icon color={color} />
+      {Icon && <Icon color={color} />}
     </LargeWrapper>
   )
 }
@@ -83,6 +85,7 @@ export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)
 export const Trash2 = icon(Trash2Icon)
 export const X = icon(XIcon)
+export const XOctagon = icon(XOctagonIcon)
 
 export const Check = styled(icon(CheckIcon))`
   circle {

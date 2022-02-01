@@ -17,6 +17,10 @@ export const optionCss = (selected: boolean) => css`
   :enabled:hover {
     border-color: ${({ theme }) => theme.onHover(selected ? theme.active : theme.outline)};
   }
+
+  :enabled:focus-within {
+    border-color: ${({ theme }) => theme.active};
+  }
 `
 
 export function value(Value: AnyStyledComponent) {

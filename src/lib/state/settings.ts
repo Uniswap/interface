@@ -3,6 +3,9 @@ import { atomWithReset } from 'jotai/utils'
 
 import { pickAtom, setTogglable } from './atoms'
 
+export const MAX_VALID_SLIPPAGE = new Percent(1, 2)
+export const MIN_HIGH_SLIPPAGE = new Percent(1, 100)
+
 // transaction deadline in minutes, needs to be adjusted to seconds before use
 // @TODO(ianlapham): update this to be stored as seconds
 export const TRANSACTION_TTL_DEFAULT = 30
@@ -17,7 +20,7 @@ interface Settings {
 
 const initialSettings: Settings = {
   maxSlippage: 'auto',
-  transactionTtl: TRANSACTION_TTL_DEFAULT,
+  transactionTtl: undefined,
   integratorFee: undefined,
   mockTogglable: true,
   clientSideRouter: false,

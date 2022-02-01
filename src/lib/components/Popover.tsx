@@ -23,6 +23,8 @@ const Reference = styled.div`
   display: inline-block;
 `
 
+const SQRT_8 = Math.sqrt(8)
+
 const Arrow = styled.div`
   height: 8px;
   width: 8px;
@@ -30,9 +32,7 @@ const Arrow = styled.div`
 
   ::before {
     background: ${({ theme }) => theme.dialog};
-    border: 1px solid ${({ theme }) => theme.outline};
     content: '';
-
     height: 8px;
     position: absolute;
     transform: rotate(45deg);
@@ -40,34 +40,30 @@ const Arrow = styled.div`
   }
 
   &.arrow-top {
-    bottom: -5px;
+    bottom: -${SQRT_8}px;
     ::before {
-      border-left: none;
-      border-top: none;
+      border-bottom-right-radius: 1px;
     }
   }
 
   &.arrow-bottom {
-    top: -5px;
+    top: -${SQRT_8}px;
     ::before {
-      border-bottom: none;
-      border-right: none;
+      border-top-left-radius: 1px;
     }
   }
 
   &.arrow-left {
-    right: -5px;
+    right: -${SQRT_8}px;
     ::before {
-      border-bottom: none;
-      border-left: none;
+      border-top-right-radius: 1px;
     }
   }
 
   &.arrow-right {
-    left: -5px;
+    left: -${SQRT_8}px;
     ::before {
-      border-right: none;
-      border-top: none;
+      border-bottom-left-radius: 1px;
     }
   }
 `
@@ -77,10 +73,11 @@ export interface PopoverProps {
   show: boolean
   children: React.ReactNode
   placement: Placement
+  offset?: number
   contained?: true
 }
 
-export default function Popover({ content, show, children, placement, contained }: PopoverProps) {
+export default function Popover({ content, show, children, placement, offset, contained }: PopoverProps) {
   const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
@@ -90,8 +87,8 @@ export default function Popover({ content, show, children, placement, contained 
 
   const options = useMemo((): Options => {
     const modifiers: Options['modifiers'] = [
-      { name: 'offset', options: { offset: [5, 5] } },
-      { name: 'arrow', options: { element: arrow, padding: 6 } },
+      { name: 'offset', options: { offset: [4, offset || 4] } },
+      { name: 'arrow', options: { element: arrow, padding: 4 } },
     ]
     if (contained) {
       modifiers.push(
@@ -118,7 +115,7 @@ export default function Popover({ content, show, children, placement, contained 
       strategy: 'absolute',
       modifiers,
     }
-  }, [arrow, boundary, placement, contained])
+  }, [offset, arrow, contained, placement, boundary])
 
   const { styles, attributes } = usePopper(reference.current, popover, options)
 
