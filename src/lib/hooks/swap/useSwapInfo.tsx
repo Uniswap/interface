@@ -11,7 +11,7 @@ import { ReactNode, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isAddress } from '../../../utils'
-import { useBestTrade } from '../routing/useBestTrade'
+import useClientSideSmartOrderRouterTrade from '../routing/useClientSideSmartOrderRouterTrade'
 import useActiveWeb3React from '../useActiveWeb3React'
 
 interface SwapInfo {
@@ -55,7 +55,7 @@ function useComputeSwapInfo(): SwapInfo {
     [inputCurrency, isExactIn, outputCurrency, amount]
   )
 
-  const trade = useBestTrade(
+  const trade = useClientSideSmartOrderRouterTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
