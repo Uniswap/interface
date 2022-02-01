@@ -49,7 +49,7 @@ function Option({ wrapper: Wrapper, children, selected, onSelect, icon }: PropsW
     <Wrapper selected={selected} onClick={onSelect}>
       <Row gap={0.5}>
         {children}
-        <span style={{ width: '1.2em' }}>{icon ? icon : selected && <LargeIcon icon={Check} />}</span>
+        {icon ? icon : <LargeIcon icon={selected ? Check : undefined} size={1.25} />}
       </Row>
     </Wrapper>
   )
@@ -70,8 +70,8 @@ export default function MaxSlippageSelect() {
           <Tooltip
             placement="top"
             icon={LargeIcon}
-            iconProps={{ icon: AlertTriangle, color: 'warning', size: 1.2 }}
-            offset={17}
+            iconProps={{ icon: AlertTriangle, color: 'warning', size: 1.25 }}
+            offset={16}
             contained
           >
             <ThemedText.Caption>{highSlippage}</ThemedText.Caption>
@@ -83,10 +83,10 @@ export default function MaxSlippageSelect() {
             content={<ThemedText.Caption>{invalidSlippage}</ThemedText.Caption>}
             show={true}
             placement="top"
-            offset={17}
+            offset={16}
             contained
           >
-            <LargeIcon icon={XOctagon} color="error" />
+            <LargeIcon icon={XOctagon} color="error" size={1.25} />
           </Popover>
         )
         return
