@@ -1,9 +1,10 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
-  "homepage": ".",
-  "main": "dist/interface.js",
-  "module": "dist/interface.esm.js",
+  "name": "@uniswap/widgets",
+  "version": "0.0.0-beta",
+  "description": "Uniswap Widgets",
+  "homepage": "https://github.com/uniswap/interface",
+  "main": "dist/widgets.js",
+  "module": "dist/widgets.esm.js",
   "types": "dist/index.d.ts",
   "files": [
     "lib",
