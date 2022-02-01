@@ -23,7 +23,7 @@ import { ExternalLink } from 'theme'
 import { DMM_ANALYTICS_URL } from '../../constants'
 import { useActiveWeb3React } from 'hooks'
 import { useMedia } from 'react-use'
-import { SlideToUnlock } from 'components/Header'
+// import { SlideToUnlock } from 'components/Header'
 import MenuFlyout from 'components/MenuFlyout'
 
 const StyledMenuIcon = styled(MenuIcon)`
@@ -163,7 +163,7 @@ export default function Menu() {
         translatedTitle={t`Menu`}
         hasArrow
       >
-        {!above768 && (
+        {/* !above768 && (
           <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>
             <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />
             <SlideToUnlock>
@@ -172,7 +172,7 @@ export default function Menu() {
               </Text>
             </SlideToUnlock>
           </MenuItem>
-        )}
+          ) */}
         {bridgeLink && (
           <MenuItem href={bridgeLink}>
             <Share2 size={14} />

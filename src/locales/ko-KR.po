@@ -1652,10 +1652,6 @@ msgstr "약관"
 msgid "Terms of Use"
 msgstr "이용 약관"
 
-#: src/components/Header/index.tsx
-msgid "Test our L2 solution now!"
-msgstr ""
-
 #: src/pages/SwapV2/index.tsx
 msgid "The amount you save compared to <0>{0}</0>."
 msgstr ""
