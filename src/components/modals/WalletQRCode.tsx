@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Share } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import { useAppTheme } from 'src/app/hooks'
 import CopySheets from 'src/assets/icons/copy-sheets.svg'
@@ -15,6 +16,7 @@ import { NULL_ADDRESS } from 'src/constants/accounts'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
+import { logger } from 'src/utils/logger'
 
 interface Props {
   isVisible: boolean
@@ -25,6 +27,17 @@ export function WalletQRCode({ isVisible, onClose }: Props) {
   const activeAccount = useActiveAccount()
   const { t } = useTranslation()
   const theme = useAppTheme()
+
+  const onShare = async () => {
+    if (!activeAccount) return
+    try {
+      await Share.share({
+        message: activeAccount.address,
+      })
+    } catch (e) {
+      logger.error('WalletQRCode', 'onShare', 'Error sharing account address', e)
+    }
+  }
 
   if (!activeAccount) return null
 
@@ -67,6 +80,7 @@ export function WalletQRCode({ isVisible, onClose }: Props) {
             icon={<ShareIcon height={18} stroke="white" width={18} />}
             label={t`Share`}
             marginLeft="sm"
+            onPress={onShare}
           />
         </Box>
       </Box>
