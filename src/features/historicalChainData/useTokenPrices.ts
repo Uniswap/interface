@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import {
@@ -7,6 +8,7 @@ import {
   useTokensQuery,
 } from 'src/features/historicalChainData/generated/uniswap-hooks'
 import { useV3SubgraphClient } from 'src/features/historicalChainData/utils'
+import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 
 export function useTokenPrices(tokens: Currency[]) {
@@ -116,13 +118,13 @@ function useChainTokenPrices({
       // TODO: as Price
       const priceUSD = currentTokenData ? currentTokenData.derivedETH * currentEthPrice : undefined
 
-      memo[address] = {
+      memo[buildCurrencyId(chainId, address)] = {
         priceUSD,
       }
 
       return memo
     },
-    { ETH: { priceUSD: currentEthPrice } }
+    { [buildCurrencyId(chainId, NATIVE_ADDRESS)]: { priceUSD: currentEthPrice } }
   )
 
   return {

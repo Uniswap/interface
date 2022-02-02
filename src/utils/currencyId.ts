@@ -1,9 +1,13 @@
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
+import { ChainId } from 'src/constants/chains'
 
 export function currencyId(currency: Currency): string {
-  const chainId = currency.chainId
-  return `${chainId}-${currencyAddress(currency)}`
+  return buildCurrencyId(currency.chainId, currencyAddress(currency))
+}
+
+export function buildCurrencyId(chainId: ChainId, address: string) {
+  return `${chainId}-${address}`
 }
 
 export function currencyAddress(currency: Currency): string {
