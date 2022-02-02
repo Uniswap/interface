@@ -1,6 +1,6 @@
 {
   "name": "@uniswap/widgets",
-  "version": "0.0.0-beta",
+  "version": "0.0.1-beta",
   "description": "Uniswap Widgets",
   "homepage": "https://github.com/uniswap/interface",
   "main": "dist/widgets.js",
