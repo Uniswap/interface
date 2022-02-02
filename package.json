@@ -1,8 +1,8 @@
 {
   "name": "@uniswap/widgets",
-  "version": "0.0.1-beta",
+  "version": "0.0.2-beta",
   "description": "Uniswap Widgets",
-  "homepage": "https://github.com/uniswap/interface",
+  "homepage": ".",
   "main": "dist/widgets.js",
   "module": "dist/widgets.esm.js",
   "types": "dist/index.d.ts",
