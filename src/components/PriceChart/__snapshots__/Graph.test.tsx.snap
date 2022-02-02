@@ -111,7 +111,16 @@ exports[`renders correctly 1`] = `
       value="-50%"
     />
   </View>
-  <View>
+  <View
+    style={
+      Array [
+        Object {
+          "display": "flex",
+          "marginBottom": 10,
+        },
+      ]
+    }
+  >
     <RNSVGSvgView
       bbHeight={180}
       bbWidth={750}

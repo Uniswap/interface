@@ -80,7 +80,7 @@ export const Graph = ({ graphs, title }: GraphProps) => {
         title={title}
         translation={translation}
       />
-      <View>
+      <Box mb="sm">
         <Svg height={HEIGHT} width={WIDTH}>
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
@@ -109,7 +109,7 @@ export const Graph = ({ graphs, title }: GraphProps) => {
           isActive={isPanning}
           translation={translation}
         />
-      </View>
+      </Box>
       <Box alignSelf="center" flexDirection="row" width={SELECTION_WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
