@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import useScrollbar from 'lib/hooks/useScrollbar'
@@ -9,6 +10,7 @@ import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
+import { computeRealizedPriceImpact } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton from '../../ActionButton'
@@ -83,14 +85,19 @@ interface SummaryDialogProps {
 }
 
 export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDialogProps) {
-  const { inputAmount, outputAmount } = trade
+  const { inputAmount, outputAmount, executionPrice } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
-  const price = trade.executionPrice
+  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
 
   const independentField = useAtomValue(independentFieldAtom)
 
-  const slippageWarning = useMemo(() => allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE), [allowedSlippage])
+  const warning = useMemo(() => {
+    if (priceImpact >= ALLOWED_PRICE_IMPACT_HIGH) return 'error'
+    if (priceImpact >= ALLOWED_PRICE_IMPACT_MEDIUM) return 'warning'
+    if (allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE)) return 'warning'
+    return
+  }, [allowedSlippage, priceImpact])
 
   const [confirmedTrade, setConfirmedTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
@@ -114,13 +121,13 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         <SummaryColumn gap={0.75} flex justify="center">
           <Summary input={inputAmount} output={outputAmount} usdc={true} />
           <ThemedText.Caption>
-            1 {inputCurrency.symbol} = {price?.toSignificant(6)} {outputCurrency.symbol}
+            1 {inputCurrency.symbol} = {executionPrice?.toSignificant(6)} {outputCurrency.symbol}
           </ThemedText.Caption>
         </SummaryColumn>
         <Rule />
         <Row>
           <Row gap={0.5}>
-            {slippageWarning ? <AlertTriangle color="warning" /> : <Info color="secondary" />}
+            {warning ? <AlertTriangle color={warning} /> : <Info color="secondary" />}
             <ThemedText.Subhead2 color="secondary">
               <Trans>Swap details</Trans>
             </ThemedText.Subhead2>
