@@ -5,7 +5,7 @@
   "homepage": ".",
   "main": "dist/widgets.js",
   "module": "dist/widgets.esm.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/widgets.d.ts",
   "files": [
     "lib",
     "dist"
