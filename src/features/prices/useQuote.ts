@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 import { QuoteResult } from 'src/features/prices/types'
 import { serializeQueryParams } from 'src/features/swap/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { currencyId } from 'src/utils/currencyId'
+import { currencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from '../../constants/misc'
 
@@ -28,9 +28,9 @@ export function useQuote(params: UseQuoteProps) {
   const currencyOut =
     tradeType === TradeType.EXACT_OUTPUT ? amountSpecified?.currency : otherCurrency
 
-  const tokenInAddress = currencyIn ? currencyId(currencyIn) : undefined
+  const tokenInAddress = currencyIn ? currencyAddress(currencyIn) : undefined
   const tokenInChainId = currencyIn?.chainId
-  const tokenOutAddress = currencyOut ? currencyId(currencyOut) : undefined
+  const tokenOutAddress = currencyOut ? currencyAddress(currencyOut) : undefined
   const tokenOutChainId = currencyOut?.chainId
 
   // builds a unique key to represent the quote in the cache

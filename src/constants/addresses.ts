@@ -14,6 +14,9 @@ const SUPPORTED_L1_L2_CHAINS = [
   ChainId.POLYGON_MUMBAI,
 ]
 
+/** Address that represents native currencies on ETH, Polygon, etc. */
+export const NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap(
   '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 )
