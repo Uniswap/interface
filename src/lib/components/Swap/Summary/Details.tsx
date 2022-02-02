@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtom } from 'jotai'
 import { integratorFeeAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Color, ThemedText } from 'lib/theme'
@@ -50,7 +51,15 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     return [
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
       [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(inputCurrency)}`],
-      [t`Price impact`, `${priceImpact.toFixed(2)}%`],
+      [
+        t`Price impact`,
+        `${priceImpact.toFixed(2)}%`,
+        priceImpact >= ALLOWED_PRICE_IMPACT_HIGH
+          ? 'error'
+          : priceImpact >= ALLOWED_PRICE_IMPACT_MEDIUM
+          ? 'warning'
+          : undefined,
+      ],
       trade.tradeType === TradeType.EXACT_INPUT
         ? [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`]
         : [],
