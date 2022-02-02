@@ -41,7 +41,12 @@ export interface DerivedSwapInfo {
     [CurrencyField.INPUT]: CurrencyAmount<Currency> | null | undefined
     [CurrencyField.OUTPUT]: CurrencyAmount<Currency> | null | undefined
   }
+  exactAmount: string
   exactCurrencyField: CurrencyField
+  formattedAmounts: {
+    [CurrencyField.INPUT]: string
+    [CurrencyField.OUTPUT]: string
+  }
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
 }
@@ -49,8 +54,8 @@ export interface DerivedSwapInfo {
 /** Returns information derived from the current swap state */
 export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
   const {
-    exactCurrencyField,
     exactAmount,
+    exactCurrencyField,
     [CurrencyField.INPUT]: partialCurrencyIn,
     [CurrencyField.OUTPUT]: partialCurrencyOut,
   } = state
@@ -115,7 +120,16 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
       [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
       [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
     },
+    exactAmount,
     exactCurrencyField,
+    formattedAmounts: {
+      [CurrencyField.INPUT]: isExactIn
+        ? exactAmount
+        : (currencyAmounts[CurrencyField.INPUT]?.toExact() ?? '').toString(),
+      [CurrencyField.OUTPUT]: isExactIn
+        ? (currencyAmounts[CurrencyField.OUTPUT]?.toExact() ?? '').toString()
+        : exactAmount,
+    },
     trade: {
       error,
       status,

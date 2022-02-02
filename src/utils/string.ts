@@ -32,3 +32,7 @@ export function normalizeTextInput(input: string, toLowerCase = true) {
   const trimmed = input.trim()
   return toLowerCase ? trimmed.toLowerCase() : trimmed
 }
+
+export function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+}

@@ -26,6 +26,7 @@ type CurrencyInputProps = {
   otherSelectedCurrency?: Currency | null
   showNonZeroBalancesOnly?: boolean
   title?: string
+  value?: string
 } & RestyleProps
 
 export function CurrencyInput(props: CurrencyInputProps) {
@@ -39,6 +40,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
     showNonZeroBalancesOnly,
     otherSelectedCurrency,
     title,
+    value,
     ...rest
   } = props
 
@@ -78,7 +80,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           placeholder="0"
           px="none"
           py="none"
-          value={currencyAmount?.toExact()}
+          value={value}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
         />
         {

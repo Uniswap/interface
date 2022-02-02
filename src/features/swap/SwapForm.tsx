@@ -55,6 +55,7 @@ export function SwapForm(props: SwapFormProps) {
     currencies,
     currencyAmounts,
     currencyBalances,
+    formattedAmounts,
     trade: { trade: trade, status: quoteStatus },
     wrapType,
   } = derivedSwapInfo
@@ -80,6 +81,7 @@ export function SwapForm(props: SwapFormProps) {
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
               otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
               showNonZeroBalancesOnly={true}
+              value={formattedAmounts[CurrencyField.INPUT]}
               onSelectCurrency={(newCurrency: Currency) =>
                 onSelectCurrency(CurrencyField.INPUT, newCurrency)
               }
@@ -125,6 +127,7 @@ export function SwapForm(props: SwapFormProps) {
               otherSelectedCurrency={currencies[CurrencyField.INPUT]}
               showNonZeroBalancesOnly={false}
               title={t("You'll receive")}
+              value={formattedAmounts[CurrencyField.OUTPUT]}
               onSelectCurrency={(newCurrency: Currency) =>
                 onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
               }
