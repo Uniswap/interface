@@ -83,10 +83,10 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <GradientBackground height="30%">
+      <GradientBackground height="100%">
         <PinkToBlueLinear />
       </GradientBackground>
-      <Flex gap="md" m="lg">
+      <Flex gap="md" pb="xs" pt="lg" px="lg">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between">
           <AccountHeader />
           <Flex flexDirection="row">
