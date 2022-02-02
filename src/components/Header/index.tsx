@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
+import { ChevronUp, ChevronDown } from 'react-feather'
 
 import styled, { css } from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useNativeCurrencyBalance, useTokenBalance } from '../../state/wallet/hooks'
+import { ReactComponent as GasInfoSvg } from '../../assets/svg/gas-info.svg'
 
 import Settings from '../Settings'
 
@@ -200,11 +202,46 @@ export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadiu
     margin-left: 7px;
   }
 `
+const GasInfo = styled.div`
+  display: flex;
+  margin-left: 6px;
+  padding: 6px 8px;
+  border: 1.06481px solid rgba(242, 153, 74, 0.65);
+  background: rgba(242, 153, 74, 0.08);
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #f2994a;
+  align-items: center;
+`
+const GasColor = {
+  fast: {
+    color: 'red',
+    backgroundColor: 'red'
+  },
+  normal: {
+    color: '',
+    backgroundColor: ''
+  },
+  slow: {
+    color: '',
+    backgroundColor: ''
+  }
+}
+const ColoredGas = styled.div<{ color: any }>`
+  font-size: 10px;
+  font-weight: 600;
+  color: ${props => GasColor[props.color].color};
+  background-color: rgba(255, 79, 132, 0.3);
+  padding: 3.19444px 4.25926px;
+
+  border-radius: 4.25926px;
+`
 
 function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
-
+  const [isGasInfoOpen, setIsGasInfoOpen] = useState(true)
   const nativeCurrency = useNativeCurrency()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
@@ -285,6 +322,19 @@ function Header() {
             )}{' '}
             {nativeCurrency.symbol}
           </Amount>
+          <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
+            <GasInfoSvg />
+            <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
+              97
+            </Text>
+            {isGasInfoOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+          </GasInfo>
+        </HeaderSubRow>
+
+        <HeaderSubRow style={{ visibility: isGasInfoOpen ? 'visible' : 'hidden', gap: '4px' }}>
+          <ColoredGas color={fast}>FAST 119</ColoredGas>
+          <ColoredGas color={normal}>NORMAL 97</ColoredGas>
+          <ColoredGas color={slow}>SLOW 89</ColoredGas>
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
