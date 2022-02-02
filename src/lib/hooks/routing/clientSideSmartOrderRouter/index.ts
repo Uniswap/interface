@@ -53,6 +53,20 @@ async function getQuote(
 }
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
+
+interface QuoteArguments {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  type: 'exactIn' | 'exactOut'
+}
+
 export async function getClientSideQuote({
   tokenInAddress,
   tokenInChainId,
@@ -64,18 +78,7 @@ export async function getClientSideQuote({
   tokenOutSymbol,
   amount,
   type,
-}: {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  type: 'exactIn' | 'exactOut'
-}) {
+}: QuoteArguments) {
   return getQuote(
     {
       type,

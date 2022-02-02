@@ -32,40 +32,38 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   })
 
   const [loading, setLoading] = useState(false)
-  const [fetchedResult, setFetchedResult] = useState<
-    | {
-        data: GetQuoteResult | undefined
-        error?: unknown
-      }
-    | undefined
-  >()
+  const [{ quoteResult, error }, setFetchedResult] = useState<{
+    quoteResult: GetQuoteResult | undefined
+    error: unknown
+  }>({
+    quoteResult: undefined,
+    error: undefined,
+  })
 
+  // When arguments update, make a new call to SOR for updated quote
   useEffect(() => {
-    async function fetchQuote() {
-      if (queryArgs) {
-        try {
-          const result = await getClientSideQuote(queryArgs)
-          setLoading(false)
-          setFetchedResult({
-            data: result.data,
-            error: result.error,
-          })
-        } catch (e) {
-          setLoading(false)
-          setFetchedResult({
-            data: undefined,
-            error: true,
-          })
-        }
-      }
-    }
     setLoading(true)
     fetchQuote()
-  }, [queryArgs])
 
-  const [quoteResult, error] = useMemo(() => {
-    return fetchedResult ? [fetchedResult.data, fetchedResult.error] : [undefined, undefined]
-  }, [fetchedResult])
+    async function fetchQuote() {
+      try {
+        if (queryArgs) {
+          const result = await getClientSideQuote(queryArgs)
+          setFetchedResult({
+            quoteResult: result.data,
+            error: result.error,
+          })
+        }
+      } catch (e) {
+        setFetchedResult({
+          quoteResult: undefined,
+          error: true,
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+  }, [queryArgs])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -91,14 +89,13 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       }
     }
 
-    const otherAmount =
-      tradeType === TradeType.EXACT_INPUT
-        ? currencyOut && quoteResult
-          ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
-          : undefined
-        : currencyIn && quoteResult
-        ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
-        : undefined
+    let otherAmount = undefined
+    if (tradeType === TradeType.EXACT_INPUT && currencyOut && quoteResult) {
+      otherAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
+    }
+    if (tradeType === TradeType.EXACT_OUTPUT && currencyIn && quoteResult) {
+      otherAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
+    }
 
     if (error || !otherAmount || !route || route.length === 0 || !queryArgs) {
       return {

@@ -55,6 +55,7 @@ function useComputeSwapInfo(): SwapInfo {
     [inputCurrency, isExactIn, outputCurrency, amount]
   )
 
+  //@TODO(ianlapham): this would eventually be replaced with routing api logic.
   const trade = useClientSideSmartOrderRouterTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
