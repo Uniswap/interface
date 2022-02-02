@@ -1,67 +1,46 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
-import { AlertTriangle, Info, Spinner } from 'lib/icons'
+import { AlertTriangle, Icon, Info, Spinner } from 'lib/icons'
 import { ThemedText } from 'lib/theme'
-import { useMemo, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 import { TextButton } from '../../Button'
 import Row from '../../Row'
 import RoutingTooltip from './RoutingTooltip'
 
+interface CaptionProps {
+  icon?: Icon
+  caption: ReactNode
+}
+
+function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
+  return (
+    <>
+      <Icon color="secondary" />
+      {caption}
+    </>
+  )
+}
+
 export function ConnectWallet() {
-  return (
-    <>
-      <AlertTriangle color="secondary" />
-      <Trans>Connect wallet to swap</Trans>
-    </>
-  )
+  return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
 }
-
-export function Empty() {
-  return (
-    <>
-      <Info color="secondary" />
-      <Trans>Enter an amount</Trans>
-    </>
-  )
-}
-
 export function UnsupportedNetwork() {
-  return (
-    <>
-      <AlertTriangle color="secondary" />
-      <Trans>Unsupported network&#8211;switch to another to trade.</Trans>
-    </>
-  )
+  return <Caption caption={<Trans>Unsupported network - switch to another network to swap</Trans>} />
 }
-
 export function InsufficientBalance({ currency }: { currency: Currency }) {
-  return (
-    <>
-      <AlertTriangle color="secondary" />
-      <Trans>Insufficient {currency?.symbol}</Trans>
-    </>
-  )
+  return <Caption caption={<Trans>Insufficient {currency?.symbol} balance</Trans>} />
 }
-
 export function InsufficientLiquidity() {
-  return (
-    <>
-      <AlertTriangle color="secondary" />
-      <Trans>Insufficient liquidity for this trade.</Trans>
-    </>
-  )
+  return <Caption caption={<Trans>Insufficient liquidity in the pool for your trade</Trans>} />
 }
-
+export function Empty() {
+  return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
+}
 export function LoadingTrade() {
-  return (
-    <>
-      <Spinner color="secondary" />
-      <Trans>Fetching best price…</Trans>
-    </>
-  )
+  return <Caption icon={Spinner} caption={<Trans>Fetching best price…</Trans>} />
 }
 
 export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
