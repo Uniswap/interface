@@ -1,3 +1,4 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
@@ -8,7 +9,7 @@ import { buildDependencies } from './dependencies'
 
 const routerParamsByChain = buildDependencies()
 
-export async function getQuote(
+async function getQuote(
   {
     type,
     chainId,
@@ -49,4 +50,53 @@ export async function getQuote(
   if (!swapRoute) throw new Error('Failed to generate client side quote')
 
   return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
+}
+
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
+
+interface QuoteArguments {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  type: 'exactIn' | 'exactOut'
+}
+
+export async function getClientSideQuote({
+  tokenInAddress,
+  tokenInChainId,
+  tokenInDecimals,
+  tokenInSymbol,
+  tokenOutAddress,
+  tokenOutChainId,
+  tokenOutDecimals,
+  tokenOutSymbol,
+  amount,
+  type,
+}: QuoteArguments) {
+  return getQuote(
+    {
+      type,
+      chainId: tokenInChainId,
+      tokenIn: {
+        address: tokenInAddress,
+        chainId: tokenInChainId,
+        decimals: tokenInDecimals,
+        symbol: tokenInSymbol,
+      },
+      tokenOut: {
+        address: tokenOutAddress,
+        chainId: tokenOutChainId,
+        decimals: tokenOutDecimals,
+        symbol: tokenOutSymbol,
+      },
+      amount,
+    },
+    { protocols }
+  )
 }

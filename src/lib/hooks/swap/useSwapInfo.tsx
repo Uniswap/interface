@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
-import { useClientSideV3Trade } from 'hooks/useClientSideV3Trade'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
@@ -12,6 +11,7 @@ import { ReactNode, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isAddress } from '../../../utils'
+import useClientSideSmartOrderRouterTrade from '../routing/useClientSideSmartOrderRouterTrade'
 import useActiveWeb3React from '../useActiveWeb3React'
 
 interface SwapInfo {
@@ -55,10 +55,8 @@ function useComputeSwapInfo(): SwapInfo {
     [inputCurrency, isExactIn, outputCurrency, amount]
   )
 
-  /**
-   * @TODO (ianlapham): eventually need a strategy for routing API here
-   */
-  const trade = useClientSideV3Trade(
+  //@TODO(ianlapham): this would eventually be replaced with routing api logic.
+  const trade = useClientSideSmartOrderRouterTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined

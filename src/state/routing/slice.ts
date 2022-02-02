@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
+import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
 
@@ -13,51 +14,6 @@ const DEFAULT_QUERY_PARAMS = {
   // example other params
   // forceCrossProtocol: 'true',
   // minSplits: '5',
-}
-
-async function getClientSideQuote({
-  tokenInAddress,
-  tokenInChainId,
-  tokenInDecimals,
-  tokenInSymbol,
-  tokenOutAddress,
-  tokenOutChainId,
-  tokenOutDecimals,
-  tokenOutSymbol,
-  amount,
-  type,
-}: {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  type: 'exactIn' | 'exactOut'
-}) {
-  return (await import('./clientSideSmartOrderRouter')).getQuote(
-    {
-      type,
-      chainId: tokenInChainId,
-      tokenIn: {
-        address: tokenInAddress,
-        chainId: tokenInChainId,
-        decimals: tokenInDecimals,
-        symbol: tokenInSymbol,
-      },
-      tokenOut: {
-        address: tokenOutAddress,
-        chainId: tokenOutChainId,
-        decimals: tokenOutDecimals,
-        symbol: tokenOutSymbol,
-      },
-      amount,
-    },
-    { protocols }
-  )
 }
 
 export const routingApi = createApi({

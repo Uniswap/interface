@@ -2,11 +2,11 @@
 import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter/constants'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
-import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'state/routing/clientSideSmartOrderRouter/constants'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'

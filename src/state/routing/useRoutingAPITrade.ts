@@ -1,9 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
+import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
+import ReactGA from 'react-ga'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useClientSideRouter } from 'state/user/hooks'
 
@@ -19,44 +22,6 @@ function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T 
   }
 
   return data
-}
-
-/**
- * Returns query arguments for the Routing API query or undefined if the
- * query should be skipped.
- */
-function useRoutingAPIArguments({
-  tokenIn,
-  tokenOut,
-  amount,
-  tradeType,
-}: {
-  tokenIn: Currency | undefined
-  tokenOut: Currency | undefined
-  amount: CurrencyAmount<Currency> | undefined
-  tradeType: TradeType
-}) {
-  const [clientSideRouter] = useClientSideRouter()
-
-  return useMemo(
-    () =>
-      !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut)
-        ? undefined
-        : {
-            amount: amount.quotient.toString(),
-            tokenInAddress: tokenIn.wrapped.address,
-            tokenInChainId: tokenIn.wrapped.chainId,
-            tokenInDecimals: tokenIn.wrapped.decimals,
-            tokenInSymbol: tokenIn.wrapped.symbol,
-            tokenOutAddress: tokenOut.wrapped.address,
-            tokenOutChainId: tokenOut.wrapped.chainId,
-            tokenOutDecimals: tokenOut.wrapped.decimals,
-            tokenOutSymbol: tokenOut.wrapped.symbol,
-            useClientSideRouter: clientSideRouter,
-            type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
-          },
-    [amount, clientSideRouter, tokenIn, tokenOut, tradeType]
-  )
 }
 
 /**
@@ -81,11 +46,14 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
+  const [clientSideRouter] = useClientSideRouter()
+
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
+    useClientSideRouter: clientSideRouter,
   })
 
   const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
@@ -148,3 +116,21 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     }
   }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, gasUseEstimateUSD])
 }
+
+// only want to enable this when app hook called
+class GAMetric extends IMetric {
+  putDimensions() {
+    return
+  }
+
+  putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
+    ReactGA.timing({
+      category: 'Routing API',
+      variable: `${key} | ${unit}`,
+      value,
+      label: 'client',
+    })
+  }
+}
+
+setGlobalMetric(new GAMetric())
