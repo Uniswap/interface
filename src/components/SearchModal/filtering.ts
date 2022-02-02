@@ -26,7 +26,7 @@ export function createTokenFilterFunction<T extends Token | TokenInfo>(search: s
       .split(/\s+/)
       .filter(s => s.length > 0)
 
-    return lowerSearchParts.every(p => p.length === 0 || sParts.some(sp => sp.startsWith(p) || sp.endsWith(p)))
+    return lowerSearchParts.every(p => p.length === 0 || sParts.some(sp => sp.includes(p)))
   }
 
   return ({ name, symbol }: T): boolean => Boolean((symbol && matchesSearch(symbol)) || (name && matchesSearch(name)))
@@ -56,7 +56,7 @@ export function filterTokens(tokens: Token[], search: string): Token[] {
       .split(/\s+/)
       .filter(s => s.length > 0)
 
-    return lowerSearchParts.every(p => p.length === 0 || sParts.some(sp => sp.startsWith(p) || sp.endsWith(p)))
+    return lowerSearchParts.every(p => p.length === 0 || sParts.some(sp => sp.includes(p)))
   }
 
   return tokens.filter(token => {
@@ -90,7 +90,7 @@ export function filterPairs(pairs: Pair[], search: string): Pair[] {
       .split(/\s+/)
       .filter(s => s.length > 0)
 
-    return lowerSearchParts.every(p => p.length === 0 || sParts.some(sp => sp.startsWith(p) || sp.endsWith(p)))
+    return lowerSearchParts.every(p => p.length === 0 || sParts.some(sp => sp.includes(p)))
   }
 
   return pairs.filter(pair => {
