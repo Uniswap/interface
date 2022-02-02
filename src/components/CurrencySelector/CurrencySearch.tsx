@@ -96,6 +96,7 @@ export function CurrencySearch({
               fontSize={16}
               fontWeight={'500'}
               placeholder={t('Search token symbols or address')}
+              placeholderTextColor="gray400"
               style={styles.input}
               value={searchFilter ?? undefined}
               onChangeText={onChangeText}
