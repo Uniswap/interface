@@ -123,43 +123,45 @@ export function AccountsScreen() {
   const isLoading = status === SagaStatus.Started
 
   return (
-    <SheetScreen px="lg">
-      <ScrollView contentContainerStyle={flex.fill}>
-        <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg">
-          <Text color="textColor" variant="bodyBold">
-            {t('Switch Accounts')}
-          </Text>
-          <BackX size={16} onPressBack={() => navigation.goBack()} />
+    <SheetScreen>
+      <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg" px="lg">
+        <Text color="textColor" variant="bodyBold">
+          {t('Switch Accounts')}
+        </Text>
+        <BackX size={16} onPressBack={() => navigation.goBack()} />
+      </Box>
+      <ScrollView>
+        <Box flex={1} px="lg">
+          {Object.values(signerAccounts).map((account) => (
+            <Box key={account.address} mb="xl">
+              <AccountItem
+                account={account}
+                isActive={!!activeAccount && activeAccount.address === account.address}
+                onEdit={onPressEdit}
+                onPress={onPressActivate}
+              />
+            </Box>
+          ))}
+          {!!readOnlyAccounts.length && (
+            <>
+              <Text color="textColor" mb="lg" variant="body">
+                {t('Watching')}
+              </Text>
+              {Object.values(readOnlyAccounts).map((account) => (
+                <Box key={account.address} mb="xl">
+                  <AccountItem
+                    account={account}
+                    isActive={!!activeAccount && activeAccount.address === account.address}
+                    onEdit={onPressEdit}
+                    onPress={onPressActivate}
+                  />
+                </Box>
+              ))}
+            </>
+          )}
         </Box>
-        {Object.values(signerAccounts).map((account) => (
-          <Box key={account.address} mb="xl">
-            <AccountItem
-              account={account}
-              isActive={!!activeAccount && activeAccount.address === account.address}
-              onEdit={onPressEdit}
-              onPress={onPressActivate}
-            />
-          </Box>
-        ))}
-        {!!readOnlyAccounts.length && (
-          <>
-            <Text color="textColor" mb="lg" variant="body">
-              {t('Watching')}
-            </Text>
-            {Object.values(readOnlyAccounts).map((account) => (
-              <Box key={account.address} mb="xl">
-                <AccountItem
-                  account={account}
-                  isActive={!!activeAccount && activeAccount.address === account.address}
-                  onEdit={onPressEdit}
-                  onPress={onPressActivate}
-                />
-              </Box>
-            ))}
-          </>
-        )}
       </ScrollView>
-      <CenterBox flexDirection="row" py="md">
+      <CenterBox flexDirection="row" px="lg" py="md">
         <PrimaryButton
           disabled={isLoading}
           label={t('Import Account')}
