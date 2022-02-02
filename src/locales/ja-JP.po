@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:06\n"
+"PO-Revision-Date: 2022-02-02 00:13\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -592,10 +592,6 @@ msgstr "現在価格"
 msgid "Current {0} Price:"
 msgstr "{0} の現在価格:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "カスタム"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "ダークテーマ"
@@ -874,6 +870,10 @@ msgstr "決済したポジションを隠す"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "大きな価格への影響"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "高いスリッページは価格変動のリスクを高めます"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "イーサリアムのレイヤー1に接続してください"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "ドロップダウンメニューまたはウォレットでサポートされているネットワークに接続してください。"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "有効なスリッページ％を入力してください"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

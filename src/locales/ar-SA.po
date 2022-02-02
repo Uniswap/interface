@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:06\n"
+"PO-Revision-Date: 2022-02-02 00:12\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -592,10 +592,6 @@ msgstr "السعر الحالي"
 msgid "Current {0} Price:"
 msgstr "سعر {0} الحالي:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "العادة"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "مظهر داكن"
@@ -874,6 +870,10 @@ msgstr "إخفاء المراكز المغلقة"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "تأثير ارتفاع السعر"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "يزيد الانزلاق العالي من مخاطر حركة السعر"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "يرجى الاتصال بـ Layer 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "يرجى الاتصال بشبكة مدعومة في القائمة المنسدلة أو في محفظتك."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "الرجاء إدخال انزلاق سعر صالح٪"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

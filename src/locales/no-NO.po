@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:07\n"
+"PO-Revision-Date: 2022-02-02 00:13\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -592,10 +592,6 @@ msgstr "Nåværende pris"
 msgid "Current {0} Price:"
 msgstr "Nåværende {0} pris:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Tilpasset"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Mørkt tema"
@@ -874,6 +870,10 @@ msgstr "Skjul avsluttede posisjoner"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Høy pris konsekvens"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Høy glidning øker risikoen for prisbevegelser"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Vennligst koble til Layer 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Koble til et støttet nettverk i rullegardinmenyen eller i lommeboken."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Vennligst skriv inn en gyldig slip %"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

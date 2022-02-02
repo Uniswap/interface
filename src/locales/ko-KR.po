@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:06\n"
+"PO-Revision-Date: 2022-02-02 00:13\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -592,10 +592,6 @@ msgstr "현재 가격"
 msgid "Current {0} Price:"
 msgstr "현재 {0} 가격 :"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "사용자 정의"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "어두운 테마"
@@ -874,6 +870,10 @@ msgstr "닫은 포지션 숨기기"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "높은 가격 영향"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "높은 미끄러짐은 가격 변동의 위험을 증가시킵니다."
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "레이어 1 Ethereum에 연결하세요"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "드롭다운 메뉴 또는 지갑에서 지원되는 네트워크에 연결하십시오."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "유효한 미끄러짐 %를 입력하십시오"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

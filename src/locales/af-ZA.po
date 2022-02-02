@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:06\n"
+"PO-Revision-Date: 2022-02-02 00:12\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -592,10 +592,6 @@ msgstr "Huidige prys"
 msgid "Current {0} Price:"
 msgstr "Huidige {0} prys:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Pasgemaak"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Donker tema"
@@ -874,6 +870,10 @@ msgstr "Versteek geslote posisies"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Hoë prysimpak"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Hoë glip verhoog die risiko van prysbeweging"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Maak asseblief verbinding met Layer 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Koppel asseblief aan 'n ondersteunde netwerk in die aftreklys of in jou beursie."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Voer asseblief 'n geldige glip-% in"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

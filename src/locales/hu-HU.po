@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:06\n"
+"PO-Revision-Date: 2022-02-02 00:12\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -592,10 +592,6 @@ msgstr "Jelenlegi ár"
 msgid "Current {0} Price:"
 msgstr "Jelenlegi {0} ár:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Egyedi"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Sötét téma"
@@ -875,6 +871,10 @@ msgstr "Zárt pozíciók elrejtése"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Magas árhatás"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "A nagy csúszás növeli az ármozgások kockázatát"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1305,6 +1305,10 @@ msgstr "Kérjük, csatlakozzon az 1. réteg Ethereumhoz"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Kérjük, csatlakozzon egy támogatott hálózathoz a legördülő menüben vagy a pénztárcájában."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Kérjük, adjon meg egy érvényes csúszást %"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:07\n"
+"PO-Revision-Date: 2022-02-02 00:13\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -592,10 +592,6 @@ msgstr "Prețul actual"
 msgid "Current {0} Price:"
 msgstr "Prețul actual {0}:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Personalizat"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Tema întunecată"
@@ -874,6 +870,10 @@ msgstr "Ascunde pozițiile închise"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Impact Preț Ridicat"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Alunecarea mare crește riscul de mișcare a prețurilor"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Vă rugăm să vă conectați la Layer 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Vă rugăm să vă conectați la o rețea acceptată în meniul drop-down sau în portofel."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Vă rugăm să introduceți un % de alunecare valid"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

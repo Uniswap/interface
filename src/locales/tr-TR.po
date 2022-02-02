@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:07\n"
+"PO-Revision-Date: 2022-02-02 00:13\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -592,10 +592,6 @@ msgstr "Güncel fiyat"
 msgid "Current {0} Price:"
 msgstr "Güncel {0} Fiyatı:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Gelenek"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Karanlık Tema"
@@ -874,6 +870,10 @@ msgstr "Kapalı pozisyonları gizle"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Yüksek Fiyat Etkisi"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Yüksek kayma, fiyat hareketi riskini artırır"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Lütfen Katman 1 Ethereum'a bağlanın"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Lütfen açılır menüden veya cüzdanınızdan desteklenen bir ağa bağlanın."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Lütfen geçerli bir kayma yüzdesi girin"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

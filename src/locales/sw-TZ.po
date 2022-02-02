@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:07\n"
+"PO-Revision-Date: 2022-02-02 00:13\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -592,10 +592,6 @@ msgstr "Bei ya sasa"
 msgid "Current {0} Price:"
 msgstr "Bei ya sasa ya {0}"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Desturi"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Mandhari meusi"
@@ -874,6 +870,10 @@ msgstr "Ficha nafasi zilizofungwa"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Athari ya Bei ya Juu"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Utelezi wa juu huongeza hatari ya harakati za bei"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Tafadhali unganisha kwenye Tabaka 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Tafadhali unganisha kwa mtandao unaotumika katika menyu kunjuzi au kwenye pochi yako."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Tafadhali weka utelezi sahihi %"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

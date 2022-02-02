@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:06\n"
+"PO-Revision-Date: 2022-02-02 00:12\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -592,10 +592,6 @@ msgstr "Harga saat ini"
 msgid "Current {0} Price:"
 msgstr "Harga {0} saat ini:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Kebiasaan"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Tema gelap"
@@ -874,6 +870,10 @@ msgstr "Sembunyikan posisi tertutup"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Dampak Harga Tinggi"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Slippage tinggi meningkatkan risiko pergerakan harga"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Silakan hubungkan ke Layer 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Harap sambungkan ke jaringan yang didukung di menu tarik-turun atau di dompet Anda."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Harap masukkan % slippage yang valid"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

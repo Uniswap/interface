@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:07\n"
+"PO-Revision-Date: 2022-02-02 00:13\n"
 "Last-Translator: \n"
 "Language: pt_BR\n"
 "Language-Team: Portuguese, Brazilian\n"
@@ -592,10 +592,6 @@ msgstr "Preço atual"
 msgid "Current {0} Price:"
 msgstr "Preço {0} atual:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Personalizado"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Tema escuro"
@@ -874,6 +870,10 @@ msgstr "Ocultar posições fechadas"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Impacto de preços altos"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Alta derrapagem aumenta o risco de movimento de preços"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Conecte-se à Camada 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Conecte-se a uma rede suportada no menu suspenso ou em sua carteira."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Insira uma % de derrapagem válida"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

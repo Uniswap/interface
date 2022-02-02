@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:06\n"
+"PO-Revision-Date: 2022-02-02 00:12\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -592,10 +592,6 @@ msgstr "当前兑换率"
 msgid "Current {0} Price:"
 msgstr "当前 {0} 兑换率："
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "自定义"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "深色主题"
@@ -874,6 +870,10 @@ msgstr "隐藏已关闭的头寸"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "对兑换率有高度影响"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "高滑点增加了价格变动的风险"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "请连接到以太坊 Layer 1"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "请在下拉菜单或您的钱包中连接到支持的网络。"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "请输入有效的滑点百分比"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:06\n"
+"PO-Revision-Date: 2022-02-02 00:12\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -592,10 +592,6 @@ msgstr "Τρέχουσα τιμή"
 msgid "Current {0} Price:"
 msgstr "Τρέχουσα τιμή {0}:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Εθιμο"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Σκούρο θέμα"
@@ -874,6 +870,10 @@ msgstr "Απόκρυψη κλειστών θέσεων"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Υψηλή Επίδραση Τιμών"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Η υψηλή ολίσθηση αυξάνει τον κίνδυνο μεταβολής των τιμών"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Συνδεθείτε στο Layer 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Συνδεθείτε σε ένα υποστηριζόμενο δίκτυο στο αναπτυσσόμενο μενού ή στο πορτοφόλι σας."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Εισαγάγετε ένα έγκυρο ολίσθημα %"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."

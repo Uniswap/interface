@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-28 18:07\n"
+"PO-Revision-Date: 2022-02-02 00:13\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -592,10 +592,6 @@ msgstr "Precio actual"
 msgid "Current {0} Price:"
 msgstr "Precio {0} actual:"
 
-#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
-msgid "Custom"
-msgstr "Personalizado"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Tema oscuro"
@@ -874,6 +870,10 @@ msgstr "Ocultar posiciones cerradas"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Impacto de precio alto"
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "High slippage increases the risk of price movement"
+msgstr "Un alto deslizamiento aumenta el riesgo de movimiento de precios"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1304,6 +1304,10 @@ msgstr "Conéctese a la capa 1 Ethereum"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to a supported network in the dropdown menu or in your wallet."
 msgstr "Conéctese a una red compatible en el menú desplegable o en su billetera."
+
+#: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
+msgid "Please enter a valid slippage %"
+msgstr "Introduzca un porcentaje de deslizamiento válido"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
