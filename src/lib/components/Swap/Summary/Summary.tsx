@@ -23,7 +23,7 @@ interface TokenValueProps {
 function TokenValue({ input, usdc, change }: TokenValueProps) {
   const percent = useMemo(() => {
     if (change) {
-      const percent = (change * 100).toPrecision(3)
+      const percent = change.toPrecision(3)
       return change > 0 ? `(+${percent}%)` : `(${percent}%)`
     }
     return undefined

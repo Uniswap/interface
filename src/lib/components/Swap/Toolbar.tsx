@@ -46,8 +46,9 @@ function LoadedState({ inputAmount, outputAmount, trade }: LoadedStateProps) {
 
   const ratio = useMemo(() => {
     const [a, b] = flip ? [outputAmount, inputAmount] : [inputAmount, outputAmount]
+    const priceString = (!flip ? executionPrice : executionPrice?.invert())?.toSignificant(6)
 
-    const ratio = `1 ${a.currency.symbol} = ${executionPrice?.toSignificant(6)} ${b.currency.symbol}`
+    const ratio = `1 ${a.currency.symbol} = ${priceString}} ${b.currency.symbol}`
     const usdc = !flip
       ? fiatValueInput
         ? ` ($${fiatValueInput.toSignificant(2)})`
