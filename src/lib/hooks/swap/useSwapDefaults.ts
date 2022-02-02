@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
-import { useUpdateAtom } from 'jotai/utils'
+import { useAtom } from 'jotai'
 import { DefaultAddress } from 'lib/components/Swap'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useToken } from 'lib/hooks/useCurrency'
@@ -37,7 +37,7 @@ export default function useSwapDefaults({
   defaultOutputAddress,
   defaultOutputAmount,
 }: UseSwapDefaultsArgs) {
-  const updateSwap = useUpdateAtom(swapAtom)
+  const [swap, updateSwap] = useAtom(swapAtom)
   const { chainId } = useActiveWeb3React()
   const defaultInputToken = useDefaultToken(defaultInputAddress, chainId)
   const defaultOutputToken = useDefaultToken(defaultOutputAddress, chainId)
@@ -67,4 +67,6 @@ export default function useSwapDefaults({
       setToDefaults()
     }
   }, [chainId, previousChainId, setToDefaults])
+
+  return swap
 }

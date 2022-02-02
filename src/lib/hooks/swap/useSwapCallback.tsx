@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
+import { FeeOptions } from '@uniswap/v3-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'
@@ -24,11 +25,12 @@ export function useSwapCallback(
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null | undefined, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined,
-  deadline: BigNumber | undefined
+  deadline: BigNumber | undefined,
+  fee: FeeOptions | undefined
 ): { state: SwapCallbackState; callback: null | (() => Promise<TransactionResponse>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData, deadline)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData, deadline, fee)
   const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls)
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
