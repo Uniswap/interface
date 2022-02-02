@@ -114,9 +114,8 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     return { disabled: true }
   }, [approval, approvalHash, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance])
 
-  // @TODO(ianlapham): connect deadline from state instead of passing undefined.
-  const { signatureData } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, undefined)
   const deadline = useTransactionDeadline()
+  const { signatureData } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, deadline)
 
   // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback(
