@@ -7,7 +7,7 @@ import { integratorFeeAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
-import { computeRealizedLPFeePercent } from 'utils/prices'
+import { computeRealizedPriceImpact } from 'utils/prices'
 
 import Row from '../../Row'
 
@@ -37,14 +37,10 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
+  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
 
   const integrator = window.location.hostname
   const [integratorFee] = useAtom(integratorFeeAtom)
-
-  const priceImpact = useMemo(() => {
-    const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-    return trade.priceImpact.subtract(realizedLpFeePercent)
-  }, [trade])
 
   const details = useMemo(() => {
     // @TODO(ianlapham): Check that provider fee is even a valid list item

@@ -16,6 +16,11 @@ import {
 const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
 
+export function computeRealizedPriceImpact(trade: Trade<Currency, Currency, TradeType>): Percent {
+  const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
+  return trade.priceImpact.subtract(realizedLpFeePercent)
+}
+
 // computes realized lp fee as a percent
 export function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>): Percent {
   let percent: Percent

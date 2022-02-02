@@ -10,7 +10,7 @@ import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
-import { computeRealizedLPFeePercent } from 'utils/prices'
+import { computeRealizedPriceImpact } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton from '../../ActionButton'
@@ -88,10 +88,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const { inputAmount, outputAmount, executionPrice } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
-  const priceImpact = useMemo(() => {
-    const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-    return trade.priceImpact.subtract(realizedLpFeePercent)
-  }, [trade])
+  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
 
   const independentField = useAtomValue(independentFieldAtom)
 
