@@ -18,16 +18,30 @@ export enum SwapCallbackState {
   VALID,
 }
 
+interface UseSwapCallbackReturns {
+  state: SwapCallbackState
+  callback: null | (() => Promise<TransactionResponse>)
+  error: ReactNode | null
+}
+interface UseSwapCallbackArgs {
+  trade: AnyTrade | undefined // trade to execute, required
+  allowedSlippage: Percent // in bips
+  recipientAddressOrName: string | null | undefined // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  signatureData: SignatureData | null | undefined
+  deadline: BigNumber | undefined
+  fee?: FeeOptions
+}
+
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
-export function useSwapCallback(
-  trade: AnyTrade | undefined, // trade to execute, required
-  allowedSlippage: Percent, // in bips
-  recipientAddressOrName: string | null | undefined, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | null | undefined,
-  deadline: BigNumber | undefined,
-  fee: FeeOptions | undefined
-): { state: SwapCallbackState; callback: null | (() => Promise<TransactionResponse>); error: ReactNode | null } {
+export function useSwapCallback({
+  trade,
+  allowedSlippage,
+  recipientAddressOrName,
+  signatureData,
+  deadline,
+  fee,
+}: UseSwapCallbackArgs): UseSwapCallbackReturns {
   const { account, chainId, library } = useActiveWeb3React()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData, deadline, fee)

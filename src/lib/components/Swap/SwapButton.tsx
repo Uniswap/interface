@@ -120,14 +120,14 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const deadline = useTransactionDeadline()
 
   // the callback to execute the swap
-  const { callback: swapCallback } = useSwapCallback(
-    optimizedTrade,
+  const { callback: swapCallback } = useSwapCallback({
+    trade: optimizedTrade,
     allowedSlippage,
-    account ?? null,
+    recipientAddressOrName: account ?? null,
     signatureData,
     deadline,
-    fee
-  )
+    fee,
+  })
 
   //@TODO(ianlapham): add a loading state, process errors
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
