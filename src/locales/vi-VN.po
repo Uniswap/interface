@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 00:13\n"
+"PO-Revision-Date: 2022-02-02 22:06\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -532,7 +532,7 @@ msgstr "Kết nối với ví để xem tính thanh khoản V2 của bạn."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Kết nối với ví để xem tính thanh khoản của bạn."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "Kết nối ví để hoán đổi"
 
@@ -719,7 +719,7 @@ msgstr "Nhập địa chỉ để kích hoạt khiếu nại UNI. Nếu địa c
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -821,7 +821,7 @@ msgstr "Bậc phí"
 msgid "Fetching best price..."
 msgstr "Đang tìm nạp giá tốt nhất ..."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "Tìm nạp giá tốt nhất…"
 
@@ -936,17 +936,17 @@ msgstr "Đầu vào được ước tính. Bạn sẽ bán nhiều nhất <0>{0}
 msgid "Install Metamask"
 msgstr "Cài đặt Metamask"
 
-#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Không đủ thanh khoản cho giao dịch này."
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Insufficient {0}"
-msgstr "Không đủ {0}"
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Insufficient liquidity in the pool for your trade"
+msgstr "Không đủ thanh khoản trong pool cho giao dịch của bạn"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -2024,9 +2024,9 @@ msgstr "Tài sản không được hỗ trợ"
 msgid "Unsupported Assets"
 msgstr "Tài sản không được hỗ trợ"
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Unsupported network–switch to another to trade."
-msgstr "Mạng không được hỗ trợ – chuyển sang mạng khác để giao dịch."
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unsupported network - switch to another network to swap"
+msgstr "Mạng không được hỗ trợ - chuyển sang mạng khác để hoán đổi"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

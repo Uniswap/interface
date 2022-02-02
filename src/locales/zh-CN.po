@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 00:12\n"
+"PO-Revision-Date: 2022-02-02 22:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -532,7 +532,7 @@ msgstr "连接到钱包以查看您的 V2 流动资金。"
 msgid "Connect to a wallet to view your liquidity."
 msgstr "连接到钱包以查看您的流动资金。"
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "连接钱包以交换"
 
@@ -719,7 +719,7 @@ msgstr "输入地址来查看领取 UNI 代币的资质。如果地址有任何�
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -821,7 +821,7 @@ msgstr "手续费级别"
 msgid "Fetching best price..."
 msgstr "正在获取最优兑换率..."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "获取最优价格…"
 
@@ -936,17 +936,17 @@ msgstr "输入数额仅为估值。您最多会售出<0>{0} {1}</0> 否则将还
 msgid "Install Metamask"
 msgstr "安装Metamask"
 
-#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "现有流动量不足以支持此交易。"
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Insufficient {0}"
-msgstr "{0} 不足"
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Insufficient liquidity in the pool for your trade"
+msgstr "您的交易池中的流动性不足"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -2024,9 +2024,9 @@ msgstr "不支持的代币"
 msgid "Unsupported Assets"
 msgstr "不支持的代币"
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Unsupported network–switch to another to trade."
-msgstr "不支持的网络——切换到其它网络进行交易。"
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unsupported network - switch to another network to swap"
+msgstr "不支持的网络 - 切换到另一个网络进行交换"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

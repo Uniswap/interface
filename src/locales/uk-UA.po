@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 00:13\n"
+"PO-Revision-Date: 2022-02-02 22:06\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -532,7 +532,7 @@ msgstr "Підключіться до гаманця, щоб перегляну�
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Підключіться до гаманця, щоб переглянути свою ліквідність."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "Підключіть гаманець для обміну"
 
@@ -719,7 +719,7 @@ msgstr "Введіть адресу для ініціювання збору UNI
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -821,7 +821,7 @@ msgstr "Рівень плати"
 msgid "Fetching best price..."
 msgstr "Отримання найкращої ціни..."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "Отримання найкращої ціни…"
 
@@ -936,17 +936,17 @@ msgstr "Вхідні дані оцінюються. Ви продасте щон
 msgid "Install Metamask"
 msgstr "Встановити Metamask"
 
-#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Недостатня ліквідність для цієї угоди."
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Insufficient {0}"
-msgstr "Недостатньо {0}"
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Insufficient liquidity in the pool for your trade"
+msgstr "Недостатня ліквідність у пулі для вашої торгівлі"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -2024,9 +2024,9 @@ msgstr "Непідтримуваний актив"
 msgid "Unsupported Assets"
 msgstr "Непідтримувані активи"
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Unsupported network–switch to another to trade."
-msgstr "Непідтримувана мережа – перейдіть на іншу, щоб торгувати."
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unsupported network - switch to another network to swap"
+msgstr "Непідтримувана мережа – перейдіть на іншу мережу, щоб помінятися"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

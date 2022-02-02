@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 00:13\n"
+"PO-Revision-Date: 2022-02-02 22:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -532,7 +532,7 @@ msgstr "Unganisha kwenye mkoba ili uone ukwasi wako wa V2."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Unganisha kwenye mkoba ili uone ukwasi wako."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "Unganisha pochi ili kubadilishana"
 
@@ -719,7 +719,7 @@ msgstr "Ingiza anwani ili kuchochea dai la UNI. Ikiwa anwani ina UNI yoyote inay
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -821,7 +821,7 @@ msgstr "Kiwango cha ada"
 msgid "Fetching best price..."
 msgstr "Inaleta bei nzuri..."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "Inaleta bei nzuri…"
 
@@ -936,17 +936,17 @@ msgstr "Ingizo inakadiriwa. Utauza zaidi <0>{0} {1}</0> au shughuli itarejea."
 msgid "Install Metamask"
 msgstr "Sakinisha Metamask"
 
-#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Ukosefu wa kutosha wa biashara hii."
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Insufficient {0}"
-msgstr "Haitoshi {0}"
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Insufficient liquidity in the pool for your trade"
+msgstr "Ukwasi hautoshi kwenye bwawa kwa biashara yako"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -2024,9 +2024,9 @@ msgstr "Sifa isiyotumika"
 msgid "Unsupported Assets"
 msgstr "Mali zisizoungwa mkono"
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Unsupported network–switch to another to trade."
-msgstr "Mtandao usiotumika–badilisha hadi mwingine ili kufanya biashara."
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unsupported network - switch to another network to swap"
+msgstr "Mtandao usiotumika - badilisha hadi mtandao mwingine ili ubadilishe"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

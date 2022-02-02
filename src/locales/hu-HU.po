@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 00:12\n"
+"PO-Revision-Date: 2022-02-02 22:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -532,7 +532,7 @@ msgstr "Csatlakozzon egy pénztárcához a V2 likviditás megtekintéséhez."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Csatlakozzon egy pénztárcához a likviditás megtekintéséhez."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "Csatlakoztassa a pénztárcát a cseréhez"
 
@@ -719,7 +719,7 @@ msgstr "Adjon meg egy címet az UNI-követelés kiváltásához. Ha a címnek va
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -822,7 +822,7 @@ msgstr "Díjszint"
 msgid "Fetching best price..."
 msgstr "A legjobb ár lekérése..."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "A legjobb ár lekérése…"
 
@@ -937,17 +937,17 @@ msgstr "Az input becsült. Legfeljebb <0>{0} {1}</0> értékesíthet, különben
 msgid "Install Metamask"
 msgstr "Metamask telepítése"
 
-#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Nincs elegendő likviditás ehhez a kereskedéshez."
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Insufficient {0}"
-msgstr "Elégtelen {0}"
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Insufficient liquidity in the pool for your trade"
+msgstr "Nincs elegendő likviditás a poolban a kereskedéshez"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -2025,9 +2025,9 @@ msgstr "Nem támogatott eszköz"
 msgid "Unsupported Assets"
 msgstr "Nem támogatott eszközök"
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Unsupported network–switch to another to trade."
-msgstr "Nem támogatott hálózat – váltson másikra a kereskedéshez."
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unsupported network - switch to another network to swap"
+msgstr "Nem támogatott hálózat – váltson másik hálózatra a cseréhez"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
