@@ -10,9 +10,9 @@ import styled, { ThemedText } from 'lib/theme'
 import { useMemo, useState } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
-import { TextButton } from '../Button'
-import Row from '../Row'
-import Rule from '../Rule'
+import { TextButton } from '../../Button'
+import Row from '../../Row'
+import Rule from '../../Rule'
 
 const ToolbarRow = styled(Row)`
   padding: 0.5em 0;
