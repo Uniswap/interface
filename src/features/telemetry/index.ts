@@ -2,6 +2,12 @@ import { firebase } from '@react-native-firebase/analytics'
 import { logger } from 'src/utils/logger'
 
 export async function enableAnalytics() {
+  if (__DEV__) {
+    // avoid polluting analytics dashboards with dev data
+    // consider re-enabling if validating data prior to launches is useful
+    return
+  }
+
   try {
     await firebase.analytics().setAnalyticsCollectionEnabled(true)
   } catch (err) {
