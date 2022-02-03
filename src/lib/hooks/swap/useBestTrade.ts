@@ -29,21 +29,34 @@ export function useBestTrade(
 
   const routingAPITrade = useClientSideSmartOrderRouterTrade(tradeType, debouncedAmount, debouncedOtherCurrency)
 
-  const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
+  // check if the artifical delay we impose is still occuring
+  const debouncing = amountSpecified !== undefined && debouncedAmount === undefined
 
-  // consider trade debouncing when inputs/outputs do not match
-  const debouncing =
-    routingAPITrade.trade &&
-    amountSpecified &&
-    (tradeType === TradeType.EXACT_INPUT
-      ? !routingAPITrade.trade.inputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(routingAPITrade.trade.inputAmount.currency) ||
-        !debouncedOtherCurrency?.equals(routingAPITrade.trade.outputAmount.currency)
-      : !routingAPITrade.trade.outputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
-        !debouncedOtherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
+  // the amount associated with field user is typing in
+  const amountFromLatestTrade =
+    tradeType === TradeType.EXACT_INPUT ? routingAPITrade.trade?.inputAmount : routingAPITrade.trade?.outputAmount
 
-  const useFallback = !debouncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND
+  // ordered currencies from API trade
+  const [currencyFromTrade, otherCurrencyFromTrade] =
+    tradeType === TradeType.EXACT_INPUT
+      ? [routingAPITrade.trade?.inputAmount?.currency, routingAPITrade.trade?.outputAmount?.currency]
+      : [routingAPITrade.trade?.outputAmount?.currency, routingAPITrade.trade?.inputAmount?.currency]
+
+  // check that amount from user input matches latest trade
+  const amountsMatch =
+    routingAPITrade.trade && amountSpecified && debouncedAmount && amountFromLatestTrade?.equalTo(debouncedAmount)
+
+  // check active swap currencies match latest trade
+  const currenciesMatch =
+    currencyFromTrade &&
+    otherCurrencyFromTrade &&
+    debouncedAmount?.currency?.equals(currencyFromTrade) &&
+    debouncedOtherCurrency?.equals(otherCurrencyFromTrade)
+
+  // either amount or currencies from latest API trade do not match swap state
+  const syncing = !amountsMatch || !currenciesMatch
+
+  const useFallback = !syncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND
 
   // use simple client side logic as backup if SOR is not available
   const bestV3Trade = useClientSideV3Trade(
@@ -55,9 +68,9 @@ export function useBestTrade(
   return useMemo(
     () => ({
       ...(useFallback ? bestV3Trade : routingAPITrade),
-      ...(debouncing ? { state: TradeState.SYNCING } : {}),
-      ...(isLoading ? { state: TradeState.LOADING } : {}),
+      ...(syncing ? { state: TradeState.SYNCING } : {}),
+      ...(debouncing ? { state: TradeState.LOADING } : {}),
     }),
-    [bestV3Trade, debouncing, isLoading, routingAPITrade, useFallback]
+    [debouncing, bestV3Trade, syncing, routingAPITrade, useFallback]
   )
 }
