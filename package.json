@@ -1,15 +1,15 @@
 {
-  "name": "@uniswap/interface",
+  "name": "@uniswap/widgets",
+  "version": "0.0.4-beta",
   "description": "Uniswap Interface",
   "homepage": ".",
-  "main": "dist/interface.js",
-  "module": "dist/interface.esm.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/widgets.js",
+  "module": "dist/widgets.esm.js",
+  "types": "dist/widgets.d.ts",
   "files": [
     "lib",
     "dist"
   ],
-  "private": true,
   "devDependencies": {
     "@ethersproject/experimental": "^5.4.0",
     "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
@@ -131,7 +131,8 @@
     "i18n:extract": "lingui extract --locale en-US",
     "i18n:compile": "yarn i18n:extract && lingui compile",
     "i18n:pseudo": "lingui extract --locale pseudo && lingui compile",
-    "postinstall": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
+    "prepare": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
+    "prepublishOnly": "yarn widgets:build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
