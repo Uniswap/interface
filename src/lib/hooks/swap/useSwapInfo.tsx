@@ -24,7 +24,7 @@ interface SwapInfo {
     state: TradeState
   }
   allowedSlippage: Percent
-  fee: FeeOptions
+  fee: FeeOptions | undefined
 }
 
 const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {

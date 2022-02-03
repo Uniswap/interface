@@ -25,6 +25,12 @@ function Fixture() {
     }
   }, [color, setColor])
 
+  const [convenienceFee] = useValue('convenienceFee', { defaultValue: 100 })
+  const [convenienceFeeRecipient] = useSelect('convenienceFeeRecipient', {
+    options: ['', '0x0dA5533d5a9aA08c1792Ef2B6a7444E149cCB0AD', '0xE6abE059E5e929fd17bef158902E73f0FEaCD68c'],
+    defaultValue: '0x1D9Cd50Dde9C19073B81303b3d930444d11552f7',
+  })
+
   const optionsToAddressMap: Record<string, string> = {
     none: '',
     Native: 'NATIVE',
@@ -52,11 +58,13 @@ function Fixture() {
 
   return (
     <Swap
-      tokenList={tokens}
+      convenienceFee={convenienceFee}
+      convenienceFeeRecipient={convenienceFeeRecipient}
       defaultInputAddress={optionsToAddressMap[defaultInput]}
       defaultInputAmount={defaultInputAmount}
       defaultOutputAddress={optionsToAddressMap[defaultOutput]}
       defaultOutputAmount={defaultOutputAmount}
+      tokenList={tokens}
     />
   )
 }
