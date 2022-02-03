@@ -112,10 +112,10 @@ export default function MaxSlippageSelect() {
     const numerator = Math.floor(+custom * 100)
     if (numerator) {
       const percent = new Percent(numerator, 10_000)
-      if (percent.greaterThan(MAX_VALID_SLIPPAGE)) {
+      if (!percent.lessThan(MAX_VALID_SLIPPAGE)) {
         setWarning(WarningState.INVALID_SLIPPAGE)
         setMaxSlippage('auto')
-      } else if (percent.greaterThan(MIN_HIGH_SLIPPAGE)) {
+      } else if (!percent.lessThan(MIN_HIGH_SLIPPAGE)) {
         setWarning(WarningState.HIGH_SLIPPAGE)
         setMaxSlippage(percent)
       } else {

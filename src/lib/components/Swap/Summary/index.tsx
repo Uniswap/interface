@@ -93,9 +93,9 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const independentField = useAtomValue(independentFieldAtom)
 
   const warning = useMemo(() => {
-    if (priceImpact >= ALLOWED_PRICE_IMPACT_HIGH) return 'error'
-    if (priceImpact >= ALLOWED_PRICE_IMPACT_MEDIUM) return 'warning'
-    if (allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE)) return 'warning'
+    if (!priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
+    if (!priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
+    if (!allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE)) return 'warning'
     return
   }, [allowedSlippage, priceImpact])
 
