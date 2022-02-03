@@ -51,6 +51,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
+    feeOptions,
   } = useSwapInfo()
 
   const independentField = useAtomValue(independentFieldAtom)
@@ -118,13 +119,14 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const { signatureData } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, deadline)
 
   // the callback to execute the swap
-  const { callback: swapCallback } = useSwapCallback(
-    optimizedTrade,
+  const { callback: swapCallback } = useSwapCallback({
+    trade: optimizedTrade,
     allowedSlippage,
-    account ?? null,
+    recipientAddressOrName: account ?? null,
     signatureData,
-    deadline
-  )
+    deadline,
+    feeOptions,
+  })
 
   //@TODO(ianlapham): add a loading state, process errors
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)

@@ -31,7 +31,7 @@ interface UseSwapDefaultsArgs {
   defaultOutputAmount?: string
 }
 
-export default function useSwapDefaults({
+export default function useSyncSwapDefaults({
   defaultInputAddress,
   defaultInputAmount,
   defaultOutputAddress,
