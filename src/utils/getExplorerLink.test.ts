@@ -18,7 +18,7 @@ describe('#getExplorerLink', () => {
     expect(getExplorerLink(3, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://ropsten.etherscan.io/address/abc')
   })
   it.skip('@TODO: enum', () => {
-    expect(getExplorerLink(ChainId.RINKEBY, 'abc', ExplorerDataType.ADDRESS)).toEqual(
+    expect(getExplorerLink(ChainId.MAINNET, 'abc', ExplorerDataType.ADDRESS)).toEqual(
       'https://rinkeby.etherscan.io/address/abc'
     )
   })
