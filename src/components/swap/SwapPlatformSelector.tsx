@@ -56,7 +56,7 @@ export function SwapPlatformSelector({
   onSelectedPlatformChange
 }: SwapPlatformSelectorProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
-  const { recipient } = useSwapState()
+  const { recipient, independentField } = useSwapState()
   const { loading: loadingTradesGasEstimates, estimations } = useSwapsGasEstimations(
     allowedSlippage,
     recipient,
@@ -87,7 +87,7 @@ export function SwapPlatformSelector({
             <Th colSpan={4}>EXCHANGE</Th>
             <Th>FEE</Th>
             {showGasFees && <Th align="right">GAS</Th>}
-            <Th align="right">MIN. RECEIVED</Th>
+            <Th align="right">{`${independentField === Field.OUTPUT ? 'MAX SENT' : 'MIN. RECEIVED'}`}</Th>
           </tr>
         </thead>
         <tbody>
