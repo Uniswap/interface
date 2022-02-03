@@ -4,12 +4,17 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtom } from 'jotai'
 import { integratorFeeAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
-import { Color, ThemedText } from 'lib/theme'
+import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 import Row from '../../Row'
+
+const Value = styled.span<{ color?: Color }>`
+  color: ${({ color, theme }) => color && theme[color]};
+  white-space: nowrap;
+`
 
 interface DetailProps {
   label: string
@@ -19,10 +24,10 @@ interface DetailProps {
 
 function Detail({ label, value, color }: DetailProps) {
   return (
-    <ThemedText.Caption color={color}>
+    <ThemedText.Caption>
       <Row gap={2}>
         <span>{label}</span>
-        <span style={{ whiteSpace: 'nowrap' }}>{value}</span>
+        <Value color={color}>{value}</Value>
       </Row>
     </ThemedText.Caption>
   )
