@@ -4,7 +4,6 @@ import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
-import { Moon, Sun } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import Logo from '../../assets/logo'
@@ -276,7 +275,7 @@ export default function Header() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const [darkMode] = useDarkModeManager()
 
   const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
 
@@ -329,12 +328,9 @@ export default function Header() {
             <Web3Status />
           </AccountElement>
         </HeaderElement>
-        {/* <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
+        <HeaderElementWrap>
           <Menu />
-        </HeaderElementWrap> */}
+        </HeaderElementWrap>
       </HeaderControls>
     </HeaderFrame>
   )

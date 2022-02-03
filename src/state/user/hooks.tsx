@@ -16,7 +16,7 @@ import {
   SerializedPair,
   SerializedToken,
   toggleURLWarning,
-  updateUserDarkMode,
+  // updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSingleHopOnly,
