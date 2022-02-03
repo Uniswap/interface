@@ -21,6 +21,7 @@ export function useBestTrade(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
   // debounce used to prevent excessive requests to SOR, as it is data intensive
+  // this helps provide a "syncing" state the UI can reference for loading animations
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
     200
