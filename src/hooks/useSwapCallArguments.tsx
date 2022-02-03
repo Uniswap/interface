@@ -37,7 +37,7 @@ export function useSwapCallArguments(
   recipientAddressOrName: string | null | undefined,
   signatureData: SignatureData | null | undefined,
   deadline: BigNumber | undefined,
-  fee: FeeOptions | undefined
+  feeOptions: FeeOptions | undefined
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -99,7 +99,7 @@ export function useSwapCallArguments(
     } else {
       // swap options shared by v3 and v2+v3 swap routers
       const sharedSwapOptions = {
-        fee,
+        feeOptions,
         recipient,
         slippageTolerance: allowedSlippage,
         ...(signatureData
@@ -174,7 +174,7 @@ export function useSwapCallArguments(
     argentWalletContract,
     chainId,
     deadline,
-    fee,
+    feeOptions,
     library,
     recipient,
     routerContract,

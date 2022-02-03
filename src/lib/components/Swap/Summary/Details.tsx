@@ -2,8 +2,9 @@ import { t } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
-import { useAtom } from 'jotai'
-import { integratorFeeAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
+import { useAtomValue } from 'jotai/utils'
+import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
+import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
@@ -45,13 +46,19 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
 
   const integrator = window.location.hostname
-  const [integratorFee] = useAtom(integratorFeeAtom)
+  const feeOptions = useAtomValue(feeOptionsAtom)
 
   const details = useMemo(() => {
     // @TODO(ianlapham): Check that provider fee is even a valid list item
     return [
       // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
-      [t`${integrator} fee`, integratorFee && `${integratorFee} ${currencyId(inputCurrency)}`],
+      [
+        t`${integrator} fee`,
+        feeOptions &&
+          `${outputAmount.multiply(feeOptions.fee).toSignificant(2)} ${
+            outputCurrency.symbol || currencyId(outputCurrency)
+          }`,
+      ],
       [
         t`Price impact`,
         `${priceImpact.toFixed(2)}%`,
@@ -77,7 +84,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     function isDetail(detail: unknown[]): detail is [string, string, Color | undefined] {
       return Boolean(detail[1])
     }
-  }, [allowedSlippage, inputCurrency, integrator, integratorFee, outputCurrency.symbol, priceImpact, trade])
+  }, [allowedSlippage, inputCurrency, integrator, feeOptions, outputAmount, outputCurrency, priceImpact, trade])
   return (
     <>
       {details.map(([label, detail, color]) => (

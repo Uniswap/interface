@@ -51,7 +51,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
-    fee,
+    feeOptions,
   } = useSwapInfo()
 
   const independentField = useAtomValue(independentFieldAtom)
@@ -125,7 +125,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     recipientAddressOrName: account ?? null,
     signatureData,
     deadline,
-    fee,
+    feeOptions,
   })
 
   //@TODO(ianlapham): add a loading state, process errors

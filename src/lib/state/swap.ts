@@ -29,5 +29,4 @@ export const independentFieldAtom = pickAtom(swapAtom, 'independentField')
 // If set to a transaction hash, that transaction will display in a status dialog.
 export const displayTxHashAtom = atom<string | undefined>(undefined)
 
-export const DEFAULT_FEE_OPTIONS = undefined
-export const feeOptionsAtom = atom<FeeOptions | undefined>(DEFAULT_FEE_OPTIONS)
+export const feeOptionsAtom = atom<FeeOptions | undefined>(undefined)

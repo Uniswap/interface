@@ -29,7 +29,7 @@ interface UseSwapCallbackArgs {
   recipientAddressOrName: string | null | undefined // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined
   deadline: BigNumber | undefined
-  fee?: FeeOptions
+  feeOptions?: FeeOptions
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -40,11 +40,18 @@ export function useSwapCallback({
   recipientAddressOrName,
   signatureData,
   deadline,
-  fee,
+  feeOptions,
 }: UseSwapCallbackArgs): UseSwapCallbackReturns {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData, deadline, fee)
+  const swapCalls = useSwapCallArguments(
+    trade,
+    allowedSlippage,
+    recipientAddressOrName,
+    signatureData,
+    deadline,
+    feeOptions
+  )
   const { callback } = useSendSwapTransaction(account, chainId, library, trade, swapCalls)
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
