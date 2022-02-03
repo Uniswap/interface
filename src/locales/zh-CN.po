@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-03 08:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -942,7 +942,7 @@ msgstr "现有流动量不足以支持此交易。"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
-msgstr "您的交易池中的流动性不足"
+msgstr "你交易的币对流动性不足"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
@@ -2026,7 +2026,7 @@ msgstr "不支持的代币"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unsupported network - switch to another network to swap"
-msgstr "不支持的网络 - 切换到另一个网络进行交换"
+msgstr "不支持该网络 - 切换到另一个网络进行交易"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
