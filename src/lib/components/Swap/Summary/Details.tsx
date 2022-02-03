@@ -55,9 +55,9 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       [
         t`Price impact`,
         `${priceImpact.toFixed(2)}%`,
-        priceImpact >= ALLOWED_PRICE_IMPACT_HIGH
+        !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH)
           ? 'error'
-          : priceImpact >= ALLOWED_PRICE_IMPACT_MEDIUM
+          : !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)
           ? 'warning'
           : undefined,
       ],
@@ -70,7 +70,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       [
         t`Slippage tolerance`,
         `${allowedSlippage.toFixed(2)}%`,
-        allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE) && 'warning',
+        !allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE) && 'warning',
       ],
     ].filter(isDetail)
 
