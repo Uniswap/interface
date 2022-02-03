@@ -1,7 +1,7 @@
 import { StackActions } from '@react-navigation/native'
 import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Keyboard, StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
@@ -11,6 +11,7 @@ import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SwapArrow } from 'src/components/icons/SwapArrow'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import {
@@ -40,6 +41,7 @@ interface SwapFormProps {
 // TODO: token warnings
 export function SwapForm(props: SwapFormProps) {
   const { state, dispatch } = props
+  const [showDetails, setShowDetails] = useState(false)
 
   const activeAccount = useActiveAccount()
   const navigation = useAppStackNavigation()
@@ -70,99 +72,101 @@ export function SwapForm(props: SwapFormProps) {
   const actionButtonDisabled = Boolean(!(isWrapAction(wrapType) || trade) || swapInputStatusMessage)
 
   return (
-    <Button flex={1} onPress={() => Keyboard.dismiss()}>
-      <Box flex={1} justifyContent="space-between" px="md">
-        <Box>
-          <Trace section={SectionName.CurrencyInputPanel}>
-            <CurrencyInput
-              autofocus
-              currency={currencies[CurrencyField.INPUT]}
-              currencyAmount={currencyAmounts[CurrencyField.INPUT]}
-              currencyBalance={currencyBalances[CurrencyField.INPUT]}
-              otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
-              showNonZeroBalancesOnly={true}
-              value={formattedAmounts[CurrencyField.INPUT]}
-              onSelectCurrency={(newCurrency: Currency) =>
-                onSelectCurrency(CurrencyField.INPUT, newCurrency)
-              }
-              onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
-            />
-          </Trace>
-          <Box zIndex="popover">
-            <Box alignItems="center" height={40} style={StyleSheet.absoluteFill}>
-              <Box
+    <Box flex={1} justifyContent="space-between" px="md">
+      <Box flex={1}>
+        <Trace section={SectionName.CurrencyInputPanel}>
+          <CurrencyInput
+            autofocus
+            currency={currencies[CurrencyField.INPUT]}
+            currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+            currencyBalance={currencyBalances[CurrencyField.INPUT]}
+            otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
+            showNonZeroBalancesOnly={true}
+            value={formattedAmounts[CurrencyField.INPUT]}
+            onSelectCurrency={(newCurrency: Currency) =>
+              onSelectCurrency(CurrencyField.INPUT, newCurrency)
+            }
+            onSetAmount={(value) => onEnterExactAmount(CurrencyField.INPUT, value)}
+          />
+        </Trace>
+        <Box zIndex="popover">
+          <Box alignItems="center" height={40} style={StyleSheet.absoluteFill}>
+            <Box
+              alignItems="center"
+              bg="background1"
+              borderColor="mainBackground"
+              borderRadius="md"
+              borderWidth={4}
+              bottom={18}
+              justifyContent="center"
+              p="xs"
+              position="relative">
+              <Button
                 alignItems="center"
-                bg="background1"
-                borderColor="mainBackground"
                 borderRadius="md"
-                borderWidth={4}
-                bottom={18}
                 justifyContent="center"
-                p="xs"
-                position="relative">
-                <Button
-                  alignItems="center"
-                  borderRadius="md"
-                  justifyContent="center"
-                  px="xxs"
-                  py="xs"
-                  onPress={onSwitchCurrencies}>
-                  <SwapArrow
-                    color="textColor"
-                    height={18}
-                    strokeLinecap="round"
-                    strokeWidth="1.5"
-                    width={18}
-                  />
-                </Button>
-              </Box>
+                px="xxs"
+                py="xs"
+                onPress={onSwitchCurrencies}>
+                <SwapArrow
+                  color="textColor"
+                  height={18}
+                  strokeLinecap="round"
+                  strokeWidth="1.5"
+                  width={18}
+                />
+              </Button>
             </Box>
           </Box>
-          <Trace section={SectionName.CurrencyOutputPanel}>
-            <CurrencyInput
-              backgroundColor="background1"
-              currency={currencies[CurrencyField.OUTPUT]}
-              currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
-              currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-              otherSelectedCurrency={currencies[CurrencyField.INPUT]}
-              showNonZeroBalancesOnly={false}
-              title={t("You'll receive")}
-              value={formattedAmounts[CurrencyField.OUTPUT]}
-              onSelectCurrency={(newCurrency: Currency) =>
-                onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
-              }
-              onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
-            />
-          </Trace>
-          {!isWrapAction(wrapType) && (
-            <Box mt="md">
-              <QuickDetails label={swapInputStatusMessage} trade={trade} />
-            </Box>
-          )}
         </Box>
-        <Box>
-          {!isWrapAction(wrapType) && trade && quoteStatus === 'success' && (
-            <SwapDetails
-              currencyIn={currencyAmounts[CurrencyField.INPUT]}
-              currencyOut={currencyAmounts[CurrencyField.OUTPUT]}
-              trade={trade}
-            />
-          )}
-          <ActionButton
-            callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
-            disabled={actionButtonDisabled}
-            label={
-              wrapType === WrapType.Wrap
-                ? t('Wrap')
-                : wrapType === WrapType.Unwrap
-                ? t('Unwrap')
-                : t('Swap')
+        <Trace section={SectionName.CurrencyOutputPanel}>
+          <CurrencyInput
+            backgroundColor="background1"
+            currency={currencies[CurrencyField.OUTPUT]}
+            currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+            currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+            otherSelectedCurrency={currencies[CurrencyField.INPUT]}
+            showNonZeroBalancesOnly={false}
+            title={t("You'll receive")}
+            value={formattedAmounts[CurrencyField.OUTPUT]}
+            onSelectCurrency={(newCurrency: Currency) =>
+              onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
             }
-            loading={quoteStatus === 'loading'}
+            onSetAmount={(value) => onEnterExactAmount(CurrencyField.OUTPUT, value)}
           />
-        </Box>
+        </Trace>
       </Box>
-    </Button>
+      <Flex flex={1} gap="md" justifyContent={'flex-end'} my="xs">
+        {showDetails && !isWrapAction(wrapType) && trade && quoteStatus === 'success' && (
+          <SwapDetails
+            currencyIn={currencyAmounts[CurrencyField.INPUT]}
+            currencyOut={currencyAmounts[CurrencyField.OUTPUT]}
+            trade={trade}
+          />
+        )}
+        {!isWrapAction(wrapType) && (
+          <Button
+            onPress={() => {
+              Keyboard.dismiss()
+              setShowDetails(!showDetails)
+            }}>
+            <QuickDetails label={swapInputStatusMessage} trade={trade} />
+          </Button>
+        )}
+        <ActionButton
+          callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
+          disabled={actionButtonDisabled}
+          label={
+            wrapType === WrapType.Wrap
+              ? t('Wrap')
+              : wrapType === WrapType.Unwrap
+              ? t('Unwrap')
+              : t('Swap')
+          }
+          loading={quoteStatus === 'loading'}
+        />
+      </Flex>
+    </Box>
   )
 }
 
@@ -186,7 +190,6 @@ function ActionButton({ callback, disabled, label, loading }: ActionButtonProps)
         disabled={disabled}
         icon={loading ? <ActivityIndicator color={theme.colors.white} size={25} /> : undefined}
         label={label}
-        mt="lg"
         py="md"
         textVariant="buttonLabelLg"
         onPress={() => {

@@ -30,8 +30,8 @@ export function Option({ currency, onPress, currencyAmount, currencyPrice }: Opt
         alignItems="center"
         flexDirection="row"
         justifyContent="space-between"
-        my="sm"
         px="lg"
+        py="sm"
         width="100%">
         <Box alignItems="center" flexDirection="row">
           <Box alignItems="center" flexDirection="row" justifyContent="center">
