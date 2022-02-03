@@ -99,7 +99,7 @@ export function useSwapCallArguments(
     } else {
       // swap options shared by v3 and v2+v3 swap routers
       const sharedSwapOptions = {
-        feeOptions,
+        fee: feeOptions,
         recipient,
         slippageTolerance: allowedSlippage,
         ...(signatureData

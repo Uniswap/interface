@@ -11,6 +11,7 @@ export const BoundaryProvider = BoundaryContext.Provider
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.dialog};
+  border: 1px solid ${({ theme }) => theme.outline};
   border-radius: 0.5em;
   opacity: ${(props) => (props.show ? 1 : 0)};
   padding: 8px;
@@ -23,8 +24,6 @@ const Reference = styled.div`
   display: inline-block;
 `
 
-const SQRT_8 = Math.sqrt(8)
-
 const Arrow = styled.div`
   height: 8px;
   width: 8px;
@@ -32,6 +31,7 @@ const Arrow = styled.div`
 
   ::before {
     background: ${({ theme }) => theme.dialog};
+    border: 1px solid ${({ theme }) => theme.outline};
     content: '';
     height: 8px;
     position: absolute;
@@ -40,30 +40,38 @@ const Arrow = styled.div`
   }
 
   &.arrow-top {
-    bottom: -${SQRT_8}px;
+    bottom: -4px;
     ::before {
-      border-bottom-right-radius: 1px;
+      border-radius: 1px;
+      border-left: none;
+      border-top: none;
     }
   }
 
   &.arrow-bottom {
-    top: -${SQRT_8}px;
+    top: -5px; // includes -1px from border
     ::before {
-      border-top-left-radius: 1px;
+      border-bottom: none;
+      border-right: none;
+      border-radius: 1px;
     }
   }
 
   &.arrow-left {
-    right: -${SQRT_8}px;
+    right: -4px;
     ::before {
-      border-top-right-radius: 1px;
+      border-bottom: none;
+      border-left: none;
+      border-radius: 1px;
     }
   }
 
   &.arrow-right {
-    left: -${SQRT_8}px;
+    left: -5px; // includes -1px from border
     ::before {
-      border-bottom-left-radius: 1px;
+      border-radius: 1px;
+      border-right: none;
+      border-top: none;
     }
   }
 `

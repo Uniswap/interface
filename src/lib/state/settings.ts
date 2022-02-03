@@ -6,10 +6,6 @@ import { pickAtom, setTogglable } from './atoms'
 export const MAX_VALID_SLIPPAGE = new Percent(1, 2)
 export const MIN_HIGH_SLIPPAGE = new Percent(1, 100)
 
-// transaction deadline in minutes, needs to be adjusted to seconds before use
-// @TODO(ianlapham): update this to be stored as seconds
-export const TRANSACTION_TTL_DEFAULT = 30
-
 interface Settings {
   maxSlippage: Percent | 'auto' // auto will cause slippage to resort to default calculation
   transactionTtl: number | undefined
