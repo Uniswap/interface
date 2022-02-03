@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useAtom } from 'jotai'
-import useConvenienceFee from 'lib/hooks/swap/useConvenienceFee'
-import useSwapDefaults from 'lib/hooks/swap/useSwapDefaults'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
+import useSyncConvenienceFee from 'lib/hooks/swap/useSyncConvenienceFee'
+import useSyncSwapDefaults from 'lib/hooks/swap/useSyncSwapDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList from 'lib/hooks/useTokenList'
@@ -48,8 +48,8 @@ export interface SwapProps {
 
 export default function Swap(props: SwapProps) {
   useTokenList(props.tokenList)
-  useSwapDefaults(props)
-  useConvenienceFee(props)
+  useSyncSwapDefaults(props)
+  useSyncConvenienceFee(props)
 
   const { active, account } = useActiveWeb3React()
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)

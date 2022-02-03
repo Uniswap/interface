@@ -7,7 +7,7 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import { maxSlippageAtom } from 'lib/state/settings'
-import { feeOptionsAtom, Field, swapAtom } from 'lib/state/swap'
+import { DEFAULT_FEE_OPTIONS, feeOptionsAtom, Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -44,7 +44,7 @@ function useComputeSwapInfo(): SwapInfo {
     [Field.OUTPUT]: outputCurrency,
   } = useAtomValue(swapAtom)
 
-  const feeOptions = useAtomValue(feeOptionsAtom)
+  const fee = useAtomValue(feeOptionsAtom)
 
   const to = account
 
@@ -145,9 +145,9 @@ function useComputeSwapInfo(): SwapInfo {
       inputError,
       trade,
       allowedSlippage,
-      fee: feeOptions,
+      fee,
     }),
-    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage, feeOptions]
+    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage, fee]
   )
 }
 
@@ -157,10 +157,7 @@ const swapInfoAtom = atom<SwapInfo>({
   currencyAmounts: {},
   trade: { state: TradeState.INVALID },
   allowedSlippage: new Percent(0),
-  fee: {
-    fee: new Percent(0),
-    recipient: '',
-  },
+  fee: DEFAULT_FEE_OPTIONS,
 })
 
 export function SwapInfoUpdater() {
