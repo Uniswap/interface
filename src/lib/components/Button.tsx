@@ -6,7 +6,7 @@ export const BaseButton = styled.button`
   background-color: transparent;
   border: none;
   border-radius: 0.5em;
-  color: currentColor;
+  color: ${({ theme: { primary } }) => primary};
   cursor: pointer;
   font-size: inherit;
   font-weight: inherit;
