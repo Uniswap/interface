@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { LoadingOpacityContainer } from 'components/Loader/styled'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
 
@@ -50,6 +51,7 @@ interface TokenInputProps {
   onMax?: () => void
   onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
+  loading?: boolean
   children: ReactNode
 }
 
@@ -60,6 +62,7 @@ export default function TokenInput({
   onMax,
   onChangeInput,
   onChangeCurrency,
+  loading,
   children,
 }: TokenInputProps) {
   const max = useRef<HTMLButtonElement>(null)
@@ -70,17 +73,20 @@ export default function TokenInput({
       setShowMax(false)
     }
   }, [])
+
   return (
     <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
-        <ThemedText.H2>
-          <ValueInput
-            value={amount}
-            onFocus={onFocus}
-            onChange={onChangeInput}
-            disabled={disabled || !currency}
-          ></ValueInput>
-        </ThemedText.H2>
+        <LoadingOpacityContainer $loading={!!loading}>
+          <ThemedText.H2>
+            <ValueInput
+              value={amount}
+              onFocus={onFocus}
+              onChange={onChangeInput}
+              disabled={disabled || !currency}
+            ></ValueInput>
+          </ThemedText.H2>
+        </LoadingOpacityContainer>
         {showMax && (
           <MaxButton onClick={onMax} ref={max}>
             <ThemedText.ButtonMedium>

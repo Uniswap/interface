@@ -1,13 +1,15 @@
 import { Trans } from '@lingui/macro'
+import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
-import { Field } from 'lib/state/swap'
+import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { TradeState } from 'state/routing/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -40,12 +42,21 @@ interface OutputProps {
 
 export default function Output({ disabled, children }: OutputProps) {
   const {
+    trade: { state: tradeState },
     currencyBalances: { [Field.OUTPUT]: balance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
 
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
+
+  //loading status of the trade
+  const routeIsLoading = useMemo(
+    () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
+    [tradeState]
+  )
+  const independentField = useAtomValue(independentFieldAtom)
+  const showLoading = independentField === Field.INPUT && routeIsLoading
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(swapOutputCurrency)
@@ -90,10 +101,13 @@ export default function Output({ disabled, children }: OutputProps) {
           onMax={onMax}
           onChangeInput={updateSwapOutputAmount}
           onChangeCurrency={updateSwapOutputCurrency}
+          loading={showLoading}
         >
           <ThemedText.Body2 color="secondary">
             <Row>
-              <span>{usdc}</span>
+              <LoadingOpacityContainer $loading={showLoading}>
+                <span>{usdc}</span>
+              </LoadingOpacityContainer>
               {balance && (
                 <span>
                   Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>

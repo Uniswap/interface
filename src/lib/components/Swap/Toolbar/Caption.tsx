@@ -53,7 +53,7 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
     const [a, b] = flip ? [outputAmount, inputAmount] : [inputAmount, outputAmount]
     const priceString = (!flip ? executionPrice : executionPrice?.invert())?.toSignificant(6)
 
-    const ratio = `1 ${a.currency.symbol} = ${priceString}} ${b.currency.symbol}`
+    const ratio = `1 ${a.currency.symbol} = ${priceString} ${b.currency.symbol}`
     const usdc = !flip
       ? fiatValueInput
         ? ` ($${fiatValueInput.toSignificant(2)})`
