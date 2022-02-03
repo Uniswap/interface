@@ -1,4 +1,10 @@
-import { JSBI, LiquidityMiningCampaign, parseBigintIsh, TokenAmount } from '@swapr/sdk'
+import {
+  JSBI,
+  parseBigintIsh,
+  TokenAmount,
+  SingleSidedLiquidityMiningCampaign,
+  LiquidityMiningCampaign
+} from '@swapr/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Box, Flex } from 'rebass'
@@ -87,7 +93,7 @@ const ButtonsRow = styled(RowBetween)`
   `}
 `
 
-const StyledButtonDark = styled(ButtonDark)`
+export const StyledButtonDark = styled(ButtonDark)`
   width: 100%;
   padding: 9.5px;
   font-weight: 500;
@@ -101,13 +107,24 @@ const StyledButtonDark = styled(ButtonDark)`
 `
 
 interface FullPositionCardProps {
-  campaign?: LiquidityMiningCampaign
+  campaign?: SingleSidedLiquidityMiningCampaign | LiquidityMiningCampaign
   showUSDValue: boolean
+  isSingleSided: boolean
+  targetedPairOrToken: any
 }
 
-export default function StakeCard({ campaign, showUSDValue }: FullPositionCardProps) {
+export default function StakeCard({
+  campaign,
+  showUSDValue,
+  isSingleSided,
+  targetedPairOrToken: targetedPairOrSingleToken
+}: FullPositionCardProps) {
   const { account } = useActiveWeb3React()
-  const stakableTokenBalance = useTokenBalance(account || undefined, campaign?.targetedPair.liquidityToken)
+  const stakableTokenBalance = useTokenBalance(
+    account || undefined,
+    isSingleSided ? targetedPairOrSingleToken : targetedPairOrSingleToken.liquidityToken
+  )
+
   const callbacks = useLiquidityMiningActionCallbacks(campaign?.address)
   const {
     stakedTokenAmount,
@@ -117,7 +134,7 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
   } = useLiquidityMiningCampaignPosition(campaign, account || undefined)
   const addTransaction = useTransactionAdder()
   const { loading: loadingLpTokensUnderlyingAssets, underlyingAssets } = useLpTokensUnderlyingAssets(
-    campaign?.targetedPair,
+    campaign instanceof LiquidityMiningCampaign ? campaign?.targetedPair : undefined,
     stakedTokenAmount || undefined
   )
 
@@ -140,7 +157,9 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
       return
     }
     if (!stakableTokenBalance) {
-      setNormalizedStakableTokenBalance(new TokenAmount(campaign.targetedPair.liquidityToken, '0'))
+      setNormalizedStakableTokenBalance(
+        new TokenAmount(isSingleSided ? targetedPairOrSingleToken : targetedPairOrSingleToken.liquidityToken, '0')
+      )
     } else if (campaign.stakingCap.equalTo('0')) {
       setNormalizedStakableTokenBalance(stakableTokenBalance)
     } else if (campaign.stakingCap.subtract(campaign.staked).lessThan(stakableTokenBalance)) {
@@ -148,7 +167,7 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
     } else {
       setNormalizedStakableTokenBalance(stakableTokenBalance)
     }
-  }, [campaign, stakableTokenBalance])
+  }, [campaign, stakableTokenBalance, targetedPairOrSingleToken, isSingleSided])
 
   useEffect(() => {
     setDisabledStaking(
@@ -336,7 +355,16 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
                   title={<Row>STAKED</Row>}
                   data={
                     <AutoColumn gap="4px">
-                      {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                      {isSingleSided ? (
+                        stakedTokenAmount ? (
+                          <TokenAmountDisplayer amount={stakedTokenAmount} showUSDValue={showUSDValue} />
+                        ) : (
+                          <Row>
+                            <Skeleton width="40px" height="14px" />
+                            <CurrencyLogo marginLeft={4} loading size="14px" />
+                          </Row>
+                        )
+                      ) : loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
                         <>
                           <Row>
                             <Skeleton width="40px" height="14px" />
@@ -449,9 +477,10 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
       {campaign && campaign.address && normalizedStakableTokenBalance && (
         <ConfirmStakingModal
           isOpen={showStakingConfirmationModal}
+          isSingleSide={isSingleSided}
           stakableTokenBalance={normalizedStakableTokenBalance}
           onDismiss={handleDismiss}
-          stakablePair={campaign.targetedPair}
+          stakablePair={targetedPairOrSingleToken}
           distributionContractAddress={campaign.address}
           attemptingTxn={attemptingTransaction}
           errorMessage={errorMessage}
@@ -465,7 +494,7 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
         isOpen={showWithdrawalConfirmationModal}
         withdrawablTokenBalance={stakedTokenAmount || undefined}
         onDismiss={handleDismiss}
-        stakablePair={campaign?.targetedPair}
+        stakablePair={targetedPairOrSingleToken}
         attemptingTxn={attemptingTransaction}
         errorMessage={errorMessage}
         onConfirm={handleWithdrawalConfirmation}
@@ -485,7 +514,7 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
       <ConfirmExitModal
         isOpen={showExitConfirmationModal}
         onDismiss={handleDismiss}
-        stakablePair={campaign?.targetedPair}
+        stakablePair={targetedPairOrSingleToken}
         claimableRewards={claimableRewardAmounts}
         stakedTokenBalance={stakedTokenAmount || undefined}
         attemptingTxn={attemptingTransaction}

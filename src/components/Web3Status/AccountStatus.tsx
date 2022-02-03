@@ -18,6 +18,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainLabel } from '../../constants'
 import { ENSAvatarData } from '../../hooks/useENSAvatar'
+import { CustomWalletLinkConnector } from '../../connectors/CustomWalletLinkConnector'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -150,7 +151,11 @@ export function AccountStatus({
   const [networkSwitchingActive, setNetworkSwitchingActive] = useState(false)
 
   useEffect(() => {
-    setNetworkSwitchingActive(connector instanceof CustomNetworkConnector || connector instanceof InjectedConnector)
+    setNetworkSwitchingActive(
+      connector instanceof CustomNetworkConnector ||
+        connector instanceof InjectedConnector ||
+        connector instanceof CustomWalletLinkConnector
+    )
   }, [connector])
 
   if (!networkConnectorChainId) return null

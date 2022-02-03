@@ -27,8 +27,8 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
 `
-
-const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number; loading?: boolean }>`
+// looading is for purpose, for some reason DevTools screams that 'loading' is expected to be a string
+const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number; looading?: boolean }>`
   position: relative;
   width: ${({ size }) => size};
   height: ${({ size }) => size};
@@ -44,7 +44,7 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
     transform: translate(-50%, -50%);
     ${({ size }) => `width: calc(${size} - 1px)`};
     ${({ size }) => `height: calc(${size} - 1px)`};
-    background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
+    background-color: ${props => (props.looading ? 'transparent' : props.theme.white)};
     border-radius: 50%;
     z-index: -1;
   }
@@ -104,7 +104,7 @@ export default function CurrencyLogo({
       <Skeleton
         wrapper={({ children }: { children: ReactNode }) => (
           <Wrapper
-            loading={loading}
+            looading={loading}
             size={size}
             marginRight={marginRight}
             marginLeft={marginLeft}

@@ -5,57 +5,30 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { PageWrapper } from './styleds'
 
 import { TYPE } from '../../theme'
-import { Box, Flex, Text } from 'rebass'
-import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonSecondary, ButtonWithLink } from '../../components/Button'
+import { Box, Button, Flex, Text } from 'rebass'
+import { RowBetween } from '../../components/Row'
+import { ButtonWithLink } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
 import { ReactComponent as ThreeBlurredCircles } from '../../assets/svg/three-blurred-circles.svg'
-import { ChevronDown, X } from 'react-feather'
+import { ChevronDown, Plus, X } from 'react-feather'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { Currency, Token } from '@swapr/sdk'
-import { useLiquidityMiningFeatureFlag } from '../../hooks/useLiquidityMiningFeatureFlag'
+
 import { useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator } from '../../hooks/useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator'
-import ListFilter, { PairsFilterType } from '../../components/Pool/ListFilter'
+import { PairsFilterType } from '../../components/Pool/ListFilter'
 import { useLPPairs } from '../../hooks/useLiquidityPositions'
 import PairsList from '../../components/Pool/PairsList'
 import CurrencyLogo from '../../components/CurrencyLogo'
-
-/* const VoteCard = styled.div`
-  overflow: hidden;
-  background-color: ${({ theme }) => theme.bg1};
-  border: 1px solid ${({ theme }) => theme.bg2};
-  border-radius: 8px;
-` */
+import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
+import { Switch } from '../../components/Switch'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-wrap: wrap;
     width: 100%;
     flex-direction: column;
-  `};
-`
-
-const ButtonRow = styled(RowFixed)`
-  & > a + a {
-    margin-left: 8px;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
-    justify-content: space-between;
-    margin: 26px 0 8px 0;
-  `};
-`
-
-const ResponsiveButtonSecondary = styled(ButtonSecondary)`
-  width: fit-content;
-  font-weight: 400;
-  color: ${({ theme }) => theme.text1};
-  border: 1px solid ${({ theme }) => theme.bg5};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
   `};
 `
 
@@ -68,7 +41,14 @@ const PointableFlex = styled(Flex)`
   cursor: pointer;
 `
 
-const ResetFilterIconContainer = styled(Flex)`
+const TransperentButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  margin-left: 18px;
+  color: ${props => props.theme.text4};
+`
+
+export const ResetFilterIconContainer = styled(Flex)`
   border: solid 1px ${props => props.theme.bg3};
   border-radius: 8px;
   width: 24px;
@@ -77,7 +57,7 @@ const ResetFilterIconContainer = styled(Flex)`
   justify-content: center;
 `
 
-const ResetFilterIcon = styled(X)`
+export const ResetFilterIcon = styled(X)`
   width: 12px;
   height: 12px;
   color: ${props => props.theme.purple3};
@@ -88,12 +68,18 @@ interface TitleProps {
   onCurrencySelection: (currency: Currency) => void
   onFilteredTokenReset: () => void
   aggregatedDataFilter: PairsFilterType
+  onFilterChange: any
 }
 
 // decoupling the title from the rest of the component avoids full-rerender everytime the pair selection modal is opened
-function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset, aggregatedDataFilter }: TitleProps) {
+function Title({
+  onCurrencySelection,
+  filteredToken,
+  onFilteredTokenReset,
+  aggregatedDataFilter,
+  onFilterChange
+}: TitleProps) {
   const [openTokenModal, setOpenTokenModal] = useState(false)
-  const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
   const handleAllClick = useCallback(() => {
     setOpenTokenModal(true)
@@ -114,7 +100,7 @@ function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset, aggre
   return (
     <>
       <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-        <Flex alignItems="center">
+        <Flex alignItems="center" justifyContent="space-between">
           <Box mr="8px">
             <Text fontSize="26px" lineHeight="32px">
               Pairs
@@ -158,21 +144,32 @@ function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset, aggre
               )}
             </PointableFlex>
           )}
-        </Flex>
-        <ButtonRow>
-          <ResponsiveButtonSecondary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
-            <Text fontWeight={700} fontSize={12}>
+
+          <TransperentButton as={Link} to="/create">
+            <Plus size="16" />
+            <Text marginLeft="5px" fontWeight="500" fontSize="12px">
               CREATE PAIR
             </Text>
-          </ResponsiveButtonSecondary>
-          {liquidityMiningEnabled && (
-            <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-              <Text fontWeight={700} fontSize={12} lineHeight="15px">
-                Create Rewards
-              </Text>
-            </ResponsiveButtonSecondary>
-          )}
-        </ButtonRow>
+          </TransperentButton>
+        </Flex>
+        <Flex>
+          <Switch
+            label="CAMPAIGNS"
+            handleToggle={() =>
+              onFilterChange(
+                aggregatedDataFilter === PairsFilterType.REWARDS ? PairsFilterType.ALL : PairsFilterType.REWARDS
+              )
+            }
+            isOn={aggregatedDataFilter === PairsFilterType.REWARDS}
+          />
+          <Switch
+            label="MY PAIRS"
+            handleToggle={() =>
+              onFilterChange(aggregatedDataFilter === PairsFilterType.MY ? PairsFilterType.ALL : PairsFilterType.MY)
+            }
+            isOn={aggregatedDataFilter === PairsFilterType.MY}
+          />
+        </Flex>
       </TitleRow>
       <CurrencySearchModal
         isOpen={openTokenModal}
@@ -192,6 +189,9 @@ export default function Pools() {
     aggregatedDataFilter,
     filterToken
   )
+
+  const { loading: ssLoading, data } = useSwaprSinglelSidedStakeCampaigns(filterToken, aggregatedDataFilter)
+
   const { loading: loadingUserLpPositions, data: userLpPairs } = useLPPairs(account || undefined)
 
   const handleCurrencySelect = useCallback(token => {
@@ -200,10 +200,6 @@ export default function Pools() {
 
   const handleFilterTokenReset = useCallback(() => {
     setFilterToken(undefined)
-  }, [])
-
-  const handleFilterChange = useCallback(filter => {
-    setAggregatedDataFilter(filter)
   }, [])
 
   return (
@@ -217,14 +213,15 @@ export default function Pools() {
               onCurrencySelection={handleCurrencySelect}
               filteredToken={filterToken}
               onFilteredTokenReset={handleFilterTokenReset}
+              onFilterChange={setAggregatedDataFilter}
             />
-            <ListFilter filter={aggregatedDataFilter} onFilterChange={handleFilterChange} />
             {aggregatedDataFilter === PairsFilterType.MY ? (
-              <PairsList loading={loadingUserLpPositions} aggregatedPairs={userLpPairs} />
+              <PairsList loading={loadingUserLpPositions} aggregatedPairs={userLpPairs} singleSidedStake={data} />
             ) : (
               <PairsList
-                loading={loadingUserLpPositions || loadingAggregatedData}
+                loading={loadingUserLpPositions || loadingAggregatedData || ssLoading}
                 aggregatedPairs={aggregatedData}
+                singleSidedStake={data}
                 filter={aggregatedDataFilter}
               />
             )}

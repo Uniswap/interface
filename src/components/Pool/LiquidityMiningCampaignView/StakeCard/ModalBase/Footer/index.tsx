@@ -1,4 +1,3 @@
-import { Pair } from '@swapr/sdk'
 import React from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { ApprovalState } from '../../../../../../hooks/useApproveCallback'
@@ -8,7 +7,7 @@ import { ButtonError, ButtonPrimary } from '../../../../../Button'
 interface ConfirmStakingModalFooterProps {
   onConfirm: () => void
   onApprove?: () => void
-  stakablePair?: Pair | null
+  text?: string
   disabledConfirm: boolean
   approvalState?: ApprovalState
   showApprove?: boolean
@@ -17,7 +16,7 @@ interface ConfirmStakingModalFooterProps {
 export default function ConfirmStakingModalFooter({
   onConfirm,
   onApprove,
-  stakablePair,
+  text,
   disabledConfirm,
   approvalState,
   showApprove
@@ -27,16 +26,9 @@ export default function ConfirmStakingModalFooter({
       {showApprove && (
         <Box width="50%" pr="6px">
           <ButtonPrimary onClick={onApprove} disabled={approvalState === ApprovalState.APPROVED}>
-            {approvalState === ApprovalState.PENDING && (
-              <Dots>
-                Approving {stakablePair?.token0.symbol}/{stakablePair?.token1.symbol}
-              </Dots>
-            )}
-            {approvalState === ApprovalState.APPROVED &&
-              `${stakablePair?.token0.symbol}/${stakablePair?.token1.symbol} APPROVED`}
-            {approvalState !== ApprovalState.PENDING &&
-              approvalState !== ApprovalState.APPROVED &&
-              `Approve ${stakablePair?.token0.symbol}/${stakablePair?.token1.symbol}`}
+            {approvalState === ApprovalState.PENDING && <Dots>Approving {text}</Dots>}
+            {approvalState === ApprovalState.APPROVED && `${text} APPROVED`}
+            {approvalState !== ApprovalState.PENDING && approvalState !== ApprovalState.APPROVED && `Approve ${text}`}
           </ButtonPrimary>
         </Box>
       )}

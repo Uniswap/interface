@@ -1,21 +1,28 @@
 import React from 'react'
-import { Box } from 'rebass'
+
 import { CurrencyAmount, Percent, Token } from '@swapr/sdk'
-import { TYPE } from '../../../../theme'
+import { MEDIA_WIDTHS, TYPE } from '../../../../theme'
 import DoubleCurrencyLogo from '../../../DoubleLogo'
 import { DarkCard } from '../../../Card'
 import styled from 'styled-components'
-import ApyBadge from '../../ApyBadge'
+import { usePair24hVolumeUSD } from '../../../../hooks/usePairVolume24hUSD'
 import { formatCurrencyAmount } from '../../../../utils'
-import { AutoColumn } from '../../../Column'
+
 import { unwrappedToken } from '../../../../utils/wrappedCurrency'
-import { ReactComponent as CarrotLogo } from '../../../../assets/svg/carrot.svg'
-import { MouseoverTooltip } from '../../../Tooltip'
+
+import { useWindowSize } from '../../../../hooks/useWindowSize'
+import { Flex, Text } from 'rebass'
+import { ReactComponent as FarmingLogo } from '../../../../assets/svg/farming.svg'
+import ApyBadge from '../../ApyBadge'
+import CurrencyLogo from '../../../CurrencyLogo'
+import CarrotBadge from '../../../Badge/Carrot'
 
 const SizedCard = styled(DarkCard)`
-  width: 210px;
-  height: 120px;
-  padding: 16px;
+  //THIS SHOULD BE TOOGLEABLE 210PX OR 100% DEPENDING ON LAYOUT CHOSEN
+  width: 100%;
+  /* height: 120px; */
+  padding: 17.5px 20px;
+  overflow: hidden;
   ${props => props.theme.mediaWidth.upToMedium`
     width: 100%;
   `}
@@ -25,43 +32,37 @@ const SizedCard = styled(DarkCard)`
   `}
 `
 
-const PositiveBadgeRoot = styled.div`
+const FarmingBadge = styled.div<{ isGreyed?: boolean }>`
   height: 16px;
+  border: ${props => !props.isGreyed && `solid 1.5px ${props.theme.green2}`};
+  color: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
+  border-radius: 6px;
+  width: fit-content;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(14, 159, 110, 0.1);
   border-radius: 4px;
   padding: 0 4px;
-`
-
-const KpiBadge = styled.div`
-  height: 16px;
-  border: solid 1.5px #f2994a;
-  color: #f2994a;
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 9px;
-  letter-spacing: 0.04em;
-  display: flex;
-  align-items: center;
-  padding: 0 4px;
-`
-
-const StyledCarrotLogo = styled(CarrotLogo)`
-  margin-right: 4px;
-  > path {
-    fill: #f2994a;
+  background-color: ${props => props.isGreyed && props.theme.bg3};
+  opacity: ${props => props.isGreyed && '0.5'};
+  svg {
+    > path {
+      fill: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
+    }
   }
+  font-weight: 700;
+  margin-left: 3px;
+  font-size: 9px;
+  line-height: 9px;
+  letter-spacing: 0.02em;
 `
 
 const BadgeText = styled.div`
-  font-weight: 600;
+  font-weight: 700;
+  margin-left: 3px;
   font-size: 9px;
-  line-height: 11px;
+  line-height: 9px;
   letter-spacing: 0.02em;
-  color: ${props => props.theme.green2};
 `
 
 const EllipsizedText = styled(TYPE.body)`
@@ -69,64 +70,23 @@ const EllipsizedText = styled(TYPE.body)`
   text-overflow: ellipsis;
 `
 
-const TextWrapper = styled(Box)`
-  order: 1;
-  width: 100%;
-  margin-top: 20px;
+const TitleText = styled(Text)`
+  color: ${props => props.theme.purple2};
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 12px;
+  opacity: 0.5;
 `
-
-const BadgeWrapper = styled.div`
-  align-self: flex-start;
-  margin-left: auto;
-
-  ${props => props.theme.mediaWidth.upToExtraSmall`
-    align-self: center;
-  `}
+const ValueText = styled.div`
+  color: ${props => props.theme.purple2};
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.8px;
+  font-family: 'Fira Code';
 `
-
-const RootFlex = styled.div`
-  height: 100%;
-  display: flex;
+const ItemsWrapper = styled(Flex)`
+  justify-content: space-evenly;
   flex-direction: column;
-  justify-content: space-between;
-  ${props => props.theme.mediaWidth.upToExtraSmall`
-    flex-direction: row-reverse;
-    justify-content: auto;
-  `}
-`
-
-const InnerUpperFlex = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  ${props => props.theme.mediaWidth.upToExtraSmall`
-    flex-direction: row-reverse;
-    align-items: center;
-  `}
-`
-
-const InnerLowerFlex = styled.div`
-  display: flex;
-  flex: 0;
-  ${props => props.theme.mediaWidth.upToExtraSmall`
-    flex: 1;
-  `}
-`
-
-const MobileHidden = styled(Box)`
-  display: block;
-  ${props => props.theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `}
-`
-
-const DesktopHidden = styled(Box)`
-  display: none;
-  ${props => props.theme.mediaWidth.upToExtraSmall`
-    display: block;
-  `}
 `
 
 interface PairProps {
@@ -135,8 +95,11 @@ interface PairProps {
   apy: Percent
   usdLiquidity: CurrencyAmount
   usdLiquidityText?: string
-  staked?: boolean
+  pairOrStakeAddress?: string
   containsKpiToken?: boolean
+  hasFarming?: boolean
+  isSingleSidedStakingCampaign?: boolean
+  dayLiquidity?: string
 }
 
 export default function Pair({
@@ -144,59 +107,107 @@ export default function Pair({
   token1,
   usdLiquidity,
   apy,
-  staked,
   containsKpiToken,
   usdLiquidityText,
+  pairOrStakeAddress,
+  hasFarming,
+  dayLiquidity,
+  isSingleSidedStakingCampaign,
   ...rest
 }: PairProps) {
+  const { width } = useWindowSize()
+  const { volume24hUSD, loading } = usePair24hVolumeUSD(pairOrStakeAddress, isSingleSidedStakingCampaign)
+
+  const isMobile = width ? width < MEDIA_WIDTHS.upToExtraSmall : false
+
   return (
     <SizedCard selectable {...rest}>
-      <RootFlex>
-        <InnerUpperFlex>
-          <MobileHidden>
-            <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
-          </MobileHidden>
-          <Box>
-            <AutoColumn justify="flex-end" gap="6px">
-              {apy.greaterThan('0') && (
-                <BadgeWrapper>
+      <Flex height="100%" justifyContent="space-between">
+        <Flex flexDirection={isMobile ? 'column' : 'row'} alignItems={!isMobile ? 'center' : ''}>
+          {isSingleSidedStakingCampaign ? (
+            <CurrencyLogo size={isMobile ? '64px' : '45px'} marginRight={14} currency={token0} />
+          ) : (
+            <DoubleCurrencyLogo
+              spaceBetween={isMobile ? -12 : 0}
+              marginLeft={isMobile ? -23 : 0}
+              marginRight={isMobile ? 0 : 14}
+              top={isMobile ? -25 : 0}
+              currency0={token0}
+              currency1={token1}
+              size={isMobile ? 64 : 45}
+            />
+          )}
+          <EllipsizedText
+            color="white"
+            lineHeight="20px"
+            fontWeight="700"
+            fontSize="16px"
+            maxWidth={isMobile ? '100%' : '145px'}
+          >
+            {unwrappedToken(token0)?.symbol}
+
+            {!isSingleSidedStakingCampaign && (isMobile ? '/' : <br></br>)}
+
+            {!isSingleSidedStakingCampaign && unwrappedToken(token1)?.symbol}
+          </EllipsizedText>
+
+          {isMobile && (
+            <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
+              ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
+            </TYPE.subHeader>
+          )}
+        </Flex>
+        <Flex width={isMobile ? 'auto' : '70%'} justifyContent="space-between">
+          <Flex
+            width={isMobile ? 'auto' : '35%'}
+            flexDirection="column"
+            alignItems="flex-start"
+            justifyContent={isMobile ? '' : 'space-evenly'}
+          >
+            {!isMobile && <TitleText marginBottom={'6px'}>CAMPAIGNS</TitleText>}
+
+            <Flex
+              style={{ gap: '6px' }}
+              flexDirection={isMobile ? 'column' : 'row'}
+              alignItems={isMobile ? 'flex-end' : 'flex-start'}
+              flexWrap="wrap"
+            >
+              {apy.greaterThan('0') && isMobile && (
+                <Flex alignSelf={isMobile ? 'center' : 'flex-start'} marginLeft="auto">
                   <ApyBadge upTo={containsKpiToken} apy={apy} />
-                </BadgeWrapper>
+                </Flex>
               )}
-              {containsKpiToken && (
-                <MouseoverTooltip content="Rewards at least a Carrot KPI token">
-                  <KpiBadge>
-                    <StyledCarrotLogo />
-                    CARROT
-                  </KpiBadge>
-                </MouseoverTooltip>
-              )}
-              {staked && (
-                <PositiveBadgeRoot>
-                  <BadgeText>STAKING</BadgeText>
-                </PositiveBadgeRoot>
-              )}
-            </AutoColumn>
-          </Box>
-        </InnerUpperFlex>
-        <InnerLowerFlex>
-          <DesktopHidden mr="8px" minWidth="auto">
-            <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
-          </DesktopHidden>
-          <TextWrapper>
-            <Box>
-              <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
-                ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
-              </TYPE.subHeader>
-            </Box>
-            <Box>
-              <EllipsizedText color="white" lineHeight="20px" fontWeight="700" fontSize="16px" maxWidth="100%">
-                {unwrappedToken(token0)?.symbol}/{unwrappedToken(token1)?.symbol}
-              </EllipsizedText>
-            </Box>
-          </TextWrapper>
-        </InnerLowerFlex>
-      </RootFlex>
+              <FarmingBadge isGreyed={!hasFarming}>
+                <FarmingLogo />
+                <BadgeText>FARMING</BadgeText>
+              </FarmingBadge>
+              <CarrotBadge isGreyed={!containsKpiToken} />
+            </Flex>
+          </Flex>
+          {!isMobile && (
+            <>
+              <ItemsWrapper>
+                <TitleText>TVL</TitleText>
+                <ValueText> ${formatCurrencyAmount(usdLiquidity).split('.')[0]}</ValueText>
+              </ItemsWrapper>
+              <ItemsWrapper>
+                <TitleText>24h VOLUME</TitleText>
+                <ValueText>
+                  ${!loading && volume24hUSD ? formatCurrencyAmount(volume24hUSD).split('.')[0] : dayLiquidity}
+                  {dayLiquidity && dayLiquidity}
+                </ValueText>
+              </ItemsWrapper>
+              <ItemsWrapper width={'60px'}>
+                <TitleText>APY</TitleText>
+
+                <Text fontWeight="700" fontSize="18px" fontFamily="Fira Code">
+                  {apy.toFixed(0)}%
+                </Text>
+              </ItemsWrapper>
+            </>
+          )}
+        </Flex>
+      </Flex>
     </SizedCard>
   )
 }
