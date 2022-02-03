@@ -19,7 +19,7 @@ import {
   ButtonWhite,
 } from './index'
 
-const wrapperCss = styled.main`
+const Main = styled.main`
   font-size: 2em;
   margin: 3em;
   max-width: 300px;
@@ -33,9 +33,9 @@ export default {
   },
   decorators: [
     (Component: Story) => (
-      <div css={wrapperCss}>
+      <Main>
         <Component />
-      </div>
+      </Main>
     ),
   ],
 }
@@ -123,25 +123,7 @@ export const Pink = () => (
     <Unicorn />
   </ButtonPink>
 )
-export const Secondary = () => (
-  <ButtonSecondary>
-    <Unicorn />
-    &nbsp;UNISWAP&nbsp;
-    <Unicorn />
-  </ButtonSecondary>
-)
-export const Gray = () => (
-  <ButtonGray>
-    <Unicorn />
-    &nbsp;UNISWAP&nbsp;
-    <Unicorn />
-  </ButtonGray>
-)
+export const Secondary = () => <ButtonSecondary>Create Pair</ButtonSecondary>
+export const Gray = () => <ButtonGray>Diffusion</ButtonGray>
 export const Light = () => <ButtonLight>Connect Wallet</ButtonLight>
-export const Primary = () => (
-  <ButtonPrimary>
-    <Unicorn />
-    &nbsp;UNISWAP&nbsp;
-    <Unicorn />
-  </ButtonPrimary>
-)
+export const Primary = () => <ButtonPrimary>Accept</ButtonPrimary>
