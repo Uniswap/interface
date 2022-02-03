@@ -152,9 +152,9 @@ export function SwapForm(props: SwapFormProps) {
             callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
             disabled={actionButtonDisabled}
             label={
-              wrapType === WrapType.WRAP
+              wrapType === WrapType.Wrap
                 ? t('Wrap')
-                : wrapType === WrapType.UNWRAP
+                : wrapType === WrapType.Unwrap
                 ? t('Unwrap')
                 : t('Swap')
             }

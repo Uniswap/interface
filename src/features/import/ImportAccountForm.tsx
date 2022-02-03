@@ -165,7 +165,7 @@ function ENSResolver() {
   const { values, setFieldValue } = useFormikContext<FormValues>()
   const input = normalizeTextInput(values.input)
   const name = isValidEnsName(input) ? input : undefined
-  const { address, loading } = useENSAddress(ChainId.MAINNET, name)
+  const { address, loading } = useENSAddress(ChainId.Mainnet, name)
 
   useEffect(() => {
     if (!loading && address) {

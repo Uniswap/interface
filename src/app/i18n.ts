@@ -5,7 +5,7 @@ import translationEn from 'src/locales/en/translation.json'
 // Note, adding/changing workspaces or locales sometimes requires
 // restarting the Typescript server in vscode before types work
 export enum Locale {
-  en = 'en',
+  En = 'en',
   // Add new locales here
 }
 

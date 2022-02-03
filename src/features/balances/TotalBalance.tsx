@@ -18,7 +18,7 @@ function useTotalBalance(
 ) {
   const activeAccount = useActiveAccount()
   const filteredBalances =
-    activeAccount?.type === AccountType.readonly
+    activeAccount?.type === AccountType.Readonly
       ? balances.filter((currencyAmount) =>
           MAINNET_CHAIN_IDS.includes(currencyAmount.currency.chainId)
         )

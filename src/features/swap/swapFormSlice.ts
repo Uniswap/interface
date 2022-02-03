@@ -21,7 +21,7 @@ export interface SwapFormState {
   } | null
 }
 
-const ethAddress = currencyId(NativeCurrency.onChain(ChainId.RINKEBY))
+const ethAddress = currencyId(NativeCurrency.onChain(ChainId.Rinkeby))
 
 // Represents the active swap form
 export const initialSwapFormState: Readonly<SwapFormState> = {
@@ -29,7 +29,7 @@ export const initialSwapFormState: Readonly<SwapFormState> = {
   exactAmount: '',
   [CurrencyField.INPUT]: {
     address: ethAddress,
-    chainId: ChainId.RINKEBY,
+    chainId: ChainId.Rinkeby,
   },
   [CurrencyField.OUTPUT]: null,
 }

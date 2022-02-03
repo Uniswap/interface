@@ -11,14 +11,14 @@ import { account, tokenContract } from 'src/test/fixtures'
 
 const approveParams: ApproveParams = {
   account,
-  chainId: ChainId.RINKEBY,
+  chainId: ChainId.Rinkeby,
   txAmount: '1',
   contract: tokenContract,
-  spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
+  spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
 }
 
 const approveTxTypeInfo = {
-  type: TransactionType.APPROVE,
+  type: TransactionType.Approve,
   tokenAddress: tokenContract.address,
   spender: approveParams.spender,
 }

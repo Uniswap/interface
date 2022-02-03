@@ -5,8 +5,8 @@ import type { BigNumber } from 'ethers'
  */
 
 export enum FeeType {
-  legacy = 'legacy',
-  eip1559 = 'eip1559',
+  Legacy = 'legacy',
+  Eip1559 = 'eip1559',
 }
 
 export interface FeeInfoBase {
@@ -16,12 +16,12 @@ export interface FeeInfoBase {
 }
 
 export interface FeeInfoLegacy extends FeeInfoBase {
-  type: FeeType.legacy
+  type: FeeType.Legacy
   gasPrice: string
 }
 
 export interface FeeInfo1559 extends FeeInfoBase {
-  type: FeeType.eip1559
+  type: FeeType.Eip1559
   feeDetails: {
     currentBaseFeePerGas: string
     maxBaseFeePerGas: string

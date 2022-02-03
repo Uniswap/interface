@@ -10,7 +10,7 @@ export function getCurrencyLogoSrcs(currency: Currency) {
 
   if (currency.isToken) {
     const defaultUrls =
-      currency.chainId === ChainId.MAINNET ? [getTokenLogoURL(currency.address)] : []
+      currency.chainId === ChainId.Mainnet ? [getTokenLogoURL(currency.address)] : []
     if (currency instanceof WrappedTokenInfo && currency.logoURI) {
       return [...defaultUrls, currency.logoURI]
     }

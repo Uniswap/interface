@@ -64,7 +64,7 @@ export function TokenDetailsScreen({
       [CurrencyField.OUTPUT]: {
         address: currency.isToken
           ? currency.wrapped.address
-          : currencyId(NativeCurrency.onChain(ChainId.RINKEBY)),
+          : currencyId(NativeCurrency.onChain(ChainId.Rinkeby)),
         chainId: currency.wrapped.chainId,
       },
     }

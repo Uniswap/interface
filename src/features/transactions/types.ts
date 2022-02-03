@@ -57,11 +57,11 @@ export interface TransactionReceipt {
  * These values is persisted in state and if you change the value it will cause errors
  */
 export enum TransactionType {
-  APPROVE = 'approve',
-  SWAP = 'swap',
-  WRAP = 'wrap',
-  SEND = 'send',
-  RECEIVE = 'receive',
+  Approve = 'approve',
+  Swap = 'swap',
+  Wrap = 'wrap',
+  Send = 'send',
+  Receive = 'receive',
 }
 
 export interface BaseTransactionInfo {
@@ -69,13 +69,13 @@ export interface BaseTransactionInfo {
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.APPROVE
+  type: TransactionType.Approve
   tokenAddress: string
   spender: string
 }
 
 interface BaseSwapTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.SWAP
+  type: TransactionType.Swap
   tradeType: TradeType
   inputCurrencyId: string
   outputCurrencyId: string
@@ -96,18 +96,18 @@ export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo 
 }
 
 export interface WrapTransactionInfo {
-  type: TransactionType.WRAP
+  type: TransactionType.Wrap
   unwrapped: boolean
   currencyAmountRaw: string
 }
 
 export interface SendTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.SEND
+  type: TransactionType.Send
   currencyAmountRaw: string
 }
 
 export interface ReceiveTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.RECEIVE
+  type: TransactionType.Receive
   currencyAmountRaw: string
 }
 

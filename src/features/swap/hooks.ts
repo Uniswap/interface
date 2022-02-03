@@ -76,11 +76,11 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
     activeAccount?.address
   )
   const { balance: nativeInBalance } = useNativeCurrencyBalance(
-    currencyIn?.chainId ?? ChainId.MAINNET,
+    currencyIn?.chainId ?? ChainId.Mainnet,
     activeAccount?.address
   )
   const { balance: nativeOutBalance } = useNativeCurrencyBalance(
-    currencyOut?.chainId ?? ChainId.MAINNET,
+    currencyOut?.chainId ?? ChainId.Mainnet,
     activeAccount?.address
   )
 
@@ -178,7 +178,7 @@ export function useSwapCallback(
 
   // TODO: fallback to mainnet required?
   const tokenContract = useTokenContract(
-    chainId ?? ChainId.MAINNET,
+    chainId ?? ChainId.Mainnet,
     trade?.inputAmount.currency.isToken ? trade?.inputAmount.currency.wrapped.address : undefined
   )
 
@@ -276,7 +276,7 @@ function tradeToTransactionInfo(
 ): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   return trade.tradeType === TradeType.EXACT_INPUT
     ? {
-        type: TransactionType.SWAP,
+        type: TransactionType.Swap,
         inputCurrencyId: currencyId(trade.inputAmount.currency),
         outputCurrencyId: currencyId(trade.outputAmount.currency),
         tradeType: TradeType.EXACT_INPUT,
@@ -287,7 +287,7 @@ function tradeToTransactionInfo(
           .quotient.toString(),
       }
     : {
-        type: TransactionType.SWAP,
+        type: TransactionType.Swap,
         inputCurrencyId: currencyId(trade.inputAmount.currency),
         outputCurrencyId: currencyId(trade.outputAmount.currency),
         tradeType: TradeType.EXACT_OUTPUT,

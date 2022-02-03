@@ -17,31 +17,31 @@ describe(serializeQueryParams, () => {
 })
 
 describe(getWrapType, () => {
-  const eth = NativeCurrency.onChain(ChainId.MAINNET)
-  const weth = WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
+  const eth = NativeCurrency.onChain(ChainId.Mainnet)
+  const weth = WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet]
 
-  const rinkEth = NativeCurrency.onChain(ChainId.RINKEBY)
-  const rinkWeth = WRAPPED_NATIVE_CURRENCY[ChainId.RINKEBY]
+  const rinkEth = NativeCurrency.onChain(ChainId.Rinkeby)
+  const rinkWeth = WRAPPED_NATIVE_CURRENCY[ChainId.Rinkeby]
 
   it('handles undefined args', () => {
-    expect(getWrapType(undefined, weth)).toEqual(WrapType.NOT_APPLICABLE)
-    expect(getWrapType(weth, undefined)).toEqual(WrapType.NOT_APPLICABLE)
-    expect(getWrapType(undefined, undefined)).toEqual(WrapType.NOT_APPLICABLE)
+    expect(getWrapType(undefined, weth)).toEqual(WrapType.NotApplicable)
+    expect(getWrapType(weth, undefined)).toEqual(WrapType.NotApplicable)
+    expect(getWrapType(undefined, undefined)).toEqual(WrapType.NotApplicable)
   })
 
   it('handles wrap', () => {
-    expect(getWrapType(eth, weth)).toEqual(WrapType.WRAP)
+    expect(getWrapType(eth, weth)).toEqual(WrapType.Wrap)
 
     // different chains
-    expect(getWrapType(rinkEth, weth)).toEqual(WrapType.NOT_APPLICABLE)
-    expect(getWrapType(eth, rinkWeth)).toEqual(WrapType.NOT_APPLICABLE)
+    expect(getWrapType(rinkEth, weth)).toEqual(WrapType.NotApplicable)
+    expect(getWrapType(eth, rinkWeth)).toEqual(WrapType.NotApplicable)
   })
 
   it('handles unwrap', () => {
-    expect(getWrapType(weth, eth)).toEqual(WrapType.UNWRAP)
+    expect(getWrapType(weth, eth)).toEqual(WrapType.Unwrap)
 
     // different chains
-    expect(getWrapType(weth, rinkEth)).toEqual(WrapType.NOT_APPLICABLE)
-    expect(getWrapType(rinkWeth, eth)).toEqual(WrapType.NOT_APPLICABLE)
+    expect(getWrapType(weth, rinkEth)).toEqual(WrapType.NotApplicable)
+    expect(getWrapType(rinkWeth, eth)).toEqual(WrapType.NotApplicable)
   })
 })

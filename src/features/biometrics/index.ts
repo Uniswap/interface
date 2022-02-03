@@ -14,38 +14,38 @@ import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
  * Note. Sorted by authenticatino level
  */
 export enum BiometricAuthenticationStatus {
-  UNSUPPORTED = 'UNSUPPORTED',
-  MISSING_ENROLLMENT = 'MISSING_ENROLLMENT',
-  REJECTED = 'REJECTED',
-  AUTHENTICATED = 'AUTHENTICATED',
+  Unsupported = 'UNSUPPORTED',
+  MissingEnrollment = 'MISSING_ENROLLMENT',
+  Rejected = 'REJECTED',
+  Authenticated = 'AUTHENTICATED',
 }
 
 export async function tryLocalAuthenticate(): Promise<BiometricAuthenticationStatus> {
-  if (__DEV__ && !isEnabled(TestConfig.BIOMETRIC_PROMPT)) {
-    return BiometricAuthenticationStatus.AUTHENTICATED
+  if (__DEV__ && !isEnabled(TestConfig.BiometricPrompt)) {
+    return BiometricAuthenticationStatus.Authenticated
   }
 
   try {
     const compatible = await hasHardwareAsync()
     if (!compatible) {
-      return BiometricAuthenticationStatus.UNSUPPORTED
+      return BiometricAuthenticationStatus.Unsupported
     }
 
     const enrolled = await isEnrolledAsync()
     if (!enrolled) {
-      return BiometricAuthenticationStatus.MISSING_ENROLLMENT
+      return BiometricAuthenticationStatus.MissingEnrollment
     }
 
     const result = await authenticateAsync()
     if (result.success === false) {
-      return BiometricAuthenticationStatus.REJECTED
+      return BiometricAuthenticationStatus.Rejected
     }
 
-    return BiometricAuthenticationStatus.AUTHENTICATED
+    return BiometricAuthenticationStatus.Authenticated
   } catch (e) {
     logger.error('biometrics/index', 'tryLocalAuthenticate', `Failed to authenticate: ${e}`)
 
-    return BiometricAuthenticationStatus.REJECTED
+    return BiometricAuthenticationStatus.Rejected
   }
 }
 
@@ -59,7 +59,7 @@ export function BiometricCheck() {
       Object.values(accounts)
         // TODO: remove in v0.3
         .filter((a) => a.address !== DEMO_ACCOUNT_ADDRESS)
-        .some((a) => a.type !== AccountType.readonly)
+        .some((a) => a.type !== AccountType.Readonly)
     ) {
       trigger()
     }

@@ -27,7 +27,7 @@ export function* importAccount(params: ImportAccountParams) {
 
 function* importAddressAccount(address: string, name?: string) {
   const formattedAddress = normalizeAddress(address)
-  const account = { type: AccountType.readonly, address: formattedAddress, name }
+  const account = { type: AccountType.Readonly, address: formattedAddress, name }
   yield* call(onAccountImport, account)
 }
 
@@ -35,14 +35,14 @@ function* importMnemonicAccount(mnemonic: string, name?: string) {
   const formattedMnemonic = normalizeMnemonic(mnemonic)
   const address = yield* call(importMnemonic, formattedMnemonic)
   yield* call(generateAndStorePrivateKey, address, 0)
-  const account: Account = { type: AccountType.native, address, name }
+  const account: Account = { type: AccountType.Native, address, name }
   yield* call(onAccountImport, account)
 }
 
 function* importPrivateKeyAccount(privateKey: string, name?: string) {
   const wallet = new Wallet(ensureLeading0x(privateKey))
   const address = wallet.address
-  const account: Account = { type: AccountType.local, privateKey, name, address }
+  const account: Account = { type: AccountType.Local, privateKey, name, address }
   // TODO save key to keychain: https://github.com/Uniswap/mobile/issues/131
   yield* call(onAccountImport, account)
 }

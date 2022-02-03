@@ -9,11 +9,11 @@ import { fixedNumberToInt } from 'src/utils/number'
 // Using a const list of 1559 chains to save a network request for each fee calculation
 // Must be kept up to date if more chains adopt 1559
 const EIP_1559_CHAINS = [
-  ChainId.MAINNET,
-  ChainId.ROPSTEN,
+  ChainId.Mainnet,
+  ChainId.Ropsten,
   // TODO: removed until figure out why EIP-1559 gas estimation fails
-  // ChainId.RINKEBY,
-  ChainId.GOERLI,
+  // ChainId.Rinkeby,
+  ChainId.Goerli,
 ]
 
 export async function computeGasFee(
@@ -54,7 +54,7 @@ async function computeGasFee1559(
   const fastFee = fastFeePerGas.mul(gasLimit)
   const urgentFee = urgentFeePerGas.mul(gasLimit)
   return {
-    type: FeeType.eip1559,
+    type: FeeType.Eip1559,
     gasLimit: gasLimit.toString(),
     fee: {
       normal: normalFee.toString(),
@@ -82,7 +82,7 @@ async function computeGasFeeLegacy(
   const fastFee = normalFee.mulUnsafe(FixedNumber.from(`${GAS_FAST_MULTIPLIER}`))
   const urgentFee = normalFee.mulUnsafe(FixedNumber.from(`${GAS_URGENT_MULTIPLIER}`))
   return {
-    type: FeeType.legacy,
+    type: FeeType.Legacy,
     gasPrice: gasPrice.toString(),
     gasLimit: gasLimit.toString(),
     fee: {

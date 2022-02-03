@@ -67,7 +67,7 @@ export function* attemptReplaceTransaction(
     yield* put(
       pushNotification({
         message: `Unable to ${isCancellation ? 'cancel' : 'replace'} transaction`,
-        severity: NotificationSeverity.error,
+        severity: NotificationSeverity.Error,
       })
     )
   }

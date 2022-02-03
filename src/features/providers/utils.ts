@@ -2,27 +2,27 @@ import { ChainId } from 'src/constants/chains'
 
 export function getInfuraChainName(chainId: ChainId) {
   switch (chainId) {
-    case ChainId.MAINNET:
+    case ChainId.Mainnet:
       return 'homestead'
-    case ChainId.RINKEBY:
+    case ChainId.Rinkeby:
       return 'rinkeby'
-    case ChainId.ROPSTEN:
+    case ChainId.Ropsten:
       return 'ropsten'
-    case ChainId.GOERLI:
+    case ChainId.Goerli:
       return 'goerli'
-    case ChainId.KOVAN:
+    case ChainId.Kovan:
       return 'kovan'
-    case ChainId.ARBITRUM_ONE:
+    case ChainId.ArbitrumOne:
       return 'arbitrum'
-    case ChainId.ARBITRUM_RINKEBY:
+    case ChainId.ArbitrumRinkeby:
       return 'arbitrum-rinkeby'
-    case ChainId.OPTIMISM:
+    case ChainId.Optimism:
       return 'optimism'
-    case ChainId.OPTIMISTIC_KOVAN:
+    case ChainId.OptimisticKovan:
       return 'optimism-kovan'
-    case ChainId.POLYGON:
+    case ChainId.Polygon:
       return 'matic'
-    case ChainId.POLYGON_MUMBAI:
+    case ChainId.PolygonMumbai:
       return 'maticmum'
     default:
       throw new Error(`Unsupported eth infura chainId for ${chainId}`)

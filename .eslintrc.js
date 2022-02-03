@@ -12,6 +12,13 @@ module.exports = {
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/no-require-imports': 'warn',
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        selector: 'enumMember',
+        format: ['PascalCase'],
+      },
+    ],
     'jest/valid-describe': 'off',
     // TODO consider enabling these:
     // '@typescript-eslint/no-floating-promises': 'error',
@@ -66,4 +73,5 @@ module.exports = {
     AddressTo: 'readonly',
     Nullable: 'readonly',
   },
+  parser: '@typescript-eslint/parser',
 }

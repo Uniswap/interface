@@ -40,5 +40,5 @@ export function useBiometricPrompt(successCallback?: () => void) {
 }
 
 function biometricAuthenticationSuccessful(status: BiometricAuthenticationStatus) {
-  return status === BiometricAuthenticationStatus.AUTHENTICATED
+  return status === BiometricAuthenticationStatus.Authenticated
 }

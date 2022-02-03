@@ -11,7 +11,7 @@ export class SignerManager {
       return this._signers[account.address]
     }
 
-    if (account.type === AccountType.native) {
+    if (account.type === AccountType.Native) {
       const addresses = await getAddressesForStoredPrivateKeys()
       if (!addresses.includes(account.address)) {
         throw Error('No private key found for address')
@@ -20,7 +20,7 @@ export class SignerManager {
       return this._signers[account.address]
     }
 
-    if (account.type === AccountType.local) {
+    if (account.type === AccountType.Local) {
       if (account.privateKey) {
         this._signers[account.address] = new Wallet(account.privateKey)
         return this._signers[account.address]

@@ -1,7 +1,7 @@
 export enum NotificationSeverity {
-  info = 'info',
-  warning = 'warning',
-  error = 'error',
+  Info = 'info',
+  Warning = 'warning',
+  Error = 'error',
 }
 
 export interface AppNotification {

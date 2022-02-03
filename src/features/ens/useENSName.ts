@@ -28,7 +28,7 @@ export function useENSName(
     if (!isValidAddress(debouncedAddress)) return [undefined]
     try {
       const formattedAddr = trimLeading0x(
-        normalizeAddress(debouncedAddress, AddressStringFormat.lowercase)
+        normalizeAddress(debouncedAddress, AddressStringFormat.Lowercase)
       )
       return [utils.namehash(`${formattedAddr}.addr.reverse`)]
     } catch (error) {
@@ -54,7 +54,7 @@ export function useENSName(
      and recommends that you perform a match on the forward resolution
      see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
   */
-  const fwdAddr = useENSAddress(ChainId.MAINNET, name)
+  const fwdAddr = useENSAddress(ChainId.Mainnet, name)
   const checkedName = address === fwdAddr?.address ? name : null
   const changed = debouncedAddress !== address
 

@@ -16,7 +16,7 @@ import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
 export const account: Account = {
-  type: AccountType.local,
+  type: AccountType.Local,
   address: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
   privateKey: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
   name: 'Test Account',
@@ -50,17 +50,17 @@ export const providerManager = {
 }
 
 export const contractManager = new ContractManager()
-contractManager.getOrCreateContract(ChainId.RINKEBY, DAI.address, provider, ERC20_ABI)
+contractManager.getOrCreateContract(ChainId.Rinkeby, DAI.address, provider, ERC20_ABI)
 contractManager.getOrCreateContract(
-  ChainId.RINKEBY,
-  WRAPPED_NATIVE_CURRENCY[ChainId.RINKEBY].address,
+  ChainId.Rinkeby,
+  WRAPPED_NATIVE_CURRENCY[ChainId.Rinkeby].address,
   provider,
   WETH_ABI
 )
-export const tokenContract = contractManager.getContract(ChainId.RINKEBY, DAI.address) as Erc20
+export const tokenContract = contractManager.getContract(ChainId.Rinkeby, DAI.address) as Erc20
 export const wethContract = contractManager.getContract(
-  ChainId.RINKEBY,
-  WRAPPED_NATIVE_CURRENCY[ChainId.RINKEBY].address
+  ChainId.Rinkeby,
+  WRAPPED_NATIVE_CURRENCY[ChainId.Rinkeby].address
 ) as Weth
 
 /**
@@ -89,13 +89,13 @@ export const txResponse = {
 }
 
 export const txTypeInfo: ApproveTransactionInfo = {
-  type: TransactionType.APPROVE,
+  type: TransactionType.Approve,
   tokenAddress: tokenContract.address,
-  spender: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
+  spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
 }
 
 export const txDetailsPending: TransactionDetails = {
-  chainId: ChainId.MAINNET,
+  chainId: ChainId.Mainnet,
   id: '0',
   from: account.address,
   options: {

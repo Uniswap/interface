@@ -10,7 +10,7 @@ export function* createAccount() {
   // eslint-disable-next-line no-unreachable
   const mnemonicId = yield* call(generateAndStoreMnemonic)
   const address = yield* call(generateAndStorePrivateKey, mnemonicId, 0)
-  const type = AccountType.native
+  const type = AccountType.Native
   const name = 'New account'
   yield* put(addAccount({ type, address, name }))
   yield* put(activateAccount(address))

@@ -67,7 +67,7 @@ function NotificationBanner({
   appNotification: AppNotification
   onPress: () => void
 }) {
-  const { message, severity = NotificationSeverity.info } = appNotification
+  const { message, severity = NotificationSeverity.Info } = appNotification
   return (
     <Button
       alignItems="center"
@@ -87,9 +87,9 @@ function NotificationBanner({
 
 function getNotificationColor(severity: NotificationSeverity) {
   switch (severity) {
-    case NotificationSeverity.error:
+    case NotificationSeverity.Error:
       return 'error'
-    case NotificationSeverity.warning:
+    case NotificationSeverity.Warning:
       return 'warning'
     default:
       return 'blue'

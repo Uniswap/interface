@@ -43,8 +43,8 @@ export function AccountsScreen() {
   const addressToAccount = useAccounts()
   const [signerAccounts, readOnlyAccounts] = useMemo(() => {
     const accounts = Object.values(addressToAccount)
-    const _signerAccounts = accounts.filter((a) => a.type !== AccountType.readonly)
-    const _readOnlyAccounts = accounts.filter((a) => a.type === AccountType.readonly)
+    const _signerAccounts = accounts.filter((a) => a.type !== AccountType.Readonly)
+    const _readOnlyAccounts = accounts.filter((a) => a.type === AccountType.Readonly)
     return [_signerAccounts, _readOnlyAccounts]
   }, [addressToAccount])
 

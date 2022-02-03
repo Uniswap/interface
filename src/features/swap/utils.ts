@@ -26,20 +26,20 @@ export function getWrapType(
   outputCurrency: Currency | null | undefined
 ): WrapType {
   if (!inputCurrency || !outputCurrency || inputCurrency.chainId !== outputCurrency.chainId) {
-    return WrapType.NOT_APPLICABLE
+    return WrapType.NotApplicable
   }
 
   const weth = WRAPPED_NATIVE_CURRENCY[inputCurrency.chainId]
 
   if (inputCurrency.isNative && outputCurrency.equals(weth)) {
-    return WrapType.WRAP
+    return WrapType.Wrap
   } else if (outputCurrency.isNative && inputCurrency.equals(weth)) {
-    return WrapType.UNWRAP
+    return WrapType.Unwrap
   }
 
-  return WrapType.NOT_APPLICABLE
+  return WrapType.NotApplicable
 }
 
-export function isWrapAction(wrapType: WrapType): wrapType is WrapType.UNWRAP | WrapType.WRAP {
-  return wrapType === WrapType.UNWRAP || wrapType === WrapType.WRAP
+export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | WrapType.Wrap {
+  return wrapType === WrapType.Unwrap || wrapType === WrapType.Wrap
 }

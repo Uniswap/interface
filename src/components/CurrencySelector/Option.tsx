@@ -40,7 +40,7 @@ export function Option({ currency, onPress, currencyAmount, currencyPrice }: Opt
               {currency.symbol}
             </Text>
           </Box>
-          {currency.chainId !== ChainId.MAINNET && (
+          {currency.chainId !== ChainId.Mainnet && (
             <CenterBox
               borderRadius="sm"
               ml="sm"

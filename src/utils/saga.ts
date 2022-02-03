@@ -130,7 +130,7 @@ export function createMonitoredSaga<SagaParams = void>(
         yield put(errorAction(errorMessage))
         if (!options?.suppressErrorNotification) {
           yield put(
-            pushNotification({ message: errorMessage, severity: NotificationSeverity.error })
+            pushNotification({ message: errorMessage, severity: NotificationSeverity.Error })
           )
         }
       }

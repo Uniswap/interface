@@ -35,7 +35,7 @@ export function* sendTransaction(params: SendTransactionParams) {
 
   logger.debug('sendTransaction', '', `Sending tx on ${CHAIN_INFO[chainId].label} to ${request.to}`)
 
-  if (account.type === AccountType.readonly) throw new Error('Account must support signing')
+  if (account.type === AccountType.Readonly) throw new Error('Account must support signing')
   // Sign and send the transaction
   const provider = yield* call(getProvider, chainId)
   const signerManager = yield* call(getSignerManager)

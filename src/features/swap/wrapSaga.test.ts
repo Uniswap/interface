@@ -9,7 +9,7 @@ import { TransactionType, WrapTransactionInfo } from 'src/features/transactions/
 import { account, provider, providerManager, wethContract } from 'src/test/fixtures'
 
 const wrapTxInfo: WrapTransactionInfo = {
-  type: TransactionType.WRAP,
+  type: TransactionType.Wrap,
   unwrapped: false,
   currencyAmountRaw: '200000',
 }
@@ -22,7 +22,7 @@ const unwrapTxInfo: WrapTransactionInfo = {
 const params: Params = {
   account,
   inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-    NativeCurrency.onChain(ChainId.RINKEBY),
+    NativeCurrency.onChain(ChainId.Rinkeby),
     '200000'
   ),
 }
@@ -39,14 +39,14 @@ describe(wrap, () => {
       .next()
       .call(getProviderManager)
       .next(providerManager)
-      .call(getWethContract, ChainId.RINKEBY, provider)
+      .call(getWethContract, ChainId.Rinkeby, provider)
       .next(wethContract)
       .call(wethContract.populateTransaction.deposit, {
         value: `0x30d40`,
       })
       .next(transaction)
       .call(sendTransaction, {
-        chainId: ChainId.RINKEBY,
+        chainId: ChainId.Rinkeby,
         account: params.account,
         typeInfo: wrapTxInfo,
         options: { request: transaction, fetchBalanceOnSuccess: true },
@@ -59,7 +59,7 @@ describe(wrap, () => {
     const unwrapParams: Params = {
       ...params,
       inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-        NativeCurrency.onChain(ChainId.RINKEBY).wrapped,
+        NativeCurrency.onChain(ChainId.Rinkeby).wrapped,
         '200000'
       ),
     }
@@ -67,12 +67,12 @@ describe(wrap, () => {
       .next()
       .call(getProviderManager)
       .next(providerManager)
-      .call(getWethContract, ChainId.RINKEBY, provider)
+      .call(getWethContract, ChainId.Rinkeby, provider)
       .next(wethContract)
       .call(wethContract.populateTransaction.withdraw, `0x30d40`)
       .next(transaction)
       .call(sendTransaction, {
-        chainId: ChainId.RINKEBY,
+        chainId: ChainId.Rinkeby,
         account: params.account,
         typeInfo: unwrapTxInfo,
         options: { request: transaction, fetchBalanceOnSuccess: true },

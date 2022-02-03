@@ -8,11 +8,11 @@ import { renderWithTheme } from 'src/test/render'
 jest.mock('src/assets', () => 'ethereum-logo.png')
 
 it('renders a currency logo without network logo', () => {
-  const tree = render(<CurrencyLogo currency={UNI[ChainId.MAINNET]} size={20} />).toJSON()
+  const tree = render(<CurrencyLogo currency={UNI[ChainId.Mainnet]} size={20} />).toJSON()
   expect(tree).toMatchSnapshot()
 })
 
 it('renders a currency logo with network logo', () => {
-  const tree = renderWithTheme(<CurrencyLogo currency={UNI[ChainId.RINKEBY]} size={20} />)
+  const tree = renderWithTheme(<CurrencyLogo currency={UNI[ChainId.Rinkeby]} size={20} />)
   expect(tree).toMatchSnapshot()
 })

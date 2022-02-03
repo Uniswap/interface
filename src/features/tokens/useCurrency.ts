@@ -15,7 +15,7 @@ export function useCurrency(
 ): Currency | null | undefined {
   const isNative = currencyId?.toLowerCase().endsWith(NATIVE_ADDRESS)
   const token = useTokenInfoFromAddress(
-    chainId ?? ChainId.MAINNET,
+    chainId ?? ChainId.Mainnet,
     isNative ? undefined : currencyId
   )
   const extendedEther = useMemo(
@@ -25,7 +25,7 @@ export function useCurrency(
       chainId
         ? NativeCurrency.onChain(chainId)
         : // display mainnet when not connected
-          NativeCurrency.onChain(ChainId.MAINNET),
+          NativeCurrency.onChain(ChainId.Mainnet),
     [chainId]
   )
   const weth = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined

@@ -7,10 +7,10 @@ import { useQuote } from 'src/features/prices/useQuote'
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
 const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
-  [ChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
-  [ChainId.RINKEBY]: CurrencyAmount.fromRawAmount(DAI_RINKEBY, 100_000e18),
-  [ChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
-  [ChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
+  [ChainId.Mainnet]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
+  [ChainId.Rinkeby]: CurrencyAmount.fromRawAmount(DAI_RINKEBY, 100_000e18),
+  [ChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
+  [ChainId.Optimism]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
 }
 
 /**

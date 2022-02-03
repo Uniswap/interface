@@ -55,7 +55,7 @@ describe(importAccount, () => {
     // assert on dispatched actions
     expect(dispatched).toEqual([
       addAccount({
-        type: AccountType.native,
+        type: AccountType.Native,
         address: SAMPLE_SEED_ADDRESS,
         name: 'WALLET',
       }),
@@ -90,7 +90,7 @@ describe(importAccount, () => {
 
     // assert on dispatched actions
     expect(dispatched).toEqual([
-      addAccount({ type: AccountType.readonly, address: NULL_ADDRESS, name: 'READONLY' }),
+      addAccount({ type: AccountType.Readonly, address: NULL_ADDRESS, name: 'READONLY' }),
       activateAccount(NULL_ADDRESS),
       fetchBalancesActions.trigger(NULL_ADDRESS),
       unlockWallet(),

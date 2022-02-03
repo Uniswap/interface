@@ -58,13 +58,13 @@ export function BiometricModal({
             {t(
               'Face ID or Touch ID is required in this early release to help safeguard your assets.'
             )}
-            {authenticationStatus === BiometricAuthenticationStatus.MISSING_ENROLLMENT &&
+            {authenticationStatus === BiometricAuthenticationStatus.MissingEnrollment &&
               ' ' + t('Please enable Face ID or Touch ID.')}
           </Text>
           <Flex centered width="100%">
             <PrimaryButton
               label={
-                authenticationStatus === BiometricAuthenticationStatus.MISSING_ENROLLMENT
+                authenticationStatus === BiometricAuthenticationStatus.MissingEnrollment
                   ? t('Enable Face ID')
                   : t('Try again')
               }

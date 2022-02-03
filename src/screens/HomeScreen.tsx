@@ -99,7 +99,7 @@ export function HomeScreen({ navigation }: Props) {
           </Flex>
         </Box>
         <TransactionStatusBanner />
-        {isEnabled(TestConfig.SWIPEABLE_ACCOUNTS) ? (
+        {isEnabled(TestConfig.SwipeableAccounts) ? (
           <AccountCardList
             balances={balances}
             onPressQRCode={onPressQRCode}

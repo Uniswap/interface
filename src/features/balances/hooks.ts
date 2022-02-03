@@ -29,7 +29,7 @@ export function useTokenBalance(
   token: Token | undefined,
   accountAddress?: Address
 ): { balance: CurrencyAmount<Currency> | undefined; loading: boolean } {
-  const chainId = token?.chainId ?? ChainId.MAINNET
+  const chainId = token?.chainId ?? ChainId.Mainnet
   const contract = useTokenContract(chainId, token?.address)
   const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
 

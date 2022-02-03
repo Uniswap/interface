@@ -4,7 +4,7 @@ import { ChainId } from 'src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 
-const ETH = NativeCurrency.onChain(ChainId.MAINNET)
+const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
 const TEST_TOKEN_INPUT: Currency[] = [DAI, ETH, DAI_ARBITRUM_ONE]
 
@@ -15,7 +15,7 @@ describe(filter, () => {
   })
 
   it('filters by single chain', () => {
-    expect(filter(TEST_TOKEN_INPUT, ChainId.MAINNET, null)).toEqual([DAI, ETH])
+    expect(filter(TEST_TOKEN_INPUT, ChainId.Mainnet, null)).toEqual([DAI, ETH])
   })
 
   it('filters by partial token symbol', () => {
@@ -41,10 +41,10 @@ describe(filter, () => {
   })
 
   it('filters by chainFilter and searchFilter', () => {
-    expect(filter(TEST_TOKEN_INPUT, ChainId.MAINNET, 'DA')).toEqual([DAI])
-    expect(filter(TEST_TOKEN_INPUT, ChainId.MAINNET, DAI.address)).toEqual([DAI])
-    expect(filter(TEST_TOKEN_INPUT, ChainId.ARBITRUM_ONE, 'DAI')).toEqual([DAI_ARBITRUM_ONE])
-    expect(filter(TEST_TOKEN_INPUT, ChainId.ARBITRUM_ONE, DAI_ARBITRUM_ONE.address)).toEqual([
+    expect(filter(TEST_TOKEN_INPUT, ChainId.Mainnet, 'DA')).toEqual([DAI])
+    expect(filter(TEST_TOKEN_INPUT, ChainId.Mainnet, DAI.address)).toEqual([DAI])
+    expect(filter(TEST_TOKEN_INPUT, ChainId.ArbitrumOne, 'DAI')).toEqual([DAI_ARBITRUM_ONE])
+    expect(filter(TEST_TOKEN_INPUT, ChainId.ArbitrumOne, DAI_ARBITRUM_ONE.address)).toEqual([
       DAI_ARBITRUM_ONE,
     ])
   })

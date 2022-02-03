@@ -26,8 +26,8 @@ export function TokenListUpdater() {
   const lists = useAllLists()
   const activeListUrls = useActiveListUrls()
 
-  const provider = useProvider(ChainId.MAINNET)
-  const fetchList = useFetchListCallback(ChainId.MAINNET)
+  const provider = useProvider(ChainId.Mainnet)
+  const fetchList = useFetchListCallback(ChainId.Mainnet)
   const fetchAllListsCallback = useCallback(() => {
     if (!provider || !isReady) return
     Object.keys(lists).forEach((url) =>

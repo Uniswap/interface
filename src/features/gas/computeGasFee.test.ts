@@ -44,7 +44,7 @@ const mockProvider: any = {
 
 describe('computeGasFee', () => {
   it('Computes fee for 1559 chain', async () => {
-    const fee = await computeGasFee(ChainId.MAINNET, {}, mockProvider)
+    const fee = await computeGasFee(ChainId.Mainnet, {}, mockProvider)
     expect(fee).toEqual({
       type: 'eip1559',
       gasLimit: '100000',
@@ -66,7 +66,7 @@ describe('computeGasFee', () => {
   })
 
   it('Computes fee for legacy chain', async () => {
-    const fee = await computeGasFee(ChainId.OPTIMISM, {}, mockProvider)
+    const fee = await computeGasFee(ChainId.Optimism, {}, mockProvider)
     expect(fee).toEqual({
       type: 'legacy',
       gasLimit: '100000',

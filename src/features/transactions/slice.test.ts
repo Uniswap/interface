@@ -17,7 +17,7 @@ import {
 } from 'src/features/transactions/types'
 
 const approveTxTypeInfo: TransactionTypeInfo = {
-  type: TransactionType.APPROVE,
+  type: TransactionType.Approve,
   tokenAddress: '0xabc',
   spender: '0xdef',
 }
@@ -42,7 +42,7 @@ describe('transaction reducer', () => {
       const beforeTime = new Date().getTime()
       store.dispatch(
         addTransaction({
-          chainId: ChainId.MAINNET,
+          chainId: ChainId.Mainnet,
           id: '0',
           hash: '0x0',
           from: '0xabc',
@@ -53,15 +53,15 @@ describe('transaction reducer', () => {
         })
       )
       const txs = store.getState().byChainId
-      expect(txs[ChainId.MAINNET]).toBeTruthy()
-      expect(txs[ChainId.MAINNET]?.['0']).toBeTruthy()
-      const tx = txs[ChainId.MAINNET]?.['0']
+      expect(txs[ChainId.Mainnet]).toBeTruthy()
+      expect(txs[ChainId.Mainnet]?.['0']).toBeTruthy()
+      const tx = txs[ChainId.Mainnet]?.['0']
       expect(tx).toBeTruthy()
       expect(tx?.hash).toEqual('0x0')
       expect(tx?.from).toEqual('0xabc')
       expect(tx?.addedTime).toBeGreaterThanOrEqual(beforeTime)
       expect(tx?.typeInfo).toEqual({
-        type: TransactionType.APPROVE,
+        type: TransactionType.Approve,
         tokenAddress: '0xabc',
         spender: '0xdef',
       })
@@ -72,7 +72,7 @@ describe('transaction reducer', () => {
     it('no op if not valid transaction', () => {
       store.dispatch(
         finalizeTransaction({
-          chainId: ChainId.RINKEBY,
+          chainId: ChainId.Rinkeby,
           id: '0',
           status: TransactionStatus.Success,
           receipt: {
@@ -89,7 +89,7 @@ describe('transaction reducer', () => {
     it('sets receipt', () => {
       store.dispatch(
         addTransaction({
-          chainId: ChainId.RINKEBY,
+          chainId: ChainId.Rinkeby,
           id: '0',
           hash: '0x0',
           from: '0x0',
@@ -101,7 +101,7 @@ describe('transaction reducer', () => {
       )
       store.dispatch(
         finalizeTransaction({
-          chainId: ChainId.RINKEBY,
+          chainId: ChainId.Rinkeby,
           id: '0',
           status: TransactionStatus.Success,
           receipt: {
@@ -128,7 +128,7 @@ describe('transaction reducer', () => {
     it('no op if not valid transaction', () => {
       store.dispatch(
         replaceTransaction({
-          chainId: ChainId.RINKEBY,
+          chainId: ChainId.Rinkeby,
           id: '0',
           newTxParams: {
             gasPrice: '0x123',
@@ -143,7 +143,7 @@ describe('transaction reducer', () => {
     it('removes all transactions for the chain', () => {
       store.dispatch(
         addTransaction({
-          chainId: ChainId.MAINNET,
+          chainId: ChainId.Mainnet,
           id: '0',
           hash: '0x0',
           from: '0xabc',
@@ -155,7 +155,7 @@ describe('transaction reducer', () => {
       )
       store.dispatch(
         addTransaction({
-          chainId: ChainId.RINKEBY,
+          chainId: ChainId.Rinkeby,
           id: '1',
           hash: '0x1',
           from: '0xabc',

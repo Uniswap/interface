@@ -62,7 +62,7 @@ export function* maybeApprove(params: ApproveParams) {
     )
 
     const typeInfo: TransactionTypeInfo = {
-      type: TransactionType.APPROVE,
+      type: TransactionType.Approve,
       tokenAddress: contract.address,
       spender,
     }

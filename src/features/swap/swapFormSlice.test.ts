@@ -10,8 +10,8 @@ import {
   switchCurrencySides,
 } from './swapFormSlice'
 
-const chainId = ChainId.RINKEBY
-const ethAddress = currencyId(NativeCurrency.onChain(ChainId.RINKEBY))
+const chainId = ChainId.Rinkeby
+const ethAddress = currencyId(NativeCurrency.onChain(ChainId.Rinkeby))
 
 test('should return the initial state', () => {
   expect(swapFormReducer(undefined, {} as any)).toEqual(initialSwapFormState)

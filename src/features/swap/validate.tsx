@@ -5,12 +5,12 @@ import { CurrencyField } from 'src/features/swap/swapFormSlice'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
 enum FieldError {
-  INSUFFICIENT_FUNDS,
-  MISSING_INPUT_AMOUNT,
-  MISSING_INPUT_CURRENCY,
-  MISSING_OUTPUT_AMOUNT,
-  MISSING_OUTPUT_CURRENCY,
-  UNSUPPORTED_NETWORK,
+  InsufficientFunds,
+  MissingInputAmount,
+  MissingInputCurrency,
+  MissingOutputAmount,
+  MissingOutputCurrency,
+  UnsupportedNetwork,
 }
 
 /** Validates the entire DeriveSwapInfo payload for errors  */
@@ -29,7 +29,7 @@ export function getHumanReadableSwapInputStatus(
 
 /** Errors specific to the current in which the swap is executing */
 function getHumanReadbleContextError(activeAccount: Account | null, t: TFunction) {
-  if (activeAccount && activeAccount.type === AccountType.readonly) {
+  if (activeAccount && activeAccount.type === AccountType.Readonly) {
     return t('Cannot swap on watched account')
   }
   return null
@@ -50,17 +50,17 @@ function getHumanReadableInputError(error: FieldError | null, t: TFunction) {
   if (error === null) return null
 
   switch (error) {
-    case FieldError.MISSING_INPUT_AMOUNT:
+    case FieldError.MissingInputAmount:
       return t('Select an input amount')
-    case FieldError.MISSING_OUTPUT_AMOUNT:
+    case FieldError.MissingOutputAmount:
       return t('Select an output amount')
-    case FieldError.MISSING_INPUT_CURRENCY:
+    case FieldError.MissingInputCurrency:
       return t('Select an input currency')
-    case FieldError.MISSING_OUTPUT_CURRENCY:
+    case FieldError.MissingOutputCurrency:
       return t('Select an output currency')
-    case FieldError.INSUFFICIENT_FUNDS:
+    case FieldError.InsufficientFunds:
       return t('Insufficient funds')
-    case FieldError.UNSUPPORTED_NETWORK:
+    case FieldError.UnsupportedNetwork:
       return t('Switch to Rinkeby')
   }
 }
@@ -71,25 +71,25 @@ function validateSwapInfo(swapInfo: DerivedSwapInfo) {
   // Note. order matters here
 
   if (!currencies[CurrencyField.INPUT]) {
-    return FieldError.MISSING_INPUT_CURRENCY
+    return FieldError.MissingInputCurrency
   }
 
   if (!currencies[CurrencyField.OUTPUT]) {
-    return FieldError.MISSING_OUTPUT_CURRENCY
+    return FieldError.MissingOutputCurrency
   }
 
   if (exactCurrencyField === CurrencyField.INPUT && !currencyAmounts[CurrencyField.INPUT]) {
-    return FieldError.MISSING_INPUT_AMOUNT
+    return FieldError.MissingInputAmount
   }
 
   if (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT]) {
-    return FieldError.MISSING_OUTPUT_AMOUNT
+    return FieldError.MissingOutputAmount
   }
 
   const exactCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
   const balance = currencyBalances[CurrencyField.INPUT]
   if (!balance || (exactCurrencyAmount && balance.lessThan(exactCurrencyAmount))) {
-    return FieldError.INSUFFICIENT_FUNDS
+    return FieldError.InsufficientFunds
   }
 
   return null

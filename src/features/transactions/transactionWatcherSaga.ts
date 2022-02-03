@@ -105,7 +105,7 @@ export function* watchTransaction(transaction: TransactionDetails) {
     yield* put(
       pushNotification({
         message: 'Error while checking transaction status',
-        severity: NotificationSeverity.error,
+        severity: NotificationSeverity.Error,
       })
     )
   }

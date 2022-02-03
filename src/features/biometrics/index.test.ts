@@ -21,7 +21,7 @@ describe(tryLocalAuthenticate, () => {
 
     const status = await tryLocalAuthenticate()
 
-    expect(status).toEqual(BiometricAuthenticationStatus.UNSUPPORTED)
+    expect(status).toEqual(BiometricAuthenticationStatus.Unsupported)
   })
 
   it('checks enrollement', async () => {
@@ -30,7 +30,7 @@ describe(tryLocalAuthenticate, () => {
 
     const status = await tryLocalAuthenticate()
 
-    expect(status).toEqual(BiometricAuthenticationStatus.MISSING_ENROLLMENT)
+    expect(status).toEqual(BiometricAuthenticationStatus.MissingEnrollment)
   })
 
   it('fails to authenticate when user rejects', async () => {
@@ -40,7 +40,7 @@ describe(tryLocalAuthenticate, () => {
 
     const status = await tryLocalAuthenticate()
 
-    expect(status).toEqual(BiometricAuthenticationStatus.REJECTED)
+    expect(status).toEqual(BiometricAuthenticationStatus.Rejected)
   })
 
   it('authenticates when user accepts', async () => {
@@ -50,7 +50,7 @@ describe(tryLocalAuthenticate, () => {
 
     const status = await tryLocalAuthenticate()
 
-    expect(status).toEqual(BiometricAuthenticationStatus.AUTHENTICATED)
+    expect(status).toEqual(BiometricAuthenticationStatus.Authenticated)
   })
 
   it('always return authenticated when disabled', async () => {
@@ -58,6 +58,6 @@ describe(tryLocalAuthenticate, () => {
 
     const status = await tryLocalAuthenticate()
 
-    expect(status).toEqual(BiometricAuthenticationStatus.AUTHENTICATED)
+    expect(status).toEqual(BiometricAuthenticationStatus.Authenticated)
   })
 })

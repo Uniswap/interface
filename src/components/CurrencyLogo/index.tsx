@@ -28,7 +28,7 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
   return (
     <Box alignItems="center" height={size} justifyContent="center" width={size}>
       <CurrencyLogoOnly currency={currency} size={currencyLogoSize} />
-      {currency.chainId !== ChainId.MAINNET && (
+      {currency.chainId !== ChainId.Mainnet && (
         <Box
           bottom={0}
           position="absolute"

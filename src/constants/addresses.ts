@@ -6,12 +6,12 @@ import { ChainId, L1_CHAIN_IDS } from 'src/constants/chains'
 type AddressMap = { [chainId: number]: string }
 
 const SUPPORTED_L1_L2_CHAINS = [
-  ChainId.OPTIMISM,
-  ChainId.OPTIMISTIC_KOVAN,
-  ChainId.ARBITRUM_ONE,
-  ChainId.ARBITRUM_RINKEBY,
-  ChainId.POLYGON,
-  ChainId.POLYGON_MUMBAI,
+  ChainId.Optimism,
+  ChainId.OptimisticKovan,
+  ChainId.ArbitrumOne,
+  ChainId.ArbitrumRinkeby,
+  ChainId.Polygon,
+  ChainId.PolygonMumbai,
 ]
 
 /** Address that represents native currencies on ETH, Polygon, etc. */
@@ -22,13 +22,13 @@ export const UNI_ADDRESS: AddressMap = constructSameAddressMap(
 )
 export const MULTICALL_ADDRESS: AddressMap = {
   ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [
-    ChainId.OPTIMISTIC_KOVAN,
-    ChainId.OPTIMISM,
-    ChainId.POLYGON,
-    ChainId.POLYGON_MUMBAI,
+    ChainId.OptimisticKovan,
+    ChainId.Optimism,
+    ChainId.Polygon,
+    ChainId.PolygonMumbai,
   ]),
-  [ChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
-  [ChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
+  [ChainId.ArbitrumOne]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
+  [ChainId.ArbitrumRinkeby]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap(
@@ -46,13 +46,13 @@ export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = constructSameAddressMap
  * The older V1 governance address
  */
 export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {
-  [ChainId.MAINNET]: '0xC4e172459f1E7939D522503B81AFAaC1014CE6F6',
+  [ChainId.Mainnet]: '0xC4e172459f1E7939D522503B81AFAaC1014CE6F6',
 }
 /**
  * The latest governor bravo that is currently admin of timelock
  */
 export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
-  [ChainId.MAINNET]: '0x408ED6354d4973f66138C91495F2f2FCbd8724C3',
+  [ChainId.Mainnet]: '0x408ED6354d4973f66138C91495F2f2FCbd8724C3',
 }
 
 export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap(
@@ -60,10 +60,10 @@ export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap(
 )
 
 export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
-  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e',
+  [ChainId.Mainnet]: '0x090D4613473dEE047c3f2706764f49E0821D256e',
 }
 export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
-  [ChainId.MAINNET]: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
+  [ChainId.Mainnet]: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
 }
 export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(
   V3_FACTORY_ADDRESS,
@@ -78,17 +78,17 @@ export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = constructSameA
   SUPPORTED_L1_L2_CHAINS
 )
 export const ENS_REGISTRAR_ADDRESSES: AddressMap = {
-  [ChainId.MAINNET]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [ChainId.ROPSTEN]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [ChainId.GOERLI]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [ChainId.RINKEBY]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+  [ChainId.Mainnet]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+  [ChainId.Ropsten]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+  [ChainId.Goerli]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+  [ChainId.Rinkeby]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
 }
 export const SOCKS_CONTROLLER_ADDRESSES: AddressMap = {
-  [ChainId.MAINNET]: '0x65770b5283117639760beA3F867b69b3697a91dd',
+  [ChainId.Mainnet]: '0x65770b5283117639760beA3F867b69b3697a91dd',
 }
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap(
   '0xA5644E29708357803b5A882D272c41cC0dF92B34',
-  [ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_RINKEBY, ChainId.POLYGON, ChainId.POLYGON_MUMBAI]
+  [ChainId.ArbitrumOne, ChainId.ArbitrumRinkeby, ChainId.Polygon, ChainId.PolygonMumbai]
 )
 
 export function constructSameAddressMap<T extends string>(

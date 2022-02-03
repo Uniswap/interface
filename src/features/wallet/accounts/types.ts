@@ -1,8 +1,8 @@
 export enum AccountType {
-  local = 'local', // Key lives in JS, essentially just a normal ethers Wallet
-  native = 'native', // Key lives in native keystore
-  walletConnect = 'walletConnect', // Account connected over WalletConnect protocol
-  readonly = 'readonly', // Accounts without keys (e.g. so user can track balances)
+  Local = 'local', // Key lives in JS, essentially just a normal ethers Wallet
+  Native = 'native', // Key lives in native keystore
+  WalletConnect = 'walletConnect', // Account connected over WalletConnect protocol
+  Readonly = 'readonly', // Accounts without keys (e.g. so user can track balances)
 }
 
 export interface AccountBase {
@@ -12,21 +12,21 @@ export interface AccountBase {
 }
 
 export interface LocalAccount extends AccountBase {
-  type: AccountType.local
+  type: AccountType.Local
   privateKey?: string
   mnemonic?: string
 }
 
 export interface NativeAccount extends AccountBase {
-  type: AccountType.native
+  type: AccountType.Native
 }
 
 export interface WalletConnectAccount extends AccountBase {
-  type: AccountType.walletConnect
+  type: AccountType.WalletConnect
 }
 
 export interface ReadOnlyAccount extends AccountBase {
-  type: AccountType.readonly
+  type: AccountType.Readonly
 }
 
 export type Account = LocalAccount | NativeAccount | WalletConnectAccount | ReadOnlyAccount

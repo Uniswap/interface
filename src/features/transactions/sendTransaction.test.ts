@@ -16,7 +16,7 @@ import {
 } from 'src/test/fixtures'
 
 const sendParams = {
-  chainId: ChainId.MAINNET,
+  chainId: ChainId.Mainnet,
   account,
   options: { request: txRequest },
   typeInfo: txTypeInfo,
@@ -77,7 +77,7 @@ describe(sendTransaction, () => {
 
   it('Fails for readonly accounts', () => {
     const readOnlyAccount: ReadOnlyAccount = {
-      type: AccountType.readonly,
+      type: AccountType.Readonly,
       address: '0xabc',
       name: 'readonly',
     }

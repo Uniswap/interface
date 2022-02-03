@@ -16,9 +16,9 @@ import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
 export enum WrapType {
-  NOT_APPLICABLE,
-  WRAP,
-  UNWRAP,
+  NotApplicable,
+  Wrap,
+  Unwrap,
 }
 
 export type Params = {
@@ -51,7 +51,7 @@ export function* wrap(params: Params) {
     })
 
     typeInfo = {
-      type: TransactionType.WRAP,
+      type: TransactionType.Wrap,
       unwrapped: false,
       currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
     }
@@ -62,7 +62,7 @@ export function* wrap(params: Params) {
     )
 
     typeInfo = {
-      type: TransactionType.WRAP,
+      type: TransactionType.Wrap,
       unwrapped: true,
       currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
     }

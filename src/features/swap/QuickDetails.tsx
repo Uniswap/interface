@@ -20,7 +20,7 @@ interface QuickDetailsProps {
 export function QuickDetails(props: QuickDetailsProps) {
   const { label, trade } = props
 
-  const chainId = trade?.inputAmount.currency.chainId ?? ChainId.MAINNET
+  const chainId = trade?.inputAmount.currency.chainId ?? ChainId.Mainnet
   const networkColors = useNetworkColors(chainId)
 
   const theme = useAppTheme()

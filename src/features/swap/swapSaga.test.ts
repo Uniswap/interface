@@ -16,10 +16,10 @@ const methodParameters: MethodParameters = {
   calldata: '0x01',
 }
 
-const CHAIN_ID = ChainId.RINKEBY
+const CHAIN_ID = ChainId.Rinkeby
 
 const transactionTypeInfo: ExactInputSwapTransactionInfo = {
-  type: TransactionType.SWAP,
+  type: TransactionType.Swap,
   tradeType: TradeType.EXACT_INPUT,
   inputCurrencyId: currencyId(NativeCurrency.onChain(CHAIN_ID)),
   outputCurrencyId: '0xabc',
@@ -30,7 +30,7 @@ const transactionTypeInfo: ExactInputSwapTransactionInfo = {
 
 const swapParams: SwapParams = {
   account,
-  chainId: ChainId.RINKEBY,
+  chainId: ChainId.Rinkeby,
   contract: tokenContract,
   methodParameters,
   swapRouterAddress: SWAP_ROUTER_ADDRESSES[CHAIN_ID],
@@ -54,7 +54,7 @@ const approveParams = (({
 
 const transaction = {
   from: account.address,
-  to: SWAP_ROUTER_ADDRESSES[ChainId.RINKEBY],
+  to: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
   data: '0x01',
 }
 const transactionWithValue = {

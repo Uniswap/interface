@@ -3,10 +3,10 @@ import { NULL_ADDRESS } from 'src/constants/accounts'
 import { logger } from 'src/utils/logger'
 
 export enum AddressStringFormat {
-  lowercase,
-  uppercase,
-  checksum,
-  shortened,
+  Lowercase,
+  Uppercase,
+  Checksum,
+  Shortened,
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
@@ -41,17 +41,17 @@ export function validateAddress(address: Nullable<Address>, context?: string) {
 
 export function normalizeAddress(
   _address: Nullable<Address>,
-  format = AddressStringFormat.checksum
+  format = AddressStringFormat.Checksum
 ): Address {
   const address = validateAddress(_address, 'normalize')
   switch (format) {
-    case AddressStringFormat.lowercase:
+    case AddressStringFormat.Lowercase:
       return address.toLowerCase()
-    case AddressStringFormat.uppercase:
+    case AddressStringFormat.Uppercase:
       return address.toUpperCase()
-    case AddressStringFormat.shortened:
+    case AddressStringFormat.Shortened:
       return address.substr(0, 8)
-    case AddressStringFormat.checksum:
+    case AddressStringFormat.Checksum:
     default:
       return utils.getAddress(address)
   }

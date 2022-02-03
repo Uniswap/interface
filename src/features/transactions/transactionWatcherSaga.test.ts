@@ -25,7 +25,7 @@ describe(transactionWatcher, () => {
       .withState({
         transactions: {
           byChainId: {
-            [ChainId.MAINNET]: {
+            [ChainId.Mainnet]: {
               '0': txDetailsPending,
             },
           },

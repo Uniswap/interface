@@ -33,7 +33,7 @@ async function _transferToken(
   providerManager: ProviderManager
 ) {
   // TODO use the appropriate provider for current chain
-  const provider = providerManager.getProvider(ChainId.RINKEBY)
+  const provider = providerManager.getProvider(ChainId.Rinkeby)
   const signer = await signerManager.getSignerForAccount(account)
   const connectedSigner = signer.connect(provider)
 

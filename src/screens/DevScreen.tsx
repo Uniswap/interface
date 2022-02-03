@@ -24,7 +24,7 @@ import { Screens } from 'src/screens/Screens'
 export function DevScreen({ navigation }: any) {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
-  const [currentChain] = useState(ChainId.RINKEBY)
+  const [currentChain] = useState(ChainId.Rinkeby)
 
   const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
@@ -42,10 +42,10 @@ export function DevScreen({ navigation }: any) {
   const activeChains = useActiveChainIds()
   const onPressToggleTestnets = () => {
     // always rely on the state of rinkeby
-    const isRinkebyActive = activeChains.includes(ChainId.RINKEBY)
+    const isRinkebyActive = activeChains.includes(ChainId.Rinkeby)
     batch(() => {
-      dispatch(setChainActiveStatus({ chainId: ChainId.RINKEBY, isActive: !isRinkebyActive }))
-      dispatch(setChainActiveStatus({ chainId: ChainId.GOERLI, isActive: !isRinkebyActive }))
+      dispatch(setChainActiveStatus({ chainId: ChainId.Rinkeby, isActive: !isRinkebyActive }))
+      dispatch(setChainActiveStatus({ chainId: ChainId.Goerli, isActive: !isRinkebyActive }))
     })
   }
 
@@ -56,7 +56,7 @@ export function DevScreen({ navigation }: any) {
     isLoading: gasIsLoading,
     isError: gasIsError,
     data: gasInfo,
-  } = useGasFee(ChainId.RINKEBY, fakeTx)
+  } = useGasFee(ChainId.Rinkeby, fakeTx)
   const gasInfoReady = !gasIsLoading && !gasIsError && gasInfo
   const onPressComputeFee = () => {
     setFakeTx({
@@ -70,7 +70,7 @@ export function DevScreen({ navigation }: any) {
     dispatch(
       pushNotification({
         message: 'A scary new error has happened. Be afraid!!',
-        severity: NotificationSeverity.error,
+        severity: NotificationSeverity.Error,
       })
     )
   }
