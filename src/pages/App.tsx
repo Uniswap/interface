@@ -50,8 +50,8 @@ const BodyWrapper = styled.div`
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  overflow: visible;
   z-index: 10;
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
     /* [PR#531]: theme.mediaWidth.upToSmall does not cover all the breakpoints smoothly 
     padding: 16px;
