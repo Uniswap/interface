@@ -216,23 +216,23 @@ const GasInfo = styled.div`
 `
 const GasColor = {
   fast: {
-    color: 'red',
-    backgroundColor: 'red'
+    color: '#10B981',
+    backgroundColor: 'rgba(16, 185, 129, 0.3)'
   },
   normal: {
-    color: '',
-    backgroundColor: ''
+    color: '#F2994A',
+    backgroundColor: 'rgba(242, 153, 74, 0.3);'
   },
   slow: {
-    color: '',
-    backgroundColor: ''
+    color: '#FF4F84',
+    backgroundColor: 'rgba(255, 79, 132, 0.3);'
   }
 }
-const ColoredGas = styled.div<{ color: any }>`
+const ColoredGas = styled.div<{ color: 'fast' | 'slow' | 'normal' }>`
   font-size: 10px;
   font-weight: 600;
   color: ${props => GasColor[props.color].color};
-  background-color: rgba(255, 79, 132, 0.3);
+  background-color: ${props => GasColor[props.color].backgroundColor};
   padding: 3.19444px 4.25926px;
 
   border-radius: 4.25926px;
@@ -241,7 +241,7 @@ const ColoredGas = styled.div<{ color: any }>`
 function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
-  const [isGasInfoOpen, setIsGasInfoOpen] = useState(true)
+  const [isGasInfoOpen, setIsGasInfoOpen] = useState(false)
   const nativeCurrency = useNativeCurrency()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
@@ -332,9 +332,9 @@ function Header() {
         </HeaderSubRow>
 
         <HeaderSubRow style={{ visibility: isGasInfoOpen ? 'visible' : 'hidden', gap: '4px' }}>
-          <ColoredGas color={fast}>FAST 119</ColoredGas>
-          <ColoredGas color={normal}>NORMAL 97</ColoredGas>
-          <ColoredGas color={slow}>SLOW 89</ColoredGas>
+          <ColoredGas color={'fast'}>FAST 119</ColoredGas>
+          <ColoredGas color={'normal'}>NORMAL 97</ColoredGas>
+          <ColoredGas color={'slow'}>SLOW 89</ColoredGas>
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
