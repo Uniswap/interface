@@ -1,9 +1,8 @@
 import styled from 'styled-components/macro'
 import { AutoColumn } from '../Column'
 
-import uImage from '../../assets/images/big_unicorn.png'
 import dBanner from '../../assets/images/diffusion-banner.png'
-import xlUnicorn from '../../assets/images/xl_uni.png'
+
 import noise from '../../assets/images/noise.png'
 
 export const TextBox = styled.div`
@@ -36,20 +35,6 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   left: -100px;
   transform: rotate(-15deg);
   user-select: none;
-  ${({ desaturate }) => desaturate && `filter: saturate(0)`}
-`
-
-export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
-  background: url(${xlUnicorn});
-  width: 1200px;
-  height: 1200px;
-  position: absolute;
-  border-radius: 12px;
-  top: -300px;
-  left: -300px;
-  opacity: 0.4;
-  user-select: none;
-
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
 `
 
