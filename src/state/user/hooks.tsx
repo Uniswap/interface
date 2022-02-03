@@ -59,14 +59,16 @@ export function useIsDarkMode(): boolean {
 }
 
 export function useDarkModeManager(): [boolean, () => void] {
-  const dispatch = useDispatch<AppDispatch>()
-  const darkMode = useIsDarkMode()
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  return [true, () => {}]
+  // const dispatch = useDispatch<AppDispatch>()
+  // const darkMode = useIsDarkMode()
 
-  const toggleSetDarkMode = useCallback(() => {
-    dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
-  }, [darkMode, dispatch])
+  // const toggleSetDarkMode = useCallback(() => {
+  //   dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
+  // }, [darkMode, dispatch])
 
-  return [darkMode, toggleSetDarkMode]
+  // return [darkMode, toggleSetDarkMode]
 }
 
 export function useIsExpertMode(): boolean {
