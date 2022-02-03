@@ -29,8 +29,9 @@ import { FixedHeightRow } from '.'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
-  background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.bg3} 100%) `};
+  background-color: rgba(34, 36, 41, 0.5);
+  /* background: ${({ theme, bgColor }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.bg3} 100%) `}; */
   position: relative;
   overflow: hidden;
 `
@@ -79,7 +80,6 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
 
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
-      <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <AutoRow gap="8px">
