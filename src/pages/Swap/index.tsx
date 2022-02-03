@@ -2,7 +2,7 @@ import { CurrencyAmount, JSBI, Trade, Token, RoutablePlatform } from '@swapr/sdk
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
-import styled, { ThemeContext, ThemeProvider, keyframes } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import Card from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
@@ -43,8 +43,6 @@ import { ApplicationModal } from '../../state/application/actions'
 
 // Landing Page Imports
 import './../../theme/landingPageTheme/stylesheet.css'
-import Layout from './../../components/LandingPageComponents/layout/Layout'
-import landingTheme from './../../utils/theme'
 import Features from './../../components/LandingPageComponents/Features'
 import Stats from './../../components/LandingPageComponents/Stats'
 import CommunityBanner from './../../components/LandingPageComponents/CommunityBanner'
@@ -490,17 +488,13 @@ export default function Swap() {
           />
         </AppBodyContainer>
       </Hero>
-      <ThemeProvider theme={landingTheme}>
-        <Layout width="full-width">
-          <Features />
-          <Stats />
-          <CommunityBanner />
-          <Timeline />
-          <CommunityLinks />
-          <BlogNavigation />
-        </Layout>
-        <Footer />
-      </ThemeProvider>
+      <Features />
+      <Stats />
+      <CommunityBanner />
+      <Timeline />
+      <CommunityLinks />
+      <BlogNavigation />
+      <Footer />
     </>
   )
 }

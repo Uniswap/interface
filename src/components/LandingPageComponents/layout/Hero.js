@@ -86,7 +86,7 @@ const Hero = (props) => {
 
     return (
         <StyledHero id={'index-hero'} className={isHeroActive ? 'hero-active' : ''}>
-            <Layout width="main-width">
+            <Layout width="main-width" className={'inner-hero'}>
                 {HeroContent ? (
                     props.children
                 ) : (
@@ -150,13 +150,18 @@ const Hero = (props) => {
 
 const zoomOut = keyframes`
     0% {transform: scale(1.2); opacity: 0;}
-    100% {transform: scale(1); opacity: 1;}
+    100% {transform: scale(1); opacity: 0.7;}
 `;
 
 const StyledHero = styled(Layout)`
     position: relative;
     padding-bottom: 120px;
     width: calc(100% + 32px) !important;
+    .inner-hero {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 240px);
+    }
     &:not(.hero-active) {
         .hero-image-left,
         .hero-image-right {
@@ -252,9 +257,9 @@ const StyledHero = styled(Layout)`
         }
     }
     .routing-through {
+        margin-top: auto;
         position: relative;
         z-index: 0;
-        margin-top: 85px;
         .routing-through-header {
             height: 28px;
             display: flex;
