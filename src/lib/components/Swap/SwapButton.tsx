@@ -148,6 +148,9 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
         //@TODO(ianlapham): add error handling
         console.log(error)
       })
+      .finally(() => {
+        setActiveTrade(undefined)
+      })
   }, [addTransaction, independentField, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback])
 
   return (
