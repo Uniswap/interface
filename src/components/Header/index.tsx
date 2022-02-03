@@ -27,6 +27,7 @@ import Skeleton from 'react-loading-skeleton'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
+import { useGasInfo } from '../../hooks/useGasInfo'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -243,6 +244,7 @@ function Header() {
   const { t } = useTranslation()
   const [isGasInfoOpen, setIsGasInfoOpen] = useState(false)
   const nativeCurrency = useNativeCurrency()
+  const { loading: loadingGas, gas } = useGasInfo()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
   const { loading, data, stakedAmount } = useSwaprSinglelSidedStakeCampaigns()
@@ -252,7 +254,7 @@ function Header() {
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
-
+  console.log(loadingGas)
   return (
     <HeaderFrame>
       <ClaimModal
@@ -325,16 +327,16 @@ function Header() {
           <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
             <GasInfoSvg />
             <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
-              97
+              {gas.normal}
             </Text>
             {isGasInfoOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
           </GasInfo>
         </HeaderSubRow>
 
         <HeaderSubRow style={{ visibility: isGasInfoOpen ? 'visible' : 'hidden', gap: '4px' }}>
-          <ColoredGas color={'fast'}>FAST 119</ColoredGas>
-          <ColoredGas color={'normal'}>NORMAL 97</ColoredGas>
-          <ColoredGas color={'slow'}>SLOW 89</ColoredGas>
+          <ColoredGas color={'fast'}>FAST {gas.fast}</ColoredGas>
+          <ColoredGas color={'normal'}>NORMAL {gas.normal}</ColoredGas>
+          <ColoredGas color={'slow'}>SLOW {gas.slow}</ColoredGas>
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
