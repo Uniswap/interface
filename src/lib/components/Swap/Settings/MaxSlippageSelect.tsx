@@ -6,7 +6,17 @@ import { TooltipHandlers, useTooltip } from 'lib/components/Tooltip'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'lib/icons'
 import { MAX_VALID_SLIPPAGE, maxSlippageAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import styled, { Color, ThemedText } from 'lib/theme'
-import { memo, PropsWithChildren, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  forwardRef,
+  memo,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 
 import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -97,10 +107,16 @@ const Warning = memo(function Warning({ state, showTooltip }: { state: WarningSt
   )
 })
 
-export default function MaxSlippageSelect() {
+interface MaxSlippageSelectHandle {
+  reset: () => void
+}
+
+const MaxSlippageSelect = forwardRef<MaxSlippageSelectHandle>(function MaxSlippageSelect(_, ref) {
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
 
   const [custom, setCustom] = useState('')
+  useImperativeHandle(ref, () => ({ reset: () => setCustom('') }), [])
+
   const input = useRef<HTMLInputElement>(null)
   const focus = useCallback(() => input.current?.focus(), [input])
 
@@ -123,6 +139,7 @@ export default function MaxSlippageSelect() {
         setMaxSlippage(percent)
       }
     } else {
+      setWarning(WarningState.NONE)
       setMaxSlippage('auto')
     }
   }, [custom, setMaxSlippage])
@@ -162,4 +179,6 @@ export default function MaxSlippageSelect() {
       </Row>
     </Column>
   )
-}
+})
+
+export default MaxSlippageSelect

@@ -4,7 +4,7 @@ import useScrollbar from 'lib/hooks/useScrollbar'
 import { Settings as SettingsIcon } from 'lib/icons'
 import { settingsAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
-import React, { useState } from 'react'
+import React, { ElementRef, useCallback, useState } from 'react'
 
 import { IconButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -16,11 +16,18 @@ import TransactionTtlInput from './TransactionTtlInput'
 export function SettingsDialog() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(boundary, { padded: true })
+
   const resetSettings = useResetAtom(settingsAtom)
+  const [maxSlippage, setMaxSlippage] = useState<ElementRef<typeof MaxSlippageSelect> | null>(null)
+  const onReset = useCallback(() => {
+    resetSettings()
+    maxSlippage?.reset()
+  }, [resetSettings, maxSlippage])
+
   return (
     <>
       <Header title={<Trans>Settings</Trans>} ruled>
-        <TextButton onClick={resetSettings}>
+        <TextButton onClick={onReset}>
           <ThemedText.ButtonSmall>
             <Trans>Reset</Trans>
           </ThemedText.ButtonSmall>
@@ -28,7 +35,7 @@ export function SettingsDialog() {
       </Header>
       <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded css={scrollbar}>
         <BoundaryProvider value={boundary}>
-          <MaxSlippageSelect />
+          <MaxSlippageSelect ref={setMaxSlippage} />
           <TransactionTtlInput />
         </BoundaryProvider>
       </Column>
