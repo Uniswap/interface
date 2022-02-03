@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { FeeOptions } from '@uniswap/v3-sdk'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import { maxSlippageAtom } from 'lib/state/settings'
-import { DEFAULT_FEE_OPTIONS, feeOptionsAtom, Field, swapAtom } from 'lib/state/swap'
+import { Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -24,7 +23,6 @@ interface SwapInfo {
     state: TradeState
   }
   allowedSlippage: Percent
-  fee: FeeOptions
 }
 
 const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
@@ -43,8 +41,6 @@ function useComputeSwapInfo(): SwapInfo {
     [Field.INPUT]: inputCurrency,
     [Field.OUTPUT]: outputCurrency,
   } = useAtomValue(swapAtom)
-
-  const fee = useAtomValue(feeOptionsAtom)
 
   const to = account
 
@@ -143,9 +139,8 @@ function useComputeSwapInfo(): SwapInfo {
       inputError,
       trade,
       allowedSlippage,
-      fee,
     }),
-    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage, fee]
+    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage]
   )
 }
 
@@ -155,7 +150,6 @@ const swapInfoAtom = atom<SwapInfo>({
   currencyAmounts: {},
   trade: { state: TradeState.INVALID },
   allowedSlippage: new Percent(0),
-  fee: DEFAULT_FEE_OPTIONS,
 })
 
 export function SwapInfoUpdater() {
