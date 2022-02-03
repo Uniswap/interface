@@ -234,6 +234,14 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 2,
     active: true,
   },
+  // CELO-mCREAL
+  {
+    address: '0x1dF0A9C8313a005793501bAC2150DFb895D10Fad',
+    underlyingPool: '0xdD8A979B6524A806EA1f1Fc8231c4c9faC40cFeB',
+    basePool: '0xdD8A979B6524A806EA1f1Fc8231c4c9faC40cFeB',
+    numRewards: 2,
+    active: true,
+  },
 
   // ** Inactive ** //
   // CELO-MOBI
