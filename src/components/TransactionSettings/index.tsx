@@ -398,6 +398,26 @@ export default function SlippageTabs({
             </RowFixed>
           </>
         )}
+        {(!!slippageError || !!preferredGasPriceError) && (
+          <Text
+            fontWeight={500}
+            fontSize="12px"
+            lineHeight="15px"
+            color={
+              slippageError === SlippageError.InvalidInput ||
+              preferredGasPriceError === PreferredGasPriceError.InvalidInput
+                ? 'red'
+                : '#F3841E'
+            }
+          >
+            {slippageError === SlippageError.InvalidInput ||
+            preferredGasPriceError === PreferredGasPriceError.InvalidInput
+              ? `Enter a valid ${slippageError === SlippageError.InvalidInput ? 'slippage percentage' : 'gas price'}`
+              : slippageError === SlippageError.RiskyLow || preferredGasPriceError === PreferredGasPriceError.RiskyLow
+              ? 'Your transaction may fail'
+              : 'Your transaction may be frontrun'}
+          </Text>
+        )}
         <RowBetween mt="2px">
           <RowFixed>
             <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
@@ -424,22 +444,6 @@ export default function SlippageTabs({
             </TYPE.body>
           </RowFixed>
         </RowBetween>
-        {!!slippageError ||
-          (!!preferredGasPriceError && (
-            <Text
-              fontWeight={500}
-              fontSize="12px"
-              lineHeight="15px"
-              color={slippageError === SlippageError.InvalidInput ? 'red' : '#F3841E'}
-            >
-              {slippageError === SlippageError.InvalidInput ||
-              preferredGasPriceError === PreferredGasPriceError.InvalidInput
-                ? `Enter a valid ${slippageError === SlippageError.InvalidInput ? 'slippage percentage' : 'gas price'}`
-                : slippageError === SlippageError.RiskyLow || preferredGasPriceError === PreferredGasPriceError.RiskyLow
-                ? 'Your transaction may fail'
-                : 'Your transaction may be frontrun'}
-            </Text>
-          ))}
       </AutoColumn>
     </AutoColumn>
   )
