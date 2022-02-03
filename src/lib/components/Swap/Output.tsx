@@ -7,7 +7,7 @@ import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -69,12 +69,6 @@ export default function Output({ disabled, children }: OutputProps) {
     return ''
   }, [priceImpact, outputUSDC])
 
-  const onMax = useCallback(() => {
-    if (balance) {
-      updateSwapOutputAmount(balance.toExact())
-    }
-  }, [balance, updateSwapOutputAmount])
-
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
@@ -87,7 +81,6 @@ export default function Output({ disabled, children }: OutputProps) {
           currency={swapOutputCurrency}
           amount={(swapOutputAmount !== undefined ? swapOutputAmount : outputCurrencyAmount?.toSignificant(6)) ?? ''}
           disabled={disabled}
-          onMax={onMax}
           onChangeInput={updateSwapOutputAmount}
           onChangeCurrency={updateSwapOutputCurrency}
         >
