@@ -5,6 +5,7 @@
     "declaration": true,
     "declarationDir": "dist/dts",
     "baseUrl": "src/lib",
+    "resolveJsonModule": true,
     "paths": {
       "lib/*": ["./*"],
       "abis/*": ["../abis/*"],
@@ -13,8 +14,8 @@
       "hooks/*": ["../hooks/*"],
       "state/*": ["../state/*"],
       "types/*": ["../types/*"],
-      "utils/*": ["../utils/*"],
-    },
+      "utils/*": ["../utils/*"]
+    }
   },
   "exclude": ["node_modules", "src/lib/**/*.test.*"],
   "include": ["src/lib/**/*"]
