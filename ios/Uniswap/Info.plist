@@ -4,6 +4,8 @@
   <dict>
     <key>NSBluetoothAlwaysUsageDescription</key>
 	  <string>$(PRODUCT_NAME) needs access to Bluetooth to connect to Ledger</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+	  <string>$(PRODUCT_NAME) needs access to Bluetooth to connect to Ledger</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
