@@ -13,3 +13,8 @@ export function toSupportedChain(chainId: number | string) {
   }
   return parseInt(chainId.toString(), 10) as ChainId
 }
+
+// variant on `toSupportedChain` with a narrower return type
+export function parseActiveChains(activeChainsString: string): ChainId[] {
+  return activeChainsString.split(',').map((id) => parseInt(id, 10) as ChainId)
+}

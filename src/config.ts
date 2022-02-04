@@ -8,6 +8,7 @@ import {
   VERSION,
 } from 'react-native-dotenv'
 import { ChainId } from 'src/constants/chains'
+import { parseActiveChains } from 'src/utils/chainId'
 
 export interface Config {
   activeChains: ChainId[]
@@ -31,10 +32,6 @@ const _config: Config = {
 
 function parseBoolean(value: string): boolean {
   return value?.toLowerCase() === 'true'
-}
-
-function parseActiveChains(activeChainsString: string) {
-  return activeChainsString.split(',').map((id) => parseInt(id, 10) as ChainId)
 }
 
 export const config = Object.freeze(_config)

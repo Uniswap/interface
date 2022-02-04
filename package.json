@@ -21,9 +21,9 @@
     "storybook:build": "build-storybook",
     "storybook:chromatic": "chromatic --build-script-name=storybook:build",
     "test": "jest",
-    "test:e2e:build": "detox build --configuration ios",
-    "test:e2e:packager": "cross-env REACT_DEBUGGER=\"echo nope\" node_modules/.bin/react-native start --no-interactive",
-    "test:e2e:run": "detox test --configuration ios --record-videos failing",
+    "test:e2e:build": "RN_SRC_EXT=e2e.js detox build -c ios.sim.debug",
+    "test:e2e:packager": "RN_SRC_EXT=e2e.js,e2e.ts yarn start:production --no-interactive",
+    "test:e2e:run": "RN_SRC_EXT=e2e.js detox test -c ios.sim.debug",
     "tsc:compile": "tsc --project ."
   },
   "dependencies": {

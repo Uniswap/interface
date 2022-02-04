@@ -19,6 +19,6 @@ export enum TestConfig {
 }
 
 export const TestConfigValues: Record<TestConfig, ConfigValue> = {
-  [TestConfig.BiometricPrompt]: 'disabled',
+  [TestConfig.BiometricPrompt]: __DEV__ ? 'disabled' : 'enabled',
   [TestConfig.SwipeableAccounts]: 'disabled',
 }

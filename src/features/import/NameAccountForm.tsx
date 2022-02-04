@@ -13,6 +13,8 @@ import {
 } from 'src/features/wallet/editAccountSaga'
 import { SagaStatus } from 'src/utils/saga'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
+import { ElementName, SectionName } from '../telemetry/constants'
+import { Trace } from '../telemetry/Trace'
 
 interface Props {
   address: Address
@@ -42,25 +44,30 @@ export function NameAccountForm({ address, onSuccess }: Props) {
 
   const { t } = useTranslation()
   return (
-    <CenterBox mt="md">
-      <Identicon address={address} size={50} />
-      <TextInput
-        fontSize={20}
-        mt="lg"
-        placeholder={t('New account name')}
-        value={newAccountName}
-        onChangeText={setNewAccountName}
-      />
-      <PrimaryButton
-        disabled={isLoading}
-        label={t('Done')}
-        mt="lg"
-        width="100%"
-        onPress={onPressDone}
-      />
-      <TextButton mt="lg" textColor="pink" textVariant="body" onPress={onSuccess}>
-        {t('Skip')}
-      </TextButton>
-    </CenterBox>
+    <Trace section={SectionName.NameAccountForm}>
+      <CenterBox mt="md">
+        <Identicon address={address} size={50} />
+        <TextInput
+          fontSize={20}
+          mt="lg"
+          placeholder={t('New account name')}
+          testID="import_account_form/input"
+          value={newAccountName}
+          onChangeText={setNewAccountName}
+        />
+        <PrimaryButton
+          disabled={isLoading}
+          label={t('Done')}
+          mt="lg"
+          name={ElementName.Submit}
+          testID={ElementName.Submit}
+          width="100%"
+          onPress={onPressDone}
+        />
+        <TextButton mt="lg" textColor="pink" textVariant="body" onPress={onSuccess}>
+          {t('Skip')}
+        </TextButton>
+      </CenterBox>
+    </Trace>
   )
 }

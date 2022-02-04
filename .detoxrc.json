@@ -3,10 +3,15 @@
   "runnerConfig": "e2e/config.json",
   "skipLegacyWorkersInjection": true,
   "apps": {
-    "ios": {
+    "ios.debug": {
       "type": "ios.app",
       "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/Uniswap.app",
       "build": "RN_SRC_EXT=e2e.js,e2e.ts xcodebuild -workspace ios/Uniswap.xcworkspace -scheme Uniswap -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=YES -arch x86_64"
+    },
+    "ios.release": {
+      "type": "ios.app",
+      "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/Uniswap.app",
+      "build": "RN_SRC_EXT=e2e.js,e2e.ts xcodebuild -workspace ios/Uniswap.xcworkspace -scheme Uniswap -configuration Release -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=YES -arch x86_64"
     },
     "android": {
       "type": "android.apk",
@@ -17,7 +22,7 @@
     "simulator": {
       "type": "ios.simulator",
       "device": {
-        "type": "iPhone 12"
+        "type": "iPhone 12 Pro Max"
       }
     },
     "emulator": {
@@ -28,9 +33,13 @@
     }
   },
   "configurations": {
-    "ios": {
+    "ios.sim.debug": {
       "device": "simulator",
-      "app": "ios"
+      "app": "ios.debug"
+    },
+    "ios.sim.release": {
+      "device": "simulator",
+      "app": "ios.release"
     },
     "android": {
       "device": "emulator",

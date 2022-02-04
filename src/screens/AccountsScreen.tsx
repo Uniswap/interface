@@ -167,7 +167,7 @@ export function AccountsScreen() {
           label={t('Import Account')}
           // mr="lg"
           name={ElementName.Import}
-          testID="accounts/add/button"
+          testID={ElementName.Import}
           // variant="palePink"
           width="100%"
           onPress={onPressImport}

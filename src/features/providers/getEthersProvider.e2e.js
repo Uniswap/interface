@@ -3,10 +3,14 @@
  * Replaces `getEthersProvider.ts` when RN_SRC_EXT=e2e.js at runtime
  */
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { ChainId } from 'src/constants/chains'
 
 export function getEthersProvider(chainId, _config) {
-  const provider = new TestProvider('http://127.0.0.1:8545/', chainId)
-  return provider
+  if (chainId === ChainId.MAINNET) {
+    const provider = new TestProvider('http://127.0.0.1:8545/', chainId)
+    return provider
+  }
+  throw new Error(`Chain ${chainId} not available in E2E tests`)
 }
 
 class TestProvider extends JsonRpcProvider {

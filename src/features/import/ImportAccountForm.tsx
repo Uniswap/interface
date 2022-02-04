@@ -21,6 +21,8 @@ import { isValidPrivateKey } from 'src/utils/privateKeys'
 import { SagaStatus } from 'src/utils/saga'
 import { normalizeTextInput } from 'src/utils/string'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
+import { ElementName, SectionName } from '../telemetry/constants'
+import { Trace } from '../telemetry/Trace'
 
 interface FormValues {
   input: string
@@ -68,47 +70,49 @@ export function ImportAccountForm({ onSuccess }: Props) {
   return (
     <Formik initialValues={initialValues} validate={validateForm(t)} onSubmit={onSubmit}>
       {({ handleChange, handleBlur, values, touched, errors }) => (
-        <CenterBox>
-          <Text color="warning" px="md" textAlign="center" variant="body">
-            {t('Warning: this wallet is still experimental. Use with caution.')}
-          </Text>
-          <CenterBox
-            backgroundColor="gray100"
-            borderRadius="lg"
-            mt="lg"
-            pt="lg"
-            px="md"
-            width="100%">
-            <TextInput
-              autoCapitalize="none"
-              backgroundColor="gray100"
-              fontSize={18}
-              height={140}
-              multiline={true}
-              numberOfLines={5}
-              placeholder={t('Secret Phrase, ENS name, or address')}
-              returnKeyType="done"
-              testID="import_account_form/input"
-              textAlign="center"
-              value={values.input}
-              width="100%"
-              onBlur={handleBlur('input')}
-              onChangeText={handleChange('input')}
-              onSubmitEditing={() => Keyboard.dismiss()}
-            />
-            <PasteButton />
-          </CenterBox>
-
-          {touched.input && errors.input && (
-            <Text color="error" mt="md" variant="body">
-              {errors.input}
+        <Trace section={SectionName.ImportAccountForm}>
+          <CenterBox>
+            <Text color="warning" px="md" textAlign="center" variant="body">
+              {t('Warning: this wallet is still experimental. Use with caution.')}
             </Text>
-          )}
+            <CenterBox
+              backgroundColor="gray100"
+              borderRadius="lg"
+              mt="lg"
+              pt="lg"
+              px="md"
+              width="100%">
+              <TextInput
+                autoCapitalize="none"
+                backgroundColor="gray100"
+                fontSize={18}
+                height={100}
+                multiline={true}
+                numberOfLines={5}
+                placeholder={t('Secret Phrase, ENS name, or address')}
+                returnKeyType="done"
+                testID="import_account_form/input"
+                textAlign="center"
+                value={values.input}
+                width="100%"
+                onBlur={handleBlur('input')}
+                onChangeText={handleChange('input')}
+                onSubmitEditing={() => Keyboard.dismiss()}
+              />
+              <PasteButton />
+            </CenterBox>
 
-          <SubmitButton onSuccess={onSuccess} />
+            {touched.input && errors.input && (
+              <Text color="error" mt="md" variant="body">
+                {errors.input}
+              </Text>
+            )}
 
-          <ENSResolver />
-        </CenterBox>
+            <SubmitButton onSuccess={onSuccess} />
+
+            <ENSResolver />
+          </CenterBox>
+        </Trace>
       )}
     </Formik>
   )
@@ -135,7 +139,8 @@ function SubmitButton({ onSuccess }: SubmitButtonProps) {
         disabled={!values.input || !isValid || isSubmitting || isLoading}
         label={t('Next')}
         mt="lg"
-        testID="import_account_form/submit"
+        name={ElementName.Submit}
+        testID={ElementName.Submit}
         width="100%"
         onPress={trigger}
       />

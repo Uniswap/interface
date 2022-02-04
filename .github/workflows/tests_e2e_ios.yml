@@ -19,7 +19,7 @@ jobs:
     name: iOS
     runs-on: macos-11
     # TODO matrix across APIs, at least 11 and 15 (lowest to highest)
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
@@ -118,7 +118,7 @@ jobs:
           export SKIP_BUNDLING=1
           export RCT_NO_LAUNCH_PACKAGER=1
           set -o pipefail
-          yarn test:e2e:build
+          RN_SRC_EXT=e2e.js yarn detox build e2e -c ios.sim.debug
           ccache -s
         shell: bash
 
@@ -159,8 +159,8 @@ jobs:
         run: yarn hardhat &
 
       - name: Detox Test
-        timeout-minutes: 30
-        run: yarn test:e2e:run
+        timeout-minutes: 60
+        run: RN_SRC_EXT=e2e.js yarn detox test -c ios.sim.debug --cleanup --debug-synchronization 500 --record-videos failing --loglevel trace --record-logs all
 
       - name: Upload Detox Artifacts
         uses: actions/upload-artifact@v2
@@ -180,4 +180,3 @@ jobs:
         with:
           name: simulator_log
           path: simulator.log.gz
-

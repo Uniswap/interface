@@ -14,6 +14,8 @@ export enum EventName {
 export const enum SectionName {
   CurrencyInputPanel = 'currency-input-panel',
   CurrencyOutputPanel = 'currency-output-panel',
+  ImportAccountForm = 'import-account-form',
+  NameAccountForm = 'name-account-form',
   TokenBalance = 'token-balance',
   AccountCard = 'account-card',
 }
@@ -40,10 +42,12 @@ export const enum ElementName {
   Edit = 'edit',
   EditCancel = 'edit-cancel',
   Import = 'import',
+  Manage = 'manage',
   NetworkButtonGroupPrefix = 'network-button-group',
   QRCodeModalToggle = 'qr-code-modal-toggle',
   Remove = 'remove',
   Rename = 'rename',
+  Submit = 'submit',
   TryAgain = 'try-again',
 }
 

@@ -21,7 +21,7 @@ export enum BiometricAuthenticationStatus {
 }
 
 export async function tryLocalAuthenticate(): Promise<BiometricAuthenticationStatus> {
-  if (__DEV__ && !isEnabled(TestConfig.BiometricPrompt)) {
+  if (!isEnabled(TestConfig.BiometricPrompt)) {
     return BiometricAuthenticationStatus.Authenticated
   }
 

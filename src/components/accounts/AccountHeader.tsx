@@ -10,6 +10,7 @@ import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { NULL_ADDRESS } from 'src/constants/accounts'
+import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
@@ -39,7 +40,8 @@ export function AccountHeader({ children, onPress, chevronDirection }: AccountHe
       <Button
         alignItems="center"
         flexDirection="row"
-        testID="account_header/manage/button"
+        name={ElementName.Manage}
+        testID={ElementName.Manage}
         onPress={onPressAccount}>
         <Flex centered flexDirection="row" gap="xs">
           <Identicon address={activeAccount?.address ?? NULL_ADDRESS} size={24} />

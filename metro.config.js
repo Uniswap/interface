@@ -16,9 +16,7 @@ module.exports = (async () => {
     resolver: {
       assetExts: assetExts.filter((ext) => ext !== 'svg'),
       // allows replacing .js|ts files with their .e2e.js|ts equivalent in Detox
-      sourceExts: process.env.RN_SRC_EXT
-        ? process.env.RN_SRC_EXT.split(',').concat(sourceExts)
-        : [...sourceExts, 'svg'],
+      sourceExts: (process.env.RN_SRC_EXT ?? '').split(',').concat(sourceExts).concat('svg'),
     },
     transformer: {
       getTransformOptions: async () => ({
