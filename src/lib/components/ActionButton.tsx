@@ -74,7 +74,10 @@ export default function ActionButton({
   return (
     <Overlay update={Boolean(update)} flex align="stretch">
       <StyledButton color={color} disabled={disabled} onClick={update ? onUpdate : onClick}>
-        <ThemedText.TransitionButton buttonSize={update ? 'medium' : 'large'} color="currentColor">
+        <ThemedText.TransitionButton
+          buttonSize={update ? 'medium' : 'large'}
+          color={color === 'accent' && !disabled ? 'accentText' : 'currentColor'}
+        >
           {update ? update.action : children}
         </ThemedText.TransitionButton>
       </StyledButton>

@@ -36,7 +36,7 @@ interface TokenButtonProps {
 export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
   return (
     <StyledTokenButton onClick={onClick} empty={!value} color={value ? 'interactive' : 'accent'} disabled={disabled}>
-      <ThemedText.ButtonLarge color="onInteractive">
+      <ThemedText.ButtonLarge color={value || disabled ? 'onInteractive' : 'accentText'}>
         <TokenButtonRow gap={0.4} collapsed={Boolean(value) && collapsed}>
           {value ? (
             <>
@@ -46,7 +46,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
           ) : (
             <Trans>Select a token</Trans>
           )}
-          <ChevronDown color="onInteractive" strokeWidth={3} />
+          <ChevronDown color={value || disabled ? 'onInteractive' : 'accentText'} strokeWidth={3} />
         </TokenButtonRow>
       </ThemedText.ButtonLarge>
     </StyledTokenButton>
