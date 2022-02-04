@@ -1179,8 +1179,8 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Ethereum Optimis dalam Beta dan mungkin mengalami downtime. Optimisme mengharapkan downtime yang direncanakan untuk meningkatkan jaringan dalam waktu dekat. Selama waktu henti, posisi Anda tidak akan mendapatkan biaya dan Anda tidak akan dapat menghapus likuiditas. <0>Baca selengkapnya.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
-msgstr "Optimis Etherscan"
+msgid "Optimistic Explorer"
+msgstr "Optimis Explorer"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1220,7 +1220,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Silakan hubungkan ke Layer 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Harap hubungkan ke jaringan Ethereum yang sesuai."
 
 #: src/components/Settings/index.tsx
@@ -1938,8 +1938,8 @@ msgid "View list"
 msgstr "Lihat daftar"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Lihat di Etherscan"
+msgid "View on Explorer"
+msgstr "Lihat di Explorer"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2299,8 +2299,8 @@ msgstr "{0} Disetor"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

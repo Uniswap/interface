@@ -1179,8 +1179,8 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Ethereum optimista és en versió beta i pot experimentar temps d'inactivitat. L'optimisme espera que els temps d'inactivitat previstos actualitzin la xarxa en un futur proper. Durant el temps d'inactivitat, la vostra posició no generarà comissions i no podreu eliminar la liquiditat. <0> Llegiu-ne més.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
-msgstr "Etherscan optimista"
+msgid "Optimistic Explorer"
+msgstr "Explorer optimista"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1220,7 +1220,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Connecteu-vos a la capa 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Connecteu-vos a la xarxa Ethereum adequada."
 
 #: src/components/Settings/index.tsx
@@ -1938,8 +1938,8 @@ msgid "View list"
 msgstr "Veure llista"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Veure a Etherscan"
+msgid "View on Explorer"
+msgstr "Veure a Explorer"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2299,8 +2299,8 @@ msgstr "{0} Dipositat"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

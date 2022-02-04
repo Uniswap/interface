@@ -1179,8 +1179,8 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Optimistisk Ethereum er i Beta og kan opleve nedetid. Optimisme forventer, at planlagt nedetid vil opgradere netværket i den nærmeste fremtid. I nedetid tjener din position ikke gebyrer, og du vil ikke være i stand til at fjerne likviditet. <0> Læs mere.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
-msgstr "Optimistisk Etherscan"
+msgid "Optimistic Explorer"
+msgstr "Optimistisk Explorer"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1220,7 +1220,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Opret forbindelse til Layer 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Opret forbindelse til det relevante Ethereum-netværk."
 
 #: src/components/Settings/index.tsx
@@ -1938,8 +1938,8 @@ msgid "View list"
 msgstr "Vis liste"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Se på Etherscan"
+msgid "View on Explorer"
+msgstr "Se på Explorer"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2299,8 +2299,8 @@ msgstr "{0} Indbetalt"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

@@ -1180,8 +1180,8 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Az optimista Ethereum bétaverzióban van, és leállhat. Az optimizmus a tervezett leállásoktól a közeljövőben a hálózat korszerűsítését várja. Az állásidőben pozíciója nem jár díjakkal, és nem tudja eltávolítani a likviditást. <0> További információ.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
-msgstr "Optimista Etherscan"
+msgid "Optimistic Explorer"
+msgstr "Optimista Explorer"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1221,7 +1221,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Kérjük, csatlakozzon az 1. réteg Ethereumhoz"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Kérjük, csatlakozzon a megfelelő Ethereum hálózathoz."
 
 #: src/components/Settings/index.tsx
@@ -1939,8 +1939,8 @@ msgid "View list"
 msgstr "Lista megtekintése"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Nézd meg az Etherscan webhelyen"
+msgid "View on Explorer"
+msgstr "Nézd meg az Explorer webhelyen"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2300,8 +2300,8 @@ msgstr "{0} letétbe helyezve"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

@@ -1179,7 +1179,7 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Το Optimistic Ethereum βρίσκεται σε έκδοση Beta και ενδέχεται να αντιμετωπίσει διακοπές λειτουργίας. Η αισιοδοξία αναμένει προγραμματισμένο χρόνο διακοπής λειτουργίας για την αναβάθμιση του δικτύου στο εγγύς μέλλον. Κατά τη διάρκεια του χρόνου διακοπής, η θέση σας δεν θα κερδίσει τέλη και δεν θα μπορείτε να αφαιρέσετε τη ρευστότητα. <0> Διαβάστε περισσότερα.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
+msgid "Optimistic Explorer"
 msgstr "Αισιόδοξη Ethercan"
 
 #: src/components/Badge/RangeBadge.tsx
@@ -1220,7 +1220,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Συνδεθείτε στο Layer 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Συνδεθείτε στο κατάλληλο δίκτυο του Ethereum."
 
 #: src/components/Settings/index.tsx
@@ -1938,7 +1938,7 @@ msgid "View list"
 msgstr "Προβολή λίστας"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
+msgid "View on Explorer"
 msgstr "Θέα στο Ethercan"
 
 #: src/components/AccountDetails/index.tsx
@@ -2299,8 +2299,8 @@ msgstr "{0} Κατατέθηκε"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

@@ -1179,7 +1179,7 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Optimistinen Ethereum on betavaiheessa ja saattaa joutua seisokkeihin. Optimismi odottaa suunnitellun seisokin päivittävän verkon lähitulevaisuudessa. Seisokkien aikana asemasi ei ansaitse palkkioita etkä voi poistaa likviditeettiä. <0> Lue lisää.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
+msgid "Optimistic Explorer"
 msgstr "Optimistinen eetteriskannaus"
 
 #: src/components/Badge/RangeBadge.tsx
@@ -1220,7 +1220,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Muodosta yhteys kerrokseen 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Ole hyvä ja yhdistä asianmukaiseen Ethereum-verkkoon."
 
 #: src/components/Settings/index.tsx
@@ -1938,8 +1938,8 @@ msgid "View list"
 msgstr "Näytä luettelo"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Näkymä Etherscanissa"
+msgid "View on Explorer"
+msgstr "Näkymä Explorerissa"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2299,8 +2299,8 @@ msgstr "{0} talletettu"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

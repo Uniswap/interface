@@ -1179,8 +1179,8 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Matumaini Ethereum yuko katika Beta na anaweza kupata wakati wa kupumzika. Matumaini yanatarajia muda wa kupumzika uliopangwa kuboresha mtandao katika siku za usoni. Wakati wa kupumzika, msimamo wako hautapata ada na hautaweza kuondoa ukwasi. <0> Soma zaidi.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
-msgstr "Matarajio ya Etherscan"
+msgid "Optimistic Explorer"
+msgstr "Matarajio ya Explorer"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1220,7 +1220,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Tafadhali unganisha kwenye Tabaka 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Tafadhali unganisha kwa mtandao unaofaa wa Ethereum."
 
 #: src/components/Settings/index.tsx
@@ -1938,8 +1938,8 @@ msgid "View list"
 msgstr "Angalia orodha"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Angalia kwenye Etherscan"
+msgid "View on Explorer"
+msgstr "Angalia kwenye Explorer"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2299,8 +2299,8 @@ msgstr "{0} Iliyowekwa"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

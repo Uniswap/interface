@@ -1179,8 +1179,8 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "낙관적 이더리움은 베타 버전이며 가동 중지 시간이 발생할 수 있습니다. 낙관론은 가까운 장래에 네트워크를 업그레이드하기 위해 계획된 다운타임을 예상합니다. 다운타임 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
-msgstr "낙관적 Etherscan"
+msgid "Optimistic Explorer"
+msgstr "낙관적 Explorer"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1220,7 +1220,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "레이어 1 이더 리움에 연결하세요"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "적절한 이더리움 네트워크에 연결하십시오."
 
 #: src/components/Settings/index.tsx
@@ -1938,8 +1938,8 @@ msgid "View list"
 msgstr "목록 보기"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Etherscan에서보기"
+msgid "View on Explorer"
+msgstr "Explorer에서보기"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2299,8 +2299,8 @@ msgstr "{0} 예치됨"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
