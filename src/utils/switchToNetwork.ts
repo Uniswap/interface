@@ -3,6 +3,7 @@ import { hexStripZeros } from '@ethersproject/bytes'
 import { Web3Provider } from '@ethersproject/providers'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { INFURA_NETWORK_URLS } from 'constants/infura'
 
 interface SwitchNetworkArguments {
   library: Web3Provider
@@ -32,8 +33,8 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
           {
             chainId: formattedChainId,
             chainName: info.label,
-            rpcUrls: [info.addNetworkInfo.rpcUrl],
-            nativeCurrency: info.addNetworkInfo.nativeCurrency,
+            rpcUrls: [INFURA_NETWORK_URLS[chainId]],
+            nativeCurrency: info.nativeCurrency,
             blockExplorerUrls: [info.explorer],
           },
         ],

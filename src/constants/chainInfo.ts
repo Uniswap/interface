@@ -7,40 +7,6 @@ import polygonMaticLogo from '../assets/svg/polygon-matic-logo.svg'
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import { ARBITRUM_LIST, OPTIMISM_LIST } from './lists'
 
-const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
-if (typeof INFURA_KEY === 'undefined') {
-  throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
-}
-
-/**
- * These are the network URLs used by the interface when there is not another available source of chain data
- */
-export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
-  [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.OPTIMISM]: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.OPTIMISTIC_KOVAN]: `https://optimism-kovan.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.ARBITRUM_ONE]: `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.ARBITRUM_RINKEBY]: `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.POLYGON]: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.POLYGON_MUMBAI]: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
-}
-
-/**
- * This is used to call the add network RPC
- */
-interface AddNetworkInfo {
-  readonly rpcUrl: string
-  readonly nativeCurrency: {
-    name: string // e.g. 'Goerli ETH',
-    symbol: string // e.g. 'gorETH',
-    decimals: number // e.g. 18,
-  }
-}
-
 export enum NetworkType {
   L1,
   L2,
@@ -56,7 +22,11 @@ interface BaseChainInfo {
   readonly logoUrl: string
   readonly label: string
   readonly helpCenterUrl?: string
-  readonly addNetworkInfo: AddNetworkInfo
+  readonly nativeCurrency: {
+    name: string // e.g. 'Goerli ETH',
+    symbol: string // e.g. 'gorETH',
+    decimals: number // e.g. 18,
+  }
 }
 
 export interface L1ChainInfo extends BaseChainInfo {
@@ -83,10 +53,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
     logoUrl: ethereumLogoUrl,
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
-    },
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   },
   [SupportedChainId.RINKEBY]: {
     networkType: NetworkType.L1,
@@ -95,10 +62,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Rinkeby',
     logoUrl: ethereumLogoUrl,
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rETH', decimals: 18 },
-      rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.RINKEBY],
-    },
+    nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rETH', decimals: 18 },
   },
   [SupportedChainId.ROPSTEN]: {
     networkType: NetworkType.L1,
@@ -107,10 +71,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ropsten',
     logoUrl: ethereumLogoUrl,
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
-      rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.ROPSTEN],
-    },
+    nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
   },
   [SupportedChainId.KOVAN]: {
     networkType: NetworkType.L1,
@@ -119,10 +80,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Kovan',
     logoUrl: ethereumLogoUrl,
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Kovan Ether', symbol: 'kovETH', decimals: 18 },
-      rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.KOVAN],
-    },
+    nativeCurrency: { name: 'Kovan Ether', symbol: 'kovETH', decimals: 18 },
   },
   [SupportedChainId.GOERLI]: {
     networkType: NetworkType.L1,
@@ -131,10 +89,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
     logoUrl: ethereumLogoUrl,
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
-      rpcUrl: INFURA_NETWORK_URLS[SupportedChainId.GOERLI],
-    },
+    nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
   },
   [SupportedChainId.OPTIMISM]: {
     networkType: NetworkType.L2,
@@ -148,10 +103,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     logoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrl: 'https://mainnet.optimism.io',
-    },
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
     networkType: NetworkType.L2,
@@ -165,10 +117,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     logoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Optimistic Kovan Ether', symbol: 'kovOpETH', decimals: 18 },
-      rpcUrl: 'https://kovan.optimism.io',
-    },
+    nativeCurrency: { name: 'Optimistic Kovan Ether', symbol: 'kovOpETH', decimals: 18 },
   },
   [SupportedChainId.ARBITRUM_ONE]: {
     networkType: NetworkType.L2,
@@ -181,10 +130,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     logoUrl: arbitrumLogoUrl,
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrl: 'https://arb1.arbitrum.io/rpc',
-    },
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   },
   [SupportedChainId.ARBITRUM_RINKEBY]: {
     networkType: NetworkType.L2,
@@ -197,10 +143,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     logoUrl: arbitrumLogoUrl,
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Rinkeby Arbitrum Ether', symbol: 'rinkArbETH', decimals: 18 },
-      rpcUrl: 'https://rinkeby.arbitrum.io/rpc',
-    },
+    nativeCurrency: { name: 'Rinkeby Arbitrum Ether', symbol: 'rinkArbETH', decimals: 18 },
   },
   [SupportedChainId.POLYGON]: {
     networkType: NetworkType.L1,
@@ -211,10 +154,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
     logoUrl: polygonMaticLogo,
-    addNetworkInfo: {
-      rpcUrl: 'https://polygon-rpc.com/',
-      nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
-    },
+    nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
   },
   [SupportedChainId.POLYGON_MUMBAI]: {
     networkType: NetworkType.L1,
@@ -225,9 +165,6 @@ export const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon Mumbai',
     logoUrl: polygonMaticLogo,
-    addNetworkInfo: {
-      nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
-      rpcUrl: 'https://rpc-endpoints.superfluid.dev/mumbai',
-    },
+    nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
   },
 }

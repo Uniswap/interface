@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { AlphaRouterParams } from '@uniswap/smart-order-router'
-import { INFURA_NETWORK_URLS } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { INFURA_NETWORK_URLS } from 'constants/infura'
 
 import { AUTO_ROUTER_SUPPORTED_CHAINS } from './constants'
 
