@@ -2,14 +2,16 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { Text } from 'src/components/Text'
 import { ChainId, MAINNET_CHAIN_IDS } from 'src/constants/chains'
+import { ChainIdToAddressToCurrencyAmount } from 'src/features/balances/hooks'
 import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
+import { flattenObjectOfObjects } from 'src/utils/objects'
 
 interface TotalBalanceViewProps {
-  balances: CurrencyAmount<Currency>[]
+  balances: ChainIdToAddressToCurrencyAmount
 }
 
 function useTotalBalance(
@@ -39,9 +41,10 @@ function useTotalBalance(
 }
 
 export function TotalBalance({ balances }: TotalBalanceViewProps) {
-  const currenciesToFetch = balances.map((currencyAmount) => currencyAmount.currency)
+  const allBalances = flattenObjectOfObjects(balances)
+  const currenciesToFetch = allBalances.map((currencyAmount) => currencyAmount.currency)
   const tokenPricesByChain = useTokenPrices(currenciesToFetch)
-  const totalBalance = useTotalBalance(balances, tokenPricesByChain)
+  const totalBalance = useTotalBalance(allBalances, tokenPricesByChain)
 
   return <Text variant="h1">{`${formatUSDPrice(totalBalance)}`}</Text>
 }

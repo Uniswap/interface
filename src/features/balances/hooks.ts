@@ -17,7 +17,7 @@ import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
-type ChainIdToAddressToCurrencyAmount = ChainIdToAddressTo<CurrencyAmount<Currency>>
+export type ChainIdToAddressToCurrencyAmount = ChainIdToAddressTo<CurrencyAmount<Currency>>
 
 const BLOCKS_PER_FETCH = 3
 const ERC20Interface = new utils.Interface(ERC20_ABI)

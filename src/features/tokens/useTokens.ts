@@ -9,7 +9,7 @@ import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
 import { ChainIdToAddressToCurrency, ChainIdToAddressToToken } from 'src/features/tokens/types'
 import { useUserAddedTokens } from 'src/features/tokens/userAddedTokens'
-import { toSupportedChain } from 'src/utils/chainId'
+import { toSupportedChainId } from 'src/utils/chainId'
 import { getKeys } from 'src/utils/objects'
 
 export function useAllTokens(): ChainIdToAddressToToken {
@@ -61,7 +61,7 @@ function useTokensFromListedMap(
     // reduce to just tokens
     const mapWithoutUrls: ChainIdToAddressToToken = {}
     for (const _chainId of getKeys(listedTokenMap)) {
-      const chainId = toSupportedChain(_chainId)
+      const chainId = toSupportedChainId(_chainId)
       if (!chainId) continue
       for (const tokenAddr of getKeys(listedTokenMap[chainId])) {
         const tokenInfo = listedTokenMap[chainId][tokenAddr]
@@ -76,7 +76,7 @@ function useTokensFromListedMap(
           // reduce into all ALL_TOKENS filtered by the current chain
           .reduce<ChainIdToAddressToToken>(
             (newMap, token) => {
-              const chainId = toSupportedChain(token.chainId)
+              const chainId = toSupportedChainId(token.chainId)
               if (!chainId) return newMap
               newMap[chainId] ??= {}
               newMap[chainId]![token.address] = token

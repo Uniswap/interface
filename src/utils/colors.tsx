@@ -30,7 +30,7 @@ export function useNetworkColors(chainId: ChainId) {
   const theme = useAppTheme()
 
   const foreground = theme.colors[`chain_${chainId}`]
-  assert(foreground, 'Netowrk color is not defined in Theme')
+  assert(foreground, 'Network color is not defined in Theme')
 
   return {
     foreground,

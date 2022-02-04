@@ -1,4 +1,3 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
@@ -11,6 +10,7 @@ import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
+import { ChainIdToAddressToCurrencyAmount } from 'src/features/balances/hooks'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { Account } from 'src/features/wallet/accounts/types'
 import { dimensions } from 'src/styles/sizing'
@@ -19,7 +19,7 @@ import { opacify } from 'src/utils/colors'
 
 interface Props {
   account: Account
-  balances: CurrencyAmount<Currency>[]
+  balances: ChainIdToAddressToCurrencyAmount
   isActive?: boolean
   onPress?: (address: Address) => void
   onPressQRCode: () => void

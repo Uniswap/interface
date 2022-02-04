@@ -18,7 +18,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { WalletQRCode } from 'src/components/modals/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
-import { useAllBalances } from 'src/features/balances/hooks'
+import { useAllBalancesByChainId } from 'src/features/balances/hooks'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
@@ -44,7 +44,7 @@ export function HomeScreen({ navigation }: Props) {
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
   const chainIdToTokens = useAllTokens()
-  const { balances, allCurrencyAmounts, loading } = useAllBalances(
+  const { balances, loading } = useAllBalancesByChainId(
     currentChains,
     chainIdToTokens,
     activeAccount?.address
@@ -86,7 +86,7 @@ export function HomeScreen({ navigation }: Props) {
       <GradientBackground height="100%">
         <PinkToBlueLinear />
       </GradientBackground>
-      <Flex gap="md" pb="xs" pt="lg" px="lg">
+      <Flex gap="md" mt="lg" mx="lg">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between">
           <AccountHeader />
           <Flex flexDirection="row">
@@ -123,13 +123,12 @@ export function HomeScreen({ navigation }: Props) {
             </Button>
           </Box>
         )}
-
         <WalletQRCode isVisible={showQRModal} onClose={onCloseQrCode} />
       </Flex>
       <Box bg="mainBackground" flex={1}>
         <TokenBalanceList
           balances={balances}
-          loading={loading && !allCurrencyAmounts.length}
+          loading={loading}
           refreshing={refreshing}
           onPressToken={onPressToken}
           onRefresh={onRefresh}
