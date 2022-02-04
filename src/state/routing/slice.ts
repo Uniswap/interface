@@ -5,15 +5,13 @@ import { ChainId } from '@uniswap/smart-order-router'
 import { AlphaRouterParams } from '@uniswap/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
-import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { AUTO_ROUTER_SUPPORTED_CHAINS, getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
 
 import { GetQuoteResult } from './types'
 
-const routerParams = (Object.values(ChainId) as ChainId[]).reduce<
-  { [chainId in SupportedChainId]?: AlphaRouterParams }
->(
+const routerParams = AUTO_ROUTER_SUPPORTED_CHAINS.reduce<{ [chainId in SupportedChainId]?: AlphaRouterParams }>(
   (params, chainId) => ({
     ...params,
     [chainId]: {
