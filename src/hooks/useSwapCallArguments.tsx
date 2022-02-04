@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { FeeOptions, SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
@@ -36,7 +36,8 @@ export function useSwapCallArguments(
   allowedSlippage: Percent,
   recipientAddressOrName: string | null | undefined,
   signatureData: SignatureData | null | undefined,
-  deadline: BigNumber | undefined
+  deadline: BigNumber | undefined,
+  feeOptions: FeeOptions | undefined
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -98,6 +99,7 @@ export function useSwapCallArguments(
     } else {
       // swap options shared by v3 and v2+v3 swap routers
       const sharedSwapOptions = {
+        fee: feeOptions,
         recipient,
         slippageTolerance: allowedSlippage,
         ...(signatureData
@@ -167,15 +169,16 @@ export function useSwapCallArguments(
       ]
     }
   }, [
-    trade,
-    recipient,
-    library,
     account,
-    chainId,
-    deadline,
-    routerContract,
     allowedSlippage,
     argentWalletContract,
+    chainId,
+    deadline,
+    feeOptions,
+    library,
+    recipient,
+    routerContract,
     signatureData,
+    trade,
   ])
 }

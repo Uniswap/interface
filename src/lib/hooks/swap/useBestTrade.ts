@@ -7,6 +7,48 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import useClientSideSmartOrderRouterTrade from '../routing/useClientSideSmartOrderRouterTrade'
 
 /**
+ * Returns the currency amount from independent field, currency from independent field,
+ * and currency from dependent field.
+ */
+function getTradeInputs(
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  tradeType: TradeType
+): [CurrencyAmount<Currency> | undefined, Currency | undefined, Currency | undefined] {
+  if (trade) {
+    if (tradeType === TradeType.EXACT_INPUT) {
+      return [trade.inputAmount, trade.inputAmount.currency, trade.outputAmount.currency]
+    }
+    if (tradeType === TradeType.EXACT_OUTPUT) {
+      return [trade.outputAmount, trade.outputAmount.currency, trade.inputAmount.currency]
+    }
+  }
+  return [undefined, undefined, undefined]
+}
+
+interface TradeDebouncingParams {
+  amounts: [CurrencyAmount<Currency> | undefined, CurrencyAmount<Currency> | undefined]
+  indepdenentCurrencies: [Currency | undefined, Currency | undefined]
+  dependentCurrencies: [Currency | undefined, Currency | undefined]
+}
+
+/**
+ * Returns wether debounced values are stale compared to latest values from trade.
+ */
+function isTradeDebouncing({ amounts, indepdenentCurrencies, dependentCurrencies }: TradeDebouncingParams): boolean {
+  // Ensure that amount from user input matches latest trade.
+  const amountsMatch = amounts[0] && amounts[1]?.equalTo(amounts[0])
+
+  // Ensure active swap currencies match latest trade.
+  const currenciesMatch =
+    indepdenentCurrencies[0] &&
+    indepdenentCurrencies[1]?.equals(indepdenentCurrencies[0]) &&
+    dependentCurrencies[0] &&
+    dependentCurrencies[1]?.equals(dependentCurrencies[0])
+
+  return !amountsMatch || !currenciesMatch
+}
+
+/**
  * Returns the best v2+v3 trade for a desired swap.
  * @param tradeType whether the swap is an exact in/out
  * @param amountSpecified the exact amount to swap in/out
@@ -20,33 +62,34 @@ export function useBestTrade(
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
-  // debounce used to prevent excessive requests to SOR, as it is data intensive
-  // this helps provide a "syncing" state the UI can reference for loading animations
+  // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
+  // This helps provide a "syncing" state the UI can reference for loading animations.
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
     200
   )
 
-  const routingAPITrade = useClientSideSmartOrderRouterTrade(tradeType, debouncedAmount, debouncedOtherCurrency)
+  const clientSORTrade = useClientSideSmartOrderRouterTrade(tradeType, debouncedAmount, debouncedOtherCurrency)
 
-  const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
+  const [amountFromLatestTrade, currencyFromTrade, otherCurrencyFromTrade] = getTradeInputs(
+    clientSORTrade.trade,
+    tradeType
+  )
 
-  // consider trade debouncing when inputs/outputs do not match
   const debouncing =
-    routingAPITrade.trade &&
-    amountSpecified &&
-    (tradeType === TradeType.EXACT_INPUT
-      ? !routingAPITrade.trade.inputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(routingAPITrade.trade.inputAmount.currency) ||
-        !debouncedOtherCurrency?.equals(routingAPITrade.trade.outputAmount.currency)
-      : !routingAPITrade.trade.outputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
-        !debouncedOtherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
+    (amountSpecified && debouncedAmount && amountSpecified !== debouncedAmount) ||
+    (debouncedOtherCurrency && otherCurrency && debouncedOtherCurrency !== otherCurrency)
 
-  const useFallback = !debouncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND
+  const syncing = isTradeDebouncing({
+    amounts: [amountFromLatestTrade, debouncedAmount],
+    indepdenentCurrencies: [currencyFromTrade, debouncedOtherCurrency],
+    dependentCurrencies: [otherCurrencyFromTrade, otherCurrency],
+  })
 
-  // use simple client side logic as backup if SOR is not available
-  const bestV3Trade = useClientSideV3Trade(
+  const useFallback = !syncing && clientSORTrade.state === TradeState.NO_ROUTE_FOUND
+
+  // Use a simple client side logic as backup if SOR is not available.
+  const fallbackTrade = useClientSideV3Trade(
     tradeType,
     useFallback ? debouncedAmount : undefined,
     useFallback ? debouncedOtherCurrency : undefined
@@ -54,10 +97,10 @@ export function useBestTrade(
 
   return useMemo(
     () => ({
-      ...(useFallback ? bestV3Trade : routingAPITrade),
-      ...(debouncing ? { state: TradeState.SYNCING } : {}),
-      ...(isLoading ? { state: TradeState.LOADING } : {}),
+      ...(useFallback ? fallbackTrade : clientSORTrade),
+      ...(syncing ? { state: TradeState.SYNCING } : {}),
+      ...(debouncing ? { state: TradeState.LOADING } : {}),
     }),
-    [bestV3Trade, debouncing, isLoading, routingAPITrade, useFallback]
+    [debouncing, fallbackTrade, syncing, clientSORTrade, useFallback]
   )
 }

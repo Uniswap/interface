@@ -6,8 +6,7 @@ import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
-import { useCallback, useMemo } from 'react'
-import { TradeState } from 'state/routing/types'
+import { useMemo } from 'react'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
@@ -53,10 +52,11 @@ export default function Input({ disabled }: InputProps) {
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
 
-  const onMax = useCallback(() => {
-    if (balance) {
-      updateSwapInputAmount(balance.toExact())
+  const onMax = useMemo(() => {
+    if (balance?.greaterThan(0)) {
+      return () => updateSwapInputAmount(balance.toExact())
     }
+    return
   }, [balance, updateSwapInputAmount])
 
   return (
