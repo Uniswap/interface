@@ -35,6 +35,10 @@ msgstr "(${0})"
 msgid "(Max)"
 msgstr "(Максимум)"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0}"
+msgstr "Баланс: {0}"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(Переглянути у Провіднику)"

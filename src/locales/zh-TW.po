@@ -32,6 +32,10 @@ msgid "(${0})"
 msgstr "(${0})"
 
 #: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0}"
+msgstr "Balance: {0}"
+
+#: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(最大值)"
 
