@@ -1,5 +1,5 @@
 import { appSelect } from 'src/app/hooks'
-import { AccountBase } from 'src/features/wallet/accounts/types'
+import { Account } from 'src/features/wallet/accounts/types'
 import {
   accountsSelector,
   editAccount as editInStore,
@@ -46,7 +46,7 @@ function* editAccount(params: EditAccountParams) {
   logger.info('editAccountSaga', 'editAccount', 'New account created:', address)
 }
 
-function* renameAccount(params: RenameParams, account: AccountBase) {
+function* renameAccount(params: RenameParams, account: Account) {
   const { address, newName } = params
   logger.info('editAccountSaga', 'renameAccount', 'Renaming account', address)
   account.name = newName
@@ -54,8 +54,7 @@ function* renameAccount(params: RenameParams, account: AccountBase) {
     editInStore({
       address,
       updatedAccount: {
-        type: account.type,
-        address,
+        ...account,
         name: newName,
       },
     })

@@ -27,7 +27,7 @@ export function* importAccount(params: ImportAccountParams) {
 
 function* importAddressAccount(address: string, name?: string) {
   const formattedAddress = normalizeAddress(address)
-  const account = { type: AccountType.Readonly, address: formattedAddress, name }
+  const account: Account = { type: AccountType.Readonly, address: formattedAddress, name }
   yield* call(onAccountImport, account)
 }
 

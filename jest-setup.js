@@ -35,3 +35,6 @@ jest.mock('src/lib/RNEthersRs')
 // Mock Firebase Remote Config
 jest.mock('@react-native-firebase/remote-config', () => {})
 jest.mock('@react-native-firebase/analytics', () => {})
+
+// Ledger bluetooth library doesn't have JS mock
+jest.mock('@ledgerhq/react-native-hw-transport-ble', () => {})

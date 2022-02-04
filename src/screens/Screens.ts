@@ -8,6 +8,7 @@ export enum Screens {
   Explore = 'Explore',
   Home = 'Home',
   ImportAccount = 'ImportAccount',
+  Ledger = 'Ledger',
   Notifications = 'Notifications',
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',

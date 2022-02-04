@@ -18,6 +18,7 @@ import { DevScreen } from 'src/screens/DevScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
+import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
@@ -96,6 +97,7 @@ function AccountStackGroup() {
     <AccountStack.Navigator screenOptions={navOptions.noHeader}>
       <AccountStack.Screen component={AccountsScreen} name={Screens.Accounts} />
       <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
+      <AccountStack.Screen component={LedgerScreen} name={Screens.Ledger} />
     </AccountStack.Navigator>
   )
 }

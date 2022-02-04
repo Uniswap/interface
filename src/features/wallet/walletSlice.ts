@@ -3,16 +3,29 @@ import type { RootState } from 'src/app/rootReducer'
 import { Account } from 'src/features/wallet/accounts/types'
 import { areAddressesEqual, normalizeAddress } from 'src/utils/addresses'
 
+export enum HardwareDeviceType {
+  LEDGER = 'LEDGER',
+}
+
+interface HardwareDevice {
+  type: HardwareDeviceType
+  id: string
+}
+
 interface Wallet {
   isUnlocked: boolean
   accounts: Record<Address, Account>
   activeAccount: Account | null
+  hardwareDevices: HardwareDevice[]
+  bluetooth: boolean
 }
 
 const initialState: Wallet = {
   isUnlocked: false,
   accounts: {},
   activeAccount: null,
+  hardwareDevices: [],
+  bluetooth: false,
 }
 
 const slice = createSlice({
@@ -51,6 +64,13 @@ const slice = createSlice({
       state.isUnlocked = true
     },
     resetWallet: () => initialState,
+    addHardwareDevice: (state, action: PayloadAction<HardwareDevice>) => {
+      state.hardwareDevices ??= []
+      state.hardwareDevices.push(action.payload)
+    },
+    toggleBluetooth: (state, action: PayloadAction<boolean>) => {
+      state.bluetooth = action.payload
+    },
   },
 })
 
@@ -64,6 +84,8 @@ export const {
   activateAccount,
   unlockWallet,
   resetWallet,
+  addHardwareDevice,
+  toggleBluetooth,
 } = slice.actions
 
 export const walletReducer = slice.reducer

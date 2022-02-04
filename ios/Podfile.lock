@@ -143,6 +143,7 @@ PODS:
     - MLImage (= 1.0.0-beta2)
     - MLKitCommon (~> 5.0)
     - Protobuf (~> 3.12)
+  - MultiplatformBleAdapter (0.1.9)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -365,6 +366,9 @@ PODS:
   - React-jsinspector (0.66.0)
   - React-logger (0.66.0):
     - glog
+  - react-native-ble-plx (2.0.3):
+    - MultiplatformBleAdapter (= 0.1.9)
+    - React-Core
   - react-native-get-random-values (1.7.0):
     - React-Core
   - react-native-safe-area-context (3.3.2):
@@ -531,6 +535,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -583,6 +588,7 @@ SPEC REPOS:
     - MLKitTextRecognition
     - MLKitTextRecognitionCommon
     - MLKitVision
+    - MultiplatformBleAdapter
     - nanopb
     - PromisesObjC
     - Protobuf
@@ -643,6 +649,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-ble-plx:
+    :path: "../node_modules/react-native-ble-plx"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
   react-native-safe-area-context:
@@ -735,6 +743,7 @@ SPEC CHECKSUMS:
   MLKitTextRecognition: 8b0e0023a4babc66ca83d8b82864e57931164445
   MLKitTextRecognitionCommon: 3e84602c928fe2b775fae81376f2136324cbd763
   MLKitVision: e87dc3f2e456a6ab32361ebd985e078dd2746143
+  MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Protobuf: 3724efa50cb2846d7ccebc8691c574e85fd74471
@@ -751,6 +760,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 6a05173dc0142abc582bd4edd2d23146b8cc218a
   React-jsinspector: be95ad424ba9f7b817aff22732eb9b1b810a000a
   React-logger: 9a9cd87d4ea681ae929b32ef580638ff1b50fb24
+  react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-get-random-values: 237bffb1c7e05fb142092681531810a29ba53015
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-webview: b83cf1aa6b4453fe53ffcc5896c36cdf37f0383f

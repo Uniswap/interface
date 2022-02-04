@@ -1,4 +1,5 @@
 export enum AccountType {
+  Ledger = 'ledger',
   Local = 'local', // Key lives in JS, essentially just a normal ethers Wallet
   Native = 'native', // Key lives in native keystore
   WalletConnect = 'walletConnect', // Account connected over WalletConnect protocol
@@ -29,4 +30,15 @@ export interface ReadOnlyAccount extends AccountBase {
   type: AccountType.Readonly
 }
 
-export type Account = LocalAccount | NativeAccount | WalletConnectAccount | ReadOnlyAccount
+export interface LedgerAccount extends AccountBase {
+  type: AccountType.Ledger
+  deviceId: string
+  path: string
+}
+
+export type Account =
+  | LedgerAccount
+  | LocalAccount
+  | NativeAccount
+  | ReadOnlyAccount
+  | WalletConnectAccount

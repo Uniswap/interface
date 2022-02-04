@@ -39,6 +39,12 @@ import {
   editAccountSaga,
   editAccountSagaName,
 } from 'src/features/wallet/editAccountSaga'
+import {
+  ledgerActions,
+  ledgerReducer,
+  ledgerSaga,
+  ledgerSagaName,
+} from 'src/features/wallet/ledgerSaga'
 import { SagaActions, SagaState } from 'src/utils/saga'
 
 // All regular sagas must be included here
@@ -78,6 +84,12 @@ export const monitoredSagas: {
     wrappedSaga: importAccountSaga,
     reducer: importAccountReducer,
     actions: importAccountActions,
+  },
+  [ledgerSagaName]: {
+    name: ledgerSagaName,
+    wrappedSaga: ledgerSaga,
+    reducer: ledgerReducer,
+    actions: ledgerActions,
   },
   [transferTokenSagaName]: {
     name: transferTokenSagaName,

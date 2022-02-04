@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native'
 import { AccountStackScreenProp } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
@@ -26,6 +27,10 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
 
   const onNamingSuccess = () => {
     navigation.navigate(Screens.Accounts)
+  }
+
+  const connectLedger = () => {
+    navigation.navigate(Screens.Ledger)
   }
 
   const { t } = useTranslation()
@@ -60,6 +65,14 @@ export function ImportAccountScreen({ navigation }: AccountStackScreenProp<Scree
               />
             </>
           )}
+          <Box alignItems="center" mt="lg">
+            <Text color="gray600" variant="body">
+              {t('Looking for more options?')}
+            </Text>
+            <TextButton textColor="primary1" textVariant="body" onPress={connectLedger}>
+              {t('Connect a Ledger Nano X')}
+            </TextButton>
+          </Box>
         </Box>
       </KeyboardAvoidingView>
     </SheetScreen>

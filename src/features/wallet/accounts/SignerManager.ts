@@ -1,4 +1,5 @@
 import { Signer, Wallet } from 'ethers'
+import { BluetoothLedgerSigner } from 'src/features/wallet/accounts/BluetoothLedgerSigner'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { getAddressesForStoredPrivateKeys } from 'src/lib/RNEthersRs'
@@ -30,6 +31,11 @@ export class SignerManager {
       } else {
         throw new Error('Account must have private key or mnemonic')
       }
+    }
+
+    if (account.type === AccountType.Ledger) {
+      this._signers[account.address] = new BluetoothLedgerSigner(account.deviceId)
+      return this._signers[account.address]
     }
 
     throw Error('Signer type currently unsupported')
