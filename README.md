@@ -47,14 +47,4 @@ If Typescript in VSCode is slow to see the change, you can restart the typescrip
 
 ### E2E Tests
 
-The e2e tests use [detox](https://github.com/wix/Detox). To run them, you need to build:
-
-```
-detox build --configuration ios
-```
-
-And then run:
-
-```
-detox test --configuration ios
-```
+See [e2e/README.md](e2e/README.md)

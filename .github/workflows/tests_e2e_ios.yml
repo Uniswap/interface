@@ -153,14 +153,14 @@ jobs:
         # With a little delay so the detox test below has time to spawn it, missing the first part of boot is fine
         # If you boot the simulator separately from detox, some other race fails and detox testee never sends ready to proxy
         continue-on-error: true
-        run: nohup sh -c "sleep 30 && xcrun simctl spawn booted log stream --level debug --style compact > simulator.log 2>&1 &"
+        run: nohup sh -c "sleep 30 && xcrun simctl spawn booted log stream --style compact > simulator.log 2>&1 &"
 
       - name: Hardhat Fork Mainnet
         run: yarn hardhat &
 
       - name: Detox Test
         timeout-minutes: 60
-        run: RN_SRC_EXT=e2e.js yarn detox test -c ios.sim.debug --cleanup --debug-synchronization 500 --record-videos failing --loglevel trace --record-logs all
+        run: RN_SRC_EXT=e2e.js yarn detox test -c ios.sim.debug --cleanup --record-videos failing
 
       - name: Upload Detox Artifacts
         uses: actions/upload-artifact@v2
