@@ -271,7 +271,7 @@ export default function Manage({
                   </ThemedText.White>
                   <ThemedText.White>
                     <Trans>
-                      UNI-V2 {currencyA?.symbol}-{currencyB?.symbol}
+                      XSP {currencyA?.symbol}-{currencyB?.symbol}
                     </Trans>
                   </ThemedText.White>
                 </RowBetween>
@@ -343,7 +343,7 @@ export default function Manage({
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? (
                   <Trans>Deposit</Trans>
                 ) : (
-                  <Trans>Deposit UNI-V2 LP Tokens</Trans>
+                  <Trans>Deposit XSP LP Tokens</Trans>
                 )}
               </ButtonPrimary>
             )}
@@ -364,7 +364,7 @@ export default function Manage({
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
           <ThemedText.Main>
-            <Trans>{userLiquidityUnstaked.toSignificant(6)} UNI-V2 LP tokens available</Trans>
+            <Trans>{userLiquidityUnstaked.toSignificant(6)} XSP LP tokens available</Trans>
           </ThemedText.Main>
         )}
       </PositionInfo>

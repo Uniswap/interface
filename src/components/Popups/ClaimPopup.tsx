@@ -112,7 +112,7 @@ export default function ClaimPopup() {
             </ThemedText.White>
             <ThemedText.SubHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
               <Trans>
-                Thanks for being part of the Uniswap community <Heart size={12} />
+                Thanks for being part of the XSwapProtocol community <Heart size={12} />
               </Trans>
             </ThemedText.SubHeader>
           </AutoColumn>

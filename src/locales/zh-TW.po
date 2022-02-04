@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: x-swap-protocol\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-11-18 19:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: x-swap-protocol\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: zh-TW\n"
 "X-Crowdin-File: en-US.po\n"
@@ -63,8 +63,8 @@ msgstr "- 刪除接收人"
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
-msgid "0 UNI / week"
-msgstr "0 UNI 代幣 / 每周"
+msgid "0 XSP / week"
+msgstr "0 XSP 代幣 / 每周"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -120,8 +120,8 @@ msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉</0>歡迎加入Unicorn（獨角獸）團隊 :) <1>🎉</1>"
 
 #: src/pages/Vote/Landing.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "提交提案所需的最低門檻為 UNI 總供應量的 0.25%"
+msgid "A minimum threshold of 0.25% of the total XSP supply is required to submit proposals"
+msgstr "提交提案所需的最低門檻為 XSP 總供應量的 0.25%"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -146,8 +146,8 @@ msgid "Add"
 msgstr "新增"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "將 <0/> 和 <1/> 添加到 Uniswap V2"
+msgid "Add <0/> and <1/> to XSwapProtocol"
+msgstr "將 <0/> 和 <1/> 添加到 XSwapProtocol"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -203,8 +203,8 @@ msgid "Allow high price impact trades and skip the confirm screen. Use at your o
 msgstr "允許高兌換率影響的交易，並跳過確認步驟。須自行承擔使用風險。"
 
 #: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "允許 Uniswap 使用您的 {0}"
+msgid "Allow the X-Swap-Protocol to use your {0}"
+msgstr "允許 XSwapProtocol 使用您的 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -219,8 +219,8 @@ msgid "Amount"
 msgstr "數額"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限制。如果還是不行，則可能是您正在交易的代幣與Uniswap不兼容。注：Uniswap V3不兼容轉賬時帶扣除費用（fee-on-transfer）的代幣和彈性供應（rebase）代幣。"
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限制。如果還是不行，則可能是您正在交易的代幣與XSwapProtocol不兼容。注：XSwapProtocol Next不兼容轉賬時帶扣除費用（fee-on-transfer）的代幣和彈性供應（rebase）代幣。"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -272,8 +272,8 @@ msgid "Are you sure?"
 msgstr "您確定嗎？"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "作為 Uniswap 社群的成員，您可以認領 UNI 代幣，用於投票和治理。<0/><1/><2>閱讀更多關於 UNI 代幣的訊息</2>"
+msgid "As a member of the XSwapProtocol community you may claim XSP to be used for voting and governance.<0/><1/><2>Read more about XSP</2>"
+msgstr "作為 XSwapProtocol 社群的成員，您可以認領 XSP 代幣，用於投票和治理。<0/><1/><2>閱讀更多關於 XSP 代幣的訊息</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -333,7 +333,7 @@ msgstr "添加此代幣列表代表您信任其數據是正確的。任何人都
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
-msgstr "連接錢包即表示您同意 XSwapProtocol 的 <0>服務條款</0> 並確認您已閱讀並理解 Uniswap <1>協議免責聲明</1>。"
+msgstr "連接錢包即表示您同意 XSwapProtocol 的 <0>服務條款</0> 並確認您已閱讀並理解 XSwapProtocol <1>協議免責聲明</1>。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -370,24 +370,24 @@ msgstr "為 {0} 領取 <0/>"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
-msgstr "領取 UNI"
+msgid "Claim XSP"
+msgstr "領取 XSP"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
-msgstr "領取 UNI 代幣"
+msgid "Claim XSP Token"
+msgstr "領取 XSP 代幣"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Claim UNI reward for {0}"
-msgstr "{0} 索取 UNI 獎勵"
+msgid "Claim XSP reward for {0}"
+msgstr "{0} 索取 XSP 獎勵"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "領取手續費"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Claim your UNI tokens"
-msgstr "領取您的 UNI 代幣"
+msgid "Claim your XSP tokens"
+msgstr "領取您的 XSP 代幣"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -395,8 +395,8 @@ msgstr "已領取"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Claimed UNI!"
-msgstr "已領取 UNI 代幣！"
+msgid "Claimed XSP!"
+msgstr "已領取 XSP 代幣！"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
@@ -408,13 +408,13 @@ msgid "Claiming"
 msgstr "領取中"
 
 #: src/components/Header/index.tsx
-msgid "Claiming UNI"
-msgstr "正在領取 UNI 代幣"
+msgid "Claiming XSP"
+msgstr "正在領取 XSP 代幣"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Claiming {0} UNI"
-msgstr "正在領取 {0} UNI 代幣"
+msgid "Claiming {0} XSP"
+msgstr "正在領取 {0} XSP 代幣"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -625,24 +625,24 @@ msgid "Deposit Assets"
 msgstr "存入資產"
 
 #: src/pages/Earn/Manage.tsx
-msgid "Deposit UNI-V2 LP Tokens"
-msgstr "存入 UNI-V2 流動池代幣"
+msgid "Deposit XSP LP Tokens"
+msgstr "存入 XSP-V2 流動池代幣"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "存入流動資金"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "存入您的流動池代幣以領取 UNI（Uniswap 的治理代幣）。"
+msgid "Deposit your Liquidity Provider tokens to receive XSP, the XSwapProtocol governance token."
+msgstr "存入您的流動池代幣以領取 XSP（XSwapProtocol 的治理代幣）。"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "已存入的流動資金："
 
 #: src/components/earn/StakingModal.tsx
-msgid "Deposited {0} UNI-V2"
-msgstr "已存入 {0} UNI-V2"
+msgid "Deposited {0} XSP"
+msgstr "已存入 {0} XSP"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
@@ -681,8 +681,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "看不到您的一些 v2 流動資金嗎？<0>將它手動導入。</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "已賺取的 UNI 代幣代表了 Uniswap 治理中的投票份額。"
+msgid "Earned XSP tokens represent voting shares in XSwapProtocol governance."
+msgstr "已賺取的 XSP 代幣代表了 XSwapProtocol 治理中的投票份額。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -705,8 +705,8 @@ msgid "Enter a valid slippage percentage"
 msgstr "輸入有效的兌換率滑點百分比"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "輸入地址來查看領取 UNI 代幣的資質。如果地址有任何可領取的 UNI，代幣將在提交領取申請後自動發送。"
+msgid "Enter an address to trigger a XSP claim. If the address has any claimable XSP it will be sent to them on submission."
+msgstr "輸入地址來查看領取 XSP 代幣的資質。如果地址有任何可領取的 XSP，代幣將在提交領取申請後自動發送。"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -766,8 +766,8 @@ msgid "Expired"
 msgstr "已過期"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "在 Uniswap 數據分析中探索較受歡迎的流動池。"
+msgid "Explore popular pools on XSwapProtocol Analytics."
+msgstr "在 XSwapProtocol 數據分析中探索較受歡迎的流動池。"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
@@ -786,8 +786,8 @@ msgid "For"
 msgstr "贊成"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "對於下面顯示的每個流動池，單擊“遷移”以從 Uniswap V2 贖回您的流動資金，並將其註入到 Uniswap V3。"
+msgid "For each pool shown below, click migrate to remove your liquidity from XSwapProtocol and deposit it into XSwapProtocol Next."
+msgstr "對於下面顯示的每個流動池，單擊“遷移”以從 XSwapProtocol 贖回您的流動資金，並將其註入到 XSwapProtocol Next。"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1061,8 +1061,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "遷移 V2 流動資金"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "將您的流動資金從 Uniswap V2 遷移到 Uniswap V3。"
+msgid "Migrate your liquidity tokens from XSwapProtocol to XSwapProtocol Next."
+msgstr "將您的流動資金從 XSwapProtocol 遷移到 XSwapProtocol Next。"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1167,8 +1167,8 @@ msgid "Once you are happy with the rate click supply to review."
 msgstr "對費率感到滿意的話，請點擊“供應”鍵，到審查步驟。"
 
 #: src/pages/Vote/VotePage.tsx
-msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "只有在 {0} 區塊編號之前已自行委托或委托給另一個區塊鏈地址的 UNI 代幣才有資格投票。"
+msgid "Only XSP votes that were self delegated or delegated to another address before block {0} are eligible for voting."
+msgstr "只有在 {0} 區塊編號之前已自行委托或委托給另一個區塊鏈地址的 XSP 代幣才有資格投票。"
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
@@ -1346,12 +1346,12 @@ msgid "Rates"
 msgstr "費率"
 
 #: src/pages/Earn/index.tsx
-msgid "Read more about UNI"
-msgstr "了解有關 UNI 的更多資訊"
+msgid "Read more about XSP"
+msgstr "了解有關 XSP 的更多資訊"
 
 #: src/pages/Vote/Landing.tsx
-msgid "Read more about Uniswap governance"
-msgstr "閱讀有關 Uniswap 治理的更多資訊"
+msgid "Read more about XSwapProtocol governance"
+msgstr "閱讀有關 XSwapProtocol 治理的更多資訊"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1504,8 +1504,8 @@ msgid "Status"
 msgstr "狀態"
 
 #: src/pages/Earn/Manage.tsx
-msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "第 1 步：獲取 UNI-V2 流動池代幣"
+msgid "Step 1. Get XSP Liquidity tokens"
+msgstr "第 1 步：獲取 XSP-V2 流動池代幣"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
@@ -1566,16 +1566,16 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "將 {0} {1} 兌換為 {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "感謝您加入 Uniswap 社區 <0/>"
+msgid "Thanks for being part of the XSwapProtocol community <0/>"
+msgstr "感謝您加入 XSwapProtocol 社區 <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "您將賺取的手續費百分比。"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "兌換交易不滿足 Uniswap 不變量 X × Y = K 的要求。這通常意味著您要兌換的代幣之一在代幣轉賬過程中帶有一些自定義代幣合約特性。"
+msgid "The XSwapProtocol invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "兌換交易不滿足 XSwapProtocol 不變量 X × Y = K 的要求。這通常意味著您要兌換的代幣之一在代幣轉賬過程中帶有一些自定義代幣合約特性。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
@@ -1610,8 +1610,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "輸出代幣無法進行轉賬。輸出代幣可能有些問題。"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "輸出代幣無法進行轉賬。輸出代幣可能有些問題。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與Uniswap V3不相容。"
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "輸出代幣無法進行轉賬。輸出代幣可能有些問題。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與XSwapProtocol Next不相容。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1662,8 +1662,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "該工具將安全地將您的 {0} 流動資金遷移到 V3。該過程完全不依賴任何信任需求"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "由於兌換率變動，該交易將不會成功。請嘗試增加滑點容差。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與Uniswap V3不兼容。"
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "由於兌換率變動，該交易將不會成功。請嘗試增加滑點容差。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與XSwapProtocol Next不兼容。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1765,37 +1765,37 @@ msgid "Turn On Expert Mode"
 msgstr "開啟專家模式"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "UNI has arrived"
-msgstr "UNI 代幣已到賬"
+msgid "XSP has arrived"
+msgstr "XSP 代幣已到賬"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "流通中的 UNI 代幣："
+msgid "XSP in circulation:"
+msgstr "流通中的 XSP 代幣："
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "UNI 代幣兌換率："
+msgid "XSP price:"
+msgstr "XSP 代幣兌換率："
 
 #: src/pages/Vote/Landing.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI 代幣代表了 Uniswap 治理中的投票份額。您可以自行為提案進行投票，或將您的投票權委托給第三方。"
+msgid "XSP tokens represent voting shares in XSwapProtocol governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "XSP 代幣代表了 XSwapProtocol 治理中的投票份額。您可以自行為提案進行投票，或將您的投票權委托給第三方。"
 
 #: src/pages/RemoveLiquidity/index.tsx
-msgid "UNI {0}/{1} Burned"
-msgstr "UNI {0}/{1} 已銷毀"
+msgid "XSP {0}/{1} Burned"
+msgstr "XSP {0}/{1} 已銷毀"
 
 #: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "需要 UNI-V2 LP 代幣。在您注入流動性到 {0}-{1} 池後，您就可以在此頁面上抵押您的流動性代幣。"
+msgid "XSP-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
+msgstr "需要 XSP-V2 LP 代幣。在您注入流動性到 {0}-{1} 池後，您就可以在此頁面上抵押您的流動性代幣。"
 
 #: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 {0}-{1}"
-msgstr "UNI-V2 {0}-{1}"
+msgid "XSP {0}-{1}"
+msgstr "XSP {0}-{1}"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Unclaimed UNI"
-msgstr "未被領取的 UNI 代幣"
+msgid "Unclaimed XSP"
+msgstr "未被領取的 XSP 代幣"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
@@ -1818,40 +1818,40 @@ msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "估計 gas 時遇到問題。請再試一次。"
 
 #: src/pages/Vote/Landing.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap治理"
+msgid "XSwapProtocol Governance"
+msgstr "XSwapProtocol治理"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "XSwapProtocol' Terms of Service"
 msgstr "XSwapProtocol 的服務條款"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap 可選語言：<0>{0}</0>"
+msgid "XSwapProtocol available in: <0>{0}</0>"
+msgstr "XSwapProtocol 可選語言：<0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Uniswap 治理僅在 Layer 1 可用。將您的網絡切換到以太坊主網以查看提案和投票。"
+msgid "XSwapProtocol governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "XSwapProtocol 治理僅在 Layer 1 可用。將您的網絡切換到以太坊主網以查看提案和投票。"
 
 #: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Uniswap 流動資金挖礦"
+msgid "XSwapProtocol liquidity mining"
+msgstr "XSwapProtocol 流動資金挖礦"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
-msgstr "Uniswap 遷移合約↗"
+msgid "XSwapProtocol migration contract↗"
+msgstr "XSwapProtocol 遷移合約↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "XSwapProtocol on {0}"
-msgstr "在 {0} 上的 Uniswap"
+msgstr "在 {0} 上的 XSwapProtocol"
 
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "未知來源"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "未知錯誤{0}。請嘗試增加滑點容差。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與Uniswap V3不相容。"
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "未知錯誤{0}。請嘗試增加滑點容差。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與XSwapProtocol Next不相容。"
 
 #: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1926,8 +1926,8 @@ msgid "V3 {0} Price:"
 msgstr "V3 {0} 兌換率："
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "查看 UNI 代幣分析"
+msgid "View XSP Analytics"
+msgstr "查看 XSP 代幣分析"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -2043,12 +2043,12 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "當您領取獎勵但沒贖回流動資金時，流動資金仍然留在礦池內。"
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "當您贖回流動資金時，智能合約將自動為您領取 UNI 代幣！"
+msgid "When you withdraw, the contract will automagically claim XSP on your behalf!"
+msgstr "當您贖回流動資金時，智能合約將自動為您領取 XSP 代幣！"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "當您贖回流動資金時，您的 UNI 代幣將被領取，流動資金也將從礦池中移除。"
+msgid "When you withdraw, your XSP is claimed and your liquidity is removed from the mining pool."
+msgstr "當您贖回流動資金時，您的 XSP 代幣將被領取，流動資金也將從礦池中移除。"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -2064,12 +2064,12 @@ msgid "Withdraw deposited liquidity"
 msgstr "贖回註入的流動資金"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "Withdrawing {0} UNI-V2"
-msgstr "贖回 {0} UNI-V2 流動池代幣"
+msgid "Withdrawing {0} XSP"
+msgstr "贖回 {0} XSP 流動池代幣"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "Withdrew UNI-V2!"
-msgstr "已贖回 UNI-V2！"
+msgid "Withdrew XSP-V2!"
+msgstr "已贖回 XSP-V2！"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
@@ -2093,8 +2093,8 @@ msgid "You are creating a pool"
 msgstr "您正在創建一個流動池"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "您是此 Uniswap V3 流動池的第一個流動資金提供者。您的流動資金將以當前的 {0} 兌換率遷移。"
+msgid "You are the first liquidity provider for this XSwapProtocol Next pool. Your liquidity will migrate at the current {0} price."
+msgstr "您是此 XSwapProtocol Next 流動池的第一個流動資金提供者。您的流動資金將以當前的 {0} 兌換率遷移。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -2129,16 +2129,16 @@ msgid "You must connect an account."
 msgstr "您必須連接帳戶。"
 
 #: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "您必須授予 Uniswap 智能合約使用您的 {0} 的權限。每個代幣只需要授權一次。"
+msgid "You must give the XSwapProtocol smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "您必須授予 XSwapProtocol 智能合約使用您的 {0} 的權限。每個代幣只需要授權一次。"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "您必須有 {formattedProposalThreshold} 票才能提交提案"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "請確保以您認為是正確的兌換率來將流動資金註入到 Uniswap V3。 <0/>如果兌換率看起來不正確，您可以進行兌換交易以移動兌換率，或者等待別人進行此操作。"
+msgid "You should only deposit liquidity into XSwapProtocol Next at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "請確保以您認為是正確的兌換率來將流動資金註入到 XSwapProtocol Next。 <0/>如果兌換率看起來不正確，您可以進行兌換交易以移動兌換率，或者等待別人進行此操作。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -2150,8 +2150,8 @@ msgid "You will receive"
 msgstr "您將收到"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "您的 UNI 代幣明細表"
+msgid "Your XSP Breakdown"
+msgstr "您的 XSP 代幣明細表"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your liquidity"
@@ -2237,8 +2237,8 @@ msgid "Your transactions will appear here..."
 msgstr "您的交易將出現在這裏..."
 
 #: src/pages/Earn/Manage.tsx
-msgid "Your unclaimed UNI"
-msgstr "您未領取的 UNI 代幣"
+msgid "Your unclaimed XSP"
+msgstr "您未領取的 XSP 代幣"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2322,24 +2322,24 @@ msgstr "{0} 待處理"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "{0} UNI"
-msgstr "{0} UNI"
+msgid "{0} XSP"
+msgstr "{0} XSP"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
-msgid "{0} UNI / week"
-msgstr "{0} UNI /週"
+msgid "{0} XSP / week"
+msgstr "{0} XSP /週"
 
 #: src/components/earn/StakingModal.tsx
-msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2"
+msgid "{0} XSP"
+msgstr "{0} XSP"
 
 #: src/pages/Earn/Manage.tsx
-msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} UNI-V2 流動池代幣可用"
+msgid "{0} XSP LP tokens available"
+msgstr "{0} XSP 流動池代幣可用"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -2403,12 +2403,12 @@ msgid "{0}/{1} LP Tokens"
 msgstr "{0}{1} 流動池代幣"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} UNI 代幣"
+msgid "{SOCKS_AMOUNT} XSP"
+msgstr "{SOCKS_AMOUNT} XSP 代幣"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} UNI"
+msgid "{USER_AMOUNT} XSP"
+msgstr "{USER_AMOUNT} XSP"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"

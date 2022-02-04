@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: x-swap-protocol\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-11-18 19:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: x-swap-protocol\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: sw-TZ\n"
 "X-Crowdin-File: en-US.po\n"
@@ -63,8 +63,8 @@ msgstr "- Ondoa mpokeaji"
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
-msgid "0 UNI / week"
-msgstr "0 UNI / wiki"
+msgid "0 XSP / week"
+msgstr "0 XSP / wiki"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -120,8 +120,8 @@ msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Karibu kwenye timu ya Unicorn :) <1>🎉</1>"
 
 #: src/pages/Vote/Landing.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "Kiwangu cha chini cha 0.25% ya jumla ya usambazaji wa UNI inahitajika kuwasilisha mapendekezo"
+msgid "A minimum threshold of 0.25% of the total XSP supply is required to submit proposals"
+msgstr "Kiwangu cha chini cha 0.25% ya jumla ya usambazaji wa XSP inahitajika kuwasilisha mapendekezo"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -146,8 +146,8 @@ msgid "Add"
 msgstr "Ongeza"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "Ongeza <0/> na <1/> kwenye Uniswap V2"
+msgid "Add <0/> and <1/> to XSwapProtocol"
+msgstr "Ongeza <0/> na <1/> kwenye XSwapProtocol"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -203,8 +203,8 @@ msgid "Allow high price impact trades and skip the confirm screen. Use at your o
 msgstr "Ruhusu biashara ya athari za bei ya juu na uruke skrini ya thibitisho. Tumia kwa hatari yako mwenyewe."
 
 #: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Ruhusu Itifaki ya Uniswap kutumia {0}"
+msgid "Allow the X-Swap-Protocol to use your {0}"
+msgstr "Ruhusu Itifaki ya XSwapProtocol kutumia {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -219,8 +219,8 @@ msgid "Amount"
 msgstr "Kiasi"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na XSwapProtocol Next."
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -272,8 +272,8 @@ msgid "Are you sure?"
 msgstr "Una uhakika?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Kama mwanachama wa jamii ya Uniswap unaweza kudai UNI kutumika kwa kupiga kura na utawala. <0 /> <1 /> <2> Soma zaidi kuhusu UNI</2>"
+msgid "As a member of the XSwapProtocol community you may claim XSP to be used for voting and governance.<0/><1/><2>Read more about XSP</2>"
+msgstr "Kama mwanachama wa jamii ya XSwapProtocol unaweza kudai XSP kutumika kwa kupiga kura na utawala. <0 /> <1 /> <2> Soma zaidi kuhusu XSP</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -333,7 +333,7 @@ msgstr "Kwa kuongeza orodha hii unaamini kabisa kuwa data ni sahihi. Mtu yeyote 
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
-msgstr "Kwa kuunganisha mkoba, unakubaliana na XSwapProtocol ' <0>Masharti ya Huduma</0> na kutambua kwamba umesoma na kuelewa Uniswap <1>Itifaki Kanusho</1>."
+msgstr "Kwa kuunganisha mkoba, unakubaliana na XSwapProtocol ' <0>Masharti ya Huduma</0> na kutambua kwamba umesoma na kuelewa XSwapProtocol <1>Itifaki Kanusho</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -370,24 +370,24 @@ msgstr "Dai <0 /> kwa {0}"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
-msgstr "Chukua UNI"
+msgid "Claim XSP"
+msgstr "Chukua XSP"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
-msgstr "Chukua UNI tokeni"
+msgid "Claim XSP Token"
+msgstr "Chukua XSP tokeni"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Claim UNI reward for {0}"
-msgstr "Dai malipo ya UNI kwa {0}"
+msgid "Claim XSP reward for {0}"
+msgstr "Dai malipo ya XSP kwa {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "Chukua makato"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Claim your UNI tokens"
-msgstr "Chukua UNI tokeni yako"
+msgid "Claim your XSP tokens"
+msgstr "Chukua XSP tokeni yako"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -395,8 +395,8 @@ msgstr "Ushachukua"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Claimed UNI!"
-msgstr "Ushachukua UNI!"
+msgid "Claimed XSP!"
+msgstr "Ushachukua XSP!"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
@@ -408,13 +408,13 @@ msgid "Claiming"
 msgstr "Inachukuliwa"
 
 #: src/components/Header/index.tsx
-msgid "Claiming UNI"
-msgstr "Inachukuliwa UNI"
+msgid "Claiming XSP"
+msgstr "Inachukuliwa XSP"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Claiming {0} UNI"
-msgstr "Inachukuliwa {0} UNI"
+msgid "Claiming {0} XSP"
+msgstr "Inachukuliwa {0} XSP"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -625,24 +625,24 @@ msgid "Deposit Assets"
 msgstr "Mali ya Amana"
 
 #: src/pages/Earn/Manage.tsx
-msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Amana UNI-V2 LP Ishara"
+msgid "Deposit XSP LP Tokens"
+msgstr "Amana XSP-V2 LP Ishara"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Amana ukwasi"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Weka ishara zako za Mtoaji wa Liquidity kupokea UNI, ishara ya utawala wa itifaki ya Uniswap."
+msgid "Deposit your Liquidity Provider tokens to receive XSP, the XSwapProtocol governance token."
+msgstr "Weka ishara zako za Mtoaji wa Liquidity kupokea XSP, ishara ya utawala wa itifaki ya XSwapProtocol."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "Ukiritimba uliowekwa:"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Deposited {0} UNI-V2"
-msgstr "Iliyowekwa {0} UNI-V2"
+msgid "Deposited {0} XSP"
+msgstr "Iliyowekwa {0} XSP"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
@@ -681,8 +681,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Je! Huoni moja ya nafasi zako za v2? <0> Ingiza.</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Ishara zilizopatikana za UNI zinawakilisha hisa za kupiga kura katika utawala wa Uniswap."
+msgid "Earned XSP tokens represent voting shares in XSwapProtocol governance."
+msgstr "Ishara zilizopatikana za XSP zinawakilisha hisa za kupiga kura katika utawala wa XSwapProtocol."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -705,8 +705,8 @@ msgid "Enter a valid slippage percentage"
 msgstr "Ingiza asilimia halali ya utelezi"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Ingiza anwani ili kuchochea dai la UNI. Ikiwa anwani ina UNI yoyote inayodaiwa itatumwa kwao kwa kuwasilisha."
+msgid "Enter an address to trigger a XSP claim. If the address has any claimable XSP it will be sent to them on submission."
+msgstr "Ingiza anwani ili kuchochea dai la XSP. Ikiwa anwani ina XSP yoyote inayodaiwa itatumwa kwao kwa kuwasilisha."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -766,8 +766,8 @@ msgid "Expired"
 msgstr "Imeisha muda"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Chunguza mabwawa maarufu kwenye Takwimu za Uniswap."
+msgid "Explore popular pools on XSwapProtocol Analytics."
+msgstr "Chunguza mabwawa maarufu kwenye Takwimu za XSwapProtocol."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
@@ -786,8 +786,8 @@ msgid "For"
 msgstr "Kwa maana"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Kwa kila dimbwi lililoonyeshwa hapa chini, bonyeza hamisha ili kuondoa ukwasi wako kutoka kwa Uniswap V2 na uweke kwenye Uniswap V3."
+msgid "For each pool shown below, click migrate to remove your liquidity from XSwapProtocol and deposit it into XSwapProtocol Next."
+msgstr "Kwa kila dimbwi lililoonyeshwa hapa chini, bonyeza hamisha ili kuondoa ukwasi wako kutoka kwa XSwapProtocol na uweke kwenye XSwapProtocol Next."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1061,8 +1061,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "Hamisha Kioevu cha V2"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Hamisha ishara zako za ukwasi kutoka kwa Uniswap V2 hadi Uniswap V3."
+msgid "Migrate your liquidity tokens from XSwapProtocol to XSwapProtocol Next."
+msgstr "Hamisha ishara zako za ukwasi kutoka kwa XSwapProtocol hadi XSwapProtocol Next."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1167,8 +1167,8 @@ msgid "Once you are happy with the rate click supply to review."
 msgstr "Mara tu unapofurahi na usambazaji wa kiwango cha bonyeza kukagua."
 
 #: src/pages/Vote/VotePage.tsx
-msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Kura tu za UNI ambazo zilikabidhiwa kibinafsi au kupelekwa kwa anwani nyingine kabla ya kizuizi {0} zinastahili kupiga kura."
+msgid "Only XSP votes that were self delegated or delegated to another address before block {0} are eligible for voting."
+msgstr "Kura tu za XSP ambazo zilikabidhiwa kibinafsi au kupelekwa kwa anwani nyingine kabla ya kizuizi {0} zinastahili kupiga kura."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
@@ -1346,12 +1346,12 @@ msgid "Rates"
 msgstr "Viwango"
 
 #: src/pages/Earn/index.tsx
-msgid "Read more about UNI"
-msgstr "Soma zaidi kuhusu UNI"
+msgid "Read more about XSP"
+msgstr "Soma zaidi kuhusu XSP"
 
 #: src/pages/Vote/Landing.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Soma zaidi kuhusu Uniswap utawala"
+msgid "Read more about XSwapProtocol governance"
+msgstr "Soma zaidi kuhusu XSwapProtocol utawala"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1504,8 +1504,8 @@ msgid "Status"
 msgstr "Hali"
 
 #: src/pages/Earn/Manage.tsx
-msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Hatua ya 1. Pata tokeni za Liquidity za UNI-V2"
+msgid "Step 1. Get XSP Liquidity tokens"
+msgstr "Hatua ya 1. Pata tokeni za Liquidity za XSP-V2"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
@@ -1566,15 +1566,15 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Kubadilisha {0} {1} kwa {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Asante kwa kuwa sehemu ya jamii ya Uniswap <0 />"
+msgid "Thanks for being part of the XSwapProtocol community <0/>"
+msgstr "Asante kwa kuwa sehemu ya jamii ya XSwapProtocol <0 />"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "% Utakayopata katika ada."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgid "The XSwapProtocol invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Kiasi kisichobadilika x * y = k hakiridhika na ubadilishaji. Hii kawaida inamaanisha moja ya ishara unazobadilisha zinajumuisha tabia ya kawaida kwenye uhamishaji."
 
 #: src/components/PrivacyPolicy/index.tsx
@@ -1610,8 +1610,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato. Kumbuka: ada ya uhamishaji na toa rehani haziendani na XSwapProtocol Next."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1662,8 +1662,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "Chombo hiki kitahamisha {0} kwa V3. Mchakato huo hauna shukrani kabisa kwa"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Uuzaji huu hautafaulu kwa sababu ya harakati za bei. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "Uuzaji huu hautafaulu kwa sababu ya harakati za bei. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na XSwapProtocol Next."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1765,37 +1765,37 @@ msgid "Turn On Expert Mode"
 msgstr "Washa Hali ya Mtaalam"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "UNI has arrived"
-msgstr "UNI imefika"
+msgid "XSP has arrived"
+msgstr "XSP imefika"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "UNI katika mzunguko:"
+msgid "XSP in circulation:"
+msgstr "XSP katika mzunguko:"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "Bei ya UNI:"
+msgid "XSP price:"
+msgstr "Bei ya XSP:"
 
 #: src/pages/Vote/Landing.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Ishara za UNI zinawakilisha hisa za kupiga kura katika utawala wa Uniswap. Unaweza kupiga kura kwa kila pendekezo mwenyewe au kupeana kura zako kwa mtu wa tatu."
+msgid "XSP tokens represent voting shares in XSwapProtocol governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Ishara za XSP zinawakilisha hisa za kupiga kura katika utawala wa XSwapProtocol. Unaweza kupiga kura kwa kila pendekezo mwenyewe au kupeana kura zako kwa mtu wa tatu."
 
 #: src/pages/RemoveLiquidity/index.tsx
-msgid "UNI {0}/{1} Burned"
-msgstr "UNI {0}/{1} kuchomwa"
+msgid "XSP {0}/{1} Burned"
+msgstr "XSP {0}/{1} kuchomwa"
 
 #: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "Ishara za UNI-V2 LP zinahitajika. Mara baada ya kuongeza ukwasi kwenye {0}-{1} unaweza kuweka ishara zako za ukwasi kwenye ukurasa huu."
+msgid "XSP-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
+msgstr "Ishara za XSP-V2 LP zinahitajika. Mara baada ya kuongeza ukwasi kwenye {0}-{1} unaweza kuweka ishara zako za ukwasi kwenye ukurasa huu."
 
 #: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 {0}-{1}"
-msgstr "UNI-V2 {0}-{1}"
+msgid "XSP {0}-{1}"
+msgstr "XSP {0}-{1}"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Unclaimed UNI"
-msgstr "Aujachukua UNI"
+msgid "Unclaimed XSP"
+msgstr "Aujachukua XSP"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
@@ -1818,7 +1818,7 @@ msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Suala lisilotarajiwa na kukadiria gesi. Tafadhali jaribu tena."
 
 #: src/pages/Vote/Landing.tsx
-msgid "Uniswap Governance"
+msgid "XSwapProtocol Governance"
 msgstr "Utawala usiobadilika"
 
 #: src/components/PrivacyPolicy/index.tsx
@@ -1826,19 +1826,19 @@ msgid "XSwapProtocol' Terms of Service"
 msgstr "Sheria na Masharti ya XSwapProtocol"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
+msgid "XSwapProtocol available in: <0>{0}</0>"
 msgstr "Kubadilisha kunapatikana katika: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgid "XSwapProtocol governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Utawala usiobadilishwa unapatikana tu kwenye Tabaka la 1. Badilisha mtandao wako uwe Ethereum Mainnet ili uone Mapendekezo na Kura."
 
 #: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
+msgid "XSwapProtocol liquidity mining"
 msgstr "Uchimbaji wa ukwasi usiobadilika"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
+msgid "XSwapProtocol migration contract↗"
 msgstr "Mkataba wa uhamiaji usiobadilika↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
@@ -1850,8 +1850,8 @@ msgid "Unknown Source"
 msgstr "Chanzo kisichojulikana"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Hitilafu isiyojulikana{0}. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "Hitilafu isiyojulikana{0}. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na XSwapProtocol Next."
 
 #: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1926,8 +1926,8 @@ msgid "V3 {0} Price:"
 msgstr "Bei ya V3 {0}"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "Tazama Uchanganuzi wa UNI"
+msgid "View XSP Analytics"
+msgstr "Tazama Uchanganuzi wa XSP"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -2043,12 +2043,12 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "Unapodai bila kuondoa ukwasi wako unabaki kwenye dimbwi la madini."
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Unapojiondoa, mkataba utadai UNI kwa niaba yako!"
+msgid "When you withdraw, the contract will automagically claim XSP on your behalf!"
+msgstr "Unapojiondoa, mkataba utadai XSP kwa niaba yako!"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Unapojiondoa, UNI yako inadaiwa na ukwasi wako umeondolewa kwenye dimbwi la madini."
+msgid "When you withdraw, your XSP is claimed and your liquidity is removed from the mining pool."
+msgstr "Unapojiondoa, XSP yako inadaiwa na ukwasi wako umeondolewa kwenye dimbwi la madini."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -2064,12 +2064,12 @@ msgid "Withdraw deposited liquidity"
 msgstr "Ondoa ukwasi uliowekwa"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "Withdrawing {0} UNI-V2"
-msgstr "Kuondoa {0} UNI-V2"
+msgid "Withdrawing {0} XSP"
+msgstr "Kuondoa {0} XSP"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "Withdrew UNI-V2!"
-msgstr "Umeondoa UNI-V2!"
+msgid "Withdrew XSP-V2!"
+msgstr "Umeondoa XSP-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
@@ -2093,7 +2093,7 @@ msgid "You are creating a pool"
 msgstr "Unaunda dimbwi"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
+msgid "You are the first liquidity provider for this XSwapProtocol Next pool. Your liquidity will migrate at the current {0} price."
 msgstr "Wewe ndiye mtoaji wa kwanza wa ukwasi wa dimbwi hili la V3 lisilobadilishwa. Ukwasi wako kuhamia kwa bei {0}"
 
 #: src/pages/AddLiquidityV2/index.tsx
@@ -2129,16 +2129,16 @@ msgid "You must connect an account."
 msgstr "Lazima uunganishe akaunti."
 
 #: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Lazima upe Mkataba wa Uniswap ruhusa ya kutumia {0}yako. Lazima ufanye hivi mara moja tu kwa ishara."
+msgid "You must give the XSwapProtocol smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "Lazima upe Mkataba wa XSwapProtocol ruhusa ya kutumia {0}yako. Lazima ufanye hivi mara moja tu kwa ishara."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "Lazima uwe na {formattedProposalThreshold} ili kuwasilisha pendekezo"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Unapaswa kuweka tu ukwasi kwenye Uniswap V3 kwa bei unayoamini ni sahihi. <0 /> Ikiwa bei inaonekana si sahihi, unaweza kubadilisha kwa kuhamisha bei au subiri mtu mwingine afanye hivyo."
+msgid "You should only deposit liquidity into XSwapProtocol Next at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "Unapaswa kuweka tu ukwasi kwenye XSwapProtocol Next kwa bei unayoamini ni sahihi. <0 /> Ikiwa bei inaonekana si sahihi, unaweza kubadilisha kwa kuhamisha bei au subiri mtu mwingine afanye hivyo."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -2150,8 +2150,8 @@ msgid "You will receive"
 msgstr "Utapokea"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "Kuvunjika kwako kwa UNI"
+msgid "Your XSP Breakdown"
+msgstr "Kuvunjika kwako kwa XSP"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your liquidity"
@@ -2237,8 +2237,8 @@ msgid "Your transactions will appear here..."
 msgstr "Shughuli zako zitaonekana hapa ..."
 
 #: src/pages/Earn/Manage.tsx
-msgid "Your unclaimed UNI"
-msgstr "UNI yako isiyodaiwa"
+msgid "Your unclaimed XSP"
+msgstr "XSP yako isiyodaiwa"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2322,24 +2322,24 @@ msgstr "{0} Inasubiri"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "{0} UNI"
-msgstr "{0} UNI"
+msgid "{0} XSP"
+msgstr "{0} XSP"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
-msgid "{0} UNI / week"
-msgstr "{0} UNI / wiki"
+msgid "{0} XSP / week"
+msgstr "{0} XSP / wiki"
 
 #: src/components/earn/StakingModal.tsx
-msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2"
+msgid "{0} XSP"
+msgstr "{0} XSP"
 
 #: src/pages/Earn/Manage.tsx
-msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} ishara za UNI-V2 LP zinapatikana"
+msgid "{0} XSP LP tokens available"
+msgstr "{0} ishara za XSP-V2 LP zinapatikana"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -2403,12 +2403,12 @@ msgid "{0}/{1} LP Tokens"
 msgstr "{0}/{1} LP Shuhuda"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} UNI"
+msgid "{SOCKS_AMOUNT} XSP"
+msgstr "{SOCKS_AMOUNT} XSP"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} UNI"
+msgid "{USER_AMOUNT} XSP"
+msgstr "{USER_AMOUNT} XSP"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"

@@ -151,7 +151,7 @@ export default function ClaimModal() {
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <ThemedText.SubHeader fontWeight={500}>
               <Trans>
-                As a member of the Uniswap community you may claim XSP to be used for voting and governance.
+                As a member of the XSwapProtocol community you may claim XSP to be used for voting and governance.
                 <br />
                 <br />
                 <ExternalLink href="https://docs.xspswap.finance/">Read more about XSP</ExternalLink>
