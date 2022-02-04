@@ -6,38 +6,44 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import useClientSideSmartOrderRouterTrade from '../routing/useClientSideSmartOrderRouterTrade'
 
+/**
+ * Returns the currency amount from independent field, currency from independent field,
+ * and currency from dependent field.
+ */
 function getTradeInputs(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
   tradeType: TradeType
 ): [CurrencyAmount<Currency> | undefined, Currency | undefined, Currency | undefined] {
-  if (!trade) return [undefined, undefined, undefined]
-  if (tradeType === TradeType.EXACT_INPUT) {
-    return [trade.inputAmount, trade.inputAmount.currency, trade.outputAmount.currency]
-  }
-  if (tradeType === TradeType.EXACT_OUTPUT) {
-    return [trade.outputAmount, trade.outputAmount.currency, trade.inputAmount.currency]
+  if (trade) {
+    if (tradeType === TradeType.EXACT_INPUT) {
+      return [trade.inputAmount, trade.inputAmount.currency, trade.outputAmount.currency]
+    }
+    if (tradeType === TradeType.EXACT_OUTPUT) {
+      return [trade.outputAmount, trade.outputAmount.currency, trade.inputAmount.currency]
+    }
   }
   return [undefined, undefined, undefined]
 }
 
-// Checks for case where debounced values are stale compared to latest values from trade.
-function isSyncing(
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
-  debouncedAmount: CurrencyAmount<Currency> | undefined,
-  debouncedOtherCurrency: Currency | undefined,
-  amountFromLatestTrade: CurrencyAmount<Currency> | undefined,
-  currencyFromTrade: Currency | undefined,
-  otherCurrencyFromTrade: Currency | undefined
-): boolean {
+interface TradeDebouncingParams {
+  amounts: [CurrencyAmount<Currency> | undefined, CurrencyAmount<Currency> | undefined]
+  indepdenentCurrencies: [Currency | undefined, Currency | undefined]
+  dependentCurrencies: [Currency | undefined, Currency | undefined]
+}
+
+/**
+ * Returns wether debounced values are stale compared to latest values from trade.
+ */
+function isTradeDebouncing({ amounts, indepdenentCurrencies, dependentCurrencies }: TradeDebouncingParams): boolean {
   // Ensure that amount from user input matches latest trade.
-  const amountsMatch = trade && debouncedAmount && amountFromLatestTrade?.equalTo(debouncedAmount)
+  const amountsMatch = amounts[0] && amounts[1]?.equalTo(amounts[0])
 
   // Ensure active swap currencies match latest trade.
   const currenciesMatch =
-    currencyFromTrade &&
-    otherCurrencyFromTrade &&
-    debouncedAmount?.currency?.equals(currencyFromTrade) &&
-    debouncedOtherCurrency?.equals(otherCurrencyFromTrade)
+    indepdenentCurrencies[0] &&
+    indepdenentCurrencies[1]?.equals(indepdenentCurrencies[0]) &&
+    dependentCurrencies[0] &&
+    dependentCurrencies[1]?.equals(dependentCurrencies[0])
 
   return !amountsMatch || !currenciesMatch
 }
@@ -74,14 +80,11 @@ export function useBestTrade(
     (amountSpecified && debouncedAmount && amountSpecified !== debouncedAmount) ||
     (debouncedOtherCurrency && otherCurrency && debouncedOtherCurrency !== otherCurrency)
 
-  const syncing = isSyncing(
-    clientSORTrade?.trade,
-    debouncedAmount,
-    debouncedOtherCurrency,
-    amountFromLatestTrade,
-    currencyFromTrade,
-    otherCurrencyFromTrade
-  )
+  const syncing = isTradeDebouncing({
+    amounts: [amountFromLatestTrade, debouncedAmount],
+    indepdenentCurrencies: [currencyFromTrade, debouncedOtherCurrency],
+    dependentCurrencies: [otherCurrencyFromTrade, otherCurrency],
+  })
 
   const useFallback = !syncing && clientSORTrade.state === TradeState.NO_ROUTE_FOUND
 
