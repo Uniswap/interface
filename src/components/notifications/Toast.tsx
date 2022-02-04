@@ -8,9 +8,9 @@ import { Text } from 'src/components/Text'
 import { opacify } from 'src/utils/colors'
 
 export enum ToastVariant {
-  Pending,
-  Success,
-  Failed,
+  Pending = 'pending',
+  Success = 'success',
+  Failed = 'failed',
 }
 
 interface ToastProps {
@@ -35,7 +35,8 @@ export function Toast({ label, variant }: ToastProps) {
       shadowOffset={{ width: 0, height: 6 }}
       shadowOpacity={0.05}
       shadowRadius={4}
-      style={{ borderColor: opacify(60, color) }}>
+      style={{ borderColor: opacify(60, color) }}
+      testID={`toast-${variant}`}>
       <Text style={{ color }} variant="body">
         {label}
       </Text>

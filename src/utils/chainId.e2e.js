@@ -1,9 +1,9 @@
 import { ChainId } from 'src/constants/chains'
 
-export function toSupportedChain(chainId) {
+export function toSupportedChainId(chainId) {
   return parseInt(chainId.toString(), 10)
 }
 
 export function parseActiveChains() {
-  return [ChainId.MAINNET]
+  return [ChainId.Mainnet]
 }

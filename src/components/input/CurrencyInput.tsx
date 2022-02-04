@@ -80,6 +80,7 @@ export function CurrencyInput(props: CurrencyInputProps) {
           placeholder="0"
           px="none"
           py="none"
+          testID={`amount-input-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
           value={value}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
         />

@@ -25,7 +25,7 @@ export function Option({ currency, onPress, currencyAmount, currencyPrice }: Opt
       ? currencyPrice * parseFloat(currencyAmount?.toSignificant())
       : undefined
   return (
-    <Pressable onPress={onPress}>
+    <Pressable testID={`currency-option-${currency.symbol}`} onPress={onPress}>
       <Box
         alignItems="center"
         flexDirection="row"

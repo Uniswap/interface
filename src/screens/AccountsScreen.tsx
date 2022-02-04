@@ -128,7 +128,9 @@ export function AccountsScreen() {
         <Text color="textColor" variant="bodyBold">
           {t('Switch Accounts')}
         </Text>
-        <BackX size={16} onPressBack={() => navigation.goBack()} />
+        <TextButton name={ElementName.Back} testID={ElementName.Back}>
+          <BackX size={16} onPressBack={() => navigation.goBack()} />
+        </TextButton>
       </Box>
       <ScrollView>
         <Box flex={1} px="lg">

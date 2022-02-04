@@ -7,11 +7,13 @@ import {
   SENTRY_DSN,
   VERSION,
 } from 'react-native-dotenv'
-import { ChainId } from 'src/constants/chains'
+import { ChainIdTo } from 'src/constants/chains'
+import { ChainState } from 'src/features/chains/types'
+import { chainListToStateMap } from 'src/features/chains/utils'
 import { parseActiveChains } from 'src/utils/chainId'
 
 export interface Config {
-  activeChains: ChainId[]
+  activeChains: ChainIdTo<ChainState>
   apiUrl: string
   debug: boolean
   infuraProjectId: string
@@ -21,7 +23,7 @@ export interface Config {
 }
 
 const _config: Config = {
-  activeChains: parseActiveChains(ACTIVE_CHAINS),
+  activeChains: chainListToStateMap(parseActiveChains(ACTIVE_CHAINS)),
   apiUrl: API_URL,
   debug: parseBoolean(DEBUG),
   infuraProjectId: INFURA_PROJECT_ID,

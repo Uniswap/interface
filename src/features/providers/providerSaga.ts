@@ -17,8 +17,8 @@ import { call, cancel, fork, join, put, spawn, take, takeEvery } from 'typed-red
 export function* initProviders() {
   // Wait for rehydration so we know which networks are enabled
   const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
-  const chains = persisted.payload?.chains?.byChainId
-  const activeChains = getSortedActiveChainIds(chains || config.activeChains)
+  const chains = persisted.payload?.chains?.byChainId ?? config.activeChains
+  const activeChains = getSortedActiveChainIds(chains)
 
   logger.debug('providerSaga', 'initProviders', 'Initializing providers')
   const manager = yield* call(getProviderManager)

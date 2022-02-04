@@ -1,9 +1,10 @@
 {
   "maxWorkers": 1,
+  "reporters": ["detox/runners/jest/streamlineReporter"],
+  "setupFilesAfterEnv": ["./init.js"],
   "testEnvironment": "./environment",
+  "testRegex": "\\.e2e\\.js$",
   "testRunner": "jest-circus/runner",
   "testTimeout": 120000,
-  "testRegex": "\\.e2e\\.js$",
-  "reporters": ["detox/runners/jest/streamlineReporter"],
   "verbose": true
 }

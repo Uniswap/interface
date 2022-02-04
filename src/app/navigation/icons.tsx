@@ -5,12 +5,15 @@ import SearchIcon from 'src/assets/icons/search.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { IconButton } from 'src/components/buttons/IconButton'
+import { ElementName } from 'src/features/telemetry/constants'
 
 export function SwapButton(props: BottomTabBarButtonProps) {
   return (
     <IconButton
       icon={<SwapIcon fill="white" height={24} width={24} />}
       mb="sm"
+      name={ElementName.TabBarSwap}
+      testID={ElementName.TabBarSwap}
       variant="primary"
       onPress={props.onPress}
     />

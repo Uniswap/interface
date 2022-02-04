@@ -1,16 +1,7 @@
 import { ElementName } from '../../src/features/telemetry/constants'
 import { by, expect, element, device } from 'detox'
 import { sleep } from '../../src/utils/timing'
-
-const READONLY_NAME = '@watched'
-const READONLY_PUBLIC_ADDRESS = '0x123196b9703ead9037d15e87841acef07a4dec03'
-
-// Test account provided by mainnet fork (10000 ETH)
-const MAINNET_TEST_ACCOUNT = {
-  address: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
-  name: '@investing',
-  privateKey: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
-}
+import { Accounts } from '../utils/fixtures'
 
 export function NewAccountOnboarding() {
   beforeAll(async () => {
@@ -27,33 +18,33 @@ export function NewAccountOnboarding() {
     await element(by.id(ElementName.Import)).tap()
 
     // enter address / eth
-    await element(by.id('import_account_form/input')).typeText(READONLY_PUBLIC_ADDRESS)
+    await element(by.id('import_account_form/input')).typeText(Accounts.readonly.address)
     await sleep(500)
     await element(by.id(ElementName.Submit)).tap()
 
     await device.matchFace()
 
     // enter account name
-    await element(by.id('import_account_form/input')).typeText(READONLY_NAME)
+    await element(by.id('import_account_form/input')).typeText(Accounts.readonly.name)
     await element(by.id(ElementName.Submit)).tap()
 
-    await expect(element(by.id(`account_item/${READONLY_PUBLIC_ADDRESS}`))).toExist()
+    await expect(element(by.id(`account_item/${Accounts.readonly.address}`))).toExist()
   })
 
   it('creates a managed account', async () => {
     await element(by.id(ElementName.Import)).tap()
 
     // enter address / eth
-    await element(by.id('import_account_form/input')).typeText(MAINNET_TEST_ACCOUNT.privateKey)
+    await element(by.id('import_account_form/input')).typeText(Accounts.managed.privateKey)
     await sleep(500)
     await element(by.id(ElementName.Submit)).tap()
 
     await device.matchFace()
 
     // enter account name
-    await element(by.id('import_account_form/input')).typeText(MAINNET_TEST_ACCOUNT.name)
+    await element(by.id('import_account_form/input')).typeText(Accounts.managed.name)
     await element(by.id(ElementName.Submit)).tap()
 
-    await expect(element(by.id(`account_item/${MAINNET_TEST_ACCOUNT.address}`))).toExist()
+    await expect(element(by.id(`account_item/${Accounts.managed.address}`))).toExist()
   })
 }

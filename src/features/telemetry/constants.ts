@@ -48,7 +48,11 @@ export const enum ElementName {
   Remove = 'remove',
   Rename = 'rename',
   Submit = 'submit',
+  Swap = 'swap',
+  TabBarSwap = 'tab-bar-swap',
   TryAgain = 'try-again',
+  Unwrap = 'unwrap',
+  Wrap = 'wrap',
 }
 
 /**

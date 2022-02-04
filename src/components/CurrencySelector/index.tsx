@@ -50,6 +50,7 @@ export function CurrencySelector({
     <Box>
       <Toggle
         filled={!selectedCurrency}
+        testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
         onToggle={() => {
           selectCurrency()
         }}>

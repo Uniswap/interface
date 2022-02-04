@@ -26,7 +26,7 @@ import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { isWrapAction } from 'src/features/swap/utils'
 import { getHumanReadableSwapInputStatus } from 'src/features/swap/validate'
 import { WrapType } from 'src/features/swap/wrapSaga'
-import { SectionName } from 'src/features/telemetry/constants'
+import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
@@ -164,6 +164,13 @@ export function SwapForm(props: SwapFormProps) {
               : t('Swap')
           }
           loading={quoteStatus === 'loading'}
+          name={
+            wrapType === WrapType.Wrap
+              ? ElementName.Wrap
+              : wrapType === WrapType.Unwrap
+              ? ElementName.Unwrap
+              : ElementName.Swap
+          }
         />
       </Flex>
     </Box>
@@ -172,12 +179,13 @@ export function SwapForm(props: SwapFormProps) {
 
 type ActionButtonProps = {
   disabled: boolean
+  name: ElementName
   label: string
   loading: boolean
   callback: () => void
 }
 
-function ActionButton({ callback, disabled, label, loading }: ActionButtonProps) {
+function ActionButton({ callback, disabled, label, loading, name }: ActionButtonProps) {
   const theme = useAppTheme()
 
   const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(callback)
@@ -190,7 +198,9 @@ function ActionButton({ callback, disabled, label, loading }: ActionButtonProps)
         disabled={disabled}
         icon={loading ? <ActivityIndicator color={theme.colors.white} size={25} /> : undefined}
         label={label}
+        name={name}
         py="md"
+        testID={name}
         textVariant="buttonLabelLg"
         onPress={() => {
           notificationAsync()
