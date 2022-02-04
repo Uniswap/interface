@@ -1,163 +1,77 @@
 export const TimelineData = [
     {
-        title: 'Q4 2020',
+        title: '2021 Q1',
         content: [
             'Swapr Alpha Launch',
+            'DXDAO-supplied liquidity',
+            'Swapr on xDai',
+            'Eco-Routing Beta',
+            'Uniswap, Sushiswap, Honeyswap, LevinSwap Routing',
+            'Network Switcher v1',
+            'Swapr redesign',
         ],
-        logo: 'swapr.svg',
         releaseTag: 'ALPHA',
         past: true
     },
     {
-        title: 'Q1',
+        title: 'Q2-Q4',
         content: [
-            'DXdao-supplied liquidity',
-            'Swapr on xDai',
+            'DIY Farming',
+            'Farming/Rewards',
+            'SWAPR Token',
+            'Carrot Integration',
+            'Arbitrum Integration',
+            'Network Switcher v2',
+            'Swapr L1-L2 Bridge',
         ],
+        releasteTag: 'BETA',
         past: true
     },
     {
-        title: 'Q1',
+        title: '2022 Q1',
         content: [
-            'Eco-Routing Beta',
-            'Uniswap Routing',
-            'Sushiswap Routing',
-            'Honeyswap Routing',
-            'LevinSwap Routing',
-            'Network Switcher v1',
+            'SWPR Staking',
+            'Movr, Hop',
+            '0x Integration',
+            'Cowswap',
+            'Curve Integration',
+            'Omni & xDai Bridge',
         ],
-        past: true
+        releaseTag: 'BETA',
+        current: true,
     },
     {
         title: 'Q2',
         content: [
-            'DIY Farming',
-            'Farming / Rewards',
-        ],
-        logo: 'swapr.svg',
-        releaseTag: 'ALPHA',
-        past: true
-    },
-    {
-        title: 'Q2\-Q3',
-        content: [
-            'Swapr Token',
-            'Arbitrum Integration',
-            'Swapr L1-L2 Bridge',
-            'Network Switcher v2',
-        ],
-        logo: 'swapr.svg',
-        releaseTag: 'BETA V2',
-        past: true
-    },
-    {
-        title: 'Q3 2021',
-        content: [
-            'Liquidity Provider',
-            'Governance',
-            'Conditional Farming',
-        ],
-        logo: 'swapr.svg',
-        releaseTag: 'V1.0',
-        past: true
-    },
-    {
-        title: 'Q4 2021',
-        content: [
-            'Swapr redesign',
-            'More Markets',
+            'SWPR Governance',
+            'DIY Farming 1.5',
+            'Anyswap/Multichain',
             'User Dashboard',
-            'Mesa Integration',
-            'Marketplace/Plugins',
-            'Live Charts',
-            'Trade History',
+            'LP Governance',
+            'Landing Page',
         ],
-        logo: 'swapr.svg',
-        releaseTag: 'V2.0',
-        current: true
+        releaseTag: 'V1',
     },
     {
-        title: 'Q4 2021',
+        title: 'Q3-Q4',
         content: [
-            'Swapr redesign',
-            'More Markets',
-            'User Dashboard',
-            'Mesa Integration',
-            'Marketplace/Plugins',
-            'Live Charts',
-            'Trade History',
+            'Balancer Integration',
+            'Uniswap V3 Int.',
+            'Bridge Swap',
+            'Advanced Trading Mode',
+            'Limit Orders',
         ],
-        logo: 'swapr.svg',
-        releaseTag: 'V2.0',
+        releaseTag: 'V1.5',
     },
     {
-        title: 'Q4 2021',
+        title: 'Soon™',
         content: [
-            'Swapr redesign',
-            'More Markets',
-            'User Dashboard',
-            'Mesa Integration',
-            'Marketplace/Plugins',
-            'Live Charts',
-            'Trade History',
+            'Bentobox/Single token staking',
+            'ZKSync',
+            'Eco Routing V2',
+            'Sushi Trident Fork',
+            'More Eco Routing markets',
         ],
-        logo: 'swapr.svg',
-        releaseTag: 'V2.0'
-    },
-    {
-        title: 'Q4 2021',
-        content: [
-            'Swapr redesign',
-            'More Markets',
-            'User Dashboard',
-            'Mesa Integration',
-            'Marketplace/Plugins',
-            'Live Charts',
-            'Trade History',
-        ],
-        logo: 'swapr.svg',
-        releaseTag: 'V2.0'
-    },
-    {
-        title: 'Q4 2021',
-        content: [
-            'Swapr redesign',
-            'More Markets',
-            'User Dashboard',
-            'Mesa Integration',
-            'Marketplace/Plugins',
-            'Live Charts',
-            'Trade History',
-        ],
-        logo: 'swapr.svg',
-        releaseTag: 'V2.0'
-    },
-    {
-        title: 'Q4 2021',
-        content: [
-            'Swapr redesign',
-            'More Markets',
-            'User Dashboard',
-            'Mesa Integration',
-            'Marketplace/Plugins',
-            'Live Charts',
-            'Trade History',
-        ],
-        logo: 'swapr.svg',
-        releaseTag: 'V2.0'
-    },
-    {
-        title: 'Q4 2021',
-        content: [
-            'Swapr redesign',
-            'More Markets',
-            'User Dashboard',
-            'Mesa Integration',
-            'Marketplace/Plugins',
-            'Live Charts',
-            'Trade History',
-        ],
-        logo: 'swapr.svg',
-        releaseTag: 'V2.0'
+        releaseTag: 'V1.5',
     },
 ];

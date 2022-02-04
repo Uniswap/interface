@@ -77,6 +77,10 @@ const AppBodyContainer = styled.section`
   align-items: center;
 `;
 
+const LandingBodyContainer = styled.section`
+  width: calc(100% + 32px) !important;
+`;
+
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [platformOverride, setPlatformOverride] = useState<RoutablePlatform | null>(null)
@@ -488,12 +492,14 @@ export default function Swap() {
           />
         </AppBodyContainer>
       </Hero>
-      <Features />
-      <Stats />
-      <CommunityBanner />
-      <Timeline />
-      <CommunityLinks />
-      <BlogNavigation />
+      <LandingBodyContainer>
+        <Features />
+        <Stats />
+        <CommunityBanner />
+        <Timeline />
+        <CommunityLinks />
+        <BlogNavigation />
+      </LandingBodyContainer>
       <Footer />
     </>
   )

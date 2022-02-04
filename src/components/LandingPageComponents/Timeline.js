@@ -7,6 +7,7 @@ import {TimelineData} from './../../utils/milestones'
 import NavigationButton from './../../assets/images/timeline-assets/navigation-button.png'
 import BackgroundBlurTop from './../../assets/images/timeline-assets/background-blur-top.png'
 import BackgroundBlur from './../../assets/images/timeline-assets/background-blur.png'
+import SwaprTimelineLogo from './../../assets/images/timeline-assets/swapr.svg'
 // import NavigationButton from './../../assets/images/timeline-assets'
 
 const Timeline = () => {
@@ -15,7 +16,7 @@ const Timeline = () => {
     const [currentMilestoneGroupPosition, setCurrentMilestoneGroupPosition] = useState(null);
     const [isCurrentPost, setIsCurrentPost] = useState(null);
     
-    const [stepNumber, setStepNumber] = useState(2);
+    const [stepNumber, setStepNumber] = useState(1);
     const [timelineDirection, setTimelineDirection] = useState(null);
 
     const timelineContentRef = useRef(null);
@@ -114,10 +115,10 @@ const Timeline = () => {
                                             </li>
                                         ))}
                                     </ul>
-                                    {timelineItem.logo && (
+                                    {timelineItem.releaseTag && (
                                         <div className="milestone-logo-container">
                                             <div className="milestone-logo">
-                                                <img className="logo" src={'/timeline-logos/' + timelineItem.logo} title="Swapr" />
+                                                <img className="logo" src={SwaprTimelineLogo} title="Swapr" />
                                                 <div className="release-tag">
                                                     {timelineItem.releaseTag}
                                                 </div>
@@ -553,7 +554,7 @@ const StyledTimeline = styled(Layout)`
             .milestone {
                 width: 177px;
                 position: relative;
-                min-height: 264px;
+                min-height: 304px;
                 @media screen and (max-width: 959px) {
                     width: 100%;
                     padding-bottom: 40px;
@@ -851,6 +852,21 @@ const StyledTimeline = styled(Layout)`
                         }
                     }
                 }
+                &:nth-child(6) {
+                    position: relative;
+                    &:after {
+                        position: absolute;
+                        width: 1000px;
+                        height: 2px;
+                        background: rgba(135,128,191,0.5);
+                        left: 100%;
+                        content: '';
+                        top: calc(100% + 54px);
+                        @media screen and (max-width: 959px) {
+                            display: none;
+                        }
+                    }
+                }
                 &:nth-child(5),
                 &:nth-child(6),
                 &:nth-child(7) {
@@ -911,7 +927,7 @@ const StyledTimeline = styled(Layout)`
                 cursor: pointer;
                 transition: ease-in-out 0.1s all;
                 &[disabled] {
-                    opacity: 0.5;
+                    opacity: 0;
                     pointer-events: none;
                 }
                 &:active {
