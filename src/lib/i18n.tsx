@@ -1,6 +1,7 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { DEFAULT_CATALOG, DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
+import { useUpdateAtom } from 'jotai/utils'
 import {
   af,
   ar,
@@ -35,6 +36,8 @@ import {
 } from 'make-plural/plurals'
 import { PluralCategory } from 'make-plural/plurals'
 import { ReactNode, useEffect } from 'react'
+
+import { localeAtom } from './state/locale'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
@@ -93,13 +96,17 @@ interface ProviderProps {
 }
 
 export function Provider({ locale, forceRenderAfterLocaleChange = true, onActivate, children }: ProviderProps) {
+  const setUserLocale = useUpdateAtom(localeAtom)
   useEffect(() => {
     dynamicActivate(locale)
-      .then(() => onActivate?.(locale))
+      .then(() => {
+        setUserLocale(locale)
+        onActivate?.(locale)
+      })
       .catch((error) => {
         console.error('Failed to activate locale', locale, error)
       })
-  }, [locale, onActivate])
+  }, [locale, onActivate, setUserLocale])
 
   return (
     <I18nProvider forceRenderOnLocaleChange={forceRenderAfterLocaleChange} i18n={i18n}>

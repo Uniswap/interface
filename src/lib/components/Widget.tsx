@@ -106,26 +106,26 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
   return (
     <StrictMode>
-      <I18nProvider locale={locale}>
-        <ThemeProvider theme={theme}>
-          <WidgetWrapper width={width} className={className} ref={setWrapper}>
-            <DialogProvider value={dialog || wrapper}>
-              <ErrorBoundary onError={onError}>
-                <WidgetPropValidator {...props}>
-                  <ReduxProvider store={multicallStore}>
-                    <AtomProvider>
+      <AtomProvider>
+        <I18nProvider locale={locale}>
+          <ThemeProvider theme={theme}>
+            <WidgetWrapper width={width} className={className} ref={setWrapper}>
+              <DialogProvider value={dialog || wrapper}>
+                <ErrorBoundary onError={onError}>
+                  <WidgetPropValidator {...props}>
+                    <ReduxProvider store={multicallStore}>
                       <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
                         <Updaters />
                         {children}
                       </Web3Provider>
-                    </AtomProvider>
-                  </ReduxProvider>
-                </WidgetPropValidator>
-              </ErrorBoundary>
-            </DialogProvider>
-          </WidgetWrapper>
-        </ThemeProvider>
-      </I18nProvider>
+                    </ReduxProvider>
+                  </WidgetPropValidator>
+                </ErrorBoundary>
+              </DialogProvider>
+            </WidgetWrapper>
+          </ThemeProvider>
+        </I18nProvider>
+      </AtomProvider>
     </StrictMode>
   )
 }
