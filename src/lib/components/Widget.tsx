@@ -6,7 +6,7 @@ import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
-import { PropsWithChildren, StrictMode, useRef } from 'react'
+import { PropsWithChildren, StrictMode, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { Provider as EthProvider } from 'widgets-web3-react/types'
 
@@ -103,13 +103,13 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     onError,
   } = props
 
-  const wrapper = useRef<HTMLDivElement>(null)
+  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
   return (
     <StrictMode>
       <I18nProvider locale={locale}>
         <ThemeProvider theme={theme}>
-          <WidgetWrapper width={width} className={className} ref={wrapper}>
-            <DialogProvider value={dialog || wrapper.current}>
+          <WidgetWrapper width={width} className={className} ref={setWrapper}>
+            <DialogProvider value={dialog || wrapper}>
               <ErrorBoundary onError={onError}>
                 <WidgetPropValidator {...props}>
                   <ReduxProvider store={multicallStore}>
