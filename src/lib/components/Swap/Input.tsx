@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
@@ -7,9 +6,11 @@ import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
+import { TradeState } from 'state/routing/types'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
+import { LoadingOpacityContainer } from '../Loader'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
@@ -42,12 +43,12 @@ export default function Input({ disabled }: InputProps) {
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(swapInputCurrency)
 
-  const routeIsLoading = useMemo(
+  const isRouteLoading = useMemo(
     () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
     [tradeState]
   )
   const independentField = useAtomValue(independentFieldAtom)
-  const showLoading = independentField === Field.OUTPUT && routeIsLoading
+  const showLoading = independentField === Field.OUTPUT && isRouteLoading
 
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true

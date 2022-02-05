@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -9,10 +8,12 @@ import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
+import { TradeState } from 'state/routing/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
+import { LoadingOpacityContainer } from '../Loader'
 import Row from '../Row'
 import TokenInput from './TokenInput'
 
@@ -50,12 +51,12 @@ export default function Output({ disabled, children }: OutputProps) {
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
   //loading status of the trade
-  const routeIsLoading = useMemo(
+  const isRouteLoading = useMemo(
     () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
     [tradeState]
   )
   const independentField = useAtomValue(independentFieldAtom)
-  const showLoading = independentField === Field.INPUT && routeIsLoading
+  const showLoading = independentField === Field.INPUT && isRouteLoading
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(swapOutputCurrency)

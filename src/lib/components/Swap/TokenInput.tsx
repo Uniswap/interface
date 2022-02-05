@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { LoadingOpacityContainer } from 'components/Loader/styled'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
 
 import Button from '../Button'
 import Column from '../Column'
 import { DecimalInput } from '../Input'
+import { LoadingOpacityContainer } from '../Loader'
 import Row from '../Row'
 import TokenSelect from '../TokenSelect'
 
@@ -77,7 +77,7 @@ export default function TokenInput({
   return (
     <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
-        <LoadingOpacityContainer $loading={!!loading}>
+        <LoadingOpacityContainer $loading={Boolean(loading)}>
           <ThemedText.H2>
             <ValueInput
               value={amount}
