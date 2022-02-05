@@ -6,10 +6,13 @@ import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { AlertTriangle, Expando, Info } from 'lib/icons'
+import { localeAtom } from 'lib/state/locale'
 import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
+import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
+import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -110,6 +113,8 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
 
   const scrollbar = useScrollbar(details)
 
+  const locale = useAtomValue(localeAtom)
+
   if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
     return null
   }
@@ -121,7 +126,8 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         <SummaryColumn gap={0.75} flex justify="center">
           <Summary input={inputAmount} output={outputAmount} usdc={true} />
           <ThemedText.Caption>
-            1 {inputCurrency.symbol} = {executionPrice?.toSignificant(6)} {outputCurrency.symbol}
+            {formatLocaleNumber({ number: 1, sigFigs: 1, locale })} {inputCurrency.symbol} ={' '}
+            {formatPrice(executionPrice, 6, locale)} {outputCurrency.symbol}
           </ThemedText.Caption>
         </SummaryColumn>
         <Rule />
@@ -145,13 +151,13 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
             <Trans>Output is estimated.</Trans>
             {independentField === Field.INPUT && (
               <Trans>
-                You will send at most {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {inputCurrency.symbol}{' '}
-                or the transaction will revert.
+                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, locale)}{' '}
+                {inputCurrency.symbol} or the transaction will revert.
               </Trans>
             )}
             {independentField === Field.OUTPUT && (
               <Trans>
-                You will receive at least {trade.minimumAmountOut(allowedSlippage).toSignificant(6)}{' '}
+                You will receive at least {formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, locale)}{' '}
                 {outputCurrency.symbol} or the transaction will revert.
               </Trans>
             )}

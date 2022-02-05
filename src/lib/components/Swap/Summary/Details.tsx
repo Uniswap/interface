@@ -3,11 +3,13 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtomValue } from 'jotai/utils'
+import { localeAtom } from 'lib/state/locale'
 import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 import Row from '../../Row'
@@ -48,43 +50,48 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
 
+  const locale = useAtomValue(localeAtom)
   const details = useMemo(() => {
+    const rows = []
     // @TODO(ianlapham): Check that provider fee is even a valid list item
-    return [
-      // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
-      [
+
+    if (feeOptions) {
+      const parsedConvenienceFee = formatCurrencyAmount(outputAmount.multiply(feeOptions.fee), 6, locale)
+      rows.push([
         t`${integrator} fee`,
-        feeOptions &&
-          `${outputAmount.multiply(feeOptions.fee).toSignificant(2)} ${
-            outputCurrency.symbol || currencyId(outputCurrency)
-          }`,
-      ],
-      [
-        t`Price impact`,
-        `${priceImpact.toFixed(2)}%`,
-        !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH)
-          ? 'error'
-          : !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)
-          ? 'warning'
-          : undefined,
-      ],
-      trade.tradeType === TradeType.EXACT_INPUT
-        ? [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`]
-        : [],
-      trade.tradeType === TradeType.EXACT_OUTPUT
-        ? [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`]
-        : [],
-      [
-        t`Slippage tolerance`,
-        `${allowedSlippage.toFixed(2)}%`,
-        !allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE) && 'warning',
-      ],
-    ].filter(isDetail)
+        `${parsedConvenienceFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`,
+      ])
+    }
+
+    const priceImpactMessage = !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH)
+      ? 'error'
+      : !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)
+      ? 'warning'
+      : undefined
+    rows.push([t`Price impact`, `${priceImpact.toFixed(2)}%`, priceImpactMessage])
+
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, locale)
+      rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
+    }
+
+    if (trade.tradeType === TradeType.EXACT_OUTPUT) {
+      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, locale)
+      rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
+    }
+
+    rows.push([
+      t`Slippage tolerance`,
+      `${allowedSlippage.toFixed(2)}%`,
+      !allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE) && 'warning',
+    ])
+
+    return rows.filter(isDetail)
 
     function isDetail(detail: unknown[]): detail is [string, string, Color | undefined] {
       return Boolean(detail[1])
     }
-  }, [allowedSlippage, inputCurrency, integrator, feeOptions, outputAmount, outputCurrency, priceImpact, trade])
+  }, [allowedSlippage, feeOptions, inputCurrency, integrator, locale, outputAmount, outputCurrency, priceImpact, trade])
   return (
     <>
       {details.map(([label, detail, color]) => (

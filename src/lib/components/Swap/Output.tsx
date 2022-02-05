@@ -5,6 +5,7 @@ import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
+import { localeAtom } from 'lib/state/locale'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
@@ -39,6 +40,8 @@ interface OutputProps {
 }
 
 export default function Output({ disabled, children }: OutputProps) {
+  const locale = useAtomValue(localeAtom)
+
   const {
     currencyBalances: { [Field.OUTPUT]: balance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
@@ -89,7 +92,7 @@ export default function Output({ disabled, children }: OutputProps) {
               <span>{usdc}</span>
               {balance && (
                 <span>
-                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>
+                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, locale)}</span>
                 </span>
               )}
             </Row>
