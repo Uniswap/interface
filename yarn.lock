@@ -4098,10 +4098,10 @@
   dependencies:
     openzeppelin-solidity "^4.0.0"
 
-"@ubeswap/sdk@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@ubeswap/sdk/-/sdk-2.1.1.tgz#b1622f66087678a17bdc184256618418dc508732"
-  integrity sha512-UBcqcUv2q1IA/5RqYSRHGQiHkm55nN+dZ+b98Il6wsi+FcUS2qyZFPgoNtGD8jpGfauERFJs4OIaRJWJRF1NYg==
+"@ubeswap/sdk@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@ubeswap/sdk/-/sdk-2.1.2.tgz#e0dd4e44c1b9071668f493e8b35486aba694b198"
+  integrity sha512-3K98FW33lGH1K2qAy4KAze7rt5aJ1p+kRkIPNCXsnuRGjRlM38igFcDRggk1pBu3QJel42qyydTQrSXf/gkkIQ==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^6.0.3"

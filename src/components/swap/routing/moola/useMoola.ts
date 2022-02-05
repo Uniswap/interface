@@ -1,7 +1,7 @@
 import { CeloContract } from '@celo/contractkit'
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
-import { CELO, ChainId, currencyEquals, cUSD, Token } from '@ubeswap/sdk'
-import { CEUR, MCELO, MCEUR, MCUSD } from 'constants/index'
+import { CELO, ChainId, cREAL, currencyEquals, cUSD, Token } from '@ubeswap/sdk'
+import { CEUR, MCELO, MCEUR, MCREAL, MCUSD } from 'constants/index'
 import { useMemo } from 'react'
 
 import { LendingPool, LendingPool__factory } from '../../../../generated'
@@ -15,6 +15,7 @@ export const moolaLendingPools = {
     [CeloContract.GoldToken]: CELO[ChainId.ALFAJORES],
     [CeloContract.StableToken]: cUSD[ChainId.ALFAJORES],
     mcUSD: MCUSD[ChainId.ALFAJORES],
+    mCREAL: MCREAL[ChainId.ALFAJORES],
     mCELO: MCELO[ChainId.ALFAJORES],
   },
   [ChainId.MAINNET]: {
@@ -24,12 +25,14 @@ export const moolaLendingPools = {
     [CeloContract.GoldToken]: CELO[ChainId.MAINNET],
     [CeloContract.StableToken]: cUSD[ChainId.MAINNET],
     mcUSD: MCUSD[ChainId.MAINNET],
+    mCREAL: MCREAL[ChainId.MAINNET],
     mCELO: MCELO[ChainId.MAINNET],
   },
 }
 
 export const moolaDuals = (
   [
+    [MCREAL, cREAL],
     [MCUSD, cUSD],
     [MCELO, CELO],
     [MCEUR, CEUR],

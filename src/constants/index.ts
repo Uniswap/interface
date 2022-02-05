@@ -26,6 +26,23 @@ export const POOF = {
   [ChainId.ALFAJORES]: new Token(ChainId.ALFAJORES, '0x00400FcbF0816bebB94654259de7273f4A05c762', 18, 'POOF', 'POOF'),
 }
 
+export const MCREAL = {
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x9802d866fdE4563d088a6619F7CeF82C0B991A55',
+    18,
+    'mCREAL',
+    'Moola cREAL'
+  ),
+  [ChainId.ALFAJORES]: new Token(
+    ChainId.ALFAJORES,
+    '0x3D0EDA535ca4b15c739D46761d24E42e37664Ad7',
+    18,
+    'mCREAL',
+    'Moola cREAL'
+  ),
+}
+
 export const MCUSD = {
   [ChainId.MAINNET]: new Token(
     ChainId.MAINNET,
