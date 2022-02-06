@@ -97,6 +97,7 @@ const HeaderElement = styled.div`
 const HeaderLinks = styled(Row)`
   justify-self: center;
   background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg1};
   width: fit-content;
   padding: 4px;
   border-radius: 16px;

@@ -32,6 +32,7 @@ import { getTokenData, useEthPrice } from 'state/logs/utils'
 import { useTokenHolderCount } from 'components/swap/ChartPage'
 import { DetailsModal } from 'components/swap/DetailsModal'
 import { useHasAccess } from 'components/AccountPage/AccountPage'
+import { normalize } from 'path'
 type SortStateKey = 'asc' | 'desc' | undefined;
   type SortState = {
     network: SortStateKey,
@@ -503,7 +504,7 @@ export const FomoPage = () => {
     <DarkCard style={{ maxWidth: 1200, background: '#252632' }}>
       <Wrapper style={{ overflow: 'auto', padding: '9px 14px' }}>
         <div style={{ marginBottom: 10 }}>
-          <h1 style={{fontFamily: 'Bangers'}}>KibaFomo &nbsp;
+          <h1 style={{fontFamily: 'Bangers', fontWeight: 'normal'}}>KibaFomo &nbsp;
             <Tooltip text={infoTipText} show={showInfo}>
               <Info onMouseEnter={() => setShowInfo(true)} onMouseLeave={() => setShowInfo(false)} />
             </Tooltip>
