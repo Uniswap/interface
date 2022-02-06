@@ -1,19 +1,21 @@
-import { DarkCard } from 'components/Card';
-import { walletconnect } from 'connectors';
-import React from 'react';
-import { isAddress } from 'utils';
-import Web3 from 'web3'
-import styled from 'styled-components/macro'
-import { useWeb3React } from '@web3-react/core';
-import { AutoColumn } from 'components/Column';
-import { RowFixed } from 'components/Row';
 import { AlertOctagon, CheckCircle, Info } from 'react-feather';
-import { useKiba } from './Vote/VotePage';
-import Swal from 'sweetalert2';
-import { useContractOwner } from 'components/swap/ConfirmSwapModal';
 import Badge, { BadgeVariant } from 'components/Badge';
+
+import { AutoColumn } from 'components/Column';
+import { DarkCard } from 'components/Card';
+import React from 'react';
+import { RowFixed } from 'components/Row';
+import Swal from 'sweetalert2';
 import Tooltip from 'components/Tooltip';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
+import Web3 from 'web3'
+import { isAddress } from 'utils';
+import styled from 'styled-components/macro'
+import { useContractOwner } from 'components/swap/ConfirmSwapModal';
+import { useKiba } from './Vote/VotePage';
+import { useWeb3React } from '@web3-react/core';
+import { walletconnect } from 'connectors';
+
 const StyledHeader = styled.div`
   font-family:"Bangers", cursive;
   font-size:22px;
@@ -305,7 +307,7 @@ export const HoneyPotBsc = () => {
       <RowFixed style={{ maxWidth: 600, width: "100%" }} >
         {hasInvalidPermissions === false &&
           <AutoColumn style={{ maxWidth: 600, width: "100%" }} gap={'md'}>
-            <label>Input a contract address to check if its a honeypot</label>
+            <label>Input a contract address to check if its a honeypot <Badge variant={BadgeVariant.PRIMARY}>(MUST BE BSC Contract Address)</Badge></label>
             <input style={{ padding: 8, width: '100%', marginBottom: 5 }} type={'search'} placeholder={"Input a contract address to check if a honeypot"} onChange={e => runInteraction(e.target.value)} />
           </AutoColumn>
         }
