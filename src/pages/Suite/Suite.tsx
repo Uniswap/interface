@@ -22,15 +22,16 @@ export const Suite = React.memo(() => {
   }, [kibaBalance])
 
   const url = `https://app.unicrypt.network/services`;
-  const FrameText =  <p style={{height:'400px', display:'flex', width:'100%', color:"#222", justifyContent: 'center', alignItems:'center'}}>You must own Kiba Inu tokens to use this feature</p>
+  const FrameText =  <p style={{fontFamily: 'Open Sans', height:'400px', display:'flex', width:'100%', color:"#FFF", justifyContent: 'center', alignItems:'center'}}>You must own Kiba Inu tokens to use this feature</p>
   const Header = styled.h1`
   font-family:"Bangers", cursive; 
   box-shadow:1px 1px .5px .5px #222;
+  padding: 20px;
   `
   return (
-    <BlueCard style={{background:'radial-gradient(#f5b642, rgba(129,3,3,.95))',opacity:'.99', marginTop:-40, maxWidth:900}}>
+    <BlueCard style={{background:'#252632',opacity:'.99', marginTop:-40, maxWidth:900, borderRadius: 30 }}>
       <div style={{display:'flex', justifyContent:'space-between', position:'sticky',  top:0, width:'100%'}}>
-        <Header style={{color:'#FFF'}}>
+        <Header style={{color:'#FFF', fontWeight: 'normal'}}>
           KibaTools&trade;
         </Header>
       </div>
