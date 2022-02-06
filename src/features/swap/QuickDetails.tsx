@@ -29,11 +29,11 @@ export function QuickDetails(props: QuickDetailsProps) {
     <Box alignItems="center" alignSelf="stretch" flexDirection="row" justifyContent="space-between">
       <Flex centered row gap="xs">
         <InfoCircle
-          color={label ? theme.colors.gray400 : theme.colors.black}
+          color={label ? theme.colors.gray400 : theme.colors.mainForeground}
           height={20}
           width={20}
         />
-        <Text color={label ? 'gray400' : 'black'} fontWeight="500" variant="bodyMd">
+        <Text color={label ? 'gray400' : 'mainForeground'} fontWeight="500" variant="bodyMd">
           {label || formatExecutionPrice(trade?.executionPrice)}
         </Text>
       </Flex>

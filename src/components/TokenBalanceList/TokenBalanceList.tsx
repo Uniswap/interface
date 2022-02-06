@@ -12,7 +12,6 @@ import { Trace } from 'src/features/telemetry/Trace'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { useNetworkColors } from 'src/utils/colors'
 import { currencyId } from 'src/utils/currencyId'
-import { logger } from 'src/utils/logger'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
 interface TokenBalanceListProps {
@@ -43,7 +42,6 @@ function balancesToSectionListData(balances: ChainIdToAddressToCurrencyAmount): 
   data: CurrencyAmount<Currency>[]
 }[] {
   // Convert balances into array suitable for SectionList
-
   const chainIdToCurrencyAmounts = ALL_SUPPORTED_CHAIN_IDS.reduce<
     {
       chainId: ChainId
@@ -61,7 +59,6 @@ function balancesToSectionListData(balances: ChainIdToAddressToCurrencyAmount): 
         })
       }
     }
-    logger.debug('tokenbalancelist', 'render', 'acc', acc)
 
     return acc
   }, [])
@@ -79,8 +76,6 @@ export function TokenBalanceList({
   const chainIdToCurrencyAmounts = useMemo(() => {
     return balancesToSectionListData(balances)
   }, [balances])
-
-  logger.debug('tokenbalancelist', 'render', 'chainidto', chainIdToCurrencyAmounts)
 
   const currenciesToFetch = flattenObjectOfObjects(balances).map(
     (currencyAmount) => currencyAmount.currency

@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/react-native'
 import { ThemeProvider } from '@shopify/restyle'
 import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
+import { enableLayoutAnimations } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClient, QueryClientProvider, setLogger } from 'react-query'
 import { Provider } from 'react-redux'
@@ -40,6 +41,8 @@ setLogger({
 
 initializeRemoteConfig()
 enableAnalytics()
+// https://github.com/software-mansion/react-native-reanimated/issues/2758
+enableLayoutAnimations(true)
 
 const queryClient = new QueryClient()
 

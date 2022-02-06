@@ -150,7 +150,7 @@ export function AccountsScreen() {
                 {t('Watching')}
               </Text>
               {Object.values(readOnlyAccounts).map((account) => (
-                <Box key={account.address} mb="xl">
+                <Box key={account.address} mb="sm">
                   <AccountItem
                     account={account}
                     isActive={!!activeAccount && activeAccount.address === account.address}
