@@ -18,7 +18,7 @@ import { walletconnect } from 'connectors';
 
 const StyledHeader = styled.div`
   font-family:"Bangers", cursive;
-  font-size:22px;
+  font-size:24px;
 `
 // eslint-disable-next-line
 export const isHoneyPotBsc = async (address: string, provider: any): Promise<boolean> => {
@@ -299,22 +299,22 @@ export const HoneyPotBsc = () => {
   const hasInvalidPermissions = React.useMemo(() => !account || !kibaBalance || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0), [account, kibaBalance])
 
   return (
-    <DarkCard style={{ background: 'radial-gradient(#f5b642, rgba(129,3,3,.95))', opacity: '.96', maxWidth: 600 }} id="honeypage">
+    <DarkCard style={{ background: '#252632', opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20  }} id="honeypage">
       <div style={{ maxWidth: 600, display: 'flex', flexFlow: 'column wrap', margin: 'auto', paddingBottom: '1rem' }}>
-        <Badge style={{ width: 200 }}><StyledHeader>Honeypot Checker (BSC)</StyledHeader></Badge>
+        <StyledHeader style={{ fontSize: 30, paddingBottom: 20, paddingTop: 20}}>Honeypot Checker (BSC)</StyledHeader>
         <small style={{ marginTop: 3, paddingLeft: 3 }}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
       </div>
       <RowFixed style={{ maxWidth: 600, width: "100%" }} >
         {hasInvalidPermissions === false &&
-          <AutoColumn style={{ maxWidth: 600, width: "100%" }} gap={'md'}>
-            <label>Input a contract address to check if its a honeypot <Badge variant={BadgeVariant.PRIMARY}>(MUST BE BSC Contract Address)</Badge></label>
+          <AutoColumn style={{ maxWidth: 600, width: "100%", paddingLeft: 15, paddingTop: 30, paddingBottom: 30 }} gap={'md'}>
+            <label style= {{ fontFamily: 'Open Sans'}}>Input a contract address to check if its a honeypot</label>
             <input style={{ padding: 8, width: '100%', marginBottom: 5 }} type={'search'} placeholder={"Input a contract address to check if a honeypot"} onChange={e => runInteraction(e.target.value)} />
           </AutoColumn>
         }
 
         {hasInvalidPermissions &&
-          <p>You must hold Kiba Inu tokens in order to use this feature.
-          </p>}
+         <p style={{display: 'flex', width: '100%', justifyContent: 'center' }}>You must hold Kiba Inu tokens in order to use this feature.
+         </p>} 
       </RowFixed>
       <RowFixed>
         <AutoColumn>
