@@ -1,5 +1,5 @@
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
-import { useSwapInfo } from 'lib/hooks/swap'
+import { useSwapAmount, useSwapInfo } from 'lib/hooks/swap'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { largeIconCss } from 'lib/icons'
 import { Field } from 'lib/state/swap'
@@ -29,6 +29,9 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     [state, trade?.swaps]
   )
 
+  const [swapInputAmount] = useSwapAmount(Field.INPUT)
+  const [swapOutputAmount] = useSwapAmount(Field.OUTPUT)
+
   const caption = useMemo(() => {
     if (disabled) {
       return <Caption.ConnectWallet />
@@ -42,11 +45,10 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
       return <Caption.InsufficientBalance currency={trade.inputAmount.currency} />
     }
 
-    if (inputCurrency && outputCurrency) {
+    if (inputCurrency && outputCurrency && (swapInputAmount || swapOutputAmount)) {
       if (!trade || routeIsLoading) {
         return <Caption.LoadingTrade />
       }
-
       if (!routeFound) {
         return <Caption.InsufficientLiquidity />
       }
@@ -56,7 +58,18 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     }
 
     return <Caption.Empty />
-  }, [balance, chainId, disabled, inputCurrency, outputCurrency, routeFound, routeIsLoading, trade])
+  }, [
+    balance,
+    chainId,
+    disabled,
+    inputCurrency,
+    outputCurrency,
+    routeFound,
+    routeIsLoading,
+    swapInputAmount,
+    swapOutputAmount,
+    trade,
+  ])
 
   return (
     <>
