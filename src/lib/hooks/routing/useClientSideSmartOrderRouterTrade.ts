@@ -1,11 +1,16 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useEffect, useMemo, useState } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
+import useActiveWeb3React from '../useActiveWeb3React'
 import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
+
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
+const config = { protocols }
 
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
@@ -15,6 +20,9 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
+  const chainId = amountSpecified?.currency.chainId
+  const { library } = useActiveWeb3React()
+
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -30,6 +38,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     tradeType,
     useClientSideRouter: true,
   })
+  const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
 
   const [loading, setLoading] = useState(false)
   const [{ quoteResult, error }, setFetchedResult] = useState<{
@@ -47,8 +56,8 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
 
     async function fetchQuote() {
       try {
-        if (queryArgs) {
-          const result = await getClientSideQuote(queryArgs)
+        if (queryArgs && params) {
+          const result = await getClientSideQuote(queryArgs, params, config)
           setFetchedResult({
             quoteResult: result.data,
             error: result.error,
@@ -63,7 +72,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
         setLoading(false)
       }
     }
-  }, [queryArgs])
+  }, [queryArgs, params])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
