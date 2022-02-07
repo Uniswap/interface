@@ -22,7 +22,7 @@ export default function WidgetsPropsValidator(props: PropsWithChildren<WidgetPro
   const { locale } = props
   useEffect(() => {
     if (locale && locale !== 'pseudo' && !SUPPORTED_LOCALES.includes(locale)) {
-      throw new IntegrationError(`${locale} is not a supported locale.`)
+      console.warn('Unsupported locale: ', locale)
     }
   }, [locale])
 
