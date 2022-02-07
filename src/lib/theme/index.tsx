@@ -26,7 +26,7 @@ export const lightTheme: Colors = {
   dialog: '#FFFFFF',
 
   // text
-  onAccentText: '#ffffff',
+  onAccent: '#ffffff',
   primary: '#000000',
   secondary: '#565A69',
   hint: '#888D9B',
@@ -53,7 +53,7 @@ export const darkTheme: Colors = {
   dialog: '#000000',
 
   // text
-  onAccentText: readableColor(darkThemeAccent),
+  onAccent: readableColor(darkThemeAccent),
   primary: '#FFFFFF',
   secondary: '#888D9B',
   hint: '#6C7284',

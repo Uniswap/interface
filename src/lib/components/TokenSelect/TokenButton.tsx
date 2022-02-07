@@ -36,7 +36,7 @@ interface TokenButtonProps {
 
 export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
   const buttonBackgroundColor = useMemo(() => (value ? 'interactive' : 'accent'), [value])
-  const contentColor = useMemo(() => (value || disabled ? 'onInteractive' : 'onAccentText'), [value, disabled])
+  const contentColor = useMemo(() => (value || disabled ? 'onInteractive' : 'onAccent'), [value, disabled])
   return (
     <StyledTokenButton onClick={onClick} empty={!value} color={buttonBackgroundColor} disabled={disabled}>
       <ThemedText.ButtonLarge color={contentColor}>

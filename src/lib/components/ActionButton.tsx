@@ -71,10 +71,7 @@ export default function ActionButton({
   onUpdate,
   children,
 }: ActionButtonProps) {
-  const textColor = useMemo(
-    () => (color === 'accent' && !disabled ? 'onAccentText' : 'currentColor'),
-    [color, disabled]
-  )
+  const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])
   return (
     <Overlay update={Boolean(update)} flex align="stretch">
       <StyledButton color={color} disabled={disabled} onClick={update ? onUpdate : onClick}>
