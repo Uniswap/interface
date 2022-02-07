@@ -324,20 +324,29 @@ function Header() {
             )}{' '}
             {nativeCurrency.symbol}
           </Amount>
-          <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
-            <GasInfoSvg />
-            <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
-              {gas.normal}
-            </Text>
-            {isGasInfoOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-          </GasInfo>
+          {gas.normal !== 0 && (
+            <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
+              <GasInfoSvg />
+              <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
+                {gas.normal}
+              </Text>
+              {gas.fast === 0 && gas.slow === 0 ? (
+                ''
+              ) : isGasInfoOpen ? (
+                <ChevronUp size={12} />
+              ) : (
+                <ChevronDown size={12} />
+              )}
+            </GasInfo>
+          )}
         </HeaderSubRow>
-
-        <HeaderSubRow style={{ visibility: isGasInfoOpen ? 'visible' : 'hidden', gap: '4px' }}>
-          <ColoredGas color={'fast'}>FAST {gas.fast}</ColoredGas>
-          <ColoredGas color={'normal'}>NORMAL {gas.normal}</ColoredGas>
-          <ColoredGas color={'slow'}>SLOW {gas.slow}</ColoredGas>
-        </HeaderSubRow>
+        {gas.fast !== 0 && gas.slow !== 0 && (
+          <HeaderSubRow style={{ visibility: isGasInfoOpen ? 'visible' : 'hidden', gap: '4px' }}>
+            <ColoredGas color={'fast'}>FAST {gas.fast}</ColoredGas>
+            <ColoredGas color={'normal'}>NORMAL {gas.normal}</ColoredGas>
+            <ColoredGas color={'slow'}>SLOW {gas.slow}</ColoredGas>
+          </HeaderSubRow>
+        )}
       </HeaderControls>
     </HeaderFrame>
   )
