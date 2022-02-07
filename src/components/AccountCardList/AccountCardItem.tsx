@@ -34,7 +34,7 @@ export function AccountCardItem({
   onPressSend,
 }: Props) {
   const { t } = useTranslation()
-  const color = useAddressColor(address)
+  const color = useAddressColor(address, /*isDarkMode=*/ false)
 
   return (
     <Button

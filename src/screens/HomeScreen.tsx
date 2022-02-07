@@ -11,7 +11,7 @@ import { AccountCardList } from 'src/components/AccountCardList/AccountCardList'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { PinkToBlueLinear } from 'src/components/gradients/PinkToBlueLinear'
+import { PrimaryToSecondaryLinear } from 'src/components/gradients/PinkToBlueLinear'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -83,8 +83,8 @@ export function HomeScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <GradientBackground height="100%">
-        <PinkToBlueLinear />
+      <GradientBackground height="50%">
+        <PrimaryToSecondaryLinear />
       </GradientBackground>
       <Flex gap="md" mt="lg" mx="lg">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between">

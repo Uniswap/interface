@@ -140,7 +140,7 @@ function ActiveAccountSummary() {
   if (!activeAccount) return null
   return (
     <Box alignItems="center" borderRadius="lg" overflow="hidden" p="md">
-      <GradientBackground opacity={0.2}>
+      <GradientBackground opacity={1}>
         <BlueToPinkRadial />
       </GradientBackground>
       <Identicon address={activeAccount.address} size={50} />

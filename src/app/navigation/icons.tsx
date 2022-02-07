@@ -25,16 +25,17 @@ interface NavIconProps {
 }
 
 export function WalletTabIcon({ focused }: NavIconProps) {
-  const { primaryColor, secondaryColor } = useTabNavColors()
-  return <WalletIcon fill={focused ? primaryColor : secondaryColor} height={30} width={30} />
+  const primaryColor = useTabNavColors()
+  return <WalletIcon fill={primaryColor} height={30} opacity={focused ? 1 : 0.3} width={30} />
 }
 
 export function ExploreTabIcon({ focused }: NavIconProps) {
-  const { primaryColor, secondaryColor } = useTabNavColors()
+  const primaryColor = useTabNavColors()
   return (
     <SearchIcon
       height={30}
-      stroke={focused ? primaryColor : secondaryColor}
+      opacity={focused ? 1 : 0.3}
+      stroke={primaryColor}
       strokeWidth={2.2}
       width={30}
     />
@@ -44,6 +45,5 @@ export function ExploreTabIcon({ focused }: NavIconProps) {
 function useTabNavColors() {
   const theme = useAppTheme()
   const primaryColor = theme.colors.primary1
-  const secondaryColor = theme.colors.secondary2
-  return { primaryColor, secondaryColor }
+  return primaryColor
 }

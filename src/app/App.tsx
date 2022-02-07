@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/react-native'
-import { ThemeProvider } from '@shopify/restyle'
 import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { enableLayoutAnimations } from 'react-native-reanimated'
@@ -19,7 +18,7 @@ import { NotificationBannerWrapper } from 'src/features/notifications/Notificati
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { enableAnalytics } from 'src/features/telemetry'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
-import { darkTheme, theme } from 'src/styles/theme'
+import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 
 if (!__DEV__) {
   Sentry.init({
@@ -54,7 +53,7 @@ export function App() {
       <SafeAreaProvider>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
+            <DynamicThemeProvider>
               <ErrorBoundary>
                 <WalletContextProvider>
                   <DataUpdaters />
@@ -65,7 +64,7 @@ export function App() {
                   </QueryClientProvider>
                 </WalletContextProvider>
               </ErrorBoundary>
-            </ThemeProvider>
+            </DynamicThemeProvider>
           </PersistGate>
         </Provider>
       </SafeAreaProvider>
