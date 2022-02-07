@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { ChevronDown } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
+import { useMemo } from 'react'
 
 import Button from '../Button'
 import Row from '../Row'
@@ -34,9 +35,11 @@ interface TokenButtonProps {
 }
 
 export default function TokenButton({ value, collapsed, disabled, onClick }: TokenButtonProps) {
+  const buttonBackgroundColor = useMemo(() => (value ? 'interactive' : 'accent'), [value])
+  const contentColor = useMemo(() => (value || disabled ? 'onInteractive' : 'onAccent'), [value, disabled])
   return (
-    <StyledTokenButton onClick={onClick} empty={!value} color={value ? 'interactive' : 'accent'} disabled={disabled}>
-      <ThemedText.ButtonLarge color="onInteractive">
+    <StyledTokenButton onClick={onClick} empty={!value} color={buttonBackgroundColor} disabled={disabled}>
+      <ThemedText.ButtonLarge color={contentColor}>
         <TokenButtonRow gap={0.4} collapsed={Boolean(value) && collapsed}>
           {value ? (
             <>
@@ -46,7 +49,7 @@ export default function TokenButton({ value, collapsed, disabled, onClick }: Tok
           ) : (
             <Trans>Select a token</Trans>
           )}
-          <ChevronDown color="onInteractive" strokeWidth={3} />
+          <ChevronDown color={contentColor} strokeWidth={3} />
         </TokenButtonRow>
       </ThemedText.ButtonLarge>
     </StyledTokenButton>
