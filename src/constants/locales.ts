@@ -32,8 +32,8 @@ export const SUPPORTED_LOCALES = [
   'vi-VN',
   'zh-CN',
   'zh-TW',
-] as const
-export type SupportedLocale = typeof SUPPORTED_LOCALES[number] | 'pseudo' | string
+]
+export type SupportedLocale = typeof SUPPORTED_LOCALES[number] | 'pseudo'
 
 // eslint-disable-next-line import/first
 import * as enUS from '../locales/en-US'
