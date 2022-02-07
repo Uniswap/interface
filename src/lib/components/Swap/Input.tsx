@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
+import { loadingOpacityCss } from 'lib/css/loading'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field, independentFieldAtom } from 'lib/state/swap'
@@ -10,10 +11,13 @@ import { TradeState } from 'state/routing/types'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
-import { LoadingOpacityContainer } from '../Loader'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
+
+const LoadingH2 = styled(ThemedText.H2)<{ loading: boolean }>`
+  ${loadingOpacityCss};
+`
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
   margin: 0.75em;
@@ -43,12 +47,13 @@ export default function Input({ disabled }: InputProps) {
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(swapInputCurrency)
 
-  const isRouteLoading = useMemo(
+  const isTradeLoading = useMemo(
     () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
     [tradeState]
   )
   const independentField = useAtomValue(independentFieldAtom)
-  const showLoading = independentField === Field.OUTPUT && isRouteLoading
+  const isDependentField = independentField !== Field.INPUT
+  const isLoading = isDependentField && isTradeLoading
 
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
@@ -74,13 +79,11 @@ export default function Input({ disabled }: InputProps) {
         onMax={onMax}
         onChangeInput={updateSwapInputAmount}
         onChangeCurrency={updateSwapInputCurrency}
-        loading={showLoading}
+        loading={isLoading}
       >
         <ThemedText.Body2 color="secondary">
           <Row>
-            <LoadingOpacityContainer $loading={showLoading}>
-              <span>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</span>
-            </LoadingOpacityContainer>
+            <LoadingH2 loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingH2>
             {balance && (
               <ThemedText.Body2 color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}>
                 Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>

@@ -1,14 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { loadingOpacityCss } from 'lib/css/loading'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
 
 import Button from '../Button'
 import Column from '../Column'
 import { DecimalInput } from '../Input'
-import { LoadingOpacityContainer } from '../Loader'
 import Row from '../Row'
 import TokenSelect from '../TokenSelect'
+
+const LoadingH2 = styled(ThemedText.H2)<{ loading: boolean }>`
+  ${loadingOpacityCss};
+`
 
 const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
@@ -77,16 +81,14 @@ export default function TokenInput({
   return (
     <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
-        <LoadingOpacityContainer $loading={Boolean(loading)}>
-          <ThemedText.H2>
-            <ValueInput
-              value={amount}
-              onFocus={onFocus}
-              onChange={onChangeInput}
-              disabled={disabled || !currency}
-            ></ValueInput>
-          </ThemedText.H2>
-        </LoadingOpacityContainer>
+        <LoadingH2 loading={Boolean(loading)}>
+          <ValueInput
+            value={amount}
+            onFocus={onFocus}
+            onChange={onChangeInput}
+            disabled={disabled || !currency}
+          ></ValueInput>
+        </LoadingH2>
         {showMax && (
           <MaxButton onClick={onMax} ref={max}>
             <ThemedText.ButtonMedium>
