@@ -95,9 +95,7 @@ interface ProviderProps {
 export function Provider({ locale, forceRenderAfterLocaleChange = true, onActivate, children }: ProviderProps) {
   useEffect(() => {
     dynamicActivate(locale)
-      .then(() => {
-        onActivate?.(locale)
-      })
+      .then(() => onActivate?.(locale))
       .catch((error) => {
         console.error('Failed to activate locale', locale, error)
       })
