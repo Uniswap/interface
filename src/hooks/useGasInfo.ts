@@ -36,7 +36,6 @@ export function useGasInfo(): { loading: boolean; gas: { fast: number; normal: n
   const [gas, setGas] = useState<{ fast: number; normal: number; slow: number }>({ normal: 0, fast: 0, slow: 0 })
   console.log(gasInfoChainUrls)
   useEffect(() => {
-    // if (loadingNativeCurrencyUSDPrice) return { loading: true, gasFeesUSD: [] }
     if (!chainId) {
       setLoading(true)
       setGas({ normal: 0, fast: 0, slow: 0 })
@@ -44,7 +43,6 @@ export function useGasInfo(): { loading: boolean; gas: { fast: number; normal: n
       fetch(gasInfoChainUrls[chainId].url, gasInfoChainUrls[chainId].body)
         .then(res => res.json())
         .then(data => {
-          console.log(data)
           let average
           let fast = 0
           let slow = 0

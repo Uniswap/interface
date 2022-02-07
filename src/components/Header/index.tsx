@@ -212,7 +212,7 @@ const GasInfo = styled.div`
   border-radius: 8px;
   font-size: 10px;
   font-weight: 600;
-  color: #f2994a;
+  color: ${({ theme }) => theme.orange1};
   align-items: center;
 `
 const GasColor = {
@@ -244,7 +244,7 @@ function Header() {
   const { t } = useTranslation()
   const [isGasInfoOpen, setIsGasInfoOpen] = useState(false)
   const nativeCurrency = useNativeCurrency()
-  const { loading: loadingGas, gas } = useGasInfo()
+  const { gas } = useGasInfo()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
   const { loading, data, stakedAmount } = useSwaprSinglelSidedStakeCampaigns()
@@ -254,7 +254,7 @@ function Header() {
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
-  console.log(loadingGas)
+
   return (
     <HeaderFrame>
       <ClaimModal
