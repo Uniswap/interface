@@ -32,7 +32,7 @@ export const lightTheme: Colors = {
   dialog: 'hsl(0, 0%, 100%)',
 
   // text
-  onAccentText: 'hsl(0, 0%, 100%)',
+  onAccent: 'hsl(0, 0%, 100%)',
   primary: 'hsl(0, 0%, 0%)',
   secondary: 'hsl(227, 10%, 37.5%)',
   hint: 'hsl(224, 9%, 57%)',
@@ -56,7 +56,7 @@ export const darkTheme: Colors = {
   dialog: 'hsl(0, 0%, 0%)',
 
   // text
-  onAccentText: readableColor(darkThemeAccent),
+  onAccent: readableColor(darkThemeAccent),
   primary: 'hsl(0, 0%, 100%)',
   secondary: 'hsl(224, 8.7%, 57.1%)',
   hint: 'hsl(225, 10%, 47.1%)',
