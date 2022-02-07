@@ -1,6 +1,6 @@
 import { AlertTriangle, Icon, LargeIcon } from 'lib/icons'
 import styled, { Color, css, keyframes, ThemedText } from 'lib/theme'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 
 import Button from './Button'
 import Row from './Row'
@@ -71,10 +71,11 @@ export default function ActionButton({
   onUpdate,
   children,
 }: ActionButtonProps) {
+  const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])
   return (
     <Overlay update={Boolean(update)} flex align="stretch">
       <StyledButton color={color} disabled={disabled} onClick={update ? onUpdate : onClick}>
-        <ThemedText.TransitionButton buttonSize={update ? 'medium' : 'large'} color="currentColor">
+        <ThemedText.TransitionButton buttonSize={update ? 'medium' : 'large'} color={textColor}>
           {update ? update.action : children}
         </ThemedText.TransitionButton>
       </StyledButton>

@@ -1,6 +1,6 @@
 import '../assets/fonts.scss'
 
-import { mix, transparentize } from 'polished'
+import { mix, readableColor, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 
 import styled, { ThemedProvider } from './styled'
@@ -26,6 +26,7 @@ export const lightTheme: Colors = {
   dialog: '#FFFFFF',
 
   // text
+  onAccent: '#ffffff',
   primary: '#000000',
   secondary: '#565A69',
   hint: '#888D9B',
@@ -40,9 +41,11 @@ export const lightTheme: Colors = {
   currentColor: 'currentColor',
 }
 
+const darkThemeAccent = '#2172E5'
+
 export const darkTheme: Colors = {
   // surface
-  accent: '#2172E5',
+  accent: darkThemeAccent,
   container: '#191B1F',
   module: '#2C2F36',
   interactive: '#40444F',
@@ -50,6 +53,7 @@ export const darkTheme: Colors = {
   dialog: '#000000',
 
   // text
+  onAccent: readableColor(darkThemeAccent),
   primary: '#FFFFFF',
   secondary: '#888D9B',
   hint: '#6C7284',

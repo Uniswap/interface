@@ -9,6 +9,7 @@ export interface Colors {
 
   // text
   primary: string
+  onAccent: string
   secondary: string
   hint: string
   onInteractive: string
