@@ -22,6 +22,7 @@ const stateColors = {
   warning: 'hsl(43, 89.9%, 53.5%)',
   error: 'hsl(0, 98%, 62.2%)',
 }
+
 export const lightTheme: Colors = {
   // surface
   accent: brand,

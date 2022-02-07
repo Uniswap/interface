@@ -12,7 +12,6 @@ export interface Colors {
   onAccent: string
   secondary: string
   hint: string
-  onAccentText: string
   onInteractive: string
 
   // state
