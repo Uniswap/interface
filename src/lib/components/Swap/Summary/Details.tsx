@@ -63,12 +63,13 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       ])
     }
 
-    const priceImpactMessage = !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH)
-      ? 'error'
-      : !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)
-      ? 'warning'
-      : undefined
-    rows.push([t`Price impact`, `${priceImpact.toFixed(2)}%`, priceImpactMessage])
+    const priceImpactRow = [t`Price impact`, `${priceImpact.toFixed(2)}%`]
+    if (!priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) {
+      priceImpactRow.push('error')
+    } else if (!priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
+      priceImpactRow.push('warning')
+    }
+    rows.push(priceImpactRow)
 
     if (trade.tradeType === TradeType.EXACT_INPUT) {
       const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)
@@ -80,22 +81,18 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     }
 
-    rows.push([
-      t`Slippage tolerance`,
-      `${allowedSlippage.toFixed(2)}%`,
-      !allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE) && 'warning',
-    ])
-
-    return rows.filter(isDetail)
-
-    function isDetail(detail: unknown[]): detail is [string, string, Color | undefined] {
-      return Boolean(detail[1])
+    const slippageToleranceRow = [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`]
+    if (!allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE)) {
+      slippageToleranceRow.push('warning')
     }
+    rows.push(slippageToleranceRow)
+
+    return rows
   }, [allowedSlippage, feeOptions, inputCurrency, integrator, i18n, outputAmount, outputCurrency, priceImpact, trade])
   return (
     <>
       {details.map(([label, detail, color]) => (
-        <Detail key={label} label={label} value={detail} color={color} />
+        <Detail key={label} label={label} value={detail} color={color as Color} />
       ))}
     </>
   )
