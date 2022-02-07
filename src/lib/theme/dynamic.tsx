@@ -8,8 +8,8 @@ import { Colors, ComputedTheme } from './theme'
 
 type DynamicColors = Pick<Colors, 'interactive' | 'outline' | 'primary' | 'secondary' | 'onInteractive'>
 
-const black = '#000000'
-const white = '#FFFFFF'
+const black = 'hsl(0, 0%, 0%)'
+const white = 'hsl(0, 0%, 100%)'
 
 const light: DynamicColors = {
   // surface

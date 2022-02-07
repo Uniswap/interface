@@ -14,56 +14,57 @@ export * from './layer'
 export * from './styled'
 export * as ThemedText from './type'
 
-export const brand = '#FF007A'
+export const brand = 'hsl(331.3, 100%, 50%)'
+
+const stateColors = {
+  active: 'hsl(215, 79%, 51.4%)',
+  success: 'hsl(145, 63.4%, 41.8%)',
+  warning: 'hsl(43, 89.9%, 53.5%)',
+  error: 'hsl(0, 98%, 62.2%)',
+}
 
 export const lightTheme: Colors = {
   // surface
   accent: brand,
-  container: '#F7F8FA',
-  module: '#E2E3E9',
-  interactive: '#CED0D9',
-  outline: '#C3C5CB',
-  dialog: '#FFFFFF',
+  container: 'hsl(220, 23%, 97.5%)',
+  module: 'hsl(231, 14%, 90%)',
+  interactive: 'hsl(229, 13%, 83%)',
+  outline: 'hsl(225, 7%, 78%)',
+  dialog: 'hsl(0, 0%, 100%)',
 
   // text
-  onAccent: '#ffffff',
-  primary: '#000000',
-  secondary: '#565A69',
-  hint: '#888D9B',
-  onInteractive: '#000000',
+  onAccent: 'hsl(0, 0%, 100%)',
+  primary: 'hsl(0, 0%, 0%)',
+  secondary: 'hsl(227, 10%, 37.5%)',
+  hint: 'hsl(224, 9%, 57%)',
+  onInteractive: 'hsl(0, 0%, 0%)',
 
   // state
-  active: '#2172E5',
-  success: '#27AE60',
-  warning: '#F3B71E',
-  error: '#FD4040',
+  ...stateColors,
 
   currentColor: 'currentColor',
 }
 
-const darkThemeAccent = '#2172E5'
+const darkThemeAccent = 'hsl(215, 79%, 51.4%)'
 
 export const darkTheme: Colors = {
   // surface
   accent: darkThemeAccent,
-  container: '#191B1F',
-  module: '#2C2F36',
-  interactive: '#40444F',
-  outline: '#565A69',
-  dialog: '#000000',
+  container: 'hsl(220, 10.7%, 11%)',
+  module: 'hsl(222, 10.2%, 19.2%)',
+  interactive: 'hsl(224, 10.5%, 281%)',
+  outline: 'hsl(227, 10%, 37.5%)',
+  dialog: 'hsl(0, 0%, 0%)',
 
   // text
   onAccent: readableColor(darkThemeAccent),
-  primary: '#FFFFFF',
-  secondary: '#888D9B',
-  hint: '#6C7284',
-  onInteractive: '#FFFFFF',
+  primary: 'hsl(0, 0%, 100%)',
+  secondary: 'hsl(224, 8.7%, 57.1%)',
+  hint: 'hsl(225, 10%, 47.1%)',
+  onInteractive: 'hsl(0, 0%, 100%)',
 
   // state
-  active: '#2172E5',
-  success: '#27AE60',
-  warning: '#F3B71E',
-  error: '#FD4040',
+  ...stateColors,
 
   currentColor: 'currentColor',
 }
