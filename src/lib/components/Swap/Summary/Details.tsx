@@ -8,7 +8,8 @@ import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
-import { computeRealizedPriceImpact } from 'utils/prices'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { computeRealizedLPFeeAmount, computeRealizedPriceImpact } from 'utils/prices'
 
 import Row from '../../Row'
 
@@ -45,13 +46,13 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const outputCurrency = outputAmount.currency
   const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
 
+  const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
+
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
 
   const details = useMemo(() => {
-    // @TODO(ianlapham): Check that provider fee is even a valid list item
     return [
-      // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
       [
         t`${integrator} fee`,
         feeOptions &&
@@ -69,22 +70,34 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
           : undefined,
       ],
       trade.tradeType === TradeType.EXACT_INPUT
-        ? [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`]
+        ? [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`]
         : [],
       trade.tradeType === TradeType.EXACT_OUTPUT
-        ? [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`]
+        ? [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`]
         : [],
       [
         t`Slippage tolerance`,
         `${allowedSlippage.toFixed(2)}%`,
         !allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE) && 'warning',
       ],
+      [t`LP Fee`, lpFeeAmount ? `${formatCurrencyAmount(lpFeeAmount, 6)} ${trade.inputAmount.currency.symbol}` : false],
+      [t`Integrator Fee`, feeOptions?.fee?.toFixed(2)],
     ].filter(isDetail)
 
     function isDetail(detail: unknown[]): detail is [string, string, Color | undefined] {
       return Boolean(detail[1])
     }
-  }, [allowedSlippage, inputCurrency, integrator, feeOptions, outputAmount, outputCurrency, priceImpact, trade])
+  }, [
+    integrator,
+    feeOptions,
+    outputAmount,
+    outputCurrency,
+    priceImpact,
+    trade,
+    allowedSlippage,
+    inputCurrency.symbol,
+    lpFeeAmount,
+  ])
   return (
     <>
       {details.map(([label, detail, color]) => (
