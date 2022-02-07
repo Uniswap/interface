@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
+import IUniswapV3PoolStateJson from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { computePoolAddress } from '@uniswap/v3-sdk'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -9,6 +9,8 @@ import { useMemo } from 'react'
 
 import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
 import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
+
+const { abi: IUniswapV3PoolStateABI } = IUniswapV3PoolStateJson
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3PoolStateInterface
 

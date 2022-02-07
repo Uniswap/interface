@@ -1,15 +1,15 @@
 import { Contract } from '@ethersproject/contracts'
-import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
-import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
-import { abi as TickLensABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
-import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
-import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
-import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
+import GovernorAlphaJson from '@uniswap/governance/build/GovernorAlpha.json'
+import UniJson from '@uniswap/governance/build/Uni.json'
+import StakingRewardsJson from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import MerkleDistributorJson from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import QuoterJson from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
+import TickLensJson from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
+import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
+import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
+import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
 import EIP_2612 from 'abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
@@ -42,6 +42,18 @@ import { NonfungiblePositionManager, Quoter, TickLens, UniswapInterfaceMulticall
 import { V3Migrator } from 'types/v3/V3Migrator'
 
 import { getContract } from '../utils'
+
+const { abi: GOVERNANCE_ABI } = GovernorAlphaJson
+const { abi: UNI_ABI } = UniJson
+const { abi: STAKING_REWARDS_ABI } = StakingRewardsJson
+const { abi: MERKLE_DISTRIBUTOR_ABI } = MerkleDistributorJson
+const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
+const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
+const { abi: QuoterABI } = QuoterJson
+const { abi: TickLensABI } = TickLensJson
+const { abi: MulticallABI } = UniswapInterfaceMulticallJson
+const { abi: NFTPositionManagerABI } = NonfungiblePositionManagerJson
+const { abi: V2MigratorABI } = V3MigratorJson
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
