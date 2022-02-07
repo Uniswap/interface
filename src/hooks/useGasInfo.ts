@@ -36,7 +36,7 @@ export function useGasInfo(): { loading: boolean; gas: { fast: number; normal: n
   const [gas, setGas] = useState<{ fast: number; normal: number; slow: number }>({ normal: 0, fast: 0, slow: 0 })
   console.log(gasInfoChainUrls)
   useEffect(() => {
-    if (!chainId) {
+    if (!chainId || !gasInfoChainUrls[chainId]) {
       setLoading(true)
       setGas({ normal: 0, fast: 0, slow: 0 })
     } else {
