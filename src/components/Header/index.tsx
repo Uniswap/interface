@@ -27,6 +27,7 @@ import Skeleton from 'react-loading-skeleton'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
+import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
 import { useGasInfo } from '../../hooks/useGasInfo'
 
 const HeaderFrame = styled.div`
@@ -247,7 +248,8 @@ function Header() {
   const { gas } = useGasInfo()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
-  const { loading, data, stakedAmount } = useSwaprSinglelSidedStakeCampaigns()
+  const { loading, data } = useSwaprSinglelSidedStakeCampaigns()
+  const { stakedTokenAmount } = useLiquidityMiningCampaignPosition(data, account ? account : undefined)
 
   const toggleClaimPopup = useToggleShowClaimPopup()
   const accountOrUndefined = useMemo(() => account || undefined, [account])
@@ -260,7 +262,7 @@ function Header() {
       <ClaimModal
         onDismiss={toggleClaimPopup}
         newSwprBalance={newSwprBalance}
-        stakedAmount={stakedAmount}
+        stakedAmount={stakedTokenAmount?.toFixed(3)}
         singleSidedCampaignLink={
           data && !loading ? `/rewards/${data.stakeToken.address}/${data.address}/singleSidedStaking` : undefined
         }
