@@ -10,15 +10,11 @@ import { DecimalInput } from '../Input'
 import Row from '../Row'
 import TokenSelect from '../TokenSelect'
 
-const LoadingH2 = styled(ThemedText.H2)<{ $loading: boolean }>`
-  ${loadingOpacityCss};
-`
-
 const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
 `
 
-const ValueInput = styled(DecimalInput)`
+const ValueInput = styled(DecimalInput)<{ $loading: boolean }>`
   color: ${({ theme }) => theme.primary};
 
   :hover:not(:focus-within) {
@@ -28,6 +24,8 @@ const ValueInput = styled(DecimalInput)`
   :hover:not(:focus-within)::placeholder {
     color: ${({ theme }) => theme.onHover(theme.secondary)};
   }
+
+  ${loadingOpacityCss}
 `
 
 const delayedFadeIn = keyframes`
@@ -81,14 +79,15 @@ export default function TokenInput({
   return (
     <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
-        <LoadingH2 $loading={Boolean(loading)}>
+        <ThemedText.H2>
           <ValueInput
             value={amount}
             onFocus={onFocus}
             onChange={onChangeInput}
             disabled={disabled || !currency}
+            $loading={Boolean(loading)}
           ></ValueInput>
-        </LoadingH2>
+        </ThemedText.H2>
         {showMax && (
           <MaxButton onClick={onMax} ref={max}>
             <ThemedText.ButtonMedium>

@@ -60,8 +60,7 @@ export default function Output({ disabled, children }: OutputProps) {
     [tradeState]
   )
 
-  const independentField = useAtomValue(independentFieldAtom)
-  const isDependentField = independentField !== Field.OUTPUT
+  const isDependentField = useAtomValue(independentFieldAtom) !== Field.OUTPUT
   const isLoading = isDependentField && isTradeLoading
 
   const overrideColor = useAtomValue(colorAtom)
