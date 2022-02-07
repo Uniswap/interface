@@ -264,9 +264,7 @@ export default function Header() {
 
   const {
     infoLink,
-    addNetworkInfo: {
-      nativeCurrency: { symbol: nativeCurrencySymbol },
-    },
+    nativeCurrency: { symbol: nativeCurrencySymbol },
   } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
   return (

@@ -3,11 +3,13 @@ import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
+import { loadingOpacityCss } from 'lib/css/loading'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
-import { Field } from 'lib/state/swap'
+import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
+import { TradeState } from 'state/routing/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -16,6 +18,10 @@ import Row from '../Row'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
+
+const LoadingSpan = styled.span<{ $loading: boolean }>`
+  ${loadingOpacityCss};
+`
 
 const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
@@ -40,12 +46,22 @@ interface OutputProps {
 
 export default function Output({ disabled, children }: OutputProps) {
   const {
+    trade: { state: tradeState },
     currencyBalances: { [Field.OUTPUT]: balance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
 
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
+
+  //loading status of the trade
+  const isTradeLoading = useMemo(
+    () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
+    [tradeState]
+  )
+
+  const isDependentField = useAtomValue(independentFieldAtom) !== Field.OUTPUT
+  const isLoading = isDependentField && isTradeLoading
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(swapOutputCurrency)
@@ -83,10 +99,11 @@ export default function Output({ disabled, children }: OutputProps) {
           disabled={disabled}
           onChangeInput={updateSwapOutputAmount}
           onChangeCurrency={updateSwapOutputCurrency}
+          loading={isLoading}
         >
           <ThemedText.Body2 color="secondary">
             <Row>
-              <span>{usdc}</span>
+              <LoadingSpan $loading={isLoading}>{usdc}</LoadingSpan>
               {balance && (
                 <span>
                   Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>

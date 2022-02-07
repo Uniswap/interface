@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { loadingOpacityCss } from 'lib/css/loading'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
 
@@ -13,7 +14,7 @@ const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
 `
 
-const ValueInput = styled(DecimalInput)`
+const ValueInput = styled(DecimalInput)<{ $loading: boolean }>`
   color: ${({ theme }) => theme.primary};
 
   :hover:not(:focus-within) {
@@ -23,6 +24,8 @@ const ValueInput = styled(DecimalInput)`
   :hover:not(:focus-within)::placeholder {
     color: ${({ theme }) => theme.onHover(theme.secondary)};
   }
+
+  ${loadingOpacityCss}
 `
 
 const delayedFadeIn = keyframes`
@@ -50,6 +53,7 @@ interface TokenInputProps {
   onMax?: () => void
   onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
+  loading?: boolean
   children: ReactNode
 }
 
@@ -60,6 +64,7 @@ export default function TokenInput({
   onMax,
   onChangeInput,
   onChangeCurrency,
+  loading,
   children,
 }: TokenInputProps) {
   const max = useRef<HTMLButtonElement>(null)
@@ -70,6 +75,7 @@ export default function TokenInput({
       setShowMax(false)
     }
   }, [])
+
   return (
     <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
@@ -79,6 +85,7 @@ export default function TokenInput({
             onFocus={onFocus}
             onChange={onChangeInput}
             disabled={disabled || !currency}
+            $loading={Boolean(loading)}
           ></ValueInput>
         </ThemedText.H2>
         {showMax && (
