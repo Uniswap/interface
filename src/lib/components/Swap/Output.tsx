@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
-import { localeAtom } from 'lib/state/locale'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
@@ -40,7 +40,7 @@ interface OutputProps {
 }
 
 export default function Output({ disabled, children }: OutputProps) {
-  const locale = useAtomValue(localeAtom)
+  const { i18n } = useLingui()
 
   const {
     currencyBalances: { [Field.OUTPUT]: balance },
@@ -92,7 +92,7 @@ export default function Output({ disabled, children }: OutputProps) {
               <span>{usdc}</span>
               {balance && (
                 <span>
-                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, locale)}</span>
+                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </span>
               )}
             </Row>

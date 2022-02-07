@@ -1,10 +1,9 @@
+import { useLingui } from '@lingui/react'
 import { Currency } from '@uniswap/sdk-core'
-import { useAtomValue } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import useNativeEvent from 'lib/hooks/useNativeEvent'
 import useScrollbar from 'lib/hooks/useScrollbar'
-import { localeAtom } from 'lib/state/locale'
 import styled, { ThemedText } from 'lib/theme'
 import {
   ComponentClass,
@@ -72,7 +71,7 @@ interface BubbledEvent extends SyntheticEvent {
 }
 
 function TokenOption({ index, value, style }: TokenOptionProps) {
-  const locale = useAtomValue(localeAtom)
+  const { i18n } = useLingui()
   const ref = useRef<HTMLButtonElement>(null)
   // Annotate the event to be handled later instead of passing in handlers to avoid rerenders.
   // This prevents token logos from reloading and flashing on the screen.
@@ -105,7 +104,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
               <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
             </Column>
           </Row>
-          {balance?.greaterThan(0) && formatCurrencyAmount(balance, 2, locale)}
+          {balance?.greaterThan(0) && formatCurrencyAmount(balance, 2, i18n.locale)}
         </Row>
       </ThemedText.Body1>
     </TokenButton>

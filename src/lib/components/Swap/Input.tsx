@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useAtomValue } from 'jotai/utils'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
-import { localeAtom } from 'lib/state/locale'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
@@ -29,7 +28,7 @@ interface InputProps {
 }
 
 export default function Input({ disabled }: InputProps) {
-  const locale = useAtomValue(localeAtom)
+  const { i18n } = useLingui()
   const {
     currencyBalances: { [Field.INPUT]: balance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
@@ -72,7 +71,7 @@ export default function Input({ disabled }: InputProps) {
             <span>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</span>
             {balance && (
               <ThemedText.Body2 color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}>
-                Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, locale)}</span>
+                Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
               </ThemedText.Body2>
             )}
           </Row>

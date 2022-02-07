@@ -1,9 +1,9 @@
 import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtomValue } from 'jotai/utils'
-import { localeAtom } from 'lib/state/locale'
 import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
@@ -50,13 +50,13 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
 
-  const locale = useAtomValue(localeAtom)
+  const { i18n } = useLingui()
   const details = useMemo(() => {
     const rows = []
     // @TODO(ianlapham): Check that provider fee is even a valid list item
 
     if (feeOptions) {
-      const parsedConvenienceFee = formatCurrencyAmount(outputAmount.multiply(feeOptions.fee), 6, locale)
+      const parsedConvenienceFee = formatCurrencyAmount(outputAmount.multiply(feeOptions.fee), 6, i18n.locale)
       rows.push([
         t`${integrator} fee`,
         `${parsedConvenienceFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`,
@@ -71,12 +71,12 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     rows.push([t`Price impact`, `${priceImpact.toFixed(2)}%`, priceImpactMessage])
 
     if (trade.tradeType === TradeType.EXACT_INPUT) {
-      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, locale)
+      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 
     if (trade.tradeType === TradeType.EXACT_OUTPUT) {
-      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, locale)
+      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     }
 
@@ -91,7 +91,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     function isDetail(detail: unknown[]): detail is [string, string, Color | undefined] {
       return Boolean(detail[1])
     }
-  }, [allowedSlippage, feeOptions, inputCurrency, integrator, locale, outputAmount, outputCurrency, priceImpact, trade])
+  }, [allowedSlippage, feeOptions, inputCurrency, integrator, i18n, outputAmount, outputCurrency, priceImpact, trade])
   return (
     <>
       {details.map(([label, detail, color]) => (

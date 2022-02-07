@@ -1,8 +1,7 @@
+import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useAtomValue } from 'jotai/utils'
 import { ArrowRight } from 'lib/icons'
-import { localeAtom } from 'lib/state/locale'
 import styled from 'lib/theme'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
@@ -24,7 +23,7 @@ interface TokenValueProps {
 }
 
 function TokenValue({ input, usdc, change }: TokenValueProps) {
-  const locale = useAtomValue(localeAtom)
+  const { i18n } = useLingui()
   const percent = useMemo(() => {
     if (change) {
       const percent = change.toPrecision(3)
@@ -40,13 +39,13 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
       <Row gap={0.375} justify="flex-start">
         <TokenImg token={input.currency} />
         <ThemedText.Body2>
-          {formatCurrencyAmount(input, 6, locale)} {input.currency.symbol}
+          {formatCurrencyAmount(input, 6, i18n.locale)} {input.currency.symbol}
         </ThemedText.Body2>
       </Row>
       {usdc && usdcAmount && (
         <Row justify="flex-start">
           <ThemedText.Caption color="secondary">
-            ${formatCurrencyAmount(usdcAmount, 2, locale)}
+            ${formatCurrencyAmount(usdcAmount, 2, i18n.locale)}
             {change && <Percent gain={change > 0}> {percent}</Percent>}
           </ThemedText.Caption>
         </Row>
