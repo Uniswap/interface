@@ -10,7 +10,7 @@ import { DecimalInput } from '../Input'
 import Row from '../Row'
 import TokenSelect from '../TokenSelect'
 
-const LoadingH2 = styled(ThemedText.H2)<{ loading: boolean }>`
+const LoadingH2 = styled(ThemedText.H2)<{ $loading: boolean }>`
   ${loadingOpacityCss};
 `
 
@@ -81,7 +81,7 @@ export default function TokenInput({
   return (
     <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
-        <LoadingH2 loading={Boolean(loading)}>
+        <LoadingH2 $loading={Boolean(loading)}>
           <ValueInput
             value={amount}
             onFocus={onFocus}

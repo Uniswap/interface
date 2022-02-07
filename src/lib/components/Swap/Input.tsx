@@ -15,7 +15,7 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
-const LoadingH2 = styled(ThemedText.H2)<{ loading: boolean }>`
+const LoadingH2 = styled(ThemedText.H2)<{ $loading: boolean }>`
   ${loadingOpacityCss};
 `
 
@@ -83,7 +83,7 @@ export default function Input({ disabled }: InputProps) {
       >
         <ThemedText.Body2 color="secondary">
           <Row>
-            <LoadingH2 loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingH2>
+            <LoadingH2 $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingH2>
             {balance && (
               <ThemedText.Body2 color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}>
                 Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>

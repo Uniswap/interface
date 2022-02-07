@@ -81,9 +81,9 @@ export function useBestTrade(
     (debouncedOtherCurrency && otherCurrency && debouncedOtherCurrency !== otherCurrency)
 
   const syncing = isTradeDebouncing({
-    amounts: [amountFromLatestTrade, debouncedAmount],
-    indepdenentCurrencies: [currencyFromTrade, debouncedOtherCurrency],
-    dependentCurrencies: [otherCurrencyFromTrade, otherCurrency],
+    amounts: [amountFromLatestTrade, amountSpecified],
+    indepdenentCurrencies: [currencyFromTrade, amountSpecified?.currency],
+    dependentCurrencies: [otherCurrencyFromTrade, debouncedOtherCurrency],
   })
 
   const useFallback = !syncing && clientSORTrade.state === TradeState.NO_ROUTE_FOUND

@@ -19,7 +19,7 @@ import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
 
-const LoadingSpan = styled.span<{ loading: boolean }>`
+const LoadingSpan = styled.span<{ $loading: boolean }>`
   ${loadingOpacityCss};
 `
 
@@ -55,13 +55,14 @@ export default function Output({ disabled, children }: OutputProps) {
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
   //loading status of the trade
-  const isRouteLoading = useMemo(
+  const isTradeLoading = useMemo(
     () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
     [tradeState]
   )
+
   const independentField = useAtomValue(independentFieldAtom)
   const isDependentField = independentField !== Field.OUTPUT
-  const isLoading = isDependentField && isRouteLoading
+  const isLoading = isDependentField && isTradeLoading
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(swapOutputCurrency)
@@ -103,7 +104,7 @@ export default function Output({ disabled, children }: OutputProps) {
         >
           <ThemedText.Body2 color="secondary">
             <Row>
-              <LoadingSpan loading={isLoading}>{usdc}</LoadingSpan>
+              <LoadingSpan $loading={isLoading}>{usdc}</LoadingSpan>
               {balance && (
                 <span>
                   Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>
