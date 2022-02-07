@@ -20,10 +20,10 @@ async function getQuote(
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
   },
-  params: AlphaRouterParams,
-  config: Partial<AlphaRouterConfig>
+  routerParams: AlphaRouterParams,
+  routerConfig: Partial<AlphaRouterConfig>
 ): Promise<{ data: GetQuoteResult; error?: unknown }> {
-  const router = new AlphaRouter(params)
+  const router = new AlphaRouter(routerParams)
 
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
@@ -37,7 +37,7 @@ async function getQuote(
     quoteCurrency,
     type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     /*swapConfig=*/ undefined,
-    config
+    routerConfig
   )
 
   if (!swapRoute) throw new Error('Failed to generate client side quote')
@@ -71,8 +71,8 @@ export async function getClientSideQuote(
     amount,
     type,
   }: QuoteArguments,
-  params: AlphaRouterParams,
-  config: Partial<AlphaRouterConfig>
+  routerParams: AlphaRouterParams,
+  routerConfig: Partial<AlphaRouterConfig>
 ) {
   return getQuote(
     {
@@ -92,7 +92,7 @@ export async function getClientSideQuote(
       },
       amount,
     },
-    params,
-    config
+    routerParams,
+    routerConfig
   )
 }
