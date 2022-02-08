@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useMemo } from 'react'
-import { useTokenBalances } from 'state/wallet/hooks'
 
 /** Sorts currency amounts (descending). */
 function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Currency>) {
@@ -15,8 +14,10 @@ function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Curr
   return 0
 }
 
+type TokenBalances = { [tokenAddress: string]: CurrencyAmount<Token> | undefined }
+
 /** Sorts tokens by currency amount (descending), then symbol (ascending). */
-export function tokenComparator(balances: ReturnType<typeof useTokenBalances>, a: Token, b: Token) {
+export function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
   // Sorts by balances
   const balanceComparison = balanceComparator(balances[a.address], balances[b.address])
   if (balanceComparison !== 0) return balanceComparison
