@@ -1,6 +1,6 @@
 import MaskedView from '@react-native-masked-view/masked-view'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { JSXElementConstructor, ReactElement, useEffect, useState } from 'react'
 import { LayoutRectangle, StyleSheet, View } from 'react-native'
 import Reanimated, {
   interpolate,
@@ -9,12 +9,15 @@ import Reanimated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { theme } from 'src/styles/theme'
+import { Box } from 'src/components/layout'
 
 const SHIMMER_DURATION = 2000 // 2 seconds
 
+type Props = {
+  children: ReactElement<any, string | JSXElementConstructor<any>>
+}
 // inspired by tutorial found here: https://github.com/kadikraman/skeleton-loader
-export function Shimmer({ children }: PropsWithChildren<{}>) {
+export function Shimmer({ children }: Props) {
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const shared = useSharedValue(0)
 
@@ -42,8 +45,13 @@ export function Shimmer({ children }: PropsWithChildren<{}>) {
   }
 
   return (
-    <View>
-      {children}
+    <MaskedView
+      maskElement={children}
+      style={{
+        width: layout.width,
+        height: layout.height,
+      }}>
+      <Box backgroundColor="gray50" flexGrow={1} overflow="hidden" />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView
           maskElement={
@@ -55,9 +63,9 @@ export function Shimmer({ children }: PropsWithChildren<{}>) {
             />
           }
           style={StyleSheet.absoluteFill}>
-          <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.colors.white }]} />
+          <Box backgroundColor="shimmer" style={StyleSheet.absoluteFill} />
         </MaskedView>
       </Reanimated.View>
-    </View>
+    </MaskedView>
   )
 }

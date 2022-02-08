@@ -20,6 +20,7 @@ export const theme = createTheme({
     mainBackground: colorsLight.white,
     mainForeground: colorsLight.black,
     tokenSelector: colorsLight.paleBlue,
+    shimmer: colorsLight.white,
     ...colorsLight,
   },
   iconButtonVariants,
@@ -35,6 +36,7 @@ export const darkTheme: Theme = {
     mainBackground: colorsDark.black,
     mainForeground: colorsDark.white,
     tokenSelector: colorsLight.black,
+    shimmer: colorsDark.gray100,
     ...colorsDark,
   },
 }
