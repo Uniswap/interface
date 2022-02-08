@@ -1,6 +1,10 @@
-/* eslint-disable no-restricted-imports */
+import { ReactComponent as CheckIcon } from 'lib/assets/svg/check.svg'
+import { ReactComponent as ExpandoIcon } from 'lib/assets/svg/expando.svg'
+import { ReactComponent as LogoIcon } from 'lib/assets/svg/logo.svg'
+import { ReactComponent as SpinnerIcon } from 'lib/assets/svg/spinner.svg'
 import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
+/* eslint-disable no-restricted-imports */
 import { Icon as FeatherIcon } from 'react-feather'
 import {
   AlertTriangle as AlertTriangleIcon,
@@ -20,11 +24,7 @@ import {
   X as XIcon,
   XOctagon as XOctagonIcon,
 } from 'react-feather'
-
-import { ReactComponent as CheckIcon } from '../assets/svg/check.svg'
-import { ReactComponent as ExpandoIcon } from '../assets/svg/expando.svg'
-import { ReactComponent as LogoIcon } from '../assets/svg/logo.svg'
-import { ReactComponent as SpinnerIcon } from '../assets/svg/spinner.svg'
+/* eslint-enable no-restricted-imports */
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
