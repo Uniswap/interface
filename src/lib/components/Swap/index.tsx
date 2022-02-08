@@ -60,10 +60,7 @@ export default function Swap(props: SwapProps) {
   const displayTx = getSwapTx(pendingTxs, displayTxHash)
 
   const onSupportedChain = useMemo(
-    () =>
-      chainId &&
-      ALL_SUPPORTED_CHAIN_IDS.includes(chainId) &&
-      list.reduce((acc, cur) => acc || cur.chainId === chainId, false),
+    () => chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId) && list.some((token) => token.chainId === chainId),
     [chainId, list]
   )
 
