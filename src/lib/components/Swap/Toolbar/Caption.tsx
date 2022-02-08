@@ -8,7 +8,7 @@ import { InterfaceTrade } from 'state/routing/types'
 
 import { TextButton } from '../../Button'
 import Row from '../../Row'
-import RoutingTooltip from './RoutingTooltip'
+import RoutingTooltip from '../RoutingTooltip'
 
 interface CaptionProps {
   icon?: Icon
@@ -72,7 +72,7 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
 
   return (
     <>
-      <RoutingTooltip />
+      <RoutingTooltip trade={trade} />
       <TextButton color="primary" onClick={() => setFlip(!flip)}>
         {ratio}
       </TextButton>
