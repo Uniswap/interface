@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
 import { loadingOpacityCss } from 'lib/css/loading'
@@ -34,6 +35,7 @@ interface InputProps {
 }
 
 export default function Input({ disabled }: InputProps) {
+  const { i18n } = useLingui()
   const {
     trade: { state: tradeState },
     currencyBalances: { [Field.INPUT]: balance },
@@ -85,7 +87,7 @@ export default function Input({ disabled }: InputProps) {
             <LoadingSpan $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingSpan>
             {balance && (
               <ThemedText.Body2 color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}>
-                Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>
+                Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
               </ThemedText.Body2>
             )}
           </Row>

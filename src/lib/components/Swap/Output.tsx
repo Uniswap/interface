@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -45,6 +46,8 @@ interface OutputProps {
 }
 
 export default function Output({ disabled, children }: OutputProps) {
+  const { i18n } = useLingui()
+
   const {
     trade: { state: tradeState },
     currencyBalances: { [Field.OUTPUT]: balance },
@@ -106,7 +109,7 @@ export default function Output({ disabled, children }: OutputProps) {
               <LoadingSpan $loading={isLoading}>{usdc}</LoadingSpan>
               {balance && (
                 <span>
-                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>
+                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </span>
               )}
             </Row>
