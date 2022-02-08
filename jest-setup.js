@@ -38,3 +38,5 @@ jest.mock('@react-native-firebase/analytics', () => {})
 
 // Ledger bluetooth library doesn't have JS mock
 jest.mock('@ledgerhq/react-native-hw-transport-ble', () => {})
+
+jest.mock("expo-linear-gradient", () => {})

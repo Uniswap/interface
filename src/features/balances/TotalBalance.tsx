@@ -27,16 +27,19 @@ function useTotalBalance(
       : balances
 
   return useMemo(() => {
-    return filteredBalances
-      .map((currencyAmount) => {
-        const currentPrice =
-          tokenPricesByChain.chainIdToPrices[currencyAmount.currency.chainId as ChainId]
-            ?.addressToPrice?.[currencyId(currencyAmount.currency)]?.priceUSD
+    return {
+      isLoading: tokenPricesByChain.isLoading,
+      totalBalance: filteredBalances
+        .map((currencyAmount) => {
+          const currentPrice =
+            tokenPricesByChain.chainIdToPrices[currencyAmount.currency.chainId as ChainId]
+              ?.addressToPrice?.[currencyId(currencyAmount.currency)]?.priceUSD
 
-        return (currentPrice ?? 0) * parseFloat(currencyAmount.toSignificant(6))
-      })
-      .reduce((a, b) => a + b, 0)
-      .toFixed(2)
+          return (currentPrice ?? 0) * parseFloat(currencyAmount.toSignificant(6))
+        })
+        .reduce((a, b) => a + b, 0)
+        .toFixed(2),
+    }
   }, [filteredBalances, tokenPricesByChain])
 }
 
@@ -44,7 +47,9 @@ export function TotalBalance({ balances }: TotalBalanceViewProps) {
   const allBalances = flattenObjectOfObjects(balances)
   const currenciesToFetch = allBalances.map((currencyAmount) => currencyAmount.currency)
   const tokenPricesByChain = useTokenPrices(currenciesToFetch)
-  const totalBalance = useTotalBalance(allBalances, tokenPricesByChain)
+  const { totalBalance } = useTotalBalance(allBalances, tokenPricesByChain)
+
+  // TODO (tina): add loading placeholder once useTotalBalance.isLoading is behaving correctly
 
   return <Text variant="h1">{`${formatUSDPrice(totalBalance)}`}</Text>
 }

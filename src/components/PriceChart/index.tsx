@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
-import { Inset } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
+import { Loading } from 'src/components/loading'
 import { Graph } from 'src/components/PriceChart/Graph'
 import { useGraphs } from 'src/components/PriceChart/Model'
 
@@ -20,12 +20,14 @@ export const PriceChart = ({ currency }: PriceChartProps) => {
 
   const { t } = useTranslation()
 
+  const showLoading = loading || !graphs
   return (
-    <Box flex={1} margin="lg" overflow="hidden">
-      {loading || !graphs ? (
-        <Inset all="xxl">
-          <ActivityIndicator />
-        </Inset>
+    <Box margin="lg" overflow="hidden">
+      {showLoading ? (
+        <Flex gap="lg" mb="lg" mt="xl">
+          <Loading type="header" />
+          <Loading type="graph" />
+        </Flex>
       ) : (
         <Graph graphs={graphs} title={currency.name ?? t('Unknown token')} />
       )}

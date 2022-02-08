@@ -1,0 +1,27 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+import { HeaderLoader } from 'src/components/loading/HeaderLoader'
+import { BoxLoader } from 'src/components/loading/BoxLoader'
+import { GraphLoader } from 'src/components/loading/BoxLoader'
+
+<Meta title="Components/Loading" component={BoxLoader} />
+
+export const Template = (args) => <HeaderLoader {...args} />
+
+# Loading
+
+`Loading` is a placeholder for loading states. Note that the shimmer effect isn't displayed here because web doesn't support an alternative for `MaskView`, which the Shimmer component uses :'(
+
+<Canvas>
+  <Story name="default" args={{}}>
+    <BoxLoader />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="header" args={{}}>
+    <HeaderLoader />
+  </Story>
+</Canvas>
+
+<ArgsTable story="default" />

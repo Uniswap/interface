@@ -1,0 +1,63 @@
+import MaskedView from '@react-native-masked-view/masked-view'
+import { LinearGradient } from 'expo-linear-gradient'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
+import { LayoutRectangle, StyleSheet, View } from 'react-native'
+import Reanimated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated'
+import { theme } from 'src/styles/theme'
+
+const SHIMMER_DURATION = 2000 // 2 seconds
+
+// inspired by tutorial found here: https://github.com/kadikraman/skeleton-loader
+export function Shimmer({ children }: PropsWithChildren<{}>) {
+  const [layout, setLayout] = useState<LayoutRectangle | null>()
+  const shared = useSharedValue(0)
+
+  useEffect(() => {
+    shared.value = withRepeat(withTiming(1, { duration: SHIMMER_DURATION }), Infinity)
+
+    // only want to do this once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateX: interpolate(
+          shared.value,
+          [0, 1],
+          [layout ? -layout.width : 0, layout ? layout.width : 0]
+        ),
+      },
+    ],
+  }))
+
+  if (!layout) {
+    return <View onLayout={(event) => setLayout(event.nativeEvent.layout)}>{children}</View>
+  }
+
+  return (
+    <View>
+      {children}
+      <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
+        <MaskedView
+          maskElement={
+            <LinearGradient
+              colors={['transparent', 'black', 'transparent']}
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
+              style={StyleSheet.absoluteFill}
+            />
+          }
+          style={StyleSheet.absoluteFill}>
+          <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.colors.white }]} />
+        </MaskedView>
+      </Reanimated.View>
+    </View>
+  )
+}

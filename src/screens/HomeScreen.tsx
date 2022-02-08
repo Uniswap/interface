@@ -106,22 +106,24 @@ export function HomeScreen({ navigation }: Props) {
             onPressSend={onPressSend}
           />
         ) : (
-          <Box alignItems="flex-end" flexDirection="row" justifyContent="space-between">
-            <Flex gap="xxs">
-              <Text color="gray600" variant="bodySm">
-                {t('Total Balance')}
-              </Text>
-              <TotalBalance balances={balances} />
+          <Flex gap="xs">
+            <Text color="gray600" variant="bodySm">
+              {t('Total Balance')}
+            </Text>
+            <Flex alignItems="flex-start" flexDirection="row" gap="sm">
+              <Flex flexGrow={1} gap="xxs">
+                <TotalBalance balances={balances} />
+              </Flex>
+              <Button
+                backgroundColor="mainBackground"
+                name={ElementName.QRCodeModalToggle}
+                padding="md"
+                style={buttonStyle}
+                onPress={onPressQRCode}>
+                <QrCode height={16} stroke={theme.colors.textColor} width={16} />
+              </Button>
             </Flex>
-            <Button
-              backgroundColor="mainBackground"
-              name={ElementName.QRCodeModalToggle}
-              padding="md"
-              style={buttonStyle}
-              onPress={onPressQRCode}>
-              <QrCode height={16} stroke={theme.colors.textColor} width={16} />
-            </Button>
-          </Box>
+          </Flex>
         )}
         <WalletQRCode isVisible={showQRModal} onClose={onCloseQrCode} />
       </Flex>

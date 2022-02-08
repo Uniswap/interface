@@ -6,6 +6,7 @@ import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
+import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
@@ -87,33 +88,35 @@ export function TokenDetailsScreen({
     <Screen>
       <TokenDetailsHeader currency={currency} />
       <ScrollView>
-        <PriceChart currency={currency} />
-        <Box mt="xl">
-          <Text color="gray600" mx="lg" variant="bodyMd">
-            {t('Your balance')}
-          </Text>
-          {balance ? (
-            <TokenBalanceItem currencyAmount={balance} currencyPrice={undefined} />
-          ) : (
-            <TokenBalanceItem currencyAmount={ethBalance} currencyPrice={undefined} />
-          )}
-          <Box flexDirection="row" mx="lg" my="md">
-            <PrimaryButton
-              flex={1}
-              label={t('Buy')}
-              mr="sm"
-              textVariant="buttonLabelLg"
-              onPress={onPressBuy}
-            />
-            <PrimaryButton
-              flex={1}
-              label={t('Sell')}
-              textVariant="buttonLabelLg"
-              variant="gray"
-              onPress={onPressSell}
-            />
+        <Flex gap="lg">
+          <PriceChart currency={currency} />
+          <Box>
+            <Text color="gray600" mx="lg" variant="bodyMd">
+              {t('Your balance')}
+            </Text>
+            {balance ? (
+              <TokenBalanceItem currencyAmount={balance} currencyPrice={undefined} />
+            ) : (
+              <TokenBalanceItem currencyAmount={ethBalance} currencyPrice={undefined} />
+            )}
+            <Box flexDirection="row" mx="lg" my="md">
+              <PrimaryButton
+                flex={1}
+                label={t('Buy')}
+                mr="sm"
+                textVariant="buttonLabelLg"
+                onPress={onPressBuy}
+              />
+              <PrimaryButton
+                flex={1}
+                label={t('Sell')}
+                textVariant="buttonLabelLg"
+                variant="gray"
+                onPress={onPressSell}
+              />
+            </Box>
           </Box>
-        </Box>
+        </Flex>
       </ScrollView>
     </Screen>
   )

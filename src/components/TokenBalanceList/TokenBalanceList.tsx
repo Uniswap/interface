@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo } from 'react'
-import { ActivityIndicator, ListRenderItemInfo, SectionList } from 'react-native'
+import { ListRenderItemInfo, SectionList } from 'react-native'
 import { Box } from 'src/components/layout/Box'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'src/constants/chains'
@@ -99,8 +100,8 @@ export function TokenBalanceList({
 
   if (loading) {
     return (
-      <Box mt="xl">
-        <ActivityIndicator animating={loading} color="grey" />
+      <Box padding="lg">
+        <Loading repeat={4} type="box" />
       </Box>
     )
   }
