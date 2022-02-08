@@ -44,7 +44,7 @@ function expectedOutput(l: SupportedLocale): string {
     case 'vi-VN':
       return `4.000.000,123`
     default:
-      return 'should not happen'
+      throw new Error('unreachable')
   }
 }
 

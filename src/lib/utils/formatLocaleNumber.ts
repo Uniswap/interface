@@ -9,15 +9,15 @@ interface FormatLocaleNumberArgs {
 }
 
 export default function formatLocaleNumber({ number, locale, sigFigs, options = {} }: FormatLocaleNumberArgs): string {
-  if (locale && !SUPPORTED_LOCALES.includes(locale)) {
-    locale = DEFAULT_LOCALE
+  let localeArg: string | string[]
+  if (!locale || (locale && !SUPPORTED_LOCALES.includes(locale))) {
+    localeArg = DEFAULT_LOCALE
+  } else {
+    localeArg = [locale, DEFAULT_LOCALE]
   }
   if (typeof number === 'number') {
-    return number.toLocaleString(locale ? [locale, DEFAULT_LOCALE] : DEFAULT_LOCALE, options)
+    return number.toLocaleString(localeArg, options)
   } else {
-    return parseFloat(number.toSignificant(sigFigs)).toLocaleString(
-      locale ? [locale, DEFAULT_LOCALE] : DEFAULT_LOCALE,
-      options
-    )
+    return parseFloat(number.toSignificant(sigFigs)).toLocaleString(localeArg, options)
   }
 }
