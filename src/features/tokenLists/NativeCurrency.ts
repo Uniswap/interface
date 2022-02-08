@@ -1,9 +1,8 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
 import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
+import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { CHAIN_INFO, isMatic } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
-
-export const DUMMY_ADDRESS = '-1'
 
 export class NativeCurrency implements NativeCurrencyClass {
   constructor(chainId: number) {
@@ -24,7 +23,7 @@ export class NativeCurrency implements NativeCurrencyClass {
   isNative: true
   isToken: false
 
-  address = DUMMY_ADDRESS
+  address = NATIVE_ADDRESS
 
   equals(currency: Currency) {
     return currency.isNative && currency.chainId === this.chainId
