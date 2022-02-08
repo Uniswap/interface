@@ -1,6 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
 import StakingRewardsJson from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import MerkleDistributorJson from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import QuoterJson from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
@@ -21,7 +20,6 @@ import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
-  MERKLE_DISTRIBUTOR_ADDRESS,
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
@@ -38,7 +36,6 @@ import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from '../utils'
 
 const { abi: STAKING_REWARDS_ABI } = StakingRewardsJson
-const { abi: MERKLE_DISTRIBUTOR_ABI } = MerkleDistributorJson
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
 const { abi: QuoterABI } = QuoterJson
@@ -125,10 +122,6 @@ export function useV2RouterContract(): Contract | null {
 
 export function useInterfaceMulticall() {
   return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI, false) as UniswapInterfaceMulticall
-}
-
-export function useMerkleDistributorContract() {
-  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
 }
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean) {
