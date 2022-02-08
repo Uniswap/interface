@@ -30,7 +30,7 @@ const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
 const ASSET_EXTENSIONS = ['.png', '.svg']
 function isAsset(source: string) {
   const extname = path.extname(source)
-  return extname && [...ASSET_EXTENSIONS, '.scss'].includes(extname)
+  return extname && [...ASSET_EXTENSIONS, '.css', '.scss'].includes(extname)
 }
 
 const TS_CONFIG = './tsconfig.lib.json'
