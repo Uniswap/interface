@@ -1,5 +1,3 @@
-import { initializeConnector } from '@widgets/web3-react/core'
-import { MetaMask } from '@widgets/web3-react/metamask'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
@@ -7,6 +5,8 @@ import Widget from 'lib/components/Widget'
 import { darkTheme, defaultTheme, lightTheme } from 'lib/theme'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
+import { initializeConnector } from 'web3-react-alpha-core'
+import { MetaMask } from 'web3-react-alpha-metamask'
 
 export const [metaMask] = initializeConnector<MetaMask>((actions) => new MetaMask(actions))
 
