@@ -174,7 +174,9 @@ export default function SlippageTabs({
       const valueAsFloat = Number.parseFloat(value)
       if (!Number.isNaN(valueAsFloat) && valueAsFloat > 0) {
         // converting to wei
-        setRawPreferredGasPrice(new Decimal(valueAsFloat.toFixed(10)).times('1000000000').toString())
+        const rawPreferredGasPriceWei = new Decimal(valueAsFloat.toFixed(10)).times('1000000000').toString()
+        if (Number(rawPreferredGasPriceWei) > Number.MAX_SAFE_INTEGER) throw new Error('Preferred gas price overflow')
+        setRawPreferredGasPrice(rawPreferredGasPriceWei)
       }
     } catch {}
   }
