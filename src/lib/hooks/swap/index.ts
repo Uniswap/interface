@@ -72,3 +72,8 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
   )
   return [value, updateAmount]
 }
+
+// check if any amount has been entered by user
+export function useIsAmountPopulated() {
+  return Boolean(useAtomValue(amountAtom))
+}
