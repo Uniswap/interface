@@ -30,10 +30,15 @@ const gasInfoChainUrls: {
     }
   }
 }
-export function useGasInfo(): { loading: boolean; gas: { fast: number; normal: number; slow: number } } {
+interface GasTypes {
+  fast: number
+  normal: number
+  slow: number
+}
+export function useGasInfo(): { loading: boolean; gas: GasTypes } {
   const { chainId } = useActiveWeb3React()
   const [loading, setLoading] = useState<boolean>(true)
-  const [gas, setGas] = useState<{ fast: number; normal: number; slow: number }>({ normal: 0, fast: 0, slow: 0 })
+  const [gas, setGas] = useState<GasTypes>({ normal: 0, fast: 0, slow: 0 })
   console.log(gasInfoChainUrls)
   useEffect(() => {
     if (!chainId || !gasInfoChainUrls[chainId]) {
@@ -46,14 +51,19 @@ export function useGasInfo(): { loading: boolean; gas: { fast: number; normal: n
           let average
           let fast = 0
           let slow = 0
-          if (chainId === ChainId.MAINNET) {
-            average = data[gasInfoChainUrls[chainId].objectDestrucutre[0]].gwei
-            fast = data[gasInfoChainUrls[chainId].objectDestrucutre[1]].gwei
-            slow = data[gasInfoChainUrls[chainId].objectDestrucutre[2]].gwei
-          } else if (chainId === ChainId.XDAI) {
-            average = data[gasInfoChainUrls[chainId].objectDestrucutre[0]]
-            fast = data[gasInfoChainUrls[chainId].objectDestrucutre[1]]
-            slow = data[gasInfoChainUrls[chainId].objectDestrucutre[2]]
+          if (chainId === ChainId.MAINNET || chainId === ChainId.XDAI) {
+            const averageData = data[gasInfoChainUrls[chainId].objectDestrucutre[0]]
+            const fastData = data[gasInfoChainUrls[chainId].objectDestrucutre[1]]
+            const slowData = data[gasInfoChainUrls[chainId].objectDestrucutre[2]]
+            if (chainId === ChainId.MAINNET) {
+              average = averageData.gwei
+              fast = fastData.gwei
+              slow = slowData.gwei
+            } else {
+              average = averageData
+              fast = fastData
+              slow = slowData
+            }
           } else {
             average = (parseInt(data.result, 16) / 1e9).toFixed(3)
           }
@@ -65,6 +75,9 @@ export function useGasInfo(): { loading: boolean; gas: { fast: number; normal: n
           console.error('gasInfo error: ', e)
           setLoading(true)
           setGas({ normal: 0, fast: 0, slow: 0 })
+        })
+        .finally(() => {
+          setLoading(false)
         })
     }
   }, [chainId])
