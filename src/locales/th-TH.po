@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 19:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -1019,6 +1019,10 @@ msgstr "สภาพคล่อง"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "ไม่มีข้อมูลสภาพคล่อง"
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "ค่าธรรมเนียมผู้ให้บริการสภาพคล่อง"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"

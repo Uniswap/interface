@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 19:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -1019,6 +1019,10 @@ msgstr "Kioevu"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Data ya kioevu haipatikani."
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Ada ya mtoa huduma ya ukwasi"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"

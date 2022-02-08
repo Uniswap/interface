@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 19:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -1019,6 +1019,10 @@ msgstr "Thanh khoản"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Dữ liệu thanh khoản không có sẵn."
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Phí nhà cung cấp thanh khoản"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
