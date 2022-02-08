@@ -9,7 +9,7 @@ import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Dialog from '../Dialog'
 import Header from '../Header'
@@ -47,20 +47,25 @@ export interface SwapProps {
 }
 
 export default function Swap(props: SwapProps) {
-  useTokenList(props.tokenList)
+  const list = useTokenList(props.tokenList)
   useSyncSwapDefaults(props)
   useSyncConvenienceFee(props)
 
-  const { active, account } = useActiveWeb3React()
+  const { active, account, chainId } = useActiveWeb3React()
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
   const displayTx = getSwapTx(pendingTxs, displayTxHash)
 
+  const onSupportedChain = useMemo(
+    () => list.reduce((acc, cur) => acc || cur.chainId === chainId, false),
+    [chainId, list]
+  )
+
   return (
     <SwapPropValidator {...props}>
-      <SwapInfoUpdater />
+      {onSupportedChain && <SwapInfoUpdater />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} />}
         <Settings disabled={!active} />
