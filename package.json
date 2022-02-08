@@ -229,6 +229,7 @@
   },
   "peerDependencies": {
     "@babel/runtime": "^7.17.0",
+    "@reduxjs/toolkit": "^1.x",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   }
