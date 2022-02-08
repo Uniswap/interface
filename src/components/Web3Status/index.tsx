@@ -2,11 +2,11 @@
 import { t, Trans } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { Connector } from '@widgets/web3-react/types'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
+import { Connector } from 'web3-react-alpha-types'
 
 import { NetworkContextName } from '../../constants/misc'
 import useENSName from '../../hooks/useENSName'

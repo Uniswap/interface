@@ -1,4 +1,9 @@
-import '../assets/fonts.scss'
+import 'lib/assets/fonts.scss'
+import '@fontsource/ibm-plex-mono/400.css'
+import '@fontsource/inter/variable.css'
+import '@fontsource/inter/400.css'
+import '@fontsource/inter/500.css'
+import '@fontsource/inter/600.css'
 
 import { mix, readableColor, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
@@ -6,12 +11,11 @@ import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 import styled, { ThemedProvider } from './styled'
 import { Colors, ComputedTheme, Theme } from './theme'
 
-export type { Color, Colors, Theme } from './theme'
-
 export default styled
 export * from './dynamic'
 export * from './layer'
 export * from './styled'
+export * from './theme'
 export * as ThemedText from './type'
 
 export const brand = 'hsl(331.3, 100%, 50%)'

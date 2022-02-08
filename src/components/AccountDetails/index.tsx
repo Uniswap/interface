@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { Connector } from '@widgets/web3-react/types'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { Connector } from 'web3-react-alpha-types'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, portis, walletlink } from '../../connectors'

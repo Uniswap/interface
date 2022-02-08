@@ -3,45 +3,45 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 ePDWDk css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-i2tbb-0 ivndgC css-vurnku"
   >
     <div
-      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV ibRCpr"
+      class="sc-bdnxRM Row-sc-u7azg8-0 RoutingDiagram__RouteContainerRow-sc-i2tbb-1 lmTMKd hLLNig hDkZVB"
     >
       CurrencyLogo currency=USDC
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
+        class="sc-bdnxRM Row-sc-u7azg8-0 RoutingDiagram__RouteRow-sc-i2tbb-2 lmTMKd hLLNig hUDqOH"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kkXINS"
+          class="RoutingDiagram__DottedLine-sc-i2tbb-4 cKqYfU"
         >
           <svg
-            class="RoutingDiagram__DotColor-sc-o1ook0-5 kgYqrO"
+            class="RoutingDiagram__DotColor-sc-i2tbb-5 fhSaBA"
           >
             dot_line.svg
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
+          class="Badge-sc-3epor3-0 RoutingDiagram__OpaqueBadge-sc-i2tbb-6 knpfHF gGARxH"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+            class="Badge-sc-3epor3-0 RoutingDiagram__ProtocolBadge-sc-i2tbb-7 knpfHF lbdUti"
           >
             <div
-              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+              class="theme__TextWrapper-sc-5lu8um-0 chxxqs RoutingDiagram__BadgeText-sc-i2tbb-8 ijjHig css-15li2d9"
             >
               V2
             </div>
           </div>
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-1aekuku"
+            class="theme__TextWrapper-sc-5lu8um-0 chxxqs RoutingDiagram__BadgeText-sc-i2tbb-8 ijjHig css-1aekuku"
             style="min-width: auto;"
           >
             75%
           </div>
         </div>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
+          class="sc-bdnxRM Row-sc-u7azg8-0 Row__AutoRow-sc-u7azg8-3 iqvZFe hLLNig cUhARX"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -51,42 +51,42 @@ exports[`renders multi route 1`] = `
       CurrencyLogo currency=DAI
     </div>
     <div
-      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV ibRCpr"
+      class="sc-bdnxRM Row-sc-u7azg8-0 RoutingDiagram__RouteContainerRow-sc-i2tbb-1 lmTMKd hLLNig hDkZVB"
     >
       CurrencyLogo currency=USDC
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
+        class="sc-bdnxRM Row-sc-u7azg8-0 RoutingDiagram__RouteRow-sc-i2tbb-2 lmTMKd hLLNig hUDqOH"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kkXINS"
+          class="RoutingDiagram__DottedLine-sc-i2tbb-4 cKqYfU"
         >
           <svg
-            class="RoutingDiagram__DotColor-sc-o1ook0-5 kgYqrO"
+            class="RoutingDiagram__DotColor-sc-i2tbb-5 fhSaBA"
           >
             dot_line.svg
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
+          class="Badge-sc-3epor3-0 RoutingDiagram__OpaqueBadge-sc-i2tbb-6 knpfHF gGARxH"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+            class="Badge-sc-3epor3-0 RoutingDiagram__ProtocolBadge-sc-i2tbb-7 knpfHF lbdUti"
           >
             <div
-              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+              class="theme__TextWrapper-sc-5lu8um-0 chxxqs RoutingDiagram__BadgeText-sc-i2tbb-8 ijjHig css-15li2d9"
             >
               V3
             </div>
           </div>
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-1aekuku"
+            class="theme__TextWrapper-sc-5lu8um-0 chxxqs RoutingDiagram__BadgeText-sc-i2tbb-8 ijjHig css-1aekuku"
             style="min-width: auto;"
           >
             25%
           </div>
         </div>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
+          class="sc-bdnxRM Row-sc-u7azg8-0 Row__AutoRow-sc-u7azg8-3 iqvZFe hLLNig cUhARX"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -102,45 +102,45 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 ePDWDk css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-i2tbb-0 ivndgC css-vurnku"
   >
     <div
-      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV ibRCpr"
+      class="sc-bdnxRM Row-sc-u7azg8-0 RoutingDiagram__RouteContainerRow-sc-i2tbb-1 lmTMKd hLLNig hDkZVB"
     >
       CurrencyLogo currency=USDC
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
+        class="sc-bdnxRM Row-sc-u7azg8-0 RoutingDiagram__RouteRow-sc-i2tbb-2 lmTMKd hLLNig hUDqOH"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kkXINS"
+          class="RoutingDiagram__DottedLine-sc-i2tbb-4 cKqYfU"
         >
           <svg
-            class="RoutingDiagram__DotColor-sc-o1ook0-5 kgYqrO"
+            class="RoutingDiagram__DotColor-sc-i2tbb-5 fhSaBA"
           >
             dot_line.svg
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll OurGh"
+          class="Badge-sc-3epor3-0 RoutingDiagram__OpaqueBadge-sc-i2tbb-6 knpfHF gGARxH"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bNVqMw"
+            class="Badge-sc-3epor3-0 RoutingDiagram__ProtocolBadge-sc-i2tbb-7 knpfHF lbdUti"
           >
             <div
-              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+              class="theme__TextWrapper-sc-5lu8um-0 chxxqs RoutingDiagram__BadgeText-sc-i2tbb-8 ijjHig css-15li2d9"
             >
               V3
             </div>
           </div>
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-1aekuku"
+            class="theme__TextWrapper-sc-5lu8um-0 chxxqs RoutingDiagram__BadgeText-sc-i2tbb-8 ijjHig css-1aekuku"
             style="min-width: auto;"
           >
             100%
           </div>
         </div>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
+          class="sc-bdnxRM Row-sc-u7azg8-0 Row__AutoRow-sc-u7azg8-3 iqvZFe hLLNig cUhARX"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -156,7 +156,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 ePDWDk css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-i2tbb-0 ivndgC css-vurnku"
   />
 </DocumentFragment>
 `;
