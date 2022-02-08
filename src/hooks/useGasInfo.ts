@@ -39,7 +39,7 @@ export function useGasInfo(): { loading: boolean; gas: GasTypes } {
   const { chainId } = useActiveWeb3React()
   const [loading, setLoading] = useState<boolean>(true)
   const [gas, setGas] = useState<GasTypes>({ normal: 0, fast: 0, slow: 0 })
-  console.log(gasInfoChainUrls)
+
   useEffect(() => {
     if (!chainId || !gasInfoChainUrls[chainId]) {
       setLoading(true)
