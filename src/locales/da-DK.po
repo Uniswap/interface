@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 19:06\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -2025,8 +2025,8 @@ msgid "Unsupported Assets"
 msgstr "Ikke-understøttede aktiver"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "Ikke-understøttet netværk - skift til et andet netværk for at bytte"
+msgid "Unsupported network - switch to another to trade."
+msgstr "Ikke-understøttet netværk - skift til et andet for at handle."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 19:06\n"
 "Last-Translator: \n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
@@ -2025,8 +2025,8 @@ msgid "Unsupported Assets"
 msgstr "Nieobsługiwane zasoby"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "Nieobsługiwana sieć — przełącz się na inną sieć, aby dokonać wymiany"
+msgid "Unsupported network - switch to another to trade."
+msgstr "Nieobsługiwana sieć - przełącz się na inną, aby handlować."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

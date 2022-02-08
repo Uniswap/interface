@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 19:06\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -2025,8 +2025,8 @@ msgid "Unsupported Assets"
 msgstr "Tài sản không được hỗ trợ"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "Mạng không được hỗ trợ - chuyển sang mạng khác để hoán đổi"
+msgid "Unsupported network - switch to another to trade."
+msgstr "Mạng không được hỗ trợ - chuyển sang mạng khác để giao dịch."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
