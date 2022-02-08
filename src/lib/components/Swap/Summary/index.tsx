@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
@@ -9,7 +10,9 @@ import { AlertTriangle, Expando, Info } from 'lib/icons'
 import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
+import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
+import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -110,6 +113,8 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
 
   const scrollbar = useScrollbar(details)
 
+  const { i18n } = useLingui()
+
   if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
     return null
   }
@@ -121,7 +126,8 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         <SummaryColumn gap={0.75} flex justify="center">
           <Summary input={inputAmount} output={outputAmount} usdc={true} />
           <ThemedText.Caption>
-            1 {inputCurrency.symbol} = {executionPrice?.toSignificant(6)} {outputCurrency.symbol}
+            {formatLocaleNumber({ number: 1, sigFigs: 1, locale: i18n.locale })} {inputCurrency.symbol} ={' '}
+            {formatPrice(executionPrice, 6, i18n.locale)} {outputCurrency.symbol}
           </ThemedText.Caption>
         </SummaryColumn>
         <Rule />
@@ -145,14 +151,15 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
             <Trans>Output is estimated.</Trans>
             {independentField === Field.INPUT && (
               <Trans>
-                You will send at most {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {inputCurrency.symbol}{' '}
-                or the transaction will revert.
+                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)}{' '}
+                {inputCurrency.symbol} or the transaction will revert.
               </Trans>
             )}
             {independentField === Field.OUTPUT && (
               <Trans>
-                You will receive at least {trade.minimumAmountOut(allowedSlippage).toSignificant(6)}{' '}
-                {outputCurrency.symbol} or the transaction will revert.
+                You will receive at least{' '}
+                {formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)} {outputCurrency.symbol}{' '}
+                or the transaction will revert.
               </Trans>
             )}
           </Estimate>

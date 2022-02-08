@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { ArrowRight } from 'lib/icons'
@@ -5,6 +6,7 @@ import styled from 'lib/theme'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../../Column'
 import Row from '../../Row'
@@ -21,6 +23,7 @@ interface TokenValueProps {
 }
 
 function TokenValue({ input, usdc, change }: TokenValueProps) {
+  const { i18n } = useLingui()
   const percent = useMemo(() => {
     if (change) {
       const percent = change.toPrecision(3)
@@ -36,13 +39,13 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
       <Row gap={0.375} justify="flex-start">
         <TokenImg token={input.currency} />
         <ThemedText.Body2>
-          {input.toSignificant(6)} {input.currency.symbol}
+          {formatCurrencyAmount(input, 6, i18n.locale)} {input.currency.symbol}
         </ThemedText.Body2>
       </Row>
       {usdc && usdcAmount && (
         <Row justify="flex-start">
           <ThemedText.Caption color="secondary">
-            ${usdcAmount.toFixed(2)}
+            ${formatCurrencyAmount(usdcAmount, 2, i18n.locale)}
             {change && <Percent gain={change > 0}> {percent}</Percent>}
           </ThemedText.Caption>
         </Row>
