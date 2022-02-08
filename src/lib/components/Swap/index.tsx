@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useAtom } from 'jotai'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useSyncConvenienceFee from 'lib/hooks/swap/useSyncConvenienceFee'
@@ -59,7 +60,10 @@ export default function Swap(props: SwapProps) {
   const displayTx = getSwapTx(pendingTxs, displayTxHash)
 
   const onSupportedChain = useMemo(
-    () => list.reduce((acc, cur) => acc || cur.chainId === chainId, false),
+    () =>
+      chainId &&
+      ALL_SUPPORTED_CHAIN_IDS.includes(chainId) &&
+      list.reduce((acc, cur) => acc || cur.chainId === chainId, false),
     [chainId, list]
   )
 
