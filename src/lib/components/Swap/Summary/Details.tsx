@@ -10,7 +10,7 @@ import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { computeRealizedPriceImpact } from 'utils/prices'
+import { computeRealizedLPFeeAmount, computeRealizedPriceImpact } from 'utils/prices'
 
 import Row from '../../Row'
 
@@ -47,6 +47,8 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const outputCurrency = outputAmount.currency
   const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
 
+  const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
+
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
 
@@ -71,12 +73,20 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     }
     rows.push(priceImpactRow)
 
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
+    if (lpFeeAmount) {
+      const localizedFeeAmount = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
+      rows.push([
+        t`Liquidity provider fee`,
+        `${localizedFeeAmount} ${inputCurrency.symbol || currencyId(inputCurrency)}`,
+      ])
+    }
+
+    if (trade.tradeType === TradeType.EXACT_OUTPUT) {
       const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 
-    if (trade.tradeType === TradeType.EXACT_OUTPUT) {
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
       const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     }
@@ -88,7 +98,18 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     rows.push(slippageToleranceRow)
 
     return rows
-  }, [allowedSlippage, feeOptions, inputCurrency, integrator, i18n, outputAmount, outputCurrency, priceImpact, trade])
+  }, [
+    feeOptions,
+    priceImpact,
+    lpFeeAmount,
+    trade,
+    allowedSlippage,
+    outputAmount,
+    i18n.locale,
+    integrator,
+    outputCurrency,
+    inputCurrency,
+  ])
   return (
     <>
       {details.map(([label, detail, color]) => (

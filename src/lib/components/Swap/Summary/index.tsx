@@ -151,15 +151,15 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
             <Trans>Output is estimated.</Trans>
             {independentField === Field.INPUT && (
               <Trans>
-                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)}{' '}
-                {inputCurrency.symbol} or the transaction will revert.
+                You will receive at least{' '}
+                {formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)} {outputCurrency.symbol}{' '}
+                or the transaction will revert.
               </Trans>
             )}
             {independentField === Field.OUTPUT && (
               <Trans>
-                You will receive at least{' '}
-                {formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)} {outputCurrency.symbol}{' '}
-                or the transaction will revert.
+                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)}{' '}
+                {inputCurrency.symbol} or the transaction will revert.
               </Trans>
             )}
           </Estimate>
