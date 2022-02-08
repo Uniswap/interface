@@ -6,12 +6,11 @@ import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 import styled, { ThemedProvider } from './styled'
 import { Colors, ComputedTheme, Theme } from './theme'
 
-export type { Color, Colors, Theme } from './theme'
-
 export default styled
 export * from './dynamic'
 export * from './layer'
 export * from './styled'
+export * from './theme'
 export * as ThemedText from './type'
 
 export const brand = 'hsl(331.3, 100%, 50%)'
