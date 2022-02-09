@@ -4,6 +4,8 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
+import { GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY } from './index'
+
 function reportWebVitals({ name, delta, id }: Metric) {
   ReactGA.timing({
     category: 'Web Vitals',
@@ -31,5 +33,15 @@ export default function GoogleAnalyticsReporter({ location: { pathname, search }
   useEffect(() => {
     ReactGA.pageview(`${pathname}${search}`)
   }, [pathname, search])
+
+  useEffect(() => {
+    // typed as 'any' in react-ga -.-
+    ReactGA.ga((tracker: any) => {
+      if (!tracker) return
+
+      const clientId = tracker.get('clientId')
+      window.localStorage.setItem(GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY, clientId)
+    })
+  }, [])
   return null
 }
