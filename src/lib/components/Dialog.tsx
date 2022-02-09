@@ -106,7 +106,7 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
     context.element &&
     createPortal(
       <ThemeProvider>
-        <Modal className="dialog" color={color} ref={dialog}>
+        <Modal color={color} ref={dialog}>
           <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
         </Modal>
       </ThemeProvider>,
