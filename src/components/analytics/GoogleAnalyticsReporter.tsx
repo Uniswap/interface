@@ -1,6 +1,6 @@
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useEffect } from 'react'
-import ReactGA, { ga } from 'react-ga'
+import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -36,7 +36,7 @@ export default function GoogleAnalyticsReporter({ location: { pathname, search }
 
   useEffect(() => {
     // typed as 'any' in react-ga -.-
-    ga((tracker: any) => {
+    ReactGA.ga((tracker: any) => {
       if (!tracker) return
 
       const clientId = tracker.get('clientId')
