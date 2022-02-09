@@ -333,7 +333,7 @@ function Header() {
             )}{' '}
             {nativeCurrency.symbol}
           </Amount>
-          {gas.normal !== 0 && (
+          {gas.normal !== 0 && !isMobileByMedia && (
             <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
               <GasInfoSvg />
               <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
@@ -349,7 +349,7 @@ function Header() {
             </GasInfo>
           )}
         </HeaderSubRow>
-        {gas.fast !== 0 && gas.slow !== 0 && (
+        {gas.fast !== 0 && gas.slow !== 0 && !isMobileByMedia && (
           <HeaderSubRow style={{ visibility: isGasInfoOpen ? 'visible' : 'hidden', gap: '4px' }}>
             <ColoredGas color={'fast'}>FAST {gas.fast}</ColoredGas>
             <ColoredGas color={'normal'}>NORMAL {gas.normal}</ColoredGas>
