@@ -1,5 +1,5 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { Connector } from 'web3-react-alpha-types'
+import { Connector } from '@web3-react/types'
+import { AbstractConnector } from 'web3-react-abstract-connector'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'

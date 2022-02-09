@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import styled from 'styled-components/macro'
+import { useWeb3React } from 'web3-react-core'
 
 import { network } from '../../connectors'
 import { NetworkContextName } from '../../constants/misc'
