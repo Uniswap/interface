@@ -103,7 +103,7 @@ export default function MaxSlippageSelect() {
 
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
-  const value = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
+  const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
   const [warning, setWarning] = useState(WarningState.NONE)
   const [showTooltip, setShowTooltip, tooltipProps] = useTooltip()
 
@@ -158,8 +158,8 @@ export default function MaxSlippageSelect() {
         >
           <Row color={warning === WarningState.INVALID_SLIPPAGE ? 'error' : undefined}>
             <DecimalInput
-              size={Math.max(value.length, 3)}
-              value={value}
+              size={Math.max(maxSlippageInput.length, 3)}
+              value={maxSlippageInput}
               onChange={(input) => processInput(+input)}
               placeholder={placeholder}
               ref={input}
