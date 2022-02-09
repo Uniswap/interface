@@ -1,14 +1,19 @@
-import { useWeb3React } from '@web3-react/core';
+import { AlertCircle, FilePlus } from 'react-feather';
+
 import { ButtonOutlined } from 'components/Button';
-import { Wrapper } from 'components/swap/styleds';
-import moment from 'moment';
 import { LoadingRows } from 'pages/Pool/styleds';
 import React from 'react';
-import { AlertCircle, FilePlus } from 'react-feather';
-import { useUserTransactions } from 'state/logs/utils';
 import Web3 from 'web3'
+import { Wrapper } from 'components/swap/styleds';
+import moment from 'moment';
 import {saveAs} from 'file-saver';
+import styled from 'styled-components/macro'
+import { useUserTransactions } from 'state/logs/utils';
+import { useWeb3React } from '@web3-react/core';
 
+const StyledA =styled.a`
+    color: ${({theme}) => theme.primary1};
+`
 export const Transactions = ({transactions, loading, error, accountValue}:{transactions?: any[], loading?:boolean, error?:any, accountValue?: string | null | undefined}) => {
     let account = accountValue;
     const { account: secondary, chainId, library } = useWeb3React()
@@ -166,9 +171,9 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                                 <td>${Number(item.amountUSD).toFixed(2).toLocaleString()}</td>
                             
                                 <td>
-                                    <a href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
+                                    <StyledA href={`https://${chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
                                         {item?.hash && item?.transaction?.id.slice(0, 6) + '...' + item?.transaction?.id.slice(38, 42)}
-                                    </a>
+                                    </StyledA>
                                 </td>
                             </tr>
                         ))}
