@@ -1,5 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { CHAIN_INFO } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
+import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
 import { SwapTransactionInfo, Transaction } from 'lib/state/transactions'
@@ -33,7 +36,7 @@ function ElapsedTime({ tx }: { tx: Transaction<SwapTransactionInfo> }) {
         setElapsedMs(Date.now() - tx.addedTime)
       }
     },
-    elapsedMs === tx.info.response.timestamp ? null : 1000
+    tx.receipt ? null : 1000
   )
   const toElapsedTime = useCallback((ms: number) => {
     let sec = Math.floor(ms / 1000)
@@ -68,12 +71,22 @@ interface TransactionStatusProps {
 }
 
 function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
+  const { chainId } = useActiveWeb3React()
+
   const Icon = useMemo(() => {
     return tx.receipt?.status ? CheckCircle : Spinner
   }, [tx.receipt?.status])
   const heading = useMemo(() => {
     return tx.receipt?.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>
   }, [tx.receipt?.status])
+  const etherscanUrl = useMemo(() => {
+    const hash = tx.info.response.hash
+    let baseUrl = CHAIN_INFO[SupportedChainId.MAINNET].explorer
+    if (chainId && CHAIN_INFO[chainId]) {
+      baseUrl = CHAIN_INFO[chainId].explorer
+    }
+    return `${baseUrl}tx/${hash}`
+  }, [chainId, tx])
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
@@ -82,7 +95,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
       </StatusHeader>
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
-          <EtherscanA href="//etherscan.io" target="_blank">
+          <EtherscanA href={etherscanUrl} target="_blank">
             <Trans>View on Etherscan</Trans>
           </EtherscanA>
         </ThemedText.ButtonSmall>
