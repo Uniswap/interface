@@ -4,7 +4,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import { GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY } from '.'
+import { GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY } from './index'
 
 function reportWebVitals({ name, delta, id }: Metric) {
   ReactGA.timing({
