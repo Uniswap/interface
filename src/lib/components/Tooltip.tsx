@@ -44,6 +44,7 @@ export default function Tooltip({
   contained,
 }: TooltipProps) {
   const [showTooltip, , tooltipProps] = useTooltip()
+
   return (
     <Popover content={children} show={showTooltip} placement={placement} offset={offset} contained={contained}>
       <IconTooltip icon={Icon} iconProps={iconProps} {...tooltipProps} />

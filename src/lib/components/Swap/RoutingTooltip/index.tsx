@@ -1,7 +1,6 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
-import Column from 'lib/components/Column'
 import Row from 'lib/components/Row'
 import TokenImg from 'lib/components/TokenImg'
 import Tooltip from 'lib/components/Tooltip'
@@ -13,7 +12,8 @@ import { InterfaceTrade } from 'state/routing/types'
 import { getTokenPath, RoutingDiagramEntry } from './utils'
 
 const RouteRow = styled(Row)`
-  grid-template-columns: 24px 1fr 24px;
+  grid-template-columns: 1em 1fr 1em;
+  min-width: 300px;
 `
 
 const RouteDetailsContainer = styled(Row)`
@@ -26,7 +26,7 @@ const DottedLine = styled.div`
   display: flex;
   opacity: 0.5;
   position: absolute;
-  width: calc(100%);
+  width: calc(100% - 1em);
   z-index: 1;
 `
 
@@ -40,41 +40,31 @@ const BaseBadge = styled(Row)`
   background-color: ${({ theme }) => theme.outline};
   border-radius: 8px;
   grid-gap: 4px;
-  padding: 4px 6px;
+  padding: 4px;
   z-index: 3;
 `
 
 const VersionBadge = styled(BaseBadge)`
   background-color: ${({ theme }) => theme.module};
-  padding: 2px 4px;
+  border-radius: 4px;
+  padding: 0px 2px;
 `
 
-const PoolBadge = styled(BaseBadge)`
-  display: flex;
-  padding: 4px;
-`
-
-const PoolsRow = styled(Row)`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1px;
-  margin: --1px;
+const DetailsRow = styled(Row)`
+  display: grid;
+  grid-template-columns: 68px 1fr;
   width: 100%;
-
-  & > * {
-    margin: -1px !important;
-  }
 `
 
 function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
   return (
-    <PoolBadge>
+    <BaseBadge>
       <Row>
         <TokenImg token={currency0} />
         <TokenImg token={currency1} />
       </Row>
       <ThemedText.Subhead1 fontSize={14}>{feeAmount / 10000}%</ThemedText.Subhead1>
-    </PoolBadge>
+    </BaseBadge>
   )
 }
 
@@ -83,32 +73,32 @@ export default function RoutingTooltip({ trade }: { trade: InterfaceTrade<Curren
 
   return (
     <Tooltip icon={Info} placement="right">
-      <Column>
-        {routes.map((route, index) => (
-          <RouteRow key={index} align="center" justify="center">
-            <TokenImg token={trade.inputAmount.currency} />
-            <RouteDetailsContainer justify="center" flex>
-              <DottedLine>
-                <DotColor />
-              </DottedLine>
+      {routes.map((route, index) => (
+        <RouteRow key={index} align="center">
+          <TokenImg token={trade.inputAmount.currency} />
+          <RouteDetailsContainer justify="flex-start" flex>
+            <DottedLine>
+              <DotColor />
+            </DottedLine>
+            <DetailsRow>
               <BaseBadge>
                 <VersionBadge>
-                  <ThemedText.Caption color="secondary" fontWeight={600}>
+                  <ThemedText.Caption color="secondary" fontWeight={600} fontSize={'10px'}>
                     {route.protocol.toUpperCase()}
                   </ThemedText.Caption>
                 </VersionBadge>
                 <ThemedText.ButtonSmall color="secondary">{route.percent.toSignificant(2)}%</ThemedText.ButtonSmall>
               </BaseBadge>
-              <PoolsRow justify="space-evenly">
+              <Row justify="space-around" flex style={{ width: '100%' }}>
                 {route.path.map(([currency0, currency1, feeAmount], index) => (
                   <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
                 ))}
-              </PoolsRow>
-            </RouteDetailsContainer>
-            <TokenImg token={trade.outputAmount.currency} />
-          </RouteRow>
-        ))}
-      </Column>
+              </Row>
+            </DetailsRow>
+          </RouteDetailsContainer>
+          <TokenImg token={trade.outputAmount.currency} />
+        </RouteRow>
+      ))}
     </Tooltip>
   )
 }
