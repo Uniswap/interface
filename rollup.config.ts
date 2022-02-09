@@ -68,7 +68,7 @@ const type = {
   external: isAsset,
   plugins: [
     dts({ compilerOptions: { baseUrl: 'dist/dts' } }),
-    del({ hook: 'buildEnd', targets: ['dist/widgets.tsc', 'dist/dts'] }),
+    process.env.ROLLUP_WATCH ? undefined : del({ hook: 'buildEnd', targets: ['dist/widgets.tsc', 'dist/dts'] }),
   ],
 }
 
