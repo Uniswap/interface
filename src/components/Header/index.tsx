@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Box, Flex, Text } from 'rebass'
+import { Box, Flex } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
 
@@ -87,8 +87,12 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
+  gap: 40px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-content: flex-end;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    gap: 0;
   `};
 `
 
@@ -119,9 +123,8 @@ export const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: ${({ theme }) => theme.text5};
   width: fit-content;
-  margin: 0 16px;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 19.5px;
 
   &.active {
@@ -158,7 +161,7 @@ const StyledExternalLink = styled(ExternalLink)`
   line-height: 19.5px;
   width: fit-content;
   text-decoration: none !important;
-  margin: 0 12px;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
@@ -201,6 +204,15 @@ export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadiu
     margin-left: 7px;
   }
 `
+const Divider = styled.div`
+  height: 24px;
+  width: 1px;
+  background-color: #8780bf;
+  margin-left: 40px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
 
 function Header() {
   const { account, chainId } = useActiveWeb3React()
@@ -233,6 +245,7 @@ function Header() {
           <SwaprVersionLogo />
         </Title>
         <HeaderLinks>
+          <Divider />
           <StyledNavLink id="swap-nav-link" to="/swap" activeClassName="active">
             {t('swap')}
           </StyledNavLink>
@@ -253,12 +266,6 @@ function Header() {
           </StyledActiveNavLinkWithBadge>
           <StyledExternalLink id="vote-nav-link" href={`https://snapshot.org/#/swpr.eth`}>
             {t('vote')}
-          </StyledExternalLink>
-          <StyledExternalLink id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
-            {t('charts')}
-            <Text ml="4px" fontSize="11px">
-              ↗
-            </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
             <MobileOptions />

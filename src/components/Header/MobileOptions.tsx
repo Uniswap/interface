@@ -146,12 +146,6 @@ export default function MobileOptions() {
                   {t('vote')}
                 </StyledExternalLink>
               </ListItem>
-              <ListItem>
-                <StyledExternalLink id="stake-nav-link" href="https://dxstats.eth.link/">
-                  {t('charts')}
-                  <span>↗</span>
-                </StyledExternalLink>
-              </ListItem>
             </List>
           </>
         }
