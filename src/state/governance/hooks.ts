@@ -7,17 +7,18 @@ import { formatUnits } from '@ethersproject/units'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import GovernorAlphaJson from '@uniswap/governance/build/GovernorAlpha.json'
+import UniJson from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
+import {
+  GOVERNANCE_ALPHA_V0_ADDRESSES,
+  GOVERNANCE_ALPHA_V1_ADDRESSES,
+  GOVERNANCE_BRAVO_ADDRESSES,
+} from 'constants/addresses'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import {
-  useGovernanceBravoContract,
-  useGovernanceV0Contract,
-  useGovernanceV1Contract,
-  useLatestGovernanceContract,
-  useUniContract,
-} from 'hooks/useContract'
+import { useContract } from 'hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -35,7 +36,27 @@ import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
 import { VoteOption } from './types'
 
-const { abi: GOV_ABI } = GovernorAlphaJson
+const { abi: GOVERNANCE_ABI } = GovernorAlphaJson
+const { abi: UNI_ABI } = UniJson
+
+export function useGovernanceV0Contract(): Contract | null {
+  return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GOVERNANCE_ABI, false)
+}
+
+export function useGovernanceV1Contract(): Contract | null {
+  return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GOVERNANCE_ABI, false)
+}
+
+export function useGovernanceBravoContract(): Contract | null {
+  return useContract(GOVERNANCE_BRAVO_ADDRESSES, GOVERNOR_BRAVO_ABI, true)
+}
+
+export const useLatestGovernanceContract = useGovernanceBravoContract
+
+export function useUniContract() {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId ? UNI[chainId]?.address : undefined, UNI_ABI, true)
+}
 
 interface ProposalDetail {
   target: string
@@ -77,7 +98,7 @@ export enum ProposalState {
   EXECUTED,
 }
 
-const GovernanceInterface = new Interface(GOV_ABI)
+const GovernanceInterface = new Interface(GOVERNANCE_ABI)
 
 // get count of all proposals made in the latest governor contract
 function useProposalCount(contract: Contract | null): number | undefined {
