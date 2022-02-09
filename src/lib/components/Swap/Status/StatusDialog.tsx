@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { CHAIN_INFO } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useInterval from 'lib/hooks/useInterval'
@@ -8,6 +6,7 @@ import { CheckCircle, Clock, Spinner } from 'lib/icons'
 import { SwapTransactionInfo, Transaction } from 'lib/state/transactions'
 import styled, { ThemedText } from 'lib/theme'
 import { useCallback, useMemo, useState } from 'react'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
@@ -79,14 +78,10 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   const heading = useMemo(() => {
     return tx.receipt?.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>
   }, [tx.receipt?.status])
-  const etherscanUrl = useMemo(() => {
-    const hash = tx.info.response.hash
-    let baseUrl = CHAIN_INFO[SupportedChainId.MAINNET].explorer
-    if (chainId && CHAIN_INFO[chainId]) {
-      baseUrl = CHAIN_INFO[chainId].explorer
-    }
-    return `${baseUrl}tx/${hash}`
-  }, [chainId, tx])
+  const etherscanLink = useMemo(
+    () => getExplorerLink(chainId || 1, tx.info.response.hash, ExplorerDataType.TRANSACTION),
+    [chainId, tx.info.response.hash]
+  )
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
@@ -95,7 +90,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
       </StatusHeader>
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
-          <EtherscanA href={etherscanUrl} target="_blank">
+          <EtherscanA href={etherscanLink} target="_blank">
             <Trans>View on Etherscan</Trans>
           </EtherscanA>
         </ThemedText.ButtonSmall>
