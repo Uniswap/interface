@@ -11,7 +11,7 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isAddress } from '../../../utils'
 import useActiveWeb3React from '../useActiveWeb3React'
-import useMaxSlippage from '../useMaxSlippage'
+import useAllowedSlippage from '../useAllowedSlippage'
 import { useBestTrade } from './useBestTrade'
 
 interface SwapInfo {
@@ -89,7 +89,7 @@ function useComputeSwapInfo(): SwapInfo {
     [trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
-  const allowedSlippage = useMaxSlippage(trade.trade)
+  const allowedSlippage = useAllowedSlippage(trade.trade)
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
