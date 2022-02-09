@@ -66,9 +66,9 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     }
 
     const priceImpactRow = [t`Price impact`, `${priceImpact.toFixed(2)}%`]
-    if (!priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) {
+    if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) {
       priceImpactRow.push('error')
-    } else if (!priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
+    } else if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
       priceImpactRow.push('warning')
     }
     rows.push(priceImpactRow)
@@ -92,7 +92,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     }
 
     const slippageToleranceRow = [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`]
-    if (!allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE)) {
+    if (allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE)) {
       slippageToleranceRow.push('warning')
     }
     rows.push(slippageToleranceRow)

@@ -10,18 +10,20 @@ import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
 import { PropsWithChildren, StrictMode, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { Provider as DialogProvider } from './Dialog'
+import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 import WidgetPropValidator from './Error/WidgetsPropsValidator'
 import Web3Provider from './Web3Provider'
 
 const slideDown = keyframes`
   to {
+    height: 0;
     top: calc(100% - 0.25em);
   }
 `
 const slideUp = keyframes`
   from {
+    height: 0;
     top: calc(100% - 0.25em);
   }
 `
@@ -41,14 +43,9 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   font-variant: none;
   height: 368px;
   min-width: 300px;
-  overflow-y: hidden;
   padding: 0.25em;
   position: relative;
   width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
-
-  @supports (overflow: clip) {
-    overflow-y: clip;
-  }
 
   * {
     box-sizing: border-box;
@@ -60,11 +57,11 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
     }
   }
 
-  .dialog {
+  ${Modal} {
     animation: ${slideUp} 0.25s ease-in-out;
   }
 
-  .dialog.${UNMOUNTING} {
+  ${Modal}.${UNMOUNTING} {
     animation: ${slideDown} 0.25s ease-in-out;
   }
 `
