@@ -18,18 +18,9 @@ const Wrapper = styled(Column)`
   padding: 0.25em;
 `
 
-const StyledAutoRouterIcon = styled(AutoRouterIcon)`
-  height: 1em;
-  width: 1em;
-
-  :hover {
-    filter: brightness(1.3);
-  }
-`
-
 const RouteRow = styled(Row)`
   grid-template-columns: 1em 1fr 1em;
-  min-width: 18.75em;
+  min-width: 430px;
 `
 
 const RouteDetailsContainer = styled(Row)`
@@ -68,7 +59,7 @@ const VersionBadge = styled(BaseBadge)`
 
 const DetailsRow = styled(Row)`
   display: grid;
-  grid-template-columns: 4.25em 1fr;
+  grid-template-columns: 4em 1fr;
   width: 100%;
 `
 
@@ -80,6 +71,14 @@ const StyledAutoRouterLabel = styled(ThemedText.Body1)`
     background-image: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+`
+
+const StyledAutoRouterIcon = styled(AutoRouterIcon)`
+  height: 0.875em;
+  width: 0.875em;
+  :hover {
+    filter: brightness(1.3);
   }
 `
 
@@ -104,10 +103,10 @@ export default function RoutingTooltip({ trade }: { trade: InterfaceTrade<Curren
         <Row justify="space-between">
           <Row gap={0.25}>
             <StyledAutoRouterIcon />
-            <StyledAutoRouterLabel>Auto Router</StyledAutoRouterLabel>
+            <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
           </Row>
-          <ThemedText.Body1 fontSize="14px">
-            Best routes via {routes.length} hop{routes.length > 1 ? 's' : ''}.
+          <ThemedText.Body1 fontSize={14}>
+            Best routes via {routes.length} hop{routes.length > 1 ? 's' : ''}
           </ThemedText.Body1>
         </Row>
         <Rule />
