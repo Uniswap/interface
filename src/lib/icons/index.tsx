@@ -2,6 +2,7 @@ import { ReactComponent as CheckIcon } from 'lib/assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'lib/assets/svg/expando.svg'
 import { ReactComponent as LogoIcon } from 'lib/assets/svg/logo.svg'
 import { ReactComponent as SpinnerIcon } from 'lib/assets/svg/spinner.svg'
+import { ReactComponent as WalletIcon } from 'lib/assets/svg/wallet.svg'
 import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
 /* eslint-disable no-restricted-imports */
@@ -14,7 +15,6 @@ import {
   CheckCircle as CheckCircleIcon,
   ChevronDown as ChevronDownIcon,
   Clock as ClockIcon,
-  CreditCard as CreditCardIcon,
   ExternalLink as LinkIcon,
   HelpCircle as HelpCircleIcon,
   Info as InfoIcon,
@@ -77,13 +77,13 @@ export const ArrowUp = icon(ArrowUpIcon)
 export const CheckCircle = icon(CheckCircleIcon)
 export const ChevronDown = icon(ChevronDownIcon)
 export const Clock = icon(ClockIcon)
-export const CreditCard = icon(CreditCardIcon)
 export const HelpCircle = icon(HelpCircleIcon)
 export const Info = icon(InfoIcon)
 export const Link = icon(LinkIcon)
 export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)
 export const Trash2 = icon(Trash2Icon)
+export const Wallet = icon(WalletIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
 

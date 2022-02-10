@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 22:07\n"
+"PO-Revision-Date: 2022-02-10 09:06\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -536,6 +536,10 @@ msgstr "Yhdistä lompakkoon nähdäksesi likviditeettisi."
 msgid "Connect wallet to swap"
 msgstr "Yhdistä lompakko vaihtaaksesi"
 
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Yhdistä lompakkosi"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Yhdistetty kohteeseen {name}"
@@ -1022,7 +1026,7 @@ msgstr "Likviditeettitietoja ei ole saatavilla."
 
 #: src/lib/components/Swap/Summary/Details.tsx
 msgid "Liquidity provider fee"
-msgstr "Likviditeetin tarjoaja maksu"
+msgstr "Likviditeetin tarjoajan palkkio"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -2030,7 +2034,7 @@ msgstr "Ei-tuettuja varoja"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unsupported network - switch to another to trade."
-msgstr "Ei tuettu verkko - vaihda toiseen kauppaa varten."
+msgstr "Ei tuettu verkko - vaihda toiseen käydäksesi kauppaa."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

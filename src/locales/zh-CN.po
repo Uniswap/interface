@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-09 03:06\n"
+"PO-Revision-Date: 2022-02-10 02:15\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -535,6 +535,10 @@ msgstr "连接到钱包以查看您的流动资金。"
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "连接钱包以交换"
+
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "连接你的钱包"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"

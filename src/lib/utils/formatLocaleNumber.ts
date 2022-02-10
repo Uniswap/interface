@@ -15,6 +15,7 @@ export default function formatLocaleNumber({ number, locale, sigFigs, options = 
   } else {
     localeArg = [locale, DEFAULT_LOCALE]
   }
+  options.maximumSignificantDigits = options.maximumSignificantDigits || sigFigs
   if (typeof number === 'number') {
     return number.toLocaleString(localeArg, options)
   } else {
