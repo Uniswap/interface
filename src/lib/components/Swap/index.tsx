@@ -45,6 +45,7 @@ export interface SwapProps {
   defaultOutputAmount?: string
   convenienceFee?: number
   convenienceFeeRecipient?: string | { [chainId: number]: string }
+  onConnectWallet?: () => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -68,7 +69,7 @@ export default function Swap(props: SwapProps) {
     <SwapPropValidator {...props}>
       {onSupportedChain && <SwapInfoUpdater />}
       <Header title={<Trans>Swap</Trans>}>
-        {active && <Wallet disabled={!account} />}
+        {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!active} />
       </Header>
       <div ref={setBoundary}>

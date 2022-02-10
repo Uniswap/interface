@@ -1,15 +1,25 @@
-import { CreditCard } from 'lib/icons'
-import { ThemedText } from 'lib/theme'
+import { Trans } from '@lingui/macro'
+import { Wallet as WalletIcon } from 'lib/icons'
+import styled, { ThemedText } from 'lib/theme'
 
 import Row from './Row'
 
-export default function Wallet({ disabled }: { disabled?: boolean }) {
+interface WalletProps {
+  disabled?: boolean
+  onClick?: () => void
+}
+
+const ClickableRow = styled(Row)<{ onClick?: unknown }>`
+  cursor: ${({ onClick }) => onClick && 'pointer'};
+`
+
+export default function Wallet({ disabled, onClick }: WalletProps) {
   return disabled ? (
     <ThemedText.Caption color="secondary">
-      <Row gap={0.25}>
-        <CreditCard />
-        Connect wallet to swap
-      </Row>
+      <ClickableRow gap={0.5} onClick={onClick}>
+        <WalletIcon />
+        <Trans>Connect your wallet</Trans>
+      </ClickableRow>
     </ThemedText.Caption>
   ) : null
 }
