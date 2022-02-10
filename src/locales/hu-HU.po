@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-10 02:15\n"
+"PO-Revision-Date: 2022-02-10 22:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -1879,10 +1879,6 @@ msgstr "Összes letét"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Kereskedelmi útvonal"
-
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "Kereskedés"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx

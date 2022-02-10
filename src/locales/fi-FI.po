@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-10 09:06\n"
+"PO-Revision-Date: 2022-02-10 22:06\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -1878,10 +1878,6 @@ msgstr "Talletuksia yhteensä"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Kauppareitti"
-
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "Kaupankäynti"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
