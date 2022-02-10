@@ -5,6 +5,7 @@ import { TYPE } from '../../../../../../theme'
 import { AutoColumn } from '../../../../../Column'
 import DataRow from '../DataRow'
 import { DateTime } from 'luxon'
+import { unwrappedToken } from '../../../../../../utils/wrappedCurrency'
 
 interface PoolSummaryProps {
   liquidityPair: Pair | null
@@ -24,7 +25,11 @@ export default function PoolSummary({ liquidityPair, startTime, endTime, timeloc
         <AutoColumn gap="4px">
           <DataRow
             name="POOL PAIR"
-            value={liquidityPair ? `${liquidityPair.token0.symbol}/${liquidityPair.token1.symbol}` : '-'}
+            value={
+              liquidityPair
+                ? `${unwrappedToken(liquidityPair.token0)?.symbol}/${unwrappedToken(liquidityPair.token1)?.symbol}`
+                : '-'
+            }
           />
           <DataRow
             name="STARTS"
