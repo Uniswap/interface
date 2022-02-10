@@ -24,7 +24,7 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
-import EtherscanA from '../EtherscanA'
+import EtherscanLink from '../EtherscanLink'
 import Row from '../Row'
 import { SummaryDialog } from './Summary'
 
@@ -87,13 +87,13 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
           disabled: true,
           update: {
             message: (
-              <EtherscanA type={ExplorerDataType.TRANSACTION} data={approvalHash}>
+              <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
                 <Row gap={0.25}>
                   <Trans>
                     Approval pending <Link />
                   </Trans>
                 </Row>
-              </EtherscanA>
+              </EtherscanLink>
             ),
             action: <Trans>Approve</Trans>,
             icon: Spinner,
