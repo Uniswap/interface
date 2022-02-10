@@ -84,7 +84,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     if (disabled) return { disabled: true }
 
     if (chainId && inputCurrencyAmount) {
-      if (!inputCurrencyBalance || inputCurrencyBalance?.lessThan(inputCurrencyAmount)) {
+      if (!inputCurrencyBalance || inputCurrencyBalance.lessThan(inputCurrencyAmount)) {
         return { disabled: true }
       } else if (approval === ApprovalState.PENDING) {
         return {
