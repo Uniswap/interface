@@ -8,7 +8,9 @@ import { useTranslation } from 'react-i18next'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import Popover from '../Popover'
-import { Triangle } from 'react-feather'
+
+import { ReactComponent as ThreeBars } from '../../assets/svg/three-bars.svg'
+import { ReactComponent as Cross } from '../../assets/svg/crossIcon.svg'
 
 const StyledPopover = styled(Popover)`
   padding: 22px;
@@ -56,25 +58,11 @@ const MenuButton = styled.button`
   align-items: center;
   border: none;
   background: none;
-  font-weight: bold;
-  font-size: 13px;
-  line-height: 16px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.text2};
   cursor: pointer;
   outline: none;
 
   svg {
-    width: 5px;
-    height: 8px;
     transform: rotate(180deg);
-    margin-left: 6px;
-    stroke: ${({ theme }) => theme.text3};
-
-    path {
-      fill: ${({ theme }) => theme.text3};
-    }
   }
 `
 
@@ -85,7 +73,7 @@ export default function MobileOptions() {
 
   const { t } = useTranslation()
   useOnClickOutside(popoverRef, open ? toggle : undefined)
-
+  console.log(open)
   return (
     <div ref={popoverRef}>
       <StyledPopover
@@ -110,9 +98,7 @@ export default function MobileOptions() {
           </>
         }
       >
-        <MenuButton onClick={toggle}>
-          <Triangle />
-        </MenuButton>
+        <MenuButton onClick={toggle}>{open ? <Cross /> : <ThreeBars />}</MenuButton>
       </StyledPopover>
     </div>
   )
