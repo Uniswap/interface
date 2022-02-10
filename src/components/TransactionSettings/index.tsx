@@ -379,10 +379,10 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
 
 export default function TransactionSettings({
   tradeValid = false,
-  isSwapPage = false
+  isShowDisplaySettings = false
 }: {
   tradeValid?: boolean
-  isSwapPage?: boolean
+  isShowDisplaySettings?: boolean
 }) {
   const theme = useTheme()
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
@@ -533,7 +533,7 @@ export default function TransactionSettings({
                 size={isMobile ? 'md' : 'sm'}
               />
             </RowBetween>
-            {isSwapPage && (
+            {isShowDisplaySettings && (
               <>
                 <StyledTitle style={{ borderTop: '1px solid ' + theme.border, padding: '16px 0' }}>
                   <Trans>Display Settings</Trans>
@@ -564,7 +564,7 @@ export default function TransactionSettings({
                       <QuestionHelper text={t`Turn on to display trade route.`} />
                     </RowFixed>
                     <Toggle
-                      isActive={(isMobile ? isShowMobileTradeRoutes : isShowTradeRoutes) && tradeValid}
+                      isActive={isMobile ? isShowMobileTradeRoutes : isShowTradeRoutes}
                       toggle={() => {
                         if (isMobile) {
                           toggleMobileTradeRoutes()
