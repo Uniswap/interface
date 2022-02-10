@@ -73,7 +73,6 @@ export default function MobileOptions() {
 
   const { t } = useTranslation()
   useOnClickOutside(popoverRef, open ? toggle : undefined)
-  console.log(open)
   return (
     <div ref={popoverRef}>
       <StyledPopover

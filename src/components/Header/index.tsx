@@ -24,7 +24,6 @@ import SwaprVersionLogo from '../SwaprVersionLogo'
 import { useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
 import Skeleton from 'react-loading-skeleton'
-//import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
@@ -33,8 +32,6 @@ import { useGasInfo } from '../../hooks/useGasInfo'
 const HeaderFrame = styled.div`
   position: relative;
   display: flex;
-
-  /* justify-content: space-between; */
   align-items: flex-start;
   width: 100%;
   padding: 1rem;
@@ -232,7 +229,7 @@ const ColoredGas = styled.div<{ color: 'fast' | 'slow' | 'normal' }>`
 const Divider = styled.div`
   height: 24px;
   width: 1px;
-  background-color: #8780bf;
+  background-color: ${({ theme }) => theme.purple3};
   margin-left: 40px;
 `
 const StyledMobileLink = styled(NavLink)`
@@ -241,11 +238,11 @@ const StyledMobileLink = styled(NavLink)`
     display: flex;
     font-weight:400;
     font-size: 14px;
-  color:#C9C7DB;
-  &.active {
-    font-weight: 600;
-    color: ${({ theme }) => theme.white};
-  }
+    color:#C9C7DB;
+    &.active {
+      font-weight: 600;
+      color: ${({ theme }) => theme.white};
+    }
   `};
 `
 const StyledExternalLinkMobile = styled(ExternalLink)`
