@@ -10,23 +10,10 @@ import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
 import { PropsWithChildren, StrictMode, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { Modal, Provider as DialogProvider } from './Dialog'
+import { Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 import WidgetPropValidator from './Error/WidgetsPropsValidator'
 import Web3Provider from './Web3Provider'
-
-const slideDown = keyframes`
-  to {
-    height: 0;
-    top: calc(100% - 0.25em);
-  }
-`
-const slideUp = keyframes`
-  from {
-    height: 0;
-    top: calc(100% - 0.25em);
-  }
-`
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
@@ -56,12 +43,37 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
       font-family: ${({ theme }) => theme.fontFamilyVariable};
     }
   }
+`
 
-  ${Modal} {
+const slideDown = keyframes`
+  to {
+    transform: translateY(calc(100% - 0.25em));
+  }
+`
+const slideUp = keyframes`
+  from {
+    transform: translateY(calc(100% - 0.25em));
+  }
+`
+
+const DialogWrapper = styled.div`
+  height: calc(100% - 0.5em);
+  left: 0;
+  margin: 0.25em;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: calc(100% - 0.5em);
+
+  @supports (overflow: clip) {
+    overflow: clip;
+  }
+
+  .dialog {
     animation: ${slideUp} 0.25s ease-in-out;
   }
 
-  ${Modal}.${UNMOUNTING} {
+  .dialog.${UNMOUNTING} {
     animation: ${slideDown} 0.25s ease-in-out;
   }
 `
@@ -95,18 +107,19 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     provider,
     jsonRpcEndpoint,
     width = 360,
-    dialog,
+    dialog: userDialog,
     className,
     onError,
   } = props
 
-  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
+  const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <StrictMode>
       <I18nProvider locale={locale}>
         <ThemeProvider theme={theme}>
-          <WidgetWrapper width={width} className={className} ref={setWrapper}>
-            <DialogProvider value={dialog || wrapper}>
+          <WidgetWrapper width={width} className={className}>
+            <DialogWrapper ref={setDialog} />
+            <DialogProvider value={userDialog || dialog}>
               <ErrorBoundary onError={onError}>
                 <WidgetPropValidator {...props}>
                   <ReduxProvider store={multicallStore}>

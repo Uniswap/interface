@@ -73,13 +73,12 @@ export const Modal = styled.div<{ color: Color }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 0.5em);
+  height: 100%;
   left: 0;
-  margin: 0.25em;
   overflow: hidden;
   position: absolute;
   top: 0;
-  width: calc(100% - 0.5em);
+  width: 100%;
   z-index: ${Layer.DIALOG};
 `
 
@@ -106,7 +105,7 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
     context.element &&
     createPortal(
       <ThemeProvider>
-        <Modal color={color} ref={dialog}>
+        <Modal className="dialog" color={color} ref={dialog}>
           <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
         </Modal>
       </ThemeProvider>,
