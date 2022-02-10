@@ -4,7 +4,7 @@ import { utils } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { MULTICALL_ADDRESS } from 'src/constants/addresses'
-import { ChainId, ChainIdToAddressTo } from 'src/constants/chains'
+import { ChainId, ChainIdToCurrencyIdTo } from 'src/constants/chains'
 import { useMulticall2Contract, useTokenContract } from 'src/features/contracts/useContract'
 import {
   useMultiChainMultiContractSingleData,
@@ -12,12 +12,16 @@ import {
   useSingleCallResult,
 } from 'src/features/multicall'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { ChainIdToAddressToToken } from 'src/features/tokens/types'
-import { currencyId } from 'src/utils/currencyId'
+import { ChainIdToCurrencyIdToToken } from 'src/features/tokens/types'
+import { buildCurrencyId, currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
-export type ChainIdToAddressToCurrencyAmount = ChainIdToAddressTo<CurrencyAmount<Currency>>
+export type ChainIdToCurrencyIdToCurrencyAmount = ChainIdToCurrencyIdTo<CurrencyAmount<Currency>>
+export type ChainIdToCurrencyIdToNativeCurrencyAmount = ChainIdToCurrencyIdTo<
+  CurrencyAmount<NativeCurrency>
+>
+export type ChainIdToCurrencyIdToTokenAmount = ChainIdToCurrencyIdTo<CurrencyAmount<Token>>
 
 const BLOCKS_PER_FETCH = 3
 const ERC20Interface = new utils.Interface(ERC20_ABI)
@@ -77,14 +81,15 @@ export function useNativeCurrencyBalance(
 
 export function useTokenBalances(
   chainIds: ChainId[],
-  chainIdToTokens: ChainIdToAddressToToken,
+  chainIdToTokens: ChainIdToCurrencyIdToToken,
   accountAddress?: Address
-): { balances: ChainIdToAddressTo<CurrencyAmount<Token>>; loading: boolean } {
+): { balances: ChainIdToCurrencyIdToTokenAmount; loading: boolean } {
   // Memoize inputs
   const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
   const chainToAddresses = useMemo(() => {
     return chainIds.reduce<Record<number, Address[]>>((result, chainId) => {
-      const tokenAddrs = Object.keys(chainIdToTokens[chainId] ?? {})
+      const tokens = Object.values(chainIdToTokens[chainId] ?? {})
+      const tokenAddrs = tokens.map((token) => token.address)
       result[chainId] = tokenAddrs
       return result
     }, {})
@@ -102,7 +107,7 @@ export function useTokenBalances(
 
   // Transform outputs
   return useMemo(() => {
-    const balances: ChainIdToAddressTo<CurrencyAmount<Token>> = {}
+    const balances: ChainIdToCurrencyIdToTokenAmount = {}
     let loading = false
 
     for (const chainId of chainIds) {
@@ -115,7 +120,8 @@ export function useTokenBalances(
 
       for (let i = 0; i < tokenAddrs.length; i++) {
         const tokenAddr = tokenAddrs[i]
-        const token = chainIdToTokens[chainId]?.[tokenAddr]
+        const _currencyId = buildCurrencyId(chainId, tokenAddr)
+        const token = chainIdToTokens[chainId]?.[_currencyId]
         if (!token) {
           logger.warn('balances/hooks', 'useTokenBalances', 'Token missing for address:', tokenAddr)
           continue
@@ -126,7 +132,7 @@ export function useTokenBalances(
         const amount = callState?.result?.[0]?.toString()
         if (!amount) continue
 
-        balances[chainId]![token.address] = CurrencyAmount.fromRawAmount(token, amount)
+        balances[chainId]![_currencyId] = CurrencyAmount.fromRawAmount(token, amount)
       }
     }
     return { balances, loading }
@@ -136,7 +142,7 @@ export function useTokenBalances(
 export function useNativeCurrencyBalances(
   chainIds: ChainId[],
   accountAddress?: Address
-): { balances: ChainIdToAddressTo<CurrencyAmount<Currency>>; loading: boolean } {
+): { balances: ChainIdToCurrencyIdToNativeCurrencyAmount; loading: boolean } {
   // Memoize inputs
   const accountAddressArray = useMemo(() => [accountAddress], [accountAddress])
   const chainToAddresses = useMemo(() => {
@@ -168,7 +174,7 @@ export function useNativeCurrencyBalances(
 
   // Transform outputs
   return useMemo(() => {
-    const balances: ChainIdToAddressTo<CurrencyAmount<Currency>> = {}
+    const balances: ChainIdToCurrencyIdToNativeCurrencyAmount = {}
     let loading = false
 
     for (const chainId of chainIds) {
@@ -190,10 +196,10 @@ export function useNativeCurrencyBalances(
 /** returns a mapping of chainId to address to CurrencyAmount */
 export function useAllBalancesByChainId(
   chainIds: ChainId[],
-  chainIdToTokens: ChainIdToAddressToToken,
+  chainIdToTokens: ChainIdToCurrencyIdToToken,
   accountAddress?: Address
 ): {
-  balances: ChainIdToAddressToCurrencyAmount
+  balances: ChainIdToCurrencyIdToCurrencyAmount
   loading: boolean
 } {
   const { balances: tokenBalances, loading: tokenBalancesLoading } = useTokenBalances(
@@ -209,7 +215,7 @@ export function useAllBalancesByChainId(
 
   const loading = tokenBalancesLoading || nativeBalancesLoading
   const balances = useMemo(() => {
-    return chainIds.reduce<ChainIdToAddressToCurrencyAmount>((result, chainId) => {
+    return chainIds.reduce<ChainIdToCurrencyIdToCurrencyAmount>((result, chainId) => {
       result[chainId] = {
         ...nativeBalances[chainId],
         ...tokenBalances[chainId],
@@ -223,7 +229,7 @@ export function useAllBalancesByChainId(
 /** returns a list of `CurrencyAmount<Currency>`s representing non-zero user balances */
 export function useAllBalances(
   chainIds: ChainId[],
-  chainIdToTokens: ChainIdToAddressToToken,
+  chainIdToTokens: ChainIdToCurrencyIdToToken,
   accountAddress?: Address
 ): {
   // TODO consider replacing allCurrencyAmounts with a CallState-like interface here (#268)

@@ -63,7 +63,7 @@ export function TokenDetailsScreen({
       exactAmount: '0',
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        address: currency.isToken
+        currencyId: currency.isToken
           ? currency.wrapped.address
           : currencyId(NativeCurrency.onChain(ChainId.Rinkeby)),
         chainId: currency.wrapped.chainId,
@@ -77,7 +77,7 @@ export function TokenDetailsScreen({
       exactCurrencyField: CurrencyField.INPUT,
       exactAmount: '0',
       [CurrencyField.INPUT]: {
-        address: currency.isToken ? currency.wrapped.address : currencyId(currency),
+        currencyId: currency.isToken ? currency.wrapped.address : currencyId(currency),
         chainId: currency.wrapped.chainId,
       },
       [CurrencyField.OUTPUT]: null,

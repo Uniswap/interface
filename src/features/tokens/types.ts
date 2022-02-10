@@ -1,5 +1,6 @@
-import { Currency, Token } from '@uniswap/sdk-core'
-import { ChainIdTo } from 'src/constants/chains'
+import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { ChainIdToCurrencyIdTo } from 'src/constants/chains'
 
-export type ChainIdToAddressToCurrency = ChainIdTo<Record<Address, Currency>>
-export type ChainIdToAddressToToken = ChainIdTo<Record<Address, Token>>
+export type ChainIdToCurrencyIdToCurrency = ChainIdToCurrencyIdTo<Currency>
+export type ChainIdToCurrencyIdToToken = ChainIdToCurrencyIdTo<Token>
+export type ChainIdToCurrencyIdToNativeCurrency = ChainIdToCurrencyIdTo<NativeCurrency>

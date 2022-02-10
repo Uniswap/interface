@@ -62,8 +62,8 @@ export function useDerivedSwapInfo(state: SwapFormState): DerivedSwapInfo {
 
   const activeAccount = useActiveAccount()
 
-  const currencyIn = useCurrency(partialCurrencyIn?.address, partialCurrencyIn?.chainId)
-  const currencyOut = useCurrency(partialCurrencyOut?.address, partialCurrencyOut?.chainId)
+  const currencyIn = useCurrency(partialCurrencyIn?.currencyId)
+  const currencyOut = useCurrency(partialCurrencyOut?.currencyId)
 
   const currencies = { [CurrencyField.INPUT]: currencyIn, [CurrencyField.OUTPUT]: currencyOut }
 
@@ -145,8 +145,8 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(
       swapFormActions.selectCurrency({
         field,
-        address: currency.isToken
-          ? currency.address
+        currencyId: currency.isToken
+          ? currencyId(currency)
           : currencyId(NativeCurrency.onChain(currency.chainId)),
         chainId: currency.chainId,
       })

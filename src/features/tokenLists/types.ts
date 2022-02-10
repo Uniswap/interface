@@ -20,8 +20,6 @@ export interface TokenListsState {
 }
 
 // Called TokenAddressMap in the web app code
-// Overlaps with ChainIdToAddressToToken but keeping as is to
-// prevent further code divergence in list code
 export type ChainIdToListedTokens = {
   [chainId: number]: {
     [tokenAddress: Address]: { token: WrappedTokenInfo; list: TokenList }

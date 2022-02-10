@@ -9,6 +9,7 @@ import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useAllCurrencies, useAllTokens } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { buildCurrencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export function CurrencySelectorScreen({
@@ -23,8 +24,16 @@ export function CurrencySelectorScreen({
     },
   },
 }: AppStackScreenProp<Screens.CurrencySelector>) {
-  const selectedCurrency = useCurrency(selectedCurrencyAddress, selectedCurrencyChainId)
-  const otherCurrency = useCurrency(otherCurrencyAddress, otherCurrencyChainId)
+  const selectedCurrency = useCurrency(
+    selectedCurrencyAddress && selectedCurrencyChainId
+      ? buildCurrencyId(selectedCurrencyChainId, selectedCurrencyAddress)
+      : undefined
+  )
+  const otherCurrency = useCurrency(
+    otherCurrencyAddress && otherCurrencyChainId
+      ? buildCurrencyId(otherCurrencyChainId, otherCurrencyAddress)
+      : undefined
+  )
 
   return (
     <SheetScreen>
@@ -96,14 +105,12 @@ function CurrencySearchAllCurrencies({
   onSelectCurrency: (currency: Currency) => void
 }) {
   const navigation = useAppStackNavigation()
-  const chainIdToAddressToCurrency = useAllCurrencies()
-
-  const currencies = flattenObjectOfObjects(chainIdToAddressToCurrency)
+  const currencies = useAllCurrencies()
 
   return (
     <CurrencySearch
       showBackButton
-      currencies={currencies}
+      currencies={flattenObjectOfObjects(currencies)}
       otherCurrency={otherCurrency}
       selectedCurrency={selectedCurrency}
       showNonZeroBalancesOnly={false}

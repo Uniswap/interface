@@ -6,7 +6,7 @@ import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'src/constants/chains'
-import { ChainIdToAddressToCurrencyAmount } from 'src/features/balances/hooks'
+import { ChainIdToCurrencyIdToCurrencyAmount } from 'src/features/balances/hooks'
 import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
 import { SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
@@ -17,7 +17,7 @@ import { flattenObjectOfObjects } from 'src/utils/objects'
 
 interface TokenBalanceListProps {
   loading: boolean
-  balances: ChainIdToAddressToCurrencyAmount
+  balances: ChainIdToCurrencyIdToCurrencyAmount
   refreshing: boolean
   onRefresh: () => void
   onPressToken: (currencyAmount: CurrencyAmount<Currency>) => void
@@ -38,7 +38,7 @@ function TokenBalanceListHeader({ chainId }: TokenBalanceListHeaderProps) {
   )
 }
 
-function balancesToSectionListData(balances: ChainIdToAddressToCurrencyAmount): {
+function balancesToSectionListData(balances: ChainIdToCurrencyIdToCurrencyAmount): {
   chainId: ChainId
   data: CurrencyAmount<Currency>[]
 }[] {

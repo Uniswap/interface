@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { Text } from 'src/components/Text'
 import { ChainId, MAINNET_CHAIN_IDS } from 'src/constants/chains'
-import { ChainIdToAddressToCurrencyAmount } from 'src/features/balances/hooks'
+import { ChainIdToCurrencyIdToCurrencyAmount } from 'src/features/balances/hooks'
 import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -11,7 +11,7 @@ import { formatUSDPrice } from 'src/utils/format'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
 interface TotalBalanceViewProps {
-  balances: ChainIdToAddressToCurrencyAmount
+  balances: ChainIdToCurrencyIdToCurrencyAmount
 }
 
 function useTotalBalance(

@@ -7,37 +7,52 @@ import { useActiveChainIds } from 'src/features/chains/utils'
 import { useCombinedActiveList, useUnsupportedTokenList } from 'src/features/tokenLists/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
-import { ChainIdToAddressToCurrency, ChainIdToAddressToToken } from 'src/features/tokens/types'
+import {
+  ChainIdToCurrencyIdToCurrency,
+  ChainIdToCurrencyIdToNativeCurrency,
+  ChainIdToCurrencyIdToToken,
+} from 'src/features/tokens/types'
 import { useUserAddedTokens } from 'src/features/tokens/userAddedTokens'
 import { toSupportedChainId } from 'src/utils/chainId'
+import { buildCurrencyId, currencyId } from 'src/utils/currencyId'
 import { getKeys } from 'src/utils/objects'
 
-export function useAllTokens(): ChainIdToAddressToToken {
+export function useAllTokens(): ChainIdToCurrencyIdToToken {
   const allTokens = useCombinedActiveList()
   return useTokensFromListedMap(allTokens, true)
 }
 
-export function useAllCurrencies(): ChainIdToAddressToCurrency {
-  const tokens = useAllTokens() as ChainIdToAddressToCurrency
+export function useAllCurrencies(): ChainIdToCurrencyIdToCurrency {
+  const tokens = useAllTokens()
   const nativeCurrencies = useNativeCurrencies()
-  nativeCurrencies.forEach((currency) => {
-    const chainId = currency.chainId as ChainId
 
-    if (tokens[chainId]) {
-      tokens[chainId]![currency.address] = currency
-    } else {
-      tokens[chainId] = { [currency.address]: currency }
-    }
-  })
-  return tokens
+  return useMemo(() => {
+    const chains = getKeys(nativeCurrencies)
+    return chains.reduce<ChainIdToCurrencyIdToCurrency>((result, chainId) => {
+      result[chainId] = {
+        ...nativeCurrencies[chainId],
+        ...tokens[chainId],
+      }
+      return result
+    }, {})
+  }, [nativeCurrencies, tokens])
 }
 
-export function useNativeCurrencies(): NativeCurrency[] {
+export function useNativeCurrencies(): ChainIdToCurrencyIdToNativeCurrency {
   const activeChains = useActiveChainIds()
-  return activeChains.map((chainId) => NativeCurrency.onChain(chainId))
+
+  return useMemo(
+    () =>
+      activeChains.reduce<ChainIdToCurrencyIdToNativeCurrency>((result, chainId) => {
+        const currency = NativeCurrency.onChain(chainId)
+        result[chainId] = { [currencyId(currency)]: currency }
+        return result
+      }, {}),
+    [activeChains]
+  )
 }
 
-export function useUnsupportedTokens(): ChainIdToAddressToCurrency {
+export function useUnsupportedTokens(): ChainIdToCurrencyIdToToken {
   const unsupportedTokensMap = useUnsupportedTokenList()
   return useTokensFromListedMap(unsupportedTokensMap, false)
 }
@@ -54,19 +69,19 @@ export function useIsTokenActive(token: Nullable<Token>): boolean {
 function useTokensFromListedMap(
   listedTokenMap: ChainIdToListedTokens,
   includeUserAdded: boolean
-): ChainIdToAddressToToken {
+): ChainIdToCurrencyIdToToken {
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {
     // reduce to just tokens
-    const mapWithoutUrls: ChainIdToAddressToToken = {}
+    const mapWithoutUrls: ChainIdToCurrencyIdToToken = {}
     for (const _chainId of getKeys(listedTokenMap)) {
       const chainId = toSupportedChainId(_chainId)
       if (!chainId) continue
       for (const tokenAddr of getKeys(listedTokenMap[chainId])) {
         const tokenInfo = listedTokenMap[chainId][tokenAddr]
         mapWithoutUrls[chainId] ??= {}
-        mapWithoutUrls[chainId]![tokenAddr] = tokenInfo.token
+        mapWithoutUrls[chainId]![buildCurrencyId(chainId, tokenAddr.toString())] = tokenInfo.token
       }
     }
 
@@ -74,12 +89,12 @@ function useTokensFromListedMap(
       return (
         userAddedTokens
           // reduce into all ALL_TOKENS filtered by the current chain
-          .reduce<ChainIdToAddressToToken>(
+          .reduce<ChainIdToCurrencyIdToToken>(
             (newMap, token) => {
               const chainId = toSupportedChainId(token.chainId)
               if (!chainId) return newMap
               newMap[chainId] ??= {}
-              newMap[chainId]![token.address] = token
+              newMap[chainId]![currencyId(token)] = token
               return newMap
             },
             // must make a copy because reduce modifies the map, and we do not

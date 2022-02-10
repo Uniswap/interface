@@ -10,13 +10,15 @@ import { useBytes32TokenContract, useTokenContract } from 'src/features/contract
 import { useSingleCallResult } from 'src/features/multicall'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { isValidAddress, normalizeAddress } from 'src/utils/addresses'
+import { currencyIdToAddress } from 'src/utils/currencyId'
 
 // Uses an Ethers contract for the token address to retrieve info directly from the chain
 // undefined if invalid or does not exist, null if loading, otherwise returns token
 export function useTokenInfoFromAddress(
   chainId: ChainId,
-  tokenAddress?: string | null
+  currencyId?: string | null
 ): Token | undefined | null {
+  const tokenAddress = currencyId ? currencyIdToAddress(currencyId) : null
   const address = isValidAddress(tokenAddress) ? normalizeAddress(tokenAddress) : null
 
   const tokenContract = useTokenContract(chainId, address ? address : undefined)
@@ -24,7 +26,7 @@ export function useTokenInfoFromAddress(
 
   const chainIdToTokens = useAllTokens()
   const tokens = chainIdToTokens[chainId] ?? {}
-  const token: Token | undefined = address ? tokens[address] : undefined
+  const token: Token | undefined = currencyId ? tokens[currencyId] : undefined
 
   const tokenName = useSingleCallResult(
     chainId,

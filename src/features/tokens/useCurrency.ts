@@ -5,14 +5,13 @@ import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
+import { currencyIdToChain } from 'src/utils/currencyId'
 
 /**
  * @param currencyId currency address or identifier (ETH for native Ether)
  */
-export function useCurrency(
-  currencyId: string | null | undefined,
-  chainId: ChainId | null | undefined
-): Currency | null | undefined {
+export function useCurrency(currencyId?: string): Currency | null | undefined {
+  const chainId = currencyIdToChain(currencyId)
   const isNative = currencyId?.toLowerCase().endsWith(NATIVE_ADDRESS)
   const token = useTokenInfoFromAddress(
     chainId ?? ChainId.Mainnet,

@@ -13,7 +13,7 @@ import {
 } from 'src/assets'
 
 export type ChainIdTo<T> = Partial<Record<ChainId, T>>
-export type ChainIdToAddressTo<T> = ChainIdTo<AddressTo<T>>
+export type ChainIdToCurrencyIdTo<T> = ChainIdTo<{ [currencyId: string]: T }>
 
 // Renamed from SupportedChainId in web app
 export enum ChainId {

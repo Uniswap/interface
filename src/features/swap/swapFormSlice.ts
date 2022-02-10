@@ -12,23 +12,21 @@ export interface SwapFormState {
   exactCurrencyField: CurrencyField
   exactAmount: string
   [CurrencyField.INPUT]: {
-    address: Address
+    currencyId: string
     chainId: number
   } | null
   [CurrencyField.OUTPUT]: {
-    address: Address
+    currencyId: string
     chainId: number
   } | null
 }
-
-const ethAddress = currencyId(NativeCurrency.onChain(ChainId.Rinkeby))
 
 // Represents the active swap form
 export const initialSwapFormState: Readonly<SwapFormState> = {
   exactCurrencyField: CurrencyField.INPUT,
   exactAmount: '',
   [CurrencyField.INPUT]: {
-    address: ethAddress,
+    currencyId: currencyId(NativeCurrency.onChain(ChainId.Rinkeby)),
     chainId: ChainId.Rinkeby,
   },
   [CurrencyField.OUTPUT]: null,
@@ -46,15 +44,15 @@ const slice = createSlice({
      */
     selectCurrency: (
       state,
-      action: PayloadAction<{ field: CurrencyField; address: string; chainId: number }>
+      action: PayloadAction<{ field: CurrencyField; currencyId: string; chainId: number }>
     ) => {
-      const { field, address, chainId } = action.payload
+      const { field, chainId } = action.payload
 
       const nonExactField =
         field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
       // swap order if tokens are the same
-      if (address === state[nonExactField]?.address) {
+      if (action.payload.currencyId === state[nonExactField]?.currencyId) {
         state.exactCurrencyField = field
         state[nonExactField] = state[field]
       }
@@ -66,7 +64,7 @@ const slice = createSlice({
       }
 
       state[field] = {
-        address,
+        currencyId: action.payload.currencyId,
         chainId,
       }
     },

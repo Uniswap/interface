@@ -25,14 +25,14 @@ describe(selectCurrency, () => {
         previousState,
         selectCurrency({
           field: CurrencyField.INPUT,
-          address: ethAddress,
+          currencyId: ethAddress,
           chainId,
         })
       )
     ).toEqual({
       ...previousState,
       [CurrencyField.INPUT]: {
-        address: ethAddress,
+        currencyId: ethAddress,
         chainId,
       },
     })
@@ -43,12 +43,12 @@ describe(selectCurrency, () => {
     expect(
       swapFormReducer(
         previousState,
-        selectCurrency({ field: CurrencyField.OUTPUT, address: 'DAI', chainId })
+        selectCurrency({ field: CurrencyField.OUTPUT, currencyId: 'DAI', chainId })
       )
     ).toEqual({
       ...previousState,
       [CurrencyField.OUTPUT]: {
-        address: 'DAI',
+        currencyId: 'DAI',
         chainId,
       },
     })
@@ -57,14 +57,14 @@ describe(selectCurrency, () => {
   test('should set other currency to null when selecting the other one', () => {
     const previousState = {
       ...initialSwapFormState,
-      [CurrencyField.INPUT]: { address: ethAddress, chainId },
+      [CurrencyField.INPUT]: { currencyId: ethAddress, chainId },
     }
     expect(
       swapFormReducer(
         previousState,
         selectCurrency({
           field: CurrencyField.OUTPUT,
-          address: ethAddress,
+          currencyId: ethAddress,
           chainId,
         })
       )
@@ -73,7 +73,7 @@ describe(selectCurrency, () => {
       exactCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        address: ethAddress,
+        currencyId: ethAddress,
         chainId,
       },
     })
@@ -82,24 +82,24 @@ describe(selectCurrency, () => {
   test('should swap currencies when selecting the other one', () => {
     const previousState = {
       ...initialSwapFormState,
-      [CurrencyField.INPUT]: { address: ethAddress, chainId },
-      [CurrencyField.OUTPUT]: { address: 'DAI', chainId },
+      [CurrencyField.INPUT]: { currencyId: ethAddress, chainId },
+      [CurrencyField.OUTPUT]: { currencyId: 'DAI', chainId },
     }
     expect(
       swapFormReducer(
         previousState,
         selectCurrency({
           field: CurrencyField.OUTPUT,
-          address: ethAddress,
+          currencyId: ethAddress,
           chainId,
         })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
-      [CurrencyField.INPUT]: { address: 'DAI', chainId },
+      [CurrencyField.INPUT]: { currencyId: 'DAI', chainId },
       [CurrencyField.OUTPUT]: {
-        address: ethAddress,
+        currencyId: ethAddress,
         chainId,
       },
     })
@@ -109,15 +109,15 @@ describe(selectCurrency, () => {
     const otherChainId = chainId + 1
     const previousState = {
       ...initialSwapFormState,
-      [CurrencyField.INPUT]: { address: ethAddress, chainId },
-      [CurrencyField.OUTPUT]: { address: 'DAI', chainId },
+      [CurrencyField.INPUT]: { currencyId: ethAddress, chainId },
+      [CurrencyField.OUTPUT]: { currencyId: 'DAI', chainId },
     }
     expect(
       swapFormReducer(
         previousState,
         selectCurrency({
           field: CurrencyField.OUTPUT,
-          address: ethAddress,
+          currencyId: ethAddress,
           chainId: otherChainId,
         })
       )
@@ -126,7 +126,7 @@ describe(selectCurrency, () => {
       exactCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
-        address: ethAddress,
+        currencyId: ethAddress,
         chainId: otherChainId,
       },
     })
@@ -138,15 +138,15 @@ describe(switchCurrencySides, () => {
     const previousState = {
       ...initialSwapFormState,
       exactCurrencyField: CurrencyField.INPUT,
-      [CurrencyField.INPUT]: { address: 'DAI', chainId },
-      [CurrencyField.OUTPUT]: { address: ethAddress, chainId },
+      [CurrencyField.INPUT]: { currencyId: 'DAI', chainId },
+      [CurrencyField.OUTPUT]: { currencyId: ethAddress, chainId },
     }
 
     expect(swapFormReducer(previousState, switchCurrencySides())).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
-      [CurrencyField.INPUT]: { address: ethAddress, chainId },
-      [CurrencyField.OUTPUT]: { address: 'DAI', chainId },
+      [CurrencyField.INPUT]: { currencyId: ethAddress, chainId },
+      [CurrencyField.OUTPUT]: { currencyId: 'DAI', chainId },
     })
   })
 })
