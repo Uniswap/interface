@@ -10,7 +10,7 @@ import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
 import { PropsWithChildren, StrictMode, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { Provider as DialogProvider } from './Dialog'
+import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 import WidgetPropValidator from './Error/WidgetsPropsValidator'
 import Web3Provider from './Web3Provider'
@@ -69,11 +69,11 @@ const DialogWrapper = styled.div`
     overflow: clip;
   }
 
-  .dialog {
+  ${Modal} {
     animation: ${slideUp} 0.25s ease-in-out;
   }
 
-  .dialog.${UNMOUNTING} {
+  ${Modal}.${UNMOUNTING} {
     animation: ${slideDown} 0.25s ease-in-out;
   }
 `
