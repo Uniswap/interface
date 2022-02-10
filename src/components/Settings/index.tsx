@@ -91,7 +91,6 @@ const MenuModal = styled(Modal)`
 
     ${({ theme }) => theme.mediaWidth.upToMedium`
       position: fixed;
-      top: initial;
       right: initial;
       justify-content: center;
       align-items: center;

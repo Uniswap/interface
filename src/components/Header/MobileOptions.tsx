@@ -120,7 +120,7 @@ export default function MobileOptions() {
         content={
           <>
             <List>
-              <ListItem>
+              {/* <ListItem>
                 <StyledNavLink id="swap-nav-link" to="/swap" onClick={closeModals} activeClassName="active">
                   {t('swap')}
                 </StyledNavLink>
@@ -135,7 +135,7 @@ export default function MobileOptions() {
                 <StyledNavLink id="pool-nav-link" to="/rewards" onClick={closeModals} activeClassName="active">
                   REWARDS
                 </StyledNavLink>
-              </ListItem>
+              </ListItem> */}
               <ListItem>
                 <StyledNavLink id="bridge-nav-link" to="/bridge" onClick={closeModals} activeClassName="active">
                   {t('bridge')}

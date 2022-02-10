@@ -22,7 +22,7 @@ import SwaprVersionLogo from '../SwaprVersionLogo'
 import { useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
 import Skeleton from 'react-loading-skeleton'
-import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
+//import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
@@ -30,7 +30,8 @@ import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMini
 const HeaderFrame = styled.div`
   position: relative;
   display: flex;
-  justify-content: space-between;
+
+  /* justify-content: space-between; */
   align-items: flex-start;
   width: 100%;
   padding: 1rem;
@@ -42,7 +43,7 @@ const HeaderFrame = styled.div`
 `
 
 const HeaderControls = styled.div<{ isConnected: boolean }>`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -52,7 +53,6 @@ const HeaderControls = styled.div<{ isConnected: boolean }>`
     flex-direction: row-reverse;
     width: 100%;
     height: 72px;
-    max-width: 960px;
     padding: 1rem;
     z-index: 99;
     background-color: ${({ theme }) => theme.bg2};
@@ -80,7 +80,7 @@ const MoreLinksIcon = styled(HeaderElement)`
 `
 
 const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     width: 100%;
   `};
 `
@@ -133,10 +133,7 @@ export const StyledNavLink = styled(NavLink)`
   }
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin: 0 8px;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
+     display: none;
   `};
 `
 
@@ -162,7 +159,7 @@ const StyledExternalLink = styled(ExternalLink)`
   width: fit-content;
   text-decoration: none !important;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     display: none;
   `};
 `
@@ -172,9 +169,9 @@ const HeaderSubRow = styled(RowFlat)`
   justify-content: flex-end;
   margin-top: 10px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-right: 8px;
-    margin-top: 0px;
+     margin-top: 0px;
   `};
 `
 
@@ -209,9 +206,21 @@ const Divider = styled.div`
   width: 1px;
   background-color: #8780bf;
   margin-left: 40px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     display: none;
   `};
+`
+const StyledMobileLink = styled(NavLink)`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    display: flex;
+  `};
+`
+const AdditionalDataWrap = styled.div`
+  margin-left: auto;
+  display: flex;
+  flex-direction:column
+  justify-content: end;
 `
 
 function Header() {
@@ -228,7 +237,7 @@ function Header() {
   const accountOrUndefined = useMemo(() => account || undefined, [account])
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
-  const isMobileByMedia = useIsMobileByMedia()
+  //const isMobileByMedia = useIsMobileByMedia()
 
   return (
     <HeaderFrame>
@@ -267,18 +276,15 @@ function Header() {
           <StyledExternalLink id="vote-nav-link" href={`https://snapshot.org/#/swpr.eth`}>
             {t('vote')}
           </StyledExternalLink>
-          <MoreLinksIcon>
-            <MobileOptions />
-          </MoreLinksIcon>
-          {isMobileByMedia && <Settings />}
         </HeaderLinks>
       </HeaderRow>
-      <HeaderControls isConnected={!!account}>
-        <HeaderElement>
-          <Web3Status />
-          {!isMobileByMedia && <Settings />}
-        </HeaderElement>
+      <AdditionalDataWrap>
         <HeaderSubRow>
+          <Web3Status />
+          <Settings />
+        </HeaderSubRow>
+
+        <Flex marginTop={'10px'}>
           <SwprInfo
             hasActiveCampaigns={!loading && !!data}
             newSwprBalance={newSwprBalance}
@@ -294,6 +300,28 @@ function Header() {
             )}{' '}
             {nativeCurrency.symbol}
           </Amount>
+        </Flex>
+      </AdditionalDataWrap>
+
+      <HeaderControls isConnected={!!account}>
+        <HeaderSubRow>
+          <StyledMobileLink id="swap-nav-mobile-link" to="/swap" activeClassName="active">
+            {t('swap')}
+          </StyledMobileLink>
+
+          <StyledMobileLink id="pool-nav-mobile-link" to="/pools" activeClassName="active">
+            Pools
+          </StyledMobileLink>
+          <StyledMobileLink id="rewards-nav-link" to="/rewards" activeClassName="active">
+            Rewards
+          </StyledMobileLink>
+          <StyledMobileLink id="bridge-nav-link" to="/bridge" activeClassName="active">
+            {t('bridge')}
+          </StyledMobileLink>
+
+          <MoreLinksIcon>
+            <MobileOptions />
+          </MoreLinksIcon>
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
