@@ -65,6 +65,8 @@ export default function Swap(props: SwapProps) {
     [chainId, list]
   )
 
+  const [focused, setFocused] = useState(false)
+
   return (
     <SwapPropValidator {...props}>
       {onSupportedChain && <SwapInfoUpdater />}
@@ -72,11 +74,11 @@ export default function Swap(props: SwapProps) {
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!active} />
       </Header>
-      <div ref={setBoundary}>
+      <div onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <Input disabled={!active} />
+          <Input disabled={!active} focused={focused} />
           <ReverseButton disabled={!active} />
-          <Output disabled={!active}>
+          <Output disabled={!active} focused={focused}>
             <Toolbar disabled={!active} />
             <SwapButton disabled={!account} />
           </Output>
