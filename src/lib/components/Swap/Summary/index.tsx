@@ -79,8 +79,6 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
-const priceUpdate = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
-
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
@@ -92,8 +90,8 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
-
   const independentField = useAtomValue(independentFieldAtom)
+  const { i18n } = useLingui()
 
   const warning = useMemo(() => {
     if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
@@ -102,18 +100,25 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
     return
   }, [allowedSlippage, priceImpact])
 
+  const [open, setOpen] = useState(false)
+  const [details, setDetails] = useState<HTMLDivElement | null>(null)
+  const scrollbar = useScrollbar(details)
+
   const [confirmedTrade, setConfirmedTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && confirmedTrade && tradeMeaningfullyDiffers(trade, confirmedTrade)),
     [confirmedTrade, trade]
   )
-  const [open, setOpen] = useState(false)
-
-  const [details, setDetails] = useState<HTMLDivElement | null>(null)
-
-  const scrollbar = useScrollbar(details)
-
-  const { i18n } = useLingui()
+  const action = useMemo(() => {
+    if (doesTradeDiffer) {
+      return {
+        message: <Trans>Price updated</Trans>,
+        onClick: () => setConfirmedTrade(trade),
+        children: <Trans>Accept</Trans>,
+      }
+    }
+    return
+  }, [doesTradeDiffer, trade])
 
   if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
     return null
@@ -163,11 +168,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
               </Trans>
             )}
           </Estimate>
-          <ActionButton
-            onClick={onConfirm}
-            onUpdate={() => setConfirmedTrade(trade)}
-            update={doesTradeDiffer ? priceUpdate : undefined}
-          >
+          <ActionButton onClick={onConfirm} action={action}>
             <Trans>Confirm swap</Trans>
           </ActionButton>
         </ExpandoColumn>
