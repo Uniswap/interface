@@ -23,7 +23,13 @@ const ArrowIndicator = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 46px;
+  @media screen and (max-width: ${breakpoints.md}) {
+    position: absolute;
+    top: calc(100vh - 220px);
+    left: 0;
+    margin-top: 80px;
+  }
   .arrow {
     width: 12px;
     height: 5px;
@@ -119,7 +125,7 @@ const Hero = (props) => {
                     <div className="hero-image hero-image-right"></div>
                     <div className="hero-image hero-image-left"></div>
                 </div>
-                <div className="routing-through" data-aos='fade-up'>
+                <div className="routing-through desktop" data-aos='fade-up'>
                     <div className="routing-through-header">
                         <div className="left-line"></div>
                         <div className="label">{RoutingThroughContent.title}</div>
@@ -143,6 +149,25 @@ const Hero = (props) => {
                     <div className="arrow" />
                     <div className="arrow" />
                 </ArrowIndicator>
+                <div className="routing-through mobile" data-aos='fade-up'>
+                    <div className="routing-through-header">
+                        <div className="left-line"></div>
+                        <div className="label">{RoutingThroughContent.title}</div>
+                        <div className="right-line"></div>
+                    </div>
+                    <div className="routing-through-body" >
+                        <Marquee speed={50} gradientColor={[12,11,18]}>
+                            <div className="marquee-inner">
+                                {RoutingThroughContent.companies.map((company, key) => (
+                                    <img key={key} src={company.img} />
+                                ))}
+                                {RoutingThroughContent.companies.map((company, key) => (
+                                    <img key={key + '-copy'} src={company.img} />
+                                ))}
+                            </div>
+                        </Marquee>
+                    </div>
+                </div>
             </Layout>
         </StyledHero>
     )
@@ -161,6 +186,7 @@ const StyledHero = styled(Layout)`
         display: flex;
         flex-direction: column;
         min-height: calc(100vh - 240px);
+        width: 100%;
     }
     &:not(.hero-active) {
         .hero-image-left,
@@ -260,6 +286,9 @@ const StyledHero = styled(Layout)`
         margin-top: auto;
         position: relative;
         z-index: 0;
+        &.mobile {
+            display: none;
+        }
         .routing-through-header {
             height: 28px;
             display: flex;
@@ -280,7 +309,7 @@ const StyledHero = styled(Layout)`
                 }
             }
             .label {
-                color: ${(props) => (props.theme['blueGray'])};
+                color: rgba(135, 128, 191, 1);
                 margin: 0 10px;
             }
         }
@@ -306,6 +335,9 @@ const StyledHero = styled(Layout)`
         }
     }
     @media screen and (max-width: ${breakpoints.md}) {
+        .inner-hero {
+            min-height: calc(100vh + 80px);;
+        }
         .hero-content {
             margin-top: 42px;
             padding: 0px;
@@ -352,9 +384,27 @@ const StyledHero = styled(Layout)`
             }
         }
         .routing-through {
+            &.desktop {
+                display: none;
+            }
+            &.mobile {
+                display: unset;
+            }
             .routing-through-header {
+                .label {
+                    font-size: 12px;
+                }
                 .left-line {
                     display: none;
+                }
+            }
+            .routing-through-body {
+                .marquee {
+                    .marquee-inner {
+                        img {
+                            margin: 0 18px;
+                        }
+                    }
                 }
             }
         }
@@ -364,6 +414,7 @@ const StyledHero = styled(Layout)`
             top: -422px;
             right: -340px;
             z-index: 1;
+            opacity: 0.7;
             transform: scale(0.8) !important;
         }
         .hero-image-left {
@@ -371,6 +422,7 @@ const StyledHero = styled(Layout)`
         }
     }
     @media screen and (max-width: ${breakpoints.s}) {
+        padding-bottom: 46px;
         .hero-content {
             h1 {
                 max-width: 80%;

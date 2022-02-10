@@ -2,8 +2,10 @@ import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import { FooterContent } from './../../../utils/ui-constants'
 import { breakpoints } from './../../../utils/theme'
+import { scrollTo } from './../../../utils/helper-functions';
 import Layout from './Layout'
 import Button from './../common/Button';
+import NavigationButton from './../../../assets/images/timeline-assets/navigation-button.png'
 
 import SwaprLogo from './../../../assets/images/swapr-logo.svg'
 
@@ -31,11 +33,17 @@ const Footer = () => {
                     ))}
                 </ul>
                 <div className="cta-container">
-                    <Button 
+                    {/* <Button 
                         label={FooterContent.footerCta.label} 
                         type={'primary'} 
                         size={'small'} 
                         to={FooterContent.footerCta.href}
+                    /> */}
+                    <div 
+                        onClick={(e) => {
+                            scrollTo('app-wrapper')
+                        }} 
+                        className="timeline-navigation-button up" 
                     />
                 </div>
             </div>
@@ -47,7 +55,7 @@ const StyledFooter = styled(Layout)`
     &#footer {
         display: flex;
         flex-direction: column;
-        margin-bottom: 80px;
+        /* margin-bottom: 80px; */
         position: relative;
         .footer-top {
             margin-bottom: 42px;
@@ -86,6 +94,29 @@ const StyledFooter = styled(Layout)`
                     }
                 }
             }
+            .cta-container {
+                display: flex;
+                align-items: center;
+                height: 32px;
+                .timeline-navigation-button {
+                    width: 56px;
+                    height: 56px;
+                    background-image: url('${NavigationButton}');
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    cursor: pointer;
+                    transition: ease-in-out 0.1s all;
+                    transform: rotate(90deg);
+                    &[disabled] {
+                        opacity: 0;
+                        pointer-events: none;
+                    }
+                    &:active {
+                        transform: rotate(90deg) scale(0.9);
+                    }
+                }
+            }
             &:after {
                 content: '';
                 position: absolute;
@@ -113,7 +144,7 @@ const StyledFooter = styled(Layout)`
                 flex-direction: column;
                 .footer-column-list {
                     margin-left: 0;
-                    margin-bottom: 80px;
+                    /* margin-bottom: 80px; */
                     flex-wrap: wrap;
                     .footer-column {
                         width: 50%;
@@ -123,6 +154,9 @@ const StyledFooter = styled(Layout)`
                 .cta-container {
                     .button {
                         width: fit-content;
+                    }
+                    .timeline-navigation-button {
+                        margin-bottom: 72px;
                     }
                 }
             }

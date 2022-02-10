@@ -204,7 +204,7 @@ const StyledButtonWrapper = styled.div`
             z-index: 0;
         }
         .hover-background {
-            box-shadow: 0px 0px 36px 0px rgba(65, 0, 255, 3);
+            box-shadow: 0px 0px 36px 0px rgba(65, 0, 255, 0.48);
             z-index: 1;
         }
         .active-background {
@@ -251,7 +251,7 @@ const StyledButtonWrapper = styled.div`
             z-index: 0;
         }
         .hover-background {
-            box-shadow: 0px 0px 36px 0px rgba(65, 0, 255, 3);
+            box-shadow: 0px 0px 36px 0px rgba(65, 0, 255, 0.48);
             z-index: 1;
         }
         .active-background {
@@ -294,7 +294,7 @@ const StyledButtonWrapper = styled.div`
             z-index: 0;
         }
         .hover-background {
-            box-shadow: 0px 0px 36px 0px rgba(65, 0, 255, 3);
+            box-shadow: 0px 0px 36px 0px rgba(65, 0, 255, 0.48);
             z-index: 1;
         }
         .active-background {

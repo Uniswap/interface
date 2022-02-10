@@ -75,6 +75,8 @@ const AppBodyContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 3;
+  min-height: calc(100vh - 340px);
 `;
 
 const LandingBodyContainer = styled.section`

@@ -561,8 +561,7 @@ const StyledTimeline = styled(Layout)`
                     min-height: unset;
                 }
                 &:first-child,
-                &:nth-child(2),
-                &:last-child {
+                &:nth-child(2) {
                     @media screen and (max-width: 959px) {
                         display: none;
                     }
@@ -582,6 +581,7 @@ const StyledTimeline = styled(Layout)`
                             left: -36px;
                             content: '';
                             background: rgba(135,128,191,0.5);
+                            display: none;
                         }
                         &.past-milestone {
                             &:after {
@@ -852,7 +852,7 @@ const StyledTimeline = styled(Layout)`
                         }
                     }
                 }
-                &:nth-child(6) {
+                &:nth-child(7) {
                     position: relative;
                     &:after {
                         position: absolute;
@@ -862,6 +862,13 @@ const StyledTimeline = styled(Layout)`
                         left: 100%;
                         content: '';
                         top: calc(100% + 54px);
+                        @media screen and (max-width: 959px) {
+                            display: none;
+                        }
+                    }
+                }
+                &:nth-child(7) {
+                    &:before {
                         @media screen and (max-width: 959px) {
                             display: none;
                         }
@@ -929,6 +936,9 @@ const StyledTimeline = styled(Layout)`
                 &[disabled] {
                     opacity: 0;
                     pointer-events: none;
+                    @media screen and (max-width: 959px) {
+                        /* opacity: 0.5; */
+                    }
                 }
                 &:active {
                     transform: scale(0.9);

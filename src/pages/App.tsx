@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import { ChainId } from '@swapr/sdk'
-import React, { Suspense, useContext } from 'react'
+import React, { Suspense, useContext, useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
 import { defaultSubgraphClient, subgraphClients } from '../apollo/client'
@@ -23,6 +23,8 @@ import LiquidityMiningCampaign from './Pools/LiquidityMiningCampaign'
 import NetworkWarningModal from '../components/NetworkWarningModal'
 import { Slide, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import Bridge from './Bridge'
 
 import Rewards from './Rewards'
@@ -31,7 +33,7 @@ const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  overflow-x: hidden;
+  overflow: hidden;
 `
 
 const HeaderWrapper = styled.div`
@@ -73,13 +75,19 @@ export default function App() {
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
+  useEffect(() => {
+    setTimeout(function () { AOS.init({
+        duration: 500
+    }); }, 1000);
+  }, []);
+
   return (
     <Suspense fallback={null}>
       <SkeletonTheme color={theme.bg3} highlightColor={theme.bg2}>
         <ApolloProvider client={subgraphClients[chainId as ChainId] || defaultSubgraphClient}>
           <NetworkWarningModal />
           <Route component={DarkModeQueryParamReader} />
-          <AppWrapper>
+          <AppWrapper id="app-wrapper">
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>

@@ -137,6 +137,15 @@ export const RoutingThroughContent = {
 }
 
 export const FeaturesContent = {
+    topBanner: {
+        title: 'Swap, Farm, Bridge & Vote. DeFi unchained.',
+        logos: [
+            EthereumLogo,
+            ArbitrumLogo,
+            xDaiLogo,
+            PolygonLogo
+        ]
+    },
     preHeader: 'Swapr Features',
     sectionTitle: 'Your DeFi Powertool',
     features: [
@@ -305,21 +314,21 @@ export const BlogContent = {
     posts: [
         {
             image: Entry1,
-            title: 'Introducing Swapr Beta',
-            content: 'The DXdao and Swapr community are excited to announce the launch of Swapr Beta…',
-            postLink: '#'
+            title: 'DXdao and BadgerDAO Leverage Swapr to Bring Smarter BTC-focused Strategies to Arbitrum',
+            content: 'Both DXdao and BadgerDAO have strong communities that have been building interesting products in the DeFi space.',
+            postLink: 'https://medium.com/swapr/dxdao-and-badgerdao-leverage-swapr-to-bring-smarter-btc-focused-strategies-to-arbitrum-23689e0c9f2b?source=collection_home---6------3-----------------------'
         },
         {
             image: Entry2,
-            title: 'Super Beta AMA',
-            content: 'TSwapr AMA answers pressing questions preceding Swapr beta release',
-            postLink: '#'
+            title: 'Introducing xDai SWPR farming',
+            content: 'Swapr farms are live on xDaichain as of October 14th, 2021',
+            postLink: 'https://medium.com/swapr/introducing-xdai-swpr-farming-150ad665abd1?source=collection_home---6------5-----------------------'
         },
         {
             image: Entry3,
-            title: 'DXdao announces Swapr',
-            content: 'Becoming the first DAO to launch a DeFi ProtAMA answers pressing questions preceding Swapr beta',
-            postLink: '#'
+            title: 'Introducing Mainnet SWPR farming',
+            content: 'Swapr farms are launching on Mainnet Ethereum October 14th, 2021',
+            postLink: 'https://medium.com/swapr/introducing-mainnet-swpr-farming-da980c270770'
         }
     ]
 }

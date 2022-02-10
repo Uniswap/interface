@@ -17,11 +17,13 @@ const FeatureItem = (props) => {
     useEffect(() => {
         window.addEventListener('scroll', (e) => {
             let el = document.getElementById(props.id);
-            let elRect = el.getBoundingClientRect().y;
-            if (elRect < 800) {
-                setIsElementVisible(true);
-            } else if (elRect > 1200) {
-                setIsElementVisible(false);
+            if (el) {
+                let elRect = el.getBoundingClientRect().y;
+                if (elRect < 800) {
+                    setIsElementVisible(true);
+                } else if (elRect > 1200) {
+                    setIsElementVisible(false);
+                }
             }
         })
     }, []);

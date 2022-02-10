@@ -6,6 +6,17 @@ import { BlogContent } from '../../utils/ui-constants'
 import { breakpoints } from '../../utils/theme'
 
 const BlogNavigation = () => {
+    useEffect(() => {
+        fetch("https://cors-anywhere.herokuapp.com/https://medium.com/feed/swapr")
+            .then(response => response)
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }, []);
+
     return (
         <StyledBlogNavigation data-aos={'fade-up'} width={'main-width'} id={'blog-navigation'}>
             <ul className={'blog-list'}>
@@ -37,10 +48,14 @@ const StyledBlogNavigation = styled(Layout)`
                 padding: 24px;
                 background: linear-gradient(265.51deg, rgba(42, 47, 78, 0.3) -7.41%, rgba(42, 47, 78, 0.093) 90.54%);
                 border-radius: 4px;
+                display: flex;
+                flex-direction: column;
                 .blog-image {
                     width: 100%;
                     height: 109px;
                     margin-bottom: 33px;
+                    background-size: cover;
+                    background-position: center;
                 }
                 h3 {
                     font-size: 20px;
@@ -48,6 +63,9 @@ const StyledBlogNavigation = styled(Layout)`
                     color: ${(props) => (props.theme.gray)};
                     margin-bottom: 8px;
                     font-weight: 400;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
                 }
                 p {
                     font-size: 16px;
@@ -60,27 +78,38 @@ const StyledBlogNavigation = styled(Layout)`
                 }
                 .button {
                     width: 150px;
+                    margin-top: auto;
                 }
             }
         }
-    }
-    @media screen and (max-width: ${breakpoints.l}) {
-        width: unset !important;
-        padding: 0 32px;
-        .blog-list {
-            .blog-item {
-                width: calc(33% - 12px) !important;
-                max-width: 360px;
+        @media screen and (max-width: ${breakpoints.l}) {
+            width: unset !important;
+            padding: 0 32px;
+            .blog-list {
+                .blog-item {
+                    width: calc(33% - 12px) !important;
+                    max-width: 360px;
+                }
             }
         }
-    }
-    @media screen and (max-width: ${breakpoints.md}) {
-        .blog-list {
-            flex-direction: column;
-            align-items: center;
-            .blog-item {
-                margin-bottom: 40px;
-                width: 100% !important;
+        @media screen and (max-width: ${breakpoints.md}) {
+            .blog-list {
+                flex-direction: column;
+                align-items: center;
+                .blog-item {
+                    margin-bottom: 40px;
+                    width: 100% !important;
+                    h3 {
+                        white-space: normal;
+                    }
+                    p {
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                        overflow: hidden;
+                        max-height: 50px;
+                    }
+                }
             }
         }
     }

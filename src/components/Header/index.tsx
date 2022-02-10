@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
@@ -43,7 +43,7 @@ const HeaderFrame = styled.div`
 const HeaderControls = styled.div<{ isConnected: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    bottom: 0px;
+    bottom: 48px;
     left: 0px;
     display: flex;
     align-items: center;
@@ -55,6 +55,11 @@ const HeaderControls = styled.div<{ isConnected: boolean }>`
     padding: 1rem;
     z-index: 99;
     background-color: ${({ theme }) => theme.bg2};
+    transition: 0.35s ease-in-out all;
+    &.hidden {
+      bottom: -72px;
+      opacity: 0;
+    }
   `};
 `
 
@@ -216,6 +221,19 @@ function Header() {
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
 
+  useEffect(() => {
+    window.addEventListener('scroll', (e) => {
+      let headerControls = document.getElementById('header-controls');
+      if (headerControls) {
+        if (window.scrollY > 0) {
+          headerControls.classList.add('hidden');
+        } else {
+          headerControls.classList.remove('hidden');
+        }
+      }
+    })
+  }, [])
+
   return (
     <HeaderFrame>
       <ClaimModal
@@ -264,7 +282,7 @@ function Header() {
           {isMobileByMedia && <Settings />}
         </HeaderLinks>
       </HeaderRow>
-      <HeaderControls isConnected={!!account}>
+      <HeaderControls id="header-controls" isConnected={!!account}>
         <HeaderElement>
           <Web3Status />
           {!isMobileByMedia && <Settings />}

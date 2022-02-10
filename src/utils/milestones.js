@@ -1,8 +1,15 @@
 export const TimelineData = [
     {
+        title: '2020 Q4',
+        content: [
+            'Swapr Alpha Launch'
+        ],
+        releaseTag: 'ALPHA',
+        past: true
+    },
+    {
         title: '2021 Q1',
         content: [
-            'Swapr Alpha Launch',
             'DXDAO-supplied liquidity',
             'Swapr on xDai',
             'Eco-Routing Beta',
@@ -10,7 +17,6 @@ export const TimelineData = [
             'Network Switcher v1',
             'Swapr redesign',
         ],
-        releaseTag: 'ALPHA',
         past: true
     },
     {
