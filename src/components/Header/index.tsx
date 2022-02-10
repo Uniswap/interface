@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react'
-import { Box, Flex } from 'rebass'
+import React, { useMemo, useState } from 'react'
+import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
+import { ChevronUp, ChevronDown } from 'react-feather'
 
 import styled, { css } from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useNativeCurrencyBalance, useTokenBalance } from '../../state/wallet/hooks'
+import { ReactComponent as GasInfoSvg } from '../../assets/svg/gas-info.svg'
 
 import Settings from '../Settings'
 
@@ -26,6 +28,7 @@ import Skeleton from 'react-loading-skeleton'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
+import { useGasInfo } from '../../hooks/useGasInfo'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -201,6 +204,41 @@ export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadiu
     margin-left: 7px;
   }
 `
+const GasInfo = styled.div`
+  display: flex;
+  margin-left: 6px;
+  padding: 6px 8px;
+  border: 1.06481px solid rgba(242, 153, 74, 0.65);
+  background: rgba(242, 153, 74, 0.08);
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.orange1};
+  align-items: center;
+`
+const GasColor = {
+  fast: {
+    color: '#10B981',
+    backgroundColor: 'rgba(16, 185, 129, 0.3)'
+  },
+  normal: {
+    color: '#F2994A',
+    backgroundColor: 'rgba(242, 153, 74, 0.3);'
+  },
+  slow: {
+    color: '#FF4F84',
+    backgroundColor: 'rgba(255, 79, 132, 0.3);'
+  }
+}
+const ColoredGas = styled.div<{ color: 'fast' | 'slow' | 'normal' }>`
+  font-size: 10px;
+  font-weight: 600;
+  color: ${props => GasColor[props.color].color};
+  background-color: ${props => GasColor[props.color].backgroundColor};
+  padding: 3.19444px 4.25926px;
+
+  border-radius: 4.25926px;
+`
 const Divider = styled.div`
   height: 24px;
   width: 1px;
@@ -226,8 +264,9 @@ const AdditionalDataWrap = styled.div`
 function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
-
+  const [isGasInfoOpen, setIsGasInfoOpen] = useState(false)
   const nativeCurrency = useNativeCurrency()
+  const { gas } = useGasInfo()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
   const { loading, data } = useSwaprSinglelSidedStakeCampaigns()
@@ -300,8 +339,31 @@ function Header() {
             )}{' '}
             {nativeCurrency.symbol}
           </Amount>
+          {gas.normal !== 0 && (
+            <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
+              <GasInfoSvg />
+              <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
+                {gas.normal}
+              </Text>
+              {gas.fast === 0 && gas.slow === 0 ? (
+                ''
+              ) : isGasInfoOpen ? (
+                <ChevronUp size={12} />
+              ) : (
+                <ChevronDown size={12} />
+              )}
+            </GasInfo>
+          )}
         </Flex>
+        {gas.fast !== 0 && gas.slow !== 0 && (
+          <HeaderSubRow style={{ visibility: isGasInfoOpen ? 'visible' : 'hidden', gap: '4px' }}>
+            <ColoredGas color={'fast'}>FAST {gas.fast}</ColoredGas>
+            <ColoredGas color={'normal'}>NORMAL {gas.normal}</ColoredGas>
+            <ColoredGas color={'slow'}>SLOW {gas.slow}</ColoredGas>
+          </HeaderSubRow>
+        )}
       </AdditionalDataWrap>
+
 
       <HeaderControls isConnected={!!account}>
         <HeaderSubRow>
