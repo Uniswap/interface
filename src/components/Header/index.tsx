@@ -173,7 +173,6 @@ const HeaderSubRow = styled(RowFlat)`
   margin-top: 10px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin-right: 8px;
      margin-top: 0px;
   `};
 `
@@ -256,6 +255,7 @@ const StyledMobileLink = styled(NavLink)`
 `
 const AdditionalDataWrap = styled.div`
   margin-left: auto;
+  gap:10px;
   display: flex;
   flex-direction:column
   justify-content: end;
@@ -323,7 +323,7 @@ function Header() {
           <Settings />
         </HeaderSubRow>
 
-        <Flex marginTop={'10px'}>
+        <Flex justifyContent={'end'}>
           <SwprInfo
             hasActiveCampaigns={!loading && !!data}
             newSwprBalance={newSwprBalance}
@@ -363,7 +363,6 @@ function Header() {
           </HeaderSubRow>
         )}
       </AdditionalDataWrap>
-
 
       <HeaderControls isConnected={!!account}>
         <HeaderSubRow>
