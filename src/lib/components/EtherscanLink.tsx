@@ -7,7 +7,7 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import ExternalLink from './ExternalLink'
 
 const Link = styled(ExternalLink)<{ color: Color }>`
-  color: ${({ theme, color }) => theme[color]}
+  color: ${({ theme, color }) => theme[color]};
   text-decoration: none;
 `
 
