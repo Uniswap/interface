@@ -111,28 +111,24 @@ export default function MaxSlippageSelect() {
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
   const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
-  const [warning, setWarning] = useState<WarningState | undefined>()
-  const [showTooltip, setShowTooltip, tooltipProps] = useTooltip()
+  const [warning, setWarning] = useState<WarningState | undefined>(toWarningState(toPercent(maxSlippage)))
+  const [showTooltip, setShowTooltip, tooltipProps] = useTooltip(/*showOnMount=*/ true)
+  useEffect(() => setShowTooltip(true), [warning, setShowTooltip]) // enables the tooltip when a warning is set
 
   const processValue = useCallback(
-    (value: number | undefined, isInput: boolean) => {
+    (value: number | undefined) => {
       const percent = toPercent(value)
       const warning = toWarningState(percent)
       setWarning(warning)
-      if (isInput) {
-        setMaxSlippage(value)
-        setAutoSlippage(!percent || warning === WarningState.INVALID_SLIPPAGE)
-      }
+      setMaxSlippage(value)
+      setAutoSlippage(!percent || warning === WarningState.INVALID_SLIPPAGE)
     },
     [setAutoSlippage, setMaxSlippage]
   )
   const onInputSelect = useCallback(() => {
     focus()
-    processValue(maxSlippage, /*isInput=*/ true)
+    processValue(maxSlippage)
   }, [focus, maxSlippage, processValue])
-
-  useEffect(() => processValue(maxSlippage, /*isInput=*/ false)) // processes any warnings on mount
-  useEffect(() => setShowTooltip(true), [warning, setShowTooltip]) // enables the tooltip when a warning is set
 
   return (
     <Column gap={0.75}>
@@ -154,7 +150,7 @@ export default function MaxSlippageSelect() {
             <DecimalInput
               size={Math.max(maxSlippageInput.length, 3)}
               value={maxSlippageInput}
-              onChange={(input) => processValue(+input, /*isInput=*/ true)}
+              onChange={(input) => processValue(+input)}
               placeholder={placeholder}
               ref={input}
             />

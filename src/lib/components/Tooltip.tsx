@@ -13,8 +13,8 @@ export interface TooltipHandlers {
   onBlur: () => void
 }
 
-export function useTooltip(): [boolean, (show: boolean) => void, TooltipHandlers] {
-  const [show, setShow] = useState(false)
+export function useTooltip(showOnMount = false): [boolean, (show: boolean) => void, TooltipHandlers] {
+  const [show, setShow] = useState(showOnMount)
   const enable = useCallback(() => setShow(true), [])
   const disable = useCallback(() => setShow(false), [])
   return [show, setShow, { onMouseEnter: enable, onMouseLeave: disable, onFocus: enable, onBlur: disable }]
