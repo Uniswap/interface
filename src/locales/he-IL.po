@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 22:07\n"
+"PO-Revision-Date: 2022-02-10 02:15\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -535,6 +535,10 @@ msgstr "התחבר לארנק כדי להציג את הנזילות שלך."
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "חבר ארנק כדי להחליף"
+
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "חבר את הארנק שלך"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"

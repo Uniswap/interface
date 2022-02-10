@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 22:07\n"
+"PO-Revision-Date: 2022-02-10 02:15\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -535,6 +535,10 @@ msgstr "Likiditenizi görüntülemek için bir cüzdana bağlanın."
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "Takas için cüzdanı bağlayın"
+
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Cüzdanını bağla"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"

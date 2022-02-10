@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 22:07\n"
+"PO-Revision-Date: 2022-02-10 02:15\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -535,6 +535,10 @@ msgstr "Maak verbinding met een portemonnee om uw liquiditeit te bekijken."
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "Portemonnee koppelen om te ruilen"
+
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Verbind je portemonnee"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
