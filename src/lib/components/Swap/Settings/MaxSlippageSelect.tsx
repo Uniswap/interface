@@ -3,6 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import Popover from 'lib/components/Popover'
 import { TooltipHandlers, useTooltip } from 'lib/components/Tooltip'
+import { toPercent } from 'lib/hooks/useAllowedSlippage'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'lib/icons'
 import { autoSlippageAtom, MAX_VALID_SLIPPAGE, maxSlippageAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import styled, { Color, ThemedText } from 'lib/theme'
@@ -58,9 +59,17 @@ function Option({
 }
 
 enum WarningState {
-  NONE,
+  INVALID_SLIPPAGE = 1,
   HIGH_SLIPPAGE,
-  INVALID_SLIPPAGE,
+}
+
+function toWarningState(percent: Percent | undefined): WarningState | undefined {
+  if (percent?.greaterThan(MAX_VALID_SLIPPAGE)) {
+    return WarningState.INVALID_SLIPPAGE
+  } else if (percent?.greaterThan(MIN_HIGH_SLIPPAGE)) {
+    return WarningState.HIGH_SLIPPAGE
+  }
+  return
 }
 
 const Warning = memo(function Warning({ state, showTooltip }: { state: WarningState; showTooltip: boolean }) {
@@ -80,8 +89,6 @@ const Warning = memo(function Warning({ state, showTooltip }: { state: WarningSt
       color = 'warning'
       content = highSlippage
       break
-    case WarningState.NONE:
-      return null
   }
   return (
     <Popover
@@ -104,41 +111,24 @@ export default function MaxSlippageSelect() {
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
   const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
-  const [warning, setWarning] = useState(WarningState.NONE)
-  const [showTooltip, setShowTooltip, tooltipProps] = useTooltip()
+  const [warning, setWarning] = useState<WarningState | undefined>(toWarningState(toPercent(maxSlippage)))
+  const [showTooltip, setShowTooltip, tooltipProps] = useTooltip(/*showOnMount=*/ true)
+  useEffect(() => setShowTooltip(true), [warning, setShowTooltip]) // enables the tooltip when a warning is set
 
-  const processInput = useCallback(
-    (input: number | undefined) => {
-      const numerator = input && Math.floor(input * 100)
-      if (numerator) {
-        const percent = new Percent(numerator, 10_000)
-        if (percent.greaterThan(MAX_VALID_SLIPPAGE)) {
-          setWarning(WarningState.INVALID_SLIPPAGE)
-          setAutoSlippage(true)
-          setMaxSlippage(input)
-        } else if (percent.greaterThan(MIN_HIGH_SLIPPAGE)) {
-          setWarning(WarningState.HIGH_SLIPPAGE)
-          setAutoSlippage(false)
-          setMaxSlippage(input)
-        } else {
-          setWarning(WarningState.NONE)
-          setAutoSlippage(false)
-          setMaxSlippage(input)
-        }
-      } else {
-        setAutoSlippage(true)
-        setMaxSlippage(undefined)
-      }
+  const processValue = useCallback(
+    (value: number | undefined) => {
+      const percent = toPercent(value)
+      const warning = toWarningState(percent)
+      setWarning(warning)
+      setMaxSlippage(value)
+      setAutoSlippage(!percent || warning === WarningState.INVALID_SLIPPAGE)
     },
     [setAutoSlippage, setMaxSlippage]
   )
   const onInputSelect = useCallback(() => {
     focus()
-    processInput(maxSlippage)
-  }, [focus, maxSlippage, processInput])
-
-  useEffect(() => processInput(maxSlippage), [maxSlippage, processInput]) // processes any warnings on mount
-  useEffect(() => setShowTooltip(true), [warning, setShowTooltip]) // enables the tooltip if a warning is set
+    processValue(maxSlippage)
+  }, [focus, maxSlippage, processValue])
 
   return (
     <Column gap={0.75}>
@@ -153,14 +143,14 @@ export default function MaxSlippageSelect() {
           wrapper={Custom}
           selected={!autoSlippage}
           onSelect={onInputSelect}
-          icon={<Warning state={warning} showTooltip={showTooltip} />}
+          icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
           {...tooltipProps}
         >
           <Row color={warning === WarningState.INVALID_SLIPPAGE ? 'error' : undefined}>
             <DecimalInput
               size={Math.max(maxSlippageInput.length, 3)}
               value={maxSlippageInput}
-              onChange={(input) => processInput(+input)}
+              onChange={(input) => processValue(+input)}
               placeholder={placeholder}
               ref={input}
             />

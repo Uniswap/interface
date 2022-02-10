@@ -14,6 +14,10 @@ export const optionCss = (selected: boolean) => css`
   grid-gap: 0.25em;
   padding: calc(0.75em - 1px) 0.625em;
 
+  :enabled {
+    border: 1px solid ${({ theme }) => (selected ? theme.active : theme.outline)};
+  }
+
   :enabled:hover {
     border-color: ${({ theme }) => theme.onHover(selected ? theme.active : theme.outline)};
   }
