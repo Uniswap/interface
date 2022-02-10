@@ -239,9 +239,13 @@ const StyledMobileLink = styled(NavLink)`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: flex;
-    font-weight:600;
+    font-weight:400;
     font-size: 14px;
   color:#C9C7DB;
+  &.active {
+    font-weight: 600;
+    color: ${({ theme }) => theme.white};
+  }
   `};
 `
 const StyledExternalLinkMobile = styled(ExternalLink)`
@@ -279,7 +283,6 @@ function Header() {
   const accountOrUndefined = useMemo(() => account || undefined, [account])
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
-  //const isMobileByMedia = useIsMobileByMedia()
 
   return (
     <HeaderFrame>
