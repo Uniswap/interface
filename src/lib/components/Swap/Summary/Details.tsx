@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
@@ -8,7 +9,8 @@ import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
-import { computeRealizedPriceImpact } from 'utils/prices'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { computeRealizedLPFeeAmount, computeRealizedPriceImpact } from 'utils/prices'
 
 import Row from '../../Row'
 
@@ -45,50 +47,73 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const outputCurrency = outputAmount.currency
   const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
 
+  const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
+
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
 
+  const { i18n } = useLingui()
   const details = useMemo(() => {
+    const rows = []
     // @TODO(ianlapham): Check that provider fee is even a valid list item
-    return [
-      // [t`Liquidity provider fee`, `${swap.lpFee} ${inputSymbol}`],
-      [
-        t`${integrator} fee`,
-        feeOptions &&
-          `${outputAmount.multiply(feeOptions.fee).toSignificant(2)} ${
-            outputCurrency.symbol || currencyId(outputCurrency)
-          }`,
-      ],
-      [
-        t`Price impact`,
-        `${priceImpact.toFixed(2)}%`,
-        !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_HIGH)
-          ? 'error'
-          : !priceImpact.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)
-          ? 'warning'
-          : undefined,
-      ],
-      trade.tradeType === TradeType.EXACT_INPUT
-        ? [t`Maximum sent`, `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${inputCurrency.symbol}`]
-        : [],
-      trade.tradeType === TradeType.EXACT_OUTPUT
-        ? [t`Minimum received`, `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${outputCurrency.symbol}`]
-        : [],
-      [
-        t`Slippage tolerance`,
-        `${allowedSlippage.toFixed(2)}%`,
-        !allowedSlippage.lessThan(MIN_HIGH_SLIPPAGE) && 'warning',
-      ],
-    ].filter(isDetail)
 
-    function isDetail(detail: unknown[]): detail is [string, string, Color | undefined] {
-      return Boolean(detail[1])
+    if (feeOptions) {
+      const parsedConvenienceFee = formatCurrencyAmount(outputAmount.multiply(feeOptions.fee), 6, i18n.locale)
+      rows.push([
+        t`${integrator} fee`,
+        `${parsedConvenienceFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`,
+      ])
     }
-  }, [allowedSlippage, inputCurrency, integrator, feeOptions, outputAmount, outputCurrency, priceImpact, trade])
+
+    const priceImpactRow = [t`Price impact`, `${priceImpact.toFixed(2)}%`]
+    if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) {
+      priceImpactRow.push('error')
+    } else if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
+      priceImpactRow.push('warning')
+    }
+    rows.push(priceImpactRow)
+
+    if (lpFeeAmount) {
+      const localizedFeeAmount = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
+      rows.push([
+        t`Liquidity provider fee`,
+        `${localizedFeeAmount} ${inputCurrency.symbol || currencyId(inputCurrency)}`,
+      ])
+    }
+
+    if (trade.tradeType === TradeType.EXACT_OUTPUT) {
+      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)
+      rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
+    }
+
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)
+      rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
+    }
+
+    const slippageToleranceRow = [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`]
+    if (allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE)) {
+      slippageToleranceRow.push('warning')
+    }
+    rows.push(slippageToleranceRow)
+
+    return rows
+  }, [
+    feeOptions,
+    priceImpact,
+    lpFeeAmount,
+    trade,
+    allowedSlippage,
+    outputAmount,
+    i18n.locale,
+    integrator,
+    outputCurrency,
+    inputCurrency,
+  ])
   return (
     <>
       {details.map(([label, detail, color]) => (
-        <Detail key={label} label={label} value={detail} color={color} />
+        <Detail key={label} label={label} value={detail} color={color as Color} />
       ))}
     </>
   )

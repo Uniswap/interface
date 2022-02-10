@@ -17,11 +17,10 @@
 # testing
 /coverage
 
-# production
+# builds
 /build
-
-# widgets
 /dist
+/dts
 
 # misc
 .DS_Store

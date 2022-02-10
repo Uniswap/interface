@@ -1,5 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import StakingRewardsJson from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -8,7 +9,7 @@ import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { usePairContract, useStakingContract, useV2RouterContract } from '../../hooks/useContract'
+import { useContract, usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { TransactionType } from '../../state/transactions/actions'
@@ -23,6 +24,12 @@ import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import ProgressCircles from '../ProgressSteps'
 import { RowBetween } from '../Row'
+
+const { abi: STAKING_REWARDS_ABI } = StakingRewardsJson
+
+function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean) {
+  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
+}
 
 const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -1020,6 +1020,10 @@ msgstr "Ликвидность"
 msgid "Liquidity data not available."
 msgstr "Данные о ликвидности отсутствуют."
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Комиссия поставщика ликвидности"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Вознаграждения для поставщика ликвидности"
@@ -2025,8 +2029,8 @@ msgid "Unsupported Assets"
 msgstr "Неподдерживаемые активы"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "Неподдерживаемая сеть — переключитесь на другую сеть для обмена"
+msgid "Unsupported network - switch to another to trade."
+msgstr "Неподдерживаемая сеть - переключитесь на другую для торговли."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

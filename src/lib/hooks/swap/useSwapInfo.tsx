@@ -1,11 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
-import { maxSlippageAtom } from 'lib/state/settings'
 import { feeOptionsAtom, Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useEffect, useMemo } from 'react'
@@ -13,6 +11,7 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isAddress } from '../../../utils'
 import useActiveWeb3React from '../useActiveWeb3React'
+import useAllowedSlippage from '../useAllowedSlippage'
 import { useBestTrade } from './useBestTrade'
 
 interface SwapInfo {
@@ -90,16 +89,7 @@ function useComputeSwapInfo(): SwapInfo {
     [trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
-  /*
-   * If user has enabled 'auto' slippage, use the default best slippage calculated
-   * based on the trade. If user has entered custom slippage, use that instead.
-   */
-  const autoSlippageTolerance = useAutoSlippageTolerance(trade.trade)
-  const maxSlippage = useAtomValue(maxSlippageAtom)
-  const allowedSlippage = useMemo(
-    () => (maxSlippage === 'auto' ? autoSlippageTolerance : maxSlippage),
-    [autoSlippageTolerance, maxSlippage]
-  )
+  const allowedSlippage = useAllowedSlippage(trade.trade)
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined

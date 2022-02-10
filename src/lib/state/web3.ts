@@ -1,6 +1,6 @@
-import { initializeConnector, Web3ReactHooks } from '@widgets/web3-react/core'
-import { EMPTY } from '@widgets/web3-react/empty'
-import { Connector } from '@widgets/web3-react/types'
+import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
+import { EMPTY } from '@web3-react/empty'
+import { Connector } from '@web3-react/types'
 import { atomWithDefault } from 'jotai/utils'
 
 const EMPTY_CONNECTOR = initializeConnector(() => EMPTY)

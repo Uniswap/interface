@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -1020,6 +1020,10 @@ msgstr "Liquidez"
 msgid "Liquidity data not available."
 msgstr "No se dispone de datos de liquidez."
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Tarifa del proveedor de liquidez"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Premios del proveedor de liquidez"
@@ -2025,8 +2029,8 @@ msgid "Unsupported Assets"
 msgstr "Activos no soportados"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "Red no admitida: cambie a otra red para intercambiar"
+msgid "Unsupported network - switch to another to trade."
+msgstr "Red no admitida: cambie a otra para comerciar."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

@@ -21,9 +21,7 @@ export function useTooltip(): [boolean, (show: boolean) => void, TooltipHandlers
 }
 
 const IconTooltip = styled(IconButton)`
-  :hover {
-    cursor: help;
-  }
+  cursor: help;
 `
 
 interface TooltipProps {

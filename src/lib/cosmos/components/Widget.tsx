@@ -1,5 +1,5 @@
-import { initializeConnector } from '@widgets/web3-react/core'
-import { MetaMask } from '@widgets/web3-react/metamask'
+import { initializeConnector } from '@web3-react/core'
+import { MetaMask } from '@web3-react/metamask'
 import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'

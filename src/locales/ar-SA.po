@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -1020,6 +1020,10 @@ msgstr "السيولة"
 msgid "Liquidity data not available."
 msgstr "بيانات السيولة غير متوفرة."
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "رسوم مزود السيولة"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "مكافآت موفر السيولة"
@@ -2025,8 +2029,8 @@ msgid "Unsupported Assets"
 msgstr "الأصول غير المدعومة"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "شبكة غير مدعومة - قم بالتبديل إلى شبكة أخرى للتبديل"
+msgid "Unsupported network - switch to another to trade."
+msgstr "شبكة غير مدعومة - قم بالتبديل إلى شبكة أخرى للتداول."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

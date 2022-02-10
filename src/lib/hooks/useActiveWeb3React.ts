@@ -1,4 +1,4 @@
-import { Web3ReactHooks } from '@widgets/web3-react/core'
+import { Web3ReactHooks } from '@web3-react/core'
 import { useAtomValue } from 'jotai/utils'
 import { injectedAtom, urlAtom, Web3ReactState } from 'lib/state/web3'
 

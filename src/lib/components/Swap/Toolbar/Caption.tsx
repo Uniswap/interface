@@ -28,7 +28,7 @@ export function ConnectWallet() {
   return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
 }
 export function UnsupportedNetwork() {
-  return <Caption caption={<Trans>Unsupported network - switch to another network to swap</Trans>} />
+  return <Caption caption={<Trans>Unsupported network - switch to another to trade.</Trans>} />
 }
 export function InsufficientBalance({ currency }: { currency: Currency }) {
   return <Caption caption={<Trans>Insufficient {currency?.symbol} balance</Trans>} />
@@ -53,13 +53,13 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
     const [a, b] = flip ? [outputAmount, inputAmount] : [inputAmount, outputAmount]
     const priceString = (!flip ? executionPrice : executionPrice?.invert())?.toSignificant(6)
 
-    const ratio = `1 ${a.currency.symbol} = ${priceString}} ${b.currency.symbol}`
+    const ratio = `1 ${a.currency.symbol} = ${priceString} ${b.currency.symbol}`
     const usdc = !flip
       ? fiatValueInput
-        ? ` ($${fiatValueInput.toSignificant(2)})`
+        ? ` ($${fiatValueInput.toSignificant(6)})`
         : null
       : fiatValueOutput
-      ? ` ($${fiatValueOutput.toSignificant(2)})`
+      ? ` ($${fiatValueOutput.toSignificant(6)})`
       : null
 
     return (

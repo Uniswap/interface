@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -1020,6 +1020,10 @@ msgstr "נְזִילוּת"
 msgid "Liquidity data not available."
 msgstr "נתוני נזילות אינם זמינים."
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "עמלת ספק נזילות"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "תגמולים של ספק נזילות"
@@ -2025,8 +2029,8 @@ msgid "Unsupported Assets"
 msgstr "נכסים שאינם נתמכים"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "רשת לא נתמכת - עבור לרשת אחרת כדי להחליף"
+msgid "Unsupported network - switch to another to trade."
+msgstr "רשת לא נתמכת - עבור לרשת אחרת כדי לסחור."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

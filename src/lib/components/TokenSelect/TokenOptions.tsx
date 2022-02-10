@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react'
 import { Currency } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -21,6 +22,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
 import invariant from 'tiny-invariant'
 import { currencyId } from 'utils/currencyId'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { BaseButton } from '../Button'
 import Column from '../Column'
@@ -69,6 +71,7 @@ interface BubbledEvent extends SyntheticEvent {
 }
 
 function TokenOption({ index, value, style }: TokenOptionProps) {
+  const { i18n } = useLingui()
   const ref = useRef<HTMLButtonElement>(null)
   // Annotate the event to be handled later instead of passing in handlers to avoid rerenders.
   // This prevents token logos from reloading and flashing on the screen.
@@ -101,7 +104,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
               <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
             </Column>
           </Row>
-          {balance?.greaterThan(0) && balance?.toFixed(2)}
+          {balance?.greaterThan(0) && formatCurrencyAmount(balance, 2, i18n.locale)}
         </Row>
       </ThemedText.Body1>
     </TokenButton>

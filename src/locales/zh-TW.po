@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1020,6 +1020,10 @@ msgstr "流動資金"
 msgid "Liquidity data not available."
 msgstr "沒有流動性數據。"
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "流動性提供者費用"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "流動資金提供者獎勵"
@@ -2025,8 +2029,8 @@ msgid "Unsupported Assets"
 msgstr "不支持的資產"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "不支持的網絡 - 切換到另一個網絡進行交換"
+msgid "Unsupported network - switch to another to trade."
+msgstr "不支持的網絡 - 切換到另一個進行交易。"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

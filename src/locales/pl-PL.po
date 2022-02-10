@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 22:06\n"
+"PO-Revision-Date: 2022-02-08 22:07\n"
 "Last-Translator: \n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
@@ -1020,6 +1020,10 @@ msgstr "Płynność"
 msgid "Liquidity data not available."
 msgstr "Brak danych dotyczących płynności."
 
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Opłata dostawcy płynności"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Nagrody za płynność"
@@ -2025,8 +2029,8 @@ msgid "Unsupported Assets"
 msgstr "Nieobsługiwane zasoby"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another network to swap"
-msgstr "Nieobsługiwana sieć — przełącz się na inną sieć, aby dokonać wymiany"
+msgid "Unsupported network - switch to another to trade."
+msgstr "Nieobsługiwana sieć - przełącz się na inną, aby handlować."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
