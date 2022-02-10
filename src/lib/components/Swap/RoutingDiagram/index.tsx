@@ -6,8 +6,6 @@ import Column from 'lib/components/Column'
 import Row from 'lib/components/Row'
 import Rule from 'lib/components/Rule'
 import TokenImg from 'lib/components/TokenImg'
-import Tooltip from 'lib/components/Tooltip'
-import { Info } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -111,54 +109,52 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
   )
 }
 
-export default function RoutingTooltip({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
+export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
   const routes: RoutingDiagramEntry[] = useMemo(() => getTokenPath(trade), [trade])
 
   return (
-    <Tooltip icon={Info} placement="right">
-      <Wrapper gap={0.75}>
-        <Row justify="space-between">
-          <Row gap={0.25}>
-            <StyledAutoRouterIcon />
-            <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
-          </Row>
-          <ThemedText.Body1 fontSize={14}>
-            Best routes via {routes.length} hop{routes.length > 1 ? 's' : ''}
-          </ThemedText.Body1>
+    <Wrapper gap={0.75}>
+      <Row justify="space-between">
+        <Row gap={0.25}>
+          <StyledAutoRouterIcon />
+          <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
         </Row>
-        <Rule />
-        {routes.map((route, index) => (
-          <RouteRow key={index} align="center">
-            <TokenImg token={trade.inputAmount.currency} />
-            <ShortDottedLine>
+        <ThemedText.Body1 fontSize={14}>
+          Best routes via {routes.length} hop{routes.length > 1 ? 's' : ''}
+        </ThemedText.Body1>
+      </Row>
+      <Rule />
+      {routes.map((route, index) => (
+        <RouteRow key={index} align="center">
+          <TokenImg token={trade.inputAmount.currency} />
+          <ShortDottedLine>
+            <DotColor />
+          </ShortDottedLine>
+          <RouteDetailsContainer justify="flex-start" flex>
+            <DottedLine>
               <DotColor />
-            </ShortDottedLine>
-            <RouteDetailsContainer justify="flex-start" flex>
-              <DottedLine>
-                <DotColor />
-              </DottedLine>
-              <DetailsRow>
-                <TransparentBadgeWrapper>
-                  <BaseBadge>
-                    <ThemedText.ButtonSmall color="secondary">{route.percent.toSignificant(2)}%</ThemedText.ButtonSmall>
-                    <VersionBadge>
-                      <ThemedText.Caption color="secondary" fontWeight={600} fontSize={'10px'}>
-                        {route.protocol.toUpperCase()}
-                      </ThemedText.Caption>
-                    </VersionBadge>
-                  </BaseBadge>
-                </TransparentBadgeWrapper>
-                <Row justify="space-evenly" flex style={{ width: '100%' }}>
-                  {route.path.map(([currency0, currency1, feeAmount], index) => (
-                    <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
-                  ))}
-                </Row>
-              </DetailsRow>
-            </RouteDetailsContainer>
-            <TokenImg token={trade.outputAmount.currency} />
-          </RouteRow>
-        ))}
-      </Wrapper>
-    </Tooltip>
+            </DottedLine>
+            <DetailsRow>
+              <TransparentBadgeWrapper>
+                <BaseBadge>
+                  <ThemedText.ButtonSmall color="secondary">{route.percent.toSignificant(2)}%</ThemedText.ButtonSmall>
+                  <VersionBadge>
+                    <ThemedText.Caption color="secondary" fontWeight={600} fontSize={'10px'}>
+                      {route.protocol.toUpperCase()}
+                    </ThemedText.Caption>
+                  </VersionBadge>
+                </BaseBadge>
+              </TransparentBadgeWrapper>
+              <Row justify="space-evenly" flex style={{ width: '100%' }}>
+                {route.path.map(([currency0, currency1, feeAmount], index) => (
+                  <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
+                ))}
+              </Row>
+            </DetailsRow>
+          </RouteDetailsContainer>
+          <TokenImg token={trade.outputAmount.currency} />
+        </RouteRow>
+      ))}
+    </Wrapper>
   )
 }
