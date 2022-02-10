@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
@@ -78,11 +77,6 @@ export default function Input({ disabled, focused }: InputProps) {
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
-      <Row>
-        <ThemedText.Subhead2 color="secondary">
-          <Trans>Trading</Trans>
-        </ThemedText.Subhead2>
-      </Row>
       <TokenInput
         currency={swapInputCurrency}
         amount={(swapInputAmount !== undefined ? swapInputAmount : inputCurrencyAmount?.toSignificant(6)) ?? ''}
