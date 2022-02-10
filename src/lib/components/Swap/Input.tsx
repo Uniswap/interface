@@ -10,6 +10,7 @@ import styled, { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
 import Row from '../Row'
@@ -59,12 +60,15 @@ export default function Input({ disabled }: InputProps) {
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
 
+  // account for gas needed if using max on native token
+  const maxInputAmount = useMemo(() => maxAmountSpend(balance), [balance])
+
   const onMax = useMemo(() => {
-    if (balance?.greaterThan(0)) {
-      return () => updateSwapInputAmount(balance.toExact())
+    if (maxInputAmount?.greaterThan(0)) {
+      return () => updateSwapInputAmount(maxInputAmount.toExact())
     }
     return
-  }, [balance, updateSwapInputAmount])
+  }, [maxInputAmount, updateSwapInputAmount])
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
