@@ -5,9 +5,9 @@
   "devDependencies": {
     "@apollo/client": "^3.4.7",
     "@ethersproject/experimental": "^5.4.0",
-    "@fontsource/montserrat": "^4.5.1",
     "@fontsource/fira-code": "^4.5.1",
     "@fontsource/fira-mono": "^4.5.0",
+    "@fontsource/montserrat": "^4.5.1",
     "@popperjs/core": "^2.9.3",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -36,7 +36,6 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "@uniswap/token-lists": "^1.0.0-beta.27",
-    "@web3-react/authereum-connector": "^6.2.0",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/network-connector": "^6.1.9",

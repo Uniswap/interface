@@ -1,5 +1,4 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
-import { AuthereumConnector } from '@web3-react/authereum-connector'
 import { CustomNetworkConnector } from './CustomNetworkConnector'
 import { CustomWalletConnectConnector } from './CustomWalletConnectConnector'
 import { ChainId } from '@swapr/sdk'
@@ -34,9 +33,6 @@ export const walletConnect = new CustomWalletConnectConnector({
   pollingInterval: 15000
 })
 
-// mainnet only
-export const authereum = new AuthereumConnector({ chainId: 1 })
-
 let networkLibrary: providers.Web3Provider | undefined
 export function getNetworkLibrary(): providers.Web3Provider {
   return (networkLibrary = networkLibrary ?? getLibrary(network.provider))
@@ -46,7 +42,7 @@ export function getNetworkLibrary(): providers.Web3Provider {
 // More info: https://github.com/walletlink/walletlink
 export const walletLink = new CustomWalletLinkConnector({
   url: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-  appName: "Swapr",
+  appName: 'Swapr',
   appLogoUrl: swprLogo,
   supportedChainIds: [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_RINKEBY, ChainId.XDAI]
 })
