@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Token, TradeType } from '@uniswap/sdk-core'
-import { CHAIN_INFO } from 'constants/chainInfo'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai/utils'
@@ -18,23 +17,20 @@ import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Link, Spinner } from 'lib/icons'
 import { displayTxHashAtom, Field, independentFieldAtom } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
-import styled, { useTheme } from 'lib/theme'
+import { useTheme } from 'lib/theme'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../ActionButton'
 import Dialog from '../Dialog'
+import EtherscanLink from '../EtherscanLink'
 import Row from '../Row'
 import { SummaryDialog } from './Summary'
 
 interface SwapButtonProps {
   disabled?: boolean
 }
-
-const EtherscanA = styled.a`
-  color: currentColor;
-  text-decoration: none;
-`
 
 function useIsPendingApproval(token?: Token, spender?: string): boolean {
   return Boolean(usePendingApproval(token, spender))
@@ -91,13 +87,13 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
           disabled: true,
           update: {
             message: (
-              <EtherscanA href={approvalHash && `${CHAIN_INFO[chainId].explorer}tx/${approvalHash}`} target="_blank">
+              <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
                 <Row gap={0.25}>
                   <Trans>
                     Approval pending <Link />
                   </Trans>
                 </Row>
-              </EtherscanA>
+              </EtherscanLink>
             ),
             action: <Trans>Approve</Trans>,
             icon: Spinner,
