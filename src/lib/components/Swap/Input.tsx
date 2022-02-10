@@ -86,7 +86,10 @@ export default function Input({ disabled }: InputProps) {
           <Row>
             <LoadingSpan $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingSpan>
             {balance && (
-              <ThemedText.Body2 color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}>
+              <ThemedText.Body2
+                className="balance"
+                color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}
+              >
                 Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
               </ThemedText.Body2>
             )}

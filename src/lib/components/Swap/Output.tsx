@@ -108,7 +108,7 @@ export default function Output({ disabled, children }: OutputProps) {
             <Row>
               <LoadingSpan $loading={isLoading}>{usdc}</LoadingSpan>
               {balance && (
-                <span>
+                <span className="balance">
                   Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </span>
               )}

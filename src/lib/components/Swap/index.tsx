@@ -10,6 +10,7 @@ import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
+import styled from 'lib/theme'
 import { useMemo, useState } from 'react'
 
 import Dialog from '../Dialog'
@@ -36,6 +37,13 @@ function getSwapTx(txs: { [hash: string]: Transaction }, hash?: string): Transac
   }
   return
 }
+
+const SwapWrapper = styled.div<{ focus: boolean }>`
+  .balance {
+    opacity: ${({ focus }) => (focus ? 1 : 0)};
+    transition: opacity 0.25s ${({ focus }) => (focus ? 'ease-in' : 'ease-out')};
+  }
+`
 
 export interface SwapProps {
   tokenList?: string | TokenInfo[]
@@ -65,6 +73,8 @@ export default function Swap(props: SwapProps) {
     [chainId, list]
   )
 
+  const [focus, setFocus] = useState(false)
+
   return (
     <SwapPropValidator {...props}>
       {onSupportedChain && <SwapInfoUpdater />}
@@ -72,7 +82,7 @@ export default function Swap(props: SwapProps) {
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!active} />
       </Header>
-      <div ref={setBoundary}>
+      <SwapWrapper onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} focus={focus} ref={setBoundary}>
         <BoundaryProvider value={boundary}>
           <Input disabled={!active} />
           <ReverseButton disabled={!active} />
@@ -81,7 +91,7 @@ export default function Swap(props: SwapProps) {
             <SwapButton disabled={!account} />
           </Output>
         </BoundaryProvider>
-      </div>
+      </SwapWrapper>
       {displayTx && (
         <Dialog color="dialog">
           <StatusDialog tx={displayTx} onClose={() => setDisplayTxHash()} />
