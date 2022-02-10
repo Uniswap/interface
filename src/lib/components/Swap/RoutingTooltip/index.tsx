@@ -19,13 +19,22 @@ const Wrapper = styled(Column)`
 `
 
 const RouteRow = styled(Row)`
-  grid-template-columns: 1em 1fr 1em;
+  grid-template-columns: 1em 1.15em 1fr 1em;
   min-width: 430px;
 `
 
 const RouteDetailsContainer = styled(Row)`
   padding: 0.1rem 0.5rem;
   position: relative;
+`
+
+const ShortDottedLine = styled.div`
+  align-items: center;
+  display: flex;
+  opacity: 0.5;
+  overflow: hidden;
+  width: 71px;
+  z-index: 1;
 `
 
 const DottedLine = styled.div`
@@ -46,9 +55,15 @@ const DotColor = styled(DotLine)`
 const BaseBadge = styled(Row)`
   background-color: ${({ theme }) => theme.outline};
   border-radius: 0.5em;
-  grid-gap: 0.25em;
-  padding: 0.25em;
-  z-index: 3;
+  grid-gap: 0.375em;
+  padding: 0.25em 0.375em;
+  z-index: 2; // To cover the dotted line.
+`
+
+// Used to cutoff space between badges and dotted lines.
+const TransparentBadgeWrapper = styled(BaseBadge)`
+  background-color: ${({ theme }) => theme.dialog};
+  padding: 0 4px;
 `
 
 const VersionBadge = styled(BaseBadge)`
@@ -59,7 +74,7 @@ const VersionBadge = styled(BaseBadge)`
 
 const DetailsRow = styled(Row)`
   display: grid;
-  grid-template-columns: 4em 1fr;
+  grid-template-columns: 4.8125em 1fr;
   width: 100%;
 `
 
@@ -84,13 +99,15 @@ const StyledAutoRouterIcon = styled(AutoRouterIcon)`
 
 function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
   return (
-    <BaseBadge>
-      <Row>
-        <TokenImg token={currency0} />
-        <TokenImg token={currency1} />
-      </Row>
-      <ThemedText.Subhead1 fontSize={14}>{feeAmount / 10000}%</ThemedText.Subhead1>
-    </BaseBadge>
+    <TransparentBadgeWrapper>
+      <BaseBadge>
+        <Row>
+          <TokenImg token={currency0} />
+          <TokenImg token={currency1} />
+        </Row>
+        <ThemedText.Subhead1 fontSize={14}>{feeAmount / 10000}%</ThemedText.Subhead1>
+      </BaseBadge>
+    </TransparentBadgeWrapper>
   )
 }
 
@@ -113,20 +130,25 @@ export default function RoutingTooltip({ trade }: { trade: InterfaceTrade<Curren
         {routes.map((route, index) => (
           <RouteRow key={index} align="center">
             <TokenImg token={trade.inputAmount.currency} />
+            <ShortDottedLine>
+              <DotColor />
+            </ShortDottedLine>
             <RouteDetailsContainer justify="flex-start" flex>
               <DottedLine>
                 <DotColor />
               </DottedLine>
               <DetailsRow>
-                <BaseBadge>
-                  <VersionBadge>
-                    <ThemedText.Caption color="secondary" fontWeight={600} fontSize={'10px'}>
-                      {route.protocol.toUpperCase()}
-                    </ThemedText.Caption>
-                  </VersionBadge>
-                  <ThemedText.ButtonSmall color="secondary">{route.percent.toSignificant(2)}%</ThemedText.ButtonSmall>
-                </BaseBadge>
-                <Row justify="space-around" flex style={{ width: '100%' }}>
+                <TransparentBadgeWrapper>
+                  <BaseBadge>
+                    <ThemedText.ButtonSmall color="secondary">{route.percent.toSignificant(2)}%</ThemedText.ButtonSmall>
+                    <VersionBadge>
+                      <ThemedText.Caption color="secondary" fontWeight={600} fontSize={'10px'}>
+                        {route.protocol.toUpperCase()}
+                      </ThemedText.Caption>
+                    </VersionBadge>
+                  </BaseBadge>
+                </TransparentBadgeWrapper>
+                <Row justify="space-evenly" flex style={{ width: '100%' }}>
                   {route.path.map(([currency0, currency1, feeAmount], index) => (
                     <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
                   ))}
