@@ -305,6 +305,10 @@ body {
 }
 
 
+.tf-v1-sidetab {
+  z-index: 1 !important
+}
+
 .tf-v1-sidetab.open {
   .tf-v1-sidetab-button  {
     display: none;

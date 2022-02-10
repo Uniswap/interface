@@ -69,7 +69,6 @@ import {
   AboutPage,
   ForTraderInfoShadow,
   GridWrapper,
-  BackgroundBottom,
   VerticalDivider,
   CommittedToSecurityDivider,
   OverflowStatisticWrapper
@@ -714,7 +713,7 @@ function About() {
                   <Trans>On-chain & Open Source</Trans>
                 </Text>
                 <ButtonEmpty padding="0">
-                  <ExternalLink href="https://github.com/dynamic-amm">
+                  <ExternalLink href="https://github.com/KyberNetwork">
                     <img src={isDarkMode ? githubImg : githubImgLight} alt="" width="125px" />
                   </ExternalLink>
                 </ButtonEmpty>
@@ -807,7 +806,6 @@ function About() {
           .flat()
           .map((farm, index) => index === indexx && <Apr key={farm.id} farm={farm} onAprUpdate={handleAprUpdate} />)}
       </AboutPage>
-      <BackgroundBottom />
       <Footer background={isDarkMode ? theme.background : theme.white}>
         <FooterContainer>
           <Flex flexWrap="wrap" sx={{ gap: '12px' }} justifyContent="center">
@@ -815,7 +813,7 @@ function About() {
               <Trans>Docs</Trans>
             </ExternalLink>
             <VerticalDivider />
-            <ExternalLink href={`https://github.com/dynamic-amm`}>
+            <ExternalLink href={`https://github.com/KyberNetwork`}>
               <Trans>Github</Trans>
             </ExternalLink>
             <VerticalDivider />

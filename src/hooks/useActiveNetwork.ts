@@ -168,7 +168,7 @@ export function useActiveNetwork() {
       try {
         await window.ethereum?.request({
           method: 'wallet_switchEthereumChain',
-          params: [switchNetworkParams, account]
+          params: [switchNetworkParams]
         })
         history.push(target)
       } catch (switchError) {

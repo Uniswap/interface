@@ -203,27 +203,12 @@ export const Powered = styled(Flex)`
 
 export const AboutPage = styled.div`
   width: 100%;
-  background-image: url(${bgimg});
-  background-size: contain;
-  background-repeat: no-repeat;
+  background-image: url(${bgimg}), url(${bgimg});
+  background-size: contain, contain;
+  background-repeat: no-repeat, no-repeat;
   z-index: 1;
-  background-color: transparent;
-`
-
-export const BackgroundBottom = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background-image: url(${bgimg});
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: bottom;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-      bottom: 500px;
-      height: 1000px;
-  `}
+  background-color: transparent, transparent;
+  background-position: top, bottom;
 `
 
 export const VerticalDivider = styled.div`
