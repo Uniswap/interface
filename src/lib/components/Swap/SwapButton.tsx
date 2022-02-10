@@ -83,7 +83,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const actionProps = useMemo(() => {
     if (disabled) return { disabled: true }
 
-    if (chainId && inputCurrencyAmount)
+    if (chainId && inputCurrencyAmount) {
       if (!inputCurrencyBalance || inputCurrencyBalance?.lessThan(inputCurrencyAmount)) {
         return { disabled: true }
       } else if (approval === ApprovalState.PENDING) {
