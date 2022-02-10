@@ -10,7 +10,6 @@ import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTokenList from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
-import styled from 'lib/theme'
 import { useMemo, useState } from 'react'
 
 import Dialog from '../Dialog'
@@ -37,13 +36,6 @@ function getSwapTx(txs: { [hash: string]: Transaction }, hash?: string): Transac
   }
   return
 }
-
-const SwapWrapper = styled.div<{ focus: boolean }>`
-  .balance {
-    opacity: ${({ focus }) => (focus ? 1 : 0)};
-    transition: opacity 0.25s ${({ focus }) => (focus ? 'ease-in' : 'ease-out')};
-  }
-`
 
 export interface SwapProps {
   tokenList?: string | TokenInfo[]
@@ -73,7 +65,7 @@ export default function Swap(props: SwapProps) {
     [chainId, list]
   )
 
-  const [focus, setFocus] = useState(false)
+  const [focused, setFocused] = useState(false)
 
   return (
     <SwapPropValidator {...props}>
@@ -82,16 +74,16 @@ export default function Swap(props: SwapProps) {
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!active} />
       </Header>
-      <SwapWrapper onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} focus={focus} ref={setBoundary}>
+      <div onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <Input disabled={!active} />
+          <Input disabled={!active} focused={focused} />
           <ReverseButton disabled={!active} />
-          <Output disabled={!active}>
+          <Output disabled={!active} focused={focused}>
             <Toolbar disabled={!active} />
             <SwapButton disabled={!account} />
           </Output>
         </BoundaryProvider>
-      </SwapWrapper>
+      </div>
       {displayTx && (
         <Dialog color="dialog">
           <StatusDialog tx={displayTx} onClose={() => setDisplayTxHash()} />

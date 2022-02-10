@@ -40,12 +40,18 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   }
 `
 
+const Balance = styled.span<{ focused: boolean }>`
+  opacity: ${({ focused }) => (focused ? 1 : 0)};
+  transition: opacity 0.25s ${({ focused }) => (focused ? 'ease-in' : 'ease-out')};
+`
+
 interface OutputProps {
-  disabled?: boolean
+  disabled: boolean
+  focused: boolean
   children: ReactNode
 }
 
-export default function Output({ disabled, children }: OutputProps) {
+export default function Output({ disabled, focused, children }: OutputProps) {
   const { i18n } = useLingui()
 
   const {
@@ -108,9 +114,9 @@ export default function Output({ disabled, children }: OutputProps) {
             <Row>
               <LoadingSpan $loading={isLoading}>{usdc}</LoadingSpan>
               {balance && (
-                <span className="balance">
+                <Balance focused={focused}>
                   Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
-                </span>
+                </Balance>
               )}
             </Row>
           </ThemedText.Body2>

@@ -30,11 +30,17 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
   }
 `
 
+const Balance = styled(ThemedText.Body2)<{ focused: boolean }>`
+  opacity: ${({ focused }) => (focused ? 1 : 0)};
+  transition: opacity 0.25s ${({ focused }) => (focused ? 'ease-in' : 'ease-out')};
+`
+
 interface InputProps {
-  disabled?: boolean
+  disabled: boolean
+  focused: boolean
 }
 
-export default function Input({ disabled }: InputProps) {
+export default function Input({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
   const {
     trade: { state: tradeState },
@@ -86,12 +92,9 @@ export default function Input({ disabled }: InputProps) {
           <Row>
             <LoadingSpan $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingSpan>
             {balance && (
-              <ThemedText.Body2
-                className="balance"
-                color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}
-              >
+              <Balance color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined} focused={focused}>
                 Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
-              </ThemedText.Body2>
+              </Balance>
             )}
           </Row>
         </ThemedText.Body2>
