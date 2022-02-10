@@ -2,12 +2,12 @@ import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import Popover from 'lib/components/Popover'
-import { TooltipHandlers, useTooltip } from 'lib/components/Tooltip'
+import { useTooltip } from 'lib/components/Tooltip'
 import { toPercent } from 'lib/hooks/useAllowedSlippage'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'lib/icons'
 import { autoSlippageAtom, MAX_VALID_SLIPPAGE, maxSlippageAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import styled, { Color, ThemedText } from 'lib/theme'
-import { memo, PropsWithChildren, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 
 import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -33,30 +33,28 @@ const Custom = styled(BaseButton)<{ selected: boolean }>`
   padding: calc(0.75em - 3px) 0.625em;
 `
 
-interface OptionProps extends Partial<TooltipHandlers> {
+interface OptionProps {
   wrapper: typeof Button | typeof Custom
   selected: boolean
   onSelect: () => void
   icon?: ReactNode
+  tabIndex?: number
+  children: ReactNode
 }
 
-function Option({
-  wrapper: Wrapper,
-  children,
-  selected,
-  onSelect,
-  icon,
-  ...tooltipHandlers
-}: PropsWithChildren<OptionProps>) {
+const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
+  { wrapper: Wrapper, children, selected, onSelect, icon, tabIndex }: OptionProps,
+  ref
+) {
   return (
-    <Wrapper selected={selected} onClick={onSelect} {...tooltipHandlers}>
+    <Wrapper selected={selected} onClick={onSelect} ref={ref} tabIndex={tabIndex}>
       <Row gap={0.5}>
         {children}
         {icon ? icon : <LargeIcon icon={selected ? Check : undefined} size={1.25} />}
       </Row>
     </Wrapper>
   )
-}
+})
 
 enum WarningState {
   INVALID_SLIPPAGE = 1,
@@ -105,15 +103,16 @@ const Warning = memo(function Warning({ state, showTooltip }: { state: WarningSt
 })
 
 export default function MaxSlippageSelect() {
-  const input = useRef<HTMLInputElement>(null)
-  const focus = useCallback(() => input.current?.focus(), [input])
-
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
   const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
   const [warning, setWarning] = useState<WarningState | undefined>(toWarningState(toPercent(maxSlippage)))
-  const [showTooltip, setShowTooltip, tooltipProps] = useTooltip(/*showOnMount=*/ true)
-  useEffect(() => setShowTooltip(true), [warning, setShowTooltip]) // enables the tooltip when a warning is set
+
+  const option = useRef<HTMLButtonElement>(null)
+  const showTooltip = useTooltip(option.current)
+
+  const input = useRef<HTMLInputElement>(null)
+  const focus = useCallback(() => input.current?.focus(), [input])
 
   const processValue = useCallback(
     (value: number | undefined) => {
@@ -144,7 +143,8 @@ export default function MaxSlippageSelect() {
           selected={!autoSlippage}
           onSelect={onInputSelect}
           icon={warning && <Warning state={warning} showTooltip={showTooltip} />}
-          {...tooltipProps}
+          ref={option}
+          tabIndex={-1}
         >
           <Row color={warning === WarningState.INVALID_SLIPPAGE ? 'error' : undefined}>
             <DecimalInput
