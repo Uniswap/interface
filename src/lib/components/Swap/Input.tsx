@@ -61,14 +61,14 @@ export default function Input({ disabled }: InputProps) {
   const mockApproved = true
 
   // account for gas needed if using max on native token
-  const maxInputAmount = useMemo(() => maxAmountSpend(balance), [balance])
+  const maxAmount = useMemo(() => maxAmountSpend(balance), [balance])
 
   const onMax = useMemo(() => {
-    if (maxInputAmount?.greaterThan(0)) {
-      return () => updateSwapInputAmount(maxInputAmount.toExact())
+    if (maxAmount?.greaterThan(0)) {
+      return () => updateSwapInputAmount(maxAmount.toExact())
     }
     return
-  }, [maxInputAmount, updateSwapInputAmount])
+  }, [maxAmount, updateSwapInputAmount])
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
