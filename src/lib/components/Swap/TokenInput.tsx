@@ -76,6 +76,15 @@ export default function TokenInput({
     }
   }, [])
 
+  const input = useRef<HTMLInputElement>(null)
+  const onSelect = useCallback(
+    (currency: Currency) => {
+      onChangeCurrency(currency)
+      setTimeout(() => input.current?.focus(), 0)
+    },
+    [onChangeCurrency]
+  )
+
   return (
     <Column gap={0.25}>
       <TokenInputRow gap={0.5} onBlur={onBlur}>
@@ -86,6 +95,7 @@ export default function TokenInput({
             onChange={onChangeInput}
             disabled={disabled || !currency}
             $loading={Boolean(loading)}
+            ref={input}
           ></ValueInput>
         </ThemedText.H2>
         {showMax && (
@@ -95,7 +105,7 @@ export default function TokenInput({
             </ThemedText.ButtonMedium>
           </MaxButton>
         )}
-        <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onChangeCurrency} />
+        <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onSelect} />
       </TokenInputRow>
       {children}
     </Column>
