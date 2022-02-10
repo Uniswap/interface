@@ -1,10 +1,13 @@
 import { Trans } from '@lingui/macro'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
+import EtherscanLink from 'lib/components/EtherscanLink'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
 import { SwapTransactionInfo, Transaction } from 'lib/state/transactions'
 import styled, { ThemedText } from 'lib/theme'
+import ms from 'ms.macro'
 import { useCallback, useMemo, useState } from 'react'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
@@ -25,16 +28,9 @@ const TransactionRow = styled(Row)`
 
 function ElapsedTime({ tx }: { tx: Transaction<SwapTransactionInfo> }) {
   const [elapsedMs, setElapsedMs] = useState(0)
-  useInterval(
-    () => {
-      if (tx.info.response.timestamp) {
-        setElapsedMs(tx.info.response.timestamp - tx.addedTime)
-      } else {
-        setElapsedMs(Date.now() - tx.addedTime)
-      }
-    },
-    elapsedMs === tx.info.response.timestamp ? null : 1000
-  )
+
+  useInterval(() => setElapsedMs(Date.now() - tx.addedTime), tx.receipt ? null : ms`1s`)
+
   const toElapsedTime = useCallback((ms: number) => {
     let sec = Math.floor(ms / 1000)
     const min = Math.floor(sec / 60)
@@ -57,11 +53,6 @@ function ElapsedTime({ tx }: { tx: Transaction<SwapTransactionInfo> }) {
   )
 }
 
-const EtherscanA = styled.a`
-  color: ${({ theme }) => theme.accent};
-  text-decoration: none;
-`
-
 interface TransactionStatusProps {
   tx: Transaction<SwapTransactionInfo>
   onClose: () => void
@@ -74,6 +65,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
   const heading = useMemo(() => {
     return tx.receipt?.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>
   }, [tx.receipt?.status])
+
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
@@ -82,9 +74,9 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
       </StatusHeader>
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
-          <EtherscanA href="//etherscan.io" target="_blank">
+          <EtherscanLink type={ExplorerDataType.TRANSACTION} data={tx.info.response.hash}>
             <Trans>View on Etherscan</Trans>
-          </EtherscanA>
+          </EtherscanLink>
         </ThemedText.ButtonSmall>
         <ElapsedTime tx={tx} />
       </TransactionRow>
