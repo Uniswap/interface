@@ -16,8 +16,13 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
-const LoadingSpan = styled.span<{ $loading: boolean }>`
+export const LoadingSpan = styled.span<{ $loading: boolean }>`
   ${loadingOpacityCss};
+`
+
+export const Balance = styled(ThemedText.Body2)<{ focused: boolean }>`
+  opacity: ${({ focused }) => (focused ? 1 : 0)};
+  transition: opacity 0.25s ${({ focused }) => (focused ? 'ease-in' : 'ease-out')};
 `
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
@@ -30,12 +35,7 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
   }
 `
 
-const Balance = styled(ThemedText.Body2)<{ focused: boolean }>`
-  opacity: ${({ focused }) => (focused ? 1 : 0)};
-  transition: opacity 0.25s ${({ focused }) => (focused ? 'ease-in' : 'ease-out')};
-`
-
-interface InputProps {
+export interface InputProps {
   disabled: boolean
   focused: boolean
 }

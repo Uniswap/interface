@@ -4,25 +4,21 @@ import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
-import { loadingOpacityCss } from 'lib/css/loading'
 import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
-import { ReactNode, useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Column from '../Column'
 import Row from '../Row'
+import { Balance, InputProps, LoadingSpan } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
-
-const LoadingSpan = styled.span<{ $loading: boolean }>`
-  ${loadingOpacityCss};
-`
 
 const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   background-color: ${({ theme }) => theme.module};
@@ -40,18 +36,7 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   }
 `
 
-const Balance = styled.span<{ focused: boolean }>`
-  opacity: ${({ focused }) => (focused ? 1 : 0)};
-  transition: opacity 0.25s ${({ focused }) => (focused ? 'ease-in' : 'ease-out')};
-`
-
-interface OutputProps {
-  disabled: boolean
-  focused: boolean
-  children: ReactNode
-}
-
-export default function Output({ disabled, focused, children }: OutputProps) {
+export default function Output({ disabled, focused, children }: PropsWithChildren<InputProps>) {
   const { i18n } = useLingui()
 
   const {
