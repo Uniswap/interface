@@ -45,24 +45,22 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
-  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
-
-  const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
-
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
-
+  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
+  const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
   const { i18n } = useLingui()
+
   const details = useMemo(() => {
     const rows = []
     // @TODO(ianlapham): Check that provider fee is even a valid list item
 
     if (feeOptions) {
-      const parsedConvenienceFee = formatCurrencyAmount(outputAmount.multiply(feeOptions.fee), 6, i18n.locale)
-      rows.push([
-        t`${integrator} fee`,
-        `${parsedConvenienceFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`,
-      ])
+      const fee = outputAmount.multiply(feeOptions.fee)
+      if (fee.greaterThan(0)) {
+        const parsedFee = formatCurrencyAmount(fee, 6, i18n.locale)
+        rows.push([t`${integrator} fee`, `${parsedFee} ${outputCurrency.symbol || currencyId(outputCurrency)}`])
+      }
     }
 
     const priceImpactRow = [t`Price impact`, `${priceImpact.toFixed(2)}%`]
@@ -74,11 +72,8 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     rows.push(priceImpactRow)
 
     if (lpFeeAmount) {
-      const localizedFeeAmount = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
-      rows.push([
-        t`Liquidity provider fee`,
-        `${localizedFeeAmount} ${inputCurrency.symbol || currencyId(inputCurrency)}`,
-      ])
+      const parsedLpFee = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
+      rows.push([t`Liquidity provider fee`, `${parsedLpFee} ${inputCurrency.symbol || currencyId(inputCurrency)}`])
     }
 
     if (trade.tradeType === TradeType.EXACT_OUTPUT) {
@@ -110,6 +105,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     outputCurrency,
     inputCurrency,
   ])
+
   return (
     <>
       {details.map(([label, detail, color]) => (
