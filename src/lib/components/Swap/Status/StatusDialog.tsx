@@ -5,6 +5,7 @@ import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
 import { SwapTransactionInfo, Transaction } from 'lib/state/transactions'
 import styled, { ThemedText } from 'lib/theme'
+import ms from 'ms.macro'
 import { useCallback, useMemo, useState } from 'react'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
@@ -25,23 +26,11 @@ const TransactionRow = styled(Row)`
   flex-direction: row-reverse;
 `
 
-const Link = styled(EtherscanLink)`
-  text-decoration: none;
-`
-
 function ElapsedTime({ tx }: { tx: Transaction<SwapTransactionInfo> }) {
   const [elapsedMs, setElapsedMs] = useState(0)
-  useInterval(
-    () => {
-      if (tx.receipt && tx.info.response.timestamp) {
-        setElapsedMs(tx.addedTime - tx.info.response.timestamp)
-      } else {
-        // count up one second
-        setElapsedMs(Date.now() - tx.addedTime)
-      }
-    },
-    tx.receipt ? null : 1000
-  )
+
+  useInterval(() => setElapsedMs(Date.now() - tx.addedTime), tx.receipt ? null : ms`1s`)
+
   const toElapsedTime = useCallback((ms: number) => {
     let sec = Math.floor(ms / 1000)
     const min = Math.floor(sec / 60)
@@ -85,9 +74,9 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
       </StatusHeader>
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
-          <Link type={ExplorerDataType.TRANSACTION} data={tx.info.response.hash}>
+          <EtherscanLink type={ExplorerDataType.TRANSACTION} data={tx.info.response.hash}>
             <Trans>View on Etherscan</Trans>
-          </Link>
+          </EtherscanLink>
         </ThemedText.ButtonSmall>
         <ElapsedTime tx={tx} />
       </TransactionRow>
