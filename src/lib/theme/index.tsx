@@ -5,7 +5,7 @@ import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 
-import { mix, readableColor, transparentize } from 'polished'
+import { mix, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 
 import styled, { ThemedProvider } from './styled'
@@ -18,7 +18,12 @@ export * from './styled'
 export * from './theme'
 export * as ThemedText from './type'
 
-export const brand = 'hsl(331.3, 100%, 50%)'
+const white = 'hsl(0, 0%, 100%)'
+const black = 'hsl(0, 0%, 0%)'
+
+const brandLight = 'hsl(331.3, 100%, 50%)'
+const brandDark = 'hsl(215, 79%, 51.4%)'
+export const brand = brandLight
 
 const stateColors = {
   active: 'hsl(215, 79%, 51.4%)',
@@ -29,19 +34,19 @@ const stateColors = {
 
 export const lightTheme: Colors = {
   // surface
-  accent: brand,
+  accent: brandLight,
   container: 'hsl(220, 23%, 97.5%)',
   module: 'hsl(231, 14%, 90%)',
   interactive: 'hsl(229, 13%, 83%)',
   outline: 'hsl(225, 7%, 78%)',
-  dialog: 'hsl(0, 0%, 100%)',
+  dialog: white,
 
   // text
-  onAccent: 'hsl(0, 0%, 100%)',
-  primary: 'hsl(0, 0%, 0%)',
+  onAccent: white,
+  primary: black,
   secondary: 'hsl(227, 10%, 37.5%)',
   hint: 'hsl(224, 9%, 57%)',
-  onInteractive: 'hsl(0, 0%, 0%)',
+  onInteractive: black,
 
   // state
   ...stateColors,
@@ -49,23 +54,21 @@ export const lightTheme: Colors = {
   currentColor: 'currentColor',
 }
 
-const darkThemeAccent = 'hsl(215, 79%, 51.4%)'
-
 export const darkTheme: Colors = {
   // surface
-  accent: darkThemeAccent,
+  accent: brandDark,
   container: 'hsl(220, 10.7%, 11%)',
   module: 'hsl(222, 10.2%, 19.2%)',
-  interactive: 'hsl(224, 10.5%, 281%)',
+  interactive: 'hsl(224, 10%, 28%)',
   outline: 'hsl(227, 10%, 37.5%)',
-  dialog: 'hsl(0, 0%, 0%)',
+  dialog: black,
 
   // text
-  onAccent: readableColor(darkThemeAccent),
-  primary: 'hsl(0, 0%, 100%)',
+  onAccent: white,
+  primary: white,
   secondary: 'hsl(224, 8.7%, 57.1%)',
   hint: 'hsl(225, 10%, 47.1%)',
-  onInteractive: 'hsl(0, 0%, 100%)',
+  onInteractive: white,
 
   // state
   ...stateColors,
