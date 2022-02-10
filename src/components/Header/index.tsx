@@ -46,14 +46,14 @@ const HeaderFrame = styled.div`
 `
 
 const HeaderControls = styled.div<{ isConnected: boolean }>`
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
     bottom: 0px;
     left: 0px;
     display: flex;
     align-items: center;
-    justify-content: ${isConnected => (!isConnected ? 'space-between' : 'center')};
-    flex-direction: row-reverse;
+    justify-content: 'space-between';
+    // flex-direction: row-reverse;
     width: 100%;
     height: 72px;
     padding: 1rem;
@@ -78,7 +78,9 @@ const MoreLinksIcon = styled(HeaderElement)`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: flex;
+    width:100%;
     justify-content: flex-start;
+   
   `};
 `
 
@@ -89,13 +91,10 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
 `
 
 const HeaderLinks = styled(Row)`
-  justify-content: center;
+  justify-content: start;
   gap: 40px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    justify-content: flex-end;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    gap: 0;
+    display: none;
   `};
 `
 
@@ -134,10 +133,6 @@ export const StyledNavLink = styled(NavLink)`
     font-weight: 600;
     color: ${({ theme }) => theme.white};
   }
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-     display: none;
-  `};
 `
 
 const StyledActiveNavLinkWithBadge = styled(StyledNavLink)`
@@ -161,10 +156,6 @@ const StyledExternalLink = styled(ExternalLink)`
   line-height: 19.5px;
   width: fit-content;
   text-decoration: none !important;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    display: none;
-  `};
 `
 
 const HeaderSubRow = styled(RowFlat)`
@@ -243,15 +234,27 @@ const Divider = styled.div`
   width: 1px;
   background-color: #8780bf;
   margin-left: 40px;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    display: none;
-  `};
 `
 const StyledMobileLink = styled(NavLink)`
   display: none;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     display: flex;
+    font-weight:600;
+    font-size: 14px;
+  color:#C9C7DB;
   `};
+`
+const StyledExternalLinkMobile = styled(ExternalLink)`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: flex;
+    font-weight:600;
+    font-size: 14px;
+    color:#C9C7DB;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+   `};
 `
 const AdditionalDataWrap = styled.div`
   margin-left: auto;
@@ -365,11 +368,10 @@ function Header() {
       </AdditionalDataWrap>
 
       <HeaderControls isConnected={!!account}>
-        <HeaderSubRow>
+        <Flex style={{ gap: '26px' }} justifyContent={'space-between'}>
           <StyledMobileLink id="swap-nav-mobile-link" to="/swap" activeClassName="active">
             {t('swap')}
           </StyledMobileLink>
-
           <StyledMobileLink id="pool-nav-mobile-link" to="/pools" activeClassName="active">
             Pools
           </StyledMobileLink>
@@ -379,11 +381,20 @@ function Header() {
           <StyledMobileLink id="bridge-nav-link" to="/bridge" activeClassName="active">
             {t('bridge')}
           </StyledMobileLink>
+          <StyledExternalLinkMobile id="vote-nav-link" href={`https://snapshot.org/#/swpr.eth`}>
+            {t('vote')}
+          </StyledExternalLinkMobile>
+          <StyledExternalLinkMobile id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
+            {t('charts')}
+            <Text ml="4px" fontSize="11px">
+              ↗
+            </Text>
+          </StyledExternalLinkMobile>
+        </Flex>
 
-          <MoreLinksIcon>
-            <MobileOptions />
-          </MoreLinksIcon>
-        </HeaderSubRow>
+        <MoreLinksIcon>
+          <MobileOptions />
+        </MoreLinksIcon>
       </HeaderControls>
     </HeaderFrame>
   )
