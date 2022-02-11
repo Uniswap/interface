@@ -65,7 +65,7 @@ export interface ActionButtonProps {
   color?: Color
   disabled?: boolean
   action?: Action
-  onClick: () => void
+  onClick?: () => void
   children: ReactNode
 }
 

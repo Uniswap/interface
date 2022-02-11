@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Token, TradeType } from '@uniswap/sdk-core'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
+import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
@@ -44,7 +45,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const {
     trade,
     allowedSlippage,
-    currencies: { [Field.INPUT]: inputCurrency },
+    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
     feeOptions,
@@ -75,6 +76,12 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       }
     })
   }, [addTransaction, getApproval])
+
+  const {
+    wrapType,
+    execute: onWrap,
+    inputError,
+  } = useWrapCallback(inputCurrency, outputCurrency, inputCurrencyAmount?.toExact())
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disabled) return { disabled: true }
@@ -153,6 +160,20 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       })
   }, [addTransaction, independentField, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback])
 
+  if (wrapType !== WrapType.NOT_APPLICABLE) {
+    console.log(activeTrade)
+    return (
+      <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} disabled={!!inputError} onClick={onWrap}>
+        {inputError ? (
+          <WrapErrorText wrapInputError={inputError} />
+        ) : wrapType === WrapType.WRAP ? (
+          <Trans>Wrap</Trans>
+        ) : (
+          <Trans>Unwrap</Trans>
+        )}
+      </ActionButton>
+    )
+  }
   return (
     <>
       <ActionButton
