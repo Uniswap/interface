@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
@@ -58,9 +59,11 @@ export function App() {
                 <WalletContextProvider>
                   <DataUpdaters />
                   <QueryClientProvider client={queryClient}>
-                    <NotificationBannerWrapper>
-                      <NavStack isDarkMode={isDarkMode} />
-                    </NotificationBannerWrapper>
+                    <BottomSheetModalProvider>
+                      <NotificationBannerWrapper>
+                        <NavStack isDarkMode={isDarkMode} />
+                      </NotificationBannerWrapper>
+                    </BottomSheetModalProvider>
                   </QueryClientProvider>
                 </WalletContextProvider>
               </ErrorBoundary>

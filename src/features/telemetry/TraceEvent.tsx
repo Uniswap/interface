@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react'
-import { GestureResponderEvent } from 'react-native-modal'
+import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
 import { logEvent } from 'src/features/telemetry'
 import { EventName, PartialActionProps } from 'src/features/telemetry/constants'
 import { ITraceContext, Trace, TraceContext } from 'src/features/telemetry/Trace'
@@ -50,7 +50,7 @@ function getEventHandlers(
   actionProps: PartialActionProps
 ) {
   const eventHandlers: Partial<
-    Record<keyof PartialActionProps, (e: GestureResponderEvent) => void>
+    Record<keyof PartialActionProps, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>
   > = {}
 
   for (const eventHandlerName of getKeys(actionProps)) {

@@ -79,7 +79,6 @@
     "react-native-ble-plx": "https://github.com/below/react-native-ble-plx",
     "react-native-gesture-handler": "^1.10.2",
     "react-native-get-random-values": "^1.7.0",
-    "react-native-modal": "^13.0.0",
     "react-native-qrcode-svg": "^6.1.2",
     "react-native-reanimated": "^2.3.1.",
     "react-native-redash": "^16.2.3",

@@ -1,6 +1,11 @@
-import React, { PropsWithChildren } from 'react'
-import { ViewStyle } from 'react-native'
-import Modal, { Direction } from 'react-native-modal'
+import {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetModal as BaseModal,
+  BottomSheetView,
+  useBottomSheetDynamicSnapPoints,
+} from '@gorhom/bottom-sheet'
+import React, { PropsWithChildren, useEffect, useRef } from 'react'
 import { Box } from 'src/components/layout'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
@@ -12,6 +17,7 @@ type Props = {
   isVisible: boolean
   name: ModalName
   onClose: () => void
+  snapPoints?: Array<string | number>
 }
 
 const HandleBar = () => {
@@ -28,36 +34,41 @@ const HandleBar = () => {
   )
 }
 
-const SWIPE_DOWN: Direction[] = ['down']
-
-export function BottomSheetModal({
-  isVisible,
-  children,
-  name,
-  onClose,
-  disableSwipe,
-  hideHandlebar,
-}: Props) {
-  return (
-    <Modal
-      propagateSwipe
-      isVisible={isVisible}
-      style={modalStyle}
-      swipeDirection={disableSwipe ? undefined : SWIPE_DOWN}
-      swipeThreshold={50}
-      onBackdropPress={onClose}
-      onSwipeComplete={onClose}>
-      <Trace logImpression section={name}>
-        <Box backgroundColor="mainBackground" borderRadius="lg">
-          {!hideHandlebar ? <HandleBar /> : null}
-          {children}
-        </Box>
-      </Trace>
-    </Modal>
-  )
+const Backdrop = (props: BottomSheetBackdropProps) => {
+  return <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.7} />
 }
 
-const modalStyle: ViewStyle = {
-  justifyContent: 'flex-end',
-  margin: 0,
+const DEFAULT_SNAP_POINTS = ['CONTENT_HEIGHT']
+
+export function BottomSheetModal({ isVisible, children, name, onClose, snapPoints }: Props) {
+  const modalRef = useRef<BaseModal>(null)
+  const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
+    useBottomSheetDynamicSnapPoints(snapPoints || DEFAULT_SNAP_POINTS)
+
+  useEffect(() => {
+    if (isVisible) {
+      modalRef.current?.present()
+    } else {
+      modalRef.current?.close()
+    }
+  }, [isVisible])
+
+  return (
+    <BaseModal
+      ref={modalRef}
+      backdropComponent={Backdrop}
+      contentHeight={animatedContentHeight}
+      handleComponent={HandleBar}
+      handleHeight={animatedHandleHeight}
+      snapPoints={animatedSnapPoints}
+      onDismiss={onClose}>
+      <Trace logImpression section={name}>
+        <BottomSheetView onLayout={handleContentLayout}>
+          <Box backgroundColor="mainBackground" borderRadius="lg">
+            {children}
+          </Box>
+        </BottomSheetView>
+      </Trace>
+    </BaseModal>
+  )
 }
