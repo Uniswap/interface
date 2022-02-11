@@ -12,6 +12,7 @@ import {
   ArrowDown as ArrowDownIcon,
   ArrowRight as ArrowRightIcon,
   ArrowUp as ArrowUpIcon,
+  BarChart2 as BarChart2Icon,
   CheckCircle as CheckCircleIcon,
   ChevronDown as ChevronDownIcon,
   Clock as ClockIcon,
@@ -75,6 +76,7 @@ export const ArrowDown = icon(ArrowDownIcon)
 export const ArrowRight = icon(ArrowRightIcon)
 export const ArrowUp = icon(ArrowUpIcon)
 export const CheckCircle = icon(CheckCircleIcon)
+export const BarChart = icon(BarChart2Icon)
 export const ChevronDown = icon(ChevronDownIcon)
 export const Clock = icon(ClockIcon)
 export const HelpCircle = icon(HelpCircleIcon)

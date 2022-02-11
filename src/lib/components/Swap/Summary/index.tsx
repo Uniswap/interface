@@ -6,7 +6,7 @@ import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constant
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import useScrollbar from 'lib/hooks/useScrollbar'
-import { AlertTriangle, Expando, Info } from 'lib/icons'
+import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
 import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
@@ -93,6 +93,10 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const independentField = useAtomValue(independentFieldAtom)
   const { i18n } = useLingui()
 
+  const [open, setOpen] = useState(false)
+  const [details, setDetails] = useState<HTMLDivElement | null>(null)
+  const scrollbar = useScrollbar(details)
+
   const warning = useMemo(() => {
     if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
     if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
@@ -100,25 +104,31 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
     return
   }, [allowedSlippage, priceImpact])
 
-  const [open, setOpen] = useState(false)
-  const [details, setDetails] = useState<HTMLDivElement | null>(null)
-  const scrollbar = useScrollbar(details)
+  const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
   const [confirmedTrade, setConfirmedTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && confirmedTrade && tradeMeaningfullyDiffers(trade, confirmedTrade)),
     [confirmedTrade, trade]
   )
+
   const action = useMemo(() => {
     if (doesTradeDiffer) {
       return {
         message: <Trans>Price updated</Trans>,
+        icon: BarChart,
         onClick: () => setConfirmedTrade(trade),
         children: <Trans>Accept</Trans>,
       }
+    } else if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH) && !ackPriceImpact) {
+      return {
+        message: <Trans>High price impact</Trans>,
+        onClick: () => setAckPriceImpact(true),
+        children: <Trans>Acknowledge</Trans>,
+      }
     }
     return
-  }, [doesTradeDiffer, trade])
+  }, [ackPriceImpact, doesTradeDiffer, priceImpact, trade])
 
   if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
     return null
