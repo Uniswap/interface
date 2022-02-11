@@ -93,6 +93,9 @@ export default function BridgeMenuGroup() {
           <MenuItem id="link" href="https://optics.app/">
             Optics
           </MenuItem>
+          <MenuItem id="link" href="https://bridge.orbitchain.io/">
+            Orbit
+          </MenuItem>
         </MenuFlyout>
       )}
     </StyledMenu>

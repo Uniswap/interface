@@ -437,6 +437,11 @@ export default function Header() {
                   Optics
                 </StyledDrawerExternalLink>
               </StyledSubMenuItem>
+              <StyledSubMenuItem>
+                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://bridge.orbitchain.io/'}>
+                  Orbit
+                </StyledDrawerExternalLink>
+              </StyledSubMenuItem>
               <StyledMenuItem>
                 <StyledNavLink id={'stake-drawer-nav-link'} to={'/stake'} onClick={onDrawerClose}>
                   {t('stake')}
