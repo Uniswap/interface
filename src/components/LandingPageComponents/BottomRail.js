@@ -36,9 +36,7 @@ const StyledBottomRail = styled.section`
     bottom: -390px;
     left: 0;
     @media screen and (max-width: ${breakpoints.l}) {
-        .bottom-rail-container {
-            top: 640px;
-        }
+        top: 640px;
     }
     @media screen and (max-width: ${breakpoints.md}) {
         display: none;

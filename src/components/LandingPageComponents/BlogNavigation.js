@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Layout from './layout/Layout'
 import Button from './common/Button'
@@ -6,17 +6,6 @@ import { BlogContent } from '../../utils/ui-constants'
 import { breakpoints } from '../../utils/theme'
 
 const BlogNavigation = () => {
-    useEffect(() => {
-        fetch("https://cors-anywhere.herokuapp.com/https://medium.com/feed/swapr")
-            .then(response => response)
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => {
-                console.error(error)
-            })
-    }, []);
-
     return (
         <StyledBlogNavigation data-aos={'fade-up'} width={'main-width'} id={'blog-navigation'}>
             <ul className={'blog-list'}>

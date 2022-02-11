@@ -5,8 +5,8 @@ import {breakpoints} from './../../utils/theme'
 import {TimelineData} from './../../utils/milestones'
 
 import Milestone from './Milestone'
+import TimelineControls from './TimelineControls'
 import BottomRail from './BottomRail'
-import NavigationButton from './../../assets/images/timeline-assets/navigation-button.png'
 import BackgroundBlurTop from './../../assets/images/timeline-assets/background-blur-top.png'
 import BackgroundBlur from './../../assets/images/timeline-assets/background-blur.png'
 
@@ -18,14 +18,19 @@ const Timeline = () => {
     
     const [stepNumber, setStepNumber] = useState(1);
     const [timelineDirection, setTimelineDirection] = useState(null);
+    const [isMobileTimeline, setIsMobileTimeline] = useState(false);
 
     const timelineContentRef = useRef(null);
 
     const buildGroup = () => {
-        return TimelineData.slice(stepNumber - 1, stepNumber + 6);
+        if (!isMobileTimeline) {
+            return TimelineData.slice(stepNumber - 1, stepNumber + 6);
+        } else {
+            return TimelineData.slice(stepNumber -1, stepNumber + 3);
+        }
     }
 
-    const handleElementsAnimation = (callback) => {
+    const handleElementsAnimation = () => {
         const milestones = timelineContentRef.current.querySelectorAll('.milestone');
         milestones.forEach((el) => {
             const animableElements = el.querySelector('.milestone-content');
@@ -47,6 +52,22 @@ const Timeline = () => {
         
         setTimelineDirection(null);
     }
+
+    useEffect(() => {
+        window.addEventListener('resize', (e) => {
+            setIsMobileTimeline(e.target.innerWidth < 960);
+        })
+    }, []);
+
+    useEffect(() => {
+        setIsMobileTimeline(window.innerWidth < 960);
+    }, []);
+
+    useEffect(() => {
+        if (!isMobileTimeline && TimelineData.length <= 7) {
+            setStepNumber(1)
+        }
+    }, [isMobileTimeline]);
 
     const prevStep = () => {
         setTimelineDirection('left');
@@ -70,7 +91,7 @@ const Timeline = () => {
         }
         // 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [isMobileTimeline, stepNumber])
 
     useEffect(() => {
         handleElementsAnimation()
@@ -89,9 +110,11 @@ const Timeline = () => {
                     setIsCurrentPost(true)
                 }
             }
-            setCurrentMilestoneGroupPosition(8)
         }
-    }, [currentMilestoneGroup, currentMilestonePosition, stepNumber])
+    }, [currentMilestoneGroup, 
+        currentMilestonePosition, 
+        stepNumber]
+    )
 
     return (
         <StyledTimeline width={'full-width'}>
@@ -111,22 +134,13 @@ const Timeline = () => {
                         ))}
                     </ul>
                 </div>
-                <div className="timeline-controls">
-                    <div 
-                        disabled={stepNumber <= 1}
-                        onClick={(e) => {
-                            prevStep();
-                        }} 
-                        className="timeline-navigation-button left" 
-                    />
-                    <div 
-                        disabled={stepNumber > TimelineData.length - 7}
-                        onClick={(e) => {
-                            nextStep();
-                        }} 
-                        className="timeline-navigation-button right" 
-                    />
-                </div>
+                <TimelineControls 
+                    stepNumber={stepNumber}
+                    timelineData={TimelineData}
+                    isMobileTimeline={isMobileTimeline}
+                    prevStep={prevStep}
+                    nextStep={nextStep}
+                />
                 <div className="timeline-text">
                     <span data-aos="fade">Swapr Roadmap</span>
                 </div>
@@ -214,63 +228,6 @@ const StyledTimeline = styled(Layout)`
             position: relative;
             @media screen and (max-width: 959px) {
                 flex-direction: column;
-            }
-        }
-        .timeline-controls {
-            position: absolute;
-            top: calc(100% - 124px);
-            width: 100%;
-            @media screen and (max-width: 959px) {
-                height: 100%;
-                top: 0;
-            }
-            .timeline-navigation-button {
-                width: 56px;
-                height: 56px;
-                position: absolute;
-                top: 0;
-                background-image: url('${NavigationButton}');
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: contain;
-                cursor: pointer;
-                transition: ease-in-out 0.1s all;
-                &[disabled] {
-                    opacity: 0;
-                    pointer-events: none;
-                    @media screen and (max-width: 959px) {
-                        /* opacity: 0.5; */
-                    }
-                }
-                &:active {
-                    transform: scale(0.9);
-                }
-                &.left {
-                    left: -76px;
-                    @media screen and (max-width: 959px) {
-                        left: -64px;
-                        top: -100px;
-                        transform: rotate(90deg);
-                    }
-                }
-                &.right {
-                    right: -42px;
-                    transform: rotate(180deg);
-                    top: 56px;
-                    @media screen and (max-width: 959px) {
-                        left: -34px;
-                        bottom: -40px;
-                        top: unset;
-                        transform: rotate(-90deg);
-                    }
-                    &:active {
-                        transform: rotate(180deg) scale(0.9);
-                        @media screen and (max-width: 959px) {
-                            transform: rotate(-90deg) scale(0.9);
-                        }
-                    }
-                }
-                /* filter: drop-shadow(0px 0px 10px #703FFF); */
             }
         }
         .timeline-text {

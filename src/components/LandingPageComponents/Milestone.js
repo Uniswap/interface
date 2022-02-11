@@ -86,14 +86,7 @@ const StyledMilestone = styled.li`
         padding-bottom: 40px;
         min-height: unset;
     }
-    &:first-child,
-    &:nth-child(2) {
-        @media screen and (max-width: 959px) {
-            display: none;
-        }
-    }
-    /* FIRST CHILD ON MOBILE VIEW */
-    &:nth-child(3) {
+    &:first-child {
         /* background: blue !important; */
         @media screen and (max-width: 959px) {
             &:before {
@@ -107,7 +100,6 @@ const StyledMilestone = styled.li`
                 left: -36px;
                 content: '';
                 background: rgba(135,128,191,0.5);
-                display: none;
             }
             &.past-milestone {
                 &:after {
@@ -116,7 +108,7 @@ const StyledMilestone = styled.li`
             }
         }
     }
-    &:nth-child(4) {
+    &:nth-child(2) {
         @media screen and (max-width: 959px) {
             margin-bottom: 34px;
         }
@@ -149,7 +141,7 @@ const StyledMilestone = styled.li`
             }
         }
     }
-    &:nth-child(5) {
+    &:nth-child(3) {
         /* background: blue !important; */
         @media screen and (max-width: 959px) {
             margin-top: 74px;
@@ -165,6 +157,29 @@ const StyledMilestone = styled.li`
                 top: -75px;
                 /* transform-origin: 50% 0; */
                 /* transform: rotate(-45deg); */
+            }
+        }
+    }
+    &:nth-child(3),
+    &:nth-child(4) {
+        @media screen and (max-width: 959px) {
+            left: 32px;
+        }
+        .milestone-content {
+            @media screen and (max-width: 959px) {
+                padding: 0 0 60px;
+                position: relative;
+            }
+        }
+        &:before {
+            @media screen and (max-width: 959px) {
+                bottom: 0;
+            }
+        }
+        .milestone-pointer {
+            @media screen and (max-width: 959px) {
+                top: 0;
+                bottom: 0;
             }
         }
     }
@@ -388,46 +403,22 @@ const StyledMilestone = styled.li`
             left: 100%;
             content: '';
             top: calc(100% + 54px);
-            @media screen and (max-width: 959px) {
-                display: none;
-            }
-        }
-    }
-    &:nth-child(7) {
-        &:before {
-            @media screen and (max-width: 959px) {
-                display: none;
-            }
         }
     }
     &:nth-child(5),
     &:nth-child(6),
     &:nth-child(7) {
         position: relative;
-        @media screen and (max-width: 959px) {
-            left: 32px;
-        }
         .milestone-content {
             padding: 92px 0 0;
             position: absolute;
             top: calc(100% + 60px);
-            @media screen and (max-width: 959px) {
-                padding: 0 0 60px;
-                position: relative;
-            }
         }
         &:before {
             bottom: -56px;
-            @media screen and (max-width: 959px) {
-                bottom: 0;
-            }
         }
         .milestone-pointer {
             bottom: -66px;
-            @media screen and (max-width: 959px) {
-                top: 0;
-                bottom: 0;
-            }
         }
         .milestone-line {
             height: 80px;
