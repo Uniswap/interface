@@ -1,7 +1,9 @@
+import { Plural, Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ReactComponent as AutoRouterIcon } from 'assets/svg/auto_router.svg'
 import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
+import { Badge, BadgeDark } from 'lib/components/Badge'
 import Column from 'lib/components/Column'
 import Row from 'lib/components/Row'
 import Rule from 'lib/components/Rule'
@@ -10,7 +12,7 @@ import styled, { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
-import { getTokenPath, RoutingDiagramEntry } from './utils'
+import { getTokenPath, routerGradientCss, RoutingDiagramEntry } from './utils'
 
 const Wrapper = styled(Column)`
   padding: 0.25em;
@@ -22,17 +24,8 @@ const RouteRow = styled(Row)`
 `
 
 const RouteDetailsContainer = styled(Row)`
-  padding: 0.1rem 0.5rem;
+  padding: 0.1em 0.5em;
   position: relative;
-`
-
-const ShortDottedLine = styled.div`
-  align-items: center;
-  display: flex;
-  opacity: 0.5;
-  overflow: hidden;
-  width: 71px;
-  z-index: 1;
 `
 
 const DottedLine = styled.div`
@@ -44,30 +37,22 @@ const DottedLine = styled.div`
   z-index: 1;
 `
 
+const ShortDottedLine = styled(DottedLine)`
+  overflow: hidden;
+  position: relative;
+  width: 71px;
+`
+
 const DotColor = styled(DotLine)`
   path {
     stroke: ${({ theme }) => theme.secondary};
   }
 `
 
-const BaseBadge = styled(Row)`
-  background-color: ${({ theme }) => theme.outline};
-  border-radius: 0.5em;
-  grid-gap: 0.375em;
-  padding: 0.25em 0.375em;
-  z-index: 2; // To cover the dotted line.
-`
-
 // Used to cutoff space between badges and dotted lines.
-const TransparentBadgeWrapper = styled(BaseBadge)`
+const TransparentBadgeWrapper = styled(Badge)`
   background-color: ${({ theme }) => theme.dialog};
   padding: 0 4px;
-`
-
-const VersionBadge = styled(BaseBadge)`
-  background-color: ${({ theme }) => theme.module};
-  border-radius: 0.25em;
-  padding: 0 0.125em;
 `
 
 const DetailsRow = styled(Row)`
@@ -76,15 +61,12 @@ const DetailsRow = styled(Row)`
   width: 100%;
 `
 
-const StyledAutoRouterLabel = styled(ThemedText.Body1)`
+const StyledAutoRouterLabel = styled(ThemedText.ButtonSmall)`
   color: #27ae60;
   font-weight: 500;
   line-height: 1rem;
-  @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
-    background-image: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+
+  ${routerGradientCss}
 `
 
 const StyledAutoRouterIcon = styled(AutoRouterIcon)`
@@ -98,13 +80,13 @@ const StyledAutoRouterIcon = styled(AutoRouterIcon)`
 function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
   return (
     <TransparentBadgeWrapper>
-      <BaseBadge>
+      <Badge gap={0.375}>
         <Row>
           <TokenImg token={currency0} />
           <TokenImg token={currency1} />
         </Row>
-        <ThemedText.Subhead1 fontSize={14}>{feeAmount / 10000}%</ThemedText.Subhead1>
-      </BaseBadge>
+        <ThemedText.Subhead2>{feeAmount / 10000}%</ThemedText.Subhead2>
+      </Badge>
     </TransparentBadgeWrapper>
   )
 }
@@ -117,11 +99,15 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Curren
       <Row justify="space-between">
         <Row gap={0.25}>
           <StyledAutoRouterIcon />
-          <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
+          <StyledAutoRouterLabel>
+            <Trans>Auto Router</Trans>
+          </StyledAutoRouterLabel>
         </Row>
-        <ThemedText.Body1 fontSize={14}>
-          Best routes via {routes.length} hop{routes.length > 1 ? 's' : ''}
-        </ThemedText.Body1>
+        <ThemedText.ButtonSmall>
+          <Trans>
+            Best route via {routes.length} <Plural value={routes.length} one="hop" other="hops" />
+          </Trans>
+        </ThemedText.ButtonSmall>
       </Row>
       <Rule />
       {routes.map((route, index) => (
@@ -136,14 +122,12 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Curren
             </DottedLine>
             <DetailsRow>
               <TransparentBadgeWrapper>
-                <BaseBadge>
+                <Badge gap={0.375}>
                   <ThemedText.ButtonSmall color="secondary">{route.percent.toSignificant(2)}%</ThemedText.ButtonSmall>
-                  <VersionBadge>
-                    <ThemedText.Caption color="secondary" fontWeight={600} fontSize={'10px'}>
-                      {route.protocol.toUpperCase()}
-                    </ThemedText.Caption>
-                  </VersionBadge>
-                </BaseBadge>
+                  <BadgeDark padding="0.125em" borderRadius={0.25}>
+                    <ThemedText.Badge color="secondary">{route.protocol.toUpperCase()}</ThemedText.Badge>
+                  </BadgeDark>
+                </Badge>
               </TransparentBadgeWrapper>
               <Row justify="space-evenly" flex style={{ width: '100%' }}>
                 {route.path.map(([currency0, currency1, feeAmount], index) => (

@@ -2,6 +2,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { css } from 'lib/theme'
 import { InterfaceTrade } from 'state/routing/types'
 
 export interface RoutingDiagramEntry {
@@ -12,7 +13,17 @@ export interface RoutingDiagramEntry {
 
 const V2_DEFAULT_FEE_TIER = 3000
 
-// Loops through all routes on a trade and returns an array of diagram entries
+export const routerGradientCss = css`
+  @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
+    background-image: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+`
+
+/**
+ * Loops through all routes on a trade and returns an array of diagram entries.
+ */
 export function getTokenPath(trade: InterfaceTrade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
   return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
     const portion =
