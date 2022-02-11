@@ -1,5 +1,6 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { StaticV2SubgraphProvider, StaticV3SubgraphProvider } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useEffect, useMemo, useState } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
@@ -14,7 +15,12 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 // The following configs are used to reduce latency when using the client side SOR
 const MIN_DISTRIBUTION_PERCENT = 5
 
-const config = { protocols, distributionPercent: MIN_DISTRIBUTION_PERCENT }
+const config = {
+  protocols,
+  distributionPercent: MIN_DISTRIBUTION_PERCENT,
+  v3PoolProvider: StaticV3SubgraphProvider,
+  v2PoolProvider: StaticV2SubgraphProvider,
+}
 
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
