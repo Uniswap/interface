@@ -85,7 +85,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       } else if (approval === ApprovalState.PENDING) {
         return {
           disabled: true,
-          update: {
+          action: {
             message: (
               <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
                 <Row gap={0.25}>
@@ -102,9 +102,10 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
         }
       } else if (approval === ApprovalState.NOT_APPROVED) {
         return {
-          update: {
+          action: {
             message: <Trans>Approve {inputCurrencyAmount.currency.symbol} first</Trans>,
-            action: <Trans>Approve</Trans>,
+            onClick: addApprovalTransaction,
+            children: <Trans>Approve</Trans>,
           },
         }
       }
