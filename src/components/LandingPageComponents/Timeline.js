@@ -67,6 +67,10 @@ const Timeline = () => {
         if (!isMobileTimeline && TimelineData.length <= 7) {
             setStepNumber(1)
         }
+
+        if(isMobileTimeline) {
+            setStepNumber(2)
+        }
     }, [isMobileTimeline]);
 
     const prevStep = () => {
