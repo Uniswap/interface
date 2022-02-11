@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Layout from './layout/Layout'
 import Button from './common/Button'

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Button from './common/Button'
 import { breakpoints } from './../../utils/theme'
@@ -9,7 +9,6 @@ const FeatureItem = (props) => {
     const [isSafari, setIsSafari] = useState(false);
 
     useEffect(() => {
-        // let safari;
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         setIsSafari(isSafari);
     }, []);
@@ -26,7 +25,7 @@ const FeatureItem = (props) => {
                 }
             }
         })
-    }, []);
+    }, [props.id]);
 
     return (
         <StyledFeatureItem className="feature-item" data-aos="fade-up" id={props.id}>
@@ -34,12 +33,14 @@ const FeatureItem = (props) => {
                 <div className="image-container">
                 {!isSafari ? (
                     isElementVisible && (
-                        <object type="image/svg+xml" data={feature.animation}></object>
-                        // <embed src={feature.animation} />
-                        // <img src={feature.image} alt="image"/>
+                        <object 
+                            type="image/svg+xml" 
+                            data={feature.animation} 
+                            aria-label="Swapr feature"
+                        />
                     )
                 ) : (
-                    <img src={feature.image} alt="image"/>
+                    <img src={feature.image} alt="Swapr feature"/>
                 )}
                 </div>
                 <div className="feature-content">

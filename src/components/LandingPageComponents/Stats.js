@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import $ from 'jquery'
 import styled from 'styled-components'
 import { gradients, breakpoints } from '../../utils/theme'
 import { StatsContent } from '../../utils/ui-constants'
@@ -14,7 +13,8 @@ const Stats = () => {
     let [isChartActive, setIsChartActive] = useState(false);
 
     useEffect(() => {
-        const fetchPromise = fetch('https://api.llama.fi/tvl/swapr').then((data) => {
+        const fetchPromise = fetch('https://api.llama.fi/tvl/swapr')
+        fetchPromise.then((data) => {
             return data.json();
         }).then((decodedTvl) => {
             let stringTvl = decodedTvl.toString();
@@ -83,7 +83,7 @@ const Stats = () => {
                                     {statsItem.companies.map((company, key) => (
                                         <li key={key} className="routing-company">
                                             <a href={company.href}>
-                                                <img src={company.image} />
+                                                <img src={company.image} alt="Company logo"/>
                                                 <span>{company.name}</span>
                                             </a>
                                         </li>

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import styled, {keyframes} from 'styled-components'
 import { HeroContent, RoutingThroughContent } from './../../../utils/ui-constants'
-import { watchPosition } from '../../../utils/helper-functions'
 import { gradients, breakpoints } from '../../../utils/theme'
 import HeroImage from './../../../assets/images/hero-graphic-desktop.png'
 import HeroImageLeft from './../../../assets/images/hero-graphic-left.png'
@@ -106,7 +105,11 @@ const Hero = (props) => {
                                 >
                                     {item.map((logo, key) => (
                                         <li key={key}>
-                                            <img src={logo.img} title={logo.title} />
+                                            <img 
+                                                src={logo.img} 
+                                                title={logo.title} 
+                                                alt="Logos"
+                                            />
                                         </li>
                                     ))}
                                 </div>
@@ -135,10 +138,18 @@ const Hero = (props) => {
                         <Marquee speed={50} gradientColor={[12,11,18]}>
                             <div className="marquee-inner">
                                 {RoutingThroughContent.companies.map((company, key) => (
-                                    <img key={key} src={company.img} />
+                                    <img 
+                                        key={key} 
+                                        src={company.img} 
+                                        alt="Routing through..." 
+                                    />
                                 ))}
                                 {RoutingThroughContent.companies.map((company, key) => (
-                                    <img key={key + '-copy'} src={company.img} />
+                                    <img 
+                                        key={key} 
+                                        src={company.img} 
+                                        alt="Routing through..." 
+                                    />
                                 ))}
                             </div>
                         </Marquee>
@@ -159,10 +170,10 @@ const Hero = (props) => {
                         <Marquee speed={50} gradientColor={[12,11,18]}>
                             <div className="marquee-inner">
                                 {RoutingThroughContent.companies.map((company, key) => (
-                                    <img key={key} src={company.img} />
+                                    <img key={key} src={company.img} alt="Routing through..."/>
                                 ))}
                                 {RoutingThroughContent.companies.map((company, key) => (
-                                    <img key={key + '-copy'} src={company.img} />
+                                    <img key={key + '-copy'} src={company.img} alt="Routing through..."/>
                                 ))}
                             </div>
                         </Marquee>

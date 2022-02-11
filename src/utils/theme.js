@@ -1,4 +1,4 @@
-import { rgba, lighten, darken, transparentize } from "polished";
+import { lighten, darken, transparentize } from "polished";
 
 const colorList = [
     'slateblue',

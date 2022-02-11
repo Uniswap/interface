@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { FooterContent } from './../../../utils/ui-constants'
 import { breakpoints } from './../../../utils/theme'
 import { scrollTo } from './../../../utils/helper-functions';
 import Layout from './Layout'
-import Button from './../common/Button';
 import NavigationButton from './../../../assets/images/timeline-assets/navigation-button.png'
 
 import SwaprLogo from './../../../assets/images/swapr-logo.svg'
@@ -13,7 +12,7 @@ const Footer = () => {
     return (
         <StyledFooter data-aos={'fade-up'} id="footer" width="main-width">
             <div className="footer-top">
-                <img src={SwaprLogo} />
+                <img src={SwaprLogo} alt="Swapr"/>
             </div>
             <div className="footer-content">
                 <ul className="footer-column-list">

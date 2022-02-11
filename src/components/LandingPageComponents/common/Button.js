@@ -24,50 +24,52 @@ const Button = (props) => {
             data-aos-delay={dataAOSDelay}
             className={`button ${type} ${size} ${className}`}
         >
-            <a href={to && to} onClick={onClick && onClick} title={title} target={external ? '_blank' : ''}>
-                {type == 'dark' && (
-                    <>
-                        <svg width="0" height="0">
-                            <linearGradient id="button-grad" x1="0" x2="0" y1="100%" y2="0">
-                                <stop offset="0%"/>
-                                <stop offset="50%"/>
-                                <stop offset="100%"/>
-                            </linearGradient>
-                            <symbol id="button-border" overflow="visible">
-                                <rect width="100%" height="100%" rx={'25'} ry={'25'}/>
-                            </symbol>
-                        </svg>
-                        <svg className="button-border">
-                            <use href="#button-border"/>
-                        </svg>
-                    </>
-                )}
-                {type == 'dark-outline' && (
-                    <>
-                        <svg width="0" height="0">
-                            <linearGradient id="button-grad-dark-outline" x1="0%" x2="100%">
-                                <stop offset="0%"/>
-                                <stop offset="50%"/>
-                                <stop offset="100%"/>
-                            </linearGradient>
-                            <symbol id="button-border-dark-outline" overflow="visible">
-                                <rect width="100%" height="100%" rx={'20'} ry={'20'}/>
-                            </symbol>
-                        </svg>
-                        <svg className="button-border-dark-outline"><use href="#button-border-dark-outline"/></svg>
-                    </>
-                )}
-                {type != 'icon' ? (
-                    <>
-                        <span className="label">{label}</span>
-                        <span className="default-background"></span>
-                        <span className="active-background"></span>
-                        <span className="hover-background"></span>
-                    </>
-                ) : (
-                    <img src={iconImage}/>
-                )}
-            </a>
+            {elementTag === 'a' && (
+                <a href={to && to} onClick={onClick && onClick} title={title} target={external ? '_blank' : ''}>
+                    {type === 'dark' && (
+                        <>
+                            <svg width="0" height="0">
+                                <linearGradient id="button-grad" x1="0" x2="0" y1="100%" y2="0">
+                                    <stop offset="0%"/>
+                                    <stop offset="50%"/>
+                                    <stop offset="100%"/>
+                                </linearGradient>
+                                <symbol id="button-border" overflow="visible">
+                                    <rect width="100%" height="100%" rx={'25'} ry={'25'}/>
+                                </symbol>
+                            </svg>
+                            <svg className="button-border">
+                                <use href="#button-border"/>
+                            </svg>
+                        </>
+                    )}
+                    {type === 'dark-outline' && (
+                        <>
+                            <svg width="0" height="0">
+                                <linearGradient id="button-grad-dark-outline" x1="0%" x2="100%">
+                                    <stop offset="0%"/>
+                                    <stop offset="50%"/>
+                                    <stop offset="100%"/>
+                                </linearGradient>
+                                <symbol id="button-border-dark-outline" overflow="visible">
+                                    <rect width="100%" height="100%" rx={'20'} ry={'20'}/>
+                                </symbol>
+                            </svg>
+                            <svg className="button-border-dark-outline"><use href="#button-border-dark-outline"/></svg>
+                        </>
+                    )}
+                    {type !== 'icon' ? (
+                        <>
+                            <span className="label">{label}</span>
+                            <span className="default-background"></span>
+                            <span className="active-background"></span>
+                            <span className="hover-background"></span>
+                        </>
+                    ) : (
+                        <img src={iconImage} alt="Button icon" />
+                    )}
+                </a>
+            )}
         </StyledButtonWrapper>
     )
 };

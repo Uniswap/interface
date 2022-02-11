@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { FeaturesContent } from './../../utils/ui-constants'
 import { gradients, breakpoints } from './../../utils/theme'
@@ -12,7 +12,7 @@ const Features = () => {
             <section className="top-banner" data-aos={'fade-up'}>
                 <strong>{FeaturesContent.topBanner.title}</strong>
                 <div className="top-banner-logos">
-                    {FeaturesContent.topBanner.logos.map((logo, index) => <img key={index} src={logo} />)}
+                    {FeaturesContent.topBanner.logos.map((logo, index) => <img key={index} src={logo} alt={'Swap, Farm, Bridge & Vote. DeFi unchained.'} />)}
                 </div>
             </section>
             <span className="pre-header">

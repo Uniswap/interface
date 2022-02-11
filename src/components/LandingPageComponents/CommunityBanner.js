@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import styled, {keyframes} from 'styled-components'
 import { gradients, breakpoints } from './../../utils/theme'
 import { CommunityBannerContent } from './../../utils/ui-constants'
