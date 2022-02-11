@@ -117,7 +117,7 @@ export const CHAIN_INFO: ChainInfo = {
     logo: ARBITRUM_LOGO,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
+    subgraphUrl: 'https://graphql-proxy-f184dc0990baf289.onporter.run/graphql',
   },
   [ChainId.ArbitrumRinkeby]: {
     blockWaitMsBeforeWarning: 600000, // 10 minutes
@@ -137,7 +137,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Ethereum',
     logo: ETHEREUM_LOGO,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+    subgraphUrl: 'https://graphql-proxy-f184dc0990baf289.onporter.run/graphql',
   },
   [ChainId.Rinkeby]: {
     docs: 'https://docs.uniswap.org/',
@@ -146,7 +146,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Rinkeby',
     logo: RINKEBY_LOGO,
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-rinkeby',
+    subgraphUrl: 'https://graphql-proxy-f184dc0990baf289.onporter.run/graphql',
   },
   [ChainId.Ropsten]: {
     docs: 'https://docs.uniswap.org/',
@@ -196,7 +196,7 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://kovan.optimism.io'],
     nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
     statusPage: 'https://optimism.io/status',
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism-dev',
+    subgraphUrl: 'https://graphql-proxy-f184dc0990baf289.onporter.run/graphql',
   },
   [ChainId.Polygon]: {
     blockWaitMsBeforeWarning: 600000, // 10 minutes
@@ -208,7 +208,7 @@ export const CHAIN_INFO: ChainInfo = {
     logo: POLYGON_LOGO,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://polygon-rpc.com/'],
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
+    subgraphUrl: 'https://graphql-proxy-f184dc0990baf289.onporter.run/graphql',
   },
   [ChainId.PolygonMumbai]: {
     blockWaitMsBeforeWarning: 600000, // 10 minutes

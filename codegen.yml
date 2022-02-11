@@ -3,7 +3,7 @@ hooks:
     - prettier --write
 generates:
   ./src/features/historicalChainData/generated/uniswap-hooks.ts:
-    schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
+    schema: 'https://graphql-proxy-f184dc0990baf289.onporter.run/graphql'
     documents: 'src/features/historicalChainData/queries/*.graphql'
     plugins:
       - typescript

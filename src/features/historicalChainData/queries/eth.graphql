@@ -1,5 +1,5 @@
 query ethPrices($chainId: Int!) {
-  current: bundles(first: 1, subgraphError: allow) {
+  current: bundles(chainId: $chainId, first: 1, subgraphError: allow) {
     ethPriceUSD
   }
 }
