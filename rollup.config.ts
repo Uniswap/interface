@@ -23,7 +23,7 @@ import { CompilerOptions } from 'typescript'
 
 const REPLACEMENTS = {
   'process.env.REACT_APP_IS_WIDGET': true,
-  'process.env.REACT_APP_LOCALES': "'./locales'",
+  'process.env.REACT_APP_LOCALES': '"./locales"',
 }
 
 const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
