@@ -16,7 +16,7 @@ import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
-import ActionButton from '../../ActionButton'
+import ActionButton, { Action } from '../../ActionButton'
 import Column from '../../Column'
 import { Header } from '../../Dialog'
 import Row from '../../Row'
@@ -112,7 +112,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
     [confirmedTrade, trade]
   )
 
-  const action = useMemo(() => {
+  const action = useMemo((): Action | undefined => {
     if (doesTradeDiffer) {
       return {
         message: <Trans>Price updated</Trans>,

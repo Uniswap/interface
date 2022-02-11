@@ -54,10 +54,17 @@ export const Overlay = styled(Row)<{ action?: boolean }>`
   ${({ action }) => action && actionCss}
 `
 
+export interface Action {
+  message: ReactNode
+  icon?: Icon
+  onClick: () => void
+  children: ReactNode
+}
+
 export interface ActionButtonProps {
   color?: Color
   disabled?: boolean
-  action?: { message: ReactNode; icon?: Icon; onClick: () => void; children: ReactNode }
+  action?: Action
   onClick: () => void
   children: ReactNode
 }

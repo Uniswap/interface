@@ -22,7 +22,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
-import ActionButton from '../ActionButton'
+import ActionButton, { ActionButtonProps } from '../ActionButton'
 import Dialog from '../Dialog'
 import EtherscanLink from '../EtherscanLink'
 import Row from '../Row'
@@ -76,7 +76,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     })
   }, [addTransaction, getApproval])
 
-  const actionProps = useMemo(() => {
+  const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disabled) return { disabled: true }
 
     if (chainId && inputCurrencyAmount) {
@@ -85,7 +85,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       } else if (approval === ApprovalState.PENDING) {
         return {
           disabled: true,
-          update: {
+          action: {
             message: (
               <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
                 <Row gap={0.25}>
@@ -102,9 +102,10 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
         }
       } else if (approval === ApprovalState.NOT_APPROVED) {
         return {
-          update: {
+          action: {
             message: <Trans>Approve {inputCurrencyAmount.currency.symbol} first</Trans>,
-            action: <Trans>Approve</Trans>,
+            onClick: addApprovalTransaction,
+            children: <Trans>Approve</Trans>,
           },
         }
       }
