@@ -40,16 +40,15 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
       return <Caption.UnsupportedNetwork />
     }
 
-    if (balance && trade?.inputAmount.greaterThan(balance)) {
-      return <Caption.InsufficientBalance currency={trade.inputAmount.currency} />
-    }
-
     if (inputCurrency && outputCurrency && isAmountPopulated) {
       if (!trade || routeIsLoading) {
         return <Caption.LoadingTrade />
       }
       if (!routeFound) {
         return <Caption.InsufficientLiquidity />
+      }
+      if (balance && trade?.inputAmount.greaterThan(balance)) {
+        return <Caption.InsufficientBalance currency={trade.inputAmount.currency} />
       }
       if (trade.inputAmount && trade.outputAmount) {
         return <Caption.Trade trade={trade} />
