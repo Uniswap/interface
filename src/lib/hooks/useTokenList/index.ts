@@ -7,6 +7,7 @@ import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
+import { useCurrencyBalances } from '../useCurrencyBalance'
 import fetchTokenList from './fetchTokenList'
 import { useQueryTokens } from './querying'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
@@ -17,7 +18,7 @@ export { DEFAULT_TOKEN_LIST } from './fetchTokenList'
 const chainTokenMapAtom = atom<ChainTokenMap>({})
 
 export default function useTokenList(list?: string | TokenInfo[]): WrappedTokenInfo[] {
-  const { chainId, library } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const [chainTokenMap, setChainTokenMap] = useAtom(chainTokenMapAtom)
 
   // Error boundaries will not catch (non-rendering) async errors, but it should still be shown
@@ -41,9 +42,17 @@ export default function useTokenList(list?: string | TokenInfo[]): WrappedTokenI
     }
   }, [chainId, library, list, setChainTokenMap])
 
-  return useMemo(() => {
+  const tokenList = useMemo(() => {
     return Object.values((chainId && chainTokenMap[chainId]) || {}).map(({ token }) => token)
   }, [chainId, chainTokenMap])
+
+  // Prefetch currency balances once on chain load.
+  const [prefetchedChainId, setPrefetchedChainId] = useState<number>()
+  useEffect(() => setPrefetchedChainId(chainId), [chainId])
+  const shouldPrefetch = chainId && chainId !== prefetchedChainId
+  useCurrencyBalances(account, shouldPrefetch ? tokenList : undefined)
+
+  return tokenList
 }
 
 export type TokenMap = { [address: string]: Token }
