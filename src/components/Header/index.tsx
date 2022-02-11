@@ -25,6 +25,7 @@ import Skeleton from 'react-loading-skeleton'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
+import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -91,8 +92,12 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
+  gap: 40px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-content: flex-end;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    gap: 0;
   `};
 `
 
@@ -123,9 +128,8 @@ export const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: ${({ theme }) => theme.text5};
   width: fit-content;
-  margin: 0 16px;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 19.5px;
 
   &.active {
@@ -162,7 +166,7 @@ const StyledExternalLink = styled(ExternalLink)`
   line-height: 19.5px;
   width: fit-content;
   text-decoration: none !important;
-  margin: 0 12px;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
@@ -205,6 +209,15 @@ export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadiu
     margin-left: 7px;
   }
 `
+const Divider = styled.div`
+  height: 24px;
+  width: 1px;
+  background-color: #8780bf;
+  margin-left: 40px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
 
 function Header() {
   const { account, chainId } = useActiveWeb3React()
@@ -213,7 +226,8 @@ function Header() {
   const nativeCurrency = useNativeCurrency()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
-  const { loading, data, stakedAmount } = useSwaprSinglelSidedStakeCampaigns()
+  const { loading, data } = useSwaprSinglelSidedStakeCampaigns()
+  const { stakedTokenAmount } = useLiquidityMiningCampaignPosition(data, account ? account : undefined)
 
   const toggleClaimPopup = useToggleShowClaimPopup()
   const accountOrUndefined = useMemo(() => account || undefined, [account])
@@ -239,7 +253,7 @@ function Header() {
       <ClaimModal
         onDismiss={toggleClaimPopup}
         newSwprBalance={newSwprBalance}
-        stakedAmount={stakedAmount}
+        stakedAmount={stakedTokenAmount?.toFixed(3)}
         singleSidedCampaignLink={
           data && !loading ? `/rewards/${data.stakeToken.address}/${data.address}/singleSidedStaking` : undefined
         }
@@ -249,6 +263,7 @@ function Header() {
           <SwaprVersionLogo />
         </Title>
         <HeaderLinks>
+          <Divider />
           <StyledNavLink id="swap-nav-link" to="/swap" activeClassName="active">
             {t('swap')}
           </StyledNavLink>
