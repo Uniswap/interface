@@ -50,7 +50,6 @@ const HeaderControls = styled.div<{ isConnected: boolean }>`
     display: flex;
     align-items: center;
     justify-content: 'space-between';
-    // flex-direction: row-reverse;
     width: 100%;
     height: 72px;
     padding: 1rem;
@@ -368,11 +367,11 @@ function Header() {
       </AdditionalDataWrap>
 
       <HeaderControls isConnected={!!account}>
-        <Flex style={{ gap: '26px' }} justifyContent={'space-between'}>
-          <StyledMobileLink id="swap-nav-mobile-link" to="/swap" activeClassName="active">
+        <Flex style={{ gap: '26px' }} minWidth={'unset'}>
+          <StyledMobileLink id="swap-nav-link" to="/swap" activeClassName="active">
             {t('swap')}
           </StyledMobileLink>
-          <StyledMobileLink id="pool-nav-mobile-link" to="/pools" activeClassName="active">
+          <StyledMobileLink id="pool-nav-link" to="/pools" activeClassName="active">
             Pools
           </StyledMobileLink>
           <StyledMobileLink id="rewards-nav-link" to="/rewards" activeClassName="active">

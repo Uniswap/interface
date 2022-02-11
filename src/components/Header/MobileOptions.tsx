@@ -82,7 +82,7 @@ export default function MobileOptions() {
           <>
             <List>
               <ListItem>
-                <StyledExternalLink id="stake-nav-link" href="https://dxstats.eth.link/">
+                <StyledExternalLink id="charts-nav-link" href="https://dxstats.eth.link/">
                   {t('charts')}
                   <span>↗</span>
                 </StyledExternalLink>
