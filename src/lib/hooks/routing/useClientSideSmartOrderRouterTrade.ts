@@ -10,7 +10,11 @@ import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
-const config = { protocols }
+
+// The following configs are used to reduce latency when using the client side SOR
+const MIN_DISTRIBUTION_PERCENT = 5
+
+const config = { protocols, distributionPercent: MIN_DISTRIBUTION_PERCENT }
 
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
