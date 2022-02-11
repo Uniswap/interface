@@ -22,7 +22,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
-import ActionButton from '../ActionButton'
+import ActionButton, { ActionButtonProps } from '../ActionButton'
 import Dialog from '../Dialog'
 import EtherscanLink from '../EtherscanLink'
 import Row from '../Row'
@@ -76,7 +76,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     })
   }, [addTransaction, getApproval])
 
-  const actionProps = useMemo(() => {
+  const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disabled) return { disabled: true }
 
     if (chainId && inputCurrencyAmount) {
