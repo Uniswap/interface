@@ -71,7 +71,7 @@ export default function TokenInput({
   const [showMax, setShowMax] = useState(false)
   const onFocus = useCallback(() => setShowMax(Boolean(onMax)), [onMax])
   const onBlur = useCallback((e: FocusEvent) => {
-    if (e.relatedTarget !== max.current) {
+    if (e.relatedTarget !== max.current && e.relatedTarget !== input.current) {
       setShowMax(false)
     }
   }, [])
