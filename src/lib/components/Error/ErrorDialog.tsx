@@ -87,10 +87,10 @@ interface ErrorDialogProps {
   header?: ReactNode
   error: Error
   action: ReactNode
-  onAction: () => void
+  onClick: () => void
 }
 
-export default function ErrorDialog({ header, error, action, onAction }: ErrorDialogProps) {
+export default function ErrorDialog({ header, error, action, onClick }: ErrorDialogProps) {
   const [open, setOpen] = useState(false)
   const [details, setDetails] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(details)
@@ -123,7 +123,7 @@ export default function ErrorDialog({ header, error, action, onAction }: ErrorDi
             </ThemedText.Code>
           </Column>
         </ErrorColumn>
-        <ActionButton onClick={onAction}>{action}</ActionButton>
+        <ActionButton onClick={onClick}>{action}</ActionButton>
       </ExpandoColumn>
     </Column>
   )

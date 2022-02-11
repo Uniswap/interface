@@ -93,7 +93,7 @@ export default function TransactionStatusDialog({ tx, onClose }: TransactionStat
       header={errorMessage}
       error={new Error('TODO(zzmp)')}
       action={<Trans>Dismiss</Trans>}
-      onAction={onClose}
+      onClick={onClose}
     />
   ) : (
     <TransactionStatus tx={tx} onClose={onClose} />

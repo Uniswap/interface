@@ -95,8 +95,9 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
                 </Row>
               </EtherscanLink>
             ),
-            action: <Trans>Approve</Trans>,
             icon: Spinner,
+            onClick: addApprovalTransaction,
+            children: <Trans>Approve</Trans>,
           },
         }
       } else if (approval === ApprovalState.NOT_APPROVED) {
@@ -111,7 +112,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     }
 
     return { disabled: true }
-  }, [approval, approvalHash, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance])
+  }, [addApprovalTransaction, approval, approvalHash, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance])
 
   const deadline = useTransactionDeadline()
   const { signatureData } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, deadline)
@@ -156,7 +157,6 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       <ActionButton
         color={tokenColorExtraction ? 'interactive' : 'accent'}
         onClick={() => setActiveTrade(trade.trade)}
-        onUpdate={addApprovalTransaction}
         {...actionProps}
       >
         <Trans>Review swap</Trans>

@@ -36,7 +36,7 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
             error={this.state.error}
             header={<Trans>Something went wrong.</Trans>}
             action={<Trans>Reload the page</Trans>}
-            onAction={() => window.location.reload()}
+            onClick={() => window.location.reload()}
           />
         </Dialog>
       )
