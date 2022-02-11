@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from 'react'
-import { Box, Flex, Text } from 'rebass'
+import { Box, Flex } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
 
@@ -272,9 +272,6 @@ function Header() {
           </StyledExternalLink>
           <StyledExternalLink id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
             {t('charts')}
-            <Text ml="4px" fontSize="11px">
-              ↗
-            </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
             <MobileOptions />
