@@ -8,6 +8,4 @@ generates:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-react-query
-    config:
-      fetcher: graphql-request
+      - typescript-react-apollo

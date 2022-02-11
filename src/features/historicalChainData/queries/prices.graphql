@@ -4,7 +4,6 @@
 # some tables have considerably more data which prevents the client from
 # transforming data until all queries are done.
 #
-# Note. `chainId` is only used to guarantee unique keys across chains.
 
 query hourlyTokenPrices($address: String, $chainId: Int!, $periodStartUnix: Int) {
   tokenHourDatas(
@@ -13,7 +12,9 @@ query hourlyTokenPrices($address: String, $chainId: Int!, $periodStartUnix: Int)
     where: { token: $address, periodStartUnix_gt: $periodStartUnix }
     orderBy: periodStartUnix
     orderDirection: desc
+    subgraphError: allow
   ) {
+    id
     timestamp: periodStartUnix
     high
     low
@@ -29,7 +30,9 @@ query dailyTokenPrices($address: String, $chainId: Int!) {
     where: { token: $address }
     orderBy: date
     orderDirection: desc
+    subgraphError: allow
   ) {
+    id
     timestamp: date
     high
     low

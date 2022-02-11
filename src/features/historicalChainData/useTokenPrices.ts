@@ -7,9 +7,9 @@ import {
   useEthPricesQuery,
   useTokensQuery,
 } from 'src/features/historicalChainData/generated/uniswap-hooks'
-import { useV3SubgraphClient } from 'src/features/historicalChainData/utils'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
+import { NativeCurrency } from '../tokenLists/NativeCurrency'
 
 export function useTokenPrices(tokens: Currency[]) {
   const activeChains = useActiveChainIds()
@@ -64,67 +64,74 @@ function useChainTokenPrices({
   isError: boolean
   addressToPrice: { [address: Address]: { priceUSD?: number } } | null
 } {
-  const client = useV3SubgraphClient(chainId)
+  // always retrieve wrapped native price to build native price
+  const nativeCurrencyWrapped = NativeCurrency.onChain(chainId).wrapped
+  if (isEnabled) {
+    currencies.push(nativeCurrencyWrapped)
+  }
 
+  // build token list consumable by graphql
   const tokens = currencies.filter((c) => c.isToken)
   const tokenList = useMemo(
     () => tokens.map((token) => token.wrapped.address.toLowerCase()),
     [tokens]
   )
 
-  const tokensResult = useTokensQuery(
-    client!,
-    { chainId, tokenList },
-    { enabled: Boolean(isEnabled && client && tokenList && tokenList.length > 0) }
-  )
+  // TODO: consider different cache policies like partial
+  const tokensResult = useTokensQuery({
+    variables: { chainId, tokenList },
+    skip: !(isEnabled && tokenList && tokenList.length > 0),
+  })
 
-  const ethPricesResult = useEthPricesQuery(
-    client!,
-    { chainId },
-    { enabled: Boolean(isEnabled && client && currencies.length > 0) }
-  )
+  const ethPricesResult = useEthPricesQuery({
+    variables: { chainId },
+    skip: !(isEnabled && currencies.length > 0),
+  })
 
-  const anyIsLoading = tokensResult.isLoading || ethPricesResult.isLoading
-  const anyIsError = tokensResult.isError || ethPricesResult.isError
+  const anyIsLoading = Boolean(tokensResult.loading || ethPricesResult.loading)
+  const anyIsError = Boolean(tokensResult.error || ethPricesResult.error)
 
-  if (anyIsError || anyIsLoading) {
+  if (anyIsError || anyIsLoading || !isEnabled) {
     return {
-      isLoading: tokensResult.isLoading || ethPricesResult.isLoading,
-      isError: tokensResult.isError || ethPricesResult.isError,
+      isLoading: anyIsLoading,
+      isError: anyIsError,
       addressToPrice: null,
     }
   }
+
+  const currentEthPrice = parseFloat(ethPricesResult.data?.current[0].ethPriceUSD ?? 0)
 
   const addressToTokenData = tokensResult.data?.tokens.reduce<{
     [address: Address]: { address: string; derivedETH: number }
   }>((memo, tokenData) => {
     memo[tokenData.id] = {
-      address: tokenData.id,
+      address: tokenData.id.toLowerCase(),
       derivedETH: parseFloat(tokenData.derivedETH),
     }
     return memo
   }, {})
 
-  const currentEthPrice = parseFloat(ethPricesResult.data?.current[0].ethPriceUSD ?? 0)
+  // subgraph only has ETH price in USD
+  const nativeDerivedEth =
+    addressToTokenData?.[nativeCurrencyWrapped.address.toLowerCase()]?.derivedETH ?? 0
 
   // TODO: value should be a `Price`
   // TODO: time-travel for price diff
   const addressToPrice = tokens.reduce<{ [address: Address]: { priceUSD?: number } }>(
-    (memo, token) => {
-      const address = token.wrapped.address
-
+    (memo, { wrapped: { address } }) => {
       const currentTokenData = addressToTokenData?.[address.toLowerCase()]
 
-      // TODO: as Price
-      const priceUSD = currentTokenData ? currentTokenData.derivedETH * currentEthPrice : undefined
-
       memo[buildCurrencyId(chainId, address)] = {
-        priceUSD,
+        priceUSD: derivedEthToUsd(currentTokenData?.derivedETH, currentEthPrice),
       }
 
       return memo
     },
-    { [buildCurrencyId(chainId, NATIVE_ADDRESS)]: { priceUSD: currentEthPrice } }
+    {
+      [buildCurrencyId(chainId, NATIVE_ADDRESS)]: {
+        priceUSD: derivedEthToUsd(nativeDerivedEth, currentEthPrice),
+      },
+    }
   )
 
   return {
@@ -133,3 +140,6 @@ function useChainTokenPrices({
     addressToPrice,
   }
 }
+
+const derivedEthToUsd = (derivedETH: number | undefined, ethPrice: number | undefined) =>
+  derivedETH && ethPrice ? derivedETH * ethPrice : undefined

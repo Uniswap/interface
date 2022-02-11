@@ -4,11 +4,7 @@ import {
   useDailyTokenPricesQuery,
   useHourlyTokenPricesQuery,
 } from 'src/features/historicalChainData/generated/uniswap-hooks'
-import {
-  getTokenQueryKey,
-  parseTokenData,
-  useV3SubgraphClient,
-} from 'src/features/historicalChainData/utils'
+import { getTokenQueryKey, parseTokenData } from 'src/features/historicalChainData/utils'
 
 type WithPeriodStartUnix<T> = T & { periodStartUnix: number }
 
@@ -22,16 +18,10 @@ export function useHourlyTokenPrices({
   // periodEndUnix
   periodStartUnix,
 }: WithPeriodStartUnix<TokenPricesProps>) {
-  const client = useV3SubgraphClient(token?.chainId)
-
-  // non-null assertions enforced by `enabled`
-  const { data, ...queryStatus } = useHourlyTokenPricesQuery(
-    client!,
-    getTokenQueryKey(token!, {
-      periodStartUnix,
-    }),
-    { enabled: Boolean(client) && Boolean(token) }
-  )
+  const { data, ...queryStatus } = useHourlyTokenPricesQuery({
+    variables: getTokenQueryKey(token!, { periodStartUnix }),
+    skip: !token,
+  })
 
   const prices = useMemo(() => parseTokenData(data?.tokenHourDatas), [data?.tokenHourDatas])
 
@@ -42,11 +32,9 @@ export function useHourlyTokenPrices({
 }
 
 export function useDailyTokenPrices({ token }: TokenPricesProps) {
-  const client = useV3SubgraphClient(token?.chainId)
-
-  // non-null assertions enforced by `enabled`
-  const { data, ...queryStatus } = useDailyTokenPricesQuery(client!, getTokenQueryKey(token!), {
-    enabled: Boolean(client) && Boolean(token),
+  const { data, ...queryStatus } = useDailyTokenPricesQuery({
+    variables: getTokenQueryKey(token!),
+    skip: !token,
   })
 
   const prices = useMemo(() => parseTokenData(data?.tokenDayDatas), [data?.tokenDayDatas])

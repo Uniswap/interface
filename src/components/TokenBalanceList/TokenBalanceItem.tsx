@@ -22,9 +22,12 @@ export function TokenBalanceItem({
 }: TokenBalanceItemProps) {
   const { currency } = currencyAmount
 
+  // value stabilized with `endOf`
+  const periodStartUnix = dayjs().subtract(1, 'day').endOf('hour').unix()
+
   const { prices } = useHourlyTokenPrices({
     token: currency.wrapped,
-    periodStartUnix: dayjs().subtract(1, 'day').unix(),
+    periodStartUnix,
   })
 
   const percentChange = (function () {

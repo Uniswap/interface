@@ -4,12 +4,13 @@ import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { enableLayoutAnimations } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { QueryClient, QueryClientProvider, setLogger } from 'react-query'
+import { setLogger } from 'react-query'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
+import { QueryProvider } from 'src/app/QueryProvider'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
@@ -44,8 +45,6 @@ enableAnalytics()
 // https://github.com/software-mansion/react-native-reanimated/issues/2758
 enableLayoutAnimations(true)
 
-const queryClient = new QueryClient()
-
 export function App() {
   const isDarkMode = useColorScheme() === 'dark'
 
@@ -58,13 +57,13 @@ export function App() {
               <ErrorBoundary>
                 <WalletContextProvider>
                   <DataUpdaters />
-                  <QueryClientProvider client={queryClient}>
+                  <QueryProvider>
                     <BottomSheetModalProvider>
                       <NotificationBannerWrapper>
                         <NavStack isDarkMode={isDarkMode} />
                       </NotificationBannerWrapper>
                     </BottomSheetModalProvider>
-                  </QueryClientProvider>
+                  </QueryProvider>
                 </WalletContextProvider>
               </ErrorBoundary>
             </DynamicThemeProvider>

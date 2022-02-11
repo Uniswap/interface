@@ -27,7 +27,7 @@ export function useGraphs(token: Token): GraphMetadatas | null {
   const hourlyTokenData = useHourlyTokenPrices({ token, periodStartUnix: oneMonthAgo })
   const dailyTokenData = useDailyTokenPrices({ token })
 
-  const isError = hourlyTokenData.isError || dailyTokenData.isError
+  const isError = hourlyTokenData.error || dailyTokenData.error
 
   // build graph data for each data set to reduce the number of re-renders
 
