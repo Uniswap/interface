@@ -62,9 +62,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     async function fetchQuote() {
       try {
         if (queryArgs && params) {
-          const start = Date.now()
           const result = await getClientSideQuote(queryArgs, params, config)
-          console.log(Date.now() - start)
           setFetchedResult({
             quoteResult: result.data,
             error: result.error,
