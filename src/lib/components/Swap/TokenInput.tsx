@@ -16,6 +16,7 @@ const TokenInputRow = styled(Row)`
 
 const ValueInput = styled(DecimalInput)<{ $loading: boolean }>`
   color: ${({ theme }) => theme.primary};
+  height: 1em;
 
   :hover:not(:focus-within) {
     color: ${({ theme }) => theme.onHover(theme.primary)};

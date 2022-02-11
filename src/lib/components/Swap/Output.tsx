@@ -83,9 +83,9 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
         <Row>
-          <ThemedText.Subhead2 color="secondary">
+          <ThemedText.Subhead1 color="secondary">
             <Trans>For</Trans>
-          </ThemedText.Subhead2>
+          </ThemedText.Subhead1>
         </Row>
         <TokenInput
           currency={swapOutputCurrency}

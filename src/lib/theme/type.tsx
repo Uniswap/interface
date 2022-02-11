@@ -20,7 +20,7 @@ export function H1(props: TextProps) {
 }
 
 export function H2(props: TextProps) {
-  return <TextWrapper className="headline headline-2" fontSize={24} fontWeight={400} lineHeight="32px" {...props} />
+  return <TextWrapper className="headline headline-2" fontSize={32} fontWeight={400} lineHeight="32px" {...props} />
 }
 
 export function H3(props: TextProps) {
