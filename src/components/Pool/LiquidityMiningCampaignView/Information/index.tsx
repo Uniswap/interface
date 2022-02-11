@@ -389,7 +389,7 @@ function Information({
                 !startsAt ? (
                   <Skeleton width="80px" height="10.5px" />
                 ) : (
-                  DateTime.fromSeconds(parseInt(startsAt.toString())).toFormat('dd-MM-yyyy hh:mm')
+                  DateTime.fromSeconds(parseInt(startsAt.toString())).toFormat('dd-MM-yyyy HH:mm')
                 )
               }
               dataTextSize={10.5}
@@ -402,7 +402,7 @@ function Information({
                 !endsAt ? (
                   <Skeleton width="80px" height="10.5px" />
                 ) : (
-                  DateTime.fromSeconds(parseInt(endsAt.toString())).toFormat('dd-MM-yyyy hh:mm')
+                  DateTime.fromSeconds(parseInt(endsAt.toString())).toFormat('dd-MM-yyyy HH:mm')
                 )
               }
               dataTextSize={10.5}
