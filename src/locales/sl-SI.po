@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-10 22:06\n"
+"PO-Revision-Date: 2022-02-11 04:07\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -128,6 +128,10 @@ msgstr "Sprejmi"
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Račun"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Acknowledge"
+msgstr "Priznaj"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -873,6 +877,10 @@ msgstr "Skrij zaprte pozicije"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
+msgstr "Visok vpliv na ceno"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High price impact"
 msgstr "Visok vpliv na ceno"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
