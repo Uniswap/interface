@@ -149,6 +149,19 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   }, [tokens])
 
   const list = useRef<FixedSizeList>(null)
+  const [element, setElement] = useState<HTMLElement | null>(null)
+  const scrollTo = useCallback(
+    (index: number | undefined) => {
+      if (index === undefined) return
+      list.current?.scrollToItem(index)
+      if (focused) {
+        element?.querySelector<HTMLElement>(`[data-index='${index}']`)?.focus()
+      }
+      setHover({ index, currency: tokens[index] })
+    },
+    [element, focused, tokens]
+  )
+
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -164,13 +177,8 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       if (e.key === 'Enter' && hover.index !== -1) {
         onSelect(tokens[hover.index])
       }
-
-      function scrollTo(index: number) {
-        list.current?.scrollToItem(index)
-        setHover({ index, currency: tokens[index] })
-      }
     },
-    [hover, onSelect, tokens]
+    [hover.index, onSelect, scrollTo, tokens]
   )
   const blur = useCallback(() => setHover({ index: -1 }), [])
   useImperativeHandle(ref, () => ({ onKeyDown, blur }), [blur, onKeyDown])
@@ -178,29 +186,15 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   const onClick = useCallback(({ token }: BubbledEvent) => token && onSelect(token), [onSelect])
   const onFocus = useCallback(
     ({ index }: BubbledEvent) => {
-      if (index !== undefined) {
-        setHover({ index, currency: tokens[index] })
-        setFocused(true)
-      }
+      setFocused(true)
+      scrollTo(index)
     },
-    [tokens]
+    [scrollTo]
   )
   const onBlur = useCallback(() => setFocused(false), [])
-  const onMouseMove = useCallback(
-    ({ index, ref }: BubbledEvent) => {
-      if (index !== undefined) {
-        setHover({ index, currency: tokens[index] })
-        if (focused) {
-          ref?.focus()
-        }
-      }
-    },
-    [focused, tokens]
-  )
+  const onMouseMove = useCallback(({ index }: BubbledEvent) => scrollTo(index), [scrollTo])
 
-  const [element, setElement] = useState<HTMLElement | null>(null)
   const scrollbar = useScrollbar(element, { padded: true })
-
   const onHover = useRef<HTMLDivElement>(null)
   // use native onscroll handler to capture Safari's bouncy overscroll effect
   useNativeEvent(element, 'scroll', (e) => {
