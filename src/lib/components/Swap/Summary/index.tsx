@@ -43,13 +43,13 @@ const Body = styled(Column)<{ open: boolean }>`
     transition: flex-grow 0.25s;
 
     ${DetailsColumn} {
-      flex-basis: ${({ open }) => (open ? 7 : 0)}em;
+      flex-basis: ${({ open }) => (open ? 7.5 : 0)}em;
       overflow-y: hidden;
       position: relative;
       transition: flex-basis 0.25s;
 
       ${Column} {
-        height: 100%;
+        height: 7.5em;
         grid-template-rows: repeat(auto-fill, 1em);
         padding: ${({ open }) => (open ? '0.5em 0' : 0)};
         transition: padding 0.25s;
