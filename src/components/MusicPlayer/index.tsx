@@ -1,6 +1,7 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Pause, Play, SkipForward } from 'react-feather'
 import styled from 'styled-components/macro'
+import { MEDIA_WIDTHS } from 'theme'
 
 // @ts-ignore
 import song1 from '../../assets/audio/uniswap1.mp3'
@@ -10,9 +11,13 @@ import song2 from '../../assets/audio/uniswap2.mp3'
 import song3 from '../../assets/audio/uniswap3.mp3'
 
 const Controls = styled.div`
-  position: absolute;
   bottom: 2em;
+  display: none;
+  position: absolute;
   right: 1em;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    display: block;
+  }
 `
 
 const Control = styled.button`
@@ -33,14 +38,29 @@ export default function MusicPlayer() {
   const [playing, setPlaying] = useState(false)
   const audioEl = useRef<HTMLAudioElement | null>(null)
 
+  const onMobile = matchMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`).matches
+
+  const playMusic = useCallback(() => {
+    if (!audioEl.current) return
+    audioEl.current.play()
+  }, [])
+  const stopMusic = useCallback(() => {
+    if (!audioEl.current) return
+    audioEl.current.pause()
+  }, [])
+
+  useEffect(() => {
+    !onMobile ? playMusic() : stopMusic()
+    matchMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`).addEventListener('change', stopMusic)
+    return () => {
+      matchMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`).removeEventListener('change', stopMusic)
+    }
+  }, [onMobile, playMusic, stopMusic])
+
   const togglePlayback = useCallback(() => {
     if (!audioEl.current) return
-    if (playing) {
-      audioEl.current.pause()
-    } else {
-      audioEl.current.play()
-    }
-  }, [playing])
+    playing ? stopMusic() : playMusic()
+  }, [playMusic, playing, stopMusic])
 
   const playNext = useCallback(() => {
     if (song === 3) {
@@ -76,8 +96,7 @@ export default function MusicPlayer() {
         src={trackFile}
         controls={false}
         ref={audioEl}
-        autoPlay
-        loop
+        autoPlay={!onMobile}
         onEnded={playNext}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
