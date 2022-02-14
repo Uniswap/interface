@@ -1,4 +1,5 @@
 import Loader from 'components/Loader'
+import MusicPlayer from 'components/MusicPlayer'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
@@ -86,6 +87,7 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
+            <MusicPlayer />
             <Suspense fallback={<Loader />}>
               <Switch>
                 <Route strict path="/vote" component={Vote} />
