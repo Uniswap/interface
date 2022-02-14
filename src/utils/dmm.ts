@@ -6,12 +6,13 @@ import { formattedNum } from 'utils'
 import { TokenAmount as TokenAmountSUSHI, Token as TokenSUSHI, ChainId as ChainIdSUSHI } from '@sushiswap/sdk'
 import { TokenAmount as TokenAmountUNI, Token as TokenUNI, ChainId as ChainIdUNI } from '@uniswap/sdk'
 import { Token as TokenDMM, TokenAmount as TokenAmountDMM, ChainId as ChainIdDMM } from '@dynamic-amm/sdk'
-import { BLOCKS_PER_YEAR, FARMING_POOLS, ZERO_ADDRESS } from '../constants'
+import { BLOCKS_PER_YEAR, FARMING_POOLS, SECONDS_PER_YEAR, ZERO_ADDRESS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
-import { Farm, Reward, RewardPerBlock } from 'state/farms/types'
+import { Farm, Reward, RewardPerTimeUnit } from 'state/farms/types'
 import { useAllTokens } from 'hooks/Tokens'
 import { useRewardTokenPrices, useRewardTokens } from 'state/farms/hooks'
 import { getFullDisplayBalance } from './formatBalance'
+import { useBlockNumber } from 'state/application/hooks'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
@@ -256,43 +257,119 @@ export function tokenAmountDmmToUni(amount: TokenAmountDMM): TokenAmountUNI | un
     : undefined
 }
 
+export function useFarmRewardsPerTimeUnit(farm?: Farm): RewardPerTimeUnit[] {
+  if (!farm) {
+    return []
+  }
+
+  const farmRewardsPerTimeUnit: RewardPerTimeUnit[] = []
+
+  if (farm.rewardPerSeconds) {
+    farm.rewardTokens.forEach((token, index) => {
+      if (farmRewardsPerTimeUnit[index]) {
+        farmRewardsPerTimeUnit[index].amount = farmRewardsPerTimeUnit[index].amount.add(
+          BigNumber.from(farm.rewardPerSeconds[index])
+        )
+      } else {
+        farmRewardsPerTimeUnit[index] = {
+          token,
+          amount: BigNumber.from(farm.rewardPerSeconds[index])
+        }
+      }
+    })
+  } else if (farm.rewardPerBlocks) {
+    farm.rewardTokens.forEach((token, index) => {
+      if (farmRewardsPerTimeUnit[index]) {
+        farmRewardsPerTimeUnit[index].amount = farmRewardsPerTimeUnit[index].amount.add(
+          BigNumber.from(farm.rewardPerBlocks[index])
+        )
+      } else {
+        farmRewardsPerTimeUnit[index] = {
+          token,
+          amount: BigNumber.from(farm.rewardPerBlocks[index])
+        }
+      }
+    })
+  }
+
+  return farmRewardsPerTimeUnit
+}
+
 /**
  * Get farm APR value in %
  * @param kncPriceUsd KNC price in USD
  * @param poolLiquidityUsd Total pool liquidity in USD
  * @returns
  */
-
-export function useFarmApr(
-  rewardPerBlocks: RewardPerBlock[],
-  poolLiquidityUsd: string,
-  isLiquidityMiningActive?: boolean
-): number {
+export function useFarmApr(farm: Farm, poolLiquidityUsd: string): number {
   const { chainId } = useActiveWeb3React()
-  const tokenPrices = useRewardTokenPrices((rewardPerBlocks || []).map(item => item.token))
+  const currentBlock = useBlockNumber()
+  const rewardsPerTimeUnit = useFarmRewardsPerTimeUnit(farm)
+  const tokenPrices = useRewardTokenPrices((rewardsPerTimeUnit || []).map(item => item.token))
+  let yearlyRewardUSD
 
-  if (parseFloat(poolLiquidityUsd) === 0 || !isLiquidityMiningActive) {
-    return 0
-  }
+  if (farm.rewardPerSeconds) {
+    // FarmV2
 
-  if (!rewardPerBlocks || rewardPerBlocks.length === 0) {
-    return 0
-  }
+    const currentTimestamp = Math.floor(Date.now() / 1000)
 
-  const yearlyRewardUSD = rewardPerBlocks.reduce((total, rewardPerBlock, index) => {
-    if (!rewardPerBlock || !rewardPerBlock.amount) {
+    // Check if pool is active for liquidity mining
+    const isLiquidityMiningActive =
+      currentTimestamp && farm.startTime && farm.endTime
+        ? farm.startTime <= currentTimestamp && currentTimestamp <= farm.endTime
+        : false
+
+    if (parseFloat(poolLiquidityUsd) === 0 || !isLiquidityMiningActive) {
+      return 0
+    }
+
+    if (!rewardsPerTimeUnit || rewardsPerTimeUnit.length === 0) {
+      return 0
+    }
+
+    yearlyRewardUSD = rewardsPerTimeUnit.reduce((total, rewardPerSecond, index) => {
+      if (!rewardPerSecond || !rewardPerSecond.amount) {
+        return total
+      }
+
+      if (chainId && tokenPrices[index]) {
+        const rewardPerSecondAmount = new TokenAmountDMM(rewardPerSecond.token, rewardPerSecond.amount.toString())
+        const yearlyETHRewardAllocation = parseFloat(rewardPerSecondAmount.toSignificant(6)) * SECONDS_PER_YEAR
+        total += yearlyETHRewardAllocation * tokenPrices[index]
+      }
+
       return total
+    }, 0)
+  } else {
+    // Check if pool is active for liquidity mining
+    const isLiquidityMiningActive =
+      currentBlock && farm.startBlock && farm.endBlock
+        ? farm.startBlock <= currentBlock && currentBlock <= farm.endBlock
+        : false
+
+    if (parseFloat(poolLiquidityUsd) === 0 || !isLiquidityMiningActive) {
+      return 0
     }
 
-    if (chainId && tokenPrices[index]) {
-      const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
-      const yearlyETHRewardAllocation =
-        parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
-      total += yearlyETHRewardAllocation * tokenPrices[index]
+    if (!rewardsPerTimeUnit || rewardsPerTimeUnit.length === 0) {
+      return 0
     }
 
-    return total
-  }, 0)
+    yearlyRewardUSD = rewardsPerTimeUnit.reduce((total, rewardPerBlock, index) => {
+      if (!rewardPerBlock || !rewardPerBlock.amount) {
+        return total
+      }
+
+      if (chainId && tokenPrices[index]) {
+        const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
+        const yearlyETHRewardAllocation =
+          parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
+        total += yearlyETHRewardAllocation * tokenPrices[index]
+      }
+
+      return total
+    }, 0)
+  }
 
   const apr = (yearlyRewardUSD / parseFloat(poolLiquidityUsd)) * 100
 
@@ -347,18 +424,34 @@ export function useFarmRewards(farms?: Farm[], onlyCurrentUser = true): Reward[]
   const initialAllFarmsRewards: { [key: string]: Reward } = {}
 
   const allFarmsRewards = farms.reduce((total, farm) => {
-    farm.rewardTokens.forEach((token, index) => {
-      if (total[token.address]) {
-        total[token.address].amount = total[token.address].amount.add(
-          BigNumber.from(farm.lastRewardBlock - farm.startBlock).mul(farm.rewardPerBlocks[index])
-        )
-      } else {
-        total[token.address] = {
-          token,
-          amount: BigNumber.from(farm.lastRewardBlock - farm.startBlock).mul(farm.rewardPerBlocks[index])
+    if (farm.rewardPerSeconds) {
+      farm.rewardTokens.forEach((token, index) => {
+        if (total[token.address]) {
+          total[token.address].amount = total[token.address].amount.add(
+            BigNumber.from(farm.lastRewardTime - farm.startTime).mul(farm.rewardPerSeconds[index])
+          )
+        } else {
+          total[token.address] = {
+            token,
+            amount: BigNumber.from(farm.lastRewardTime - farm.startTime).mul(farm.rewardPerSeconds[index])
+          }
         }
-      }
-    })
+      })
+    } else {
+      farm.rewardTokens.forEach((token, index) => {
+        if (total[token.address]) {
+          total[token.address].amount = total[token.address].amount.add(
+            BigNumber.from(farm.lastRewardBlock - farm.startBlock).mul(farm.rewardPerBlocks[index])
+          )
+        } else {
+          total[token.address] = {
+            token,
+            amount: BigNumber.from(farm.lastRewardBlock - farm.startBlock).mul(farm.rewardPerBlocks[index])
+          }
+        }
+      })
+    }
+
     return total
   }, initialAllFarmsRewards)
 
@@ -378,41 +471,13 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
     }
 
     if (chainId && tokenPrices[index]) {
-      total += parseFloat(getFullDisplayBalance(reward.amount)) * tokenPrices[index]
+      total += parseFloat(getFullDisplayBalance(reward.amount, reward.token.decimals)) * tokenPrices[index]
     }
 
     return total
   }, 0)
 
   return rewardUSD
-}
-
-export function useFarmRewardPerBlocks(farms?: Farm[]): RewardPerBlock[] {
-  if (!farms) {
-    return []
-  }
-
-  const initialRewardPerBlocks: RewardPerBlock[] = []
-
-  const farmRewardPerBlocks = farms.reduce((total, farm) => {
-    if (farm.rewardPerBlocks) {
-      farm.rewardTokens.forEach((token, index) => {
-        if (total[index]) {
-          total[index].amount = total[index].amount.add(BigNumber.from(farm.rewardPerBlocks[index]))
-        } else {
-          total[index] = {
-            token,
-            amount: BigNumber.from(farm.rewardPerBlocks[index])
-          }
-        }
-      })
-      return total
-    }
-
-    return total
-  }, initialRewardPerBlocks)
-
-  return farmRewardPerBlocks
 }
 
 export function useRewardTokensFullInfo(): Token[] {

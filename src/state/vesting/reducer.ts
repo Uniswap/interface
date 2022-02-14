@@ -10,10 +10,13 @@ import {
   setTxHash,
   setVestingError
 } from './actions'
+import { RewardLockerVersion } from 'state/farms/types'
 
 export interface VestingState {
   readonly loading: boolean
-  readonly schedulesByRewardLocker: { [key: string]: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number][] }
+  readonly schedulesByRewardLocker: {
+    [key: string]: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number, RewardLockerVersion][]
+  }
   readonly showConfirm: boolean
   readonly attemptingTxn: boolean
   readonly txHash: string

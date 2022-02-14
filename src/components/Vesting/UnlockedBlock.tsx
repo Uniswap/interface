@@ -53,7 +53,7 @@ const UnlockedBlock = ({ info, onClaimAll }: { info: any; onClaimAll?: () => voi
             <MenuFlyout>
               {Object.keys(info).map(k => (
                 <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
-                  {fixedFormatting(info[k].vestableAmount, 18)} {k}
+                  {fixedFormatting(info[k].vestableAmount, info[k].token.decimals)} {k}
                 </TYPE.body>
               ))}
             </MenuFlyout>

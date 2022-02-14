@@ -1,4 +1,4 @@
-export const getFormattedTimeFromSecond = (numberOfSeconds: number) => {
+export const getFormattedTimeFromSecond = (numberOfSeconds: number, showDetail = false) => {
   const second = numberOfSeconds % 60
   const estimatedRemainingMinutes = (numberOfSeconds - second) / 60
   const minute = estimatedRemainingMinutes % 60
@@ -8,16 +8,21 @@ export const getFormattedTimeFromSecond = (numberOfSeconds: number) => {
 
   let formattedEstimatedRemainingTime = ''
 
+  let unit: string
+
   if (estimatedRemainingDays) {
-    formattedEstimatedRemainingTime += `${estimatedRemainingDays}D `
+    unit = (showDetail ? ' Day' : 'D') + (showDetail && estimatedRemainingDays > 1 ? 's ' : ' ')
+    formattedEstimatedRemainingTime += estimatedRemainingDays + unit
   }
 
   if (hour) {
-    formattedEstimatedRemainingTime += `${hour}H `
+    unit = (showDetail ? ' Hour' : 'H') + (showDetail && hour > 1 ? 's ' : ' ')
+    formattedEstimatedRemainingTime += hour + unit
   }
 
   if (minute) {
-    formattedEstimatedRemainingTime += `${minute}M`
+    unit = (showDetail ? ' Minute' : 'M') + (showDetail && minute > 1 ? 's ' : ' ')
+    formattedEstimatedRemainingTime += minute + unit
   }
 
   return formattedEstimatedRemainingTime

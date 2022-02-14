@@ -14,12 +14,12 @@ const useStakedBalance = (contractAddress: string, pid: number, decimals = 18) =
   const [balance, setBalance] = useState<BalanceProps>({ value: BigNumber.from(0), decimals: 18 })
   const { account } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
-  const masterChefContract = useFairLaunchContract(contractAddress)
+  const fairLaunchContract = useFairLaunchContract(contractAddress)
 
   const fetchBalance = useCallback(async () => {
     const getStaked = async (pid: number, owner: string | null | undefined): Promise<BalanceProps> => {
       try {
-        const { amount } = await masterChefContract?.getUserInfo(pid, owner)
+        const { amount } = await fairLaunchContract?.getUserInfo(pid, owner)
         return { value: BigNumber.from(amount), decimals: decimals }
       } catch (e) {
         return { value: BigNumber.from(0), decimals: decimals }
@@ -27,13 +27,13 @@ const useStakedBalance = (contractAddress: string, pid: number, decimals = 18) =
     }
     const balance = await getStaked(pid, account)
     setBalance(balance)
-  }, [account, decimals, masterChefContract, pid])
+  }, [account, decimals, fairLaunchContract, pid])
 
   useEffect(() => {
-    if (account && masterChefContract) {
+    if (account && fairLaunchContract) {
       fetchBalance()
     }
-  }, [account, setBalance, currentBlockNumber, fetchBalance, masterChefContract])
+  }, [account, setBalance, currentBlockNumber, fetchBalance, fairLaunchContract])
 
   return balance
 }

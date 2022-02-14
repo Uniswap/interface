@@ -33,14 +33,7 @@ import githubImgLight from 'assets/svg/about_icon_github_light.png'
 import FantomLogoFull from 'components/Icons/FantomLogoFull'
 import { KNC, MAX_ALLOW_APY } from 'constants/index'
 import { ChainId, ETHER, Fraction, JSBI } from '@dynamic-amm/sdk'
-import {
-  convertToNativeTokenFromETH,
-  useFarmRewardPerBlocks,
-  getTradingFeeAPR,
-  useFarmApr,
-  useFarmRewards,
-  useFarmRewardsUSD
-} from 'utils/dmm'
+import { convertToNativeTokenFromETH, getTradingFeeAPR, useFarmApr, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { useActiveWeb3React } from 'hooks'
 import { useFarmsData } from 'state/farms/hooks'
 import { useGlobalData } from 'state/about/hooks'
@@ -48,7 +41,6 @@ import { Farm } from 'state/farms/types'
 import { isAddressString } from 'utils'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { ethers } from 'ethers'
-import { useBlockNumber } from 'state/application/hooks'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import {
   Footer,
@@ -837,7 +829,6 @@ function About() {
 export default About
 
 function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
-  const farmRewardPerBlocks = useFarmRewardPerBlocks([farm])
   const poolAddressChecksum = isAddressString(farm.id)
   const { decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
@@ -851,13 +842,9 @@ function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
     )
   )
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
-  const currentBlock = useBlockNumber()
-  const isLiquidityMiningActive =
-    currentBlock && farm.startBlock && farm.endBlock
-      ? farm.startBlock <= currentBlock && currentBlock <= farm.endBlock
-      : false
 
-  const farmAPR = useFarmApr(farmRewardPerBlocks, liquidity.toString(), isLiquidityMiningActive)
+  // const farmAPR = 0
+  const farmAPR = useFarmApr(farm, liquidity.toString())
   const tradingFee = farm?.oneDayFeeUSD ? farm?.oneDayFeeUSD : farm?.oneDayFeeUntracked
 
   const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)

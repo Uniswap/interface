@@ -2,7 +2,17 @@ import { BigNumber } from '@ethersproject/bignumber'
 
 import { Token } from '@dynamic-amm/sdk'
 
-export interface Farm {
+export enum FairLaunchVersion {
+  V1,
+  V2
+}
+
+export enum RewardLockerVersion {
+  V1,
+  V2
+}
+
+export interface FarmV1 {
   fairLaunchAddress: string
   pid: number
   id: string
@@ -33,12 +43,50 @@ export interface Farm {
   isEnded?: boolean
 }
 
+export interface FarmV2 {
+  fairLaunchAddress: string
+  pid: number
+  id: string
+  rewardTokens: Token[]
+  rewardPerSeconds: BigNumber[]
+  accRewardPerShares: BigNumber[]
+  totalStake: BigNumber
+  stakeToken: string
+  generatedToken: string
+  startTime: number
+  endTime: number
+  lastRewardTime: number
+  token0?: any
+  token1?: any
+  amp: number
+  reserve0: string
+  reserve1: string
+  reserveUSD: string
+  totalSupply: string
+  oneDayFeeUSD?: string
+  oneDayFeeUntracked?: string
+  userData?: {
+    allowance?: string
+    tokenBalance?: string
+    stakedBalance?: string
+    rewards?: string[]
+  }
+  time: string
+  vestingDuration: number
+  rewardMultipliers: BigNumber[]
+}
+
+export interface Farm extends FarmV1, FarmV2 {}
+
 export interface Reward {
   token: Token
   amount: BigNumber
 }
 
-export interface RewardPerBlock {
+/**
+ * Time unit can be block or second
+ */
+export interface RewardPerTimeUnit {
   token: Token
   amount: BigNumber
 }

@@ -66,7 +66,13 @@ const TokenSymbol = styled.span`
 
 const RewardTokenPrices = () => {
   const { chainId } = useActiveWeb3React()
-  const rewardTokens = useRewardTokensFullInfo()
+  let rewardTokens = useRewardTokensFullInfo()
+  const isContainETH = rewardTokens.findIndex(token => token.address === ZERO_ADDRESS) >= 0
+  const isContainWETH = rewardTokens.findIndex(token => token.address === WETH[chainId as ChainId].address) >= 0
+  rewardTokens =
+    isContainETH && isContainWETH
+      ? rewardTokens.filter(token => token.address !== WETH[chainId as ChainId].address)
+      : rewardTokens
 
   // Sort the list of reward tokens in order: KNC -> Native token -> Other tokens
   rewardTokens.sort(function(tokenA, tokenB) {

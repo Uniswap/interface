@@ -1,31 +1,33 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Contract } from '@ethersproject/contracts'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Interface } from '@ethersproject/abi'
 
 import { FARM_HISTORIES } from 'apollo/queries'
-import { ChainId, Token, WETH, Fraction, JSBI } from '@dynamic-amm/sdk'
+import { ChainId, Fraction, JSBI, Token, WETH } from '@dynamic-amm/sdk'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
+import FAIRLAUNCH_V2_ABI from 'constants/abis/fairlaunch-v2.json'
 import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
-import { Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
+import { FairLaunchVersion, Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
 import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
 import { useBlockNumber, useETHPrice, useExchangeClient, useTokensPrice } from 'state/application/hooks'
 import { useActiveWeb3React } from 'hooks'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import {
-  FAIRLAUNCH_ADDRESSES,
-  ZERO_ADDRESS,
   DEFAULT_REWARDS,
-  OUTSITE_FAIRLAUNCH_ADDRESSES,
-  MAX_ALLOW_APY
+  FAIRLAUNCH_ADDRESSES,
+  FAIRLAUNCH_V2_ADDRESSES,
+  MAX_ALLOW_APY,
+  OUTSIDE_FAIRLAUNCH_ADDRESSES,
+  ZERO_ADDRESS
 } from '../../constants'
 import { useAllTokens } from 'hooks/Tokens'
 import { getBulkPoolData } from 'state/pools/hooks'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
-import { useFarmRewardPerBlocks, useFarmApr, getTradingFeeAPR } from 'utils/dmm'
+import { getTradingFeeAPR, useFarmApr } from 'utils/dmm'
 import { isAddressString } from 'utils'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { ethers } from 'ethers'
@@ -35,6 +37,12 @@ export const useRewardTokens = () => {
   const rewardTokensMulticallResult = useMultipleContractSingleData(
     FAIRLAUNCH_ADDRESSES[chainId as ChainId],
     new Interface(FAIRLAUNCH_ABI),
+    'getRewardTokens'
+  )
+
+  const rewardTokensV2MulticallResult = useMultipleContractSingleData(
+    FAIRLAUNCH_V2_ADDRESSES[chainId as ChainId],
+    new Interface(FAIRLAUNCH_V2_ABI),
     'getRewardTokens'
   )
 
@@ -51,8 +59,14 @@ export const useRewardTokens = () => {
       }
     })
 
+    rewardTokensV2MulticallResult.forEach(token => {
+      if (token?.result?.[0]) {
+        result = result.concat(token?.result?.[0].filter((item: string) => result.indexOf(item) < 0))
+      }
+    })
+
     return [...defaultRewards, ...result]
-  }, [rewardTokensMulticallResult, defaultRewards])
+  }, [rewardTokensMulticallResult, rewardTokensV2MulticallResult, defaultRewards])
 }
 
 export const useRewardTokenPrices = (tokens: (Token | undefined)[]) => {
@@ -69,12 +83,14 @@ export const useFarmsData = () => {
   const ethPrice = useETHPrice()
   const allTokens = useAllTokens()
   const blockNumber = useBlockNumber()
+  const currentTimestamp = Math.round(Date.now() / 1000)
 
   const apolloClient = useExchangeClient()
   const farmsData = useSelector((state: AppState) => state.farms.data)
   const loading = useSelector((state: AppState) => state.farms.loading)
   const error = useSelector((state: AppState) => state.farms.error)
 
+  const latestRenderTime = useRef(0)
   useEffect(() => {
     async function getListFarmsForContract(contract: Contract): Promise<Farm[]> {
       const rewardTokenAddresses: string[] = await contract?.getRewardTokens()
@@ -82,13 +98,28 @@ export const useFarmsData = () => {
 
       const pids = [...Array(BigNumber.from(poolLength).toNumber()).keys()]
 
+      const isV2 = FAIRLAUNCH_V2_ADDRESSES[chainId as ChainId].includes(contract.address)
       const poolInfos = await Promise.all(
         pids.map(async (pid: number) => {
           const poolInfo = await contract?.getPoolInfo(pid)
+          if (isV2) {
+            return {
+              ...poolInfo,
+              accRewardPerShares: poolInfo.accRewardPerShares.map((accRewardPerShare: BigNumber, index: number) =>
+                accRewardPerShare.div(poolInfo.rewardMultipliers[index])
+              ),
+              rewardPerSeconds: poolInfo.rewardPerSeconds.map((accRewardPerShare: BigNumber, index: number) =>
+                accRewardPerShare.div(poolInfo.rewardMultipliers[index])
+              ),
+              pid,
+              fairLaunchVersion: FairLaunchVersion.V2
+            }
+          }
 
           return {
             ...poolInfo,
-            pid
+            pid,
+            fairLaunchVersion: FairLaunchVersion.V1
           }
         })
       )
@@ -127,19 +158,27 @@ export const useFarmsData = () => {
           fairLaunchAddress: contract.address,
           userData: {
             stakedBalance: stakedBalances[index],
-            rewards: pendingRewards[index]
+            rewards:
+              poolInfo.fairLaunchVersion === FairLaunchVersion.V2
+                ? pendingRewards[index] &&
+                  pendingRewards[index].map((pendingReward: BigNumber, pendingRewardIndex: number) =>
+                    pendingReward.div(poolInfo.rewardMultipliers[pendingRewardIndex])
+                  )
+                : pendingRewards[index]
           },
-          isEnded: poolInfo.endBlock < (blockNumber || 0)
+          isEnded:
+            poolInfo.fairLaunchVersion === FairLaunchVersion.V2
+              ? poolInfo.endTime <= currentTimestamp
+              : poolInfo.endBlock <= (blockNumber || 0)
         }
       })
 
-      const outsiteFarm = OUTSITE_FAIRLAUNCH_ADDRESSES[contract.address]
-
-      if (outsiteFarm) {
-        const poolData = await fetch(outsiteFarm.subgraphAPI, {
+      const outsideFarm = OUTSIDE_FAIRLAUNCH_ADDRESSES[contract.address]
+      if (outsideFarm) {
+        const poolData = await fetch(outsideFarm.subgraphAPI, {
           method: 'POST',
           body: JSON.stringify({
-            query: outsiteFarm.query
+            query: outsideFarm.query
           })
         }).then(res => res.json())
 
@@ -179,7 +218,7 @@ export const useFarmsData = () => {
       return farms.filter(farm => !!farm.totalSupply)
     }
 
-    async function checkForFarms() {
+    async function checkForFarms(currentRenderTime: number) {
       try {
         if (!fairLaunchContracts) {
           dispatch(setFarmsData({}))
@@ -203,7 +242,7 @@ export const useFarmsData = () => {
           result[address] = promiseResult[index]
         })
 
-        dispatch(setFarmsData(result))
+        currentRenderTime === latestRenderTime.current && dispatch(setFarmsData(result))
       } catch (err) {
         console.error(err)
         dispatch(setYieldPoolsError((err as Error).message))
@@ -212,7 +251,11 @@ export const useFarmsData = () => {
       dispatch(setLoading(false))
     }
 
-    checkForFarms()
+    checkForFarms(latestRenderTime.current)
+
+    return () => {
+      latestRenderTime.current++
+    }
   }, [apolloClient, dispatch, ethPrice.currentPrice, chainId, fairLaunchContracts, account, blockNumber, allTokens])
 
   return { loading, error, data: farmsData }
@@ -333,7 +376,6 @@ export const useYieldHistories = (isModalOpen: boolean) => {
 }
 
 export const useTotalApr = (farm: Farm) => {
-  const farmRewardPerBlocks = useFarmRewardPerBlocks([farm])
   const poolAddressChecksum = isAddressString(farm.id)
   const { decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
@@ -347,13 +389,8 @@ export const useTotalApr = (farm: Farm) => {
     )
   )
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
-  const currentBlock = useBlockNumber()
-  const isLiquidityMiningActive =
-    currentBlock && farm.startBlock && farm.endBlock
-      ? farm.startBlock <= currentBlock && currentBlock <= farm.endBlock
-      : false
 
-  const farmAPR = useFarmApr(farmRewardPerBlocks, liquidity.toString(), isLiquidityMiningActive)
+  const farmAPR = useFarmApr(farm, liquidity.toString())
   const tradingFee = farm?.oneDayFeeUSD ? farm?.oneDayFeeUSD : farm?.oneDayFeeUntracked
 
   const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)

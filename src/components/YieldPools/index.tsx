@@ -1,8 +1,8 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react'
+import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
 import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
 
-import RainMakerBannel from 'assets/images/rain-maker.png'
+import RainMakerBanner from 'assets/images/rain-maker.png'
 import RainMakerMobileBanner from 'assets/images/rain-maker-mobile.png'
 import { AMP_HINT } from 'constants/index'
 import FairLaunchPools from 'components/YieldPools/FairLaunchPools'
@@ -54,6 +54,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
   const activeTab = active ? 'active' : 'ended'
 
   const blockNumber = useBlockNumber()
+  const currentTimestamp = Math.floor(Date.now() / 1000)
 
   const ref = useRef<HTMLDivElement>()
   const [open, setOpen] = useState(false)
@@ -63,29 +64,53 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
   const debouncedSearchText = useDebounce(searchText.trim().toLowerCase(), 200)
   const [isCheckUserStaked, setIsCheckUserStaked] = useState(false)
 
+  const filterFarm = useCallback(
+    (farm: Farm) => {
+      if (farm.rewardPerSeconds) {
+        // for active/ended farms
+        return (
+          currentTimestamp &&
+          (active ? farm.endTime >= currentTimestamp : farm.endTime < currentTimestamp) &&
+          // search farms
+          (debouncedSearchText
+            ? farm.token0?.symbol.toLowerCase().includes(debouncedSearchText) ||
+              farm.token1?.symbol.toLowerCase().includes(debouncedSearchText) ||
+              farm.id === debouncedSearchText
+            : true) &&
+          // stakedOnly
+          (stakedOnly[activeTab]
+            ? farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0)
+            : true)
+        )
+      } else {
+        // for active/ended farms
+        return (
+          blockNumber &&
+          (active ? farm.endBlock >= blockNumber : farm.endBlock < blockNumber) &&
+          // search farms
+          (debouncedSearchText
+            ? farm.token0?.symbol.toLowerCase().includes(debouncedSearchText) ||
+              farm.token1?.symbol.toLowerCase().includes(debouncedSearchText) ||
+              farm.id === debouncedSearchText
+            : true) &&
+          // stakedOnly
+          (stakedOnly[activeTab]
+            ? farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0)
+            : true)
+        )
+      }
+    },
+    [active, activeTab, blockNumber, debouncedSearchText, stakedOnly]
+  )
+
   const farms = useMemo(
     () =>
       Object.keys(farmsByFairLaunch).reduce((acc: { [key: string]: Farm[] }, address) => {
-        const currentFarms = farmsByFairLaunch[address].filter(
-          farm =>
-            // for active/ended farms
-            blockNumber &&
-            (active ? farm.endBlock >= blockNumber : farm.endBlock < blockNumber) &&
-            // search farms
-            (debouncedSearchText
-              ? farm.token0?.symbol.toLowerCase().includes(debouncedSearchText) ||
-                farm.token1?.symbol.toLowerCase().includes(debouncedSearchText) ||
-                farm.id === debouncedSearchText
-              : true) &&
-            // stakedOnly
-            (stakedOnly[activeTab]
-              ? farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0)
-              : true)
-        )
+        const currentFarms = farmsByFairLaunch[address].filter(farm => filterFarm(farm))
         if (currentFarms.length) acc[address] = currentFarms
         return acc
       }, {}),
-    [farmsByFairLaunch, debouncedSearchText, active, blockNumber, activeTab, stakedOnly]
+    [farmsByFairLaunch, filterFarm]
   )
 
   const noFarms = !Object.keys(farms).length
@@ -99,12 +124,21 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
     if (!active && !stakedOnly['ended'] && !isCheckUserStaked) {
       const staked = Object.keys(farmsByFairLaunch).filter(address => {
         return !!farmsByFairLaunch[address].filter(farm => {
-          return (
-            blockNumber &&
-            farm.endBlock < blockNumber &&
-            farm.userData?.stakedBalance &&
-            BigNumber.from(farm.userData.stakedBalance).gt(0)
-          )
+          if (farm.rewardPerSeconds) {
+            return (
+              currentTimestamp &&
+              farm.endTime < currentTimestamp &&
+              farm.userData?.stakedBalance &&
+              BigNumber.from(farm.userData.stakedBalance).gt(0)
+            )
+          } else {
+            return (
+              blockNumber &&
+              farm.endBlock < blockNumber &&
+              farm.userData?.stakedBalance &&
+              BigNumber.from(farm.userData.stakedBalance).gt(0)
+            )
+          }
         }).length
       })
 
@@ -122,7 +156,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         <LearnMoreBtn href="https://docs.kyberswap.com/guides/yield-farming" target="_blank" rel="noopener noreferrer">
           <Trans>Learn more</Trans> -&gt;
         </LearnMoreBtn>
-        <img src={mdBreakpoint ? RainMakerBannel : RainMakerMobileBanner} alt="RainMaker" width="100%" />
+        <img src={mdBreakpoint ? RainMakerBanner : RainMakerMobileBanner} alt="RainMaker" width="100%" />
       </AdContainer>
       <HeadingContainer>
         <StakedOnlyToggleWrapper>
@@ -165,7 +199,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
 
                   return (
                     <TYPE.body key={reward.token.address} color={theme.text11} fontWeight={'normal'} fontSize={16}>
-                      {fixedFormatting(reward.amount, 18)} {reward.token.symbol}
+                      {fixedFormatting(reward.amount, reward.token.decimals)} {reward.token.symbol}
                     </TYPE.body>
                   )
                 })}
@@ -190,7 +224,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
             </ClickableText>
           </Flex>
 
-          <Flex grid-area="end" alignItems="right" justifyContent="flex-end">
+          <Flex grid-area="end" alignItems="center" justifyContent="flex-start">
             <ClickableText>
               <Trans>Ending In</Trans>
             </ClickableText>

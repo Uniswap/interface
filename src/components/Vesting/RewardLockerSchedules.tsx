@@ -9,27 +9,31 @@ import { useAppDispatch } from 'state/hooks'
 import { useBlockNumber } from 'state/application/hooks'
 import Schedule from './Schedule'
 import UnlockedBlock from './UnlockedBlock'
-import { RewardLockerSchedulesWrapper, RewardLockerSchedulesTitle, ClaimAllSection } from './styleds'
+import { ClaimAllSection, RewardLockerSchedulesTitle, RewardLockerSchedulesWrapper } from './styleds'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
-import { Text, Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import { useMedia } from 'react-use'
 import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
+import { RewardLockerVersion } from 'state/farms/types'
 
 const RewardLockerSchedules = ({
   rewardLockerAddress,
   schedules,
-  idx
+  idx,
+  rewardLockerVersion
 }: {
   rewardLockerAddress: string
-  schedules: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number][]
+  schedules: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number, RewardLockerVersion][]
   idx: number
+  rewardLockerVersion: RewardLockerVersion
 }) => {
   const theme = useTheme()
   const isDarkMode = useIsDarkMode()
   const dispatch = useAppDispatch()
   const above500 = useMedia('(min-width: 500px)')
   const currentBlockNumber = useBlockNumber()
+  const currentTimestamp = Math.round(Date.now() / 1000)
   const { account, chainId } = useActiveWeb3React()
   const [expanded, setExpanded] = useState<boolean>(true)
   const { vestMultipleTokensAtIndices } = useVesting(rewardLockerAddress)
@@ -37,7 +41,6 @@ const RewardLockerSchedules = ({
   if (!schedules) {
     schedules = []
   }
-
   const info = schedules.reduce<{
     [key: string]: {
       vestableIndexes: number[]
@@ -67,16 +70,16 @@ const RewardLockerSchedules = ({
     /**
      * fullyVestedAlready = schedule.quantity - schedule.vestedQuantity
      */
-    const fullyVestedAlready = BigNumber.from(schedule[2])
-      .sub(BigNumber.from(schedule[3]))
-      .isZero()
+    const fullyVestedAlready = schedule[2].sub(schedule[3]).isZero()
 
     /**
-     * isEnd = schedule.endBlock - currentBlock >= 0
+     * v1: isEnd = schedule.endBlock < currentBlock
+     * v2: isEnd = schedule.endTime < currentTimestamp
      */
-    const isEnd = !BigNumber.from(currentBlockNumber)
-      .sub(BigNumber.from(schedule[1]))
-      .isNegative()
+    const isEnd =
+      rewardLockerVersion === RewardLockerVersion.V1
+        ? schedule[1].lt(currentBlockNumber)
+        : schedule[1].lt(currentTimestamp)
     // const vestedAndVestablePercent = BigNumber.from(currentBlockNumber)
     //   .sub(BigNumber.from(s[1]))
     //   .isNegative()
@@ -89,10 +92,10 @@ const RewardLockerSchedules = ({
     //   .mul(vestedAndVestablePercent)
     //   .div(100)
     const unlockedAmount = isEnd
-      ? BigNumber.from(schedule[2])
-      : BigNumber.from(schedule[2])
-          .mul(BigNumber.from(currentBlockNumber).sub(BigNumber.from(schedule[0])))
-          .div(BigNumber.from(schedule[1]).sub(BigNumber.from(schedule[0])))
+      ? schedule[2]
+      : rewardLockerVersion === RewardLockerVersion.V1
+      ? schedule[2].mul(BigNumber.from(currentBlockNumber).sub(schedule[0])).div(schedule[1].sub(schedule[0]))
+      : schedule[2].mul(BigNumber.from(currentTimestamp).sub(schedule[0])).div(schedule[1].sub(schedule[0]))
     const vestableAmount = unlockedAmount.sub(BigNumber.from(schedule[3])) // vestableAmount = unlock - vestedQuanitty
     if (!fullyVestedAlready) {
       result[address].vestableIndexes.push(schedule[5])
@@ -100,10 +103,9 @@ const RewardLockerSchedules = ({
     result[address].vestableAmount = result[address].vestableAmount.add(
       vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
     )
-
-    if (!fullyVestedAlready && !!currentBlockNumber && BigNumber.from(currentBlockNumber).gt(schedule[1])) {
+    if (!fullyVestedAlready && (rewardLockerVersion === RewardLockerVersion.V2 || !!currentBlockNumber) && isEnd) {
       result[address].fullyIndexes.push(schedule[5])
-      result[address].fullyAmount = result[address].fullyAmount.add(BigNumber.from(schedule[2]))
+      result[address].fullyAmount = result[address].fullyAmount.add(schedule[2])
     }
 
     result[address].unlockedAmount = result[address].unlockedAmount.add(unlockedAmount)
@@ -174,14 +176,28 @@ const RewardLockerSchedules = ({
             (s, index) =>
               !BigNumber.from(s[2])
                 .sub(BigNumber.from(s[3]))
-                .isZero() && <Schedule rewardLockerAddress={rewardLockerAddress} schedule={s} key={index} />
+                .isZero() && (
+                <Schedule
+                  rewardLockerAddress={rewardLockerAddress}
+                  schedule={s}
+                  key={index}
+                  currentTimestamp={currentTimestamp}
+                />
+              )
           )}
 
           {schedules.map(
             (s, index) =>
               BigNumber.from(s[2])
                 .sub(BigNumber.from(s[3]))
-                .isZero() && <Schedule rewardLockerAddress={rewardLockerAddress} schedule={s} key={index} />
+                .isZero() && (
+                <Schedule
+                  rewardLockerAddress={rewardLockerAddress}
+                  schedule={s}
+                  key={index}
+                  currentTimestamp={currentTimestamp}
+                />
+              )
           )}
         </>
       )}

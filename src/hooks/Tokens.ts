@@ -1,5 +1,5 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, ETHER, Token, currencyEquals } from '@dynamic-amm/sdk'
+import { Currency, ETHER, Token, currencyEquals, ChainId } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { TokenAddressMap, useCombinedActiveList, useAllLists, useInactiveListUrls } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'

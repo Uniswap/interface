@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { useMedia } from 'react-use'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ChainId } from '@dynamic-amm/sdk'
+import { ChainId, Token } from '@dynamic-amm/sdk'
 import { AVERAGE_BLOCK_TIME_IN_SECS } from 'constants/index'
 import { ButtonPrimary } from 'components/Button'
 import { AutoRow } from 'components/Row'
@@ -19,10 +19,19 @@ import { TYPE } from 'theme'
 import { getTokenSymbol } from 'utils'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import { fixedFormatting } from 'utils/formatBalance'
-import { Tag, ScheduleWrapper } from './styleds'
+import { ScheduleWrapper, Tag } from './styleds'
 import { Flex, Text } from 'rebass'
+import { RewardLockerVersion } from 'state/farms/types'
 
-const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: string; schedule: any }) => {
+const Schedule = ({
+  rewardLockerAddress,
+  schedule,
+  currentTimestamp
+}: {
+  rewardLockerAddress: string
+  schedule: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number, RewardLockerVersion]
+  currentTimestamp: number
+}) => {
   const dispatch = useAppDispatch()
   const { account, chainId } = useActiveWeb3React()
   const above768 = useMedia('(min-width: 768px)') // Extra large screen
@@ -32,60 +41,70 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
   const rewardTokens = useMemo(() => [schedule[4]], [JSON.stringify(schedule)])
   const tokenPrices = useRewardTokenPrices(rewardTokens)
   const { vestAtIndex } = useVesting(rewardLockerAddress)
+  const rewardLockerVersion = schedule[6]
 
-  const startTimestamp = useTimestampFromBlock(BigNumber.from(schedule[0]).toNumber())
-  const endTimestamp =
-    useTimestampFromBlock(BigNumber.from(schedule[1]).toNumber()) ||
+  const startTimestampFromBlock = useTimestampFromBlock(schedule[0].toNumber())
+  const endTimestampFromBlock =
+    useTimestampFromBlock(schedule[1].toNumber()) ||
     (chainId &&
-      !!startTimestamp &&
-      startTimestamp +
-        BigNumber.from(schedule[1])
-          .sub(BigNumber.from(schedule[0]))
+      !!startTimestampFromBlock &&
+      startTimestampFromBlock +
+        schedule[1]
+          .sub(schedule[0])
           .mul(100 * AVERAGE_BLOCK_TIME_IN_SECS[chainId])
           .div(100)
           .toNumber())
-  const currentBlockNumber = useBlockNumber() || schedule[0]
-  const endIn =
-    chainId && currentBlockNumber && BigNumber.from(schedule[1]).toNumber() > currentBlockNumber
-      ? BigNumber.from(schedule[1])
-          .sub(currentBlockNumber)
-          .mul(100 * AVERAGE_BLOCK_TIME_IN_SECS[chainId])
-          .div(100)
-          .toNumber()
-      : undefined
-  const fullyVestedAlready = BigNumber.from(schedule[2])
-    .sub(BigNumber.from(schedule[3]))
-    .isZero()
-  const vestedPercent = BigNumber.from(schedule[3])
+  const startTimestamp =
+    rewardLockerVersion === RewardLockerVersion.V1 ? startTimestampFromBlock : schedule[0].toNumber()
+  const endTimestamp = rewardLockerVersion === RewardLockerVersion.V1 ? endTimestampFromBlock : schedule[1].toNumber()
+  const currentBlockNumber =
+    useBlockNumber() || (rewardLockerVersion === RewardLockerVersion.V1 ? schedule[0].toNumber() : 0)
+
+  let endIn: number | undefined
+  if (rewardLockerVersion === RewardLockerVersion.V1) {
+    endIn =
+      chainId && currentBlockNumber && schedule[1].toNumber() > currentBlockNumber
+        ? BigNumber.from(schedule[1])
+            .sub(currentBlockNumber)
+            .mul(100 * AVERAGE_BLOCK_TIME_IN_SECS[chainId])
+            .div(100)
+            .toNumber()
+        : undefined
+  } else {
+    endIn = chainId && schedule[1].toNumber() > currentTimestamp ? schedule[1].toNumber() - currentTimestamp : undefined
+  }
+  const fullyVestedAlready = schedule[2].sub(schedule[3]).isZero()
+  const vestedPercent = schedule[3]
     .mul(100)
-    .div(BigNumber.from(schedule[2]))
+    .div(schedule[2])
     .toNumber()
-  const isEnd = !BigNumber.from(currentBlockNumber)
-    .sub(BigNumber.from(schedule[1]))
-    .isNegative()
-  const vestedAndVestablePercent = BigNumber.from(currentBlockNumber)
-    .sub(BigNumber.from(schedule[1]))
-    .isNegative()
-    ? BigNumber.from(currentBlockNumber)
-        .sub(BigNumber.from(schedule[0]))
+  const isEnd =
+    rewardLockerVersion === RewardLockerVersion.V1
+      ? schedule[1].lt(currentBlockNumber)
+      : schedule[1].lt(currentTimestamp)
+  const vestedAndVestablePercent = isEnd
+    ? 100
+    : BigNumber.from(rewardLockerVersion === RewardLockerVersion.V1 ? currentBlockNumber : currentTimestamp)
+        .sub(schedule[0])
         .mul(100)
-        .div(BigNumber.from(schedule[1]).sub(BigNumber.from(schedule[0])))
-    : 100
+        .div(schedule[1].sub(schedule[0]))
   let vestableAmount = isEnd
-    ? BigNumber.from(schedule[2]).sub(BigNumber.from(schedule[3]))
-    : BigNumber.from(schedule[2])
-        .mul(BigNumber.from(currentBlockNumber).sub(BigNumber.from(schedule[0])))
-        .div(BigNumber.from(schedule[1]).sub(BigNumber.from(schedule[0])))
-        .sub(BigNumber.from(schedule[3]))
+    ? schedule[2].sub(schedule[3])
+    : schedule[2]
+        .mul(
+          BigNumber.from(rewardLockerVersion === RewardLockerVersion.V1 ? currentBlockNumber : currentTimestamp).sub(
+            schedule[0]
+          )
+        )
+        .div(schedule[1].sub(schedule[0]))
+        .sub(schedule[3])
   vestableAmount = vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
 
-  const unvestableAmount = BigNumber.from(schedule[2])
-    .mul(BigNumber.from(100).sub(vestedAndVestablePercent))
-    .div(100)
+  const unvestableAmount = schedule[2].mul(BigNumber.from(100).sub(vestedAndVestablePercent)).div(100)
 
-  const toUSD: (value: BigNumber) => string = useCallback(
-    value =>
-      tokenPrices[0] && value ? `$${(tokenPrices[0] * parseFloat(fixedFormatting(value, 18))).toFixed(2)}` : '',
+  const toUSD: (value: BigNumber, decimals: number) => string = useCallback(
+    (value, decimals) =>
+      tokenPrices[0] && value ? `$${(tokenPrices[0] * parseFloat(fixedFormatting(value, decimals))).toFixed(2)}` : '',
     [tokenPrices]
   )
 
@@ -113,12 +132,13 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
     <Flex alignItems="center" style={{ gap: '8px' }} flexWrap="wrap">
       <TYPE.body color={theme.text11} fontWeight={400} fontSize={16}>
         <Trans>
-          Rewards: {fixedFormatting(BigNumber.from(schedule[2]), 18)} {getTokenSymbol(schedule[4], chainId)}
+          Rewards: {fixedFormatting(BigNumber.from(schedule[2]), schedule[4].decimals)}{' '}
+          {getTokenSymbol(schedule[4], chainId)}
         </Trans>
       </TYPE.body>
 
       <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-        {toUSD(BigNumber.from(schedule[2]))}
+        {toUSD(BigNumber.from(schedule[2]), schedule[4].decimals)}
       </TYPE.body>
 
       {vestedAndVestablePercent === 100 && !fullyVestedAlready && (
@@ -148,7 +168,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
     >
       <Tag>
         <Trans>
-          Unlocked: {fixedFormatting(vestableAmount, 18)} {getTokenSymbol(schedule[4], chainId)}
+          Unlocked: {fixedFormatting(vestableAmount, schedule[4].decimals)} {getTokenSymbol(schedule[4], chainId)}
         </Trans>
       </Tag>
 
@@ -161,9 +181,8 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
   const duration =
     chainId &&
     getFormattedTimeFromSecond(
-      BigNumber.from(schedule[1])
-        .sub(BigNumber.from(schedule[0]))
-        .toNumber() * AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId]
+      schedule[1].sub(schedule[0]).toNumber() *
+        (rewardLockerVersion === RewardLockerVersion.V1 ? AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId] : 1)
     )
 
   return (
@@ -206,7 +225,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
             >
               <Trans>CLAIMED</Trans> <br />
               <Text color={theme.text} fontWeight={600} as="span">
-                {fixedFormatting(BigNumber.from(schedule[3]), 18)}
+                {fixedFormatting(BigNumber.from(schedule[3]), schedule[4].decimals)}
               </Text>
             </TYPE.body>
             {/* <TYPE.body
@@ -269,7 +288,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                 >
                   <Trans>UNLOCKED</Trans> <br />
                   <Text color={theme.text} fontWeight={600} as="span">
-                    {fixedFormatting(vestableAmount, 18)}
+                    {fixedFormatting(vestableAmount, schedule[4].decimals)}
                   </Text>
                 </TYPE.body>
               </>
@@ -290,7 +309,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                   }}
                 >
                   <Text color={theme.text} fontWeight={600} as="span">
-                    {fixedFormatting(unvestableAmount, 18)}
+                    {fixedFormatting(unvestableAmount, schedule[4].decimals)}
                   </Text>{' '}
                   <Trans>LOCKED</Trans>
                 </TYPE.body>
