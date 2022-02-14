@@ -16,3 +16,12 @@ export default function useAllowedSlippage(trade: InterfaceTrade<Currency, Curre
   const maxSlippage = toPercent(useAtomValue(maxSlippageAtom))
   return useAtomValue(autoSlippageAtom) ? autoSlippage : maxSlippage ?? autoSlippage
 }
+
+export const MAX_VALID_SLIPPAGE = new Percent(1, 2)
+export const MIN_HIGH_SLIPPAGE = new Percent(1, 100)
+
+export function getSlippageWarning(slippage?: Percent): 'warning' | 'error' | undefined {
+  if (slippage?.greaterThan(MAX_VALID_SLIPPAGE)) return 'error'
+  if (slippage?.greaterThan(MIN_HIGH_SLIPPAGE)) return 'warning'
+  return
+}

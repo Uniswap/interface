@@ -5,9 +5,9 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
+import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
-import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
@@ -100,8 +100,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const warning = useMemo(() => {
     if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
     if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
-    if (allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE)) return 'warning'
-    return
+    return getSlippageWarning(allowedSlippage)
   }, [allowedSlippage, priceImpact])
 
   const [ackPriceImpact, setAckPriceImpact] = useState(false)

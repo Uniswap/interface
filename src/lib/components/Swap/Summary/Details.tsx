@@ -4,7 +4,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtomValue } from 'jotai/utils'
-import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
+import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
@@ -52,7 +52,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   const { i18n } = useLingui()
 
   const details = useMemo(() => {
-    const rows = []
+    const rows: Array<[string, string] | [string, string, Color | undefined]> = []
     // @TODO(ianlapham): Check that provider fee is even a valid list item
 
     if (feeOptions) {
@@ -63,13 +63,13 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       }
     }
 
-    const priceImpactRow = [t`Price impact`, `${priceImpact.toFixed(2)}%`]
+    let priceImpactColor: Color | undefined
     if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) {
-      priceImpactRow.push('error')
+      priceImpactColor = 'error'
     } else if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
-      priceImpactRow.push('warning')
+      priceImpactColor = 'warning'
     }
-    rows.push(priceImpactRow)
+    rows.push([t`Price impact`, `${priceImpact.toFixed(2)}%`, priceImpactColor])
 
     if (lpFeeAmount) {
       const parsedLpFee = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
@@ -86,11 +86,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     }
 
-    const slippageToleranceRow = [t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`]
-    if (allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE)) {
-      slippageToleranceRow.push('warning')
-    }
-    rows.push(slippageToleranceRow)
+    rows.push([t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`, getSlippageWarning(allowedSlippage)])
 
     return rows
   }, [
@@ -109,7 +105,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
   return (
     <>
       {details.map(([label, detail, color]) => (
-        <Detail key={label} label={label} value={detail} color={color as Color} />
+        <Detail key={label} label={label} value={detail} color={color} />
       ))}
     </>
   )
