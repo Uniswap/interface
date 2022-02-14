@@ -40,36 +40,34 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   })
   const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
 
-  const [loading, setLoading] = useState(false)
-  const [{ quoteResult, error }, setFetchedResult] = useState<{
-    quoteResult: GetQuoteResult | undefined
-    error: unknown
-  }>({
-    quoteResult: undefined,
-    error: undefined,
-  })
-
   // When arguments update, make a new call to SOR for updated quote
+  const [loading, setLoading] = useState(false)
+  const [{ data: quoteResult, error }, setResult] = useState<{
+    data?: GetQuoteResult
+    error?: unknown
+  }>({ error: undefined })
   useEffect(() => {
     setLoading(true)
+
+    let stale = false
     fetchQuote()
+    return () => {
+      stale = true
+      setLoading(false)
+    }
 
     async function fetchQuote() {
-      try {
-        if (queryArgs && params) {
-          const result = await getClientSideQuote(queryArgs, params, config)
-          setFetchedResult({
-            quoteResult: result.data,
-            error: result.error,
-          })
+      if (queryArgs && params) {
+        let result
+        try {
+          result = await getClientSideQuote(queryArgs, params, config)
+        } catch {
+          result = { error: true }
         }
-      } catch (e) {
-        setFetchedResult({
-          quoteResult: undefined,
-          error: true,
-        })
-      } finally {
-        setLoading(false)
+        if (!stale) {
+          setResult(result)
+          setLoading(false)
+        }
       }
     }
   }, [queryArgs, params])
