@@ -6,7 +6,7 @@ import TextyAnim from 'rc-texty'
 import EthereumLogo from './../assets/images/logo-Ethereum.svg'
 import ArbitrumLogo from './../assets/images/logo-Arbitrum.svg'
 import xDaiLogo from './../assets/images/logo-xDai.svg'
-import gnosisChainLogo from './../assets/images/gnosis-chain-logo.svg'
+import gnosisChainLogo from './../assets/images/gnosis-chain.svg'
 import PolygonLogo from './../assets/images/logo-Polygon.svg'
 
 // Hero Imports
