@@ -1,23 +1,17 @@
 import { Placement } from '@popperjs/core'
+import useHasFocus from 'lib/hooks/useHasFocus'
+import useHasHover from 'lib/hooks/useHasHover'
 import { HelpCircle, Icon } from 'lib/icons'
 import styled from 'lib/theme'
-import { ComponentProps, ReactNode, useCallback, useState } from 'react'
+import { ComponentProps, ReactNode, useRef } from 'react'
 
 import { IconButton } from './Button'
 import Popover from './Popover'
 
-export interface TooltipHandlers {
-  onMouseEnter: () => void
-  onMouseLeave: () => void
-  onFocus: () => void
-  onBlur: () => void
-}
-
-export function useTooltip(showOnMount = false): [boolean, (show: boolean) => void, TooltipHandlers] {
-  const [show, setShow] = useState(showOnMount)
-  const enable = useCallback(() => setShow(true), [])
-  const disable = useCallback(() => setShow(false), [])
-  return [show, setShow, { onMouseEnter: enable, onMouseLeave: disable, onFocus: enable, onBlur: disable }]
+export function useTooltip(tooltip: Node | null | undefined): boolean {
+  const hover = useHasHover(tooltip)
+  const focus = useHasFocus(tooltip)
+  return hover || focus
 }
 
 const IconTooltip = styled(IconButton)`
@@ -41,10 +35,11 @@ export default function Tooltip({
   offset,
   contained,
 }: TooltipProps) {
-  const [showTooltip, , tooltipProps] = useTooltip()
+  const tooltip = useRef<HTMLDivElement>(null)
+  const showTooltip = useTooltip(tooltip.current)
   return (
     <Popover content={children} show={showTooltip} placement={placement} offset={offset} contained={contained}>
-      <IconTooltip icon={Icon} iconProps={iconProps} {...tooltipProps} />
+      <IconTooltip icon={Icon} iconProps={iconProps} ref={tooltip} />
     </Popover>
   )
 }

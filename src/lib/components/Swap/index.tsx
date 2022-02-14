@@ -7,6 +7,7 @@ import useSyncConvenienceFee from 'lib/hooks/swap/useSyncConvenienceFee'
 import useSyncSwapDefaults from 'lib/hooks/swap/useSyncSwapDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import useHasFocus from 'lib/hooks/useHasFocus'
 import useTokenList from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
@@ -54,7 +55,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props)
 
   const { active, account, chainId } = useActiveWeb3React()
-  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
@@ -65,7 +66,7 @@ export default function Swap(props: SwapProps) {
     [chainId, list]
   )
 
-  const [focused, setFocused] = useState(false)
+  const focused = useHasFocus(wrapper)
 
   return (
     <SwapPropValidator {...props}>
@@ -74,8 +75,8 @@ export default function Swap(props: SwapProps) {
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!active} />
       </Header>
-      <div onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} ref={setBoundary}>
-        <BoundaryProvider value={boundary}>
+      <div ref={setWrapper}>
+        <BoundaryProvider value={wrapper}>
           <Input disabled={!active} focused={focused} />
           <ReverseButton disabled={!active} />
           <Output disabled={!active} focused={focused}>
