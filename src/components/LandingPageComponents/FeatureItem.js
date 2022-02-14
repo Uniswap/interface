@@ -48,7 +48,12 @@ const FeatureItem = (props) => {
                     <p>{feature.content}</p>
                     <div className="feature-buttons">
                         {feature.buttons.map((button, key) => (
-                            <Button key={key} label={button.label} type={button.type}/>
+                            <Button 
+                                key={key} 
+                                label={button.label} 
+                                type={button.type} 
+                                to={button.href} 
+                                onClick={button.onClick && button.onClick } />
                         ))}
                     </div>
                 </div>

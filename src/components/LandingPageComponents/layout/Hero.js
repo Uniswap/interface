@@ -137,20 +137,17 @@ const Hero = (props) => {
                     <div className="routing-through-body" >
                         <Marquee speed={50} gradientColor={[12,11,18]}>
                             <div className="marquee-inner">
-                                {RoutingThroughContent.companies.map((company, key) => (
-                                    <img 
-                                        key={key} 
-                                        src={company.img} 
-                                        alt="Routing through..." 
-                                    />
-                                ))}
-                                {RoutingThroughContent.companies.map((company, key) => (
-                                    <img 
-                                        key={key} 
-                                        src={company.img} 
-                                        alt="Routing through..." 
-                                    />
-                                ))}
+                                {[...Array(3)].map((e, i) => 
+                                    <>{
+                                        RoutingThroughContent.companies.map((company, key) => (
+                                            <img 
+                                                key={key} 
+                                                src={company.img} 
+                                                alt="Routing through..." 
+                                            />
+                                        ))
+                                    }</>
+                                )}
                             </div>
                         </Marquee>
                     </div>

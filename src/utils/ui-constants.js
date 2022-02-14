@@ -6,6 +6,7 @@ import TextyAnim from 'rc-texty'
 import EthereumLogo from './../assets/images/logo-Ethereum.svg'
 import ArbitrumLogo from './../assets/images/logo-Arbitrum.svg'
 import xDaiLogo from './../assets/images/logo-xDai.svg'
+import gnosisChainLogo from './../assets/images/gnosis-chain-logo.svg'
 import PolygonLogo from './../assets/images/logo-Polygon.svg'
 
 // Hero Imports
@@ -14,6 +15,7 @@ import RoutingUniswap from './../assets/images/routing-Uniswap.svg'
 import RoutingSushiSwap from './../assets/images/routing-SushiSwap.svg'
 import RoutingBaoSwap from './../assets/images/routing-BaoSwap.svg'
 import RoutingHoneySwap from './../assets/images/routing-HoneySwap.svg'
+import RoutingLevinSwap from './../assets/images/levinswap.svg'
 
 // Features Imports
 
@@ -58,6 +60,7 @@ import AboutGovernance from './../assets/images/about-governance.png'
 import AboutFarming from './../assets/images/about-farming.png'
 import AboutEcoRouting from './../assets/images/about-eco-routing.png'
 import AboutBridging from './../assets/images/about-bridging.png'
+import { scrollTo } from './helper-functions'
 
 export const mainNavigation = [
     // {
@@ -133,6 +136,10 @@ export const RoutingThroughContent = {
             title: 'HoneySwap',
             img: RoutingHoneySwap
         },
+        {
+            title: 'Levinswap',
+            img: RoutingLevinSwap
+        },
     ]
 }
 
@@ -142,8 +149,8 @@ export const FeaturesContent = {
         logos: [
             EthereumLogo,
             ArbitrumLogo,
-            xDaiLogo,
-            PolygonLogo
+            gnosisChainLogo,
+            // PolygonLogo
         ]
     },
     preHeader: 'Swapr Features',
@@ -151,103 +158,109 @@ export const FeaturesContent = {
     features: [
         {
             title: 'SWAP',
-            content: 'It is a long established fact that a reader will be distracted. It is a long  established fact',
+            content: 'Trade your favorite pairs on your favorite chains through the Swapr interface.',
             image: Swap,
             animation: SwapAnim,
             buttons: [
                 {
-                    label: 'BRIDGE',
-                    href: '#',
+                    label: 'SWAP',
+                    href: '/',
+                    onClick: scrollTo('app-wrapper'),
                     type: 'primary'
                 },
                 {
                     label: 'READ MORE',
-                    href: '#',
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/',
                     type: 'dark'
                 },
             ]
         },
         {
             title: 'ECO-ROUTING',
-            content: 'It is a long established fact that a reader will be distracted. It is a long  established fact',
+            content: 'The eco-router ensures the best price through established DEXes with no extra fees!',
             animation: EcoRoutingAnim,
             image: EcoRouting,
             buttons: [
                 {
                     label: 'SWAP',
-                    href: '#',
+                    onClick: scrollTo('app-wrapper'),
                     type: 'primary'
                 },
                 {
                     label: 'READ MORE',
-                    href: '#',
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/',
                     type: 'dark'
                 },
             ]
         },
         {
             title: 'VOTE',
-            content: 'It is a long established fact that a reader will be distracted. It is a long  established fact',
+            content: 'LPs on the Swapr protocol can vote to adjust the fees on their pools.',
             image: Vote,
             animation: VoteAnim,
             buttons: [
                 {
+                    label: 'VOTE',
+                    href: '/',
+                    type: 'primary'
+                },
+                {
                     label: 'READ MORE',
-                    href: '#',
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/',
                     type: 'dark'
                 },
             ]
         },
         {
             title: 'FARMING',
-            content: 'It is a long established fact that a reader will be distracted. It is a long  established fact',
+            content: 'Users can participate in permissionless farming campaigns directly in the Swapr interface.',
             image: Farming,
             animation: FarmingAnim,
             buttons: [
                 {
-                    label: 'BRIDGE',
-                    href: '#',
+                    label: 'FARM',
+                    href: '/rewards#/rewards',
                     type: 'primary'
                 },
                 {
                     label: 'READ MORE',
-                    href: '#',
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/',
                     type: 'dark'
                 },
             ]
         },
         {
             title: 'DIY FARM',
-            content: 'It is a long established fact that a reader will be distracted. It is a long  established fact',
+            content: 'The Swapr protocol allows anyone to create farming campaigns. Any pair, any reward.',
             image: DiyFarm,
             animation: DiyFarmAnim,
             buttons: [
                 {
-                    label: 'BRIDGE',
-                    href: '#',
+                    label: 'CREATE CAMPAIGN',
+                    href: 'https://swapr.eth.link/#/liquidity-mining/create',
                     type: 'primary'
                 },
                 {
                     label: 'READ MORE',
-                    href: '#',
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/',
                     type: 'dark'
                 },
             ]
         },
         {
             title: 'BRIDGE',
-            content: 'It is a long established fact that a reader will be distracted. It is a long  established fact',
+            content: 'Bridge directly to or from any chain where Swapr is deployed.',
             image: Bridge,
             animation: BridgeAnim,
             buttons: [
                 {
                     label: 'BRIDGE',
-                    href: '#',
+                    href: '/bridge',
                     type: 'primary'
                 },
                 {
                     label: 'READ MORE',
-                    href: '#',
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/',
                     type: 'dark'
                 },
             ]
