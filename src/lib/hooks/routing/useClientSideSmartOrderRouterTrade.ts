@@ -10,6 +10,10 @@ import useActiveWeb3React from '../useActiveWeb3React'
 import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
+/**
+ * Reduces client-side latency by increasing the minimum percentage of the input token to use for each route in a split route while SOR is used client-side.
+ * Defaults are defined in https://github.com/Uniswap/smart-order-router/blob/309e6f6603984d3b5aef0733b0cfaf129c29f602/src/routers/alpha-router/config.ts#L83.
+ */
 const DistributionPercents: { [key: number]: number } = {
   [ChainId.MAINNET]: 10,
   [ChainId.OPTIMISM]: 10,
@@ -25,13 +29,7 @@ function getConfig(chainId: ChainId | undefined) {
     // Limit to only V2 and V3.
     protocols: [Protocol.V2, Protocol.V3],
 
-    /**
-     * Reduces client-side latency by increasing the minimum percentage of the input token to use for each route in a split route while SOR is used client-side.
-     * Defaults are defined in https://github.com/Uniswap/smart-order-router/blob/309e6f6603984d3b5aef0733b0cfaf129c29f602/src/routers/alpha-router/config.ts#L83.
-     */
-    distributionPercent: chainId
-      ? DistributionPercents[chainId] ?? DEFAULT_DISTRIBUTION_PERCENT
-      : DEFAULT_DISTRIBUTION_PERCENT,
+    distributionPercent: (chainId && DistributionPercents[chainId]) ?? DEFAULT_DISTRIBUTION_PERCENT,
   }
 }
 
