@@ -53,7 +53,9 @@ const FeatureItem = (props) => {
                                 label={button.label} 
                                 type={button.type} 
                                 to={button.href} 
-                                onClick={button.onClick && button.onClick } />
+                                onClick={button.onClick && button.onClick } 
+                                external={button.external && button.external} 
+                            />
                         ))}
                     </div>
                 </div>
@@ -111,10 +113,12 @@ const StyledFeatureItem = styled.div`
                 margin-bottom: 6px;
                 font-weight: 500;
                 letter-spacing: 1px;
+                font-size: 20px;
+                line-height: 150%;
             }
             p {
-                font-size: 20px;
-                line-height: 30px;
+                font-size: 16px;
+                line-height: 150%;
                 font-weight: 100;
                 margin-bottom: 40px;
                 color: #B7B5CB;

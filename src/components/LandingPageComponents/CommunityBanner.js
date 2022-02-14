@@ -68,7 +68,7 @@ const StyledCommunityBanner = styled(Layout)`
             }
             .pre-header {
                 margin-bottom: 24px;
-                color: ${(props) => (props.theme.gray)};
+                color: #B7B5CB;
                 font-size: 20px;
                 line-height: 30px;
                 letter-spacing: 0.04em;

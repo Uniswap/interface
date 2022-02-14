@@ -56,7 +56,7 @@ const StyledCommunityLinks = styled(Layout)`
             font-size: 20px;
             line-height: 30px;
             margin-bottom: 16px;
-            color: ${(props) => (props.theme.gray)};
+            color: #B7B5CB;
         }
         h2 {
             font-size: 49px;
@@ -92,7 +92,7 @@ const StyledCommunityLinks = styled(Layout)`
                 }
                 .content {
                     margin: 40px auto 24px;
-                    color: ${(props) => (props.theme.gray)};
+                    color: #B7B5CB;
                     font-size: 16px;
                     line-height: 24px;
                     font-weight: 200;

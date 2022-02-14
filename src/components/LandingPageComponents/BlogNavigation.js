@@ -47,9 +47,9 @@ const StyledBlogNavigation = styled(Layout)`
                     background-position: center;
                 }
                 h3 {
-                    font-size: 20px;
+                    font-size: 18px;
                     line-height: 30px;
-                    color: ${(props) => (props.theme.gray)};
+                    color: #B7B5CB;
                     margin-bottom: 8px;
                     font-weight: 400;
                     text-overflow: ellipsis;
@@ -60,7 +60,7 @@ const StyledBlogNavigation = styled(Layout)`
                     font-size: 16px;
                     line-height: 24px;
                     font-weight: 200;
-                    color: ${(props) => (props.theme.gray)};
+                    color: #B7B5CB;
                     height: 72px;
                     display: inline-block;
                     margin-bottom: 39px;

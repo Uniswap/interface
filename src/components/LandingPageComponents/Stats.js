@@ -279,7 +279,7 @@ const StyledStats = styled(Layout)`
                 position: absolute;
             }
             h3 {
-                color: ${(props) => (props.theme.blueGray)};
+                color: #8780BF;
                 font-weight: 300;
                 margin-bottom: 16px;
                 letter-spacing: 1px;
@@ -295,7 +295,7 @@ const StyledStats = styled(Layout)`
                     &.dim,
                     &.hiddable-mobile {
                         span {
-                            color: #3E3C55;
+                            color: #4A4765;
                         }
                     }
                 }

@@ -72,7 +72,7 @@ const StyledFeatures = styled(Layout)`
             line-height: 30px;
             font-weight: 300;
             letter-spacing: 0.5px;
-            color: ${(props) => (props.theme.gray)};
+            color: #B7B5CB;
             margin-bottom: 8px;
         }
         h2 {

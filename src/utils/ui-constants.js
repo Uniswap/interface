@@ -149,8 +149,7 @@ export const FeaturesContent = {
         logos: [
             EthereumLogo,
             ArbitrumLogo,
-            gnosisChainLogo,
-            // PolygonLogo
+            gnosisChainLogo
         ]
     },
     preHeader: 'Swapr Features',
@@ -164,14 +163,14 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'SWAP',
-                    href: '/',
-                    onClick: scrollTo('app-wrapper'),
+                    onClick: () => {scrollTo('app-wrapper');},
                     type: 'primary'
                 },
                 {
                     label: 'READ MORE',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/',
-                    type: 'dark'
+                    type: 'dark',
+                    external: true
                 },
             ]
         },
@@ -183,13 +182,14 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'SWAP',
-                    onClick: scrollTo('app-wrapper'),
+                    onClick: () => {scrollTo('app-wrapper');},
                     type: 'primary'
                 },
                 {
                     label: 'READ MORE',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/',
-                    type: 'dark'
+                    type: 'dark',
+                    external: true
                 },
             ]
         },
@@ -207,7 +207,8 @@ export const FeaturesContent = {
                 {
                     label: 'READ MORE',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/',
-                    type: 'dark'
+                    type: 'dark',
+                    external: true
                 },
             ]
         },
@@ -225,7 +226,8 @@ export const FeaturesContent = {
                 {
                     label: 'READ MORE',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/',
-                    type: 'dark'
+                    type: 'dark',
+                    external: true
                 },
             ]
         },
@@ -243,7 +245,8 @@ export const FeaturesContent = {
                 {
                     label: 'READ MORE',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/',
-                    type: 'dark'
+                    type: 'dark',
+                    external: true
                 },
             ]
         },
@@ -261,7 +264,8 @@ export const FeaturesContent = {
                 {
                     label: 'READ MORE',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/',
-                    type: 'dark'
+                    type: 'dark',
+                    external: true
                 },
             ]
         },
