@@ -34,7 +34,7 @@ import {
   zh,
 } from 'make-plural/plurals'
 import { PluralCategory } from 'make-plural/plurals'
-import { ReactNode, useEffect } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
@@ -90,10 +90,14 @@ interface ProviderProps {
   locale: SupportedLocale
   forceRenderAfterLocaleChange?: boolean
   onActivate?: (locale: SupportedLocale) => void
-  children: ReactNode
 }
 
-export function Provider({ locale, forceRenderAfterLocaleChange = true, onActivate, children }: ProviderProps) {
+export function Provider({
+  locale,
+  forceRenderAfterLocaleChange = true,
+  onActivate,
+  children,
+}: PropsWithChildren<ProviderProps>) {
   useEffect(() => {
     dynamicActivate(locale)
       .then(() => onActivate?.(locale))

@@ -1,7 +1,7 @@
 import { Options, Placement } from '@popperjs/core'
 import styled, { Layer } from 'lib/theme'
 import maxSize from 'popper-max-size-modifier'
-import React, { createContext, useContext, useMemo, useRef, useState } from 'react'
+import React, { createContext, PropsWithChildren, ReactNode, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 
@@ -77,15 +77,21 @@ const Arrow = styled.div`
 `
 
 export interface PopoverProps {
-  content: React.ReactNode
+  content: ReactNode
   show: boolean
-  children: React.ReactNode
   placement: Placement
   offset?: number
   contained?: true
 }
 
-export default function Popover({ content, show, children, placement, offset, contained }: PopoverProps) {
+export default function Popover({
+  content,
+  show,
+  children,
+  placement,
+  offset,
+  contained,
+}: PropsWithChildren<PopoverProps>) {
   const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 

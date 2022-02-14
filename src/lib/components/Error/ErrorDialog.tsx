@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { AlertTriangle, Expando, Icon, Info, LargeIcon } from 'lib/icons'
 import styled, { Color, ThemedText } from 'lib/theme'
-import { ReactNode, useState } from 'react'
+import { PropsWithChildren, ReactNode, useState } from 'react'
 
 import ActionButton from '../ActionButton'
 import { IconButton } from '../Button'
@@ -22,10 +22,9 @@ interface StatusHeaderProps {
   icon: Icon
   iconColor?: Color
   iconSize?: number
-  children: ReactNode
 }
 
-export function StatusHeader({ icon: Icon, iconColor, iconSize = 4, children }: StatusHeaderProps) {
+export function StatusHeader({ icon: Icon, iconColor, iconSize = 4, children }: PropsWithChildren<StatusHeaderProps>) {
   return (
     <>
       <Column flex style={{ flexGrow: 1 }}>

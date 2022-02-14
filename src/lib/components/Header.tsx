@@ -1,6 +1,6 @@
 import { largeIconCss } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement } from 'react'
 
 import Row from './Row'
 
@@ -11,12 +11,7 @@ const HeaderRow = styled(Row)`
   ${largeIconCss}
 `
 
-export interface HeaderProps {
-  title?: ReactElement
-  children: ReactNode
-}
-
-export default function Header({ title, children }: HeaderProps) {
+export default function Header({ title, children }: PropsWithChildren<{ title?: ReactElement }>) {
   return (
     <HeaderRow iconSize={1.2}>
       <Row gap={0.5}>{title && <ThemedText.Subhead1>{title}</ThemedText.Subhead1>}</Row>

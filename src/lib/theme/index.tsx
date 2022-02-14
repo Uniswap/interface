@@ -6,7 +6,7 @@ import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 
 import { mix, transparentize } from 'polished'
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 
 import styled, { ThemedProvider } from './styled'
 import { Colors, ComputedTheme, Theme } from './theme'
@@ -96,12 +96,7 @@ export function useSystemTheme() {
 
 const ThemeContext = createContext<ComputedTheme>(toComputedTheme(defaultTheme))
 
-interface ThemeProviderProps {
-  theme?: Theme
-  children: ReactNode
-}
-
-export function ThemeProvider({ theme, children }: ThemeProviderProps) {
+export function ThemeProvider({ theme, children }: PropsWithChildren<{ theme?: Theme }>) {
   const contextTheme = useContext(ThemeContext)
   const value = useMemo(() => {
     return toComputedTheme({

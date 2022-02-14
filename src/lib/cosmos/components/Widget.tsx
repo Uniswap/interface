@@ -5,12 +5,12 @@ import { INFURA_NETWORK_URLS } from 'constants/infura'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 import Widget from 'lib/components/Widget'
 import { darkTheme, defaultTheme, lightTheme } from 'lib/theme'
-import { ReactNode, useEffect, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
 
 export const [metaMask] = initializeConnector<MetaMask>((actions) => new MetaMask(actions))
 
-export default function Wrapper({ children }: { children: ReactNode }) {
+export default function Wrapper({ children }: PropsWithChildren<Record<string, never>>) {
   const [width] = useValue('width', { defaultValue: 360 })
   const [locale] = useSelect('locale', { defaultValue: DEFAULT_LOCALE, options: ['pseudo', ...SUPPORTED_LOCALES] })
   const [darkMode] = useValue('dark mode', { defaultValue: false })

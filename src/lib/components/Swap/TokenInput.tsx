@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { loadingOpacityCss } from 'lib/css/loading'
 import styled, { keyframes, ThemedText } from 'lib/theme'
-import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
+import { FocusEvent, PropsWithChildren, useCallback, useRef, useState } from 'react'
 
 import Button from '../Button'
 import Column from '../Column'
@@ -55,7 +55,6 @@ interface TokenInputProps {
   onChangeInput: (input: string) => void
   onChangeCurrency: (currency: Currency) => void
   loading?: boolean
-  children: ReactNode
 }
 
 export default function TokenInput({
@@ -67,7 +66,7 @@ export default function TokenInput({
   onChangeCurrency,
   loading,
   children,
-}: TokenInputProps) {
+}: PropsWithChildren<TokenInputProps>) {
   const max = useRef<HTMLButtonElement>(null)
   const [showMax, setShowMax] = useState(false)
   const onFocus = useCallback(() => setShowMax(Boolean(onMax)), [onMax])

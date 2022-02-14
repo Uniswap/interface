@@ -3,7 +3,16 @@ import 'wicg-inert'
 import useUnmount from 'lib/hooks/useUnmount'
 import { X } from 'lib/icons'
 import styled, { Color, Layer, ThemeProvider } from 'lib/theme'
-import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 
 import { IconButton } from './Button'
@@ -24,12 +33,7 @@ const Context = createContext({
   setActive: (active: boolean) => undefined as void,
 })
 
-interface ProviderProps {
-  value: HTMLElement | null
-  children: ReactNode
-}
-
-export function Provider({ value, children }: ProviderProps) {
+export function Provider({ value, children }: PropsWithChildren<{ value: HTMLElement | null }>) {
   // If a Dialog is active, mark the main content inert
   const ref = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(false)
@@ -84,11 +88,10 @@ export const Modal = styled.div<{ color: Color }>`
 
 interface DialogProps {
   color: Color
-  children: ReactNode
   onClose?: () => void
 }
 
-export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
+export default function Dialog({ color, children, onClose = () => void 0 }: PropsWithChildren<DialogProps>) {
   const context = useContext(Context)
   useEffect(() => {
     context.setActive(true)

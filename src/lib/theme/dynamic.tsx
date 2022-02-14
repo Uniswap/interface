@@ -1,6 +1,6 @@
 import { darken, lighten, opacify, transparentize } from 'polished'
 import { readableColor } from 'polished'
-import { ReactNode, useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { hex } from 'wcag-contrast'
 
 import { ThemedProvider, useTheme } from './styled'
@@ -56,12 +56,7 @@ function getAccessibleColor(theme: ComputedTheme, color: string) {
   return color
 }
 
-interface DynamicThemeProviderProps {
-  color?: string
-  children: ReactNode
-}
-
-export function DynamicThemeProvider({ color, children }: DynamicThemeProviderProps) {
+export function DynamicThemeProvider({ color, children }: PropsWithChildren<{ color?: string }>) {
   const theme = useTheme()
   const value = useMemo(() => {
     if (!color) {

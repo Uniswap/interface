@@ -3,7 +3,7 @@ import useHasFocus from 'lib/hooks/useHasFocus'
 import useHasHover from 'lib/hooks/useHasHover'
 import { HelpCircle, Icon } from 'lib/icons'
 import styled from 'lib/theme'
-import { ComponentProps, ReactNode, useRef } from 'react'
+import { ComponentProps, PropsWithChildren, useRef } from 'react'
 
 import { IconButton } from './Button'
 import Popover from './Popover'
@@ -21,7 +21,6 @@ const IconTooltip = styled(IconButton)`
 interface TooltipProps {
   icon?: Icon
   iconProps?: ComponentProps<Icon>
-  children: ReactNode
   placement?: Placement
   offset?: number
   contained?: true
@@ -34,7 +33,7 @@ export default function Tooltip({
   placement = 'auto',
   offset,
   contained,
-}: TooltipProps) {
+}: PropsWithChildren<TooltipProps>) {
   const tooltip = useRef<HTMLDivElement>(null)
   const showTooltip = useTooltip(tooltip.current)
   return (

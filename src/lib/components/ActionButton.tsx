@@ -1,6 +1,6 @@
 import { AlertTriangle, Icon, LargeIcon } from 'lib/icons'
 import styled, { Color, css, keyframes, ThemedText } from 'lib/theme'
-import { ReactNode, useMemo } from 'react'
+import { PropsWithChildren, ReactNode, useMemo } from 'react'
 
 import Button from './Button'
 import Row from './Row'
@@ -58,18 +58,22 @@ export interface Action {
   message: ReactNode
   icon?: Icon
   onClick: () => void
-  children: ReactNode
 }
 
 export interface ActionButtonProps {
   color?: Color
   disabled?: boolean
-  action?: Action
+  action?: PropsWithChildren<Action>
   onClick: () => void
-  children: ReactNode
 }
 
-export default function ActionButton({ color = 'accent', disabled, action, onClick, children }: ActionButtonProps) {
+export default function ActionButton({
+  color = 'accent',
+  disabled,
+  action,
+  onClick,
+  children,
+}: PropsWithChildren<ActionButtonProps>) {
   const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])
   return (
     <Overlay action={Boolean(action)} flex align="stretch">

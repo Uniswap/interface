@@ -5,12 +5,11 @@ import { Url } from '@web3-react/url'
 import { SetStateAction } from 'jotai'
 import { RESET, useUpdateAtom } from 'jotai/utils'
 import { injectedAtom, urlAtom } from 'lib/state/web3'
-import { ReactNode, useEffect } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 
 interface Web3ProviderProps {
   jsonRpcEndpoint?: string
   provider?: EthProvider
-  children: ReactNode
 }
 
 function useConnector<T extends { new (actions: Actions, initializer: I): Connector }, I>(
@@ -28,7 +27,7 @@ function useConnector<T extends { new (actions: Actions, initializer: I): Connec
   }, [Connector, initializer, setContext])
 }
 
-export default function Web3Provider({ jsonRpcEndpoint, provider, children }: Web3ProviderProps) {
+export default function Web3Provider({ jsonRpcEndpoint, provider, children }: PropsWithChildren<Web3ProviderProps>) {
   const setUrl = useUpdateAtom(urlAtom)
   useConnector(Url, jsonRpcEndpoint, setUrl)
 
