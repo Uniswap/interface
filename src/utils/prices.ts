@@ -21,9 +21,9 @@ export function computeRealizedPriceImpact(trade: Trade<Currency, Currency, Trad
   return trade.priceImpact.subtract(realizedLpFeePercent)
 }
 
-export function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error' | undefined {
-  if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
-  if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
+export function getPriceImpactWarning(priceImpact?: Percent): 'warning' | 'error' | undefined {
+  if (priceImpact?.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
+  if (priceImpact?.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
   return
 }
 
