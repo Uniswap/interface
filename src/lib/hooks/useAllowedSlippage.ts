@@ -11,7 +11,7 @@ export function toPercent(maxSlippage: number | undefined): Percent | undefined 
 }
 
 /** Returns the user-inputted max slippage. */
-export default function useMaxSlippage(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined): Percent {
+export default function useAllowedSlippage(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined): Percent {
   const autoSlippage = useAutoSlippageTolerance(trade)
   const maxSlippage = toPercent(useAtomValue(maxSlippageAtom))
   return useAtomValue(autoSlippageAtom) ? autoSlippage : maxSlippage ?? autoSlippage
