@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
 import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
@@ -13,7 +12,7 @@ import styled, { ThemedText } from 'lib/theme'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
-import { computeRealizedPriceImpact } from 'utils/prices'
+import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton, { Action } from '../../ActionButton'
@@ -98,9 +97,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const scrollbar = useScrollbar(details)
 
   const warning = useMemo(() => {
-    if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
-    if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
-    return getSlippageWarning(allowedSlippage)
+    return getPriceImpactWarning(priceImpact) || getSlippageWarning(allowedSlippage)
   }, [allowedSlippage, priceImpact])
 
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
@@ -119,7 +116,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         onClick: () => setConfirmedTrade(trade),
         children: <Trans>Accept</Trans>,
       }
-    } else if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH) && !ackPriceImpact) {
+    } else if (getPriceImpactWarning(priceImpact) === 'error' && !ackPriceImpact) {
       return {
         message: <Trans>High price impact</Trans>,
         onClick: () => setAckPriceImpact(true),

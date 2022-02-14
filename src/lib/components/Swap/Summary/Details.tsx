@@ -2,7 +2,6 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { useAtomValue } from 'jotai/utils'
 import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import { feeOptionsAtom } from 'lib/state/swap'
@@ -10,7 +9,7 @@ import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { computeRealizedLPFeeAmount, computeRealizedPriceImpact } from 'utils/prices'
+import { computeRealizedLPFeeAmount, computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
 import Row from '../../Row'
 
@@ -63,13 +62,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       }
     }
 
-    let priceImpactColor: Color | undefined
-    if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) {
-      priceImpactColor = 'error'
-    } else if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
-      priceImpactColor = 'warning'
-    }
-    rows.push([t`Price impact`, `${priceImpact.toFixed(2)}%`, priceImpactColor])
+    rows.push([t`Price impact`, `${priceImpact.toFixed(2)}%`, getPriceImpactWarning(priceImpact)])
 
     if (lpFeeAmount) {
       const parsedLpFee = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
