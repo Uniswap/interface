@@ -1,4 +1,6 @@
-import { Provider as EthProvider } from '@web3-react/types'
+import { Provider as EthersProvider } from '@ethersproject/abstract-provider'
+import { Signer as EthersSigner } from '@ethersproject/abstract-signer'
+import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
@@ -91,7 +93,7 @@ function Updaters() {
 export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: EthProvider
+  provider?: Eip1193Provider | { provider: EthersProvider; signer: EthersSigner }
   jsonRpcEndpoint?: string
   width?: string | number
   dialog?: HTMLElement | null
