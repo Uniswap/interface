@@ -1128,7 +1128,9 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
   [ChainId.CRONOS]: []
 }
 
-export const MAX_ALLOW_APY = 2000
+// This variable to handle crazy APR which it can be wrong calculations or a bug
+// But now, for FOMO of Pagxy, updated this to 10000 (before we set 2000 for it)
+export const MAX_ALLOW_APY = 10000
 
 export const AMP_HINT = t`Stands for amplification factor. Each pool can have its own AMP. Pools with a higher AMP provide higher capital efficiency within a particular price range`
 export const CREATE_POOL_AMP_HINT = t`Stands for amplification factor. Pools with a higher AMP provide higher capital efficiency within a particular price range. We recommend higher AMP for stable token pairs and lower AMP for volatile token pairs`
