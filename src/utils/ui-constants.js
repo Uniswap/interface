@@ -43,9 +43,9 @@ import Twitter from './../assets/images/isologo-twitter.svg'
 
 // Blog Images
 
-import Entry1 from './../assets/images/blog-entry-1.png'
-import Entry2 from './../assets/images/blog-entry-2.png'
-import Entry3 from './../assets/images/blog-entry-3.png'
+import Entry1 from './../assets/images/blog/blog-entry-1.png'
+import Entry2 from './../assets/images/blog/blog-entry-2.png'
+import Entry3 from './../assets/images/blog/blog-entry-3.png'
 
 // Stats Images
 
@@ -332,21 +332,21 @@ export const BlogContent = {
     posts: [
         {
             image: Entry1,
-            title: 'DXdao and BadgerDAO Leverage Swapr to Bring Smarter BTC-focused Strategies to Arbitrum',
-            content: 'Both DXdao and BadgerDAO have strong communities that have been building interesting products in the DeFi space.',
-            postLink: 'https://medium.com/swapr/dxdao-and-badgerdao-leverage-swapr-to-bring-smarter-btc-focused-strategies-to-arbitrum-23689e0c9f2b?source=collection_home---6------3-----------------------'
+            title: 'Swapr Dec 9th Farming Rewards',
+            content: 'Bi-weekly recap of upcoming SWPR token release schedule',
+            postLink: 'https://medium.com/swapr/swapr-dec-9th-farming-rewards-8c99521d5f84?source=collection_home---6------0-----------------------'
         },
         {
             image: Entry2,
-            title: 'Introducing xDai SWPR farming',
-            content: 'Swapr farms are live on xDaichain as of October 14th, 2021',
-            postLink: 'https://medium.com/swapr/introducing-xdai-swpr-farming-150ad665abd1?source=collection_home---6------5-----------------------'
+            title: 'Swapr Nov 25th Farming Rewards',
+            content: 'Bi-weekly recap of upcoming SWPR token release schedule',
+            postLink: 'https://medium.com/swapr/swapr-nov-25th-farming-rewards-35c3ce51aeb5'
         },
         {
             image: Entry3,
-            title: 'Introducing Mainnet SWPR farming',
-            content: 'Swapr farms are launching on Mainnet Ethereum October 14th, 2021',
-            postLink: 'https://medium.com/swapr/introducing-mainnet-swpr-farming-da980c270770'
+            title: 'Swapr Nov 11th Farming Rewards',
+            content: 'Bi-weekly recap of upcoming SWPR token release schedule',
+            postLink: 'https://medium.com/swapr/swapr-nov-11th-farming-rewards-b99d71680b57'
         }
     ]
 }
