@@ -1,6 +1,7 @@
 import { Provider as EthersProvider } from '@ethersproject/abstract-provider'
 import { Signer as EthersSigner } from '@ethersproject/abstract-signer'
 import { Eip1193Bridge } from '@ethersproject/experimental'
+import { ExternalProvider } from '@ethersproject/providers'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
@@ -95,7 +96,7 @@ function Updaters() {
 export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: Eip1193Provider | JsonRpcProvider | { provider: EthersProvider; signer: EthersSigner }
+  provider?: Eip1193Provider | ExternalProvider | JsonRpcProvider | { provider: EthersProvider; signer: EthersSigner }
   jsonRpcEndpoint?: string
   width?: string | number
   dialog?: HTMLElement | null
@@ -121,8 +122,8 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     eip1193 = new Eip1193Bridge(provider.signer, provider.provider)
   } else if (provider instanceof JsonRpcProvider) {
     eip1193 = new Eip1193Bridge(provider.getSigner(), provider)
-  } else {
-    eip1193 = provider
+  } else if (provider) {
+    eip1193 = provider as Eip1193Provider
   }
 
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
