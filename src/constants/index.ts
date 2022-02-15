@@ -135,6 +135,22 @@ export const BAD_RECIPIENT_ADDRESSES: string[] = [FACTORY_ADDRESSES[ChainId.MAIN
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
+export const CLAIM_REWARD_SC_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.ROPSTEN]: '0xB2eA6DaAD5334907311c63a27EdFb02535048f50',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3',
+  [ChainId.MUMBAI]: '',
+  [ChainId.BSCTESTNET]: '',
+  [ChainId.BSCMAINNET]: '',
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.AVAXMAINNET]: '',
+  [ChainId.FANTOM]: '',
+  [ChainId.CRONOSTESTNET]: '',
+  [ChainId.CRONOS]: ''
+}
 export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
@@ -1136,5 +1152,8 @@ export const AMP_HINT = t`Stands for amplification factor. Each pool can have it
 export const CREATE_POOL_AMP_HINT = t`Stands for amplification factor. Pools with a higher AMP provide higher capital efficiency within a particular price range. We recommend higher AMP for stable token pairs and lower AMP for volatile token pairs`
 export const AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC =
   '0xd6d4f5681c246c9f42c203e287975af1601f8df8035a9251f79aab5c8f09e2f8'
+
+export const CLAIM_REWARDS_DATA_URL =
+  'https://raw.githubusercontent.com/KyberNetwork/zkyber-reward-distribution/main/results/phase_0/merkle_data.json'
 
 export const sentryRequestId = uuid()

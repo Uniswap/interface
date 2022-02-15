@@ -79,6 +79,11 @@ export const SUMMARY: {
     success: () => 'Migrated your liquidity',
     pending: () => 'Migrating your liquidity',
     failure: () => 'Error migrating your liquidity'
+  },
+  'Claim reward': {
+    success: summary => 'Claimed ' + summary,
+    pending: summary => 'Claiming ' + summary,
+    failure: summary => 'Error claiming ' + summary
   }
 }
 

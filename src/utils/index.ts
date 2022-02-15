@@ -20,7 +20,8 @@ import {
   KNCL_ADDRESS_ROPSTEN,
   KNC,
   AGGREGATION_EXECUTOR,
-  DEFAULT_GAS_LIMIT_MARGIN
+  DEFAULT_GAS_LIMIT_MARGIN,
+  CLAIM_REWARD_SC_ADDRESS
 } from '../constants'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
@@ -28,7 +29,8 @@ import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import ZAP_ABI from '../constants/abis/zap.json'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from '@dynamic-amm/sdk'
+import CLAIM_REWARD_ABI from '../constants/abis/claim-reward.json'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH, TokenAmount } from '@dynamic-amm/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getEthereumMainnetTokenLogoURL } from './ethereumMainnetTokenMapping'
 import { getMaticTokenLogoURL } from './maticTokenMapping'
@@ -216,6 +218,15 @@ export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, acc
 // account is optional
 export function getZapContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   return getContract(ZAP_ADDRESSES[chainId] || '', ZAP_ABI, library, account)
+}
+
+export function getClaimRewardContract(
+  chainId: ChainId,
+  library: Web3Provider,
+  account?: string
+): Contract | undefined {
+  if (![ChainId.ROPSTEN, ChainId.MATIC].includes(chainId)) return
+  return getContract(CLAIM_REWARD_SC_ADDRESS[chainId], CLAIM_REWARD_ABI, library, account)
 }
 
 export function getAggregationExecutorAddress(chainId: ChainId): string {

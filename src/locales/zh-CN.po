@@ -63,27 +63,27 @@ msgstr ""
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "每笔交易的一部分费用({0}%) 作为协议激励给流动性提供者。"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
 msgstr "放大系数"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 msgid "AMP Liquidity"
 msgstr "AMP 流动性"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 msgid "AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity."
 msgstr "AMP 系数 x 池中的流动性。 放大池具有更高的资本效率和流动性。"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/ListItem.tsx
+#: src/components/PoolList/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "APR"
 msgstr "APR"
 
@@ -97,9 +97,9 @@ msgstr ""
 msgid "About"
 msgstr "关于"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/WalletModal/index.tsx
 msgid "Accept"
 msgstr "接受"
 
@@ -198,10 +198,10 @@ msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Approve"
 msgstr "批准"
 
@@ -210,10 +210,10 @@ msgstr "批准"
 msgid "Approve {0}"
 msgstr "批准 {0}"
 
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Approved"
@@ -221,10 +221,10 @@ msgstr "已批准"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Approving"
@@ -318,6 +318,7 @@ msgstr "检查補貼..."
 msgid "Circulating Supply"
 msgstr ""
 
+#: src/components/Menu/ClaimRewardModal.tsx
 #: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "领取"
@@ -326,9 +327,25 @@ msgstr "领取"
 msgid "Claim All"
 msgstr "领取全部"
 
+#: src/components/Menu/index.tsx
+msgid "Claim Rewards"
+msgstr ""
+
+#: src/components/Menu/ClaimRewardModal.tsx
+msgid "Claim your rewards"
+msgstr ""
+
 #: src/components/Vesting/index.tsx
 msgid "Claimed Rewards"
 msgstr "领取奖励"
+
+#: src/components/Menu/ClaimRewardModal.tsx
+msgid "Claiming {rewardAmounts} KNC"
+msgstr ""
+
+#: src/components/Menu/index.tsx
+msgid "Claiming..."
+msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
@@ -355,10 +372,10 @@ msgid "Common bases"
 msgstr "通用基础"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Confirm"
 msgstr "确认"
 
@@ -378,17 +395,17 @@ msgstr "在您的钱包中确认此交易"
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Connect Wallet"
 msgstr "连接钱包"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Connect to a wallet to find pools"
 msgstr "连接钱包以查找池"
 
@@ -478,8 +495,8 @@ msgstr "当前价格"
 msgid "Current Price:"
 msgstr "当前价格:"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
 msgstr "池的当前代币对比率。 比率根据池交易而变化。 按照这个比率添加流动性。"
 
@@ -577,8 +594,8 @@ msgstr "允许高滑点交易。使用的风险自负。"
 msgid "Ended"
 msgstr "已结束"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Ending In"
 msgstr "截止"
 
@@ -645,8 +662,8 @@ msgstr "由于您的交易规模，估计的价格变化"
 msgid "Estimated network fee for your transaction"
 msgstr "您的交易的估计网络费用"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Estimated return based on yearly fees of the pool"
 msgstr "根据池的年费的估计回报"
@@ -779,6 +796,10 @@ msgstr "我知道"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "如果您从此列表中购买了代币，则可能无法将其卖回。"
 
+#: src/components/Menu/ClaimRewardModal.tsx
+msgid "If your wallet is eligible, you will be able to claim your reward below. You can claim:"
+msgstr ""
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -827,8 +848,8 @@ msgstr "包括DEX聚合"
 msgid "Info"
 msgstr ""
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Information"
 msgstr "信息"
 
@@ -877,6 +898,10 @@ msgstr "可用的流动性不足。请重新加载页面并再次尝试!"
 #: src/pages/SwapV2/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "这笔交易的流动性不足。"
+
+#: src/hooks/useClaimReward.ts
+msgid "Insufficient reward amount available for claim!"
+msgstr ""
 
 #: src/hooks/useWrapCallback.ts
 #: src/state/mint/hooks.ts
@@ -942,9 +967,9 @@ msgstr "语言"
 msgid "Learn More"
 msgstr "了解更多"
 
-#: src/components/UpcomingFarms/ListItem.tsx
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Learn more"
 msgstr "了解更多"
@@ -968,8 +993,8 @@ msgstr "已加载"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/pages/Pool/lp.tsx
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Loading"
 msgstr "加载中"
 
@@ -1026,10 +1051,10 @@ msgstr ""
 msgid "Market Cap Rank"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Max"
 msgstr "最大值"
 
@@ -1096,8 +1121,8 @@ msgstr "您将收到的最低金额，否则您的交易将被退回"
 msgid "Minimum received"
 msgstr "收到的最小值"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Deposit"
 msgstr "我的存款"
 
@@ -1111,8 +1136,8 @@ msgstr "我的池"
 msgid "My Pools on External Platforms"
 msgstr "我在外部平台上的池"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Rewards"
 msgstr "我的奖励"
 
@@ -1124,13 +1149,13 @@ msgstr "我的全部奖励"
 msgid "My Vesting"
 msgstr "我的奖励归属"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 msgid "My liquidity"
 msgstr "我的流动性"
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Network"
 msgstr "网络"
 
@@ -1256,8 +1281,8 @@ msgid "Please type the word 'confirm' below to enable Advanced Mode"
 msgstr "请在下方输入“确认”以启用高级模式"
 
 #: src/components/NavigationTabs/index.tsx
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Pool"
@@ -1268,8 +1293,8 @@ msgstr "池"
 msgid "Pool Address"
 msgstr "池的地址"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Pool Found!"
 msgstr "池已找到!"
 
@@ -1312,8 +1337,8 @@ msgid "Pooled {0}:"
 msgstr "Pooled {0}:"
 
 #: src/components/Header/index.tsx
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Pools"
 msgstr "池"
 
@@ -1403,8 +1428,8 @@ msgstr ""
 msgid "Rainmaker Yield Farming"
 msgstr "Rainmaker 流动性挖矿"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 msgid "Ratio"
 msgstr "比率"
 
@@ -1449,8 +1474,8 @@ msgstr "删除池代币会将您的头寸以当前比率转换回基础代币，
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "删除 {0} {1} 和 {2} {3}"
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/YieldPools/HarvestAll.tsx
 msgid "Rewards"
 msgstr "奖励"
@@ -1519,8 +1544,8 @@ msgstr "选择一个代币"
 msgid "Select a token"
 msgstr "选择一个代币"
 
-#: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Select a token to find your liquidity."
 msgstr "选择一个代币以找到您的流动性。"
 
@@ -1548,6 +1573,10 @@ msgstr "显示Portis"
 msgid "Single Token"
 msgstr "单一代币"
 
+#: src/hooks/useClaimReward.ts
+msgid "Something is wrong. Please try again later!"
+msgstr ""
+
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
 msgid "Something went wrong"
@@ -1561,8 +1590,8 @@ msgstr ""
 msgid "Staked Only"
 msgstr "仅质押"
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Staked TVL"
 msgstr "质押的总锁定价值"
 
@@ -1584,8 +1613,8 @@ msgstr "代表放大系数。具有较高AMP的池在特定的价格范围内提
 msgid "Start Earning"
 msgstr "开始赚取收益"
 
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 msgid "Starting In"
 msgstr "开始"
 
@@ -1924,8 +1953,8 @@ msgstr "查看列表"
 msgid "View transaction on Etherscan"
 msgstr "在 Etherscan 上查看交易"
 
-#: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/PoolList/ListItem.tsx
 msgid "Volume (24h)"
 msgstr "交易量(24小时)"
 
@@ -2038,17 +2067,17 @@ msgstr ""
 msgid "Your available LP Token balance after staking (if applicable)"
 msgstr ""
 
-#: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/PositionCardUNI.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
 msgid "Your pool share:"
 msgstr "您的池份额："
 
+#: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Your position"
 msgstr "您的头寸"
 
@@ -2082,6 +2111,10 @@ msgstr "如果在确认之前出现较大的不利价格变动，您的交易将
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "您的交易将显示在此处..."
+
+#: src/components/Menu/ClaimRewardModal.tsx
+msgid "Your wallet address"
+msgstr ""
 
 #: src/components/WalletModal/index.tsx
 msgid "and"
