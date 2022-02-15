@@ -22,7 +22,7 @@ const Footer = () => {
                             <ul className="footer-link-list">
                                 {column.footerLinks.map((link, key) => (
                                     <li key={key}className="footer-link-item">
-                                        <a href={link.href}>
+                                        <a href={link.href} target="_blank" rel="noopener noreferrer">
                                             {link.label}
                                         </a>
                                     </li>
@@ -32,12 +32,6 @@ const Footer = () => {
                     ))}
                 </ul>
                 <div className="cta-container">
-                    {/* <Button 
-                        label={FooterContent.footerCta.label} 
-                        type={'primary'} 
-                        size={'small'} 
-                        to={FooterContent.footerCta.href}
-                    /> */}
                     <div 
                         onClick={(e) => {
                             scrollTo('app-wrapper')

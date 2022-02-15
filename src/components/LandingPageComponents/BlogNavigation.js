@@ -17,7 +17,7 @@ const BlogNavigation = () => {
                         />
                         <h3>{post.title}</h3>
                         <p>{post.content}</p>
-                        <Button size={'small'} label={BlogContent.readBlogPost} type={'dark'} />
+                        <Button size={'small'} label={BlogContent.readBlogPost} type={'dark'} to={BlogContent.postLink}/>
                     </li>
                 ))}
             </ul>
@@ -51,7 +51,7 @@ const StyledBlogNavigation = styled(Layout)`
                     line-height: 30px;
                     color: #B7B5CB;
                     margin-bottom: 8px;
-                    font-weight: 400;
+                    font-weight: 600;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     overflow: hidden;

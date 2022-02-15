@@ -25,7 +25,7 @@ const Button = (props) => {
             className={`button ${type} ${size} ${className}`}
         >
             {elementTag === 'a' && (
-                <a href={to && to} onClick={onClick && onClick} title={title} target={external ? '_blank' : ''}>
+                <a href={to && to} onClick={onClick && onClick} title={title} target={external ? '_blank' : ''} rel={external ? '_blank' : "noopener noreferrer"}>
                     {type === 'dark' && (
                         <>
                             <svg width="0" height="0">

@@ -201,8 +201,9 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'VOTE',
-                    href: '/',
-                    type: 'primary'
+                    href: 'https://snapshot.org/#/swpr.eth',
+                    type: 'primary',
+                    external: true
                 },
                 {
                     label: 'READ MORE',
@@ -220,7 +221,7 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'FARM',
-                    href: '/rewards#/rewards',
+                    href: '/#/rewards',
                     type: 'primary'
                 },
                 {
@@ -258,7 +259,7 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'BRIDGE',
-                    href: '/bridge',
+                    href: '/#/bridge',
                     type: 'primary'
                 },
                 {
@@ -273,24 +274,24 @@ export const FeaturesContent = {
 }
 
 export const CommunityBannerContent = {
-    preHeader: 'A DXDao Product',
+    preHeader: 'A DXdao Product',
     content: 'Owned and funded by the Community',
     buttons: [
         {
             label: 'GET INVOLVED',
-            href: '#',
+            href: 'https://dxdao.eth.link/',
             type: 'primary'
         },
         {
             label: 'FORUM',
-            href: '#',
+            href: 'https://daotalk.org/c/dx-dao/15',
             type: 'dark'
         },
     ]
 }
 
 export const CommunityLinksContent = {
-    preHeader: 'Swapr socials',
+    preHeader: 'Swapr Protocol',
     title: <span>Join an unstoppable <br/>community</span>,
     links: [
         {
@@ -300,7 +301,7 @@ export const CommunityLinksContent = {
             content: 'Join in on community discussion on the Swapr Discord.',
             button: {
                 label: 'JOIN DISCORD',
-                href: '#',
+                href: 'https://discord.gg/4QXEJQkvHH',
             },
         },
         {
@@ -310,7 +311,7 @@ export const CommunityLinksContent = {
             content: <>Contribute to the <br/>Swapr repositories on Github.</>,
             button: {
                 label: 'VISIT GITHUB',
-                href: '#',
+                href: 'https://github.com/levelkdev/dxswap-dapp',
             },
         },
         {
@@ -320,7 +321,7 @@ export const CommunityLinksContent = {
             content: 'Get the latest Swapr announcements on the Swapr Twitter.',
             button: {
                 label: 'Follow on Twitter',
-                href: '#',
+                href: 'https://twitter.com/SwaprEth',
             },
         },
     ]
@@ -357,19 +358,19 @@ export const FooterContent = {
             footerLinks: [
                 {
                     label: 'Faq',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/faq/'
                 },
                 {
                     label: 'Blog',
-                    href: '#'
+                    href: 'https://medium.com/swapr'
                 },
                 {
                     label: 'Audits',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Technical%20Documentation/Audits/#swapr'
                 },
                 {
                     label: 'Brand Assets',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/BrandingAssets/#swapr-brand-assets'
                 },
             ]
         },
@@ -378,19 +379,19 @@ export const FooterContent = {
             footerLinks: [
                 {
                     label: 'Discord',
-                    href: '#'
+                    href: 'https://discord.gg/4QXEJQkvHH'
                 },
                 {
                     label: 'Twitter',
-                    href: '#'
+                    href: 'https://twitter.com/SwaprEth'
                 },
                 {
                     label: 'Keybase',
-                    href: '#'
+                    href: 'https://keybase.io/team/dx_dao'
                 },
                 {
                     label: 'Forum',
-                    href: '#'
+                    href: 'https://daotalk.org/c/dx-dao/15'
                 },
             ]
         },
@@ -399,29 +400,29 @@ export const FooterContent = {
             footerLinks: [
                 {
                     label: 'DIY Liq. Mining',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/DIY%20Liquidity%20Mining/'
                 },
                 {
                     label: 'Roadmap',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/roadmap/'
                 },
                 {
                     label: 'We\'re hiring',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/ContributorHub/open-positions-and-bounties/'
                 },
                 {
                     label: 'Token',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/tokenomics/'
                 },
             ]
         },
         {
             title: 'Analytics',
             footerLinks: [
-                // {
-                //     label: 'DIY Liq. Mining',
-                //     href: '#'
-                // },
+                {
+                    label: 'DXstats',
+                    href: 'https://dxstats.eth.link/#/home'
+                },
                 // {
                 //     label: 'Roadmap',
                 //     href: '#'
