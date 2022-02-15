@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 22:07\n"
+"PO-Revision-Date: 2022-02-11 04:07\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -128,6 +128,10 @@ msgstr "Прихвати"
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Рачун"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Acknowledge"
+msgstr "Признати"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -536,6 +540,10 @@ msgstr "Повежите се са новчаником да бисте виде
 msgid "Connect wallet to swap"
 msgstr "Повежите новчаник за замену"
 
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Повежите свој новчаник"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Повезано са {name}"
@@ -870,6 +878,10 @@ msgstr "Сакриј затворене позиције"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Утицај високе цене"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High price impact"
+msgstr "Висок утицај на цену"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
@@ -1874,10 +1886,6 @@ msgstr "Укупни депозити"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Трговачка рута"
-
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "Трговање"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx

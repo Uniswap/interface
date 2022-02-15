@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-09 03:06\n"
+"PO-Revision-Date: 2022-02-11 04:07\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -128,6 +128,10 @@ msgstr "接受"
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "账户"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Acknowledge"
+msgstr "承认"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -536,6 +540,10 @@ msgstr "连接到钱包以查看您的流动资金。"
 msgid "Connect wallet to swap"
 msgstr "连接钱包以交换"
 
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "连接你的钱包"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "已与 {name} 连接"
@@ -870,6 +878,10 @@ msgstr "隐藏已关闭的头寸"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "对兑换率有高度影响"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High price impact"
+msgstr "高价格影响"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
@@ -1874,10 +1886,6 @@ msgstr "存入总额"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "交易路由"
-
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "交易"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx

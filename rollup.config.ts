@@ -23,7 +23,7 @@ import { CompilerOptions } from 'typescript'
 
 const REPLACEMENTS = {
   'process.env.REACT_APP_IS_WIDGET': true,
-  'process.env.REACT_APP_LOCALES': "'./locales'",
+  'process.env.REACT_APP_LOCALES': '"./locales"',
 }
 
 const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
@@ -68,7 +68,7 @@ const type = {
   external: isAsset,
   plugins: [
     dts({ compilerOptions: { baseUrl: 'dist/dts' } }),
-    del({ hook: 'buildEnd', targets: ['dist/widgets.tsc', 'dist/dts'] }),
+    process.env.ROLLUP_WATCH ? undefined : del({ hook: 'buildEnd', targets: ['dist/widgets.tsc', 'dist/dts'] }),
   ],
 }
 

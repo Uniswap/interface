@@ -1,5 +1,6 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useEffect, useMemo, useState } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
@@ -9,8 +10,28 @@ import useActiveWeb3React from '../useActiveWeb3React'
 import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
-const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
-const config = { protocols }
+/**
+ * Reduces client-side latency by increasing the minimum percentage of the input token to use for each route in a split route while SOR is used client-side.
+ * Defaults are defined in https://github.com/Uniswap/smart-order-router/blob/309e6f6603984d3b5aef0733b0cfaf129c29f602/src/routers/alpha-router/config.ts#L83.
+ */
+const DistributionPercents: { [key: number]: number } = {
+  [ChainId.MAINNET]: 10,
+  [ChainId.OPTIMISM]: 10,
+  [ChainId.OPTIMISTIC_KOVAN]: 10,
+  [ChainId.ARBITRUM_ONE]: 25,
+  [ChainId.ARBITRUM_RINKEBY]: 25,
+}
+
+const DEFAULT_DISTRIBUTION_PERCENT = 10
+
+function getConfig(chainId: ChainId | undefined) {
+  return {
+    // Limit to only V2 and V3.
+    protocols: [Protocol.V2, Protocol.V3],
+
+    distributionPercent: (chainId && DistributionPercents[chainId]) ?? DEFAULT_DISTRIBUTION_PERCENT,
+  }
+}
 
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
@@ -49,6 +70,8 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     error: undefined,
   })
 
+  const config = useMemo(() => getConfig(chainId), [chainId])
+
   // When arguments update, make a new call to SOR for updated quote
   useEffect(() => {
     setLoading(true)
@@ -72,7 +95,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
         setLoading(false)
       }
     }
-  }, [queryArgs, params])
+  }, [queryArgs, params, config])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),

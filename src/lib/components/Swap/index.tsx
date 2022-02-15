@@ -7,6 +7,7 @@ import useSyncConvenienceFee from 'lib/hooks/swap/useSyncConvenienceFee'
 import useSyncSwapDefaults from 'lib/hooks/swap/useSyncSwapDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import useHasFocus from 'lib/hooks/useHasFocus'
 import useTokenList from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
@@ -45,6 +46,7 @@ export interface SwapProps {
   defaultOutputAmount?: string
   convenienceFee?: number
   convenienceFeeRecipient?: string | { [chainId: number]: string }
+  onConnectWallet?: () => void
 }
 
 export default function Swap(props: SwapProps) {
@@ -53,7 +55,7 @@ export default function Swap(props: SwapProps) {
   useSyncConvenienceFee(props)
 
   const { active, account, chainId } = useActiveWeb3React()
-  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
@@ -64,18 +66,20 @@ export default function Swap(props: SwapProps) {
     [chainId, list]
   )
 
+  const focused = useHasFocus(wrapper)
+
   return (
     <SwapPropValidator {...props}>
       {onSupportedChain && <SwapInfoUpdater />}
       <Header title={<Trans>Swap</Trans>}>
-        {active && <Wallet disabled={!account} />}
+        {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!active} />
       </Header>
-      <div ref={setBoundary}>
-        <BoundaryProvider value={boundary}>
-          <Input disabled={!active} />
+      <div ref={setWrapper}>
+        <BoundaryProvider value={wrapper}>
+          <Input disabled={!active} focused={focused} />
           <ReverseButton disabled={!active} />
-          <Output disabled={!active}>
+          <Output disabled={!active} focused={focused}>
             <Toolbar disabled={!active} />
             <SwapButton disabled={!account} />
           </Output>

@@ -16,6 +16,7 @@ const TokenInputRow = styled(Row)`
 
 const ValueInput = styled(DecimalInput)<{ $loading: boolean }>`
   color: ${({ theme }) => theme.primary};
+  height: 1em;
 
   :hover:not(:focus-within) {
     color: ${({ theme }) => theme.onHover(theme.primary)};
@@ -71,10 +72,19 @@ export default function TokenInput({
   const [showMax, setShowMax] = useState(false)
   const onFocus = useCallback(() => setShowMax(Boolean(onMax)), [onMax])
   const onBlur = useCallback((e: FocusEvent) => {
-    if (e.relatedTarget !== max.current) {
+    if (e.relatedTarget !== max.current && e.relatedTarget !== input.current) {
       setShowMax(false)
     }
   }, [])
+
+  const input = useRef<HTMLInputElement>(null)
+  const onSelect = useCallback(
+    (currency: Currency) => {
+      onChangeCurrency(currency)
+      setTimeout(() => input.current?.focus(), 0)
+    },
+    [onChangeCurrency]
+  )
 
   return (
     <Column gap={0.25}>
@@ -86,6 +96,7 @@ export default function TokenInput({
             onChange={onChangeInput}
             disabled={disabled || !currency}
             $loading={Boolean(loading)}
+            ref={input}
           ></ValueInput>
         </ThemedText.H2>
         {showMax && (
@@ -95,7 +106,7 @@ export default function TokenInput({
             </ThemedText.ButtonMedium>
           </MaxButton>
         )}
-        <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onChangeCurrency} />
+        <TokenSelect value={currency} collapsed={showMax} disabled={disabled} onSelect={onSelect} />
       </TokenInputRow>
       {children}
     </Column>

@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useAtomValue } from 'jotai/utils'
@@ -10,14 +9,20 @@ import styled, { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import Column from '../Column'
 import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
-const LoadingSpan = styled.span<{ $loading: boolean }>`
+export const LoadingSpan = styled.span<{ $loading: boolean }>`
   ${loadingOpacityCss};
+`
+
+export const Balance = styled(ThemedText.Body2)<{ focused: boolean }>`
+  opacity: ${({ focused }) => (focused ? 1 : 0)};
+  transition: opacity 0.25s ${({ focused }) => (focused ? 'ease-in' : 'ease-out')};
 `
 
 const InputColumn = styled(Column)<{ approved?: boolean }>`
@@ -30,11 +35,12 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
   }
 `
 
-interface InputProps {
-  disabled?: boolean
+export interface InputProps {
+  disabled: boolean
+  focused: boolean
 }
 
-export default function Input({ disabled }: InputProps) {
+export default function Input({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
   const {
     trade: { state: tradeState },
@@ -59,20 +65,18 @@ export default function Input({ disabled }: InputProps) {
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
 
+  // account for gas needed if using max on native token
+  const maxAmount = useMemo(() => maxAmountSpend(balance), [balance])
+
   const onMax = useMemo(() => {
-    if (balance?.greaterThan(0)) {
-      return () => updateSwapInputAmount(balance.toExact())
+    if (maxAmount?.greaterThan(0)) {
+      return () => updateSwapInputAmount(maxAmount.toExact())
     }
     return
-  }, [balance, updateSwapInputAmount])
+  }, [maxAmount, updateSwapInputAmount])
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
-      <Row>
-        <ThemedText.Subhead2 color="secondary">
-          <Trans>Trading</Trans>
-        </ThemedText.Subhead2>
-      </Row>
       <TokenInput
         currency={swapInputCurrency}
         amount={(swapInputAmount !== undefined ? swapInputAmount : inputCurrencyAmount?.toSignificant(6)) ?? ''}
@@ -86,9 +90,9 @@ export default function Input({ disabled }: InputProps) {
           <Row>
             <LoadingSpan $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingSpan>
             {balance && (
-              <ThemedText.Body2 color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined}>
+              <Balance color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined} focused={focused}>
                 Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
-              </ThemedText.Body2>
+              </Balance>
             )}
           </Row>
         </ThemedText.Body2>

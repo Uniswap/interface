@@ -73,13 +73,12 @@ export const Modal = styled.div<{ color: Color }>`
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 0.5em);
+  height: 100%;
   left: 0;
-  margin: 0.25em;
   overflow: hidden;
   position: absolute;
   top: 0;
-  width: calc(100% - 0.5em);
+  width: 100%;
   z-index: ${Layer.DIALOG};
 `
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 22:07\n"
+"PO-Revision-Date: 2022-02-11 04:07\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -128,6 +128,10 @@ msgstr "Hyväksy"
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Tili"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Acknowledge"
+msgstr "Tunnustaa"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -536,6 +540,10 @@ msgstr "Yhdistä lompakkoon nähdäksesi likviditeettisi."
 msgid "Connect wallet to swap"
 msgstr "Yhdistä lompakko vaihtaaksesi"
 
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Yhdistä lompakkosi"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Yhdistetty kohteeseen {name}"
@@ -871,6 +879,10 @@ msgstr "Piilota suljetut positiot"
 msgid "High Price Impact"
 msgstr "Korkea hintavaikutus"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High price impact"
+msgstr "Korkea hintavaikutus"
+
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
 msgstr "Suuri lipsahdus lisää hintojen liikkeiden riskiä"
@@ -1022,7 +1034,7 @@ msgstr "Likviditeettitietoja ei ole saatavilla."
 
 #: src/lib/components/Swap/Summary/Details.tsx
 msgid "Liquidity provider fee"
-msgstr "Likviditeetin tarjoaja maksu"
+msgstr "Likviditeetin tarjoajan palkkio"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1875,10 +1887,6 @@ msgstr "Talletuksia yhteensä"
 msgid "Trade Route"
 msgstr "Kauppareitti"
 
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "Kaupankäynti"
-
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -2030,7 +2038,7 @@ msgstr "Ei-tuettuja varoja"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unsupported network - switch to another to trade."
-msgstr "Ei tuettu verkko - vaihda toiseen kauppaa varten."
+msgstr "Ei tuettu verkko - vaihda toiseen käydäksesi kauppaa."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

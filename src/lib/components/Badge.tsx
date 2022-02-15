@@ -1,14 +1,11 @@
-import styled from 'lib/theme'
+import styled, { Color } from 'lib/theme'
 
 import Row from './Row'
 
-export const Badge = styled(Row)<{ borderRadius?: number; padding?: string }>`
-  background-color: ${({ theme }) => theme.outline};
+const Badge = styled(Row)<{ borderRadius?: number; padding?: string; color?: Color }>`
+  background-color: ${({ theme, color = 'outline' }) => theme[color]};
   border-radius: ${({ borderRadius }) => `${borderRadius ?? 0.5}em`};
   padding: ${({ padding }) => padding ?? '0.25em 0.375em'};
-  z-index: 2;
 `
 
-export const BadgeDark = styled(Badge)`
-  background-color: ${({ theme }) => theme.module};
-`
+export default Badge

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 22:07\n"
+"PO-Revision-Date: 2022-02-12 15:07\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -128,6 +128,10 @@ msgstr "Принять"
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Аккаунт"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Acknowledge"
+msgstr "Принять"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -536,6 +540,10 @@ msgstr "Подключите кошелёк, чтобы просмотреть �
 msgid "Connect wallet to swap"
 msgstr "Подключите кошелек, чтобы обменять"
 
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Подключить свой кошелёк"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Подключено к {name}"
@@ -871,9 +879,13 @@ msgstr "Скрыть закрытые позиции"
 msgid "High Price Impact"
 msgstr "Высокое влияние на цену"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High price impact"
+msgstr "Высокое влияние на цену"
+
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
-msgstr "Высокое проскальзывание увеличивает риск движения цены"
+msgstr "Высокое проскальзывание увеличивает риск изменения цены"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1311,7 +1323,7 @@ msgstr "Пожалуйста, подключитесь на поддержива
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Please enter a valid slippage %"
-msgstr "Пожалуйста, введите действительный процент проскальзывания"
+msgstr "Пожалуйста, введите корректный процент проскальзывания"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1875,10 +1887,6 @@ msgstr "Всего внесено"
 msgid "Trade Route"
 msgstr "Маршрут обмена"
 
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "Торговля"
-
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -2030,7 +2038,7 @@ msgstr "Неподдерживаемые активы"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unsupported network - switch to another to trade."
-msgstr "Неподдерживаемая сеть - переключитесь на другую для торговли."
+msgstr "Сеть не поддерживается; переключитесь на другую, чтобы торговать."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

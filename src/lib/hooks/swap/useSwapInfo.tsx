@@ -57,6 +57,8 @@ function useComputeSwapInfo(): SwapInfo {
     () => tryParseCurrencyAmount(amount, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
     [inputCurrency, isExactIn, outputCurrency, amount]
   )
+  const parsedAmountIn = isExactIn ? parsedAmount : undefined
+  const parsedAmountOut = isExactIn ? undefined : parsedAmount
 
   //@TODO(ianlapham): this would eventually be replaced with routing api logic.
   const trade = useBestTrade(
@@ -83,10 +85,10 @@ function useComputeSwapInfo(): SwapInfo {
 
   const currencyAmounts = useMemo(
     () => ({
-      [Field.INPUT]: trade.trade?.inputAmount,
-      [Field.OUTPUT]: trade.trade?.outputAmount,
+      [Field.INPUT]: parsedAmountIn || trade.trade?.inputAmount,
+      [Field.OUTPUT]: parsedAmountOut || trade.trade?.outputAmount,
     }),
-    [trade.trade?.inputAmount, trade.trade?.outputAmount]
+    [parsedAmountIn, parsedAmountOut, trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
   const allowedSlippage = useAllowedSlippage(trade.trade)

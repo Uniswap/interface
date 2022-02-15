@@ -17,7 +17,7 @@ module.exports = (webpackConfig) => ({
         'process.env': {
           ...plugin.definitions['process.env'],
           REACT_APP_IS_WIDGET: true,
-          REACT_APP_LOCALES: "'../locales'",
+          REACT_APP_LOCALES: '"../locales"',
         },
       })
     }

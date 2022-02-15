@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-08 22:07\n"
+"PO-Revision-Date: 2022-02-11 04:07\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -128,6 +128,10 @@ msgstr "Accepter"
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
 msgstr "Compte"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Acknowledge"
+msgstr "Accuser réception"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -536,6 +540,10 @@ msgstr "Connectez-vous à un portefeuille pour voir vos liquidités."
 msgid "Connect wallet to swap"
 msgstr "Connectez le portefeuille pour échanger"
 
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Connectez votre portefeuille"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
 msgstr "Connecté avec {name}"
@@ -870,6 +878,10 @@ msgstr "Masquer les positions fermées"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Impact sur les prix élevés"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High price impact"
+msgstr "Impact prix élevé"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
@@ -1874,10 +1886,6 @@ msgstr "Total des dépôts"
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
 msgstr "Route commerciale"
-
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "Commerce"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
