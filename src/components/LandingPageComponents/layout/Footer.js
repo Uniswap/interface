@@ -10,7 +10,7 @@ import SwaprLogo from './../../../assets/images/swapr-logo.svg'
 
 const Footer = () => {
     return (
-        <StyledFooter data-aos={'fade-up'} id="footer" width="main-width">
+        <StyledFooter id="footer" width="main-width">
             <div className="footer-top">
                 <img src={SwaprLogo} alt="Swapr"/>
             </div>

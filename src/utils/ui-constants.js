@@ -290,7 +290,7 @@ export const CommunityBannerContent = {
 }
 
 export const CommunityLinksContent = {
-    preHeader: 'Tagline',
+    preHeader: 'Swapr socials',
     title: <span>Join an unstoppable <br/>community</span>,
     links: [
         {
