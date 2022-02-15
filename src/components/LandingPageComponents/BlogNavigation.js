@@ -17,7 +17,7 @@ const BlogNavigation = () => {
                         />
                         <h3>{post.title}</h3>
                         <p>{post.content}</p>
-                        <Button size={'small'} label={BlogContent.readBlogPost} type={'dark'} to={BlogContent.postLink}/>
+                        <Button size={'small'} label={BlogContent.readBlogPost} type={'dark'} external to={post.postLink}/>
                     </li>
                 ))}
             </ul>
