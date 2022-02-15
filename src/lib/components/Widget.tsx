@@ -1,7 +1,7 @@
 import { Provider as EthersProvider } from '@ethersproject/abstract-provider'
 import { Signer as EthersSigner } from '@ethersproject/abstract-signer'
 import { Eip1193Bridge } from '@ethersproject/experimental'
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
