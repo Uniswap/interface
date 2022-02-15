@@ -55,12 +55,9 @@ export default function Input({ disabled, focused }: InputProps) {
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(swapInputCurrency)
 
-  const isTradeLoading = useMemo(
-    () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
-    [tradeState]
-  )
+  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = useAtomValue(independentFieldAtom) !== Field.INPUT
-  const isLoading = isDependentField && isTradeLoading
+  const isLoading = isRouteLoading && isDependentField
 
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true

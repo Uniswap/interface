@@ -23,7 +23,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
     currencyBalances: { [Field.INPUT]: balance },
   } = useSwapInfo()
-  const isRouteLoading = useMemo(() => TradeState.LOADING === state || TradeState.SYNCING === state, [state])
+  const isRouteLoading = state === TradeState.SYNCING || state === TradeState.LOADING
   const isAmountPopulated = useIsAmountPopulated()
 
   const caption = useMemo(() => {

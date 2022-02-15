@@ -48,8 +48,9 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
+  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = useAtomValue(independentFieldAtom) !== Field.OUTPUT
-  const isLoading = isDependentField && tradeState === TradeState.LOADING
+  const isLoading = isRouteLoading && isDependentField
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(swapOutputCurrency)

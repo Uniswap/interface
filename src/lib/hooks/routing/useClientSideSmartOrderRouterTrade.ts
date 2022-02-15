@@ -1,6 +1,7 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
+import useDebounce from 'hooks/useDebounce'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useEffect, useMemo, useState } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
@@ -41,6 +42,12 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
+  // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
+  // This helps provide a "syncing" state the UI can reference for loading animations.
+  const inputs = useMemo(() => [tradeType, amountSpecified, otherCurrency], [tradeType, amountSpecified, otherCurrency])
+  const debouncedInputs = useDebounce(inputs, 200)
+  const isDebouncing = inputs !== debouncedInputs
+
   const chainId = amountSpecified?.currency.chainId
   const { library } = useActiveWeb3React()
 
@@ -71,6 +78,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   // When arguments update, make a new call to SOR for updated quote
   useEffect(() => {
     setLoading(true)
+    if (isDebouncing) return
 
     let stale = false
     fetchQuote()
@@ -93,7 +101,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
         }
       }
     }
-  }, [queryArgs, params, config])
+  }, [queryArgs, params, config, isDebouncing])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -116,8 +124,10 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.INVALID, trade: undefined }
     }
 
-    if (loading) {
-      // Returns the last trade state while loading to avoid jank.
+    // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
+    if (isDebouncing) {
+      return { state: TradeState.SYNCING, trade }
+    } else if (loading) {
       return { state: TradeState.LOADING, trade }
     }
 
@@ -141,5 +151,5 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.VALID, trade }
     }
     return { state: TradeState.INVALID, trade: undefined }
-  }, [currencyIn, currencyOut, loading, tradeType, quoteResult, error, route, queryArgs, trade])
+  }, [currencyIn, currencyOut, isDebouncing, loading, quoteResult, error, route, queryArgs, trade, tradeType])
 }

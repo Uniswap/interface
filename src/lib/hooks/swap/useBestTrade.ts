@@ -1,7 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useClientSideV3Trade } from 'hooks/useClientSideV3Trade'
-import useDebounce from 'hooks/useDebounce'
-import { useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import useClientSideSmartOrderRouterTrade from '../routing/useClientSideSmartOrderRouterTrade'
@@ -20,29 +18,15 @@ export function useBestTrade(
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
-  // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
-  // This helps provide a "syncing" state the UI can reference for loading animations.
-  const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
-    useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    200
-  )
-  const isDebouncing = amountSpecified !== debouncedAmount || otherCurrency !== debouncedOtherCurrency
-
-  const clientSORTrade = useClientSideSmartOrderRouterTrade(tradeType, debouncedAmount, debouncedOtherCurrency)
+  const clientSORTrade = useClientSideSmartOrderRouterTrade(tradeType, amountSpecified, otherCurrency)
 
   // Use a simple client side logic as backup if SOR is not available.
   const useFallback = clientSORTrade.state === TradeState.NO_ROUTE_FOUND || clientSORTrade.state === TradeState.INVALID
   const fallbackTrade = useClientSideV3Trade(
     tradeType,
-    useFallback ? debouncedAmount : undefined,
-    useFallback ? debouncedOtherCurrency : undefined
+    useFallback ? amountSpecified : undefined,
+    useFallback ? otherCurrency : undefined
   )
 
-  return useMemo(
-    () => ({
-      ...(useFallback ? fallbackTrade : clientSORTrade),
-      ...(isDebouncing ? { state: TradeState.LOADING } : {}),
-    }),
-    [isDebouncing, fallbackTrade, clientSORTrade, useFallback]
-  )
+  return useFallback ? fallbackTrade : clientSORTrade
 }
