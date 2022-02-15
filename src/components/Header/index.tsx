@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { Box, Flex } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
@@ -44,7 +44,7 @@ const HeaderFrame = styled.div`
 const HeaderControls = styled.div<{ isConnected: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    bottom: 0px;
+    bottom: 48px;
     left: 0px;
     display: flex;
     align-items: center;
@@ -56,6 +56,11 @@ const HeaderControls = styled.div<{ isConnected: boolean }>`
     padding: 1rem;
     z-index: 99;
     background-color: ${({ theme }) => theme.bg2};
+    transition: 0.35s ease-in-out all;
+    &.hidden {
+      bottom: -72px;
+      opacity: 0;
+    }
   `};
 `
 
@@ -126,7 +131,7 @@ export const StyledNavLink = styled(NavLink)`
   font-weight: 400;
   font-size: 14px;
   line-height: 19.5px;
-
+  font-family: 'Montserrat';
   &.active {
     font-weight: 600;
     color: ${({ theme }) => theme.white};
@@ -157,10 +162,11 @@ const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
   color: ${({ theme }) => theme.text5};
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 19.5px;
   width: fit-content;
   text-decoration: none !important;
+  font-family: 'Montserrat';
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
@@ -230,6 +236,19 @@ function Header() {
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
 
+  useEffect(() => {
+    window.addEventListener('scroll', (e) => {
+      let headerControls = document.getElementById('header-controls');
+      if (headerControls) {
+        if (window.scrollY > 0) {
+          headerControls.classList.add('hidden');
+        } else {
+          headerControls.classList.remove('hidden');
+        }
+      }
+    })
+  }, [])
+
   return (
     <HeaderFrame>
       <ClaimModal
@@ -267,13 +286,16 @@ function Header() {
           <StyledExternalLink id="vote-nav-link" href={`https://snapshot.org/#/swpr.eth`}>
             {t('vote')}
           </StyledExternalLink>
+          <StyledExternalLink id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
+            {t('charts')}
+          </StyledExternalLink>
           <MoreLinksIcon>
             <MobileOptions />
           </MoreLinksIcon>
           {isMobileByMedia && <Settings />}
         </HeaderLinks>
       </HeaderRow>
-      <HeaderControls isConnected={!!account}>
+      <HeaderControls id="header-controls" isConnected={!!account}>
         <HeaderElement>
           <Web3Status />
           {!isMobileByMedia && <Settings />}
