@@ -99,51 +99,47 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
-
-  // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
+  const trade = useMemo(() => {
+    if (route) {
+      try {
+        return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+      } catch (e: unknown) {
+        console.debug('transformRoutesToTrade failed: ', e)
+      }
+    }
+    return
+  }, [gasUseEstimateUSD, route, tradeType])
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
-      return {
-        state: TradeState.INVALID,
-        trade: undefined,
-      }
+      return { state: TradeState.INVALID, trade: undefined }
     }
 
-    if (loading && !quoteResult) {
-      // only on first hook render
-      return {
-        state: TradeState.LOADING,
-        trade: undefined,
-      }
+    if (loading) {
+      // Returns the last trade state while loading to avoid jank.
+      return { state: TradeState.LOADING, trade }
     }
 
     let otherAmount = undefined
-    if (tradeType === TradeType.EXACT_INPUT && currencyOut && quoteResult) {
-      otherAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
-    }
-    if (tradeType === TradeType.EXACT_OUTPUT && currencyIn && quoteResult) {
-      otherAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
+    if (quoteResult) {
+      switch (tradeType) {
+        case TradeType.EXACT_INPUT:
+          otherAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
+          break
+        case TradeType.EXACT_OUTPUT:
+          otherAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
+          break
+      }
     }
 
     if (error || !otherAmount || !route || route.length === 0 || !queryArgs) {
-      return {
-        state: TradeState.NO_ROUTE_FOUND,
-        trade: undefined,
-      }
+      return { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
     }
 
-    try {
-      const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-      return {
-        // always return VALID regardless of isFetching status
-        state: TradeState.VALID,
-        trade,
-      }
-    } catch (e) {
-      console.debug('transformRoutesToTrade failed: ', e)
-      return { state: TradeState.INVALID, trade: undefined }
+    if (trade) {
+      return { state: TradeState.VALID, trade }
     }
-  }, [currencyIn, currencyOut, loading, quoteResult, tradeType, error, route, queryArgs, gasUseEstimateUSD])
+    return { state: TradeState.INVALID, trade: undefined }
+  }, [currencyIn, currencyOut, loading, tradeType, quoteResult, error, route, queryArgs, trade])
 }
