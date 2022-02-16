@@ -6,6 +6,7 @@ import {
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
 import React, { PropsWithChildren, useEffect, useRef } from 'react'
+import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
@@ -44,6 +45,7 @@ export function BottomSheetModal({ isVisible, children, name, onClose, snapPoint
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints || DEFAULT_SNAP_POINTS)
+  const theme = useAppTheme()
 
   useEffect(() => {
     if (isVisible) {
@@ -57,17 +59,14 @@ export function BottomSheetModal({ isVisible, children, name, onClose, snapPoint
     <BaseModal
       ref={modalRef}
       backdropComponent={Backdrop}
+      backgroundStyle={{ backgroundColor: theme.colors.mainBackground }}
       contentHeight={animatedContentHeight}
       handleComponent={HandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       onDismiss={onClose}>
       <Trace logImpression section={name}>
-        <BottomSheetView onLayout={handleContentLayout}>
-          <Box backgroundColor="mainBackground" borderRadius="lg">
-            {children}
-          </Box>
-        </BottomSheetView>
+        <BottomSheetView onLayout={handleContentLayout}>{children}</BottomSheetView>
       </Trace>
     </BaseModal>
   )
