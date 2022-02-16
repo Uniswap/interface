@@ -1,4 +1,9 @@
-import { Provider as EthProvider } from '@web3-react/types'
+import { Provider as EthersProvider } from '@ethersproject/abstract-provider'
+import { Signer as EthersSigner } from '@ethersproject/abstract-signer'
+import { Eip1193Bridge } from '@ethersproject/experimental'
+import { ExternalProvider } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
@@ -91,7 +96,7 @@ function Updaters() {
 export type WidgetProps = {
   theme?: Theme
   locale?: SupportedLocale
-  provider?: EthProvider
+  provider?: Eip1193Provider | ExternalProvider | JsonRpcProvider | { provider: EthersProvider; signer: EthersSigner }
   jsonRpcEndpoint?: string
   width?: string | number
   dialog?: HTMLElement | null
@@ -112,6 +117,15 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
     onError,
   } = props
 
+  let eip1193: Eip1193Provider | undefined
+  if (provider && 'provider' in provider && 'signer' in provider) {
+    eip1193 = new Eip1193Bridge(provider.signer, provider.provider)
+  } else if (provider instanceof JsonRpcProvider) {
+    eip1193 = new Eip1193Bridge(provider.getSigner(), provider)
+  } else if (provider) {
+    eip1193 = provider as Eip1193Provider
+  }
+
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <StrictMode>
@@ -124,7 +138,7 @@ export default function Widget(props: PropsWithChildren<WidgetProps>) {
                 <WidgetPropValidator {...props}>
                   <ReduxProvider store={multicallStore}>
                     <AtomProvider>
-                      <Web3Provider provider={provider} jsonRpcEndpoint={jsonRpcEndpoint}>
+                      <Web3Provider provider={eip1193} jsonRpcEndpoint={jsonRpcEndpoint}>
                         <Updaters />
                         {children}
                       </Web3Provider>
