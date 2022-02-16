@@ -308,7 +308,7 @@ export const CommunityLinksContent = {
             image: Github,
             alt: 'GitHub Logo',
             title: 'GitHub',
-            content: <>Contribute to the <br/>Swapr repositories on Github.</>,
+            content: <>Contribute to the <br/>Swapr repositories on GitHub.</>,
             button: {
                 label: 'VISIT GITHUB',
                 href: 'https://github.com/levelkdev/dxswap-dapp',
