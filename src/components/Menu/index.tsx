@@ -159,7 +159,7 @@ export default function Menu() {
 
   const bridgeLink = getBridgeLink()
   const toggleClaimPopup = useToggleModal(ApplicationModal.CLAIM_POPUP)
-  const { isUserHasReward, pendingTx } = useClaimReward()
+  const { pendingTx } = useClaimReward()
 
   return (
     <StyledMenu ref={node as any}>
@@ -228,7 +228,7 @@ export default function Menu() {
           <Trans>Forum</Trans>
         </MenuItem>
 
-        <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
+        <MenuItem id="link" href="/15022022KyberSwapTermsofUse.pdf">
           <FileText size={14} />
           <Trans>Terms</Trans>
         </MenuItem>
