@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useUpdateAtom } from 'jotai/utils'
-import { useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
+import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
 import useSwapApproval, {
   ApprovalState,
   useSwapApprovalOptimizedTrade,
@@ -17,7 +17,6 @@ import { Link, Spinner } from 'lib/icons'
 import { displayTxHashAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
-import useInputCurrencyAmount from 'lib/useInputCurrencyAmount'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { ExplorerDataType } from 'utils/getExplorerLink'
@@ -62,7 +61,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
     useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval) || trade.trade
 
-  const approvalCurrencyAmount = useInputCurrencyAmount()
+  const approvalCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
   const [approval, getApproval] = useSwapApproval(
     optimizedTrade,
     allowedSlippage,

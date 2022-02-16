@@ -1,11 +1,16 @@
 import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { loadingOpacityCss } from 'lib/css/loading'
-import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
+import {
+  useIsSwapFieldIndependent,
+  useSwapAmount,
+  useSwapCurrency,
+  useSwapCurrencyAmount,
+  useSwapInfo,
+} from 'lib/hooks/swap'
 import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
-import useInputCurrencyAmount from 'lib/useInputCurrencyAmount'
 import { useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -51,7 +56,7 @@ export default function Input({ disabled, focused }: InputProps) {
 
   const [swapInputAmount, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
   const [swapInputCurrency, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
-  const inputCurrencyAmount = useInputCurrencyAmount()
+  const inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(swapInputCurrency)
