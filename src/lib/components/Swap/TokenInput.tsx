@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { loadingOpacityCss } from 'lib/css/loading'
 import styled, { keyframes, ThemedText } from 'lib/theme'
-import { FocusEvent, ReactNode, useCallback, useRef, useState } from 'react'
+import { FocusEvent, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 
 import Button from '../Button'
 import Column from '../Column'
@@ -69,7 +69,8 @@ export default function TokenInput({
   children,
 }: TokenInputProps) {
   const max = useRef<HTMLButtonElement>(null)
-  const [showMax, setShowMax] = useState(false)
+  const [showMax, setShowMax] = useState(Boolean(onMax))
+  useEffect(() => setShowMax((Boolean(onMax) && input.current?.contains(document.activeElement)) ?? false), [onMax])
   const onFocus = useCallback(() => setShowMax(Boolean(onMax)), [onMax])
   const onBlur = useCallback((e: FocusEvent) => {
     if (e.relatedTarget !== max.current && e.relatedTarget !== input.current) {
