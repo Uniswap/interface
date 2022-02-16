@@ -1,4 +1,3 @@
-import { darken } from 'polished'
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 
@@ -6,33 +5,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
-
-const StyledNavMenu = styled('div')`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
-  }
-
-  @media (max-width: 320px) {
-    margin: 0 8px;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `}
-`
+import { StyledNavMenu } from './NavMenu'
 
 const StyledMenu = styled.div`
   display: flex;
