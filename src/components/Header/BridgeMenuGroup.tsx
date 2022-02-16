@@ -7,7 +7,7 @@ import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
 
-const StyledNavMenu = styled('div')`
+export const StyledNavMenu = styled('div')`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
