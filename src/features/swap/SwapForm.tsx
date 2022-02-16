@@ -3,12 +3,11 @@ import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Keyboard, StyleSheet } from 'react-native'
+import { Keyboard, StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
-import { useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { LongPressButton } from 'src/components/buttons/LongPressButton'
 import { SwapArrow } from 'src/components/icons/SwapArrow'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
 import { Flex } from 'src/components/layout'
@@ -158,10 +157,10 @@ export function SwapForm(props: SwapFormProps) {
           disabled={actionButtonDisabled}
           label={
             wrapType === WrapType.Wrap
-              ? t('Wrap')
+              ? t('Hold to wrap')
               : wrapType === WrapType.Unwrap
-              ? t('Unwrap')
-              : t('Swap')
+              ? t('Hold to unwrap')
+              : t('Hold to swap')
           }
           loading={quoteStatus === 'loading'}
           name={
@@ -185,24 +184,16 @@ type ActionButtonProps = {
   callback: () => void
 }
 
-function ActionButton({ callback, disabled, label, loading, name }: ActionButtonProps) {
-  const theme = useAppTheme()
-
+function ActionButton({ callback, disabled, label, name }: ActionButtonProps) {
   const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(callback)
 
   return (
     <>
-      <PrimaryButton
-        alignSelf="stretch"
-        bg={disabled ? 'gray400' : undefined}
+      <LongPressButton
         disabled={disabled}
-        icon={loading ? <ActivityIndicator color={theme.colors.white} size={25} /> : undefined}
         label={label}
         name={name}
-        py="md"
-        testID={name}
-        textVariant="buttonLabelLg"
-        onPress={() => {
+        onComplete={() => {
           notificationAsync()
           actionButtonTrigger()
         }}
