@@ -151,10 +151,7 @@ const swapInfoAtom = atom<SwapInfo>({
 export function SwapInfoUpdater() {
   const setSwapInfo = useUpdateAtom(swapInfoAtom)
   const swapInfo = useComputeSwapInfo()
-  useEffect(() => {
-    console.log('zzmp', 'setSwapInfo', swapInfo.currencyAmounts.INPUT)
-    setSwapInfo(swapInfo)
-  }, [swapInfo, setSwapInfo])
+  useEffect(() => setSwapInfo(swapInfo), [swapInfo, setSwapInfo])
   return null
 }
 
