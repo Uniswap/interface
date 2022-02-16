@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useTheme } from '@shopify/restyle'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -123,133 +124,135 @@ export function AccountsScreen() {
   const isLoading = status === SagaStatus.Started
 
   return (
-    <SheetScreen>
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg" px="lg">
-        <Text color="textColor" variant="bodyBold">
-          {t('Switch Accounts')}
-        </Text>
-        <TextButton name={ElementName.Back} testID={ElementName.Back}>
-          <BackX size={16} onPressBack={() => navigation.goBack()} />
-        </TextButton>
-      </Box>
-      <ScrollView>
-        <Box flex={1} px="lg">
-          {Object.values(signerAccounts).map((account) => (
-            <Box key={account.address} mb="xl">
-              <AccountItem
-                account={account}
-                isActive={!!activeAccount && activeAccount.address === account.address}
-                onEdit={onPressEdit}
-                onPress={onPressActivate}
-              />
-            </Box>
-          ))}
-          {!!readOnlyAccounts.length && (
-            <>
-              <Text color="textColor" mb="lg" variant="body">
-                {t('Watching')}
-              </Text>
-              {Object.values(readOnlyAccounts).map((account) => (
-                <Box key={account.address} mb="sm">
-                  <AccountItem
-                    account={account}
-                    isActive={!!activeAccount && activeAccount.address === account.address}
-                    onEdit={onPressEdit}
-                    onPress={onPressActivate}
-                  />
-                </Box>
-              ))}
-            </>
-          )}
+    <BottomSheetModalProvider>
+      <SheetScreen>
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between" mb="lg" px="lg">
+          <Text color="textColor" variant="bodyBold">
+            {t('Switch Accounts')}
+          </Text>
+          <TextButton name={ElementName.Back} testID={ElementName.Back}>
+            <BackX size={16} onPressBack={() => navigation.goBack()} />
+          </TextButton>
         </Box>
-      </ScrollView>
-      <CenterBox flexDirection="row" px="lg" py="md">
-        <PrimaryButton
-          disabled={isLoading}
-          label={t('Import Account')}
-          // mr="lg"
-          name={ElementName.Import}
-          testID={ElementName.Import}
-          // variant="palePink"
-          width="100%"
-          onPress={onPressImport}
-        />
-        {/* <PrimaryButton
+        <ScrollView>
+          <Box flex={1} px="lg">
+            {Object.values(signerAccounts).map((account) => (
+              <Box key={account.address} mb="xl">
+                <AccountItem
+                  account={account}
+                  isActive={!!activeAccount && activeAccount.address === account.address}
+                  onEdit={onPressEdit}
+                  onPress={onPressActivate}
+                />
+              </Box>
+            ))}
+            {!!readOnlyAccounts.length && (
+              <>
+                <Text color="textColor" mb="lg" variant="body">
+                  {t('Watching')}
+                </Text>
+                {Object.values(readOnlyAccounts).map((account) => (
+                  <Box key={account.address} mb="sm">
+                    <AccountItem
+                      account={account}
+                      isActive={!!activeAccount && activeAccount.address === account.address}
+                      onEdit={onPressEdit}
+                      onPress={onPressActivate}
+                    />
+                  </Box>
+                ))}
+              </>
+            )}
+          </Box>
+        </ScrollView>
+        <CenterBox flexDirection="row" px="lg" py="md">
+          <PrimaryButton
+            disabled={isLoading}
+            label={t('Import Account')}
+            // mr="lg"
+            name={ElementName.Import}
+            testID={ElementName.Import}
+            // variant="palePink"
+            width="100%"
+            onPress={onPressImport}
+          />
+          {/* <PrimaryButton
           disabled={isLoading}
           label={t('Create Account')}
           name={ElementName.Create}
           testID="accounts/create/button"
           onPress={onPressCreate}
         /> */}
-      </CenterBox>
-      <BottomSheetModal
-        isVisible={showEditAccountModal}
-        name={ModalName.Account}
-        onClose={() => setShowEditAccountModal(false)}>
-        <Flex centered gap="sm" p="md">
-          <Text color="gray400" paddingBottom="sm" variant="bodySm">
-            {t('Edit or rename your account')}
-          </Text>
-          <PrimaryButton
-            disabled={isLoading}
-            icon={
-              <EditIcon height={18} stroke={theme.colors.primary1} strokeWidth={2} width={18} />
-            }
-            label={t('Rename Account')}
-            name={ElementName.Rename}
-            variant="palePink"
-            width="100%"
-            onPress={onPressRename}
-          />
-          <PrimaryButton
-            disabled={isLoading}
-            icon={<CopyIcon height={18} stroke={theme.colors.primary1} width={18} />}
-            label={t('Copy Address')}
-            name={ElementName.Copy}
-            variant="palePink"
-            width="100%"
-            onPress={onPressCopyAddress}
-          />
-          <PrimaryButton
-            disabled={isLoading}
-            label={t('Remove Account')}
-            name={ElementName.Remove}
-            variant="paleOrange"
-            width="100%"
-            onPress={onPressRemove}
-          />
-          <TextButton
-            disabled={isLoading}
-            name={ElementName.EditCancel}
-            pb="sm"
-            pt="xs"
-            textAlign="center"
-            textColor="primary1"
-            textVariant="body"
-            width="100%"
-            onPress={onPressEditCancel}>
-            {t('Cancel')}
-          </TextButton>
-        </Flex>
-      </BottomSheetModal>
-      {!!pendingRenameAddress && (
-        <View style={flex.fill}>
-          <RenameAccountModal
-            address={pendingRenameAddress}
-            onCancel={onPressRenameCancel}
-            onConfirm={onPressRenameConfirm}
-          />
-        </View>
-      )}
-      {!!pendingRemoveAddress && (
-        <View style={flex.fill}>
-          <RemoveAccountModal
-            address={pendingRemoveAddress}
-            onCancel={onPressRemoveCancel}
-            onConfirm={onPressRemoveConfirm}
-          />
-        </View>
-      )}
-    </SheetScreen>
+        </CenterBox>
+        <BottomSheetModal
+          isVisible={showEditAccountModal}
+          name={ModalName.Account}
+          onClose={() => setShowEditAccountModal(false)}>
+          <Flex centered gap="sm" p="md">
+            <Text color="gray400" paddingBottom="sm" variant="bodySm">
+              {t('Edit or rename your account')}
+            </Text>
+            <PrimaryButton
+              disabled={isLoading}
+              icon={
+                <EditIcon height={18} stroke={theme.colors.primary1} strokeWidth={2} width={18} />
+              }
+              label={t('Rename Account')}
+              name={ElementName.Rename}
+              variant="palePink"
+              width="100%"
+              onPress={onPressRename}
+            />
+            <PrimaryButton
+              disabled={isLoading}
+              icon={<CopyIcon height={18} stroke={theme.colors.primary1} width={18} />}
+              label={t('Copy Address')}
+              name={ElementName.Copy}
+              variant="palePink"
+              width="100%"
+              onPress={onPressCopyAddress}
+            />
+            <PrimaryButton
+              disabled={isLoading}
+              label={t('Remove Account')}
+              name={ElementName.Remove}
+              variant="paleOrange"
+              width="100%"
+              onPress={onPressRemove}
+            />
+            <TextButton
+              disabled={isLoading}
+              name={ElementName.EditCancel}
+              pb="sm"
+              pt="xs"
+              textAlign="center"
+              textColor="primary1"
+              textVariant="body"
+              width="100%"
+              onPress={onPressEditCancel}>
+              {t('Cancel')}
+            </TextButton>
+          </Flex>
+        </BottomSheetModal>
+        {!!pendingRenameAddress && (
+          <View style={flex.fill}>
+            <RenameAccountModal
+              address={pendingRenameAddress}
+              onCancel={onPressRenameCancel}
+              onConfirm={onPressRenameConfirm}
+            />
+          </View>
+        )}
+        {!!pendingRemoveAddress && (
+          <View style={flex.fill}>
+            <RemoveAccountModal
+              address={pendingRemoveAddress}
+              onCancel={onPressRemoveCancel}
+              onConfirm={onPressRemoveConfirm}
+            />
+          </View>
+        )}
+      </SheetScreen>
+    </BottomSheetModalProvider>
   )
 }
