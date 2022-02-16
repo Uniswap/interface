@@ -138,3 +138,18 @@ export async function getTokenPrice(tokenId: string): Promise<number> {
     return 0
   }
 }
+
+export async function getGenesisLiquidityTokenPrice(address: string, chainId: number): Promise<number> {
+  try {
+    const resp = (await axios.get(
+      `http://localhost:3001/prices/liquidity-tokens?address=${address}&chainId=${chainId}`
+    )) as {
+      data: number
+    }
+
+    return resp.data
+  } catch (error) {
+    console.log('coingecko api error: ', error)
+    return 0
+  }
+}

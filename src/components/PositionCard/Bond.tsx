@@ -1,9 +1,15 @@
+// import { BigNumber } from '@ethersproject/bignumber'
+// import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
+import { DAO_TREASURY } from 'constants/addresses'
+import { SupportedChainId } from 'constants/chains'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { PurchaseBondCallback } from 'hooks/useBondDepository'
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Text } from 'rebass'
+import { usePurchaseBondInfo } from 'state/bond/hooks'
 import styled from 'styled-components/macro'
 import { IBond } from 'types/bonds'
 
@@ -29,13 +35,25 @@ interface IBondPositionCardProps {
   purchaseCallback: PurchaseBondCallback
 }
 
-function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCardProps) {
-  const [showMore, setShowMore] = useState<boolean>(false)
+const amount = '10'
+const maxPrice = '10'
 
-  const handlePurchase = async () => {
-    console.log('Handling bond purchase')
+function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCardProps) {
+  const [showMore, setShowMore] = useState<boolean>(true)
+  const { parsedAmount } = usePurchaseBondInfo({ amount, maxPrice })
+  const [approval, approveCallback] = useApproveCallback(parsedAmount, DAO_TREASURY[SupportedChainId.POLYGON_MUMBAI])
+
+  async function handleApprove() {
     try {
-      await purchaseCallback({ account, bond, amount: 10, maxPrice: 1 })
+      await approveCallback()
+    } catch (error) {
+      console.log('ERROR ON APPROVE: ', error)
+    }
+  }
+
+  async function handlePurchase() {
+    try {
+      await purchaseCallback({ account, bond, amount, maxPrice })
     } catch (error) {
       console.log('AN ERROR HAS OCCURED', error)
     }
@@ -99,9 +117,16 @@ function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCard
               </Text>
             </FixedHeightRow>
 
-            <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={handlePurchase}>
-              <Trans>Bond</Trans>
-            </ButtonPrimary>
+            {approval === ApprovalState.APPROVED ? (
+              <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={handlePurchase}>
+                <Trans>Bond</Trans>
+              </ButtonPrimary>
+            ) : (
+              <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={handleApprove}>
+                <Trans>Approve </Trans>
+                {bond.displayName.toUpperCase()}
+              </ButtonPrimary>
+            )}
           </AutoColumn>
         )}
       </AutoColumn>

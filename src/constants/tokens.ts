@@ -3,9 +3,9 @@ import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core
 import { GEN_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
-export const DAI_USDC_POLYGON_MUMBAI_PAIR = new Token(
+export const DAI_GEN_POLYGON_MUMBAI_PAIR = new Token(
   SupportedChainId.POLYGON_MUMBAI,
-  '0x8412e1036841a9d1e86e24c315f7ce27e4fcb7dd',
+  '0x36cac24888253048a8e59b64ccbb61ba429acf1a',
   18,
   'GEN-LP',
   'Genesis LP'

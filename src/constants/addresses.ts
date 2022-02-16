@@ -6,7 +6,7 @@ import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
-export const DAI_GEN_PAIR_ADDRESS = '0x3d90706560b2fcb29d0a41aeeed551c96b62f608'
+export const DAI_GEN_PAIR_ADDRESS = '0x36cac24888253048a8e59b64ccbb61ba429acf1a'
 export const DAO_BOND_DEPOSITORY: AddressMap = constructSameAddressMap(GenesisContractAddresses.BOND_DEPOSITORY)
 export const DAO_TREASURY: AddressMap = constructSameAddressMap(GenesisContractAddresses.TREASURY)
 export const DAO_STAKING: AddressMap = constructSameAddressMap(GenesisContractAddresses.STAKING)

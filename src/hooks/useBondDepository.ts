@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { formatUnits } from '@ethersproject/units'
+import { formatUnits, parseEther } from '@ethersproject/units'
 import { DAO_TREASURY } from 'constants/addresses'
 import { BASE_TOKEN_DECIMALS, BOND_DETAILS, IBondDetails } from 'constants/bonds'
 import { SupportedChainId } from 'constants/chains'
@@ -25,8 +25,8 @@ export interface IProcessBondArgs {
 export interface IPurchaseBondArgs {
   account: string | null | undefined
   bond: IBond
-  amount: number
-  maxPrice: number
+  amount: string
+  maxPrice: string
 }
 
 export interface IPurchaseBondCallbackReturn {
@@ -40,7 +40,7 @@ export type PurchaseBondCallback = (args: IPurchaseBondArgs) => Promise<IPurchas
 // token1 -> Dai
 function useGenTokenPrice() {
   const pair = useDaiGenPair()
-  const [genPrice, setGenPrice] = useState<BigNumber>(BigNumber.from(0))
+  const [genPrice, setGenPrice] = useState<BigNumber>(BigNumber.from(1))
 
   const getGenPrice = useCallback(() => {
     pair?.getReserves().then((reserves: any) => {
@@ -108,7 +108,7 @@ export function useGetAllBonds() {
         setIsLoading(false)
       }
     })()
-  }, [setIsLoading, getMarkets, chainId])
+  }, [setIsLoading, getMarkets, chainId, genPrice])
 
   return { bonds, isLoading, error }
 }
@@ -123,6 +123,7 @@ async function processBond({
   genPrice,
 }: IProcessBondArgs): Promise<IBond | null> {
   if (genPrice.eq(BigNumber.from('0'))) {
+    console.error('GENESIS: Missing GEN price')
     return null
   }
 
@@ -135,6 +136,7 @@ async function processBond({
   }
 
   const quoteTokenPrice = await bondDetails.pricingFunction()
+  console.log('🚀 ~ file: useBondDepository.ts ~ line 143 ~ quoteTokenPrice', quoteTokenPrice, bond.quoteToken)
   const bondPriceBigNumber = await depository?.marketPrice(index)
   const bondPrice = +bondPriceBigNumber / Math.pow(10, BASE_TOKEN_DECIMALS)
   const bondPriceUSD = quoteTokenPrice * +bondPrice
@@ -224,9 +226,7 @@ export function usePurchaseBondCallback(): PurchaseBondCallback {
         if (!depository) return { success: false, txHash }
 
         const amountBigNumber = BigNumber.from(amount)
-        const maxPriceBignNumber = BigNumber.from(maxPrice)
-
-        console.log(DAO_TREASURY[SupportedChainId.POLYGON_MUMBAI])
+        const maxPriceBignNumber = parseEther(`${maxPrice}`)
 
         const depositTx = await depository.deposit(
           bond.index,
