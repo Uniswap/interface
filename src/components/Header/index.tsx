@@ -29,6 +29,7 @@ import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import BridgeMenuGroup from './BridgeMenuGroup'
+import ChartsMenuGroup from './ChartsMenuGroup'
 import UbeBalanceContent from './UbeBalanceContent'
 
 const HeaderFrame = styled.div`
@@ -402,9 +403,7 @@ export default function Header() {
           <StyledNavLinkExtraSmall id={`stake-nav-link`} to={'/stake'}>
             {t('stake')}
           </StyledNavLinkExtraSmall>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://info.ubeswap.org'}>
-            {t('charts')} <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledExternalLink>
+          <ChartsMenuGroup />
         </HeaderLinks>
         <BurgerElement>
           <Hamburger size={18} hideOutline={false} label="show menu" toggled={drawerVisible} onToggle={onToggle} />
@@ -448,10 +447,20 @@ export default function Header() {
                 </StyledNavLink>
               </StyledMenuItem>
               <StyledMenuItem>
-                <StyledDrawerExternalLink id={`stake-drawer-nav-link`} href={'https://info.ubeswap.org'}>
-                  {t('charts')}
-                </StyledDrawerExternalLink>
+                <StyledNavLink id={'charts-drawer-nav-link'} to={'#'}>
+                  Charts
+                </StyledNavLink>
               </StyledMenuItem>
+              <StyledSubMenuItem>
+                <StyledDrawerExternalLink id={`charts-analytics-drawer-nav-link`} href={'https://info.ubeswap.org/'}>
+                  Analytics
+                </StyledDrawerExternalLink>
+              </StyledSubMenuItem>
+              <StyledSubMenuItem>
+                <StyledDrawerExternalLink id={`charts-celo-tracker-drawer-nav-link`} href={'https://celotracker.com/'}>
+                  Celo Tracker
+                </StyledDrawerExternalLink>
+              </StyledSubMenuItem>
             </StyledMenu>
           </StyledDrawer>
         </BurgerElement>
