@@ -1,4 +1,4 @@
-import { NativeCurrency } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -78,7 +78,7 @@ export default function useTokenList(): WrappedTokenInfo[] {
   }, [tokenMap])
 }
 
-export type TokenMap = { [address: string]: WrappedTokenInfo }
+export type TokenMap = { [address: string]: Token }
 
 export function useTokenMap(): TokenMap {
   const { chainId } = useActiveWeb3React()
