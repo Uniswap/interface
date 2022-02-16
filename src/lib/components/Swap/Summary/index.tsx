@@ -2,17 +2,16 @@ import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/misc'
 import { IconButton } from 'lib/components/Button'
 import { useSwapTradeType } from 'lib/hooks/swap'
+import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
-import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
-import { computeRealizedPriceImpact } from 'utils/prices'
+import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton, { Action } from '../../ActionButton'
@@ -42,13 +41,13 @@ const Body = styled(Column)<{ open: boolean }>`
     transition: flex-grow 0.25s;
 
     ${DetailsColumn} {
-      flex-basis: ${({ open }) => (open ? 7 : 0)}em;
+      flex-basis: ${({ open }) => (open ? 7.5 : 0)}em;
       overflow-y: hidden;
       position: relative;
       transition: flex-basis 0.25s;
 
       ${Column} {
-        height: 100%;
+        height: 7.5em;
         grid-template-rows: repeat(auto-fill, 1em);
         padding: ${({ open }) => (open ? '0.5em 0' : 0)};
         transition: padding 0.25s;
@@ -97,10 +96,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const scrollbar = useScrollbar(details)
 
   const warning = useMemo(() => {
-    if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
-    if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
-    if (allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE)) return 'warning'
-    return
+    return getPriceImpactWarning(priceImpact) || getSlippageWarning(allowedSlippage)
   }, [allowedSlippage, priceImpact])
 
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
@@ -119,7 +115,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         onClick: () => setConfirmedTrade(trade),
         children: <Trans>Accept</Trans>,
       }
-    } else if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH) && !ackPriceImpact) {
+    } else if (getPriceImpactWarning(priceImpact) === 'error' && !ackPriceImpact) {
       return {
         message: <Trans>High price impact</Trans>,
         onClick: () => setAckPriceImpact(true),

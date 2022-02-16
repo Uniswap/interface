@@ -21,7 +21,7 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
-export const LoadingSpan = styled.span<{ $loading: boolean }>`
+export const LoadingRow = styled(Row)<{ $loading: boolean }>`
   ${loadingOpacityCss};
 `
 
@@ -61,12 +61,9 @@ export default function Input({ disabled, focused }: InputProps) {
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(swapInputCurrency)
 
-  const isTradeLoading = useMemo(
-    () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
-    [tradeState]
-  )
+  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
-  const isLoading = isDependentField && isTradeLoading
+  const isLoading = isRouteLoading && isDependentField
 
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
@@ -101,7 +98,7 @@ export default function Input({ disabled, focused }: InputProps) {
       >
         <ThemedText.Body2 color="secondary">
           <Row>
-            <LoadingSpan $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingSpan>
+            <LoadingRow $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingRow>
             {balance && (
               <Balance color={balanceColor} focused={focused}>
                 Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
