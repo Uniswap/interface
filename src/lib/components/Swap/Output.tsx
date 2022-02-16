@@ -4,9 +4,9 @@ import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
-import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
+import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
-import { Field, independentFieldAtom } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { PropsWithChildren, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -50,7 +50,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
   const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
-  const isDependentField = useAtomValue(independentFieldAtom) !== Field.OUTPUT
+  const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
   const isLoading = isRouteLoading && isDependentField
 
   const overrideColor = useAtomValue(colorAtom)

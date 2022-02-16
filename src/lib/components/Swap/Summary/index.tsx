@@ -2,12 +2,11 @@ import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
+import { useSwapTradeType } from 'lib/hooks/swap'
 import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
-import { Field, independentFieldAtom } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
@@ -89,7 +88,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
-  const independentField = useAtomValue(independentFieldAtom)
+  const tradeType = useSwapTradeType()
   const { i18n } = useLingui()
 
   const [open, setOpen] = useState(false)
@@ -160,14 +159,14 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
           </DetailsColumn>
           <Estimate color="secondary">
             <Trans>Output is estimated.</Trans>
-            {independentField === Field.INPUT && (
+            {tradeType === TradeType.EXACT_INPUT && (
               <Trans>
                 You will receive at least{' '}
                 {formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)} {outputCurrency.symbol}{' '}
                 or the transaction will revert.
               </Trans>
             )}
-            {independentField === Field.OUTPUT && (
+            {tradeType === TradeType.EXACT_OUTPUT && (
               <Trans>
                 You will send at most {formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)}{' '}
                 {inputCurrency.symbol} or the transaction will revert.
