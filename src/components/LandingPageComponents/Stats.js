@@ -7,10 +7,51 @@ import Layout from './layout/Layout'
 import BackgroundTitleGradient from './../../assets/images/gradient-stats.png'
 import TextyAnim from 'rc-texty';
 
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+
+const apiUrlList = [
+    'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3',
+    'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-xdai-v2',
+    'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-mainnet-v2'
+]
+
+const tokensQuery = `{
+    swaprFactories (first:1000) {
+        txCount
+        totalVolumeUSD
+    }
+}`;
+
+
+const retrieveData = async (url) => {
+
+    const client = new ApolloClient({
+        uri: url, 
+        cache: new InMemoryCache(),
+    });
+
+    let asyncClient = await client
+        .query({
+            query: gql(tokensQuery)
+        })
+        .then((data) => {
+            // console.log('Subgraph data: ', data)
+            return data;
+        })
+        .catch((err) => {
+            console.log('Error fetching data: ', err);
+            return err;
+        });
+    return asyncClient;
+}
+
+
 const Stats = () => {
 
     let [tvl, setTvl] = useState(0);
     let [swaprPrice, setSwaprPrice] = useState(0);
+    let [tx, setTx] = useState(0);
+    let [totalVolumeUSD, setTotalVolumeUSD] = useState(0);
     let [isChartActive, setIsChartActive] = useState(false);
 
     useEffect(() => {
@@ -23,26 +64,40 @@ const Stats = () => {
             let integralTvl = splitTvlString[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             setTvl(integralTvl);
         });
+    }, []);
 
+    useEffect(() => {
         let coinCode = "arbitrum:0xde903e2712288a1da82942dddf2c20529565ac30"
-
-        let thing = {
-            "coins": [
-                coinCode
-            ]
-        };
         const swaprPricePromise = fetch('https://coins.llama.fi/prices', {
             method: 'POST',
-            body: JSON.stringify(thing)
+            body: JSON.stringify({
+                "coins": [
+                    coinCode
+                ]
+            })
         });
         swaprPricePromise.then((data) => {
             return data.json();
         }).then((decodedPrice) => {
             let swaprPrice = decodedPrice.coins[coinCode].price.toString();
-            setSwaprPrice(swaprPrice)
+            setSwaprPrice(swaprPrice);
         });
+    }, [])
 
-    }, []);
+    useEffect(() => {
+        for (let val in apiUrlList) {
+            // eslint-disable-next-line
+            retrieveData(apiUrlList[val]).then((data) => {
+                let floatTx = parseFloat(data.data.swaprFactories[0].txCount);
+                let floatVolume = parseFloat(data.data.swaprFactories[0].totalVolumeUSD);
+
+                // eslint-disable-next-line
+                setTx(tx += floatTx);
+                // eslint-disable-next-line
+                setTotalVolumeUSD((totalVolumeUSD += floatVolume).toFixed(2));
+            });
+        };
+    }, [])
 
     useEffect(() => {
         let options = {
@@ -67,7 +122,9 @@ const Stats = () => {
 
     let statsData = {
         'TVL': tvl,
-        'SWPR PRICE': swaprPrice
+        'SWPR PRICE': swaprPrice,
+        'TOTAL VOLUME': totalVolumeUSD,
+        'TRADES': tx
     };
 
     return (
@@ -96,7 +153,7 @@ const Stats = () => {
                                             {
                                                 statsItem.externalSource ? (
                                                     <TextyAnim type="flash">
-                                                        {statsData[statsItem.title]}
+                                                        {statsData[statsItem.title].toString()}
                                                     </TextyAnim>
                                                     ) : (
                                                     statsItem.value

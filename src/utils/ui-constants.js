@@ -450,12 +450,15 @@ export const StatsContent = {
         {
             title: 'TOTAL VOLUME',
             value: <TextyAnim type="flash">$145,000,000+</TextyAnim>,
+            externalSource: true,
+            headingDollar: true
         },
         {
             title: 'TRADES',
             value: <>
                 <TextyAnim type="flash">570,000+</TextyAnim>
                 </>,
+            externalSource: true,
         },
         {
             title: 'TOTAL FEES COLLECTED',
