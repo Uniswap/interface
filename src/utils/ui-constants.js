@@ -240,7 +240,7 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'CREATE CAMPAIGN',
-                    href: 'https://swapr.eth.link/#/liquidity-mining/create',
+                    href: '/#/liquidity-mining/create',
                     type: 'primary'
                 },
                 {
