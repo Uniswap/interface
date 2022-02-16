@@ -53,7 +53,7 @@ export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST
         } else {
           tokens = await validateTokens(list)
         }
-        const tokenMap = tokensToChainTokenMap(tokens)
+        const tokenMap = tokensToChainTokenMap(tokens) // also caches the fetched tokens, so it is invoked even if stale
         if (!stale) {
           setChainTokenMap(tokenMap)
           setError(undefined)
