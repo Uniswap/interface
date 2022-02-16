@@ -1,7 +1,7 @@
 import { useContractKit, useGetConnectedSigner } from '@celo-tools/use-contractkit'
 import { TokenAmount } from '@ubeswap/sdk'
 import { ButtonEmpty, ButtonLight, ButtonPrimary, ButtonRadio } from 'components/Button'
-import { GreyCard, YellowCard } from 'components/Card'
+import { GreyCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { CardNoise, CardSection, DataCard } from 'components/earn/styled'
@@ -215,9 +215,9 @@ export const Stake: React.FC = () => {
           {/* <h2>Your UBE stake: {stakeBalance ? stakeBalance.toFixed(2, { groupSeparator: ',' }) : '--'} UBE</h2> */}
           {userRewardRate?.greaterThan('0') ? (
             <>
-              <YellowCard style={{ marginBottom: '16px' }}>
+              <LightCard style={{ marginBottom: '16px' }}>
                 <DescriptionWrapper>
-                  <h4 style={{ margin: '12px 0' }}>Your weekly rewards</h4>
+                  <h4 style={{ margin: '12px 0' }}>Your Weekly Rewards</h4>
                   <h4 style={{ margin: '12px 0' }}>
                     {userRewardRate
                       ? userRewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(2, { groupSeparator: ',' })
@@ -226,7 +226,7 @@ export const Stake: React.FC = () => {
                   </h4>
                 </DescriptionWrapper>
                 <DescriptionWrapper>
-                  <h4 style={{ margin: '12px 0' }}>Annual stake APR</h4>
+                  <h4 style={{ margin: '12px 0' }}>Annual Stake APR</h4>
                   <h4 style={{ margin: '12px 0' }}>
                     {apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}%{' '}
                   </h4>
@@ -234,15 +234,15 @@ export const Stake: React.FC = () => {
                 <DescriptionWrapper>
                   <h4 style={{ margin: '12px 0' }}>Unclaimed Rewards</h4>
                   <div style={{ display: 'flex' }}>
-                    <h4 style={{ margin: '12px 0' }}>
-                      {userRewardRate ? earned.toFixed(4, { groupSeparator: ',' }) : '--'}
-                    </h4>
                     <ButtonEmpty padding="8px" borderRadius="8px" width="fit-content" onClick={onClaimClick}>
                       {t('claim')}
                     </ButtonEmpty>
+                    <h4 style={{ margin: '12px 0' }}>
+                      {userRewardRate ? earned.toFixed(4, { groupSeparator: ',' }) : '--'}
+                    </h4>
                   </div>
                 </DescriptionWrapper>
-              </YellowCard>
+              </LightCard>
               <CommunityWrapper showBackground={true} bgColor={theme.primary1}>
                 <h3 style={{ margin: 'unset' }}>Community UBE Stake</h3>
                 <DescriptionWrapper>
@@ -254,14 +254,14 @@ export const Stake: React.FC = () => {
                   <h4 style={{ margin: 'unset' }}>{stakeBalance?.toSignificant(4)}</h4>
                 </DescriptionWrapper>
                 <ExternalLink
-                  style={{ color: 'white', textDecoration: 'underline', textAlign: 'left' }}
+                  style={{ color: 'white', textDecoration: 'underline', textAlign: 'left', fontSize: '15px' }}
                   target="_blank"
                   href="https://explorer.celo.org/address/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC/transactions"
                 >
                   View UBE Contract
                 </ExternalLink>
                 <ExternalLink
-                  style={{ color: 'white', textDecoration: 'underline', textAlign: 'left' }}
+                  style={{ color: 'white', textDecoration: 'underline', textAlign: 'left', fontSize: '15px' }}
                   target="_blank"
                   href="https://info.ubeswap.org/token/0x00be915b9dcf56a3cbe739d9b9c202ca692409ec"
                 >
@@ -304,10 +304,10 @@ export const Stake: React.FC = () => {
         <CurrencyLogo
           currency={ube}
           size={'42px'}
-          style={{ position: 'absolute', top: '30px', right: 'calc(50% + 120px)' }}
+          style={{ position: 'absolute', top: '30px', right: 'calc(50% + 112px)' }}
         />
-        <h2 style={{ textAlign: 'center', margin: '15px 0px' }}>Your UBE stake</h2>
-        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+        <h2 style={{ textAlign: 'center', margin: '15px 0px 15px 6px' }}>Your UBE Stake</h2>
+        <div style={{ margin: '10px 0 0 6px', display: 'flex', justifyContent: 'center' }}>
           <div style={{ width: '100px' }}>
             <StyledButtonRadio active={staking} onClick={() => setStaking(true)}>
               Stake
