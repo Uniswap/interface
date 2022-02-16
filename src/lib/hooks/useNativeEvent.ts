@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 
-export default function useNativeEvent(
+export default function useNativeEvent<K extends keyof HTMLElementEventMap>(
   element: HTMLElement | null,
-  ...eventListener: Parameters<HTMLElement['addEventListener']>
+  type: K,
+  listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+  options?: boolean | AddEventListenerOptions | undefined
 ) {
   useEffect(() => {
-    element?.addEventListener(...eventListener)
-    return () => element?.removeEventListener(...eventListener)
-  }, [element, eventListener])
+    element?.addEventListener(type, listener, options)
+    return () => element?.removeEventListener(type, listener, options)
+  }, [element, type, listener, options])
 }

@@ -20,7 +20,6 @@ import {
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps } from 'react-window'
-import invariant from 'tiny-invariant'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -140,68 +139,73 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   ref
 ) {
   const [focused, setFocused] = useState(false)
-  const [hover, setHover] = useState(-1)
-  useEffect(() => setHover(-1), [tokens])
+  const [hover, setHover] = useState<{ index: number; currency?: Currency }>({ index: -1 })
+  useEffect(() => {
+    setHover((hover) => {
+      const index = hover.currency ? tokens.indexOf(hover.currency) : -1
+      return { index, currency: tokens[index] }
+    })
+  }, [tokens])
 
   const list = useRef<FixedSizeList>(null)
+  const [element, setElement] = useState<HTMLElement | null>(null)
+  const scrollTo = useCallback(
+    (index: number | undefined) => {
+      if (index === undefined) return
+      list.current?.scrollToItem(index)
+      if (focused) {
+        element?.querySelector<HTMLElement>(`[data-index='${index}']`)?.focus()
+      }
+      setHover({ index, currency: tokens[index] })
+    },
+    [element, focused, tokens]
+  )
+
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        if (e.key === 'ArrowDown' && hover < tokens.length - 1) {
-          scrollTo(hover + 1)
-        } else if (e.key === 'ArrowUp' && hover > 0) {
-          scrollTo(hover - 1)
-        } else if (e.key === 'ArrowUp' && hover === -1) {
+        if (e.key === 'ArrowDown' && hover.index < tokens.length - 1) {
+          scrollTo(hover.index + 1)
+        } else if (e.key === 'ArrowUp' && hover.index > 0) {
+          scrollTo(hover.index - 1)
+        } else if (e.key === 'ArrowUp' && hover.index === -1) {
           scrollTo(tokens.length - 1)
         }
         e.preventDefault()
       }
-      if (e.key === 'Enter' && hover) {
-        onSelect(tokens[hover])
-      }
-
-      function scrollTo(index: number) {
-        list.current?.scrollToItem(index)
-        setHover(index)
+      if (e.key === 'Enter' && hover.index !== -1) {
+        onSelect(tokens[hover.index])
       }
     },
-    [hover, onSelect, tokens]
+    [hover.index, onSelect, scrollTo, tokens]
   )
-  const blur = useCallback(() => setHover(-1), [])
+  const blur = useCallback(() => setHover({ index: -1 }), [])
   useImperativeHandle(ref, () => ({ onKeyDown, blur }), [blur, onKeyDown])
 
   const onClick = useCallback(({ token }: BubbledEvent) => token && onSelect(token), [onSelect])
-  const onFocus = useCallback(({ index }: BubbledEvent) => {
-    if (index !== undefined) {
-      setHover(index)
+  const onFocus = useCallback(
+    ({ index }: BubbledEvent) => {
       setFocused(true)
-    }
-  }, [])
-  const onBlur = useCallback(() => setFocused(false), [])
-  const onMouseMove = useCallback(
-    ({ index, ref }: BubbledEvent) => {
-      if (index !== undefined) {
-        setHover(index)
-        if (focused) {
-          ref?.focus()
-        }
-      }
+      scrollTo(index)
     },
-    [focused]
+    [scrollTo]
   )
+  const onBlur = useCallback(() => setFocused(false), [])
+  const onMouseMove = useCallback(({ index }: BubbledEvent) => scrollTo(index), [scrollTo])
 
-  const [element, setElement] = useState<HTMLElement | null>(null)
   const scrollbar = useScrollbar(element, { padded: true })
-
   const onHover = useRef<HTMLDivElement>(null)
   // use native onscroll handler to capture Safari's bouncy overscroll effect
-  useNativeEvent(element, 'scroll', (e) => {
-    invariant(element)
-    if (onHover.current) {
-      // must be set synchronously to avoid jank (avoiding useState)
-      onHover.current.style.marginTop = `${-element.scrollTop}px`
-    }
-  })
+  useNativeEvent(
+    element,
+    'scroll',
+    useCallback(() => {
+      if (element && onHover.current) {
+        // must be set synchronously to avoid jank (avoiding useState)
+        onHover.current.style.marginTop = `${-element.scrollTop}px`
+      }
+    }, [element])
+  )
 
   return (
     <Column
@@ -215,11 +219,11 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
       style={{ overflow: 'hidden' }}
     >
       {/* OnHover is a workaround to Safari's incorrect (overflow: overlay) implementation */}
-      <OnHover hover={hover} ref={onHover} />
+      <OnHover hover={hover.index} ref={onHover} />
       <AutoSizer disableWidth>
         {({ height }) => (
           <TokenList
-            hover={hover}
+            hover={hover.index}
             height={height}
             width="100%"
             itemCount={tokens.length}

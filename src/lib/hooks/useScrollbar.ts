@@ -1,5 +1,5 @@
 import { css } from 'lib/theme'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import useNativeEvent from './useNativeEvent'
 
@@ -52,7 +52,11 @@ export default function useScrollbar(element: HTMLElement | null, { padded = fal
   useEffect(() => {
     setOverflow(hasOverflow(element))
   }, [element])
-  useNativeEvent(element, 'transitionend', () => setOverflow(hasOverflow(element)))
+  useNativeEvent(
+    element,
+    'transitionend',
+    useCallback(() => setOverflow(hasOverflow(element)), [element])
+  )
   return useMemo(() => (overflow ? scrollbarCss(padded) : overflowCss), [overflow, padded])
 
   function hasOverflow(element: HTMLElement | null) {
