@@ -43,9 +43,9 @@ import Twitter from './../assets/images/isologo-twitter.svg'
 
 // Blog Images
 
-import Entry1 from './../assets/images/blog/blog-entry-1.png'
-import Entry2 from './../assets/images/blog/blog-entry-2.png'
-import Entry3 from './../assets/images/blog/blog-entry-3.png'
+import Entry1 from './../assets/images/blog/blog-entry-1.jpg'
+import Entry2 from './../assets/images/blog/blog-entry-2.jpg'
+import Entry3 from './../assets/images/blog/blog-entry-3.jpg'
 
 // Stats Images
 
