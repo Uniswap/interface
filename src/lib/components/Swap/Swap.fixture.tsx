@@ -71,6 +71,7 @@ function Fixture() {
       defaultOutputAddress={optionsToAddressMap[defaultOutput]}
       defaultOutputAmount={defaultOutputAmount}
       tokenList={tokens}
+      onConnectWallet={() => console.log('onConnectWallet')}
     />
   )
 }
