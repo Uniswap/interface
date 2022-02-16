@@ -40,7 +40,7 @@ export function Provider({ value, children }: ProviderProps) {
     }
   }, [active])
   return (
-    <div ref={ref}>
+    <div ref={ref} style={{ isolation: 'isolate' }}>
       <Context.Provider value={context}>{children}</Context.Provider>
     </div>
   )
