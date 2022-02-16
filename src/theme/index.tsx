@@ -210,7 +210,8 @@ export const ThemedText = {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg1} !important;
+  background: rgb(199,248,255);
+  background: linear-gradient(90deg, rgba(199,248,255,1) 0%, rgba(229,229,255,1) 44%, rgba(172,200,255,1) 100%);
 }
 
 a {
