@@ -169,29 +169,17 @@ export function AccountsScreen() {
           <PrimaryButton
             disabled={isLoading}
             label={t('Import Account')}
-            // mr="lg"
             name={ElementName.Import}
             testID={ElementName.Import}
-            // variant="palePink"
             width="100%"
             onPress={onPressImport}
           />
-          {/* <PrimaryButton
-          disabled={isLoading}
-          label={t('Create Account')}
-          name={ElementName.Create}
-          testID="accounts/create/button"
-          onPress={onPressCreate}
-        /> */}
         </CenterBox>
         <BottomSheetModal
           isVisible={showEditAccountModal}
           name={ModalName.Account}
           onClose={() => setShowEditAccountModal(false)}>
           <Flex centered gap="sm" p="md">
-            <Text color="gray400" paddingBottom="sm" variant="bodySm">
-              {t('Edit or rename your account')}
-            </Text>
             <PrimaryButton
               disabled={isLoading}
               icon={
@@ -199,7 +187,6 @@ export function AccountsScreen() {
               }
               label={t('Rename Account')}
               name={ElementName.Rename}
-              variant="palePink"
               width="100%"
               onPress={onPressRename}
             />
@@ -208,7 +195,6 @@ export function AccountsScreen() {
               icon={<CopyIcon height={18} stroke={theme.colors.primary1} width={18} />}
               label={t('Copy Address')}
               name={ElementName.Copy}
-              variant="palePink"
               width="100%"
               onPress={onPressCopyAddress}
             />
@@ -216,7 +202,6 @@ export function AccountsScreen() {
               disabled={isLoading}
               label={t('Remove Account')}
               name={ElementName.Remove}
-              variant="paleOrange"
               width="100%"
               onPress={onPressRemove}
             />
