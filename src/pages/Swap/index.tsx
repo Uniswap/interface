@@ -40,6 +40,7 @@ import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl
 import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
 import QuestionHelper from '../../components/QuestionHelper'
 import { ApplicationModal } from '../../state/application/actions'
+import { useUSDValue } from '../../hooks/useUSDValue'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
@@ -266,6 +267,9 @@ export default function Swap() {
 
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
 
+  const fiatValueInput = useUSDValue(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useUSDValue(parsedAmounts[Field.OUTPUT])
+
   return (
     <>
       <TokenWarningModal
@@ -305,6 +309,7 @@ export default function Swap() {
                 onMax={handleMaxInput}
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
+                fiatValue={fiatValueInput}
                 showCommonBases
                 id="swap-currency-input"
               />
@@ -328,6 +333,7 @@ export default function Swap() {
                 currency={currencies[Field.OUTPUT]}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
+                fiatValue={fiatValueOutput}
                 showCommonBases
                 id="swap-currency-output"
               />

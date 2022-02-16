@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
+  margin-bottom: 8px;
   align-items: center;
 `
 
@@ -69,7 +70,6 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
 `
 
 const Container = styled.div<{ focused: boolean }>`
-  height: 80px;
   background-color: ${({ theme }) => theme.bg1And2};
   border: solid 1px ${({ focused, theme }) => (focused ? theme.bg3 : theme.bg1And2)};
   border-radius: 12px;
@@ -77,9 +77,7 @@ const Container = styled.div<{ focused: boolean }>`
   padding: 17px 22px;
 `
 
-const Content = styled.div`
-  height: 46px;
-`
+const Content = styled.div``
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   margin: ${({ active }) => (active ? '0 0 0 6px' : '0')};
@@ -105,6 +103,8 @@ const UppercaseHelper = styled.span`
   text-transform: uppercase;
 `
 
+const FiatRow = styled.div``
+
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -123,6 +123,7 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   customBalanceText?: string
   balance?: CurrencyAmount
+  fiatValue?: CurrencyAmount | null
 }
 
 export default function CurrencyInputPanel({
@@ -142,7 +143,8 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
-  balance
+  balance,
+  fiatValue
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -250,6 +252,13 @@ export default function CurrencyInputPanel({
               </Aligner>
             </CurrencySelect>
           </InputRow>
+          <FiatRow>
+            <RowBetween>
+              <TYPE.body fontWeight="600" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
+                <UppercaseHelper>${fiatValue ? fiatValue.toFixed(2) : '0'}</UppercaseHelper>
+              </TYPE.body>
+            </RowBetween>
+          </FiatRow>
         </Content>
       </Container>
       {!disableCurrencySelect && onCurrencySelect && (
