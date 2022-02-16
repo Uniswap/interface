@@ -332,21 +332,21 @@ export const BlogContent = {
     posts: [
         {
             image: Entry1,
-            title: 'Swapr Dec 9th Farming Rewards',
-            content: 'Bi-weekly recap of upcoming SWPR token release schedule',
-            postLink: 'https://medium.com/swapr/swapr-dec-9th-farming-rewards-8c99521d5f84?source=collection_home---6------0-----------------------'
+            title: 'Announcing SWPR Token',
+            content: 'SWPR Token and Liquidity Mining',
+            postLink: 'https://medium.com/swapr/announcing-swpr-token-e8ab12dbad45'
         },
         {
             image: Entry2,
-            title: 'Swapr Nov 25th Farming Rewards',
-            content: 'Bi-weekly recap of upcoming SWPR token release schedule',
-            postLink: 'https://medium.com/swapr/swapr-nov-25th-farming-rewards-35c3ce51aeb5'
+            title: 'Introducing SWPR Token Farming Rewards',
+            content: 'Introducing SWPR Token Farming RewardsRecently, the DXdao community identified a misconfiguration with its governance framework on Arbitrum...',
+            postLink: 'https://medium.com/swapr/introducing-swpr-token-farming-rewards-7fbdcc9507ae'
         },
         {
             image: Entry3,
-            title: 'Swapr Nov 11th Farming Rewards',
-            content: 'Bi-weekly recap of upcoming SWPR token release schedule',
-            postLink: 'https://medium.com/swapr/swapr-nov-11th-farming-rewards-b99d71680b57'
+            title: 'Xdao and BadgerDAO Leverage Swapr to Bring Smarter BTC-focused Strategies to Arbitrum',
+            content: 'Both DXdao and BadgerDAO have strong communities that have been building interesting products in the DeFi space.',
+            postLink: 'https://medium.com/swapr/dxdao-and-badgerdao-leverage-swapr-to-bring-smarter-btc-focused-strategies-to-arbitrum-23689e0c9f2b'
         }
     ]
 }
@@ -449,18 +449,18 @@ export const StatsContent = {
     stats: [
         {
             title: 'TOTAL VOLUME',
-            value: <TextyAnim type="flash">$100,149,321</TextyAnim>,
+            value: <TextyAnim type="flash">$145,000,000+</TextyAnim>,
         },
         {
             title: 'TRADES',
             value: <>
-                <TextyAnim type="flash">1452</TextyAnim><TextyAnim type="flash" className="dim">0</TextyAnim><TextyAnim type="flash" className="hiddable-mobile">00</TextyAnim>
+                <TextyAnim type="flash">570,000+</TextyAnim>
                 </>,
         },
         {
             title: 'TOTAL FEES COLLECTED',
             value: <>
-                <TextyAnim type="flash">14,523</TextyAnim><TextyAnim type="flash" className="dim">00</TextyAnim>
+                <TextyAnim type="flash">$34,000+</TextyAnim><TextyAnim type="flash" className="dim"></TextyAnim>
                 </>,
         },
         {
@@ -468,10 +468,12 @@ export const StatsContent = {
             value: <>
                 <TextyAnim type="flash">$49</TextyAnim><TextyAnim type="flash" className="dim">0</TextyAnim><TextyAnim type="flash" className="hiddable-mobile">00</TextyAnim>
             </>,
+            externalSource: true,
+            headingDollar: true
         },
         {
             title: 'TVL',
-            value: <TextyAnim>$10,149,321</TextyAnim>,
+            value: <TextyAnim>10,149,321</TextyAnim>,
             externalSource: true,
             headingDollar: true,
         },

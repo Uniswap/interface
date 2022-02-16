@@ -10,18 +10,38 @@ import TextyAnim from 'rc-texty';
 const Stats = () => {
 
     let [tvl, setTvl] = useState(0);
+    let [swaprPrice, setSwaprPrice] = useState(0);
     let [isChartActive, setIsChartActive] = useState(false);
 
     useEffect(() => {
-        const fetchPromise = fetch('https://api.llama.fi/tvl/swapr')
-        fetchPromise.then((data) => {
+        const tvlPromise = fetch('https://api.llama.fi/tvl/swapr')
+        tvlPromise.then((data) => {
             return data.json();
         }).then((decodedTvl) => {
             let stringTvl = decodedTvl.toString();
             let splitTvlString = stringTvl.split('.');
             let integralTvl = splitTvlString[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             setTvl(integralTvl);
-        })
+        });
+
+        let coinCode = "arbitrum:0xde903e2712288a1da82942dddf2c20529565ac30"
+
+        let thing = {
+            "coins": [
+                coinCode
+            ]
+        };
+        const swaprPricePromise = fetch('https://coins.llama.fi/prices', {
+            method: 'POST',
+            body: JSON.stringify(thing)
+        });
+        swaprPricePromise.then((data) => {
+            return data.json();
+        }).then((decodedPrice) => {
+            let swaprPrice = decodedPrice.coins[coinCode].price.toString();
+            setSwaprPrice(swaprPrice)
+        });
+
     }, []);
 
     useEffect(() => {
@@ -47,6 +67,7 @@ const Stats = () => {
 
     let statsData = {
         'TVL': tvl,
+        'SWPR PRICE': swaprPrice
     };
 
     return (
@@ -63,16 +84,26 @@ const Stats = () => {
                         {statsItem.value && (
                                 <span className={`value ${!isChartActive ? 'hidden' : ''}`}>
                                     {isChartActive && (
-                                        statsItem.headingDollar && (
-                                            <TextyAnim type="flash">$</TextyAnim>
-                                        ),
-                                        statsItem.externalSource ? (
-                                            <TextyAnim type="flash">
-                                                {statsData[statsItem.title]}
-                                            </TextyAnim>
-                                            ) : (
-                                            statsItem.value
-                                        )
+                                        <>
+                                            <>
+                                                {
+                                                    statsItem.headingDollar && (
+                                                        <TextyAnim type="flash">$</TextyAnim>
+                                                    )
+                                                }
+                                            </>
+                                            <>
+                                            {
+                                                statsItem.externalSource ? (
+                                                    <TextyAnim type="flash">
+                                                        {statsData[statsItem.title]}
+                                                    </TextyAnim>
+                                                    ) : (
+                                                    statsItem.value
+                                                )
+                                            }
+                                            </>
+                                        </>
                                     )}
                                 </span>
                             )
@@ -379,6 +410,9 @@ const StyledStats = styled(Layout)`
                             'polygon(0 0, 100% 0, 100%, 0 0);'
                         };
                         background: linear-gradient(180deg, rgba(135, 128, 191, 0) 0%, #8780BF 51.04%, rgba(135, 128, 191, 0) 100%);
+                    }
+                    .value {
+                        overflow: hidden;
                     }
                 }
                 &.total-fees-collected,
