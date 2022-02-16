@@ -44,7 +44,7 @@ export function useFetchListCallback(
           sendDispatch && dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
           resolve(tokenList)
         } catch (error) {
-          logger.error('useFetchListCallback', '', `Failed to get list at url ${listUrl}`, error)
+          logger.debug('useFetchListCallback', '', `Failed to get list at url ${listUrl}`, error)
           sendDispatch &&
             dispatch(
               fetchTokenList.rejected({
