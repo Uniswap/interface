@@ -1553,7 +1553,7 @@
     "@ethersproject/logger" "^5.4.0"
     "@ethersproject/properties" "^5.4.0"
 
-"@ethersproject/abstract-signer@^5.4.0", "@ethersproject/abstract-signer@^5.5.0":
+"@ethersproject/abstract-signer@^5.4.0", "@ethersproject/abstract-signer@^5.4.1", "@ethersproject/abstract-signer@^5.5.0":
   version "5.5.0"
   resolved "https://registry.npmjs.org/@ethersproject/abstract-signer/-/abstract-signer-5.5.0.tgz"
   integrity sha512-lj//7r250MXVLKI7sVarXAbZXbv9P50lgmJQGr2/is82EwEb8r7HrxsmMqAjTsztMYy7ohrIhGMIml+Gx4D3mA==
@@ -5301,19 +5301,21 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^0.0.12-beta":
-  version "0.0.12-beta"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-0.0.12-beta.tgz#65764e52e7266aa89616eff8d47e68204158f402"
-  integrity sha512-K1n+NQOYq/8cQ8Hk27iu2yzTpeWnDHSLkZJY+mvu63GW31Wt+ugYIRGu2qBHfIYIrZyh8i2c2G2DHnKHFkAPwA==
+"@uniswap/widgets@^0.0.13-beta":
+  version "0.0.13-beta"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-0.0.13-beta.tgz#9e4ca2d3bac5d684bdd8056dba6e9ea6a17e1518"
+  integrity sha512-46VQ+y8O9IQU6U3/6zoKvGufN0fBgnrjkGLP32kYzqNqAgO/7EmSSlug/Pzxgs10PxiZoQ4cVPUHVHE0PuOoXQ==
   dependencies:
     "@babel/runtime" "^7.17.0"
     "@ethersproject/abi" "^5.4.1"
     "@ethersproject/abstract-provider" "^5.4.1"
+    "@ethersproject/abstract-signer" "^5.4.1"
     "@ethersproject/address" "^5.4.0"
     "@ethersproject/bignumber" "^5.4.2"
     "@ethersproject/bytes" "^5.4.0"
     "@ethersproject/constants" "^5.4.0"
     "@ethersproject/contracts" "^5.4.1"
+    "@ethersproject/experimental" "^5.4.0"
     "@ethersproject/hash" "^5.4.0"
     "@ethersproject/providers" "5.4.0"
     "@ethersproject/solidity" "^5.4.0"

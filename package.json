@@ -198,7 +198,7 @@
     "@uniswap/token-lists": "^1.0.0-beta.27",
     "@uniswap/v2-sdk": "^3.0.1",
     "@uniswap/v3-sdk": "^3.8.2",
-    "@uniswap/widgets": "^0.0.12-beta",
+    "@uniswap/widgets": "^0.0.13-beta",
     "@web3-react/core": "8.0.16-alpha.0",
     "@web3-react/eip1193": "8.0.16-alpha.0",
     "@web3-react/empty": "8.0.17-alpha.0",
