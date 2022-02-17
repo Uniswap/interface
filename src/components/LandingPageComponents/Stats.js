@@ -76,7 +76,7 @@ const Stats = () => {
         swaprPricePromise.then((data) => {
             return data.json();
         }).then((decodedPrice) => {
-            let swaprPrice = decodedPrice.coins[coinCode].price.toFixed(2).toString();
+            let swaprPrice = decodedPrice.coins[coinCode].price.toFixed(3).toString();
             setSwaprPrice(swaprPrice);
         });
     }, [])
@@ -117,10 +117,10 @@ const Stats = () => {
 
     }, []);
 
-    let statsData = {
+    const statsData = {
         'TVL': tvl + ' M',
         'SWPR PRICE': swaprPrice,
-        'TOTAL VOLUME': totalVolumeUSD + ' M',
+        'TOTAL VOLUME': '$' + totalVolumeUSD + ' M',
         'TRADES': tx
     };
 
