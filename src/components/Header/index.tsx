@@ -309,10 +309,10 @@ function Header() {
           <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
             {!account ? (
               '0.000'
-            ) : userNativeCurrencyBalance ? (
-              userNativeCurrencyBalance?.toFixed(3)
-            ) : (
+            ) : !userNativeCurrencyBalance ? (
               <Skeleton width="40px" />
+            ) : (
+              userNativeCurrencyBalance.toFixed(3)
             )}{' '}
             {nativeCurrency.symbol}
           </Amount>
