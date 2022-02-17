@@ -1,9 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import Row from '../../components/Row'
-import { ReactComponent as EcoRouter } from '../../assets/images/eco-router.svg'
+import { ReactComponent as EcoRouter } from '../../assets/svg/eco-router.svg'
+import { useTranslation } from 'react-i18next'
 
 export const Tabs = () => {
+  const { t } = useTranslation()
+
   return (
     <TabsColumn>
       <TabsRow>
@@ -11,8 +14,8 @@ export const Tabs = () => {
           <StyledEcoRouter />
           Eco Router V1.5
         </Button>
-        <Button disabled={true}>Limit</Button>
-        <Button disabled={true}>Bridge Swap</Button>
+        <Button disabled={true}>{t('limit')}</Button>
+        <Button disabled={true}>{t('bridgeSwap')}</Button>
       </TabsRow>
     </TabsColumn>
   )
@@ -28,7 +31,7 @@ const TabsRow = styled(Row)`
   width: auto;
   margin: 0 0 10px;
   padding: 2px;
-  background: #191a24;
+  background: ${({ theme }) => theme.bg6};
   border-radius: 12px;
 `
 
@@ -41,7 +44,7 @@ const Button = styled.button`
   line-height: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #8780bf;
+  color: ${({ theme }) => theme.text5};
   border-radius: 10px;
   border: none;
   background: none;
@@ -49,13 +52,13 @@ const Button = styled.button`
 
   &.active {
     color: #ffffff;
-    background: #2a2f42;
+    background: ${({ theme }) => theme.bg2};
     font-size: 12px;
     line-height: 14px;
   }
 
   &:disabled {
-    color: #504d72;
+    color: ${({ theme }) => theme.text6};
     cursor: not-allowed;
   }
 `
