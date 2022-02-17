@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-17 18:08\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -131,7 +131,7 @@ msgstr "账户"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Acknowledge"
-msgstr "承认"
+msgstr "确认"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -488,7 +488,7 @@ msgstr "确认兑换"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
-msgstr "确认交换"
+msgstr "确认交易"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -538,11 +538,11 @@ msgstr "连接到钱包以查看您的流动资金。"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
-msgstr "连接钱包以交换"
+msgstr "连接钱包以兑换"
 
 #: src/lib/components/Wallet.tsx
 msgid "Connect your wallet"
-msgstr "连接你的钱包"
+msgstr "连接钱包"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -815,7 +815,7 @@ msgstr "查看 Uniswap 分析。"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "无法从 Uniswap 切换网络。为了在 {0} 上使用 Uniswap，您必须更改钱包中的网络。"
+msgstr "无法从 Uniswap 界面切换网络。为了在 {0} 上使用 Uniswap，您必须更改钱包中的网络。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -831,7 +831,7 @@ msgstr "正在获取最优兑换率..."
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
-msgstr "获取最优价格…"
+msgstr "正在获取最优兑换率..."
 
 #: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -873,7 +873,7 @@ msgstr "隐藏"
 
 #: src/components/PositionList/index.tsx
 msgid "Hide closed positions"
-msgstr "隐藏已关闭的头寸"
+msgstr "隐藏已关闭的仓位"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1404,7 +1404,7 @@ msgstr "兑换率已更新"
 
 #: src/lib/components/Swap/Summary/Details.tsx
 msgid "Price impact"
-msgstr "价格影响"
+msgstr "兑换率影响"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
