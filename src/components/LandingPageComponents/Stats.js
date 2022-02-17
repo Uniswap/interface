@@ -118,7 +118,7 @@ const Stats = () => {
     }, []);
 
     const statsData = {
-        'TVL': tvl + ' M',
+        'TVL': '$' + tvl + ' M',
         'SWPR PRICE': swaprPrice,
         'TOTAL VOLUME': '$' + totalVolumeUSD + ' M',
         'TRADES': tx

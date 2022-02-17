@@ -64,6 +64,11 @@ const StyledBlogNavigation = styled(Layout)`
                     height: 72px;
                     display: inline-block;
                     margin-bottom: 39px;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical;  
+                    overflow: hidden;
+                    max-height: 70px;
                 }
                 .button {
                     width: 150px;

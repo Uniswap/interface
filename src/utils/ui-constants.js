@@ -339,12 +339,12 @@ export const BlogContent = {
         {
             image: Entry2,
             title: 'Introducing SWPR Token Farming Rewards',
-            content: 'Introducing SWPR Token Farming RewardsRecently, the DXdao community identified a misconfiguration with its governance framework on Arbitrum...',
+            content: 'Introducing SWPR Token Farming RewardsRecently, the DXdao community identified a misconfiguration with ...',
             postLink: 'https://medium.com/swapr/introducing-swpr-token-farming-rewards-7fbdcc9507ae'
         },
         {
             image: Entry3,
-            title: 'Xdao and BadgerDAO Leverage Swapr to Bring Smarter BTC-focused Strategies to Arbitrum',
+            title: 'DXdao and BadgerDAO Leverage Swapr to Bring Smarter BTC-focused Strategies to Arbitrum',
             content: 'Both DXdao and BadgerDAO have strong communities that have been building interesting products in the DeFi space.',
             postLink: 'https://medium.com/swapr/dxdao-and-badgerdao-leverage-swapr-to-bring-smarter-btc-focused-strategies-to-arbitrum-23689e0c9f2b'
         }
