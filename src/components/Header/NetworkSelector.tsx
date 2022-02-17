@@ -306,7 +306,7 @@ export default function NetworkSelector() {
 
   return (
     <SelectorWrapper ref={node as any}>
-      <SelectorControls onClick={toggle} interactive>
+      <SelectorControls onMouseEnter={toggle} onClick={toggle} interactive>
         <SelectorLogo interactive src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         <StyledChevronDown />
