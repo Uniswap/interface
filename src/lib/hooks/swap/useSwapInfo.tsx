@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { FeeOptions } from '@uniswap/v3-sdk'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
@@ -14,6 +15,19 @@ import useActiveWeb3React from '../useActiveWeb3React'
 import useAllowedSlippage from '../useAllowedSlippage'
 import { useBestTrade } from './useBestTrade'
 
+export enum WrapType {
+  NOT_APPLICABLE,
+  WRAP,
+  UNWRAP,
+}
+enum WrapInputError {
+  NO_ERROR, // must be equal to 0 so all other errors are truthy
+  ENTER_NATIVE_AMOUNT,
+  ENTER_WRAPPED_AMOUNT,
+  INSUFFICIENT_NATIVE_BALANCE,
+  INSUFFICIENT_WRAPPED_BALANCE,
+}
+
 interface SwapInfo {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -24,6 +38,8 @@ interface SwapInfo {
   }
   allowedSlippage: Percent
   feeOptions: FeeOptions | undefined
+  wrapType: WrapType
+  wrapError: WrapInputError | undefined
 }
 
 const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
@@ -34,7 +50,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(): SwapInfo {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
     independentField,
@@ -127,6 +143,34 @@ function useComputeSwapInfo(): SwapInfo {
     return inputError
   }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, to, trade.trade])
 
+  const wrapType = useMemo(() => {
+    if (!inputCurrency || !outputCurrency || !chainId) {
+      return WrapType.NOT_APPLICABLE
+    }
+    const weth = WRAPPED_NATIVE_CURRENCY[chainId]
+    if (inputCurrency.isNative && weth.equals(outputCurrency)) {
+      return WrapType.WRAP
+    }
+    if (weth.equals(inputCurrency) && outputCurrency.isNative) {
+      return WrapType.UNWRAP
+    }
+    return WrapType.NOT_APPLICABLE
+  }, [chainId, inputCurrency, outputCurrency])
+
+  const hasInputAmount = Boolean(parsedAmount?.greaterThan('0'))
+  const sufficientBalance = parsedAmountIn && !currencyBalances[Field.INPUT]?.lessThan(parsedAmountIn)
+  const wrapError = useMemo(() => {
+    if (sufficientBalance) {
+      return undefined
+    }
+    if (wrapType === WrapType.WRAP) {
+      return hasInputAmount ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE : WrapInputError.ENTER_NATIVE_AMOUNT
+    } else if (wrapType === WrapType.UNWRAP) {
+      return hasInputAmount ? WrapInputError.INSUFFICIENT_WRAPPED_BALANCE : WrapInputError.ENTER_WRAPPED_AMOUNT
+    }
+    return undefined
+  }, [hasInputAmount, sufficientBalance, wrapType])
+
   return useMemo(
     () => ({
       currencies,
@@ -136,8 +180,10 @@ function useComputeSwapInfo(): SwapInfo {
       trade,
       allowedSlippage,
       feeOptions,
+      wrapError,
+      wrapType,
     }),
-    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage, feeOptions]
+    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage, feeOptions, wrapError, wrapType]
   )
 }
 
@@ -148,6 +194,8 @@ const swapInfoAtom = atom<SwapInfo>({
   trade: { state: TradeState.INVALID },
   allowedSlippage: new Percent(0),
   feeOptions: undefined,
+  wrapType: WrapType.NOT_APPLICABLE,
+  wrapError: undefined,
 })
 
 export function SwapInfoUpdater() {

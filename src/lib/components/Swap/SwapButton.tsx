@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Token, TradeType } from '@uniswap/sdk-core'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
-import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
+import { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
@@ -49,6 +49,8 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
     feeOptions,
+    wrapType,
+    wrapError,
   } = useSwapInfo()
 
   const independentField = useAtomValue(independentFieldAtom)
@@ -76,12 +78,6 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       }
     })
   }, [addTransaction, getApproval])
-
-  const {
-    wrapType,
-    execute: onWrap,
-    inputError,
-  } = useWrapCallback(inputCurrency, outputCurrency, inputCurrencyAmount?.toExact())
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disabled) return { disabled: true }
@@ -160,20 +156,20 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       })
   }, [addTransaction, independentField, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback])
 
-  if (wrapType !== WrapType.NOT_APPLICABLE) {
-    console.log(activeTrade)
-    return (
-      <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} disabled={!!inputError} onClick={onWrap}>
-        {inputError ? (
-          <WrapErrorText wrapInputError={inputError} />
-        ) : wrapType === WrapType.WRAP ? (
-          <Trans>Wrap</Trans>
-        ) : (
-          <Trans>Unwrap</Trans>
-        )}
-      </ActionButton>
-    )
-  }
+  const ButtonText = useCallback(() => {
+    if (wrapError) {
+      return <WrapErrorText wrapInputError={wrapError} />
+    }
+    switch (wrapType) {
+      case WrapType.UNWRAP:
+        return <Trans>Unwrap</Trans>
+      case WrapType.WRAP:
+        return <Trans>Wrap</Trans>
+      case WrapType.NOT_APPLICABLE:
+      default:
+        return <Trans>Review swap</Trans>
+    }
+  }, [wrapError, wrapType])
   return (
     <>
       <ActionButton
@@ -181,7 +177,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
         onClick={() => setActiveTrade(trade.trade)}
         {...actionProps}
       >
-        <Trans>Review swap</Trans>
+        <ButtonText />
       </ActionButton>
       {activeTrade && (
         <Dialog color="dialog" onClose={() => setActiveTrade(undefined)}>
