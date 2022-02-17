@@ -59,10 +59,7 @@ const Stats = () => {
         tvlPromise.then((data) => {
             return data.json();
         }).then((decodedTvl) => {
-            let stringTvl = decodedTvl.toString();
-            let splitTvlString = stringTvl.split('.');
-            let integralTvl = splitTvlString[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            setTvl(integralTvl);
+            setTvl((decodedTvl / 1000000).toFixed(1));
         });
     }, []);
 
@@ -79,7 +76,7 @@ const Stats = () => {
         swaprPricePromise.then((data) => {
             return data.json();
         }).then((decodedPrice) => {
-            let swaprPrice = decodedPrice.coins[coinCode].price.toString();
+            let swaprPrice = decodedPrice.coins[coinCode].price.toFixed(2).toString();
             setSwaprPrice(swaprPrice);
         });
     }, [])
@@ -94,7 +91,7 @@ const Stats = () => {
                 // eslint-disable-next-line
                 setTx(tx += floatTx);
                 // eslint-disable-next-line
-                setTotalVolumeUSD((totalVolumeUSD += floatVolume).toFixed(2));
+                setTotalVolumeUSD(((totalVolumeUSD += floatVolume) / 1000000).toFixed(0));
             });
         };
     }, [])
@@ -121,9 +118,9 @@ const Stats = () => {
     }, []);
 
     let statsData = {
-        'TVL': tvl,
+        'TVL': tvl + ' M',
         'SWPR PRICE': swaprPrice,
-        'TOTAL VOLUME': totalVolumeUSD,
+        'TOTAL VOLUME': totalVolumeUSD + ' M',
         'TRADES': tx
     };
 

@@ -451,7 +451,6 @@ export const StatsContent = {
             title: 'TOTAL VOLUME',
             value: <TextyAnim type="flash">$145,000,000+</TextyAnim>,
             externalSource: true,
-            headingDollar: true
         },
         {
             title: 'TRADES',
@@ -477,8 +476,7 @@ export const StatsContent = {
         {
             title: 'TVL',
             value: <TextyAnim>10,149,321</TextyAnim>,
-            externalSource: true,
-            headingDollar: true,
+            externalSource: true
         },
         {
             title: 'ROUTING THROUGH',
