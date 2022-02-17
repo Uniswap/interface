@@ -24,7 +24,6 @@ import SwaprVersionLogo from '../SwaprVersionLogo'
 import { useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
 import Skeleton from 'react-loading-skeleton'
-import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
@@ -33,7 +32,6 @@ import { useGasInfo } from '../../hooks/useGasInfo'
 const HeaderFrame = styled.div`
   position: relative;
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   width: 100%;
   padding: 1rem;
@@ -51,11 +49,9 @@ const HeaderControls = styled.div<{ isConnected: boolean }>`
     left: 0px;
     display: flex;
     align-items: center;
-    justify-content: ${isConnected => (!isConnected ? 'space-between' : 'center')};
-    flex-direction: row-reverse;
+    justify-content: 'space-between';
     width: 100%;
     height: 72px;
-    max-width: 960px;
     padding: 1rem;
     z-index: 99;
     background-color: ${({ theme }) => theme.bg2};
@@ -78,24 +74,23 @@ const MoreLinksIcon = styled(HeaderElement)`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: flex;
+    width:100%;
     justify-content: flex-start;
+   
   `};
 `
 
 const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     width: 100%;
   `};
 `
 
 const HeaderLinks = styled(Row)`
-  justify-content: center;
+  justify-content: start;
   gap: 40px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    justify-content: flex-end;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    gap: 0;
+    display: none;
   `};
 `
 
@@ -134,13 +129,6 @@ export const StyledNavLink = styled(NavLink)`
     font-weight: 600;
     color: ${({ theme }) => theme.white};
   }
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin: 0 8px;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
 `
 
 const StyledActiveNavLinkWithBadge = styled(StyledNavLink)`
@@ -164,10 +152,6 @@ const StyledExternalLink = styled(ExternalLink)`
   line-height: 19.5px;
   width: fit-content;
   text-decoration: none !important;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
 `
 
 const HeaderSubRow = styled(RowFlat)`
@@ -175,9 +159,8 @@ const HeaderSubRow = styled(RowFlat)`
   justify-content: flex-end;
   margin-top: 10px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-right: 8px;
-    margin-top: 0px;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+     margin-top: 0px;
   `};
 `
 
@@ -245,11 +228,40 @@ const ColoredGas = styled.div<{ color: 'fast' | 'slow' | 'normal' }>`
 const Divider = styled.div`
   height: 24px;
   width: 1px;
-  background-color: #8780bf;
+  background-color: ${({ theme }) => theme.purple3};
   margin-left: 40px;
+`
+const StyledMobileLink = styled(NavLink)`
+  display: none;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
+    display: flex;
+    font-weight:400;
+    font-size: 14px;
+    color:#C9C7DB;
+    &.active {
+      font-weight: 600;
+      color: ${({ theme }) => theme.white};
+    }
   `};
+`
+const StyledExternalLinkMobile = styled(ExternalLink)`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: flex;
+    font-weight:600;
+    font-size: 14px;
+    color:#C9C7DB;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+   `};
+`
+const AdditionalDataWrap = styled.div`
+  margin-left: auto;
+  gap:10px;
+  display: flex;
+  flex-direction:column
+  justify-content: end;
 `
 
 function Header() {
@@ -267,7 +279,6 @@ function Header() {
   const accountOrUndefined = useMemo(() => account || undefined, [account])
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
-  const isMobileByMedia = useIsMobileByMedia()
 
   return (
     <HeaderFrame>
@@ -306,18 +317,15 @@ function Header() {
           <StyledExternalLink id="vote-nav-link" href={`https://snapshot.org/#/swpr.eth`}>
             {t('vote')}
           </StyledExternalLink>
-          <MoreLinksIcon>
-            <MobileOptions />
-          </MoreLinksIcon>
-          {isMobileByMedia && <Settings />}
         </HeaderLinks>
       </HeaderRow>
-      <HeaderControls isConnected={!!account}>
-        <HeaderElement>
-          <Web3Status />
-          {!isMobileByMedia && <Settings />}
-        </HeaderElement>
+      <AdditionalDataWrap>
         <HeaderSubRow>
+          <Web3Status />
+          <Settings />
+        </HeaderSubRow>
+
+        <Flex justifyContent={'end'}>
           <SwprInfo
             hasActiveCampaigns={!loading && !!data}
             newSwprBalance={newSwprBalance}
@@ -333,7 +341,7 @@ function Header() {
             )}{' '}
             {nativeCurrency.symbol}
           </Amount>
-          {gas.normal !== 0 && !isMobileByMedia && (
+          {gas.normal !== 0 && (
             <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
               <GasInfoSvg />
               <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
@@ -348,14 +356,44 @@ function Header() {
               )}
             </GasInfo>
           )}
-        </HeaderSubRow>
-        {gas.fast !== 0 && gas.slow !== 0 && !isMobileByMedia && (
+        </Flex>
+        {gas.fast !== 0 && gas.slow !== 0 && (
           <HeaderSubRow style={{ visibility: isGasInfoOpen ? 'visible' : 'hidden', gap: '4px' }}>
             <ColoredGas color={'fast'}>FAST {gas.fast}</ColoredGas>
             <ColoredGas color={'normal'}>NORMAL {gas.normal}</ColoredGas>
             <ColoredGas color={'slow'}>SLOW {gas.slow}</ColoredGas>
           </HeaderSubRow>
         )}
+      </AdditionalDataWrap>
+
+      <HeaderControls isConnected={!!account}>
+        <Flex style={{ gap: '26px' }} minWidth={'unset'}>
+          <StyledMobileLink id="swap-nav-link" to="/swap" activeClassName="active">
+            {t('swap')}
+          </StyledMobileLink>
+          <StyledMobileLink id="pool-nav-link" to="/pools" activeClassName="active">
+            Pools
+          </StyledMobileLink>
+          <StyledMobileLink id="rewards-nav-link" to="/rewards" activeClassName="active">
+            Rewards
+          </StyledMobileLink>
+          <StyledMobileLink id="bridge-nav-link" to="/bridge" activeClassName="active">
+            {t('bridge')}
+          </StyledMobileLink>
+          <StyledExternalLinkMobile id="vote-nav-link" href={`https://snapshot.org/#/swpr.eth`}>
+            {t('vote')}
+          </StyledExternalLinkMobile>
+          <StyledExternalLinkMobile id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
+            {t('charts')}
+            <Text ml="4px" fontSize="11px">
+              ↗
+            </Text>
+          </StyledExternalLinkMobile>
+        </Flex>
+
+        <MoreLinksIcon>
+          <MobileOptions />
+        </MoreLinksIcon>
       </HeaderControls>
     </HeaderFrame>
   )
