@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-17 18:08\n"
+"PO-Revision-Date: 2022-02-17 23:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -881,11 +881,11 @@ msgstr "对兑换率有高度影响"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "High price impact"
-msgstr "高价格影响"
+msgstr "对兑换率有高度影响"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
-msgstr "高滑点增加了价格变动的风险"
+msgstr "高滑点会增加兑换率波动风险"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1270,7 +1270,7 @@ msgstr "Optimism 网关"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimistic 处于 Beta 阶段，可能会遇到停机问题。Optimistic 计划近期会停机升级网络。在停机期间，您的头寸不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
+msgstr "Optimism 处于 Beta 阶段，可能会遇到停机问题。Optimism 计划近期内会停机升级网络。在停机期间，您的仓位不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1282,7 +1282,7 @@ msgstr "超出范围"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated."
-msgstr "估计输出。"
+msgstr "输出量仅为估值。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1331,7 +1331,7 @@ msgstr "请输入单词 \"{confirmWord}\" 以启用专家模式。"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr "多边形桥"
+msgstr "Polygon 连桥"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
@@ -1412,7 +1412,7 @@ msgstr "兑换率范围"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Price updated"
-msgstr "价格已更新"
+msgstr "兑换率已更新"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
