@@ -23,6 +23,7 @@ import PairsList from '../../components/Pool/PairsList'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 import { Switch } from '../../components/Switch'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -130,7 +131,7 @@ function Title({
                 </Box>
               )}
               <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
-                {filteredToken ? filteredToken.symbol : 'ALL'}
+                {filteredToken ? unwrappedToken(filteredToken)?.symbol : 'ALL'}
               </Text>
               <Box>
                 <ChevronDown size={12} />
