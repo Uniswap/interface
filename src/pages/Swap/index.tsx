@@ -43,7 +43,7 @@ import { ApplicationModal } from '../../state/application/actions'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
-  width: 14px;
+  width: 19px;
 `
 
 const SwitchIconContainer = styled.div`
