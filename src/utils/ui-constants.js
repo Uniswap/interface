@@ -357,7 +357,7 @@ export const FooterContent = {
             title: 'About',
             footerLinks: [
                 {
-                    label: 'Faq',
+                    label: 'FAQ',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/faq/'
                 },
                 {
@@ -399,7 +399,7 @@ export const FooterContent = {
             title: 'Documentation',
             footerLinks: [
                 {
-                    label: 'DIY Liq. Mining',
+                    label: 'DIY Campaigns',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/DIY%20Liquidity%20Mining/'
                 },
                 {
@@ -411,7 +411,7 @@ export const FooterContent = {
                     href: 'https://dxdocs.eth.link/docs/ContributorHub/open-positions-and-bounties/'
                 },
                 {
-                    label: 'Token',
+                    label: 'SWPR Token',
                     href: 'https://dxdocs.eth.link/docs/Products/swapr/tokenomics/'
                 },
             ]
