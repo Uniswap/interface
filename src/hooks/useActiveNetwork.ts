@@ -125,7 +125,7 @@ function parseNetworkId(maybeSupportedNetwork: string): SupportedNetwork | undef
 }
 
 export function useActiveNetwork() {
-  const { chainId, library, account, connector } = useActiveWeb3React()
+  const { chainId, library, connector } = useActiveWeb3React()
   const history = useHistory()
   const location = useLocation()
   const qs = useParsedQueryString()
@@ -175,7 +175,7 @@ export function useActiveNetwork() {
         // This error code indicates that the chain has not been added to MetaMask.
         if (switchError.code === 4902 || switchError.code === -32603) {
           try {
-            await window.ethereum?.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams, account] })
+            await window.ethereum?.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
             history.push(target)
           } catch (addError) {
             console.error(addError)
@@ -186,7 +186,7 @@ export function useActiveNetwork() {
         }
       }
     },
-    [account, dispatch, history, library, target, connector]
+    [dispatch, history, library, target, connector]
   )
 
   useEffect(() => {

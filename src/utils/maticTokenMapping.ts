@@ -201,6 +201,16 @@ export const getMaticTokenLogoURL = (address: string) => {
     // PGX
     uri =
       'https://raw.githubusercontent.com/stevepegaxy/assets/master/blockchains/polygon/assets/0xc1c93D475dc82Fe72DBC7074d55f5a734F8cEEAE/logo.png'
+  } else if (address?.toLowerCase() === '0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c'.toLowerCase()) {
+    // jEUR
+    uri = 'https://i.imgur.com/92uhfao.png'
+  } else if (address?.toLowerCase() === '0x767058F11800FBA6A682E73A6e79ec5eB74Fac8c'.toLowerCase()) {
+    // jGBP
+    uri = 'https://i.imgur.com/HS7BMfs.png'
+  } else if (address?.toLowerCase() === '0xcC1B9517460D8aE86fe576f614d091fCa65a28Fc'.toLowerCase()) {
+    // VIS
+    uri =
+      'https://raw.githubusercontent.com/stevepegaxy/assets/master/blockchains/polygon/assets/0xcC1B9517460D8aE86fe576f614d091fCa65a28Fc/logo.png'
   }
 
   if (!uri) {

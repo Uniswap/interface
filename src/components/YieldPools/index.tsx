@@ -100,7 +100,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         )
       }
     },
-    [active, activeTab, blockNumber, debouncedSearchText, stakedOnly]
+    [active, activeTab, blockNumber, debouncedSearchText, stakedOnly, currentTimestamp]
   )
 
   const farms = useMemo(
@@ -147,7 +147,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         setStakedOnly(prev => ({ ...prev, ended: true }))
       }
     }
-  }, [active, stakedOnly, farmsByFairLaunch, blockNumber, isCheckUserStaked])
+  }, [active, stakedOnly, farmsByFairLaunch, blockNumber, isCheckUserStaked, currentTimestamp])
 
   return (
     <>
@@ -172,7 +172,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         <HeadingRight>
           <SearchContainer>
             <SearchInput
-              placeholder={t`Search by token or pool address`}
+              placeholder={t`Search by token name or pool address`}
               maxLength={255}
               value={searchText}
               onChange={e => setSearchText(e.target.value)}

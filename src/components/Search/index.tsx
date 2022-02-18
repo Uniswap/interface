@@ -21,7 +21,7 @@ const Wrapper = styled.div<{ minWidth?: string }>`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding: 8px 12px;
+  padding: 6px 12px;
   border-radius: 4px;
   background-color: ${({ theme }) => theme.background};
   width: 100%;
@@ -56,12 +56,13 @@ interface SearchProps {
   placeholder?: string
   allowClear?: boolean
   minWidth?: string
+  style?: React.CSSProperties
 }
 
-export const Search = ({ searchValue, setSearchValue, placeholder, minWidth }: SearchProps) => {
+export const Search = ({ searchValue, setSearchValue, placeholder, minWidth, style }: SearchProps) => {
   const theme = useTheme()
   return (
-    <Container>
+    <Container style={style}>
       <Wrapper minWidth={minWidth}>
         <Input
           type="text"

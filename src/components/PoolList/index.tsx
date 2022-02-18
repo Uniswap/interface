@@ -1,168 +1,147 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
-import { Pair } from '@dynamic-amm/sdk'
-import { ChevronUp, ChevronDown } from 'react-feather'
+import { Currency } from '@dynamic-amm/sdk'
+import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp } from 'react-feather'
 import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
-
-import { ButtonEmpty } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
-import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
-import { getHealthFactor, getTradingFeeAPR } from 'utils/dmm'
-import ListItem, { ItemCard } from './ListItem'
+import {
+  SubgraphPoolData,
+  useAllPoolsData,
+  useResetPools,
+  UserLiquidityPosition,
+  useUserLiquidityPositions
+} from 'state/pools/hooks'
+import ListItemGroup from './ListItem'
+import ItemCardGroup from 'components/PoolList/ItemCard/ItemCardGroup'
 import PoolDetailModal from './PoolDetailModal'
-import { AMP_HINT } from 'constants/index'
+import { AMP_HINT, AMP_LIQUIDITY_HINT, MAX_ALLOW_APY } from 'constants/index'
+import useTheme from 'hooks/useTheme'
+import { useActiveWeb3React } from 'hooks'
+import LocalLoader from 'components/LocalLoader'
+import { Field } from 'state/pair/actions'
+import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
+import { getTradingFeeAPR } from 'utils/dmm'
+import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
 
-const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
+const TableHeader = styled.div`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1.5fr 1fr 2fr 1.5fr repeat(3, 1fr) 1fr;
-  grid-template-areas: 'pool ratio liq vol';
-  padding: 15px 36px 13px 26px;
+  grid-template-columns: 1.5fr 1.5fr 2fr 0.75fr 1fr 1fr 1fr 1.5fr;
+  padding: 18px 16px;
   font-size: 12px;
   align-items: center;
   height: fit-content;
   position: relative;
-  opacity: ${({ fade }) => (fade ? '0.6' : '1')};
-  background-color: ${({ theme }) => theme.evenRow};
+  background-color: ${({ theme }) => theme.tableHeader};
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  z-index: 1;
+  border-bottom: ${({ theme }) => `1px solid ${theme.border}`};
 `
 
 const ClickableText = styled(Text)`
   display: flex;
   align-items: center;
   color: ${({ theme }) => theme.subText};
+
   &:hover {
     cursor: pointer;
     opacity: 0.6;
   }
+
   user-select: none;
   text-transform: uppercase;
 `
 
-const LoadMoreButtonContainer = styled.div`
-  width: 100%;
+const Pagination = styled.div`
   display: flex;
+  gap: 4px;
+  align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.background};
-  font-size: 12px;
+  padding: 24px;
+  background-color: ${({ theme }) => theme.oddRow};
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    border-radius: 8px;
-  `};
+    padding: 0;
+    border: none;
+    background-color: revert;
+  `}
+`
+
+const PaginationText = styled.div`
+  font-size: 12px;
+  color: ${({ theme }) => theme.subText};
 `
 
 interface PoolListProps {
-  poolsList: (Pair | null)[]
-  subgraphPoolsData?: SubgraphPoolData[]
-  userLiquidityPositions?: UserLiquidityPosition[]
-  maxItems?: number
+  currencies: { [field in Field]?: Currency }
+  searchValue: string
+  isShowOnlyActiveFarmPools: boolean
 }
 
 const SORT_FIELD = {
-  NONE: -1,
   LIQ: 0,
   VOL: 1,
   FEES: 2,
-  ONE_YEAR_FL: 3
+  APR: 3
 }
 
-const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
-  const above1000 = useMedia('(min-width: 1000px)')
+const ITEM_PER_PAGE = 5
 
+const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolListProps) => {
+  const above1000 = useMedia('(min-width: 1000px)')
+  const theme = useTheme()
+
+  const [sortDirection, setSortDirection] = useState(true)
+  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
+  const { loading: loadingPoolsData, data: subgraphPoolsData } = useAllPoolsData()
+
+  const { account, chainId } = useActiveWeb3React()
+
+  useResetPools(chainId)
+
+  const userLiquidityPositionsQueryResult = useUserLiquidityPositions(account)
+  const loadingUserLiquidityPositions = !account ? false : userLiquidityPositionsQueryResult.loading
+  const userLiquidityPositions = !account ? { liquidityPositions: [] } : userLiquidityPositionsQueryResult.data
   const transformedUserLiquidityPositions: {
     [key: string]: UserLiquidityPosition
   } = {}
-
-  const transformedSubgraphPoolsData: {
-    [key: string]: SubgraphPoolData
-  } = useMemo(() => {
-    return (subgraphPoolsData || []).reduce((acc, data) => {
-      return {
-        ...acc,
-        [data.id]: data
-      }
-    }, {})
-  }, [subgraphPoolsData])
-
   userLiquidityPositions &&
-    userLiquidityPositions.forEach(position => {
+    userLiquidityPositions.liquidityPositions.forEach(position => {
       transformedUserLiquidityPositions[position.pool.id] = position
     })
 
-  // pagination
-  const [page, setPage] = useState(1)
-  const [maxPage, setMaxPage] = useState(1)
-  const ITEMS_PER_PAGE = maxItems
-
-  // sorting
-  const [sortDirection, setSortDirection] = useState(true)
-  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.NONE)
-
-  const sortList = useCallback(
-    (poolA: Pair | null, poolB: Pair | null): number => {
-      if (sortedColumn === SORT_FIELD.NONE) {
-        if (!poolA) {
-          return 1
-        }
-
-        if (!poolB) {
-          return -1
-        }
-
-        const poolAHealthFactor = getHealthFactor(poolA)
-        const poolBHealthFactor = getHealthFactor(poolB)
-
-        // Pool with better health factor will be prioritized higher
-        if (poolAHealthFactor.greaterThan(poolBHealthFactor)) {
-          return -1
-        }
-
-        if (poolAHealthFactor.lessThan(poolBHealthFactor)) {
-          return 1
-        }
-
-        return 0
-      }
-
-      const poolASubgraphData = transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]
-      const poolBSubgraphData = transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]
-
-      const feeA = poolASubgraphData?.oneDayFeeUSD
-        ? poolASubgraphData?.oneDayFeeUSD
-        : poolASubgraphData?.oneDayFeeUntracked
-
-      const feeB = poolBSubgraphData?.oneDayFeeUSD
-        ? poolBSubgraphData?.oneDayFeeUSD
-        : poolBSubgraphData?.oneDayFeeUntracked
+  const listComparator = useCallback(
+    (poolA: SubgraphPoolData, poolB: SubgraphPoolData): number => {
+      const feeA = poolA?.oneDayFeeUSD ? poolA?.oneDayFeeUSD : poolA?.oneDayFeeUntracked
+      const feeB = poolB?.oneDayFeeUSD ? poolB?.oneDayFeeUSD : poolB?.oneDayFeeUntracked
 
       switch (sortedColumn) {
         case SORT_FIELD.LIQ:
-          return parseFloat(poolA?.amp.toString() || '0') * parseFloat(poolASubgraphData?.reserveUSD) >
-            parseFloat(poolB?.amp.toString() || '0') * parseFloat(poolBSubgraphData?.reserveUSD)
+          return parseFloat(poolA?.amp.toString() || '0') * parseFloat(poolA?.reserveUSD) >
+            parseFloat(poolB?.amp.toString() || '0') * parseFloat(poolB?.reserveUSD)
             ? (sortDirection ? -1 : 1) * 1
             : (sortDirection ? -1 : 1) * -1
         case SORT_FIELD.VOL:
-          const volumeA = poolASubgraphData?.oneDayVolumeUSD
-            ? poolASubgraphData?.oneDayVolumeUSD
-            : poolASubgraphData?.oneDayVolumeUntracked
+          const volumeA = poolA?.oneDayVolumeUSD ? poolA?.oneDayVolumeUSD : poolA?.oneDayVolumeUntracked
 
-          const volumeB = poolBSubgraphData?.oneDayVolumeUSD
-            ? poolBSubgraphData?.oneDayVolumeUSD
-            : poolBSubgraphData?.oneDayVolumeUntracked
+          const volumeB = poolB?.oneDayVolumeUSD ? poolB?.oneDayVolumeUSD : poolB?.oneDayVolumeUntracked
 
           return parseFloat(volumeA) > parseFloat(volumeB)
             ? (sortDirection ? -1 : 1) * 1
             : (sortDirection ? -1 : 1) * -1
         case SORT_FIELD.FEES:
           return parseFloat(feeA) > parseFloat(feeB) ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
-        case SORT_FIELD.ONE_YEAR_FL:
-          const oneYearFLPoolA = getTradingFeeAPR(poolASubgraphData?.reserveUSD, feeA)
-          const oneYearFLPoolB = getTradingFeeAPR(poolBSubgraphData?.reserveUSD, feeB)
+        case SORT_FIELD.APR:
+          const oneYearFLPoolA =
+            getTradingFeeAPR(poolA?.reserveUSD, feeA) > MAX_ALLOW_APY ? -1 : getTradingFeeAPR(poolA?.reserveUSD, feeA)
+          const oneYearFLPoolB =
+            getTradingFeeAPR(poolB?.reserveUSD, feeB) > MAX_ALLOW_APY ? -1 : getTradingFeeAPR(poolB?.reserveUSD, feeB)
 
           return oneYearFLPoolA > oneYearFLPoolB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
         default:
@@ -171,31 +150,34 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
 
       return 0
     },
-    [sortDirection, sortedColumn, transformedSubgraphPoolsData]
+    [sortDirection, sortedColumn]
   )
 
   const renderHeader = () => {
     return above1000 ? (
       <TableHeader>
-        <Flex alignItems="center" justifyContent="flexStart">
+        <Flex alignItems="center">
           <ClickableText>
-            <Trans>Pool</Trans>
+            <Trans>Token Pair</Trans>
           </ClickableText>
         </Flex>
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center">
           <ClickableText>
-            <Trans>AMP</Trans>
+            <Trans>Pool | AMP</Trans>
           </ClickableText>
           <InfoHelper text={AMP_HINT} />
         </Flex>
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.LIQ)
               setSortDirection(sortedColumn !== SORT_FIELD.LIQ ? true : !sortDirection)
             }}
           >
-            <Trans>AMP Liquidity</Trans>
+            <Trans>AMP LIQUIDITY</Trans>
+            <InfoHelper text={AMP_LIQUIDITY_HINT} />
+            <span style={{ marginLeft: '0.25rem' }}>|</span>
+            <span style={{ marginLeft: '0.25rem' }}>TVL</span>
             {sortedColumn === SORT_FIELD.LIQ ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -206,11 +188,28 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               ''
             )}
           </ClickableText>
-          <InfoHelper
-            text={t`AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.`}
-          />
         </Flex>
-        <Flex alignItems="center">
+        <Flex alignItems="center" justifyContent="flex-end">
+          <ClickableText
+            onClick={() => {
+              setSortedColumn(SORT_FIELD.APR)
+              setSortDirection(sortedColumn !== SORT_FIELD.APR ? true : !sortDirection)
+            }}
+          >
+            <Trans>APR</Trans>
+            {sortedColumn === SORT_FIELD.APR ? (
+              !sortDirection ? (
+                <ChevronUp size="14" style={{ marginLeft: '2px' }} />
+              ) : (
+                <ChevronDown size="14" style={{ marginLeft: '2px' }} />
+              )
+            ) : (
+              ''
+            )}
+          </ClickableText>
+          <InfoHelper text={t`Estimated return based on yearly fees of the pool`} />
+        </Flex>
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.VOL)
@@ -229,7 +228,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
         </Flex>
-        {/* <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.FEES)
@@ -247,107 +246,168 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               ''
             )}
           </ClickableText>
-        </Flex> */}
-        <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText
-            onClick={() => {
-              setSortedColumn(SORT_FIELD.ONE_YEAR_FL)
-              setSortDirection(sortedColumn !== SORT_FIELD.ONE_YEAR_FL ? true : !sortDirection)
-            }}
-          >
-            <Trans>APR</Trans>
-            {sortedColumn === SORT_FIELD.ONE_YEAR_FL ? (
-              !sortDirection ? (
-                <ChevronUp size="14" style={{ marginLeft: '2px' }} />
-              ) : (
-                <ChevronDown size="14" style={{ marginLeft: '2px' }} />
-              )
-            ) : (
-              ''
-            )}
-          </ClickableText>
-          <InfoHelper text={t`Estimated return based on yearly fees of the pool`} />
         </Flex>
-        <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>
-            <Trans>Ratio</Trans>
-          </ClickableText>
-          <InfoHelper
-            text={t`Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.`}
-          />
-        </Flex>
-
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText>
             <Trans>My liquidity</Trans>
           </ClickableText>
         </Flex>
 
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText>
-            <Trans>Add liquidity</Trans>
+            <Trans>Actions</Trans>
           </ClickableText>
         </Flex>
       </TableHeader>
     ) : null
   }
 
-  const pools = useMemo(() => {
-    return poolsList
-      .map(pair => pair) // Clone to a new array to prevent "in-place" sort that mutate the poolsList
-      .sort(sortList)
-  }, [poolsList, sortList])
+  const { data: farms } = useActiveAndUniqueFarmsData()
 
-  useEffect(() => {
-    if (page > maxPage) setPage(maxPage)
-  }, [maxPage, page])
+  const sortedFilteredSubgraphPoolsData = useMemo(() => {
+    let res = [...subgraphPoolsData].sort(listComparator)
 
-  useEffect(() => {
-    if (poolsList) {
-      let extraPages = 1
-      if (Object.keys(poolsList).length % ITEMS_PER_PAGE === 0) {
-        extraPages = 0
-      }
-      setMaxPage(Math.floor(Object.keys(poolsList).length / ITEMS_PER_PAGE) + extraPages)
+    if (isShowOnlyActiveFarmPools) {
+      const farmAddresses = farms.map(farm => farm.id)
+      res = res.filter(poolData => farmAddresses.includes(poolData.id))
     }
-  }, [ITEMS_PER_PAGE, poolsList])
+
+    const ca = currencies[Field.CURRENCY_A]
+    const cb = currencies[Field.CURRENCY_B]
+
+    if (ca) {
+      const wca = wrappedCurrency(ca, chainId)
+      const wcaAddress = wca && wca.address.toLowerCase()
+      res = res.filter(
+        poolData => wcaAddress && (poolData.token0.id === wcaAddress || poolData.token1.id === wcaAddress)
+      )
+    }
+
+    if (cb) {
+      const wcb = wrappedCurrency(cb, chainId)
+      const wcbAddress = wcb && wcb.address.toLowerCase()
+      res = res.filter(
+        poolData => wcbAddress && (poolData.token0.id === wcbAddress || poolData.token1.id === wcbAddress)
+      )
+    }
+
+    res = res.filter(poolData => {
+      const search = searchValue.toLowerCase()
+
+      return (
+        poolData.token0.symbol.toLowerCase().includes(search) ||
+        poolData.token1.symbol.toLowerCase().includes(search) ||
+        poolData.id.includes(search)
+      )
+    })
+
+    return res
+  }, [subgraphPoolsData, listComparator, currencies, searchValue, isShowOnlyActiveFarmPools, farms, chainId])
+
+  const [currentPage, setCurrentPage] = useState(1)
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [subgraphPoolsData, currencies, searchValue, isShowOnlyActiveFarmPools])
+
+  const sortedFilteredSubgraphPoolsObject = useMemo(() => {
+    const res = new Map<string, SubgraphPoolData[]>()
+    sortedFilteredSubgraphPoolsData.forEach(poolData => {
+      if (!poolData) return
+      const poolKey = poolData.token0.id + '-' + poolData.token1.id
+      const prevValue = res.get(poolKey)
+      res.set(poolKey, (prevValue ?? []).concat(poolData))
+    })
+    return res
+  }, [sortedFilteredSubgraphPoolsData])
+
+  const maxPage =
+    sortedFilteredSubgraphPoolsObject.size % ITEM_PER_PAGE === 0
+      ? sortedFilteredSubgraphPoolsObject.size / ITEM_PER_PAGE
+      : Math.floor(sortedFilteredSubgraphPoolsObject.size / ITEM_PER_PAGE) + 1
+
+  const sortedFilteredPaginatedSubgraphPoolsList = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEM_PER_PAGE
+    const endIndex = currentPage * ITEM_PER_PAGE
+    const res = Array.from(sortedFilteredSubgraphPoolsObject, ([, pools]) => pools[0]).slice(startIndex, endIndex)
+    return res
+  }, [currentPage, sortedFilteredSubgraphPoolsObject])
+
+  const onPrev = () => setCurrentPage(prev => Math.max(1, prev - 1))
+  const onNext = () => setCurrentPage(prev => Math.min(maxPage, prev + 1))
+
+  const [expandedPoolKey, setExpandedPoolKey] = useState<string>()
+
+  // Active first expandable pool in first page for first time.
+  useEffect(() => {
+    if (!above1000 || expandedPoolKey !== undefined) return
+
+    const firstPoolHasMoreThanTwoExpandedPools = sortedFilteredPaginatedSubgraphPoolsList.filter(poolData => {
+      const poolKey = poolData.token0.id + '-' + poolData.token1.id
+
+      const expandedPools = sortedFilteredSubgraphPoolsObject.get(poolKey) ?? []
+
+      return expandedPools.length >= 2
+    })
+
+    firstPoolHasMoreThanTwoExpandedPools.length &&
+      setExpandedPoolKey(
+        firstPoolHasMoreThanTwoExpandedPools[0].token0.id + '-' + firstPoolHasMoreThanTwoExpandedPools[0].token1.id
+      )
+  }, [above1000, sortedFilteredPaginatedSubgraphPoolsList, expandedPoolKey, sortedFilteredSubgraphPoolsObject])
+
+  if (loadingUserLiquidityPositions || loadingPoolsData) return <LocalLoader />
+
+  if (sortedFilteredPaginatedSubgraphPoolsList.length === 0)
+    return (
+      <SelectPairInstructionWrapper>
+        <div style={{ marginBottom: '1rem' }}>
+          <Trans>There are no pools for this token pair.</Trans>
+        </div>
+        <div>
+          <Trans>Create a new pool or select another pair of tokens to view the available pools.</Trans>
+        </div>
+      </SelectPairInstructionWrapper>
+    )
 
   return (
     <div>
       {renderHeader()}
-      {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
-        if (pool) {
+      {sortedFilteredPaginatedSubgraphPoolsList.map(poolData => {
+        if (poolData) {
           return above1000 ? (
-            <ListItem
-              key={pool.address}
-              pool={pool}
-              subgraphPoolData={transformedSubgraphPoolsData[pool.address.toLowerCase()]}
-              myLiquidity={transformedUserLiquidityPositions[pool.address.toLowerCase()]}
-              oddRow={(index + 1) % 2 !== 0}
+            <ListItemGroup
+              key={poolData.id}
+              sortedFilteredSubgraphPoolsObject={sortedFilteredSubgraphPoolsObject}
+              poolData={poolData}
+              userLiquidityPositions={transformedUserLiquidityPositions}
+              expandedPoolKey={expandedPoolKey}
+              setExpandedPoolKey={setExpandedPoolKey}
             />
           ) : (
-            <ItemCard
-              key={pool.address}
-              pool={pool}
-              subgraphPoolData={transformedSubgraphPoolsData[pool.address.toLowerCase()]}
-              myLiquidity={transformedUserLiquidityPositions[pool.address.toLowerCase()]}
-              oddRow={(index + 1) % 2 !== 0}
+            <ItemCardGroup
+              key={poolData.id}
+              sortedFilteredSubgraphPoolsObject={sortedFilteredSubgraphPoolsObject}
+              poolData={poolData}
+              userLiquidityPositions={transformedUserLiquidityPositions}
+              expandedPoolKey={expandedPoolKey}
+              setExpandedPoolKey={setExpandedPoolKey}
             />
           )
         }
 
         return null
       })}
-      <LoadMoreButtonContainer>
-        <ButtonEmpty
-          onClick={() => {
-            setPage(page === maxPage ? page : page + 1)
-          }}
-          disabled={page >= maxPage}
-        >
-          <Trans>Show More Pools</Trans>
-        </ButtonEmpty>
-      </LoadMoreButtonContainer>
+      <Pagination>
+        <ClickableText>
+          <ArrowLeft size={16} color={theme.primary} onClick={onPrev} />
+        </ClickableText>
+        <PaginationText>
+          Page {currentPage} of {maxPage}
+        </PaginationText>
+        <ClickableText>
+          <ArrowRight size={16} color={theme.primary} onClick={onNext} />
+        </ClickableText>
+      </Pagination>
       <PoolDetailModal />
     </div>
   )

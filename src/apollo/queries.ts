@@ -102,6 +102,7 @@ const PoolFields = `
       id
       symbol
       name
+      decimals
       totalLiquidity
       derivedETH
     }
@@ -109,6 +110,7 @@ const PoolFields = `
       id
       symbol
       name
+      decimals
       totalLiquidity
       derivedETH
     }
@@ -204,17 +206,15 @@ export const POOL_DATA = (poolAddress: string, block: number) => {
   return gql(queryString)
 }
 
-export const POOLS_BULK = gql`
-  ${PoolFields}
-  query pools($allPools: [Bytes]!) {
-    pools(where: { id_in: $allPools }, orderBy: trackedReserveETH, orderDirection: desc) {
-      ...PoolFields
+export const POOL_COUNT = gql`
+  {
+    dmmFactories(first: 1) {
+      poolCount
     }
   }
 `
 
-export const POOLS_HISTORICAL_BULK = (block: number, pools: string[]) => {
-  // Construct the poolsString
+export const POOLS_BULK_FROM_LIST = (pools: string[]) => {
   let poolsString = `[`
   pools.map((pool: string) => {
     return (poolsString += `"${pool}"`)
@@ -223,7 +223,61 @@ export const POOLS_HISTORICAL_BULK = (block: number, pools: string[]) => {
 
   const queryString = `
   query pools {
-    pools(first: 200, where: {id_in: ${poolsString}}, block: {number: ${block}}, orderBy: trackedReserveETH, orderDirection: desc) {
+    pools(first: ${pools.length}, where: {id_in: ${poolsString}}, orderBy: reserveUSD, orderDirection: desc) {
+      ...PoolFields
+    }
+  }
+  `
+
+  return gql`
+    ${PoolFields}
+    ${queryString}
+  `
+}
+
+export const POOLS_BULK_WITH_PAGINATION = (first: number, skip: number) => {
+  const queryString = `
+  query pools {
+    pools(first: ${first}, skip: ${skip}) {
+      ...PoolFields
+    }
+  }
+  `
+
+  return gql`
+    ${PoolFields}
+    ${queryString}
+  `
+}
+
+export const POOLS_HISTORICAL_BULK_FROM_LIST = (block: number, pools: string[]) => {
+  let poolsString = `[`
+  pools.map((pool: string) => {
+    return (poolsString += `"${pool}"`)
+  })
+  poolsString += ']'
+
+  const queryString = `
+  query pools {
+    pools(first: ${pools.length}, where: {id_in: ${poolsString}}, block: {number: ${block}}, orderBy: reserveUSD, orderDirection: desc) {
+      id
+      reserveUSD
+      trackedReserveETH
+      volumeUSD
+      feeUSD
+      untrackedVolumeUSD
+      untrackedFeeUSD
+    }
+  }
+  `
+
+  return gql(queryString)
+}
+
+export const POOLS_HISTORICAL_BULK_WITH_PAGINATION = (first: number, skip: number, block: number) => {
+  const queryString = `
+  query pools {
+    pools(first: ${first}, skip: ${skip}, block: {number: ${block}}) {
       id
       reserveUSD
       trackedReserveETH

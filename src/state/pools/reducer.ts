@@ -1,20 +1,18 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { Pair } from '@dynamic-amm/sdk'
 import { SubgraphPoolData, UserLiquidityPosition } from './hooks'
 import { setError, setLoading, setSelectedPool, updatePools } from './actions'
 
 interface SelectedPool {
-  pool: Pair
-  subgraphPoolData: SubgraphPoolData
-  myLiquidity?: UserLiquidityPosition
+  poolData: SubgraphPoolData
+  myLiquidity: UserLiquidityPosition | undefined
 }
 
 export interface PoolsState {
   readonly pools: SubgraphPoolData[]
   readonly loading: boolean
-  readonly error?: Error
-  readonly selectedPool?: SelectedPool
+  readonly error: Error | undefined
+  readonly selectedPool: SelectedPool | undefined
 }
 
 const initialState: PoolsState = {
@@ -47,12 +45,11 @@ export default createReducer<PoolsState>(initialState, builder =>
         selectedPool: undefined
       }
     })
-    .addCase(setSelectedPool, (state, { payload: { pool, subgraphPoolData, myLiquidity } }) => {
+    .addCase(setSelectedPool, (state, { payload: { poolData, myLiquidity } }) => {
       return {
         ...state,
         selectedPool: {
-          pool,
-          subgraphPoolData,
+          poolData,
           myLiquidity
         }
       }

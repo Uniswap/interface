@@ -1,18 +1,31 @@
-import { useEffect, useState } from 'react'
-import { useQuery, ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ApolloClient, NormalizedCacheObject, useQuery } from '@apollo/client'
 import { useDispatch, useSelector } from 'react-redux'
-import { useDeepCompareEffect } from 'react-use'
 
-import { POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK, USER_POSITIONS } from 'apollo/queries'
-import { ChainId, Currency } from '@dynamic-amm/sdk'
+import {
+  POOL_COUNT,
+  POOL_DATA,
+  POOLS_BULK_FROM_LIST,
+  POOLS_BULK_WITH_PAGINATION,
+  POOLS_HISTORICAL_BULK_FROM_LIST,
+  POOLS_HISTORICAL_BULK_WITH_PAGINATION,
+  USER_POSITIONS
+} from 'apollo/queries'
+import { ChainId } from '@dynamic-amm/sdk'
 import { AppState } from '../index'
-import { updatePools, setLoading, setError } from './actions'
-import { getPercentChange, getTimestampsForChanges, getBlocksFromTimestamps, get24hValue } from 'utils'
+import { setError, setLoading, updatePools } from './actions'
+import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 import { useActiveWeb3React } from 'hooks'
-import { useExchangeClient } from 'state/application/hooks'
+import { useETHPrice, useExchangeClient } from 'state/application/hooks'
 
 export interface SubgraphPoolData {
   id: string
+  amp: string
+  reserve0: string
+  reserve1: string
+  vReserve0: string
+  vReserve1: string
+  totalSupply: string
   reserveUSD: string
   volumeUSD: string
   feeUSD: string
@@ -20,6 +33,22 @@ export interface SubgraphPoolData {
   oneDayVolumeUntracked: string
   oneDayFeeUSD: string
   oneDayFeeUntracked: string
+  token0: {
+    id: string
+    symbol: string
+    name: string
+    decimals: string
+    totalLiquidity: string
+    derivedETH: string
+  }
+  token1: {
+    id: string
+    symbol: string
+    name: string
+    decimals: string
+    totalLiquidity: string
+    derivedETH: string
+  }
 }
 
 export interface UserLiquidityPosition {
@@ -59,7 +88,7 @@ export function useUserLiquidityPositions(user: string | null | undefined): User
     fetchPolicy: 'no-cache'
   })
 
-  return { loading, error, data }
+  return useMemo(() => ({ loading, error, data }), [data, error, loading])
 }
 
 function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, chainId?: ChainId): SubgraphPoolData {
@@ -155,7 +184,7 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
   return data
 }
 
-export async function getBulkPoolData(
+export async function getBulkPoolDataFromPoolList(
   poolList: string[],
   apolloClient: ApolloClient<NormalizedCacheObject>,
   ethPrice?: string,
@@ -163,10 +192,7 @@ export async function getBulkPoolData(
 ): Promise<any> {
   try {
     const current = await apolloClient.query({
-      query: POOLS_BULK,
-      variables: {
-        allPools: poolList
-      },
+      query: POOLS_BULK_FROM_LIST(poolList),
       fetchPolicy: 'network-only'
     })
     let poolData
@@ -180,7 +206,7 @@ export async function getBulkPoolData(
       const [oneDayResult] = await Promise.all(
         [b1].map(async block => {
           const result = apolloClient.query({
-            query: POOLS_HISTORICAL_BULK(block, poolList),
+            query: POOLS_HISTORICAL_BULK_FROM_LIST(block, poolList),
             fetchPolicy: 'network-only'
           })
           return result
@@ -218,10 +244,100 @@ export async function getBulkPoolData(
   }
 }
 
-export function useBulkPoolData(
-  poolList: (string | undefined)[],
-  ethPrice?: string
-): {
+export async function getBulkPoolDataWithPagination(
+  first: number,
+  skip: number,
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  ethPrice?: string,
+  chainId?: ChainId
+): Promise<any> {
+  try {
+    let poolData
+    const [t1] = getTimestampsForChanges()
+    const blocks = await getBlocksFromTimestamps([t1], chainId)
+    if (!blocks.length) {
+      return []
+    } else {
+      const [{ number: b1 }] = blocks
+
+      const [oneDayResult, current] = await Promise.all(
+        [b1]
+          .map(async block => {
+            const result = apolloClient.query({
+              query: POOLS_HISTORICAL_BULK_WITH_PAGINATION(first, skip, block),
+              fetchPolicy: 'network-only'
+            })
+            return result
+          })
+          .concat(
+            apolloClient.query({
+              query: POOLS_BULK_WITH_PAGINATION(first, skip),
+              fetchPolicy: 'network-only'
+            })
+          )
+      )
+
+      const oneDayData = oneDayResult?.data?.pools.reduce((obj: any, cur: any) => {
+        return { ...obj, [cur.id]: cur }
+      }, {})
+
+      poolData = await Promise.all(
+        current &&
+          current.data.pools.map(async (pool: any) => {
+            let data = { ...pool }
+            const oneDayHistory = oneDayData?.[pool.id]
+            // TODO: If number of pools > 1000 then uncomment this.
+            // if (!oneDayHistory) {
+            //   const newData = await apolloClient.query({
+            //     query: POOL_DATA(pool.id, b1),
+            //     fetchPolicy: 'network-only'
+            //   })
+            //   oneDayHistory = newData.data.pools[0]
+            // }
+
+            data = parseData(data, oneDayHistory, ethPrice, b1, chainId)
+
+            return data
+          })
+      )
+    }
+
+    return poolData
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
+}
+
+export function useResetPools(chainId: ChainId | undefined) {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(updatePools({ pools: [] }))
+    dispatch(setError(undefined))
+  }, [chainId, dispatch])
+}
+
+export function usePoolCountInSubgraph(): number {
+  const [poolCount, setPoolCount] = useState(0)
+  const apolloClient = useExchangeClient()
+
+  useEffect(() => {
+    const getPoolCount = async () => {
+      const result = await apolloClient.query({
+        query: POOL_COUNT,
+        fetchPolicy: 'network-only'
+      })
+      setPoolCount(result.data.dmmFactories[0].poolCount)
+    }
+
+    getPoolCount()
+  }, [apolloClient])
+
+  return poolCount
+}
+
+export function useAllPoolsData(): {
   loading: AppState['pools']['loading']
   error: AppState['pools']['error']
   data: AppState['pools']['pools']
@@ -234,34 +350,47 @@ export function useBulkPoolData(
   const loading = useSelector((state: AppState) => state.pools.loading)
   const error = useSelector((state: AppState) => state.pools.error)
 
-  useDeepCompareEffect(() => {
-    async function checkForPools() {
+  const latestRenderTime = useRef(0)
+
+  const { currentPrice: ethPrice } = useETHPrice()
+
+  const poolCountSubgraph = usePoolCountInSubgraph()
+
+  const getPoolsData = useCallback(
+    async (currentRenderTime: number) => {
       try {
-        if (poolList.length > 0 && !error && poolsData.length === 0) {
+        if (poolCountSubgraph > 0 && poolsData.length === 0 && !error && ethPrice) {
           dispatch(setLoading(true))
-          const pools = await getBulkPoolData(poolList as string[], apolloClient, ethPrice, chainId)
-          dispatch(updatePools({ pools }))
+          const ITEM_PER_CHUNK = Math.min(1000, poolCountSubgraph) // GraphNode can handle max 1000 records per query.
+          const promises = []
+          for (let i = 0, j = poolCountSubgraph; i < j; i += ITEM_PER_CHUNK) {
+            promises.push(() => getBulkPoolDataWithPagination(ITEM_PER_CHUNK, i, apolloClient, ethPrice, chainId))
+          }
+          const start = Date.now()
+          const pools = (await Promise.all(promises.map(callback => callback()))).flat()
+          const end = Date.now()
+          console.log(`overall`, end - start)
+          currentRenderTime === latestRenderTime.current && dispatch(updatePools({ pools }))
+          currentRenderTime === latestRenderTime.current && dispatch(setLoading(false))
         }
       } catch (error) {
-        dispatch(setError(error as Error))
+        currentRenderTime === latestRenderTime.current && dispatch(setError(error as Error))
+        currentRenderTime === latestRenderTime.current && dispatch(setLoading(false))
       }
-
-      dispatch(setLoading(false))
-    }
-
-    checkForPools()
-  }, [dispatch, ethPrice, error, poolList, poolsData.length])
-
-  return { loading, error, data: poolsData }
-}
-
-export function useResetPools(currencyA: Currency | undefined, currencyB: Currency | undefined) {
-  const dispatch = useDispatch()
+    },
+    [apolloClient, chainId, dispatch, error, ethPrice, poolsData, poolCountSubgraph]
+  )
 
   useEffect(() => {
-    dispatch(updatePools({ pools: [] }))
-    dispatch(setError(undefined))
-  }, [currencyA, currencyB, dispatch])
+    getPoolsData(latestRenderTime.current)
+
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      latestRenderTime.current++
+    }
+  }, [getPoolsData])
+
+  return useMemo(() => ({ loading, error, data: poolsData }), [error, loading, poolsData])
 }
 
 export function useSelectedPool() {
@@ -283,26 +412,32 @@ export function useSinglePoolData(
   const [error, setError] = useState<Error | undefined>(undefined)
   const [poolData, setPoolData] = useState<SubgraphPoolData>()
 
+  const latestRenderTime = useRef(0)
   useEffect(() => {
-    async function checkForPools() {
+    async function checkForPools(currentRenderTime: number) {
       setLoading(true)
 
       try {
         if (poolAddress && !error) {
-          const pools = await getBulkPoolData([poolAddress], apolloClient, ethPrice, chainId)
+          const pools = await getBulkPoolDataFromPoolList([poolAddress], apolloClient, ethPrice, chainId)
 
           if (pools.length > 0) {
-            setPoolData(pools[0])
+            currentRenderTime === latestRenderTime.current && setPoolData(pools[0])
           }
         }
       } catch (error) {
-        setError(error as Error)
+        currentRenderTime === latestRenderTime.current && setError(error as Error)
       }
 
       setLoading(false)
     }
 
-    checkForPools()
+    checkForPools(latestRenderTime.current)
+
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      latestRenderTime.current++
+    }
   }, [ethPrice, error, poolAddress, apolloClient, chainId])
 
   return { loading, error, data: poolData }

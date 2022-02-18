@@ -58,6 +58,7 @@ export function colors(darkMode: boolean): Colors {
     text11: darkMode ? '#f4f4f4' : '#565A69',
     text12: darkMode ? '#4aff8c' : '#0CE15B',
     text13: darkMode ? '#f5f5f5' : '#333333',
+    text14: darkMode ? '#3a3a3a' : '#ffffff',
     disableText: darkMode ? '#6C7284' : '#A7B6BD',
 
     // backgrounds
@@ -138,7 +139,8 @@ export function colors(darkMode: boolean): Colors {
     darkBlue: '#1183b7',
     blue: darkMode ? '#78d5ff' : '#31cb9e',
     lightGreen: '#98E5CE',
-    apr: '#0faaa2'
+    apr: '#0faaa2',
+    shadow: darkMode ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.04)'
   }
 }
 

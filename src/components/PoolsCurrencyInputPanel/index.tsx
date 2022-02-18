@@ -9,6 +9,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { X } from 'react-feather'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -29,13 +30,11 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   border: 1px solid ${({ theme }) => theme.border};
   color: ${({ theme }) => theme.text};
   border-radius: 4px;
-  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
   user-select: none;
   padding: 0 0.5rem;
 
-  :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary))};
   }
@@ -65,28 +64,31 @@ const StyledDropDown = styled(DropDown)`
   }
 `
 
+const StyledX = styled(X)`
+  margin: 0 0.25rem 0 0.5rem;
+
+  path,
+  line {
+    stroke: ${({ theme }) => theme.text};
+  }
+
+  :hover {
+    path,
+    line {
+      stroke: ${({ theme }) => theme.subText};
+    }
+  }
+`
+
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   border-radius: 4px;
   background-color: transparent;
   z-index: 1;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    width: 100%;
-    margin-bottom: 12px;
-  `};
 `
 
-const Container = styled.div`
-  border-radius: 8px;
-  border: 1px solid transparent;
-  background-color: transparent;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    width: 100%;
-  `};
-`
+const Container = styled.div``
 
 const LogoNameWrapper = styled.div`
   display: flex;
@@ -95,11 +97,13 @@ const LogoNameWrapper = styled.div`
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '20px' : '16px')};
+  font-size:  ${({ active }) => (active ? '16px' : '14px')};
+  min-width: max-content;
 `
 
 interface CurrencyInputPanelProps {
   onCurrencySelect?: (currency: Currency) => void
+  onClearCurrency?: () => void
   currency?: Currency | null
   disableCurrencySelect?: boolean
   pair?: Pair | null
@@ -108,8 +112,9 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
 }
 
-export default function CurrencyInputPanel({
+export default function PoolsCurrencyInputPanel({
   onCurrencySelect,
+  onClearCurrency,
   currency,
   disableCurrencySelect = false,
   pair = null, // used for double token logo
@@ -124,6 +129,12 @@ export default function CurrencyInputPanel({
   }, [setModalOpen])
 
   const nativeCurrency = useCurrencyConvertedToNative(currency || undefined)
+
+  const clearCurrency = (event: React.MouseEvent<SVGElement>) => {
+    event.stopPropagation()
+    onClearCurrency && onClearCurrency()
+  }
+
   return (
     <InputPanel id={id}>
       <Container>
@@ -154,11 +165,12 @@ export default function CurrencyInputPanel({
                       ? nativeCurrency.symbol.slice(0, 4) +
                         '...' +
                         nativeCurrency.symbol.slice(nativeCurrency.symbol.length - 5, nativeCurrency.symbol.length)
-                      : nativeCurrency?.symbol) || <Trans>Select a token</Trans>}
+                      : nativeCurrency?.symbol) || <Trans>All Tokens</Trans>}
                   </StyledTokenName>
                 )}
               </LogoNameWrapper>
-              {!disableCurrencySelect && <StyledDropDown />}
+              {!disableCurrencySelect && !currency && <StyledDropDown />}
+              {!disableCurrencySelect && currency && <StyledX size={16} onClick={clearCurrency} />}
             </Aligner>
           </CurrencySelect>
         </InputRow>

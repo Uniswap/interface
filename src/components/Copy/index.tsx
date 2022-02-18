@@ -36,8 +36,13 @@ export default function CopyHelper({
 }) {
   const [isCopied, setCopied] = useCopyClipboard()
 
+  const onCopy = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation()
+    setCopied(toCopy)
+  }
+
   return (
-    <CopyIcon onClick={() => setCopied(toCopy)} margin={margin}>
+    <CopyIcon onClick={onCopy} margin={margin}>
       {isCopied ? (
         <TransactionStatusText>
           <CheckCircle size={'14'} />

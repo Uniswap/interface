@@ -1,4 +1,4 @@
-import { ChainId, ETHER } from '@dynamic-amm/sdk'
+import { ChainId } from '@dynamic-amm/sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { Link, NavLink } from 'react-router-dom'
@@ -6,15 +6,14 @@ import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 
-import { DMM_ANALYTICS_URL, KNC } from '../../constants'
+import { DMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useETHBalances } from 'state/wallet/hooks'
-import Settings from '../Settings'
-import Menu from '../Menu'
+import Settings from 'components/Settings'
+import Menu from 'components/Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { ExternalLink } from 'theme/components'
-import { convertToNativeTokenFromETH } from 'utils/dmm'
 import Web3Network from 'components/Web3Network'
 import { useIsDarkMode } from 'state/user/hooks'
 // import { MouseoverTooltip } from 'components/Tooltip'
@@ -284,40 +283,9 @@ const NewText = styled.div`
 //   -webkit-text-size-adjust: none;
 // `
 
-export const getPoolsMenuLink = (chainId?: ChainId) => {
-  switch (chainId) {
-    case ChainId.MAINNET:
-      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
-    case ChainId.ROPSTEN:
-      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
-    case ChainId.MATIC:
-      return `/pools/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/${KNC[chainId as ChainId].address}`
-    case ChainId.MUMBAI:
-      return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
-    case ChainId.BSCTESTNET:
-      return `/pools/BNB/${KNC[chainId as ChainId].address}`
-    case ChainId.BSCMAINNET:
-      return `/pools/BNB/${KNC[chainId as ChainId].address}`
-    case ChainId.AVAXTESTNET:
-      return `/pools/AVAX/${KNC[chainId as ChainId].address}`
-    case ChainId.AVAXMAINNET:
-      return `/pools/AVAX/${KNC[chainId as ChainId].address}`
-    case ChainId.FANTOM:
-      return `/pools/FTM`
-    case ChainId.CRONOSTESTNET:
-      return `/pools/CRO`
-    case ChainId.CRONOS:
-      return `/pools/CRO`
-    default:
-      return '/pools/ETH'
-  }
-}
-
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-
-  const poolsMenuLink = getPoolsMenuLink(chainId)
 
   const isDark = useIsDarkMode()
 
@@ -341,7 +309,7 @@ export default function Header() {
 
           <StyledNavLink
             id={`pools-nav-link`}
-            to={poolsMenuLink}
+            to="/pools"
             isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/pools')}
           >
             <Trans>Pools</Trans>

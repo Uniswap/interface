@@ -1,46 +1,25 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { useMedia } from 'react-use'
-import { Trans } from '@lingui/macro'
-import { Flex } from 'rebass'
+import { t, Trans } from '@lingui/macro'
+import { Flex, Text } from 'rebass'
 
-import { ChainId, Currency } from '@dynamic-amm/sdk'
-import { POPULAR_PAIRS } from 'constants/index'
-import { ButtonGray, ButtonPrimary } from 'components/Button'
+import { Currency } from '@dynamic-amm/sdk'
+import { ButtonPrimary } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
 import Search from 'components/Search'
-import LocalLoader from 'components/LocalLoader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
-import { useETHPrice } from 'state/application/hooks'
-import { useDerivedPairInfo } from 'state/pair/hooks'
-import { useUserLiquidityPositions, useBulkPoolData, useResetPools } from 'state/pools/hooks'
 import { Field } from 'state/pair/actions'
-import { currencyId, currencyIdFromAddress } from 'utils/currencyId'
-import { useGlobalData } from 'state/about/hooks'
-import {
-  PageWrapper,
-  GlobalDataContainer,
-  GlobalDataItem,
-  GlobalDataItemTitle,
-  GlobalDataItemValue,
-  AddLiquidityInstructionContainer,
-  AddLiquidityTitle,
-  AddLiquidityInstructionText,
-  ToolbarWrapper,
-  CurrencyWrapper,
-  SearchWrapper,
-  SelectPairInstructionWrapper
-} from './styleds'
-import { formatBigLiquidity } from 'utils/formatBalance'
-import Loader from 'components/Loader'
-import { Farm } from 'state/farms/types'
-import { useFarmsData } from 'state/farms/hooks'
-import { PopularPair } from 'state/pair/types'
+import { currencyId } from 'utils/currencyId'
+import { CurrencyWrapper, PageWrapper, SearchWrapper, ToolbarWrapper } from './styleds'
+import InstructionAndGlobalData from 'pages/Pools/InstructionAndGlobalData'
+import FarmingPoolsMarquee from 'pages/Pools/FarmingPoolsMarquee'
 import useTheme from 'hooks/useTheme'
+import FarmingPoolsToggle from 'components/Toggle/FarmingPoolsToggle'
 
 const Pools = ({
   match: {
@@ -48,15 +27,21 @@ const Pools = ({
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
-  const { account, chainId } = useActiveWeb3React()
+  const theme = useTheme()
+  const { chainId } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
   const above1000 = useMedia('(min-width: 1000px)')
+  const [isShowOnlyActiveFarmPools, setIsShowOnlyActiveFarmPools] = useState(false)
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
-  const { currencies, pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
-
-  const ethPrice = useETHPrice()
+  const currencies: { [field in Field]?: Currency } = useMemo(
+    () => ({
+      [Field.CURRENCY_A]: currencyA ?? undefined,
+      [Field.CURRENCY_B]: currencyB ?? undefined
+    }),
+    [currencyA, currencyB]
+  )
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
@@ -73,261 +58,199 @@ const Pools = ({
     (currencyB: Currency) => {
       const newCurrencyIdB = currencyId(currencyB, chainId)
       if (currencyIdA === newCurrencyIdB) {
-        if (currencyIdB) {
-          history.push(`/pools/${currencyIdB}/${newCurrencyIdB}`)
-        } else {
-          history.push(`/pools/${newCurrencyIdB}`)
-        }
+        history.push(`/pools/${currencyIdB}/${currencyIdA}`)
       } else {
-        history.push(`/pools/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
+        history.push(`/pools/${currencyIdA}/${newCurrencyIdB}`)
       }
     },
     [currencyIdA, history, currencyIdB, chainId]
   )
-
-  const poolsList = useMemo(
-    () =>
-      pairs
-        .map(([_, pair]) => pair)
-        .filter(pair => pair !== null)
-        .filter(pair => {
-          if (searchValue) {
-            return pair?.address.toLowerCase().includes(searchValue.toLowerCase())
-          }
-
-          return true
-        }),
-    [pairs, searchValue]
-  )
-
-  // format as array of addresses
-  const formattedPools = useMemo(() => poolsList.map(pool => pool?.address.toLowerCase()), [poolsList])
-
-  useResetPools(currencyA ?? undefined, currencyB ?? undefined)
-
-  // get data for every pool in list
-  const { loading: loadingPoolsData, data: poolsData } = useBulkPoolData(formattedPools, ethPrice.currentPrice)
-
-  // const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
-  const temp = useUserLiquidityPositions(account)
-  const loadingUserLiquidityPositions = !account ? false : temp.loading
-  const userLiquidityPositions = !account ? { liquidityPositions: [] } : temp.data
-
-  const data = useGlobalData()
-
-  const globalData = data && data.dmmFactories[0]
-  const aggregatorData = data?.aggregatorData
-
-  const { loading: loadingPoolFarm, data: farms } = useFarmsData()
-
-  const popularPairs: PopularPair[] = POPULAR_PAIRS[chainId as ChainId]
-
-  const uniquePairs: { [key: string]: boolean } = {}
+  const handleClearCurrencyA = useCallback(() => {
+    history.push(`/pools/undefined/${currencyIdB}`)
+  }, [currencyIdB, history])
+  const handleClearCurrencyB = useCallback(() => {
+    history.push(`/pools/${currencyIdA}/undefined`)
+  }, [currencyIdA, history])
 
   return (
     <>
       <PageWrapper>
-        <GlobalDataContainer>
-          <GlobalDataItem>
-            <GlobalDataItemTitle>
-              <Trans>Total Trading Volume:</Trans>
-            </GlobalDataItemTitle>
-            <GlobalDataItemValue>
-              {aggregatorData?.totalVolume ? formatBigLiquidity(aggregatorData.totalVolume, 2, true) : <Loader />}
-            </GlobalDataItemValue>
-          </GlobalDataItem>
-          <GlobalDataItem>
-            <GlobalDataItemTitle>
-              <Trans>Total Value Locked:</Trans>
-            </GlobalDataItemTitle>
-            <GlobalDataItemValue>
-              {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
-            </GlobalDataItemValue>
-          </GlobalDataItem>
-          <GlobalDataItem>
-            <GlobalDataItemTitle>
-              <Trans>Total AMP Liquidity:</Trans>
-            </GlobalDataItemTitle>
-            <GlobalDataItemValue>
-              {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
-            </GlobalDataItemValue>
-          </GlobalDataItem>
-        </GlobalDataContainer>
-
-        <AddLiquidityInstructionContainer>
-          <AddLiquidityTitle>
-            <Trans>Add liquidity:</Trans>
-          </AddLiquidityTitle>
-          <AddLiquidityInstructionText>
-            <Trans>
-              Receive liquidity pool tokens representing your position and earn fees proportional to your pool share.
-              Fees are automatically claimed when you withdraw your liquidity.
-            </Trans>
-          </AddLiquidityInstructionText>
-        </AddLiquidityInstructionContainer>
+        <InstructionAndGlobalData />
 
         {above1000 ? (
+          <ToolbarWrapper>
+            <Text fontSize="20px" fontWeight={500}>
+              <Trans>Provide Liquidity</Trans>
+            </Text>
+            <SearchWrapper>
+              <ButtonPrimary
+                padding="10px 12px"
+                as={Link}
+                to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
+                  currencyIdB === '' ? undefined : currencyIdB
+                }`}
+                style={{ float: 'right', borderRadius: '4px', fontSize: '14px' }}
+              >
+                <Trans>+ Create New Pool</Trans>
+              </ButtonPrimary>
+            </SearchWrapper>
+          </ToolbarWrapper>
+        ) : (
+          <ToolbarWrapper>
+            <Text fontSize="20px" fontWeight={500}>
+              <Trans>Provide Liquidity</Trans>
+            </Text>
+            <SearchWrapper>
+              <ButtonPrimary
+                padding="10px 12px"
+                as={Link}
+                to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
+                  currencyIdB === '' ? undefined : currencyIdB
+                }`}
+                style={{ float: 'right', borderRadius: '4px', fontSize: '14px' }}
+              >
+                <Trans>+ Create Pool</Trans>
+              </ButtonPrimary>
+            </SearchWrapper>
+          </ToolbarWrapper>
+        )}
+
+        <FarmingPoolsMarquee />
+
+        {above1000 ? (
+          <ToolbarWrapper>
+            <CurrencyWrapper>
+              <PoolsCurrencyInputPanel
+                onCurrencySelect={handleCurrencyASelect}
+                onClearCurrency={handleClearCurrencyA}
+                currency={currencies[Field.CURRENCY_A]}
+                id="input-tokena"
+              />
+              <span style={{ margin: '0 8px' }}>-</span>
+              <PoolsCurrencyInputPanel
+                onCurrencySelect={handleCurrencyBSelect}
+                onClearCurrency={handleClearCurrencyB}
+                currency={currencies[Field.CURRENCY_B]}
+                id="input-tokenb"
+              />
+              <ButtonPrimary
+                padding="9px 13px"
+                width="fit-content"
+                style={{ marginLeft: '16px', borderRadius: '4px', fontSize: '14px' }}
+                onClick={() => {
+                  if (currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B]) {
+                    history.push(
+                      `/swap?inputCurrency=${currencyId(
+                        currencies[Field.CURRENCY_A] as Currency,
+                        chainId
+                      )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`
+                    )
+                  } else if (currencies[Field.CURRENCY_A]) {
+                    history.push(`/swap?inputCurrency=${currencyId(currencies[Field.CURRENCY_A] as Currency, chainId)}`)
+                  } else if (currencies[Field.CURRENCY_B]) {
+                    history.push(
+                      `/swap?outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`
+                    )
+                  }
+                }}
+                disabled={!currencies[Field.CURRENCY_A] && !currencies[Field.CURRENCY_B]}
+              >
+                <Trans>Swap</Trans>
+              </ButtonPrimary>
+            </CurrencyWrapper>
+
+            <Flex style={{ gap: '20px' }}>
+              <Flex alignItems="center" style={{ gap: '8px' }}>
+                <FarmingPoolsToggle
+                  isActive={isShowOnlyActiveFarmPools}
+                  toggle={() => setIsShowOnlyActiveFarmPools(prev => !prev)}
+                />
+                <Text fontSize="14px" color={theme.subText}>
+                  <Trans>Farming Pools</Trans>
+                </Text>
+              </Flex>
+              <Search
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                placeholder={t`Search by token name or pool address`}
+              />
+            </Flex>
+          </ToolbarWrapper>
+        ) : (
           <>
-            <div style={{ marginBottom: '16px' }}>
-              <Trans>Select Pair</Trans>
-            </div>
-            <ToolbarWrapper>
+            <Search
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              placeholder={t`Search by token name or pool address`}
+              style={{ marginBottom: '16px' }}
+            />
+            <Flex justifyContent="space-between" style={{ marginBottom: '16px' }}>
               <CurrencyWrapper>
                 <PoolsCurrencyInputPanel
                   onCurrencySelect={handleCurrencyASelect}
+                  onClearCurrency={handleClearCurrencyA}
                   currency={currencies[Field.CURRENCY_A]}
                   otherCurrency={currencies[Field.CURRENCY_B]}
                   id="input-tokena"
                 />
-                <span style={{ margin: '0 8px' }}>/</span>
+                <span style={{ margin: '0 8px' }}>-</span>
                 <PoolsCurrencyInputPanel
                   onCurrencySelect={handleCurrencyBSelect}
+                  onClearCurrency={handleClearCurrencyB}
                   currency={currencies[Field.CURRENCY_B]}
                   otherCurrency={currencies[Field.CURRENCY_A]}
                   id="input-tokenb"
                 />
-
-                {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && (
-                  <ButtonPrimary
-                    padding="8px 28px"
-                    as={Link}
-                    to={`/swap?inputCurrency=${currencyId(
-                      currencies[Field.CURRENCY_A] as Currency,
-                      chainId
-                    )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`}
-                    width="fit-content"
-                    style={{ marginLeft: '1rem', borderRadius: '4px' }}
-                  >
-                    <span>
-                      <Trans>Trade</Trans>
-                    </span>
-                  </ButtonPrimary>
-                )}
               </CurrencyWrapper>
-
-              <SearchWrapper>
-                <Search searchValue={searchValue} setSearchValue={setSearchValue} />
-                <ButtonPrimary
-                  width="max-content"
-                  padding="10px 12px"
-                  as={Link}
-                  to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
-                    currencyIdB === '' ? undefined : currencyIdB
-                  }`}
-                  style={{ float: 'right', fontSize: '14px', borderRadius: '4px' }}
-                >
-                  <Trans>+ Create New Pool</Trans>
-                </ButtonPrimary>
-              </SearchWrapper>
-            </ToolbarWrapper>
-          </>
-        ) : (
-          <>
-            <ToolbarWrapper>
-              <Trans>Select Pair</Trans>
-              <SearchWrapper>
-                <ButtonPrimary
-                  padding="10px 12px"
-                  as={Link}
-                  to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
-                    currencyIdB === '' ? undefined : currencyIdB
-                  }`}
-                  style={{ float: 'right', borderRadius: '4px', fontSize: '14px' }}
-                >
-                  <Trans>+ Create New Pool</Trans>
-                </ButtonPrimary>
-              </SearchWrapper>
-            </ToolbarWrapper>
-            <CurrencyWrapper>
-              <PoolsCurrencyInputPanel
-                onCurrencySelect={handleCurrencyASelect}
-                currency={currencies[Field.CURRENCY_A]}
-                otherCurrency={currencies[Field.CURRENCY_B]}
-                id="input-tokena"
-              />
-              {above1000 && <span style={{ margin: '0 8px' }}>/</span>}
-              <PoolsCurrencyInputPanel
-                onCurrencySelect={handleCurrencyBSelect}
-                currency={currencies[Field.CURRENCY_B]}
-                otherCurrency={currencies[Field.CURRENCY_A]}
-                id="input-tokenb"
-              />
-            </CurrencyWrapper>
+              <ButtonPrimary
+                padding="9px 13px"
+                width="fit-content"
+                style={{ marginLeft: '8px', borderRadius: '4px', fontSize: '14px' }}
+                onClick={() => {
+                  if (currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B]) {
+                    history.push(
+                      `/swap?inputCurrency=${currencyId(
+                        currencies[Field.CURRENCY_A] as Currency,
+                        chainId
+                      )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`
+                    )
+                  } else if (currencies[Field.CURRENCY_A]) {
+                    history.push(`/swap?inputCurrency=${currencyId(currencies[Field.CURRENCY_A] as Currency, chainId)}`)
+                  } else if (currencies[Field.CURRENCY_B]) {
+                    history.push(
+                      `/swap?outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`
+                    )
+                  }
+                }}
+                disabled={!currencies[Field.CURRENCY_A] && !currencies[Field.CURRENCY_B]}
+              >
+                <Trans>Swap</Trans>
+              </ButtonPrimary>
+            </Flex>
+            <Flex justifyContent="flex-end" style={{ marginBottom: '28px' }}>
+              <Flex alignItems="center" style={{ gap: '8px' }}>
+                <FarmingPoolsToggle
+                  isActive={isShowOnlyActiveFarmPools}
+                  toggle={() => setIsShowOnlyActiveFarmPools(prev => !prev)}
+                />
+                <Text fontSize="14px" color={theme.subText}>
+                  <Trans>Farming Pools</Trans>
+                </Text>
+              </Flex>
+            </Flex>
           </>
         )}
 
         <Panel>
-          {loadingUserLiquidityPositions || loadingPoolsData ? (
-            <LocalLoader />
-          ) : poolsList.length > 0 ? (
-            <PoolList
-              poolsList={poolsList}
-              subgraphPoolsData={poolsData}
-              userLiquidityPositions={userLiquidityPositions?.liquidityPositions}
-              maxItems={2}
-            />
-          ) : (
-            <SelectPairInstructionWrapper>
-              <div style={{ marginBottom: '1rem' }}>
-                <Trans>There are no pools for this token pair.</Trans>
-              </div>
-              <div>
-                <Trans>Create a new pool or select another pair of tokens to view the available pools.</Trans>
-              </div>
-            </SelectPairInstructionWrapper>
-          )}
+          <PoolList
+            currencies={currencies}
+            searchValue={searchValue}
+            isShowOnlyActiveFarmPools={isShowOnlyActiveFarmPools}
+          />
         </Panel>
-
-        <Flex marginTop="1rem" alignItems="center">
-          {(loadingPoolFarm ||
-            (!loadingPoolFarm && (!!Object.values(farms).flat().length || !!popularPairs.length))) && (
-            <Trans>Popular Pairs</Trans>
-          )}
-          &nbsp;
-          {loadingPoolFarm && <Loader />}
-        </Flex>
-        <Flex alignItems="center" justifyContent="flexStart" flexWrap="wrap">
-          {popularPairs.map((pair, index) => (
-            <PoolFarm key={index} farm={pair} />
-          ))}
-
-          {Object.values(farms)
-            .flat()
-            .filter(farm => {
-              if (uniquePairs[`${farm.token0?.symbol}-${farm.token1?.symbol}`]) return false
-              uniquePairs[`${farm.token0?.symbol}-${farm.token1?.symbol}`] = true
-              return true
-            })
-            .map((farm, index) => (
-              <PoolFarm key={index} farm={farm} />
-            ))}
-        </Flex>
       </PageWrapper>
       <SwitchLocaleLink />
     </>
-  )
-}
-
-const PoolFarm = ({ farm }: { farm: Farm | PopularPair }) => {
-  const { chainId } = useActiveWeb3React()
-  const theme = useTheme()
-  return (
-    <ButtonGray
-      padding="8px 28px"
-      as={Link}
-      to={`/pools/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
-        farm.token1?.id,
-        chainId
-      )}`}
-      width="fit-content"
-      style={{ margin: '1rem 1rem 0 0', borderRadius: '4px', background: theme.background, color: theme.subText }}
-    >
-      <span>
-        <Trans>
-          {farm.token0?.symbol}-{farm.token1?.symbol}
-        </Trans>
-      </span>
-    </ButtonGray>
   )
 }
 
