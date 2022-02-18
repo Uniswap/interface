@@ -15,7 +15,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@swapr/core": "^0.3.18",
     "@swapr/periphery": "^0.3.20",
-    "@swapr/sdk": "^0.11.0",
+    "@swapr/sdk": "^0.11.1",
     "@types/aos": "^3.0.4",
     "@types/jest": "^25.2.1",
     "@types/lodash.flatmap": "^4.5.6",
