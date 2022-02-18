@@ -43,9 +43,9 @@ import Twitter from './../assets/images/isologo-twitter.svg'
 
 // Blog Images
 
-import Entry1 from './../assets/images/blog-entry-1.png'
-import Entry2 from './../assets/images/blog-entry-2.png'
-import Entry3 from './../assets/images/blog-entry-3.png'
+import Entry1 from './../assets/images/blog/blog-entry-1.jpg'
+import Entry2 from './../assets/images/blog/blog-entry-2.jpg'
+import Entry3 from './../assets/images/blog/blog-entry-3.jpg'
 
 // Stats Images
 
@@ -201,8 +201,9 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'VOTE',
-                    href: '/',
-                    type: 'primary'
+                    href: 'https://snapshot.org/#/swpr.eth',
+                    type: 'primary',
+                    external: true
                 },
                 {
                     label: 'READ MORE',
@@ -220,7 +221,7 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'FARM',
-                    href: '/rewards#/rewards',
+                    href: '/#/rewards',
                     type: 'primary'
                 },
                 {
@@ -239,7 +240,7 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'CREATE CAMPAIGN',
-                    href: 'https://swapr.eth.link/#/liquidity-mining/create',
+                    href: '/#/liquidity-mining/create',
                     type: 'primary'
                 },
                 {
@@ -258,7 +259,7 @@ export const FeaturesContent = {
             buttons: [
                 {
                     label: 'BRIDGE',
-                    href: '/bridge',
+                    href: '/#/bridge',
                     type: 'primary'
                 },
                 {
@@ -273,24 +274,24 @@ export const FeaturesContent = {
 }
 
 export const CommunityBannerContent = {
-    preHeader: 'A DXDao Product',
+    preHeader: 'A DXdao Product',
     content: 'Owned and funded by the Community',
     buttons: [
         {
             label: 'GET INVOLVED',
-            href: '#',
+            href: 'https://dxdao.eth.link/',
             type: 'primary'
         },
         {
             label: 'FORUM',
-            href: '#',
+            href: 'https://daotalk.org/c/dx-dao/15',
             type: 'dark'
         },
     ]
 }
 
 export const CommunityLinksContent = {
-    preHeader: 'Tagline',
+    preHeader: 'Swapr Protocol',
     title: <span>Join an unstoppable <br/>community</span>,
     links: [
         {
@@ -300,17 +301,17 @@ export const CommunityLinksContent = {
             content: 'Join in on community discussion on the Swapr Discord.',
             button: {
                 label: 'JOIN DISCORD',
-                href: '#',
+                href: 'https://discord.gg/4QXEJQkvHH',
             },
         },
         {
             image: Github,
             alt: 'GitHub Logo',
             title: 'GitHub',
-            content: <>Contribute to the <br/>Swapr repositories on Github.</>,
+            content: <>Contribute to the <br/>Swapr repositories on GitHub.</>,
             button: {
                 label: 'VISIT GITHUB',
-                href: '#',
+                href: 'https://github.com/levelkdev/dxswap-dapp',
             },
         },
         {
@@ -320,7 +321,7 @@ export const CommunityLinksContent = {
             content: 'Get the latest Swapr announcements on the Swapr Twitter.',
             button: {
                 label: 'Follow on Twitter',
-                href: '#',
+                href: 'https://twitter.com/SwaprEth',
             },
         },
     ]
@@ -331,21 +332,21 @@ export const BlogContent = {
     posts: [
         {
             image: Entry1,
-            title: 'DXdao and BadgerDAO Leverage Swapr to Bring Smarter BTC-focused Strategies to Arbitrum',
-            content: 'Both DXdao and BadgerDAO have strong communities that have been building interesting products in the DeFi space.',
-            postLink: 'https://medium.com/swapr/dxdao-and-badgerdao-leverage-swapr-to-bring-smarter-btc-focused-strategies-to-arbitrum-23689e0c9f2b?source=collection_home---6------3-----------------------'
+            title: 'Announcing SWPR Token',
+            content: 'SWPR Token and Liquidity Mining',
+            postLink: 'https://medium.com/swapr/announcing-swpr-token-e8ab12dbad45'
         },
         {
             image: Entry2,
-            title: 'Introducing xDai SWPR farming',
-            content: 'Swapr farms are live on xDaichain as of October 14th, 2021',
-            postLink: 'https://medium.com/swapr/introducing-xdai-swpr-farming-150ad665abd1?source=collection_home---6------5-----------------------'
+            title: 'Introducing SWPR Token Farming Rewards',
+            content: 'Introducing SWPR Token Farming RewardsRecently, the DXdao community identified a misconfiguration with ...',
+            postLink: 'https://medium.com/swapr/introducing-swpr-token-farming-rewards-7fbdcc9507ae'
         },
         {
             image: Entry3,
-            title: 'Introducing Mainnet SWPR farming',
-            content: 'Swapr farms are launching on Mainnet Ethereum October 14th, 2021',
-            postLink: 'https://medium.com/swapr/introducing-mainnet-swpr-farming-da980c270770'
+            title: 'DXdao and BadgerDAO Leverage Swapr to Bring Smarter BTC-focused Strategies to Arbitrum',
+            content: 'Both DXdao and BadgerDAO have strong communities that have been building interesting products in the DeFi space.',
+            postLink: 'https://medium.com/swapr/dxdao-and-badgerdao-leverage-swapr-to-bring-smarter-btc-focused-strategies-to-arbitrum-23689e0c9f2b'
         }
     ]
 }
@@ -357,19 +358,19 @@ export const FooterContent = {
             footerLinks: [
                 {
                     label: 'Faq',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/faq/'
                 },
                 {
                     label: 'Blog',
-                    href: '#'
+                    href: 'https://medium.com/swapr'
                 },
                 {
                     label: 'Audits',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Technical%20Documentation/Audits/#swapr'
                 },
                 {
                     label: 'Brand Assets',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/BrandingAssets/#swapr-brand-assets'
                 },
             ]
         },
@@ -378,19 +379,19 @@ export const FooterContent = {
             footerLinks: [
                 {
                     label: 'Discord',
-                    href: '#'
+                    href: 'https://discord.gg/4QXEJQkvHH'
                 },
                 {
                     label: 'Twitter',
-                    href: '#'
+                    href: 'https://twitter.com/SwaprEth'
                 },
                 {
                     label: 'Keybase',
-                    href: '#'
+                    href: 'https://keybase.io/team/dx_dao'
                 },
                 {
                     label: 'Forum',
-                    href: '#'
+                    href: 'https://daotalk.org/c/dx-dao/15'
                 },
             ]
         },
@@ -399,29 +400,29 @@ export const FooterContent = {
             footerLinks: [
                 {
                     label: 'DIY Liq. Mining',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/DIY%20Liquidity%20Mining/'
                 },
                 {
                     label: 'Roadmap',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/roadmap/'
                 },
                 {
                     label: 'We\'re hiring',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/ContributorHub/open-positions-and-bounties/'
                 },
                 {
                     label: 'Token',
-                    href: '#'
+                    href: 'https://dxdocs.eth.link/docs/Products/swapr/tokenomics/'
                 },
             ]
         },
         {
             title: 'Analytics',
             footerLinks: [
-                // {
-                //     label: 'DIY Liq. Mining',
-                //     href: '#'
-                // },
+                {
+                    label: 'DXstats',
+                    href: 'https://dxstats.eth.link/#/home'
+                },
                 // {
                 //     label: 'Roadmap',
                 //     href: '#'
@@ -448,18 +449,20 @@ export const StatsContent = {
     stats: [
         {
             title: 'TOTAL VOLUME',
-            value: <TextyAnim type="flash">$100,149,321</TextyAnim>,
+            value: <TextyAnim type="flash">$145,000,000+</TextyAnim>,
+            externalSource: true,
         },
         {
             title: 'TRADES',
             value: <>
-                <TextyAnim type="flash">1452</TextyAnim><TextyAnim type="flash" className="dim">0</TextyAnim><TextyAnim type="flash" className="hiddable-mobile">00</TextyAnim>
+                <TextyAnim type="flash">570,000+</TextyAnim>
                 </>,
+            externalSource: true,
         },
         {
             title: 'TOTAL FEES COLLECTED',
             value: <>
-                <TextyAnim type="flash">14,523</TextyAnim><TextyAnim type="flash" className="dim">00</TextyAnim>
+                <TextyAnim type="flash">$34,000+</TextyAnim><TextyAnim type="flash" className="dim"></TextyAnim>
                 </>,
         },
         {
@@ -467,12 +470,13 @@ export const StatsContent = {
             value: <>
                 <TextyAnim type="flash">$49</TextyAnim><TextyAnim type="flash" className="dim">0</TextyAnim><TextyAnim type="flash" className="hiddable-mobile">00</TextyAnim>
             </>,
+            externalSource: true,
+            headingDollar: true
         },
         {
             title: 'TVL',
-            value: <TextyAnim>$10,149,321</TextyAnim>,
-            externalSource: true,
-            headingDollar: true,
+            value: <TextyAnim>10,149,321</TextyAnim>,
+            externalSource: true
         },
         {
             title: 'ROUTING THROUGH',

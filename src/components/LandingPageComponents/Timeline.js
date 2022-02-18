@@ -132,6 +132,7 @@ const Timeline = () => {
                     <ul className="timeline-milestones">
                         {currentMilestoneGroup.map((timelineItem, key) => (
                             <Milestone 
+                                key={key}
                                 milestoneIndex={key}
                                 milestoneData={timelineItem} 
                             />

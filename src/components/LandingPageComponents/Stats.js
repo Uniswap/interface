@@ -7,22 +7,94 @@ import Layout from './layout/Layout'
 import BackgroundTitleGradient from './../../assets/images/gradient-stats.png'
 import TextyAnim from 'rc-texty';
 
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+
+const apiUrlList = [
+    'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-arbitrum-one-v3',
+    'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-xdai-v2',
+    'https://api.thegraph.com/subgraphs/name/dxgraphs/swapr-mainnet-v2'
+]
+
+const tokensQuery = `{
+    swaprFactories (first:1000) {
+        txCount
+        totalVolumeUSD
+    }
+}`;
+
+
+const retrieveData = async (url) => {
+
+    const client = new ApolloClient({
+        uri: url, 
+        cache: new InMemoryCache(),
+    });
+
+    let asyncClient = await client
+        .query({
+            query: gql(tokensQuery)
+        })
+        .then((data) => {
+            // console.log('Subgraph data: ', data)
+            return data;
+        })
+        .catch((err) => {
+            console.log('Error fetching data: ', err);
+            return err;
+        });
+    return asyncClient;
+}
+
+
 const Stats = () => {
 
     let [tvl, setTvl] = useState(0);
+    let [swaprPrice, setSwaprPrice] = useState(0);
+    let [tx, setTx] = useState(0);
+    let [totalVolumeUSD, setTotalVolumeUSD] = useState(0);
     let [isChartActive, setIsChartActive] = useState(false);
 
     useEffect(() => {
-        const fetchPromise = fetch('https://api.llama.fi/tvl/swapr')
-        fetchPromise.then((data) => {
+        const tvlPromise = fetch('https://api.llama.fi/tvl/swapr')
+        tvlPromise.then((data) => {
             return data.json();
         }).then((decodedTvl) => {
-            let stringTvl = decodedTvl.toString();
-            let splitTvlString = stringTvl.split('.');
-            let integralTvl = splitTvlString[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            setTvl(integralTvl);
-        })
+            setTvl((decodedTvl / 1000000).toFixed(1));
+        });
     }, []);
+
+    useEffect(() => {
+        let coinCode = "arbitrum:0xde903e2712288a1da82942dddf2c20529565ac30"
+        const swaprPricePromise = fetch('https://coins.llama.fi/prices', {
+            method: 'POST',
+            body: JSON.stringify({
+                "coins": [
+                    coinCode
+                ]
+            })
+        });
+        swaprPricePromise.then((data) => {
+            return data.json();
+        }).then((decodedPrice) => {
+            let swaprPrice = decodedPrice.coins[coinCode].price.toFixed(3).toString();
+            setSwaprPrice(swaprPrice);
+        });
+    }, [])
+
+    useEffect(() => {
+        for (let val in apiUrlList) {
+            // eslint-disable-next-line
+            retrieveData(apiUrlList[val]).then((data) => {
+                let floatTx = parseFloat(data.data.swaprFactories[0].txCount);
+                let floatVolume = parseFloat(data.data.swaprFactories[0].totalVolumeUSD);
+
+                // eslint-disable-next-line
+                setTx(tx += floatTx);
+                // eslint-disable-next-line
+                setTotalVolumeUSD(((totalVolumeUSD += floatVolume) / 1000000).toFixed(0));
+            });
+        };
+    }, [])
 
     useEffect(() => {
         let options = {
@@ -45,8 +117,11 @@ const Stats = () => {
 
     }, []);
 
-    let statsData = {
-        'TVL': tvl,
+    const statsData = {
+        'TVL': '$' + tvl + ' M',
+        'SWPR PRICE': swaprPrice,
+        'TOTAL VOLUME': '$' + totalVolumeUSD + ' M',
+        'TRADES': tx
     };
 
     return (
@@ -63,16 +138,26 @@ const Stats = () => {
                         {statsItem.value && (
                                 <span className={`value ${!isChartActive ? 'hidden' : ''}`}>
                                     {isChartActive && (
-                                        statsItem.headingDollar && (
-                                            <TextyAnim type="flash">$</TextyAnim>
-                                        ),
-                                        statsItem.externalSource ? (
-                                            <TextyAnim type="flash">
-                                                {statsData[statsItem.title]}
-                                            </TextyAnim>
-                                            ) : (
-                                            statsItem.value
-                                        )
+                                        <>
+                                            <>
+                                                {
+                                                    statsItem.headingDollar && (
+                                                        <TextyAnim type="flash">$</TextyAnim>
+                                                    )
+                                                }
+                                            </>
+                                            <>
+                                            {
+                                                statsItem.externalSource ? (
+                                                    <TextyAnim type="flash">
+                                                        {statsData[statsItem.title].toString()}
+                                                    </TextyAnim>
+                                                    ) : (
+                                                    statsItem.value
+                                                )
+                                            }
+                                            </>
+                                        </>
                                     )}
                                 </span>
                             )
@@ -379,6 +464,9 @@ const StyledStats = styled(Layout)`
                             'polygon(0 0, 100% 0, 100%, 0 0);'
                         };
                         background: linear-gradient(180deg, rgba(135, 128, 191, 0) 0%, #8780BF 51.04%, rgba(135, 128, 191, 0) 100%);
+                    }
+                    .value {
+                        overflow: hidden;
                     }
                 }
                 &.total-fees-collected,

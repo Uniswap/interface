@@ -32,6 +32,7 @@ const CommunityBanner = () => {
                             key={key} 
                             label={button.label} 
                             type={button.type} 
+                            external
                         />
                     ))}
                 </div>
