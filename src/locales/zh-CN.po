@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-17 23:06\n"
+"PO-Revision-Date: 2022-02-18 00:12\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -1723,11 +1723,11 @@ msgstr "将 {0} {1} 兑换为 {2} {3}"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
-msgstr "进行 10 分钟调查，以帮助我们改善您在 Uniswap 应用程序中的体验。"
+msgstr "参加 10 分钟调查，以帮助我们改善您在 Uniswap 中的体验。"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
-msgstr "告诉我们你的想法↗"
+msgstr "告诉我们您的想法↗"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1767,7 +1767,7 @@ msgstr "发送此交易的成本是输入金额价值的一半以上。"
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "当前用于在 L1 上发送交易的快速 gas 量。 Gas 费用以以太坊的本位币以太币 (ETH) 支付，并以 GWEI 计价。"
+msgstr "当前用于在 L1 上快速发送交易的 gas 价。 Gas 费用以以太坊的本位币以太币 (ETH) 支付，并以 GWEI 计价。"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1922,7 +1922,7 @@ msgstr "交易被拒绝。"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Transaction submitted"
-msgstr "提交的交易"
+msgstr "已提交交易"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -1934,7 +1934,7 @@ msgstr "再试一次"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "尝试增加您的滑点容限。<0/>注意：在转账和rebase时产生费用的代币与 Uniswap V3 不兼容。"
+msgstr "可以尝试增加滑点容差。<0/>注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2304,11 +2304,11 @@ msgstr "您将收到"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "您将收到至少 {0} {1} 或交易将回滚。"
+msgstr "您将收到至少 {0} {1} 否则交易将回滚。"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "您最多发送 {0} {1} 或交易将回滚。"
+msgstr "您最多发送 {0} {1} 否则交易将回滚。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2316,7 +2316,7 @@ msgstr "您的V2流动资金"
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
-msgstr "您的有效 V3 流动性头寸将显示在此处。"
+msgstr "您的 V3 流动性仓位将在此显示。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2383,7 +2383,7 @@ msgstr "您的交易可能失败"
 
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "如果您的交易待处理的时间超过此时间段，您的交易将恢复。"
+msgstr "如果您的交易待处理的时间超过此时间段，会将回滚。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
