@@ -1,14 +1,15 @@
-import { DAI_POLYGON_MUMBAI } from 'constants/tokens'
+import { Currency } from '@uniswap/sdk-core'
 
 import { tryParseAmount } from '../swap/hooks'
 
 interface IPurchaseBondInfoArgs {
   amount: string
   maxPrice: string
+  token: Currency | undefined
 }
 
-export function usePurchaseBondInfo({ amount, maxPrice }: IPurchaseBondInfoArgs) {
-  const parsedAmount = tryParseAmount(amount, DAI_POLYGON_MUMBAI)
+export function usePurchaseBondInfo({ amount, maxPrice, token }: IPurchaseBondInfoArgs) {
+  const parsedAmount = tryParseAmount(amount, token)
   const parsedMaxPrice = tryParseAmount(maxPrice)
 
   return {

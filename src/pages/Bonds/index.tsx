@@ -6,7 +6,7 @@ import { RowBetween } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import { useGetAllBonds, usePurchaseBondCallback } from 'hooks/useBondDepository'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 import { IBond } from 'types/bonds'
@@ -40,12 +40,6 @@ export default function Bonds() {
   const { account } = useActiveWeb3React()
   const purchaseBondCallback = usePurchaseBondCallback()
   const { bonds, isLoading, error } = useGetAllBonds()
-
-  useEffect(
-    // () => console.log('🚀 ~ file: index.tsx ~ line 43 ~ Bonds ~ bonds', bonds, isLoading, error),
-    () => console.log(),
-    [bonds, isLoading, error]
-  )
 
   return (
     <PageWrapper>

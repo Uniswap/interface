@@ -1,7 +1,7 @@
 // import { BigNumber } from '@ethersproject/bignumber'
 // import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { DAO_TREASURY } from 'constants/addresses'
+import { DAO_BOND_DEPOSITORY } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { PurchaseBondCallback } from 'hooks/useBondDepository'
@@ -18,6 +18,7 @@ import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import { CardNoise } from '../earn/styled'
+import PurchaseBondModal from '../PurchaseBondModal'
 import { AutoRow, RowFixed } from '../Row'
 import { FixedHeightRow } from '.'
 
@@ -39,9 +40,13 @@ const amount = '10'
 const maxPrice = '10'
 
 function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCardProps) {
+  const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false)
   const [showMore, setShowMore] = useState<boolean>(true)
-  const { parsedAmount } = usePurchaseBondInfo({ amount, maxPrice })
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, DAO_TREASURY[SupportedChainId.POLYGON_MUMBAI])
+  const { parsedAmount } = usePurchaseBondInfo({ amount, maxPrice, token: bond.quoteCurrency })
+  const [approval, approveCallback] = useApproveCallback(
+    parsedAmount,
+    DAO_BOND_DEPOSITORY[SupportedChainId.POLYGON_MUMBAI]
+  )
 
   async function handleApprove() {
     try {
@@ -118,7 +123,7 @@ function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCard
             </FixedHeightRow>
 
             {approval === ApprovalState.APPROVED ? (
-              <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={handlePurchase}>
+              <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={() => setShowPurchaseModal(true)}>
                 <Trans>Bond</Trans>
               </ButtonPrimary>
             ) : (
@@ -130,6 +135,13 @@ function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCard
           </AutoColumn>
         )}
       </AutoColumn>
+      <PurchaseBondModal
+        account={account ? account : undefined}
+        isOpen={showPurchaseModal}
+        bond={bond}
+        onDismiss={() => setShowPurchaseModal(false)}
+        purchaseCallback={purchaseCallback}
+      />
     </StyledPositionCard>
   )
 }

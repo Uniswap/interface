@@ -5,9 +5,6 @@ import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.
 import { FeeAmount } from '@uniswap/v3-sdk'
 import axios from 'axios'
 import { getNetworkLibrary } from 'connectors'
-import { V2_FACTORY_ADDRESSES } from 'constants/addresses'
-import { SupportedChainId } from 'constants/chains'
-import DexGuru from 'dexguru-sdk'
 import JSBI from 'jsbi'
 
 import {
@@ -96,9 +93,6 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
   return 0
 }
 
-// TODO: move DexGuru instance to it's own file, add the key to env file and connection string to a const file
-const dexGuru = new DexGuru('PFowZ20Pm5oQifPah3s5e0NlJVr0gR_k_o_oQGTDMpA', 'https://api.dev.dex.guru')
-
 // TODO: check if chain is testnet, if it is use mainnet addresses to get the price
 export async function getLpTokenPrice(pairAddress: string): Promise<number> {
   if (!pairAddress) return 0
@@ -116,33 +110,10 @@ export async function getLpTokenPrice(pairAddress: string): Promise<number> {
   }
 }
 
-async function getTokenPairAddress(tokenAddress: string, connectorAddress: string): Promise<string | boolean> {
-  const library = getNetworkLibrary()
-  const factory = getContract(V2_FACTORY_ADDRESSES[SupportedChainId.POLYGON_MUMBAI], IUniswapV2PairABI, library)
-  const pairAddress = await factory.getPair(tokenAddress, connectorAddress)
-
-  return false
-}
-
-export async function getTokenPrice(tokenId: string): Promise<number> {
-  try {
-    const resp = (await axios.get(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
-    )) as {
-      data: { [id: string]: { usd: number } }
-    }
-    const tokenPrice: number = resp.data[tokenId].usd
-    return tokenPrice
-  } catch (error) {
-    console.log('coingecko api error: ', error)
-    return 0
-  }
-}
-
 export async function getGenesisLiquidityTokenPrice(address: string, chainId: number): Promise<number> {
   try {
     const resp = (await axios.get(
-      `http://localhost:3001/prices/liquidity-tokens?address=${address}&chainId=${chainId}`
+      `${process.env.REACT_APP_GENESIS_API}/prices/liquidity-tokens?address=${address}&chainId=${chainId}`
     )) as {
       data: number
     }
@@ -150,6 +121,23 @@ export async function getGenesisLiquidityTokenPrice(address: string, chainId: nu
     return resp.data
   } catch (error) {
     console.log('coingecko api error: ', error)
+    return 0
+  }
+}
+
+export async function getTokenPrice(address: string, chainId: number): Promise<number> {
+  console.log('GEN API: ', process.env.REACT_APP_GENESIS_API)
+
+  try {
+    const resp = (await axios.get(
+      `${process.env.REACT_APP_GENESIS_API}/prices/tokens?address=${address}&chainId=${chainId}`
+    )) as {
+      data: number
+    }
+
+    return resp.data
+  } catch (error) {
+    console.error('GENENSIS API ERROR', error)
     return 0
   }
 }

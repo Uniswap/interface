@@ -1,14 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { formatUnits, parseEther } from '@ethersproject/units'
-import { DAO_TREASURY } from 'constants/addresses'
+import { DAO_TREASURY, GEN_ADDRESS } from 'constants/addresses'
 import { BASE_TOKEN_DECIMALS, BOND_DETAILS, IBondDetails } from 'constants/bonds'
 import { SupportedChainId } from 'constants/chains'
-import { useDaiGenPair } from 'hooks/useContract'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useEffect, useState } from 'react'
 import { IBond, IBondCore, IMetadata, ITerms } from 'types/bonds'
 import { prettifySeconds } from 'utils'
+import { getTokenPrice } from 'utils/prices'
 
 import { useBondDepository } from './useContract'
 
@@ -19,7 +19,7 @@ export interface IProcessBondArgs {
   terms: ITerms
   metadata: IMetadata
   depository: Contract | null
-  genPrice: BigNumber
+  genPrice: number
 }
 
 export interface IPurchaseBondArgs {
@@ -36,22 +36,22 @@ export interface IPurchaseBondCallbackReturn {
 
 export type PurchaseBondCallback = (args: IPurchaseBondArgs) => Promise<IPurchaseBondCallbackReturn>
 
+const GEN_PRICE_DECIMALS = 1e10
+
 // token0 -> Genesis
 // token1 -> Dai
 function useGenTokenPrice() {
-  const pair = useDaiGenPair()
-  const [genPrice, setGenPrice] = useState<BigNumber>(BigNumber.from(1))
+  const [genPrice, setGenPrice] = useState<number>(0)
 
-  const getGenPrice = useCallback(() => {
-    pair?.getReserves().then((reserves: any) => {
-      const genReserves = reserves.reserve0.mul(BigNumber.from('10').pow(BigNumber.from('9')))
-      const daiReserves = reserves.reserve1
-      const price = genReserves.div(daiReserves)
-      setGenPrice(price)
-    })
-  }, [pair])
+  const getGenPrice = useCallback(async () => {
+    const genPrice = await getTokenPrice(GEN_ADDRESS[SupportedChainId.POLYGON_MUMBAI], SupportedChainId.POLYGON_MUMBAI)
 
-  useEffect(() => getGenPrice(), [getGenPrice])
+    setGenPrice(genPrice as number)
+  }, [])
+
+  useEffect(() => {
+    ;(async () => await getGenPrice())()
+  }, [getGenPrice])
 
   return genPrice
 }
@@ -66,14 +66,16 @@ export function useGetAllBonds() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getMarkets = useCallback(async (): Promise<IBond[]> => {
+    console.log('GETTING ALL MARKETS', depository)
+
     const liveBonds = []
 
     if (!depository) return []
 
-    const liveBondIndexes = await depository?.liveMarkets()
-    const termPromises = liveBondIndexes.map(async (index: number) => depository?.terms(index))
-    const bondPromises = liveBondIndexes.map(async (index: number) => depository?.markets(index))
-    const metadataPromises = liveBondIndexes.map(async (index: number) => depository?.metadata(index))
+    const liveBondIndexes = await depository.liveMarkets()
+    const termPromises = liveBondIndexes.map(async (index: number) => depository.terms(index))
+    const bondPromises = liveBondIndexes.map(async (index: number) => depository.markets(index))
+    const metadataPromises = liveBondIndexes.map(async (index: number) => depository.metadata(index))
 
     for (let index = 0; index < liveBondIndexes.length; index++) {
       const terms: ITerms = await termPromises[index]
@@ -122,7 +124,7 @@ async function processBond({
   depository,
   genPrice,
 }: IProcessBondArgs): Promise<IBond | null> {
-  if (genPrice.eq(BigNumber.from('0'))) {
+  if (genPrice === 0) {
     console.error('GENESIS: Missing GEN price')
     return null
   }
@@ -136,11 +138,12 @@ async function processBond({
   }
 
   const quoteTokenPrice = await bondDetails.pricingFunction()
-  console.log('🚀 ~ file: useBondDepository.ts ~ line 143 ~ quoteTokenPrice', quoteTokenPrice, bond.quoteToken)
+  console.log('Before market price', depository?.address)
   const bondPriceBigNumber = await depository?.marketPrice(index)
+  console.log('After market price')
   const bondPrice = +bondPriceBigNumber / Math.pow(10, BASE_TOKEN_DECIMALS)
   const bondPriceUSD = quoteTokenPrice * +bondPrice
-  const bondDiscount = (+genPrice - bondPriceUSD) / +genPrice
+  const bondDiscount = (genPrice - bondPriceUSD) / genPrice
 
   let capacityInBaseToken: string, capacityInQuoteToken: string
 
@@ -172,6 +175,7 @@ async function processBond({
     const conclusionTime = terms.conclusion
     seconds = conclusionTime - currentTime
   }
+
   let duration = ''
   if (seconds > 86400) {
     duration = prettifySeconds(seconds, 'day')
@@ -200,7 +204,7 @@ async function processBond({
     duration,
     isLP: bondDetails.isLP,
     lpUrl: '',
-    marketPrice: +genPrice,
+    marketPrice: genPrice,
     quoteToken: bond.quoteToken.toLowerCase(),
     maxPayoutInQuoteToken,
     maxPayoutInBaseToken,
@@ -210,6 +214,7 @@ async function processBond({
     maxPayoutOrCapacityInQuote,
     maxPayoutOrCapacityInBase,
     bondIconSvg: bondDetails.bondIconSvg,
+    quoteCurrency: bondDetails.quoteCurrency,
   }
 }
 
@@ -235,6 +240,8 @@ export function usePurchaseBondCallback(): PurchaseBondCallback {
           account,
           DAO_TREASURY[SupportedChainId.POLYGON_MUMBAI]
         )
+
+        console.log('TRANSACTION HASH: ', depositTx)
 
         await depositTx.wait()
 

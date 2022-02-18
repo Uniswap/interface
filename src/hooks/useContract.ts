@@ -37,6 +37,7 @@ import {
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
+import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
@@ -167,7 +168,7 @@ export function useV3Quoter() {
 }
 
 export function useBondDepository() {
-  return useContract(DAO_BOND_DEPOSITORY, BOND_DEPOSITORY_ABI, true)
+  return useContract(DAO_BOND_DEPOSITORY[SupportedChainId.POLYGON_MUMBAI], BOND_DEPOSITORY_ABI, true)
 }
 
 export function useGenToken() {

@@ -69,7 +69,7 @@ export const USDC_POLYGON = new Token(
 export const USDC_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
   '0xc33f8f8a10dcde714753b99d9f0d61cfedfb9410',
-  18, // beware with the decimals
+  18, // beware of the decimals
   'USDC',
   'USD//C'
 )

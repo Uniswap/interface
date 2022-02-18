@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Currency } from '@uniswap/sdk-core'
 
 export interface IBond extends IBondCore, IMetadata, ITerms {
   index: number
@@ -20,6 +21,7 @@ export interface IBond extends IBondCore, IMetadata, ITerms {
   maxPayoutOrCapacityInQuote: string
   maxPayoutOrCapacityInBase: string
   bondIconSvg: string
+  quoteCurrency: Currency | undefined
 }
 
 export interface IBondCore {
