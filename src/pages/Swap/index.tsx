@@ -41,6 +41,7 @@ import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
 import QuestionHelper from '../../components/QuestionHelper'
 import { ApplicationModal } from '../../state/application/actions'
 import { useUSDValue } from '../../hooks/useUSDValue'
+import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
@@ -269,6 +270,10 @@ export default function Swap() {
 
   const fiatValueInput = useUSDValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDValue(parsedAmounts[Field.OUTPUT])
+  const priceImpact = useMemo(() => computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput), [
+    fiatValueInput,
+    fiatValueOutput
+  ])
 
   return (
     <>
@@ -334,6 +339,7 @@ export default function Swap() {
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
                 fiatValue={fiatValueOutput}
+                priceImpact={priceImpact}
                 showCommonBases
                 id="swap-currency-output"
               />

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair } from '@swapr/sdk'
+import { Currency, CurrencyAmount, Pair, Percent, JSBI } from '@swapr/sdk'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -12,6 +12,7 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
+import { warningFiatSeverity } from '../../utils/prices'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -105,6 +106,11 @@ const UppercaseHelper = styled.span`
 
 const FiatRow = styled.div``
 
+const PriceImpactText = styled.span<{ warning?: boolean }>`
+  color: ${({ theme, warning }) => warning && theme.red1};
+  margin-left: 8px;
+`
+
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -124,6 +130,7 @@ interface CurrencyInputPanelProps {
   customBalanceText?: string
   balance?: CurrencyAmount
   fiatValue?: CurrencyAmount | null
+  priceImpact?: Percent
 }
 
 export default function CurrencyInputPanel({
@@ -144,7 +151,8 @@ export default function CurrencyInputPanel({
   showCommonBases,
   customBalanceText,
   balance,
-  fiatValue
+  fiatValue,
+  priceImpact
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -165,6 +173,8 @@ export default function CurrencyInputPanel({
   const handleBlur = useCallback(() => {
     setFocused(false)
   }, [])
+
+  const fiatPriceImpactSeverity = warningFiatSeverity(priceImpact)
 
   return (
     <InputPanel id={id}>
@@ -256,6 +266,11 @@ export default function CurrencyInputPanel({
             <RowBetween>
               <TYPE.body fontWeight="600" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
                 <UppercaseHelper>${fiatValue ? fiatValue.toFixed(2) : '0'}</UppercaseHelper>
+                {priceImpact && (
+                  <PriceImpactText warning={fiatPriceImpactSeverity === 1}>
+                    {priceImpact.multiply(JSBI.BigInt(-100)).toSignificant(3)}%
+                  </PriceImpactText>
+                )}
               </TYPE.body>
             </RowBetween>
           </FiatRow>
