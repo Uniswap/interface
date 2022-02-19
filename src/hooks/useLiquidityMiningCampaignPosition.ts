@@ -55,7 +55,7 @@ export function useLiquidityMiningCampaignPosition(
     const claimedRewards = claimedRewardsResult.result[0] as BigNumber[]
     const claimableRewards = claimableRewardsResult.result[0] as BigNumber[]
 
-    const rewardToken = campaign.rewards.reduce(
+    const rewardTokens = campaign.rewards.reduce(
       (accumulator: { [address: string]: PricedToken }, reward: PricedTokenAmount) => {
         accumulator[getAddress(reward.token.address)] = reward.token
         return accumulator
@@ -64,10 +64,10 @@ export function useLiquidityMiningCampaignPosition(
     )
 
     const claimedRewardAmounts = claimedRewards.map(
-      (claimed, index) => new PricedTokenAmount(rewardToken[rewardTokenAddresses[index]], claimed.toString())
+      (claimed, index) => new PricedTokenAmount(rewardTokens[rewardTokenAddresses[index]], claimed.toString())
     )
     const claimableRewardAmounts = claimableRewards.map(
-      (claimable, index) => new PricedTokenAmount(rewardToken[rewardTokenAddresses[index]], claimable.toString())
+      (claimable, index) => new PricedTokenAmount(rewardTokens[rewardTokenAddresses[index]], claimable.toString())
     )
     const totalRewardedAmounts = claimableRewardAmounts.map(
       (claimable, index) => new PricedTokenAmount(claimable.token, claimable.add(claimedRewardAmounts[index]).raw)
