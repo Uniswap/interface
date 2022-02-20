@@ -27,6 +27,7 @@ import { Pair } from '@swapr/sdk'
 import { ResetFilterIcon, ResetFilterIconContainer } from '../Pools'
 import { useRouter } from '../../hooks/useRouter'
 import { RewardsList } from '../../components/LiquidityMiningCampaigns/RewardsList'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -169,7 +170,7 @@ export default function Rewards({
                   <Box mr="4px">
                     <Text fontWeight="600" fontSize="16px" lineHeight="20px">
                       {filterPair
-                        ? `${filterPair.token0.symbol}/${filterPair.token1.symbol}`
+                        ? `${unwrappedToken(filterPair.token0)?.symbol}/${unwrappedToken(filterPair.token1)?.symbol}`
                         : wrappedPair[0] === PairState.LOADING
                         ? 'LOADING'
                         : aggregatedDataFilter === PairsFilterType.MY

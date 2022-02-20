@@ -17,6 +17,7 @@ interface Window {
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
     request?: (args: EthereumProviderRequestArguments) => Promise<unknown>
+    isCoinbaseWallet?: boolean
   }
   web3?: {}
 }

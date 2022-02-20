@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react'
-import { Box, Flex, Text } from 'rebass'
+import React, { useMemo, useEffect } from 'react'
+import { Box, Flex } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
 
@@ -25,6 +25,7 @@ import Skeleton from 'react-loading-skeleton'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
+import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -43,7 +44,7 @@ const HeaderFrame = styled.div`
 const HeaderControls = styled.div<{ isConnected: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    bottom: 0px;
+    bottom: 48px;
     left: 0px;
     display: flex;
     align-items: center;
@@ -55,6 +56,11 @@ const HeaderControls = styled.div<{ isConnected: boolean }>`
     padding: 1rem;
     z-index: 99;
     background-color: ${({ theme }) => theme.bg2};
+    transition: 0.35s ease-in-out all;
+    &.hidden {
+      bottom: -72px;
+      opacity: 0;
+    }
   `};
 `
 
@@ -86,8 +92,12 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
+  gap: 40px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-content: flex-end;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    gap: 0;
   `};
 `
 
@@ -118,11 +128,10 @@ export const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: ${({ theme }) => theme.text5};
   width: fit-content;
-  margin: 0 16px;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 19.5px;
-
+  font-family: 'Montserrat';
   &.active {
     font-weight: 600;
     color: ${({ theme }) => theme.white};
@@ -153,11 +162,12 @@ const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
   color: ${({ theme }) => theme.text5};
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 19.5px;
   width: fit-content;
   text-decoration: none !important;
-  margin: 0 12px;
+  font-family: 'Montserrat';
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
@@ -200,6 +210,15 @@ export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadiu
     margin-left: 7px;
   }
 `
+const Divider = styled.div`
+  height: 24px;
+  width: 1px;
+  background-color: #8780bf;
+  margin-left: 40px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
 
 function Header() {
   const { account, chainId } = useActiveWeb3React()
@@ -208,7 +227,8 @@ function Header() {
   const nativeCurrency = useNativeCurrency()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
-  const { loading, data, stakedAmount } = useSwaprSinglelSidedStakeCampaigns()
+  const { loading, data } = useSwaprSinglelSidedStakeCampaigns()
+  const { stakedTokenAmount } = useLiquidityMiningCampaignPosition(data, account ? account : undefined)
 
   const toggleClaimPopup = useToggleShowClaimPopup()
   const accountOrUndefined = useMemo(() => account || undefined, [account])
@@ -216,12 +236,25 @@ function Header() {
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
 
+  useEffect(() => {
+    window.addEventListener('scroll', (e) => {
+      let headerControls = document.getElementById('header-controls');
+      if (headerControls) {
+        if (window.scrollY > 0) {
+          headerControls.classList.add('hidden');
+        } else {
+          headerControls.classList.remove('hidden');
+        }
+      }
+    })
+  }, [])
+
   return (
     <HeaderFrame>
       <ClaimModal
         onDismiss={toggleClaimPopup}
         newSwprBalance={newSwprBalance}
-        stakedAmount={stakedAmount}
+        stakedAmount={stakedTokenAmount?.toFixed(3)}
         singleSidedCampaignLink={
           data && !loading ? `/rewards/${data.stakeToken.address}/${data.address}/singleSidedStaking` : undefined
         }
@@ -231,6 +264,7 @@ function Header() {
           <SwaprVersionLogo />
         </Title>
         <HeaderLinks>
+          <Divider />
           <StyledNavLink id="swap-nav-link" to="/swap" activeClassName="active">
             {t('swap')}
           </StyledNavLink>
@@ -254,9 +288,6 @@ function Header() {
           </StyledExternalLink>
           <StyledExternalLink id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
             {t('charts')}
-            <Text ml="4px" fontSize="11px">
-              ↗
-            </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
             <MobileOptions />
@@ -264,7 +295,7 @@ function Header() {
           {isMobileByMedia && <Settings />}
         </HeaderLinks>
       </HeaderRow>
-      <HeaderControls isConnected={!!account}>
+      <HeaderControls id="header-controls" isConnected={!!account}>
         <HeaderElement>
           <Web3Status />
           {!isMobileByMedia && <Settings />}
@@ -278,10 +309,10 @@ function Header() {
           <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
             {!account ? (
               '0.000'
-            ) : userNativeCurrencyBalance ? (
-              userNativeCurrencyBalance?.toFixed(3)
-            ) : (
+            ) : !userNativeCurrencyBalance ? (
               <Skeleton width="40px" />
+            ) : (
+              userNativeCurrencyBalance.toFixed(3)
             )}{' '}
             {nativeCurrency.symbol}
           </Amount>
