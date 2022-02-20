@@ -249,7 +249,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
                     text={
                       <Trans>
                         You will need to maintain a minimum balance to ensure your trades are processed. This amount
-                        will fluctuate based on the price of ETH and KROM.
+                        will fluctuate based on the price of ETH / KROM and the current network gas price.
                       </Trans>
                     }
                   >

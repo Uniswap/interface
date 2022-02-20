@@ -1,13 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { BigintIsh, Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { BigintIsh, Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { encodeSqrtRatioX96, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { toHex } from '@uniswap/v3-sdk'
 import { useTokenComparator } from 'components/SearchModal/sorting'
 import { WETH9_EXTENDED } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { ReactNode, useMemo } from 'react'
+import { useIsExpertMode, useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -20,6 +22,8 @@ import { useLimitOrderManager } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
 import { useActiveWeb3React } from './web3'
+
+const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 enum SwapCallbackState {
   INVALID,
@@ -69,7 +73,8 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const limitOrderManager = useLimitOrderManager()
   const argentWalletContract = useArgentWalletContract()
-  const tokenComparator = useTokenComparator(true)
+
+  const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
   return useMemo(() => {
     if (
@@ -145,7 +150,8 @@ function useSwapCallArguments(
     let amount1: CurrencyAmount<Currency> = CurrencyAmount.fromRawAmount(priceAmount.quoteCurrency, 0)
 
     // sort tokens
-    const sortedTokens: Token[] = [token0, token1].sort(tokenComparator)
+    const sortedTokens: Token[] = token0.sortsBefore(token1) ? [token0, token1] : [token1, token0]
+
     let targetPrice = priceAmount
 
     if (sortedTokens[1] == token0) {
@@ -154,12 +160,9 @@ function useSwapCallArguments(
       targetPrice = priceAmount.invert()
     }
 
-    // console.log(sortedTokens[0].address)
-    // console.log(sortedTokens[1].address)
-    // console.log(trade.route.pools[0].fee.toString())
-    // console.log(encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString())
-    // console.log(amount0?.quotient.toString())
-    // console.log(amount1?.quotient.toString())
+    const amount0Min = calculateSlippageAmount(amount0, allowedSlippage)[0]
+
+    const amount1Min = calculateSlippageAmount(amount1, allowedSlippage)[0]
 
     if (targetPrice && sortedTokens) {
       calldatas.push(
@@ -171,6 +174,8 @@ function useSwapCallArguments(
             _sqrtPriceX96: encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString(),
             _amount0: toHex(amount0?.quotient),
             _amount1: toHex(amount1?.quotient),
+            _amount0Min: toHex(amount0Min),
+            _amount1Min: toHex(amount1Min),
           },
         ])
       )
@@ -216,7 +221,6 @@ function useSwapCallArguments(
     serviceFee,
     gasAmount,
     signatureData,
-    tokenComparator,
     argentWalletContract,
   ])
 }
@@ -311,6 +315,8 @@ export function useSwapCallback(
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
+  const expertMode = useIsExpertMode()
+
   const swapCalls = useSwapCallArguments(
     trade,
     gasAmount,
@@ -358,6 +364,7 @@ export function useSwapCallback(
             return library
               .estimateGas(tx)
               .then((gasEstimate) => {
+                console.log(gasEstimate.toString())
                 return {
                   call,
                   gasEstimate,

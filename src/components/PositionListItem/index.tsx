@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
@@ -201,8 +201,8 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
-  const currency0 = token0 ? unwrappedToken(token0) : undefined
-  const currency1 = token1 ? unwrappedToken(token1) : undefined
+  const currency0 = token0 ? token0 : undefined
+  const currency1 = token1 ? token1 : undefined
 
   // construct Position from details returned
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
@@ -225,7 +225,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   const inverted = token1 ? base?.equals(token1) : undefined
   // check if price is within range ; if out of range; the status is pending
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
-  const closedOrder: boolean = processed.isZero() ? false : true
+  const closedOrder: boolean = processed ? true : false
 
   const currencyAmount = tokensOwed0.gt(0)
     ? currency0
@@ -236,7 +236,14 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
     : undefined
 
   // TODO (pai) fix the target price ; upper or lower ; buy or sell
-  const targetPrice = priceUpper
+
+  const targetPrice = useMemo(() => {
+    if (priceUpper?.baseCurrency != currencyAmount?.currency) {
+      // invert
+      return priceUpper?.invert()
+    }
+    return priceUpper
+  }, [currencyAmount?.currency, priceUpper])
 
   const positionSummaryLink = '/pool/' + positionDetails.tokenId
 
@@ -253,10 +260,19 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           &nbsp;
           <Badge>
             <BadgeText>
-              <Trans>
-                Trade {currencyAmount?.toSignificant(6)} {currencyAmount?.currency?.symbol} for{' '}
-                {targetPrice?.toSignificant(6)} {currencyQuote?.symbol}
-              </Trans>
+              {!closedOrder ? (
+                <Trans>
+                  Trade {currencyAmount?.toSignificant(6)}{' '}
+                  {currencyAmount?.currency ? unwrappedToken(currencyAmount?.currency)?.symbol : ''} for{' '}
+                  {currencyAmount ? targetPrice?.quote(currencyAmount).toSignificant(6) : ''}{' '}
+                  {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
+                </Trans>
+              ) : (
+                <Trans>
+                  Collected {currencyAmount?.toSignificant(6)}{' '}
+                  {currencyAmount?.currency ? unwrappedToken(currencyAmount?.currency)?.symbol : ''}
+                </Trans>
+              )}
             </BadgeText>
           </Badge>
         </PrimaryPositionIdData>
@@ -285,7 +301,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Target Price:</Trans>
             </ExtentsText>
             <Trans>
-              {targetPrice.toSignificant(6)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+              {priceUpper?.toSignificant(6)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
               <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>
           </RangeText>
