@@ -15,11 +15,12 @@ import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { Field } from 'state/pair/actions'
 import { currencyId } from 'utils/currencyId'
-import { CurrencyWrapper, PageWrapper, SearchWrapper, ToolbarWrapper } from './styleds'
+import { CurrencyWrapper, SearchWrapper, ToolbarWrapper } from './styleds'
 import InstructionAndGlobalData from 'pages/Pools/InstructionAndGlobalData'
 import FarmingPoolsMarquee from 'pages/Pools/FarmingPoolsMarquee'
 import useTheme from 'hooks/useTheme'
 import FarmingPoolsToggle from 'components/Toggle/FarmingPoolsToggle'
+import { PageWrapper } from 'pages/CreatePool/styled'
 
 const Pools = ({
   match: {

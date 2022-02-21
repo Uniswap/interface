@@ -2,8 +2,15 @@ import styled from 'styled-components'
 import { Flex } from 'rebass'
 import { MoreHorizontal } from 'react-feather'
 
-export const ListItemGroupContainer = styled.div`
+export const ListItemGroupContainer = styled.div<{ isDisableShowTwoPools: boolean; isShowExpandedPools: boolean }>`
   border-bottom: ${({ theme }) => `1px solid ${theme.border}`};
+  cursor: ${({ isDisableShowTwoPools }) => (isDisableShowTwoPools ? 'default' : 'pointer')};
+  background-color: ${({ theme, isShowExpandedPools }) => (isShowExpandedPools ? theme.evenRow : theme.oddRow)};
+
+  &:hover {
+    ${({ theme, isDisableShowTwoPools, isShowExpandedPools }) =>
+      !isDisableShowTwoPools && !isShowExpandedPools && `background-color: ${theme.evenRow}`};
+  }
 `
 
 export const ItemCardGroupContainer = styled.div`
@@ -21,9 +28,8 @@ export const TableRow = styled.div<{ isShowExpandedPools?: boolean; isShowBorder
   font-size: 14px;
   align-items: center;
   height: fit-content;
-  background-color: ${({ theme, isShowExpandedPools }) => (isShowExpandedPools ? theme.evenRow : theme.oddRow)};
+    // background-color: ${({ theme, isShowExpandedPools }) => (isShowExpandedPools ? theme.evenRow : theme.oddRow)};
   position: relative;
-  cursor: pointer;
 
   &:after {
     content: '';

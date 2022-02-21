@@ -6,7 +6,6 @@ import { useFarmsData } from 'state/farms/hooks'
 import { useFarmHistoryModalToggle } from 'state/application/hooks'
 import Loader from 'components/Loader'
 import {
-  PageWrapper,
   TopBar,
   TabContainer,
   TabWrapper,
@@ -29,6 +28,7 @@ import History from 'components/Icons/History'
 import { UPCOMING_POOLS } from 'constants/upcoming-pools'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useHistory } from 'react-router-dom'
+import { PageWrapper } from 'pages/CreatePool/styled'
 
 const Farms = () => {
   const { loading, data: farms } = useFarmsData()

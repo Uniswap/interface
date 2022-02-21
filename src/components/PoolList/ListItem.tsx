@@ -89,7 +89,11 @@ const ListItemGroup = ({
   }
 
   return (
-    <ListItemGroupContainer onClick={onUpdateExpandedPoolKey}>
+    <ListItemGroupContainer
+      onClick={onUpdateExpandedPoolKey}
+      isDisableShowTwoPools={isDisableShowTwoPools}
+      isShowExpandedPools={isShowTwoPools}
+    >
       {renderPools.map((poolData, index) => (
         <ListItem
           key={poolData.id}
