@@ -1,8 +1,7 @@
 import { CurrencyAmount, JSBI, Trade, Token, RoutablePlatform } from '@swapr/sdk'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Repeat } from 'react-feather'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { ButtonError, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import Card from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
@@ -40,11 +39,7 @@ import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl
 import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
 import QuestionHelper from '../../components/QuestionHelper'
 import { ApplicationModal } from '../../state/application/actions'
-
-const RotatedRepeat = styled(Repeat)`
-  transform: rotate(90deg);
-  width: 14px;
-`
+import { ReactComponent as SwapIcon } from '../../assets/svg/swap.svg'
 
 const SwitchIconContainer = styled.div`
   height: 0;
@@ -86,7 +81,6 @@ export default function Swap() {
   }, [])
 
   const { account, chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
@@ -316,7 +310,7 @@ export default function Swap() {
                   }}
                 >
                   <ArrowWrapper clickable>
-                    <RotatedRepeat color={theme.text4} />
+                    <SwapIcon />
                   </ArrowWrapper>
                 </SwitchTokensAmountsContainer>
               </SwitchIconContainer>
