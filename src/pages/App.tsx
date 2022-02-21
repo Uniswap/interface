@@ -1,3 +1,4 @@
+import URLWarning from 'components/Header/URLWarning'
 import Loader from 'components/Loader'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
@@ -79,6 +80,7 @@ export default function App() {
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
         <AppWrapper>
+          <URLWarning />
           <HeaderWrapper>
             <Header />
           </HeaderWrapper>

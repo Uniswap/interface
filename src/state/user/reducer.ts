@@ -10,6 +10,7 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  toggleURLUserWarning,
   updateHideClosedPositions,
   updateMatchesDarkMode,
   updateShowSurveyPopup,
@@ -181,6 +182,9 @@ export default createReducer(initialState, (builder) =>
         state.pairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
       }
       state.timestamp = currentTimestamp()
+    })
+    .addCase(toggleURLUserWarning, (state) => {
+      state.URLWarningVisible = !state.URLWarningVisible
     })
     .addCase(removeSerializedPair, (state, { payload: { chainId, tokenAAddress, tokenBAddress } }) => {
       if (state.pairs[chainId]) {
