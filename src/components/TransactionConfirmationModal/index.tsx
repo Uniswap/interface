@@ -3,7 +3,6 @@ import { Currency } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
-import { SUPPORTED_WALLETS } from 'constants/wallet'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAddToken from 'hooks/useAddToken'
 import useIsCoinbaseWallet from 'hooks/useIsCoinbaseWallet'
@@ -15,6 +14,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import CoinbaseWalletLogo from '../../assets/images/coinbaseWalletLogo.png'
+import MetaMaskLogo from '../../assets/images/metamask.png'
 import { ExternalLink } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -110,13 +110,13 @@ function TransactionSubmittedContent({
   const shouldRenderAddTokenButton = currencyToAdd && (isCbWallet || isMetaMask)
 
   const walletName = useMemo(() => {
-    if (isMetaMask) return SUPPORTED_WALLETS.METAMASK.name
-    if (isCbWallet) return SUPPORTED_WALLETS.WALLETLINK.name
+    if (isMetaMask) return 'MetaMask'
+    if (isCbWallet) return 'Coinbase Wallet'
     return ''
   }, [isMetaMask, isCbWallet])
 
   const walletLogo = useMemo(() => {
-    if (isMetaMask) return SUPPORTED_WALLETS.METAMASK.iconURL
+    if (isMetaMask) return MetaMaskLogo
     if (isCbWallet) return CoinbaseWalletLogo
     return undefined
   }, [isMetaMask, isCbWallet])
