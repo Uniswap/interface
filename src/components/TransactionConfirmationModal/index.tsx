@@ -3,16 +3,18 @@ import { Currency } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
+import { SUPPORTED_WALLETS } from 'constants/wallet'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
-import { ReactNode, useContext } from 'react'
+import useAddToken from 'hooks/useAddToken'
+import useIsCoinbaseWallet from 'hooks/useIsCoinbaseWallet'
+import { ReactNode, useContext, useMemo } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import MetaMaskLogo from '../../assets/images/metamask.png'
+import CoinbaseWalletLogo from '../../assets/images/coinbaseWalletLogo.png'
 import { ExternalLink } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -99,7 +101,25 @@ function TransactionSubmittedContent({
 
   const { library } = useActiveWeb3React()
 
-  const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
+  const { addToken, success } = useAddToken(currencyToAdd)
+
+  const isMetaMask = library?.provider?.isMetaMask
+
+  const isCbWallet = useIsCoinbaseWallet()
+
+  const shouldRenderAddTokenButton = currencyToAdd && (isCbWallet || isMetaMask)
+
+  const walletName = useMemo(() => {
+    if (isMetaMask) return SUPPORTED_WALLETS.METAMASK.name
+    if (isCbWallet) return SUPPORTED_WALLETS.WALLETLINK.name
+    return ''
+  }, [isMetaMask, isCbWallet])
+
+  const walletLogo = useMemo(() => {
+    if (isMetaMask) return SUPPORTED_WALLETS.METAMASK.iconURL
+    if (isCbWallet) return CoinbaseWalletLogo
+    return undefined
+  }, [isMetaMask, isCbWallet])
 
   return (
     <Wrapper>
@@ -124,12 +144,12 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {currencyToAdd && library?.provider?.isMetaMask && (
+          {shouldRenderAddTokenButton && (
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
                   <Trans>
-                    Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+                    Add {currencyToAdd.symbol} to {walletName} <StyledLogo src={walletLogo} />
                   </Trans>
                 </RowFixed>
               ) : (
