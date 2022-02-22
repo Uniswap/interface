@@ -28,7 +28,7 @@ import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitc
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import Modal from '../Modal'
-import { TYPE } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 
 export const NetworkSwitcher = ({
   show,
@@ -104,6 +104,7 @@ const WrongNetworkPopover = ({ children, show }: EthereumOptionPopoverProps) => 
         <View>
           <Row>
             <Text>Please use our network switcher and switch to a supported network.</Text>
+            <CloseIcon onClick={() => {}} />
           </Row>
           <Image src={unsupportedNetworkHintImage1x} srcSet={unsupportedNetworkHintImage1x} alt="hint screenshot" />
         </View>
