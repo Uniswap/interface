@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Token, TradeType } from '@uniswap/sdk-core'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
-import { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAtomValue } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
@@ -11,6 +10,7 @@ import useSwapApproval, {
   useSwapRouterAddress,
 } from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
+import useWrapCallback, { WrapErrorText, WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
@@ -45,12 +45,10 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const {
     trade,
     allowedSlippage,
-    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
+    currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
     feeOptions,
-    wrapType,
-    wrapError,
   } = useSwapInfo()
 
   const independentField = useAtomValue(independentFieldAtom)
@@ -79,8 +77,10 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     })
   }, [addTransaction, getApproval])
 
+  const { type: wrapType, callback: wrapCallback, error: wrapError, loading: wrapLoading } = useWrapCallback()
+
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    if (disabled) return { disabled: true }
+    if (disabled || wrapLoading) return { disabled: true }
 
     if (chainId && inputCurrencyAmount) {
       if (!inputCurrencyBalance || inputCurrencyBalance.lessThan(inputCurrencyAmount)) {
@@ -116,7 +116,16 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     }
 
     return { disabled: true }
-  }, [addApprovalTransaction, approval, approvalHash, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance])
+  }, [
+    addApprovalTransaction,
+    approval,
+    approvalHash,
+    chainId,
+    disabled,
+    inputCurrencyAmount,
+    inputCurrencyBalance,
+    wrapLoading,
+  ])
 
   const deadline = useTransactionDeadline()
   const { signatureData } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, deadline)
@@ -170,17 +179,30 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
         return <Trans>Review swap</Trans>
     }
   }, [wrapError, wrapType])
+
+  const handleDialogClose = useCallback(() => {
+    setActiveTrade(undefined)
+  }, [])
+
+  const handleActionButtonClick = useCallback(() => {
+    if (wrapType === WrapType.NOT_APPLICABLE) {
+      setActiveTrade(trade.trade)
+    } else {
+      wrapCallback()
+    }
+  }, [trade.trade, wrapCallback, wrapType])
+
   return (
     <>
       <ActionButton
         color={tokenColorExtraction ? 'interactive' : 'accent'}
-        onClick={() => setActiveTrade(trade.trade)}
+        onClick={handleActionButtonClick}
         {...actionProps}
       >
         <ButtonText />
       </ActionButton>
       {activeTrade && (
-        <Dialog color="dialog" onClose={() => setActiveTrade(undefined)}>
+        <Dialog color="dialog" onClose={handleDialogClose}>
           <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>
       )}

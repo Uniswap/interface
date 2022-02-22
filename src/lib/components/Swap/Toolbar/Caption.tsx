@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
+import { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { AlertTriangle, Icon, Info, Spinner } from 'lib/icons'
 import { ThemedText } from 'lib/theme'
 import { ReactNode, useMemo, useState } from 'react'
@@ -24,6 +25,22 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
   )
 }
 
+export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType: WrapType.UNWRAP | WrapType.WRAP }) {
+  const wrapText = useMemo(() => {
+    let text = ''
+    if (wrapType === WrapType.WRAP) {
+      text = 'Wrap'
+    } else if (wrapType === WrapType.UNWRAP) {
+      text = 'Unwrap'
+    }
+    if (loading) {
+      text = `${text}ing`
+    }
+    return text
+  }, [loading, wrapType])
+
+  return <Caption icon={Info} caption={<Trans>{wrapText} native currency. </Trans>} />
+}
 export function ConnectWallet() {
   return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
 }
