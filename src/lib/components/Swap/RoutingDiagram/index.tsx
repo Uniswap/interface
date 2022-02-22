@@ -92,7 +92,7 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Curren
     <Wrapper gap={0.75}>
       <Row justify="space-between">
         <Row gap={0.25}>
-          <AutoRouter size={0.875} />
+          <AutoRouter />
           <StyledAutoRouterLabel color="primary" lineHeight={'16px'}>
             <Trans>Auto Router</Trans>
           </StyledAutoRouterLabel>
