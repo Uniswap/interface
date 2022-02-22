@@ -22,7 +22,7 @@ import {
 } from './NetworkSwitcher.styles'
 import unsupportedNetworkHintImage1x from '../../assets/images/unsupported-network-hint.png'
 
-import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitcher.types'
+import { UnsupportedNetworkPopoverProps, NetworkSwitcherProps } from './NetworkSwitcher.types'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { CloseIcon } from '../../theme'
@@ -59,7 +59,11 @@ export const NetworkSwitcher = ({
   }
 
   if (isUnsupportedNetwork && !isMobileByMedia) {
-    return <UnsupportedNetworkPopover show={showWrongNetworkPopover}>{children}</UnsupportedNetworkPopover>
+    return (
+      <UnsupportedNetworkPopover show={showWrongNetworkPopover} onClick={onOuterClick}>
+        {children}
+      </UnsupportedNetworkPopover>
+    )
   }
 
   return (
@@ -89,7 +93,7 @@ export const NetworkSwitcher = ({
   )
 }
 
-const UnsupportedNetworkPopover = ({ children, show }: EthereumOptionPopoverProps) => {
+const UnsupportedNetworkPopover = ({ children, show, onClick }: UnsupportedNetworkPopoverProps) => {
   return (
     <StyledPopover
       placement="bottom-end"
@@ -98,7 +102,7 @@ const UnsupportedNetworkPopover = ({ children, show }: EthereumOptionPopoverProp
         <View>
           <Row>
             <Text>Please use our network switcher and switch to a supported network.</Text>
-            <CloseIcon onClick={() => {}} />
+            <CloseIcon onClick={onClick} />
           </Row>
           <Image src={unsupportedNetworkHintImage1x} srcSet={unsupportedNetworkHintImage1x} alt="hint screenshot" />
         </View>

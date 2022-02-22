@@ -12,9 +12,10 @@ export interface NetworkSwitcherProps {
   showWrongNetworkPopover?: boolean
 }
 
-export interface EthereumOptionPopoverProps {
+export interface UnsupportedNetworkPopoverProps {
   children: ReactNode
   show: boolean
+  onClick?: () => void
 }
 
 export type NetworkOptionsPreset = {
