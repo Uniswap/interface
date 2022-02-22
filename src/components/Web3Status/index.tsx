@@ -20,23 +20,6 @@ import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { useENSAvatar } from '../../hooks/useENSAvatar'
 import { ApplicationModal } from '../../state/application/actions'
 
-const Web3StatusError = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 0 0 10px;
-  color: ${({ theme }) => theme.text1};
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 10px;
-  line-height: 12px;
-  letter-spacing: 0.08em;
-  background-color: ${({ theme }) => theme.red1};
-  border-radius: 12px;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    font-size: 9px;
-  `};
-`
-
 const SwitchNetworkButton = styled.button`
   display: flex;
   align-items: center;
@@ -146,13 +129,10 @@ export default function Web3Status() {
   if (error) {
     return (
       <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
-        <Web3StatusError>
-          {unsupportedChain ? 'Unsupported network' : 'Error'}
-          <SwitchNetworkButton onClick={clickHandler} disabled={unsupportedChain}>
-            Switch network
-            <TriangleIcon />
-          </SwitchNetworkButton>
-        </Web3StatusError>
+        <SwitchNetworkButton onClick={clickHandler} disabled={unsupportedChain}>
+          Switch network
+          <TriangleIcon />
+        </SwitchNetworkButton>
       </NetworkSwitcherPopover>
     )
   }
