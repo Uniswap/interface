@@ -103,10 +103,15 @@ export function useGraphs(token: Token): GraphMetadatas | null {
 }
 
 /** Constructs a drawable Path from a PriceList */
-export function buildGraph(datapoints: PriceList | undefined, precision: number): GraphData | null {
+export function buildGraph(
+  datapoints: PriceList | undefined,
+  precision: number,
+  width = WIDTH,
+  height = HEIGHT
+): GraphData | null {
   if (!datapoints || datapoints.length === 0) return null
 
-  const priceList = datapoints.reverse()
+  const priceList = datapoints.slice().reverse()
 
   const formattedValues = priceList.map(
     (price) => [price.timestamp, parseFloat(price.close)] as [number, number]
@@ -123,8 +128,8 @@ export function buildGraph(datapoints: PriceList | undefined, precision: number)
   const openDate = dates[0]
   const closeDate = dates[dates.length - 1]
 
-  const scaleX = scaleLinear().domain([openDate, closeDate]).range([0, WIDTH])
-  const scaleY = scaleLinear().domain([lowPrice, highPrice]).range([HEIGHT, 0])
+  const scaleX = scaleLinear().domain([openDate, closeDate]).range([0, width])
+  const scaleY = scaleLinear().domain([lowPrice, highPrice]).range([height, 0])
 
   // normalize brings all paths to the same precision (number of points)
   const path = normalizePath(
@@ -135,7 +140,7 @@ export function buildGraph(datapoints: PriceList | undefined, precision: number)
         .curve(curveBasis)(formattedValues) as string
     ),
     precision,
-    WIDTH
+    width
   )
 
   return {

@@ -3,8 +3,8 @@ import { fireEvent, render } from '@testing-library/react-native'
 import React from 'react'
 import 'react-native'
 import 'react-native-gesture-handler'
-import { Graph } from 'src/components/PriceChart/Graph'
 import { buildGraph } from 'src/components/PriceChart/Model'
+import { PriceExplorer } from 'src/components/PriceChart/PriceExplorer'
 import { theme } from 'src/styles/theme'
 
 const graphDatapoints = buildGraph(
@@ -39,7 +39,7 @@ const graphs = [
 it('renders correctly', () => {
   const tree = render(
     <ThemeProvider theme={theme}>
-      <Graph graphs={graphs} title="My Token" />
+      <PriceExplorer graphs={graphs} title="My Token" />
     </ThemeProvider>
   ).toJSON()
   expect(tree).toMatchSnapshot()
@@ -48,7 +48,7 @@ it('renders correctly', () => {
 it('navigates between ranges', () => {
   const { getByText } = render(
     <ThemeProvider theme={theme}>
-      <Graph graphs={graphs} title="My token" />
+      <PriceExplorer graphs={graphs} title="My token" />
     </ThemeProvider>
   )
 

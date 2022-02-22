@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Loading } from 'src/components/loading'
-import { Graph } from 'src/components/PriceChart/Graph'
 import { useGraphs } from 'src/components/PriceChart/Model'
+import { PriceExplorer } from 'src/components/PriceChart/PriceExplorer'
 
 interface PriceChartProps {
   currency: Currency
@@ -29,7 +29,7 @@ export const PriceChart = ({ currency }: PriceChartProps) => {
           <Loading type="graph" />
         </Flex>
       ) : (
-        <Graph graphs={graphs} title={currency.name ?? t('Unknown token')} />
+        <PriceExplorer graphs={graphs} title={currency.name ?? t('Unknown token')} />
       )}
     </Box>
   )

@@ -15,7 +15,7 @@ export type GraphData = {
   path: Path
 }
 
-type GraphMetadata = Readonly<{
+export type GraphMetadata = Readonly<{
   label: string
   index: number
   data: GraphData

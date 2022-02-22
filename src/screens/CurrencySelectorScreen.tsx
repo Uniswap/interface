@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
-import { CurrencySearch } from 'src/components/CurrencySelector/CurrencySearch'
+import { CurrencySelect } from 'src/components/CurrencySelector/CurrencySelect'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { useAllBalances } from 'src/features/balances/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -38,7 +38,7 @@ export function CurrencySelectorScreen({
   return (
     <SheetScreen>
       {showNonZeroBalancesOnly ? (
-        <CurrencySearchOwnedCurrencies
+        <CurrencySearchWithBalancesOnly
           otherCurrency={otherCurrency}
           selectedCurrency={selectedCurrency}
           onSelectCurrency={onSelectCurrency}
@@ -55,7 +55,7 @@ export function CurrencySelectorScreen({
 }
 
 // Helper component to avoid loading all currencies
-function CurrencySearchOwnedCurrencies({
+function CurrencySearchWithBalancesOnly({
   selectedCurrency,
   otherCurrency,
   onSelectCurrency,
@@ -80,8 +80,7 @@ function CurrencySearchOwnedCurrencies({
   ).balances.map((currencyAmount) => currencyAmount.currency)
 
   return (
-    <CurrencySearch
-      showBackButton
+    <CurrencySelect
       showNonZeroBalancesOnly
       currencies={currenciesWithBalance}
       otherCurrency={otherCurrency}
@@ -108,8 +107,7 @@ function CurrencySearchAllCurrencies({
   const currencies = useAllCurrencies()
 
   return (
-    <CurrencySearch
-      showBackButton
+    <CurrencySelect
       currencies={flattenObjectOfObjects(currencies)}
       otherCurrency={otherCurrency}
       selectedCurrency={selectedCurrency}

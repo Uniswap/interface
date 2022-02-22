@@ -5,7 +5,7 @@ import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { CurrencySearch } from 'src/components/CurrencySelector/CurrencySearch'
+import { CurrencySelect } from 'src/components/CurrencySelector/CurrencySelect'
 import { Toggle } from 'src/components/CurrencySelector/Toggle'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
@@ -18,7 +18,7 @@ import { currencyId } from 'src/utils/currencyId'
 
 interface CurrencySelectorProps {
   showNonZeroBalancesOnly?: boolean
-  onSelectCurrency: ComponentProps<typeof CurrencySearch>['onSelectCurrency']
+  onSelectCurrency: ComponentProps<typeof CurrencySelect>['onSelectCurrency']
   otherSelectedCurrency?: Currency | null
   selectedCurrency?: Currency | null
 }

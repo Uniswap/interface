@@ -31,7 +31,7 @@ interface GraphProps {
  * Displays a set of graphs with header, scrubbable chart and navigation row.
  * Inspired by https://github.com/wcandillon/can-it-be-done-in-react-native/tree/master/season4/src/Rainbow
  */
-export const Graph = ({ graphs, title }: GraphProps) => {
+export const PriceExplorer = ({ graphs, title }: GraphProps) => {
   const theme = useTheme<Theme>()
 
   // whether the graph pan gesture is active
