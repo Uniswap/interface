@@ -31,8 +31,8 @@ export const iconButtonVariants = {
     alignSelf: 'center',
     borderRadius: 'md',
     letterSpacing: 'headline',
-    paddingHorizontal: 'xl',
-    paddingVertical: 'sm',
+    paddingHorizontal: 'lg',
+    paddingVertical: 'md',
     shadowColor: 'black',
     shadowOffset: {
       width: 0,

@@ -80,7 +80,7 @@ exports[`renders a NetworkPill with border 1`] = `
     style={
       Array [
         Object {
-          "color": "#27252E",
+          "color": "#000000",
           "display": "flex",
           "fontFamily": "UniswapSansBeta3-Medium",
           "fontSize": 14,
@@ -176,7 +176,7 @@ exports[`renders a NetworkPill without image 1`] = `
     style={
       Array [
         Object {
-          "color": "#27252E",
+          "color": "#000000",
           "display": "flex",
           "fontFamily": "UniswapSansBeta3-Medium",
           "fontSize": 14,

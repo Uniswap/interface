@@ -69,7 +69,7 @@ exports[`renders correctly 1`] = `
       editable={false}
       style={
         Object {
-          "color": "#27252E",
+          "color": "#000000",
           "fontSize": 45,
         }
       }

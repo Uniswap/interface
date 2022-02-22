@@ -30,8 +30,8 @@ interface TokenBalanceListHeaderProps {
 function TokenBalanceListHeader({ chainId }: TokenBalanceListHeaderProps) {
   const colors = useNetworkColors(chainId)
   return (
-    <Box bg="mainBackground" pb="sm" pt="md" px="lg">
-      <Text style={{ color: colors.foreground }} variant="h5">
+    <Box bg="mainBackground" pb="xs" pt="md" px="lg">
+      <Text style={{ color: colors.foreground }} variant="body">
         {CHAIN_INFO[chainId].label}
       </Text>
     </Box>

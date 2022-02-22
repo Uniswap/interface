@@ -25,7 +25,7 @@ export function Toast({ label, variant }: ToastProps) {
     <Box
       alignContent="center"
       alignSelf="stretch"
-      backgroundColor="white"
+      backgroundColor="background1"
       borderRadius="md"
       borderWidth={1}
       flexDirection="row"

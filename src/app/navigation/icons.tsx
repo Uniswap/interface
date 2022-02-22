@@ -1,64 +1,23 @@
-import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs'
-import React, { PropsWithChildren } from 'react'
-import { useAppTheme } from 'src/app/hooks'
+import { useTheme } from '@shopify/restyle'
+import React from 'react'
 import SearchIcon from 'src/assets/icons/search.svg'
-import SwapIcon from 'src/assets/icons/swap.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
-import { IconButton } from 'src/components/buttons/IconButton'
-import { EmptyCircle } from 'src/components/icons/EmptyCircle'
-import { Flex } from 'src/components/layout'
-import { ElementName } from 'src/features/telemetry/constants'
-
-export function SwapButton(props: BottomTabBarButtonProps) {
-  return (
-    <IconButton
-      icon={<SwapIcon fill="white" height={24} width={24} />}
-      mb="sm"
-      name={ElementName.TabBarSwap}
-      testID={ElementName.TabBarSwap}
-      variant="primary"
-      onPress={props.onPress}
-    />
-  )
-}
+import { Theme } from 'src/styles/theme'
 
 interface NavIconProps {
   focused: boolean
 }
 
 export function WalletTabIcon({ focused }: NavIconProps) {
-  const primaryColor = useTabNavColors()
+  const theme = useTheme<Theme>()
+
   return (
-    <WithDot focused={focused}>
-      <WalletIcon fill={primaryColor} opacity={focused ? 1 : 0.3} />
-    </WithDot>
+    <WalletIcon fill={theme.colors.textColor} height={24} opacity={focused ? 1 : 0.6} width={24} />
   )
 }
 
 export function ExploreTabIcon({ focused }: NavIconProps) {
-  const primaryColor = useTabNavColors()
-  return (
-    <WithDot focused={focused}>
-      <SearchIcon opacity={focused ? 1 : 0.3} stroke={primaryColor} strokeWidth={2.2} />
-    </WithDot>
-  )
-}
+  const theme = useTheme<Theme>()
 
-function WithDot({ children, focused }: PropsWithChildren<NavIconProps>) {
-  return (
-    <Flex alignItems="center" gap="xs">
-      {/* this is kind of a hack but im rendering a dot above and below so that
-        the main icon stays centered within the navbar even when there is a dot below it
-      */}
-      <EmptyCircle backgroundColor="none" borderWidth={0} size={4} />
-      {children}
-      <EmptyCircle backgroundColor={focused ? 'primary1' : 'none'} borderWidth={0} size={4} />
-    </Flex>
-  )
-}
-
-function useTabNavColors() {
-  const theme = useAppTheme()
-  const primaryColor = theme.colors.primary1
-  return primaryColor
+  return <SearchIcon opacity={focused ? 1 : 0.6} stroke={theme.colors.textColor} strokeWidth={2} />
 }

@@ -4,6 +4,8 @@ PODS:
   - EthersRS (0.0.5)
   - EXApplication (4.0.0):
     - ExpoModulesCore
+  - EXBlur (10.0.3):
+    - ExpoModulesCore
   - EXClipboard (2.0.3):
     - ExpoModulesCore
   - EXHaptics (11.0.3):
@@ -493,6 +495,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - "EthersRS (from `../node_modules/@cmcewen/ethers-rs-mobile`)"
   - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXBlur (from `../node_modules/expo-blur/ios`)
   - EXClipboard (from `../node_modules/expo-clipboard/ios`)
   - EXHaptics (from `../node_modules/expo-haptics/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
@@ -585,6 +588,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@cmcewen/ethers-rs-mobile"
   EXApplication:
     :path: "../node_modules/expo-application/ios"
+  EXBlur:
+    :path: "../node_modules/expo-blur/ios"
   EXClipboard:
     :path: "../node_modules/expo-clipboard/ios"
   EXHaptics:
@@ -695,6 +700,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   EthersRS: d9bd4b6d742bfc017670e52badf9cb08cf8715fe
   EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
+  EXBlur: 71eea96f591726398c1d41f0a8eb527b6c65660e
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   EXHaptics: f52df335f17192e440d9639c971ebcbb3fb91dec
   EXLinearGradient: 4d727eacb53d19ef25b02dd810e0199b453489ce

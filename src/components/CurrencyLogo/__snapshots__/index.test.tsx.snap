@@ -22,7 +22,7 @@ exports[`renders a currency logo with network logo 1`] = `
           "display": "flex",
           "position": "absolute",
           "right": 0,
-          "shadowColor": "#27252E",
+          "shadowColor": "#000000",
           "shadowOffset": Object {
             "height": 2,
             "width": 0,
