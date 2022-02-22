@@ -3,13 +3,19 @@
   "version": "0.0.14-beta",
   "description": "Uniswap Interface",
   "homepage": ".",
-  "main": "dist/widgets.js",
-  "module": "dist/widgets.esm.js",
-  "types": "dist/widgets.d.ts",
+  "type": "module",
   "files": [
     "lib",
     "dist"
   ],
+  "exports": {
+    "types": "./dist/widgets.d.ts",
+    "import": "./dist/widgets.esm.js",
+    "require": "./dist/widgets.js"
+  },
+  "types": "./dist/widgets.d.ts",
+  "module": "./dist/widgets.esm.js",
+  "main": "./dist/widgets.js",
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
