@@ -1,0 +1,9 @@
+* {
+    font-family: 'Montserrat';
+    box-sizing: border-box;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}

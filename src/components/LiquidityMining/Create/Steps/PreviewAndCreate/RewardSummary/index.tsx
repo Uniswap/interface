@@ -4,6 +4,7 @@ import { Percent, TokenAmount } from '@swapr/sdk'
 import { TYPE } from '../../../../../../theme'
 import { AutoColumn } from '../../../../../Column'
 import DataRow from '../DataRow'
+import { unwrappedToken } from '../../../../../../utils/wrappedCurrency'
 
 interface RewardSummaryProps {
   reward: TokenAmount | null
@@ -20,7 +21,11 @@ export default function RewardSummary({ reward, apy }: RewardSummaryProps) {
         <DataRow name="INITIAL APR" value={`${apy.toSignificant(2)}%`} />
         <DataRow
           name="TOTAL REWARD"
-          value={reward && reward.token && reward.token.symbol ? `${reward.toExact()} ${reward.token.symbol}` : '-'}
+          value={
+            reward && reward.token && reward.token.symbol
+              ? `${reward.toExact()} ${unwrappedToken(reward.token)?.symbol}`
+              : '-'
+          }
         />
       </AutoColumn>
     </Flex>

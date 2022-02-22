@@ -23,11 +23,11 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
 
 export const SwitchTokensAmountsContainer = styled.div`
   background-color: ${props => props.theme.bg1And2};
-  width: 37px;
-  height: 37px;
+  width: 51px;
+  height: 51px;
   position: absolute;
   left: 50%;
-  top: -16px;
+  top: -26px;
   transform: translateX(-50%);
   z-index: 2;
   border-radius: 50%;

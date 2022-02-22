@@ -1,8 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
 
-// @ts-nocheck
-const { CID } = require('multiformats/esm/src/cid')
+import { CID } from 'multiformats/cid'
 
 const IPFS_GATEWAY = 'https://ipfs.io/ipfs/'
 
