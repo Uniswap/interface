@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-17 15:11\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -131,7 +131,7 @@ msgstr "Račun"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Acknowledge"
-msgstr "Priznaj"
+msgstr "Razumem"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -218,7 +218,7 @@ msgstr "Pri poskusu izvedbe te zamenjave je prišlo do napake. Morda boste moral
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approval pending <0/>"
-msgstr "Odobritev čaka <0/>"
+msgstr "Odobritev je v teku"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -811,11 +811,11 @@ msgstr "Potekla"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
-msgstr "Pobrskajte po Uniswap Analytics."
+msgstr "Raziščite Uniswap Analytics."
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "Zamenjava omrežij iz Uniswapovega vmesnika ni uspel. Če želite uporabiti Uniswap na {0}, morate zamenjati omrežje v svoji denarnici."
+msgstr "Zamenjava omrežij iz Uniswapovega vmesnika ni uspela. Če želite uporabiti Uniswap na {0}, morate zamenjati omrežje v svoji denarnici."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -885,7 +885,7 @@ msgstr "Visok vpliv na ceno"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
-msgstr "Visok zdrs povečuje tveganje gibanja cen"
+msgstr "Visok zdrs povečuje tveganje spremembe cene"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -954,7 +954,7 @@ msgstr "Za ta posel je likvidnost prenizka."
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Insufficient liquidity in the pool for your trade"
-msgstr "Nezadostna likvidnost v bazenu za vašo trgovino"
+msgstr "Sklad ima prenizko likvidnost za ta posel."
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
@@ -1282,7 +1282,7 @@ msgstr "Zunaj razpona"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated."
-msgstr "Izhod je ocenjen."
+msgstr "Končni znesek je ocenjen."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -2038,7 +2038,7 @@ msgstr "Nepodprta sredstva"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unsupported network - switch to another to trade."
-msgstr "Nepodprto omrežje - preklopite na drugo za trgovanje."
+msgstr "To omrežje ni podprto – za trgovanje preklopite na drugo omrežje."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"

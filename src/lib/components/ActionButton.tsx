@@ -45,13 +45,13 @@ const actionCss = css`
   }
 `
 
-export const Overlay = styled(Row)<{ action?: boolean }>`
+export const Overlay = styled(Row)<{ hasAction: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
   min-height: 3.5em;
   transition: padding 0.25s ease-out;
 
-  ${({ action }) => action && actionCss}
+  ${({ hasAction }) => hasAction && actionCss}
 `
 
 export interface Action {
@@ -72,7 +72,7 @@ export interface ActionButtonProps {
 export default function ActionButton({ color = 'accent', disabled, action, onClick, children }: ActionButtonProps) {
   const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])
   return (
-    <Overlay action={Boolean(action)} flex align="stretch">
+    <Overlay hasAction={Boolean(action)} flex align="stretch">
       <StyledButton color={color} disabled={disabled} onClick={action ? action.onClick : onClick}>
         <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
           {action ? action.children : children}

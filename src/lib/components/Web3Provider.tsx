@@ -1,6 +1,6 @@
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
-import { Actions, Connector, Provider as EthProvider } from '@web3-react/types'
+import { Actions, Connector, Provider as Eip1193Provider } from '@web3-react/types'
 import { Url } from '@web3-react/url'
 import { SetStateAction } from 'jotai'
 import { RESET, useUpdateAtom } from 'jotai/utils'
@@ -9,7 +9,7 @@ import { ReactNode, useEffect } from 'react'
 
 interface Web3ProviderProps {
   jsonRpcEndpoint?: string
-  provider?: EthProvider
+  provider?: Eip1193Provider
   children: ReactNode
 }
 
