@@ -18,17 +18,14 @@ import {
   OptionGrid,
   StyledPopover,
   ChangeWalletButton,
-  NetworkTagRow,
-  Wrapper,
-  TitleWrapper
+  NetworkTagRow
 } from './NetworkSwitcher.styles'
 import unsupportedNetworkHintImage1x from '../../assets/images/unsupported-network-hint.png'
 
 import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitcher.types'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
-import Modal from '../Modal'
-import { CloseIcon, TYPE } from '../../theme'
+import { CloseIcon } from '../../theme'
 
 export const NetworkSwitcher = ({
   show,
@@ -46,7 +43,7 @@ export const NetworkSwitcher = ({
   const ethereumOptionPopoverOpen = useModalOpen(ApplicationModal.ETHEREUM_OPTION)
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
   const isMobileByMedia = useIsMobileByMedia()
-  const isWrongNetwork = useMemo(() => {
+  const isUnsupportedNetwork = useMemo(() => {
     return error instanceof UnsupportedChainIdError
   }, [error])
 
@@ -57,15 +54,12 @@ export const NetworkSwitcher = ({
     if (show || ethereumOptionPopoverOpen) onOuterClick()
   })
 
-  if (isWrongNetwork && !networkSwitcherPopoverOpen) {
+  if (isUnsupportedNetwork && !networkSwitcherPopoverOpen) {
     toggleNetworkSwitcherPopover()
   }
 
-  if (isWrongNetwork) {
-    if (isMobileByMedia) {
-      return <WrongNetworkMobileModal />
-    }
-    return <WrongNetworkPopover show={showWrongNetworkPopover}>{children}</WrongNetworkPopover>
+  if (isUnsupportedNetwork && !isMobileByMedia) {
+    return <UnsupportedNetworkPopover show={showWrongNetworkPopover}>{children}</UnsupportedNetworkPopover>
   }
 
   return (
@@ -95,7 +89,7 @@ export const NetworkSwitcher = ({
   )
 }
 
-const WrongNetworkPopover = ({ children, show }: EthereumOptionPopoverProps) => {
+const UnsupportedNetworkPopover = ({ children, show }: EthereumOptionPopoverProps) => {
   return (
     <StyledPopover
       placement="bottom-end"
@@ -112,25 +106,5 @@ const WrongNetworkPopover = ({ children, show }: EthereumOptionPopoverProps) => 
     >
       {children}
     </StyledPopover>
-  )
-}
-
-const WrongNetworkMobileModal = () => {
-  return (
-    <Modal isOpen onDismiss={() => null} maxHeight={90}>
-      <Wrapper>
-        <TitleWrapper>
-          <TYPE.mediumHeader lineHeight="24px" color="text5">
-            {'WRONG NETWORK'}
-          </TYPE.mediumHeader>
-        </TitleWrapper>
-        <TYPE.body mb="15px">
-          <Row>
-            <Image src={unsupportedNetworkHintImage1x} srcSet={unsupportedNetworkHintImage1x} alt="hint screenshot" />
-          </Row>
-          <Text>Please use our network switcher and switch to a supported network.</Text>
-        </TYPE.body>
-      </Wrapper>
-    </Modal>
   )
 }
