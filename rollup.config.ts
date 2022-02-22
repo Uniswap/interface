@@ -78,12 +78,12 @@ const transpile = {
     {
       file: 'dist/widgets.js',
       format: 'cjs',
-      sourcemap: false,
+      sourcemap: true,
     },
     {
       file: 'dist/widgets.esm.js',
       format: 'esm',
-      sourcemap: false,
+      sourcemap: true,
     },
   ],
   plugins: [
