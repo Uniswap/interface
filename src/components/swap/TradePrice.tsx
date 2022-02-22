@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Price } from '@uniswap/sdk-core'
-import useUSDCPrice from 'hooks/useUSDCPrice'
+import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useCallback, useContext } from 'react'
 import { Text } from 'rebass'
+import { tryParseAmount } from 'state/swap/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { TYPE } from 'theme'
 
@@ -32,7 +33,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   let formattedPrice: string
   try {
-    formattedPrice = showInverted ? price.toSignificant(4) : price.invert()?.toSignificant(4)
+    formattedPrice = showInverted ? price.toSignificant(6) : price.invert()?.toSignificant(6)
   } catch (error) {
     formattedPrice = '0'
   }

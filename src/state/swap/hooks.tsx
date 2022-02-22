@@ -1,15 +1,24 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Ether, NativeCurrency, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Ether, NativeCurrency, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import {
+  encodeSqrtRatioX96,
+  nearestUsableTick,
+  TICK_SPACINGS,
+  TickMath,
+  tickToPrice,
+  Trade as V3Trade,
+} from '@uniswap/v3-sdk'
 import { KROM } from 'constants/tokens'
+import { constants } from 'crypto'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { tryParseTick } from 'state/mint/v3/utils'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { V3TradeState } from 'state/routing/types'
 import { useNetworkGasPrice } from 'state/user/hooks'
@@ -24,6 +33,9 @@ import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, Rate, replaceSwapState, selectCurrency, setRecipient, switchCurrencies } from './actions'
 import { typeInput } from './actions'
 import { SwapState } from './reducer'
+
+const Q96 = JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(96))
+const Q192 = JSBI.exponentiate(Q96, JSBI.BigInt(2))
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -146,6 +158,7 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   price: Price<Currency, Currency> | undefined
+  minPrice: Price<Currency, Currency> | undefined
   inputError?: ReactNode
   v3Trade: {
     trade: V3Trade<Currency, Currency, TradeType> | null
@@ -232,6 +245,37 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: outputCurrency,
   }
 
+  const minPrice = useMemo(() => {
+    if (!bestTrade || !inputCurrency || !outputCurrency) return undefined
+
+    const price = bestTrade.route.midPrice
+    const sorted = price.baseCurrency.wrapped.sortsBefore(price.quoteCurrency.wrapped)
+
+    const sqrtRatioX96 = sorted
+      ? encodeSqrtRatioX96(price.numerator, price.denominator)
+      : encodeSqrtRatioX96(price.denominator, price.numerator)
+
+    let tick = TickMath.getTickAtSqrtRatio(sqrtRatioX96)
+    const nextTick = sorted
+      ? tick + 5 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
+      : tick - 5 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
+    const nextTickPrice = tickToPrice(price.baseCurrency.wrapped, price.quoteCurrency.wrapped, nextTick)
+    if (!nextTickPrice.lessThan(price)) {
+      tick = nextTick
+    }
+
+    const nearestTick = nearestUsableTick(tick, TICK_SPACINGS[bestTrade.route.pools[0].fee])
+
+    const sqrtRatioX96Recalc = TickMath.getSqrtRatioAtTick(nearestTick)
+
+    const ratioX192 = JSBI.multiply(sqrtRatioX96Recalc, sqrtRatioX96Recalc)
+    return sorted
+      ? new Price(inputCurrency, outputCurrency, Q192, ratioX192)
+      : new Price(inputCurrency, outputCurrency, ratioX192, Q192)
+
+    //return bestTrade.route.midPrice
+  }, [bestTrade, inputCurrency, outputCurrency])
+
   const marketPrice = useMemo(() => {
     const priceTmp =
       isDesiredRateUpdate && inputCurrency && parsedAmount
@@ -239,13 +283,13 @@ export function useDerivedSwapInfo(): {
             baseAmount: tryParseAmount('1', inputCurrency) as CurrencyAmount<Currency>,
             quoteAmount: parsedAmount as CurrencyAmount<Currency>,
           })
-        : bestTrade?.route.midPrice
+        : minPrice
 
     if (priceTmp?.baseCurrency != inputCurrency) {
       return priceTmp?.invert()
     }
     return priceTmp
-  }, [bestTrade, parsedAmount, inputCurrency, isDesiredRateUpdate])
+  }, [minPrice, parsedAmount, inputCurrency, isDesiredRateUpdate])
 
   const parsedAmounts = useMemo(
     () => ({
@@ -305,12 +349,8 @@ export function useDerivedSwapInfo(): {
     })
   }, [parsedAmounts.input, parsedAmounts.output])
 
-  if (
-    price &&
-    bestTrade?.route &&
-    (price?.lessThan(bestTrade?.route.midPrice) || price?.equalTo(bestTrade?.route.midPrice))
-  ) {
-    inputError = inputError ?? <Trans>Please trade above the current market price</Trans>
+  if (price && minPrice && bestTrade?.route && price?.lessThan(minPrice)) {
+    inputError = inputError ?? <Trans>Please trade above the minimum price</Trans>
   }
 
   // compare input balance to max input based on version
@@ -347,6 +387,7 @@ export function useDerivedSwapInfo(): {
     currencies,
     currencyBalances,
     price,
+    minPrice,
     inputError,
     v3Trade,
     bestTrade: bestTrade ?? undefined,

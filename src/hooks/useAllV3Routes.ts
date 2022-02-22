@@ -37,6 +37,17 @@ function computeAllRoutes(
     const outputToken = pool.token0.equals(tokenIn) ? pool.token1 : pool.token0
     if (outputToken.equals(tokenOut)) {
       allPaths.push(new Route([...currentPath, pool], startCurrencyIn, currencyOut))
+    } else if (maxHops > 1) {
+      computeAllRoutes(
+        outputToken,
+        currencyOut,
+        pools,
+        chainId,
+        [...currentPath, pool],
+        allPaths,
+        startCurrencyIn,
+        maxHops - 1
+      )
     }
   }
 
@@ -50,7 +61,8 @@ function computeAllRoutes(
  */
 export function useAllV3Routes(
   currencyIn?: Currency,
-  currencyOut?: Currency
+  currencyOut?: Currency,
+  maxHops = 1
 ): { loading: boolean; routes: Route<Currency, Currency>[] } {
   const { chainId } = useActiveWeb3React()
   const { pools, loading: poolsLoading } = useV3SwapPools(currencyIn, currencyOut)
@@ -58,7 +70,7 @@ export function useAllV3Routes(
   return useMemo(() => {
     if (poolsLoading || !chainId || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [] }
 
-    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, 1)
+    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, maxHops)
     return { loading: false, routes }
-  }, [chainId, currencyIn, currencyOut, pools, poolsLoading])
+  }, [chainId, currencyIn, currencyOut, pools, poolsLoading, maxHops])
 }
