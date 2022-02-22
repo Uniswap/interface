@@ -1,3 +1,5 @@
+import 'setimmediate'
+
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { loadingOpacityCss } from 'lib/css/loading'
