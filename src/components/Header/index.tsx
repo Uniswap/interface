@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect } from 'react'
 import { Box, Flex } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
-import { SWPR } from '@swapr/sdk'
+import { Currency, CurrencyAmount, SWPR } from '@swapr/sdk'
 
 import styled, { css } from 'styled-components'
 
@@ -235,15 +235,16 @@ function Header() {
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
+  const isUnsupportedNetwork = account ? false : true
 
   useEffect(() => {
-    window.addEventListener('scroll', (e) => {
-      let headerControls = document.getElementById('header-controls');
+    window.addEventListener('scroll', e => {
+      const headerControls = document.getElementById('header-controls')
       if (headerControls) {
         if (window.scrollY > 0) {
-          headerControls.classList.add('hidden');
+          headerControls.classList.add('hidden')
         } else {
-          headerControls.classList.remove('hidden');
+          headerControls.classList.remove('hidden')
         }
       }
     })
@@ -306,16 +307,12 @@ function Header() {
             newSwprBalance={newSwprBalance}
             onToggleClaimPopup={toggleClaimPopup}
           />
-          <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
-            {!account ? (
-              '0.000'
-            ) : !userNativeCurrencyBalance ? (
-              <Skeleton width="40px" />
-            ) : (
-              userNativeCurrencyBalance.toFixed(3)
-            )}{' '}
-            {nativeCurrency.symbol}
-          </Amount>
+          <AccountBalance
+            account={account}
+            userNativeCurrencyBalance={userNativeCurrencyBalance}
+            nativeCurrency={nativeCurrency}
+            isUnsupportedNetwork={isUnsupportedNetwork}
+          />
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
@@ -323,3 +320,32 @@ function Header() {
 }
 
 export default withRouter(Header)
+
+interface AccountBalanceProps {
+  account: string | null | undefined
+  userNativeCurrencyBalance: CurrencyAmount | undefined
+  nativeCurrency: Currency
+  isUnsupportedNetwork: boolean
+}
+
+export function AccountBalance({
+  account,
+  userNativeCurrencyBalance,
+  nativeCurrency,
+  isUnsupportedNetwork
+}: AccountBalanceProps) {
+  return isUnsupportedNetwork ? (
+    <Amount zero={true}>{'UNSUPPORTED NETWORK'}</Amount>
+  ) : (
+    <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
+      {!account ? (
+        '0.000'
+      ) : !userNativeCurrencyBalance ? (
+        <Skeleton width="40px" />
+      ) : (
+        userNativeCurrencyBalance.toFixed(3)
+      )}{' '}
+      {nativeCurrency.symbol}
+    </Amount>
+  )
+}
