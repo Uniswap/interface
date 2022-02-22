@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../../hooks'
 import { Amount } from '../index'
+import Skeleton from 'react-loading-skeleton'
 
 const StakeIndicator = styled.div`
   display: flex;
@@ -33,7 +34,7 @@ export function SwprInfo({ onToggleClaimPopup, newSwprBalance, hasActiveCampaign
   return (
     <Wrapper onClick={onToggleClaimPopup}>
       <Amount borderRadius={hasActiveCampaigns ? '8px 0px 0px 8px !important;' : ''} zero={false} clickable>
-        {!account || !newSwprBalance ? '0.000' : newSwprBalance.toFixed(3)} SWPR
+        {!account ? '0.000' : !newSwprBalance ? <Skeleton width="40px" /> : newSwprBalance.toFixed(3)} SWPR
       </Amount>
       {hasActiveCampaigns && <StakeIndicator>STAKE</StakeIndicator>}
     </Wrapper>
