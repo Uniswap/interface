@@ -37,7 +37,6 @@ export class CustomWalletLinkConnector extends AbstractConnector {
   }
 
   public async activate(): Promise<ConnectorUpdate> {
-    // @ts-ignore
     if (window.ethereum && window.ethereum.isCoinbaseWallet === true) {
       // user is in the dapp browser on Coinbase Wallet
       this.provider = window.ethereum

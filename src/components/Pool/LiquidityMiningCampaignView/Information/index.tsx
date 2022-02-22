@@ -18,6 +18,7 @@ import Row, { AutoRow, RowBetween, RowFixed } from '../../../Row'
 import DataDisplayer from '../DataDisplayer'
 import TokenAmountDisplayer from '../TokenAmountDisplayer'
 import { useActiveWeb3React } from '../../../../hooks'
+import { unwrappedToken } from '../../../../utils/wrappedCurrency'
 
 const KpiTokenInfoContainer = styled.div`
   width: 100%;
@@ -224,9 +225,9 @@ function Information({
                     {!targetedPair ? (
                       <Skeleton width="60px" height="18px" />
                     ) : targetedPair instanceof Token ? (
-                      targetedPair.symbol
+                      unwrappedToken(targetedPair)?.symbol
                     ) : targetedPair instanceof Pair ? (
-                      `${targetedPair.token0.symbol}/${targetedPair.token1.symbol}`
+                      `${unwrappedToken(targetedPair.token0)?.symbol}/${unwrappedToken(targetedPair.token1)?.symbol}`
                     ) : (
                       ''
                     )}

@@ -1,0 +1,84 @@
+:root {
+    --main-bg-color: rgba(12, 11, 18, 1);
+    --xl-bp: 1620px;
+    --l-bp: 1360px;
+    --md-bp: 959px;
+    --s-bp: 600px;
+    --xs-bp: 416px;
+}
+
+html {
+    background: var(--main-bg-color);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+}
+
+body::-webkit-scrollbar {
+    width: 10px;
+    border-left: 1px solid rgba(255,255,255,0.2);
+  }
+   
+body::-webkit-scrollbar-track {
+background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+background-color: #B6B5B7;
+/* outline: 1px solid slategrey; */
+border-radius: 100px;
+
+}
+
+#___gatsby {
+    overflow: hidden;
+}
+
+* {
+    color: white;
+}
+
+#root {
+    color: white;
+    background: var(--main-bg-color);
+}
+
+.full-width {
+    width: 100%;
+}
+
+.main-width {
+    width: 1160px;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 1360px) {
+    .main-width {
+        width: 1086px;
+        padding: 0;
+    }
+}
+
+@media screen and (max-width: 959px) {
+    .main-width {
+        width: 543px !important;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .main-width {
+        width: 100% !important;
+        padding: 0 24px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .main-width {
+        width: 100% !important;
+        padding: 0 16px;
+    }
+}

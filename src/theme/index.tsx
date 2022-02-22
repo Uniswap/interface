@@ -206,6 +206,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  margin: 0 !important;
 }
 
 * {
@@ -248,6 +249,7 @@ body {
     theme.bg1
   } 100%);
   `};
+  margin: 0 !important;
 }
 
 .react-datepicker-wrapper {
