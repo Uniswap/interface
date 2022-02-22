@@ -22,8 +22,7 @@ import {
   Wrapper,
   TitleWrapper
 } from './NetworkSwitcher.styles'
-import ethereumHintImage1x from '../../assets/images/ethereum-hint@1x.png'
-import ethereumHintImage2x from '../../assets/images/ethereum-hint@2x.png'
+import unsupportedNetworkHintImage1x from '../../assets/images/unsupported-network-hint.png'
 
 import { EthereumOptionPopoverProps, NetworkSwitcherProps } from './NetworkSwitcher.types'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
@@ -104,9 +103,9 @@ const WrongNetworkPopover = ({ children, show }: EthereumOptionPopoverProps) => 
       content={
         <View>
           <Row>
-            <Text>Please open up Metamask and switch to supported network manually.</Text>
+            <Text>Please use our network switcher and switch to a supported network.</Text>
           </Row>
-          <Image src={ethereumHintImage1x} srcSet={ethereumHintImage2x} alt="hint screenshot" />
+          <Image src={unsupportedNetworkHintImage1x} srcSet={unsupportedNetworkHintImage1x} alt="hint screenshot" />
         </View>
       }
     >
@@ -126,9 +125,9 @@ const WrongNetworkMobileModal = () => {
         </TitleWrapper>
         <TYPE.body mb="15px">
           <Row>
-            <Image src={ethereumHintImage1x} srcSet={ethereumHintImage2x} alt="hint screenshot" />
+            <Image src={unsupportedNetworkHintImage1x} srcSet={unsupportedNetworkHintImage1x} alt="hint screenshot" />
           </Row>
-          <Text>Please open up Metamask and switch to supported network manually.</Text>
+          <Text>Please use our network switcher and switch to a supported network.</Text>
         </TYPE.body>
       </Wrapper>
     </Modal>

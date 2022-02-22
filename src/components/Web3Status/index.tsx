@@ -147,7 +147,7 @@ export default function Web3Status() {
     return (
       <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
         <Web3StatusError>
-          {unsupportedChain ? 'Wrong Network' : 'Error'}
+          {unsupportedChain ? 'Unsupported network' : 'Error'}
           <SwitchNetworkButton onClick={clickHandler} disabled={unsupportedChain}>
             Switch network
             <TriangleIcon />
