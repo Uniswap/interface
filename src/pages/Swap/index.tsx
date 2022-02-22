@@ -325,7 +325,6 @@ export default function Swap() {
                 <AutoColumn gap="3px">
                   <CurrencyInputPanel
                     value={formattedAmounts[Field.INPUT]}
-                    showMaxButton={false}
                     currency={currencies[Field.INPUT]}
                     onUserInput={handleTypeInput}
                     onMax={handleMaxInput}
@@ -350,7 +349,6 @@ export default function Swap() {
                   <CurrencyInputPanel
                     value={formattedAmounts[Field.OUTPUT]}
                     onUserInput={handleTypeOutput}
-                    showMaxButton={false}
                     currency={currencies[Field.OUTPUT]}
                     onCurrencySelect={handleOutputSelect}
                     otherCurrency={currencies[Field.INPUT]}

@@ -63,7 +63,6 @@ export default function ConfirmStakingWithdrawingModalHeader({
           setTypedAmount(maximumAmount.toExact())
           onAmountChange(new TokenAmount(maximumAmount.token, maximumAmount.raw))
         }}
-        showMaxButton
         currency={stakablePair instanceof Token ? stakablePair : undefined}
         pair={stakablePair instanceof Pair ? stakablePair : undefined}
         id="staked-amount"

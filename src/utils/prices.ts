@@ -98,8 +98,8 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
   return 0
 }
 
-export function warningFiatSeverity(priceImpact: Percent | undefined): 0 | 1 {
-  if (!priceImpact?.lessThan(ALLOWED_FIAT_PRICE_IMPACT_HIGH)) return 1
+export function warningFiatSeverity(priceImpact: Percent | undefined): 0 | 3 {
+  if (!priceImpact?.lessThan(ALLOWED_FIAT_PRICE_IMPACT_HIGH)) return 3
   return 0
 }
 

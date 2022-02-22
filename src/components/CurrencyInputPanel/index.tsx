@@ -12,7 +12,7 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
-import FiatValueDetails from '../FiatValueDetails'
+import { FiatValueDetails } from '../FiatValueDetails'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -87,19 +87,6 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   letter-spacing: 0.08em;
 `
 
-const StyledBalanceMax = styled.button`
-  font-size: 11px;
-  line-height: 13px;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  margin-right: 4px;
-  color: ${({ theme }) => theme.purple3};
-  text-decoration: underline;
-  outline: none;
-  background: transparent;
-  border: none;
-`
-
 const UppercaseHelper = styled.span`
   text-transform: uppercase;
 `
@@ -110,7 +97,6 @@ interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
   onMax?: () => void
-  showMaxButton: boolean
   label?: string
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
@@ -132,7 +118,6 @@ export default function CurrencyInputPanel({
   value,
   onUserInput,
   onMax,
-  showMaxButton,
   label,
   onCurrencySelect,
   currency,
@@ -195,9 +180,6 @@ export default function CurrencyInputPanel({
                   }}
                   disabled={disabled}
                 />
-                {account && (currency || pair) && showMaxButton && label !== 'To' && (
-                  <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
-                )}
               </>
             )}
             <CurrencySelect
@@ -235,7 +217,7 @@ export default function CurrencyInputPanel({
           </InputRow>
           <FiatRow>
             <RowBetween>
-              <FiatValueDetails fiatValue={fiatValue} priceImpact={priceImpact} />
+              <FiatValueDetails fiatValue={fiatValue?.toFixed(2)} priceImpact={priceImpact} />
               {account && (
                 <TYPE.body
                   onClick={onMax}
