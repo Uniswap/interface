@@ -127,21 +127,94 @@ export default function SettingsTab() {
 
   const theme = useContext(ThemeContext)
 
+  const [expertMode, toggleExpertMode] = useExpertModeManager()
+
+  // show confirmation view before turning on
+  const [showConfirmation, setShowConfirmation] = useState(false)
+
   useOnClickOutside(node, open ? toggle : undefined)
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
+      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
+        <ModalContentWrapper>
+          <AutoColumn gap="lg">
+            <RowBetween style={{ padding: '0 2rem' }}>
+              <div />
+              <Text fontWeight={500} fontSize={20}>
+                <Trans>Are you sure?</Trans>
+              </Text>
+              <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
+            </RowBetween>
+            <Break />
+            <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
+              <Text fontWeight={500} fontSize={20}>
+                <Trans>
+                  Gasless mode enables users to send blockchain transactions without paying network gas fees.
+                </Trans>
+              </Text>
+              <Text fontWeight={600} fontSize={20}>
+                <Trans>ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA.</Trans>
+              </Text>
+              <ButtonError
+                error={true}
+                padding={'12px'}
+                onClick={() => {
+                  const confirmWord = t`gasless`
+                  if (window.prompt(t`Please type the word "${confirmWord}" to enable gasless mode.`) === confirmWord) {
+                    toggleExpertMode()
+                    setShowConfirmation(false)
+                  }
+                }}
+              >
+                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
+                  <Trans>Turn On Gasless Mode</Trans>
+                </Text>
+              </ButtonError>
+            </AutoColumn>
+          </AutoColumn>
+        </ModalContentWrapper>
+      </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label={t`Transaction Settings`}>
         <StyledMenuIcon />
+        {expertMode ? (
+          <EmojiWrapper>
+            <span role="img" aria-label="wizard-icon">
+              🧙
+            </span>
+          </EmojiWrapper>
+        ) : null}
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={14}>
-              <Trans>Transaction Settings</Trans>
+              <Trans>Kromatika Settings</Trans>
             </Text>
-            <TransactionSettings />
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Gasless Mode</Trans>
+                </TYPE.black>
+                <QuestionHelper text={<Trans>Enables gasless trades by compensating them with KROM.</Trans>} />
+              </RowFixed>
+              <Toggle
+                id="toggle-expert-mode-button"
+                isActive={expertMode}
+                toggle={
+                  expertMode
+                    ? () => {
+                        toggleExpertMode()
+                        setShowConfirmation(false)
+                      }
+                    : () => {
+                        toggle()
+                        setShowConfirmation(true)
+                      }
+                }
+              />
+            </RowBetween>
           </AutoColumn>
         </MenuFlyout>
       )}

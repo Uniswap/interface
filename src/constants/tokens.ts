@@ -158,6 +158,20 @@ export const KROM: { [chainId: number]: Token } = {
     'KROM',
     'Kromatika'
   ),
+  [SupportedChainId.ARBITRUM_RINKEBY]: new Token(
+    SupportedChainId.ARBITRUM_RINKEBY,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.ARBITRUM_RINKEBY],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
+  [SupportedChainId.MAINNET]: new Token(
+    SupportedChainId.MAINNET,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.MAINNET],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
 }
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),

@@ -119,6 +119,7 @@ export default function Swap({ history }: RouteComponentProps) {
     serviceFee,
     currencyBalances,
     price,
+    minPrice,
     currencies,
     parsedAmounts,
     formattedAmounts,
@@ -438,67 +439,87 @@ export default function Swap({ history }: RouteComponentProps) {
               </>
             ) : null}
 
-            {!showWrap && trade && (
-              <Row justify={!trade ? 'center' : 'space-between'}>
-                <RowFixed style={{ position: 'relative' }}>
-                  <MouseoverTooltipContent
-                    wrap={false}
-                    content={
-                      <ResponsiveTooltipContainer>
-                        <SwapRoute trade={trade} syncing={routeIsSyncing} />
-                      </ResponsiveTooltipContainer>
-                    }
-                    placement="bottom"
-                    onOpen={() =>
-                      ReactGA.event({
-                        category: 'Swap',
-                        action: 'Router Tooltip Open',
-                      })
-                    }
-                  >
-                    <AutoRow gap="4px" width="auto">
-                      <AutoRouterLogo />
-                      <LoadingOpacityContainer $loading={routeIsSyncing}>
-                        {trade instanceof V3Trade && trade.swaps.length > 1 && (
-                          <TYPE.blue fontSize={14}>{trade.swaps.length} routes</TYPE.blue>
-                        )}
-                      </LoadingOpacityContainer>
-                    </AutoRow>
-                  </MouseoverTooltipContent>
-                </RowFixed>
-                <RowFixed>
-                  <LoadingOpacityContainer $loading={routeIsSyncing}>
-                    <TradePrice
-                      price={trade.route.midPrice}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                    />
-                  </LoadingOpacityContainer>
-                  <MouseoverTooltipContent
-                    wrap={false}
-                    content={
-                      <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                        <AdvancedSwapDetails
-                          trade={trade}
-                          serviceFee={serviceFee}
-                          priceAmount={price}
-                          outputAmount={parsedAmounts.output}
-                          syncing={routeIsSyncing}
-                        />
-                      </ResponsiveTooltipContainer>
-                    }
-                    placement="bottom"
-                    onOpen={() =>
-                      ReactGA.event({
-                        category: 'Trade',
-                        action: 'Transaction Details Tooltip Open',
-                      })
-                    }
-                  >
-                    <StyledInfo />
-                  </MouseoverTooltipContent>
-                </RowFixed>
-              </Row>
+            {!showWrap && trade && minPrice && (
+              <>
+                <Row justify={!trade ? 'center' : 'space-between'}>
+                  <RowFixed style={{ position: 'relative' }}>
+                    <MouseoverTooltipContent
+                      wrap={false}
+                      content={
+                        <ResponsiveTooltipContainer>
+                          <SwapRoute trade={trade} syncing={routeIsSyncing} />
+                        </ResponsiveTooltipContainer>
+                      }
+                      placement="bottom"
+                      onOpen={() =>
+                        ReactGA.event({
+                          category: 'Swap',
+                          action: 'Router Tooltip Open',
+                        })
+                      }
+                    >
+                      <AutoRow gap="4px" width="auto">
+                        <AutoRouterLogo />
+                        <LoadingOpacityContainer $loading={routeIsSyncing}>
+                          {trade instanceof V3Trade && trade.swaps.length > 1 && (
+                            <TYPE.blue fontSize={14}>{trade.swaps.length} routes</TYPE.blue>
+                          )}
+                        </LoadingOpacityContainer>
+                      </AutoRow>
+                    </MouseoverTooltipContent>
+                  </RowFixed>
+                  <RowFixed style={{ position: 'relative' }}>
+                    <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                      <Trans>Current Price</Trans>
+                    </TYPE.body>
+                  </RowFixed>
+                  <RowFixed>
+                    <LoadingOpacityContainer $loading={routeIsSyncing}>
+                      <TradePrice
+                        price={trade.route.midPrice}
+                        showInverted={showInverted}
+                        setShowInverted={setShowInverted}
+                      />
+                    </LoadingOpacityContainer>
+                    <MouseoverTooltipContent
+                      wrap={false}
+                      content={
+                        <ResponsiveTooltipContainer origin="top right" width={'295px'}>
+                          <AdvancedSwapDetails
+                            trade={trade}
+                            serviceFee={serviceFee}
+                            priceAmount={price}
+                            outputAmount={parsedAmounts.output}
+                            syncing={routeIsSyncing}
+                          />
+                        </ResponsiveTooltipContainer>
+                      }
+                      placement="bottom"
+                      onOpen={() =>
+                        ReactGA.event({
+                          category: 'Trade',
+                          action: 'Transaction Details Tooltip Open',
+                        })
+                      }
+                    >
+                      <StyledInfo />
+                    </MouseoverTooltipContent>
+                  </RowFixed>
+                </Row>
+                <Row justify={!trade ? 'center' : 'space-between'}>
+                  <RowFixed style={{ position: 'relative' }}></RowFixed>
+                  <RowFixed style={{ position: 'relative' }}>
+                    <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                      <Trans>Min Price</Trans>
+                    </TYPE.body>
+                  </RowFixed>
+                  <RowFixed>
+                    <LoadingOpacityContainer $loading={routeIsSyncing}>
+                      <TradePrice price={minPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
+                    </LoadingOpacityContainer>
+                  </RowFixed>
+                </Row>
+              </>
             )}
 
             <div>

@@ -7,8 +7,10 @@ export interface Log {
   topics: Array<string>
   data: string
   transactionIndex: number
+  transactionHash: string
   logIndex: number
   blockNumber: number
+  blockHash: string
 }
 
 /**

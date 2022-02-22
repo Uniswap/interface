@@ -143,7 +143,7 @@ export default function Pool() {
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
-      acc[p.processed?.isZero() ? 0 : 1].push(p)
+      acc[p.processed ? 1 : 0].push(p)
       return acc
     },
     [[], []]

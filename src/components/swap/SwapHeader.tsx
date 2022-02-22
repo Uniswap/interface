@@ -21,6 +21,9 @@ export default function SwapHeader() {
             <Trans>Trade</Trans>
           </TYPE.black>
         </RowFixed>
+        {/* <RowFixed>
+          <SettingsTab />
+        </RowFixed> */}
       </RowBetween>
     </StyledSwapHeader>
   )

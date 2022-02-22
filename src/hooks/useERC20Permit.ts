@@ -52,7 +52,6 @@ const PERMITTABLE_TOKENS: {
   },
   [42]: {
     [UNI[42].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-    [KROM[42].address]: { type: PermitType.AMOUNT, name: 'Kromatika' },
   },
 }
 

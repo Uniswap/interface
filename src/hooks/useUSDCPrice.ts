@@ -30,7 +30,9 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
   })
 
   // TODO (pai) check this again
-  const v3USDCTrade = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountOut, currency)
+  const v3USDCTrade = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountOut, currency, {
+    maxHops: 2,
+  })
 
   return useMemo(() => {
     if (!currency || !stablecoin) {

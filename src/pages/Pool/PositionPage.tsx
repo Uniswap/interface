@@ -15,6 +15,7 @@ import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { SupportedChainId } from 'constants/chains'
+import { KROM } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -23,14 +24,16 @@ import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { DateTime } from 'luxon/src/luxon'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
+import { ExternalLink, HideExtraSmall, HideSmall, TYPE } from 'theme'
+import { MEDIA_WIDTHS } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatTickPrice } from 'utils/formatTickPrice'
@@ -70,6 +73,91 @@ const PageWrapper = styled.div`
     min-width: 340px;
     max-width: 340px;
   `};
+`
+
+const DesktopHeader = styled.div`
+  display: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px;
+
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    align-items: center;
+    display: flex;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    & > div:last-child {
+      text-align: right;
+      margin-right: 12px;
+    }
+  }
+`
+
+const DataLineItem = styled.div`
+  font-size: 14px;
+`
+
+const RangeLineItem = styled(DataLineItem)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  margin-top: 4px;
+  width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  background-color: ${({ theme }) => theme.bg2};
+    border-radius: 12px;
+    padding: 8px 0;
+`};
+`
+
+const LinkRow = styled(ExternalLink)`
+  align-items: center;
+  border-radius: 20px;
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-between;
+  color: ${({ theme }) => theme.text1};
+  margin: 8px 0;
+  padding: 16px;
+  text-decoration: none;
+  font-weight: 500;
+  background-color: ${({ theme }) => theme.bg1};
+
+  &:last-of-type {
+    margin: 8px 0 0 0;
+  }
+  & > div:not(:first-child) {
+    text-align: center;
+  }
+  :hover {
+    background-color: ${({ theme }) => theme.bg2};
+  }
+
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    /* flex-direction: row; */
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+    row-gap: 12px;
+  `};
+`
+
+const MobileHeader = styled.div`
+  font-weight: medium;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    display: none;
+  }
 `
 
 const BadgeText = styled.div`
@@ -244,7 +332,7 @@ export function PositionPage({
   const theme = useTheme()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
-  const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
+  const { loading, position: positionDetails, createdLogs, processedLogs } = useV3PositionFromTokenId(parsedTokenId)
 
   const {
     token0: token0Address,
@@ -260,6 +348,10 @@ export function PositionPage({
     owner,
   } = positionDetails || {}
 
+  const { transactionHash: createdTxn, event: createdEvent, blockHash: createdBlockNumber } = createdLogs || {}
+
+  const { transactionHash: processedTxn, event: processedEvent, blockHash: processedBlockNumber } = processedLogs || {}
+
   const removed = liquidity?.eq(0)
 
   const token0 = useToken(token0Address)
@@ -267,6 +359,8 @@ export function PositionPage({
 
   const metadata = usePositionTokenURI(parsedTokenId)
 
+  const currency0Wrapped = token0 ? token0 : undefined
+  const currency1Wrapped = token1 ? token1 : undefined
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
@@ -280,19 +374,10 @@ export function PositionPage({
   }, [liquidity, pool, tickLower, tickUpper])
 
   const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
-  const isClosed: boolean = processed?.isZero() ? false : true
-
-  const pricesFromPosition = getPriceOrderingFromPositionForUI(position)
-  const [manuallyInverted, setManuallyInverted] = useState(false)
+  const isClosed: boolean = processed ? true : false
 
   // handle manual inversion
-  const { priceLower, priceUpper, base } = useInverter({
-    priceLower: pricesFromPosition.priceLower,
-    priceUpper: pricesFromPosition.priceUpper,
-    quote: pricesFromPosition.quote,
-    base: pricesFromPosition.base,
-    invert: manuallyInverted,
-  })
+  const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
 
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
@@ -346,8 +431,90 @@ export function PositionPage({
 
   const currencyAmount = feeValue0?.greaterThan(0) ? feeValue0 : feeValue1
 
+  const orderType = createdEvent?.orderType
+
+  const serviceFeePaid = processedEvent?.serviceFeePaid
+
+  const serviceFeePaidKrom: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!serviceFeePaid || !chainId) return undefined
+    return CurrencyAmount.fromRawAmount(KROM[chainId], serviceFeePaid?.toString())
+  }, [serviceFeePaid, chainId])
+
+  const createdEventAmount0 = createdEvent?.amount0
+  const createdEventAmount1 = createdEvent?.amount1
+
+  const currencyCreatedEventAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!createdEventAmount0 || !currency0Wrapped) return undefined
+    if (!createdEventAmount1 || !currency1Wrapped) return undefined
+
+    if (createdEventAmount0.gt(createdEventAmount1)) {
+      return CurrencyAmount.fromRawAmount(currency0Wrapped as Token, createdEventAmount0?.toString())
+    }
+    return CurrencyAmount.fromRawAmount(currency1Wrapped as Token, createdEventAmount1?.toString())
+  }, [createdEventAmount0, currency0Wrapped, createdEventAmount1, currency1Wrapped])
+
+  const [createdBlockDate, setCreatedBlockDate] = useState<DateTime>()
+  const [processedBlockDate, setProcessedBlockDate] = useState<DateTime>()
+
+  useEffect(() => {
+    let active = true
+    load()
+    return () => {
+      active = false
+    }
+
+    async function load() {
+      setCreatedBlockDate(undefined) // this is optional
+      if (createdBlockNumber) {
+        const res = await library?.getBlock(createdBlockNumber)
+        if (!res?.timestamp) {
+          return
+        }
+        setCreatedBlockDate(DateTime.fromSeconds(res?.timestamp))
+      }
+    }
+  }, [createdBlockNumber, library])
+
+  useEffect(() => {
+    let active = true
+    load()
+    return () => {
+      active = false
+    }
+
+    async function load() {
+      setProcessedBlockDate(undefined) // this is optional
+      if (processedBlockNumber) {
+        const res = await library?.getBlock(processedBlockNumber)
+        if (!res?.timestamp) {
+          return
+        }
+        setProcessedBlockDate(DateTime.fromSeconds(res?.timestamp))
+      }
+    }
+  }, [processedBlockNumber, library])
+
   // TODO (pai) fix the target price ; upper or lower ; buy or sell
-  const targetPrice = priceUpper
+  const positionSummaryLink = useMemo(() => {
+    if (!chainId || !createdTxn) return undefined
+
+    return getExplorerLink(chainId, createdTxn, ExplorerDataType.TRANSACTION)
+  }, [chainId, createdTxn])
+
+  const processedSummaryLink = useMemo(() => {
+    if (!chainId || !processedTxn) return undefined
+
+    return getExplorerLink(chainId, processedTxn, ExplorerDataType.TRANSACTION)
+  }, [chainId, processedTxn])
+
+  // TODO (pai) fix the target price ; upper or lower ; buy or sell
+  const targetPrice = useMemo(() => {
+    if (priceUpper?.baseCurrency != currencyCreatedEventAmount?.currency) {
+      // invert
+      return priceUpper?.invert()
+    }
+    return priceUpper
+  }, [currencyCreatedEventAmount, priceUpper])
 
   const addTransaction = useTransactionAdder()
   const limitManager = useLimitOrderManager()
@@ -541,10 +708,7 @@ export function PositionPage({
                 </TYPE.label>
                 <Badge style={{ marginRight: '8px' }}>
                   <BadgeText>
-                    <Trans>
-                      Trade {currencyAmount?.toSignificant(6)} {currencyAmount?.currency?.symbol} for{' '}
-                      {targetPrice?.toSignificant(6)} {currencyQuote?.symbol}
-                    </Trans>
+                    <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
                   </BadgeText>
                 </Badge>
                 <RangeBadge removed={removed} inRange={inRange} closed={isClosed} />
@@ -654,17 +818,7 @@ export function PositionPage({
                     <Trans>Price Details</Trans>
                   </Label>
                 </RowFixed>
-                <RowFixed>
-                  {currencyBase && currencyQuote && (
-                    <RateToggle
-                      currencyA={currencyBase}
-                      currencyB={currencyQuote}
-                      handleRateToggle={() => setManuallyInverted(!manuallyInverted)}
-                    />
-                  )}
-                </RowFixed>
               </RowBetween>
-
               <RowBetween>
                 <LightCard padding="12px" width="100%">
                   <AutoColumn gap="8px" justify="center">
@@ -689,7 +843,7 @@ export function PositionPage({
                     <ExtentsText>
                       <Trans>Target price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">{targetPrice?.toSignificant(6)}</TYPE.mediumHeader>
+                    <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(6)}</TYPE.mediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>
@@ -699,6 +853,93 @@ export function PositionPage({
                   </AutoColumn>
                 </LightCard>
               </RowBetween>
+            </AutoColumn>
+          </DarkCard>
+
+          <DarkCard>
+            <AutoColumn gap="2px" style={{ width: '100%' }}>
+              <AutoColumn gap="2px">
+                <RowBetween style={{ alignItems: 'flex-start' }}>
+                  <AutoColumn gap="2px">
+                    <Label>
+                      <Trans>Trade History</Trans>
+                    </Label>
+                  </AutoColumn>
+                </RowBetween>
+              </AutoColumn>
+
+              {currencyCreatedEventAmount && positionSummaryLink ? (
+                <LinkRow href={positionSummaryLink}>
+                  <RangeLineItem>
+                    <ExtentsText>
+                      <Trans>{createdBlockDate && createdBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
+                    </ExtentsText>
+                    <HideSmall>
+                      <DoubleArrow>⟷</DoubleArrow>{' '}
+                    </HideSmall>
+                    <TYPE.subHeader>
+                      <Trans>
+                        Created {orderType?.eq(1) ? 'Sell' : 'Buy'} Limit Trade{' '}
+                        {currencyCreatedEventAmount?.toSignificant(4)}{' '}
+                        {currencyCreatedEventAmount?.currency
+                          ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
+                          : ''}{' '}
+                        for{' '}
+                        {targetPrice && currencyCreatedEventAmount
+                          ? targetPrice?.quote(currencyCreatedEventAmount).toSignificant(6)
+                          : ''}{' '}
+                        {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''} ↗
+                      </Trans>
+                    </TYPE.subHeader>
+                  </RangeLineItem>
+                </LinkRow>
+              ) : (
+                ''
+              )}
+              {serviceFeePaidKrom && processedSummaryLink ? (
+                <LinkRow href={processedSummaryLink}>
+                  <RangeLineItem>
+                    <ExtentsText>
+                      <Trans>{processedBlockDate && processedBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
+                    </ExtentsText>
+                    <HideSmall>
+                      <DoubleArrow>⟷</DoubleArrow>{' '}
+                    </HideSmall>
+                    <TYPE.subHeader>
+                      <Trans>
+                        Collected {feeValue0?.toSignificant(4)}{' '}
+                        {feeValue0?.currency ? unwrappedToken(feeValue0?.currency)?.symbol : ''} and{' '}
+                        {feeValue1?.toSignificant(4)}{' '}
+                        {feeValue1?.currency ? unwrappedToken(feeValue1?.currency)?.symbol : ''} ↗
+                      </Trans>
+                    </TYPE.subHeader>
+                  </RangeLineItem>
+                </LinkRow>
+              ) : (
+                ''
+              )}
+
+              {serviceFeePaidKrom && processedSummaryLink ? (
+                <LinkRow href={processedSummaryLink}>
+                  <RangeLineItem>
+                    <ExtentsText>
+                      <Trans>{processedBlockDate && processedBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
+                    </ExtentsText>
+                    <HideSmall>
+                      <DoubleArrow>⟷</DoubleArrow>{' '}
+                    </HideSmall>
+                    <TYPE.subHeader>
+                      <Trans>
+                        Paid {serviceFeePaidKrom?.toSignificant(4)}{' '}
+                        {serviceFeePaidKrom?.currency ? unwrappedToken(serviceFeePaidKrom?.currency)?.symbol : ''}{' '}
+                        service fees ↗
+                      </Trans>
+                    </TYPE.subHeader>
+                  </RangeLineItem>
+                </LinkRow>
+              ) : (
+                ''
+              )}
             </AutoColumn>
           </DarkCard>
         </AutoColumn>

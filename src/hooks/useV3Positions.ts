@@ -1,7 +1,12 @@
+import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
 import { Currency, CurrencyAmount, Ether, Token, WETH9 } from '@uniswap/sdk-core'
+import LIMIT_ABI from 'abis/limit-order-manager.json'
 import { KROM } from 'constants/tokens'
-import { useMemo } from 'react'
+import QueryString from 'qs'
+import { useMemo, useState } from 'react'
+import { useLogs } from 'state/logs/hooks'
 import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useNetworkGasPrice } from 'state/user/hooks'
 import { PositionDetails } from 'types/position'
@@ -16,6 +21,8 @@ interface UseV3PositionsResults {
   minBalance: CurrencyAmount<Token> | undefined
   gasPrice: CurrencyAmount<Currency> | undefined
 }
+
+const LimitOrderManagerInterface = new Interface(LIMIT_ABI)
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
   const limitOrderManager = useLimitOrderManager()
@@ -61,14 +68,168 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
 interface UseV3PositionResults {
   loading: boolean
   position: PositionDetails | undefined
+  createdLogs: ProposalCreatedLogs | undefined
+  processedLogs: ProposalCreatedLogs | undefined
+}
+
+interface ProposalCreatedLogs {
+  transactionHash: string
+  blockHash: string
+  event: Result
+}
+
+/**
+ * Position created events to get data emitted from
+ * new limit order created.
+ */
+function usePositionCreatedLogs(
+  contract: Contract | null,
+  tokenId: BigNumber | undefined,
+  account: string | null | undefined
+): ProposalCreatedLogs[] | undefined {
+  // create filters for
+  const filter = useMemo(() => contract?.filters?.LimitOrderCreated(account, tokenId), [contract])
+
+  const useLogsResult = useLogs(filter)
+
+  return useMemo(() => {
+    return useLogsResult?.logs
+      ?.map((log) => {
+        const parsed = LimitOrderManagerInterface.parseLog(log).args
+        return {
+          transactionHash: log.transactionHash,
+          blockHash: log.blockHash,
+          parsed,
+        }
+      })
+      ?.map((parsed) => {
+        let transactionHash!: string
+        let blockHash!: string
+        let event!: Result
+        try {
+          transactionHash = parsed.transactionHash
+          blockHash = parsed.blockHash
+          event = parsed.parsed
+        } catch (error) {
+          // replace invalid UTF-8 in the description with replacement characters
+        }
+        return {
+          transactionHash,
+          blockHash,
+          event,
+        }
+      })
+  }, [useLogsResult])
+}
+
+/**
+ * Position created events to get data emitted from
+ * order processed.
+ */
+function usePositionProcessedLogs(
+  contract: Contract | null,
+  tokenId: BigNumber | undefined,
+  account: string | null | undefined
+): ProposalCreatedLogs[] | undefined {
+  // create filters for
+  const filter = useMemo(
+    () => contract?.filters?.LimitOrderProcessed('0x6a055C65d46fEe70d0d6cc22dF857cfc22D6cE55', tokenId),
+    [contract]
+  )
+
+  const useLogsResult = useLogs(filter)
+
+  return useMemo(() => {
+    return useLogsResult?.logs
+      ?.map((log) => {
+        const parsed = LimitOrderManagerInterface.parseLog(log).args
+        return {
+          transactionHash: log.transactionHash,
+          blockHash: log.blockHash,
+          parsed,
+        }
+      })
+      ?.map((parsed) => {
+        let transactionHash!: string
+        let event!: Result
+        let blockHash!: string
+        try {
+          transactionHash = parsed.transactionHash
+          event = parsed.parsed
+          blockHash = parsed.blockHash
+        } catch (error) {
+          // replace invalid UTF-8 in the description with replacement characters
+        }
+        return {
+          transactionHash,
+          blockHash,
+          event,
+        }
+      })
+  }, [useLogsResult])
+}
+
+/**
+ * Position created events to get data emitted from
+ * order processed.
+ */
+function usePositionCollectedLogs(
+  contract: Contract | null,
+  tokenId: BigNumber | undefined,
+  account: string | null | undefined
+): ProposalCreatedLogs[] | undefined {
+  // create filters for
+  const filter = useMemo(() => contract?.filters?.LimitOrderCollected(account, tokenId), [contract])
+
+  const useLogsResult = useLogs(filter)
+
+  return useMemo(() => {
+    return useLogsResult?.logs
+      ?.map((log) => {
+        const parsed = LimitOrderManagerInterface.parseLog(log).args
+        return {
+          transactionHash: log.transactionHash,
+          blockHash: log.blockHash,
+          parsed,
+        }
+      })
+      ?.map((parsed) => {
+        let transactionHash!: string
+        let event!: Result
+        let blockHash!: string
+        try {
+          transactionHash = parsed.transactionHash
+          event = parsed.parsed
+          blockHash = parsed.blockHash
+        } catch (error) {
+          // replace invalid UTF-8 in the description with replacement characters
+        }
+        return {
+          transactionHash,
+          blockHash,
+          event,
+        }
+      })
+  }, [useLogsResult])
 }
 
 export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3PositionResults {
+  const { account } = useActiveWeb3React()
+
   const position = useV3PositionsFromTokenIds(tokenId ? [tokenId] : undefined)
-  return {
-    loading: position.loading,
-    position: position.positions?.[0],
-  }
+  const limitOrderManager = useLimitOrderManager()
+
+  const positionCreatedLogs = usePositionCreatedLogs(limitOrderManager, tokenId, account)
+  const positionProcessedLogs = usePositionProcessedLogs(limitOrderManager, tokenId, account)
+
+  return useMemo(() => {
+    return {
+      loading: position.loading,
+      position: position.positions?.[0],
+      createdLogs: positionCreatedLogs?.[0],
+      processedLogs: positionProcessedLogs?.[0],
+    }
+  }, [position, positionCreatedLogs, positionProcessedLogs])
 }
 
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
@@ -78,33 +239,18 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
 
   const gasPrice = useNetworkGasPrice()
 
-  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(limitOrderManager, 'balanceOf', [
+  const { loading: balanceLoading, result: tokenIdResults } = useSingleCallResult(limitOrderManager, 'tokensOfOwner', [
     account ?? undefined,
   ])
 
-  // we don't expect any account balance to ever exceed the bounds of max safe int
-  const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
-
-  const tokenIdsArgs = useMemo(() => {
-    if (accountBalance && account) {
+  const tokenIds = useMemo(() => {
+    if (tokenIdResults && account) {
       const tokenRequests = []
-      for (let i = 0; i < accountBalance; i++) {
-        tokenRequests.push([account, i])
+      const tokens = tokenIdResults?.ownerTokens
+      for (let i = 0; i < tokens.length; i++) {
+        tokenRequests.push(tokens[i]?.toNumber())
       }
       return tokenRequests
-    }
-    return []
-  }, [account, accountBalance])
-
-  const tokenIdResults = useSingleContractMultipleData(limitOrderManager, 'tokenOfOwnerByIndex', tokenIdsArgs)
-  const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults])
-
-  const tokenIds = useMemo(() => {
-    if (account) {
-      return tokenIdResults
-        .map(({ result }) => result)
-        .filter((result): result is Result => !!result)
-        .map((result) => BigNumber.from(result[0]))
     }
     return []
   }, [account, tokenIdResults])
@@ -134,7 +280,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
   }, [chainId, minBalanceResult])
 
   return {
-    loading: someTokenIdsLoading || balanceLoading || positionsLoading || fundingLoading || minBalanceLoading,
+    loading: balanceLoading || positionsLoading || fundingLoading || minBalanceLoading,
     positions,
     fundingBalance,
     minBalance,

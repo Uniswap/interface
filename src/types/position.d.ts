@@ -9,7 +9,6 @@ export interface PositionDetails {
   tickLower: number
   tickUpper: number
   liquidity: BigNumber
-  opened: BigNumber
   processed: BigNumber
   tokensOwed0: BigNumber
   tokensOwed1: BigNumber
