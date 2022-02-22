@@ -69,14 +69,10 @@ export default function Input({ disabled, focused }: InputProps) {
   const mockApproved = true
 
   // account for gas needed if using max on native token
-  const maxAmount = useMemo(() => maxAmountSpend(balance), [balance])
-
-  const onMax = useMemo(() => {
-    if (maxAmount?.greaterThan(0)) {
-      return () => updateSwapInputAmount(maxAmount.toExact())
-    }
-    return
-  }, [maxAmount, updateSwapInputAmount])
+  const max = useMemo(() => {
+    const maxAmount = maxAmountSpend(balance)
+    return maxAmount?.greaterThan(0) ? maxAmount.toExact() : undefined
+  }, [balance])
 
   const balanceColor = useMemo(() => {
     const insufficientBalance =
@@ -90,8 +86,8 @@ export default function Input({ disabled, focused }: InputProps) {
       <TokenInput
         currency={swapInputCurrency}
         amount={(swapInputAmount !== undefined ? swapInputAmount : swapInputCurrencyAmount?.toSignificant(6)) ?? ''}
+        max={max}
         disabled={disabled}
-        onMax={onMax}
         onChangeInput={updateSwapInputAmount}
         onChangeCurrency={updateSwapInputCurrency}
         loading={isLoading}
