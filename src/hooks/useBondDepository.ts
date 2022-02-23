@@ -229,6 +229,7 @@ export function usePurchaseBondCallback(): PurchaseBondCallback {
 
         if (!depository) return { success: false, txHash }
 
+        // TODO: check if this fails with floating point numbers
         const amountBigNumber = BigNumber.from(`${amount}`).mul(BigNumber.from('10').pow(bond.quoteDecimals))
         const maxPriceBignNumber = parseEther(`${maxPrice * 1e18}`)
 

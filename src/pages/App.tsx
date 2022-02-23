@@ -18,8 +18,6 @@ import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Bond from './Bonds'
-import Earn from './Earn'
-import Manage from './Earn/Manage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -83,9 +81,6 @@ export default function App() {
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
               <Switch>
-                <Route exact strict path="/uni" component={Earn} />
-                <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
-
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/swap" component={Swap} />

@@ -18,6 +18,7 @@ import {
   DepositLiquidityStakingTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  GenStakingTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   RemoveLiquidityV2TransactionInfo,
   RemoveLiquidityV3TransactionInfo,
@@ -99,6 +100,14 @@ function ApprovalSummary({ info }: { info: ApproveTransactionInfo }) {
   const token = useToken(info.tokenAddress)
 
   return <Trans>Approve {token?.symbol}</Trans>
+}
+
+function GenStakingSummary({ info: { amountStaked, stakedTo } }: { info: GenStakingTransactionInfo }) {
+  return (
+    <Trans>
+      {amountStaked} GEN staked to {stakedTo}
+    </Trans>
+  )
 }
 
 function VoteSummary({ info }: { info: VoteTransactionInfo }) {
@@ -332,6 +341,9 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.BOND:
       return <BondSummary info={info} />
+
+    case TransactionType.GEN_STAKING:
+      return <GenStakingSummary info={info} />
 
     case TransactionType.CLAIM:
       return <ClaimSummary info={info} />

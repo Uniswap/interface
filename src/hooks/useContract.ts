@@ -1,7 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
@@ -19,12 +18,14 @@ import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
 import BOND_DEPOSITORY_ABI from 'abis/genesis/bond-depository-V2.json'
 import GEN_ERC20_ABI from 'abis/genesis/genesis-erc20-token.json'
+import GEN_STAKING_ABI from 'abis/genesis/staking.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   DAI_GEN_PAIR_ADDRESS,
   DAO_BOND_DEPOSITORY,
+  DAO_STAKING,
   ENS_REGISTRAR_ADDRESSES,
   GEN_ADDRESS,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
@@ -151,8 +152,8 @@ export function useUniContract() {
   return useContract(chainId ? UNI[chainId]?.address : undefined, UNI_ABI, true)
 }
 
-export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean) {
-  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
+export function useStakingContract() {
+  return useContract(DAO_STAKING, GEN_STAKING_ABI, true)
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {

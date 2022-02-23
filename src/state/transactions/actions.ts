@@ -36,6 +36,7 @@ export enum TransactionType {
   SUBMIT_PROPOSAL = 14,
   REMOVE_LIQUIDITY_V2 = 15,
   BOND = 16,
+  GEN_STAKING = 17,
 }
 
 export interface BaseTransactionInfo {
@@ -169,6 +170,12 @@ export interface BondTransactionInfo {
   quoteTokenAmount: number
 }
 
+export interface GenStakingTransactionInfo {
+  type: TransactionType.GEN_STAKING
+  amountStaked: number
+  stakedTo: string
+}
+
 export type TransactionInfo =
   | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
@@ -188,6 +195,7 @@ export type TransactionInfo =
   | RemoveLiquidityV2TransactionInfo
   | SubmitProposalTransactionInfo
   | BondTransactionInfo
+  | GenStakingTransactionInfo
 
 export const addTransaction = createAction<{
   chainId: number
