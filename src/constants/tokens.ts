@@ -1,4 +1,13 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
+import {
+  USDC_ARBITRUM_RINKEBY,
+  USDC_GÖRLI,
+  USDC_KOVAN,
+  USDC_OPTIMISTIC_KOVAN,
+  USDC_POLYGON_MUMBAI,
+  USDC_RINKEBY,
+  USDC_ROPSTEN,
+} from '@uniswap/smart-order-router'
 
 import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
@@ -31,7 +40,7 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
-export const USDC = new Token(
+export const USDC_MAINNET = new Token(
   SupportedChainId.MAINNET,
   '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   6,
@@ -52,6 +61,26 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  6,
+  'USDC',
+  'USD//C'
+)
+export const USDC: { [chainId in SupportedChainId]: Token } = {
+  [SupportedChainId.MAINNET]: USDC_MAINNET,
+  [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM,
+  [SupportedChainId.OPTIMISM]: USDC_OPTIMISM,
+  [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN,
+  [SupportedChainId.POLYGON]: USDC_POLYGON,
+  [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI,
+  [SupportedChainId.GOERLI]: USDC_GÖRLI,
+  [SupportedChainId.RINKEBY]: USDC_RINKEBY,
+  [SupportedChainId.KOVAN]: USDC_KOVAN,
+  [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
+}
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -72,13 +101,6 @@ export const WBTC_POLYGON = new Token(
   8,
   'WBTC',
   'Wrapped BTC'
-)
-export const USDC_OPTIMISM = new Token(
-  SupportedChainId.OPTIMISM,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-  6,
-  'USDC',
-  'USD//C'
 )
 export const USDT = new Token(
   SupportedChainId.MAINNET,
@@ -295,4 +317,8 @@ export function nativeOnChain(chainId: number): NativeCurrency {
       ? new MaticNativeCurrency(chainId)
       : ExtendedEther.onChain(chainId))
   )
+}
+
+export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: Token } } = {
+  USDC,
 }

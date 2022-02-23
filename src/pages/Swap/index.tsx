@@ -67,8 +67,8 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.inputCurrencyId),
-    useCurrency(loadedUrlParams?.outputCurrencyId),
+    useCurrency(loadedUrlParams?.[Field.INPUT]?.currencyId),
+    useCurrency(loadedUrlParams?.[Field.OUTPUT]?.currencyId),
   ]
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(

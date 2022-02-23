@@ -1,5 +1,5 @@
 import { tokens } from '@uniswap/default-token-list'
-import { DAI, USDC } from 'constants/tokens'
+import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useSelect, useValue } from 'react-cosmos/fixture'
@@ -41,7 +41,7 @@ function Fixture() {
     none: '',
     Native: 'NATIVE',
     DAI: DAI.address,
-    USDC: USDC.address,
+    USDC: USDC_MAINNET.address,
   }
   const addressOptions = Object.keys(optionsToAddressMap)
   const [defaultInput] = useSelect('defaultInputAddress', {
