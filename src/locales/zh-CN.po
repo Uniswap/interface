@@ -2046,6 +2046,10 @@ msgstr "您正在创建一个池"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "您可以通过提供单一代币(来自代币对的任一代币)向池中添加流动性。我们将自动为您创建LP代币，并将其添加到流动性池中--所有操作都在一次交易中完成。"
 
+#: src/pages/CreatePool/index.tsx
+msgid "You can choose fee that suit your pool based on those pre-made options."
+msgstr ""
+
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
 msgstr ""

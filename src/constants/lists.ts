@@ -19,9 +19,10 @@ const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.j
 const PANGOLIN = 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json'
 const SPOOKY = 'https://raw.githubusercontent.com/SpookySwap/spooky-info/master/src/constants/token/spookyswap.json'
 const COINGECKO = 'https://tokens.coingecko.com/uniswap/all.json'
+const ARBITRUM = 'https://bridge.arbitrum.io/token-list-42161.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
-export const BYPASS_LIST = [PANGOLIN, SPOOKY]
+export const BYPASS_LIST = [PANGOLIN, SPOOKY, ARBITRUM]
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   COINGECKO,
@@ -42,6 +43,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   PANCAKE_EXTENDED,
   PANGOLIN,
   SPOOKY,
+  ARBITRUM,
   ...UNSUPPORTED_LIST_URLS // need to load unsupported tokens as well
 ]
 
@@ -50,8 +52,10 @@ export const BSC_TOKEN_LISTS: string[] = [PANCAKE_TOP100, PANCAKE_EXTENDED]
 export const AVAX_TOKEN_LISTS: string[] = []
 export const FANTOM_TOKEN_LISTS: string[] = []
 export const CRONOS_TOKEN_LISTS: string[] = []
+export const ARBITRUM_TOKEN_LISTS: string[] = [ARBITRUM]
+export const BTTC_TOKEN_LISTS: string[] = []
 
 // default lists to be 'active' aka searched across
-export const DEFAULT_ACTIVE_LIST_URLS: string[] = []
+export const DEFAULT_ACTIVE_LIST_URLS: string[] = [ARBITRUM]
 
 export const HIDE_LIST = [COINGECKO]

@@ -2046,6 +2046,10 @@ msgstr "풀 생성 중"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "단일 토큰(토큰 쌍의 토큰)을 제공하여 풀에 유동성을 추가할 수 있습니다. 한번의 트랜잭션으로 유동성 풀을 추가하고 LP 토큰을 생성합니다. "
 
+#: src/pages/CreatePool/index.tsx
+msgid "You can choose fee that suit your pool based on those pre-made options."
+msgstr ""
+
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
 msgstr ""

@@ -247,7 +247,7 @@ const ZapIn = ({
             setAttemptingTxn(false)
             addTransactionWithType(tx, {
               type: 'Add liquidity',
-              summary: userInCurrencyAmount?.toSignificant(4) + ' ' + independentToken?.symbol
+              summary: userInCurrencyAmount?.toSignificant(6) + ' ' + independentToken?.symbol
             })
 
             setTxHash(tx.hash)

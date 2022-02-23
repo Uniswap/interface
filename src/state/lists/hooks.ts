@@ -10,7 +10,9 @@ import {
   BSC_TOKEN_LISTS,
   MATIC_TOKEN_LISTS,
   CRONOS_TOKEN_LISTS,
-  UNSUPPORTED_LIST_URLS
+  UNSUPPORTED_LIST_URLS,
+  ARBITRUM_TOKEN_LISTS,
+  BTTC_TOKEN_LISTS
 } from '../../constants/lists'
 import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
 import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
@@ -23,10 +25,13 @@ import { AVAX_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/avax.mainnet
 import { FANTOM_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/fantom.mainnet.tokenlist'
 import { CRONOS_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/cronos.testnet.tokenlist'
 import { CRONOS_TOKEN_LIST } from '../../constants/tokenLists/cronos.tokenlist'
+import { ARBITRUM_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/arbitrum.testnet.tokenlist'
+import { ARBITRUM_TOKEN_LIST } from '../../constants/tokenLists/arbitrum.tokenlist'
 import { useActiveWeb3React } from 'hooks'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
 import { WrappedTokenInfo } from './wrappedTokenInfo'
+import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -58,7 +63,10 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.AVAXMAINNET]: {},
   [ChainId.FANTOM]: {},
   [ChainId.CRONOSTESTNET]: {},
-  [ChainId.CRONOS]: {}
+  [ChainId.CRONOS]: {},
+  [ChainId.ARBITRUM_TESTNET]: {},
+  [ChainId.BTTC]: {},
+  [ChainId.ARBITRUM]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -117,6 +125,12 @@ export const getTokenAddressMap = (chainId?: ChainId) => {
       return listToTokenMap(CRONOS_TESTNET_TOKEN_LIST)
     case ChainId.CRONOS:
       return listToTokenMap(CRONOS_TOKEN_LIST)
+    case ChainId.ARBITRUM_TESTNET:
+      return listToTokenMap(ARBITRUM_TESTNET_TOKEN_LIST)
+    case ChainId.ARBITRUM:
+      return listToTokenMap(ARBITRUM_TOKEN_LIST)
+    case ChainId.BTTC:
+      return listToTokenMap(BTTC_TOKEN_LIST)
     default:
       return listToTokenMap(MAINNET_TOKEN_LIST)
   }
@@ -198,6 +212,20 @@ export function useAllListsByChainId(): {
   } else if (chainId && [ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId)) {
     lists = Object.keys(allLists)
       .filter(key => CRONOS_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
+  } else if (chainId && [ChainId.ARBITRUM_TESTNET, ChainId.ARBITRUM].includes(chainId)) {
+    lists = Object.keys(allLists)
+      .filter(key => ARBITRUM_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
+  } else if (chainId && chainId === ChainId.BTTC) {
+    lists = Object.keys(allLists)
+      .filter(key => BTTC_TOKEN_LISTS.includes(key))
       .reduce((obj, key) => {
         obj[key] = allLists[key]
         return obj

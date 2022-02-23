@@ -43,12 +43,13 @@ export const Separator = styled.div`
 `
 
 const PoolPriceBarWrapper = styled.div<{ isAdd?: boolean }>`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 8px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 8px;
 
   @media only screen and (min-width: 1000px) {
-    grid-template-columns: ${({ isAdd }) => (isAdd ? '1fr' : 'repeat(3, 1fr)')};
+    flex-direction: row;
   }
 `
 
@@ -58,7 +59,9 @@ const PoolPriceBarItem = styled.div<{ isAdd?: boolean }>`
   align-items: center;
 
   @media only screen and (min-width: 1000px) {
+    justify-content: flex-end;
     flex-direction: ${({ isAdd }) => (isAdd ? 'row' : 'column-reverse')};
+    flex: ${({ isAdd }) => (isAdd ? 1 : 'unset')};
   }
 `
 
@@ -102,7 +105,7 @@ export function PoolPriceBar({
       {noLiquidity && (
         <>
           <PoolPriceBarItem>
-            <Text fontWeight={400} fontSize={14} color={theme.subText} pt={1}>
+            <Text fontWeight={400} fontSize={14} color={theme.subText} pt={1} textAlign="center">
               {nativeB?.symbol} <Trans>per</Trans> {nativeA?.symbol}
             </Text>
             <TYPE.black fontWeight={400} fontSize={14} color={theme.text}>
@@ -111,7 +114,7 @@ export function PoolPriceBar({
           </PoolPriceBarItem>
 
           <PoolPriceBarItem>
-            <Text fontWeight={400} fontSize={14} color={theme.subText} pt={1}>
+            <Text fontWeight={400} fontSize={14} color={theme.subText} pt={1} textAlign="center">
               {nativeA?.symbol} <Trans>per</Trans> {nativeB?.symbol}
             </Text>
             <TYPE.black fontWeight={400} fontSize={14} color={theme.text}>

@@ -15,7 +15,7 @@ export default function CurrentPrice({ price }: CurrentPriceProps) {
   const theme = useContext(ThemeContext)
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const formattedPrice = showInverted ? price?.toSignificant(4) : price?.invert()?.toSignificant(4)
+  const formattedPrice = showInverted ? price?.toSignificant(8) : price?.invert()?.toSignificant(8)
 
   const show = Boolean(price?.baseCurrency && price?.quoteCurrency)
   const nativeQuote = useCurrencyConvertedToNative(price?.quoteCurrency as Currency)

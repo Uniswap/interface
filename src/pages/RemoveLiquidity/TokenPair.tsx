@@ -348,11 +348,11 @@ export default function TokenPair({
             addTransactionWithType(response, {
               type: 'Remove liquidity',
               summary:
-                parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+                parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
                 ' ' +
                 convertToNativeTokenFromETH(currencyA, chainId).symbol +
                 ' and ' +
-                parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+                parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
                 convertToNativeTokenFromETH(currencyB, chainId).symbol
             })

@@ -35,6 +35,7 @@ export default async function getTokenList(
   const tokenListValidator = getTokenListValidator()
   const parsedENS = parseENSAddress(listUrl)
   let urls: string[]
+
   if (parsedENS) {
     let contentHashUri
     try {
@@ -73,6 +74,7 @@ export default async function getTokenList(
 
     const [json, validator] = await Promise.all([response.json(), tokenListValidator])
     if (BYPASS_LIST.indexOf(listUrl) >= 0) return json
+
     if (!validator(json)) {
       const validationErrors: string =
         validator.errors?.reduce<string>((memo, error) => {

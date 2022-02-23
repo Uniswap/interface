@@ -71,6 +71,7 @@ export function useDerivedMintInfo(
   const [pairState, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
   const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
+
   const noLiquidity: boolean =
     (pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))) &&
     (tokenA?.symbol !== WETH[chainId as ChainId].symbol || tokenB?.symbol !== WETH[chainId as ChainId].symbol)

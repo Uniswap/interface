@@ -24,6 +24,7 @@ import { defaultExchangeClient } from 'apollo/client'
 export function useExchangeClient() {
   const { chainId } = useActiveWeb3React()
   const exchangeSubgraphClients = useSelector((state: AppState) => state.application.exchangeSubgraphClients)
+
   return useMemo(() => {
     if (!chainId) return defaultExchangeClient
     return exchangeSubgraphClients[chainId] || defaultExchangeClient

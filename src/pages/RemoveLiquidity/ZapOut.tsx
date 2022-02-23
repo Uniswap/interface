@@ -382,7 +382,7 @@ export default function ZapOut({
 
             addTransactionWithType(response, {
               type: 'Remove liquidity',
-              summary: parsedAmounts[independentTokenField]?.toSignificant(3) + ' ' + independentToken?.symbol
+              summary: parsedAmounts[independentTokenField]?.toSignificant(6) + ' ' + independentToken?.symbol
             })
 
             setTxHash(response.hash)

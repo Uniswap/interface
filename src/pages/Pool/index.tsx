@@ -177,6 +177,7 @@ export default function Pool() {
       currencies: tokens
     }))
   )
+
   const v2IsLoading =
     fetchingV2PairBalances ||
     v2Pairs?.length < liquidityTokensWithBalances.length ||

@@ -13,12 +13,30 @@ export const dexListConfig: DexList = {
   dmm: {
     name: 'KyberSwap',
     icon: 'https://kyberswap.com/favicon.ico',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.CRONOS]
+    chainIds: [
+      ChainId.MAINNET,
+      ChainId.MATIC,
+      ChainId.BSCMAINNET,
+      ChainId.AVAXMAINNET,
+      ChainId.FANTOM,
+      ChainId.CRONOS,
+      ChainId.ARBITRUM,
+      ChainId.BTTC
+    ]
   },
   kyberswap: {
     name: 'KyberSwap',
     icon: 'https://kyberswap.com/favicon.ico',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.CRONOS]
+    chainIds: [
+      ChainId.MAINNET,
+      ChainId.MATIC,
+      ChainId.BSCMAINNET,
+      ChainId.AVAXMAINNET,
+      ChainId.FANTOM,
+      ChainId.CRONOS,
+      ChainId.ARBITRUM,
+      ChainId.BTTC
+    ]
   },
   uniswap: {
     name: 'UniSwap_V2',
@@ -28,7 +46,7 @@ export const dexListConfig: DexList = {
   sushiswap: {
     name: 'SushiSwap',
     icon: 'https://sushi.com/favicon.ico',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM]
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM, ChainId.ARBITRUM]
   },
   shibaswap: {
     name: 'ShibaSwap',
@@ -68,7 +86,7 @@ export const dexListConfig: DexList = {
   curve: {
     name: 'Curve',
     icon: 'https://curve.fi/favicon-32x32.svg',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM]
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM, ChainId.ARBITRUM]
   },
   jetswap: {
     name: 'JetSwap',
@@ -193,7 +211,7 @@ export const dexListConfig: DexList = {
   balancer: {
     name: 'Balancer',
     icon: 'https://app.balancer.fi/favicon.ico',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC]
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.ARBITRUM]
   },
   axial: {
     name: 'Axial',
@@ -249,6 +267,11 @@ export const dexListConfig: DexList = {
     name: 'PhotonSwap',
     icon: 'https://photonswap.finance/logo.png',
     chainIds: [ChainId.CRONOS]
+  },
+  swapr: {
+    name: 'Swapr',
+    icon: 'https://swapr.eth.link/favicon.png',
+    chainIds: [ChainId.ARBITRUM]
   }
 }
 
@@ -291,7 +314,8 @@ export const dexIds: DexTypes = {
     dinoswap: 8,
     safeswap: 2,
     pantherswap: 3,
-    morpheus: 4
+    morpheus: 4,
+    swapr: 2
   },
   [ChainId.BSCMAINNET]: {
     jetswap: 1
@@ -331,5 +355,6 @@ export const DEX_TO_COMPARE: { [chainId in ChainId]?: DexConfig } = {
   [ChainId.AVAXMAINNET]: findDex('traderjoe'),
   [ChainId.MAINNET]: findDex('uniswap'),
   [ChainId.FANTOM]: findDex('spookyswap'),
-  [ChainId.CRONOS]: findDex('vvs')
+  [ChainId.CRONOS]: findDex('vvs'),
+  [ChainId.ARBITRUM]: findDex('sushiswap')
 }

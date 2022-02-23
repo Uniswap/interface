@@ -133,6 +133,7 @@ const ClaimRewardButton = styled(ButtonPrimary)`
   margin-top: 20px;
   padding: 11px;
   font-size: 14px;
+  width: max-content;
 `
 
 export default function Menu() {
@@ -154,6 +155,9 @@ export default function Menu() {
     if ([ChainId.FANTOM].includes(chainId)) return 'https://multichain.xyz'
     if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId))
       return 'https://cronos.crypto.org/docs/bridge/cdcapp.html'
+    if ([ChainId.ARBITRUM, ChainId.ARBITRUM_TESTNET].includes(chainId)) return 'https://bridge.arbitrum.io'
+    if ([ChainId.BTTC].includes(chainId)) return 'https://wallet.bt.io/bridge'
+
     return ''
   }
 

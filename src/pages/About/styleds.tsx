@@ -193,12 +193,33 @@ export const FooterContainer = styled.div`
   `};
 `
 
-export const Powered = styled(Flex)`
-  img {
-    ${({ theme }) => theme.mediaWidth.upToLarge`
-      max-width: 120px;
-    `}
+// TODO: change this
+export const Powered = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 48px;
+  gap: 52px;
+  align-items: center;
+
+  svg {
+    max-width: 100%;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 48px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    padding: 12px;
+    row-gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  `}
+
 `
 
 export const AboutPage = styled.div`

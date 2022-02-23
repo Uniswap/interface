@@ -83,7 +83,7 @@ function Web3Network(): JSX.Element | null {
         </Row>
         <DropdownIcon open={networkModalOpen} />
       </NetworkSwitchContainer>
-      <NetworkModal node={node} />
+      <NetworkModal />
     </NetworkCard>
   )
 }

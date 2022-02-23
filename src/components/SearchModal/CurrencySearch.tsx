@@ -31,6 +31,7 @@ import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useDebounce from 'hooks/useDebounce'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -88,10 +89,12 @@ export function CurrencySearch({
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
   const isSearchTokenActive = useIsTokenActive(searchToken)
 
+  const nativeToken = convertToNativeTokenFromETH(ETHER, chainId)
+
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
-    return s === '' || s === 'e' || s === 'et' || s === 'eth'
-  }, [searchQuery])
+    return !!nativeToken.symbol?.toLowerCase().startsWith(s)
+  }, [searchQuery, nativeToken.symbol])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 

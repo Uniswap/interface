@@ -2046,6 +2046,10 @@ msgstr "Bir havuz oluşturuyorsunuz"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "Tek bir token (token çiftinden istediğiniz token) sağlayarak havuza likidite ekleyebilirsiniz. Sizin için otomatik olarak LP token’ları oluşturacağız ve bunları likidite havuzuna ekleyeceğiz - Hem de hepsi sadece tek bir işlemde"
 
+#: src/pages/CreatePool/index.tsx
+msgid "You can choose fee that suit your pool based on those pre-made options."
+msgstr ""
+
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
 msgstr ""

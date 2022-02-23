@@ -33,7 +33,25 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114, 250, 25, 338]
+  supportedChainIds: [
+    1,
+    3,
+    4,
+    5,
+    42,
+    80001,
+    137,
+    56,
+    97,
+    43113,
+    43114,
+    250,
+    25,
+    338,
+    ChainId.BTTC,
+    ChainId.ARBITRUM,
+    ChainId.ARBITRUM_TESTNET
+  ]
 })
 
 const SUPPORTED_CHAIN_IDS: ChainId[] = [
@@ -47,7 +65,10 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.AVAXTESTNET,
   ChainId.FANTOM,
   ChainId.CRONOSTESTNET,
-  ChainId.CRONOS
+  ChainId.CRONOS,
+  ChainId.BTTC,
+  ChainId.ARBITRUM,
+  ChainId.ARBITRUM_TESTNET
 ]
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
@@ -65,7 +86,12 @@ export const NETWORK_URLS: {
   [ChainId.AVAXMAINNET]: `https://avalanche.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
   [ChainId.FANTOM]: `https://rpcapi.fantom.network`,
   [ChainId.CRONOSTESTNET]: `https://cronos-testnet-3.crypto.org:8545`,
-  [ChainId.CRONOS]: `https://evm-cronos.crypto.org`
+  [ChainId.CRONOS]: `https://evm-cronos.crypto.org`,
+
+  // [ChainId.BTTC]: `https://rpc.bt.io`,
+  [ChainId.BTTC]: `https://bttc.dev.kyberengineering.io`,
+  [ChainId.ARBITRUM]: `https://arb1.arbitrum.io/rpc`,
+  [ChainId.ARBITRUM_TESTNET]: `https://rinkeby.arbitrum.io/rpc`
 }
 
 export const walletconnect = new WalletConnectConnector({
@@ -87,6 +113,7 @@ export const portis = new PortisConnector({
 })
 
 export const walletlink = new WalletLinkConnector({
+  // TODO: check this later=> walletlink connect maybe failed becauseof this
   url: NETWORK_URL,
   appName: 'KyberSwap',
   appLogoUrl: 'https://kyberswap.com/favicon.ico'

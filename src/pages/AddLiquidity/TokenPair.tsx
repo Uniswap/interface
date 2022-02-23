@@ -261,11 +261,11 @@ const TokenPair = ({
             addTransactionWithType(response, {
               type: 'Add liquidity',
               summary:
-                parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+                parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
                 ' ' +
                 convertToNativeTokenFromETH(cA, chainId).symbol +
                 ' and ' +
-                parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+                parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
                 convertToNativeTokenFromETH(cB, chainId).symbol
             })

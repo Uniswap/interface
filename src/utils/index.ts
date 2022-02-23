@@ -41,6 +41,7 @@ import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 import { getFantomTokenLogoURL } from './fantomTokenMapping'
 import { getCronosTokenLogoURL } from './cronosTokenMapping'
+import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -89,6 +90,12 @@ function getEtherscanDomain(chainId: ChainId): string {
       return 'https://cronos.crypto.org/explorer/testnet3'
     case ChainId.CRONOS:
       return 'https://cronos.crypto.org/explorer'
+    case ChainId.ARBITRUM_TESTNET:
+      return 'https://testnet.arbiscan.io'
+    case ChainId.ARBITRUM:
+      return 'https://arbiscan.io'
+    case ChainId.BTTC:
+      return 'https://bttcscan.com'
     default:
       return ''
   }
@@ -137,6 +144,12 @@ export function getEtherscanLinkText(chainId: ChainId): string {
   if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId)) {
     return 'View on Explorer'
   }
+
+  if ([ChainId.ARBITRUM, ChainId.ARBITRUM_TESTNET].includes(chainId)) {
+    return 'View on Arbiscan'
+  }
+
+  if (ChainId.BTTC === chainId) return 'View on BTTCScan'
 
   return 'View on Etherscan'
 }
@@ -449,6 +462,11 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
     return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png'
   }
 
+  // WBTC
+  if (address.toLowerCase() === '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f') {
+    return 'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png?1548822744'
+  }
+
   let imageURL
 
   switch (chainId) {
@@ -482,6 +500,13 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
     case ChainId.CRONOS:
       imageURL = getCronosTokenLogoURL(address)
       break
+    case ChainId.ARBITRUM:
+      imageURL = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${address}/logo.png`
+      break
+    case ChainId.BTTC:
+      imageURL =
+        BTTC_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
+      break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
         address
@@ -513,6 +538,8 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
         return 'CRO'
       case ChainId.CRONOS:
         return 'CRO'
+      case ChainId.BTTC:
+        return 'BTT'
       default:
         return 'ETH'
     }

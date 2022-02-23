@@ -109,6 +109,10 @@ export default function AnimatingNumber({
   const numArray = formatForDisplay(baseValue)
   const theme = useTheme()
 
+  if (baseValue === Infinity) {
+    return null
+  }
+
   return (
     <Flex style={{ fontWeight: 500 }}>
       <TicketView fontSize={fontSize}>

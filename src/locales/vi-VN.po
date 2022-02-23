@@ -2046,6 +2046,10 @@ msgstr "Bạn đang tạo một Pool"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "Bạn có thể thêm thanh khoản cho Pool bằng cách cung cấp một token duy nhất (một token trong cặp đôi token). Chúng tôi sẽ tự động tạo mã thông báo LP cho bạn và thêm chúng vào nhóm thanh khoản - tất cả chỉ trong một giao dịch"
 
+#: src/pages/CreatePool/index.tsx
+msgid "You can choose fee that suit your pool based on those pre-made options."
+msgstr ""
+
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
 msgstr ""

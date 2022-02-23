@@ -68,7 +68,7 @@ import {
 import { ButtonEmpty } from 'components/Button'
 import { FooterSocialLink } from 'components/Footer/Footer'
 
-const KNC_NOT_AVAILABLE_IN = [ChainId.CRONOS, ChainId.AVAXMAINNET, ChainId.FANTOM]
+const KNC_NOT_AVAILABLE_IN = [ChainId.CRONOS, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.BTTC, ChainId.ARBITRUM]
 
 const getPoolsMenuLink = (chainId?: ChainId, path?: string) => {
   const pathname = path || 'pools'
@@ -467,7 +467,7 @@ function About() {
                   <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
                     <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
                       <Text fontWeight="600" fontSize="24px">
-                        6
+                        7
                       </Text>
                       <Text color={theme.subText} marginTop="4px" fontSize="14px">
                         <Trans>Chains</Trans>
@@ -728,69 +728,68 @@ function About() {
           <Text marginTop={['100px', '160px']} fontSize={['28px', '36px']} fontWeight="500" textAlign="center">
             <Trans>Powered by</Trans>
 
-            <Powered
-              marginTop="48px"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ gap: '52px' }}
-              flexDirection={above992 ? 'row' : 'column'}
-              width="100%"
-            >
-              <Flex flex={1} justifyContent="center" alignItems="center" sx={{ gap: '52px' }}>
-                <Flex flex={1} alignItems="center">
-                  <img
-                    src={
-                      isDarkMode
-                        ? require('../../assets/svg/about_icon_kyber.svg')
-                        : require('../../assets/svg/about_icon_kyber_light.svg')
-                    }
-                    alt=""
-                    width="100%"
-                  />
-                </Flex>
-                <Flex flex={1} alignItems="center">
-                  <img
-                    src={
-                      isDarkMode
-                        ? require('../../assets/svg/about_icon_ethereum.png')
-                        : require('../../assets/svg/about_icon_ethereum_light.png')
-                    }
-                    alt=""
-                    width="100%"
-                  />
-                </Flex>
-              </Flex>
-              <Flex flex={1} justifyContent="center" alignItems="center" sx={{ gap: '52px' }}>
-                <Flex flex={1} alignItems="center">
-                  <img src={require('../../assets/svg/about_icon_bsc.svg')} alt="" width="100%" />
-                </Flex>
-                <Flex flex={1} alignItems="center">
-                  <img
-                    src={
-                      isDarkMode
-                        ? require('../../assets/svg/about_icon_polygon.png')
-                        : require('../../assets/svg/about_icon_polygon_light.svg')
-                    }
-                    alt=""
-                    width="100%"
-                  />
-                </Flex>
-              </Flex>
-
-              <Flex flex={1} justifyContent="center" alignItems="center" sx={{ gap: '52px' }}>
-                <Flex flex={1} alignItems="center">
-                  <img src={require('../../assets/svg/about_icon_avalanche.svg')} alt="" width="100%" />
-                </Flex>
-                <Flex flex={1} alignItems="center">
-                  <FantomLogoFull color={isDarkMode ? '#fff' : '#1969FF'} />
-                </Flex>
-              </Flex>
-
-              <Flex flex={0.5} justifyContent="center" alignItems="center" sx={{ gap: '52px' }}>
-                <Flex flex={1} alignItems="center">
-                  <CronosLogoFull color={isDarkMode ? undefined : '#142564'} />
-                </Flex>
-              </Flex>
+            <Powered>
+              <div>
+                <img
+                  src={
+                    isDarkMode
+                      ? require('../../assets/svg/about_icon_kyber.svg')
+                      : require('../../assets/svg/about_icon_kyber_light.svg')
+                  }
+                  alt=""
+                  width="100%"
+                />
+              </div>
+              <div>
+                <img
+                  src={
+                    isDarkMode
+                      ? require('../../assets/svg/about_icon_ethereum.png')
+                      : require('../../assets/svg/about_icon_ethereum_light.png')
+                  }
+                  alt=""
+                  width="100%"
+                />
+              </div>
+              <div>
+                <img src={require('../../assets/svg/about_icon_bsc.svg')} alt="" width="100%" />
+              </div>
+              <div>
+                <img
+                  src={
+                    isDarkMode
+                      ? require('../../assets/svg/about_icon_polygon.png')
+                      : require('../../assets/svg/about_icon_polygon_light.svg')
+                  }
+                  alt=""
+                  width="100%"
+                />
+              </div>
+              <div>
+                <img src={require('../../assets/svg/about_icon_avalanche.svg')} alt="" width="100%" />
+              </div>
+              <div>
+                <FantomLogoFull color={isDarkMode ? '#fff' : '#1969FF'} />
+              </div>
+              <div>
+                <CronosLogoFull color={isDarkMode ? undefined : '#142564'} />
+              </div>
+              {/* TODO:  Temporary hide to merge main
+                <div>
+                <img
+                  src={require(`../../assets/images/Arbitrum_HorizontalLogo${isDarkMode ? '-dark' : ''}.svg`)}
+                  alt=""
+                  width="100%"
+                />
+              </div>
+              <div>
+                <img
+                  src={require(`../../assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`)}
+                  alt=""
+                  width="100%"
+                />
+              </div>
+              */}
             </Powered>
           </Text>
         </Wrapper>

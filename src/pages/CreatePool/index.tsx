@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH } from '@dynamic-amm/sdk'
+import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH, ChainId } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { Plus, AlertTriangle } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -16,7 +16,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESSES, CREATE_POOL_AMP_HINT } from '../../constants'
+import { ROUTER_ADDRESSES, CREATE_POOL_AMP_HINT, FEE_OPTIONS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -52,7 +52,9 @@ import {
   Section,
   NumericalInput2,
   USDPrice,
-  Warning
+  Warning,
+  FeeOption,
+  FeeSelector
 } from './styled'
 
 export default function CreatePool({
@@ -65,6 +67,7 @@ export default function CreatePool({
   const theme = useContext(ThemeContext)
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
+  const [selectedFee, setSelectedFee] = useState(FEE_OPTIONS[chainId as ChainId]?.[0])
 
   const { pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
 
@@ -217,11 +220,11 @@ export default function CreatePool({
             addTransactionWithType(response, {
               type: 'Create pool',
               summary:
-                parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+                parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
                 ' ' +
                 convertToNativeTokenFromETH(cA, chainId).symbol +
                 ' and ' +
-                parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+                parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
                 convertToNativeTokenFromETH(cB, chainId).symbol
             })
@@ -543,24 +546,47 @@ export default function CreatePool({
                   />
                 )}
 
-                <Section>
-                  <AutoRow>
-                    <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                      <Trans>Dynamic Fee Range</Trans>:{' '}
-                      {currencies[Field.CURRENCY_A] &&
-                      currencies[Field.CURRENCY_B] &&
-                      pairState !== PairState.INVALID &&
-                      +amp >= 1
-                        ? feeRangeCalc(
-                            !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
-                          )
-                        : '-'}
-                    </Text>
-                    <QuestionHelper
-                      text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
-                    />
-                  </AutoRow>
-                </Section>
+                {chainId && FEE_OPTIONS[chainId] ? (
+                  <AutoColumn gap="16px">
+                    <AutoRow>
+                      <ActiveText>Fee</ActiveText>
+                      <QuestionHelper
+                        text={t`You can choose fee that suit your pool based on those pre-made options.`}
+                      />
+                    </AutoRow>
+                    <FeeSelector>
+                      {FEE_OPTIONS[chainId].map(fee => (
+                        <FeeOption
+                          role="button"
+                          key={fee}
+                          onClick={() => setSelectedFee(fee)}
+                          active={selectedFee === fee}
+                        >
+                          {fee / 100}%
+                        </FeeOption>
+                      ))}
+                    </FeeSelector>
+                  </AutoColumn>
+                ) : (
+                  <Section>
+                    <AutoRow>
+                      <Text fontWeight={500} fontSize={14} color={theme.subText}>
+                        <Trans>Dynamic Fee Range</Trans>:{' '}
+                        {currencies[Field.CURRENCY_A] &&
+                        currencies[Field.CURRENCY_B] &&
+                        pairState !== PairState.INVALID &&
+                        +amp >= 1
+                          ? feeRangeCalc(
+                              !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
+                            )
+                          : '-'}
+                      </Text>
+                      <QuestionHelper
+                        text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
+                      />
+                    </AutoRow>
+                  </Section>
+                )}
 
                 {showSanityPriceWarning && (
                   <Warning>

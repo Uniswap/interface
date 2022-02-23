@@ -158,6 +158,7 @@ export default function Updater(): null {
     if (!latestBlockNumber || !chainId || !multicallContract) return
 
     const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys)
+
     if (outdatedCallKeys.length === 0) return
     const calls = outdatedCallKeys.map(key => parseCallKey(key))
 

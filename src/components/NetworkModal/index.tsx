@@ -1,6 +1,6 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
-import { t } from '@lingui/macro'
+import styled from 'styled-components'
+import { Trans } from '@lingui/macro'
 
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
@@ -10,31 +10,21 @@ import { ChainId } from '@dynamic-amm/sdk'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
-import MenuFlyout from 'components/MenuFlyout'
-import { isMobile } from 'react-device-detect'
+import Modal from 'components/Modal'
+import { Flex, Text } from 'rebass'
+import { X } from 'react-feather'
 
-const ModalBrowserStyle = css`
-  top: 50px;
-  left: 0;
-  align-items: flex-start;
+const Wrapper = styled.div`
   width: 100%;
-  background-color: ${({ theme }) => theme.tableHeader};
-  color: ${({ theme }) => theme.text};
-  min-width: 180px;
-  max-width: 180px;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    top: auto;
-    bottom: 52px;
-    left: 0;
-  `};
+  padding: 20px;
 `
 
 const NetworkList = styled.div`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1fr ${isMobile ? '1fr' : ''};
+  grid-template-columns: 1fr 1fr;
   width: 100%;
+  margin-top: 20px;
 `
 
 const NetworkLabel = styled.span`
@@ -86,7 +76,7 @@ const SelectNetworkButton = styled(ButtonEmpty)`
   }
 `
 
-export default function NetworkModal(props: { node: any }): JSX.Element | null {
+export default function NetworkModal(): JSX.Element | null {
   const { chainId } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
@@ -95,16 +85,29 @@ export default function NetworkModal(props: { node: any }): JSX.Element | null {
   if (!chainId || !networkModalOpen) return null
 
   return (
-    <MenuFlyout
-      node={props.node}
-      browserCustomStyle={ModalBrowserStyle}
-      isOpen={networkModalOpen}
-      toggle={toggleNetworkModal}
-      translatedTitle={t`Select a Network`}
-    >
-      <NetworkList>
-        {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.CRONOS].map(
-          (key: ChainId, i: number) => {
+    <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal}>
+      <Wrapper>
+        <Flex alignItems="center" justifyContent="space-between">
+          <Text fontWeight="500" fontSize={18}>
+            <Trans>Select a Network</Trans>
+          </Text>
+
+          <Flex sx={{ cursor: 'pointer' }} role="button" onClick={toggleNetworkModal}>
+            <X />
+          </Flex>
+        </Flex>
+        <NetworkList>
+          {[
+            ChainId.MAINNET,
+            ChainId.MATIC,
+            ChainId.BSCMAINNET,
+            ChainId.AVAXMAINNET,
+            ChainId.FANTOM,
+            ChainId.CRONOS
+            // TODO: Enable 2 chains
+            // ChainId.ARBITRUM,
+            // ChainId.BTTC
+          ].map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (
                 <SelectNetworkButton key={i} padding="0">
@@ -131,9 +134,9 @@ export default function NetworkModal(props: { node: any }): JSX.Element | null {
                 </ListItem>
               </SelectNetworkButton>
             )
-          }
-        )}
-      </NetworkList>
-    </MenuFlyout>
+          })}
+        </NetworkList>
+      </Wrapper>
+    </Modal>
   )
 }
