@@ -98,9 +98,7 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Curren
           </StyledAutoRouterLabel>
         </Row>
         <ThemedText.ButtonSmall>
-          <Trans>
-            Best route via {routes.length} <Plural value={routes.length} one="hop" other="hops" />
-          </Trans>
+          <Plural value={routes.length} _1="Best route via 1 hop" other="Best route via # hops" />
         </ThemedText.ButtonSmall>
       </Row>
       <Rule />
