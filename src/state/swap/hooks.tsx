@@ -226,7 +226,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     // default to ETH input
     inputCurrency = 'ETH'
     outputCurrency = 'USDC'
-    typedValue = '1.0'
+    typedValue = '1'
   } else if (inputCurrency === outputCurrency) {
     // clear output if identical
     outputCurrency = ''

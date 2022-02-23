@@ -319,6 +319,6 @@ export function nativeOnChain(chainId: number): NativeCurrency {
   )
 }
 
-export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: Token } } = {
+export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]: Token } } = {
   USDC,
 }
