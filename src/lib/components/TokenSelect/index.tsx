@@ -55,7 +55,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
   // Give the balance-less tokens a small block period to avoid layout thrashing from re-sorting.
   useEffect(() => {
     if (!isLoaded) {
-      const timeout = setTimeout(() => setIsLoaded(true), 1500)
+      const timeout = setTimeout(() => setIsLoaded(true), 250)
       return () => clearTimeout(timeout)
     }
     return
