@@ -4,7 +4,9 @@ import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
-export const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId) as number[]
+export const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((chainId): chainId is ChainId =>
+  Number.isInteger(chainId)
+)
 
 async function getQuote(
   {

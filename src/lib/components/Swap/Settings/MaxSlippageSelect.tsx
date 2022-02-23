@@ -130,7 +130,7 @@ export default function MaxSlippageSelect() {
         >
           <Row color={warning === 'error' ? 'error' : undefined}>
             <DecimalInput
-              size={Math.max(maxSlippageInput.length, 3)}
+              size={Math.max(maxSlippageInput.length, 4)}
               value={maxSlippageInput}
               onChange={(input) => processValue(+input)}
               placeholder={placeholder}

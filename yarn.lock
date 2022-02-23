@@ -5648,6 +5648,13 @@
     "@ethersproject/providers" "^5.4.5"
     "@web3-react/types" "^8.0.16-alpha.0"
 
+"@web3-react/walletconnect@8.0.16-alpha.0":
+  version "8.0.16-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/walletconnect/-/walletconnect-8.0.16-alpha.0.tgz#63e69261ec0029db362bc740db90c7ed5c31c144"
+  integrity sha512-ZE1fuPw+rAirw4dTz+/bhgoZWv9opw+eu3XZuDeyee+IWd80U2GYHZtztyF+0RRTRm7A+dRfXx9I2tsnmoF1sw==
+  dependencies:
+    "@web3-react/types" "^8.0.16-alpha.0"
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
