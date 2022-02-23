@@ -5,6 +5,7 @@ import { Flex } from 'src/components/layout/Flex'
 import { ToastIcon, ToastVariant } from 'src/components/notifications/Toast'
 import { Text } from 'src/components/Text'
 import { CHAIN_INFO } from 'src/constants/chains'
+import { ElementName } from 'src/features/telemetry/constants'
 import { getNotificationName } from 'src/features/transactions/TransactionStatusBanner'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { shortenAddress } from 'src/utils/addresses'
@@ -48,7 +49,10 @@ export function TransactionSummaryCard({ tx }: { tx: TransactionDetails }) {
         <Text variant="bodySm">
           {t('From {{addr}} on {{chain}}', { addr: fromAddress, chain: chainName })}
         </Text>
-        <TextButton textVariant="bodySm" onPress={onPressHash}>
+        <TextButton
+          name={ElementName.TransactionSummaryHash}
+          textVariant="bodySm"
+          onPress={onPressHash}>
           {t('Hash: {{hash}}', { hash: trimToLength(tx.hash, 10) })}
         </TextButton>
       </Flex>

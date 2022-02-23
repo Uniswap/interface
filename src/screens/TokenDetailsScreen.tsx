@@ -16,6 +16,7 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { ChainId } from 'src/constants/chains'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
+import { ElementName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -104,12 +105,14 @@ export function TokenDetailsScreen({
                 flex={1}
                 label={t('Buy')}
                 mr="sm"
+                name={ElementName.BuyToken}
                 textVariant="buttonLabelLg"
                 onPress={onPressBuy}
               />
               <PrimaryButton
                 flex={1}
                 label={t('Sell')}
+                name={ElementName.SellToken}
                 textVariant="buttonLabelLg"
                 variant="gray"
                 onPress={onPressSell}

@@ -93,6 +93,7 @@ export function DevScreen({ navigation }: any) {
               <TextButton
                 key={s}
                 m="xs"
+                name={`DEBUG_${s}`}
                 testID={`dev_screen/${s}`}
                 onPress={() => activateWormhole(s)}>
                 {s}
@@ -103,19 +104,19 @@ export function DevScreen({ navigation }: any) {
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
 
-          <TextButton mt="md" onPress={onPressCreate}>
+          <TextButton mt="md" name="DEBUG_Create" onPress={onPressCreate}>
             Create Account
           </TextButton>
-          <TextButton mt="sm" onPress={onPressGetBalance}>
+          <TextButton mt="sm" name="DEBUG_GetBalance" onPress={onPressGetBalance}>
             Get Balance
           </TextButton>
-          <TextButton mt="sm" onPress={onPressToggleTestnets}>
+          <TextButton mt="sm" name="DEBUG_ToggleTestnets" onPress={onPressToggleTestnets}>
             Toggle Testnets
           </TextButton>
-          <TextButton mt="sm" onPress={onPressComputeFee}>
+          <TextButton mt="sm" name="DEBUG_Computefee" onPress={onPressComputeFee}>
             Compute fee
           </TextButton>
-          <TextButton mt="sm" onPress={onPressShowError}>
+          <TextButton mt="sm" name="DEBUG_ShowError" onPress={onPressShowError}>
             Show global error
           </TextButton>
           <Text mt="xl" textAlign="center">

@@ -15,7 +15,7 @@ export function NewAccountOnboarding() {
 
   it('creates a readonly account', async () => {
     await element(by.id(ElementName.Manage)).tap()
-    await element(by.id(ElementName.Import)).tap()
+    await element(by.id(ElementName.ImportAccount)).tap()
 
     // enter address / eth
     await element(by.id('import_account_form/input')).typeText(Accounts.readonly.address)
@@ -32,7 +32,7 @@ export function NewAccountOnboarding() {
   })
 
   it('creates a managed account', async () => {
-    await element(by.id(ElementName.Import)).tap()
+    await element(by.id(ElementName.ImportAccount)).tap()
 
     // enter address / eth
     await element(by.id('import_account_form/input')).typeText(Accounts.managed.privateKey)

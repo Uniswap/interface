@@ -8,7 +8,7 @@ export async function quickOnboarding() {
   await device.setBiometricEnrollment(true)
 
   await element(by.id(ElementName.Manage)).tap()
-  await element(by.id(ElementName.Import)).tap()
+  await element(by.id(ElementName.ImportAccount)).tap()
 
   // enter address / eth
   await element(by.id('import_account_form/input')).typeText(Accounts.managed.privateKey)

@@ -6,6 +6,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { ElementName } from 'src/features/telemetry/constants'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { unlockWallet } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
@@ -30,10 +31,16 @@ export function WelcomeScreen() {
         <Text textAlign="center" variant="h1">
           {t('Uniswap Wallet')}
         </Text>
-        <PrimaryButton label={t('Create New Account')} mt="lg" onPress={onPressCreate} />
+        <PrimaryButton
+          label={t('Create New Account')}
+          mt="lg"
+          name={ElementName.CreateAccount}
+          onPress={onPressCreate}
+        />
         <PrimaryButton
           label={t('Import Account')}
           mt="lg"
+          name={ElementName.ImportAccount}
           testID="import-account-button"
           onPress={onPressImport}
         />

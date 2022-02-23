@@ -7,6 +7,7 @@ import { AddressInput } from 'src/components/input/AddressInput'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout/Box'
 import { Modal } from 'src/components/modals/Modal'
+import { ElementName } from 'src/features/telemetry/constants'
 import { transferTokenActions } from 'src/features/transfer/transferTokenSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
@@ -53,7 +54,7 @@ export function TransferTokenForm() {
                 onChangeText={handleChange('amount')}
               />
             </Box>
-            <PrimaryButton label="Send" onPress={handleSubmit} />
+            <PrimaryButton label="Send" name={ElementName.Submit} onPress={handleSubmit} />
           </Box>
         )}
       </Formik>

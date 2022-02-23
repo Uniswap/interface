@@ -104,6 +104,7 @@ export function SwapForm(props: SwapFormProps) {
                 alignItems="center"
                 borderRadius="md"
                 justifyContent="center"
+                name={ElementName.SwapArrow}
                 px="xxs"
                 py="xs"
                 onPress={onSwitchCurrencies}>
@@ -145,6 +146,7 @@ export function SwapForm(props: SwapFormProps) {
         )}
         {!isWrapAction(wrapType) && (
           <Button
+            name={ElementName.SwapQuickDetails}
             onPress={() => {
               Keyboard.dismiss()
               setShowDetails(!showDetails)

@@ -50,7 +50,7 @@ export function NetworkButtonGroup({
               key={chainId}
               height={36}
               mr="sm"
-              name={`${ElementName.NetworkButtonGroupPrefix}-${chainId}`}
+              name={`${ElementName.NetworkButton}-${chainId}`}
               onPress={() => {
                 selectionAsync()
                 onPress(chainId)

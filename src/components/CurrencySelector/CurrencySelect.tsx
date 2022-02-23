@@ -122,10 +122,7 @@ export function NetworkGroupPrefixButton({
   const theme = useAppTheme()
 
   return (
-    <Button
-      mr="sm"
-      name={`${ElementName.NetworkButtonGroupPrefix}-${elementNameSuffix}`}
-      onPress={onPress}>
+    <Button mr="sm" name={`${ElementName.NetworkButton}-${elementNameSuffix}`} onPress={onPress}>
       <Pill
         backgroundColor="gray100"
         borderColor={selected ? 'gray600' : 'gray50'}

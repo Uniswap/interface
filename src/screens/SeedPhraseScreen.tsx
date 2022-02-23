@@ -8,6 +8,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
+import { ElementName } from 'src/features/telemetry/constants'
 
 interface PhraseButtonProps {
   word: string
@@ -94,6 +95,7 @@ export function SeedPhraseScreen({
           <PrimaryButton
             disabled={removable}
             label={t('Confirm phrase')}
+            name={ElementName.Confirm}
             onPress={onConfirmPhrase}
           />
         )}

@@ -14,6 +14,7 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
+import { ElementName } from 'src/features/telemetry/constants'
 import { BluetoothLedgerSigner } from 'src/features/wallet/accounts/BluetoothLedgerSigner'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { ledgerActions, LedgerActionTypes } from 'src/features/wallet/ledgerSaga'
@@ -309,11 +310,13 @@ export function LedgerScreen({ navigation }: AccountStackScreenProp<Screens.Impo
             disabled={getPrimaryButtonDisabled(currentStep)}
             label={primaryButtonText}
             mt="xl"
+            name={primaryButtonText}
             onPress={onPressPrimaryButton}
           />
           <TextButton
             alignSelf="center"
             mt="md"
+            name={ElementName.Restart}
             textColor="primary1"
             textVariant="body"
             onPress={onPressRestart}>

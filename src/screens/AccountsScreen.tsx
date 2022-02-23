@@ -169,8 +169,8 @@ export function AccountsScreen() {
           <PrimaryButton
             disabled={isLoading}
             label={t('Import Account')}
-            name={ElementName.Import}
-            testID={ElementName.Import}
+            name={ElementName.ImportAccount}
+            testID={ElementName.ImportAccount}
             width="100%"
             onPress={onPressImport}
           />

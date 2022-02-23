@@ -20,6 +20,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
+import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
@@ -120,7 +121,12 @@ interface SettingsRowProps {
 
 function SettingsRow({ page: { screen, icon, text }, navigation, theme }: SettingsRowProps) {
   return (
-    <Button mt="md" px="sm" py="sm" onPress={() => navigation.navigate(screen)}>
+    <Button
+      mt="md"
+      name="DEBUG_Settings_Navigate"
+      px="sm"
+      py="sm"
+      onPress={() => navigation.navigate(screen)}>
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">
           {icon}
@@ -147,7 +153,11 @@ function ActiveAccountSummary() {
       <Text mt="md" variant="h4">
         {displayName}
       </Text>
-      <CopyTextButton copyText={activeAccount.address} mt="sm" textVariant="bodySm">
+      <CopyTextButton
+        copyText={activeAccount.address}
+        mt="sm"
+        name={ElementName.Copy}
+        textVariant="bodySm">
         {shortenAddress(activeAccount.address, 4)}
       </CopyTextButton>
     </Box>
