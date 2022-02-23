@@ -9,9 +9,15 @@
     "dist"
   ],
   "exports": {
+    ".": {
     "types": "./dist/widgets.d.ts",
     "import": "./dist/widgets.esm.js",
     "require": "./dist/widgets.js"
+    },
+    "./fonts.css": {
+      "import": "./dist/fonts.css",
+      "require": "./dist/fonts.css"
+    }
   },
   "types": "./dist/widgets.d.ts",
   "module": "./dist/widgets.esm.js",
