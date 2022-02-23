@@ -1,17 +1,14 @@
 // import { BigNumber } from '@ethersproject/bignumber'
 // import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { DAO_BOND_DEPOSITORY } from 'constants/addresses'
-import { SupportedChainId } from 'constants/chains'
-import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { PurchaseBondCallback } from 'hooks/useBondDepository'
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Text } from 'rebass'
-import { usePurchaseBondInfo } from 'state/bond/hooks'
 import styled from 'styled-components/macro'
 import { IBond } from 'types/bonds'
+import { trim } from 'utils'
 
 import { ButtonEmpty, ButtonPrimary } from '../Button'
 import { LightCard } from '../Card'
@@ -36,36 +33,12 @@ interface IBondPositionCardProps {
   purchaseCallback: PurchaseBondCallback
 }
 
-const amount = '10'
-const maxPrice = '10'
-
 function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCardProps) {
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false)
   const [showMore, setShowMore] = useState<boolean>(true)
-  const { parsedAmount } = usePurchaseBondInfo({ amount, maxPrice, token: bond.quoteCurrency })
-  const [approval, approveCallback] = useApproveCallback(
-    parsedAmount,
-    DAO_BOND_DEPOSITORY[SupportedChainId.POLYGON_MUMBAI]
-  )
-
-  async function handleApprove() {
-    try {
-      await approveCallback()
-    } catch (error) {
-      console.log('ERROR ON APPROVE: ', error)
-    }
-  }
-
-  async function handlePurchase() {
-    try {
-      await purchaseCallback({ account, bond, amount, maxPrice })
-    } catch (error) {
-      console.log('AN ERROR HAS OCCURED', error)
-    }
-  }
 
   return (
-    <StyledPositionCard border="#cccccc" bgColor="#000000">
+    <StyledPositionCard border="#cccccc" bgColor="#000000" width="400px" padding="20px">
       <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
@@ -100,7 +73,7 @@ function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCard
                 <Trans>Price:</Trans>
               </Text>
               <Text fontSize={16} fontWeight={500}>
-                $ {bond.priceUSD}
+                $ {trim(`${bond.priceUSD}`, 3)}
               </Text>
             </FixedHeightRow>
 
@@ -109,11 +82,11 @@ function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCard
                 <Trans>ROI:</Trans>
               </Text>
               <Text fontSize={16} fontWeight={500}>
-                {bond.discount} %
+                {trim(`${bond.discount}`, 3)} %
               </Text>
             </FixedHeightRow>
 
-            <FixedHeightRow>
+            <FixedHeightRow marginBottom="30px">
               <Text fontSize={16} fontWeight={500}>
                 <Trans>Duration:</Trans>
               </Text>
@@ -122,16 +95,9 @@ function BondPositionCard({ account, bond, purchaseCallback }: IBondPositionCard
               </Text>
             </FixedHeightRow>
 
-            {approval === ApprovalState.APPROVED ? (
-              <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={() => setShowPurchaseModal(true)}>
-                <Trans>Bond</Trans>
-              </ButtonPrimary>
-            ) : (
-              <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={handleApprove}>
-                <Trans>Approve </Trans>
-                {bond.displayName.toUpperCase()}
-              </ButtonPrimary>
-            )}
+            <ButtonPrimary padding="8px" $borderRadius="8px" width="100%" onClick={() => setShowPurchaseModal(true)}>
+              <Trans>Bond</Trans>
+            </ButtonPrimary>
           </AutoColumn>
         )}
       </AutoColumn>

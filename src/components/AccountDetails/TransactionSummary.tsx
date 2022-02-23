@@ -10,6 +10,7 @@ import {
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
   ApproveTransactionInfo,
+  BondTransactionInfo,
   ClaimTransactionInfo,
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
@@ -68,6 +69,14 @@ function FormattedCurrencyAmountManaged({
       symbol={currency.symbol ?? '???'}
     />
   ) : null
+}
+
+function BondSummary({ info: { quoteTokenAmount, quoteTokenSymbol } }: { info: BondTransactionInfo }) {
+  return (
+    <Trans>
+      {quoteTokenAmount} {quoteTokenSymbol} worth of sGEN purchased
+    </Trans>
+  )
 }
 
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
@@ -320,6 +329,9 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.ADD_LIQUIDITY_V2_POOL:
       return <AddLiquidityV2PoolSummary info={info} />
+
+    case TransactionType.BOND:
+      return <BondSummary info={info} />
 
     case TransactionType.CLAIM:
       return <ClaimSummary info={info} />

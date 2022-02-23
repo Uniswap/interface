@@ -20,4 +20,9 @@ export const AutoColumn = styled.div<{
   justify-items: ${({ justify }) => justify && justify};
 `
 
+export const Grid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+
 export default Column

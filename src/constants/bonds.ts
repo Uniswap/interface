@@ -4,8 +4,6 @@ import { getGenesisLiquidityTokenPrice, getTokenPrice } from 'utils/prices'
 
 import { DAI_GEN_POLYGON_MUMBAI_PAIR, DAI_POLYGON_MUMBAI, USDC_POLYGON_MUMBAI } from './tokens'
 
-console.log('🚀 ~ file: bonds.ts ~ line 6 ~ DAI_GEN_POLYGON_MUMBAI_PAIR', DAI_GEN_POLYGON_MUMBAI_PAIR.address)
-
 export interface IBondDetails extends Token {
   isLP: boolean
   bondIconSvg: string
@@ -14,8 +12,6 @@ export interface IBondDetails extends Token {
 }
 
 export const BASE_TOKEN_DECIMALS = 9
-
-console.log(DAI_POLYGON_MUMBAI.address)
 
 export const BOND_DETAILS = {
   [SupportedChainId.POLYGON_MUMBAI]: {

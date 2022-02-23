@@ -6,6 +6,8 @@ import { BASE_TOKEN_DECIMALS, BOND_DETAILS, IBondDetails } from 'constants/bonds
 import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useEffect, useState } from 'react'
+import { TransactionType } from 'state/transactions/actions'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import { IBond, IBondCore, IMetadata, ITerms } from 'types/bonds'
 import { prettifySeconds } from 'utils'
 import { getTokenPrice } from 'utils/prices'
@@ -25,8 +27,8 @@ export interface IProcessBondArgs {
 export interface IPurchaseBondArgs {
   account: string | null | undefined
   bond: IBond
-  amount: string
-  maxPrice: string
+  amount: number
+  maxPrice: number
 }
 
 export interface IPurchaseBondCallbackReturn {
@@ -35,8 +37,6 @@ export interface IPurchaseBondCallbackReturn {
 }
 
 export type PurchaseBondCallback = (args: IPurchaseBondArgs) => Promise<IPurchaseBondCallbackReturn>
-
-const GEN_PRICE_DECIMALS = 1e10
 
 // token0 -> Genesis
 // token1 -> Dai
@@ -66,8 +66,6 @@ export function useGetAllBonds() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getMarkets = useCallback(async (): Promise<IBond[]> => {
-    console.log('GETTING ALL MARKETS', depository)
-
     const liveBonds = []
 
     if (!depository) return []
@@ -138,9 +136,7 @@ async function processBond({
   }
 
   const quoteTokenPrice = await bondDetails.pricingFunction()
-  console.log('Before market price', depository?.address)
   const bondPriceBigNumber = await depository?.marketPrice(index)
-  console.log('After market price')
   const bondPrice = +bondPriceBigNumber / Math.pow(10, BASE_TOKEN_DECIMALS)
   const bondPriceUSD = quoteTokenPrice * +bondPrice
   const bondDiscount = (genPrice - bondPriceUSD) / genPrice
@@ -187,8 +183,10 @@ async function processBond({
   // 1. check sold out
   let soldOut = false
   if (+capacityInBaseToken < 1 || +maxPayoutInBaseToken < 1) soldOut = true
-  const maxPayoutOrCapacityInQuote = bond.maxPayout.gt(bond.capacity) ? capacityInQuoteToken : maxPayoutInQuoteToken
-  const maxPayoutOrCapacityInBase = bond.maxPayout.gt(bond.capacity) ? capacityInBaseToken : maxPayoutInBaseToken
+  const maxPayoutOrCapacityInQuote =
+    +capacityInQuoteToken > +maxPayoutInQuoteToken ? maxPayoutInQuoteToken : capacityInQuoteToken
+  const maxPayoutOrCapacityInBase =
+    +capacityInBaseToken > +maxPayoutInBaseToken ? maxPayoutInBaseToken : capacityInBaseToken
 
   return {
     ...bond,
@@ -220,6 +218,7 @@ async function processBond({
 
 export function usePurchaseBondCallback(): PurchaseBondCallback {
   const depository = useBondDepository()
+  const addTransaction = useTransactionAdder()
 
   return useCallback<PurchaseBondCallback>(
     async ({ account, bond, amount, maxPrice }: IPurchaseBondArgs): Promise<IPurchaseBondCallbackReturn> => {
@@ -230,8 +229,8 @@ export function usePurchaseBondCallback(): PurchaseBondCallback {
 
         if (!depository) return { success: false, txHash }
 
-        const amountBigNumber = BigNumber.from(amount)
-        const maxPriceBignNumber = parseEther(`${maxPrice}`)
+        const amountBigNumber = BigNumber.from(`${amount}`).mul(BigNumber.from('10').pow(bond.quoteDecimals))
+        const maxPriceBignNumber = parseEther(`${maxPrice * 1e18}`)
 
         const depositTx = await depository.deposit(
           bond.index,
@@ -241,12 +240,15 @@ export function usePurchaseBondCallback(): PurchaseBondCallback {
           DAO_TREASURY[SupportedChainId.POLYGON_MUMBAI]
         )
 
-        console.log('TRANSACTION HASH: ', depositTx)
+        addTransaction(depositTx, {
+          type: TransactionType.BOND,
+          quoteTokenAmount: amount,
+          quoteTokenSymbol: bond?.quoteCurrency?.symbol,
+        })
 
         await depositTx.wait()
 
         txHash = depositTx.hash
-        console.log('Transaction successful with tx', txHash)
         return { success: true, txHash }
       } catch (error) {
         console.error('GENESIS: Error on purchasing Bond', error)

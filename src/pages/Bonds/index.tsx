@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { AutoColumn } from 'components/Column'
-import { CardBGImage, CardNoise } from 'components/earn/styled'
+import { AutoColumn, Grid } from 'components/Column'
+import { CardBGImage } from 'components/earn/styled'
 import BondPositionCard from 'components/PositionCard/Bond'
 import { RowBetween } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
@@ -12,7 +12,7 @@ import { HideSmall, ThemedText } from 'theme'
 import { IBond } from 'types/bonds'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
+  max-width: 900px;
   width: 100%;
 `
 
@@ -35,18 +35,21 @@ const EmptyProposals = styled.div`
   align-items: center;
 `
 
+const BondWrapper = styled.div`
+  padding: 20px;
+`
+
 export default function Bonds() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
   const purchaseBondCallback = usePurchaseBondCallback()
-  const { bonds, isLoading, error } = useGetAllBonds()
+  const { bonds, isLoading } = useGetAllBonds()
 
   return (
     <PageWrapper>
       <CardBGImage />
-      <CardNoise />
 
-      <AutoColumn gap="md">
+      <AutoColumn justify="center" gap="md">
         <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
           <HideSmall>
             <ThemedText.MediumHeader style={{ marginTop: '0.5rem', marginBottom: '0.5rem', justifySelf: 'flex-start' }}>
@@ -63,11 +66,13 @@ export default function Bonds() {
             </ThemedText.Body>
           </EmptyProposals>
         ) : (
-          <>
+          <Grid>
             {bonds.map((bond: IBond, index: number) => (
-              <BondPositionCard bond={bond} account={account} purchaseCallback={purchaseBondCallback} key={index} />
+              <BondWrapper key={index}>
+                <BondPositionCard bond={bond} account={account} purchaseCallback={purchaseBondCallback} key={index} />
+              </BondWrapper>
             ))}
-          </>
+          </Grid>
         )}
       </AutoColumn>
     </PageWrapper>

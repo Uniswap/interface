@@ -126,8 +126,6 @@ export async function getGenesisLiquidityTokenPrice(address: string, chainId: nu
 }
 
 export async function getTokenPrice(address: string, chainId: number): Promise<number> {
-  console.log('GEN API: ', process.env.REACT_APP_GENESIS_API)
-
   try {
     const resp = (await axios.get(
       `${process.env.REACT_APP_GENESIS_API}/prices/tokens?address=${address}&chainId=${chainId}`
