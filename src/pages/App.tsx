@@ -3,6 +3,7 @@ import Loader from 'components/Loader'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import { useURLWarningVisible } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -53,13 +54,17 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div`
+const HeaderWrapper = styled.div<{ urlWarningVisible?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  top: 0;
+  top: ${({ urlWarningVisible }) => (urlWarningVisible ? '20px' : 0)};
   z-index: 2;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    top: ${(urlWarningVisible) => (urlWarningVisible ? '40px' : 0)};
+  `};
 `
 
 const Marginer = styled.div`
@@ -73,6 +78,8 @@ function TopLevelModals() {
 }
 
 export default function App() {
+  const urlWarningVisible = useURLWarningVisible()
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -81,7 +88,7 @@ export default function App() {
       <Web3ReactManager>
         <AppWrapper>
           <URLWarning />
-          <HeaderWrapper>
+          <HeaderWrapper urlWarningVisible={true}>
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
