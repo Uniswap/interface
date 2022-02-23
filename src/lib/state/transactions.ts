@@ -3,9 +3,9 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { atomWithImmer } from 'jotai/immer'
 
 export enum TransactionType {
-  APPROVAL = 0,
-  SWAP = 1,
-  WRAP = 2,
+  APPROVAL,
+  SWAP,
+  WRAP,
 }
 
 interface BaseTransactionInfo {
