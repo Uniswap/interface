@@ -164,7 +164,7 @@
     "prepublishOnly": "yarn widgets:build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=./custom-test-env.js",
+    "test": "react-scripts test --env=./custom-test-env.cjs",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "widgets:start": "cosmos",
     "widgets:build": "rollup --config --failAfterWarnings --configPlugin typescript2"
