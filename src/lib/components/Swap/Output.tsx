@@ -97,7 +97,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
           <ThemedText.Body2 color="secondary">
             <Row>
               <LoadingRow gap={0.5} $loading={isLoading}>
-                {outputUSDC?.toFixed(2)} {priceImpact}
+                {outputUSDC ? `$${outputUSDC.toFixed(2)}` : '-'} {priceImpact}
               </LoadingRow>
               {balance && (
                 <Balance focused={focused}>
