@@ -5,7 +5,8 @@ import styled from 'styled-components/macro'
 import { useURLWarningToggle, useURLWarningVisible } from '../../state/user/hooks'
 import { isMobile } from '../../utils/userAgent'
 
-const PhishAlert = styled.div<{ isActive: any }>`
+const PhishAlert = styled.div`
+  display: flex;
   width: 100%;
   padding: 6px 6px;
   background-color: ${({ theme }) => theme.blue1};
@@ -14,7 +15,6 @@ const PhishAlert = styled.div<{ isActive: any }>`
   z-index: 10;
   justify-content: space-between;
   align-items: center;
-  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
 `
 
 export const StyledClose = styled(X)`
@@ -27,8 +27,8 @@ export default function URLWarning() {
   const toggleURLWarning = useURLWarningToggle()
   const showURLWarning = useURLWarningVisible()
 
-  return isMobile ? (
-    <PhishAlert isActive={showURLWarning}>
+  return !showURLWarning ? null : isMobile ? (
+    <PhishAlert>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} />
         <Trans>
@@ -38,8 +38,8 @@ export default function URLWarning() {
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
-  ) : window.location.hostname === 'app.uniswap.org' ? (
-    <PhishAlert isActive={showURLWarning}>
+  ) : (
+    <PhishAlert>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} />
         <Trans>
@@ -50,5 +50,5 @@ export default function URLWarning() {
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
-  ) : null
+  )
 }

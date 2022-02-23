@@ -265,7 +265,10 @@ export function usePairAdder(): (pair: Pair) => void {
 }
 
 export function useURLWarningVisible(): boolean {
-  return useAppSelector((state: AppState) => state.user.URLWarningVisible)
+  // Only show warning on Uniswap host, independent of local storage setting
+  return (
+    useAppSelector((state: AppState) => state.user.URLWarningVisible) && window.location.hostname === 'app.uniswap.org'
+  )
 }
 
 export function useURLWarningToggle(): () => void {

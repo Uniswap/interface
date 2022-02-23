@@ -61,10 +61,6 @@ const HeaderWrapper = styled.div<{ urlWarningVisible?: boolean }>`
   position: fixed;
   top: ${({ urlWarningVisible }) => (urlWarningVisible ? '20px' : 0)};
   z-index: 2;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    top: ${(urlWarningVisible) => (urlWarningVisible ? '40px' : 0)};
-  `};
 `
 
 const Marginer = styled.div`
@@ -88,7 +84,7 @@ export default function App() {
       <Web3ReactManager>
         <AppWrapper>
           <URLWarning />
-          <HeaderWrapper urlWarningVisible={true}>
+          <HeaderWrapper urlWarningVisible={urlWarningVisible}>
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
