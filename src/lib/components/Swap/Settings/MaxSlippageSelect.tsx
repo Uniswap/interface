@@ -6,7 +6,7 @@ import { getSlippageWarning, toPercent } from 'lib/hooks/useAllowedSlippage'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'lib/icons'
 import { autoSlippageAtom, maxSlippageAtom } from 'lib/state/settings'
 import styled, { ThemedText } from 'lib/theme'
-import { forwardRef, memo, ReactNode, useCallback, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -88,7 +88,6 @@ export default function MaxSlippageSelect() {
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
   const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
-  const [warning, setWarning] = useState<'warning' | 'error' | undefined>(getSlippageWarning(toPercent(maxSlippage)))
 
   const option = useRef<HTMLButtonElement>(null)
   const showTooltip = useTooltip(option.current)
@@ -96,20 +95,27 @@ export default function MaxSlippageSelect() {
   const input = useRef<HTMLInputElement>(null)
   const focus = useCallback(() => input.current?.focus(), [input])
 
+  const [warning, setWarning] = useState<'warning' | 'error' | undefined>(getSlippageWarning(toPercent(maxSlippage)))
+  useEffect(() => {
+    setWarning(getSlippageWarning(toPercent(maxSlippage)))
+  }, [maxSlippage])
+
+  const onInputSelect = useCallback(() => {
+    focus()
+    const percent = toPercent(maxSlippage)
+    const warning = getSlippageWarning(percent)
+    setAutoSlippage(!percent || warning === 'error')
+  }, [focus, maxSlippage, setAutoSlippage])
+
   const processValue = useCallback(
     (value: number | undefined) => {
       const percent = toPercent(value)
       const warning = getSlippageWarning(percent)
-      setWarning(warning)
       setMaxSlippage(value)
       setAutoSlippage(!percent || warning === 'error')
     },
     [setAutoSlippage, setMaxSlippage]
   )
-  const onInputSelect = useCallback(() => {
-    focus()
-    processValue(maxSlippage)
-  }, [focus, maxSlippage, processValue])
 
   return (
     <Column gap={0.75}>
