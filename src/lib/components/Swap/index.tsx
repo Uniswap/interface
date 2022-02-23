@@ -7,7 +7,8 @@ import useSyncConvenienceFee from 'lib/hooks/swap/useSyncConvenienceFee'
 import useSyncSwapDefaults from 'lib/hooks/swap/useSyncSwapDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
-import useTokenList from 'lib/hooks/useTokenList'
+import useHasFocus from 'lib/hooks/useHasFocus'
+import useTokenList, { useSyncTokenList } from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
 import { useMemo, useState } from 'react'
@@ -49,33 +50,34 @@ export interface SwapProps {
 }
 
 export default function Swap(props: SwapProps) {
-  const list = useTokenList(props.tokenList)
+  useSyncTokenList(props.tokenList)
   useSyncSwapDefaults(props)
   useSyncConvenienceFee(props)
 
   const { active, account, chainId } = useActiveWeb3React()
-  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
   const displayTx = getSwapTx(pendingTxs, displayTxHash)
 
-  const onSupportedChain = useMemo(
-    () => chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId) && list.some((token) => token.chainId === chainId),
-    [chainId, list]
+  const tokenList = useTokenList()
+  const isSwapSupported = useMemo(
+    () => Boolean(chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId) && tokenList?.length),
+    [chainId, tokenList]
   )
 
-  const [focused, setFocused] = useState(false)
+  const focused = useHasFocus(wrapper)
 
   return (
     <SwapPropValidator {...props}>
-      {onSupportedChain && <SwapInfoUpdater />}
+      {isSwapSupported && <SwapInfoUpdater />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!active} />
       </Header>
-      <div onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} ref={setBoundary}>
-        <BoundaryProvider value={boundary}>
+      <div ref={setWrapper}>
+        <BoundaryProvider value={wrapper}>
           <Input disabled={!active} focused={focused} />
           <ReverseButton disabled={!active} />
           <Output disabled={!active} focused={focused}>

@@ -1,10 +1,6 @@
-import { Percent } from '@uniswap/sdk-core'
 import { atomWithReset } from 'jotai/utils'
 
 import { pickAtom, setTogglable } from './atoms'
-
-export const MAX_VALID_SLIPPAGE = new Percent(1, 2)
-export const MIN_HIGH_SLIPPAGE = new Percent(1, 100)
 
 interface Settings {
   autoSlippage: boolean // if true, slippage will use the default calculation

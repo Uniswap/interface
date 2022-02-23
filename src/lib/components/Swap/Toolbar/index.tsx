@@ -24,12 +24,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
     currencyBalances: { [Field.INPUT]: balance },
   } = useSwapInfo()
-
-  const [routeFound, routeIsLoading] = useMemo(
-    () => [Boolean(trade?.swaps), TradeState.LOADING === state || TradeState.SYNCING === state],
-    [state, trade?.swaps]
-  )
-
+  const isRouteLoading = state === TradeState.SYNCING || state === TradeState.LOADING
   const isAmountPopulated = useIsAmountPopulated()
   const { type: wrapType, loading: wrapLoading } = useWrapCallback()
   const caption = useMemo(() => {
@@ -45,10 +40,10 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
       if (wrapType !== WrapType.NOT_APPLICABLE) {
         return <Caption.WrapCurrency wrapType={wrapType} loading={wrapLoading} />
       }
-      if (!trade || routeIsLoading) {
+      if (isRouteLoading) {
         return <Caption.LoadingTrade />
       }
-      if (!routeFound) {
+      if (!trade?.swaps) {
         return <Caption.InsufficientLiquidity />
       }
       if (balance && trade?.inputAmount.greaterThan(balance)) {
@@ -66,9 +61,8 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     disabled,
     inputCurrency,
     isAmountPopulated,
+    isRouteLoading,
     outputCurrency,
-    routeFound,
-    routeIsLoading,
     trade,
     wrapLoading,
     wrapType,

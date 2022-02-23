@@ -1,3 +1,4 @@
+import { ReactComponent as RouterIcon } from 'lib/assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'lib/assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'lib/assets/svg/expando.svg'
 import { ReactComponent as LogoIcon } from 'lib/assets/svg/logo.svg'
@@ -82,6 +83,7 @@ export const Clock = icon(ClockIcon)
 export const HelpCircle = icon(HelpCircleIcon)
 export const Info = icon(InfoIcon)
 export const Link = icon(LinkIcon)
+export const AutoRouter = icon(RouterIcon)
 export const Settings = icon(SettingsIcon)
 export const Slash = icon(SlashIcon)
 export const Trash2 = icon(Trash2Icon)

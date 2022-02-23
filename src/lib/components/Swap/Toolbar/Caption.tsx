@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
+import Tooltip from 'lib/components/Tooltip'
 import { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { AlertTriangle, Icon, Info, Spinner } from 'lib/icons'
 import { ThemedText } from 'lib/theme'
@@ -9,7 +10,7 @@ import { InterfaceTrade } from 'state/routing/types'
 
 import { TextButton } from '../../Button'
 import Row from '../../Row'
-import RoutingTooltip from './RoutingTooltip'
+import RoutingDiagram from '../RoutingDiagram'
 
 interface CaptionProps {
   icon?: Icon
@@ -83,7 +84,9 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
 
   return (
     <>
-      <RoutingTooltip />
+      <Tooltip placement="bottom" icon={Info}>
+        <RoutingDiagram trade={trade} />
+      </Tooltip>
       <TextButton color="primary" onClick={() => setFlip(!flip)}>
         {ratio}
       </TextButton>

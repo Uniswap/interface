@@ -4,7 +4,7 @@
   ],
   "webpack": {
     "configPath": "react-scripts/config/webpack.config",
-    "overridePath": "cosmos.override.js"
+    "overridePath": "cosmos.override.cjs"
   },
   "port": 5001
 }

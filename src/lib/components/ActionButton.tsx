@@ -45,13 +45,13 @@ const actionCss = css`
   }
 `
 
-export const Overlay = styled(Row)<{ showAction: boolean }>`
+export const Overlay = styled(Row)<{ hasAction: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-direction: row-reverse;
   min-height: 3.5em;
   transition: padding 0.25s ease-out;
 
-  ${({ showAction }) => (showAction ? actionCss : '')}
+  ${({ hasAction }) => hasAction && actionCss}
 `
 
 export interface Action {
@@ -71,7 +71,7 @@ export type ActionButtonProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTML
 export default function ActionButton({ color = 'accent', disabled, action, onClick, children }: ActionButtonProps) {
   const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])
   return (
-    <Overlay showAction={Boolean(action)} flex align="stretch">
+    <Overlay hasAction={Boolean(action)} flex align="stretch">
       <StyledButton color={color} disabled={disabled} onClick={action ? action.onClick : onClick}>
         <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
           {action ? action.children : children}

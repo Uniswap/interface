@@ -1,6 +1,6 @@
 import { Icon } from 'lib/icons'
 import styled, { Color } from 'lib/theme'
-import { ComponentProps } from 'react'
+import { ComponentProps, forwardRef } from 'react'
 
 export const BaseButton = styled.button`
   background-color: transparent;
@@ -55,10 +55,12 @@ interface IconButtonProps {
   iconProps?: ComponentProps<Icon>
 }
 
-export function IconButton({ icon: Icon, iconProps, ...props }: IconButtonProps & ComponentProps<typeof BaseButton>) {
-  return (
-    <SecondaryButton {...props}>
-      <Icon {...iconProps} />
-    </SecondaryButton>
-  )
-}
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps & ComponentProps<typeof BaseButton>>(
+  function IconButton({ icon: Icon, iconProps, ...props }: IconButtonProps & ComponentProps<typeof BaseButton>, ref) {
+    return (
+      <SecondaryButton {...props} ref={ref}>
+        <Icon {...iconProps} />
+      </SecondaryButton>
+    )
+  }
+)
