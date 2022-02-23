@@ -35,12 +35,12 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   min-width: 300px;
   padding: 0.25em;
   position: relative;
+  user-select: none;
   width: ${({ width }) => width && (isNaN(Number(width)) ? width : `${width}px`)};
 
   * {
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.fontFamily};
-    user-select: none;
 
     @supports (font-variation-settings: normal) {
       font-family: ${({ theme }) => theme.fontFamilyVariable};
