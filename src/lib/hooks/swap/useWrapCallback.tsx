@@ -44,7 +44,7 @@ export enum WrapType {
   UNWRAP,
 }
 interface UseWrapCallbackReturns {
-  callback: () => Promise<ContractTransaction | null>
+  callback: () => Promise<ContractTransaction>
   error: WrapInputError
   loading: boolean
   type: WrapType
@@ -110,24 +110,14 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
 
   const callback = useCallback(async () => {
     if (!wethContract || !sufficientBalance || !parsedAmountIn || wrapType === WrapType.NOT_APPLICABLE) {
-      return null
+      return Promise.reject()
     }
-    try {
-      setLoading(true)
-      if (wrapType === WrapType.WRAP) {
-        const transaction = await wethContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
-        return transaction
-      } else if (wrapType === WrapType.UNWRAP) {
-        const transaction = await wethContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`)
-        return transaction
-      }
-      return null
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
-      return null
-    }
+    setLoading(true)
+    const result = await (wrapType === WrapType.WRAP
+      ? wethContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
+      : wethContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`))
+    result.wait(1).then(() => setLoading(false))
+    return Promise.resolve(result)
   }, [parsedAmountIn, sufficientBalance, wethContract, wrapType])
 
   return useMemo(

@@ -38,7 +38,14 @@ export interface OutputSwapTransactionInfo extends SwapTransactionInfo {
   maximumInputCurrencyAmount: string
 }
 
-export type TransactionInfo = ApprovalTransactionInfo | SwapTransactionInfo
+export interface WrapTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.WRAP
+  unwrapped: boolean
+  currencyAmountRaw: string
+  chainId?: number
+}
+
+export type TransactionInfo = ApprovalTransactionInfo | SwapTransactionInfo | WrapTransactionInfo
 
 export interface Transaction<T extends TransactionInfo = TransactionInfo> {
   addedTime: number

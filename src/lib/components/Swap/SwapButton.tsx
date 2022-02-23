@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Token, TradeType } from '@uniswap/sdk-core'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
-import { useUpdateAtom } from 'jotai/utils'
-import { useAtomValue } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useSwapInfo } from 'lib/hooks/swap'
 import useSwapApproval, {
   ApprovalState,
@@ -184,13 +183,21 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     setActiveTrade(undefined)
   }, [])
 
-  const handleActionButtonClick = useCallback(() => {
+  const handleActionButtonClick = useCallback(async () => {
     if (wrapType === WrapType.NOT_APPLICABLE) {
       setActiveTrade(trade.trade)
     } else {
-      wrapCallback()
+      const transaction = await wrapCallback()
+      addTransaction({
+        response: transaction,
+        type: TransactionType.WRAP,
+        unwrapped: wrapType === WrapType.UNWRAP,
+        currencyAmountRaw: transaction.value?.toString() ?? '0',
+        chainId,
+      })
+      setDisplayTxHash(transaction.hash)
     }
-  }, [trade.trade, wrapCallback, wrapType])
+  }, [addTransaction, chainId, setDisplayTxHash, trade.trade, wrapCallback, wrapType])
 
   return (
     <>

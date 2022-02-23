@@ -30,7 +30,7 @@ export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } |
 function getSwapTx(txs: { [hash: string]: Transaction }, hash?: string): Transaction<SwapTransactionInfo> | undefined {
   if (hash) {
     const tx = txs[hash]
-    if (tx?.info?.type === TransactionType.SWAP) {
+    if ([TransactionType.SWAP, TransactionType.WRAP].includes(tx?.info?.type)) {
       return tx as Transaction<SwapTransactionInfo>
     }
   }
