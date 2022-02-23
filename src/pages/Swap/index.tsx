@@ -94,8 +94,8 @@ export default function Swap({ history }: RouteComponentProps) {
           const supported = supportedChainId(chainId)
           if (!supported) return true
           return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
-            const shorthandToken = TOKEN_SHORTHANDS[shorthand][supported]
-            return shorthandToken && shorthandToken.address === token.address
+            const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
+            return shorthandTokenAddress && shorthandTokenAddress === token.address
           })
         }),
     [chainId, defaultTokens, urlLoadedTokens]

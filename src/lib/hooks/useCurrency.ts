@@ -105,12 +105,12 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   const nativeCurrency = useNativeCurrency()
   const { chainId } = useActiveWeb3React()
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
-  const shorthandMatch = useMemo(() => {
+  const shorthandMatchAddress = useMemo(() => {
     const chain = supportedChainId(chainId)
     return chain && currencyId ? TOKEN_SHORTHANDS[currencyId.toUpperCase()]?.[chain] : undefined
   }, [chainId, currencyId])
 
-  const token = useTokenFromMapOrNetwork(tokens, isNative || shorthandMatch ? undefined : currencyId)
+  const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
   if (currencyId === null || currencyId === undefined) return currencyId
 
@@ -118,7 +118,7 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
   const wrappedNative = nativeCurrency?.wrapped
   if (wrappedNative?.address?.toUpperCase() === currencyId?.toUpperCase()) return wrappedNative
 
-  return isNative ? nativeCurrency : shorthandMatch ? shorthandMatch : token
+  return isNative ? nativeCurrency : token
 }
 
 /**

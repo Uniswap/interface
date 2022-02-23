@@ -319,6 +319,18 @@ export function nativeOnChain(chainId: number): NativeCurrency {
   )
 }
 
-export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]: Token } } = {
-  USDC,
+export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {
+  USDC: {
+    [SupportedChainId.MAINNET]: USDC_MAINNET.address,
+    [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM.address,
+    [SupportedChainId.OPTIMISM]: USDC_OPTIMISM.address,
+    [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY.address,
+    [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN.address,
+    [SupportedChainId.POLYGON]: USDC_POLYGON.address,
+    [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
+    [SupportedChainId.GOERLI]: USDC_GÖRLI.address,
+    [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
+    [SupportedChainId.KOVAN]: USDC_KOVAN.address,
+    [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
+  },
 }
