@@ -93,9 +93,9 @@ export default function Swap({ history }: RouteComponentProps) {
         .filter((token: Token) => {
           const supported = supportedChainId(chainId)
           if (!supported) return true
-          return !Object.keys(TOKEN_SHORTHANDS[supported]).some((shorthand) => {
+          return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
             const shorthandToken = TOKEN_SHORTHANDS[shorthand][supported]
-            return !shorthandToken || shorthandToken.address !== token.address
+            return shorthandToken && shorthandToken.address === token.address
           })
         }),
     [chainId, defaultTokens, urlLoadedTokens]
