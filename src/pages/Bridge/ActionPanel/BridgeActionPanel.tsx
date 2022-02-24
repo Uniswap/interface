@@ -2,7 +2,11 @@ import React, { useCallback } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { ButtonPrimary } from '../../../components/Button'
 import { useNetworkSwitch } from '../../../hooks/useNetworkSwitch'
-import { useModalOpen, useWalletSwitcherPopoverToggle } from '../../../state/application/hooks'
+import {
+  useModalOpen,
+  useNetworkSwitcherPopoverToggle,
+  useWalletSwitcherPopoverToggle
+} from '../../../state/application/hooks'
 import { BridgeStep } from '../utils'
 import { NetworkSwitcher } from './NetworkSwitcher'
 import { BridgeButton } from './BridgeButton'
@@ -16,6 +20,7 @@ import Column from '../../../components/Column'
 import { useBridgeActionPanel } from './useBridgeActionPanel'
 import { ApprovalState } from '../../../hooks/useApproveCallback'
 import { ApplicationModal } from '../../../state/application/actions'
+import { useUnsupportedChainIdError } from '../../../hooks'
 
 export type BridgeActionPanelProps = {
   account: string | null | undefined
@@ -39,6 +44,8 @@ export const BridgeActionPanel = ({
 }: BridgeActionPanelProps) => {
   const { selectNetwork } = useNetworkSwitch()
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
+
   const {
     approvalState,
     handleApprove,
@@ -49,6 +56,8 @@ export const BridgeActionPanel = ({
     hasAmount
   } = useBridgeActionPanel()
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
+  const unsupportedChainIdError = useUnsupportedChainIdError()
+  const isSwitchNetwork = networkSwitcherPopoverOpen || unsupportedChainIdError
 
   const handleSelectFromNetwork = useCallback(() => {
     selectNetwork(fromNetworkChainId)
@@ -62,8 +71,11 @@ export const BridgeActionPanel = ({
     // No wallet
     if (!account) {
       return (
-        <ButtonPrimary onClick={toggleWalletSwitcherPopover} disabled={networkSwitcherPopoverOpen}>
-          {networkSwitcherPopoverOpen ? 'Switch network' : 'Connect wallet'}
+        <ButtonPrimary
+          onClick={isSwitchNetwork ? toggleNetworkSwitcherPopover : toggleWalletSwitcherPopover}
+          disabled={networkSwitcherPopoverOpen}
+        >
+          {isSwitchNetwork ? 'Switch network' : 'Connect wallet'}
         </ButtonPrimary>
       )
     }
