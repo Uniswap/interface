@@ -101,7 +101,7 @@ export default function StakingRewardsDistributionCreationModalFooter({
         </RowFixed>
         <RowFixed>
           <TYPE.body fontWeight={500} fontSize="12px" color="text5">
-            {startTime ? DateTime.fromJSDate(startTime).toFormat('dd-MM-yyyy hh:mm') : '-'}
+            {startTime ? DateTime.fromJSDate(startTime).toFormat('dd-MM-yyyy HH:mm') : '-'}
           </TYPE.body>
         </RowFixed>
       </RowBetween>
@@ -115,7 +115,7 @@ export default function StakingRewardsDistributionCreationModalFooter({
         </RowFixed>
         <RowFixed>
           <TYPE.body fontWeight={500} fontSize="12px" color="text5">
-            {endTime ? DateTime.fromJSDate(endTime).toFormat('dd-MM-yyyy hh:mm') : '-'}
+            {endTime ? DateTime.fromJSDate(endTime).toFormat('dd-MM-yyyy HH:mm') : '-'}
           </TYPE.body>
         </RowFixed>
       </RowBetween>

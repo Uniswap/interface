@@ -13,7 +13,7 @@ import {
   RoutablePlatform,
   SWPR
 } from '@swapr/sdk'
-import { authereum, injected, walletConnect, walletLink } from '../connectors'
+import { injected, walletConnect, walletLink } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
 import SushiswapLogo from '../assets/svg/sushiswap-logo.svg'
@@ -220,15 +220,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#4196FC',
     mobile: true
   },
-  AUTHEREUM: {
-    connector: authereum,
-    name: 'Authereum',
-    iconName: 'authereum.svg',
-    description: 'Connect using Authereum.',
-    href: null,
-    color: '#4196FC',
-    mobile: true
-  },
   COINBASE: {
     connector: walletLink,
     name: 'Coinbase',
@@ -265,7 +256,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = 'ipfs://QmS3GdeaJbmYQzSf28J8JuhAtq5qfJ2qJCAVcqx9cXscXV'
+export const DEFAULT_TOKEN_LIST = 'ipfs://QmSbyVo6Kz5BuqyAHYcN7UkeCk5cALFp6QmPUN6NtPpDWL'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 
