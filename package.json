@@ -3,13 +3,25 @@
   "version": "0.0.14-beta",
   "description": "Uniswap Interface",
   "homepage": ".",
-  "main": "dist/widgets.js",
-  "module": "dist/widgets.esm.js",
-  "types": "dist/widgets.d.ts",
+  "type": "module",
   "files": [
     "lib",
     "dist"
   ],
+  "exports": {
+    ".": {
+    "types": "./dist/widgets.d.ts",
+    "import": "./dist/widgets.esm.js",
+    "require": "./dist/widgets.js"
+    },
+    "./fonts.css": {
+      "import": "./dist/fonts.css",
+      "require": "./dist/fonts.css"
+    }
+  },
+  "types": "./dist/widgets.d.ts",
+  "module": "./dist/widgets.esm.js",
+  "main": "./dist/widgets.js",
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
@@ -73,13 +85,6 @@
     "@uniswap/v3-periphery": "^1.1.1",
     "@web3-react/metamask": "8.0.16-alpha.0",
     "@web3-react/walletconnect": "8.0.16-alpha.0",
-    "web3-react-abstract-connector": "npm:@web3-react/abstract-connector@^6.0.7",
-    "web3-react-fortmatic-connector": "npm:@web3-react/fortmatic-connector@^6.0.9",
-    "web3-react-injected-connector": "npm:@web3-react/injected-connector@^6.0.7",
-    "web3-react-portis-connector": "npm:@web3-react/portis-connector@^6.0.9",
-    "web3-react-types": "npm:@web3-react/types@^6.0.7",
-    "web3-react-walletconnect-connector": "npm:@web3-react/walletconnect-connector@^7.0.2-alpha.0",
-    "web3-react-walletlink-connector": "npm:@web3-react/walletlink-connector@^6.2.11",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
     "babel-plugin-macros": "^3.1.0",
@@ -110,10 +115,12 @@
     "react-ga": "^2.5.7",
     "react-is": "^17.0.2",
     "react-markdown": "^4.3.1",
+    "react-redux": "^7.2.2",
     "react-router-dom": "^5.0.0",
     "react-scripts": "^4.0.3",
     "react-spring": "^8.0.27",
     "react-use-gesture": "^6.0.14",
+    "redux": "^4.1.2",
     "redux-localstorage-simple": "^2.3.1",
     "rollup": "^2.63.0",
     "rollup-plugin-copy": "^3.4.0",
@@ -132,6 +139,13 @@
     "use-resize-observer": "^8.0.0",
     "wcag-contrast": "^3.0.0",
     "web-vitals": "^2.1.0",
+    "web3-react-abstract-connector": "npm:@web3-react/abstract-connector@^6.0.7",
+    "web3-react-fortmatic-connector": "npm:@web3-react/fortmatic-connector@^6.0.9",
+    "web3-react-injected-connector": "npm:@web3-react/injected-connector@^6.0.7",
+    "web3-react-portis-connector": "npm:@web3-react/portis-connector@^6.0.9",
+    "web3-react-types": "npm:@web3-react/types@^6.0.7",
+    "web3-react-walletconnect-connector": "npm:@web3-react/walletconnect-connector@^7.0.2-alpha.0",
+    "web3-react-walletlink-connector": "npm:@web3-react/walletlink-connector@^6.2.11",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0"
@@ -152,7 +166,7 @@
     "prepublishOnly": "yarn widgets:build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=./custom-test-env.js",
+    "test": "react-scripts test --env=./custom-test-env.cjs",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "widgets:start": "cosmos",
     "widgets:build": "rollup --config --failAfterWarnings --configPlugin typescript2"
@@ -201,7 +215,11 @@
     "@uniswap/token-lists": "^1.0.0-beta.27",
     "@uniswap/v2-sdk": "^3.0.1",
     "@uniswap/v3-sdk": "^3.8.2",
-    "web3-react-core": "npm:@web3-react/core@^6.0.9",
+    "@web3-react/core": "8.0.16-alpha.0",
+    "@web3-react/eip1193": "8.0.16-alpha.0",
+    "@web3-react/empty": "8.0.17-alpha.0",
+    "@web3-react/types": "8.0.16-alpha.0",
+    "@web3-react/url": "8.0.17-alpha.0",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
     "immer": "^9.0.6",
@@ -216,25 +234,26 @@
     "popper-max-size-modifier": "^0.2.0",
     "react-feather": "^2.0.8",
     "react-popper": "^2.2.3",
-    "react-redux": "^7.2.2",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
     "rebass": "^4.0.7",
-    "redux": "^4.1.2",
     "setimmediate": "^1.0.5",
     "styled-components": "^5.3.0",
     "tiny-invariant": "^1.2.0",
     "wcag-contrast": "^3.0.0",
-    "@web3-react/core": "8.0.16-alpha.0",
-    "@web3-react/eip1193": "8.0.16-alpha.0",
-    "@web3-react/empty": "8.0.17-alpha.0",
-    "@web3-react/types": "8.0.16-alpha.0",
-    "@web3-react/url": "8.0.17-alpha.0",
+    "web3-react-core": "npm:@web3-react/core@^6.0.9",
     "wicg-inert": "^3.1.1"
   },
   "peerDependencies": {
     "@babel/runtime": "^7.17.0",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "react-redux": "^7.2.2",
+    "redux": "^4.1.2"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.6",
+    "encoding": "^0.1.13",
+    "utf-8-validate": "^5.0.8"
   }
 }

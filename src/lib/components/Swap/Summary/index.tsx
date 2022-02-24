@@ -158,7 +158,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
-            <Trans>Output is estimated.</Trans>
+            <Trans>Output is estimated.</Trans>{' '}
             {tradeType === TradeType.EXACT_INPUT && (
               <Trans>
                 You will receive at least{' '}
