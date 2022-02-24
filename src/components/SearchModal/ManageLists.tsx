@@ -81,11 +81,13 @@ const StyledListUrlText = styled(TYPE.main)<{ active: boolean }>`
 `
 
 const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
-  background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.bg2)};
+  background: transparent;
   transition: 200ms;
   align-items: center;
   padding: 1rem;
-  border-radius: 20px;
+  border-radius: 12px;
+  border: 1px solid ${({ active, theme }) => (active ? '#24C5E0' ?? 'transparent' : theme.bg2)};
+  color: ${({ active }) => (active ? '#24C5E0' : 'white')};
 `
 
 function listUrlRowHTMLId(listUrl: string) {

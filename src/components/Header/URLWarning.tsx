@@ -8,7 +8,7 @@ import { isMobile } from 'react-device-detect'
 const PhishAlert = styled.div<{ isActive: any }>`
   width: 100%;
   padding: 6px 6px;
-  background-color: ${({ theme }) => theme.blue1};
+  background-color: ${({ theme }) => theme.primary1};
   color: white;
   font-size: 11px;
   justify-content: space-between;

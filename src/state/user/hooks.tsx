@@ -3,7 +3,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import { ChainId } from 'constants/chains'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -16,7 +16,7 @@ import {
   SerializedPair,
   SerializedToken,
   toggleURLWarning,
-  // updateUserDarkMode,
+  updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSingleHopOnly,
@@ -44,31 +44,20 @@ function deserializeToken(serializedToken: SerializedToken): Token {
 }
 
 export function useIsDarkMode(): boolean {
-  const { userDarkMode, matchesDarkMode } = useSelector<
-    AppState,
-    { userDarkMode: boolean | null; matchesDarkMode: boolean }
-  >(
-    ({ user: { matchesDarkMode, userDarkMode } }) => ({
-      userDarkMode,
-      matchesDarkMode,
-    }),
-    shallowEqual
-  )
-
-  return userDarkMode === null ? matchesDarkMode : userDarkMode
+  return true
 }
 
 export function useDarkModeManager(): [boolean, () => void] {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  return [true, () => {}]
-  // const dispatch = useDispatch<AppDispatch>()
-  // const darkMode = useIsDarkMode()
+  // return [true, () => {}]
+  const dispatch = useDispatch<AppDispatch>()
+  const darkMode = useIsDarkMode()
 
-  // const toggleSetDarkMode = useCallback(() => {
-  //   dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
-  // }, [darkMode, dispatch])
+  const toggleSetDarkMode = useCallback(() => {
+    dispatch(updateUserDarkMode({ userDarkMode: !darkMode }))
+  }, [darkMode, dispatch])
 
-  // return [darkMode, toggleSetDarkMode]
+  return [darkMode, toggleSetDarkMode]
 }
 
 export function useIsExpertMode(): boolean {
