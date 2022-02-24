@@ -107,7 +107,10 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   }, [signatureState, gatherPermitSignature, addApprovalTransaction])
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    if (!disabled && chainId && !(signatureState === UseERC20PermitState.SIGNED)) {
+    if (!disabled && chainId) {
+      if (signatureState === UseERC20PermitState.SIGNED) {
+        return {}
+      }
       if (approval === ApprovalState.NOT_APPROVED) {
         const currency = inputCurrency || approvalCurrencyAmount?.currency
         invariant(currency)
