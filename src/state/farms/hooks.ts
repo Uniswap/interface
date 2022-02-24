@@ -80,7 +80,7 @@ export const useRewardTokenPrices = (tokens: (Token | undefined)[]) => {
   return tokenPrices.map((price, index) => price || marketPrices[index] || 0)
 }
 
-export const useFarmsData = () => {
+export const useFarmsData = (isShowOutsideFarms = true) => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
   const fairLaunchContracts = useFairLaunchContracts()
@@ -179,7 +179,7 @@ export const useFarmsData = () => {
       })
 
       const outsideFarm = OUTSIDE_FAIRLAUNCH_ADDRESSES[contract.address]
-      if (outsideFarm) {
+      if (isShowOutsideFarms && outsideFarm) {
         const poolData = await fetch(outsideFarm.subgraphAPI, {
           method: 'POST',
           body: JSON.stringify({
@@ -264,13 +264,23 @@ export const useFarmsData = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       latestRenderTime.current++
     }
-  }, [apolloClient, dispatch, ethPrice.currentPrice, chainId, fairLaunchContracts, account, blockNumber, allTokens])
+  }, [
+    apolloClient,
+    dispatch,
+    ethPrice.currentPrice,
+    chainId,
+    fairLaunchContracts,
+    account,
+    blockNumber,
+    allTokens,
+    isShowOutsideFarms
+  ])
 
   return useMemo(() => ({ loading, error, data: farmsData }), [error, farmsData, loading])
 }
 
 export const useActiveAndUniqueFarmsData = (): { loading: boolean; error: string; data: Farm[] } => {
-  const farmsData = useFarmsData()
+  const farmsData = useFarmsData(false)
 
   return useMemo(() => {
     const { loading, error, data: farms } = farmsData
