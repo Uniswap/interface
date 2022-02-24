@@ -1,12 +1,24 @@
 import { ChainId } from 'constants/chains'
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 
-export const MULTICALL2_ADDRESSES = constructSameAddressMap('0x44e83e9CFE38a970E4110BbE5b7EaC0F953267D8')
-
-export const V2_ROUTER_ADDRESS = constructSameAddressMap('0xd4C7B8a4fDFE65B8f2199748EEdC909A9CE7c58c') //Updated
-
-export const FACTORY_ADDRESS = '0x21461DaFBec3EcBeaff138c0Ce665d67228d139e'
+// Actively Deployed by us
+export const FACTORY_ADDRESS = '0xbc0b8C49443E309528a7F21211933A58096B866c'
 export const V2_FATORY_ADDRESS = constructSameAddressMap(FACTORY_ADDRESS)
+export const MULTICALL2_ADDRESSES = constructSameAddressMap('0x880E63017A2854ECE5B23A5B84fbEeC0858e6551')
+export const V2_ROUTER_ADDRESS = constructSameAddressMap('0xd4C7B8a4fDFE65B8f2199748EEdC909A9CE7c58c')
+
+export const MINICHEF_V2_ADDRESS = constructSameAddressMap('0x9d7F42E2e7e30a971A952DA066177201a85193E9')
+
+// Used but ultimately not ours
+
+export const WETH9_ADDRESS = '0x21461DaFBec3EcBeaff138c0Ce665d67228d139e'
+/**
+ weth9: ,
+mockUSDC: "0x290A81340949c3C303313D54f4E99774e8bF85CD",
+mockEVMOS: "0x44e83e9CFE38a970E4110BbE5b7EaC0F953267D8",
+mockATOM: "0x74506b734311dD9fc876496F5eb896AA32dE0a52",
+mockOSMOSIS: "0x0ffbC3FE4DB358Acf838C21720C95f907100d38D",
+ */
 
 export const GOVERNANCE_ADDRESS = constructSameAddressMap('0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F')
 export const TIMELOCK_ADDRESS = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC')

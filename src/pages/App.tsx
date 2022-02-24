@@ -9,6 +9,7 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import ErrorBoundary from '../components/ErrorBoundary'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 // import Earn from './Earn'
+import { Playground } from './Earn/Play'
 // import Manage from './Earn/Manage'
 // import MigrateV2 from './MigrateV2'
 // import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -23,7 +24,6 @@ import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 // import AddLiquidity from './AddLiquidity'
 import { ThemedBackground } from '../theme'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { PlaygroundPage } from './Playground'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -76,9 +76,10 @@ export default function App() {
             <Polling />
             <Web3ReactManager>
               <Switch>
-                <Route exact strict path="/play" component={PlaygroundPage} />
-                {/* <Route exact strict path="/uni" component={Earn} />
-                <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} /> */}
+                <Route exact strict path="/play" component={Playground} />
+                {/* <Route exact strict path="/farm" component={Earn} /> */}
+
+                {/* <Route exact strict path="/farm/:currencyIdA/:currencyIdB" component={Manage} /> */}
 
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
