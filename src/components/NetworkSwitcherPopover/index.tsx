@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { Placement } from '@popperjs/core'
 import { useActiveWeb3React } from '../../hooks'
@@ -23,11 +23,11 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
     onSelectNetworkCallback: closeModals
   })
 
-  useEffect(() => {
-    if (activeChainId === ChainId.MAINNET) {
-      closeModals()
-    }
-  }, [activeChainId, closeModals])
+  // useEffect(() => {
+  //   if (activeChainId === ChainId.MAINNET) {
+  //     closeModals()
+  //   }
+  // }, [activeChainId, closeModals])
 
   const isNetworkDisabled = (chainId: ChainId) => {
     return connector?.supportedChainIds?.indexOf(chainId) === -1 || activeChainId === chainId

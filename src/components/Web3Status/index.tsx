@@ -24,7 +24,6 @@ import Row from '../Row'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { useENSAvatar } from '../../hooks/useENSAvatar'
 import { ApplicationModal } from '../../state/application/actions'
-import UnsupportedNetworkPopover from '../NetworkUnsupportedPopover'
 
 const SwitchNetworkButton = styled.button`
   display: flex;
@@ -145,25 +144,14 @@ export default function Web3Status() {
     return null
   }
   if (error) {
-    if (isUnsupportedNetworkModal) {
-      return (
-        <UnsupportedNetworkPopover show={isUnsupportedNetworkModal}>
-          <SwitchNetworkButton onClick={clickHandler}>
-            Switch network
-            <TriangleIcon />
-          </SwitchNetworkButton>
-        </UnsupportedNetworkPopover>
-      )
-    } else {
-      return (
-        <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
-          <SwitchNetworkButton onClick={clickHandler}>
-            Switch network
-            <TriangleIcon />
-          </SwitchNetworkButton>
-        </NetworkSwitcherPopover>
-      )
-    }
+    return (
+      <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
+        <SwitchNetworkButton onClick={clickHandler}>
+          Switch network
+          <TriangleIcon />
+        </SwitchNetworkButton>
+      </NetworkSwitcherPopover>
+    )
   }
 
   return (

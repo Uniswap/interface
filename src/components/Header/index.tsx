@@ -19,13 +19,16 @@ import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
-import { useToggleShowClaimPopup } from '../../state/application/hooks'
+import { useModalOpen, useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
 import Skeleton from 'react-loading-skeleton'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
+import UnsupportedNetworkPopover from '../NetworkUnsupportedPopover'
+import { ApplicationModal } from '../../state/application/actions'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -223,6 +226,7 @@ const Divider = styled.div`
 function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
+  const { error } = useWeb3React()
 
   const nativeCurrency = useNativeCurrency()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
@@ -235,7 +239,10 @@ function Header() {
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
-  const isUnsupportedNetwork = account ? false : true
+  const isUnsupportedNetworkModal = useModalOpen(ApplicationModal.UNSUPPORTED_NETWORK)
+  const isUnsupportedChainIdError = useMemo(() => {
+    return error instanceof UnsupportedChainIdError
+  }, [error])
 
   useEffect(() => {
     window.addEventListener('scroll', e => {
@@ -307,12 +314,14 @@ function Header() {
             newSwprBalance={newSwprBalance}
             onToggleClaimPopup={toggleClaimPopup}
           />
-          <AccountBalance
-            account={account}
-            userNativeCurrencyBalance={userNativeCurrencyBalance}
-            nativeCurrency={nativeCurrency}
-            isUnsupportedNetwork={isUnsupportedNetwork}
-          />
+          <UnsupportedNetworkPopover show={isUnsupportedNetworkModal}>
+            <AccountBalance
+              account={account}
+              userNativeCurrencyBalance={userNativeCurrencyBalance}
+              nativeCurrency={nativeCurrency}
+              isUnsupportedChainIdError={isUnsupportedChainIdError}
+            />
+          </UnsupportedNetworkPopover>
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
@@ -325,16 +334,16 @@ interface AccountBalanceProps {
   account: string | null | undefined
   userNativeCurrencyBalance: CurrencyAmount | undefined
   nativeCurrency: Currency
-  isUnsupportedNetwork: boolean
+  isUnsupportedChainIdError: boolean
 }
 
 export function AccountBalance({
   account,
   userNativeCurrencyBalance,
   nativeCurrency,
-  isUnsupportedNetwork
+  isUnsupportedChainIdError
 }: AccountBalanceProps) {
-  return isUnsupportedNetwork ? (
+  return isUnsupportedChainIdError ? (
     <Amount zero={true}>{'UNSUPPORTED NETWORK'}</Amount>
   ) : (
     <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
