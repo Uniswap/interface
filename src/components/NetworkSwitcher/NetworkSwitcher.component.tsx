@@ -1,14 +1,10 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useRef } from 'react'
 
 import Option from './Option'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
-import {
-  useModalOpen,
-  useNetworkSwitcherPopoverToggle,
-  useWalletSwitcherPopoverToggle
-} from '../../state/application/hooks'
+import { useCloseModals, useModalOpen, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 
 import {
   Row,
@@ -22,9 +18,7 @@ import {
 } from './NetworkSwitcher.styles'
 import unsupportedNetworkHintImage1x from '../../assets/images/unsupported-network-hint.png'
 
-import { UnsupportedNetworkPopoverProps, NetworkSwitcherProps } from './NetworkSwitcher.types'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
+import { NetworkSwitcherProps, UnsupportedNetworkPopoverProps } from './NetworkSwitcher.types'
 import { CloseIcon } from '../../theme'
 
 export const NetworkSwitcher = ({
@@ -34,37 +28,17 @@ export const NetworkSwitcher = ({
   placement,
   onOuterClick,
   parentRef,
-  showWalletConnector = true,
-  showWrongNetworkPopover = false
+  showWalletConnector = true
 }: NetworkSwitcherProps) => {
   const popoverRef = useRef(null)
   const { account } = useActiveWeb3React()
-  const { error } = useWeb3React()
   const ethereumOptionPopoverOpen = useModalOpen(ApplicationModal.ETHEREUM_OPTION)
-  const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
-  const isMobileByMedia = useIsMobileByMedia()
-  const isUnsupportedNetwork = useMemo(() => {
-    return error instanceof UnsupportedChainIdError
-  }, [error])
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-  const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
 
   useOnClickOutside(parentRef || popoverRef, () => {
     if (show || ethereumOptionPopoverOpen) onOuterClick()
   })
-
-  if (isUnsupportedNetwork && !networkSwitcherPopoverOpen) {
-    toggleNetworkSwitcherPopover()
-  }
-
-  if (isUnsupportedNetwork && !isMobileByMedia) {
-    return (
-      <UnsupportedNetworkPopover show={showWrongNetworkPopover} onClick={onOuterClick}>
-        {children}
-      </UnsupportedNetworkPopover>
-    )
-  }
 
   return (
     <div ref={popoverRef}>
@@ -93,7 +67,14 @@ export const NetworkSwitcher = ({
   )
 }
 
-const UnsupportedNetworkPopover = ({ children, show, onClick }: UnsupportedNetworkPopoverProps) => {
+export default function UnsupportedNetworkPopover({ children, show, parentRef }: UnsupportedNetworkPopoverProps) {
+  const closeModals = useCloseModals()
+  const popoverRef = useRef(null)
+
+  useOnClickOutside(parentRef || popoverRef, () => {
+    if (show) closeModals()
+  })
+
   return (
     <StyledPopover
       placement="bottom-end"
@@ -102,7 +83,7 @@ const UnsupportedNetworkPopover = ({ children, show, onClick }: UnsupportedNetwo
         <View>
           <Row>
             <Text>Please use our network switcher and switch to a supported network.</Text>
-            <CloseIcon onClick={onClick} />
+            <CloseIcon onClick={closeModals} />
           </Row>
           <Image src={unsupportedNetworkHintImage1x} srcSet={unsupportedNetworkHintImage1x} alt="hint screenshot" />
         </View>

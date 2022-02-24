@@ -48,7 +48,6 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
       show={networkSwitcherPopoverOpen}
       onOuterClick={closeModals}
       placement={placement}
-      showWrongNetworkPopover
     >
       {children}
     </NetworkSwitcher>

@@ -1,6 +1,6 @@
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
@@ -12,13 +12,19 @@ import WalletModal from '../WalletModal'
 import { AccountStatus } from './AccountStatus'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
-import { useNetworkSwitcherPopoverToggle, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
+import {
+  useModalOpen,
+  useNetworkSwitcherPopoverToggle,
+  useOpenModal,
+  useWalletSwitcherPopoverToggle
+} from '../../state/application/hooks'
 import { TriangleIcon } from '../Icons'
 import { useTranslation } from 'react-i18next'
 import Row from '../Row'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { useENSAvatar } from '../../hooks/useENSAvatar'
 import { ApplicationModal } from '../../state/application/actions'
+import UnsupportedNetworkPopover from '../NetworkSwitcher/NetworkSwitcher.component'
 
 const SwitchNetworkButton = styled.button`
   display: flex;
@@ -91,6 +97,7 @@ export default function Web3Status() {
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
+  const openUnsupportedNetworkModal = useOpenModal(ApplicationModal.UNSUPPORTED_NETWORK)
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     setPendingWallet(connector)
@@ -114,27 +121,49 @@ export default function Web3Status() {
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { t } = useTranslation()
   const mobileByMedia = useIsMobileByMedia()
-  const unsupportedChain = useMemo(() => {
-    return error && error instanceof UnsupportedChainIdError
+  const [isUnsupportedNetwork, setUnsupportedNetwork] = useState(false)
+  const isUnsupportedNetworkModal = useModalOpen(ApplicationModal.UNSUPPORTED_NETWORK)
+
+  const unsupportedChainIdError = useMemo(() => {
+    return error instanceof UnsupportedChainIdError
   }, [error])
 
+  useEffect(() => {
+    if (!isUnsupportedNetworkModal && !isUnsupportedNetwork && unsupportedChainIdError) {
+      setUnsupportedNetwork(true)
+      openUnsupportedNetworkModal()
+    } else if (!isUnsupportedNetworkModal && isUnsupportedNetwork && !unsupportedChainIdError) {
+      setUnsupportedNetwork(false)
+    }
+  }, [isUnsupportedNetwork, openUnsupportedNetworkModal, isUnsupportedNetworkModal, unsupportedChainIdError])
+
   const clickHandler = useCallback(() => {
-    !unsupportedChain && toggleNetworkSwitcherPopover()
-  }, [unsupportedChain, toggleNetworkSwitcherPopover])
+    toggleNetworkSwitcherPopover()
+  }, [toggleNetworkSwitcherPopover])
 
   if (!contextNetwork.active && !active) {
     return null
   }
-
   if (error) {
-    return (
-      <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
-        <SwitchNetworkButton onClick={clickHandler}>
-          Switch network
-          <TriangleIcon />
-        </SwitchNetworkButton>
-      </NetworkSwitcherPopover>
-    )
+    if (isUnsupportedNetworkModal) {
+      return (
+        <UnsupportedNetworkPopover show={isUnsupportedNetworkModal}>
+          <SwitchNetworkButton onClick={clickHandler}>
+            Switch network
+            <TriangleIcon />
+          </SwitchNetworkButton>
+        </UnsupportedNetworkPopover>
+      )
+    } else {
+      return (
+        <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
+          <SwitchNetworkButton onClick={clickHandler}>
+            Switch network
+            <TriangleIcon />
+          </SwitchNetworkButton>
+        </NetworkSwitcherPopover>
+      )
+    }
   }
 
   return (

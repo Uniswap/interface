@@ -9,13 +9,13 @@ export interface NetworkSwitcherProps {
   placement?: Placement
   showWalletConnector?: boolean
   parentRef?: RefObject<HTMLElement>
-  showWrongNetworkPopover?: boolean
 }
 
 export interface UnsupportedNetworkPopoverProps {
-  children: ReactNode
+  children?: ReactNode
   show: boolean
-  onClick?: () => void
+  placement?: Placement
+  parentRef?: RefObject<HTMLElement>
 }
 
 export type NetworkOptionsPreset = {
