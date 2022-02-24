@@ -107,45 +107,47 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   }, [signatureState, gatherPermitSignature, addApprovalTransaction])
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    if (!disabled && chainId) {
-      if (signatureState === UseERC20PermitState.SIGNED) {
-        return {}
+    if (
+      disabled ||
+      !chainId ||
+      signatureState === UseERC20PermitState.LOADING ||
+      (inputCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputCurrencyAmount))
+    ) {
+      return { disabled: true }
+    }
+    if (signatureState === UseERC20PermitState.SIGNED && Boolean(gatherPermitSignature)) {
+      return {}
+    }
+    if (approval === ApprovalState.NOT_APPROVED) {
+      const currency = inputCurrency || approvalCurrencyAmount?.currency
+      invariant(currency)
+      return {
+        action: {
+          message: <Trans>Approve {currency.symbol} first</Trans>,
+          onClick: handleApprove,
+          children: Boolean(gatherPermitSignature) ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
+        },
       }
-      if (approval === ApprovalState.NOT_APPROVED) {
-        const currency = inputCurrency || approvalCurrencyAmount?.currency
-        invariant(currency)
-        return {
-          // Prevent users from submitting on-chain approvals if potential for permit.
-          disabled: signatureState === UseERC20PermitState.LOADING,
-          action: {
-            message: <Trans>Allow {currency.symbol} first</Trans>,
-            onClick: handleApprove,
-            children: Boolean(gatherPermitSignature) ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
-          },
-        }
-      } else if (approval === ApprovalState.PENDING) {
-        return {
-          disabled: true,
-          action: {
-            message: (
-              <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
-                <Row gap={0.25}>
-                  <Trans>
-                    Approval pending <Link />
-                  </Trans>
-                </Row>
-              </EtherscanLink>
-            ),
-            icon: Spinner,
-            onClick: handleApprove,
-            children: <Trans>Approve</Trans>,
-          },
-        }
-      } else if (inputCurrencyAmount && inputCurrencyBalance && !inputCurrencyBalance.lessThan(inputCurrencyAmount)) {
-        return {}
+    } else if (approval === ApprovalState.PENDING) {
+      return {
+        disabled: true,
+        action: {
+          message: (
+            <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
+              <Row gap={0.25}>
+                <Trans>
+                  Approval pending <Link />
+                </Trans>
+              </Row>
+            </EtherscanLink>
+          ),
+          icon: Spinner,
+          onClick: handleApprove,
+          children: <Trans>Approve</Trans>,
+        },
       }
     }
-    return { disabled: true }
+    return {}
   }, [
     approval,
     approvalCurrencyAmount?.currency,
