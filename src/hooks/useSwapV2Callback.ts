@@ -39,6 +39,9 @@ import {
 import invariant from 'tiny-invariant'
 import { Web3Provider } from '@ethersproject/providers'
 import { formatCurrencyAmount } from 'utils/formatBalance'
+import { useSelector } from 'react-redux'
+import { AppState } from 'state'
+import { ethers } from 'ethers'
 
 /**
  * The parameters to use in the call to the DmmExchange Router to execute a trade.
@@ -373,6 +376,7 @@ export function useSwapV2Callback(
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
+  const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
 
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
@@ -458,8 +462,10 @@ export function useSwapV2Callback(
           gasEstimate
         } = successfulEstimation
 
+        console.log('gasPrice used: ', gasPrice?.standard ? `api: ${gasPrice?.standard} gwei` : 'metamask default')
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
+          ...(gasPrice?.standard ? { gasPrice: ethers.utils.parseUnits(gasPrice?.standard, 'gwei') } : {}),
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
         })
           .then((response: any) => {
@@ -505,5 +511,5 @@ export function useSwapV2Callback(
       },
       error: null
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransactionWithType])
+  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransactionWithType, gasPrice])
 }

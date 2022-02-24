@@ -199,7 +199,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
       if (liveKyberData) {
         const value =
           liveKyberData && tokenAddresses[0] && tokenAddresses[1]
-            ? liveKyberData[tokenAddresses[0]].price / liveKyberData[tokenAddresses[1]].price
+            ? liveKyberData[tokenAddresses[0]]?.price / liveKyberData[tokenAddresses[1]]?.price
             : 0
         if (value) return { time: new Date().getTime(), value: value }
       }
