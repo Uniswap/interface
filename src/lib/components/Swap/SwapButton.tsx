@@ -123,7 +123,11 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       invariant(currency)
       return {
         action: {
-          message: <Trans>Approve {currency.symbol} first</Trans>,
+          message: Boolean(gatherPermitSignature) ? (
+            <Trans>Allow {currency.symbol} first</Trans>
+          ) : (
+            <Trans>Approve {currency.symbol} first</Trans>
+          ),
           onClick: handleApprove,
           children: Boolean(gatherPermitSignature) ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
         },
