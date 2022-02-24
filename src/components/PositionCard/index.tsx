@@ -211,7 +211,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </Text>
           </AutoRow>
           <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-            <ButtonEmpty padding="6px 8px" borderRadius="12px" width="100%" onClick={() => setShowMore(!showMore)}>
+            <ButtonEmpty padding="6px 20px" borderRadius="10px" width="100%" onClick={() => setShowMore(!showMore)}>
               {showMore ? (
                 <>
                   Manage
