@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-23 23:06\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -217,8 +217,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "รออนุมัติ <0/>"
+msgid "Approval pending"
+msgstr "รอการอนุมัติ"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -287,6 +287,10 @@ msgstr "อย่างน้อย {0} {1} และ {2} {3} จะถูกค
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "รถยนต์"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "เราเตอร์อัตโนมัติ"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -2442,6 +2446,10 @@ msgstr "ผ่าน {0}"
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "ผ่าน {0} รายการโทเค็น"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {เส้นทางที่ดีที่สุดผ่าน 1 ฮอป} other {เส้นทางที่ดีที่สุดผ่าน # hops}}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"

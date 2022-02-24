@@ -13,7 +13,7 @@ import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
-import { Link, Spinner } from 'lib/icons'
+import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
@@ -24,7 +24,6 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
 import ActionButton, { ActionButtonProps } from '../ActionButton'
 import Dialog from '../Dialog'
 import EtherscanLink from '../EtherscanLink'
-import Row from '../Row'
 import { SummaryDialog } from './Summary'
 
 interface SwapButtonProps {
@@ -100,11 +99,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
           action: {
             message: (
               <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
-                <Row gap={0.25}>
-                  <Trans>
-                    Approval pending <Link />
-                  </Trans>
-                </Row>
+                <Trans>Approval pending</Trans>
               </EtherscanLink>
             ),
             icon: Spinner,

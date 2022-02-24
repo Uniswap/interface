@@ -1,12 +1,14 @@
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import { Link } from 'lib/icons'
 import styled, { Color } from 'lib/theme'
 import { ReactNode, useMemo } from 'react'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import ExternalLink from './ExternalLink'
+import Row from './Row'
 
-const Link = styled(ExternalLink)<{ color: Color }>`
+const StyledExternalLink = styled(ExternalLink)<{ color: Color }>`
   color: ${({ theme, color }) => theme[color]};
   text-decoration: none;
 `
@@ -25,8 +27,10 @@ export default function EtherscanLink({ data, type, color = 'currentColor', chil
     [chainId, data, type]
   )
   return (
-    <Link href={url} color={color} target="_blank">
-      {children}
-    </Link>
+    <StyledExternalLink href={url} color={color} target="_blank">
+      <Row gap={0.25}>
+        {children} <Link />
+      </Row>
+    </StyledExternalLink>
   )
 }
