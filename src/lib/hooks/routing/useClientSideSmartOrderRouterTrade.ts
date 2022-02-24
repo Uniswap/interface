@@ -70,22 +70,12 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
 
   const [loading, setLoading] = useState(false)
-<<<<<<< HEAD
-  const [{ quoteResult, error }, setFetchedResult] = useState<{
-    quoteResult: GetQuoteResult | undefined
-    error: unknown
-  }>({
-    quoteResult: undefined,
-    error: undefined,
-  })
-  const { type: wrapType } = useWrapCallback()
-=======
   const [{ data: quoteResult, error }, setResult] = useState<{
     data?: GetQuoteResult
     error?: unknown
   }>({ error: undefined })
   const config = useMemo(() => getConfig(chainId), [chainId])
->>>>>>> main
+  const { type: wrapType } = useWrapCallback()
 
   // When arguments update, make a new call to SOR for updated quote
   useEffect(() => {
@@ -116,11 +106,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
         }
       }
     }
-<<<<<<< HEAD
-  }, [queryArgs, params, wrapType])
-=======
-  }, [queryArgs, params, config, isDebouncing])
->>>>>>> main
+  }, [queryArgs, params, config, isDebouncing, wrapType])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -166,21 +152,8 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
     }
 
-<<<<<<< HEAD
-    try {
-      const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-      return {
-        // always return VALID regardless of isFetching status
-        state: TradeState.VALID,
-        trade,
-      }
-    } catch (e) {
-      return { state: TradeState.INVALID, trade: undefined }
-=======
     if (trade) {
       return { state: TradeState.VALID, trade }
->>>>>>> main
     }
-    return { state: TradeState.INVALID, trade: undefined }
   }, [currencyIn, currencyOut, isDebouncing, loading, quoteResult, error, route, queryArgs, trade, tradeType])
 }
