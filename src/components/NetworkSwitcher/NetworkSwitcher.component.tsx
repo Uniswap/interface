@@ -4,22 +4,11 @@ import Option from './Option'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
-import { useCloseModals, useModalOpen, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
+import { useModalOpen, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 
-import {
-  Row,
-  View,
-  Text,
-  Image,
-  OptionGrid,
-  StyledPopover,
-  ChangeWalletButton,
-  NetworkTagRow
-} from './NetworkSwitcher.styles'
-import unsupportedNetworkHintImage1x from '../../assets/images/unsupported-network-hint.png'
+import { OptionGrid, StyledPopover, ChangeWalletButton, NetworkTagRow } from './NetworkSwitcher.styles'
 
-import { NetworkSwitcherProps, UnsupportedNetworkPopoverProps } from './NetworkSwitcher.types'
-import { CloseIcon } from '../../theme'
+import { NetworkSwitcherProps } from './NetworkSwitcher.types'
 
 export const NetworkSwitcher = ({
   show,
@@ -64,32 +53,5 @@ export const NetworkSwitcher = ({
         {children}
       </StyledPopover>
     </div>
-  )
-}
-
-export default function UnsupportedNetworkPopover({ children, show, parentRef }: UnsupportedNetworkPopoverProps) {
-  const closeModals = useCloseModals()
-  const popoverRef = useRef(null)
-
-  useOnClickOutside(parentRef || popoverRef, () => {
-    if (show) closeModals()
-  })
-
-  return (
-    <StyledPopover
-      placement="bottom-end"
-      show={show}
-      content={
-        <View>
-          <Row>
-            <Text>Please use our network switcher and switch to a supported network.</Text>
-            <CloseIcon onClick={closeModals} />
-          </Row>
-          <Image src={unsupportedNetworkHintImage1x} srcSet={unsupportedNetworkHintImage1x} alt="hint screenshot" />
-        </View>
-      }
-    >
-      {children}
-    </StyledPopover>
   )
 }

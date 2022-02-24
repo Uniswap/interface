@@ -24,7 +24,7 @@ import Row from '../Row'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { useENSAvatar } from '../../hooks/useENSAvatar'
 import { ApplicationModal } from '../../state/application/actions'
-import UnsupportedNetworkPopover from '../NetworkSwitcher/NetworkSwitcher.component'
+import UnsupportedNetworkPopover from '../NetworkUnsupportedPopover'
 
 const SwitchNetworkButton = styled.button`
   display: flex;

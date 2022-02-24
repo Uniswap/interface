@@ -11,13 +11,6 @@ export interface NetworkSwitcherProps {
   parentRef?: RefObject<HTMLElement>
 }
 
-export interface UnsupportedNetworkPopoverProps {
-  children?: ReactNode
-  show: boolean
-  placement?: Placement
-  parentRef?: RefObject<HTMLElement>
-}
-
 export type NetworkOptionsPreset = {
   chainId: ChainId
   name: React.ReactNode
