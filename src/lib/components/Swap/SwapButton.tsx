@@ -132,7 +132,8 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
           children: Boolean(gatherPermitSignature) ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
         },
       }
-    } else if (approval === ApprovalState.PENDING) {
+    }
+    if (approval === ApprovalState.PENDING) {
       return {
         disabled: true,
         action: {
