@@ -53,7 +53,7 @@ interface UseWrapCallbackReturns {
 export default function useWrapCallback(): UseWrapCallbackReturns {
   const { account, chainId } = useActiveWeb3React()
   const [loading, setLoading] = useState(false)
-  const wethContract = useWETHContract()
+  const wrappedNativeCurrencyContract = useWETHContract()
   const {
     amount,
     independentField,
@@ -65,11 +65,11 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     if (!inputCurrency || !outputCurrency || !chainId) {
       return WrapType.NOT_APPLICABLE
     }
-    const weth = WRAPPED_NATIVE_CURRENCY[chainId]
-    if (inputCurrency.isNative && weth.equals(outputCurrency)) {
+    const wrappedNativeCurrency = WRAPPED_NATIVE_CURRENCY[chainId]
+    if (inputCurrency.isNative && wrappedNativeCurrency.equals(outputCurrency)) {
       return WrapType.WRAP
     }
-    if (weth.equals(inputCurrency) && outputCurrency.isNative) {
+    if (wrappedNativeCurrency.equals(inputCurrency) && outputCurrency.isNative) {
       return WrapType.UNWRAP
     }
     return WrapType.NOT_APPLICABLE
@@ -109,16 +109,21 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
   }, [hasInputAmount, sufficientBalance, wrapType])
 
   const callback = useCallback(async () => {
-    if (!wethContract || !sufficientBalance || !parsedAmountIn || wrapType === WrapType.NOT_APPLICABLE) {
+    if (
+      !wrappedNativeCurrencyContract ||
+      !sufficientBalance ||
+      !parsedAmountIn ||
+      wrapType === WrapType.NOT_APPLICABLE
+    ) {
       return Promise.reject()
     }
     setLoading(true)
     const result = await (wrapType === WrapType.WRAP
-      ? wethContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
-      : wethContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`))
+      ? wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
+      : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`))
     result.wait(1).then(() => setLoading(false))
     return Promise.resolve(result)
-  }, [parsedAmountIn, sufficientBalance, wethContract, wrapType])
+  }, [parsedAmountIn, sufficientBalance, wrappedNativeCurrencyContract, wrapType])
 
   return useMemo(
     () => ({

@@ -28,7 +28,10 @@ import Toolbar from './Toolbar'
 
 export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } | 'NATIVE'
 
-function getSwapTx(txs: { [hash: string]: Transaction }, hash?: string): Transaction<SwapTransactionInfo> | undefined {
+function getTransactionFromMap(
+  txs: { [hash: string]: Transaction },
+  hash?: string
+): Transaction<SwapTransactionInfo> | undefined {
   if (hash) {
     const tx = txs[hash]
     if ([TransactionType.SWAP, TransactionType.WRAP].includes(tx?.info?.type)) {
@@ -59,7 +62,7 @@ export default function Swap(props: SwapProps) {
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
-  const displayTx = getSwapTx(pendingTxs, displayTxHash)
+  const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
 
   const tokenList = useTokenList()
   const isSwapSupported = useMemo(

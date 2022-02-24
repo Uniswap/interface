@@ -29,9 +29,9 @@ function Caption({ icon: Icon = AlertTriangle, caption }: CaptionProps) {
 export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType: WrapType.UNWRAP | WrapType.WRAP }) {
   const WrapText = useCallback(() => {
     if (wrapType === WrapType.WRAP) {
-      return loading ? <Trans>Wraping native currency.</Trans> : <Trans>Wrap native currency.</Trans>
+      return loading ? <Trans>Wrapping native currency.</Trans> : <Trans>Wrap native currency.</Trans>
     }
-    return loading ? <Trans>Unwraping native currency.</Trans> : <Trans>Unwrap native currency.</Trans>
+    return loading ? <Trans>Unwrapping native currency.</Trans> : <Trans>Unwrap native currency.</Trans>
   }, [loading, wrapType])
 
   return <Caption icon={Info} caption={<WrapText />} />
