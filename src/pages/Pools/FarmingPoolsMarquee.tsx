@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
 import { useDeepCompareEffect } from 'react-use'
+import { setFarmsData } from 'state/farms/actions'
+import { useAppDispatch } from 'state/hooks'
 
 const MarqueeItem = ({ token0, token1 }: { token0: Token; token1: Token }) => {
   const theme = useTheme()
@@ -53,6 +55,12 @@ const FarmingPoolsMarquee = () => {
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
 
   const increaseRef = useRef<HTMLDivElement>(null)
+
+  const dispatch = useAppDispatch()
+  const { chainId } = useActiveWeb3React()
+  useEffect(() => {
+    dispatch(setFarmsData({}))
+  }, [dispatch, chainId])
 
   useDeepCompareEffect(() => {
     let itv: NodeJS.Timeout | undefined
