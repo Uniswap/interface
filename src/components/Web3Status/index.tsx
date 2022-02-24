@@ -6,7 +6,7 @@ import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useUnsupportedChainIdError } from '../../hooks'
 import { ConnectWalletPopover } from './ConnectWalletPopover'
 import WalletModal from '../WalletModal'
 import { AccountStatus } from './AccountStatus'
@@ -123,9 +123,7 @@ export default function Web3Status() {
   const [isUnsupportedNetwork, setUnsupportedNetwork] = useState(false)
   const isUnsupportedNetworkModal = useModalOpen(ApplicationModal.UNSUPPORTED_NETWORK)
 
-  const unsupportedChainIdError = useMemo(() => {
-    return error instanceof UnsupportedChainIdError
-  }, [error])
+  const unsupportedChainIdError = useUnsupportedChainIdError()
 
   useEffect(() => {
     if (!isUnsupportedNetworkModal && !isUnsupportedNetwork && unsupportedChainIdError) {

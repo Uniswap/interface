@@ -5,7 +5,7 @@ import { Currency, CurrencyAmount, SWPR } from '@swapr/sdk'
 
 import styled, { css } from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useUnsupportedChainIdError } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useNativeCurrencyBalance, useTokenBalance } from '../../state/wallet/hooks'
 
@@ -28,7 +28,6 @@ import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStake
 import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
 import UnsupportedNetworkPopover from '../NetworkUnsupportedPopover'
 import { ApplicationModal } from '../../state/application/actions'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -226,7 +225,6 @@ const Divider = styled.div`
 function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
-  const { error } = useWeb3React()
 
   const nativeCurrency = useNativeCurrency()
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
@@ -240,9 +238,7 @@ function Header() {
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
   const isUnsupportedNetworkModal = useModalOpen(ApplicationModal.UNSUPPORTED_NETWORK)
-  const isUnsupportedChainIdError = useMemo(() => {
-    return error instanceof UnsupportedChainIdError
-  }, [error])
+  const isUnsupportedChainIdError = useUnsupportedChainIdError()
 
   useEffect(() => {
     window.addEventListener('scroll', e => {
