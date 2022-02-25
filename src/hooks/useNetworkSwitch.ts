@@ -19,7 +19,7 @@ export const useNetworkSwitch = ({ onSelectNetworkCallback }: UseNetworkSwitchPr
 
   const selectNetwork = useCallback(
     (optionChainId?: ChainId) => {
-      if (optionChainId === undefined || optionChainId === chainId) return
+      if (optionChainId === undefined || (optionChainId === chainId && !unsupportedChainIdError)) return
       if (!!!account && !unsupportedChainIdError && connector instanceof CustomNetworkConnector)
         connector.changeChainId(optionChainId)
       else if (!!!account && unsupportedChainIdError && connector instanceof CustomNetworkConnector)
