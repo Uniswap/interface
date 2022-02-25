@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-23 23:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -131,7 +131,7 @@ msgstr "账户"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Acknowledge"
-msgstr "承认"
+msgstr "确认"
 
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
@@ -217,8 +217,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Uniswap不兼容。注：Uniswap V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "等待授权 <0/>"
+msgid "Approval pending"
+msgstr "等待批准"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -287,6 +287,10 @@ msgstr "根据选定的兑换率范围，至少会有 {0} {1} 和 {2} {3} 将退
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "自动"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "自动路由"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -488,7 +492,7 @@ msgstr "确认兑换"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
-msgstr "确认交换"
+msgstr "确认交易"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -538,11 +542,11 @@ msgstr "连接到钱包以查看您的流动资金。"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
-msgstr "连接钱包以交换"
+msgstr "连接钱包以兑换"
 
 #: src/lib/components/Wallet.tsx
 msgid "Connect your wallet"
-msgstr "连接你的钱包"
+msgstr "连接钱包"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -815,7 +819,7 @@ msgstr "查看 Uniswap 分析。"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
-msgstr "无法从 Uniswap 切换网络。为了在 {0} 上使用 Uniswap，您必须更改钱包中的网络。"
+msgstr "无法从 Uniswap 界面切换网络。为了在 {0} 上使用 Uniswap，您必须更改钱包中的网络。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -831,7 +835,7 @@ msgstr "正在获取最优兑换率..."
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
-msgstr "获取最优价格…"
+msgstr "正在获取最优兑换率..."
 
 #: src/lib/components/Swap/Output.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -873,7 +877,7 @@ msgstr "隐藏"
 
 #: src/components/PositionList/index.tsx
 msgid "Hide closed positions"
-msgstr "隐藏已关闭的头寸"
+msgstr "隐藏已关闭的仓位"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -881,11 +885,11 @@ msgstr "对兑换率有高度影响"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "High price impact"
-msgstr "高价格影响"
+msgstr "对兑换率有高度影响"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
-msgstr "高滑点增加了价格变动的风险"
+msgstr "高滑点会增加兑换率波动风险"
 
 #: src/components/WalletModal/index.tsx
 msgid "How this app uses APIs"
@@ -1270,7 +1274,7 @@ msgstr "Optimism 网关"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimistic 处于 Beta 阶段，可能会遇到停机问题。Optimistic 计划近期会停机升级网络。在停机期间，您的头寸不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
+msgstr "Optimism 处于 Beta 阶段，可能会遇到停机问题。Optimism 计划近期内会停机升级网络。在停机期间，您的仓位不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1282,7 +1286,7 @@ msgstr "超出范围"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated."
-msgstr "估计输出。"
+msgstr "输出量仅为估值。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1331,7 +1335,7 @@ msgstr "请输入单词 \"{confirmWord}\" 以启用专家模式。"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr "多边形桥"
+msgstr "Polygon 连桥"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
@@ -1404,7 +1408,7 @@ msgstr "兑换率已更新"
 
 #: src/lib/components/Swap/Summary/Details.tsx
 msgid "Price impact"
-msgstr "价格影响"
+msgstr "兑换率影响"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -1412,7 +1416,7 @@ msgstr "兑换率范围"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Price updated"
-msgstr "价格已更新"
+msgstr "兑换率已更新"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1723,11 +1727,11 @@ msgstr "将 {0} {1} 兑换为 {2} {3}"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
-msgstr "进行 10 分钟调查，以帮助我们改善您在 Uniswap 应用程序中的体验。"
+msgstr "参加 10 分钟调查，以帮助我们改善您在 Uniswap 中的体验。"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
-msgstr "告诉我们你的想法↗"
+msgstr "告诉我们您的想法↗"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1767,7 +1771,7 @@ msgstr "发送此交易的成本是输入金额价值的一半以上。"
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "当前用于在 L1 上发送交易的快速 gas 量。 Gas 费用以以太坊的本位币以太币 (ETH) 支付，并以 GWEI 计价。"
+msgstr "当前用于在 L1 上快速发送交易的 gas 价。 Gas 费用以以太坊的本位币以太币 (ETH) 支付，并以 GWEI 计价。"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -1922,7 +1926,7 @@ msgstr "交易被拒绝。"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Transaction submitted"
-msgstr "提交的交易"
+msgstr "已提交交易"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -1934,7 +1938,7 @@ msgstr "再试一次"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Try increasing your slippage tolerance.<0/>NOTE: Fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "尝试增加您的滑点容限。<0/>注意：在转账和rebase时产生费用的代币与 Uniswap V3 不兼容。"
+msgstr "可以尝试增加滑点容差。<0/>注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -2304,11 +2308,11 @@ msgstr "您将收到"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "您将收到至少 {0} {1} 或交易将回滚。"
+msgstr "您将收到至少 {0} {1} 否则交易将回滚。"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "您最多发送 {0} {1} 或交易将回滚。"
+msgstr "您最多发送 {0} {1} 否则交易将回滚。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -2316,7 +2320,7 @@ msgstr "您的V2流动资金"
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
-msgstr "您的有效 V3 流动性头寸将显示在此处。"
+msgstr "您的 V3 流动性仓位将在此显示。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -2383,7 +2387,7 @@ msgstr "您的交易可能失败"
 
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Your transaction will revert if it has been pending for longer than this period of time."
-msgstr "如果您的交易待处理的时间超过此时间段，您的交易将恢复。"
+msgstr "如果您的交易待处理的时间超过此时间段，会将回滚。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
@@ -2442,6 +2446,10 @@ msgstr "通过 {0}"
 #: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "从 {0} 代币列表"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {通过 1 跳的最佳路线} other {通过# hops 的最佳路线}}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"

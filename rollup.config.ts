@@ -78,12 +78,12 @@ const transpile = {
     {
       file: 'dist/widgets.js',
       format: 'cjs',
-      sourcemap: false,
+      sourcemap: true,
     },
     {
       file: 'dist/widgets.esm.js',
       format: 'esm',
-      sourcemap: false,
+      sourcemap: true,
     },
   ],
   plugins: [
@@ -92,7 +92,7 @@ const transpile = {
     // Source code transformation
     url({ include: ASSET_EXTENSIONS.map((extname) => '**/*' + extname) }), // imports assets as data URIs
     svgr({ exportType: 'named', svgo: false }), // imports svgs as React components
-    sass({ insert: true }), // imports inlined sass styles
+    sass({ output: 'dist/fonts.css' }), // generates widgets.css
     commonjs(), // transforms cjs dependencies into tree-shakeable ES modules
 
     babel({

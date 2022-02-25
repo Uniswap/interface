@@ -1,10 +1,15 @@
 import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useAtomValue } from 'jotai/utils'
 import { loadingOpacityCss } from 'lib/css/loading'
-import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
+import {
+  useIsSwapFieldIndependent,
+  useSwapAmount,
+  useSwapCurrency,
+  useSwapCurrencyAmount,
+  useSwapInfo,
+} from 'lib/hooks/swap'
 import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
-import { Field, independentFieldAtom } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
@@ -16,7 +21,7 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
-export const LoadingSpan = styled.span<{ $loading: boolean }>`
+export const LoadingRow = styled(Row)<{ $loading: boolean }>`
   ${loadingOpacityCss};
 `
 
@@ -45,52 +50,53 @@ export default function Input({ disabled, focused }: InputProps) {
   const {
     trade: { state: tradeState },
     currencyBalances: { [Field.INPUT]: balance },
-    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount },
+    currencyAmounts: { [Field.INPUT]: swapInputCurrencyAmount },
   } = useSwapInfo()
-  const inputUSDC = useUSDCValue(inputCurrencyAmount)
+  const inputUSDC = useUSDCValue(swapInputCurrencyAmount)
 
   const [swapInputAmount, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
   const [swapInputCurrency, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
+  const inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
   // extract eagerly in case of reversal
   usePrefetchCurrencyColor(swapInputCurrency)
 
-  const isTradeLoading = useMemo(
-    () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
-    [tradeState]
-  )
-  const isDependentField = useAtomValue(independentFieldAtom) !== Field.INPUT
-  const isLoading = isDependentField && isTradeLoading
+  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
+  const isLoading = isRouteLoading && isDependentField
 
   //TODO(ianlapham): mimic logic from app swap page
   const mockApproved = true
 
   // account for gas needed if using max on native token
-  const maxAmount = useMemo(() => maxAmountSpend(balance), [balance])
+  const max = useMemo(() => {
+    const maxAmount = maxAmountSpend(balance)
+    return maxAmount?.greaterThan(0) ? maxAmount.toExact() : undefined
+  }, [balance])
 
-  const onMax = useMemo(() => {
-    if (maxAmount?.greaterThan(0)) {
-      return () => updateSwapInputAmount(maxAmount.toExact())
-    }
-    return
-  }, [maxAmount, updateSwapInputAmount])
+  const balanceColor = useMemo(() => {
+    const insufficientBalance =
+      balance &&
+      (inputCurrencyAmount ? inputCurrencyAmount.greaterThan(balance) : swapInputCurrencyAmount?.greaterThan(balance))
+    return insufficientBalance ? 'error' : undefined
+  }, [balance, inputCurrencyAmount, swapInputCurrencyAmount])
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput
         currency={swapInputCurrency}
-        amount={(swapInputAmount !== undefined ? swapInputAmount : inputCurrencyAmount?.toSignificant(6)) ?? ''}
+        amount={(swapInputAmount !== undefined ? swapInputAmount : swapInputCurrencyAmount?.toSignificant(6)) ?? ''}
+        max={max}
         disabled={disabled}
-        onMax={onMax}
         onChangeInput={updateSwapInputAmount}
         onChangeCurrency={updateSwapInputCurrency}
         loading={isLoading}
       >
         <ThemedText.Body2 color="secondary">
           <Row>
-            <LoadingSpan $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingSpan>
+            <LoadingRow $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingRow>
             {balance && (
-              <Balance color={inputCurrencyAmount?.greaterThan(balance) ? 'error' : undefined} focused={focused}>
+              <Balance color={balanceColor} focused={focused}>
                 Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
               </Balance>
             )}

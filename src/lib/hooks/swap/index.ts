@@ -1,12 +1,11 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { pickAtom } from 'lib/state/atoms'
-import { Field, independentFieldAtom, swapAtom } from 'lib/state/swap'
+import { Field, swapAtom } from 'lib/state/swap'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo } from 'react'
 export { default as useSwapInfo } from './useSwapInfo'
-
-export const amountAtom = pickAtom(swapAtom, 'amount')
 
 function otherField(field: Field) {
   switch (field) {
@@ -57,10 +56,34 @@ export function useSwapCurrency(field: Field): [Currency | undefined, (currency?
   return [currency, setOrSwitchCurrency]
 }
 
+const independentFieldAtom = pickAtom(swapAtom, 'independentField')
+
+export function useIsSwapFieldIndependent(field: Field): boolean {
+  const independentField = useAtomValue(independentFieldAtom)
+  return independentField === field
+}
+
+export function useSwapTradeType(): TradeType {
+  const independentField = useAtomValue(independentFieldAtom)
+  switch (independentField) {
+    case Field.INPUT:
+      return TradeType.EXACT_INPUT
+    case Field.OUTPUT:
+      return TradeType.EXACT_OUTPUT
+  }
+}
+
+const amountAtom = pickAtom(swapAtom, 'amount')
+
+// check if any amount has been entered by user
+export function useIsAmountPopulated() {
+  return Boolean(useAtomValue(amountAtom))
+}
+
 export function useSwapAmount(field: Field): [string | undefined, (amount: string) => void] {
   const amount = useAtomValue(amountAtom)
-  const independentField = useAtomValue(independentFieldAtom)
-  const value = useMemo(() => (independentField === field ? amount : undefined), [amount, independentField, field])
+  const isFieldIndependent = useIsSwapFieldIndependent(field)
+  const value = useMemo(() => (isFieldIndependent ? amount : undefined), [amount, isFieldIndependent])
   const updateSwap = useUpdateAtom(swapAtom)
   const updateAmount = useCallback(
     (amount: string) =>
@@ -73,7 +96,13 @@ export function useSwapAmount(field: Field): [string | undefined, (amount: strin
   return [value, updateAmount]
 }
 
-// check if any amount has been entered by user
-export function useIsAmountPopulated() {
-  return Boolean(useAtomValue(amountAtom))
+export function useSwapCurrencyAmount(field: Field): CurrencyAmount<Currency> | undefined {
+  const isFieldIndependent = useIsSwapFieldIndependent(field)
+  const isAmountPopulated = useIsAmountPopulated()
+  const [swapAmount] = useSwapAmount(field)
+  const [swapCurrency] = useSwapCurrency(field)
+  if (isFieldIndependent && isAmountPopulated) {
+    return tryParseCurrencyAmount(swapAmount, swapCurrency)
+  }
+  return
 }

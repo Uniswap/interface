@@ -1,13 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { Percent } from '@uniswap/sdk-core'
 import { useAtom } from 'jotai'
 import Popover from 'lib/components/Popover'
 import { useTooltip } from 'lib/components/Tooltip'
-import { toPercent } from 'lib/hooks/useAllowedSlippage'
+import { getSlippageWarning, toPercent } from 'lib/hooks/useAllowedSlippage'
 import { AlertTriangle, Check, Icon, LargeIcon, XOctagon } from 'lib/icons'
-import { autoSlippageAtom, MAX_VALID_SLIPPAGE, maxSlippageAtom, MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
-import styled, { Color, ThemedText } from 'lib/theme'
-import { forwardRef, memo, ReactNode, useCallback, useMemo, useRef, useState } from 'react'
+import { autoSlippageAtom, maxSlippageAtom } from 'lib/state/settings'
+import styled, { ThemedText } from 'lib/theme'
+import { forwardRef, memo, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { BaseButton, TextButton } from '../../Button'
 import Column from '../../Column'
@@ -56,35 +55,18 @@ const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
   )
 })
 
-enum WarningState {
-  INVALID_SLIPPAGE = 1,
-  HIGH_SLIPPAGE,
-}
-
-function toWarningState(percent: Percent | undefined): WarningState | undefined {
-  if (percent?.greaterThan(MAX_VALID_SLIPPAGE)) {
-    return WarningState.INVALID_SLIPPAGE
-  } else if (percent?.greaterThan(MIN_HIGH_SLIPPAGE)) {
-    return WarningState.HIGH_SLIPPAGE
-  }
-  return
-}
-
-const Warning = memo(function Warning({ state, showTooltip }: { state: WarningState; showTooltip: boolean }) {
-  let icon: Icon
-  let color: Color
+const Warning = memo(function Warning({ state, showTooltip }: { state?: 'warning' | 'error'; showTooltip: boolean }) {
+  let icon: Icon | undefined
   let content: ReactNode
   let show = showTooltip
   switch (state) {
-    case WarningState.INVALID_SLIPPAGE:
+    case 'error':
       icon = XOctagon
-      color = 'error'
       content = invalidSlippage
       show = true
       break
-    case WarningState.HIGH_SLIPPAGE:
+    case 'warning':
       icon = AlertTriangle
-      color = 'warning'
       content = highSlippage
       break
   }
@@ -97,7 +79,7 @@ const Warning = memo(function Warning({ state, showTooltip }: { state: WarningSt
       offset={16}
       contained
     >
-      <LargeIcon icon={icon} color={color} size={1.25} />
+      <LargeIcon icon={icon} color={state} size={1.25} />
     </Popover>
   )
 })
@@ -106,7 +88,6 @@ export default function MaxSlippageSelect() {
   const [autoSlippage, setAutoSlippage] = useAtom(autoSlippageAtom)
   const [maxSlippage, setMaxSlippage] = useAtom(maxSlippageAtom)
   const maxSlippageInput = useMemo(() => maxSlippage?.toString() || '', [maxSlippage])
-  const [warning, setWarning] = useState<WarningState | undefined>(toWarningState(toPercent(maxSlippage)))
 
   const option = useRef<HTMLButtonElement>(null)
   const showTooltip = useTooltip(option.current)
@@ -114,20 +95,27 @@ export default function MaxSlippageSelect() {
   const input = useRef<HTMLInputElement>(null)
   const focus = useCallback(() => input.current?.focus(), [input])
 
+  const [warning, setWarning] = useState<'warning' | 'error' | undefined>(getSlippageWarning(toPercent(maxSlippage)))
+  useEffect(() => {
+    setWarning(getSlippageWarning(toPercent(maxSlippage)))
+  }, [maxSlippage])
+
+  const onInputSelect = useCallback(() => {
+    focus()
+    const percent = toPercent(maxSlippage)
+    const warning = getSlippageWarning(percent)
+    setAutoSlippage(!percent || warning === 'error')
+  }, [focus, maxSlippage, setAutoSlippage])
+
   const processValue = useCallback(
     (value: number | undefined) => {
       const percent = toPercent(value)
-      const warning = toWarningState(percent)
-      setWarning(warning)
+      const warning = getSlippageWarning(percent)
       setMaxSlippage(value)
-      setAutoSlippage(!percent || warning === WarningState.INVALID_SLIPPAGE)
+      setAutoSlippage(!percent || warning === 'error')
     },
     [setAutoSlippage, setMaxSlippage]
   )
-  const onInputSelect = useCallback(() => {
-    focus()
-    processValue(maxSlippage)
-  }, [focus, maxSlippage, processValue])
 
   return (
     <Column gap={0.75}>
@@ -146,9 +134,9 @@ export default function MaxSlippageSelect() {
           ref={option}
           tabIndex={-1}
         >
-          <Row color={warning === WarningState.INVALID_SLIPPAGE ? 'error' : undefined}>
+          <Row color={warning === 'error' ? 'error' : undefined}>
             <DecimalInput
-              size={Math.max(maxSlippageInput.length, 3)}
+              size={Math.max(maxSlippageInput.length, 4)}
               value={maxSlippageInput}
               onChange={(input) => processValue(+input)}
               placeholder={placeholder}

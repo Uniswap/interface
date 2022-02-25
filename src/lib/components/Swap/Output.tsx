@@ -4,18 +4,19 @@ import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
-import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
+import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
-import { Field, independentFieldAtom } from 'lib/state/swap'
+import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { PropsWithChildren, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../Column'
 import Row from '../Row'
-import { Balance, InputProps, LoadingSpan } from './Input'
+import { Balance, InputProps, LoadingRow } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
@@ -48,14 +49,9 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
 
-  //loading status of the trade
-  const isTradeLoading = useMemo(
-    () => TradeState.LOADING === tradeState || TradeState.SYNCING === tradeState,
-    [tradeState]
-  )
-
-  const isDependentField = useAtomValue(independentFieldAtom) !== Field.OUTPUT
-  const isLoading = isDependentField && isTradeLoading
+  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
+  const isLoading = isRouteLoading && isDependentField
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(swapOutputCurrency)
@@ -68,16 +64,19 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const outputUSDC = useUSDCValue(outputCurrencyAmount)
 
   const priceImpact = useMemo(() => {
-    const computedChange = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
-    return computedChange ? parseFloat(computedChange.multiply(-1)?.toSignificant(3)) : undefined
-  }, [inputUSDC, outputUSDC])
+    const fiatValuePriceImpact = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
+    if (!fiatValuePriceImpact) return null
 
-  const usdc = useMemo(() => {
-    if (outputUSDC) {
-      return `$${outputUSDC.toFixed(2)} (${priceImpact && priceImpact > 0 ? '+' : ''}${priceImpact}%)`
-    }
-    return ''
-  }, [priceImpact, outputUSDC])
+    const color = getPriceImpactWarning(fiatValuePriceImpact)
+    const sign = fiatValuePriceImpact.lessThan(0) ? '+' : ''
+    const displayedPriceImpact = parseFloat(fiatValuePriceImpact.multiply(-1)?.toSignificant(3))
+    return (
+      <ThemedText.Body2 color={color}>
+        ({sign}
+        {displayedPriceImpact}%)
+      </ThemedText.Body2>
+    )
+  }, [inputUSDC, outputUSDC])
 
   return (
     <DynamicThemeProvider color={color}>
@@ -97,7 +96,9 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
         >
           <ThemedText.Body2 color="secondary">
             <Row>
-              <LoadingSpan $loading={isLoading}>{usdc}</LoadingSpan>
+              <LoadingRow gap={0.5} $loading={isLoading}>
+                {outputUSDC ? `$${outputUSDC.toFixed(2)}` : '-'} {priceImpact}
+              </LoadingRow>
               {balance && (
                 <Balance focused={focused}>
                   Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
