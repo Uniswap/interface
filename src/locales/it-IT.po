@@ -302,7 +302,7 @@ msgstr "Disponibile per il deposito: {0}"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
-msgstr "Bilanciamento: {0}"
+msgstr "Disponibili: {0}"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
