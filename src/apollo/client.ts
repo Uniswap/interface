@@ -73,7 +73,7 @@ const cronosTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Apo
 })
 
 const cronosExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://bttc-graph.dev.kyberengineering.io/subgraphs/name/dynamic-amm/kyberswap-bttc',
+  uri: 'https://cronos-subgraph.kyberswap.com/subgraphs/name/kyberswap/kyberswap-cronos',
   cache: new InMemoryCache()
 })
 
