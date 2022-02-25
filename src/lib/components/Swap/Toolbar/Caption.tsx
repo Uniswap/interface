@@ -36,21 +36,27 @@ export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType
 
   return <Caption icon={Info} caption={<WrapText />} />
 }
+
 export function ConnectWallet() {
   return <Caption caption={<Trans>Connect wallet to swap</Trans>} />
 }
+
 export function UnsupportedNetwork() {
   return <Caption caption={<Trans>Unsupported network - switch to another to trade.</Trans>} />
 }
+
 export function InsufficientBalance({ currency }: { currency: Currency }) {
   return <Caption caption={<Trans>Insufficient {currency?.symbol} balance</Trans>} />
 }
+
 export function InsufficientLiquidity() {
   return <Caption caption={<Trans>Insufficient liquidity in the pool for your trade</Trans>} />
 }
+
 export function Empty() {
   return <Caption icon={Info} caption={<Trans>Enter an amount</Trans>} />
 }
+
 export function LoadingTrade() {
   return <Caption icon={Spinner} caption={<Trans>Fetching best price…</Trans>} />
 }

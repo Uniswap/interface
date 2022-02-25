@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
 import EtherscanLink from 'lib/components/EtherscanLink'
+import SwapSummary from 'lib/components/Swap/Summary'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
 import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
@@ -12,7 +13,6 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
 import Row from '../../Row'
-import SwapSummary from '../Summary'
 
 const errorMessage = (
   <Trans>
