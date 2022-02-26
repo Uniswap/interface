@@ -48,9 +48,9 @@ export interface InputProps {
 export default function Input({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
   const {
-    trade: { state: tradeState },
     currencyBalances: { [Field.INPUT]: balance },
-    currencyAmounts: { [Field.INPUT]: swapInputCurrencyAmount },
+    trade: { state: tradeState },
+    tradeCurrencyAmounts: { [Field.INPUT]: swapInputCurrencyAmount },
   } = useSwapInfo()
   const inputUSDC = useUSDCValue(swapInputCurrencyAmount)
 
