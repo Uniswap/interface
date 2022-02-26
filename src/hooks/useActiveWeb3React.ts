@@ -5,7 +5,7 @@ import { useWeb3React } from 'web3-react-core'
 
 import { NetworkContextName } from '../constants/misc'
 
-export default function useActiveWeb3React() {
+export default function useActiveWeb3React(): ReturnType<typeof useWidgetsWeb3React> | ReturnType<typeof useWeb3React> {
   if (process.env.REACT_APP_IS_WIDGET) {
     return useWidgetsWeb3React()
   }

@@ -13,7 +13,7 @@ export function useActiveWeb3ReactHooks(): Web3ReactHooks {
   return hooks
 }
 
-export default function useActiveWeb3React() {
+export default function useActiveWeb3React(): ReturnType<Web3ReactHooks['useWeb3React']> {
   const { useProvider, useWeb3React } = useActiveWeb3ReactHooks()
   return useWeb3React(useProvider())
 }

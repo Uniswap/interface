@@ -21,6 +21,7 @@ function useConnector<T extends { new (actions: Actions, initializer: I): Connec
   return useEffect(() => {
     if (initializer) {
       const [connector, hooks] = initializeConnector((actions) => new Connector(actions, initializer))
+      connector.activate()
       setContext([connector, hooks])
     } else {
       setContext(RESET)
