@@ -87,7 +87,7 @@ const transpile = {
     // Source code transformation
     url({ include: ASSET_EXTENSIONS.map((extname) => '**/*' + extname), limit: Infinity }), // imports assets as data URIs
     svgr({ exportType: 'named', svgo: false }), // imports svgs as React components
-    sass({ output: 'dist/fonts.css' }), // generates widgets.css
+    sass({ output: 'dist/fonts.css' }), // generates fonts.css
     commonjs(), // transforms cjs dependencies into tree-shakeable ES modules
 
     babel({
