@@ -403,7 +403,7 @@ export function PositionPage({
     // if there was a tx hash, we want to clear the input
     if (collectMigrationHash) {
       // dont jump to pool page if creating
-      history.push('/pool')
+      history.push('/pool/')
     }
     //setCollectMigrationHash('')
   }, [history, collectMigrationHash])
@@ -539,7 +539,7 @@ export function PositionPage({
           ...txn,
           gasLimit: calculateGasMargin(chainId, estimate),
         }
-
+        setCollectMigrationHash(null)
         return library
           .getSigner()
           .sendTransaction(newTxn)
@@ -561,6 +561,7 @@ export function PositionPage({
           })
       })
       .catch((error) => {
+        setCollectMigrationHash(null)
         setCollecting(false)
         console.error(error)
       })
@@ -606,6 +607,7 @@ export function PositionPage({
               currencyId0: currencyId(feeValue0.currency),
               currencyId1: currencyId(feeValue1.currency),
             })
+            history.push('/pool/')
           })
       })
       .catch((error) => {
@@ -697,7 +699,7 @@ export function PositionPage({
           <AutoColumn gap="sm">
             <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
               <HoverText>
-                <Trans>← Back to My Trades</Trans>
+                <Trans>← Back to Dashboard</Trans>
               </HoverText>
             </Link>
             <ResponsiveRow>
@@ -711,7 +713,7 @@ export function PositionPage({
                     <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
                   </BadgeText>
                 </Badge>
-                <RangeBadge removed={removed} inRange={inRange} closed={isClosed} />
+                <RangeBadge removed={removed} inRange={inRange} closed={isClosed} isUnderfunded={false} />
               </RowFixed>
               {ownsNFT && tokenId && (
                 <RowFixed>

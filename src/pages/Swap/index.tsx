@@ -300,7 +300,8 @@ export default function Swap({ history }: RouteComponentProps) {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
-      onUserInput(Field.INPUT, '')
+      //onUserInput(Field.INPUT, '')
+      history.push('/pool/')
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 

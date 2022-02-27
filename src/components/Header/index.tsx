@@ -274,9 +274,6 @@ export default function Header() {
         </UniIcon>
       </Title>
       <HeaderLinks>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Trans>Trade</Trans>
-        </StyledNavLink>
         <StyledNavLink
           id={`pool-nav-link`}
           to={'/pool'}
@@ -288,7 +285,10 @@ export default function Header() {
             pathname.startsWith('/find')
           }
         >
-          <Trans>My Trades</Trans>
+          <Trans>Dashboard</Trans>
+        </StyledNavLink>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <Trans>Trade</Trans>
         </StyledNavLink>
       </HeaderLinks>
 
