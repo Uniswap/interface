@@ -1,8 +1,8 @@
 import { ChainId } from 'constants/chains'
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
-  [ChainId.TESTNET]: 'ropsten.',
+const EXPLORER_PREFIXES: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: 'evm.evmos.org',
+  [ChainId.TESTNET]: 'evm.evmos.dev',
 }
 
 export enum ExplorerDataType {
@@ -19,7 +19,7 @@ export enum ExplorerDataType {
  * @param type the type of the data
  */
 export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDataType): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[ChainId.MAINNET]}etherscan.io`
+  const prefix = `https://${EXPLORER_PREFIXES[chainId] || EXPLORER_PREFIXES[ChainId.MAINNET]}`
 
   switch (type) {
     case ExplorerDataType.TRANSACTION: {
