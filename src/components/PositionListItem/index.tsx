@@ -129,6 +129,7 @@ const DataText = styled.div`
 
 interface PositionListItemProps {
   positionDetails: PositionDetails
+  isUnderfunded: boolean
 }
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
@@ -185,7 +186,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 }
 
-export default function PositionListItem({ positionDetails }: PositionListItemProps) {
+export default function PositionListItem({ positionDetails, isUnderfunded }: PositionListItemProps) {
   const {
     token0: token0Address,
     token1: token1Address,
@@ -276,7 +277,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             </BadgeText>
           </Badge>
         </PrimaryPositionIdData>
-        <RangeBadge removed={removed} inRange={!outOfRange} closed={closedOrder} />
+        <RangeBadge removed={removed} inRange={!outOfRange} closed={closedOrder} isUnderfunded={isUnderfunded} />
       </RowBetween>
 
       {targetPrice ? (

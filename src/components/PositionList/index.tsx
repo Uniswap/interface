@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import PositionListItem from 'components/PositionListItem'
 import React from 'react'
 import styled from 'styled-components/macro'
@@ -36,9 +37,13 @@ const MobileHeader = styled.div`
 
 type PositionListProps = React.PropsWithChildren<{
   positions: PositionDetails[]
+  fundingBalance?: CurrencyAmount<Token>
+  minBalance?: CurrencyAmount<Token>
 }>
 
-export default function PositionList({ positions }: PositionListProps) {
+export default function PositionList({ positions, fundingBalance, minBalance }: PositionListProps) {
+  const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
+
   return (
     <>
       <DesktopHeader>
@@ -54,7 +59,7 @@ export default function PositionList({ positions }: PositionListProps) {
         <Trans>My trades</Trans>
       </MobileHeader>
       {positions.map((p) => {
-        return <PositionListItem key={p.tokenId.toString()} positionDetails={p} />
+        return <PositionListItem key={p.tokenId.toString()} positionDetails={p} isUnderfunded={isUnderfunded} />
       })}
     </>
   )

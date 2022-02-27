@@ -28,20 +28,32 @@ export default function RangeBadge({
   removed,
   inRange,
   closed,
+  isUnderfunded,
 }: {
   removed: boolean | undefined
   inRange: boolean | undefined
   closed: boolean | undefined
+  isUnderfunded: boolean | undefined
 }) {
   return (
     <BadgeWrapper>
       {closed ? (
-        <MouseoverTooltip text={<Trans>The trade has been processed.</Trans>}>
+        <MouseoverTooltip text={<Trans>The trade has been processed</Trans>}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
               <Trans>Processed</Trans>
+            </BadgeText>
+          </Badge>
+        </MouseoverTooltip>
+      ) : isUnderfunded ? (
+        <MouseoverTooltip text={<Trans>Trades not processing. Please fund your account with KROM.</Trans>}>
+          <Badge variant={BadgeVariant.NEGATIVE}>
+            <AlertCircle width={14} height={14} />
+            &nbsp;
+            <BadgeText>
+              <Trans>Not Processing</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>

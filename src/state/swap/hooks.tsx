@@ -257,8 +257,8 @@ export function useDerivedSwapInfo(): {
 
     let tick = TickMath.getTickAtSqrtRatio(sqrtRatioX96)
     const nextTick = sorted
-      ? tick + 5 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
-      : tick - 5 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
+      ? tick + 3 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
+      : tick - 3 * TICK_SPACINGS[bestTrade.route.pools[0].fee]
     const nextTickPrice = tickToPrice(price.baseCurrency.wrapped, price.quoteCurrency.wrapped, nextTick)
     if (!nextTickPrice.lessThan(price)) {
       tick = nextTick
@@ -307,6 +307,10 @@ export function useDerivedSwapInfo(): {
   let inputError: ReactNode | undefined
   if (!account) {
     inputError = <Trans>Connect Wallet</Trans>
+  }
+
+  if (!minPrice && (parsedAmounts.input || parsedAmounts.output)) {
+    inputError = inputError ?? <Trans>Trading pair not available</Trans>
   }
 
   if (!parsedAmounts.input || !parsedAmounts.output) {

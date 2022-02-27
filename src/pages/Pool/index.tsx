@@ -160,7 +160,7 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'10'}>
               <TYPE.body fontSize={'20px'}>
-                <Trans>Trades</Trans>
+                <Trans>Account</Trans>
               </TYPE.body>
               <ButtonRow>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/add/${kromToken?.address}/remove`}>
@@ -170,14 +170,22 @@ export default function Pool() {
                   + <Trans>Deposit KROM</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
-              <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/swap`}>
-                + <Trans>New Trade</Trans>
-              </ResponsiveButtonPrimary>
             </TitleRow>
 
-            <HideSmall>
-              <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
-            </HideSmall>
+            <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
+
+            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <HideSmall>
+                <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                  <Trans>Trades</Trans>
+                </TYPE.mediumHeader>
+              </HideSmall>
+              <ButtonRow>
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/swap`}>
+                  + <Trans>New Trade</Trans>
+                </ResponsiveButtonPrimary>
+              </ButtonRow>
+            </TitleRow>
 
             <MainContentWrapper>
               {positionsLoading ? (
@@ -196,7 +204,7 @@ export default function Pool() {
                   <div />
                 </LoadingRows>
               ) : filteredPositions && filteredPositions.length > 0 ? (
-                <PositionList positions={filteredPositions} />
+                <PositionList positions={filteredPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
               ) : (
                 <NoLiquidity>
                   <TYPE.body color={theme.text3} textAlign="center">

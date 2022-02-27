@@ -26,7 +26,7 @@ import { GreyCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { CardNoise } from '../earn/styled'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 
@@ -39,11 +39,8 @@ const BadgeText = styled.div`
   font-size: 14px;
 `
 
-const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
-  border: none;
-  background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.bg3} 100%) `};
-  position: relative;
+const VoteCard = styled(DataCard)`
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
   overflow: hidden;
 `
 
@@ -179,104 +176,120 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
   const { chainId } = useActiveWeb3React()
   const kromToken = chainId ? KROM[chainId] : undefined
 
-  const isUnderfunded = fundingBalance ? minBalance?.greaterThan(fundingBalance?.quotient) : true
+  const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
 
   return (
-    <StyledPositionCard bgColor={backgroundColor}>
-      <AutoColumn gap="12px">
-        <FixedHeightRow>
-          <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
-        </FixedHeightRow>
+    <VoteCard>
+      <CardBGImage />
+      <CardNoise />
+      <CardSection>
+        <AutoColumn gap="md">
+          <FixedHeightRow>
+            <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
+          </FixedHeightRow>
 
-        {showMore && (
-          <AutoColumn gap="8px">
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
-                  <Trans>Status:</Trans>
-                </Text>
-              </RowFixed>
-
-              {isUnderfunded ? (
-                <MouseoverTooltip
-                  text={<Trans>Your account is underfunded. Please deposit KROM up to the minimum balance.</Trans>}
-                >
-                  <Badge variant={BadgeVariant.NEGATIVE}>
-                    <AlertCircle width={14} height={14} />
-                    &nbsp;
-                    <BadgeText>
-                      <Trans>Underfunded</Trans>
-                    </BadgeText>
-                  </Badge>
-                </MouseoverTooltip>
-              ) : (
-                <MouseoverTooltip text={<Trans>Your account is actively processing trades.</Trans>}>
-                  <Badge variant={BadgeVariant.POSITIVE}>
-                    <AlertCircle width={14} height={14} />
-                    &nbsp;
-                    <BadgeText>
-                      <Trans>Active</Trans>
-                    </BadgeText>
-                  </Badge>
-                </MouseoverTooltip>
-              )}
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
-                  <Trans>Deposit Balance:</Trans>
-                </Text>
-              </RowFixed>
-              {fundingBalance ? (
+          {showMore && (
+            <AutoColumn gap="8px">
+              <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
+                  <Text fontSize={16} fontWeight={500}>
+                    <Trans>Account Status:</Trans>
                   </Text>
                 </RowFixed>
-              ) : (
-                '-'
-              )}
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
-                  <Trans>Minimum Balance:</Trans>
-                </Text>
-              </RowFixed>
-              {minBalance ? (
-                <RowFixed>
+
+                {isUnderfunded ? (
                   <MouseoverTooltip
                     text={
                       <Trans>
-                        You will need to maintain a minimum balance to ensure your trades are processed. This amount
-                        will fluctuate based on the price of ETH / KROM and the current network gas price.
+                        Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the
+                        minimum balance.
                       </Trans>
                     }
                   >
-                    <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                    <Badge variant={BadgeVariant.NEGATIVE}>
+                      <AlertCircle width={14} height={14} />
+                      &nbsp;
+                      <BadgeText>
+                        <Trans>Underfunded</Trans>
+                      </BadgeText>
+                    </Badge>
                   </MouseoverTooltip>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
+                ) : (
+                  <MouseoverTooltip
+                    text={
+                      <Trans>
+                        Your account is actively processing trades. Recommendation is to deposit at least twice the
+                        minimum balance.
+                      </Trans>
+                    }
+                  >
+                    <Badge variant={BadgeVariant.POSITIVE}>
+                      <AlertCircle width={14} height={14} />
+                      &nbsp;
+                      <BadgeText>
+                        <Trans>Active</Trans>
+                      </BadgeText>
+                    </Badge>
+                  </MouseoverTooltip>
+                )}
+              </FixedHeightRow>
+              <FixedHeightRow>
+                <RowFixed>
+                  <Text fontSize={16} fontWeight={500}>
+                    <Trans>Deposit Balance:</Trans>
                   </Text>
                 </RowFixed>
-              ) : (
-                '-'
-              )}
-            </FixedHeightRow>
+                {fundingBalance ? (
+                  <RowFixed>
+                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
+                    </Text>
+                  </RowFixed>
+                ) : (
+                  '-'
+                )}
+              </FixedHeightRow>
+              <FixedHeightRow>
+                <RowFixed>
+                  <Text fontSize={16} fontWeight={500}>
+                    <Trans>Minimum Balance:</Trans>
+                  </Text>
+                </RowFixed>
+                {minBalance ? (
+                  <RowFixed>
+                    <MouseoverTooltip
+                      text={
+                        <Trans>
+                          You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation
+                          is to deposit at least twice the minimum balance.
+                        </Trans>
+                      }
+                    >
+                      <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                    </MouseoverTooltip>
+                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                      {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
+                    </Text>
+                  </RowFixed>
+                ) : (
+                  '-'
+                )}
+              </FixedHeightRow>
 
-            <ButtonSecondary padding="8px" $borderRadius="8px">
-              <ExternalLink
-                style={{ width: '100%', textAlign: 'center' }}
-                href={`https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${kromToken?.address}`}
-              >
-                <Trans>
-                  Get more KROM tokens here<span style={{ fontSize: '11px' }}>↗</span>
-                </Trans>
-              </ExternalLink>
-            </ButtonSecondary>
-          </AutoColumn>
-        )}
-      </AutoColumn>
-    </StyledPositionCard>
+              <ButtonSecondary padding="8px" $borderRadius="8px">
+                <ExternalLink
+                  style={{ width: '100%', textAlign: 'center' }}
+                  href={`https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${kromToken?.address}`}
+                >
+                  <Trans>
+                    Get KROM tokens here<span style={{ fontSize: '11px' }}>↗</span>
+                  </Trans>
+                </ExternalLink>
+              </ButtonSecondary>
+            </AutoColumn>
+          )}
+        </AutoColumn>
+      </CardSection>
+    </VoteCard>
   )
 }

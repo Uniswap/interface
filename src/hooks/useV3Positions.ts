@@ -132,10 +132,7 @@ function usePositionProcessedLogs(
   account: string | null | undefined
 ): ProposalCreatedLogs[] | undefined {
   // create filters for
-  const filter = useMemo(
-    () => contract?.filters?.LimitOrderProcessed('0x6a055C65d46fEe70d0d6cc22dF857cfc22D6cE55', tokenId),
-    [contract]
-  )
+  const filter = useMemo(() => contract?.filters?.LimitOrderProcessed(null, tokenId), [contract])
 
   const useLogsResult = useLogs(filter)
 

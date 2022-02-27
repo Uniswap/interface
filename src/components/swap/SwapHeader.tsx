@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
@@ -12,14 +13,25 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
+const HoverText = styled(TYPE.main)`
+  text-decoration: none;
+  color: ${({ theme }) => theme.text3};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    text-decoration: none;
+  }
+`
+
 export default function SwapHeader() {
   return (
     <StyledSwapHeader>
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            <Trans>Trade</Trans>
-          </TYPE.black>
+          <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
+            <HoverText>
+              <Trans>← Back to Dashboard</Trans>
+            </HoverText>
+          </Link>
         </RowFixed>
         {/* <RowFixed>
           <SettingsTab />
