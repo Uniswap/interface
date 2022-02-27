@@ -2,7 +2,7 @@
   "background_color": "#fff",
   "display": "standalone",
   "homepage_url": "https://app.uniswap.org",
-  "providedBy": { "name": "Uniswap", "url": "https://uniswap.org" },
+  "providedBy": { "name": "Kromatika", "url": "https://kromatika.finance" },
   "icons": [
     {
       "src": "./images/192x192_App_Icon.png",
@@ -18,10 +18,10 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Uniswap",
-  "description": "Swap or provide liquidity on the Uniswap Protocol",
+  "name": "Kromatika",
+  "description": "Place limit orders on the Uniswap V3 Protocol",
   "iconPath": "./images/256x256_App_Icon_Pink.svg",
-  "short_name": "Uniswap",
+  "short_name": "Kromatika",
   "start_url": ".",
   "theme_color": "#ff007a"
 }
