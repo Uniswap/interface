@@ -9,7 +9,7 @@ import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-import { Photon, PHOTON } from '../../constants/tokens'
+import { Evmos, EVMOS } from '../../constants/tokens'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -48,7 +48,7 @@ export default function CommonBases({
         <BaseWrapper
           onClick={() => {
             if (chainId) {
-              const photon = Photon.onChain(chainId || ChainId.MAINNET)
+              const photon = Evmos.onChain(chainId || ChainId.MAINNET)
               if (!selectedCurrency || !currencyEquals(selectedCurrency, photon)) {
                 onSelect(photon)
               }
@@ -56,9 +56,9 @@ export default function CommonBases({
           }}
           disable={selectedCurrency?.isNative}
         >
-          <CurrencyLogo currency={PHOTON} style={{ marginRight: 8 }} />
+          <CurrencyLogo currency={EVMOS} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
-            PHOTON
+            {EVMOS.symbol}
           </Text>
         </BaseWrapper>
         {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((token: Token) => {

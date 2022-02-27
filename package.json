@@ -140,7 +140,8 @@
     "build-storybook": "build-storybook",
     "test": "craco test --env=jsdom",
     "upload-storybook": "yarn build-storybook; chromatic",
-    "chromatic": "dotenv -e .env.local -- npx chromatic --storybook-build-dir=storybook-static"
+    "chromatic": "dotenv -e .env.local -- npx chromatic --storybook-build-dir=storybook-static",
+    "lint": "eslint src"
   },
   "eslintConfig": {
     "extends": "react-app",

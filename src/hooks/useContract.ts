@@ -20,9 +20,10 @@ import { Unisocks } from 'abis/types/Unisocks'
 import UNISOCKS_ABI from 'abis/unisocks.json'
 import WETH_ABI from 'abis/weth.json'
 import EIP_2612 from 'abis/eip_2612.json'
+import { abi as MINICHEF_V2_ABI } from 'abis/MiniChefV2.json'
 
 import { ChainId } from 'constants/chains'
-import { WPHOTON, DIFFUSION } from 'constants/tokens'
+import { WEVMOS, DIFFUSION } from 'constants/tokens'
 
 import {
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -36,6 +37,7 @@ import {
   V2_ROUTER_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
   SOCKS_CONTROLLER_ADDRESSES,
+  MINICHEF_V2_ADDRESS,
 } from 'constants/addresses'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { useMemo } from 'react'
@@ -43,7 +45,15 @@ import { Quoter, UniswapV3Factory, UniswapV3Pool } from 'types/v3'
 import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Multicall2, Weth } from '../abis/types'
+import {
+  ArgentWalletDetector,
+  EnsPublicResolver,
+  EnsRegistrar,
+  Erc20,
+  MiniChefV2,
+  Multicall2,
+  Weth,
+} from '../abis/types'
 
 import { useActiveWeb3React } from './web3'
 
@@ -80,7 +90,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
   const { chainId } = useActiveWeb3React()
-  return useContract<Weth>(chainId ? WPHOTON[chainId]?.address : undefined, WETH_ABI, withSignerIfPossible)
+  return useContract<Weth>(chainId ? WEVMOS[chainId]?.address : undefined, WETH_ABI, withSignerIfPossible)
 }
 
 export function useArgentWalletDetectorContract() {
@@ -117,6 +127,10 @@ export function useMulticall2Contract() {
 
 export function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
+}
+
+export function useMiniChef() {
+  return useContract<MiniChefV2>(MINICHEF_V2_ADDRESS, MINICHEF_V2_ABI, true)
 }
 
 export function useGovernanceContract() {

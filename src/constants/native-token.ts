@@ -2,13 +2,14 @@ import { ChainId } from './chains'
 import { Token } from '../sdk-core/entities/token'
 import { NativeCurrency } from '../sdk-core/entities/nativeCurrency'
 import invariant from 'tiny-invariant'
+import { WETH9_ADDRESS } from './addresses'
 
-export const WPHOTON = {
+export const WEVMOS = {
   // Mainly for unit tests
-  1: new Token(1, '0xbc0b8C49443E309528a7F21211933A58096B866c', 18, 'WEVMOS', 'Wrapped Evmos'),
-  ...makeToken('Wrapped Evmos', 'WEVMOS', 18, '0xbc0b8C49443E309528a7F21211933A58096B866c'),
+  1: new Token(1, WETH9_ADDRESS, 18, 'WEVMOS', 'Wrapped Evmos'),
+  ...makeToken('Wrapped Evmos', 'WEVMOS', 18, WETH9_ADDRESS),
 }
-export const WETH9 = WPHOTON
+export const WETH9 = WEVMOS
 
 function makeToken(name: string, symbol: string, decimals: number, mainAddress: string, testNetAddress?: string) {
   return {
@@ -17,21 +18,21 @@ function makeToken(name: string, symbol: string, decimals: number, mainAddress: 
   }
 }
 
-export class Photon extends NativeCurrency {
+export class Evmos extends NativeCurrency {
   protected constructor(chainId: number) {
-    super(chainId, 18, 'PHOTON', 'Photon')
+    super(chainId, 18, 'EVMOS', 'Evmos')
   }
 
   public get wrapped(): Token {
-    const weth9 = WPHOTON[this.chainId as ChainId]
+    const weth9 = WEVMOS[this.chainId as ChainId]
     invariant(!!weth9, 'WRAPPED')
     return weth9
   }
 
-  private static _etherCache: { [chainId: number]: Photon } = {}
+  private static _etherCache: { [chainId: number]: Evmos } = {}
 
-  public static onChain(chainId: number): Photon {
-    return this._etherCache[chainId] ?? (this._etherCache[chainId] = new Photon(chainId))
+  public static onChain(chainId: number): Evmos {
+    return this._etherCache[chainId] ?? (this._etherCache[chainId] = new Evmos(chainId))
   }
 
   public equals(other: NativeCurrency | Token): boolean {

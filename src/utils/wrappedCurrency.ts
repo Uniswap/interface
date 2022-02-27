@@ -1,6 +1,6 @@
 import { Currency, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { ChainId } from 'constants/chains'
-import { WETH9, PHOTON } from 'constants/tokens'
+import { WETH9, EVMOS } from 'constants/tokens'
 import { supportedChainId } from './supportedChainId'
 import invariant from 'tiny-invariant'
 
@@ -18,7 +18,7 @@ export function wrappedCurrencyAmount(
 export function unwrappedToken(token: Token): Currency {
   if (token.isNative) return token
   const formattedChainId = supportedChainId(token.chainId)
-  if (formattedChainId && token.equals(WETH9[formattedChainId])) return PHOTON
+  if (formattedChainId && token.equals(WETH9[formattedChainId])) return EVMOS
   return token
 }
 

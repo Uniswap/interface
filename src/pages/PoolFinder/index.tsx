@@ -22,7 +22,7 @@ import { Dots } from '../Pool/styleds'
 import { BlueCard } from '../../components/Card'
 import { TYPE } from '../../theme'
 import { useLocation } from 'react-router'
-import { PHOTON } from 'constants/tokens'
+import { EVMOS } from 'constants/tokens'
 
 enum Fields {
   TOKEN0 = 0,
@@ -41,7 +41,7 @@ export default function PoolFinder() {
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [currency0, setCurrency0] = useState<Currency | null>(PHOTON)
+  const [currency0, setCurrency0] = useState<Currency | null>(EVMOS)
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
   const [pairState, pair] = useV2Pair(currency0 ?? undefined, currency1 ?? undefined)

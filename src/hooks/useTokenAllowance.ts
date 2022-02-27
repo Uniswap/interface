@@ -7,10 +7,15 @@ export function useTokenAllowance(token?: Token, owner?: string, spender?: strin
   const contract = useTokenContract(token?.address, false)
 
   const inputs = useMemo(() => [owner, spender], [owner, spender])
-  const allowance = useSingleCallResult(contract, 'allowance', inputs).result
+  const callResult = useSingleCallResult(contract, 'allowance', inputs)
 
-  return useMemo(
-    () => (token && allowance ? CurrencyAmount.fromRawAmount(token, allowance.toString()) : undefined),
-    [token, allowance]
-  )
+  const allowance = callResult.result
+
+  return useMemo(() => {
+    if (token && allowance) {
+      const parsed = CurrencyAmount.fromRawAmount(token, allowance.toString())
+      return parsed
+    }
+    return undefined
+  }, [token, allowance])
 }

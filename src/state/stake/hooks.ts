@@ -2,13 +2,17 @@ import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { DIFFUSION } from '../../constants/tokens'
+import {
+  DIFFUSION,
+  // ATOM, OSMOSIS
+} from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { Interface } from '@ethersproject/abi'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
+// import { abi as MINICHEF_V2_ABI } from 'abis/MiniChefV2.json'
 import { ChainId } from 'constants/chains'
 
 export const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
@@ -20,6 +24,8 @@ export const REWARDS_DURATION_DAYS = 60
 export const STAKING_REWARDS_INFO: {
   [chainId in ChainId]?: {
     tokens: [Token, Token]
+    poolIndex: number
+    isActive: boolean
     stakingRewardAddress: string
   }[]
 } = {
@@ -41,11 +47,23 @@ export const STAKING_REWARDS_INFO: {
     //   stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e',
     // },
   ],
+  [ChainId.TESTNET]: [
+    // {
+    //   tokens: [
+    //     new Token(ChainId.TESTNET, '0xdBF7a4AAD29BCD3624Cba36Bb271427DCF2a64B1', 18),
+    //     new Token(ChainId.TESTNET, '0xFDA1AB2055292c59DA08b903894341920aF8fB64', 18),
+    //   ],
+    //   poolIndex: 0,
+    //   isActive: true,
+    // },
+  ],
 }
 
 export interface StakingInfo {
   // the address of the reward contract
+
   stakingRewardAddress: string
+  // lpTokenAddress: string
   // the tokens involved in this pair
   tokens: [Token, Token]
   // the amount of token currently staked, or undefined if no account

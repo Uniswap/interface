@@ -13,7 +13,8 @@ describe('computePairAddress', () => {
       tokenB,
     })
 
-    expect(result).toEqual('0xb50b5182D6a47EC53a469395AF44e371d7C76ed4')
+    //Crypzoh: We also changed the hash, so need to overwrite this now
+    expect(result).toEqual('0x02A216A79Ffe2dcE2BB9cc975708D12cDDe447C4')
   })
   it('should give same result regardless of token order', () => {
     const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 18, 'USDC', 'USD Coin')

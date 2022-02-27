@@ -3,15 +3,15 @@ const { MEVMOS, MUSDC, MATOM } = CONTRACTS
 
 describe('Remove Liquidity', () => {
   it('Native remove', () => {
-    cy.visit(`/remove/v2/PHOTON/${MUSDC}`)
-    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'PHOTON')
+    cy.visit(`/remove/v2/EVMOS/${MUSDC}`)
+    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'EVMOS')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'MUSDC')
   })
 
   it('Native remove swap order', () => {
-    cy.visit(`/remove/v2/${MUSDC}/PHOTON`)
+    cy.visit(`/remove/v2/${MUSDC}/EVMOS`)
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'MUSDC')
-    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'PHOTON')
+    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'EVMOS')
   })
 
   it('loads the two correct tokens', () => {
