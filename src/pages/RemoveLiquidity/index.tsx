@@ -479,15 +479,15 @@ export default function RemoveLiquidity({
                               currencyB?.isNative ? WEVMOS[chainId].address : currencyIdB
                             }`}
                           >
-                            Receive WETH
+                            Receive WEVMOS
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
                             to={`/remove/v2/${
-                              currencyA && currencyEquals(currencyA, WEVMOS[chainId]) ? 'ETH' : currencyIdA
-                            }/${currencyB && currencyEquals(currencyB, WEVMOS[chainId]) ? 'ETH' : currencyIdB}`}
+                              currencyA && currencyEquals(currencyA, WEVMOS[chainId]) ? 'EVMOS' : currencyIdA
+                            }/${currencyB && currencyEquals(currencyB, WEVMOS[chainId]) ? 'EVMOS' : currencyIdB}`}
                           >
-                            Receive ETH
+                            Receive EVMOS
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

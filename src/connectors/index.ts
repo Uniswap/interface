@@ -7,10 +7,10 @@ import getLibrary from '../utils/getLibrary'
 
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
-import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
-import { ChainId } from '../constants/chains'
+import DIFFUSION_LOGO_URL from '../assets/svg/logo.svg'
+import { ChainId, NETWORK_URLS } from '../constants/chains'
 
-const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
+// const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
@@ -19,14 +19,12 @@ const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
 //   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
 // }
 
-const NETWORK_URLS: {
-  [chainId in ChainId]: string
-} = {
-  [ChainId.MAINNET]: `https://ethereum.rpc.evmos.dev`,
-  [ChainId.TESTNET]: `https://ethereum.rpc.evmos.dev`,
-}
-
 const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.TESTNET]
+
+/**
+ * @TODO: Crypzoh: This is to enable the other connectors temporarily without removing them from the code
+ */
+const FAKE_CHAIN_ID = 3 // This is ropsten
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
@@ -43,28 +41,29 @@ export const injected = new InjectedConnector({
 })
 
 export const walletconnect = new WalletConnectConnector({
-  supportedChainIds: SUPPORTED_CHAIN_IDS,
-  infuraId: INFURA_KEY, // obviously a hack
+  // supportedChainIds: SUPPORTED_CHAIN_IDS,
+  supportedChainIds: [FAKE_CHAIN_ID],
+  infuraId: '1234', //INFURA_KEY, // obviously a hack
   bridge: WALLETCONNECT_BRIDGE_URL,
   qrcode: true,
   pollingInterval: 15000,
 })
 
-// mainnet only
+// // mainnet only
 export const fortmatic = new FortmaticConnector({
   apiKey: FORMATIC_KEY ?? '',
-  chainId: 1,
+  chainId: FAKE_CHAIN_ID,
 })
 
-// mainnet only
+// // mainnet only
 export const portis = new PortisConnector({
   dAppId: PORTIS_ID ?? '',
-  networks: [1],
+  networks: [FAKE_CHAIN_ID],
 })
 
-// mainnet only
+// // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URLS[ChainId.MAINNET],
-  appName: 'Uniswap',
-  appLogoUrl: UNISWAP_LOGO_URL,
+  appName: 'Diffusion Finance',
+  appLogoUrl: DIFFUSION_LOGO_URL,
 })

@@ -1,5 +1,5 @@
 import useScrollPosition from '@react-hook/window-scroll'
-import React, { useState } from 'react'
+import React from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
@@ -19,8 +19,8 @@ import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
-import Modal from '../Modal'
-import UniBalanceContent from './UniBalanceContent'
+// import Modal from '../Modal'
+// import UniBalanceContent from './UniBalanceContent'
 import { ChainId } from 'constants/chains'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
@@ -278,15 +278,15 @@ export default function Header() {
   // const [isDark] = useDarkModeManager()
   const [darkMode] = useDarkModeManager()
 
-  const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
+  // const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
 
   const scrollY = useScrollPosition()
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>
-      <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
+      {/* <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
-      </Modal>
+      </Modal> */}
       <HeaderRow>
         <Title href=".">
           <Logo height="24px" fill={darkMode ? 'white' : 'black'} />

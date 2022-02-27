@@ -222,8 +222,8 @@ export default function AccountDetails({
   pendingTransactions,
   confirmedTransactions,
   ENSName,
-  openOptions,
-}: AccountDetailsProps) {
+}: // openOptions,
+AccountDetailsProps) {
   const { chainId, account, connector } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
@@ -311,14 +311,14 @@ export default function AccountDetails({
                       Disconnect
                     </WalletAction>
                   )}
-                  <WalletAction
+                  {/* <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {
                       openOptions()
                     }}
                   >
                     Change
-                  </WalletAction>
+                  </WalletAction> */}
                 </div>
               </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">

@@ -44,7 +44,7 @@
   "currentPoolSize": "Текущий размер пула",
   "yourPoolShare": "Ваша доля в пуле",
   "noZero": "Значение не может быть нулевым.",
-  "mustBeETH": "Одно из значений должно быть ETH.",
+  "mustBeETH": "Одно из значений должно быть EVMOS.",
   "enterCurrencyOrLabelCont": "Введите {{ inputCurrency }} или {{ label }}, чтобы продолжить.",
   "youAreAdding": "Вы добавляете от",
   "and": "и",

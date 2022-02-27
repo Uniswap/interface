@@ -82,7 +82,8 @@ Cypress.Commands.overwrite('visit', (original, url, options) => {
     onBeforeLoad(win) {
       options && options.onBeforeLoad && options.onBeforeLoad(win)
       win.localStorage.clear()
-      const provider = new JsonRpcProvider('https://ethereum.rpc.evmos.dev', CHAIN_ID)
+      // Current testnet rpc
+      const provider = new JsonRpcProvider('https://evmos-archive-testnet.api.bdnodes.net:8545', CHAIN_ID)
       const signer = new Wallet(TEST_PRIVATE_KEY, provider)
       win.ethereum = new CustomizedBridge(signer, provider)
     },

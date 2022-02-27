@@ -4,12 +4,6 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import Component, { LineChartProps } from './'
 import { dummyData } from './data'
-// import { AutoColumn } from 'components/Column'
-// import { TYPE } from 'theme'
-// import DoubleCurrencyLogo from 'components/DoubleLogo'
-// import { MKR } from 'constants'
-// import { ETHER } from '@uniswap/sdk'
-// import LineChart from '.'
 
 const Wrapper = styled.div`
   margin: 1em 2em;

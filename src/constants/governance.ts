@@ -4,7 +4,7 @@ import //  GOVERNANCE_ADDRESS, TIMELOCK_ADDRESS, UNI_ADDRESS
 
 export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]?: { [address: string]: string } } = {
   [ChainId.MAINNET]: {
-    //@TODO: MH - Check where used and how
+    //@TODO: Crypzoh - Check where used and how
     // [UNI_ADDRESS[ChainId.MAINNET]]: 'UNI',
     // [GOVERNANCE_ADDRESS[ChainId.MAINNET]]: 'Governance',
     // [TIMELOCK_ADDRESS[ChainId.MAINNET]]: 'Timelock',
@@ -16,7 +16,7 @@ export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]?: { [address: string]
   },
 }
 
-export const DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS = 13
+export const DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS = 5
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId in ChainId]?: number } = {

@@ -1,5 +1,11 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import {
+  //  BookOpen,
+  Code,
+  Info,
+  MessageCircle,
+  // PieChart
+} from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -112,7 +118,7 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
+const CODE_LINK = 'https://github.com/diffusion-fi/interface'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
@@ -129,26 +135,26 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem href="https://uniswap.org/">
+          <MenuItem href="https://diffusion.fi/">
             <Info size={14} />
             <div>About</div>
           </MenuItem>
-          <MenuItem href="https://docs.uniswap.org/">
+          {/* <MenuItem href="https://docs.uniswap.org/">
             <BookOpen size={14} />
             <div>Docs</div>
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem href={CODE_LINK}>
             <Code size={14} />
             <div>Code</div>
           </MenuItem>
-          <MenuItem href="https://discord.gg/FCfyBSbCU5">
+          <MenuItem href="https://discord.gg/2Df4XDkcFC ">
             <MessageCircle size={14} />
             <div>Discord</div>
           </MenuItem>
-          <MenuItem href="https://info.uniswap.org/">
+          {/* <MenuItem href="https://info.uniswap.org/">
             <PieChart size={14} />
             <div>Analytics</div>
-          </MenuItem>
+          </MenuItem> */}
         </MenuFlyout>
       )}
     </StyledMenu>

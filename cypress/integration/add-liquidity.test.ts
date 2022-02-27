@@ -1,6 +1,11 @@
 import { CONTRACTS } from './contracts'
 
 describe('Add Liquidity', () => {
+  it('Loads Evmos correctly', () => {
+    cy.visit(`/add/v2/EVMOS`)
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'EVMOS')
+  })
+
   it('loads the two correct tokens', () => {
     const { MEVMOS, MUSDC } = CONTRACTS
     cy.visit(`/add/v2/${MUSDC}/${MEVMOS}`)

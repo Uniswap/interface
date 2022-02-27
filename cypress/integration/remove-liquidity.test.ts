@@ -20,10 +20,16 @@ describe('Remove Liquidity', () => {
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'MATOM')
   })
 
-  it('does not crash if ETH is duplicated', () => {
+  it('does not crash if WEVMOS is duplicated', () => {
     cy.visit(`/remove/v2/${MEVMOS}/${MEVMOS}`)
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'MEVMOS')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'MEVMOS')
+  })
+
+  it('does not crash if EVMOS is duplicated', () => {
+    cy.visit(`/remove/v2/EVMOS/EVMOS`)
+    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'EVMOS')
+    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'EVMOS')
   })
 
   it.skip('token not in storage is loaded', () => {
