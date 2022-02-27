@@ -193,7 +193,9 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
               <FixedHeightRow>
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500}>
-                    <Trans>Account Status:</Trans>
+                    <TYPE.white>
+                      <Trans>Account Status:</Trans>
+                    </TYPE.white>
                   </Text>
                 </RowFixed>
 
@@ -236,13 +238,17 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
               <FixedHeightRow>
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500}>
-                    <Trans>Deposit Balance:</Trans>
+                    <TYPE.white>
+                      <Trans>Deposit Balance:</Trans>
+                    </TYPE.white>
                   </Text>
                 </RowFixed>
                 {fundingBalance ? (
                   <RowFixed>
                     <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
+                      <TYPE.white>
+                        {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
+                      </TYPE.white>
                     </Text>
                   </RowFixed>
                 ) : (
@@ -252,7 +258,9 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
               <FixedHeightRow>
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500}>
-                    <Trans>Minimum Balance:</Trans>
+                    <TYPE.white>
+                      <Trans>Minimum Balance:</Trans>
+                    </TYPE.white>
                   </Text>
                 </RowFixed>
                 {minBalance ? (
@@ -268,7 +276,9 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
                       <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
                     </MouseoverTooltip>
                     <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
+                      <TYPE.white>
+                        {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
+                      </TYPE.white>
                     </Text>
                   </RowFixed>
                 ) : (
