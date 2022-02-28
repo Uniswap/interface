@@ -173,6 +173,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
               setSortedColumn(SORT_FIELD.LIQ)
               setSortDirection(sortedColumn !== SORT_FIELD.LIQ ? true : !sortDirection)
             }}
+            style={{ textAlign: 'right' }}
           >
             <Trans>AMP LIQUIDITY</Trans>
             <InfoHelper text={AMP_LIQUIDITY_HINT} />
@@ -215,6 +216,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
               setSortedColumn(SORT_FIELD.VOL)
               setSortDirection(sortedColumn !== SORT_FIELD.VOL ? true : !sortDirection)
             }}
+            style={{ textAlign: 'right' }}
           >
             <Trans>Volume (24h)</Trans>
             {sortedColumn === SORT_FIELD.VOL ? (
@@ -248,7 +250,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
           </ClickableText>
         </Flex>
         <Flex alignItems="center" justifyContent="flex-end">
-          <ClickableText>
+          <ClickableText style={{ textAlign: 'right' }}>
             <Trans>My liquidity</Trans>
           </ClickableText>
         </Flex>
