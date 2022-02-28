@@ -51,7 +51,7 @@ const plugins = [
 
   // Source code transformation
   replace({ ...REPLACEMENTS, preventAssignment: true }),
-  json(), // imports json; doing so type-checking allows the json to be type-checked
+  json(), // imports json as ES6; doing so enables type-checking and module resolution
 ]
 
 const check = {
@@ -76,13 +76,8 @@ const transpile = {
   input: 'src/lib/index.tsx',
   output: [
     {
-      file: 'dist/widgets.js',
+      file: 'dist/widgets.cjs',
       format: 'cjs',
-      sourcemap: true,
-    },
-    {
-      file: 'dist/widgets.esm.js',
-      format: 'esm',
       sourcemap: true,
     },
   ],
@@ -90,9 +85,9 @@ const transpile = {
     ...plugins,
 
     // Source code transformation
-    url({ include: ASSET_EXTENSIONS.map((extname) => '**/*' + extname) }), // imports assets as data URIs
+    url({ include: ASSET_EXTENSIONS.map((extname) => '**/*' + extname), limit: Infinity }), // imports assets as data URIs
     svgr({ exportType: 'named', svgo: false }), // imports svgs as React components
-    sass({ output: 'dist/fonts.css' }), // generates widgets.css
+    sass({ output: 'dist/fonts.css' }), // generates fonts.css
     commonjs(), // transforms cjs dependencies into tree-shakeable ES modules
 
     babel({

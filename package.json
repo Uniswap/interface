@@ -1,18 +1,17 @@
 {
   "name": "@uniswap/widgets",
-  "version": "0.0.15-beta",
+  "version": "0.0.18-beta",
   "description": "Uniswap Interface",
   "homepage": ".",
-  "type": "module",
   "files": [
     "lib",
     "dist"
   ],
   "exports": {
     ".": {
-    "types": "./dist/widgets.d.ts",
-    "import": "./dist/widgets.esm.js",
-    "require": "./dist/widgets.js"
+      "types": "./dist/widgets.d.ts",
+      "import": "./dist/widgets.cjs",
+      "require": "./dist/widgets.cjs"
     },
     "./fonts.css": {
       "import": "./dist/fonts.css",
@@ -20,8 +19,6 @@
     }
   },
   "types": "./dist/widgets.d.ts",
-  "module": "./dist/widgets.esm.js",
-  "main": "./dist/widgets.js",
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
@@ -83,8 +80,8 @@
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "^1.1.1",
-    "@web3-react/metamask": "8.0.16-alpha.0",
-    "@web3-react/walletconnect": "8.0.16-alpha.0",
+    "@web3-react/metamask": "8.0.10-beta.0",
+    "@web3-react/walletconnect": "8.0.15-beta.0",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
     "babel-plugin-macros": "^3.1.0",
@@ -166,7 +163,7 @@
     "prepublishOnly": "yarn widgets:build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=./custom-test-env.cjs",
+    "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "widgets:start": "cosmos",
     "widgets:build": "rollup --config --failAfterWarnings --configPlugin typescript2"
@@ -196,7 +193,7 @@
     "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/experimental": "^5.4.0",
     "@ethersproject/hash": "^5.4.0",
-    "@ethersproject/providers": "5.4.0",
+    "@ethersproject/providers": "^5.4.0",
     "@ethersproject/solidity": "^5.4.0",
     "@ethersproject/strings": "^5.4.0",
     "@ethersproject/units": "^5.4.0",
@@ -215,11 +212,11 @@
     "@uniswap/token-lists": "^1.0.0-beta.27",
     "@uniswap/v2-sdk": "^3.0.1",
     "@uniswap/v3-sdk": "^3.8.2",
-    "@web3-react/core": "8.0.16-alpha.0",
-    "@web3-react/eip1193": "8.0.16-alpha.0",
-    "@web3-react/empty": "8.0.17-alpha.0",
-    "@web3-react/types": "8.0.16-alpha.0",
-    "@web3-react/url": "8.0.17-alpha.0",
+    "@web3-react/core": "8.0.14-beta.0",
+    "@web3-react/eip1193": "8.0.9-beta.0",
+    "@web3-react/empty": "8.0.7-beta.0",
+    "@web3-react/types": "8.0.7-beta.0",
+    "@web3-react/url": "8.0.9-beta.0",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
     "immer": "^9.0.6",
