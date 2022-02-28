@@ -1,9 +1,13 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 import {
+  USDC_ARBITRUM,
   USDC_ARBITRUM_RINKEBY,
   USDC_GÖRLI,
   USDC_KOVAN,
+  USDC_MAINNET,
+  USDC_OPTIMISM,
   USDC_OPTIMISTIC_KOVAN,
+  USDC_POLYGON,
   USDC_POLYGON_MUMBAI,
   USDC_RINKEBY,
   USDC_ROPSTEN,
@@ -11,6 +15,8 @@ import {
 
 import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
+
+export { USDC_ARBITRUM, USDC_MAINNET, USDC_OPTIMISM, USDC_POLYGON }
 
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
@@ -39,34 +45,6 @@ export const DAI_OPTIMISM = new Token(
   18,
   'DAI',
   'Dai stable coin'
-)
-export const USDC_MAINNET = new Token(
-  SupportedChainId.MAINNET,
-  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_ARBITRUM = new Token(
-  SupportedChainId.ARBITRUM_ONE,
-  '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_POLYGON = new Token(
-  SupportedChainId.POLYGON,
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_OPTIMISM = new Token(
-  SupportedChainId.OPTIMISM,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-  6,
-  'USDC',
-  'USD//C'
 )
 export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.MAINNET]: USDC_MAINNET,

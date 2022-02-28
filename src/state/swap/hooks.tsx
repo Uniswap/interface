@@ -223,7 +223,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   const independentField = parseIndependentFieldURLParameter(parsedQs.exactField)
 
   if (inputCurrency === '' && outputCurrency === '' && typedValue === '' && independentField === Field.INPUT) {
-    // default to ETH input
+    // Defaults to 1 ETH -> USDC
     inputCurrency = 'ETH'
     outputCurrency = 'USDC'
     typedValue = '1'

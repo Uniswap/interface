@@ -44,8 +44,7 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
   const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
   return useMemo(() => {
-    if (typeof tokenAddress !== 'string') return tokenAddress
-    if (!chainId || !formattedAddress) return undefined
+    if (typeof tokenAddress !== 'string' || !chainId || !formattedAddress) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
     if (decimals.result) {
       return new Token(

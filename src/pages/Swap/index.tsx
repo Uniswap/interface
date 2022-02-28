@@ -91,6 +91,7 @@ export default function Swap({ history }: RouteComponentProps) {
           return !Boolean(token.address in defaultTokens)
         })
         .filter((token: Token) => {
+          // Any token addresses that are loaded from the shorthands map do not need to show the import URL
           const supported = supportedChainId(chainId)
           if (!supported) return true
           return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
