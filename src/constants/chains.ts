@@ -23,7 +23,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   // SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
 
-  // SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,

@@ -165,6 +165,13 @@ export const KROM: { [chainId: number]: Token } = {
     'KROM',
     'Kromatika'
   ),
+  [SupportedChainId.ARBITRUM_ONE]: new Token(
+    SupportedChainId.ARBITRUM_ONE,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.ARBITRUM_ONE],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
   [SupportedChainId.MAINNET]: new Token(
     SupportedChainId.MAINNET,
     KROM_TOKEN_ADDRESSES[SupportedChainId.MAINNET],
