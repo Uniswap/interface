@@ -3,7 +3,8 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import DonationHeader from 'components/DonationHeader'
+import RecipientDetails from 'components/swap/RecipientDetails'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -19,7 +20,6 @@ import { Text } from 'rebass'
 import { TradeState } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -50,7 +50,7 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
-import { LinkStyledButton, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
@@ -143,7 +143,7 @@ export default function Swap({ history }: RouteComponentProps) {
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
   )
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -367,11 +367,6 @@ export default function Swap({ history }: RouteComponentProps) {
     })
   }, [maxInputAmount, onUserInput])
 
-  const handleOutputSelect = useCallback(
-    (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
-    [onCurrencySelection]
-  )
-
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
@@ -384,6 +379,9 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
+      <AlertWrapper>
+        <DonationHeader />
+      </AlertWrapper>
       <AppBody>
         <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
@@ -416,16 +414,13 @@ export default function Swap({ history }: RouteComponentProps) {
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
                 showCommonBases={true}
+                disableNonToken={true}
                 id="swap-currency-input"
                 loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
               <ArrowWrapper clickable>
                 <ArrowDown
                   size="16"
-                  onClick={() => {
-                    setApprovalSubmitted(false) // reset 2 step UI for approvals
-                    onSwitchTokens()
-                  }}
                   color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
                 />
               </ArrowWrapper>
@@ -438,25 +433,22 @@ export default function Swap({ history }: RouteComponentProps) {
                 fiatValue={fiatValueOutput ?? undefined}
                 priceImpact={priceImpact}
                 currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={handleOutputSelect}
+                onCurrencySelect={undefined} // disable output selection to force ETH
                 otherCurrency={currencies[Field.INPUT]}
                 showCommonBases={true}
                 id="swap-currency-output"
                 loading={independentField === Field.INPUT && routeIsSyncing}
               />
             </div>
-
             {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                   <ArrowWrapper clickable={false}>
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                    <Trans>- Remove recipient</Trans>
-                  </LinkStyledButton>
                 </AutoRow>
-                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                {/* <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} /> */}
+                <RecipientDetails />
               </>
             ) : null}
             {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
@@ -574,9 +566,9 @@ export default function Swap({ history }: RouteComponentProps) {
                         {priceImpactTooHigh ? (
                           <Trans>High Price Impact</Trans>
                         ) : trade && priceImpactSeverity > 2 ? (
-                          <Trans>Swap Anyway</Trans>
+                          <Trans>Send Anyway</Trans>
                         ) : (
-                          <Trans>Swap</Trans>
+                          <Trans>Send</Trans>
                         )}
                       </Text>
                     </ButtonError>
@@ -605,13 +597,13 @@ export default function Swap({ history }: RouteComponentProps) {
                     {swapInputError ? (
                       swapInputError
                     ) : routeIsSyncing || routeIsLoading ? (
-                      <Trans>Swap</Trans>
+                      <Trans>Send</Trans>
                     ) : priceImpactSeverity > 2 ? (
-                      <Trans>Swap Anyway</Trans>
+                      <Trans>Send Anyway</Trans>
                     ) : priceImpactTooHigh ? (
                       <Trans>Price Impact Too High</Trans>
                     ) : (
-                      <Trans>Swap</Trans>
+                      <Trans>Send</Trans>
                     )}
                   </Text>
                 </ButtonError>
@@ -621,9 +613,7 @@ export default function Swap({ history }: RouteComponentProps) {
           </AutoColumn>
         </Wrapper>
       </AppBody>
-      <AlertWrapper>
-        <NetworkAlert />
-      </AlertWrapper>
+
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter

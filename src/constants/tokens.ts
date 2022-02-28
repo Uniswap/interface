@@ -296,3 +296,5 @@ export function nativeOnChain(chainId: number): NativeCurrency {
       : ExtendedEther.onChain(chainId))
   )
 }
+
+export const MAINNET_ETHER = ExtendedEther.onChain(1)

@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { UKRAINE_GOV_ETH_ADDRESS } from 'constants/donations'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
@@ -20,7 +21,15 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 
 export function useSwapState(): AppState['swap'] {
-  return useAppSelector((state) => state.swap)
+  return useAppSelector((state) => {
+    /**
+     * override for donation, in future will need to have better way to set donation address
+     */
+    return {
+      ...state.swap,
+      recipient: UKRAINE_GOV_ETH_ADDRESS,
+    }
+  })
 }
 
 export function useSwapActionHandlers(): {
@@ -92,12 +101,14 @@ export function useDerivedSwapInfo(): {
     independentField,
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
-    [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
   } = useSwapState()
 
+  // overrides for fixed outputs on donation
+  const outputCurrencyIdFixed = 'ETH'
+
   const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
+  const outputCurrency = useCurrency(outputCurrencyIdFixed)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
@@ -214,11 +225,11 @@ function validatedRecipient(recipient: any): string | null {
 }
 
 export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
+  const inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   if (inputCurrency === '' && outputCurrency === '') {
     // default to ETH input
-    inputCurrency = 'ETH'
+    outputCurrency = 'ETH'
   } else if (inputCurrency === outputCurrency) {
     // clear output if identical
     outputCurrency = ''

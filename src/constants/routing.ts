@@ -98,14 +98,7 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
-  [SupportedChainId.MAINNET]: [
-    nativeOnChain(SupportedChainId.MAINNET),
-    DAI,
-    USDC,
-    USDT,
-    WBTC,
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET],
-  ],
+  [SupportedChainId.MAINNET]: [DAI, USDC, USDT, WBTC],
   [SupportedChainId.ROPSTEN]: [
     nativeOnChain(SupportedChainId.ROPSTEN),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ROPSTEN],
