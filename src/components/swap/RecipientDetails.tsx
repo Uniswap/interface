@@ -1,14 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/smart-order-router'
+import { AutoColumn } from 'components/Column'
 import { StyledFlagImage } from 'components/DonationHeader'
 import Popover from 'components/Popover'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { TooltipContainer } from 'components/Tooltip'
 import { UKRAINE_GOV_ETH_ADDRESS } from 'constants/donations'
-import useTheme from 'hooks/useTheme'
 import { useState } from 'react'
-import { Send } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -38,19 +37,19 @@ const RecipientBadge = styled.div`
     rgba(255, 255, 255, 0.05);
 `
 
-export default function RecipientDetails() {
+export default function RecipientDetails({ amount }: { amount: string | undefined }) {
   const [showTooltip, setShowTooltip] = useState(false)
-
-  const theme = useTheme()
 
   return (
     <Wrapper>
       <RowBetween>
         <AutoRow gap="md">
-          <Send stroke={theme.white} size="16px" strokeWidth={'3px'} />
-          <ThemedText.White ml="8px" fontWeight={700}>
-            <Trans>Sending as ETH to:</Trans>
-          </ThemedText.White>
+          <AutoColumn gap="4px">
+            <ThemedText.White fontSize={'12px'} fontWeight={400}>
+              To:
+            </ThemedText.White>
+            <ThemedText.White fontWeight={700}>{amount ? `${amount} ETH` : '0 ETH'}</ThemedText.White>
+          </AutoColumn>
         </AutoRow>
         <Popover
           show={showTooltip}
@@ -66,7 +65,7 @@ export default function RecipientDetails() {
               <Row>
                 <StyledFlagImage />
                 <ThemedText.White style={{ whiteSpace: 'nowrap' }}>
-                  <Trans>US-Ukraine Foundation</Trans>
+                  <Trans>Ukraine Government</Trans>
                 </ThemedText.White>
               </Row>
             </RecipientBadge>

@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { ReactComponent as TwitterIcon } from 'assets/svg/twitter.svg'
 import { ButtonLight } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall, ThemedText } from 'theme'
 
-import { AutoRow } from '../Row'
+import { AutoRow, RowBetween } from '../Row'
 
 const ContentWrapper = styled.div`
   border-radius: 20px;
@@ -63,12 +64,23 @@ export const StyledFlagImage = styled.div`
 `
 
 const StyledButton = styled(ButtonLight)`
-  padding: 8px;
+  padding: 12px;
   border-radius: 12px;
-  width: 140px;
+  width: fit-content;
   font-size: 14px;
   background: rgba(255, 255, 255, 0.15);
   color: ${({ theme }) => theme.text1};
+  text-decoration: none !important;
+
+  :hover,
+  :active,
+  :focus {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`
+
+const StyledTwtterIcon = styled(TwitterIcon)`
+  margin-left: 8px;
 `
 
 export default function DonationHeader() {
@@ -79,16 +91,21 @@ export default function DonationHeader() {
           <AutoRow align="center">
             <StyledFlagImage />
             <Header>
-              <Trans>Dontate ETH to Ukraine</Trans>
+              <Trans>Donate to Ukraine</Trans>
             </Header>
           </AutoRow>
           <HideSmall>
             <ThemedText.SubHeader fontSize="12px" fontWeight={400} maxWidth="280px">
-              <Trans>Select which token you want to donate below.</Trans>
+              <Trans>Select a token to send - it will be converted to ETH before sending.</Trans>
             </ThemedText.SubHeader>
           </HideSmall>
         </AutoColumn>
-        <StyledButton>Learn More</StyledButton>
+        <StyledButton as={ExternalLink} href="https://twitter.com/Ukraine/status/1497594592438497282">
+          <RowBetween>
+            <Trans>Learn More</Trans>
+            <StyledTwtterIcon />
+          </RowBetween>
+        </StyledButton>
       </LinkOut>
     </ContentWrapper>
   )

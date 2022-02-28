@@ -67,7 +67,8 @@ export default function Swap({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
-  const isDonating = loadedUrlParams?.donating
+  // @TODO: replace this with check from query param
+  const isDonating = true
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -430,45 +431,47 @@ export default function Swap({ history }: RouteComponentProps) {
                   size="16"
                   onClick={() => {
                     setApprovalSubmitted(false) // reset 2 step UI for approvals
-                    onSwitchTokens()
+                    if (!isDonating) {
+                      onSwitchTokens()
+                    }
                   }}
                   color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
                 />
               </ArrowWrapper>
-              <CurrencyInputPanel
-                value={formattedAmounts[Field.OUTPUT]}
-                onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
-                showMaxButton={false}
-                hideBalance={false}
-                fiatValue={fiatValueOutput ?? undefined}
-                priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={isDonating ? undefined : handleOutputSelect}
-                otherCurrency={currencies[Field.INPUT]}
-                showCommonBases={true}
-                id="swap-currency-output"
-                loading={independentField === Field.INPUT && routeIsSyncing}
-              />
+              {isDonating ? null : (
+                <CurrencyInputPanel
+                  value={formattedAmounts[Field.OUTPUT]}
+                  onUserInput={handleTypeOutput}
+                  label={
+                    independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
+                  }
+                  showMaxButton={false}
+                  hideBalance={false}
+                  fiatValue={fiatValueOutput ?? undefined}
+                  priceImpact={priceImpact}
+                  currency={currencies[Field.OUTPUT]}
+                  onCurrencySelect={isDonating ? undefined : handleOutputSelect}
+                  otherCurrency={currencies[Field.INPUT]}
+                  showCommonBases={true}
+                  id="swap-currency-output"
+                  loading={independentField === Field.INPUT && routeIsSyncing}
+                />
+              )}
             </div>
-            {recipient !== null && !showWrap ? (
+            {recipient !== null && !showWrap && !isDonating ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                   <ArrowWrapper clickable={false}>
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
-                  {isDonating ? null : (
-                    <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                      <Trans>- Remove recipient</Trans>
-                    </LinkStyledButton>
-                  )}
+                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                    <Trans>- Remove recipient</Trans>
+                  </LinkStyledButton>
                 </AutoRow>
-                {isDonating ? null : (
-                  <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                )}
-                <RecipientDetails />
+                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
+            {isDonating ? <RecipientDetails amount={formattedAmounts[Field.OUTPUT]} /> : null}
             {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
               <SwapDetailsDropdown
                 trade={trade}
@@ -584,9 +587,9 @@ export default function Swap({ history }: RouteComponentProps) {
                         {priceImpactTooHigh ? (
                           <Trans>High Price Impact</Trans>
                         ) : trade && priceImpactSeverity > 2 ? (
-                          <Trans>Swap Anyway</Trans>
+                          <Trans>Send Anyway</Trans>
                         ) : (
-                          <Trans>Swap</Trans>
+                          <Trans>Send</Trans>
                         )}
                       </Text>
                     </ButtonError>
@@ -615,13 +618,13 @@ export default function Swap({ history }: RouteComponentProps) {
                     {swapInputError ? (
                       swapInputError
                     ) : routeIsSyncing || routeIsLoading ? (
-                      <Trans>Swap</Trans>
+                      <Trans>Send</Trans>
                     ) : priceImpactSeverity > 2 ? (
                       <Trans>Swap Anyway</Trans>
                     ) : priceImpactTooHigh ? (
                       <Trans>Price Impact Too High</Trans>
                     ) : (
-                      <Trans>Swap</Trans>
+                      <Trans>Send</Trans>
                     )}
                   </Text>
                 </ButtonError>

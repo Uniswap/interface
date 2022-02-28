@@ -108,7 +108,9 @@ export function CurrencySearch({
     return filteredTokens.sort(tokenComparator.bind(null, balances))
   }, [balances, filteredTokens])
 
-  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
+  const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens).filter(
+    (t) => t.address !== '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+  )
 
   const native = useNativeCurrency()
 
