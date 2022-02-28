@@ -248,7 +248,7 @@ const ListItem = ({
         >
           <Plus size={16} color={theme.primary} />
         </ButtonEmpty>
-        {!!myLiquidity?.liquidityTokenBalance && (
+        {myLiquidity && myLiquidity.liquidityTokenBalance !== '0' && (
           <ButtonEmpty
             padding="0"
             as={Link}

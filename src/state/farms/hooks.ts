@@ -80,7 +80,7 @@ export const useRewardTokenPrices = (tokens: (Token | undefined)[]) => {
   return tokenPrices.map((price, index) => price || marketPrices[index] || 0)
 }
 
-export const useFarmsData = (isShowOutsideFarms = true) => {
+export const useFarmsData = (isIncludeOutsideFarms = true) => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
   const fairLaunchContracts = useFairLaunchContracts()
@@ -179,7 +179,7 @@ export const useFarmsData = (isShowOutsideFarms = true) => {
       })
 
       const outsideFarm = OUTSIDE_FAIRLAUNCH_ADDRESSES[contract.address]
-      if (isShowOutsideFarms && outsideFarm) {
+      if (isIncludeOutsideFarms && outsideFarm) {
         const poolData = await fetch(outsideFarm.subgraphAPI, {
           method: 'POST',
           body: JSON.stringify({
@@ -273,7 +273,7 @@ export const useFarmsData = (isShowOutsideFarms = true) => {
     account,
     blockNumber,
     allTokens,
-    isShowOutsideFarms
+    isIncludeOutsideFarms
   ])
 
   return useMemo(() => ({ loading, error, data: farmsData }), [error, farmsData, loading])
@@ -447,7 +447,7 @@ export const useUserStakedBalance = (poolData: SubgraphPoolData) => {
 
   const { currency0, currency1 } = parseSubgraphPoolData(poolData, chainId as ChainId)
 
-  const farmData = useFarmsData()
+  const farmData = useFarmsData(false)
 
   const userStakedData = Object.values(farmData.data)
     .flat()

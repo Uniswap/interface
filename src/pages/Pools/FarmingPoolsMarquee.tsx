@@ -83,7 +83,7 @@ const FarmingPoolsMarquee = () => {
 
   return (
     <Container>
-      <div style={{ position: 'absolute', top: 0, left: 0 }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 2 }}>
         <MouseoverTooltip text="Available for yield farming">
           <DropIcon />
         </MouseoverTooltip>

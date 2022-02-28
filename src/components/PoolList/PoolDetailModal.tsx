@@ -3,7 +3,7 @@ import Modal from 'components/Modal'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, usePoolDetailModalToggle } from 'state/application/hooks'
 import { useSelectedPool } from 'state/pools/hooks'
-import Index from 'components/PoolList/ItemCard'
+import ItemCard from 'components/PoolList/ItemCard'
 
 export default function PoolDetailModal() {
   const poolDetailModalOpen = useModalOpen(ApplicationModal.POOL_DETAIL)
@@ -21,7 +21,7 @@ export default function PoolDetailModal() {
       maxWidth="fit-content"
       maxHeight="fit-content"
     >
-      <Index
+      <ItemCard
         poolData={selectedPool.poolData}
         myLiquidity={selectedPool.myLiquidity}
         isShowExpandedPools={false}
