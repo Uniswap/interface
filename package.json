@@ -142,7 +142,7 @@
     "web3-react-portis-connector": "npm:@web3-react/portis-connector@^6.0.9",
     "web3-react-types": "npm:@web3-react/types@^6.0.7",
     "web3-react-walletconnect-connector": "npm:@web3-react/walletconnect-connector@^7.0.2-alpha.0",
-    "web3-react-walletlink-connector": "npm:@web3-react/walletlink-connector@^6.2.11",
+    "web3-react-walletlink-connector": "npm:@web3-react/walletlink-connector@^6.2.13",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0"
