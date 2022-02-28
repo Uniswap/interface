@@ -18,6 +18,8 @@ const isLocalhost = Boolean(
     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 )
 
+let refreshing: boolean
+
 type Config = {
   onSuccess?: (registration: ServiceWorkerRegistration) => void
   onUpdate?: (registration: ServiceWorkerRegistration) => void
@@ -47,6 +49,9 @@ function registerValidSW(swUrl: string, config?: Config) {
               if (config && config.onUpdate) {
                 config.onUpdate(registration)
               }
+              if (refreshing) return
+              refreshing = true
+              window.location.reload()
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a

@@ -24,6 +24,7 @@ import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
+import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
@@ -49,6 +50,9 @@ import { TransactionType } from '../../state/transactions/actions'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
+
+const Q96 = JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(96))
+const Q192 = JSBI.exponentiate(Q96, JSBI.BigInt(2))
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -332,7 +336,13 @@ export function PositionPage({
   const theme = useTheme()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
-  const { loading, position: positionDetails, createdLogs, processedLogs } = useV3PositionFromTokenId(parsedTokenId)
+  const {
+    loading,
+    position: positionDetails,
+    createdLogs,
+    processedLogs,
+    collectedLogs,
+  } = useV3PositionFromTokenId(parsedTokenId)
 
   const {
     token0: token0Address,
@@ -351,6 +361,8 @@ export function PositionPage({
   const { transactionHash: createdTxn, event: createdEvent, blockHash: createdBlockNumber } = createdLogs || {}
 
   const { transactionHash: processedTxn, event: processedEvent, blockHash: processedBlockNumber } = processedLogs || {}
+
+  const { transactionHash: collectedTxn, event: collectedEvent, blockHash: collectedBlockNumber } = collectedLogs || {}
 
   const removed = liquidity?.eq(0)
 
@@ -435,6 +447,9 @@ export function PositionPage({
 
   const serviceFeePaid = processedEvent?.serviceFeePaid
 
+  const collectedAmount0 = collectedEvent?.tokensOwed0
+  const collectedAmount1 = collectedEvent?.tokensOwed1
+
   const serviceFeePaidKrom: CurrencyAmount<Token> | undefined = useMemo(() => {
     if (!serviceFeePaid || !chainId) return undefined
     return CurrencyAmount.fromRawAmount(KROM[chainId], serviceFeePaid?.toString())
@@ -452,6 +467,16 @@ export function PositionPage({
     }
     return CurrencyAmount.fromRawAmount(currency1Wrapped as Token, createdEventAmount1?.toString())
   }, [createdEventAmount0, currency0Wrapped, createdEventAmount1, currency1Wrapped])
+
+  const collectedValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!collectedAmount0 || !currency0) return undefined
+    return CurrencyAmount.fromRawAmount(currency0 as Token, collectedAmount0?.toString())
+  }, [currency0, collectedAmount0])
+
+  const collectedValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!collectedAmount1 || !currency1) return undefined
+    return CurrencyAmount.fromRawAmount(currency1 as Token, collectedAmount1?.toString())
+  }, [currency1, collectedAmount1])
 
   const [createdBlockDate, setCreatedBlockDate] = useState<DateTime>()
   const [processedBlockDate, setProcessedBlockDate] = useState<DateTime>()
@@ -507,14 +532,28 @@ export function PositionPage({
     return getExplorerLink(chainId, processedTxn, ExplorerDataType.TRANSACTION)
   }, [chainId, processedTxn])
 
+  const sqrtRatioX96Recalc = createdEvent?.sqrtPriceX96
+
+  const createdPrice = useMemo(() => {
+    if (!currency0Wrapped || !currency1Wrapped || !sqrtRatioX96Recalc) return undefined
+    const ratioX192 = JSBI.multiply(JSBI.BigInt(sqrtRatioX96Recalc), JSBI.BigInt(sqrtRatioX96Recalc))
+    return new Price(currency0Wrapped, currency1Wrapped, Q192, ratioX192)
+  }, [currency0Wrapped, currency1Wrapped, sqrtRatioX96Recalc])
+
   // TODO (pai) fix the target price ; upper or lower ; buy or sell
   const targetPrice = useMemo(() => {
+    if (createdPrice) {
+      if (createdPrice?.baseCurrency != currencyCreatedEventAmount?.currency) {
+        return createdPrice.invert()
+      }
+      return createdPrice
+    }
     if (priceUpper?.baseCurrency != currencyCreatedEventAmount?.currency) {
       // invert
       return priceUpper?.invert()
     }
     return priceUpper
-  }, [currencyCreatedEventAmount, priceUpper])
+  }, [createdPrice, currencyCreatedEventAmount, priceUpper])
 
   const addTransaction = useTransactionAdder()
   const limitManager = useLimitOrderManager()
@@ -787,7 +826,7 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                         <RowFixed>
-                          <TYPE.main>{inverted ? feeValue0?.toSignificant(4) : feeValue0?.toSignificant(4)}</TYPE.main>
+                          <TYPE.main>{inverted ? feeValue0?.toSignificant(6) : feeValue1?.toSignificant(6)}</TYPE.main>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
                               <TYPE.main fontSize={11}>
@@ -800,7 +839,7 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyBase} />
                         <RowFixed>
-                          <TYPE.main>{inverted ? feeValue1?.toSignificant(4) : feeValue1?.toSignificant(4)}</TYPE.main>
+                          <TYPE.main>{inverted ? feeValue1?.toSignificant(6) : feeValue0?.toSignificant(6)}</TYPE.main>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
                               <TYPE.main color={theme.text2} fontSize={11}>
@@ -881,8 +920,7 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.subHeader>
                       <Trans>
-                        Created {orderType?.eq(1) ? 'Sell' : 'Buy'} Limit Trade{' '}
-                        {currencyCreatedEventAmount?.toSignificant(4)}{' '}
+                        Created Limit Trade {currencyCreatedEventAmount?.toSignificant(4)}{' '}
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
                           : ''}{' '}
@@ -909,10 +947,10 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.subHeader>
                       <Trans>
-                        Collected {feeValue0?.toSignificant(4)}{' '}
-                        {feeValue0?.currency ? unwrappedToken(feeValue0?.currency)?.symbol : ''} and{' '}
-                        {feeValue1?.toSignificant(4)}{' '}
-                        {feeValue1?.currency ? unwrappedToken(feeValue1?.currency)?.symbol : ''} ↗
+                        Collected {collectedValue0?.toSignificant(6)}{' '}
+                        {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''} and{' '}
+                        {collectedValue1?.toSignificant(6)}{' '}
+                        {collectedValue1?.currency ? unwrappedToken(collectedValue1?.currency)?.symbol : ''} ↗
                       </Trans>
                     </TYPE.subHeader>
                   </RangeLineItem>
@@ -932,7 +970,7 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.subHeader>
                       <Trans>
-                        Paid {serviceFeePaidKrom?.toSignificant(4)}{' '}
+                        Paid {serviceFeePaidKrom?.toSignificant(6)}{' '}
                         {serviceFeePaidKrom?.currency ? unwrappedToken(serviceFeePaidKrom?.currency)?.symbol : ''}{' '}
                         service fees ↗
                       </Trans>
