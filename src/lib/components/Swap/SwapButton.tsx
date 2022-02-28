@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useUpdateAtom } from 'jotai/utils'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
@@ -162,6 +163,8 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       })
   }, [addTransaction, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
 
+  const onSupportedNetwork = useMemo(() => chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId), [chainId])
+
   return (
     <>
       <ActionButton
@@ -171,7 +174,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       >
         <Trans>Review swap</Trans>
       </ActionButton>
-      {activeTrade && (
+      {activeTrade && onSupportedNetwork && (
         <Dialog color="dialog" onClose={() => setActiveTrade(undefined)}>
           <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>

@@ -62,9 +62,10 @@ export default function Swap(props: SwapProps) {
   const displayTx = getSwapTx(pendingTxs, displayTxHash)
 
   const tokenList = useTokenList()
+  const onSupportedNetwork = useMemo(() => chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId), [chainId])
   const isSwapSupported = useMemo(
-    () => Boolean(chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId) && tokenList?.length),
-    [chainId, tokenList]
+    () => Boolean(active && onSupportedNetwork && tokenList?.length),
+    [active, onSupportedNetwork, tokenList?.length]
   )
 
   const focused = useHasFocus(wrapper)
@@ -74,15 +75,15 @@ export default function Swap(props: SwapProps) {
       {isSwapSupported && <SwapInfoUpdater />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
-        <Settings disabled={!active} />
+        <Settings disabled={!active || !onSupportedNetwork} />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <Input disabled={!active} focused={focused} />
-          <ReverseButton disabled={!active} />
-          <Output disabled={!active} focused={focused}>
+          <Input disabled={!active || !onSupportedNetwork} focused={focused} />
+          <ReverseButton disabled={!active || !onSupportedNetwork} />
+          <Output disabled={!active || !onSupportedNetwork} focused={focused}>
             <Toolbar disabled={!active} />
-            <SwapButton disabled={!account} />
+            <SwapButton disabled={!isSwapSupported} />
           </Output>
         </BoundaryProvider>
       </div>

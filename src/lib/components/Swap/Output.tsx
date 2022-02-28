@@ -78,6 +78,19 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
     )
   }, [inputUSDC, outputUSDC])
 
+  const amount = useMemo(() => {
+    if (disabled) {
+      return ''
+    }
+    if (swapOutputAmount !== undefined) {
+      return swapOutputAmount
+    }
+    if (outputCurrencyAmount) {
+      return outputCurrencyAmount.toSignificant(6)
+    }
+    return ''
+  }, [disabled, outputCurrencyAmount, swapOutputAmount])
+
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
@@ -88,7 +101,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
         </Row>
         <TokenInput
           currency={swapOutputCurrency}
-          amount={(swapOutputAmount !== undefined ? swapOutputAmount : outputCurrencyAmount?.toSignificant(6)) ?? ''}
+          amount={amount}
           disabled={disabled}
           onChangeInput={updateSwapOutputAmount}
           onChangeCurrency={updateSwapOutputCurrency}
