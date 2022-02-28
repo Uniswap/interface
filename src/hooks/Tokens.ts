@@ -2,7 +2,7 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chainInfo'
 import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useCurrencyFromMap, useTokenFromMap } from 'lib/hooks/useCurrency'
+import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useMemo } from 'react'
 
@@ -159,7 +159,7 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
 // otherwise returns the token
 export function useToken(tokenAddress?: string | null): Token | null | undefined {
   const tokens = useAllTokens()
-  return useTokenFromMap(tokens, tokenAddress)
+  return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
 export function useCurrency(currencyId?: string | null): Currency | null | undefined {

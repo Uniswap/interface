@@ -18,8 +18,8 @@ import {
   sETH2,
   SWISE,
   TRIBE,
-  USDC,
   USDC_ARBITRUM,
+  USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDT,
@@ -50,7 +50,13 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
-  [SupportedChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [SupportedChainId.MAINNET]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET],
+    DAI,
+    USDC_MAINNET,
+    USDT,
+    WBTC,
+  ],
   [SupportedChainId.OPTIMISM]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.OPTIMISM],
     DAI_OPTIMISM,
@@ -98,7 +104,14 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
-  [SupportedChainId.MAINNET]: [DAI, USDC, USDT, WBTC],
+  [SupportedChainId.MAINNET]: [
+    // nativeOnChain(SupportedChainId.MAINNET),
+    DAI,
+    USDC_MAINNET,
+    USDT,
+    WBTC,
+    // WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET],
+  ],
   [SupportedChainId.ROPSTEN]: [
     nativeOnChain(SupportedChainId.ROPSTEN),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ROPSTEN],
@@ -147,7 +160,13 @@ export const COMMON_BASES: ChainCurrencyList = {
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
-  [SupportedChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [SupportedChainId.MAINNET]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET],
+    DAI,
+    USDC_MAINNET,
+    USDT,
+    WBTC,
+  ],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
   [SupportedChainId.MAINNET]: [
@@ -161,7 +180,7 @@ export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
         'Compound USD Coin'
       ),
     ],
-    [USDC, USDT],
+    [USDC_MAINNET, USDT],
     [DAI, USDT],
   ],
 }

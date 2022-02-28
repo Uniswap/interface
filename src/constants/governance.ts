@@ -12,6 +12,8 @@ export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }
     [TIMELOCK_ADDRESS[SupportedChainId.MAINNET]]: 'Timelock',
     [GOVERNANCE_ALPHA_V0_ADDRESSES[SupportedChainId.MAINNET]]: 'Governance (V0)',
     [GOVERNANCE_ALPHA_V1_ADDRESSES[SupportedChainId.MAINNET]]: 'Governance',
+    '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e': 'ENS Registry',
+    '0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41': 'ENS Public Resolver',
   },
 }
 
