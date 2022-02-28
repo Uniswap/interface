@@ -84,7 +84,7 @@ interface FailedCall {
 }
 
 interface FeeConfig {
-  chargeFeeBy: 'tokenIn' | 'tokenOut'
+  chargeFeeBy: 'currency_in' | 'currency_out'
   feeReceiver: string
   isInBps: boolean
   feeAmount: string
@@ -132,16 +132,9 @@ function getSwapCallParameters(
       : `0x${options.deadline.toString(16)}`
   // const useFeeOnTransfer = Boolean(options.feeOnTransfer)
 
-  // TODO: Change later.
-  const feeConfig: FeeConfig | undefined = undefined as any
-  // const feeConfig: FeeConfig | undefined = {
-  //   chargeFeeBy: 'tokenIn',
-  //   feeReceiver: '0x16368dD7e94f177B8C2c028Ef42289113D328121',
-  //   isInBps: true,
-  //   feeAmount: '10'
-  // } as any
+  const feeConfig: FeeConfig | undefined = undefined as FeeConfig | undefined
   const destTokenFeeData =
-    feeConfig && feeConfig.chargeFeeBy === 'tokenOut'
+    feeConfig && feeConfig.chargeFeeBy === 'currency_out'
       ? encodeFeeConfig({
           feeReceiver: feeConfig.feeReceiver,
           isInBps: feeConfig.isInBps,
@@ -165,12 +158,12 @@ function getSwapCallParameters(
       const aggregationExecutorContract = getAggregationExecutorContract(chainId, library)
       const src: { [p: string]: BigNumber } = {}
       const isEncodeUniswap = isEncodeUniswapCallback(chainId)
-      if (feeConfig && feeConfig.chargeFeeBy === 'tokenIn') {
+      if (feeConfig && feeConfig.chargeFeeBy === 'currency_in') {
         const { feeReceiver, isInBps, feeAmount } = feeConfig
         src[feeReceiver] = isInBps
           ? BigNumber.from(amountIn)
               .mul(feeAmount)
-              .div('100')
+              .div(10000)
           : BigNumber.from(feeAmount)
       }
       // Use swap simple mode when tokenIn is not ETH and every firstPool is encoded by uniswap.
@@ -199,7 +192,7 @@ function getSwapCallParameters(
               }
               if (sequence.length === 1 && isEncodeUniswap(firstPool)) {
                 firstPool.recipient =
-                  etherOut || feeConfig?.chargeFeeBy === 'tokenOut' ? aggregationExecutorAddress : to
+                  etherOut || feeConfig?.chargeFeeBy === 'currency_out' ? aggregationExecutorAddress : to
               }
             } else {
               const A = sequence[i - 1]
@@ -213,7 +206,7 @@ function getSwapCallParameters(
                 A.recipient = aggregationExecutorAddress
               }
               if (i === sequence.length - 1 && isEncodeUniswap(B)) {
-                B.recipient = etherOut || feeConfig?.chargeFeeBy === 'tokenOut' ? aggregationExecutorAddress : to
+                B.recipient = etherOut || feeConfig?.chargeFeeBy === 'currency_out' ? aggregationExecutorAddress : to
               }
             }
           }
@@ -261,7 +254,7 @@ function getSwapCallParameters(
               }
               if (sequence.length === 1 && isEncodeUniswap(firstPool)) {
                 firstPool.recipient =
-                  etherOut || feeConfig?.chargeFeeBy === 'tokenOut' ? aggregationExecutorAddress : to
+                  etherOut || feeConfig?.chargeFeeBy === 'currency_out' ? aggregationExecutorAddress : to
               }
             } else {
               const A = sequence[i - 1]
@@ -275,7 +268,7 @@ function getSwapCallParameters(
                 A.recipient = aggregationExecutorAddress
               }
               if (i === sequence.length - 1 && isEncodeUniswap(B)) {
-                B.recipient = etherOut || feeConfig?.chargeFeeBy === 'tokenOut' ? aggregationExecutorAddress : to
+                B.recipient = etherOut || feeConfig?.chargeFeeBy === 'currency_out' ? aggregationExecutorAddress : to
               }
             }
           }
