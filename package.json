@@ -171,5 +171,7 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {
+    "react-toastify": "^8.2.0"
+  }
 }
