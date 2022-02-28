@@ -81,11 +81,24 @@ export default function Input({ disabled, focused }: InputProps) {
     return insufficientBalance ? 'error' : undefined
   }, [balance, inputCurrencyAmount, swapInputCurrencyAmount])
 
+  const amount = useMemo(() => {
+    if (disabled) {
+      return ''
+    }
+    if (swapInputAmount !== undefined) {
+      return swapInputAmount
+    }
+    if (swapInputCurrencyAmount) {
+      return swapInputCurrencyAmount.toSignificant(6)
+    }
+    return ''
+  }, [disabled, swapInputCurrencyAmount, swapInputAmount])
+
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput
         currency={swapInputCurrency}
-        amount={(swapInputAmount !== undefined ? swapInputAmount : swapInputCurrencyAmount?.toSignificant(6)) ?? ''}
+        amount={amount}
         max={max}
         disabled={disabled}
         onChangeInput={updateSwapInputAmount}
