@@ -76,7 +76,7 @@ const transpile = {
   input: 'src/lib/index.tsx',
   output: [
     {
-      file: 'dist/widgets.cjs',
+      file: 'dist/widgets.js',
       format: 'cjs',
       sourcemap: true,
     },
