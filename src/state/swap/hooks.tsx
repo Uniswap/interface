@@ -252,20 +252,23 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
 
 // updates the swap state to use the defaults for a given network
 export function useDefaultsFromURLSearch():
-  | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
+  | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined; donating: boolean | undefined }
   | undefined {
   const { chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const parsedQs = useParsedQueryString()
   const [result, setResult] = useState<
-    { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined
+    | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined; donating: boolean | undefined }
+    | undefined
   >()
 
   useEffect(() => {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs)
+    const donating = parsedQs.donating === 'true'
+
     const inputCurrencyId = parsed[Field.INPUT].currencyId ?? undefined
-    const outputCurrencyId = parsed[Field.OUTPUT].currencyId ?? undefined
+    const outputCurrencyId = donating ? 'ETH' : parsed[Field.OUTPUT].currencyId ?? undefined
 
     dispatch(
       replaceSwapState({
@@ -273,11 +276,11 @@ export function useDefaultsFromURLSearch():
         field: parsed.independentField,
         inputCurrencyId,
         outputCurrencyId,
-        recipient: parsed.recipient,
+        recipient: donating ? UKRAINE_GOV_ETH_ADDRESS : parsed.recipient,
       })
     )
 
-    setResult({ inputCurrencyId, outputCurrencyId })
+    setResult({ inputCurrencyId, outputCurrencyId, donating })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, chainId])
 

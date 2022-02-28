@@ -3,7 +3,9 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import AddressInputPanel from 'components/AddressInputPanel'
 import DonationHeader from 'components/DonationHeader'
+import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import RecipientDetails from 'components/swap/RecipientDetails'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -50,7 +52,7 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
-import { ThemedText } from '../../theme'
+import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
@@ -64,6 +66,8 @@ const AlertWrapper = styled.div`
 export default function Swap({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+
+  const isDonating = loadedUrlParams?.donating
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -143,7 +147,7 @@ export default function Swap({ history }: RouteComponentProps) {
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
   )
 
-  const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -367,6 +371,11 @@ export default function Swap({ history }: RouteComponentProps) {
     })
   }, [maxInputAmount, onUserInput])
 
+  const handleOutputSelect = useCallback(
+    (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
+    [onCurrencySelection]
+  )
+
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
@@ -379,9 +388,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-      <AlertWrapper>
-        <DonationHeader />
-      </AlertWrapper>
+      <AlertWrapper>{isDonating ? <DonationHeader /> : null}</AlertWrapper>
       <AppBody>
         <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
@@ -414,13 +421,17 @@ export default function Swap({ history }: RouteComponentProps) {
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
                 showCommonBases={true}
-                disableNonToken={true}
+                disableNonToken={isDonating}
                 id="swap-currency-input"
                 loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
               <ArrowWrapper clickable>
                 <ArrowDown
                   size="16"
+                  onClick={() => {
+                    setApprovalSubmitted(false) // reset 2 step UI for approvals
+                    onSwitchTokens()
+                  }}
                   color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
                 />
               </ArrowWrapper>
@@ -433,7 +444,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 fiatValue={fiatValueOutput ?? undefined}
                 priceImpact={priceImpact}
                 currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={undefined} // disable output selection to force ETH
+                onCurrencySelect={isDonating ? undefined : handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
                 showCommonBases={true}
                 id="swap-currency-output"
@@ -446,8 +457,15 @@ export default function Swap({ history }: RouteComponentProps) {
                   <ArrowWrapper clickable={false}>
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
+                  {isDonating ? null : (
+                    <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                      <Trans>- Remove recipient</Trans>
+                    </LinkStyledButton>
+                  )}
                 </AutoRow>
-                {/* <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} /> */}
+                {isDonating ? null : (
+                  <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                )}
                 <RecipientDetails />
               </>
             ) : null}
@@ -566,9 +584,9 @@ export default function Swap({ history }: RouteComponentProps) {
                         {priceImpactTooHigh ? (
                           <Trans>High Price Impact</Trans>
                         ) : trade && priceImpactSeverity > 2 ? (
-                          <Trans>Send Anyway</Trans>
+                          <Trans>Swap Anyway</Trans>
                         ) : (
-                          <Trans>Send</Trans>
+                          <Trans>Swap</Trans>
                         )}
                       </Text>
                     </ButtonError>
@@ -597,13 +615,13 @@ export default function Swap({ history }: RouteComponentProps) {
                     {swapInputError ? (
                       swapInputError
                     ) : routeIsSyncing || routeIsLoading ? (
-                      <Trans>Send</Trans>
+                      <Trans>Swap</Trans>
                     ) : priceImpactSeverity > 2 ? (
-                      <Trans>Send Anyway</Trans>
+                      <Trans>Swap Anyway</Trans>
                     ) : priceImpactTooHigh ? (
                       <Trans>Price Impact Too High</Trans>
                     ) : (
-                      <Trans>Send</Trans>
+                      <Trans>Swap</Trans>
                     )}
                   </Text>
                 </ButtonError>
@@ -613,6 +631,9 @@ export default function Swap({ history }: RouteComponentProps) {
           </AutoColumn>
         </Wrapper>
       </AppBody>
+      <AlertWrapper>
+        <NetworkAlert />
+      </AlertWrapper>
 
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (

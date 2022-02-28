@@ -32,7 +32,7 @@ const LinkOut = styled(ExternalLink)`
   width: 100%;
 `
 
-const StyledFlagImage = styled.div`
+export const StyledFlagImage = styled.div`
   margin-right: 12px;
   width: 18px;
   height: 18px;
