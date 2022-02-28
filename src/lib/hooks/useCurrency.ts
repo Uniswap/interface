@@ -7,9 +7,10 @@ import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 
+import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
-import { useTokenMap } from './useTokenList'
-import { TokenMap } from './useTokenList'
+import { supportedChainId } from '../../utils/supportedChainId'
+import { TokenMap, useTokenMap } from './useTokenList'
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
@@ -28,35 +29,27 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromMap(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
+export function useTokenFromNetwork(tokenAddress: string | null | undefined): Token | null | undefined {
   const { chainId } = useActiveWeb3React()
 
-  const address = isAddress(tokenAddress)
+  const formattedAddress = isAddress(tokenAddress)
 
-  const tokenContract = useTokenContract(address ? address : undefined, false)
-  const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
-  const token: Token | undefined = address ? tokens[address] : undefined
+  const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined, false)
+  const tokenContractBytes32 = useBytes32TokenContract(formattedAddress ? formattedAddress : undefined, false)
 
-  const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
-  const tokenNameBytes32 = useSingleCallResult(
-    token ? undefined : tokenContractBytes32,
-    'name',
-    undefined,
-    NEVER_RELOAD
-  )
-  const symbol = useSingleCallResult(token ? undefined : tokenContract, 'symbol', undefined, NEVER_RELOAD)
-  const symbolBytes32 = useSingleCallResult(token ? undefined : tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
-  const decimals = useSingleCallResult(token ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
+  const tokenName = useSingleCallResult(tokenContract, 'name', undefined, NEVER_RELOAD)
+  const tokenNameBytes32 = useSingleCallResult(tokenContractBytes32, 'name', undefined, NEVER_RELOAD)
+  const symbol = useSingleCallResult(tokenContract, 'symbol', undefined, NEVER_RELOAD)
+  const symbolBytes32 = useSingleCallResult(tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
+  const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
   return useMemo(() => {
-    if (token) return token
-    if (tokenAddress === null) return null
-    if (!chainId || !address) return undefined
+    if (typeof tokenAddress !== 'string' || !chainId || !formattedAddress) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
     if (decimals.result) {
       return new Token(
         chainId,
-        address,
+        formattedAddress,
         decimals.result[0],
         parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
         parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token')
@@ -64,14 +57,13 @@ export function useTokenFromMap(tokens: TokenMap, tokenAddress?: string | null):
     }
     return undefined
   }, [
-    address,
+    formattedAddress,
     chainId,
     decimals.loading,
     decimals.result,
     symbol.loading,
     symbol.result,
     symbolBytes32.result,
-    token,
     tokenAddress,
     tokenName.loading,
     tokenName.result,
@@ -84,9 +76,23 @@ export function useTokenFromMap(tokens: TokenMap, tokenAddress?: string | null):
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
+export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
+  const address = isAddress(tokenAddress)
+  const token: Token | undefined = address ? tokens[address] : undefined
+
+  const tokenFromNetwork = useTokenFromNetwork(token ? undefined : address ? address : undefined)
+
+  return tokenFromNetwork ?? token
+}
+
+/**
+ * Returns a Token from the tokenAddress.
+ * Returns null if token is loading or null was passed.
+ * Returns undefined if tokenAddress is invalid or token does not exist.
+ */
 export function useToken(tokenAddress?: string | null): Token | null | undefined {
   const tokens = useTokenMap()
-  return useTokenFromMap(tokens, tokenAddress)
+  return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
 /**
@@ -96,8 +102,14 @@ export function useToken(tokenAddress?: string | null): Token | null | undefined
  */
 export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null): Currency | null | undefined {
   const nativeCurrency = useNativeCurrency()
+  const { chainId } = useActiveWeb3React()
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
-  const token = useTokenFromMap(tokens, isNative ? undefined : currencyId)
+  const shorthandMatchAddress = useMemo(() => {
+    const chain = supportedChainId(chainId)
+    return chain && currencyId ? TOKEN_SHORTHANDS[currencyId.toUpperCase()]?.[chain] : undefined
+  }, [chainId, currencyId])
+
+  const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
   if (currencyId === null || currencyId === undefined) return currencyId
 
