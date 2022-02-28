@@ -920,8 +920,7 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.subHeader>
                       <Trans>
-                        Created {orderType?.eq(1) ? 'Sell' : 'Buy'} Limit Trade{' '}
-                        {currencyCreatedEventAmount?.toSignificant(4)}{' '}
+                        Created Limit Trade {currencyCreatedEventAmount?.toSignificant(4)}{' '}
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
                           : ''}{' '}
