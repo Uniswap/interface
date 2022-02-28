@@ -70,6 +70,7 @@ interface UseV3PositionResults {
   position: PositionDetails | undefined
   createdLogs: ProposalCreatedLogs | undefined
   processedLogs: ProposalCreatedLogs | undefined
+  collectedLogs: ProposalCreatedLogs | undefined
 }
 
 interface ProposalCreatedLogs {
@@ -88,7 +89,7 @@ function usePositionCreatedLogs(
   account: string | null | undefined
 ): ProposalCreatedLogs[] | undefined {
   // create filters for
-  const filter = useMemo(() => contract?.filters?.LimitOrderCreated(account, tokenId), [contract])
+  const filter = useMemo(() => contract?.filters?.LimitOrderCreated(account, tokenId), [account])
 
   const useLogsResult = useLogs(filter)
 
@@ -132,7 +133,7 @@ function usePositionProcessedLogs(
   account: string | null | undefined
 ): ProposalCreatedLogs[] | undefined {
   // create filters for
-  const filter = useMemo(() => contract?.filters?.LimitOrderProcessed(null, tokenId), [contract])
+  const filter = useMemo(() => contract?.filters?.LimitOrderProcessed(null, tokenId), [account])
 
   const useLogsResult = useLogs(filter)
 
@@ -176,7 +177,7 @@ function usePositionCollectedLogs(
   account: string | null | undefined
 ): ProposalCreatedLogs[] | undefined {
   // create filters for
-  const filter = useMemo(() => contract?.filters?.LimitOrderCollected(account, tokenId), [contract])
+  const filter = useMemo(() => contract?.filters?.LimitOrderCollected(account, tokenId), [account])
 
   const useLogsResult = useLogs(filter)
 
@@ -216,8 +217,15 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
   const position = useV3PositionsFromTokenIds(tokenId ? [tokenId] : undefined)
   const limitOrderManager = useLimitOrderManager()
 
-  const positionCreatedLogs = usePositionCreatedLogs(limitOrderManager, tokenId, account)
-  const positionProcessedLogs = usePositionProcessedLogs(limitOrderManager, tokenId, account)
+  const accountPosition = useMemo(() => {
+    if (!position || !position.positions?.[0]) return account
+
+    return position.positions?.[0].owner
+  }, [position, account])
+
+  const positionCreatedLogs = usePositionCreatedLogs(limitOrderManager, tokenId, accountPosition)
+  const positionProcessedLogs = usePositionProcessedLogs(limitOrderManager, tokenId, accountPosition)
+  const positionCollectedLogs = usePositionCollectedLogs(limitOrderManager, tokenId, accountPosition)
 
   return useMemo(() => {
     return {
@@ -225,8 +233,9 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
       position: position.positions?.[0],
       createdLogs: positionCreatedLogs?.[0],
       processedLogs: positionProcessedLogs?.[0],
+      collectedLogs: positionCollectedLogs?.[0],
     }
-  }, [position, positionCreatedLogs, positionProcessedLogs])
+  }, [position.loading, position.positions, positionCollectedLogs, positionCreatedLogs, positionProcessedLogs])
 }
 
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
