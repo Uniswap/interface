@@ -1,20 +1,21 @@
-import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId as UbeswapChainId, JSBI, Pair, Token, TokenAmount } from '@ubeswap/sdk'
 import { POOL_MANAGER } from 'constants/poolManager'
 import { UBE } from 'constants/tokens'
-import { PoolManager } from 'generated/'
+import { MoolaStakingRewards__factory, PoolManager } from 'generated/'
 import { useAllTokens } from 'hooks/Tokens'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import zip from 'lodash/zip'
 // Hooks
-import { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 import ERC_20_INTERFACE from '../../constants/abis/erc20'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 // Interfaces
 import { UNISWAP_V2_PAIR_INTERFACE } from '../../constants/abis/uniswap-v2-pair'
 import { usePoolManagerContract, useTokenContract } from '../../hooks/useContract'
+import { useFarmRegistry } from '../../pages/Earn/useFarmRegistry'
 import {
   NEVER_RELOAD,
   useMultipleContractSingleData,
@@ -22,11 +23,12 @@ import {
   useSingleContractMultipleData,
 } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
-import { multiRewardPools } from './farms'
 import { useMultiStakeRewards } from './useDualStakeRewards'
 import useStakingInfo from './useStakingInfo'
 
 export const STAKING_GENESIS = 1619100000
+const ACTIVE_CONTRACT_UPDATED_THRESHOLD = 5259492
+const UNPREDICTABLE_GAS_LIMIT_ERROR_CODE = 'UNPREDICTABLE_GAS_LIMIT'
 
 export interface StakingInfo {
   // the address of the reward contract
@@ -61,13 +63,95 @@ export interface StakingInfo {
   readonly rewardTokens: Token[]
 }
 
+type MultiRewardPool = {
+  address: string
+  underlyingPool: string
+  basePool: string
+  numRewards: number
+  active: boolean
+}
+
+export const useMultiRewardPools = (): MultiRewardPool[] => {
+  const library = useProvider()
+  const farmSummaries = useFarmRegistry()
+
+  const [multiRewardPools, setMultiRewardPools] = React.useState<MultiRewardPool[]>([])
+
+  const call = React.useCallback(async () => {
+    const multiRwdPools: MultiRewardPool[] = []
+
+    await Promise.all(
+      farmSummaries.map(async (fs) => {
+        let poolContract = MoolaStakingRewards__factory.connect(fs.stakingAddress, library)
+        const rewardsTokens = []
+        const externalStakingRwdAddresses = []
+
+        // the first reward token at the top level
+        rewardsTokens.push(await poolContract.rewardsToken())
+
+        // last time the contract was updated - set isActive to false if it has been longer than 2 months
+        let periodFinish = await poolContract.periodFinish()
+        let isActive = Math.floor(Date.now() / 1000) - periodFinish.toNumber() < ACTIVE_CONTRACT_UPDATED_THRESHOLD
+
+        let baseContractFound = false
+        // recursivley find underlying and base pool contracts
+        while (!baseContractFound) {
+          try {
+            // find the underlying contract if one exists
+            const externalStakingRewardAddr = await poolContract.externalStakingRewards()
+            externalStakingRwdAddresses.push(externalStakingRewardAddr)
+
+            // capture the contract's reward token
+            poolContract = MoolaStakingRewards__factory.connect(externalStakingRewardAddr, library)
+            rewardsTokens.push(await poolContract.rewardsToken())
+
+            // determine if the underlying contract is active or not
+            periodFinish = await poolContract.periodFinish()
+            isActive =
+              Math.floor(Date.now() / 1000) - periodFinish.toNumber() < ACTIVE_CONTRACT_UPDATED_THRESHOLD || isActive
+          } catch (e: any) {
+            //if the error is not what is expected - log it
+            if (e.code !== UNPREDICTABLE_GAS_LIMIT_ERROR_CODE) {
+              console.log(e)
+            }
+
+            //set true when externalStakingRewards() throws an error
+            baseContractFound = true
+          }
+        }
+
+        if (externalStakingRwdAddresses.length) {
+          multiRwdPools.push({
+            address: fs.stakingAddress,
+            underlyingPool: externalStakingRwdAddresses[0],
+            basePool: externalStakingRwdAddresses[externalStakingRwdAddresses.length - 1],
+            numRewards: rewardsTokens.length,
+            active: isActive,
+          })
+        }
+      })
+    )
+    setMultiRewardPools(multiRwdPools)
+  }, [farmSummaries, library])
+
+  useEffect(() => {
+    call()
+  }, [call])
+
+  return multiRewardPools
+}
+
 export const usePairMultiStakingInfo = (
   stakingInfo: StakingInfo | undefined,
   stakingAddress: string
 ): StakingInfo | null => {
-  const multiRewardPool = multiRewardPools
-    .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
-    .find((x) => x.basePool.toLowerCase() === stakingInfo?.poolInfo.poolAddress.toLowerCase())
+  const multiRewardPools = useMultiRewardPools()
+
+  const multiRewardPool = useMemo(() => {
+    return multiRewardPools
+      .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
+      .find((x) => x.basePool.toLowerCase() === stakingInfo?.poolInfo.poolAddress.toLowerCase())
+  }, [multiRewardPools, stakingAddress, stakingInfo?.poolInfo.poolAddress])
 
   const isTriple = multiRewardPool?.numRewards === 3
 
