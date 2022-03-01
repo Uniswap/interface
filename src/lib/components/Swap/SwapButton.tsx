@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useUpdateAtom } from 'jotai/utils'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
@@ -13,6 +12,7 @@ import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, Field } from 'lib/state/swap'
@@ -163,7 +163,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       })
   }, [addTransaction, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
 
-  const onSupportedNetwork = useMemo(() => chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId), [chainId])
+  const onSupportedNetwork = useOnSupportedNetwork()
 
   return (
     <>

@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useAtom } from 'jotai'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useSyncConvenienceFee from 'lib/hooks/swap/useSyncConvenienceFee'
@@ -8,6 +7,7 @@ import useSyncSwapDefaults from 'lib/hooks/swap/useSyncSwapDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
+import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
 import useTokenList, { useSyncTokenList } from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
@@ -54,7 +54,7 @@ export default function Swap(props: SwapProps) {
   useSyncSwapDefaults(props)
   useSyncConvenienceFee(props)
 
-  const { active, account, chainId } = useActiveWeb3React()
+  const { active, account } = useActiveWeb3React()
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null)
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
@@ -62,7 +62,7 @@ export default function Swap(props: SwapProps) {
   const displayTx = getSwapTx(pendingTxs, displayTxHash)
 
   const tokenList = useTokenList()
-  const onSupportedNetwork = useMemo(() => chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId), [chainId])
+  const onSupportedNetwork = useOnSupportedNetwork()
   const isSwapSupported = useMemo(
     () => Boolean(active && onSupportedNetwork && tokenList?.length),
     [active, onSupportedNetwork, tokenList?.length]
@@ -70,18 +70,20 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
+  const interactionsDisabled = useMemo(() => !active || !onSupportedNetwork, [active, onSupportedNetwork])
+
   return (
     <SwapPropValidator {...props}>
       {isSwapSupported && <SwapInfoUpdater />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
-        <Settings disabled={!active || !onSupportedNetwork} />
+        <Settings disabled={interactionsDisabled} />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <Input disabled={!active || !onSupportedNetwork} focused={focused} />
-          <ReverseButton disabled={!active || !onSupportedNetwork} />
-          <Output disabled={!active || !onSupportedNetwork} focused={focused}>
+          <Input disabled={interactionsDisabled} focused={focused} />
+          <ReverseButton disabled={interactionsDisabled} />
+          <Output disabled={interactionsDisabled} focused={focused}>
             <Toolbar disabled={!active} />
             <SwapButton disabled={!isSwapSupported} />
           </Output>

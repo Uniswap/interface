@@ -8,6 +8,7 @@ import {
   useSwapCurrencyAmount,
   useSwapInfo,
 } from 'lib/hooks/swap'
+import useInputOutputFieldAmount from 'lib/hooks/swap/useInputOutputFieldAmount'
 import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
@@ -81,18 +82,16 @@ export default function Input({ disabled, focused }: InputProps) {
     return insufficientBalance ? 'error' : undefined
   }, [balance, inputCurrencyAmount, swapInputCurrencyAmount])
 
-  const amount = useMemo(() => {
-    if (disabled) {
-      return ''
-    }
-    if (swapInputAmount !== undefined) {
-      return swapInputAmount
-    }
-    if (swapInputCurrencyAmount) {
-      return swapInputCurrencyAmount.toSignificant(6)
-    }
-    return ''
-  }, [disabled, swapInputCurrencyAmount, swapInputAmount])
+  const amount = useInputOutputFieldAmount(
+    useMemo(
+      () => ({
+        disabled,
+        currencyAmount: inputCurrencyAmount,
+        fieldAmount: swapInputAmount,
+      }),
+      [disabled, inputCurrencyAmount, swapInputAmount]
+    )
+  )
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
