@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-28 19:11\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -217,8 +217,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "A apărut o eroare la încercarea de a executa acest swap. Este posibil să fie nevoie să vă măriți toleranța la alunecare. Dacă acest lucru nu funcționează, poate exista o incompatibilitate cu jetonul pe care îl tranzacționați. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "Aprobare în așteptare <0/>"
+msgid "Approval pending"
+msgstr "În curs de aprobare"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -287,6 +287,10 @@ msgstr "Cel puțin {0} {1} și {2} {3} vor fi rambursați în portofelul tău da
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Automat"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "Router automat"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -2443,9 +2447,13 @@ msgstr "prin {0}"
 msgid "via {0} token list"
 msgstr "prin {0} lista de jetoane"
 
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {Cel mai bun traseu printr-un hop} other {Cel mai bun traseu prin # hamei}}"
+
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Importă jetonul} other {Importă jetoane}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Import token} other {Importați jetoane}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

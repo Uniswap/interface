@@ -1101,6 +1101,13 @@
       "name": "BMEX",
       "symbol": "BMEX",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0x322A46E88fa3C78F9c9E3DBb0254b61664a06109",
+      "name": "Ukraine DAO",
+      "symbol": "Ukraine",
+      "decimals": 18
     }
   ]
 }

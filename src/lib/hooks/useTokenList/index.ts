@@ -1,10 +1,10 @@
-import { Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
-import { atom, useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
+import { atom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import fetchTokenList from './fetchTokenList'
@@ -12,38 +12,70 @@ import { useQueryTokens } from './querying'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
 import { validateTokens } from './validateTokenList'
 
-export { DEFAULT_TOKEN_LIST } from './fetchTokenList'
+export const DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 
-const chainTokenMapAtom = atom<ChainTokenMap>({})
+const chainTokenMapAtom = atom<ChainTokenMap | undefined>(undefined)
 
-export default function useTokenList(list?: string | TokenInfo[]): WrappedTokenInfo[] {
+export function useIsTokenListLoaded() {
+  return Boolean(useAtomValue(chainTokenMapAtom))
+}
+
+export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST): void {
   const { chainId, library } = useActiveWeb3React()
-  const [chainTokenMap, setChainTokenMap] = useAtom(chainTokenMapAtom)
+  const setChainTokenMap = useUpdateAtom(chainTokenMapAtom)
 
   // Error boundaries will not catch (non-rendering) async errors, but it should still be shown
   const [error, setError] = useState<Error>()
   if (error) throw error
 
-  useEffect(() => {
-    if (list !== undefined) {
-      let tokens: Promise<TokenList | TokenInfo[]>
-      if (typeof list === 'string') {
-        tokens = fetchTokenList(list, (ensName: string) => {
-          if (library && chainId === 1) {
-            return resolveENSContentHash(ensName, library)
-          }
-          throw new Error('Could not construct mainnet ENS resolver')
-        })
-      } else {
-        tokens = validateTokens(list)
+  const resolver = useCallback(
+    (ensName: string) => {
+      if (library && chainId === 1) {
+        // TODO(zzmp): Use network resolver when wallet is not on chainId === 1.
+        return resolveENSContentHash(ensName, library)
       }
-      tokens.then(tokensToChainTokenMap).then(setChainTokenMap).catch(setError)
+      throw new Error('Could not construct mainnet ENS resolver')
+    },
+    [chainId, library]
+  )
+  useEffect(() => {
+    let stale = false
+    activateList(list)
+    return () => {
+      stale = true
     }
-  }, [chainId, library, list, setChainTokenMap])
 
+    async function activateList(list: string | TokenInfo[]) {
+      try {
+        let tokens: TokenList | TokenInfo[]
+        if (typeof list === 'string') {
+          tokens = await fetchTokenList(list, resolver)
+        } else {
+          tokens = await validateTokens(list)
+        }
+        const tokenMap = tokensToChainTokenMap(tokens) // also caches the fetched tokens, so it is invoked even if stale
+        if (!stale) {
+          setChainTokenMap(tokenMap)
+          setError(undefined)
+        }
+      } catch (e: unknown) {
+        if (!stale) {
+          setChainTokenMap(undefined)
+          setError(e as Error)
+        }
+      }
+    }
+  }, [list, resolver, setChainTokenMap])
+}
+
+export default function useTokenList(): WrappedTokenInfo[] {
+  const { chainId } = useActiveWeb3React()
+  const chainTokenMap = useAtomValue(chainTokenMapAtom)
+  const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
-    return Object.values((chainId && chainTokenMap[chainId]) || {}).map(({ token }) => token)
-  }, [chainId, chainTokenMap])
+    if (!tokenMap) return []
+    return Object.values(tokenMap).map(({ token }) => token)
+  }, [tokenMap])
 }
 
 export type TokenMap = { [address: string]: Token }
@@ -51,14 +83,16 @@ export type TokenMap = { [address: string]: Token }
 export function useTokenMap(): TokenMap {
   const { chainId } = useActiveWeb3React()
   const chainTokenMap = useAtomValue(chainTokenMapAtom)
+  const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
-    return Object.entries((chainId && chainTokenMap[chainId]) || {}).reduce((map, [address, { token }]) => {
+    if (!tokenMap) return {}
+    return Object.entries(tokenMap).reduce((map, [address, { token }]) => {
       map[address] = token
       return map
     }, {} as TokenMap)
-  }, [chainId, chainTokenMap])
+  }, [tokenMap])
 }
 
-export function useQueryTokenList(query: string) {
+export function useQueryCurrencies(query = ''): (WrappedTokenInfo | NativeCurrency)[] {
   return useQueryTokens(query, useTokenList())
 }

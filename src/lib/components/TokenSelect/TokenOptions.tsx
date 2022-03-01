@@ -69,6 +69,13 @@ interface BubbledEvent extends SyntheticEvent {
   ref?: HTMLButtonElement
 }
 
+const TokenBalance = styled.div<{ isLoading: boolean }>`
+  background-color: ${({ theme, isLoading }) => isLoading && theme.secondary};
+  border-radius: 0.25em;
+  padding: 0.375em 0;
+  width: 1.5em;
+`
+
 function TokenOption({ index, value, style }: TokenOptionProps) {
   const { i18n } = useLingui()
   const ref = useRef<HTMLButtonElement>(null)
@@ -103,7 +110,9 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
               <ThemedText.Caption color="secondary">{value.name}</ThemedText.Caption>
             </Column>
           </Row>
-          {balance?.greaterThan(0) && formatCurrencyAmount(balance, 2, i18n.locale)}
+          <TokenBalance isLoading={Boolean(account) && !balance}>
+            {balance?.greaterThan(0) && formatCurrencyAmount(balance, 2, i18n.locale)}
+          </TokenBalance>
         </Row>
       </ThemedText.Body1>
     </TokenButton>

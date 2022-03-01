@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-28 19:11\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -217,8 +217,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "Đã xảy ra lỗi khi cố gắng thực hiện hoán đổi này. Bạn có thể cần phải tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "Đang chờ phê duyệt <0/>"
+msgid "Approval pending"
+msgstr "Đang chờ phê duyệt"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -287,6 +287,10 @@ msgstr "Ít nhất {0} {1} và {2} {3} sẽ được hoàn lại vào ví của 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Tự động"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "Bộ định tuyến tự động"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -2443,9 +2447,13 @@ msgstr "qua {0}"
 msgid "via {0} token list"
 msgstr "thông qua {0} mã token"
 
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {Tuyến đường tốt nhất thông qua 1 bước nhảy} other {Tuyến đường tốt nhất thông qua # bước nhảy}}"
+
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Import token} other {Import tokens}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Nhập mã thông báo} other {Nhập mã thông báo}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

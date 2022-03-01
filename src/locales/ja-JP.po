@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-28 19:11\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -34,7 +34,7 @@ msgstr "${0}"
 
 #: src/components/swap/TradePrice.tsx
 msgid "(${0})"
-msgstr "（${0}）"
+msgstr "(${0})"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -217,8 +217,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "スワップ実行時にエラーが発生しました。スリッページの許容範囲を広げる必要がある可能性があります。それでも上手くいかない場合、取引しているトークンとの互換性がない可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "承認待ち <0/>"
+msgid "Approval pending"
+msgstr "承認待ち"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -241,7 +241,7 @@ msgstr "{0} を承認する"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approve {0} first"
-msgstr "最初に {0} 承認する"
+msgstr "最初に {0} を承認する"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -269,7 +269,7 @@ msgstr "Arbitrumブリッジ"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrumはベータ版であり、ダウンタイムが発生する可能性があります。ダウンタイム中、あなたのポジションは手数料を獲得せず、流動性を取り除くことができなくなります。 <0>続きを読む。</0>"
+msgstr "Arbitrumはベータ版であり、ダウンタイムが発生する可能性があります。ダウンタイム中、あなたのポジションは手数料を獲得せず、流動性を解除することができなくなります。 <0>続きを読む。</0>"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -287,6 +287,10 @@ msgstr "少なくとも {0} の {1} と {2} の {3} は設定した価格範囲�
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "自動"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "自動ルーター"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -811,7 +815,7 @@ msgstr "期限切れ"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
-msgstr "UniswapAnalyticsをご覧ください。"
+msgstr "Uniswap Analyticsをご覧ください。"
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
@@ -1064,7 +1068,7 @@ msgstr "読み込み中"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
-msgstr "MAX"
+msgstr "最大"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1270,7 +1274,7 @@ msgstr "Optimismゲートウェイ"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "楽観主義はベータ版であり、ダウンタイムが発生する可能性があります。 Optimismは、近い将来、ネットワークをアップグレードするために計画されたダウンタイムを予想しています。ダウンタイム中、あなたのポジションは手数料を獲得せず、流動性を取り除くことができなくなります。 <0>続きを読む。</0>"
+msgstr "Optimism はベータ版であり、ダウンタイムが発生する可能性があります。 Optimismは、近い将来、ネットワークをアップグレードするために計画されたダウンタイムを予想しています。ダウンタイム中、あなたのポジションは手数料を獲得せず、流動性を取り除くことができなくなります。 <0>続きを読む。</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1335,7 +1339,7 @@ msgstr "Polygonブリッジ"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
-msgstr "ポリゴンスキャン"
+msgstr "Polygonscan"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1500,7 +1504,7 @@ msgstr "ページを再読み込みする"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
-msgstr "削除"
+msgstr "解除"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
@@ -1518,7 +1522,7 @@ msgstr "委任を削除"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "流動性を削除"
+msgstr "流動性を解除"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
@@ -2197,7 +2201,7 @@ msgstr "引き出すと、コントラクトはあなたに代わって自動的
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "引き出すと、UNIが請求され、流動性はマイニングプールから削除されます。"
+msgstr "引き出すと、UNIが請求され、流動性はマイニングプールから解除されます。"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -2443,9 +2447,13 @@ msgstr "{0} から"
 msgid "via {0} token list"
 msgstr "{0} トークンリストから"
 
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {1ホップ経由のベストルート} other {＃ホップ経由の最適ルート}}"
+
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {トークンをインポート} other {トークンをインポート}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {トークンをインポートしてください} other {トークンをインポートしてください}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2602,7 +2610,7 @@ msgstr "{label} トークンブリッジ"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "{min}m {sec}s"
-msgstr "{min}m {sec}s"
+msgstr "{min}分 {sec}秒"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-28 19:11\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -217,8 +217,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "교환을 실행하는 중에 오류가 발생했습니다. 가격변동 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 교환중인 토큰이 Uniswap과 호환되지 않는 것일 수 있습니다. 참고: 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "승인 대기 중 <0/>"
+msgid "Approval pending"
+msgstr "승인 대기 중"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -287,6 +287,10 @@ msgstr "선택한 가격 범위로 인해 최소 {0} {1} 및 {2} {3} 이 지갑�
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "자동"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "자동 라우터"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -2443,9 +2447,13 @@ msgstr "{0} 경유"
 msgid "via {0} token list"
 msgstr "{0} 토큰 목록을 통해"
 
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {1 홉을 통한 최적의 경로} other {# 홉을 통한 최적의 경로}}"
+
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {토큰 가져 오기} other {토큰 가져 오기}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {토큰 가져오기} other {토큰 가져오기}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

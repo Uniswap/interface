@@ -8,7 +8,7 @@ import useSyncSwapDefaults from 'lib/hooks/swap/useSyncSwapDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
-import useTokenList from 'lib/hooks/useTokenList'
+import useTokenList, { useSyncTokenList } from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
 import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
 import { useMemo, useState } from 'react'
@@ -50,7 +50,7 @@ export interface SwapProps {
 }
 
 export default function Swap(props: SwapProps) {
-  const list = useTokenList(props.tokenList)
+  useSyncTokenList(props.tokenList)
   useSyncSwapDefaults(props)
   useSyncConvenienceFee(props)
 
@@ -61,16 +61,17 @@ export default function Swap(props: SwapProps) {
   const pendingTxs = usePendingTransactions()
   const displayTx = getSwapTx(pendingTxs, displayTxHash)
 
-  const onSupportedChain = useMemo(
-    () => chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId) && list.some((token) => token.chainId === chainId),
-    [chainId, list]
+  const tokenList = useTokenList()
+  const isSwapSupported = useMemo(
+    () => Boolean(chainId && ALL_SUPPORTED_CHAIN_IDS.includes(chainId) && tokenList?.length),
+    [chainId, tokenList]
   )
 
   const focused = useHasFocus(wrapper)
 
   return (
     <SwapPropValidator {...props}>
-      {onSupportedChain && <SwapInfoUpdater />}
+      {isSwapSupported && <SwapInfoUpdater />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
         <Settings disabled={!active} />

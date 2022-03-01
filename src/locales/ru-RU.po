@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-12 15:07\n"
+"PO-Revision-Date: 2022-02-28 19:11\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -217,8 +217,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "Произошла ошибка при попытке произвести этот обмен. Возможно, нужно увеличить допустимое проскальзывание. Если это не сработает, возможно, имеет место несовместимость с токеном, которым вы торгуете. Обратите внимание: токены с комиссией за перевод или изменяемой базой несовместимы с Uniswap V3."
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "Ожидается одобрение <0/>"
+msgid "Approval pending"
+msgstr "Ожидается подтверждение"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -287,6 +287,10 @@ msgstr "Не менее {0} {1} и {2} {3} будут возвращены на 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Авто"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "Автомаршрутизатор"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -2443,9 +2447,13 @@ msgstr "из {0}"
 msgid "via {0} token list"
 msgstr "из списка токенов {0}"
 
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {Лучший маршрут через 1 прыжок} other {Лучший маршрут через #hops}}"
+
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Импортировать токен} other {Импортировать токены}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Импортный токен} other {Импортируйте токены}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

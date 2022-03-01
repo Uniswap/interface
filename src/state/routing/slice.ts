@@ -1,9 +1,7 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { BaseProvider, JsonRpcProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
-import { AlphaRouterParams } from '@uniswap/smart-order-router'
-import { SupportedChainId } from 'constants/chains'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import { AUTO_ROUTER_SUPPORTED_CHAINS, getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
@@ -11,16 +9,19 @@ import qs from 'qs'
 
 import { GetQuoteResult } from './types'
 
-const routerParams = AUTO_ROUTER_SUPPORTED_CHAINS.reduce<{ [chainId in SupportedChainId]?: AlphaRouterParams }>(
-  (params, chainId) => ({
-    ...params,
-    [chainId]: {
-      chainId,
-      provider: new JsonRpcProvider(INFURA_NETWORK_URLS[chainId]),
-    },
-  }),
-  {}
-)
+const routerProviders = new Map<ChainId, BaseProvider>()
+function getRouterProvider(chainId: ChainId): BaseProvider {
+  const provider = routerProviders.get(chainId)
+  if (provider) return provider
+
+  if (AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId)) {
+    const provider = new JsonRpcProvider(INFURA_NETWORK_URLS[chainId])
+    routerProviders.set(chainId, provider)
+    return provider
+  }
+
+  throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
+}
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
@@ -62,8 +63,7 @@ export const routingApi = createApi({
         try {
           if (useClientSideRouter) {
             const chainId = args.tokenInChainId
-            const params = routerParams[chainId]
-            if (!params) throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
+            const params = { chainId, provider: getRouterProvider(chainId) }
             result = await getClientSideQuote(args, params, { protocols })
           } else {
             const query = qs.stringify({

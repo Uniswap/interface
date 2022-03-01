@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-11 04:07\n"
+"PO-Revision-Date: 2022-02-28 19:11\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -217,8 +217,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "Παρουσιάστηκε σφάλμα κατά την προσπάθεια εκτέλεσης αυτής της ανταλλαγής. Ίσως χρειαστεί να αυξήσετε την ανοχή ολίσθησης. Εάν αυτό δεν λειτουργεί, μπορεί να υπάρχει ασυμβατότητα με το διακριτικό που διαπραγματεύεστε. Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "Η έγκριση εκκρεμεί <0/>"
+msgid "Approval pending"
+msgstr "Η έγκριση εκκρεμεί"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -287,6 +287,10 @@ msgstr "Τουλάχιστον {0} {1} και {2} {3} θα επιστραφού�
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Αυτόματο"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "Αυτόματος δρομολογητής"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -2443,9 +2447,13 @@ msgstr "μέσω {0}"
 msgid "via {0} token list"
 msgstr "μέσω {0} λίστας μάρκας"
 
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {Η καλύτερη διαδρομή μέσω 1 hop} other {Η καλύτερη διαδρομή μέσω # λυκίσκου}}"
+
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Εισαγωγή διακριτικού} other {Εισαγωγή διακριτικών}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Εισαγωγή διακριτικού} other {Εισαγάγετε μάρκες}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
