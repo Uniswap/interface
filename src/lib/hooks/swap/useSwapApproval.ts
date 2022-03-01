@@ -4,10 +4,14 @@ import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from 'constants/addresses'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useMemo } from 'react'
+import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
+import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
+import { TransactionType } from 'lib/state/transactions'
+import { useCallback, useMemo } from 'react'
 import invariant from 'tiny-invariant'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
+import { useAddTransaction } from '../transactions'
 import { ApprovalState, useApproval, useApprovalStateForSpender } from '../useApproval'
 export { ApprovalState } from '../useApproval'
 
@@ -133,4 +137,74 @@ export function useSwapApprovalOptimizedTrade(
       return undefined
     }
   }, [trade, optimizedSwapRouter])
+}
+
+/**
+ * need
+ * 1. approval state
+ * 2. approval callback
+ * 3. siganture status
+ * 4. gather signature callback
+ * 5. general handleApprove callback
+ */
+export const useApproveAndPermit = (
+  trade:
+    | V2Trade<Currency, Currency, TradeType>
+    | V3Trade<Currency, Currency, TradeType>
+    | Trade<Currency, Currency, TradeType>
+    | undefined,
+  allowedSlippage: Percent,
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
+  amount?: CurrencyAmount<Currency> // defaults to trade.maximumAmountIn(allowedSlippage)
+) => {
+  const deadline = useTransactionDeadline()
+
+  // Check approvals on ERC20 contract based on amount
+  const [approval, getApproval] = useSwapApproval(trade, allowedSlippage, useIsPendingApproval, amount)
+
+  // Check status of permit and wether token supports it
+  const {
+    state: signatureState,
+    signatureData,
+    gatherPermitSignature,
+  } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
+
+  const notApproved =
+    approval === ApprovalState.NOT_APPROVED &&
+    !(signatureState === UseERC20PermitState.SIGNED && Boolean(gatherPermitSignature))
+
+  // setup callback if need to submit approval on chain
+  const addTransaction = useAddTransaction()
+  const addApprovalTransaction = useCallback(() => {
+    getApproval().then((transaction) => {
+      if (transaction) {
+        addTransaction({ type: TransactionType.APPROVAL, ...transaction })
+      }
+    })
+  }, [addTransaction, getApproval])
+
+  // if permit is supported, trigger a signature, if not create approval transaction
+  const handleApproveOrPermit = useCallback(async () => {
+    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
+      try {
+        await gatherPermitSignature()
+      } catch (error) {
+        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+        if (error?.code !== 4001) {
+          addApprovalTransaction()
+        }
+      }
+    } else {
+      addApprovalTransaction()
+    }
+  }, [signatureState, gatherPermitSignature, addApprovalTransaction])
+
+  return {
+    notApproved,
+    pendingApproval: approval === ApprovalState.PENDING,
+    loadingSignature: signatureState === UseERC20PermitState.LOADING,
+    supportsPermit: Boolean(gatherPermitSignature),
+    signatureData,
+    handleApproveOrPermit,
+  }
 }

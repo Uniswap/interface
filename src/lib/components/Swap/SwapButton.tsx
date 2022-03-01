@@ -1,16 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
-import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import { useUpdateAtom } from 'jotai/utils'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
-import useSwapApproval, {
-  ApprovalState,
+import {
+  useApproveAndPermit,
   useSwapApprovalOptimizedTrade,
   useSwapRouterAddress,
 } from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
-import { useAddTransaction } from 'lib/hooks/transactions'
-import { usePendingApproval } from 'lib/hooks/transactions'
+import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Spinner } from 'lib/icons'
@@ -61,78 +59,43 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval) || trade.trade
 
   const approvalCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
-  const [approval, getApproval] = useSwapApproval(
-    optimizedTrade,
-    allowedSlippage,
-    useIsPendingApproval,
-    approvalCurrencyAmount
-  )
 
-  const addTransaction = useAddTransaction()
-  const addApprovalTransaction = useCallback(() => {
-    getApproval().then((transaction) => {
-      if (transaction) {
-        addTransaction({ type: TransactionType.APPROVAL, ...transaction })
-      }
-    })
-  }, [addTransaction, getApproval])
+  const { notApproved, pendingApproval, loadingSignature, supportsPermit, signatureData, handleApproveOrPermit } =
+    useApproveAndPermit(optimizedTrade, allowedSlippage, useIsPendingApproval, approvalCurrencyAmount)
 
   const approvalHash = usePendingApproval(
     inputCurrency?.isToken ? inputCurrency : undefined,
     useSwapRouterAddress(optimizedTrade)
   )
 
+  const addTransaction = useAddTransaction()
   const deadline = useTransactionDeadline()
-
-  const {
-    state: signatureState,
-    signatureData,
-    gatherPermitSignature,
-  } = useERC20PermitFromTrade(optimizedTrade, allowedSlippage, deadline)
-
-  const handleApprove = useCallback(async () => {
-    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
-      try {
-        await gatherPermitSignature()
-      } catch (error) {
-        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
-        if (error?.code !== 4001) {
-          addApprovalTransaction()
-        }
-      }
-    } else {
-      addApprovalTransaction()
-    }
-  }, [signatureState, gatherPermitSignature, addApprovalTransaction])
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (
       disabled ||
       !chainId ||
-      signatureState === UseERC20PermitState.LOADING ||
+      loadingSignature ||
       (inputCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputCurrencyAmount))
     ) {
       return { disabled: true }
     }
-    if (signatureState === UseERC20PermitState.SIGNED && Boolean(gatherPermitSignature)) {
-      return {}
-    }
-    if (approval === ApprovalState.NOT_APPROVED) {
+    if (notApproved) {
       const currency = inputCurrency || approvalCurrencyAmount?.currency
       invariant(currency)
       return {
         action: {
-          message: Boolean(gatherPermitSignature) ? (
+          message: supportsPermit ? (
             <Trans>Allow {currency.symbol} first</Trans>
           ) : (
             <Trans>Approve {currency.symbol} first</Trans>
           ),
-          onClick: handleApprove,
-          children: Boolean(gatherPermitSignature) ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
+          onClick: handleApproveOrPermit,
+          children: supportsPermit ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
         },
       }
     }
-    if (approval === ApprovalState.PENDING) {
+    if (pendingApproval) {
       return {
         disabled: true,
         action: {
@@ -142,24 +105,25 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
             </EtherscanLink>
           ),
           icon: Spinner,
-          onClick: handleApprove,
+          onClick: handleApproveOrPermit,
           children: <Trans>Approve</Trans>,
         },
       }
     }
     return {}
   }, [
-    approval,
     approvalCurrencyAmount?.currency,
     approvalHash,
     chainId,
     disabled,
-    gatherPermitSignature,
-    handleApprove,
+    handleApproveOrPermit,
     inputCurrency,
     inputCurrencyAmount,
     inputCurrencyBalance,
-    signatureState,
+    loadingSignature,
+    notApproved,
+    pendingApproval,
+    supportsPermit,
   ])
 
   // the callback to execute the swap
