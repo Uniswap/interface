@@ -65,7 +65,8 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = ''
         const darkModeGradient =
           'radial-gradient(150.6% 98.22% at 48.06% 0%, #005BBB 0%, rgba(255, 213, 0, 0.26) 100%), #1F2128'
-        backgroundRadialGradientElement.style.background = darkMode ? darkModeGradient : ''
+        const lightGradient = `radial-gradient(153.32% 100% at 47.26% 0%, rgba(0, 91, 187, 0.15) 0%, rgba(255, 213, 0, 0.048) 100%), #FFFFFF;`
+        backgroundRadialGradientElement.style.background = darkMode ? darkModeGradient : lightGradient
         backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay,normal' : 'multiply,normal'
     }
   }, [darkMode, chainId])
