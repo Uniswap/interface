@@ -2,19 +2,23 @@ import { Trans } from '@lingui/macro'
 import { ReactComponent as TwitterIcon } from 'assets/svg/twitter.svg'
 import { ButtonLight } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall, ThemedText } from 'theme'
 
 import { AutoRow, RowBetween } from '../Row'
 
-const ContentWrapper = styled.div`
+const lightRadial = `radial-gradient(108.7% 137.25% at 0% 6.64%, #5d9fe4 0%, #f9e894 100%), #002c5a;`
+const darkRadial = ` radial-gradient(100% 93.36% at 0% 6.64%, rgba(255, 213, 0, 0) 0%, rgba(0, 91, 187, 0.3) 100%), #002c5a;`
+
+const ContentWrapper = styled.div<{ darkMode: boolean }>`
   border-radius: 20px;
   padding: 24px 16px;
   display: flex;
   flex-direction: row;
   position: relative;
   width: 100%;
-  background: radial-gradient(100% 93.36% at 0% 6.64%, rgba(255, 213, 0, 0) 0%, rgba(0, 91, 187, 0.3) 100%), #002c5a;
+  background: ${({ darkMode }) => (darkMode ? darkRadial : lightRadial)};
 `
 const Header = styled.h2`
   font-weight: 600;
@@ -85,8 +89,10 @@ const StyledTwtterIcon = styled(TwitterIcon)`
 `
 
 export default function DonationHeader() {
+  const [darkMode] = useDarkModeManager()
+
   return (
-    <ContentWrapper>
+    <ContentWrapper darkMode={darkMode}>
       <LinkOut href={''}>
         <AutoColumn gap="sm">
           <AutoRow align="center">

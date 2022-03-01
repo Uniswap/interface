@@ -9,11 +9,19 @@ import Row, { AutoRow, RowBetween } from 'components/Row'
 import { TooltipContainer } from 'components/Tooltip'
 import { UKRAINE_GOV_ETH_ADDRESS } from 'constants/donations'
 import { useState } from 'react'
+import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-const Wrapper = styled.div`
+const darkGradient = `radial-gradient(87.53% 3032.45% at 5.16% 10.13%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%),
+linear-gradient(0deg, rgba(0, 91, 187, 0.35), rgba(0, 91, 187, 0.35)), #000000;`
+const lightGradient = ` url(image.png), radial-gradient(87.53% 3032.45% at 5.16% 10.13%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #5D9FE4, #5D9FE4), rgba(255, 255, 255, 0.09);`
+
+const lightSahdow = `0px 3px 10px rgba(0, 0, 0, 0.19), 0px 16px 24px rgba(0, 0, 0, 0.04);`
+const darkShadow = ` 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 8px 11px rgba(255, 213, 0, 0.24);`
+
+const Wrapper = styled.div<{ darkMode: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   border-radius: 1.25rem;
@@ -21,8 +29,8 @@ const Wrapper = styled.div`
   z-index: 1;
   width: 100%;
   padding: 16px 12px;
-  background: radial-gradient(87.53% 3032.45% at 5.16% 10.13%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%),
-    linear-gradient(0deg, rgba(0, 91, 187, 0.35), rgba(0, 91, 187, 0.35)), #000000;
+  background: ${({ darkMode }) => (darkMode ? darkGradient : lightGradient)};
+  box-shadow: ${({ darkMode }) => (darkMode ? darkShadow : lightSahdow)};
 
   overflow: hidden;
   :before {
@@ -54,9 +62,10 @@ const RecipientBadge = styled.div`
 
 export default function RecipientDetails({ amount }: { amount: string | undefined }) {
   const [showTooltip, setShowTooltip] = useState(false)
+  const [darkMode] = useDarkModeManager()
 
   return (
-    <Wrapper>
+    <Wrapper darkMode={darkMode}>
       <RowBetween>
         <AutoRow gap="md">
           <AutoColumn gap="4px">
