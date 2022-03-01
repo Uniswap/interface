@@ -17,6 +17,8 @@ import { RollupWarning } from 'rollup'
 import copy from 'rollup-plugin-copy'
 import del from 'rollup-plugin-delete'
 import dts from 'rollup-plugin-dts'
+// @ts-ignore // missing types
+import multi from 'rollup-plugin-multi-input'
 import externals from 'rollup-plugin-node-externals'
 import sass from 'rollup-plugin-scss'
 import { CompilerOptions } from 'typescript'
@@ -72,13 +74,25 @@ const type = {
   ],
 }
 
-const cjs = {
+const transpile = {
   input: 'src/lib/index.tsx',
   output: [
+    {
+      file: 'dist/widgets.js',
+      format: 'esm',
+      sourcemap: false,
+    },
     {
       file: 'dist/widgets.cjs',
       format: 'cjs',
       sourcemap: false,
+      plugins: [
+        copy({
+          copyOnce: true,
+          hook: 'writeBundle',
+          targets: [{ src: 'src/locales/*.js', dest: 'dist/locales', rename: (name) => `${name}.cjs` }],
+        }),
+      ],
     },
   ],
   plugins: [
@@ -99,16 +113,23 @@ const cjs = {
         '@babel/plugin-transform-runtime', // embeds the babel runtime for library distribution
       ],
     }),
-
-    copy({
-      copyOnce: true,
-      targets: [{ src: 'src/locales/*.js', dest: 'dist/locales', rename: (name) => `${name}.cjs` }],
-    }),
   ],
   onwarn: squelchTypeWarnings, // this pipeline is only for transpilation
 }
 
-const config = [check, type, cjs]
+const locales = {
+  input: 'src/locales/*.js',
+  output: [
+    {
+      dir: 'dist',
+      format: 'esm',
+      sourcemap: false,
+    },
+  ],
+  plugins: [commonjs(), multi()],
+}
+
+const config = [check, type, transpile, locales]
 export default config
 
 function squelchTranspilationWarnings(warning: RollupWarning, warn: (warning: RollupWarning) => void) {
