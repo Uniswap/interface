@@ -26,6 +26,8 @@ import { CompilerOptions } from 'typescript'
 const REPLACEMENTS = {
   'process.env.REACT_APP_IS_WIDGET': true,
   'process.env.REACT_APP_LOCALES': '"@uniswap/widgets/locales"',
+  // esm requires fully-specified paths:
+  'react/jsx-runtime': 'react/jsx-runtime.js',
 }
 
 const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
@@ -47,7 +49,7 @@ const aliases = Object.entries({ ...paths }).flatMap(([find, replacements]) => {
 
 const plugins = [
   // Dependency resolution
-  externals({ exclude: ['constants'], deps: true, peerDeps: true }), // marks builtins, dependencies, and peerDependencies external
+  externals({ exclude: ['constants', /\.json$/], deps: true, peerDeps: true }), // marks builtins, dependencies, and peerDependencies external
   resolve({ extensions: EXTENSIONS }), // resolves third-party modules within node_modules/
   alias({ entries: aliases }), // resolves paths aliased through the tsconfig (babel does not use tsconfig path resolution)
 
@@ -58,7 +60,7 @@ const plugins = [
 
 const check = {
   input: 'src/lib/index.tsx',
-  output: { file: 'dist/widgets.tsc' },
+  output: { file: 'dist/widgets.tsc', inlineDynamicImports: true },
   external: isAsset,
   plugins: [...plugins, typescript({ tsconfig: TS_CONFIG })],
   onwarn: squelchTranspilationWarnings, // this pipeline is only for typechecking and generating definitions
@@ -78,21 +80,16 @@ const transpile = {
   input: 'src/lib/index.tsx',
   output: [
     {
-      file: 'dist/widgets.js',
+      dir: 'dist',
       format: 'esm',
       sourcemap: false,
     },
     {
-      file: 'dist/widgets.cjs',
+      dir: 'dist/cjs',
+      chunkFileNames: '[name]-[hash].cjs',
+      entryFileNames: '[name].cjs',
       format: 'cjs',
       sourcemap: false,
-      plugins: [
-        copy({
-          copyOnce: true,
-          hook: 'writeBundle',
-          targets: [{ src: 'src/locales/*.js', dest: 'dist/locales', rename: (name) => `${name}.cjs` }],
-        }),
-      ],
     },
   ],
   plugins: [
@@ -126,7 +123,14 @@ const locales = {
       sourcemap: false,
     },
   ],
-  plugins: [commonjs(), multi()],
+  plugins: [
+    copy({
+      copyOnce: true,
+      targets: [{ src: 'src/locales/*.js', dest: 'dist/cjs/locales', rename: (name) => `${name}.cjs` }],
+    }),
+    commonjs(),
+    multi(),
+  ],
 }
 
 const config = [check, type, transpile, locales]
