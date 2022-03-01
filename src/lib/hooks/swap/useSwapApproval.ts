@@ -140,12 +140,8 @@ export function useSwapApprovalOptimizedTrade(
 }
 
 /**
- * need
- * 1. approval state
- * 2. approval callback
- * 3. siganture status
- * 4. gather signature callback
- * 5. general handleApprove callback
+ * Returns all relevant statuses and callback functions for approvals.
+ * Considers both standard approval and ERC20 permit.
  */
 export const useApproveAndPermit = (
   trade:
