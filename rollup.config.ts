@@ -25,7 +25,7 @@ import { CompilerOptions } from 'typescript'
 
 const REPLACEMENTS = {
   'process.env.REACT_APP_IS_WIDGET': true,
-  'process.env.REACT_APP_LOCALES': '"@uniswap/widgets/locales"',
+  'process.env.REACT_APP_LOCALES': '"./locales"',
   // esm requires fully-specified paths:
   'react/jsx-runtime': 'react/jsx-runtime.js',
 }
@@ -49,7 +49,6 @@ const aliases = Object.entries({ ...paths }).flatMap(([find, replacements]) => {
 
 const plugins = [
   // Dependency resolution
-  externals({ exclude: ['constants', /\.json$/], deps: true, peerDeps: true }), // marks builtins, dependencies, and peerDependencies external
   resolve({ extensions: EXTENSIONS }), // resolves third-party modules within node_modules/
   alias({ entries: aliases }), // resolves paths aliased through the tsconfig (babel does not use tsconfig path resolution)
 
@@ -62,15 +61,20 @@ const check = {
   input: 'src/lib/index.tsx',
   output: { file: 'dist/widgets.tsc', inlineDynamicImports: true },
   external: isAsset,
-  plugins: [...plugins, typescript({ tsconfig: TS_CONFIG })],
+  plugins: [
+    externals({ exclude: ['constants'], deps: true, peerDeps: true }), // marks builtins, dependencies, and peerDependencies external
+    ...plugins,
+    typescript({ tsconfig: TS_CONFIG }),
+  ],
   onwarn: squelchTranspilationWarnings, // this pipeline is only for typechecking and generating definitions
 }
 
 const type = {
   input: 'dist/dts/lib/index.d.ts',
-  output: { file: 'dist/widgets.d.ts' },
+  output: { file: 'dist/index.d.ts' },
   external: isAsset,
   plugins: [
+    externals({ exclude: ['constants'], deps: true, peerDeps: true }),
     dts({ compilerOptions: { baseUrl: 'dist/dts' } }),
     process.env.ROLLUP_WATCH ? undefined : del({ hook: 'buildEnd', targets: ['dist/widgets.tsc', 'dist/dts'] }),
   ],
@@ -86,13 +90,22 @@ const transpile = {
     },
     {
       dir: 'dist/cjs',
-      chunkFileNames: '[name]-[hash].cjs',
       entryFileNames: '[name].cjs',
+      chunkFileNames: '[name]-[hash].cjs',
       format: 'cjs',
       sourcemap: false,
     },
   ],
   plugins: [
+    externals({
+      exclude: [
+        'constants',
+        /@lingui\/(core|react)/, // @lingui incorrectly exports esm, so it must be bundled in
+        /\.json$/, // esm does not support JSON loading, so it must be bundled in
+      ],
+      deps: true,
+      peerDeps: true,
+    }),
     ...plugins,
 
     // Source code transformation

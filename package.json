@@ -4,28 +4,26 @@
   "description": "Uniswap Interface",
   "homepage": ".",
   "files": [
-    "dist",
-    "dist/locales",
-    "widgets.mjs"
+    "dist"
   ],
   "type": "module",
-  "main": "./dist/widgets.cjs",
+  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.cjs",
   "exports": {
     ".": {
-      "types": "./dist/widgets.d.ts",
-      "import": "./dist/widgets.js",
-      "require": "./dist/widgets.cjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.cjs"
     },
     "./locales/*": {
-      "import": "./dist/widgets.js",
-      "require": "./dist/locales/*.cjs"
+      "import": "./dist/locales/*.js",
+      "require": "./dist/cjs/locales/*.cjs"
     },
     "./fonts.css": {
       "import": "./dist/fonts.css",
       "require": "./dist/fonts.css"
     }
   },
-  "types": "./dist/widgets.d.ts",
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
@@ -37,6 +35,9 @@
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
     "@lingui/cli": "^3.9.0",
+    "@lingui/core": "^3.9.0",
+    "@lingui/macro": "^3.9.0",
+    "@lingui/react": "^3.9.0",
     "@metamask/jazzicon": "^2.0.0",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -208,9 +209,6 @@
     "@ethersproject/wallet": "^5.4.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
-    "@lingui/core": "^3.9.0",
-    "@lingui/macro": "^3.9.0",
-    "@lingui/react": "^3.9.0",
     "@popperjs/core": "^2.4.4",
     "@reduxjs/toolkit": "^1.6.1",
     "@uniswap/redux-multicall": "^1.0.0",
