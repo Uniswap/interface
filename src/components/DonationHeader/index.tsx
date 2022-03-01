@@ -97,7 +97,7 @@ export default function DonationHeader() {
           </AutoRow>
           <HideSmall>
             <ThemedText.SubHeader fontSize="12px" fontWeight={400} maxWidth="280px">
-              <Trans>Select a token to send - it will be converted to ETH before sending.</Trans>
+              <Trans>Select a token to donate - it will be converted to ETH before sending.</Trans>
             </ThemedText.SubHeader>
           </HideSmall>
         </AutoColumn>
