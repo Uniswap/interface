@@ -396,7 +396,7 @@ export const USDT: { [chainId in ChainId]: Token } = {
     ChainId.AVAXMAINNET,
     '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
     6,
-    'USDT',
+    'USDT.e',
     'Tether USD'
   ),
   [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x049d68029688eAbF473097a2fC38ef61633A3C7A', 6, 'fUSDT', 'Tether USD'),
