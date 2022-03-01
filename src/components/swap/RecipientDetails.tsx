@@ -24,8 +24,6 @@ const Wrapper = styled.div`
     radial-gradient(87.53% 3032.45% at 5.16% 10.13%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%), #005bbb;
   border: 2px solid #ffd500;
   box-sizing: border-box;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 4px 8px rgba(0, 0, 0, 0.04), 0px 8px 11px rgba(255, 213, 0, 0.24);
 `
 
 const RecipientBadge = styled.div`

@@ -29,7 +29,6 @@ const setBackground = (newValues: TargetBackgroundStyles) =>
 export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
-
   // manage background color
   useEffect(() => {
     if (!backgroundRadialGradientElement) {
@@ -63,8 +62,10 @@ export default function RadialGradientByChainUpdater(): null {
         break
       default:
         setBackground(initialStyles)
-        backgroundRadialGradientElement.style.background =
+        backgroundRadialGradientElement.style.background = ''
+        const darkModeGradient =
           'radial-gradient(150.6% 98.22% at 48.06% 0%, #005BBB 0%, rgba(255, 213, 0, 0.26) 100%), #1F2128'
+        backgroundRadialGradientElement.style.background = darkMode ? darkModeGradient : ''
         backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay,normal' : 'multiply,normal'
     }
   }, [darkMode, chainId])

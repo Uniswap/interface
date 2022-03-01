@@ -66,6 +66,7 @@ export const StyledFlagImage = styled.div`
 const StyledButton = styled(ButtonLight)`
   padding: 12px;
   border-radius: 12px;
+
   width: fit-content;
   font-size: 14px;
   background: rgba(255, 255, 255, 0.15);
@@ -102,7 +103,9 @@ export default function DonationHeader() {
         </AutoColumn>
         <StyledButton as={ExternalLink} href="https://twitter.com/Ukraine/status/1497594592438497282">
           <RowBetween>
-            <Trans>Learn More</Trans>
+            <ThemedText.White>
+              <Trans>Learn More</Trans>
+            </ThemedText.White>
             <StyledTwtterIcon />
           </RowBetween>
         </StyledButton>
