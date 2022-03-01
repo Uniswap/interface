@@ -82,14 +82,18 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     })
   }, [addTransaction, handleApproveOrPermit])
 
-  const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    if (
+  const disableSwap = useMemo(
+    () =>
       disabled ||
       !chainId ||
       approvalState === ApproveOrPermitState.PENDING_SIGNATURE ||
       !(inputCurrencyAmount && outputCurrencyAmount && inputCurrencyBalance) ||
-      (inputCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputCurrencyAmount))
-    ) {
+      (inputCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputCurrencyAmount)),
+    [approvalState, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance, outputCurrencyAmount]
+  )
+
+  const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
+    if (disableSwap) {
       return { disabled: true }
     }
 
@@ -129,18 +133,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       }
     }
     return {}
-  }, [
-    approvalCurrencyAmount?.currency,
-    approvalHash,
-    approvalState,
-    chainId,
-    disabled,
-    inputCurrency,
-    inputCurrencyAmount,
-    inputCurrencyBalance,
-    onApprove,
-    outputCurrencyAmount,
-  ])
+  }, [approvalCurrencyAmount?.currency, approvalHash, approvalState, disableSwap, inputCurrency, onApprove])
 
   const deadline = useTransactionDeadline()
 
