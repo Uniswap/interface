@@ -220,7 +220,6 @@ exports[`renders correctly 1`] = `
         collapsable={false}
         forwardedRef={[Function]}
         onGestureHandlerEvent={[Function]}
-        onGestureHandlerStateChange={[Function]}
         style={
           Array [
             Object {
