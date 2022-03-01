@@ -81,6 +81,8 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
 
   const { userStakedBalance } = useUserStakedBalance(poolData)
 
+  const isHaveLiquidity = myLiquidity && myLiquidity.liquidityTokenBalance !== '0'
+
   return (
     <StyledItemCard>
       {isFarmingPool && (
@@ -180,14 +182,18 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
         </ButtonPrimary>
         <ButtonOutlined
           as={Link}
-          to={`/swap?inputCurrency=${currencyId(currency0, chainId)}&outputCurrency=${currencyId(currency1, chainId)}`}
+          to={
+            isHaveLiquidity
+              ? `/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`
+              : `/swap?inputCurrency=${currencyId(currency0, chainId)}&outputCurrency=${currencyId(currency1, chainId)}`
+          }
           style={{
             padding: '10px',
             fontSize: '14px',
             fontWeight: 500
           }}
         >
-          Swap
+          {isHaveLiquidity ? <Trans>Remove Liquidity</Trans> : <Trans>Swap</Trans>}
         </ButtonOutlined>
       </ButtonGroupContainer>
       <Divider />
