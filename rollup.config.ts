@@ -23,7 +23,7 @@ import { CompilerOptions } from 'typescript'
 
 const REPLACEMENTS = {
   'process.env.REACT_APP_IS_WIDGET': true,
-  'process.env.REACT_APP_LOCALES': '"./locales"',
+  'process.env.REACT_APP_LOCALES': '"@uniswap/widgets/locales"',
 }
 
 const EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx']
@@ -72,13 +72,13 @@ const type = {
   ],
 }
 
-const transpile = {
+const cjs = {
   input: 'src/lib/index.tsx',
   output: [
     {
-      file: 'dist/widgets.js',
+      file: 'dist/widgets.cjs',
       format: 'cjs',
-      sourcemap: true,
+      sourcemap: false,
     },
   ],
   plugins: [
@@ -102,13 +102,13 @@ const transpile = {
 
     copy({
       copyOnce: true,
-      targets: [{ src: 'src/locales/*.js', dest: 'dist/locales' }],
+      targets: [{ src: 'src/locales/*.js', dest: 'dist/locales', rename: (name) => `${name}.cjs` }],
     }),
   ],
   onwarn: squelchTypeWarnings, // this pipeline is only for transpilation
 }
 
-const config = [check, type, transpile]
+const config = [check, type, cjs]
 export default config
 
 function squelchTranspilationWarnings(warning: RollupWarning, warn: (warning: RollupWarning) => void) {

@@ -4,14 +4,21 @@
   "description": "Uniswap Interface",
   "homepage": ".",
   "files": [
-    "lib",
-    "dist"
+    "dist",
+    "dist/locales",
+    "widgets.mjs"
   ],
+  "type": "module",
+  "main": "./dist/widgets.cjs",
   "exports": {
     ".": {
       "types": "./dist/widgets.d.ts",
-      "import": "./dist/widgets.js",
-      "require": "./dist/widgets.js"
+      "import": "./widgets.mjs",
+      "require": "./dist/widgets.cjs"
+    },
+    "./cjs": "./dist/widgets.cjs",
+    "./locales/*": {
+      "require": "./dist/locales/*.cjs"
     },
     "./fonts.css": {
       "import": "./dist/fonts.css",
