@@ -3,7 +3,8 @@ import { Token } from '@uniswap/sdk-core'
 import { useUpdateAtom } from 'jotai/utils'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
 import {
-  useApproveAndPermit,
+  ApproveOrPermitState,
+  useApproveOrPermit,
   useSwapApprovalOptimizedTrade,
   useSwapRouterAddress,
 } from 'lib/hooks/swap/useSwapApproval'
@@ -60,8 +61,12 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
 
   const approvalCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
-  const { notApproved, pendingApproval, loadingSignature, supportsPermit, signatureData, handleApproveOrPermit } =
-    useApproveAndPermit(optimizedTrade, allowedSlippage, useIsPendingApproval, approvalCurrencyAmount)
+  const { approvalState, signatureData, handleApproveOrPermit } = useApproveOrPermit(
+    optimizedTrade,
+    allowedSlippage,
+    useIsPendingApproval,
+    approvalCurrencyAmount
+  )
 
   const approvalHash = usePendingApproval(
     inputCurrency?.isToken ? inputCurrency : undefined,
@@ -69,33 +74,46 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   )
 
   const addTransaction = useAddTransaction()
-  const deadline = useTransactionDeadline()
+  const onApprove = useCallback(() => {
+    handleApproveOrPermit().then((transaction) => {
+      if (transaction) {
+        addTransaction({ type: TransactionType.APPROVAL, ...transaction })
+      }
+    })
+  }, [addTransaction, handleApproveOrPermit])
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (
       disabled ||
       !chainId ||
-      loadingSignature ||
+      approvalState === ApproveOrPermitState.PENDING_SIGNATURE ||
+      !(inputCurrencyAmount && outputCurrencyAmount && inputCurrencyBalance) ||
       (inputCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputCurrencyAmount))
     ) {
       return { disabled: true }
     }
-    if (notApproved) {
+
+    if (
+      approvalState === ApproveOrPermitState.REQUIRES_APPROVAL ||
+      approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE
+    ) {
       const currency = inputCurrency || approvalCurrencyAmount?.currency
       invariant(currency)
       return {
         action: {
-          message: supportsPermit ? (
-            <Trans>Allow {currency.symbol} first</Trans>
-          ) : (
-            <Trans>Approve {currency.symbol} first</Trans>
-          ),
-          onClick: handleApproveOrPermit,
-          children: supportsPermit ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
+          message:
+            approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE ? (
+              <Trans>Allow {currency.symbol} first</Trans>
+            ) : (
+              <Trans>Approve {currency.symbol} first</Trans>
+            ),
+          onClick: onApprove,
+          children:
+            approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
         },
       }
     }
-    if (pendingApproval) {
+    if (approvalState === ApproveOrPermitState.PENDING_APPROVAL) {
       return {
         disabled: true,
         action: {
@@ -105,7 +123,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
             </EtherscanLink>
           ),
           icon: Spinner,
-          onClick: handleApproveOrPermit,
+          onClick: () => void 0, // @TODO: should not require an onclick
           children: <Trans>Approve</Trans>,
         },
       }
@@ -114,17 +132,17 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   }, [
     approvalCurrencyAmount?.currency,
     approvalHash,
+    approvalState,
     chainId,
     disabled,
-    handleApproveOrPermit,
     inputCurrency,
     inputCurrencyAmount,
     inputCurrencyBalance,
-    loadingSignature,
-    notApproved,
-    pendingApproval,
-    supportsPermit,
+    onApprove,
+    outputCurrencyAmount,
   ])
+
+  const deadline = useTransactionDeadline()
 
   // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback({

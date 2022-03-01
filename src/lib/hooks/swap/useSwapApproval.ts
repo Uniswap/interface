@@ -6,12 +6,10 @@ import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from 'con
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
-import { TransactionType } from 'lib/state/transactions'
 import { useCallback, useMemo } from 'react'
 import invariant from 'tiny-invariant'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
-import { useAddTransaction } from '../transactions'
 import { ApprovalState, useApproval, useApprovalStateForSpender } from '../useApproval'
 export { ApprovalState } from '../useApproval'
 
@@ -139,11 +137,18 @@ export function useSwapApprovalOptimizedTrade(
   }, [trade, optimizedSwapRouter])
 }
 
+export enum ApproveOrPermitState {
+  REQUIRES_APPROVAL,
+  PENDING_APPROVAL,
+  REQUIRES_SIGNATURE,
+  PENDING_SIGNATURE,
+}
+
 /**
  * Returns all relevant statuses and callback functions for approvals.
  * Considers both standard approval and ERC20 permit.
  */
-export const useApproveAndPermit = (
+export const useApproveOrPermit = (
   trade:
     | V2Trade<Currency, Currency, TradeType>
     | V3Trade<Currency, Currency, TradeType>
@@ -155,51 +160,52 @@ export const useApproveAndPermit = (
 ) => {
   const deadline = useTransactionDeadline()
 
-  // Check approvals on ERC20 contract based on amount
+  // Check approvals on ERC20 contract based on amount.
   const [approval, getApproval] = useSwapApproval(trade, allowedSlippage, useIsPendingApproval, amount)
 
-  // Check status of permit and wether token supports it
+  // Check status of permit and whether token supports it.
   const {
     state: signatureState,
     signatureData,
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
 
-  const notApproved =
-    approval === ApprovalState.NOT_APPROVED &&
-    !(signatureState === UseERC20PermitState.SIGNED && Boolean(gatherPermitSignature))
+  const notApproved = approval === ApprovalState.NOT_APPROVED && !(signatureState === UseERC20PermitState.SIGNED)
 
-  // setup callback if need to submit approval on chain
-  const addTransaction = useAddTransaction()
-  const addApprovalTransaction = useCallback(() => {
-    getApproval().then((transaction) => {
-      if (transaction) {
-        addTransaction({ type: TransactionType.APPROVAL, ...transaction })
-      }
-    })
-  }, [addTransaction, getApproval])
-
-  // if permit is supported, trigger a signature, if not create approval transaction
+  // If permit is supported, trigger a signature, if not create approval transaction.
   const handleApproveOrPermit = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
       try {
-        await gatherPermitSignature()
+        return await gatherPermitSignature()
       } catch (error) {
-        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+        // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
         if (error?.code !== 4001) {
-          addApprovalTransaction()
+          return getApproval()
         }
       }
     } else {
-      addApprovalTransaction()
+      return getApproval()
     }
-  }, [signatureState, gatherPermitSignature, addApprovalTransaction])
+  }, [signatureState, gatherPermitSignature, getApproval])
+
+  const approvalState = useMemo(() => {
+    if (approval === ApprovalState.PENDING) {
+      return ApproveOrPermitState.PENDING_APPROVAL
+    }
+    if (signatureState === UseERC20PermitState.LOADING) {
+      return ApproveOrPermitState.PENDING_SIGNATURE
+    }
+    if (notApproved && Boolean(gatherPermitSignature)) {
+      return ApproveOrPermitState.REQUIRES_SIGNATURE
+    }
+    if (notApproved) {
+      return ApproveOrPermitState.REQUIRES_APPROVAL
+    }
+    return undefined
+  }, [approval, gatherPermitSignature, notApproved, signatureState])
 
   return {
-    notApproved,
-    pendingApproval: approval === ApprovalState.PENDING,
-    loadingSignature: signatureState === UseERC20PermitState.LOADING,
-    supportsPermit: Boolean(gatherPermitSignature),
+    approvalState,
     signatureData,
     handleApproveOrPermit,
   }
