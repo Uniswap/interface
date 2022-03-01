@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/smart-order-router'
+import FlagImage from 'assets/images/ukraine_flag.png'
 import { AutoColumn } from 'components/Column'
 import { StyledFlagImage } from 'components/DonationHeader'
 import Popover from 'components/Popover'
@@ -20,8 +21,24 @@ const Wrapper = styled.div`
   z-index: 1;
   width: 100%;
   padding: 16px 12px;
-  background: url(image.png),
-    radial-gradient(87.53% 3032.45% at 5.16% 10.13%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%), #005bbb;
+  background: radial-gradient(87.53% 3032.45% at 5.16% 10.13%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(0deg, rgba(0, 91, 187, 0.35), rgba(0, 91, 187, 0.35)), #000000;
+
+  overflow: hidden;
+  :before {
+    background-image: url(${FlagImage});
+    background-repeat: no-repeat;
+    overflow: hidden;
+    background-size: 300px;
+    content: '';
+    height: 300px;
+    opacity: 0.1;
+    position: absolute;
+    transform: rotate(25deg) translate(-90px, -40px);
+    width: 300px;
+    z-index: -1;
+  }
+
   border: 2px solid #ffd500;
   box-sizing: border-box;
 `
