@@ -80,6 +80,22 @@ const type = {
   ],
 }
 
+/**
+ * This exports scheme works for nextjs and for CRA5.
+ *
+ * It will also work for CRA4 if you use direct imports:
+ *   instead of `import { SwapWidget } from '@uniswap/widgets'`,
+ *              `import { SwapWidget } from '@uniswap/widgets/dist/index.js'`.
+ * I do not know why CRA4 does not seem to use exports for resolution.
+ *
+ * Note that chunks are enabled. This is so the tokenlist spec can be loaded async,
+ * to improve first load time (due to ajv). Locales are also in separate chunks.
+ *
+ * Lastly, note that JSON and lingui are bundled into the library, as neither are fully
+ * supported/compatible with ES Modules. Both _could_ be bundled only with esm, but this
+ * yields a less complex pipeline.
+ */
+
 const transpile = {
   input: 'src/lib/index.tsx',
   output: [
