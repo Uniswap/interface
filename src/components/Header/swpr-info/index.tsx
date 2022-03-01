@@ -20,7 +20,7 @@ const Wrapper = styled.div<{ hide: boolean }>`
   display: flex;
   margin-right: 7px;
   border-radius: 15px 50px 30px 5px;
-  visibility: ${props => (props.hide ? 'hidden' : 'visible')};
+  visibility: ${({ hide }) => (hide ? 'hidden' : 'visible')};
 `
 
 interface SwprInfoProps {

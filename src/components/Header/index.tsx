@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect } from 'react'
 import { Box, Flex } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
-import { Currency, CurrencyAmount, SWPR } from '@swapr/sdk'
+import { SWPR } from '@swapr/sdk'
 
 import styled, { css } from 'styled-components'
 
@@ -311,12 +311,20 @@ function Header() {
             onToggleClaimPopup={toggleClaimPopup}
           />
           <UnsupportedNetworkPopover show={isUnsupportedNetworkModal}>
-            <AccountBalance
-              account={account}
-              userNativeCurrencyBalance={userNativeCurrencyBalance}
-              nativeCurrency={nativeCurrency}
-              isUnsupportedChainIdError={isUnsupportedChainIdError}
-            />
+            {isUnsupportedChainIdError ? (
+              <Amount zero={true}>{'UNSUPPORTED NETWORK'}</Amount>
+            ) : (
+              <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
+                {!account ? (
+                  '0.000'
+                ) : !userNativeCurrencyBalance ? (
+                  <Skeleton width="40px" />
+                ) : (
+                  userNativeCurrencyBalance.toFixed(3)
+                )}{' '}
+                {nativeCurrency.symbol}
+              </Amount>
+            )}
           </UnsupportedNetworkPopover>
         </HeaderSubRow>
       </HeaderControls>
@@ -325,32 +333,3 @@ function Header() {
 }
 
 export default withRouter(Header)
-
-interface AccountBalanceProps {
-  account: string | null | undefined
-  userNativeCurrencyBalance: CurrencyAmount | undefined
-  nativeCurrency: Currency
-  isUnsupportedChainIdError: boolean
-}
-
-export function AccountBalance({
-  account,
-  userNativeCurrencyBalance,
-  nativeCurrency,
-  isUnsupportedChainIdError
-}: AccountBalanceProps) {
-  return isUnsupportedChainIdError ? (
-    <Amount zero={true}>{'UNSUPPORTED NETWORK'}</Amount>
-  ) : (
-    <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
-      {!account ? (
-        '0.000'
-      ) : !userNativeCurrencyBalance ? (
-        <Skeleton width="40px" />
-      ) : (
-        userNativeCurrencyBalance.toFixed(3)
-      )}{' '}
-      {nativeCurrency.symbol}
-    </Amount>
-  )
-}
