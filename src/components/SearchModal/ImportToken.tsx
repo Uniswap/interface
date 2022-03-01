@@ -48,7 +48,7 @@ export function ImportToken(props: ImportProps) {
         <RowBetween>
           {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
           <ThemedText.MediumHeader>
-            <Plural value={tokens.length} one="Import token" other="Import tokens" />
+            <Plural value={tokens.length} _1="Import token" other="Import tokens" />
           </ThemedText.MediumHeader>
           {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div />}
         </RowBetween>

@@ -27,8 +27,8 @@ describe('hooks', () => {
         queryParametersToSwapState(parse('?outputCurrency=invalid', { parseArrays: false, ignoreQueryPrefix: true }))
       ).toEqual({
         [Field.INPUT]: { currencyId: 'ETH' },
-        [Field.OUTPUT]: { currencyId: null },
-        typedValue: '',
+        [Field.OUTPUT]: { currencyId: 'USDC' },
+        typedValue: '1',
         independentField: Field.INPUT,
         recipient: null,
       })
