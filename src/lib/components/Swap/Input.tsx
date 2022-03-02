@@ -1,4 +1,5 @@
 import { useLingui } from '@lingui/react'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { loadingOpacityCss } from 'lib/css/loading'
 import {
@@ -45,6 +46,27 @@ export interface InputProps {
   focused: boolean
 }
 
+interface UseFormattedFieldAmountArguments {
+  disabled: boolean
+  currencyAmount?: CurrencyAmount<Currency>
+  fieldAmount?: string
+}
+
+export function useFormattedFieldAmount({ disabled, currencyAmount, fieldAmount }: UseFormattedFieldAmountArguments) {
+  return useMemo(() => {
+    if (disabled) {
+      return ''
+    }
+    if (fieldAmount !== undefined) {
+      return fieldAmount
+    }
+    if (currencyAmount) {
+      return currencyAmount.toSignificant(6)
+    }
+    return ''
+  }, [disabled, currencyAmount, fieldAmount])
+}
+
 export default function Input({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
   const {
@@ -81,11 +103,17 @@ export default function Input({ disabled, focused }: InputProps) {
     return insufficientBalance ? 'error' : undefined
   }, [balance, inputCurrencyAmount, swapInputCurrencyAmount])
 
+  const amount = useFormattedFieldAmount({
+    disabled,
+    currencyAmount: inputCurrencyAmount,
+    fieldAmount: swapInputAmount,
+  })
+
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput
         currency={swapInputCurrency}
-        amount={(swapInputAmount !== undefined ? swapInputAmount : swapInputCurrencyAmount?.toSignificant(6)) ?? ''}
+        amount={amount}
         max={max}
         disabled={disabled}
         onChangeInput={updateSwapInputAmount}
