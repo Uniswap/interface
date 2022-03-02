@@ -38,6 +38,7 @@ import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl
 import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
 import QuestionHelper from '../../components/QuestionHelper'
 import { ApplicationModal } from '../../state/application/actions'
+import { Tabs } from './Tabs'
 import { ReactComponent as SwapIcon } from '../../assets/svg/swap.svg'
 
 // Landing Page Imports
@@ -296,6 +297,7 @@ export default function Swap() {
       />
       <Hero>
         <AppBodyContainer>
+          <Tabs />
           <AppBody tradeDetailsOpen={!!trade}>
             <SwapPoolTabs active={'swap'} />
             <Wrapper id="swap-page">
