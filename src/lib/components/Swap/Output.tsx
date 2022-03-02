@@ -16,7 +16,7 @@ import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../Column'
 import Row from '../Row'
-import { Balance, InputProps, LoadingRow } from './Input'
+import { Balance, InputProps, LoadingRow, useFormattedFieldAmount } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
@@ -41,9 +41,9 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const { i18n } = useLingui()
 
   const {
-    trade: { state: tradeState },
     currencyBalances: { [Field.OUTPUT]: balance },
-    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
+    trade: { state: tradeState },
+    tradeCurrencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
 
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
@@ -78,6 +78,12 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
     )
   }, [inputUSDC, outputUSDC])
 
+  const amount = useFormattedFieldAmount({
+    disabled,
+    currencyAmount: outputCurrencyAmount,
+    fieldAmount: swapOutputAmount,
+  })
+
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
@@ -88,7 +94,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
         </Row>
         <TokenInput
           currency={swapOutputCurrency}
-          amount={(swapOutputAmount !== undefined ? swapOutputAmount : outputCurrencyAmount?.toSignificant(6)) ?? ''}
+          amount={amount}
           disabled={disabled}
           onChangeInput={updateSwapOutputAmount}
           onChangeCurrency={updateSwapOutputCurrency}

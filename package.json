@@ -1,24 +1,29 @@
 {
   "name": "@uniswap/widgets",
-  "version": "0.0.18-beta",
+  "version": "0.0.20-beta",
   "description": "Uniswap Interface",
   "homepage": ".",
   "files": [
-    "lib",
     "dist"
   ],
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.cjs",
   "exports": {
     ".": {
-      "types": "./dist/widgets.d.ts",
-      "import": "./dist/widgets.cjs",
-      "require": "./dist/widgets.cjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./locales/*": {
+      "import": "./dist/locales/*.js",
+      "require": "./dist/cjs/locales/*.cjs"
     },
     "./fonts.css": {
       "import": "./dist/fonts.css",
       "require": "./dist/fonts.css"
     }
   },
-  "types": "./dist/widgets.d.ts",
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
@@ -30,6 +35,9 @@
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
     "@lingui/cli": "^3.9.0",
+    "@lingui/core": "^3.9.0",
+    "@lingui/macro": "^3.9.0",
+    "@lingui/react": "^3.9.0",
     "@metamask/jazzicon": "^2.0.0",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -80,8 +88,8 @@
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "^1.1.1",
-    "@web3-react/metamask": "8.0.10-beta.0",
-    "@web3-react/walletconnect": "8.0.15-beta.0",
+    "@web3-react/metamask": "8.0.13-beta.0",
+    "@web3-react/walletconnect": "8.0.18-beta.0",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
     "babel-plugin-macros": "^3.1.0",
@@ -123,6 +131,7 @@
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-dts": "^4.1.0",
+    "rollup-plugin-multi-input": "^1.3.1",
     "rollup-plugin-node-externals": "^3.1.2",
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-typescript2": "^0.31.1",
@@ -163,7 +172,7 @@
     "prepublishOnly": "yarn widgets:build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=./custom-test-env.js",
+    "test": "react-scripts test --env=./custom-test-env.cjs",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "widgets:start": "cosmos",
     "widgets:build": "rollup --config --failAfterWarnings --configPlugin typescript2"
@@ -200,9 +209,6 @@
     "@ethersproject/wallet": "^5.4.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
-    "@lingui/core": "^3.9.0",
-    "@lingui/macro": "^3.9.0",
-    "@lingui/react": "^3.9.0",
     "@popperjs/core": "^2.4.4",
     "@reduxjs/toolkit": "^1.6.1",
     "@uniswap/redux-multicall": "^1.0.0",
@@ -212,11 +218,11 @@
     "@uniswap/token-lists": "^1.0.0-beta.27",
     "@uniswap/v2-sdk": "^3.0.1",
     "@uniswap/v3-sdk": "^3.8.2",
-    "@web3-react/core": "8.0.14-beta.0",
-    "@web3-react/eip1193": "8.0.9-beta.0",
-    "@web3-react/empty": "8.0.7-beta.0",
-    "@web3-react/types": "8.0.7-beta.0",
-    "@web3-react/url": "8.0.9-beta.0",
+    "@web3-react/core": "8.0.17-beta.0",
+    "@web3-react/eip1193": "8.0.12-beta.0",
+    "@web3-react/empty": "8.0.10-beta.0",
+    "@web3-react/types": "8.0.10-beta.0",
+    "@web3-react/url": "8.0.12-beta.0",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
     "immer": "^9.0.6",

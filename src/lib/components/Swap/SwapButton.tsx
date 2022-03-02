@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { useUpdateAtom } from 'jotai/utils'
+import { WrapErrorText } from 'lib/components/Swap/WrapErrorText'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
 import {
   ApproveOrPermitState,
@@ -9,6 +10,7 @@ import {
   useSwapRouterAddress,
 } from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
+import useWrapCallback, { WrapError, WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
@@ -39,12 +41,12 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
 
   const {
-    trade,
     allowedSlippage,
     currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
-    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
     feeOptions,
+    trade,
+    tradeCurrencyAmounts: { [Field.INPUT]: inputTradeCurrencyAmount, [Field.OUTPUT]: outputTradeCurrencyAmount },
   } = useSwapInfo()
 
   const tradeType = useSwapTradeType()
@@ -53,6 +55,11 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   useEffect(() => {
     setActiveTrade((activeTrade) => activeTrade && trade.trade)
   }, [trade])
+
+  // clear active trade on chain change
+  useEffect(() => {
+    setActiveTrade(undefined)
+  }, [chainId])
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
@@ -82,24 +89,28 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     })
   }, [addTransaction, handleApproveOrPermit])
 
+  const { type: wrapType, callback: wrapCallback, error: wrapError, loading: wrapLoading } = useWrapCallback()
+
   const disableSwap = useMemo(
     () =>
       disabled ||
       !chainId ||
+      wrapLoading ||
+      (wrapType !== WrapType.NOT_APPLICABLE && wrapError) ||
       approvalState === ApproveOrPermitState.PENDING_SIGNATURE ||
-      !(inputCurrencyAmount && inputCurrencyBalance) ||
-      (inputCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputCurrencyAmount)),
-    [approvalState, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance]
+      !(inputTradeCurrencyAmount && inputCurrencyBalance) ||
+      (inputTradeCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputTradeCurrencyAmount)),
+    [disabled, chainId, wrapLoading, wrapType, wrapError, approvalState, inputTradeCurrencyAmount, inputCurrencyBalance]
   )
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) {
       return { disabled: true }
     }
-
     if (
-      approvalState === ApproveOrPermitState.REQUIRES_APPROVAL ||
-      approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE
+      wrapType === WrapType.NOT_APPLICABLE &&
+      (approvalState === ApproveOrPermitState.REQUIRES_APPROVAL ||
+        approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE)
     ) {
       const currency = inputCurrency || approvalCurrencyAmount?.currency
       invariant(currency)
@@ -133,7 +144,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       }
     }
     return {}
-  }, [approvalCurrencyAmount?.currency, approvalHash, approvalState, disableSwap, inputCurrency, onApprove])
+  }, [approvalCurrencyAmount?.currency, approvalHash, approvalState, disableSwap, inputCurrency, onApprove, wrapType])
 
   const deadline = useTransactionDeadline()
 
@@ -154,13 +165,13 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     swapCallback?.()
       .then((response) => {
         setDisplayTxHash(response.hash)
-        invariant(inputCurrencyAmount && outputCurrencyAmount)
+        invariant(inputTradeCurrencyAmount && outputTradeCurrencyAmount)
         addTransaction({
           response,
           type: TransactionType.SWAP,
           tradeType,
-          inputCurrencyAmount,
-          outputCurrencyAmount,
+          inputCurrencyAmount: inputTradeCurrencyAmount,
+          outputCurrencyAmount: outputTradeCurrencyAmount,
         })
       })
       .catch((error) => {
@@ -170,19 +181,54 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       .finally(() => {
         setActiveTrade(undefined)
       })
-  }, [addTransaction, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
+  }, [addTransaction, inputTradeCurrencyAmount, outputTradeCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
+
+  const ButtonText = useCallback(() => {
+    if (wrapError !== WrapError.NO_ERROR) {
+      return <WrapErrorText wrapError={wrapError} />
+    }
+    switch (wrapType) {
+      case WrapType.UNWRAP:
+        return <Trans>Unwrap</Trans>
+      case WrapType.WRAP:
+        return <Trans>Wrap</Trans>
+      case WrapType.NOT_APPLICABLE:
+      default:
+        return <Trans>Review swap</Trans>
+    }
+  }, [wrapError, wrapType])
+
+  const handleDialogClose = useCallback(() => {
+    setActiveTrade(undefined)
+  }, [])
+
+  const handleActionButtonClick = useCallback(async () => {
+    if (wrapType === WrapType.NOT_APPLICABLE) {
+      setActiveTrade(trade.trade)
+    } else {
+      const transaction = await wrapCallback()
+      addTransaction({
+        response: transaction,
+        type: TransactionType.WRAP,
+        unwrapped: wrapType === WrapType.UNWRAP,
+        currencyAmountRaw: transaction.value?.toString() ?? '0',
+        chainId,
+      })
+      setDisplayTxHash(transaction.hash)
+    }
+  }, [addTransaction, chainId, setDisplayTxHash, trade.trade, wrapCallback, wrapType])
 
   return (
     <>
       <ActionButton
         color={tokenColorExtraction ? 'interactive' : 'accent'}
-        onClick={() => setActiveTrade(trade.trade)}
+        onClick={handleActionButtonClick}
         {...actionProps}
       >
-        <Trans>Review swap</Trans>
+        <ButtonText />
       </ActionButton>
       {activeTrade && (
-        <Dialog color="dialog" onClose={() => setActiveTrade(undefined)}>
+        <Dialog color="dialog" onClose={handleDialogClose}>
           <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>
       )}

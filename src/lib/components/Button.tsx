@@ -10,6 +10,7 @@ export const BaseButton = styled.button`
   cursor: pointer;
   font-size: inherit;
   font-weight: inherit;
+  height: inherit;
   line-height: inherit;
   margin: 0;
   padding: 0;

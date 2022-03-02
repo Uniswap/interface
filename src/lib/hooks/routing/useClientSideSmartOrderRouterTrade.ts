@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
+import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
 import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
@@ -74,9 +75,13 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     error?: unknown
   }>({ error: undefined })
   const config = useMemo(() => getConfig(chainId), [chainId])
+  const { type: wrapType } = useWrapCallback()
 
   // When arguments update, make a new call to SOR for updated quote
   useEffect(() => {
+    if (wrapType !== WrapType.NOT_APPLICABLE) {
+      return
+    }
     setLoading(true)
     if (isDebouncing) return
 
@@ -101,7 +106,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
         }
       }
     }
-  }, [queryArgs, params, config, isDebouncing])
+  }, [queryArgs, params, config, isDebouncing, wrapType])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),

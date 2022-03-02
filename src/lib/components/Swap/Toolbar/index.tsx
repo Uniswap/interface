@@ -1,5 +1,6 @@
 import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useIsAmountPopulated, useSwapInfo } from 'lib/hooks/swap'
+import useWrapCallback, { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { largeIconCss } from 'lib/icons'
 import { Field } from 'lib/state/swap'
@@ -25,7 +26,7 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
   } = useSwapInfo()
   const isRouteLoading = state === TradeState.SYNCING || state === TradeState.LOADING
   const isAmountPopulated = useIsAmountPopulated()
-
+  const { type: wrapType, loading: wrapLoading } = useWrapCallback()
   const caption = useMemo(() => {
     if (disabled) {
       return <Caption.ConnectWallet />
@@ -36,6 +37,9 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
+      if (wrapType !== WrapType.NOT_APPLICABLE) {
+        return <Caption.WrapCurrency wrapType={wrapType} loading={wrapLoading} />
+      }
       if (isRouteLoading) {
         return <Caption.LoadingTrade />
       }
@@ -51,7 +55,18 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
     }
 
     return <Caption.Empty />
-  }, [balance, chainId, disabled, inputCurrency, isAmountPopulated, isRouteLoading, outputCurrency, trade])
+  }, [
+    balance,
+    chainId,
+    disabled,
+    inputCurrency,
+    isAmountPopulated,
+    isRouteLoading,
+    outputCurrency,
+    trade,
+    wrapLoading,
+    wrapType,
+  ])
 
   return (
     <>

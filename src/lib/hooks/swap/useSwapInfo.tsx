@@ -17,7 +17,7 @@ import { useBestTrade } from './useBestTrade'
 interface SwapInfo {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
-  currencyAmounts: { [field in Field]?: CurrencyAmount<Currency> }
+  tradeCurrencyAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   trade: {
     trade?: InterfaceTrade<Currency, Currency, TradeType>
     state: TradeState
@@ -52,7 +52,7 @@ function useComputeSwapInfo(): SwapInfo {
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 
-  const isExactIn: boolean = independentField === Field.INPUT
+  const isExactIn = independentField === Field.INPUT
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
     [inputCurrency, isExactIn, outputCurrency, amount]
@@ -81,7 +81,7 @@ function useComputeSwapInfo(): SwapInfo {
     [relevantTokenBalances]
   )
 
-  const currencyAmounts = useMemo(
+  const tradeCurrencyAmounts = useMemo(
     () => ({
       [Field.INPUT]: trade.trade?.inputAmount,
       [Field.OUTPUT]: trade.trade?.outputAmount,
@@ -129,21 +129,21 @@ function useComputeSwapInfo(): SwapInfo {
     () => ({
       currencies,
       currencyBalances,
-      currencyAmounts,
       inputError,
       trade,
+      tradeCurrencyAmounts,
       allowedSlippage,
       feeOptions,
     }),
-    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage, feeOptions]
+    [currencies, currencyBalances, inputError, trade, tradeCurrencyAmounts, allowedSlippage, feeOptions]
   )
 }
 
 const swapInfoAtom = atom<SwapInfo>({
   currencies: {},
   currencyBalances: {},
-  currencyAmounts: {},
   trade: { state: TradeState.INVALID },
+  tradeCurrencyAmounts: {},
   allowedSlippage: new Percent(0),
   feeOptions: undefined,
 })

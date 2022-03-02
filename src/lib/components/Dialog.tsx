@@ -40,7 +40,10 @@ export function Provider({ value, children }: ProviderProps) {
     }
   }, [active])
   return (
-    <div ref={ref}>
+    <div
+      ref={ref}
+      style={{ isolation: 'isolate' }} // creates a new stacking context, preventing the dialog from intercepting non-dialog clicks
+    >
       <Context.Provider value={context}>{children}</Context.Provider>
     </div>
   )
