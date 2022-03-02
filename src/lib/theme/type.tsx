@@ -3,7 +3,7 @@ import { Text, TextProps as TextPropsWithCss } from 'rebass'
 import styled, { useTheme } from './styled'
 import { Color } from './theme'
 
-type TextProps = Omit<TextPropsWithCss, 'css' | 'color' | 'userSelect' | 'lineHeight'> & {
+type TextProps = Omit<TextPropsWithCss, 'css' | 'color' | 'userSelect'> & {
   color?: Color
   userSelect?: true
 }
