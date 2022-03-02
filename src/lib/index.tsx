@@ -1,5 +1,7 @@
 import Swap, { SwapProps } from './components/Swap'
 import Widget, { WidgetProps } from './components/Widget'
+export { darkTheme, lightTheme } from './theme'
+export type { Theme } from './theme/theme'
 export { SUPPORTED_LOCALES } from 'constants/locales'
 
 type SwapWidgetProps = SwapProps & WidgetProps
