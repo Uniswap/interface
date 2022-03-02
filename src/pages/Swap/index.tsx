@@ -54,6 +54,7 @@ import BlogNavigation from './../../components/LandingPageComponents/BlogNavigat
 import Hero from './../../components/LandingPageComponents/layout/Hero'
 import Footer from './../../components/LandingPageComponents/layout/Footer'
 import { SwapButton } from '../../components/swap/SwapButton'
+import { RecipientField } from '../../components/RecipientField'
 
 const SwitchIconContainer = styled.div`
   height: 0;
@@ -394,6 +395,7 @@ export default function Swap() {
                     </PaddedRowBetween>
                   </AutoColumn>
                 )}
+                {isExpertMode && <RecipientField />}
                 <div>
                   {!account ? (
                     <ButtonPrimary onClick={toggleWalletSwitcherPopover} disabled={networkSwitcherPopoverOpen}>
