@@ -20,6 +20,7 @@ import {
   SerializedPair,
   SerializedToken,
   updateHideClosedPositions,
+  updateShowDonationLink,
   updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -115,6 +116,19 @@ export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean)
     [dispatch]
   )
   return [showSurveyPopup, toggleShowSurveyPopup]
+}
+
+export function useShowDonationLink(): [boolean | undefined, (showDonationLink: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const showDonationLink = useAppSelector((state) => state.user.showDonationLink)
+
+  const toggleShowDonationLink = useCallback(
+    (showPopup: boolean) => {
+      dispatch(updateShowDonationLink({ showDonationLink: showPopup }))
+    },
+    [dispatch]
+  )
+  return [showDonationLink, toggleShowDonationLink]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {

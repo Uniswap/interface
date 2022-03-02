@@ -1,12 +1,14 @@
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 
 import { useActivePopups } from '../../state/application/hooks'
-import { useURLWarningVisible } from '../../state/user/hooks'
+import { useShowDonationLink, useURLWarningVisible } from '../../state/user/hooks'
 import { AutoColumn } from '../Column'
 import ClaimPopup from './ClaimPopup'
+import DonationLink from './DonationLink'
 import PopupItem from './PopupItem'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
@@ -14,7 +16,7 @@ const MobilePopupWrapper = styled.div<{ height: string | number }>`
   max-width: 100%;
   height: ${({ height }) => height};
   margin: ${({ height }) => (height ? '0 auto;' : 0)};
-  margin-bottom: ${({ height }) => (height ? '20px' : 0)}};
+  margin-bottom: ${({ height }) => (height ? '20px' : 0)};
 
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -55,6 +57,8 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: 
   }
 `
 
+const DONATION_END_TIMESTAMP = 1646864954 // Jan 15th
+
 export default function Popups() {
   // get all popups
   const activePopups = useActivePopups()
@@ -65,6 +69,12 @@ export default function Popups() {
   const { chainId } = useActiveWeb3React()
   const isNotOnMainnet = Boolean(chainId && chainId !== SupportedChainId.MAINNET)
 
+  // donation popup, hide if after fixed duration
+  const [donationVisible] = useShowDonationLink()
+  const timestamp = useCurrentBlockTimestamp()
+  const durationOver = timestamp ? timestamp.toNumber() > DONATION_END_TIMESTAMP : false
+  const showDonation = donationVisible !== false && !durationOver
+
   return (
     <>
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet}>
@@ -72,9 +82,11 @@ export default function Popups() {
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
+        {showDonation ? <DonationLink /> : null}
       </FixedPopupColumn>
-      <MobilePopupWrapper height={activePopups?.length > 0 ? 'fit-content' : 0}>
+      <MobilePopupWrapper height={activePopups?.length > 0 || showDonation ? 'fit-content' : 0}>
         <MobilePopupInner>
+          {showDonation ? <DonationLink /> : null}
           {activePopups // reverse so new items up front
             .slice(0)
             .reverse()
