@@ -12,7 +12,6 @@ import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
-import useOnSupportedNetwork from 'lib/hooks/useOnSupportedNetwork'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, Field } from 'lib/state/swap'
@@ -55,6 +54,11 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   useEffect(() => {
     setActiveTrade((activeTrade) => activeTrade && trade.trade)
   }, [trade])
+
+  // clear active trade on chain change
+  useEffect(() => {
+    setActiveTrade(undefined)
+  }, [chainId])
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
@@ -163,8 +167,6 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       })
   }, [addTransaction, inputCurrencyAmount, outputCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
 
-  const onSupportedNetwork = useOnSupportedNetwork()
-
   return (
     <>
       <ActionButton
@@ -174,7 +176,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       >
         <Trans>Review swap</Trans>
       </ActionButton>
-      {activeTrade && onSupportedNetwork && (
+      {activeTrade && (
         <Dialog color="dialog" onClose={() => setActiveTrade(undefined)}>
           <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
         </Dialog>
