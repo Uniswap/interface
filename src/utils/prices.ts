@@ -17,6 +17,7 @@ import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
 import Decimal from 'decimal.js-light'
 import { parseUnits } from 'ethers/lib/utils'
+import { ALLOWED_FIAT_PRICE_IMPACT_HIGH } from '../constants/index'
 
 const ONE_HUNDRED_PERCENT = new Percent(_10000, _10000)
 
@@ -94,6 +95,11 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return 3
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 2
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) return 1
+  return 0
+}
+
+export function warningFiatSeverity(priceImpact: Percent | undefined): 0 | 3 {
+  if (!priceImpact?.lessThan(ALLOWED_FIAT_PRICE_IMPACT_HIGH)) return 3
   return 0
 }
 

@@ -80,7 +80,7 @@ export default function Bridge() {
   const bridgeSummaries = useBridgeTransactionsSummary()
   const { chainId, partnerChainId, isArbitrum } = useChains()
   const [modalData, setModalStatus, setModalData] = useBridgeModal()
-  const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
+  const { bridgeCurrency, currencyBalance, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
   const {
     onCurrencySelection,
     onUserInput,
@@ -105,7 +105,6 @@ export default function Bridge() {
   const isCollectableFilter = txsFilter === BridgeTxsFilter.COLLECTABLE
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
-  const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
 
   useEffect(() => {
     if (!chainId || !partnerChainId) return
@@ -271,7 +270,6 @@ export default function Bridge() {
         <CurrencyInputPanel
           label="Amount"
           value={isCollecting ? collectableTx.value : typedValue}
-          showMaxButton={!isCollecting && !atMaxAmountInput}
           currency={bridgeCurrency}
           onUserInput={onUserInput}
           onMax={!isCollecting ? handleMaxInput : undefined}
