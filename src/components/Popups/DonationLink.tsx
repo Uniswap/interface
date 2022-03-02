@@ -20,7 +20,7 @@ const Wrapper = styled(AutoColumn)<{ darkMode: boolean }>`
   max-width: 360px;
   background: ${({ darkMode }) => (darkMode ? darkGradient : lightGradient)};
   color: ${({ theme }) => theme.text1};
-  z-index: ${Z_INDEX.fixed};
+  z-index: ${Z_INDEX.deprecated_content};
 
   :hover {
     opacity: 0.8;
@@ -43,7 +43,7 @@ const Wrapper = styled(AutoColumn)<{ darkMode: boolean }>`
     position: absolute;
     transform: rotate(25deg) translate(-140px, -60px);
     width: 300px;
-    z-index: 1;
+    z-index: ${Z_INDEX.deprecated_zero};
   }
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -53,7 +53,7 @@ const Wrapper = styled(AutoColumn)<{ darkMode: boolean }>`
 
 const WrappedCloseIcon = styled(X)`
   stroke: ${({ theme }) => theme.text2};
-  z-index: 2000;
+  z-index: ${Z_INDEX.tooltip};
   :hover {
     cursor: pointer;
     opacity: 0.8;
@@ -111,7 +111,7 @@ export default function DonationLink() {
       <RowBetween>
         <RowFixed>
           <StyledFlagImage />
-          <ThemedText.Body fontWeight={600} ml="6px" style={{ textDecoration: 'none' }}>
+          <ThemedText.Body fontWeight={600} ml="6px">
             <Trans>Donate to Ukraine</Trans>
           </ThemedText.Body>
         </RowFixed>
