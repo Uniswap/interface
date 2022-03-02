@@ -87,9 +87,9 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       disabled ||
       !chainId ||
       approvalState === ApproveOrPermitState.PENDING_SIGNATURE ||
-      !(inputCurrencyAmount && outputCurrencyAmount && inputCurrencyBalance) ||
+      !(inputCurrencyAmount && inputCurrencyBalance) ||
       (inputCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputCurrencyAmount)),
-    [approvalState, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance, outputCurrencyAmount]
+    [approvalState, chainId, disabled, inputCurrencyAmount, inputCurrencyBalance]
   )
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {

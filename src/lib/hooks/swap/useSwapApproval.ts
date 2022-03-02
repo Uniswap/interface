@@ -142,6 +142,7 @@ export enum ApproveOrPermitState {
   PENDING_APPROVAL,
   REQUIRES_SIGNATURE,
   PENDING_SIGNATURE,
+  APPROVED,
 }
 
 /**
@@ -178,7 +179,7 @@ export const useApproveOrPermit = (
       try {
         return await gatherPermitSignature()
       } catch (error) {
-        // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+        // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
         if (error?.code !== 4001) {
           return getApproval()
         }
@@ -201,7 +202,7 @@ export const useApproveOrPermit = (
     if (notApproved) {
       return ApproveOrPermitState.REQUIRES_APPROVAL
     }
-    return undefined
+    return ApproveOrPermitState.APPROVED
   }, [approval, gatherPermitSignature, notApproved, signatureState])
 
   return {
