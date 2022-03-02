@@ -10,7 +10,7 @@ import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
 import useTokenList, { useSyncTokenList } from 'lib/hooks/useTokenList'
 import { displayTxHashAtom } from 'lib/state/swap'
-import { SwapTransactionInfo, Transaction, TransactionType } from 'lib/state/transactions'
+import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
 import { useMemo, useState } from 'react'
 
 import Dialog from '../Dialog'
@@ -28,11 +28,17 @@ import Toolbar from './Toolbar'
 
 export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } | 'NATIVE'
 
-function getSwapTx(txs: { [hash: string]: Transaction }, hash?: string): Transaction<SwapTransactionInfo> | undefined {
+function getTransactionFromMap(
+  txs: { [hash: string]: Transaction },
+  hash?: string
+): Transaction<SwapTransactionInfo | WrapTransactionInfo> | undefined {
   if (hash) {
     const tx = txs[hash]
     if (tx?.info?.type === TransactionType.SWAP) {
       return tx as Transaction<SwapTransactionInfo>
+    }
+    if (tx?.info?.type === TransactionType.WRAP) {
+      return tx as Transaction<WrapTransactionInfo>
     }
   }
   return
@@ -59,7 +65,7 @@ export default function Swap(props: SwapProps) {
 
   const [displayTxHash, setDisplayTxHash] = useAtom(displayTxHashAtom)
   const pendingTxs = usePendingTransactions()
-  const displayTx = getSwapTx(pendingTxs, displayTxHash)
+  const displayTx = getTransactionFromMap(pendingTxs, displayTxHash)
 
   const tokenList = useTokenList()
   const isSwapSupported = useMemo(

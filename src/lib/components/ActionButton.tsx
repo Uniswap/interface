@@ -61,13 +61,12 @@ export interface Action {
   children: ReactNode
 }
 
-export interface ActionButtonProps {
+export interface BaseProps {
   color?: Color
-  disabled?: boolean
   action?: Action
-  onClick: () => void
-  children: ReactNode
 }
+
+export type ActionButtonProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
 export default function ActionButton({ color = 'accent', disabled, action, onClick, children }: ActionButtonProps) {
   const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])

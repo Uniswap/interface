@@ -41,9 +41,9 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const { i18n } = useLingui()
 
   const {
-    trade: { state: tradeState },
     currencyBalances: { [Field.OUTPUT]: balance },
-    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
+    trade: { state: tradeState },
+    tradeCurrencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
 
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
