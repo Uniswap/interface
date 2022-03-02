@@ -57,6 +57,11 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
     setActiveTrade((activeTrade) => activeTrade && trade.trade)
   }, [trade])
 
+  // clear active trade on chain change
+  useEffect(() => {
+    setActiveTrade(undefined)
+  }, [chainId])
+
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
     // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
