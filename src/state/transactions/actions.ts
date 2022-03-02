@@ -173,7 +173,7 @@ export interface BondTransactionInfo {
 export interface GenStakingTransactionInfo {
   type: TransactionType.GEN_STAKING
   amountStaked: number
-  stakedTo: string
+  stakedTo: string | undefined
 }
 
 export type TransactionInfo =

@@ -4,7 +4,7 @@ import { DarkCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Modal from 'components/Modal'
-import NumericalInput from 'components/NumericalInput'
+import { StyledCurrencyInput } from 'components/NumericalInput'
 import { FixedHeightRow } from 'components/PositionCard'
 import { AutoRow, RowBetween } from 'components/Row'
 import { DAO_BOND_DEPOSITORY } from 'constants/addresses'
@@ -32,11 +32,6 @@ const Section = styled(AutoColumn)`
   margin-bottom: 30px;
 `
 
-const StyledCurrencyInput = styled(NumericalInput)`
-  height: 50px;
-  border-radius: 16px;
-  padding: 0 15px;
-`
 export default function PurchaseBondModal({
   bond,
   isOpen,
