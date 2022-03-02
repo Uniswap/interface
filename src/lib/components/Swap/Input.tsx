@@ -46,17 +46,13 @@ export interface InputProps {
   focused: boolean
 }
 
-interface UseInputOutputFormattedFieldArguments {
+interface UseFormattedFieldAmountArguments {
   disabled: boolean
-  currencyAmount: CurrencyAmount<Currency> | undefined
-  fieldAmount: string | undefined
+  currencyAmount?: CurrencyAmount<Currency>
+  fieldAmount?: string
 }
 
-export function useInputOutputFormattedField({
-  disabled,
-  currencyAmount,
-  fieldAmount,
-}: UseInputOutputFormattedFieldArguments) {
+export function useFormattedFieldAmount({ disabled, currencyAmount, fieldAmount }: UseFormattedFieldAmountArguments) {
   return useMemo(() => {
     if (disabled) {
       return ''
@@ -107,7 +103,7 @@ export default function Input({ disabled, focused }: InputProps) {
     return insufficientBalance ? 'error' : undefined
   }, [balance, inputCurrencyAmount, swapInputCurrencyAmount])
 
-  const amount = useInputOutputFormattedField({
+  const amount = useFormattedFieldAmount({
     disabled,
     currencyAmount: inputCurrencyAmount,
     fieldAmount: swapInputAmount,

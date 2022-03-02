@@ -16,7 +16,7 @@ import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../Column'
 import Row from '../Row'
-import { Balance, InputProps, LoadingRow, useInputOutputFormattedField } from './Input'
+import { Balance, InputProps, LoadingRow, useFormattedFieldAmount } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
@@ -78,7 +78,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
     )
   }, [inputUSDC, outputUSDC])
 
-  const amount = useInputOutputFormattedField({
+  const amount = useFormattedFieldAmount({
     disabled,
     currencyAmount: outputCurrencyAmount,
     fieldAmount: swapOutputAmount,
