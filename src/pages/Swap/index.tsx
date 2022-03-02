@@ -41,6 +41,7 @@ import QuestionHelper from '../../components/QuestionHelper'
 import { ApplicationModal } from '../../state/application/actions'
 import { ReactComponent as SwapIcon } from '../../assets/svg/swap.svg'
 import { useUSDValue } from '../../hooks/useUSDValue'
+import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 
 // Landing Page Imports
 import './../../theme/landingPageTheme/stylesheet.css'
@@ -203,7 +204,6 @@ export default function Swap() {
   }, [approval, approvalSubmitted])
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT], chainId)
-  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
@@ -286,6 +286,10 @@ export default function Swap() {
 
   const fiatValueInput = useUSDValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDValue(parsedAmounts[Field.OUTPUT])
+  const priceImpact = useMemo(() => computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput), [
+    fiatValueInput,
+    fiatValueOutput
+  ])
 
   return (
     <>
@@ -320,9 +324,7 @@ export default function Swap() {
               <AutoColumn gap="12px">
                 <AutoColumn gap="3px">
                   <CurrencyInputPanel
-                    label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
                     value={formattedAmounts[Field.INPUT]}
-                    showMaxButton={!atMaxAmountInput}
                     currency={currencies[Field.INPUT]}
                     onUserInput={handleTypeInput}
                     onMax={handleMaxInput}
@@ -347,12 +349,11 @@ export default function Swap() {
                   <CurrencyInputPanel
                     value={formattedAmounts[Field.OUTPUT]}
                     onUserInput={handleTypeOutput}
-                    label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
-                    showMaxButton={false}
                     currency={currencies[Field.OUTPUT]}
                     onCurrencySelect={handleOutputSelect}
                     otherCurrency={currencies[Field.INPUT]}
                     fiatValue={fiatValueOutput}
+                    priceImpact={priceImpact}
                     showCommonBases
                     id="swap-currency-output"
                   />
