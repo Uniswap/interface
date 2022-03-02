@@ -14,7 +14,8 @@ const lightGradient = `radial-gradient(87.53% 3032.45% at 5.16% 10.13%, rgba(255
 
 const Wrapper = styled(AutoColumn)<{ darkMode: boolean }>`
   background: #edeef2;
-  position: relative;
+  position: fixed;
+  bottom: 40px;
   border-radius: 12px;
   padding: 18px;
   max-width: 360px;
@@ -31,6 +32,7 @@ const Wrapper = styled(AutoColumn)<{ darkMode: boolean }>`
   }
 
   overflow: hidden;
+
   :before {
     background-image: url(${FlagImage});
     background-repeat: no-repeat;
@@ -48,6 +50,11 @@ const Wrapper = styled(AutoColumn)<{ darkMode: boolean }>`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     max-width: 100%;
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    position: relative;
+    bottom: unset;
   `}
 `
 
@@ -111,7 +118,7 @@ export default function DonationLink() {
       <RowBetween>
         <RowFixed>
           <StyledFlagImage />
-          <ThemedText.Body fontWeight={600} ml="6px">
+          <ThemedText.Body fontWeight={600} fontSize={'18px'}>
             <Trans>Donate to Ukraine</Trans>
           </ThemedText.Body>
         </RowFixed>
@@ -124,7 +131,7 @@ export default function DonationLink() {
           }}
         />
       </RowBetween>
-      <ThemedText.Body fontWeight={400} fontSize="12px">
+      <ThemedText.Body fontWeight={400} fontSize="12px" color="text2">
         <Trans>Directly support the Ukrainian government by donating tokens.</Trans>
       </ThemedText.Body>
     </Wrapper>
