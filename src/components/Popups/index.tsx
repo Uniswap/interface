@@ -1,5 +1,6 @@
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 
@@ -67,7 +68,10 @@ export default function Popups() {
   const { chainId } = useActiveWeb3React()
   const isNotOnMainnet = Boolean(chainId && chainId !== SupportedChainId.MAINNET)
 
-  const [showDonation] = useShowDonationLink()
+  const location = useLocation()
+  const isOnSwapPage = location.pathname.includes('swap')
+  const [donationVisible] = useShowDonationLink()
+  const showDonation = donationVisible && isOnSwapPage
 
   return (
     <>
