@@ -12,6 +12,7 @@ import Rule from '../Rule'
 
 const HeaderIcon = styled(LargeIcon)`
   flex-grow: 1;
+  transition: height 0.25s, width 0.25s;
 
   svg {
     transition: height 0.25s, width 0.25s;
@@ -66,7 +67,7 @@ const ExpandoColumn = styled(Column)<{ open: boolean }>`
     transition: flex-grow 0.25s;
 
     ${Column} {
-      height: 100%;
+      height: 6.825em;
       padding: ${({ open }) => (open ? '0.5em 0' : 0)};
       transition: padding 0.25s;
 
