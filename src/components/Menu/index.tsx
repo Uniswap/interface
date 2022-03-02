@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import {
-  //  BookOpen,
+  BookOpen,
   Code,
   Info,
   MessageCircle,
@@ -20,13 +20,13 @@ export enum FlyoutAlignment {
   RIGHT = 'RIGHT',
 }
 
-const StyledMenuIcon = styled(MenuIcon)`
+export const StyledMenuIcon = styled(MenuIcon)`
   path {
     stroke: ${({ theme }) => theme.text1};
   }
 `
 
-const StyledMenuButton = styled.button`
+export const StyledMenuButton = styled.button`
   width: 100%;
   height: 100%;
   border: none;
@@ -51,7 +51,7 @@ const StyledMenuButton = styled.button`
   }
 `
 
-const StyledMenu = styled.div`
+export const StyledMenu = styled.div`
   margin-left: 0.5rem;
   display: flex;
   justify-content: center;
@@ -61,7 +61,7 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
+export const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 8.125rem;
   background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -87,7 +87,7 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   `};
 `
 
-const MenuItem = styled(ExternalLink)`
+export const MenuItem = styled(ExternalLink)`
   display: flex;
   flex: 1;
   flex-direction: row;
@@ -139,10 +139,10 @@ export default function Menu() {
             <Info size={14} />
             <div>About</div>
           </MenuItem>
-          {/* <MenuItem href="https://docs.uniswap.org/">
+          <MenuItem href="https://diffusion.gitbook.io/untitled/GXx8KsOHCFNEcZgOpj0b/">
             <BookOpen size={14} />
             <div>Docs</div>
-          </MenuItem> */}
+          </MenuItem>
           <MenuItem href={CODE_LINK}>
             <Code size={14} />
             <div>Code</div>
@@ -164,6 +164,7 @@ export default function Menu() {
 interface NewMenuProps {
   flyoutAlignment?: FlyoutAlignment
   ToggleUI?: React.FunctionComponent
+  toggleElementProps?: Record<string, any>
   menuItems: {
     content: any
     link: string
@@ -184,7 +185,14 @@ const ExternalMenuItem = styled(MenuItem)`
   text-decoration: none;
 `
 
-export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: NewMenuProps) => {
+export const NewMenu = ({
+  flyoutAlignment = FlyoutAlignment.RIGHT,
+  ToggleUI,
+  menuItems,
+
+  toggleElementProps,
+  ...rest
+}: NewMenuProps) => {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.POOL_OVERVIEW_OPTIONS)
   const toggle = useToggleModal(ApplicationModal.POOL_OVERVIEW_OPTIONS)
@@ -192,7 +200,7 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
   const ToggleElement = ToggleUI || StyledMenuIcon
   return (
     <StyledMenu ref={node as any} {...rest}>
-      <ToggleElement onClick={toggle} />
+      <ToggleElement onClick={toggle} {...toggleElementProps} />
       {open && (
         <NewMenuFlyout flyoutAlignment={flyoutAlignment}>
           {menuItems.map(({ content, link, external }, i) =>

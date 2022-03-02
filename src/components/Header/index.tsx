@@ -11,8 +11,9 @@ import Logo from '../../assets/logo'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
+// import { BridgeMenu } from '../Menu/BridgeMenu'
 
-// import { ExternalLink } from '../../theme'
+import { ExternalLink } from '../../theme'
 
 import { YellowCard } from '../Card'
 import Menu from '../Menu'
@@ -205,36 +206,37 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
-// const StyledExternalLink = styled(ExternalLink).attrs({
-//   activeClassName,
-// })<{ isActive?: boolean }>`
-//   ${({ theme }) => theme.flexRowNoWrap}
-//   align-items: left;
-//   border-radius: 3rem;
-//   outline: none;
-//   cursor: pointer;
-//   text-decoration: none;
-//   color: ${({ theme }) => theme.text2};
-//   font-size: 1rem;
-//   width: fit-content;
-//   margin: 0 12px;
-//   font-weight: 500;
-//
-//   &.${activeClassName} {
-//     border-radius: 12px;
-//     font-weight: 600;
-//     color: ${({ theme }) => theme.text1};
-//   }
+const StyledExternalLink = styled(ExternalLink).attrs({
+  activeClassName,
+})<{ isActive?: boolean }>`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: left;
+  border-radius: 3rem;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text2};
+  font-size: 1rem;
+  width: fit-content;
+  margin: 0 12px;
+  font-weight: 500;
 
-//   :hover,
-//   :focus {
-//     color: ${({ theme }) => darken(0.1, theme.text1)};
-//   }
-//
-//   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-//       display: none;
-// `}
-// `
+  &.${activeClassName} {
+    border-radius: 12px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.text1};
+  }
+
+  :hover,
+  :focus {
+    color: ${({ theme }) => darken(0.1, theme.text1)};
+    text-decoration: none;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+      display: none;
+`}
+`
 
 export const StyledMenuButton = styled.button`
   position: relative;
@@ -273,6 +275,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
+  // const [isBridgeOpen, setIsBridgeOpen] = useState(false)
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -309,9 +312,11 @@ export default function Header() {
         >
           {t('pool')}
         </StyledNavLink>
-        {/*<StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>*/}
-        {/*  Charts <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>*/}
-        {/*</StyledExternalLink>*/}
+        {/* <BridgeMenu /> */}
+
+        <StyledExternalLink id={`stake-nav-link`} href={'https://app.nomad.xyz/'}>
+          Bridge <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
+        </StyledExternalLink>
       </HeaderLinks>
       <HeaderControls>
         <HeaderElement>
