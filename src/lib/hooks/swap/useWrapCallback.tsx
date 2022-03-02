@@ -2,7 +2,6 @@ import { ContractTransaction } from '@ethersproject/contracts'
 import { useWETHContract } from 'hooks/useContract'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { WrapInputError } from 'lib/components/Swap/WrapErrorText'
 import { Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -18,19 +17,27 @@ export enum WrapType {
 }
 interface UseWrapCallbackReturns {
   callback: () => Promise<ContractTransaction>
-  error: WrapInputError
+  error: WrapError
   loading: boolean
   type: WrapType
 }
 
+export enum WrapError {
+  NO_ERROR = 0, // must be equal to 0 so all other errors are truthy
+  ENTER_NATIVE_AMOUNT,
+  ENTER_WRAPPED_AMOUNT,
+  INSUFFICIENT_NATIVE_BALANCE,
+  INSUFFICIENT_WRAPPED_BALANCE,
+}
+
 interface WrapState {
   loading: boolean
-  error: WrapInputError
+  error: WrapError
 }
 
 const wrapState = atom<WrapState>({
   loading: false,
-  error: WrapInputError.NO_ERROR,
+  error: WrapError.NO_ERROR,
 })
 
 export default function useWrapCallback(): UseWrapCallbackReturns {
@@ -82,16 +89,16 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
 
   useEffect(() => {
     if (sufficientBalance) {
-      setWrapState((state) => ({ ...state, error: WrapInputError.NO_ERROR }))
+      setWrapState((state) => ({ ...state, error: WrapError.NO_ERROR }))
     } else if (wrapType === WrapType.WRAP) {
       setWrapState((state) => ({
         ...state,
-        error: hasInputAmount ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE : WrapInputError.ENTER_NATIVE_AMOUNT,
+        error: hasInputAmount ? WrapError.INSUFFICIENT_NATIVE_BALANCE : WrapError.ENTER_NATIVE_AMOUNT,
       }))
     } else if (wrapType === WrapType.UNWRAP) {
       setWrapState((state) => ({
         ...state,
-        error: hasInputAmount ? WrapInputError.INSUFFICIENT_WRAPPED_BALANCE : WrapInputError.ENTER_WRAPPED_AMOUNT,
+        error: hasInputAmount ? WrapError.INSUFFICIENT_WRAPPED_BALANCE : WrapError.ENTER_WRAPPED_AMOUNT,
       }))
     }
   }, [hasInputAmount, setWrapState, sufficientBalance, wrapType])

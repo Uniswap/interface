@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useUpdateAtom } from 'jotai/utils'
-import { WrapErrorText, WrapInputError } from 'lib/components/Swap/WrapErrorText'
+import { WrapErrorText } from 'lib/components/Swap/WrapErrorText'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
 import useSwapApproval, {
   ApprovalState,
@@ -10,7 +10,7 @@ import useSwapApproval, {
   useSwapRouterAddress,
 } from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
-import useWrapCallback, { WrapType } from 'lib/hooks/swap/useWrapCallback'
+import useWrapCallback, { WrapError, WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
@@ -178,8 +178,8 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   }, [addTransaction, inputTradeCurrencyAmount, outputTradeCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
 
   const ButtonText = useCallback(() => {
-    if (wrapError !== WrapInputError.NO_ERROR) {
-      return <WrapErrorText wrapInputError={wrapError} />
+    if (wrapError !== WrapError.NO_ERROR) {
+      return <WrapErrorText wrapError={wrapError} />
     }
     switch (wrapType) {
       case WrapType.UNWRAP:
