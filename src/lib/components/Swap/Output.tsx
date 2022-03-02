@@ -5,7 +5,6 @@ import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
-import useInputOutputFieldAmount from 'lib/hooks/swap/useInputOutputFieldAmount'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
@@ -17,7 +16,7 @@ import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../Column'
 import Row from '../Row'
-import { Balance, InputProps, LoadingRow } from './Input'
+import { Balance, InputProps, LoadingRow, useInputOutputFormattedField } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
@@ -79,16 +78,11 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
     )
   }, [inputUSDC, outputUSDC])
 
-  const amount = useInputOutputFieldAmount(
-    useMemo(
-      () => ({
-        disabled,
-        currencyAmount: outputCurrencyAmount,
-        fieldAmount: swapOutputAmount,
-      }),
-      [disabled, outputCurrencyAmount, swapOutputAmount]
-    )
-  )
+  const amount = useInputOutputFormattedField({
+    disabled,
+    currencyAmount: outputCurrencyAmount,
+    fieldAmount: swapOutputAmount,
+  })
 
   return (
     <DynamicThemeProvider color={color}>

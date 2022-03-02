@@ -1,4 +1,5 @@
 import { useLingui } from '@lingui/react'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { loadingOpacityCss } from 'lib/css/loading'
 import {
@@ -8,7 +9,6 @@ import {
   useSwapCurrencyAmount,
   useSwapInfo,
 } from 'lib/hooks/swap'
-import useInputOutputFieldAmount from 'lib/hooks/swap/useInputOutputFieldAmount'
 import { usePrefetchCurrencyColor } from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
@@ -44,6 +44,31 @@ const InputColumn = styled(Column)<{ approved?: boolean }>`
 export interface InputProps {
   disabled: boolean
   focused: boolean
+}
+
+interface UseInputOutputFormattedFieldArguments {
+  disabled: boolean
+  currencyAmount: CurrencyAmount<Currency> | undefined
+  fieldAmount: string | undefined
+}
+
+export function useInputOutputFormattedField({
+  disabled,
+  currencyAmount,
+  fieldAmount,
+}: UseInputOutputFormattedFieldArguments) {
+  return useMemo(() => {
+    if (disabled) {
+      return ''
+    }
+    if (fieldAmount !== undefined) {
+      return fieldAmount
+    }
+    if (currencyAmount) {
+      return currencyAmount.toSignificant(6)
+    }
+    return ''
+  }, [disabled, currencyAmount, fieldAmount])
 }
 
 export default function Input({ disabled, focused }: InputProps) {
@@ -82,16 +107,11 @@ export default function Input({ disabled, focused }: InputProps) {
     return insufficientBalance ? 'error' : undefined
   }, [balance, inputCurrencyAmount, swapInputCurrencyAmount])
 
-  const amount = useInputOutputFieldAmount(
-    useMemo(
-      () => ({
-        disabled,
-        currencyAmount: inputCurrencyAmount,
-        fieldAmount: swapInputAmount,
-      }),
-      [disabled, inputCurrencyAmount, swapInputAmount]
-    )
-  )
+  const amount = useInputOutputFormattedField({
+    disabled,
+    currencyAmount: inputCurrencyAmount,
+    fieldAmount: swapInputAmount,
+  })
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>

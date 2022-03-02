@@ -70,20 +70,20 @@ export default function Swap(props: SwapProps) {
 
   const focused = useHasFocus(wrapper)
 
-  const interactionsDisabled = useMemo(() => !active || !onSupportedNetwork, [active, onSupportedNetwork])
+  const isInteractive = Boolean(active && onSupportedNetwork)
 
   return (
     <SwapPropValidator {...props}>
       {isSwapSupported && <SwapInfoUpdater />}
       <Header title={<Trans>Swap</Trans>}>
         {active && <Wallet disabled={!account} onClick={props.onConnectWallet} />}
-        <Settings disabled={interactionsDisabled} />
+        <Settings disabled={!isInteractive} />
       </Header>
       <div ref={setWrapper}>
         <BoundaryProvider value={wrapper}>
-          <Input disabled={interactionsDisabled} focused={focused} />
-          <ReverseButton disabled={interactionsDisabled} />
-          <Output disabled={interactionsDisabled} focused={focused}>
+          <Input disabled={!isInteractive} focused={focused} />
+          <ReverseButton disabled={!isInteractive} />
+          <Output disabled={!isInteractive} focused={focused}>
             <Toolbar disabled={!active} />
             <SwapButton disabled={!isSwapSupported} />
           </Output>
