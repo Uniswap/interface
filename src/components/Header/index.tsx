@@ -19,7 +19,6 @@ import { ExternalLink, ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
-import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import HolidayOrnament from './HolidayOrnament'
@@ -86,7 +85,7 @@ const HeaderElement = styled.div`
   `};
 `
 
-const HeaderLinks = styled(Row)`
+const HeaderLinks = styled.nav`
   justify-self: center;
   background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
@@ -98,8 +97,8 @@ const HeaderLinks = styled(Row)`
   overflow: auto;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    justify-self: start;  
-    `};
+    justify-self: start;
+  `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
   `};

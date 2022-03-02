@@ -38,7 +38,7 @@ const AppWrapper = styled.div`
   align-items: flex-start;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.main`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -52,7 +52,7 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div`
+const HeaderWrapper = styled.header`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   justify-content: space-between;
