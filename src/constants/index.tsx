@@ -358,6 +358,21 @@ export const NETWORK_OPTIONAL_DETAIL: { [chainId: number]: NetworkOptionalDetail
   }
 }
 
+export const ROUTABLE_PLATFORM_STYLE: {
+  [routablePaltformName: string]: { logo: string; alt: string; bgImage: string }
+} = {
+  [RoutablePlatform.UNISWAP.name]: { logo: UniswapLogo, alt: 'uniswap', bgImage: '' },
+  [RoutablePlatform.SUSHISWAP.name]: {
+    logo: SushiswapLogo,
+    alt: 'sushiswap',
+    bgImage: 'linear-gradient(90deg, #2E17F2 19.74%, #FB52A1 120.26%)'
+  },
+  [RoutablePlatform.SWAPR.name]: { logo: SwaprLogo, alt: 'swapr', bgImage: '' },
+  [RoutablePlatform.HONEYSWAP.name]: { logo: HoneyswapLogo, alt: 'honeyswap', bgImage: '' },
+  [RoutablePlatform.BAOSWAP.name]: { logo: BaoswapLogo, alt: 'baoswap', bgImage: '' },
+  [RoutablePlatform.LEVINSWAP.name]: { logo: LevinswapLogo, alt: 'levinswap', bgImage: '' }
+}
+
 export const ROUTABLE_PLATFORM_LOGO: { [routablePaltformName: string]: ReactNode } = {
   [RoutablePlatform.UNISWAP.name]: <img width={16} height={16} src={UniswapLogo} alt="uniswap" />,
   [RoutablePlatform.SUSHISWAP.name]: <img width={16} height={16} src={SushiswapLogo} alt="sushiswap" />,

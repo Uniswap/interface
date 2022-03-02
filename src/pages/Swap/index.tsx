@@ -1,6 +1,5 @@
 import { CurrencyAmount, JSBI, Trade, Token, RoutablePlatform } from '@swapr/sdk'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Text } from 'rebass'
 import styled from 'styled-components'
 import { ButtonError, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import Card from '../../components/Card'
@@ -51,6 +50,7 @@ import CommunityLinks from './../../components/LandingPageComponents/CommunityLi
 import BlogNavigation from './../../components/LandingPageComponents/BlogNavigation'
 import Hero from './../../components/LandingPageComponents/layout/Hero'
 import Footer from './../../components/LandingPageComponents/layout/Footer'
+import { SwapButton } from '../../components/swap/SwapButton'
 
 const SwitchIconContainer = styled.div`
   height: 0;
@@ -445,7 +445,7 @@ export default function Swap() {
                       </ButtonError>
                     </RowBetween>
                   ) : (
-                    <ButtonPrimary
+                    <SwapButton
                       onClick={() => {
                         if (isExpertMode) {
                           handleSwap()
@@ -461,15 +461,11 @@ export default function Swap() {
                       }}
                       id="swap-button"
                       disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                    >
-                      <Text>
-                        {swapInputError
-                          ? swapInputError
-                          : priceImpactSeverity > 3 && !isExpertMode
-                          ? `Price Impact Too High`
-                          : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                      </Text>
-                    </ButtonPrimary>
+                      platformName={trade?.platform.name}
+                      swapInputError={swapInputError}
+                      priceImpactSeverity={priceImpactSeverity}
+                      isExpertMode={isExpertMode}
+                    ></SwapButton>
                   )}
                   {showApproveFlow && (
                     <Column style={{ marginTop: '1rem' }}>
