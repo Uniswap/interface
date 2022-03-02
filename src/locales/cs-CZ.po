@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-28 19:11\n"
+"PO-Revision-Date: 2022-03-02 19:11\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -751,6 +751,8 @@ msgstr "Zadejte platnou adresu žetonu"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Zadejte částku {0}"
 
@@ -963,6 +965,8 @@ msgstr "Nedostatečná likvidita v poolu pro váš obchod"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -1704,6 +1708,10 @@ msgstr "Vyměňte <0/> za přesně <1/>"
 msgid "Swap Anyway"
 msgstr "Přesto prohodit"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "Výměna potvrzena"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "Vyměňte si detaily"
@@ -1716,6 +1724,10 @@ msgstr "Vyměňte přesně <0/> za <1/>"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Výměna se nezdařila: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "Čeká se na výměnu"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1910,6 +1922,10 @@ msgstr "Transakce odeslána"
 msgid "Transaction completed in"
 msgstr "Transakce dokončena v"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "Transakce potvrzena"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1923,10 +1939,6 @@ msgstr "Transakce čeká na vyřízení"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Transakce zamítnuta."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "Transakce odeslána"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2048,6 +2060,7 @@ msgstr "Nepodporovaná síť – přepněte na jinou a obchodujte."
 msgid "Untitled"
 msgstr "Nepojmenovaná"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Rozbalit"
@@ -2055,6 +2068,22 @@ msgstr "Rozbalit"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Rozbalte <0/> až {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "Rozbalení potvrzeno"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrap native currency."
+msgstr "Rozbalte nativní měnu."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "Rozbalení čeká na vyřízení"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrapping native currency."
+msgstr "Rozbalení nativní měny."
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2224,6 +2253,7 @@ msgstr "Výběr {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 vybráno!"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Zalomit"
@@ -2231,6 +2261,22 @@ msgstr "Zalomit"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Zabalit <0/> až {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "Zabalení potvrzeno"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrap native currency."
+msgstr "Zabalit nativní měnu."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "Čeká se na zabalení"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrapping native currency."
+msgstr "Balení nativní měny."
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

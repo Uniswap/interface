@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 07:31\n"
+"PO-Revision-Date: 2022-03-02 19:11\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -751,6 +751,8 @@ msgstr "输入有效的代币合约地址"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "输入 {0} 数量"
 
@@ -963,6 +965,8 @@ msgstr "你交易的币对流动性不足"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -1704,6 +1708,10 @@ msgstr "将约 <0/> 兑换成 <1/>"
 msgid "Swap Anyway"
 msgstr "仍要兑换"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "交换确认"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "交易详情"
@@ -1716,6 +1724,10 @@ msgstr "将恰好 <0/> 兑换成 <1/>"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "兑换失败： {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "交换待处理"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1910,6 +1922,10 @@ msgstr "已提交交易"
 msgid "Transaction completed in"
 msgstr "交易完成于"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "交易确认"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1923,10 +1939,6 @@ msgstr "交易等待中"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "交易被拒绝。"
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "已提交交易"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2048,6 +2060,7 @@ msgstr "不支持的网络 - 切换到其它网络进行交易。"
 msgid "Untitled"
 msgstr "无标题"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "展开"
@@ -2055,6 +2068,22 @@ msgstr "展开"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "将 <0/> 换回为 {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "打开包装确认"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrap native currency."
+msgstr "解开本国货币。"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "打开待处理"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrapping native currency."
+msgstr "解包本国货币。"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2224,6 +2253,7 @@ msgstr "赎回 {0} UNI-V2 流动池代币"
 msgid "Withdrew UNI-V2!"
 msgstr "已赎回 UNI-V2！"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "兑换"
@@ -2231,6 +2261,22 @@ msgstr "兑换"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "将 <0/> 换为 {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "包裹确认"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrap native currency."
+msgstr "包裹本国货币。"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "包裹待处理"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrapping native currency."
+msgstr "包装本国货币。"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

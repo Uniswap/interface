@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-28 19:11\n"
+"PO-Revision-Date: 2022-03-02 19:11\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -751,6 +751,8 @@ msgstr "유효한 토큰 주소를 입력하세요."
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "{0} 금액을 입력하세요"
 
@@ -963,6 +965,8 @@ msgstr "거래를 위한 풀의 유동성 부족"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -1704,6 +1708,10 @@ msgstr "<0/>을 정확히 <1/>로 바꿉니다."
 msgid "Swap Anyway"
 msgstr "어쨌든 스왑"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "스왑 확인됨"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "세부정보 교환"
@@ -1716,6 +1724,10 @@ msgstr "<1/>에 대해 정확히 <0/> 스왑"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "스왑 실패: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "스왑 보류"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1910,6 +1922,10 @@ msgstr "제출된 거래"
 msgid "Transaction completed in"
 msgstr "거래 완료"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "거래 확인됨"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1923,10 +1939,6 @@ msgstr "거래 보류 중"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "거래가 거부되었습니다."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "거래 제출"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2048,6 +2060,7 @@ msgstr "지원되지 않는 네트워크 - 거래하려면 다른 네트워크�
 msgid "Untitled"
 msgstr "제목 없음"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "언랩"
@@ -2055,6 +2068,22 @@ msgstr "언랩"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "<0/> 에서 {0}풀기"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "포장 풀기 확인"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrap native currency."
+msgstr "기본 통화 포장을 풉니다."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "언래핑 보류"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrapping native currency."
+msgstr "기본 통화 포장 풀기."
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2224,6 +2253,7 @@ msgstr "{0} UNI-V2 인출"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 인출!"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "랩"
@@ -2231,6 +2261,22 @@ msgstr "랩"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "<0/> 에서 {0}바꿈"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "랩 확인됨"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrap native currency."
+msgstr "기본 통화를 포장합니다."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "랩 대기 중"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrapping native currency."
+msgstr "기본 통화 래핑."
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

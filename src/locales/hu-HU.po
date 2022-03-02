@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-28 19:11\n"
+"PO-Revision-Date: 2022-03-02 19:11\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -751,6 +751,8 @@ msgstr "Adja meg az érvényes token címet"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Adjon meg {0} összeget"
 
@@ -964,6 +966,8 @@ msgstr "Nincs elegendő likviditás a poolban a kereskedéshez"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -1705,6 +1709,10 @@ msgstr "Cserélje le a <0/> pontot <1/> értékre"
 msgid "Swap Anyway"
 msgstr "Swap mindenképp"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "A csere megerősítve"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "Cserélje ki a részleteket"
@@ -1717,6 +1725,10 @@ msgstr "Pontosan cserélje ki a <0/> értéket a <1/> értékre"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "A csere nem sikerült: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "Csere függőben"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1911,6 +1923,10 @@ msgstr "Tranzakció benyújtva"
 msgid "Transaction completed in"
 msgstr "A tranzakció befejeződött"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "Az ügylet megerősítve"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1924,10 +1940,6 @@ msgstr "Tranzakció függőben"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "A tranzakció elutasítva."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "Tranzakció elküldve"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2049,6 +2061,7 @@ msgstr "Nem támogatott hálózat – váltson másikra a kereskedéshez."
 msgid "Untitled"
 msgstr "Névtelen"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Kicsomagolás"
@@ -2056,6 +2069,22 @@ msgstr "Kicsomagolás"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Kicsomagolás <0/> tól {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "Kibontás megerősítve"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrap native currency."
+msgstr "Bontsa ki a natív valutát."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "Felbontás függőben"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrapping native currency."
+msgstr "A natív valuta kibontása."
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2225,6 +2254,7 @@ msgstr "{0} UNI-V2 visszavonása"
 msgid "Withdrew UNI-V2!"
 msgstr "Visszavonta az UNI-V2-t!"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Becsomagolás"
@@ -2232,6 +2262,22 @@ msgstr "Becsomagolás"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Tekerje <0/> tól {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "Wrap megerősítve"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrap native currency."
+msgstr "Wrap natív valuta."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "Becsomagolás függőben"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrapping native currency."
+msgstr "A natív valuta csomagolása."
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

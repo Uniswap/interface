@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-28 19:11\n"
+"PO-Revision-Date: 2022-03-02 19:11\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -751,6 +751,8 @@ msgstr "Inserisci un indirizzo di token valido"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Inserisci {0} importo"
 
@@ -963,6 +965,8 @@ msgstr "Liquidità insufficiente nel pool per il tuo trade"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -1704,6 +1708,10 @@ msgstr "Scambia <0/> con esattamente <1/>"
 msgid "Swap Anyway"
 msgstr "Scambia Comunque"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "Scambio confermato"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "Scambia i dettagli"
@@ -1716,6 +1724,10 @@ msgstr "Scambia esattamente <0/> con <1/>"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Scambio fallito: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "Scambio in attesa"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1910,6 +1922,10 @@ msgstr "Transazione Inviata"
 msgid "Transaction completed in"
 msgstr "Transazione completata in"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "Transazione confermata"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1923,10 +1939,6 @@ msgstr "Transazione in sospeso"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Transazione rifiutata."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "Transazione inviata"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2048,6 +2060,7 @@ msgstr "Rete non supportata: passa a un'altra per fare trading."
 msgid "Untitled"
 msgstr "Senza titolo"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
@@ -2055,6 +2068,22 @@ msgstr "Unwrap"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Scarta da <0/> a {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "Scarto confermato"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrap native currency."
+msgstr "Scartare la valuta nativa."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "Scartare in attesa"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrapping native currency."
+msgstr "Scartare la valuta nativa."
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2224,6 +2253,7 @@ msgstr "Ritiro {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 ritirato!"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Avvolgi"
@@ -2231,6 +2261,22 @@ msgstr "Avvolgi"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Avvolgi da <0/> a {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "Avvolgimento confermato"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrap native currency."
+msgstr "Avvolgi la valuta nativa."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "Avvolgimento in attesa"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrapping native currency."
+msgstr "Avvolgimento della valuta nativa."
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
