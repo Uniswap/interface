@@ -312,7 +312,7 @@ function Header() {
           />
           <UnsupportedNetworkPopover show={isUnsupportedNetworkModal}>
             {isUnsupportedChainIdError ? (
-              <Amount zero={true}>{'UNSUPPORTED NETWORK'}</Amount>
+              <Amount zero>{'UNSUPPORTED NETWORK'}</Amount>
             ) : (
               <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
                 {!account ? (

@@ -14,20 +14,18 @@ interface UnsupportedNetworkPopoverProps {
   parentRef?: RefObject<HTMLElement>
 }
 
-export default function UnsupportedNetworkPopover({ children, show, parentRef }: UnsupportedNetworkPopoverProps) {
+export default function UnsupportedNetworkPopover({ children, show }: UnsupportedNetworkPopoverProps) {
   const closeModals = useCloseModals()
   const popoverRef = useRef(null)
 
-  useOnClickOutside(parentRef || popoverRef, () => {
-    if (show) closeModals()
-  })
+  useOnClickOutside(popoverRef, show ? closeModals : undefined)
 
   return (
     <StyledPopover
       placement="bottom-end"
       show={show}
       content={
-        <View>
+        <View ref={popoverRef}>
           <Row>
             <Text>Please use our network switcher and switch to a supported network.</Text>
             <CloseIcon onClick={closeModals} />
