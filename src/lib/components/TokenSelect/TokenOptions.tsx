@@ -73,7 +73,6 @@ const TokenBalance = styled.div<{ isLoading: boolean }>`
   background-color: ${({ theme, isLoading }) => isLoading && theme.secondary};
   border-radius: 0.25em;
   padding: 0.375em 0;
-  width: 1.5em;
 `
 
 function TokenOption({ index, value, style }: TokenOptionProps) {
