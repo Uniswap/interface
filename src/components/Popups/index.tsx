@@ -1,6 +1,5 @@
 import { SupportedChainId } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 
@@ -21,6 +20,7 @@ const MobilePopupWrapper = styled.div<{ height: string | number }>`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: block;
+    padding-top: 20px;
   `};
 `
 
@@ -57,8 +57,6 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: 
   }
 `
 
-const DONATION_END_TIMESTAMP = 1646864954 // Jan 15th
-
 export default function Popups() {
   // get all popups
   const activePopups = useActivePopups()
@@ -69,11 +67,7 @@ export default function Popups() {
   const { chainId } = useActiveWeb3React()
   const isNotOnMainnet = Boolean(chainId && chainId !== SupportedChainId.MAINNET)
 
-  // donation popup, hide if after fixed duration
-  const [donationVisible] = useShowDonationLink()
-  const timestamp = useCurrentBlockTimestamp()
-  const durationOver = timestamp ? timestamp.toNumber() > DONATION_END_TIMESTAMP : false
-  const showDonation = donationVisible !== false && !durationOver
+  const [showDonation] = useShowDonationLink()
 
   return (
     <>

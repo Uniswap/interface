@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import FlagImage from 'assets/images/ukraine.png'
 import { AutoColumn } from 'components/Column'
-import { RowFixed } from 'components/Row'
+import { RowBetween, RowFixed } from 'components/Row'
 import { X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useDarkModeManager, useShowDonationLink } from 'state/user/hooks'
@@ -20,6 +20,11 @@ const Wrapper = styled(AutoColumn)<{ darkMode: boolean }>`
   max-width: 360px;
   background: ${({ darkMode }) => (darkMode ? darkGradient : lightGradient)};
   color: ${({ theme }) => theme.text1};
+  z-index: ${Z_INDEX.fixed};
+
+  :hover {
+    opacity: 0.8;
+  }
 
   & > * {
     z-index: ${Z_INDEX.fixed};
@@ -47,13 +52,8 @@ const Wrapper = styled(AutoColumn)<{ darkMode: boolean }>`
 `
 
 const WrappedCloseIcon = styled(X)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 20px;
-  height: 20px;
   stroke: ${({ theme }) => theme.text2};
-  z-index: ${Z_INDEX.popover};
+  z-index: 2000;
   :hover {
     cursor: pointer;
     opacity: 0.8;
@@ -86,35 +86,46 @@ export const StyledFlagImage = styled.div`
   transform: rotate(90deg);
 `
 
+const StyledLink = styled(ExternalLink)`
+  text-decoration: none !important;
+`
+
 export default function DonationLink() {
   const [darkMode] = useDarkModeManager()
   const [, setVisible] = useShowDonationLink()
 
   return (
-    <Wrapper gap="10px" darkMode={darkMode}>
-      <WrappedCloseIcon
-        onClick={() => {
-          setVisible(false)
-        }}
-      />
-      <ExternalLink
-        href="https://donate.uniswap.org/#/swap"
-        onClickCapture={() => {
-          ReactGA.event({
-            category: 'Donate',
-            action: 'Link to Ukraine site.',
-          })
-        }}
-      >
+    <Wrapper
+      gap="10px"
+      darkMode={darkMode}
+      as={StyledLink}
+      target="https://donate.uniswap.org/#/swap"
+      href="https://donate.uniswap.org/#/swap"
+      onClickCapture={() => {
+        ReactGA.event({
+          category: 'Donate',
+          action: 'Link to Ukraine site.',
+        })
+      }}
+    >
+      <RowBetween>
         <RowFixed>
           <StyledFlagImage />
-          <ThemedText.Body fontWeight={600} ml="6px">
-            <Trans>Donate directly to Ukraine ↗</Trans>
+          <ThemedText.Body fontWeight={600} ml="6px" style={{ textDecoration: 'none' }}>
+            <Trans>Donate to Ukraine</Trans>
           </ThemedText.Body>
         </RowFixed>
-      </ExternalLink>
+        <WrappedCloseIcon
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            setVisible(false)
+            return false
+          }}
+        />
+      </RowBetween>
       <ThemedText.Body fontWeight={400} fontSize="12px">
-        <Trans>Donate any token directly to the Ukrainian government through a special swap app.</Trans>
+        <Trans>Directly support the Ukrainian government by donating tokens.</Trans>
       </ThemedText.Body>
     </Wrapper>
   )
