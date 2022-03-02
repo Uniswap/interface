@@ -81,10 +81,12 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
       : null
 
     return (
-      <Row gap={0.25} style={{ userSelect: 'text' }}>
-        {ratio}
-        {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
-      </Row>
+      <ThemedText.Caption userSelect>
+        <Row gap={0.25}>
+          {ratio}
+          {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
+        </Row>
+      </ThemedText.Caption>
     )
   }, [executionPrice, fiatValueInput, fiatValueOutput, flip, inputAmount, outputAmount])
 

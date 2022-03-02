@@ -3,12 +3,17 @@ import { Text, TextProps as TextPropsWithCss } from 'rebass'
 import styled, { useTheme } from './styled'
 import { Color } from './theme'
 
-type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { color?: Color }
+type TextProps = Omit<TextPropsWithCss, 'css' | 'color' | 'userSelect' | 'lineHeight'> & {
+  color?: Color
+  userSelect?: true
+}
 
-const TextWrapper = styled(Text)<{ color?: Color; lineHeight: string }>`
+const TextWrapper = styled(Text)<{ color?: Color; lineHeight: string; userSelect?: true }>`
   color: ${({ color = 'currentColor', theme }) => theme[color as Color]};
   // Avoid the need for placeholders by setting min-height to line-height.
   min-height: ${({ lineHeight }) => lineHeight};
+  // user-select must be configured through styled-components for cross-browser compat.
+  user-select: ${({ userSelect }) => userSelect && 'text'};
 `
 
 const TransitionTextWrapper = styled(TextWrapper)`
