@@ -14,12 +14,12 @@ import {
 import { useTradeExactOutAllPlatforms } from './Trades'
 import { tryParseAmount } from '../state/swap/hooks'
 import { ChainId } from '@swapr/sdk'
-import { USDC } from '../constants/index'
+import { USDC, DAI } from '../constants/index'
 import { useActiveWeb3React } from './index'
 import { useMemo } from 'react'
 
 const STABLECOIN_OUT: { [chainId: number]: Token } = {
-  [ChainId.MAINNET]: USDC[ChainId.MAINNET],
+  [ChainId.MAINNET]: DAI,
   [ChainId.ARBITRUM_ONE]: USDC[ChainId.ARBITRUM_ONE],
   [ChainId.XDAI]: USDC[ChainId.XDAI]
 }
@@ -30,9 +30,9 @@ const ALLOWED_PLATAFORMS: { [chainId: number]: string[] } = {
   [ChainId.XDAI]: [RoutablePlatform.SUSHISWAP.name]
 }
 
-const AMOUNT_OUT = '1000'
+const AMOUNT_OUT = '1'
 
-export function useUSDPrice(currency?: Currency) {
+export function useUSDPrice(currency?: Currency, selectedTrade?: Trade) {
   const { chainId } = useActiveWeb3React()
   const stablecoin = chainId ? STABLECOIN_OUT[chainId] : undefined
   const parsedAmountOut = tryParseAmount(AMOUNT_OUT, stablecoin, chainId)
@@ -44,8 +44,11 @@ export function useUSDPrice(currency?: Currency) {
 
     if (currencyEquals(currency, stablecoin)) return new Price(currency, currency, '1', '1')
 
-    const allowHighTVLPlataforms = (trade: Trade | undefined) =>
-      trade && ALLOWED_PLATAFORMS[chainId].includes(trade.platform.name)
+    const allowHighTVLPlataforms = (trade: Trade | undefined) => {
+      if (!trade) return false
+      if (selectedTrade) return selectedTrade.platform.name === trade.platform.name
+      else return ALLOWED_PLATAFORMS[chainId].includes(trade.platform.name)
+    }
 
     const calculateBestPrice = (trades: (Trade | undefined)[]): Price | undefined => {
       if (!trades || !trades.length) return undefined
@@ -63,11 +66,11 @@ export function useUSDPrice(currency?: Currency) {
     }
 
     return calculateBestPrice(tradeExactOutAllPlatforms)
-  }, [chainId, currency, stablecoin, tradeExactOutAllPlatforms])
+  }, [chainId, currency, selectedTrade, stablecoin, tradeExactOutAllPlatforms])
 }
 
-export function useUSDValue(currencyAmount: CurrencyAmount | undefined | null) {
-  const price = useUSDPrice(currencyAmount?.currency)
+export function useUSDValue(currencyAmount: CurrencyAmount | undefined | null, selectedTrade?: Trade) {
+  const price = useUSDPrice(currencyAmount?.currency, selectedTrade)
 
   return useMemo(() => {
     if (!price || !currencyAmount) return null

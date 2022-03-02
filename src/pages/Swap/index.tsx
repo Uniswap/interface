@@ -284,8 +284,8 @@ export default function Swap() {
 
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
 
-  const fiatValueInput = useUSDValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useUSDValue(parsedAmounts[Field.OUTPUT])
+  const fiatValueInput = useUSDValue(parsedAmounts[Field.INPUT], trade)
+  const fiatValueOutput = useUSDValue(parsedAmounts[Field.OUTPUT], trade)
   const priceImpact = useMemo(() => computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput), [
     fiatValueInput,
     fiatValueOutput
