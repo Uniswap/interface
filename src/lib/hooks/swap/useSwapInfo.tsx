@@ -52,7 +52,7 @@ function useComputeSwapInfo(): SwapInfo {
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 
-  const isExactIn: boolean = independentField === Field.INPUT
+  const isExactIn = independentField === Field.INPUT
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
     [inputCurrency, isExactIn, outputCurrency, amount]

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { useERC20PermitFromTrade } from 'hooks/useERC20Permit'
 import { useUpdateAtom } from 'jotai/utils'
+import { WrapErrorText, WrapInputError } from 'lib/components/Swap/WrapErrorText'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
 import useSwapApproval, {
   ApprovalState,
@@ -9,7 +10,7 @@ import useSwapApproval, {
   useSwapRouterAddress,
 } from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
-import useWrapCallback, { WrapErrorText, WrapInputError, WrapType } from 'lib/hooks/swap/useWrapCallback'
+import useWrapCallback, { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { useAddTransaction } from 'lib/hooks/transactions'
 import { usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
