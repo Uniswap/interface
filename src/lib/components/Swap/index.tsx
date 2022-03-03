@@ -3,7 +3,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { useAtom } from 'jotai'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
 import useSyncConvenienceFee, { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
-import useSyncTokenAmounts, { DefaultTokenAmounts } from 'lib/hooks/swap/useSyncTokenAmounts'
+import useSyncTokenDefaults, { TokenDefaults } from 'lib/hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
@@ -42,14 +42,14 @@ function getTransactionFromMap(
   return
 }
 
-export interface SwapProps extends DefaultTokenAmounts, FeeOptions {
+export interface SwapProps extends TokenDefaults, FeeOptions {
   tokenList?: string | TokenInfo[]
   onConnectWallet?: () => void
 }
 
 export default function Swap(props: SwapProps) {
   useSyncTokenList(props.tokenList)
-  useSyncTokenAmounts(props)
+  useSyncTokenDefaults(props)
   useSyncConvenienceFee(props)
 
   const { active, account } = useActiveWeb3React()

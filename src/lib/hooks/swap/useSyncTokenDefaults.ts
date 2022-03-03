@@ -8,7 +8,7 @@ import { useCallback, useLayoutEffect, useState } from 'react'
 
 export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } | 'NATIVE'
 
-export interface DefaultTokenAmounts {
+export interface TokenDefaults {
   defaultInputTokenAddress?: DefaultAddress
   defaultInputAmount?: number | string
   defaultOutputTokenAddress?: DefaultAddress
@@ -32,12 +32,12 @@ function useDefaultToken(
   return token
 }
 
-export default function useSyncTokenAmounts({
+export default function useSyncTokenDefaults({
   defaultInputTokenAddress,
   defaultInputAmount,
   defaultOutputTokenAddress,
   defaultOutputAmount,
-}: DefaultTokenAmounts) {
+}: TokenDefaults) {
   const updateSwap = useUpdateAtom(swapAtom)
   const { chainId } = useActiveWeb3React()
   const defaultInputToken = useDefaultToken(defaultInputTokenAddress, chainId)

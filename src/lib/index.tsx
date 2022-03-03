@@ -3,7 +3,7 @@ import Widget, { WidgetProps } from './components/Widget'
 
 export type { ErrorHandler } from './components/Error/ErrorBoundary'
 export type { FeeOptions } from './hooks/swap/useSyncConvenienceFee'
-export type { DefaultAddress, DefaultTokenAmounts } from './hooks/swap/useSyncTokenAmounts'
+export type { DefaultAddress, TokenDefaults } from './hooks/swap/useSyncTokenDefaults'
 export type { Theme } from './theme'
 export { darkTheme, lightTheme } from './theme'
 export type { Provider as EthersProvider } from '@ethersproject/abstract-provider'
