@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -192,6 +192,10 @@ msgstr "주소에 사용 가능한 청구가 없습니다."
 msgid "Against"
 msgstr "반대"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "허용하다"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP 토큰 마이그레이션 허용"
@@ -203,6 +207,10 @@ msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁�
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Uniswap 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "먼저 {0} 허용"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

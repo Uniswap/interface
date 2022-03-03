@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -192,6 +192,10 @@ msgstr "ที่อยู่ไม่มีการอ้างสิทธิ
 msgid "Against"
 msgstr "ขัดต่อ"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "อนุญาต"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "อนุญาตให้ย้ายโทเค็น LP"
@@ -203,6 +207,10 @@ msgstr "อนุญาตให้ทำการซื้อขายที่
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "อนุญาตให้ Uniswap Protocol ใช้ {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "ให้ {0} ก่อน"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
