@@ -66,6 +66,12 @@ msgstr "<0>dmm.exchange is now <1>KyberSwap.com</1>! Click <2>here</2> to learn 
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "A portion of each trade that will goes to liquidity providers as a protocol incentive."
+msgstr "A portion of each trade that will goes to liquidity providers as a protocol incentive."
+
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
@@ -701,6 +707,12 @@ msgstr "Farm"
 msgid "Farming Pools"
 msgstr "Farming Pools"
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Fee"
+msgstr "Fee"
+
 #: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "Fee (24h)"
@@ -882,6 +894,10 @@ msgstr "Input is estimated. You will sell at most"
 
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient Liquidity in the Liquidity Pool to Swap"
 msgstr "Insufficient Liquidity in the Liquidity Pool to Swap"
 
@@ -896,19 +912,12 @@ msgstr "Insufficient W{0} balance"
 msgid "Insufficient balance"
 msgstr "Insufficient balance"
 
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-msgid "Insufficient liquidity available. Please reload page and try again"
-msgstr "Insufficient liquidity available. Please reload page and try again"
-
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient liquidity available. Please reload page and try again!"
 msgstr "Insufficient liquidity available. Please reload page and try again!"
 
@@ -1300,6 +1309,10 @@ msgstr "Please check the <0>Active Farms</0> or come back later."
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "Please connect to the appropriate network."
+
+#: src/pages/CreatePool/index.tsx
+msgid "Please select fee"
+msgstr "Please select fee"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Please type the word 'confirm' below to enable Advanced Mode"

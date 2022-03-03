@@ -18,7 +18,7 @@ import {
   TokenAmount,
   WETH
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES, AMP_HINT } from 'constants/index'
+import { ZAP_ADDRESSES, AMP_HINT, FEE_OPTIONS } from 'constants/index'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
@@ -606,17 +606,29 @@ const ZapIn = ({
                         <AutoRow>
                           <Text fontWeight={500} fontSize={12} color={theme.subText}>
                             <UppercaseText>
-                              <Trans>Dynamic Fee Range</Trans>
+                              {chainId && FEE_OPTIONS[chainId] ? <Trans>Fee</Trans> : <Trans>Dynamic Fee Range</Trans>}
                             </UppercaseText>
                           </Text>
                           <QuestionHelper
-                            text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
+                            text={
+                              chainId && FEE_OPTIONS[chainId]
+                                ? t`A portion of each trade that will goes to liquidity providers as a protocol incentive.`
+                                : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`
+                            }
                           />
                         </AutoRow>
                         <Text fontWeight={400} fontSize={14} color={theme.text}>
-                          {feeRangeCalc(
-                            !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
-                          )}
+                          {chainId && FEE_OPTIONS[chainId]
+                            ? pair?.fee
+                              ? +new Fraction(pair.fee)
+                                  .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
+                                  .toSignificant(6) *
+                                  100 +
+                                '%'
+                              : ''
+                            : feeRangeCalc(
+                                !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
+                              )}
                         </Text>
                       </DynamicFeeRangeWrapper>
                     )}

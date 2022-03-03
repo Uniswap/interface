@@ -67,6 +67,8 @@ import {
 } from './styleds'
 import { ButtonEmpty } from 'components/Button'
 import { FooterSocialLink } from 'components/Footer/Footer'
+// import Bttc from 'components/Icons/Bttc'
+import Arbitrum from 'components/Icons/Arbitrum'
 
 const KNC_NOT_AVAILABLE_IN = [ChainId.CRONOS, ChainId.AVAXMAINNET, ChainId.FANTOM, ChainId.BTTC, ChainId.ARBITRUM]
 
@@ -282,6 +284,8 @@ function About() {
             <Avalanche />
             <Fantom />
             <Cronos />
+            {/* <Bttc /> */}
+            <Arbitrum />
           </SupportedChain>
 
           <Flex
@@ -454,7 +458,7 @@ function About() {
 
                     <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
                       <Text fontWeight="600" fontSize="24px">
-                        46+
+                        48+
                       </Text>
                       <Text color={theme.subText} marginTop="4px" fontSize="14px">
                         <Trans>DEXs</Trans>
@@ -774,22 +778,20 @@ function About() {
               <div>
                 <CronosLogoFull color={isDarkMode ? undefined : '#142564'} />
               </div>
-              {/* TODO:  Temporary hide to merge main
-                <div>
+              <div>
                 <img
                   src={require(`../../assets/images/Arbitrum_HorizontalLogo${isDarkMode ? '-dark' : ''}.svg`)}
                   alt=""
                   width="100%"
                 />
               </div>
-              <div>
-                <img
-                  src={require(`../../assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`)}
-                  alt=""
-                  width="100%"
-                />
-              </div>
-              */}
+              {/* <div> */}
+              {/*   <img */}
+              {/*     src={require(`../../assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`)} */}
+              {/*     alt="" */}
+              {/*     width="100%" */}
+              {/*   /> */}
+              {/* </div> */}
             </Powered>
           </Text>
         </Wrapper>

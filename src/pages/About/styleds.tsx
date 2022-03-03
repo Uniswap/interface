@@ -21,6 +21,10 @@ export const SupportedChain = styled.div`
   justify-content: center;
   gap: 20px;
   margin-top: 24px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    gap: 12px
+  `}
 `
 
 export const BtnOutlined = styled(ButtonOutlined)`
@@ -193,7 +197,6 @@ export const FooterContainer = styled.div`
   `};
 `
 
-// TODO: change this
 export const Powered = styled.div`
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

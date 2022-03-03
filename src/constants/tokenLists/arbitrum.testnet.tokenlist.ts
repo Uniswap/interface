@@ -26,7 +26,7 @@ export const ARBITRUM_TESTNET_TOKEN_LIST = {
     },
     {
       chainId: 421611,
-      address: '0x93D51226c4C3c265ca0c2F6420fa4c6A9151c09e',
+      address: '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
       symbol: 'WETH',
       name: 'Wrapped Ether',
       decimals: 18

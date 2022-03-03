@@ -21,9 +21,11 @@ import {
   KNC,
   AGGREGATION_EXECUTOR,
   DEFAULT_GAS_LIMIT_MARGIN,
-  CLAIM_REWARD_SC_ADDRESS
+  CLAIM_REWARD_SC_ADDRESS,
+  FEE_OPTIONS
 } from '../constants'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
+import ROUTER_ABI_WITHOUT_DYNAMIC_FEE from '../constants/abis/dmm-router-without-dynamic-fee.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
 import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
@@ -221,7 +223,12 @@ export function getContractForReading(address: string, ABI: any, library: ethers
 
 // account is optional
 export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
+  return getContract(
+    ROUTER_ADDRESSES[chainId],
+    FEE_OPTIONS[chainId] ? ROUTER_ABI_WITHOUT_DYNAMIC_FEE : ROUTER_ABI,
+    library,
+    account
+  )
 }
 
 export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, account?: string): Contract {

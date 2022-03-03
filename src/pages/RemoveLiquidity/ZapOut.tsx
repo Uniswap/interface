@@ -18,7 +18,7 @@ import {
   TokenAmount,
   WETH
 } from '@dynamic-amm/sdk'
-import { ZAP_ADDRESSES } from 'constants/index'
+import { ZAP_ADDRESSES, FEE_OPTIONS } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -175,6 +175,7 @@ export default function ZapOut({
       return approveCallback()
     }
 
+    const isWithoutDynamicFee = !!(chainId && FEE_OPTIONS[chainId])
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account)
 
@@ -185,7 +186,7 @@ export default function ZapOut({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'KyberDMM LP',
+      name: !isWithoutDynamicFee ? 'KyberDMM LP' : 'KyberSwap LP',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -350,8 +351,11 @@ export default function ZapOut({
               console.error(`estimateGas failed`, methodName, args, err)
             }
 
-            if (err.message.includes('INSUFFICIENT_OUTPUT_AMOUNT')) {
-              setZapOutError(t`Insufficient liquidity available. Please reload page and try again!`)
+            if (
+              err.message.includes('INSUFFICIENT_OUTPUT_AMOUNT') ||
+              err?.data?.message?.includes('INSUFFICIENT_OUTPUT_AMOUNT')
+            ) {
+              setZapOutError(t`Insufficient Liquidity in the Liquidity Pool to Swap`)
             } else {
               setZapOutError(err?.message)
             }
@@ -396,7 +400,7 @@ export default function ZapOut({
           }
 
           if (err.message.includes('INSUFFICIENT_OUTPUT_AMOUNT')) {
-            setZapOutError(t`Insufficient liquidity available. Please reload page and try again`)
+            setZapOutError(t`Insufficient Liquidity in the Liquidity Pool to Swap`)
           } else {
             setZapOutError(err?.message)
           }

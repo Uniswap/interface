@@ -17,10 +17,12 @@ import { setError, setLoading, updatePools } from './actions'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { useETHPrice, useExchangeClient } from 'state/application/hooks'
+import { FEE_OPTIONS } from 'constants/index'
 
 export interface SubgraphPoolData {
   id: string
   amp: string
+  fee: number
   reserve0: string
   reserve1: string
   vReserve0: string
@@ -261,18 +263,20 @@ export async function getBulkPoolDataWithPagination(
     } else {
       const [{ number: b1 }] = blocks
 
+      const withoutDynamicFee = !!(chainId && FEE_OPTIONS[chainId])
+
       const [oneDayResult, current] = await Promise.all(
         [b1]
           .map(async block => {
             const result = apolloClient.query({
-              query: POOLS_HISTORICAL_BULK_WITH_PAGINATION(first, skip, block),
+              query: POOLS_HISTORICAL_BULK_WITH_PAGINATION(first, skip, block, withoutDynamicFee),
               fetchPolicy: 'network-only'
             })
             return result
           })
           .concat(
             apolloClient.query({
-              query: POOLS_BULK_WITH_PAGINATION(first, skip),
+              query: POOLS_BULK_WITH_PAGINATION(first, skip, withoutDynamicFee),
               fetchPolicy: 'network-only'
             })
           )
@@ -329,7 +333,7 @@ export function usePoolCountInSubgraph(): number {
         query: POOL_COUNT,
         fetchPolicy: 'network-only'
       })
-      setPoolCount(result.data.dmmFactories[0].poolCount)
+      setPoolCount(result?.data.dmmFactories[0]?.poolCount || 0)
     }
 
     getPoolCount()

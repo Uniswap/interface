@@ -66,6 +66,12 @@ msgstr ""
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr ""
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "A portion of each trade that will goes to liquidity providers as a protocol incentive."
+msgstr ""
+
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
@@ -701,6 +707,12 @@ msgstr ""
 msgid "Farming Pools"
 msgstr ""
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Fee"
+msgstr ""
+
 #: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr ""
@@ -882,6 +894,10 @@ msgstr ""
 
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient Liquidity in the Liquidity Pool to Swap"
 msgstr ""
 
@@ -896,19 +912,12 @@ msgstr ""
 msgid "Insufficient balance"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-msgid "Insufficient liquidity available. Please reload page and try again"
-msgstr ""
-
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient liquidity available. Please reload page and try again!"
 msgstr ""
 
@@ -1299,6 +1308,10 @@ msgstr ""
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "Please select fee"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx

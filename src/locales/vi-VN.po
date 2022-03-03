@@ -66,6 +66,12 @@ msgstr "<0>dmm.exchange bây giờ là <1>KyberSwap.com</1>! Bấm vào <2>đây
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "Một phần phí của mỗi giao dịch ({0}%) sẽ được chuyển đến các nhà cung cấp thanh khoản nhằm khuyến khích phát triển giao thức."
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "A portion of each trade that will goes to liquidity providers as a protocol incentive."
+msgstr ""
+
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
@@ -701,6 +707,12 @@ msgstr "Farm"
 msgid "Farming Pools"
 msgstr ""
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Fee"
+msgstr ""
+
 #: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "Phí (24h)"
@@ -882,6 +894,10 @@ msgstr "Đầu vào được ước tính. Bạn sẽ bán với giá tốt nh�
 
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient Liquidity in the Liquidity Pool to Swap"
 msgstr "Không đủ thanh khoản trong Pool này để Swap"
 
@@ -896,19 +912,12 @@ msgstr "Thanh khoản W{0} không đủ"
 msgid "Insufficient balance"
 msgstr "Không đủ thanh khoản"
 
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-msgid "Insufficient liquidity available. Please reload page and try again"
-msgstr "Không đủ thanh khoản. Vui lòng tải lại trang và thử lại"
-
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient liquidity available. Please reload page and try again!"
 msgstr "Không đủ thanh khoản. Vui lòng tải lại trang và thử lại!"
 
@@ -1300,6 +1309,10 @@ msgstr "Vui lòng kiểm tra <0>Farm đang hiệu lực</0> hoặc quay lại sa
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "Vui lòng kết nối với mạng thích hợp."
+
+#: src/pages/CreatePool/index.tsx
+msgid "Please select fee"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Please type the word 'confirm' below to enable Advanced Mode"

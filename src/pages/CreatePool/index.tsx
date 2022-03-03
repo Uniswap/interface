@@ -69,6 +69,8 @@ export default function CreatePool({
   const currencyB = useCurrency(currencyIdB)
   const [selectedFee, setSelectedFee] = useState(FEE_OPTIONS[chainId as ChainId]?.[0])
 
+  const withoutDynamicFee = !!chainId && !!FEE_OPTIONS[chainId]
+
   const { pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
 
   const currencyAIsETHER = !!(chainId && currencyA && currencyEquals(currencyA, ETHER))
@@ -181,7 +183,9 @@ export default function CreatePool({
       method = router.addLiquidityNewPoolETH
       args = [
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-        ampConvertedInBps.toSignificant(5), //ampBps
+        withoutDynamicFee
+          ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
+          : ampConvertedInBps.toSignificant(5), //ampBps
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
@@ -195,7 +199,9 @@ export default function CreatePool({
       args = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
         wrappedCurrency(currencyB, chainId)?.address ?? '',
-        ampConvertedInBps.toSignificant(5), //ampBps
+        withoutDynamicFee
+          ? [ampConvertedInBps.toSignificant(5), selectedFee.toString()]
+          : ampConvertedInBps.toSignificant(5), //ampBps
         parsedAmountA.raw.toString(),
         parsedAmountB.raw.toString(),
         amountsMin[Field.CURRENCY_A].toString(),
@@ -208,7 +214,7 @@ export default function CreatePool({
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit =>
+      .then(estimatedGasLimit => {
         method(...args, {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
@@ -232,7 +238,7 @@ export default function CreatePool({
             setTxHash(response.hash)
           }
         })
-      )
+      })
       .catch(error => {
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
@@ -643,7 +649,10 @@ export default function CreatePool({
                         expertMode ? onAdd() : setShowConfirm(true)
                       }}
                       disabled={
-                        !isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED
+                        !isValid ||
+                        approvalA !== ApprovalState.APPROVED ||
+                        approvalB !== ApprovalState.APPROVED ||
+                        (withoutDynamicFee ? !selectedFee : false)
                       }
                       error={
                         !isValid &&
@@ -653,7 +662,12 @@ export default function CreatePool({
                       }
                     >
                       <Text fontSize={20} fontWeight={500}>
-                        {error ?? (+amp < 1 ? t`Enter amp (>=1)` : t`Create`)}
+                        {error ??
+                          (+amp < 1
+                            ? t`Enter amp (>=1)`
+                            : withoutDynamicFee && !selectedFee
+                            ? t`Please select fee`
+                            : t`Create`)}
                       </Text>
                     </ButtonError>
                   </AutoColumn>

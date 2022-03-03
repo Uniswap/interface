@@ -8,7 +8,7 @@ import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Percent, Token, WETH } from '@dynamic-amm/sdk'
-import { ROUTER_ADDRESSES } from 'constants/index'
+import { ROUTER_ADDRESSES, FEE_OPTIONS } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -142,6 +142,8 @@ export default function TokenPair({
       return approveCallback()
     }
 
+    const isWithoutDynamicFee = !!(chainId && FEE_OPTIONS[chainId])
+
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account)
 
@@ -152,7 +154,7 @@ export default function TokenPair({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'KyberDMM LP',
+      name: !isWithoutDynamicFee ? 'KyberDMM LP' : 'KyberSwap LP',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address

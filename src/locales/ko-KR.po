@@ -66,6 +66,12 @@ msgstr ""
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "각 거래량의 일부가({0}%) 프로토콜 인센티브로써 유동성 공급자에게 전달됩니다."
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "A portion of each trade that will goes to liquidity providers as a protocol incentive."
+msgstr ""
+
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
@@ -701,6 +707,12 @@ msgstr "시골에 살고 있음"
 msgid "Farming Pools"
 msgstr ""
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Fee"
+msgstr ""
+
 #: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "수수료(24시간)"
@@ -882,6 +894,10 @@ msgstr "예상된 입력값입니다"
 
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient Liquidity in the Liquidity Pool to Swap"
 msgstr "교환할 유동성 풀의 유동성 부족"
 
@@ -896,19 +912,12 @@ msgstr "W{0} 잔고 부족"
 msgid "Insufficient balance"
 msgstr "잔액 불충분"
 
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-msgid "Insufficient liquidity available. Please reload page and try again"
-msgstr "사용 가능한 유동성이 부족합니다. 페이지를 새로고침하고 다시 시도하십시오"
-
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient liquidity available. Please reload page and try again!"
 msgstr "사용 가능한 유동성이 부족합니다. 페이지를 새로고침하고 다시 시도하세요!"
 
@@ -1300,6 +1309,10 @@ msgstr ""
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "올바른 네트워크에 연결하십시오."
+
+#: src/pages/CreatePool/index.tsx
+msgid "Please select fee"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Please type the word 'confirm' below to enable Advanced Mode"

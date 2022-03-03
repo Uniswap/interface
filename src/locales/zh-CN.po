@@ -66,6 +66,12 @@ msgstr ""
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "每笔交易的一部分费用({0}%) 作为协议激励给流动性提供者。"
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "A portion of each trade that will goes to liquidity providers as a protocol incentive."
+msgstr ""
+
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
@@ -701,6 +707,12 @@ msgstr "挖矿"
 msgid "Farming Pools"
 msgstr ""
 
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Fee"
+msgstr ""
+
 #: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "费用(24小时)"
@@ -882,6 +894,10 @@ msgstr "输入估计。 您最多会卖出"
 
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient Liquidity in the Liquidity Pool to Swap"
 msgstr "流动性池中的流动性不足，无法进行兑换"
 
@@ -896,19 +912,12 @@ msgstr "不足 W{0} 余额"
 msgid "Insufficient balance"
 msgstr "余额不足"
 
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-msgid "Insufficient liquidity available. Please reload page and try again"
-msgstr "可用的流动性不足。请重新加载页面并再次尝试"
-
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
-#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Insufficient liquidity available. Please reload page and try again!"
 msgstr "可用的流动性不足。请重新加载页面并再次尝试!"
 
@@ -1300,6 +1309,10 @@ msgstr ""
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "请连接到适当的网络。"
+
+#: src/pages/CreatePool/index.tsx
+msgid "Please select fee"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Please type the word 'confirm' below to enable Advanced Mode"
