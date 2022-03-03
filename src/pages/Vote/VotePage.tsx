@@ -150,7 +150,7 @@ export default function VotePage({
 
   const { chainId, account } = useActiveWeb3React()
 
-  const quorum = useQuorum(parsedGovernorIndex)
+  const quorumAmount = useQuorum(parsedGovernorIndex)
 
   // get data for this specific proposal
   const proposalData: ProposalData | undefined = useProposalData(parsedGovernorIndex, id)
@@ -326,8 +326,10 @@ export default function VotePage({
                     {proposalData && (
                       <ThemedText.Black fontWeight={600}>
                         {proposalData.forCount.toFixed(0, { groupSeparator: ',' })}
-                        {quorum && (
-                          <span style={{ fontWeight: 400 }}>{` / ${quorum.toExact({ groupSeparator: ',' })}`}</span>
+                        {quorumAmount && (
+                          <span style={{ fontWeight: 400 }}>{` / ${quorumAmount.toExact({
+                            groupSeparator: ',',
+                          })}`}</span>
                         )}
                       </ThemedText.Black>
                     )}
