@@ -83,7 +83,7 @@ function colors(darkMode: boolean): Colors {
     primary2: '#A76BFF',
     primary3: '#BD90FF',
     primary4: '#9D9DCB70',
-    primary5: '#CACAEE70',
+    primary5: '#443D6270',
 
     // color text
     primaryText1: '#5090ea',
@@ -108,7 +108,7 @@ function colors(darkMode: boolean): Colors {
     warning: '#FF8F00',
 
     // dont wanna forget these blue yet
-    blue4: '#CACAEE70',
+    blue4: '#443D6270',
   }
 }
 
