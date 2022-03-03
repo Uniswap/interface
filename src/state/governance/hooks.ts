@@ -15,6 +15,7 @@ import {
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
 } from 'constants/addresses'
+import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -39,19 +40,19 @@ import { VoteOption } from './types'
 const { abi: GOVERNANCE_ABI } = GovernorAlphaJson
 const { abi: UNI_ABI } = UniJson
 
-export function useGovernanceV0Contract(): Contract | null {
+function useGovernanceV0Contract(): Contract | null {
   return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GOVERNANCE_ABI, false)
 }
 
-export function useGovernanceV1Contract(): Contract | null {
+function useGovernanceV1Contract(): Contract | null {
   return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GOVERNANCE_ABI, false)
 }
 
-export function useGovernanceBravoContract(): Contract | null {
+function useGovernanceBravoContract(): Contract | null {
   return useContract(GOVERNANCE_BRAVO_ADDRESSES, GOVERNOR_BRAVO_ABI, true)
 }
 
-export const useLatestGovernanceContract = useGovernanceBravoContract
+const useLatestGovernanceContract = useGovernanceBravoContract
 
 export function useUniContract() {
   const { chainId } = useActiveWeb3React()
@@ -310,6 +311,17 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
 export function useProposalData(governorIndex: number, id: string): ProposalData | undefined {
   const { data } = useAllProposalData()
   return data.filter((p) => p.governorIndex === governorIndex)?.find((p) => p.id === id)
+}
+
+export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefined {
+  const latestGovernanceContract = useLatestGovernanceContract()
+  const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
+  const { chainId } = useActiveWeb3React()
+  const uni = chainId ? UNI[chainId] : undefined
+
+  if (!latestGovernanceContract || !quorumVotes || !uni || governorIndex !== LATEST_GOVERNOR_INDEX) return undefined
+
+  return CurrencyAmount.fromRawAmount(uni, quorumVotes)
 }
 
 // get the users delegatee if it exists

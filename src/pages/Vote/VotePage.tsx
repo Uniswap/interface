@@ -34,6 +34,7 @@ import {
   ProposalData,
   ProposalState,
   useProposalData,
+  useQuorum,
   useUserDelegatee,
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
@@ -146,10 +147,14 @@ export default function VotePage({
     params: { governorIndex, id },
   },
 }: RouteComponentProps<{ governorIndex: string; id: string }>) {
+  const parsedGovernorIndex = Number.parseInt(governorIndex)
+
   const { chainId, account } = useActiveWeb3React()
 
+  const quorum = useQuorum(parsedGovernorIndex)
+
   // get data for this specific proposal
-  const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(governorIndex), id)
+  const proposalData: ProposalData | undefined = useProposalData(parsedGovernorIndex, id)
 
   // update vote option based on button interactions
   const [voteOption, setVoteOption] = useState<VoteOption | undefined>(undefined)
@@ -321,9 +326,14 @@ export default function VotePage({
                     <ThemedText.Black fontWeight={600}>
                       <Trans>For</Trans>
                     </ThemedText.Black>
-                    <ThemedText.Black fontWeight={600}>
-                      {proposalData?.forCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </ThemedText.Black>
+                    {proposalData && (
+                      <ThemedText.Black fontWeight={600}>
+                        {proposalData.forCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        {quorum && (
+                          <span style={{ fontWeight: 400 }}>{` / ${quorum.toExact({ groupSeparator: ',' })}`}</span>
+                        )}
+                      </ThemedText.Black>
+                    )}
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
@@ -338,9 +348,11 @@ export default function VotePage({
                     <ThemedText.Black fontWeight={600}>
                       <Trans>Against</Trans>
                     </ThemedText.Black>
-                    <ThemedText.Black fontWeight={600}>
-                      {proposalData?.againstCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </ThemedText.Black>
+                    {proposalData && (
+                      <ThemedText.Black fontWeight={600}>
+                        {proposalData.againstCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                      </ThemedText.Black>
+                    )}
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
