@@ -3,12 +3,18 @@ import { Text, TextProps as TextPropsWithCss } from 'rebass'
 import styled, { useTheme } from './styled'
 import { Color } from './theme'
 
-type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { color?: Color }
+type TextProps = Omit<TextPropsWithCss, 'css' | 'color' | 'userSelect'> & {
+  color?: Color
+  userSelect?: true
+}
 
-const TextWrapper = styled(Text)<{ color?: Color; lineHeight: string; noWrap?: true }>`
+const TextWrapper = styled(Text)<{ color?: Color; lineHeight: string; noWrap?: true; userSelect?: true }>`
   color: ${({ color = 'currentColor', theme }) => theme[color as Color]};
   // Avoid the need for placeholders by setting min-height to line-height.
   min-height: ${({ lineHeight }) => lineHeight};
+  // user-select is set to 'none' at the root element (Widget), but is desired for displayed data.
+  // user-select must be configured through styled-components for cross-browser compat (eg to auto-generate prefixed properties).
+  user-select: ${({ userSelect }) => userSelect && 'text'};
   white-space: ${({ noWrap }) => noWrap && 'nowrap'};
 `
 

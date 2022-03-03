@@ -26,7 +26,7 @@ interface DetailProps {
 
 function Detail({ label, value, color }: DetailProps) {
   return (
-    <ThemedText.Caption>
+    <ThemedText.Caption userSelect>
       <Row gap={2}>
         <span>{label}</span>
         <Value color={color}>{value}</Value>

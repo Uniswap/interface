@@ -22,7 +22,7 @@ import Row from '../Row'
 import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
-export const LoadingRow = styled(Row)<{ $loading: boolean }>`
+export const USDC = styled(Row)`
   ${loadingOpacityCss};
 `
 
@@ -120,12 +120,12 @@ export default function Input({ disabled, focused }: InputProps) {
         onChangeCurrency={updateSwapInputCurrency}
         loading={isLoading}
       >
-        <ThemedText.Body2 color="secondary">
+        <ThemedText.Body2 color="secondary" userSelect>
           <Row>
-            <LoadingRow $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</LoadingRow>
+            <USDC $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</USDC>
             {balance && (
               <Balance color={balanceColor} focused={focused}>
-                Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
               </Balance>
             )}
           </Row>
