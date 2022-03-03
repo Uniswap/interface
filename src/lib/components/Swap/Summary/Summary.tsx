@@ -38,13 +38,13 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
     <Column justify="flex-start">
       <Row gap={0.375} justify="flex-start">
         <TokenImg token={input.currency} />
-        <ThemedText.Body2>
+        <ThemedText.Body2 userSelect>
           {formatCurrencyAmount(input, 6, i18n.locale)} {input.currency.symbol}
         </ThemedText.Body2>
       </Row>
       {usdc && usdcAmount && (
         <Row justify="flex-start">
-          <ThemedText.Caption color="secondary">
+          <ThemedText.Caption color="secondary" userSelect>
             ${formatCurrencyAmount(usdcAmount, 2, i18n.locale)}
             {change && <Percent gain={change > 0}> {percent}</Percent>}
           </ThemedText.Caption>

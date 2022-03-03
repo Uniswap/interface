@@ -16,7 +16,7 @@ import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../Column'
 import Row from '../Row'
-import { Balance, InputProps, LoadingRow, useFormattedFieldAmount } from './Input'
+import { Balance, InputProps, USDC, useFormattedFieldAmount } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
@@ -100,14 +100,14 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
           onChangeCurrency={updateSwapOutputCurrency}
           loading={isLoading}
         >
-          <ThemedText.Body2 color="secondary">
+          <ThemedText.Body2 color="secondary" userSelect>
             <Row>
-              <LoadingRow gap={0.5} $loading={isLoading}>
+              <USDC gap={0.5} $loading={isLoading}>
                 {outputUSDC ? `$${outputUSDC.toFixed(2)}` : '-'} {priceImpact}
-              </LoadingRow>
+              </USDC>
               {balance && (
                 <Balance focused={focused}>
-                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                  Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
                 </Balance>
               )}
             </Row>
