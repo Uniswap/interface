@@ -83,7 +83,7 @@ export default function ConfirmSwapModal({
         feeConfig={feeConfig}
       />
     ) : null
-  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade, feeConfig])
 
   const nativeInput = useCurrencyConvertedToNative(trade?.inputAmount?.currency)
   const nativeOutput = useCurrencyConvertedToNative(trade?.outputAmount?.currency)

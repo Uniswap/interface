@@ -1,7 +1,7 @@
 import Divider from 'components/Divider'
 import React, { useEffect, useState, useMemo } from 'react'
 import { Flex, Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import useTheme from 'hooks/useTheme'
 import { VerticalDivider } from 'pages/About/styleds'
@@ -9,7 +9,7 @@ import { useActiveWeb3React } from 'hooks'
 import { ButtonPrimary } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
 import FarmingPoolsToggle from 'components/Toggle/FarmingPoolsToggle'
-import { ArrowRight, ChevronDown, ChevronsDown, ChevronUp } from 'react-feather'
+import { ArrowRight, ChevronDown } from 'react-feather'
 import TokensSelect from './TokensSelect'
 import Slider from 'components/Slider'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
@@ -236,7 +236,11 @@ export default function CreateReferral() {
                   <br />
                   <br />
                   Read more{' '}
-                  <a href="https://docs.kyberswap.com/guides/referral-fee-program/index.html" target="_blank">
+                  <a
+                    href="https://docs.kyberswap.com/guides/referral-fee-program/index.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     here
                   </a>
                 </Trans>
@@ -309,7 +313,10 @@ export default function CreateReferral() {
             <Flex marginBottom="12px" justifyContent="space-between">
               <Text fontSize={16} lineHeight="20px" color={theme.text}>
                 <Trans>Include Chain</Trans>
-                <InfoHelper size={14} text={t`You can include the chain in your referral link`} />
+                <InfoHelper
+                  size={14}
+                  text={t`You can include the chain in your referral link so referees are automatically re-directed to this network on KyberSwap. You will still earn commission on trades that are made on other chains and use your referral link`}
+                />
               </Text>
               <FarmingPoolsToggle isActive={isShowChain} toggle={() => setIsShowChain(prev => !prev)} />
             </Flex>
@@ -320,6 +327,7 @@ export default function CreateReferral() {
                     <>
                       <Flex alignItems="center">
                         <img
+                          alt=""
                           src={NETWORK_ICON[chainId]}
                           style={{ height: '20px', width: '20px', marginRight: '8px' }}
                         />
@@ -332,7 +340,10 @@ export default function CreateReferral() {
                 <Flex marginBottom={isShowTokens ? '12px' : '28px'} justifyContent="space-between">
                   <Text fontSize={16} lineHeight="20px" color={theme.text}>
                     <Trans>Include Tokens</Trans>
-                    <InfoHelper size={14} text={t`You can include the tokens to swap in your referral link`} />
+                    <InfoHelper
+                      size={14}
+                      text={t`You can also include tokens to swap in your referral link so that referees are automatically re-directed to selected chain and selected tokens are also populated for the swap. You will still earn commission on other token swaps if they use your referral link.`}
+                    />
                   </Text>
                   <FarmingPoolsToggle isActive={isShowTokens} toggle={() => setIsShowTokens(prev => !prev)} />
                 </Flex>

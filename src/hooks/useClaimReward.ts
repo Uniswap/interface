@@ -27,8 +27,8 @@ export default function useClaimReward() {
   const updateRewardAmounts = useCallback(() => {
     setRewardAmounts('0')
     setIsUserHasReward(!!userReward)
-    if (rewardContract && chainId) {
-      rewardContract.getClaimedAmounts(data.phaseId || 0, account || '', data?.tokens || []).then((res: any) => {
+    if (rewardContract && chainId && userReward) {
+      rewardContract.getClaimedAmounts(data?.phaseId || 0, account || '', data?.tokens || []).then((res: any) => {
         if (res) {
           const remainAmounts = BigNumber.from(userReward.amounts[0])
             .sub(BigNumber.from(res[0]))
@@ -44,7 +44,7 @@ export default function useClaimReward() {
     if (data && chainId && account && library && userReward) {
       updateRewardAmounts()
     }
-  }, [data, chainId, account, library, rewardContract, userReward])
+  }, [data, chainId, account, library, rewardContract, userReward, updateRewardAmounts])
 
   const addTransactionWithType = useTransactionAdder()
   const [attemptingTxn, setAttemptingTxn] = useState(false)
@@ -58,15 +58,22 @@ export default function useClaimReward() {
         .filter(item => item.type === 'Claim reward' && !item.receipt)[0],
     [allTransactions]
   )
+  const resetTxn = useCallback(() => {
+    setAttemptingTxn(false)
+    setTxHash(undefined)
+    updateRewardAmounts()
+    setError(null)
+  }, [updateRewardAmounts])
+
   const hasPendingTx = !!tx
   useEffect(() => {
     if (!hasPendingTx) {
       resetTxn()
     }
-  }, [hasPendingTx])
+  }, [hasPendingTx, resetTxn])
 
   const claimRewardsCallback = useCallback(() => {
-    if (rewardContract && chainId && account && library && data) {
+    if (rewardContract && chainId && account && library && data && userReward) {
       setAttemptingTxn(true)
       //execute isValidClaim method to pre-check
       rewardContract
@@ -116,13 +123,20 @@ export default function useClaimReward() {
           setError(err.message || t`Something is wrong. Please try again later!`)
         })
     }
-  }, [rewardContract, chainId, account, library, data, rewardAmounts])
-  const resetTxn = () => {
-    setAttemptingTxn(false)
-    setTxHash(undefined)
-    updateRewardAmounts()
-    setError(null)
-  }
+  }, [
+    rewardContract,
+    chainId,
+    account,
+    library,
+    data,
+    rewardAmounts,
+    userReward,
+    userReward?.amounts,
+    userReward?.index,
+    userReward?.proof,
+    addTransactionWithType
+  ])
+
   return {
     isUserHasReward,
     rewardAmounts,
