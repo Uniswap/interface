@@ -55,9 +55,7 @@ export default function PurchaseBondModal({
   async function handleApprove() {
     try {
       await approveCallback()
-    } catch (error) {
-      console.log('ERROR ON APPROVE: ', error)
-    }
+    } catch (error) {}
   }
 
   const handlePurchase = async () => {

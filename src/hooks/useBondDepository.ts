@@ -102,7 +102,6 @@ export function useGetAllBonds() {
       try {
         setBonds(await getMarkets())
       } catch (err) {
-        console.log('ERROR: ', err)
         setError(err.message)
       } finally {
         setIsLoading(false)

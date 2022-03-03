@@ -27,7 +27,7 @@ export const S_GEN = new Token(
 export const G_GEN = new Token(
   SupportedChainId.POLYGON_MUMBAI,
   G_GEN_ADDRESS[SupportedChainId.POLYGON_MUMBAI],
-  9,
+  18,
   'G_GEN',
   'gGEN'
 )

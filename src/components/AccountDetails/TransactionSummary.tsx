@@ -102,10 +102,10 @@ function ApprovalSummary({ info }: { info: ApproveTransactionInfo }) {
   return <Trans>Approve {token?.symbol}</Trans>
 }
 
-function GenStakingSummary({ info: { amountStaked, stakedTo } }: { info: GenStakingTransactionInfo }) {
+function GenStakingSummary({ info: { amountStaked, stakedTo, op } }: { info: GenStakingTransactionInfo }) {
   return (
     <Trans>
-      {amountStaked} GEN staked to {stakedTo}
+      {amountStaked} GEN {op} {op === 'staked' ? 'to' : 'from'} {stakedTo}
     </Trans>
   )
 }

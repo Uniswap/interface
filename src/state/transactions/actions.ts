@@ -174,6 +174,7 @@ export interface GenStakingTransactionInfo {
   type: TransactionType.GEN_STAKING
   amountStaked: number
   stakedTo: string | undefined
+  op: string
 }
 
 export type TransactionInfo =
