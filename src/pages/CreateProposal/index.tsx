@@ -23,6 +23,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
 import { CreateProposalTabs } from '../../components/NavigationTabs'
+import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
 import { ProposalActionDetail } from './ProposalActionDetail'
@@ -88,8 +89,7 @@ export default function CreateProposal() {
   const { account, chainId } = useActiveWeb3React()
 
   const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
-  // the first argument below should be the index of the latest governor
-  const latestProposalData = useProposalData(/* governorIndex */ 2, latestProposalId)
+  const latestProposalData = useProposalData(LATEST_GOVERNOR_INDEX, latestProposalId)
   const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
 
