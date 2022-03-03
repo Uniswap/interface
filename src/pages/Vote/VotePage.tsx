@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-// eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -101,7 +100,7 @@ const Progress = styled.div<{ status: 'for' | 'against'; percentageString?: stri
   height: 4px;
   border-radius: 4px;
   background-color: ${({ theme, status }) => (status === 'for' ? theme.green1 : theme.red1)};
-  width: ${({ percentageString }) => percentageString};
+  width: ${({ percentageString }) => percentageString ?? '0%'};
 `
 
 const MarkDownWrapper = styled.div`
@@ -194,13 +193,11 @@ export default function VotePage({
   }
 
   // get total votes and format percentages for UI
-  const totalVotes: number | undefined = proposalData ? proposalData.forCount + proposalData.againstCount : undefined
-  const forPercentage: string = t`${
-    proposalData && totalVotes ? ((proposalData.forCount * 100) / totalVotes).toFixed(0) : '0'
-  } %`
-  const againstPercentage: string = t`${
-    proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) : '0'
-  } %`
+  const totalVotes = proposalData?.forCount?.add(proposalData.againstCount)
+  const forPercentage = totalVotes
+    ? proposalData?.forCount?.asFraction?.divide(totalVotes.asFraction)?.multiply(100)
+    : undefined
+  const againstPercentage = forPercentage ? new Fraction(100).subtract(forPercentage) : undefined
 
   // only count available votes as of the proposal start block
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
@@ -328,7 +325,7 @@ export default function VotePage({
                     </ThemedText.Black>
                     {proposalData && (
                       <ThemedText.Black fontWeight={600}>
-                        {proposalData.forCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        {proposalData.forCount.toFixed(0, { groupSeparator: ',' })}
                         {quorum && (
                           <span style={{ fontWeight: 400 }}>{` / ${quorum.toExact({ groupSeparator: ',' })}`}</span>
                         )}
@@ -337,7 +334,7 @@ export default function VotePage({
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
-                  <Progress status={'for'} percentageString={forPercentage} />
+                  {forPercentage && <Progress status={'for'} percentageString={`${forPercentage.toFixed(0)}%`} />}
                 </ProgressWrapper>
               </CardSection>
             </StyledDataCard>
@@ -350,13 +347,15 @@ export default function VotePage({
                     </ThemedText.Black>
                     {proposalData && (
                       <ThemedText.Black fontWeight={600}>
-                        {proposalData.againstCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        {proposalData.againstCount.toFixed(0, { groupSeparator: ',' })}
                       </ThemedText.Black>
                     )}
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
-                  <Progress status={'against'} percentageString={againstPercentage} />
+                  {againstPercentage && (
+                    <Progress status={'against'} percentageString={`${againstPercentage.toFixed(0)}%`} />
+                  )}
                 </ProgressWrapper>
               </CardSection>
             </StyledDataCard>

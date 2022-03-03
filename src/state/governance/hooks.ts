@@ -3,7 +3,6 @@ import { isAddress } from '@ethersproject/address'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
-import { formatUnits } from '@ethersproject/units'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import GovernorAlphaJson from '@uniswap/governance/build/GovernorAlpha.json'
@@ -56,7 +55,8 @@ const useLatestGovernanceContract = useGovernanceBravoContract
 
 export function useUniContract() {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? UNI[chainId]?.address : undefined, UNI_ABI, true)
+  const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
+  return useContract(uniAddress, UNI_ABI, true)
 }
 
 interface ProposalDetail {
@@ -71,8 +71,8 @@ export interface ProposalData {
   description: string
   proposer: string
   status: ProposalState
-  forCount: number
-  againstCount: number
+  forCount: CurrencyAmount<Token>
+  againstCount: CurrencyAmount<Token>
   startBlock: number
   endBlock: number
   details: ProposalDetail[]
@@ -245,6 +245,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov1, gov1ProposalIndexes)
   const formattedLogsV2 = useFormattedProposalCreatedLogs(gov2, gov2ProposalIndexes)
 
+  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
+
   // early return until events are fetched
   return useMemo(() => {
     const proposalsCallData = [...proposalsV0, ...proposalsV1, ...proposalsV2]
@@ -252,6 +254,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
     const formattedLogs = [...(formattedLogsV0 ?? []), ...(formattedLogsV1 ?? []), ...(formattedLogsV2 ?? [])]
 
     if (
+      !uni ||
       proposalsCallData.some((p) => p.loading) ||
       proposalStatesCallData.some((p) => p.loading) ||
       (gov0 && !formattedLogsV0) ||
@@ -281,9 +284,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           description: description ?? t`No description.`,
           proposer: proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
-          forCount: parseFloat(formatUnits(proposal?.result?.forVotes?.toString() ?? 0, 18)),
-          againstCount: parseFloat(formatUnits(proposal?.result?.againstVotes?.toString() ?? 0, 18)),
-          abstainCount: parseFloat(formatUnits(proposal?.result?.abstainVotes?.toString() ?? 0, 18)),
+          forCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.forVotes),
+          againstCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.againstVotes),
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
           details: formattedLogs[i]?.details,
@@ -305,6 +307,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
     proposalsV0,
     proposalsV1,
     proposalsV2,
+    uni,
   ])
 }
 
@@ -317,7 +320,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   const latestGovernanceContract = useLatestGovernanceContract()
   const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
   const { chainId } = useActiveWeb3React()
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 
   if (!latestGovernanceContract || !quorumVotes || !uni || governorIndex !== LATEST_GOVERNOR_INDEX) return undefined
 
@@ -351,7 +354,7 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
   const uniContract = useUniContract()
 
   // check for available votes
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
   const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account ?? undefined, block ?? undefined])
     ?.result?.[0]
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
@@ -463,7 +466,7 @@ export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const res = useSingleCallResult(latestGovernanceContract, 'proposalThreshold')
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 
   if (res?.result?.[0] && uni) {
     return CurrencyAmount.fromRawAmount(uni, res.result[0])
