@@ -129,52 +129,9 @@ const rotate = keyframes`
 
 export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
   animation: 2s ${rotate} linear infinite;
+  height: 1rem;
   stroke: ${({ color = 'active', theme }) => theme[color]};
   stroke-linecap: round;
   stroke-width: 2;
+  width: 1rem;
 `
-
-const DetailedSpinnerWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  height: 16px;
-  transition: 250ms ease color;
-`
-
-const InnerDot = styled.div`
-  background-color: ${({ theme }) => theme.primary};
-  border-radius: 50%;
-  height: 8px;
-  min-height: 8px;
-  min-width: 8px;
-  position: relative;
-  transition: 250ms ease background-color;
-  width: 8px;
-`
-
-const OuterRing = styled.div`
-  animation: ${rotate} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme }) => theme.primary};
-  border-radius: 50%;
-  border-right: 1px solid transparent;
-  border-top: 1px solid transparent;
-  height: 14px;
-  left: -3px;
-  position: relative;
-  top: -3px;
-  transform: translateZ(0);
-  transition: 250ms ease border-color;
-  width: 14px;
-`
-
-export const DetailedSpinner = () => {
-  return (
-    <DetailedSpinnerWrapper>
-      <InnerDot>
-        <OuterRing />
-      </InnerDot>
-    </DetailedSpinnerWrapper>
-  )
-}
