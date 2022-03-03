@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:26\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -192,6 +192,10 @@ msgstr "Adreste herhangi bir hak talebi yok"
 msgid "Against"
 msgstr "Karşısında"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "İzin vermek"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP jeton geçişine izin ver"
@@ -203,6 +207,10 @@ msgstr "Yüksek fiyat etkili işlemlere izin verin ve onay ekranını atlayın. 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Uniswap Protokolünün {0} kullanmasına izin verin"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Önce {0} izin ver"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

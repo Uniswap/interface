@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -192,6 +192,10 @@ msgstr "請求可能なアドレスではありません"
 msgid "Against"
 msgstr "反対"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "許可する"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LPトークンの移行を許可する"
@@ -203,6 +207,10 @@ msgstr "価格への大きな影響がある取引を許可し、確認画面を
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "{0} の使用をUniswapに許可する"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "最初に {0} を許可する"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

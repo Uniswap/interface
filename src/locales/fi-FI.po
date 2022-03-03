@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -192,6 +192,10 @@ msgstr "Osoitteella ei ole lunastettavaa"
 msgid "Against"
 msgstr "Vastaan"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Sallia"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Salli LP-rahakkeen siirtäminen"
@@ -203,6 +207,10 @@ msgstr "Salli korkean hintavaikutuksen kaupat ja ohita vahvistusnäyttö. Käyt�
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Salli Uniswap-protokollan käyttää {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Salli ensin {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

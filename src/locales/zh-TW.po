@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -192,6 +192,10 @@ msgstr "地址沒有可领取的代幣"
 msgid "Against"
 msgstr "反對"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "允許"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "允許流動池代幣遷移"
@@ -203,6 +207,10 @@ msgstr "允許高兌換率影響的交易，並跳過確認步驟。須自行承
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "允許 Uniswap 使用您的 {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "先允許 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

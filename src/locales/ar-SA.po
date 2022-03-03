@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -192,6 +192,10 @@ msgstr "العنوان ليس لديه مطالبة متاحة"
 msgid "Against"
 msgstr "ضد"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "السماح"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "السماح بترحيل رمز LP"
@@ -203,6 +207,10 @@ msgstr "السماح بتداول تأثير الأسعار المرتفعة و�
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "السماح لبروتوكول Uniswap باستخدام {0} الخاص بك"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "اسمح بـ {0} أولاً"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

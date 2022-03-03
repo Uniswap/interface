@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -192,6 +192,10 @@ msgstr "Alamat tidak memiliki klaim yang tersedia"
 msgid "Against"
 msgstr "Melawan"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Mengizinkan"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Izinkan migrasi token LP"
@@ -203,6 +207,10 @@ msgstr "Izinkan perdagangan berdampak harga tinggi dan lewati layar konfirmasi. 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Izinkan Protokol Uniswap untuk menggunakan {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Izinkan {0} dulu"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

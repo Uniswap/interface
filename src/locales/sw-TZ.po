@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -192,6 +192,10 @@ msgstr "Anwani haina dai linalopatikana"
 msgid "Against"
 msgstr "Kupinga"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Ruhusu"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Ruhusu uhamiaji wa ishara za LP"
@@ -203,6 +207,10 @@ msgstr "Ruhusu biashara ya athari za bei ya juu na uruke skrini ya thibitisho. T
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Ruhusu Itifaki ya Uniswap kutumia {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Ruhusu {0} kwanza"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

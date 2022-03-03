@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -192,6 +192,10 @@ msgstr "Adressen har inget tillgängligt krav"
 msgid "Against"
 msgstr "Mot"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Tillåta"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Tillåt migrering av LP-token"
@@ -203,6 +207,10 @@ msgstr "Tillåt transaktioner med hög prispåverkan och hoppa över bekräftels
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Tillåt Uniswap-protokollet att använda din {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Tillåt {0} först"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

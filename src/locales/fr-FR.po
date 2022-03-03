@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -192,6 +192,10 @@ msgstr "L'adresse n'a pas de revendication disponible"
 msgid "Against"
 msgstr "Contre"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Permettre"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Autoriser la migration des jetons LP"
@@ -203,6 +207,10 @@ msgstr "Autoriser les transactions à impact élevé et enlève l'écran de conf
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Autoriser le protocole Uniswap à utiliser vos {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Autoriser {0} en premier"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
