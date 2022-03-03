@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 07:14\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -218,7 +218,7 @@ msgstr "Произошла ошибка при попытке произвест
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approval pending"
-msgstr "Ожидается подтверждение"
+msgstr "Ожидается одобрение"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -681,7 +681,7 @@ msgstr "Подробности"
 
 #: src/components/Popups/DonationLink.tsx
 msgid "Directly support the Ukrainian government by donating tokens."
-msgstr "Напрямую поддержите украинское правительство, пожертвовав токены."
+msgstr "Поддержите правительство Украины напрямую, пожертвовав токены."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
@@ -702,7 +702,7 @@ msgstr "Документация"
 
 #: src/components/Popups/DonationLink.tsx
 msgid "Donate to Ukraine"
-msgstr "Пожертвовать Украине"
+msgstr "Пожертвуйте Украине"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
@@ -1718,7 +1718,7 @@ msgstr "Всё равно обменять"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Swap confirmed"
-msgstr "Обмен подтвержден"
+msgstr "Обмен подтверждён"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
