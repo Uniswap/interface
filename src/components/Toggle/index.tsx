@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   padding: 0.25rem 0.6rem;
   border-radius: 9px;
-  background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.primary1 : theme.bg4) : 'none')};
+  background: ${({ theme, isActive, isOnSwitch }) => (isActive ? theme.primary1 : 'none')};
   color: ${({ theme, isActive }) => (isActive ? theme.white : theme.text2)};
   font-size: 14px;
   font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};

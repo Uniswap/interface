@@ -1,9 +1,11 @@
 import { getAddress } from '@ethersproject/address'
+import { BigNumber as BNET } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import BigNumber from 'bignumber.js'
 
 import { TokenAddressMap } from '../state/lists/hooks'
 
@@ -53,4 +55,57 @@ export function isTokenOnList(tokenAddressMap: TokenAddressMap, token?: Token): 
 
 export function formattedFeeAmount(feeAmount: FeeAmount): number {
   return feeAmount / 10000
+}
+
+export function trim(number = '0', precision = 0) {
+  // why would number ever be undefined??? what are we trimming?
+  const array = Number(number).toFixed(8).split('.')
+  if (array.length === 1) return number.toString()
+  if (precision === 0) return array[0].toString()
+
+  const poppedNumber = array.pop() || '0'
+  array.push(poppedNumber.substring(0, precision))
+  const trimmedNumber = array.join('.')
+  return trimmedNumber
+}
+
+export function prettifySeconds(seconds: number, resolution?: string) {
+  if (seconds !== 0 && !seconds) {
+    return ''
+  }
+
+  const d = Math.floor(seconds / (3600 * 24))
+  const h = Math.floor((seconds % (3600 * 24)) / 3600)
+  const m = Math.floor((seconds % 3600) / 60)
+
+  if (resolution === 'day') {
+    return d + (d == 1 ? ' day' : ' days')
+  }
+
+  const dDisplay = d > 0 ? d + (d == 1 ? ' day, ' : ' days, ') : ''
+  const hDisplay = h > 0 ? h + (h == 1 ? ' hr, ' : ' hrs, ') : ''
+  const mDisplay = m > 0 ? m + (m == 1 ? ' min' : ' mins') : ''
+
+  let result = dDisplay + hDisplay + mDisplay
+  if (mDisplay === '') {
+    result = result.slice(0, result.length - 2)
+  }
+
+  return result
+}
+
+export function changeNumberBase(num: BigNumber, fromDecimals: number, toDecimals: number): BigNumber {
+  return num.times(new BigNumber(10).pow(fromDecimals)).div(new BigNumber(10).pow(toDecimals))
+}
+
+export function getBigNumber(decimals: number | string) {
+  return new BigNumber(10).pow(decimals)
+}
+
+export function toDecimal(num: number | string, decimals: number): BigNumber {
+  return new BigNumber(num).div(Math.pow(10, decimals))
+}
+
+export function fromEthersToBigNumber(num: BNET): BigNumber {
+  return new BigNumber(num.toString())
 }

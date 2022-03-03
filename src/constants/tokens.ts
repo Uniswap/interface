@@ -1,8 +1,22 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 
-import { UNI_ADDRESS } from './addresses'
+import { GEN_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
+export const DAI_GEN_POLYGON_MUMBAI_PAIR = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0x36cac24888253048a8e59b64ccbb61ba429acf1a',
+  18,
+  'GEN-LP',
+  'Genesis LP'
+)
+export const GEN = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0x516DF9c8D7F87773D2d57E61DE39cBbBC6EAD2EA',
+  9,
+  'GEN',
+  'Genesis'
+)
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
@@ -52,12 +66,26 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0xc33f8f8a10dcde714753b99d9f0d61cfedfb9410',
+  18, // beware of the decimals
+  'USDC',
+  'USD//C'
+)
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
   18,
   'DAI',
   'Dai Stablecoin'
+)
+export const DAI_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  '0xc00f6b6414289283f9942a32eb0c6c15db63aeb8',
+  18,
+  'DAI',
+  'Dai'
 )
 export const USDT_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -201,11 +229,13 @@ export const WETH_POLYGON = new Token(
   'Wrapped Ether'
 )
 export const UNI: { [chainId: number]: Token } = {
-  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.POLYGON_MUMBAI]: new Token(
+    SupportedChainId.POLYGON_MUMBAI,
+    GEN_ADDRESS[SupportedChainId.POLYGON_MUMBAI],
+    9,
+    'GEN',
+    'Genesis'
+  ),
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {

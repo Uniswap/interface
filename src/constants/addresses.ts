@@ -1,4 +1,3 @@
-// import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@genesisprotocol/sdk'
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
 
 import GenesisContractAddresses from '../assets/config/contract-addresses.json'
@@ -6,6 +5,16 @@ import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
+
+export const DAI_GEN_PAIR_ADDRESS = '0x36cac24888253048a8e59b64ccbb61ba429acf1a'
+export const DAO_BOND_DEPOSITORY: AddressMap = constructSameAddressMap(GenesisContractAddresses.BOND_DEPOSITORY)
+export const DAO_TREASURY: AddressMap = constructSameAddressMap(GenesisContractAddresses.TREASURY)
+export const DAO_STAKING: AddressMap = constructSameAddressMap(GenesisContractAddresses.STAKING)
+export const DAO_DISTRIBUTOR: AddressMap = constructSameAddressMap(GenesisContractAddresses.DISTRIBUTOR)
+
+export const GEN_ADDRESS: AddressMap = constructSameAddressMap(GenesisContractAddresses.GEN_TOKEN)
+export const S_GEN_ADDRESS: AddressMap = constructSameAddressMap(GenesisContractAddresses.S_GEN_TOKEN)
+export const G_GEN_ADDRESS: AddressMap = constructSameAddressMap(GenesisContractAddresses.G_GEN_TOKEN)
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0xaBf67FB9ae3A831eAe03529D69B7A2B9418F54C4')
 export const MULTICALL_ADDRESS: AddressMap = {

@@ -29,10 +29,14 @@ export function useApprovalState(amountToApprove?: CurrencyAmount<Currency>, spe
   const pendingApproval = useHasPendingApproval(token?.address, spender)
 
   return useMemo(() => {
-    if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
+    if (!amountToApprove || !spender) {
+      return ApprovalState.UNKNOWN
+    }
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
-    if (!currentAllowance) return ApprovalState.UNKNOWN
+    if (!currentAllowance) {
+      return ApprovalState.UNKNOWN
+    }
 
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)

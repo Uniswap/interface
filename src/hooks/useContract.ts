@@ -17,11 +17,16 @@ import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
+import BOND_DEPOSITORY_ABI from 'abis/genesis/bond-depository-V2.json'
+import GEN_ERC20_ABI from 'abis/genesis/genesis-erc20-token.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
+  DAI_GEN_PAIR_ADDRESS,
+  DAO_BOND_DEPOSITORY,
   ENS_REGISTRAR_ADDRESSES,
+  GEN_ADDRESS,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
@@ -32,6 +37,7 @@ import {
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
+import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
@@ -159,4 +165,16 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
 
 export function useV3Quoter() {
   return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI)
+}
+
+export function useBondDepository() {
+  return useContract(DAO_BOND_DEPOSITORY[SupportedChainId.POLYGON_MUMBAI], BOND_DEPOSITORY_ABI, true)
+}
+
+export function useGenToken() {
+  return useContract(GEN_ADDRESS, GEN_ERC20_ABI, true)
+}
+
+export function useDaiGenPair() {
+  return usePairContract(DAI_GEN_PAIR_ADDRESS)
 }
