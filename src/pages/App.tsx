@@ -23,6 +23,7 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 // import AddLiquidity from './AddLiquidity'
 import { ThemedBackground } from '../theme'
+import TuxImg from '../assets/images/tux1.png'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 
 const AppWrapper = styled.div`
@@ -31,11 +32,20 @@ const AppWrapper = styled.div`
   align-items: flex-start;
 `
 
+const Tux = styled.img`
+  position: absolute;
+  height: 250px;
+  margin-top: -140px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none
+  `};
+`
+
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 120px;
+  padding-top: 200px;
   align-items: center;
   flex: 1;
   z-index: 1;
@@ -71,6 +81,7 @@ export default function App() {
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
+            <Tux src={TuxImg} />
             <ThemedBackground />
             <Popups />
             <Polling />
