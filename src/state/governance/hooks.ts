@@ -8,6 +8,7 @@ import { t } from '@lingui/macro'
 import GovernorAlphaJson from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJson from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/smart-order-router'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
@@ -322,7 +323,14 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   const { chainId } = useActiveWeb3React()
   const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 
-  if (!latestGovernanceContract || !quorumVotes || !uni || governorIndex !== LATEST_GOVERNOR_INDEX) return undefined
+  if (
+    !latestGovernanceContract ||
+    !quorumVotes ||
+    chainId !== ChainId.MAINNET ||
+    !uni ||
+    governorIndex !== LATEST_GOVERNOR_INDEX
+  )
+    return undefined
 
   return CurrencyAmount.fromRawAmount(uni, quorumVotes)
 }
