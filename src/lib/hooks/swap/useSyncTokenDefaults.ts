@@ -1,11 +1,19 @@
 import { Currency } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
-import { DefaultAddress } from 'lib/components/Swap'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useToken } from 'lib/hooks/useCurrency'
 import { Field, Swap, swapAtom } from 'lib/state/swap'
 import { useCallback, useLayoutEffect, useState } from 'react'
+
+export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } | 'NATIVE'
+
+export interface TokenDefaults {
+  defaultInputTokenAddress?: DefaultAddress
+  defaultInputAmount?: number | string
+  defaultOutputTokenAddress?: DefaultAddress
+  defaultOutputAmount?: number | string
+}
 
 function useDefaultToken(
   defaultAddress: DefaultAddress | undefined,
@@ -24,23 +32,16 @@ function useDefaultToken(
   return token
 }
 
-interface UseSwapDefaultsArgs {
-  defaultInputAddress?: DefaultAddress
-  defaultInputAmount?: string
-  defaultOutputAddress?: DefaultAddress
-  defaultOutputAmount?: string
-}
-
-export default function useSyncSwapDefaults({
-  defaultInputAddress,
+export default function useSyncTokenDefaults({
+  defaultInputTokenAddress,
   defaultInputAmount,
-  defaultOutputAddress,
+  defaultOutputTokenAddress,
   defaultOutputAmount,
-}: UseSwapDefaultsArgs) {
+}: TokenDefaults) {
   const updateSwap = useUpdateAtom(swapAtom)
   const { chainId } = useActiveWeb3React()
-  const defaultInputToken = useDefaultToken(defaultInputAddress, chainId)
-  const defaultOutputToken = useDefaultToken(defaultOutputAddress, chainId)
+  const defaultInputToken = useDefaultToken(defaultInputTokenAddress, chainId)
+  const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
 
   const setToDefaults = useCallback(() => {
     const defaultSwapState: Swap = {
@@ -49,14 +50,14 @@ export default function useSyncSwapDefaults({
       [Field.OUTPUT]: defaultOutputToken || undefined,
       independentField: Field.INPUT,
     }
-    if (defaultInputAmount && defaultInputToken) {
-      defaultSwapState.amount = defaultInputAmount
-    } else if (defaultOutputAmount && defaultOutputToken) {
+    if (defaultInputToken && defaultInputAmount) {
+      defaultSwapState.amount = defaultInputAmount.toString()
+    } else if (defaultOutputToken && defaultOutputAmount) {
       defaultSwapState.independentField = Field.OUTPUT
-      defaultSwapState.amount = defaultOutputAmount
+      defaultSwapState.amount = defaultOutputAmount.toString()
     }
     updateSwap((swap) => ({ ...swap, ...defaultSwapState }))
-  }, [defaultInputToken, defaultOutputToken, defaultInputAmount, defaultOutputAmount, updateSwap])
+  }, [defaultInputAmount, defaultInputToken, defaultOutputAmount, defaultOutputToken, updateSwap])
 
   const [previousChainId, setPreviousChainId] = useState(chainId)
   useLayoutEffect(() => {

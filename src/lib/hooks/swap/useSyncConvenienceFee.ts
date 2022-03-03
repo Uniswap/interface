@@ -4,12 +4,12 @@ import { useUpdateAtom } from 'jotai/utils'
 import { feeOptionsAtom } from 'lib/state/swap'
 import { useEffect } from 'react'
 
-interface FeeOptionsArgs {
+export interface FeeOptions {
   convenienceFee?: number
   convenienceFeeRecipient?: string | string | { [chainId: number]: string }
 }
 
-export default function useSyncConvenienceFee({ convenienceFee, convenienceFeeRecipient }: FeeOptionsArgs) {
+export default function useSyncConvenienceFee({ convenienceFee, convenienceFeeRecipient }: FeeOptions) {
   const { chainId } = useActiveWeb3React()
   const updateFeeOptions = useUpdateAtom(feeOptionsAtom)
 

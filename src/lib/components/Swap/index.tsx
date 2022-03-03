@@ -2,8 +2,8 @@ import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useAtom } from 'jotai'
 import { SwapInfoUpdater } from 'lib/hooks/swap/useSwapInfo'
-import useSyncConvenienceFee from 'lib/hooks/swap/useSyncConvenienceFee'
-import useSyncSwapDefaults from 'lib/hooks/swap/useSyncSwapDefaults'
+import useSyncConvenienceFee, { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
+import useSyncTokenDefaults, { TokenDefaults } from 'lib/hooks/swap/useSyncTokenDefaults'
 import { usePendingTransactions } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useHasFocus from 'lib/hooks/useHasFocus'
@@ -26,8 +26,6 @@ import SwapButton from './SwapButton'
 import SwapPropValidator from './SwapPropValidator'
 import Toolbar from './Toolbar'
 
-export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } | 'NATIVE'
-
 function getTransactionFromMap(
   txs: { [hash: string]: Transaction },
   hash?: string
@@ -44,20 +42,14 @@ function getTransactionFromMap(
   return
 }
 
-export interface SwapProps {
+export interface SwapProps extends TokenDefaults, FeeOptions {
   tokenList?: string | TokenInfo[]
-  defaultInputAddress?: DefaultAddress
-  defaultInputAmount?: string
-  defaultOutputAddress?: DefaultAddress
-  defaultOutputAmount?: string
-  convenienceFee?: number
-  convenienceFeeRecipient?: string | { [chainId: number]: string }
   onConnectWallet?: () => void
 }
 
 export default function Swap(props: SwapProps) {
   useSyncTokenList(props.tokenList)
-  useSyncSwapDefaults(props)
+  useSyncTokenDefaults(props)
   useSyncConvenienceFee(props)
 
   const { active, account } = useActiveWeb3React()
