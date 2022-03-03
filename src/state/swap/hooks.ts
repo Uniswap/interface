@@ -284,13 +284,24 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
 
 // updates the swap state to use the defaults for a given network
 export function useDefaultsFromURLSearch():
-  | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
+  | {
+      inputCurrencyId: string | undefined
+      outputCurrencyId: string | undefined
+      referralAddress: string | undefined
+      feePercent: string | undefined
+    }
   | undefined {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const parsedQs = useParsedQueryString()
   const [result, setResult] = useState<
-    { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined
+    | {
+        inputCurrencyId: string | undefined
+        outputCurrencyId: string | undefined
+        referralAddress: string | undefined
+        feePercent: string | undefined
+      }
+    | undefined
   >()
 
   useEffect(() => {
@@ -318,7 +329,9 @@ export function useDefaultsFromURLSearch():
 
     setResult({
       inputCurrencyId: parsed[Field.INPUT].currencyId,
-      outputCurrencyId: parsed[Field.OUTPUT].currencyId || outputCurrencyAddress
+      outputCurrencyId: parsed[Field.OUTPUT].currencyId || outputCurrencyAddress,
+      referralAddress: typeof parsedQs.referral === 'string' ? parsedQs.referral : undefined,
+      feePercent: typeof parsedQs['fee_percent'] === 'string' ? parsedQs['fee_percent'] : undefined
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, chainId])

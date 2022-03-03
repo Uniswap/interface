@@ -83,7 +83,7 @@ interface FailedCall {
   error: Error
 }
 
-interface FeeConfig {
+export interface FeeConfig {
   chargeFeeBy: 'currency_in' | 'currency_out'
   feeReceiver: string
   isInBps: boolean
@@ -113,7 +113,8 @@ function getSwapCallParameters(
   trade: Aggregator,
   options: TradeOptions | TradeOptionsDeadline,
   chainId: ChainId,
-  library: Web3Provider
+  library: Web3Provider,
+  feeConfig: FeeConfig | undefined
 ): SwapV2Parameters {
   const etherIn = trade.inputAmount.currency === ETHER
   const etherOut = trade.outputAmount.currency === ETHER
@@ -132,7 +133,7 @@ function getSwapCallParameters(
       : `0x${options.deadline.toString(16)}`
   // const useFeeOnTransfer = Boolean(options.feeOnTransfer)
 
-  const feeConfig: FeeConfig | undefined = undefined as FeeConfig | undefined
+  // const feeConfig: FeeConfig | undefined = undefined as FeeConfig | undefined
   const destTokenFeeData =
     feeConfig && feeConfig.chargeFeeBy === 'currency_out'
       ? encodeFeeConfig({
@@ -160,11 +161,19 @@ function getSwapCallParameters(
       const isEncodeUniswap = isEncodeUniswapCallback(chainId)
       if (feeConfig && feeConfig.chargeFeeBy === 'currency_in') {
         const { feeReceiver, isInBps, feeAmount } = feeConfig
-        src[feeReceiver] = isInBps
-          ? BigNumber.from(amountIn)
-              .mul(feeAmount)
-              .div(10000)
-          : BigNumber.from(feeAmount)
+        //handle if feeAmount is float
+        const decimalCount = feeAmount.split('.')[1]?.length
+        const pow = BigNumber.from(10).pow(decimalCount || 0)
+        const feeBignumber = BigNumber.from(feeAmount.replace('.', ''))
+
+        if (isInBps) {
+          src[feeReceiver] = BigNumber.from(amountIn)
+            .mul(feeBignumber)
+            .div(pow)
+            .div(10000)
+        } else {
+          src[feeReceiver] = BigNumber.from(feeBignumber).div(pow)
+        }
       }
       // Use swap simple mode when tokenIn is not ETH and every firstPool is encoded by uniswap.
       let isUseSwapSimpleMode = !etherIn
@@ -318,7 +327,8 @@ function getSwapCallParameters(
 function useSwapV2CallArguments(
   trade: Aggregator | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  feeConfig: FeeConfig | undefined
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -342,7 +352,8 @@ function useSwapV2CallArguments(
         deadline: deadline.toNumber()
       },
       chainId,
-      library
+      library,
+      feeConfig
     )
     const swapMethods = methodNames.map(methodName => ({
       methodName,
@@ -359,11 +370,12 @@ function useSwapV2CallArguments(
 export function useSwapV2Callback(
   trade: Aggregator | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  feeConfig: FeeConfig | undefined
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapV2CallArguments(trade, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapV2CallArguments(trade, allowedSlippage, recipientAddressOrName, feeConfig)
 
   const addTransactionWithType = useTransactionAdder()
 

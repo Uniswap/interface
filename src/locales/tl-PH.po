@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/pages/CreateReferral/index.tsx
+msgid "*Required"
+msgstr ""
+
 #: src/pages/SwapV2/index.tsx
 msgid "+ Add Recipient (optional)"
 msgstr ""
@@ -154,6 +158,10 @@ msgstr ""
 msgid "Add {0} to Metamask"
 msgstr ""
 
+#: src/pages/CreateReferral/index.tsx
+msgid "Address is not valid"
+msgstr ""
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr ""
@@ -203,6 +211,10 @@ msgstr ""
 #: src/components/PoolList/ItemCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Analytics ↗"
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "Any referral commission will automatically be sent to this wallet address"
 msgstr ""
 
 #: src/pages/About/index.tsx
@@ -380,6 +392,15 @@ msgstr ""
 msgid "Coming soon"
 msgstr ""
 
+#: src/pages/CreateReferral/index.tsx
+msgid "Commission (%) that is applied to each successful trade that uses your referral link"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Commission fee to be paid directly to your referrer"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Committed to Security"
 msgstr ""
@@ -488,6 +509,14 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Create New Pool"
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "Create Your Referral Link"
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "Create a Referral Link"
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
@@ -869,6 +898,14 @@ msgstr ""
 msgid "Import your Wallet"
 msgstr ""
 
+#: src/pages/CreateReferral/index.tsx
+msgid "Include Chain"
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "Include Tokens"
+msgstr ""
+
 #: src/pages/About/index.tsx
 msgid "Includes DEX aggregation"
 msgstr ""
@@ -885,6 +922,10 @@ msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "Input Token"
 msgstr ""
 
 #: src/components/swap/SwapModalHeader.tsx
@@ -1086,6 +1127,7 @@ msgstr ""
 msgid "Market Cap Rank"
 msgstr ""
 
+#: src/pages/CreateReferral/index.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -1194,6 +1236,7 @@ msgid "Network"
 msgstr ""
 
 #: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 #: src/pages/Yield/index.tsx
 msgid "New"
 msgstr ""
@@ -1283,6 +1326,10 @@ msgstr ""
 msgid "Output"
 msgstr ""
 
+#: src/pages/CreateReferral/index.tsx
+msgid "Output Token"
+msgstr ""
+
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
@@ -1308,6 +1355,11 @@ msgstr ""
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
+msgstr "<<<<<<< HEAD"
+
+#: src/pages/CreateReferral/index.tsx
+#: src/pages/CreateReferral/index.tsx
+msgid "Please select a token"
 msgstr ""
 
 #: src/pages/CreatePool/index.tsx
@@ -1479,6 +1531,19 @@ msgstr ""
 msgid "Recipient"
 msgstr ""
 
+#: src/components/Menu/index.tsx
+msgid "Referral"
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "Referral Commission"
+msgstr ""
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Referral Fee"
+msgstr ""
+
 #: src/components/PositionCard/V1.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1560,6 +1625,7 @@ msgid "Select Max"
 msgstr ""
 
 #: src/components/NetworkModal/index.tsx
+#: src/pages/CreateReferral/SelectNetworkModal.tsx
 msgid "Select a Network"
 msgstr ""
 
@@ -1570,6 +1636,7 @@ msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/pages/CreateReferral/TokensSelect.tsx
 #: src/state/swap/hooks.ts
 #: src/state/swap/useAggregator.ts
 msgid "Select a token"
@@ -1590,6 +1657,10 @@ msgstr ""
 
 #: src/components/ShareModal/index.tsx
 msgid "Share this token with your friends!"
+msgstr ""
+
+#: src/pages/CreateReferral/ShareLinkModal.tsx
+msgid "Share your referral link and start earning commission instantly!"
 msgstr ""
 
 #: src/components/AccountDetails/index.tsx
@@ -1662,6 +1733,10 @@ msgstr ""
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Starting In"
+msgstr ""
+
+#: src/pages/CreateReferral/ShareLinkModal.tsx
+msgid "Successfully Created"
 msgstr ""
 
 #: src/pages/AddLiquidity/TokenPair.tsx
@@ -2065,6 +2140,18 @@ msgstr ""
 msgid "You can choose fee that suit your pool based on those pre-made options."
 msgstr ""
 
+#: src/pages/CreateReferral/index.tsx
+msgid "You can create referral links here. If your referral link is used by anyone during a trade, you will receive a small commission from their transaction. The commission will be instantly sent to your wallet address. You can create multiple referral links with different configurations.<0/><1/>Read more <2>here</2>"
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "You can include the chain in your referral link"
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "You can include the tokens to swap in your referral link"
+msgstr ""
+
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
 msgstr ""
@@ -2174,6 +2261,10 @@ msgstr ""
 
 #: src/components/Menu/ClaimRewardModal.tsx
 msgid "Your wallet address"
+msgstr ""
+
+#: src/pages/CreateReferral/index.tsx
+msgid "Your wallet address *"
 msgstr ""
 
 #: src/components/WalletModal/index.tsx

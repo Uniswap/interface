@@ -36,7 +36,8 @@ export enum ApplicationModal {
   POOL_DETAIL,
   FARM_HISTORY,
   MOBILE_LIVE_CHART,
-  MOBILE_TRADE_ROUTES
+  MOBILE_TRADE_ROUTES,
+  REFERRAL_NETWORK
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')

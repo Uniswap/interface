@@ -3,13 +3,11 @@ import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
-import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
+import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainId } from '@dynamic-amm/sdk'
-import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'
-import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import Modal from 'components/Modal'
 import { Flex, Text } from 'rebass'
 import { X } from 'react-feather'
@@ -74,23 +72,27 @@ const SelectNetworkButton = styled(ButtonEmpty)`
   }
 `
 
-export default function NetworkModal(): JSX.Element | null {
-  const { chainId } = useActiveWeb3React()
-  const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
-  const toggleNetworkModal = useNetworkModalToggle()
-  const { changeNetwork } = useActiveNetwork()
+export default function SelectNetworkModal({
+  chainId = ChainId.MAINNET,
+  onNetworkSelect
+}: {
+  chainId: ChainId | undefined
+  onNetworkSelect: (chainId: number) => void
+}): JSX.Element | null {
+  const networkModalOpen = useModalOpen(ApplicationModal.REFERRAL_NETWORK)
+  const toggle = useToggleModal(ApplicationModal.REFERRAL_NETWORK)
 
   if (!chainId || !networkModalOpen) return null
 
   return (
-    <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal}>
+    <Modal isOpen={networkModalOpen} onDismiss={toggle}>
       <Wrapper>
         <Flex alignItems="center" justifyContent="space-between">
           <Text fontWeight="500" fontSize={18}>
             <Trans>Select a Network</Trans>
           </Text>
 
-          <Flex sx={{ cursor: 'pointer' }} role="button" onClick={toggleNetworkModal}>
+          <Flex sx={{ cursor: 'pointer' }} role="button" onClick={toggle}>
             <X />
           </Flex>
         </Flex>
@@ -101,9 +103,7 @@ export default function NetworkModal(): JSX.Element | null {
             ChainId.BSCMAINNET,
             ChainId.AVAXMAINNET,
             ChainId.FANTOM,
-            ChainId.CRONOS,
-            ChainId.ARBITRUM
-            // ChainId.BTTC
+            ChainId.CRONOS
           ].map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (
@@ -121,8 +121,8 @@ export default function NetworkModal(): JSX.Element | null {
                 key={i}
                 padding="0"
                 onClick={() => {
-                  toggleNetworkModal()
-                  changeNetwork(key)
+                  toggle()
+                  onNetworkSelect(key)
                 }}
               >
                 <ListItem>

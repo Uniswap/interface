@@ -146,6 +146,7 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
 
 export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
   const lists = useAllLists()
+  console.log('🚀 ~ file: Tokens.ts ~ line 149 ~ useSearchInactiveTokenLists ~ lists', lists)
   const inactiveUrls = useInactiveListUrls()
   const { chainId } = useActiveWeb3React()
   const activeTokens = useAllTokens()

@@ -6,7 +6,7 @@ import { Text } from 'rebass'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { t, Trans } from '@lingui/macro'
 
-import { Currency, ETHER, Token } from '@dynamic-amm/sdk'
+import { ChainId, Currency, ETHER, Token } from '@dynamic-amm/sdk'
 import ImportRow from './ImportRow'
 import { useActiveWeb3React } from '../../hooks'
 import {
@@ -59,6 +59,7 @@ interface CurrencySearchProps {
   showManageView: () => void
   showImportView: () => void
   setImportToken: (token: Token) => void
+  customChainId?: ChainId
 }
 
 export function CurrencySearch({
@@ -70,9 +71,11 @@ export function CurrencySearch({
   isOpen,
   showManageView,
   showImportView,
-  setImportToken
+  setImportToken,
+  customChainId
 }: CurrencySearchProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId: web3ChainId } = useActiveWeb3React()
+  const chainId = customChainId || web3ChainId
   const theme = useTheme()
 
   const fixedList = useRef<FixedSizeList>()
@@ -168,6 +171,7 @@ export function CurrencySearch({
 
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens: Token[] = useSearchInactiveTokenLists(debouncedQuery)
+  console.log('🚀 ~ file: CurrencySearch.tsx ~ line 171 ~ filteredInactiveTokens', filteredInactiveTokens)
 
   return (
     <ContentWrapper>

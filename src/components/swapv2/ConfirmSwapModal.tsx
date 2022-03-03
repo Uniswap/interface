@@ -9,6 +9,7 @@ import TransactionConfirmationModal, {
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 import { Aggregator } from '../../utils/aggregator'
+import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
@@ -30,6 +31,7 @@ export default function ConfirmSwapModal({
   originalTrade,
   onAcceptChanges,
   allowedSlippage,
+  feeConfig,
   onConfirm,
   onDismiss,
   recipient,
@@ -46,6 +48,7 @@ export default function ConfirmSwapModal({
   txHash: string | undefined
   recipient: string | null
   allowedSlippage: number
+  feeConfig: FeeConfig | undefined
   tokenAddtoMetaMask: Currency | undefined
   onAcceptChanges: () => void
   onConfirm: () => void
@@ -77,6 +80,7 @@ export default function ConfirmSwapModal({
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
         allowedSlippage={allowedSlippage}
+        feeConfig={feeConfig}
       />
     ) : null
   }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])

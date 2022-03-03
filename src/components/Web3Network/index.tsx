@@ -66,12 +66,11 @@ function Web3Network(): JSX.Element | null {
   const { chainId } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
-  const node = useRef<HTMLDivElement>()
 
   if (!chainId) return null
 
   return (
-    <NetworkCard onClick={() => toggleNetworkModal()} ref={node as any} role="button">
+    <NetworkCard onClick={() => toggleNetworkModal()} role="button">
       <NetworkSwitchContainer>
         <Row>
           <img

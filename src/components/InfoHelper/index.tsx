@@ -46,9 +46,10 @@ const InfoMark = styled.span`
 `
 
 const InfoHelperWrapper = styled.span`
-  display: flex;
+  display: inline-block;
   align-items: center;
   margin-left: 0.25rem;
+  cursor: pointer;
 `
 
 export default function InfoHelper({
