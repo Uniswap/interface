@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 23:11\n"
+"PO-Revision-Date: 2022-03-03 09:11\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -1718,7 +1718,7 @@ msgstr "Vseeno zamenjaj"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Swap confirmed"
-msgstr "Zamenjava potrjena"
+msgstr "Menjava potrjena"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
@@ -1735,7 +1735,7 @@ msgstr "Menjava je spodletela: {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Swap pending"
-msgstr "Zamenjava v teku"
+msgstr "Menjava v teku"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1791,7 +1791,7 @@ msgstr "Strošek pošiljanja te transakcije presega polovico vrednosti vhodnega 
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "Trenutna količina plina za hitro pošiljanje transakcije na L1. Provizije za plin se plačajo v valuti ether (ETH), domači valuti omrežja Ethereum, in so denominirane v enoti Gwei."
+msgstr "Trenutna količina plina za hitro pošiljanje transakcije na L1. Provizije za plin se plačajo v valuti ether (ETH), avtohtoni valuti omrežja Ethereum, in so denominirane v enoti Gwei."
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
@@ -2079,19 +2079,19 @@ msgstr "Odvijte <0/> v {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
-msgstr "Razvijanje potrjeno"
+msgstr "Odvijanje potrjeno"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unwrap native currency."
-msgstr "Odvijte domačo valuto."
+msgstr "Odvijanje avtohtone valute."
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
-msgstr "Razvijanje čaka"
+msgstr "Odvijanje v teku"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unwrapping native currency."
-msgstr "Razvijanje domače valute."
+msgstr "Odvijanje avtohtone valute."
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2272,7 +2272,7 @@ msgstr "Ovijte <0/> v {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap confirmed"
-msgstr "Zavijanje potrjeno"
+msgstr "Ovijanje potrjeno"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Wrap native currency."
@@ -2280,11 +2280,11 @@ msgstr "Zavijte domačo valuto."
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
-msgstr "Zavijanje čaka"
+msgstr "Ovijanje v teku"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Wrapping native currency."
-msgstr "Zavijanje domače valute."
+msgstr "Ovijanje avtohtone valute."
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
