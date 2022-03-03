@@ -99,7 +99,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       (wrapType !== WrapType.NOT_APPLICABLE && wrapError) ||
       approvalState === ApproveOrPermitState.PENDING_SIGNATURE ||
       !(inputTradeCurrencyAmount && inputCurrencyBalance) ||
-      (inputTradeCurrencyAmount && inputCurrencyBalance && inputCurrencyBalance.lessThan(inputTradeCurrencyAmount)),
+      inputCurrencyBalance.lessThan(inputTradeCurrencyAmount),
     [disabled, chainId, wrapLoading, wrapType, wrapError, approvalState, inputTradeCurrencyAmount, inputCurrencyBalance]
   )
 
