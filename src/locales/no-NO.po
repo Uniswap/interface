@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 19:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -192,6 +192,10 @@ msgstr "Adressen har ikke noen tilgjengelig krav"
 msgid "Against"
 msgstr "Mot"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Tillate"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Tillat migrering av LP-pollett"
@@ -203,6 +207,10 @@ msgstr "Tillat høyprispåvirkede handel og hopp over bekreftelsesskjermen. Bruk
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Tillat Uniswap-protokollen å bruke din {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Tillat {0} først"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -679,6 +687,10 @@ msgstr "Detaljert"
 msgid "Details"
 msgstr "Detaljer"
 
+#: src/components/Popups/DonationLink.tsx
+msgid "Directly support the Ukrainian government by donating tokens."
+msgstr "Støtt den ukrainske regjeringen direkte ved å donere tokens."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Frakoble"
@@ -695,6 +707,10 @@ msgstr "Avvis"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "Dokumenter"
+
+#: src/components/Popups/DonationLink.tsx
+msgid "Donate to Ukraine"
+msgstr "Doner til Ukraina"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"

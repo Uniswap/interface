@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 19:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -192,6 +192,10 @@ msgstr "Адреса не має доступного запиту"
 msgid "Against"
 msgstr "Проти"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Дозволити"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Дозволити перенесення токенів LP"
@@ -203,6 +207,10 @@ msgstr "Дозвольте торгувати з високими цінами �
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Дозвольте протоколу Uniswap використовувати ваш {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Спочатку дозвольте {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -679,6 +687,10 @@ msgstr "Докладно"
 msgid "Details"
 msgstr "Подробиці"
 
+#: src/components/Popups/DonationLink.tsx
+msgid "Directly support the Ukrainian government by donating tokens."
+msgstr "Безпосередньо підтримувати український уряд, даруючи токени."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Відключитись"
@@ -695,6 +707,10 @@ msgstr "Відхилити"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "Документація"
+
+#: src/components/Popups/DonationLink.tsx
+msgid "Donate to Ukraine"
+msgstr "Пожертвуйте Україні"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 19:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -192,6 +192,10 @@ msgstr "地址没有可领取的代币"
 msgid "Against"
 msgstr "反对"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "允许"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "允许流动池代币迁移"
@@ -203,6 +207,10 @@ msgstr "允许高度影响价格的交易，并跳过确认步骤。须自行承
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "允许 Uniswap 调用您的 {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "先允许 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -679,6 +687,10 @@ msgstr "详细信息"
 msgid "Details"
 msgstr "详细信息"
 
+#: src/components/Popups/DonationLink.tsx
+msgid "Directly support the Ukrainian government by donating tokens."
+msgstr "通过捐赠代币直接支持乌克兰政府。"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "断开"
@@ -695,6 +707,10 @@ msgstr "关闭"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "文档"
+
+#: src/components/Popups/DonationLink.tsx
+msgid "Donate to Ukraine"
+msgstr "捐赠给乌克兰"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 19:10\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -192,6 +192,10 @@ msgstr "Adres het geen eis nie"
 msgid "Against"
 msgstr "Teen"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Laat toe"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Laat migrasie van LP-teken toe"
@@ -203,6 +207,10 @@ msgstr "Laat handel oor hoë prysimpak toe en slaan die bevestigingsskerm oor. G
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Laat die Uniswap-protokol toe om u {0} te gebruik"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Laat eers {0} toe"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -679,6 +687,10 @@ msgstr "Gedetailleerd"
 msgid "Details"
 msgstr "Besonderhede"
 
+#: src/components/Popups/DonationLink.tsx
+msgid "Directly support the Ukrainian government by donating tokens."
+msgstr "Ondersteun die Oekraïense regering direk deur tokens te skenk."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Ontkoppel"
@@ -695,6 +707,10 @@ msgstr "Verwerp"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "Dokumente"
+
+#: src/components/Popups/DonationLink.tsx
+msgid "Donate to Ukraine"
+msgstr "Skenk aan die Oekraïne"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-02 19:11\n"
+"PO-Revision-Date: 2022-03-03 18:11\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -192,6 +192,10 @@ msgstr "У адреса нет прав требования"
 msgid "Against"
 msgstr "Против"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Разрешать"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Разрешить перенос LP-токенов"
@@ -203,6 +207,10 @@ msgstr "Разрешить сделки с высоким влиянием на 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Разрешить протоколу Uniswap использовать ваши {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Разрешить сначала {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -218,7 +226,7 @@ msgstr "Произошла ошибка при попытке произвест
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approval pending"
-msgstr "Ожидается подтверждение"
+msgstr "Ожидается одобрение"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -679,6 +687,10 @@ msgstr "Подробно"
 msgid "Details"
 msgstr "Подробности"
 
+#: src/components/Popups/DonationLink.tsx
+msgid "Directly support the Ukrainian government by donating tokens."
+msgstr "Поддержите правительство Украины напрямую, пожертвовав токены."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Отключить"
@@ -695,6 +707,10 @@ msgstr "Закрыть"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "Документация"
+
+#: src/components/Popups/DonationLink.tsx
+msgid "Donate to Ukraine"
+msgstr "Пожертвуйте Украине"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
@@ -1710,7 +1726,7 @@ msgstr "Всё равно обменять"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Swap confirmed"
-msgstr "Обмен подтвержден"
+msgstr "Обмен подтверждён"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
