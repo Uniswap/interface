@@ -3,7 +3,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import Tooltip from 'lib/components/Tooltip'
 import { WrapType } from 'lib/hooks/swap/useWrapCallback'
-import { AlertTriangle, Icon, Info, Spinner } from 'lib/icons'
+import { AlertTriangle, DetailedSpinner, Icon, Info } from 'lib/icons'
 import { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -47,7 +47,7 @@ export function Empty() {
 }
 
 export function LoadingTrade() {
-  return <Caption icon={Spinner} caption={<Trans>Fetching best price…</Trans>} />
+  return <Caption icon={DetailedSpinner} caption={<Trans>Fetching best price…</Trans>} />
 }
 
 export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType: WrapType.UNWRAP | WrapType.WRAP }) {
