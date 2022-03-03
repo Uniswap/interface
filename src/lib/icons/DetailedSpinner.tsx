@@ -12,14 +12,16 @@ to {
 const DetailedSpinnerWrapper = styled.div`
   align-items: center;
   display: flex;
-  height: 16px;
+  height: 1rem;
   transition: 250ms ease color;
+  width: 1rem;
 `
 
 const InnerDot = styled.div`
   background-color: ${({ theme }) => theme.outline};
   border-radius: 50%;
   height: 8px;
+  margin-left: 3px;
   min-height: 8px;
   min-width: 8px;
   position: relative;

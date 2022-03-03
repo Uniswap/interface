@@ -129,9 +129,7 @@ const rotate = keyframes`
 
 export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
   animation: 2s ${rotate} linear infinite;
-  height: 1rem;
   stroke: ${({ color = 'active', theme }) => theme[color]};
   stroke-linecap: round;
   stroke-width: 2;
-  width: 1rem;
 `
