@@ -9,12 +9,12 @@ to {
 }
 `
 
-const DetailedSpinnerWrapper = styled.div`
+const Wrapper = styled.div`
   align-items: center;
   display: flex;
-  height: 1rem;
+  height: 16px;
   transition: 250ms ease color;
-  width: 1rem;
+  width: 16px;
 `
 
 const InnerDot = styled.div`
@@ -46,12 +46,12 @@ const OuterRing = styled.div`
   width: 14px;
 `
 
-export default function DetailedSpinner() {
+export default function InlineSpinner() {
   return (
-    <DetailedSpinnerWrapper>
+    <Wrapper>
       <InnerDot>
         <OuterRing />
       </InnerDot>
-    </DetailedSpinnerWrapper>
+    </Wrapper>
   )
 }
