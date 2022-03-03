@@ -314,8 +314,10 @@ export default function CreateReferral() {
               <Text fontSize={16} lineHeight="20px" color={theme.text}>
                 <Trans>Include Chain</Trans>
                 <InfoHelper
-                  size={14}
+                  placement="top"
+                  size={10}
                   text={t`You can include the chain in your referral link so referees are automatically re-directed to this network on KyberSwap. You will still earn commission on trades that are made on other chains and use your referral link`}
+                  width="300px"
                 />
               </Text>
               <FarmingPoolsToggle isActive={isShowChain} toggle={() => setIsShowChain(prev => !prev)} />
@@ -341,8 +343,10 @@ export default function CreateReferral() {
                   <Text fontSize={16} lineHeight="20px" color={theme.text}>
                     <Trans>Include Tokens</Trans>
                     <InfoHelper
-                      size={14}
+                      placement="top"
+                      size={10}
                       text={t`You can also include tokens to swap in your referral link so that referees are automatically re-directed to selected chain and selected tokens are also populated for the swap. You will still earn commission on other token swaps if they use your referral link.`}
+                      width="300px"
                     />
                   </Text>
                   <FarmingPoolsToggle isActive={isShowTokens} toggle={() => setIsShowTokens(prev => !prev)} />
