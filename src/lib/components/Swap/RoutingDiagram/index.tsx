@@ -14,10 +14,6 @@ import { InterfaceTrade } from 'state/routing/types'
 
 import { getTokenPath, RoutingDiagramEntry } from './utils'
 
-const Wrapper = styled(Column)`
-  padding: 0.25em;
-`
-
 const RouteRow = styled(Row)`
   grid-template-columns: 1em 1.15em 1fr 1em;
   min-width: 430px;
@@ -89,7 +85,7 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Curren
   const routes: RoutingDiagramEntry[] = useMemo(() => getTokenPath(trade), [trade])
 
   return (
-    <Wrapper gap={0.75}>
+    <Column gap={0.75}>
       <Row justify="space-between">
         <Row gap={0.25}>
           <AutoRouter />
@@ -138,6 +134,6 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Curren
           <TokenImg token={trade.outputAmount.currency} />
         </RouteRow>
       ))}
-    </Wrapper>
+    </Column>
   )
 }
