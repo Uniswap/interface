@@ -14,7 +14,7 @@ export type Scalars = {
   Float: number
   DateTime: any
   bigint: any
-  bytea: any
+  numeric: any
   timestamp: any
   v2_BigDecimal: any
   v2_BigInt: any
@@ -25,25 +25,15 @@ export type Scalars = {
   v3arbitrum_BigDecimal: any
   v3arbitrum_BigInt: any
   v3arbitrum_Bytes: any
+  v3optimism_BigDecimal: any
+  v3optimism_BigInt: any
+  v3optimism_Bytes: any
   v3polygon_BigDecimal: any
   v3polygon_BigInt: any
   v3polygon_Bytes: any
   v3rinkeby_BigDecimal: any
   v3rinkeby_BigInt: any
   v3rinkeby_Bytes: any
-}
-
-/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
-export type Int_Comparison_Exp = {
-  _eq?: Maybe<Scalars['Int']>
-  _gt?: Maybe<Scalars['Int']>
-  _gte?: Maybe<Scalars['Int']>
-  _in?: Maybe<Array<Scalars['Int']>>
-  _is_null?: Maybe<Scalars['Boolean']>
-  _lt?: Maybe<Scalars['Int']>
-  _lte?: Maybe<Scalars['Int']>
-  _neq?: Maybe<Scalars['Int']>
-  _nin?: Maybe<Array<Scalars['Int']>>
 }
 
 /** mutation root */
@@ -70,7 +60,7 @@ export type MutationDelete_BlocksArgs = {
 
 /** mutation root */
 export type MutationDelete_Blocks_By_PkArgs = {
-  number: Scalars['Int']
+  number: Scalars['bigint']
 }
 
 /** mutation root */
@@ -263,6 +253,48 @@ export type Query = {
   v3arbitrum_uniswapDayData?: Maybe<V3arbitrum_UniswapDayData>
   v3arbitrum_uniswapDayDatas: Array<V3arbitrum_UniswapDayData>
   /** Access to subgraph metadata */
+  v3optimism__meta?: Maybe<V3optimism__Meta_>
+  v3optimism_bundle?: Maybe<V3optimism_Bundle>
+  v3optimism_bundles: Array<V3optimism_Bundle>
+  v3optimism_burn?: Maybe<V3optimism_Burn>
+  v3optimism_burns: Array<V3optimism_Burn>
+  v3optimism_collect?: Maybe<V3optimism_Collect>
+  v3optimism_collects: Array<V3optimism_Collect>
+  v3optimism_factories: Array<V3optimism_Factory>
+  v3optimism_factory?: Maybe<V3optimism_Factory>
+  v3optimism_flash?: Maybe<V3optimism_Flash>
+  v3optimism_flashes: Array<V3optimism_Flash>
+  v3optimism_mint?: Maybe<V3optimism_Mint>
+  v3optimism_mints: Array<V3optimism_Mint>
+  v3optimism_pool?: Maybe<V3optimism_Pool>
+  v3optimism_poolDayData?: Maybe<V3optimism_PoolDayData>
+  v3optimism_poolDayDatas: Array<V3optimism_PoolDayData>
+  v3optimism_poolHourData?: Maybe<V3optimism_PoolHourData>
+  v3optimism_poolHourDatas: Array<V3optimism_PoolHourData>
+  v3optimism_pools: Array<V3optimism_Pool>
+  v3optimism_position?: Maybe<V3optimism_Position>
+  v3optimism_positionSnapshot?: Maybe<V3optimism_PositionSnapshot>
+  v3optimism_positionSnapshots: Array<V3optimism_PositionSnapshot>
+  v3optimism_positions: Array<V3optimism_Position>
+  v3optimism_swap?: Maybe<V3optimism_Swap>
+  v3optimism_swaps: Array<V3optimism_Swap>
+  v3optimism_tick?: Maybe<V3optimism_Tick>
+  v3optimism_tickDayData?: Maybe<V3optimism_TickDayData>
+  v3optimism_tickDayDatas: Array<V3optimism_TickDayData>
+  v3optimism_tickHourData?: Maybe<V3optimism_TickHourData>
+  v3optimism_tickHourDatas: Array<V3optimism_TickHourData>
+  v3optimism_ticks: Array<V3optimism_Tick>
+  v3optimism_token?: Maybe<V3optimism_Token>
+  v3optimism_tokenDayData?: Maybe<V3optimism_TokenDayData>
+  v3optimism_tokenDayDatas: Array<V3optimism_TokenDayData>
+  v3optimism_tokenHourData?: Maybe<V3optimism_TokenHourData>
+  v3optimism_tokenHourDatas: Array<V3optimism_TokenHourData>
+  v3optimism_tokens: Array<V3optimism_Token>
+  v3optimism_transaction?: Maybe<V3optimism_Transaction>
+  v3optimism_transactions: Array<V3optimism_Transaction>
+  v3optimism_uniswapDayData?: Maybe<V3optimism_UniswapDayData>
+  v3optimism_uniswapDayDatas: Array<V3optimism_UniswapDayData>
+  /** Access to subgraph metadata */
   v3polygon__meta?: Maybe<V3polygon__Meta_>
   v3polygon_bundle?: Maybe<V3polygon_Bundle>
   v3polygon_bundles: Array<V3polygon_Bundle>
@@ -370,7 +402,7 @@ export type QueryBlocks_AggregateArgs = {
 }
 
 export type QueryBlocks_By_PkArgs = {
-  number: Scalars['Int']
+  number: Scalars['bigint']
 }
 
 export type QueryBundleArgs = {
@@ -1600,6 +1632,330 @@ export type QueryV3arbitrum_UniswapDayDatasArgs = {
   where?: Maybe<V3arbitrum_UniswapDayData_Filter>
 }
 
+export type QueryV3optimism__MetaArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+}
+
+export type QueryV3optimism_BundleArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_BundlesArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Bundle_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Bundle_Filter>
+}
+
+export type QueryV3optimism_BurnArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_BurnsArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Burn_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Burn_Filter>
+}
+
+export type QueryV3optimism_CollectArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_CollectsArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Collect_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Collect_Filter>
+}
+
+export type QueryV3optimism_FactoriesArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Factory_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Factory_Filter>
+}
+
+export type QueryV3optimism_FactoryArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_FlashArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_FlashesArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Flash_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Flash_Filter>
+}
+
+export type QueryV3optimism_MintArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_MintsArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Mint_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Mint_Filter>
+}
+
+export type QueryV3optimism_PoolArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_PoolDayDataArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_PoolDayDatasArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_PoolDayData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_PoolDayData_Filter>
+}
+
+export type QueryV3optimism_PoolHourDataArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_PoolHourDatasArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_PoolHourData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_PoolHourData_Filter>
+}
+
+export type QueryV3optimism_PoolsArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Pool_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Pool_Filter>
+}
+
+export type QueryV3optimism_PositionArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_PositionSnapshotArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_PositionSnapshotsArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_PositionSnapshot_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_PositionSnapshot_Filter>
+}
+
+export type QueryV3optimism_PositionsArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Position_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Position_Filter>
+}
+
+export type QueryV3optimism_SwapArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_SwapsArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Swap_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Swap_Filter>
+}
+
+export type QueryV3optimism_TickArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_TickDayDataArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_TickDayDatasArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_TickDayData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_TickDayData_Filter>
+}
+
+export type QueryV3optimism_TickHourDataArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_TickHourDatasArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_TickHourData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_TickHourData_Filter>
+}
+
+export type QueryV3optimism_TicksArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Tick_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Tick_Filter>
+}
+
+export type QueryV3optimism_TokenArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_TokenDayDataArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_TokenDayDatasArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_TokenDayData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_TokenDayData_Filter>
+}
+
+export type QueryV3optimism_TokenHourDataArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_TokenHourDatasArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_TokenHourData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_TokenHourData_Filter>
+}
+
+export type QueryV3optimism_TokensArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Token_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Token_Filter>
+}
+
+export type QueryV3optimism_TransactionArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_TransactionsArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Transaction_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_Transaction_Filter>
+}
+
+export type QueryV3optimism_UniswapDayDataArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  id: Scalars['ID']
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+}
+
+export type QueryV3optimism_UniswapDayDatasArgs = {
+  block?: Maybe<V3optimism_Block_Height>
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_UniswapDayData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  subgraphError?: V3optimism__SubgraphErrorPolicy_
+  where?: Maybe<V3optimism_UniswapDayData_Filter>
+}
+
 export type QueryV3polygon__MetaArgs = {
   block?: Maybe<V3polygon_Block_Height>
 }
@@ -2248,6 +2604,39 @@ export type QueryV3rinkeby_UniswapDayDatasArgs = {
   where?: Maybe<V3rinkeby_UniswapDayData_Filter>
 }
 
+/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
+export type String_Comparison_Exp = {
+  _eq?: Maybe<Scalars['String']>
+  _gt?: Maybe<Scalars['String']>
+  _gte?: Maybe<Scalars['String']>
+  /** does the column match the given case-insensitive pattern */
+  _ilike?: Maybe<Scalars['String']>
+  _in?: Maybe<Array<Scalars['String']>>
+  /** does the column match the given POSIX regular expression, case insensitive */
+  _iregex?: Maybe<Scalars['String']>
+  _is_null?: Maybe<Scalars['Boolean']>
+  /** does the column match the given pattern */
+  _like?: Maybe<Scalars['String']>
+  _lt?: Maybe<Scalars['String']>
+  _lte?: Maybe<Scalars['String']>
+  _neq?: Maybe<Scalars['String']>
+  /** does the column NOT match the given case-insensitive pattern */
+  _nilike?: Maybe<Scalars['String']>
+  _nin?: Maybe<Array<Scalars['String']>>
+  /** does the column NOT match the given POSIX regular expression, case insensitive */
+  _niregex?: Maybe<Scalars['String']>
+  /** does the column NOT match the given pattern */
+  _nlike?: Maybe<Scalars['String']>
+  /** does the column NOT match the given POSIX regular expression, case sensitive */
+  _nregex?: Maybe<Scalars['String']>
+  /** does the column NOT match the given SQL regular expression */
+  _nsimilar?: Maybe<Scalars['String']>
+  /** does the column match the given POSIX regular expression, case sensitive */
+  _regex?: Maybe<Scalars['String']>
+  /** does the column match the given SQL regular expression */
+  _similar?: Maybe<Scalars['String']>
+}
+
 export type Subscription = {
   __typename?: 'Subscription'
   /** fetch data from the table: "blocks" */
@@ -2275,7 +2664,7 @@ export type SubscriptionBlocks_AggregateArgs = {
 }
 
 export type SubscriptionBlocks_By_PkArgs = {
-  number: Scalars['Int']
+  number: Scalars['bigint']
 }
 
 export type TimeseriesOutput = {
@@ -2300,16 +2689,26 @@ export type Bigint_Comparison_Exp = {
 /** columns and relationships of "blocks" */
 export type Blocks = {
   __typename?: 'blocks'
-  difficulty: Scalars['bigint']
-  extra_data: Scalars['bytea']
-  gas_limit: Scalars['bigint']
-  gas_used: Scalars['bigint']
-  hash: Scalars['bytea']
-  miner: Scalars['bytea']
-  nonce: Scalars['bytea']
-  number: Scalars['Int']
-  parent_hash: Scalars['bytea']
-  timestamp: Scalars['timestamp']
+  base_fee_per_gas?: Maybe<Scalars['bigint']>
+  difficulty?: Maybe<Scalars['numeric']>
+  extra_data?: Maybe<Scalars['String']>
+  gas_limit?: Maybe<Scalars['bigint']>
+  gas_used?: Maybe<Scalars['bigint']>
+  hash?: Maybe<Scalars['String']>
+  logs_bloom?: Maybe<Scalars['String']>
+  miner?: Maybe<Scalars['String']>
+  mix_hash?: Maybe<Scalars['String']>
+  nonce?: Maybe<Scalars['String']>
+  number: Scalars['bigint']
+  parent_hash?: Maybe<Scalars['String']>
+  receipts_root?: Maybe<Scalars['String']>
+  sha3_uncles?: Maybe<Scalars['String']>
+  size?: Maybe<Scalars['bigint']>
+  state_root?: Maybe<Scalars['String']>
+  timestamp?: Maybe<Scalars['timestamp']>
+  total_difficulty?: Maybe<Scalars['numeric']>
+  transaction_count?: Maybe<Scalars['bigint']>
+  transactions_root?: Maybe<Scalars['String']>
 }
 
 /** aggregated selection of "blocks" */
@@ -2344,10 +2743,14 @@ export type Blocks_Aggregate_FieldsCountArgs = {
 /** aggregate avg on columns */
 export type Blocks_Avg_Fields = {
   __typename?: 'blocks_avg_fields'
+  base_fee_per_gas?: Maybe<Scalars['Float']>
   difficulty?: Maybe<Scalars['Float']>
   gas_limit?: Maybe<Scalars['Float']>
   gas_used?: Maybe<Scalars['Float']>
   number?: Maybe<Scalars['Float']>
+  size?: Maybe<Scalars['Float']>
+  total_difficulty?: Maybe<Scalars['Float']>
+  transaction_count?: Maybe<Scalars['Float']>
 }
 
 /** Boolean expression to filter rows from the table "blocks". All fields are combined with a logical 'AND'. */
@@ -2355,16 +2758,26 @@ export type Blocks_Bool_Exp = {
   _and?: Maybe<Array<Blocks_Bool_Exp>>
   _not?: Maybe<Blocks_Bool_Exp>
   _or?: Maybe<Array<Blocks_Bool_Exp>>
-  difficulty?: Maybe<Bigint_Comparison_Exp>
-  extra_data?: Maybe<Bytea_Comparison_Exp>
+  base_fee_per_gas?: Maybe<Bigint_Comparison_Exp>
+  difficulty?: Maybe<Numeric_Comparison_Exp>
+  extra_data?: Maybe<String_Comparison_Exp>
   gas_limit?: Maybe<Bigint_Comparison_Exp>
   gas_used?: Maybe<Bigint_Comparison_Exp>
-  hash?: Maybe<Bytea_Comparison_Exp>
-  miner?: Maybe<Bytea_Comparison_Exp>
-  nonce?: Maybe<Bytea_Comparison_Exp>
-  number?: Maybe<Int_Comparison_Exp>
-  parent_hash?: Maybe<Bytea_Comparison_Exp>
+  hash?: Maybe<String_Comparison_Exp>
+  logs_bloom?: Maybe<String_Comparison_Exp>
+  miner?: Maybe<String_Comparison_Exp>
+  mix_hash?: Maybe<String_Comparison_Exp>
+  nonce?: Maybe<String_Comparison_Exp>
+  number?: Maybe<Bigint_Comparison_Exp>
+  parent_hash?: Maybe<String_Comparison_Exp>
+  receipts_root?: Maybe<String_Comparison_Exp>
+  sha3_uncles?: Maybe<String_Comparison_Exp>
+  size?: Maybe<Bigint_Comparison_Exp>
+  state_root?: Maybe<String_Comparison_Exp>
   timestamp?: Maybe<Timestamp_Comparison_Exp>
+  total_difficulty?: Maybe<Numeric_Comparison_Exp>
+  transaction_count?: Maybe<Bigint_Comparison_Exp>
+  transactions_root?: Maybe<String_Comparison_Exp>
 }
 
 /** unique or primary key constraints on table "blocks" */
@@ -2377,44 +2790,88 @@ export enum Blocks_Constraint {
 
 /** input type for incrementing numeric columns in table "blocks" */
 export type Blocks_Inc_Input = {
-  difficulty?: Maybe<Scalars['bigint']>
+  base_fee_per_gas?: Maybe<Scalars['bigint']>
+  difficulty?: Maybe<Scalars['numeric']>
   gas_limit?: Maybe<Scalars['bigint']>
   gas_used?: Maybe<Scalars['bigint']>
-  number?: Maybe<Scalars['Int']>
+  number?: Maybe<Scalars['bigint']>
+  size?: Maybe<Scalars['bigint']>
+  total_difficulty?: Maybe<Scalars['numeric']>
+  transaction_count?: Maybe<Scalars['bigint']>
 }
 
 /** input type for inserting data into table "blocks" */
 export type Blocks_Insert_Input = {
-  difficulty?: Maybe<Scalars['bigint']>
-  extra_data?: Maybe<Scalars['bytea']>
+  base_fee_per_gas?: Maybe<Scalars['bigint']>
+  difficulty?: Maybe<Scalars['numeric']>
+  extra_data?: Maybe<Scalars['String']>
   gas_limit?: Maybe<Scalars['bigint']>
   gas_used?: Maybe<Scalars['bigint']>
-  hash?: Maybe<Scalars['bytea']>
-  miner?: Maybe<Scalars['bytea']>
-  nonce?: Maybe<Scalars['bytea']>
-  number?: Maybe<Scalars['Int']>
-  parent_hash?: Maybe<Scalars['bytea']>
+  hash?: Maybe<Scalars['String']>
+  logs_bloom?: Maybe<Scalars['String']>
+  miner?: Maybe<Scalars['String']>
+  mix_hash?: Maybe<Scalars['String']>
+  nonce?: Maybe<Scalars['String']>
+  number?: Maybe<Scalars['bigint']>
+  parent_hash?: Maybe<Scalars['String']>
+  receipts_root?: Maybe<Scalars['String']>
+  sha3_uncles?: Maybe<Scalars['String']>
+  size?: Maybe<Scalars['bigint']>
+  state_root?: Maybe<Scalars['String']>
   timestamp?: Maybe<Scalars['timestamp']>
+  total_difficulty?: Maybe<Scalars['numeric']>
+  transaction_count?: Maybe<Scalars['bigint']>
+  transactions_root?: Maybe<Scalars['String']>
 }
 
 /** aggregate max on columns */
 export type Blocks_Max_Fields = {
   __typename?: 'blocks_max_fields'
-  difficulty?: Maybe<Scalars['bigint']>
+  base_fee_per_gas?: Maybe<Scalars['bigint']>
+  difficulty?: Maybe<Scalars['numeric']>
+  extra_data?: Maybe<Scalars['String']>
   gas_limit?: Maybe<Scalars['bigint']>
   gas_used?: Maybe<Scalars['bigint']>
-  number?: Maybe<Scalars['Int']>
+  hash?: Maybe<Scalars['String']>
+  logs_bloom?: Maybe<Scalars['String']>
+  miner?: Maybe<Scalars['String']>
+  mix_hash?: Maybe<Scalars['String']>
+  nonce?: Maybe<Scalars['String']>
+  number?: Maybe<Scalars['bigint']>
+  parent_hash?: Maybe<Scalars['String']>
+  receipts_root?: Maybe<Scalars['String']>
+  sha3_uncles?: Maybe<Scalars['String']>
+  size?: Maybe<Scalars['bigint']>
+  state_root?: Maybe<Scalars['String']>
   timestamp?: Maybe<Scalars['timestamp']>
+  total_difficulty?: Maybe<Scalars['numeric']>
+  transaction_count?: Maybe<Scalars['bigint']>
+  transactions_root?: Maybe<Scalars['String']>
 }
 
 /** aggregate min on columns */
 export type Blocks_Min_Fields = {
   __typename?: 'blocks_min_fields'
-  difficulty?: Maybe<Scalars['bigint']>
+  base_fee_per_gas?: Maybe<Scalars['bigint']>
+  difficulty?: Maybe<Scalars['numeric']>
+  extra_data?: Maybe<Scalars['String']>
   gas_limit?: Maybe<Scalars['bigint']>
   gas_used?: Maybe<Scalars['bigint']>
-  number?: Maybe<Scalars['Int']>
+  hash?: Maybe<Scalars['String']>
+  logs_bloom?: Maybe<Scalars['String']>
+  miner?: Maybe<Scalars['String']>
+  mix_hash?: Maybe<Scalars['String']>
+  nonce?: Maybe<Scalars['String']>
+  number?: Maybe<Scalars['bigint']>
+  parent_hash?: Maybe<Scalars['String']>
+  receipts_root?: Maybe<Scalars['String']>
+  sha3_uncles?: Maybe<Scalars['String']>
+  size?: Maybe<Scalars['bigint']>
+  state_root?: Maybe<Scalars['String']>
   timestamp?: Maybe<Scalars['timestamp']>
+  total_difficulty?: Maybe<Scalars['numeric']>
+  transaction_count?: Maybe<Scalars['bigint']>
+  transactions_root?: Maybe<Scalars['String']>
 }
 
 /** response of any mutation on the table "blocks" */
@@ -2435,26 +2892,38 @@ export type Blocks_On_Conflict = {
 
 /** Ordering options when selecting data from "blocks". */
 export type Blocks_Order_By = {
+  base_fee_per_gas?: Maybe<Order_By>
   difficulty?: Maybe<Order_By>
   extra_data?: Maybe<Order_By>
   gas_limit?: Maybe<Order_By>
   gas_used?: Maybe<Order_By>
   hash?: Maybe<Order_By>
+  logs_bloom?: Maybe<Order_By>
   miner?: Maybe<Order_By>
+  mix_hash?: Maybe<Order_By>
   nonce?: Maybe<Order_By>
   number?: Maybe<Order_By>
   parent_hash?: Maybe<Order_By>
+  receipts_root?: Maybe<Order_By>
+  sha3_uncles?: Maybe<Order_By>
+  size?: Maybe<Order_By>
+  state_root?: Maybe<Order_By>
   timestamp?: Maybe<Order_By>
+  total_difficulty?: Maybe<Order_By>
+  transaction_count?: Maybe<Order_By>
+  transactions_root?: Maybe<Order_By>
 }
 
 /** primary key columns input for table: blocks */
 export type Blocks_Pk_Columns_Input = {
-  number: Scalars['Int']
+  number: Scalars['bigint']
 }
 
 /** select columns of table "blocks" */
 export enum Blocks_Select_Column {
   /** column name */
+  BaseFeePerGas = 'base_fee_per_gas',
+  /** column name */
   Difficulty = 'difficulty',
   /** column name */
   ExtraData = 'extra_data',
@@ -2465,7 +2934,11 @@ export enum Blocks_Select_Column {
   /** column name */
   Hash = 'hash',
   /** column name */
+  LogsBloom = 'logs_bloom',
+  /** column name */
   Miner = 'miner',
+  /** column name */
+  MixHash = 'mix_hash',
   /** column name */
   Nonce = 'nonce',
   /** column name */
@@ -2473,61 +2946,103 @@ export enum Blocks_Select_Column {
   /** column name */
   ParentHash = 'parent_hash',
   /** column name */
+  ReceiptsRoot = 'receipts_root',
+  /** column name */
+  Sha3Uncles = 'sha3_uncles',
+  /** column name */
+  Size = 'size',
+  /** column name */
+  StateRoot = 'state_root',
+  /** column name */
   Timestamp = 'timestamp',
+  /** column name */
+  TotalDifficulty = 'total_difficulty',
+  /** column name */
+  TransactionCount = 'transaction_count',
+  /** column name */
+  TransactionsRoot = 'transactions_root',
 }
 
 /** input type for updating data in table "blocks" */
 export type Blocks_Set_Input = {
-  difficulty?: Maybe<Scalars['bigint']>
-  extra_data?: Maybe<Scalars['bytea']>
+  base_fee_per_gas?: Maybe<Scalars['bigint']>
+  difficulty?: Maybe<Scalars['numeric']>
+  extra_data?: Maybe<Scalars['String']>
   gas_limit?: Maybe<Scalars['bigint']>
   gas_used?: Maybe<Scalars['bigint']>
-  hash?: Maybe<Scalars['bytea']>
-  miner?: Maybe<Scalars['bytea']>
-  nonce?: Maybe<Scalars['bytea']>
-  number?: Maybe<Scalars['Int']>
-  parent_hash?: Maybe<Scalars['bytea']>
+  hash?: Maybe<Scalars['String']>
+  logs_bloom?: Maybe<Scalars['String']>
+  miner?: Maybe<Scalars['String']>
+  mix_hash?: Maybe<Scalars['String']>
+  nonce?: Maybe<Scalars['String']>
+  number?: Maybe<Scalars['bigint']>
+  parent_hash?: Maybe<Scalars['String']>
+  receipts_root?: Maybe<Scalars['String']>
+  sha3_uncles?: Maybe<Scalars['String']>
+  size?: Maybe<Scalars['bigint']>
+  state_root?: Maybe<Scalars['String']>
   timestamp?: Maybe<Scalars['timestamp']>
+  total_difficulty?: Maybe<Scalars['numeric']>
+  transaction_count?: Maybe<Scalars['bigint']>
+  transactions_root?: Maybe<Scalars['String']>
 }
 
 /** aggregate stddev on columns */
 export type Blocks_Stddev_Fields = {
   __typename?: 'blocks_stddev_fields'
+  base_fee_per_gas?: Maybe<Scalars['Float']>
   difficulty?: Maybe<Scalars['Float']>
   gas_limit?: Maybe<Scalars['Float']>
   gas_used?: Maybe<Scalars['Float']>
   number?: Maybe<Scalars['Float']>
+  size?: Maybe<Scalars['Float']>
+  total_difficulty?: Maybe<Scalars['Float']>
+  transaction_count?: Maybe<Scalars['Float']>
 }
 
 /** aggregate stddev_pop on columns */
 export type Blocks_Stddev_Pop_Fields = {
   __typename?: 'blocks_stddev_pop_fields'
+  base_fee_per_gas?: Maybe<Scalars['Float']>
   difficulty?: Maybe<Scalars['Float']>
   gas_limit?: Maybe<Scalars['Float']>
   gas_used?: Maybe<Scalars['Float']>
   number?: Maybe<Scalars['Float']>
+  size?: Maybe<Scalars['Float']>
+  total_difficulty?: Maybe<Scalars['Float']>
+  transaction_count?: Maybe<Scalars['Float']>
 }
 
 /** aggregate stddev_samp on columns */
 export type Blocks_Stddev_Samp_Fields = {
   __typename?: 'blocks_stddev_samp_fields'
+  base_fee_per_gas?: Maybe<Scalars['Float']>
   difficulty?: Maybe<Scalars['Float']>
   gas_limit?: Maybe<Scalars['Float']>
   gas_used?: Maybe<Scalars['Float']>
   number?: Maybe<Scalars['Float']>
+  size?: Maybe<Scalars['Float']>
+  total_difficulty?: Maybe<Scalars['Float']>
+  transaction_count?: Maybe<Scalars['Float']>
 }
 
 /** aggregate sum on columns */
 export type Blocks_Sum_Fields = {
   __typename?: 'blocks_sum_fields'
-  difficulty?: Maybe<Scalars['bigint']>
+  base_fee_per_gas?: Maybe<Scalars['bigint']>
+  difficulty?: Maybe<Scalars['numeric']>
   gas_limit?: Maybe<Scalars['bigint']>
   gas_used?: Maybe<Scalars['bigint']>
-  number?: Maybe<Scalars['Int']>
+  number?: Maybe<Scalars['bigint']>
+  size?: Maybe<Scalars['bigint']>
+  total_difficulty?: Maybe<Scalars['numeric']>
+  transaction_count?: Maybe<Scalars['bigint']>
 }
 
 /** update columns of table "blocks" */
 export enum Blocks_Update_Column {
+  /** column name */
+  BaseFeePerGas = 'base_fee_per_gas',
   /** column name */
   Difficulty = 'difficulty',
   /** column name */
@@ -2539,7 +3054,11 @@ export enum Blocks_Update_Column {
   /** column name */
   Hash = 'hash',
   /** column name */
+  LogsBloom = 'logs_bloom',
+  /** column name */
   Miner = 'miner',
+  /** column name */
+  MixHash = 'mix_hash',
   /** column name */
   Nonce = 'nonce',
   /** column name */
@@ -2547,47 +3066,73 @@ export enum Blocks_Update_Column {
   /** column name */
   ParentHash = 'parent_hash',
   /** column name */
+  ReceiptsRoot = 'receipts_root',
+  /** column name */
+  Sha3Uncles = 'sha3_uncles',
+  /** column name */
+  Size = 'size',
+  /** column name */
+  StateRoot = 'state_root',
+  /** column name */
   Timestamp = 'timestamp',
+  /** column name */
+  TotalDifficulty = 'total_difficulty',
+  /** column name */
+  TransactionCount = 'transaction_count',
+  /** column name */
+  TransactionsRoot = 'transactions_root',
 }
 
 /** aggregate var_pop on columns */
 export type Blocks_Var_Pop_Fields = {
   __typename?: 'blocks_var_pop_fields'
+  base_fee_per_gas?: Maybe<Scalars['Float']>
   difficulty?: Maybe<Scalars['Float']>
   gas_limit?: Maybe<Scalars['Float']>
   gas_used?: Maybe<Scalars['Float']>
   number?: Maybe<Scalars['Float']>
+  size?: Maybe<Scalars['Float']>
+  total_difficulty?: Maybe<Scalars['Float']>
+  transaction_count?: Maybe<Scalars['Float']>
 }
 
 /** aggregate var_samp on columns */
 export type Blocks_Var_Samp_Fields = {
   __typename?: 'blocks_var_samp_fields'
+  base_fee_per_gas?: Maybe<Scalars['Float']>
   difficulty?: Maybe<Scalars['Float']>
   gas_limit?: Maybe<Scalars['Float']>
   gas_used?: Maybe<Scalars['Float']>
   number?: Maybe<Scalars['Float']>
+  size?: Maybe<Scalars['Float']>
+  total_difficulty?: Maybe<Scalars['Float']>
+  transaction_count?: Maybe<Scalars['Float']>
 }
 
 /** aggregate variance on columns */
 export type Blocks_Variance_Fields = {
   __typename?: 'blocks_variance_fields'
+  base_fee_per_gas?: Maybe<Scalars['Float']>
   difficulty?: Maybe<Scalars['Float']>
   gas_limit?: Maybe<Scalars['Float']>
   gas_used?: Maybe<Scalars['Float']>
   number?: Maybe<Scalars['Float']>
+  size?: Maybe<Scalars['Float']>
+  total_difficulty?: Maybe<Scalars['Float']>
+  transaction_count?: Maybe<Scalars['Float']>
 }
 
-/** Boolean expression to compare columns of type "bytea". All fields are combined with logical 'AND'. */
-export type Bytea_Comparison_Exp = {
-  _eq?: Maybe<Scalars['bytea']>
-  _gt?: Maybe<Scalars['bytea']>
-  _gte?: Maybe<Scalars['bytea']>
-  _in?: Maybe<Array<Scalars['bytea']>>
+/** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
+export type Numeric_Comparison_Exp = {
+  _eq?: Maybe<Scalars['numeric']>
+  _gt?: Maybe<Scalars['numeric']>
+  _gte?: Maybe<Scalars['numeric']>
+  _in?: Maybe<Array<Scalars['numeric']>>
   _is_null?: Maybe<Scalars['Boolean']>
-  _lt?: Maybe<Scalars['bytea']>
-  _lte?: Maybe<Scalars['bytea']>
-  _neq?: Maybe<Scalars['bytea']>
-  _nin?: Maybe<Array<Scalars['bytea']>>
+  _lt?: Maybe<Scalars['numeric']>
+  _lte?: Maybe<Scalars['numeric']>
+  _neq?: Maybe<Scalars['numeric']>
+  _nin?: Maybe<Array<Scalars['numeric']>>
 }
 
 /** column ordering options */
@@ -2619,9 +3164,19 @@ export type Timestamp_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['timestamp']>>
 }
 
+/** The block at which the query should be executed. */
 export type V2_Block_Height = {
+  /** Value containing a block hash */
   hash?: Maybe<Scalars['v2_Bytes']>
+  /** Value containing a block number */
   number?: Maybe<Scalars['Int']>
+  /**
+   * Value containing the minimum block number.
+   * In the case of `number_gte`, the query will be executed on the latest block only if
+   * the subgraph has progressed to or past the minimum block number.
+   * Defaults to the latest block when omitted.
+   *
+   */
   number_gte?: Maybe<Scalars['Int']>
 }
 
@@ -3173,6 +3728,7 @@ export enum V2_Mint_OrderBy {
   Transaction = 'transaction',
 }
 
+/** Defines the order direction, either ascending or descending */
 export enum V2_OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
@@ -4482,9 +5038,19 @@ export enum V2__SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+/** The block at which the query should be executed. */
 export type V3_Block_Height = {
+  /** Value containing a block hash */
   hash?: Maybe<Scalars['v3_Bytes']>
+  /** Value containing a block number */
   number?: Maybe<Scalars['Int']>
+  /**
+   * Value containing the minimum block number.
+   * In the case of `number_gte`, the query will be executed on the latest block only if
+   * the subgraph has progressed to or past the minimum block number.
+   * Defaults to the latest block when omitted.
+   *
+   */
   number_gte?: Maybe<Scalars['Int']>
 }
 
@@ -5294,6 +5860,7 @@ export enum V3_Mint_OrderBy {
   Transaction = 'transaction',
 }
 
+/** Defines the order direction, either ascending or descending */
 export enum V3_OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
@@ -7927,9 +8494,19 @@ export enum V3__SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+/** The block at which the query should be executed. */
 export type V3arbitrum_Block_Height = {
+  /** Value containing a block hash */
   hash?: Maybe<Scalars['v3arbitrum_Bytes']>
+  /** Value containing a block number */
   number?: Maybe<Scalars['Int']>
+  /**
+   * Value containing the minimum block number.
+   * In the case of `number_gte`, the query will be executed on the latest block only if
+   * the subgraph has progressed to or past the minimum block number.
+   * Defaults to the latest block when omitted.
+   *
+   */
   number_gte?: Maybe<Scalars['Int']>
 }
 
@@ -8739,6 +9316,7 @@ export enum V3arbitrum_Mint_OrderBy {
   Transaction = 'transaction',
 }
 
+/** Defines the order direction, either ascending or descending */
 export enum V3arbitrum_OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
@@ -10872,9 +11450,3501 @@ export enum V3arbitrum__SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
-export type V3polygon_Block_Height = {
-  hash?: Maybe<Scalars['v3polygon_Bytes']>
+/** The block at which the query should be executed. */
+export type V3optimism_Block_Height = {
+  /** Value containing a block hash */
+  hash?: Maybe<Scalars['v3optimism_Bytes']>
+  /** Value containing a block number */
   number?: Maybe<Scalars['Int']>
+  /**
+   * Value containing the minimum block number.
+   * In the case of `number_gte`, the query will be executed on the latest block only if
+   * the subgraph has progressed to or past the minimum block number.
+   * Defaults to the latest block when omitted.
+   *
+   */
+  number_gte?: Maybe<Scalars['Int']>
+}
+
+export type V3optimism_Bundle = {
+  __typename?: 'v3optimism_Bundle'
+  ethPriceUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+}
+
+export type V3optimism_Bundle_Filter = {
+  ethPriceUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  ethPriceUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  ethPriceUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  ethPriceUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  ethPriceUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  ethPriceUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  ethPriceUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  ethPriceUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+}
+
+export enum V3optimism_Bundle_OrderBy {
+  EthPriceUsd = 'ethPriceUSD',
+  Id = 'id',
+}
+
+export type V3optimism_Burn = {
+  __typename?: 'v3optimism_Burn'
+  amount: Scalars['v3optimism_BigInt']
+  amount0: Scalars['v3optimism_BigDecimal']
+  amount1: Scalars['v3optimism_BigDecimal']
+  amountUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  id: Scalars['ID']
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  origin: Scalars['v3optimism_Bytes']
+  owner?: Maybe<Scalars['v3optimism_Bytes']>
+  pool: V3optimism_Pool
+  tickLower: Scalars['v3optimism_BigInt']
+  tickUpper: Scalars['v3optimism_BigInt']
+  timestamp: Scalars['v3optimism_BigInt']
+  token0: V3optimism_Token
+  token1: V3optimism_Token
+  transaction: V3optimism_Transaction
+}
+
+export type V3optimism_Burn_Filter = {
+  amount?: Maybe<Scalars['v3optimism_BigInt']>
+  amount0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  amount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  logIndex_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  origin?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  origin_not?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  owner?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  owner_not?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  tickLower?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickLower_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickUpper?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickUpper_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  token0?: Maybe<Scalars['String']>
+  token0_contains?: Maybe<Scalars['String']>
+  token0_ends_with?: Maybe<Scalars['String']>
+  token0_gt?: Maybe<Scalars['String']>
+  token0_gte?: Maybe<Scalars['String']>
+  token0_in?: Maybe<Array<Scalars['String']>>
+  token0_lt?: Maybe<Scalars['String']>
+  token0_lte?: Maybe<Scalars['String']>
+  token0_not?: Maybe<Scalars['String']>
+  token0_not_contains?: Maybe<Scalars['String']>
+  token0_not_ends_with?: Maybe<Scalars['String']>
+  token0_not_in?: Maybe<Array<Scalars['String']>>
+  token0_not_starts_with?: Maybe<Scalars['String']>
+  token0_starts_with?: Maybe<Scalars['String']>
+  token1?: Maybe<Scalars['String']>
+  token1_contains?: Maybe<Scalars['String']>
+  token1_ends_with?: Maybe<Scalars['String']>
+  token1_gt?: Maybe<Scalars['String']>
+  token1_gte?: Maybe<Scalars['String']>
+  token1_in?: Maybe<Array<Scalars['String']>>
+  token1_lt?: Maybe<Scalars['String']>
+  token1_lte?: Maybe<Scalars['String']>
+  token1_not?: Maybe<Scalars['String']>
+  token1_not_contains?: Maybe<Scalars['String']>
+  token1_not_ends_with?: Maybe<Scalars['String']>
+  token1_not_in?: Maybe<Array<Scalars['String']>>
+  token1_not_starts_with?: Maybe<Scalars['String']>
+  token1_starts_with?: Maybe<Scalars['String']>
+  transaction?: Maybe<Scalars['String']>
+  transaction_contains?: Maybe<Scalars['String']>
+  transaction_ends_with?: Maybe<Scalars['String']>
+  transaction_gt?: Maybe<Scalars['String']>
+  transaction_gte?: Maybe<Scalars['String']>
+  transaction_in?: Maybe<Array<Scalars['String']>>
+  transaction_lt?: Maybe<Scalars['String']>
+  transaction_lte?: Maybe<Scalars['String']>
+  transaction_not?: Maybe<Scalars['String']>
+  transaction_not_contains?: Maybe<Scalars['String']>
+  transaction_not_ends_with?: Maybe<Scalars['String']>
+  transaction_not_in?: Maybe<Array<Scalars['String']>>
+  transaction_not_starts_with?: Maybe<Scalars['String']>
+  transaction_starts_with?: Maybe<Scalars['String']>
+}
+
+export enum V3optimism_Burn_OrderBy {
+  Amount = 'amount',
+  Amount0 = 'amount0',
+  Amount1 = 'amount1',
+  AmountUsd = 'amountUSD',
+  Id = 'id',
+  LogIndex = 'logIndex',
+  Origin = 'origin',
+  Owner = 'owner',
+  Pool = 'pool',
+  TickLower = 'tickLower',
+  TickUpper = 'tickUpper',
+  Timestamp = 'timestamp',
+  Token0 = 'token0',
+  Token1 = 'token1',
+  Transaction = 'transaction',
+}
+
+export type V3optimism_Collect = {
+  __typename?: 'v3optimism_Collect'
+  amount0: Scalars['v3optimism_BigDecimal']
+  amount1: Scalars['v3optimism_BigDecimal']
+  amountUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  id: Scalars['ID']
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  owner?: Maybe<Scalars['v3optimism_Bytes']>
+  pool: V3optimism_Pool
+  tickLower: Scalars['v3optimism_BigInt']
+  tickUpper: Scalars['v3optimism_BigInt']
+  timestamp: Scalars['v3optimism_BigInt']
+  transaction: V3optimism_Transaction
+}
+
+export type V3optimism_Collect_Filter = {
+  amount0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  logIndex_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  owner?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  owner_not?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  tickLower?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickLower_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickUpper?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickUpper_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  transaction?: Maybe<Scalars['String']>
+  transaction_contains?: Maybe<Scalars['String']>
+  transaction_ends_with?: Maybe<Scalars['String']>
+  transaction_gt?: Maybe<Scalars['String']>
+  transaction_gte?: Maybe<Scalars['String']>
+  transaction_in?: Maybe<Array<Scalars['String']>>
+  transaction_lt?: Maybe<Scalars['String']>
+  transaction_lte?: Maybe<Scalars['String']>
+  transaction_not?: Maybe<Scalars['String']>
+  transaction_not_contains?: Maybe<Scalars['String']>
+  transaction_not_ends_with?: Maybe<Scalars['String']>
+  transaction_not_in?: Maybe<Array<Scalars['String']>>
+  transaction_not_starts_with?: Maybe<Scalars['String']>
+  transaction_starts_with?: Maybe<Scalars['String']>
+}
+
+export enum V3optimism_Collect_OrderBy {
+  Amount0 = 'amount0',
+  Amount1 = 'amount1',
+  AmountUsd = 'amountUSD',
+  Id = 'id',
+  LogIndex = 'logIndex',
+  Owner = 'owner',
+  Pool = 'pool',
+  TickLower = 'tickLower',
+  TickUpper = 'tickUpper',
+  Timestamp = 'timestamp',
+  Transaction = 'transaction',
+}
+
+export type V3optimism_Factory = {
+  __typename?: 'v3optimism_Factory'
+  id: Scalars['ID']
+  owner: Scalars['ID']
+  poolCount: Scalars['v3optimism_BigInt']
+  populated?: Maybe<Scalars['Boolean']>
+  totalFeesETH: Scalars['v3optimism_BigDecimal']
+  totalFeesUSD: Scalars['v3optimism_BigDecimal']
+  totalValueLockedETH: Scalars['v3optimism_BigDecimal']
+  totalValueLockedETHUntracked: Scalars['v3optimism_BigDecimal']
+  totalValueLockedUSD: Scalars['v3optimism_BigDecimal']
+  totalValueLockedUSDUntracked: Scalars['v3optimism_BigDecimal']
+  totalVolumeETH: Scalars['v3optimism_BigDecimal']
+  totalVolumeUSD: Scalars['v3optimism_BigDecimal']
+  txCount: Scalars['v3optimism_BigInt']
+  untrackedVolumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_Factory_Filter = {
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  owner?: Maybe<Scalars['ID']>
+  owner_gt?: Maybe<Scalars['ID']>
+  owner_gte?: Maybe<Scalars['ID']>
+  owner_in?: Maybe<Array<Scalars['ID']>>
+  owner_lt?: Maybe<Scalars['ID']>
+  owner_lte?: Maybe<Scalars['ID']>
+  owner_not?: Maybe<Scalars['ID']>
+  owner_not_in?: Maybe<Array<Scalars['ID']>>
+  poolCount?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  poolCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  populated?: Maybe<Scalars['Boolean']>
+  populated_in?: Maybe<Array<Scalars['Boolean']>>
+  populated_not?: Maybe<Scalars['Boolean']>
+  populated_not_in?: Maybe<Array<Scalars['Boolean']>>
+  totalFeesETH?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesETH_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesETH_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesETH_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalFeesETH_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesETH_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesETH_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesETH_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalFeesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalFeesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalFeesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedETH?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETHUntracked?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETHUntracked_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETHUntracked_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETHUntracked_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedETHUntracked_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETHUntracked_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETHUntracked_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETHUntracked_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedETH_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedETH_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSDUntracked_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalVolumeETH?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeETH_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeETH_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeETH_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalVolumeETH_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeETH_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeETH_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeETH_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalVolumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalVolumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalVolumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  txCount?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  txCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  untrackedVolumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  untrackedVolumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_Factory_OrderBy {
+  Id = 'id',
+  Owner = 'owner',
+  PoolCount = 'poolCount',
+  Populated = 'populated',
+  TotalFeesEth = 'totalFeesETH',
+  TotalFeesUsd = 'totalFeesUSD',
+  TotalValueLockedEth = 'totalValueLockedETH',
+  TotalValueLockedEthUntracked = 'totalValueLockedETHUntracked',
+  TotalValueLockedUsd = 'totalValueLockedUSD',
+  TotalValueLockedUsdUntracked = 'totalValueLockedUSDUntracked',
+  TotalVolumeEth = 'totalVolumeETH',
+  TotalVolumeUsd = 'totalVolumeUSD',
+  TxCount = 'txCount',
+  UntrackedVolumeUsd = 'untrackedVolumeUSD',
+}
+
+export type V3optimism_Flash = {
+  __typename?: 'v3optimism_Flash'
+  amount0: Scalars['v3optimism_BigDecimal']
+  amount0Paid: Scalars['v3optimism_BigDecimal']
+  amount1: Scalars['v3optimism_BigDecimal']
+  amount1Paid: Scalars['v3optimism_BigDecimal']
+  amountUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  pool: V3optimism_Pool
+  recipient: Scalars['v3optimism_Bytes']
+  sender: Scalars['v3optimism_Bytes']
+  timestamp: Scalars['v3optimism_BigInt']
+  transaction: V3optimism_Transaction
+}
+
+export type V3optimism_Flash_Filter = {
+  amount0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0Paid?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0Paid_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0Paid_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0Paid_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount0Paid_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0Paid_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0Paid_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0Paid_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1Paid?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1Paid_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1Paid_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1Paid_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1Paid_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1Paid_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1Paid_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1Paid_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  logIndex_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  recipient?: Maybe<Scalars['v3optimism_Bytes']>
+  recipient_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  recipient_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  recipient_not?: Maybe<Scalars['v3optimism_Bytes']>
+  recipient_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  recipient_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  sender?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  sender_not?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  timestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  transaction?: Maybe<Scalars['String']>
+  transaction_contains?: Maybe<Scalars['String']>
+  transaction_ends_with?: Maybe<Scalars['String']>
+  transaction_gt?: Maybe<Scalars['String']>
+  transaction_gte?: Maybe<Scalars['String']>
+  transaction_in?: Maybe<Array<Scalars['String']>>
+  transaction_lt?: Maybe<Scalars['String']>
+  transaction_lte?: Maybe<Scalars['String']>
+  transaction_not?: Maybe<Scalars['String']>
+  transaction_not_contains?: Maybe<Scalars['String']>
+  transaction_not_ends_with?: Maybe<Scalars['String']>
+  transaction_not_in?: Maybe<Array<Scalars['String']>>
+  transaction_not_starts_with?: Maybe<Scalars['String']>
+  transaction_starts_with?: Maybe<Scalars['String']>
+}
+
+export enum V3optimism_Flash_OrderBy {
+  Amount0 = 'amount0',
+  Amount0Paid = 'amount0Paid',
+  Amount1 = 'amount1',
+  Amount1Paid = 'amount1Paid',
+  AmountUsd = 'amountUSD',
+  Id = 'id',
+  LogIndex = 'logIndex',
+  Pool = 'pool',
+  Recipient = 'recipient',
+  Sender = 'sender',
+  Timestamp = 'timestamp',
+  Transaction = 'transaction',
+}
+
+export type V3optimism_Mint = {
+  __typename?: 'v3optimism_Mint'
+  amount: Scalars['v3optimism_BigInt']
+  amount0: Scalars['v3optimism_BigDecimal']
+  amount1: Scalars['v3optimism_BigDecimal']
+  amountUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  id: Scalars['ID']
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  origin: Scalars['v3optimism_Bytes']
+  owner: Scalars['v3optimism_Bytes']
+  pool: V3optimism_Pool
+  sender?: Maybe<Scalars['v3optimism_Bytes']>
+  tickLower: Scalars['v3optimism_BigInt']
+  tickUpper: Scalars['v3optimism_BigInt']
+  timestamp: Scalars['v3optimism_BigInt']
+  token0: V3optimism_Token
+  token1: V3optimism_Token
+  transaction: V3optimism_Transaction
+}
+
+export type V3optimism_Mint_Filter = {
+  amount?: Maybe<Scalars['v3optimism_BigInt']>
+  amount0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  amount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  amount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  logIndex_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  origin?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  origin_not?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  owner?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  owner_not?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  sender?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  sender_not?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  tickLower?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickLower_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tickLower_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickUpper?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickUpper_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tickUpper_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  token0?: Maybe<Scalars['String']>
+  token0_contains?: Maybe<Scalars['String']>
+  token0_ends_with?: Maybe<Scalars['String']>
+  token0_gt?: Maybe<Scalars['String']>
+  token0_gte?: Maybe<Scalars['String']>
+  token0_in?: Maybe<Array<Scalars['String']>>
+  token0_lt?: Maybe<Scalars['String']>
+  token0_lte?: Maybe<Scalars['String']>
+  token0_not?: Maybe<Scalars['String']>
+  token0_not_contains?: Maybe<Scalars['String']>
+  token0_not_ends_with?: Maybe<Scalars['String']>
+  token0_not_in?: Maybe<Array<Scalars['String']>>
+  token0_not_starts_with?: Maybe<Scalars['String']>
+  token0_starts_with?: Maybe<Scalars['String']>
+  token1?: Maybe<Scalars['String']>
+  token1_contains?: Maybe<Scalars['String']>
+  token1_ends_with?: Maybe<Scalars['String']>
+  token1_gt?: Maybe<Scalars['String']>
+  token1_gte?: Maybe<Scalars['String']>
+  token1_in?: Maybe<Array<Scalars['String']>>
+  token1_lt?: Maybe<Scalars['String']>
+  token1_lte?: Maybe<Scalars['String']>
+  token1_not?: Maybe<Scalars['String']>
+  token1_not_contains?: Maybe<Scalars['String']>
+  token1_not_ends_with?: Maybe<Scalars['String']>
+  token1_not_in?: Maybe<Array<Scalars['String']>>
+  token1_not_starts_with?: Maybe<Scalars['String']>
+  token1_starts_with?: Maybe<Scalars['String']>
+  transaction?: Maybe<Scalars['String']>
+  transaction_contains?: Maybe<Scalars['String']>
+  transaction_ends_with?: Maybe<Scalars['String']>
+  transaction_gt?: Maybe<Scalars['String']>
+  transaction_gte?: Maybe<Scalars['String']>
+  transaction_in?: Maybe<Array<Scalars['String']>>
+  transaction_lt?: Maybe<Scalars['String']>
+  transaction_lte?: Maybe<Scalars['String']>
+  transaction_not?: Maybe<Scalars['String']>
+  transaction_not_contains?: Maybe<Scalars['String']>
+  transaction_not_ends_with?: Maybe<Scalars['String']>
+  transaction_not_in?: Maybe<Array<Scalars['String']>>
+  transaction_not_starts_with?: Maybe<Scalars['String']>
+  transaction_starts_with?: Maybe<Scalars['String']>
+}
+
+export enum V3optimism_Mint_OrderBy {
+  Amount = 'amount',
+  Amount0 = 'amount0',
+  Amount1 = 'amount1',
+  AmountUsd = 'amountUSD',
+  Id = 'id',
+  LogIndex = 'logIndex',
+  Origin = 'origin',
+  Owner = 'owner',
+  Pool = 'pool',
+  Sender = 'sender',
+  TickLower = 'tickLower',
+  TickUpper = 'tickUpper',
+  Timestamp = 'timestamp',
+  Token0 = 'token0',
+  Token1 = 'token1',
+  Transaction = 'transaction',
+}
+
+/** Defines the order direction, either ascending or descending */
+export enum V3optimism_OrderDirection {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export type V3optimism_Pool = {
+  __typename?: 'v3optimism_Pool'
+  burns: Array<V3optimism_Burn>
+  collectedFeesToken0: Scalars['v3optimism_BigDecimal']
+  collectedFeesToken1: Scalars['v3optimism_BigDecimal']
+  collectedFeesUSD: Scalars['v3optimism_BigDecimal']
+  collects: Array<V3optimism_Collect>
+  createdAtBlockNumber: Scalars['v3optimism_BigInt']
+  createdAtTimestamp: Scalars['v3optimism_BigInt']
+  feeGrowthGlobal0X128: Scalars['v3optimism_BigInt']
+  feeGrowthGlobal1X128: Scalars['v3optimism_BigInt']
+  feeTier: Scalars['v3optimism_BigInt']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  liquidity: Scalars['v3optimism_BigInt']
+  liquidityProviderCount: Scalars['v3optimism_BigInt']
+  mints: Array<V3optimism_Mint>
+  observationIndex: Scalars['v3optimism_BigInt']
+  poolDayData: Array<V3optimism_PoolDayData>
+  poolHourData: Array<V3optimism_PoolHourData>
+  sqrtPrice: Scalars['v3optimism_BigInt']
+  swaps: Array<V3optimism_Swap>
+  tick?: Maybe<Scalars['v3optimism_BigInt']>
+  ticks: Array<V3optimism_Tick>
+  token0: V3optimism_Token
+  token0Price: Scalars['v3optimism_BigDecimal']
+  token1: V3optimism_Token
+  token1Price: Scalars['v3optimism_BigDecimal']
+  totalValueLockedETH: Scalars['v3optimism_BigDecimal']
+  totalValueLockedToken0: Scalars['v3optimism_BigDecimal']
+  totalValueLockedToken1: Scalars['v3optimism_BigDecimal']
+  totalValueLockedUSD: Scalars['v3optimism_BigDecimal']
+  totalValueLockedUSDUntracked: Scalars['v3optimism_BigDecimal']
+  txCount: Scalars['v3optimism_BigInt']
+  untrackedVolumeUSD: Scalars['v3optimism_BigDecimal']
+  volumeToken0: Scalars['v3optimism_BigDecimal']
+  volumeToken1: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_PoolBurnsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Burn_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Burn_Filter>
+}
+
+export type V3optimism_PoolCollectsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Collect_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Collect_Filter>
+}
+
+export type V3optimism_PoolMintsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Mint_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Mint_Filter>
+}
+
+export type V3optimism_PoolPoolDayDataArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_PoolDayData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_PoolDayData_Filter>
+}
+
+export type V3optimism_PoolPoolHourDataArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_PoolHourData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_PoolHourData_Filter>
+}
+
+export type V3optimism_PoolSwapsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Swap_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Swap_Filter>
+}
+
+export type V3optimism_PoolTicksArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Tick_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Tick_Filter>
+}
+
+export type V3optimism_PoolDayData = {
+  __typename?: 'v3optimism_PoolDayData'
+  close: Scalars['v3optimism_BigDecimal']
+  date: Scalars['Int']
+  feeGrowthGlobal0X128: Scalars['v3optimism_BigInt']
+  feeGrowthGlobal1X128: Scalars['v3optimism_BigInt']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  high: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  liquidity: Scalars['v3optimism_BigInt']
+  low: Scalars['v3optimism_BigDecimal']
+  open: Scalars['v3optimism_BigDecimal']
+  pool: V3optimism_Pool
+  sqrtPrice: Scalars['v3optimism_BigInt']
+  tick?: Maybe<Scalars['v3optimism_BigInt']>
+  token0Price: Scalars['v3optimism_BigDecimal']
+  token1Price: Scalars['v3optimism_BigDecimal']
+  tvlUSD: Scalars['v3optimism_BigDecimal']
+  txCount: Scalars['v3optimism_BigInt']
+  volumeToken0: Scalars['v3optimism_BigDecimal']
+  volumeToken1: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_PoolDayData_Filter = {
+  close?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  close_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  date?: Maybe<Scalars['Int']>
+  date_gt?: Maybe<Scalars['Int']>
+  date_gte?: Maybe<Scalars['Int']>
+  date_in?: Maybe<Array<Scalars['Int']>>
+  date_lt?: Maybe<Scalars['Int']>
+  date_lte?: Maybe<Scalars['Int']>
+  date_not?: Maybe<Scalars['Int']>
+  date_not_in?: Maybe<Array<Scalars['Int']>>
+  feeGrowthGlobal0X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal0X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal1X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal1X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  high?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  high_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  liquidity?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidity_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  low?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  low_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  open?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  open_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  sqrtPrice?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  sqrtPrice_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_not?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tick?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tick_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  token0Price?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token0Price_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token1Price?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token1Price_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  tvlUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  tvlUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  txCount?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  txCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  volumeToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_PoolDayData_OrderBy {
+  Close = 'close',
+  Date = 'date',
+  FeeGrowthGlobal0X128 = 'feeGrowthGlobal0X128',
+  FeeGrowthGlobal1X128 = 'feeGrowthGlobal1X128',
+  FeesUsd = 'feesUSD',
+  High = 'high',
+  Id = 'id',
+  Liquidity = 'liquidity',
+  Low = 'low',
+  Open = 'open',
+  Pool = 'pool',
+  SqrtPrice = 'sqrtPrice',
+  Tick = 'tick',
+  Token0Price = 'token0Price',
+  Token1Price = 'token1Price',
+  TvlUsd = 'tvlUSD',
+  TxCount = 'txCount',
+  VolumeToken0 = 'volumeToken0',
+  VolumeToken1 = 'volumeToken1',
+  VolumeUsd = 'volumeUSD',
+}
+
+export type V3optimism_PoolHourData = {
+  __typename?: 'v3optimism_PoolHourData'
+  close: Scalars['v3optimism_BigDecimal']
+  feeGrowthGlobal0X128: Scalars['v3optimism_BigInt']
+  feeGrowthGlobal1X128: Scalars['v3optimism_BigInt']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  high: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  liquidity: Scalars['v3optimism_BigInt']
+  low: Scalars['v3optimism_BigDecimal']
+  open: Scalars['v3optimism_BigDecimal']
+  periodStartUnix: Scalars['Int']
+  pool: V3optimism_Pool
+  sqrtPrice: Scalars['v3optimism_BigInt']
+  tick?: Maybe<Scalars['v3optimism_BigInt']>
+  token0Price: Scalars['v3optimism_BigDecimal']
+  token1Price: Scalars['v3optimism_BigDecimal']
+  tvlUSD: Scalars['v3optimism_BigDecimal']
+  txCount: Scalars['v3optimism_BigInt']
+  volumeToken0: Scalars['v3optimism_BigDecimal']
+  volumeToken1: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_PoolHourData_Filter = {
+  close?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  close_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feeGrowthGlobal0X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal0X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal1X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal1X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  high?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  high_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  liquidity?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidity_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  low?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  low_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  open?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  open_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  periodStartUnix?: Maybe<Scalars['Int']>
+  periodStartUnix_gt?: Maybe<Scalars['Int']>
+  periodStartUnix_gte?: Maybe<Scalars['Int']>
+  periodStartUnix_in?: Maybe<Array<Scalars['Int']>>
+  periodStartUnix_lt?: Maybe<Scalars['Int']>
+  periodStartUnix_lte?: Maybe<Scalars['Int']>
+  periodStartUnix_not?: Maybe<Scalars['Int']>
+  periodStartUnix_not_in?: Maybe<Array<Scalars['Int']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  sqrtPrice?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  sqrtPrice_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_not?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tick?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tick_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  token0Price?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token0Price_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token1Price?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token1Price_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  tvlUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  tvlUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  txCount?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  txCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  volumeToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_PoolHourData_OrderBy {
+  Close = 'close',
+  FeeGrowthGlobal0X128 = 'feeGrowthGlobal0X128',
+  FeeGrowthGlobal1X128 = 'feeGrowthGlobal1X128',
+  FeesUsd = 'feesUSD',
+  High = 'high',
+  Id = 'id',
+  Liquidity = 'liquidity',
+  Low = 'low',
+  Open = 'open',
+  PeriodStartUnix = 'periodStartUnix',
+  Pool = 'pool',
+  SqrtPrice = 'sqrtPrice',
+  Tick = 'tick',
+  Token0Price = 'token0Price',
+  Token1Price = 'token1Price',
+  TvlUsd = 'tvlUSD',
+  TxCount = 'txCount',
+  VolumeToken0 = 'volumeToken0',
+  VolumeToken1 = 'volumeToken1',
+  VolumeUsd = 'volumeUSD',
+}
+
+export type V3optimism_Pool_Filter = {
+  collectedFeesToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  createdAtBlockNumber?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  createdAtBlockNumber_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_not?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  createdAtTimestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  createdAtTimestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal0X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal0X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal0X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal1X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthGlobal1X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthGlobal1X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeTier?: Maybe<Scalars['v3optimism_BigInt']>
+  feeTier_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeTier_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeTier_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeTier_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeTier_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeTier_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeTier_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  liquidity?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityProviderCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidity_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidity_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  observationIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  observationIndex_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  observationIndex_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  observationIndex_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  observationIndex_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  observationIndex_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  observationIndex_not?: Maybe<Scalars['v3optimism_BigInt']>
+  observationIndex_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  sqrtPrice?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  sqrtPrice_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_not?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPrice_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tick?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tick_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  token0?: Maybe<Scalars['String']>
+  token0Price?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token0Price_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token0Price_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token0_contains?: Maybe<Scalars['String']>
+  token0_ends_with?: Maybe<Scalars['String']>
+  token0_gt?: Maybe<Scalars['String']>
+  token0_gte?: Maybe<Scalars['String']>
+  token0_in?: Maybe<Array<Scalars['String']>>
+  token0_lt?: Maybe<Scalars['String']>
+  token0_lte?: Maybe<Scalars['String']>
+  token0_not?: Maybe<Scalars['String']>
+  token0_not_contains?: Maybe<Scalars['String']>
+  token0_not_ends_with?: Maybe<Scalars['String']>
+  token0_not_in?: Maybe<Array<Scalars['String']>>
+  token0_not_starts_with?: Maybe<Scalars['String']>
+  token0_starts_with?: Maybe<Scalars['String']>
+  token1?: Maybe<Scalars['String']>
+  token1Price?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token1Price_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  token1Price_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token1_contains?: Maybe<Scalars['String']>
+  token1_ends_with?: Maybe<Scalars['String']>
+  token1_gt?: Maybe<Scalars['String']>
+  token1_gte?: Maybe<Scalars['String']>
+  token1_in?: Maybe<Array<Scalars['String']>>
+  token1_lt?: Maybe<Scalars['String']>
+  token1_lte?: Maybe<Scalars['String']>
+  token1_not?: Maybe<Scalars['String']>
+  token1_not_contains?: Maybe<Scalars['String']>
+  token1_not_ends_with?: Maybe<Scalars['String']>
+  token1_not_in?: Maybe<Array<Scalars['String']>>
+  token1_not_starts_with?: Maybe<Scalars['String']>
+  token1_starts_with?: Maybe<Scalars['String']>
+  totalValueLockedETH?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedETH_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedETH_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSDUntracked_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  txCount?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  txCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  untrackedVolumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  untrackedVolumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_Pool_OrderBy {
+  Burns = 'burns',
+  CollectedFeesToken0 = 'collectedFeesToken0',
+  CollectedFeesToken1 = 'collectedFeesToken1',
+  CollectedFeesUsd = 'collectedFeesUSD',
+  Collects = 'collects',
+  CreatedAtBlockNumber = 'createdAtBlockNumber',
+  CreatedAtTimestamp = 'createdAtTimestamp',
+  FeeGrowthGlobal0X128 = 'feeGrowthGlobal0X128',
+  FeeGrowthGlobal1X128 = 'feeGrowthGlobal1X128',
+  FeeTier = 'feeTier',
+  FeesUsd = 'feesUSD',
+  Id = 'id',
+  Liquidity = 'liquidity',
+  LiquidityProviderCount = 'liquidityProviderCount',
+  Mints = 'mints',
+  ObservationIndex = 'observationIndex',
+  PoolDayData = 'poolDayData',
+  PoolHourData = 'poolHourData',
+  SqrtPrice = 'sqrtPrice',
+  Swaps = 'swaps',
+  Tick = 'tick',
+  Ticks = 'ticks',
+  Token0 = 'token0',
+  Token0Price = 'token0Price',
+  Token1 = 'token1',
+  Token1Price = 'token1Price',
+  TotalValueLockedEth = 'totalValueLockedETH',
+  TotalValueLockedToken0 = 'totalValueLockedToken0',
+  TotalValueLockedToken1 = 'totalValueLockedToken1',
+  TotalValueLockedUsd = 'totalValueLockedUSD',
+  TotalValueLockedUsdUntracked = 'totalValueLockedUSDUntracked',
+  TxCount = 'txCount',
+  UntrackedVolumeUsd = 'untrackedVolumeUSD',
+  VolumeToken0 = 'volumeToken0',
+  VolumeToken1 = 'volumeToken1',
+  VolumeUsd = 'volumeUSD',
+}
+
+export type V3optimism_Position = {
+  __typename?: 'v3optimism_Position'
+  collectedFeesToken0: Scalars['v3optimism_BigDecimal']
+  collectedFeesToken1: Scalars['v3optimism_BigDecimal']
+  collectedToken0: Scalars['v3optimism_BigDecimal']
+  collectedToken1: Scalars['v3optimism_BigDecimal']
+  depositedToken0: Scalars['v3optimism_BigDecimal']
+  depositedToken1: Scalars['v3optimism_BigDecimal']
+  feeGrowthInside0LastX128: Scalars['v3optimism_BigInt']
+  feeGrowthInside1LastX128: Scalars['v3optimism_BigInt']
+  id: Scalars['ID']
+  liquidity: Scalars['v3optimism_BigInt']
+  owner: Scalars['v3optimism_Bytes']
+  pool: V3optimism_Pool
+  tickLower: V3optimism_Tick
+  tickUpper: V3optimism_Tick
+  token0: V3optimism_Token
+  token1: V3optimism_Token
+  transaction: V3optimism_Transaction
+  withdrawnToken0: Scalars['v3optimism_BigDecimal']
+  withdrawnToken1: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_PositionSnapshot = {
+  __typename?: 'v3optimism_PositionSnapshot'
+  blockNumber: Scalars['v3optimism_BigInt']
+  collectedFeesToken0: Scalars['v3optimism_BigDecimal']
+  collectedFeesToken1: Scalars['v3optimism_BigDecimal']
+  depositedToken0: Scalars['v3optimism_BigDecimal']
+  depositedToken1: Scalars['v3optimism_BigDecimal']
+  feeGrowthInside0LastX128: Scalars['v3optimism_BigInt']
+  feeGrowthInside1LastX128: Scalars['v3optimism_BigInt']
+  id: Scalars['ID']
+  liquidity: Scalars['v3optimism_BigInt']
+  owner: Scalars['v3optimism_Bytes']
+  pool: V3optimism_Pool
+  position: V3optimism_Position
+  timestamp: Scalars['v3optimism_BigInt']
+  transaction: V3optimism_Transaction
+  withdrawnToken0: Scalars['v3optimism_BigDecimal']
+  withdrawnToken1: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_PositionSnapshot_Filter = {
+  blockNumber?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  blockNumber_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_not?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  collectedFeesToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  depositedToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  depositedToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  depositedToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  depositedToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feeGrowthInside0LastX128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthInside0LastX128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthInside1LastX128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthInside1LastX128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  liquidity?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidity_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  owner?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  owner_not?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  position?: Maybe<Scalars['String']>
+  position_contains?: Maybe<Scalars['String']>
+  position_ends_with?: Maybe<Scalars['String']>
+  position_gt?: Maybe<Scalars['String']>
+  position_gte?: Maybe<Scalars['String']>
+  position_in?: Maybe<Array<Scalars['String']>>
+  position_lt?: Maybe<Scalars['String']>
+  position_lte?: Maybe<Scalars['String']>
+  position_not?: Maybe<Scalars['String']>
+  position_not_contains?: Maybe<Scalars['String']>
+  position_not_ends_with?: Maybe<Scalars['String']>
+  position_not_in?: Maybe<Array<Scalars['String']>>
+  position_not_starts_with?: Maybe<Scalars['String']>
+  position_starts_with?: Maybe<Scalars['String']>
+  timestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  transaction?: Maybe<Scalars['String']>
+  transaction_contains?: Maybe<Scalars['String']>
+  transaction_ends_with?: Maybe<Scalars['String']>
+  transaction_gt?: Maybe<Scalars['String']>
+  transaction_gte?: Maybe<Scalars['String']>
+  transaction_in?: Maybe<Array<Scalars['String']>>
+  transaction_lt?: Maybe<Scalars['String']>
+  transaction_lte?: Maybe<Scalars['String']>
+  transaction_not?: Maybe<Scalars['String']>
+  transaction_not_contains?: Maybe<Scalars['String']>
+  transaction_not_ends_with?: Maybe<Scalars['String']>
+  transaction_not_in?: Maybe<Array<Scalars['String']>>
+  transaction_not_starts_with?: Maybe<Scalars['String']>
+  transaction_starts_with?: Maybe<Scalars['String']>
+  withdrawnToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  withdrawnToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  withdrawnToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  withdrawnToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_PositionSnapshot_OrderBy {
+  BlockNumber = 'blockNumber',
+  CollectedFeesToken0 = 'collectedFeesToken0',
+  CollectedFeesToken1 = 'collectedFeesToken1',
+  DepositedToken0 = 'depositedToken0',
+  DepositedToken1 = 'depositedToken1',
+  FeeGrowthInside0LastX128 = 'feeGrowthInside0LastX128',
+  FeeGrowthInside1LastX128 = 'feeGrowthInside1LastX128',
+  Id = 'id',
+  Liquidity = 'liquidity',
+  Owner = 'owner',
+  Pool = 'pool',
+  Position = 'position',
+  Timestamp = 'timestamp',
+  Transaction = 'transaction',
+  WithdrawnToken0 = 'withdrawnToken0',
+  WithdrawnToken1 = 'withdrawnToken1',
+}
+
+export type V3optimism_Position_Filter = {
+  collectedFeesToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  depositedToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  depositedToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  depositedToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  depositedToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  depositedToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feeGrowthInside0LastX128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthInside0LastX128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside0LastX128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthInside1LastX128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthInside1LastX128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthInside1LastX128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  liquidity?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidity_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidity_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  owner?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  owner_not?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  owner_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  tickLower?: Maybe<Scalars['String']>
+  tickLower_contains?: Maybe<Scalars['String']>
+  tickLower_ends_with?: Maybe<Scalars['String']>
+  tickLower_gt?: Maybe<Scalars['String']>
+  tickLower_gte?: Maybe<Scalars['String']>
+  tickLower_in?: Maybe<Array<Scalars['String']>>
+  tickLower_lt?: Maybe<Scalars['String']>
+  tickLower_lte?: Maybe<Scalars['String']>
+  tickLower_not?: Maybe<Scalars['String']>
+  tickLower_not_contains?: Maybe<Scalars['String']>
+  tickLower_not_ends_with?: Maybe<Scalars['String']>
+  tickLower_not_in?: Maybe<Array<Scalars['String']>>
+  tickLower_not_starts_with?: Maybe<Scalars['String']>
+  tickLower_starts_with?: Maybe<Scalars['String']>
+  tickUpper?: Maybe<Scalars['String']>
+  tickUpper_contains?: Maybe<Scalars['String']>
+  tickUpper_ends_with?: Maybe<Scalars['String']>
+  tickUpper_gt?: Maybe<Scalars['String']>
+  tickUpper_gte?: Maybe<Scalars['String']>
+  tickUpper_in?: Maybe<Array<Scalars['String']>>
+  tickUpper_lt?: Maybe<Scalars['String']>
+  tickUpper_lte?: Maybe<Scalars['String']>
+  tickUpper_not?: Maybe<Scalars['String']>
+  tickUpper_not_contains?: Maybe<Scalars['String']>
+  tickUpper_not_ends_with?: Maybe<Scalars['String']>
+  tickUpper_not_in?: Maybe<Array<Scalars['String']>>
+  tickUpper_not_starts_with?: Maybe<Scalars['String']>
+  tickUpper_starts_with?: Maybe<Scalars['String']>
+  token0?: Maybe<Scalars['String']>
+  token0_contains?: Maybe<Scalars['String']>
+  token0_ends_with?: Maybe<Scalars['String']>
+  token0_gt?: Maybe<Scalars['String']>
+  token0_gte?: Maybe<Scalars['String']>
+  token0_in?: Maybe<Array<Scalars['String']>>
+  token0_lt?: Maybe<Scalars['String']>
+  token0_lte?: Maybe<Scalars['String']>
+  token0_not?: Maybe<Scalars['String']>
+  token0_not_contains?: Maybe<Scalars['String']>
+  token0_not_ends_with?: Maybe<Scalars['String']>
+  token0_not_in?: Maybe<Array<Scalars['String']>>
+  token0_not_starts_with?: Maybe<Scalars['String']>
+  token0_starts_with?: Maybe<Scalars['String']>
+  token1?: Maybe<Scalars['String']>
+  token1_contains?: Maybe<Scalars['String']>
+  token1_ends_with?: Maybe<Scalars['String']>
+  token1_gt?: Maybe<Scalars['String']>
+  token1_gte?: Maybe<Scalars['String']>
+  token1_in?: Maybe<Array<Scalars['String']>>
+  token1_lt?: Maybe<Scalars['String']>
+  token1_lte?: Maybe<Scalars['String']>
+  token1_not?: Maybe<Scalars['String']>
+  token1_not_contains?: Maybe<Scalars['String']>
+  token1_not_ends_with?: Maybe<Scalars['String']>
+  token1_not_in?: Maybe<Array<Scalars['String']>>
+  token1_not_starts_with?: Maybe<Scalars['String']>
+  token1_starts_with?: Maybe<Scalars['String']>
+  transaction?: Maybe<Scalars['String']>
+  transaction_contains?: Maybe<Scalars['String']>
+  transaction_ends_with?: Maybe<Scalars['String']>
+  transaction_gt?: Maybe<Scalars['String']>
+  transaction_gte?: Maybe<Scalars['String']>
+  transaction_in?: Maybe<Array<Scalars['String']>>
+  transaction_lt?: Maybe<Scalars['String']>
+  transaction_lte?: Maybe<Scalars['String']>
+  transaction_not?: Maybe<Scalars['String']>
+  transaction_not_contains?: Maybe<Scalars['String']>
+  transaction_not_ends_with?: Maybe<Scalars['String']>
+  transaction_not_in?: Maybe<Array<Scalars['String']>>
+  transaction_not_starts_with?: Maybe<Scalars['String']>
+  transaction_starts_with?: Maybe<Scalars['String']>
+  withdrawnToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  withdrawnToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  withdrawnToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  withdrawnToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  withdrawnToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_Position_OrderBy {
+  CollectedFeesToken0 = 'collectedFeesToken0',
+  CollectedFeesToken1 = 'collectedFeesToken1',
+  CollectedToken0 = 'collectedToken0',
+  CollectedToken1 = 'collectedToken1',
+  DepositedToken0 = 'depositedToken0',
+  DepositedToken1 = 'depositedToken1',
+  FeeGrowthInside0LastX128 = 'feeGrowthInside0LastX128',
+  FeeGrowthInside1LastX128 = 'feeGrowthInside1LastX128',
+  Id = 'id',
+  Liquidity = 'liquidity',
+  Owner = 'owner',
+  Pool = 'pool',
+  TickLower = 'tickLower',
+  TickUpper = 'tickUpper',
+  Token0 = 'token0',
+  Token1 = 'token1',
+  Transaction = 'transaction',
+  WithdrawnToken0 = 'withdrawnToken0',
+  WithdrawnToken1 = 'withdrawnToken1',
+}
+
+export type V3optimism_Swap = {
+  __typename?: 'v3optimism_Swap'
+  amount0: Scalars['v3optimism_BigDecimal']
+  amount1: Scalars['v3optimism_BigDecimal']
+  amountUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  origin: Scalars['v3optimism_Bytes']
+  pool: V3optimism_Pool
+  recipient: Scalars['v3optimism_Bytes']
+  sender: Scalars['v3optimism_Bytes']
+  sqrtPriceX96: Scalars['v3optimism_BigInt']
+  tick: Scalars['v3optimism_BigInt']
+  timestamp: Scalars['v3optimism_BigInt']
+  token0: V3optimism_Token
+  token1: V3optimism_Token
+  transaction: V3optimism_Transaction
+}
+
+export type V3optimism_Swap_Filter = {
+  amount0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amount1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amount1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  amountUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  amountUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  logIndex?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  logIndex_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not?: Maybe<Scalars['v3optimism_BigInt']>
+  logIndex_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  origin?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  origin_not?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  origin_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  recipient?: Maybe<Scalars['v3optimism_Bytes']>
+  recipient_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  recipient_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  recipient_not?: Maybe<Scalars['v3optimism_Bytes']>
+  recipient_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  recipient_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  sender?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  sender_not?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_not_contains?: Maybe<Scalars['v3optimism_Bytes']>
+  sender_not_in?: Maybe<Array<Scalars['v3optimism_Bytes']>>
+  sqrtPriceX96?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPriceX96_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPriceX96_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPriceX96_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  sqrtPriceX96_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPriceX96_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPriceX96_not?: Maybe<Scalars['v3optimism_BigInt']>
+  sqrtPriceX96_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tick?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tick_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tick_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  token0?: Maybe<Scalars['String']>
+  token0_contains?: Maybe<Scalars['String']>
+  token0_ends_with?: Maybe<Scalars['String']>
+  token0_gt?: Maybe<Scalars['String']>
+  token0_gte?: Maybe<Scalars['String']>
+  token0_in?: Maybe<Array<Scalars['String']>>
+  token0_lt?: Maybe<Scalars['String']>
+  token0_lte?: Maybe<Scalars['String']>
+  token0_not?: Maybe<Scalars['String']>
+  token0_not_contains?: Maybe<Scalars['String']>
+  token0_not_ends_with?: Maybe<Scalars['String']>
+  token0_not_in?: Maybe<Array<Scalars['String']>>
+  token0_not_starts_with?: Maybe<Scalars['String']>
+  token0_starts_with?: Maybe<Scalars['String']>
+  token1?: Maybe<Scalars['String']>
+  token1_contains?: Maybe<Scalars['String']>
+  token1_ends_with?: Maybe<Scalars['String']>
+  token1_gt?: Maybe<Scalars['String']>
+  token1_gte?: Maybe<Scalars['String']>
+  token1_in?: Maybe<Array<Scalars['String']>>
+  token1_lt?: Maybe<Scalars['String']>
+  token1_lte?: Maybe<Scalars['String']>
+  token1_not?: Maybe<Scalars['String']>
+  token1_not_contains?: Maybe<Scalars['String']>
+  token1_not_ends_with?: Maybe<Scalars['String']>
+  token1_not_in?: Maybe<Array<Scalars['String']>>
+  token1_not_starts_with?: Maybe<Scalars['String']>
+  token1_starts_with?: Maybe<Scalars['String']>
+  transaction?: Maybe<Scalars['String']>
+  transaction_contains?: Maybe<Scalars['String']>
+  transaction_ends_with?: Maybe<Scalars['String']>
+  transaction_gt?: Maybe<Scalars['String']>
+  transaction_gte?: Maybe<Scalars['String']>
+  transaction_in?: Maybe<Array<Scalars['String']>>
+  transaction_lt?: Maybe<Scalars['String']>
+  transaction_lte?: Maybe<Scalars['String']>
+  transaction_not?: Maybe<Scalars['String']>
+  transaction_not_contains?: Maybe<Scalars['String']>
+  transaction_not_ends_with?: Maybe<Scalars['String']>
+  transaction_not_in?: Maybe<Array<Scalars['String']>>
+  transaction_not_starts_with?: Maybe<Scalars['String']>
+  transaction_starts_with?: Maybe<Scalars['String']>
+}
+
+export enum V3optimism_Swap_OrderBy {
+  Amount0 = 'amount0',
+  Amount1 = 'amount1',
+  AmountUsd = 'amountUSD',
+  Id = 'id',
+  LogIndex = 'logIndex',
+  Origin = 'origin',
+  Pool = 'pool',
+  Recipient = 'recipient',
+  Sender = 'sender',
+  SqrtPriceX96 = 'sqrtPriceX96',
+  Tick = 'tick',
+  Timestamp = 'timestamp',
+  Token0 = 'token0',
+  Token1 = 'token1',
+  Transaction = 'transaction',
+}
+
+export type V3optimism_Tick = {
+  __typename?: 'v3optimism_Tick'
+  collectedFeesToken0: Scalars['v3optimism_BigDecimal']
+  collectedFeesToken1: Scalars['v3optimism_BigDecimal']
+  collectedFeesUSD: Scalars['v3optimism_BigDecimal']
+  createdAtBlockNumber: Scalars['v3optimism_BigInt']
+  createdAtTimestamp: Scalars['v3optimism_BigInt']
+  feeGrowthOutside0X128: Scalars['v3optimism_BigInt']
+  feeGrowthOutside1X128: Scalars['v3optimism_BigInt']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  liquidityGross: Scalars['v3optimism_BigInt']
+  liquidityNet: Scalars['v3optimism_BigInt']
+  liquidityProviderCount: Scalars['v3optimism_BigInt']
+  pool: V3optimism_Pool
+  poolAddress?: Maybe<Scalars['String']>
+  price0: Scalars['v3optimism_BigDecimal']
+  price1: Scalars['v3optimism_BigDecimal']
+  tickIdx: Scalars['v3optimism_BigInt']
+  untrackedVolumeUSD: Scalars['v3optimism_BigDecimal']
+  volumeToken0: Scalars['v3optimism_BigDecimal']
+  volumeToken1: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_TickDayData = {
+  __typename?: 'v3optimism_TickDayData'
+  date: Scalars['Int']
+  feeGrowthOutside0X128: Scalars['v3optimism_BigInt']
+  feeGrowthOutside1X128: Scalars['v3optimism_BigInt']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  liquidityGross: Scalars['v3optimism_BigInt']
+  liquidityNet: Scalars['v3optimism_BigInt']
+  pool: V3optimism_Pool
+  tick: V3optimism_Tick
+  volumeToken0: Scalars['v3optimism_BigDecimal']
+  volumeToken1: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_TickDayData_Filter = {
+  date?: Maybe<Scalars['Int']>
+  date_gt?: Maybe<Scalars['Int']>
+  date_gte?: Maybe<Scalars['Int']>
+  date_in?: Maybe<Array<Scalars['Int']>>
+  date_lt?: Maybe<Scalars['Int']>
+  date_lte?: Maybe<Scalars['Int']>
+  date_not?: Maybe<Scalars['Int']>
+  date_not_in?: Maybe<Array<Scalars['Int']>>
+  feeGrowthOutside0X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthOutside0X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthOutside1X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthOutside1X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  liquidityGross?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityGross_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityNet?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityNet_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  tick?: Maybe<Scalars['String']>
+  tick_contains?: Maybe<Scalars['String']>
+  tick_ends_with?: Maybe<Scalars['String']>
+  tick_gt?: Maybe<Scalars['String']>
+  tick_gte?: Maybe<Scalars['String']>
+  tick_in?: Maybe<Array<Scalars['String']>>
+  tick_lt?: Maybe<Scalars['String']>
+  tick_lte?: Maybe<Scalars['String']>
+  tick_not?: Maybe<Scalars['String']>
+  tick_not_contains?: Maybe<Scalars['String']>
+  tick_not_ends_with?: Maybe<Scalars['String']>
+  tick_not_in?: Maybe<Array<Scalars['String']>>
+  tick_not_starts_with?: Maybe<Scalars['String']>
+  tick_starts_with?: Maybe<Scalars['String']>
+  volumeToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_TickDayData_OrderBy {
+  Date = 'date',
+  FeeGrowthOutside0X128 = 'feeGrowthOutside0X128',
+  FeeGrowthOutside1X128 = 'feeGrowthOutside1X128',
+  FeesUsd = 'feesUSD',
+  Id = 'id',
+  LiquidityGross = 'liquidityGross',
+  LiquidityNet = 'liquidityNet',
+  Pool = 'pool',
+  Tick = 'tick',
+  VolumeToken0 = 'volumeToken0',
+  VolumeToken1 = 'volumeToken1',
+  VolumeUsd = 'volumeUSD',
+}
+
+export type V3optimism_TickHourData = {
+  __typename?: 'v3optimism_TickHourData'
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  liquidityGross: Scalars['v3optimism_BigInt']
+  liquidityNet: Scalars['v3optimism_BigInt']
+  periodStartUnix: Scalars['Int']
+  pool: V3optimism_Pool
+  tick: V3optimism_Tick
+  volumeToken0: Scalars['v3optimism_BigDecimal']
+  volumeToken1: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_TickHourData_Filter = {
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  liquidityGross?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityGross_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityNet?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityNet_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  periodStartUnix?: Maybe<Scalars['Int']>
+  periodStartUnix_gt?: Maybe<Scalars['Int']>
+  periodStartUnix_gte?: Maybe<Scalars['Int']>
+  periodStartUnix_in?: Maybe<Array<Scalars['Int']>>
+  periodStartUnix_lt?: Maybe<Scalars['Int']>
+  periodStartUnix_lte?: Maybe<Scalars['Int']>
+  periodStartUnix_not?: Maybe<Scalars['Int']>
+  periodStartUnix_not_in?: Maybe<Array<Scalars['Int']>>
+  pool?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  tick?: Maybe<Scalars['String']>
+  tick_contains?: Maybe<Scalars['String']>
+  tick_ends_with?: Maybe<Scalars['String']>
+  tick_gt?: Maybe<Scalars['String']>
+  tick_gte?: Maybe<Scalars['String']>
+  tick_in?: Maybe<Array<Scalars['String']>>
+  tick_lt?: Maybe<Scalars['String']>
+  tick_lte?: Maybe<Scalars['String']>
+  tick_not?: Maybe<Scalars['String']>
+  tick_not_contains?: Maybe<Scalars['String']>
+  tick_not_ends_with?: Maybe<Scalars['String']>
+  tick_not_in?: Maybe<Array<Scalars['String']>>
+  tick_not_starts_with?: Maybe<Scalars['String']>
+  tick_starts_with?: Maybe<Scalars['String']>
+  volumeToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_TickHourData_OrderBy {
+  FeesUsd = 'feesUSD',
+  Id = 'id',
+  LiquidityGross = 'liquidityGross',
+  LiquidityNet = 'liquidityNet',
+  PeriodStartUnix = 'periodStartUnix',
+  Pool = 'pool',
+  Tick = 'tick',
+  VolumeToken0 = 'volumeToken0',
+  VolumeToken1 = 'volumeToken1',
+  VolumeUsd = 'volumeUSD',
+}
+
+export type V3optimism_Tick_Filter = {
+  collectedFeesToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  collectedFeesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  collectedFeesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  createdAtBlockNumber?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  createdAtBlockNumber_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_not?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtBlockNumber_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  createdAtTimestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  createdAtTimestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  createdAtTimestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthOutside0X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthOutside0X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside0X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthOutside1X128?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feeGrowthOutside1X128_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_not?: Maybe<Scalars['v3optimism_BigInt']>
+  feeGrowthOutside1X128_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  liquidityGross?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityGross_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityGross_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityNet?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityNet_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityNet_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityProviderCount?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  liquidityProviderCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  liquidityProviderCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  pool?: Maybe<Scalars['String']>
+  poolAddress?: Maybe<Scalars['String']>
+  poolAddress_contains?: Maybe<Scalars['String']>
+  poolAddress_ends_with?: Maybe<Scalars['String']>
+  poolAddress_gt?: Maybe<Scalars['String']>
+  poolAddress_gte?: Maybe<Scalars['String']>
+  poolAddress_in?: Maybe<Array<Scalars['String']>>
+  poolAddress_lt?: Maybe<Scalars['String']>
+  poolAddress_lte?: Maybe<Scalars['String']>
+  poolAddress_not?: Maybe<Scalars['String']>
+  poolAddress_not_contains?: Maybe<Scalars['String']>
+  poolAddress_not_ends_with?: Maybe<Scalars['String']>
+  poolAddress_not_in?: Maybe<Array<Scalars['String']>>
+  poolAddress_not_starts_with?: Maybe<Scalars['String']>
+  poolAddress_starts_with?: Maybe<Scalars['String']>
+  pool_contains?: Maybe<Scalars['String']>
+  pool_ends_with?: Maybe<Scalars['String']>
+  pool_gt?: Maybe<Scalars['String']>
+  pool_gte?: Maybe<Scalars['String']>
+  pool_in?: Maybe<Array<Scalars['String']>>
+  pool_lt?: Maybe<Scalars['String']>
+  pool_lte?: Maybe<Scalars['String']>
+  pool_not?: Maybe<Scalars['String']>
+  pool_not_contains?: Maybe<Scalars['String']>
+  pool_not_ends_with?: Maybe<Scalars['String']>
+  pool_not_in?: Maybe<Array<Scalars['String']>>
+  pool_not_starts_with?: Maybe<Scalars['String']>
+  pool_starts_with?: Maybe<Scalars['String']>
+  price0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  price0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  price1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  price1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  price1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  tickIdx?: Maybe<Scalars['v3optimism_BigInt']>
+  tickIdx_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickIdx_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickIdx_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  tickIdx_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  tickIdx_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  tickIdx_not?: Maybe<Scalars['v3optimism_BigInt']>
+  tickIdx_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  untrackedVolumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  untrackedVolumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken0?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken0_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken0_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeToken1_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeToken1_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_Tick_OrderBy {
+  CollectedFeesToken0 = 'collectedFeesToken0',
+  CollectedFeesToken1 = 'collectedFeesToken1',
+  CollectedFeesUsd = 'collectedFeesUSD',
+  CreatedAtBlockNumber = 'createdAtBlockNumber',
+  CreatedAtTimestamp = 'createdAtTimestamp',
+  FeeGrowthOutside0X128 = 'feeGrowthOutside0X128',
+  FeeGrowthOutside1X128 = 'feeGrowthOutside1X128',
+  FeesUsd = 'feesUSD',
+  Id = 'id',
+  LiquidityGross = 'liquidityGross',
+  LiquidityNet = 'liquidityNet',
+  LiquidityProviderCount = 'liquidityProviderCount',
+  Pool = 'pool',
+  PoolAddress = 'poolAddress',
+  Price0 = 'price0',
+  Price1 = 'price1',
+  TickIdx = 'tickIdx',
+  UntrackedVolumeUsd = 'untrackedVolumeUSD',
+  VolumeToken0 = 'volumeToken0',
+  VolumeToken1 = 'volumeToken1',
+  VolumeUsd = 'volumeUSD',
+}
+
+export type V3optimism_Token = {
+  __typename?: 'v3optimism_Token'
+  decimals: Scalars['v3optimism_BigInt']
+  derivedETH: Scalars['v3optimism_BigDecimal']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  name: Scalars['String']
+  poolCount: Scalars['v3optimism_BigInt']
+  symbol: Scalars['String']
+  tokenDayData: Array<V3optimism_TokenDayData>
+  totalSupply: Scalars['v3optimism_BigInt']
+  totalValueLocked: Scalars['v3optimism_BigDecimal']
+  totalValueLockedUSD: Scalars['v3optimism_BigDecimal']
+  totalValueLockedUSDUntracked: Scalars['v3optimism_BigDecimal']
+  txCount: Scalars['v3optimism_BigInt']
+  untrackedVolumeUSD: Scalars['v3optimism_BigDecimal']
+  volume: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+  whitelistPools: Array<V3optimism_Pool>
+}
+
+export type V3optimism_TokenTokenDayDataArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_TokenDayData_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_TokenDayData_Filter>
+}
+
+export type V3optimism_TokenWhitelistPoolsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Pool_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Pool_Filter>
+}
+
+export type V3optimism_TokenDayData = {
+  __typename?: 'v3optimism_TokenDayData'
+  close: Scalars['v3optimism_BigDecimal']
+  date: Scalars['Int']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  high: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  low: Scalars['v3optimism_BigDecimal']
+  open: Scalars['v3optimism_BigDecimal']
+  priceUSD: Scalars['v3optimism_BigDecimal']
+  token: V3optimism_Token
+  totalValueLocked: Scalars['v3optimism_BigDecimal']
+  totalValueLockedUSD: Scalars['v3optimism_BigDecimal']
+  untrackedVolumeUSD: Scalars['v3optimism_BigDecimal']
+  volume: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_TokenDayData_Filter = {
+  close?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  close_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  date?: Maybe<Scalars['Int']>
+  date_gt?: Maybe<Scalars['Int']>
+  date_gte?: Maybe<Scalars['Int']>
+  date_in?: Maybe<Array<Scalars['Int']>>
+  date_lt?: Maybe<Scalars['Int']>
+  date_lte?: Maybe<Scalars['Int']>
+  date_not?: Maybe<Scalars['Int']>
+  date_not_in?: Maybe<Array<Scalars['Int']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  high?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  high_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  low?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  low_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  open?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  open_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  priceUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  priceUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token?: Maybe<Scalars['String']>
+  token_contains?: Maybe<Scalars['String']>
+  token_ends_with?: Maybe<Scalars['String']>
+  token_gt?: Maybe<Scalars['String']>
+  token_gte?: Maybe<Scalars['String']>
+  token_in?: Maybe<Array<Scalars['String']>>
+  token_lt?: Maybe<Scalars['String']>
+  token_lte?: Maybe<Scalars['String']>
+  token_not?: Maybe<Scalars['String']>
+  token_not_contains?: Maybe<Scalars['String']>
+  token_not_ends_with?: Maybe<Scalars['String']>
+  token_not_in?: Maybe<Array<Scalars['String']>>
+  token_not_starts_with?: Maybe<Scalars['String']>
+  token_starts_with?: Maybe<Scalars['String']>
+  totalValueLocked?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLocked_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLocked_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  untrackedVolumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  untrackedVolumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_TokenDayData_OrderBy {
+  Close = 'close',
+  Date = 'date',
+  FeesUsd = 'feesUSD',
+  High = 'high',
+  Id = 'id',
+  Low = 'low',
+  Open = 'open',
+  PriceUsd = 'priceUSD',
+  Token = 'token',
+  TotalValueLocked = 'totalValueLocked',
+  TotalValueLockedUsd = 'totalValueLockedUSD',
+  UntrackedVolumeUsd = 'untrackedVolumeUSD',
+  Volume = 'volume',
+  VolumeUsd = 'volumeUSD',
+}
+
+export type V3optimism_TokenHourData = {
+  __typename?: 'v3optimism_TokenHourData'
+  close: Scalars['v3optimism_BigDecimal']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  high: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  low: Scalars['v3optimism_BigDecimal']
+  open: Scalars['v3optimism_BigDecimal']
+  periodStartUnix: Scalars['Int']
+  priceUSD: Scalars['v3optimism_BigDecimal']
+  token: V3optimism_Token
+  totalValueLocked: Scalars['v3optimism_BigDecimal']
+  totalValueLockedUSD: Scalars['v3optimism_BigDecimal']
+  untrackedVolumeUSD: Scalars['v3optimism_BigDecimal']
+  volume: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_TokenHourData_Filter = {
+  close?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  close_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  close_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  high?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  high_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  high_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  low?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  low_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  low_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  open?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  open_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  open_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  periodStartUnix?: Maybe<Scalars['Int']>
+  periodStartUnix_gt?: Maybe<Scalars['Int']>
+  periodStartUnix_gte?: Maybe<Scalars['Int']>
+  periodStartUnix_in?: Maybe<Array<Scalars['Int']>>
+  periodStartUnix_lt?: Maybe<Scalars['Int']>
+  periodStartUnix_lte?: Maybe<Scalars['Int']>
+  periodStartUnix_not?: Maybe<Scalars['Int']>
+  periodStartUnix_not_in?: Maybe<Array<Scalars['Int']>>
+  priceUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  priceUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  priceUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  token?: Maybe<Scalars['String']>
+  token_contains?: Maybe<Scalars['String']>
+  token_ends_with?: Maybe<Scalars['String']>
+  token_gt?: Maybe<Scalars['String']>
+  token_gte?: Maybe<Scalars['String']>
+  token_in?: Maybe<Array<Scalars['String']>>
+  token_lt?: Maybe<Scalars['String']>
+  token_lte?: Maybe<Scalars['String']>
+  token_not?: Maybe<Scalars['String']>
+  token_not_contains?: Maybe<Scalars['String']>
+  token_not_ends_with?: Maybe<Scalars['String']>
+  token_not_in?: Maybe<Array<Scalars['String']>>
+  token_not_starts_with?: Maybe<Scalars['String']>
+  token_starts_with?: Maybe<Scalars['String']>
+  totalValueLocked?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLocked_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLocked_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  untrackedVolumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  untrackedVolumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_TokenHourData_OrderBy {
+  Close = 'close',
+  FeesUsd = 'feesUSD',
+  High = 'high',
+  Id = 'id',
+  Low = 'low',
+  Open = 'open',
+  PeriodStartUnix = 'periodStartUnix',
+  PriceUsd = 'priceUSD',
+  Token = 'token',
+  TotalValueLocked = 'totalValueLocked',
+  TotalValueLockedUsd = 'totalValueLockedUSD',
+  UntrackedVolumeUsd = 'untrackedVolumeUSD',
+  Volume = 'volume',
+  VolumeUsd = 'volumeUSD',
+}
+
+export type V3optimism_Token_Filter = {
+  decimals?: Maybe<Scalars['v3optimism_BigInt']>
+  decimals_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  decimals_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  decimals_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  decimals_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  decimals_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  decimals_not?: Maybe<Scalars['v3optimism_BigInt']>
+  decimals_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  derivedETH?: Maybe<Scalars['v3optimism_BigDecimal']>
+  derivedETH_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  derivedETH_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  derivedETH_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  derivedETH_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  derivedETH_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  derivedETH_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  derivedETH_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  name?: Maybe<Scalars['String']>
+  name_contains?: Maybe<Scalars['String']>
+  name_ends_with?: Maybe<Scalars['String']>
+  name_gt?: Maybe<Scalars['String']>
+  name_gte?: Maybe<Scalars['String']>
+  name_in?: Maybe<Array<Scalars['String']>>
+  name_lt?: Maybe<Scalars['String']>
+  name_lte?: Maybe<Scalars['String']>
+  name_not?: Maybe<Scalars['String']>
+  name_not_contains?: Maybe<Scalars['String']>
+  name_not_ends_with?: Maybe<Scalars['String']>
+  name_not_in?: Maybe<Array<Scalars['String']>>
+  name_not_starts_with?: Maybe<Scalars['String']>
+  name_starts_with?: Maybe<Scalars['String']>
+  poolCount?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  poolCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  poolCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  symbol?: Maybe<Scalars['String']>
+  symbol_contains?: Maybe<Scalars['String']>
+  symbol_ends_with?: Maybe<Scalars['String']>
+  symbol_gt?: Maybe<Scalars['String']>
+  symbol_gte?: Maybe<Scalars['String']>
+  symbol_in?: Maybe<Array<Scalars['String']>>
+  symbol_lt?: Maybe<Scalars['String']>
+  symbol_lte?: Maybe<Scalars['String']>
+  symbol_not?: Maybe<Scalars['String']>
+  symbol_not_contains?: Maybe<Scalars['String']>
+  symbol_not_ends_with?: Maybe<Scalars['String']>
+  symbol_not_in?: Maybe<Array<Scalars['String']>>
+  symbol_not_starts_with?: Maybe<Scalars['String']>
+  symbol_starts_with?: Maybe<Scalars['String']>
+  totalSupply?: Maybe<Scalars['v3optimism_BigInt']>
+  totalSupply_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  totalSupply_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  totalSupply_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  totalSupply_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  totalSupply_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  totalSupply_not?: Maybe<Scalars['v3optimism_BigInt']>
+  totalSupply_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  totalValueLocked?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSDUntracked_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSDUntracked_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLockedUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLockedUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLocked_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  totalValueLocked_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  totalValueLocked_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  txCount?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  txCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  untrackedVolumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  untrackedVolumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  untrackedVolumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volume_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volume_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  whitelistPools?: Maybe<Array<Scalars['String']>>
+  whitelistPools_contains?: Maybe<Array<Scalars['String']>>
+  whitelistPools_not?: Maybe<Array<Scalars['String']>>
+  whitelistPools_not_contains?: Maybe<Array<Scalars['String']>>
+}
+
+export enum V3optimism_Token_OrderBy {
+  Decimals = 'decimals',
+  DerivedEth = 'derivedETH',
+  FeesUsd = 'feesUSD',
+  Id = 'id',
+  Name = 'name',
+  PoolCount = 'poolCount',
+  Symbol = 'symbol',
+  TokenDayData = 'tokenDayData',
+  TotalSupply = 'totalSupply',
+  TotalValueLocked = 'totalValueLocked',
+  TotalValueLockedUsd = 'totalValueLockedUSD',
+  TotalValueLockedUsdUntracked = 'totalValueLockedUSDUntracked',
+  TxCount = 'txCount',
+  UntrackedVolumeUsd = 'untrackedVolumeUSD',
+  Volume = 'volume',
+  VolumeUsd = 'volumeUSD',
+  WhitelistPools = 'whitelistPools',
+}
+
+export type V3optimism_Transaction = {
+  __typename?: 'v3optimism_Transaction'
+  blockNumber: Scalars['v3optimism_BigInt']
+  burns: Array<Maybe<V3optimism_Burn>>
+  collects: Array<Maybe<V3optimism_Collect>>
+  flashed: Array<Maybe<V3optimism_Flash>>
+  gasPrice: Scalars['v3optimism_BigInt']
+  gasUsed: Scalars['v3optimism_BigInt']
+  id: Scalars['ID']
+  mints: Array<Maybe<V3optimism_Mint>>
+  swaps: Array<Maybe<V3optimism_Swap>>
+  timestamp: Scalars['v3optimism_BigInt']
+}
+
+export type V3optimism_TransactionBurnsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Burn_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Burn_Filter>
+}
+
+export type V3optimism_TransactionCollectsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Collect_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Collect_Filter>
+}
+
+export type V3optimism_TransactionFlashedArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Flash_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Flash_Filter>
+}
+
+export type V3optimism_TransactionMintsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Mint_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Mint_Filter>
+}
+
+export type V3optimism_TransactionSwapsArgs = {
+  first?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<V3optimism_Swap_OrderBy>
+  orderDirection?: Maybe<V3optimism_OrderDirection>
+  skip?: Maybe<Scalars['Int']>
+  where?: Maybe<V3optimism_Swap_Filter>
+}
+
+export type V3optimism_Transaction_Filter = {
+  blockNumber?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  blockNumber_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_not?: Maybe<Scalars['v3optimism_BigInt']>
+  blockNumber_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  gasPrice?: Maybe<Scalars['v3optimism_BigInt']>
+  gasPrice_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  gasPrice_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  gasPrice_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  gasPrice_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  gasPrice_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  gasPrice_not?: Maybe<Scalars['v3optimism_BigInt']>
+  gasPrice_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  gasUsed?: Maybe<Scalars['v3optimism_BigInt']>
+  gasUsed_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  gasUsed_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  gasUsed_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  gasUsed_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  gasUsed_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  gasUsed_not?: Maybe<Scalars['v3optimism_BigInt']>
+  gasUsed_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  timestamp?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  timestamp_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not?: Maybe<Scalars['v3optimism_BigInt']>
+  timestamp_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+}
+
+export enum V3optimism_Transaction_OrderBy {
+  BlockNumber = 'blockNumber',
+  Burns = 'burns',
+  Collects = 'collects',
+  Flashed = 'flashed',
+  GasPrice = 'gasPrice',
+  GasUsed = 'gasUsed',
+  Id = 'id',
+  Mints = 'mints',
+  Swaps = 'swaps',
+  Timestamp = 'timestamp',
+}
+
+export type V3optimism_UniswapDayData = {
+  __typename?: 'v3optimism_UniswapDayData'
+  date: Scalars['Int']
+  feesUSD: Scalars['v3optimism_BigDecimal']
+  id: Scalars['ID']
+  tvlUSD: Scalars['v3optimism_BigDecimal']
+  txCount: Scalars['v3optimism_BigInt']
+  volumeETH: Scalars['v3optimism_BigDecimal']
+  volumeUSD: Scalars['v3optimism_BigDecimal']
+  volumeUSDUntracked: Scalars['v3optimism_BigDecimal']
+}
+
+export type V3optimism_UniswapDayData_Filter = {
+  date?: Maybe<Scalars['Int']>
+  date_gt?: Maybe<Scalars['Int']>
+  date_gte?: Maybe<Scalars['Int']>
+  date_in?: Maybe<Array<Scalars['Int']>>
+  date_lt?: Maybe<Scalars['Int']>
+  date_lte?: Maybe<Scalars['Int']>
+  date_not?: Maybe<Scalars['Int']>
+  date_not_in?: Maybe<Array<Scalars['Int']>>
+  feesUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  feesUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  feesUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  id?: Maybe<Scalars['ID']>
+  id_gt?: Maybe<Scalars['ID']>
+  id_gte?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  id_lt?: Maybe<Scalars['ID']>
+  id_lte?: Maybe<Scalars['ID']>
+  id_not?: Maybe<Scalars['ID']>
+  id_not_in?: Maybe<Array<Scalars['ID']>>
+  tvlUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  tvlUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  tvlUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  txCount?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_gte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  txCount_lt?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_lte?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not?: Maybe<Scalars['v3optimism_BigInt']>
+  txCount_not_in?: Maybe<Array<Scalars['v3optimism_BigInt']>>
+  volumeETH?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeETH_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeETH_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeETH_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeETH_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeETH_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeETH_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeETH_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSDUntracked?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSDUntracked_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSDUntracked_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSDUntracked_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSDUntracked_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSDUntracked_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSDUntracked_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSDUntracked_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_gt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_gte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+  volumeUSD_lt?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_lte?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not?: Maybe<Scalars['v3optimism_BigDecimal']>
+  volumeUSD_not_in?: Maybe<Array<Scalars['v3optimism_BigDecimal']>>
+}
+
+export enum V3optimism_UniswapDayData_OrderBy {
+  Date = 'date',
+  FeesUsd = 'feesUSD',
+  Id = 'id',
+  TvlUsd = 'tvlUSD',
+  TxCount = 'txCount',
+  VolumeEth = 'volumeETH',
+  VolumeUsd = 'volumeUSD',
+  VolumeUsdUntracked = 'volumeUSDUntracked',
+}
+
+export type V3optimism__Block_ = {
+  __typename?: 'v3optimism__Block_'
+  /** The hash of the block */
+  hash?: Maybe<Scalars['v3optimism_Bytes']>
+  /** The block number */
+  number: Scalars['Int']
+}
+
+/** The type for the top-level _meta field */
+export type V3optimism__Meta_ = {
+  __typename?: 'v3optimism__Meta_'
+  /**
+   * Information about a specific subgraph block. The hash of the block
+   * will be null if the _meta field has a block constraint that asks for
+   * a block number. It will be filled if the _meta field has no block constraint
+   * and therefore asks for the latest  block
+   *
+   */
+  block: V3optimism__Block_
+  /** The deployment ID */
+  deployment: Scalars['String']
+  /** If `true`, the subgraph encountered indexing errors at some past block */
+  hasIndexingErrors: Scalars['Boolean']
+}
+
+export enum V3optimism__SubgraphErrorPolicy_ {
+  /** Data will be returned even if the subgraph has indexing errors */
+  Allow = 'allow',
+  /** If the subgraph has indexing errors, data will be omitted. The default. */
+  Deny = 'deny',
+}
+
+/** The block at which the query should be executed. */
+export type V3polygon_Block_Height = {
+  /** Value containing a block hash */
+  hash?: Maybe<Scalars['v3polygon_Bytes']>
+  /** Value containing a block number */
+  number?: Maybe<Scalars['Int']>
+  /**
+   * Value containing the minimum block number.
+   * In the case of `number_gte`, the query will be executed on the latest block only if
+   * the subgraph has progressed to or past the minimum block number.
+   * Defaults to the latest block when omitted.
+   *
+   */
   number_gte?: Maybe<Scalars['Int']>
 }
 
@@ -11684,6 +15754,7 @@ export enum V3polygon_Mint_OrderBy {
   Transaction = 'transaction',
 }
 
+/** Defines the order direction, either ascending or descending */
 export enum V3polygon_OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
@@ -14367,9 +18438,19 @@ export enum V3polygon__SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+/** The block at which the query should be executed. */
 export type V3rinkeby_Block_Height = {
+  /** Value containing a block hash */
   hash?: Maybe<Scalars['v3rinkeby_Bytes']>
+  /** Value containing a block number */
   number?: Maybe<Scalars['Int']>
+  /**
+   * Value containing the minimum block number.
+   * In the case of `number_gte`, the query will be executed on the latest block only if
+   * the subgraph has progressed to or past the minimum block number.
+   * Defaults to the latest block when omitted.
+   *
+   */
   number_gte?: Maybe<Scalars['Int']>
 }
 
@@ -15179,6 +19260,7 @@ export enum V3rinkeby_Mint_OrderBy {
   Transaction = 'transaction',
 }
 
+/** Defines the order direction, either ascending or descending */
 export enum V3rinkeby_OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
