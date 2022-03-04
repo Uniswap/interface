@@ -1,6 +1,7 @@
 import { ReactComponent as RouterIcon } from 'lib/assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'lib/assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'lib/assets/svg/expando.svg'
+import { ReactComponent as InlineSpinnerIcon } from 'lib/assets/svg/inline_spinner.svg'
 import { ReactComponent as LogoIcon } from 'lib/assets/svg/logo.svg'
 import { ReactComponent as SpinnerIcon } from 'lib/assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'lib/assets/svg/wallet.svg'
@@ -132,4 +133,12 @@ export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
   stroke: ${({ color = 'active', theme }) => theme[color]};
   stroke-linecap: round;
   stroke-width: 2;
+`
+
+export const InlineSpinner = styled(icon(InlineSpinnerIcon))<{ color?: Color }>`
+  animation: ${rotate} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
+  color: ${({ color = 'active', theme }) => theme[color]};
+  fill: ${({ theme }) => theme.outline};
+  stroke: ${({ theme }) => theme.outline};
+  stroke-linecap: round;
 `
