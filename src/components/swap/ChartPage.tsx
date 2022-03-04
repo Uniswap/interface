@@ -119,7 +119,7 @@ export const useHolderCount = (chainId: any) => {
     function intervalCallback() {
         if (!chainId) return;
         if (chainId === 1)
-            fetch('https://api.ethplorer.io/getTokenInfo/0x4b2c54b80b77580dc02a0f6734d3bad733f50900?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
+            fetch('https://api.ethplorer.io/getTokenInfo/0x005D1123878Fc55fbd56b54C73963b234a64af3c?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
                 .then(res => res.json())
                 .then(setHoldersCount);
         if (chainId === 56) fetchBscHolders().then((response: any) => {
@@ -383,9 +383,9 @@ export const Chart = () => {
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const [ethPrice, ethPriceOld] = useEthPrice()
-    const transactionData = useTokenTransactions('0x4b2c54b80b77580dc02a0f6734d3bad733f50900', 60000)
+    const transactionData = useTokenTransactions('0x005D1123878Fc55fbd56b54C73963b234a64af3c', 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
-    const binanceTransactionData = useBscTokenTransactions('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', 60000)
+    const binanceTransactionData = useBscTokenTransactions('0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', 60000)
     const prices = useBnbPrices()
     const hasAccess = useHasAccess()
     const accessDenied = !hasAccess
@@ -396,9 +396,9 @@ export const Chart = () => {
             `UNISWAP:KIBAWETH`
     }, [chainId])
     const tokenDataAddress = React.useMemo(() => chainId === 1 ?
-        '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'
+        '0x005D1123878Fc55fbd56b54C73963b234a64af3c'
         : chainId === 56 ?
-            '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : '', [chainId])
+            '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5' : '', [chainId])
     const [tokenDataPriceParam, tokenDataPriceParamTwo] = React.useMemo(() => {
         const valueOne = chainId === 56 ? prices?.current : ethPrice;
         const valueTwo = chainId === 56 ? prices?.oneDay : ethPriceOld;
