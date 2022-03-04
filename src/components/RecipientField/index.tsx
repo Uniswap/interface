@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Flex } from 'rebass/styled-components'
 import styled from 'styled-components'
 import { SearchInput } from '../SearchModal/styleds'
 import { RowBetween } from '../Row'
 import { CloseIcon, TYPE } from '../../theme'
+import useENS from '../../hooks/useENS'
+import { useDispatch } from 'react-redux'
 
-const AddReceipientButtonStyled = styled.button`
+const AddRecipientButtonStyled = styled.button`
   font-size: 11px;
   line-height: 13px;
   letter-spacing: 0.08em;
@@ -19,24 +21,66 @@ const CloseIconStyled = styled(CloseIcon)`
   padding: 0;
 `
 
-const SearchInputStyled = styled(SearchInput)`
+const SearchInputStyled = styled(SearchInput)<{ error: boolean }>`
   margin-top: 5px;
+  padding: ${({ error }) => error && '15px 19px'};
+  && {
+    border: ${({ error }) => error && 'solid 1px red'};
+  }
 `
 
-export const RecipientField = () => {
+interface RecipientField {
+  recipient: string | null
+  action: any
+}
+
+export const RecipientField = ({ recipient, action }: RecipientField) => {
   const [showInput, setShowInput] = useState(false)
+  const dispatch = useDispatch()
+  const { address, loading } = useENS(recipient)
+  const error = useMemo(() => Boolean(recipient && recipient.length > 0 && !loading && !address), [
+    address,
+    loading,
+    recipient
+  ])
+
+  const handleInput = useCallback(
+    event => {
+      const input = event.target.value
+      dispatch(action({ recipient: input }))
+    },
+    [action, dispatch]
+  )
+
+  // Unset recipient on unmount
+  useEffect(() => {
+    return () => {
+      dispatch(action({ recipient: null }))
+    }
+  }, [action, dispatch])
+
+  const handleClose = useCallback(() => {
+    setShowInput(false)
+    dispatch(action({ recipient: null }))
+  }, [action, dispatch])
 
   return !showInput ? (
     <Flex justifyContent="center">
-      <AddReceipientButtonStyled onClick={() => setShowInput(true)}>Add receipient</AddReceipientButtonStyled>
+      <AddRecipientButtonStyled onClick={() => setShowInput(true)}>Add recipient</AddRecipientButtonStyled>
     </Flex>
   ) : (
     <div>
       <RowBetween>
-        <TYPE.subHeader px={2}>Select a pair</TYPE.subHeader>
-        <CloseIconStyled p={0} onClick={() => setShowInput(false)} />
+        <TYPE.subHeader px={2}>Recipient</TYPE.subHeader>
+        <CloseIconStyled p={0} onClick={handleClose} />
       </RowBetween>
-      <SearchInputStyled type="text" placeholder={'Wallet address or ENS name'} />
+      <SearchInputStyled
+        type="text"
+        placeholder={'Wallet address or ENS name'}
+        value={(address || recipient) ?? undefined}
+        onChange={handleInput}
+        error={error}
+      />
     </div>
   )
 }

@@ -20,7 +20,7 @@ import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useAppro
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useModalOpen, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
-import { Field } from '../../state/swap/actions'
+import { Field, setRecipient } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -395,7 +395,7 @@ export default function Swap() {
                     </PaddedRowBetween>
                   </AutoColumn>
                 )}
-                {isExpertMode && <RecipientField />}
+                {isExpertMode && !showWrap && <RecipientField recipient={recipient} action={setRecipient} />}
                 <div>
                   {!account ? (
                     <ButtonPrimary onClick={toggleWalletSwitcherPopover} disabled={networkSwitcherPopoverOpen}>
