@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { StyledNumericalInput } from 'components/CurrencyInputPane;'
+import { StyledCurrencyInput } from 'components/NumericalInput'
 import { FixedHeightRow } from 'components/PositionCard'
 import { AutoRow } from 'components/Row'
 import Toggle from 'components/Toggle'
@@ -13,7 +13,6 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useStakeGenCallback, useUnstakeGenCallback } from 'hooks/useStakeGen'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useCurrencyBalance } from 'state/wallet/hooks'
@@ -22,13 +21,11 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import AppBody from '../AppBody'
 
-// import { StyledCurrencyInput } from 'components/NumericalInput'
-
-export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
+export default function Stake() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
   const [stake, setStake] = useState<boolean>(true)
-  const [amount, setAmount] = useState<number>(0)
+  const [amount, setAmount] = useState<string>('')
 
   const [stakingToken, setStakingToken] = useState<{ token: Token; isSGen: boolean }>({
     token: S_GEN,
@@ -45,13 +42,13 @@ export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: s
   )
 
   const stakeGen = useStakeGenCallback({
-    amount,
+    amount: Number(amount),
     account,
     rebasing: stakingToken.isSGen,
     stakingTokenName: stakingToken.token.name,
   })
   const unstakeGen = useUnstakeGenCallback({
-    amount,
+    amount: Number(amount),
     account,
     rebasing: stakingToken.isSGen,
     unstakingTokenName: stakingToken.token.name,
@@ -69,12 +66,14 @@ export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: s
   const handleStakeGen = async () => {
     try {
       await stakeGen()
+      setAmount('')
     } catch (error) {}
   }
 
   const handleUnstakeGen = async () => {
     try {
       await unstakeGen()
+      setAmount('')
     } catch (error) {}
   }
 
@@ -90,10 +89,11 @@ export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: s
       </AutoRow>
 
       <AutoRow style={{ padding: '1rem' }}>
-        <StyledNumericalInput
+        <StyledCurrencyInput
+          className="token-amount-input"
           value={amount}
-          onUserInput={(amount: string) => setAmount(+amount)}
-          placeholder={'0'}
+          onUserInput={(amount) => setAmount(amount)}
+          placeholder={'0.0'}
           fontSize="30px"
         />
       </AutoRow>
@@ -104,7 +104,7 @@ export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: s
             <Trans>Unstaked Balance:</Trans>
           </Text>
           <Text fontSize={16} fontWeight={500}>
-            {formatCurrencyAmount(genBalance, 2)} {GEN.symbol}
+            {formatCurrencyAmount(genBalance, 5)} {GEN.symbol}
           </Text>
         </FixedHeightRow>
 
@@ -122,7 +122,7 @@ export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: s
             <Trans>sGEN Balance:</Trans>
           </Text>
           <Text fontSize={14} fontWeight={500} color={theme.text3}>
-            {formatCurrencyAmount(sGenBalance, 2)} {S_GEN.name}
+            {formatCurrencyAmount(sGenBalance, 5)} {S_GEN.name}
           </Text>
         </FixedHeightRow>
 
@@ -131,7 +131,7 @@ export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: s
             <Trans>gGEN Balance:</Trans>
           </Text>
           <Text fontSize={14} fontWeight={500} color={theme.text3}>
-            {formatCurrencyAmount(gGenBalance, 2)} {G_GEN.name}
+            {formatCurrencyAmount(gGenBalance, 5)} {G_GEN.name}
           </Text>
         </FixedHeightRow>
       </AutoColumn>
