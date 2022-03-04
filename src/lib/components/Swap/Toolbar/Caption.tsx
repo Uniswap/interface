@@ -2,15 +2,21 @@ import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import Tooltip from 'lib/components/Tooltip'
+import { loadingCss } from 'lib/css/loading'
 import { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
-import { ThemedText } from 'lib/theme'
+import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 import { TextButton } from '../../Button'
 import Row from '../../Row'
 import RoutingDiagram from '../RoutingDiagram'
+
+const Loading = styled.span`
+  color: ${({ theme }) => theme.secondary};
+  ${loadingCss};
+`
 
 interface CaptionProps {
   icon?: Icon
@@ -47,7 +53,16 @@ export function Empty() {
 }
 
 export function LoadingTrade() {
-  return <Caption icon={InlineSpinner} caption={<Trans>Fetching best price…</Trans>} />
+  return (
+    <Caption
+      icon={InlineSpinner}
+      caption={
+        <Loading>
+          <Trans>Fetching best price…</Trans>
+        </Loading>
+      }
+    />
+  )
 }
 
 export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType: WrapType.UNWRAP | WrapType.WRAP }) {

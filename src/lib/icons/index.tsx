@@ -146,7 +146,7 @@ export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
 export const InlineSpinner = styled(icon(InlineSpinnerIcon))<{ color?: Color }>`
   animation: ${rotate} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   color: ${({ color = 'active', theme }) => theme[color]};
-  fill: ${({ theme }) => theme.outline};
-  stroke: ${({ theme }) => theme.outline};
+  fill: ${({ color = 'active', theme }) => theme[color]};
+  stroke: ${({ theme }) => theme.secondary};
   stroke-linecap: round;
 `

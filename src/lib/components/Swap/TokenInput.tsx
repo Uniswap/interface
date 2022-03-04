@@ -2,7 +2,7 @@ import 'setimmediate'
 
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { loadingOpacityCss } from 'lib/css/loading'
+import { loadingTransitionCss } from 'lib/css/loading'
 import styled, { keyframes, ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -16,7 +16,7 @@ const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
 `
 
-const ValueInput = styled(DecimalInput)<{ $loading: boolean }>`
+const ValueInput = styled(DecimalInput)`
   color: ${({ theme }) => theme.primary};
   height: 1em;
 
@@ -28,7 +28,7 @@ const ValueInput = styled(DecimalInput)<{ $loading: boolean }>`
     color: ${({ theme }) => theme.onHover(theme.secondary)};
   }
 
-  ${loadingOpacityCss}
+  ${loadingTransitionCss}
 `
 
 const delayedFadeIn = keyframes`
@@ -108,7 +108,7 @@ export default function TokenInput({
             onFocus={() => setShowMax(hasMax)}
             onChange={onChangeInput}
             disabled={disabled || !currency}
-            $loading={Boolean(loading)}
+            isLoading={Boolean(loading)}
             ref={input}
           ></ValueInput>
         </ThemedText.H2>

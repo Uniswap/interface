@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
-import { loadingOpacityCss } from 'lib/css/loading'
+import { loadingTransitionCss } from 'lib/css/loading'
 import {
   useIsSwapFieldIndependent,
   useSwapAmount,
@@ -23,7 +23,7 @@ import TokenImg from '../TokenImg'
 import TokenInput from './TokenInput'
 
 export const USDC = styled(Row)`
-  ${loadingOpacityCss};
+  ${loadingTransitionCss};
 `
 
 export const Balance = styled(ThemedText.Body2)<{ focused: boolean }>`
@@ -122,7 +122,7 @@ export default function Input({ disabled, focused }: InputProps) {
       >
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
-            <USDC $loading={isLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</USDC>
+            <USDC isLoading={isRouteLoading}>{inputUSDC ? `$${inputUSDC.toFixed(2)}` : '-'}</USDC>
             {balance && (
               <Balance color={balanceColor} focused={focused}>
                 Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
