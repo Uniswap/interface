@@ -261,8 +261,9 @@ export default function CreateReferral() {
               <Text fontSize={12} color={theme.subText} marginBottom="8px">
                 <Trans>Your wallet address *</Trans>{' '}
                 <InfoHelper
-                  size={14}
+                  size={12}
                   text={t`Any referral commission will automatically be sent to this wallet address`}
+                  placement="top"
                 />
               </Text>
               <Text fontSize={20} lineHeight={'24px'} color={theme.text}>
@@ -287,8 +288,9 @@ export default function CreateReferral() {
               <Text fontSize={12} lineHeight="16px" color={theme.subText} marginBottom="10px">
                 <Trans>Referral Commission</Trans> (%) *{' '}
                 <InfoHelper
-                  size={14}
+                  size={12}
                   text={t`Commission (%) that is applied to each successful trade that uses your referral link`}
+                  placement="top"
                 />
               </Text>
               <Flex justifyContent="space-between" alignItems="center">
@@ -308,6 +310,7 @@ export default function CreateReferral() {
                 step={5}
                 onChange={value => setCommission(value)}
                 size={16}
+                style={{ width: '100%' }}
               />
             </ReferralCommissionBox>
             <Flex marginBottom="12px" justifyContent="space-between">
@@ -315,7 +318,7 @@ export default function CreateReferral() {
                 <Trans>Include Chain</Trans>
                 <InfoHelper
                   placement="top"
-                  size={10}
+                  size={12}
                   text={t`You can include the chain in your referral link so referees are automatically re-directed to this network on KyberSwap. You will still earn commission on trades that are made on other chains and use your referral link`}
                   width="300px"
                 />
@@ -344,7 +347,7 @@ export default function CreateReferral() {
                     <Trans>Include Tokens</Trans>
                     <InfoHelper
                       placement="top"
-                      size={10}
+                      size={12}
                       text={t`You can also include tokens to swap in your referral link so that referees are automatically re-directed to selected chain and selected tokens are also populated for the swap. You will still earn commission on other token swaps if they use your referral link.`}
                       width="300px"
                     />
