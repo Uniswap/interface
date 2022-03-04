@@ -1,4 +1,4 @@
-import '../assets/fonts.scss'
+import 'lib/assets/fonts.scss'
 
 import { mix, transparentize } from 'polished'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
@@ -6,60 +6,67 @@ import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 import styled, { ThemedProvider } from './styled'
 import { Colors, ComputedTheme, Theme } from './theme'
 
-export type { Color, Colors, Theme } from './theme'
-
 export default styled
 export * from './dynamic'
 export * from './layer'
 export * from './styled'
+export * from './theme'
 export * as ThemedText from './type'
 
-export const brand = '#FF007A'
+const white = 'hsl(0, 0%, 100%)'
+const black = 'hsl(0, 0%, 0%)'
+
+const brandLight = 'hsl(331.3, 100%, 50%)'
+const brandDark = 'hsl(215, 79%, 51.4%)'
+export const brand = brandLight
+
+const stateColors = {
+  active: 'hsl(215, 79%, 51.4%)',
+  success: 'hsl(145, 63.4%, 41.8%)',
+  warning: 'hsl(43, 89.9%, 53.5%)',
+  error: 'hsl(0, 98%, 62.2%)',
+}
 
 export const lightTheme: Colors = {
   // surface
-  accent: brand,
-  container: '#F7F8FA',
-  module: '#E2E3E9',
-  interactive: '#CED0D9',
-  outline: '#C3C5CB',
-  dialog: '#FFFFFF',
+  accent: brandLight,
+  container: 'hsl(220, 23%, 97.5%)',
+  module: 'hsl(231, 14%, 90%)',
+  interactive: 'hsl(229, 13%, 83%)',
+  outline: 'hsl(225, 7%, 78%)',
+  dialog: white,
 
   // text
-  primary: '#000000',
-  secondary: '#565A69',
-  hint: '#888D9B',
-  onInteractive: '#000000',
+  onAccent: white,
+  primary: black,
+  secondary: 'hsl(227, 10%, 37.5%)',
+  hint: 'hsl(224, 9%, 57%)',
+  onInteractive: black,
 
   // state
-  active: '#2172E5',
-  success: '#27AE60',
-  warning: '#F3B71E',
-  error: '#FD4040',
+  ...stateColors,
 
   currentColor: 'currentColor',
 }
 
 export const darkTheme: Colors = {
   // surface
-  accent: '#2172E5',
-  container: '#191B1F',
-  module: '#2C2F36',
-  interactive: '#40444F',
-  outline: '#565A69',
-  dialog: '#000000',
+  accent: brandDark,
+  container: 'hsl(220, 10.7%, 11%)',
+  module: 'hsl(222, 10.2%, 19.2%)',
+  interactive: 'hsl(224, 10%, 28%)',
+  outline: 'hsl(227, 10%, 37.5%)',
+  dialog: black,
 
   // text
-  primary: '#FFFFFF',
-  secondary: '#888D9B',
-  hint: '#6C7284',
-  onInteractive: '#FFFFFF',
+  onAccent: white,
+  primary: white,
+  secondary: 'hsl(224, 8.7%, 57.1%)',
+  hint: 'hsl(225, 10%, 47.1%)',
+  onInteractive: white,
 
   // state
-  active: '#2172E5',
-  success: '#27AE60',
-  warning: '#F3B71E',
-  error: '#FD4040',
+  ...stateColors,
 
   currentColor: 'currentColor',
 }

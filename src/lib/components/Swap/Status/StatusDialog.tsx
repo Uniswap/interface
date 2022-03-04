@@ -1,15 +1,18 @@
 import { Trans } from '@lingui/macro'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
+import EtherscanLink from 'lib/components/EtherscanLink'
+import SwapSummary from 'lib/components/Swap/Summary'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
-import { SwapTransactionInfo, Transaction } from 'lib/state/transactions'
+import { SwapTransactionInfo, Transaction, TransactionType, WrapTransactionInfo } from 'lib/state/transactions'
 import styled, { ThemedText } from 'lib/theme'
+import ms from 'ms.macro'
 import { useCallback, useMemo, useState } from 'react'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton from '../../ActionButton'
 import Column from '../../Column'
 import Row from '../../Row'
-import Summary from '../Summary'
 
 const errorMessage = (
   <Trans>
@@ -23,18 +26,13 @@ const TransactionRow = styled(Row)`
   flex-direction: row-reverse;
 `
 
-function ElapsedTime({ tx }: { tx: Transaction<SwapTransactionInfo> }) {
+type PendingTransaction = Transaction<SwapTransactionInfo | WrapTransactionInfo>
+
+function ElapsedTime({ tx }: { tx: PendingTransaction }) {
   const [elapsedMs, setElapsedMs] = useState(0)
-  useInterval(
-    () => {
-      if (tx.info.response.timestamp) {
-        setElapsedMs(tx.info.response.timestamp - tx.addedTime)
-      } else {
-        setElapsedMs(Date.now() - tx.addedTime)
-      }
-    },
-    elapsedMs === tx.info.response.timestamp ? null : 1000
-  )
+
+  useInterval(() => setElapsedMs(Date.now() - tx.addedTime), tx.receipt ? null : ms`1s`)
+
   const toElapsedTime = useCallback((ms: number) => {
     let sec = Math.floor(ms / 1000)
     const min = Math.floor(sec / 60)
@@ -57,13 +55,8 @@ function ElapsedTime({ tx }: { tx: Transaction<SwapTransactionInfo> }) {
   )
 }
 
-const EtherscanA = styled.a`
-  color: ${({ theme }) => theme.accent};
-  text-decoration: none;
-`
-
 interface TransactionStatusProps {
-  tx: Transaction<SwapTransactionInfo>
+  tx: PendingTransaction
   onClose: () => void
 }
 
@@ -72,19 +65,30 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
     return tx.receipt?.status ? CheckCircle : Spinner
   }, [tx.receipt?.status])
   const heading = useMemo(() => {
-    return tx.receipt?.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>
-  }, [tx.receipt?.status])
+    if (tx.info.type === TransactionType.SWAP) {
+      return tx.receipt?.status ? <Trans>Swap confirmed</Trans> : <Trans>Swap pending</Trans>
+    } else if (tx.info.type === TransactionType.WRAP) {
+      if (tx.info.unwrapped) {
+        return tx.receipt?.status ? <Trans>Unwrap confirmed</Trans> : <Trans>Unwrap pending</Trans>
+      }
+      return tx.receipt?.status ? <Trans>Wrap confirmed</Trans> : <Trans>Wrap pending</Trans>
+    }
+    return tx.receipt?.status ? <Trans>Transaction confirmed</Trans> : <Trans>Transaction pending</Trans>
+  }, [tx.info, tx.receipt?.status])
+
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={Icon} iconColor={tx.receipt?.status ? 'success' : undefined}>
         <ThemedText.Subhead1>{heading}</ThemedText.Subhead1>
-        <Summary input={tx.info.inputCurrencyAmount} output={tx.info.outputCurrencyAmount} />
+        {tx.info.type === TransactionType.SWAP ? (
+          <SwapSummary input={tx.info.inputCurrencyAmount} output={tx.info.outputCurrencyAmount} />
+        ) : null}
       </StatusHeader>
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
-          <EtherscanA href="//etherscan.io" target="_blank">
+          <EtherscanLink type={ExplorerDataType.TRANSACTION} data={tx.info.response.hash}>
             <Trans>View on Etherscan</Trans>
-          </EtherscanA>
+          </EtherscanLink>
         </ThemedText.ButtonSmall>
         <ElapsedTime tx={tx} />
       </TransactionRow>
@@ -101,7 +105,7 @@ export default function TransactionStatusDialog({ tx, onClose }: TransactionStat
       header={errorMessage}
       error={new Error('TODO(zzmp)')}
       action={<Trans>Dismiss</Trans>}
-      onAction={onClose}
+      onClick={onClose}
     />
   ) : (
     <TransactionStatus tx={tx} onClose={onClose} />

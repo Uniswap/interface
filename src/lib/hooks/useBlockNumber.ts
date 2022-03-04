@@ -25,7 +25,8 @@ function useBlock() {
 
   useEffect(() => {
     if (library && chainId && windowVisible) {
-      setState({ chainId })
+      // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
+      setState((state) => (state.chainId === chainId ? state : { chainId }))
 
       library
         .getBlockNumber()

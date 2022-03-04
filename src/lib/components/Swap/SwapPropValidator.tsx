@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { DefaultAddress, SwapProps } from 'lib/components/Swap'
 import { IntegrationError } from 'lib/errors'
+import { FeeOptions } from 'lib/hooks/swap/useSyncConvenienceFee'
+import { DefaultAddress, TokenDefaults } from 'lib/hooks/swap/useSyncTokenDefaults'
 import { PropsWithChildren, useEffect } from 'react'
 
 import { isAddress } from '../../../utils'
@@ -15,7 +16,7 @@ function isAddressOrAddressMap(addressOrMap: DefaultAddress): boolean {
   return false
 }
 
-type ValidatorProps = PropsWithChildren<SwapProps>
+type ValidatorProps = PropsWithChildren<TokenDefaults & FeeOptions>
 
 export default function SwapPropValidator(props: ValidatorProps) {
   const { convenienceFee, convenienceFeeRecipient } = props
@@ -47,7 +48,7 @@ export default function SwapPropValidator(props: ValidatorProps) {
     }
   }, [convenienceFee, convenienceFeeRecipient])
 
-  const { defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount } = props
+  const { defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount } = props
   useEffect(() => {
     if (defaultOutputAmount && defaultInputAmount) {
       throw new IntegrationError('defaultInputAmount and defaultOutputAmount may not both be defined.')
@@ -60,17 +61,25 @@ export default function SwapPropValidator(props: ValidatorProps) {
         `defaultOutputAmount must be a positive number. (You set it to ${defaultOutputAmount})`
       )
     }
-    if (defaultInputAddress && !isAddressOrAddressMap(defaultInputAddress) && defaultInputAddress !== 'NATIVE') {
+    if (
+      defaultInputTokenAddress &&
+      !isAddressOrAddressMap(defaultInputTokenAddress) &&
+      defaultInputTokenAddress !== 'NATIVE'
+    ) {
       throw new IntegrationError(
-        `defaultInputAddress(es) must be a valid address or "NATIVE". (You set it to ${defaultInputAddress}`
+        `defaultInputTokenAddress(es) must be a valid address or "NATIVE". (You set it to ${defaultInputTokenAddress}`
       )
     }
-    if (defaultOutputAddress && !isAddressOrAddressMap(defaultOutputAddress) && defaultOutputAddress !== 'NATIVE') {
+    if (
+      defaultOutputTokenAddress &&
+      !isAddressOrAddressMap(defaultOutputTokenAddress) &&
+      defaultOutputTokenAddress !== 'NATIVE'
+    ) {
       throw new IntegrationError(
-        `defaultOutputAddress(es) must be a valid address or "NATIVE". (You set it to ${defaultOutputAddress}`
+        `defaultOutputTokenAddress(es) must be a valid address or "NATIVE". (You set it to ${defaultOutputTokenAddress}`
       )
     }
-  }, [defaultInputAddress, defaultInputAmount, defaultOutputAddress, defaultOutputAmount])
+  }, [defaultInputTokenAddress, defaultInputAmount, defaultOutputTokenAddress, defaultOutputAmount])
 
   return <>{props.children}</>
 }

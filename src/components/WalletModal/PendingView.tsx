@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { AbstractConnector } from '@web3-react/abstract-connector'
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
+import { AbstractConnector } from 'web3-react-abstract-connector'
 
 import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'

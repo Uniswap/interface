@@ -1,17 +1,20 @@
 import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { useAtomValue } from 'jotai/utils'
 import { IconButton } from 'lib/components/Button'
+import { useSwapTradeType } from 'lib/hooks/swap'
+import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import useScrollbar from 'lib/hooks/useScrollbar'
-import { AlertTriangle, Expando, Info } from 'lib/icons'
-import { MIN_HIGH_SLIPPAGE } from 'lib/state/settings'
-import { Field, independentFieldAtom } from 'lib/state/swap'
+import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
+import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
+import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
+import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
-import ActionButton from '../../ActionButton'
+import ActionButton, { Action } from '../../ActionButton'
 import Column from '../../Column'
 import { Header } from '../../Dialog'
 import Row from '../../Row'
@@ -38,13 +41,13 @@ const Body = styled(Column)<{ open: boolean }>`
     transition: flex-grow 0.25s;
 
     ${DetailsColumn} {
-      flex-basis: ${({ open }) => (open ? 7 : 0)}em;
+      flex-basis: ${({ open }) => (open ? 7.5 : 0)}em;
       overflow-y: hidden;
       position: relative;
       transition: flex-basis 0.25s;
 
       ${Column} {
-        height: 100%;
+        height: 7.5em;
         grid-template-rows: repeat(auto-fill, 1em);
         padding: ${({ open }) => (open ? '0.5em 0' : 0)};
         transition: padding 0.25s;
@@ -74,8 +77,6 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
-const priceUpdate = { message: <Trans>Price updated</Trans>, action: <Trans>Accept</Trans> }
-
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
@@ -83,25 +84,46 @@ interface SummaryDialogProps {
 }
 
 export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDialogProps) {
-  const { inputAmount, outputAmount } = trade
+  const { inputAmount, outputAmount, executionPrice } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
-  const price = trade.executionPrice
+  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
+  const tradeType = useSwapTradeType()
+  const { i18n } = useLingui()
 
-  const independentField = useAtomValue(independentFieldAtom)
+  const [open, setOpen] = useState(false)
+  const [details, setDetails] = useState<HTMLDivElement | null>(null)
+  const scrollbar = useScrollbar(details)
 
-  const slippageWarning = useMemo(() => allowedSlippage.greaterThan(MIN_HIGH_SLIPPAGE), [allowedSlippage])
+  const warning = useMemo(() => {
+    return getPriceImpactWarning(priceImpact) || getSlippageWarning(allowedSlippage)
+  }, [allowedSlippage, priceImpact])
+
+  const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
   const [confirmedTrade, setConfirmedTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && confirmedTrade && tradeMeaningfullyDiffers(trade, confirmedTrade)),
     [confirmedTrade, trade]
   )
-  const [open, setOpen] = useState(false)
 
-  const [details, setDetails] = useState<HTMLDivElement | null>(null)
-
-  const scrollbar = useScrollbar(details)
+  const action = useMemo((): Action | undefined => {
+    if (doesTradeDiffer) {
+      return {
+        message: <Trans>Price updated</Trans>,
+        icon: BarChart,
+        onClick: () => setConfirmedTrade(trade),
+        children: <Trans>Accept</Trans>,
+      }
+    } else if (getPriceImpactWarning(priceImpact) === 'error' && !ackPriceImpact) {
+      return {
+        message: <Trans>High price impact</Trans>,
+        onClick: () => setAckPriceImpact(true),
+        children: <Trans>Acknowledge</Trans>,
+      }
+    }
+    return
+  }, [ackPriceImpact, doesTradeDiffer, priceImpact, trade])
 
   if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
     return null
@@ -113,14 +135,17 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
       <Body flex align="stretch" gap={0.75} padded open={open}>
         <SummaryColumn gap={0.75} flex justify="center">
           <Summary input={inputAmount} output={outputAmount} usdc={true} />
-          <ThemedText.Caption>
-            1 {inputCurrency.symbol} = {price?.toSignificant(6)} {outputCurrency.symbol}
-          </ThemedText.Caption>
+          <Row>
+            <ThemedText.Caption userSelect>
+              {formatLocaleNumber({ number: 1, sigFigs: 1, locale: i18n.locale })} {inputCurrency.symbol} ={' '}
+              {formatPrice(executionPrice, 6, i18n.locale)} {outputCurrency.symbol}
+            </ThemedText.Caption>
+          </Row>
         </SummaryColumn>
         <Rule />
         <Row>
           <Row gap={0.5}>
-            {slippageWarning ? <AlertTriangle color="warning" /> : <Info color="secondary" />}
+            {warning ? <AlertTriangle color={warning} /> : <Info color="secondary" />}
             <ThemedText.Subhead2 color="secondary">
               <Trans>Swap details</Trans>
             </ThemedText.Subhead2>
@@ -135,25 +160,22 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
-            <Trans>Output is estimated.</Trans>
-            {independentField === Field.INPUT && (
+            <Trans>Output is estimated.</Trans>{' '}
+            {tradeType === TradeType.EXACT_INPUT && (
               <Trans>
-                You will send at most {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {inputCurrency.symbol}{' '}
+                You will receive at least{' '}
+                {formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)} {outputCurrency.symbol}{' '}
                 or the transaction will revert.
               </Trans>
             )}
-            {independentField === Field.OUTPUT && (
+            {tradeType === TradeType.EXACT_OUTPUT && (
               <Trans>
-                You will receive at least {trade.minimumAmountOut(allowedSlippage).toSignificant(6)}{' '}
-                {outputCurrency.symbol} or the transaction will revert.
+                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)}{' '}
+                {inputCurrency.symbol} or the transaction will revert.
               </Trans>
             )}
           </Estimate>
-          <ActionButton
-            onClick={onConfirm}
-            onUpdate={() => setConfirmedTrade(trade)}
-            update={doesTradeDiffer ? priceUpdate : undefined}
-          >
+          <ActionButton onClick={onConfirm} action={action}>
             <Trans>Confirm swap</Trans>
           </ActionButton>
         </ExpandoColumn>

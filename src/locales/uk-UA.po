@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 00:13\n"
+"PO-Revision-Date: 2022-03-03 22:06\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -129,6 +129,10 @@ msgstr "Прийняти"
 msgid "Account"
 msgstr "Обліковий запис"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Acknowledge"
+msgstr "Визнайте"
+
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
@@ -188,6 +192,10 @@ msgstr "Адреса не має доступного запиту"
 msgid "Against"
 msgstr "Проти"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Дозволити"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Дозволити перенесення токенів LP"
@@ -199,6 +207,10 @@ msgstr "Дозвольте торгувати з високими цінами �
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Дозвольте протоколу Uniswap використовувати ваш {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Спочатку дозвольте {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -213,8 +225,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "Під час спроби виконати цей обмін сталася помилка. Можливо, вам доведеться збільшити толерантність до ковзання. Якщо це не спрацює, можливо, існує несумісність з токеном, яким ви торгуєте. Примітка: плата за перенесення та перебазування токенів несумісні з Uniswap V3."
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "Очікує схвалення <0/>"
+msgid "Approval pending"
+msgstr "Очікує схвалення"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -283,6 +295,10 @@ msgstr "Щонайменше {0} {1} і {2} {3} повертаються до в
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Автоматично"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "Автоматичний маршрутизатор"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -532,9 +548,13 @@ msgstr "Підключіться до гаманця, щоб перегляну�
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Підключіться до гаманця, щоб переглянути свою ліквідність."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "Підключіть гаманець для обміну"
+
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Підключіть гаманець"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -667,6 +687,10 @@ msgstr "Докладно"
 msgid "Details"
 msgstr "Подробиці"
 
+#: src/components/Popups/DonationLink.tsx
+msgid "Directly support the Ukrainian government by donating tokens."
+msgstr "Безпосередньо підтримувати український уряд, даруючи токени."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Відключитись"
@@ -683,6 +707,10 @@ msgstr "Відхилити"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "Документація"
+
+#: src/components/Popups/DonationLink.tsx
+msgid "Donate to Ukraine"
+msgstr "Пожертвуйте Україні"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
@@ -719,7 +747,7 @@ msgstr "Введіть адресу для ініціювання збору UNI
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -739,6 +767,8 @@ msgstr "Введіть дійсну адресу токена"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Введіть {0} суму"
 
@@ -821,7 +851,7 @@ msgstr "Рівень плати"
 msgid "Fetching best price..."
 msgstr "Отримання найкращої ціни..."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "Отримання найкращої ціни…"
 
@@ -870,6 +900,10 @@ msgstr "Приховати закриті позиції"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Вплив високої ціни"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High price impact"
+msgstr "Високий вплив на ціну"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
@@ -936,17 +970,19 @@ msgstr "Вхідні дані оцінюються. Ви продасте щон
 msgid "Install Metamask"
 msgstr "Встановити Metamask"
 
-#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Недостатня ліквідність для цієї угоди."
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Insufficient {0}"
-msgstr "Недостатньо {0}"
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Insufficient liquidity in the pool for your trade"
+msgstr "Недостатня ліквідність у пулі для вашої торгівлі"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -1019,6 +1055,10 @@ msgstr "Ліквідність"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Дані про ліквідність відсутні."
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Комісія постачальника ліквідності"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1684,6 +1724,10 @@ msgstr "Поміняти <0/> на точно <1/>"
 msgid "Swap Anyway"
 msgstr "Обміняти в будь-якому випадку"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "Обмін підтверджено"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "Обмін деталями"
@@ -1696,6 +1740,10 @@ msgstr "Поміняти <0/> на <1/>"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Помилка підкачки: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "Обмін очікує на розгляд"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1871,10 +1919,6 @@ msgstr "Усього внесків"
 msgid "Trade Route"
 msgstr "Торговий шлях"
 
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "Торгівля"
-
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -1894,6 +1938,10 @@ msgstr "Транзакцію надіслано"
 msgid "Transaction completed in"
 msgstr "Транзакція завершена в"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "Транзакція підтверджена"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1907,10 +1955,6 @@ msgstr "Транзакція очікує на розгляд"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Транзакцію відхилено."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "Трансакцію надіслано"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2024,14 +2068,15 @@ msgstr "Непідтримуваний актив"
 msgid "Unsupported Assets"
 msgstr "Непідтримувані активи"
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Unsupported network–switch to another to trade."
-msgstr "Непідтримувана мережа – перейдіть на іншу, щоб торгувати."
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unsupported network - switch to another to trade."
+msgstr "Непідтримувана мережа - перейдіть на іншу для торгівлі."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Без назви"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Розгорнути"
@@ -2039,6 +2084,22 @@ msgstr "Розгорнути"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Розгорніть <0/> до {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "Розгортання підтверджено"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrap native currency."
+msgstr "Розгорніть рідну валюту."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "Очікує розгортання"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrapping native currency."
+msgstr "Розгортання рідної валюти."
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2208,6 +2269,7 @@ msgstr "Зняття {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 знято!"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Перенос"
@@ -2215,6 +2277,22 @@ msgstr "Перенос"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Оберніть <0/> до {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "Wrap підтверджено"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrap native currency."
+msgstr "Загорніть рідну валюту."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "Очікується обгортання"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrapping native currency."
+msgstr "Обгортання рідної валюти."
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2431,9 +2509,13 @@ msgstr "через {0}"
 msgid "via {0} token list"
 msgstr "через {0} список токенів"
 
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {Найкращий маршрут через 1 стрибок} other {Найкращий маршрут через # перельоту}}"
+
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {токен імпортувати} other {токенів імпортувати}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Імпортувати маркер} other {Імпорт токенів}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2441,8 +2523,6 @@ msgid "{0}"
 msgstr "{0}"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/VotePage.tsx
 msgid "{0} %"
 msgstr "{0} %"
 

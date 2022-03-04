@@ -1,18 +1,22 @@
 import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
-import { useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
+import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
+import { TradeState } from 'state/routing/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../Column'
 import Row from '../Row'
+import { Balance, InputProps, USDC, useFormattedFieldAmount } from './Input'
 import TokenInput from './TokenInput'
 
 export const colorAtom = atom<string | undefined>(undefined)
@@ -33,19 +37,21 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null }>`
   }
 `
 
-interface OutputProps {
-  disabled?: boolean
-  children: ReactNode
-}
+export default function Output({ disabled, focused, children }: PropsWithChildren<InputProps>) {
+  const { i18n } = useLingui()
 
-export default function Output({ disabled, children }: OutputProps) {
   const {
     currencyBalances: { [Field.OUTPUT]: balance },
-    currencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
+    trade: { state: tradeState },
+    tradeCurrencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
   } = useSwapInfo()
 
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
   const [swapOutputCurrency, updateSwapOutputCurrency] = useSwapCurrency(Field.OUTPUT)
+
+  const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
+  const isDependentField = !useIsSwapFieldIndependent(Field.OUTPUT)
+  const isLoading = isRouteLoading && isDependentField
 
   const overrideColor = useAtomValue(colorAtom)
   const dynamicColor = useCurrencyColor(swapOutputCurrency)
@@ -58,46 +64,51 @@ export default function Output({ disabled, children }: OutputProps) {
   const outputUSDC = useUSDCValue(outputCurrencyAmount)
 
   const priceImpact = useMemo(() => {
-    const computedChange = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
-    return computedChange ? parseFloat(computedChange.multiply(-1)?.toSignificant(3)) : undefined
+    const fiatValuePriceImpact = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
+    if (!fiatValuePriceImpact) return null
+
+    const color = getPriceImpactWarning(fiatValuePriceImpact)
+    const sign = fiatValuePriceImpact.lessThan(0) ? '+' : ''
+    const displayedPriceImpact = parseFloat(fiatValuePriceImpact.multiply(-1)?.toSignificant(3))
+    return (
+      <ThemedText.Body2 color={color}>
+        ({sign}
+        {displayedPriceImpact}%)
+      </ThemedText.Body2>
+    )
   }, [inputUSDC, outputUSDC])
 
-  const usdc = useMemo(() => {
-    if (outputUSDC) {
-      return `$${outputUSDC.toFixed(2)} (${priceImpact && priceImpact > 0 ? '+' : ''}${priceImpact}%)`
-    }
-    return ''
-  }, [priceImpact, outputUSDC])
-
-  const onMax = useCallback(() => {
-    if (balance) {
-      updateSwapOutputAmount(balance.toExact())
-    }
-  }, [balance, updateSwapOutputAmount])
+  const amount = useFormattedFieldAmount({
+    disabled,
+    currencyAmount: outputCurrencyAmount,
+    fieldAmount: swapOutputAmount,
+  })
 
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.5}>
         <Row>
-          <ThemedText.Subhead2 color="secondary">
+          <ThemedText.Subhead1 color="secondary">
             <Trans>For</Trans>
-          </ThemedText.Subhead2>
+          </ThemedText.Subhead1>
         </Row>
         <TokenInput
           currency={swapOutputCurrency}
-          amount={(swapOutputAmount !== undefined ? swapOutputAmount : outputCurrencyAmount?.toSignificant(6)) ?? ''}
+          amount={amount}
           disabled={disabled}
-          onMax={onMax}
           onChangeInput={updateSwapOutputAmount}
           onChangeCurrency={updateSwapOutputCurrency}
+          loading={isLoading}
         >
-          <ThemedText.Body2 color="secondary">
+          <ThemedText.Body2 color="secondary" userSelect>
             <Row>
-              <span>{usdc}</span>
+              <USDC gap={0.5} $loading={isLoading}>
+                {outputUSDC ? `$${outputUSDC.toFixed(2)}` : '-'} {priceImpact}
+              </USDC>
               {balance && (
-                <span>
-                  Balance: <span style={{ userSelect: 'text' }}>{formatCurrencyAmount(balance, 4)}</span>
-                </span>
+                <Balance focused={focused}>
+                  Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
+                </Balance>
               )}
             </Row>
           </ThemedText.Body2>

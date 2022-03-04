@@ -12,6 +12,7 @@ import Rule from '../Rule'
 
 const HeaderIcon = styled(LargeIcon)`
   flex-grow: 1;
+  transition: height 0.25s, width 0.25s;
 
   svg {
     transition: height 0.25s, width 0.25s;
@@ -66,7 +67,7 @@ const ExpandoColumn = styled(Column)<{ open: boolean }>`
     transition: flex-grow 0.25s;
 
     ${Column} {
-      height: 100%;
+      height: 6.825em;
       padding: ${({ open }) => (open ? '0.5em 0' : 0)};
       transition: padding 0.25s;
 
@@ -87,10 +88,10 @@ interface ErrorDialogProps {
   header?: ReactNode
   error: Error
   action: ReactNode
-  onAction: () => void
+  onClick: () => void
 }
 
-export default function ErrorDialog({ header, error, action, onAction }: ErrorDialogProps) {
+export default function ErrorDialog({ header, error, action, onClick }: ErrorDialogProps) {
   const [open, setOpen] = useState(false)
   const [details, setDetails] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(details)
@@ -117,13 +118,13 @@ export default function ErrorDialog({ header, error, action, onAction }: ErrorDi
         <Rule />
         <ErrorColumn>
           <Column gap={0.5} ref={setDetails} css={scrollbar}>
-            <ThemedText.Code>
+            <ThemedText.Code userSelect>
               {error.name}
               {error.message ? `: ${error.message}` : ''}
             </ThemedText.Code>
           </Column>
         </ErrorColumn>
-        <ActionButton onClick={onAction}>{action}</ActionButton>
+        <ActionButton onClick={onClick}>{action}</ActionButton>
       </ExpandoColumn>
     </Column>
   )

@@ -1,4 +1,4 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import { AbstractConnector } from 'web3-react-abstract-connector'
 
 import INJECTED_ICON_URL from '../assets/images/arrow-right.svg'
 import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'

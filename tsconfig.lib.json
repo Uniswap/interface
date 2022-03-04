@@ -2,8 +2,9 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
+    "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "dist/dts",
+    "declarationDir": "dts",
     "baseUrl": "src/lib",
     "paths": {
       "lib/*": ["./*"],
@@ -11,11 +12,12 @@
       "assets/*": ["../assets/*"],
       "constants/*": ["../constants/*"],
       "hooks/*": ["../hooks/*"],
+      "locales/*": ["../locales/*"],
       "state/*": ["../state/*"],
       "types/*": ["../types/*"],
-      "utils/*": ["../utils/*"],
-    },
+      "utils/*": ["../utils/*"]
+    }
   },
-  "exclude": ["node_modules", "src/lib/**/*.test.*"],
-  "include": ["src/lib/**/*"]
+  "exclude": ["node_modules", "src/**/*.test.*"],
+  "include": ["src/lib/**/*.d.ts", "src/lib/index.tsx"]
 }

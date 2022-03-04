@@ -1,28 +1,29 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
-import { useClientSideV3Trade } from 'hooks/useClientSideV3Trade'
+import { FeeOptions } from '@uniswap/v3-sdk'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
-import { maxSlippageAtom } from 'lib/state/settings'
-import { Field, swapAtom } from 'lib/state/swap'
+import { feeOptionsAtom, Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isAddress } from '../../../utils'
 import useActiveWeb3React from '../useActiveWeb3React'
+import useAllowedSlippage from '../useAllowedSlippage'
+import { useBestTrade } from './useBestTrade'
 
 interface SwapInfo {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
-  currencyAmounts: { [field in Field]?: CurrencyAmount<Currency> }
+  tradeCurrencyAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   trade: {
     trade?: InterfaceTrade<Currency, Currency, TradeType>
     state: TradeState
   }
   allowedSlippage: Percent
+  feeOptions: FeeOptions | undefined
 }
 
 const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
@@ -42,6 +43,8 @@ function useComputeSwapInfo(): SwapInfo {
     [Field.OUTPUT]: outputCurrency,
   } = useAtomValue(swapAtom)
 
+  const feeOptions = useAtomValue(feeOptionsAtom)
+
   const to = account
 
   const relevantTokenBalances = useCurrencyBalances(
@@ -49,16 +52,14 @@ function useComputeSwapInfo(): SwapInfo {
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 
-  const isExactIn: boolean = independentField === Field.INPUT
+  const isExactIn = independentField === Field.INPUT
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
     [inputCurrency, isExactIn, outputCurrency, amount]
   )
 
-  /**
-   * @TODO (ianlapham): eventually need a strategy for routing API here
-   */
-  const trade = useClientSideV3Trade(
+  //@TODO(ianlapham): this would eventually be replaced with routing api logic.
+  const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
@@ -80,7 +81,7 @@ function useComputeSwapInfo(): SwapInfo {
     [relevantTokenBalances]
   )
 
-  const currencyAmounts = useMemo(
+  const tradeCurrencyAmounts = useMemo(
     () => ({
       [Field.INPUT]: trade.trade?.inputAmount,
       [Field.OUTPUT]: trade.trade?.outputAmount,
@@ -88,16 +89,7 @@ function useComputeSwapInfo(): SwapInfo {
     [trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
-  /*
-   * If user has enabled 'auto' slippage, use the default best slippage calculated
-   * based on the trade. If user has entered custom slippage, use that instead.
-   */
-  const autoSlippageTolerance = useAutoSlippageTolerance(trade.trade)
-  const maxSlippage = useAtomValue(maxSlippageAtom)
-  const allowedSlippage = useMemo(
-    () => (maxSlippage === 'auto' ? autoSlippageTolerance : maxSlippage),
-    [autoSlippageTolerance, maxSlippage]
-  )
+  const allowedSlippage = useAllowedSlippage(trade.trade)
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -137,29 +129,29 @@ function useComputeSwapInfo(): SwapInfo {
     () => ({
       currencies,
       currencyBalances,
-      currencyAmounts,
       inputError,
       trade,
+      tradeCurrencyAmounts,
       allowedSlippage,
+      feeOptions,
     }),
-    [currencies, currencyBalances, currencyAmounts, inputError, trade, allowedSlippage]
+    [currencies, currencyBalances, inputError, trade, tradeCurrencyAmounts, allowedSlippage, feeOptions]
   )
 }
 
 const swapInfoAtom = atom<SwapInfo>({
   currencies: {},
   currencyBalances: {},
-  currencyAmounts: {},
   trade: { state: TradeState.INVALID },
+  tradeCurrencyAmounts: {},
   allowedSlippage: new Percent(0),
+  feeOptions: undefined,
 })
 
 export function SwapInfoUpdater() {
   const setSwapInfo = useUpdateAtom(swapInfoAtom)
   const swapInfo = useComputeSwapInfo()
-  useEffect(() => {
-    setSwapInfo(swapInfo)
-  }, [swapInfo, setSwapInfo])
+  useEffect(() => setSwapInfo(swapInfo), [swapInfo, setSwapInfo])
   return null
 }
 

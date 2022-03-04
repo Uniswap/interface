@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-02-02 00:12\n"
+"PO-Revision-Date: 2022-03-03 22:06\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -129,6 +129,10 @@ msgstr "Αποδοχή"
 msgid "Account"
 msgstr "Λογαριασμός"
 
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Acknowledge"
+msgstr "Αναγνωρίζω"
+
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
@@ -188,6 +192,10 @@ msgstr "Η διεύθυνση δεν έχει διαθέσιμη διεκδίκ�
 msgid "Against"
 msgstr "Εναντίον"
 
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow"
+msgstr "Επιτρέπω"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Επιτρέψτε τη μεταφορά μάρκας παρόχου ρευστότητας (LP)"
@@ -199,6 +207,10 @@ msgstr "Επιτρέψτε τις διαπραγματεύσεις υψηλής 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Επιτρέψτε στο πρωτόκολλο Uniswap να χρησιμοποιήσει το {0} σας"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allow {0} first"
+msgstr "Επιτρέψτε πρώτα το {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -213,8 +225,8 @@ msgid "An error occurred when trying to execute this swap. You may need to incre
 msgstr "Παρουσιάστηκε σφάλμα κατά την προσπάθεια εκτέλεσης αυτής της ανταλλαγής. Ίσως χρειαστεί να αυξήσετε την ανοχή ολίσθησης. Εάν αυτό δεν λειτουργεί, μπορεί να υπάρχει ασυμβατότητα με το διακριτικό που διαπραγματεύεστε. Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
 
 #: src/lib/components/Swap/SwapButton.tsx
-msgid "Approval pending <0/>"
-msgstr "Η έγκριση εκκρεμεί <0/>"
+msgid "Approval pending"
+msgstr "Η έγκριση εκκρεμεί"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -283,6 +295,10 @@ msgstr "Τουλάχιστον {0} {1} και {2} {3} θα επιστραφού�
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "Auto"
 msgstr "Αυτόματο"
+
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "Auto Router"
+msgstr "Αυτόματος δρομολογητής"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
@@ -532,9 +548,13 @@ msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτ
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Συνδεθείτε σε ένα πορτοφόλι για να δείτε την ρευστότητά σας."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Connect wallet to swap"
 msgstr "Συνδέστε το πορτοφόλι για ανταλλαγή"
+
+#: src/lib/components/Wallet.tsx
+msgid "Connect your wallet"
+msgstr "Συνδέστε το πορτοφόλι σας"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -667,6 +687,10 @@ msgstr "Λεπτομερής"
 msgid "Details"
 msgstr "Λεπτομέρειες"
 
+#: src/components/Popups/DonationLink.tsx
+msgid "Directly support the Ukrainian government by donating tokens."
+msgstr "Υποστηρίξτε άμεσα την κυβέρνηση της Ουκρανίας δωρίζοντας μάρκες."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Αποσύνδεση"
@@ -683,6 +707,10 @@ msgstr "Απόρριψη"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "Έγγραφα"
+
+#: src/components/Popups/DonationLink.tsx
+msgid "Donate to Ukraine"
+msgstr "Κάντε δωρεά στην Ουκρανία"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
@@ -719,7 +747,7 @@ msgstr "Εισάγετε μια διεύθυνση για να εκκινήσε�
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -739,6 +767,8 @@ msgstr "Εισάγετε μια διεύθυνση έγκυρης μάρκας"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Εισαγάγετε {0} ποσό"
 
@@ -821,7 +851,7 @@ msgstr "Επίπεδο χρεώσεων"
 msgid "Fetching best price..."
 msgstr "Λήψη της καλύτερης τιμής..."
 
-#: src/lib/components/Swap/Toolbar.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Fetching best price…"
 msgstr "Λήψη της καλύτερης τιμής…"
 
@@ -870,6 +900,10 @@ msgstr "Απόκρυψη κλειστών θέσεων"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Υψηλή Επίδραση Τιμών"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "High price impact"
+msgstr "Υψηλό αντίκτυπο στην τιμή"
 
 #: src/lib/components/Swap/Settings/MaxSlippageSelect.tsx
 msgid "High slippage increases the risk of price movement"
@@ -936,17 +970,19 @@ msgstr "Η τιμή που εισάγετε εκτιμήθηκε. Θα πουλ�
 msgid "Install Metamask"
 msgstr "Εγκατάσταση Metamask"
 
-#: src/lib/components/Swap/Toolbar.tsx
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Ανεπαρκής ρευστότητα για αυτή τη διαπραγμάτευση."
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Insufficient {0}"
-msgstr "Ανεπαρκές {0}"
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Insufficient liquidity in the pool for your trade"
+msgstr "Ανεπαρκής ρευστότητα στο pool για τις συναλλαγές σας"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
+#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
@@ -1019,6 +1055,10 @@ msgstr "Ρευστότητα"
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
 msgstr "Δεν υπάρχουν διαθέσιμα δεδομένα ρευστότητας."
+
+#: src/lib/components/Swap/Summary/Details.tsx
+msgid "Liquidity provider fee"
+msgstr "Αμοιβή παρόχου ρευστότητας"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1684,6 +1724,10 @@ msgstr "Αντικαταστήστε <0/> με ακριβώς <1/>"
 msgid "Swap Anyway"
 msgstr "Ανταλλάξτε ούτως ή άλλως"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap confirmed"
+msgstr "Η ανταλλαγή επιβεβαιώθηκε"
+
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
 msgstr "Ανταλλαγή λεπτομερειών"
@@ -1696,6 +1740,10 @@ msgstr "Αντικαταστήστε ακριβώς <0/> με <1/>"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Swap failed: {0}"
 msgstr "Η ανταλλαγή απέτυχε: {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Swap pending"
+msgstr "Ανταλλαγή σε εκκρεμότητα"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1871,10 +1919,6 @@ msgstr "Συνολικές καταθέσεις"
 msgid "Trade Route"
 msgstr "Εμπορική οδός"
 
-#: src/lib/components/Swap/Input.tsx
-msgid "Trading"
-msgstr "Εμπορία"
-
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -1894,6 +1938,10 @@ msgstr "Συναλλαγή Υποβλήθηκε"
 msgid "Transaction completed in"
 msgstr "Η συναλλαγή ολοκληρώθηκε στις"
 
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Transaction confirmed"
+msgstr "Η συναλλαγή επιβεβαιώθηκε"
+
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
 msgid "Transaction deadline"
@@ -1907,10 +1955,6 @@ msgstr "Συναλλαγή σε εκκρεμότητα"
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Transaction rejected."
 msgstr "Η συναλλαγή απορρίφθηκε."
-
-#: src/lib/components/Swap/Status/StatusDialog.tsx
-msgid "Transaction submitted"
-msgstr "Η συναλλαγή υποβλήθηκε"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -2024,14 +2068,15 @@ msgstr "Μη Υποστηριζόμενο Περιουσιακό Στοιχεί�
 msgid "Unsupported Assets"
 msgstr "Μη Υποστηριζόμενα Περιουσιακά Στοιχεία"
 
-#: src/lib/components/Swap/Toolbar.tsx
-msgid "Unsupported network–switch to another to trade."
-msgstr "Μη υποστηριζόμενο δίκτυο – μεταβείτε σε άλλο για συναλλαγές."
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unsupported network - switch to another to trade."
+msgstr "Μη υποστηριζόμενο δίκτυο - μεταβείτε σε άλλο για συναλλαγές."
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Χωρίς τίτλο"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Αποκαλύπτω"
@@ -2039,6 +2084,22 @@ msgstr "Αποκαλύπτω"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Ξετυλίξτε <0/> προς {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap confirmed"
+msgstr "Το ξετύλιγμα επιβεβαιώθηκε"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrap native currency."
+msgstr "Ξετυλίξτε το εγγενές νόμισμα."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Unwrap pending"
+msgstr "Εκκρεμεί το ξετύλιγμα"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Unwrapping native currency."
+msgstr "Ξετυλίγοντας το εγγενές νόμισμα."
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2208,6 +2269,7 @@ msgstr "Ανάληψη {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "Πραγματοποιήθηκε ανάληψη UNI-V2!"
 
+#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Καλύπτω"
@@ -2215,6 +2277,22 @@ msgstr "Καλύπτω"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Τυλίξτε <0/> προς {0}"
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap confirmed"
+msgstr "Η αναδίπλωση επιβεβαιώθηκε"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrap native currency."
+msgstr "Τυλίξτε το εγγενές νόμισμα."
+
+#: src/lib/components/Swap/Status/StatusDialog.tsx
+msgid "Wrap pending"
+msgstr "Ανακύκλωση σε εκκρεμότητα"
+
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Wrapping native currency."
+msgstr "Αναδίπλωση εγγενούς νομίσματος."
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2431,9 +2509,13 @@ msgstr "μέσω {0}"
 msgid "via {0} token list"
 msgstr "μέσω {0} λίστας μάρκας"
 
+#: src/lib/components/Swap/RoutingDiagram/index.tsx
+msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
+msgstr "{0, plural, =1 {Η καλύτερη διαδρομή μέσω 1 hop} other {Η καλύτερη διαδρομή μέσω # λυκίσκου}}"
+
 #: src/components/SearchModal/ImportToken.tsx
-msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Εισαγωγή διακριτικού} other {Εισαγωγή διακριτικών}}"
+msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr "{0, plural, =1 {Εισαγωγή διακριτικού} other {Εισαγάγετε μάρκες}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2441,8 +2523,6 @@ msgid "{0}"
 msgstr "{0}"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/VotePage.tsx
 msgid "{0} %"
 msgstr "{0} %"
 

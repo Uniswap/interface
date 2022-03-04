@@ -1,6 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
 import type { EthereumProvider } from 'lib/ethereum'
 import { useEffect, useState } from 'react'
+import { useWeb3React } from 'web3-react-core'
 
 import { gnosisSafe, injected } from '../connectors'
 import { IS_IN_IFRAME } from '../constants/misc'
