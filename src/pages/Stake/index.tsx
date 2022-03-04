@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { StyledCurrencyInput } from 'components/NumericalInput'
+import { StyledNumericalInput } from 'components/CurrencyInputPane;'
 import { FixedHeightRow } from 'components/PositionCard'
 import { AutoRow } from 'components/Row'
 import Toggle from 'components/Toggle'
@@ -16,11 +16,13 @@ import { useContext, useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { tryParseAmount } from 'state/swap/hooks'
-import { useCurrencyBalance, useGGenToGenBalance } from 'state/wallet/hooks'
+import { useCurrencyBalance } from 'state/wallet/hooks'
 import { ThemeContext } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import AppBody from '../AppBody'
+
+// import { StyledCurrencyInput } from 'components/NumericalInput'
 
 export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const theme = useContext(ThemeContext)
@@ -58,7 +60,6 @@ export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: s
   const genBalance = useCurrencyBalance(account ? account : undefined, GEN)
   const sGenBalance = useCurrencyBalance(account ? account : undefined, S_GEN)
   const gGenBalance = useCurrencyBalance(account ? account : undefined, G_GEN)
-  const gGenToSGenBalance = useGGenToGenBalance(account ? account : undefined, G_GEN)
 
   const onToggle = () =>
     stakingToken.isSGen
@@ -89,9 +90,9 @@ export default function Stake({ history }: RouteComponentProps<{ currencyIdA?: s
       </AutoRow>
 
       <AutoRow style={{ padding: '1rem' }}>
-        <StyledCurrencyInput
+        <StyledNumericalInput
           value={amount}
-          onUserInput={(amount) => setAmount(+amount)}
+          onUserInput={(amount: string) => setAmount(+amount)}
           placeholder={'0'}
           fontSize="30px"
         />
