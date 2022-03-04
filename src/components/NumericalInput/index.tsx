@@ -97,4 +97,9 @@ export const Input = React.memo(function InnerInput({
 
 export default Input
 
+export const StyledCurrencyInput = styled(Input)`
+  height: 50px;
+  border-radius: 16px;
+  padding: 0 15px;
+`
 // const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group

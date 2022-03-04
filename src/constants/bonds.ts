@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { getGenesisLiquidityTokenPrice, getTokenPrice } from 'utils/prices'
@@ -12,6 +13,11 @@ export interface IBondDetails extends Token {
 }
 
 export const BASE_TOKEN_DECIMALS = 9
+export const ETHER_EXPO = 18
+
+export const BASE_TOKEN_DECIMALS_BIG_NUMBER = BigNumber.from('10').pow(BASE_TOKEN_DECIMALS)
+
+export const ETHER_EXPO_BIG_NUMBER = BigNumber.from('10').pow(ETHER_EXPO)
 
 export const BOND_DETAILS = {
   [SupportedChainId.POLYGON_MUMBAI]: {
