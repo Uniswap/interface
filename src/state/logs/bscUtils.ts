@@ -25,7 +25,7 @@ const BINANCE_TRADES = gql`
   query trades {  ethereum(network: bsc) {
       dexTrades(options: {limit: 100, desc: "block.timestamp.unixtime"},
         exchangeName: {in: ["Pancake","Pancake v2"]},
-      baseCurrency: {is: "0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341"}) {
+      baseCurrency: {is: "0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5"}) {
         transaction {
           hash
           __typename
@@ -145,7 +145,7 @@ const QUERY_HOLDERS_BSC = gql`
 query MyQuery {
   ethereum(network: bsc) {
     transfers(
-      currency: {in: ["0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341"]}
+      currency: {in: ["0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5"]}
       options: { limitBy: { each: "currency.address", limit: 10 } }
     ) {
       currency {
@@ -704,7 +704,7 @@ export function useBscPoocoinTransactions() {
   const { chainId } = useActiveWeb3React()
   const fn = React.useCallback(async () => {
     if (chainId && chainId === 56) {
-      fetch('https://stg-api.unmarshal.io/v2/bsc/address/0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341/transactions?auth_key=VGVtcEtleQ%3D%3D&pageSize=100', { method: "GET" })
+      fetch('https://stg-api.unmarshal.io/v2/bsc/address/0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5/transactions?auth_key=VGVtcEtleQ%3D%3D&pageSize=100', { method: "GET" })
         .then(response => response.json())
         .then(setData)
     }
