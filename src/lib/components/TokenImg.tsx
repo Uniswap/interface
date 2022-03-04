@@ -1,17 +1,18 @@
 import { Currency } from '@uniswap/sdk-core'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
-import { Slash } from 'lib/icons'
+import { MissingToken } from 'lib/icons'
 import styled from 'lib/theme'
 import { useCallback, useEffect, useState } from 'react'
 
 const badSrcs = new Set<string>()
 
-interface TokenImgProps {
-  className?: string
+interface BaseProps {
   token: Currency
 }
 
-function TokenImg({ className, token }: TokenImgProps) {
+type TokenImgProps = BaseProps & Omit<React.ImgHTMLAttributes<HTMLImageElement>, keyof BaseProps>
+
+function TokenImg({ token, ...rest }: TokenImgProps) {
   const srcs = useCurrencyLogoURIs(token)
   const [src, setSrc] = useState<string | undefined>()
   useEffect(() => {
@@ -23,9 +24,9 @@ function TokenImg({ className, token }: TokenImgProps) {
   }, [src, srcs])
 
   if (src) {
-    return <img className={className} src={src} alt={token.name || token.symbol} onError={onError} />
+    return <img src={src} alt={token.name || token.symbol} onError={onError} {...rest} />
   }
-  return <Slash className={className} color="secondary" />
+  return <MissingToken color="secondary" {...rest} />
 }
 
 export default styled(TokenImg)<{ size?: number }>`
