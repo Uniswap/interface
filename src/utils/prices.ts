@@ -120,7 +120,6 @@ export async function getGenesisLiquidityTokenPrice(address: string, chainId: nu
 
     return resp.data
   } catch (error) {
-    console.log('coingecko api error: ', error)
     return 0
   }
 }
