@@ -41,4 +41,5 @@ export const iconButtonVariants = {
     shadowOpacity: 0.2,
     shadowRadius: 5,
   },
+  transparent: {},
 }

@@ -3,6 +3,7 @@ import { monitoredSagaReducers } from 'src/app/rootSaga'
 import { balancesReducer } from 'src/features/balances/balancesSlice'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
+import { favoritesReducer } from 'src/features/favorites/slice'
 import { multicall } from 'src/features/multicall'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
 import { providersReducer } from 'src/features/providers/providerSlice'
@@ -15,6 +16,7 @@ export const rootReducer = combineReducers({
   balances: balancesReducer,
   blocks: blocksReducer,
   chains: chainsReducer,
+  favorites: favoritesReducer,
   notifications: notificationReducer,
   providers: providersReducer,
   tokenLists: tokenListsReducer,

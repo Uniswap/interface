@@ -33,7 +33,7 @@ type IconButtonProps = {
 
 export function IconButton({ icon, name, ...rest }: IconButtonProps) {
   const baseProps = { hitSlop: defaultHitslopInset, ...rest }
-  const backgroundColor = rest.variant === 'primary' ? 'primary1' : 'secondary1'
+  const backgroundColor = rest.variant === 'primary' ? 'primary1' : 'none'
   return (
     <TraceEvent actionProps={ButtonActionProps} elementName={name} elementType="button">
       <IconBaseButton {...baseProps} backgroundColor={backgroundColor} p="md">

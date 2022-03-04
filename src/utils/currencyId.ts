@@ -3,7 +3,9 @@ import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { toSupportedChainId } from 'src/utils/chainId'
 
-export function currencyId(currency: Currency): string {
+export type CurrencyId = string
+
+export function currencyId(currency: Currency): CurrencyId {
   return buildCurrencyId(currency.chainId, currencyAddress(currency))
 }
 
