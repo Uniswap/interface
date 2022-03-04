@@ -217,16 +217,17 @@ export default function CurrencyInputPanel({
           </InputRow>
           <FiatRow>
             <RowBetween>
-              <FiatValueDetails fiatValue={fiatValue?.toFixed(2)} priceImpact={priceImpact} />
+              {fiatValue && <FiatValueDetails fiatValue={fiatValue?.toFixed(2)} priceImpact={priceImpact} />}
               {account && (
                 <TYPE.body
                   onClick={onMax}
                   fontWeight="600"
                   fontSize="10px"
-                  lineHeight="12px"
+                  lineHeight="13px"
                   letterSpacing="0.08em"
                   style={{
                     display: 'inline',
+                    marginLeft: 'auto',
                     cursor:
                       !hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance) ? 'pointer' : 'auto'
                   }}
