@@ -259,7 +259,7 @@ export default function CreateReferral() {
               }}
             >
               <Text fontSize={12} color={theme.subText} marginBottom="8px">
-                <Trans>Your wallet address *</Trans>{' '}
+                <Trans>Your wallet address *</Trans>
                 <InfoHelper
                   size={12}
                   text={t`Any referral commission will automatically be sent to this wallet address`}
@@ -358,7 +358,7 @@ export default function CreateReferral() {
                   <Flex alignItems="flex-start" marginBottom="28px">
                     <Flex flexDirection="column" flex={1}>
                       <Label>
-                        <Trans>Input Token</Trans>*
+                        <Trans>Input Token</Trans> *
                       </Label>
                       <TokensSelect
                         currency={currencyA}
@@ -376,7 +376,7 @@ export default function CreateReferral() {
                     <ArrowRight style={{ margin: '30px 14px 0px 14px', alignSelf: 'flex-start' }} />
                     <Flex flexDirection="column" flex={1}>
                       <Label>
-                        <Trans>Output Token</Trans>*
+                        <Trans>Output Token</Trans> *
                       </Label>
                       <TokensSelect
                         currency={currencyB}

@@ -49,7 +49,8 @@ const InfoHelperWrapper = styled.span`
   display: inline-block;
   align-items: center;
   margin-left: 0.25rem;
-  cursor: pointer;
+  line-height: 100%;
+  vertical-align: middle;
 `
 
 export default function InfoHelper({
