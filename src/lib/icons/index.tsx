@@ -1,3 +1,4 @@
+import MissingTokenIcon from 'lib/assets/missing-token-image.png'
 import { ReactComponent as RouterIcon } from 'lib/assets/svg/auto_router.svg'
 import { ReactComponent as CheckIcon } from 'lib/assets/svg/check.svg'
 import { ReactComponent as ExpandoIcon } from 'lib/assets/svg/expando.svg'
@@ -31,6 +32,10 @@ import {
 
 type SVGIcon = FunctionComponent<SVGProps<SVGSVGElement>>
 
+const StyledImage = styled.img`
+  height: 1em;
+  width: 1em;
+`
 function icon(Icon: FeatherIcon | SVGIcon) {
   return styled(Icon)<{ color?: Color }>`
     clip-path: stroke-box;
@@ -91,6 +96,9 @@ export const Trash2 = icon(Trash2Icon)
 export const Wallet = icon(WalletIcon)
 export const X = icon(XIcon)
 export const XOctagon = icon(XOctagonIcon)
+export const MissingToken = (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  <StyledImage src={MissingTokenIcon} alt="Missing token" {...props} />
+)
 
 export const Check = styled(icon(CheckIcon))`
   circle {
