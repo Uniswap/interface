@@ -59,57 +59,56 @@ function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#8F96AC' : '#6E727D',
-    text4: darkMode ? '#B2B9D2' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text1: '#FFFFFF',
+    text2: '#C3C5CB',
+    text3: '#8F96AC',
+    text4: '#B2B9D2',
+    text5: '#2C2F36',
 
     // backgrounds / greys
-    bg0: darkMode ? '#191B1F' : '#FFF',
-    bg1: darkMode ? '#212429' : '#F7F8FA',
-    bg2: darkMode ? '#2C2F36' : '#EDEEF2',
-    bg3: darkMode ? '#40444F' : '#CED0D9',
-    bg4: darkMode ? '#565A69' : '#888D9B',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
-    bg6: darkMode ? '#1A2028' : '#6C7284',
+    bg0: '#150C1D',
+    bg1: '#1E1228',
+    bg2: '#1F1935',
+    bg3: '#322D4A',
+    bg4: '#443D62',
+    bg5: '#564D78',
+    bg6: '#7E7BAF',
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+    modalBG: 'rgba(0,0,0,.425)',
+    advancedBG: 'rgba(0,0,0,0.1)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#E8006F',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: '#9146FF',
+    primary2: '#A76BFF',
+    primary3: '#BD90FF',
+    primary4: '#9D9DCB70',
+    primary5: '#443D6270',
 
     // color text
-    primaryText1: darkMode ? '#5090ea' : '#D50066',
+    primaryText1: '#5090ea',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#E8006F',
-    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary1: '#9146FF',
+    secondary2: '#17000b26',
+    secondary3: '#17000b26',
 
     // other
-    red1: darkMode ? '#FF4343' : '#DA2D2B',
-    red2: darkMode ? '#F82D3A' : '#DF1F38',
+    red1: '#FF4343',
+    red2: '#F82D3A',
     red3: '#D60000',
-    green1: darkMode ? '#27AE60' : '#007D35',
+    green1: '#27AE60',
     yellow1: '#E3A507',
     yellow2: '#FF8F00',
     yellow3: '#F3B71E',
-    blue1: darkMode ? '#2172E5' : '#0068FC',
-    blue2: darkMode ? '#5199FF' : '#0068FC',
-    error: darkMode ? '#FD4040' : '#DF1F38',
-    success: darkMode ? '#27AE60' : '#007D35',
+    blue1: '#9146FF',
+    blue2: '#A76BFF',
+    error: '#FD4040',
+    success: '#27AE60',
     warning: '#FF8F00',
 
     // dont wanna forget these blue yet
-    blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+    blue4: '#443D6270',
   }
 }
 
@@ -124,7 +123,7 @@ function theme(darkMode: boolean): DefaultTheme {
     },
 
     //shadows
-    shadow1: darkMode ? '#000' : '#2F80ED',
+    shadow1: '#000',
 
     // media queries
     mediaWidth: mediaWidthTemplates,

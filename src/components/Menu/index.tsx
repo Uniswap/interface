@@ -5,7 +5,7 @@ import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/loca
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import React, { useEffect, useRef, useState } from 'react'
-import { BookOpen, Check, ChevronLeft, Coffee, Globe, MessageCircle, Moon, Sun } from 'react-feather'
+import { BookOpen, Check, ChevronLeft, Coffee, Globe, MessageCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
@@ -233,10 +233,6 @@ export default function Menu() {
                         <Trans>Language</Trans>
                       </div>
                       <Globe opacity={0.6} size={16} />
-                    </ToggleMenuItem>
-                    <ToggleMenuItem onClick={() => toggleDarkMode()}>
-                      <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
-                      {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
                     </ToggleMenuItem>
                     <MenuItem href="https://docs.uniswap.org/">
                       <div>
