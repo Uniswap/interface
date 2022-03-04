@@ -1,16 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
+import useUSDCPriceImpact, { toHumanReadablePriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useCallback } from 'react'
 import { TradeState } from 'state/routing/types'
-import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { getPriceImpactWarning } from 'utils/prices'
 
@@ -60,23 +59,13 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   // different state true/null/false allow smoother color transition
   const hasColor = swapOutputCurrency ? Boolean(color) || null : false
 
-  const inputUSDC = useUSDCValue(inputCurrencyAmount)
-  const outputUSDC = useUSDCValue(outputCurrencyAmount)
+  const { outputUSDC, priceImpact } = useUSDCPriceImpact(inputCurrencyAmount, outputCurrencyAmount)
+  const PriceImpact = useCallback(() => {
+    if (!priceImpact) return null
 
-  const priceImpact = useMemo(() => {
-    const fiatValuePriceImpact = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
-    if (!fiatValuePriceImpact) return null
-
-    const color = getPriceImpactWarning(fiatValuePriceImpact)
-    const sign = fiatValuePriceImpact.lessThan(0) ? '+' : ''
-    const displayedPriceImpact = parseFloat(fiatValuePriceImpact.multiply(-1)?.toSignificant(3))
-    return (
-      <ThemedText.Body2 color={color}>
-        ({sign}
-        {displayedPriceImpact}%)
-      </ThemedText.Body2>
-    )
-  }, [inputUSDC, outputUSDC])
+    const color = getPriceImpactWarning(priceImpact)
+    return <ThemedText.Body2 color={color}>({toHumanReadablePriceImpact(priceImpact)})</ThemedText.Body2>
+  }, [priceImpact])
 
   const amount = useFormattedFieldAmount({
     disabled,
@@ -103,7 +92,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
           <ThemedText.Body2 color="secondary" userSelect>
             <Row>
               <USDC gap={0.5} $loading={isLoading}>
-                {outputUSDC ? `$${outputUSDC.toFixed(2)}` : '-'} {priceImpact}
+                {outputUSDC ? `$${outputUSDC.toFixed(2)}` : '-'} <PriceImpact />
               </USDC>
               {balance && (
                 <Balance focused={focused}>
