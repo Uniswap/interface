@@ -234,7 +234,7 @@ export default function CurrencyInputPanel({
                   <UppercaseHelper>
                     {!hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance) && (
                       <>
-                        {customBalanceText ?? 'Balance: '}
+                        {customBalanceText ?? t('balance')}
                         <TYPE.small as="span" fontWeight="600" color="text3" style={{ textDecoration: 'underline' }}>
                           {(balance || selectedCurrencyBalance)?.toSignificant(6)}
                         </TYPE.small>

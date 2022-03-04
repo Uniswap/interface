@@ -2,6 +2,12 @@ import { CurrencyAmount, Percent, _10000, JSBI, currencyEquals, ZERO } from '@sw
 
 const ONE_HUNDRED_PERCENT = new Percent(_10000, _10000)
 
+/**
+ * Calculates the difference between fiat value ouput and input in percentage terms.
+ * @param {CurrencyAmount} fiatValueInput
+ * @param {CurrencyAmount} fiatValueOutput
+ * @returns {Percent}
+ */
 export function computeFiatValuePriceImpact(
   fiatValueInput: CurrencyAmount | undefined | null,
   fiatValueOutput: CurrencyAmount | undefined | null

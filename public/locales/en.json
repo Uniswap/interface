@@ -99,5 +99,8 @@
   "vote": "Vote",
   "charts": "Charts",
   "limit": "Limit",
-  "bridgeSwap": "Bridge Swap"
+  "bridgeSwap": "Bridge Swap",
+  "priceImpactTooHigh": "Price Impact Too High",
+  "anyway": "Anyway",
+  "swapWith": "Swap with"
 }

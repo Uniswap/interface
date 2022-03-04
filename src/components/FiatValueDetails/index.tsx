@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { TYPE } from '../../theme'
 import { JSBI, Percent } from '@swapr/sdk'
-import { warningFiatSeverity } from '../../utils/prices'
+import { PRICE_IMPACT_HIGH, warningFiatSeverity } from '../../utils/prices'
 
 interface FiatValueDetailsProps {
   fiatValue?: string
@@ -21,7 +21,7 @@ export function FiatValueDetails({ fiatValue = '0', priceImpact }: FiatValueDeta
     <TYPE.body fontWeight="600" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
       ${fiatValue}
       {priceImpact && (
-        <StyledPriceImpact warning={fiatPriceImpactSeverity === 3}>
+        <StyledPriceImpact warning={fiatPriceImpactSeverity === PRICE_IMPACT_HIGH}>
           {priceImpact.multiply(JSBI.BigInt(-100)).toSignificant(3)}%
         </StyledPriceImpact>
       )}

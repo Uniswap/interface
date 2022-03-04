@@ -363,16 +363,16 @@ export const NETWORK_OPTIONAL_DETAIL: { [chainId: number]: NetworkOptionalDetail
 export const ROUTABLE_PLATFORM_STYLE: {
   [routablePaltformName: string]: { logo: string; alt: string; bgImage: string }
 } = {
-  [RoutablePlatform.UNISWAP.name]: { logo: UniswapLogo, alt: 'uniswap', bgImage: '' },
+  [RoutablePlatform.UNISWAP.name]: { logo: UniswapLogo, alt: RoutablePlatform.UNISWAP.name, bgImage: '' },
   [RoutablePlatform.SUSHISWAP.name]: {
     logo: SushiswapLogo,
-    alt: 'sushiswap',
+    alt: RoutablePlatform.SUSHISWAP.name,
     bgImage: 'linear-gradient(90deg, #2E17F2 19.74%, #FB52A1 120.26%)'
   },
-  [RoutablePlatform.SWAPR.name]: { logo: SwaprLogo, alt: 'swapr', bgImage: '' },
-  [RoutablePlatform.HONEYSWAP.name]: { logo: HoneyswapLogo, alt: 'honeyswap', bgImage: '' },
-  [RoutablePlatform.BAOSWAP.name]: { logo: BaoswapLogo, alt: 'baoswap', bgImage: '' },
-  [RoutablePlatform.LEVINSWAP.name]: { logo: LevinswapLogo, alt: 'levinswap', bgImage: '' }
+  [RoutablePlatform.SWAPR.name]: { logo: SwaprLogo, alt: RoutablePlatform.SWAPR.name, bgImage: '' },
+  [RoutablePlatform.HONEYSWAP.name]: { logo: HoneyswapLogo, alt: RoutablePlatform.HONEYSWAP.name, bgImage: '' },
+  [RoutablePlatform.BAOSWAP.name]: { logo: BaoswapLogo, alt: RoutablePlatform.BAOSWAP.name, bgImage: '' },
+  [RoutablePlatform.LEVINSWAP.name]: { logo: LevinswapLogo, alt: RoutablePlatform.LEVINSWAP.name, bgImage: '' }
 }
 
 export const ROUTABLE_PLATFORM_LOGO: { [routablePaltformName: string]: ReactNode } = {

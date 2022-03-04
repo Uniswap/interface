@@ -90,17 +90,23 @@ export function computeSlippageAdjustedAmounts(
   }
 }
 
+export const PRICE_IMPACT_NON_EXPERT = 4
+export const PRICE_IMPACT_HIGH = 3
+export const PRICE_IMPACT_MEDIUM = 2
+export const PRICE_IMPACT_LOW = 3
+export const NO_PRICE_IMPACT = 0
+
 export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3 | 4 {
-  if (!priceImpact?.lessThan(BLOCKED_PRICE_IMPACT_NON_EXPERT)) return 4
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return 3
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 2
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) return 1
-  return 0
+  if (!priceImpact?.lessThan(BLOCKED_PRICE_IMPACT_NON_EXPERT)) return PRICE_IMPACT_NON_EXPERT
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return PRICE_IMPACT_HIGH
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return PRICE_IMPACT_MEDIUM
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) return NO_PRICE_IMPACT
+  return NO_PRICE_IMPACT
 }
 
 export function warningFiatSeverity(priceImpact: Percent | undefined): 0 | 3 {
-  if (!priceImpact?.lessThan(ALLOWED_FIAT_PRICE_IMPACT_HIGH)) return 3
-  return 0
+  if (!priceImpact?.lessThan(ALLOWED_FIAT_PRICE_IMPACT_HIGH)) return PRICE_IMPACT_HIGH
+  return NO_PRICE_IMPACT
 }
 
 export function formatExecutionPrice(trade?: Trade, inverted?: boolean): string {
