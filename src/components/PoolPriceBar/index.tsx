@@ -15,6 +15,8 @@ import { ONE_BIPS } from '../../constants'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 import { useMedia } from 'react-use'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
+import { useActiveWeb3React } from 'hooks'
 
 const DEFAULT_MIN_PRICE = '0.00'
 const DEFAULT_MAX_PRICE = '♾️'
@@ -226,6 +228,9 @@ export function PoolPriceRangeBar({
   const theme = useContext(ThemeContext)
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
+  const { chainId } = useActiveWeb3React()
+
+  const wrappedA = wrappedCurrency(currencies[Field.CURRENCY_A], chainId)
 
   const existedPriceRange = () => {
     const amp = amplification?.divide(JSBI.BigInt(10000))
@@ -243,15 +248,13 @@ export function PoolPriceRangeBar({
               <>
                 <TYPE.black color={theme.text} fontWeight={400}>
                   Max:{' '}
-                  {priceRangeCalcByPair(pair)[
-                    currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 0 : 1
-                  ][1]?.toSignificant(6) ?? '-'}
+                  {priceRangeCalcByPair(pair)[wrappedA?.symbol === pair.token0.symbol ? 0 : 1][1]?.toSignificant(6) ??
+                    '-'}
                 </TYPE.black>
                 <TYPE.black color={theme.text} fontWeight={400}>
                   Min:{' '}
-                  {priceRangeCalcByPair(pair)[
-                    currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 0 : 1
-                  ][0]?.toSignificant(6) ?? '-'}
+                  {priceRangeCalcByPair(pair)[wrappedA?.symbol === pair.token0.symbol ? 0 : 1][0]?.toSignificant(6) ??
+                    '-'}
                 </TYPE.black>
               </>
             ) : (
@@ -268,15 +271,13 @@ export function PoolPriceRangeBar({
               <>
                 <TYPE.black color={theme.text} fontWeight={400}>
                   Max:{' '}
-                  {priceRangeCalcByPair(pair)[
-                    currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 1 : 0
-                  ][1]?.toSignificant(6) ?? '-'}
+                  {priceRangeCalcByPair(pair)[wrappedA?.symbol === pair.token0.symbol ? 1 : 0][1]?.toSignificant(6) ??
+                    '-'}
                 </TYPE.black>
                 <TYPE.black color={theme.text} fontWeight={400}>
                   Min:{' '}
-                  {priceRangeCalcByPair(pair)[
-                    currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 1 : 0
-                  ][0]?.toSignificant(6) ?? '-'}
+                  {priceRangeCalcByPair(pair)[wrappedA?.symbol === pair.token0.symbol ? 1 : 0][0]?.toSignificant(6) ??
+                    '-'}
                 </TYPE.black>
               </>
             ) : (

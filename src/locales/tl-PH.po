@@ -70,12 +70,6 @@ msgstr ""
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr ""
 
-#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
-#: src/pages/AddLiquidity/TokenPair.tsx
-#: src/pages/AddLiquidity/ZapIn.tsx
-msgid "A portion of each trade that will goes to liquidity providers as a protocol incentive."
-msgstr ""
-
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
@@ -1053,6 +1047,12 @@ msgstr ""
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Liquidity Provider Fee"
+msgstr ""
+
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Liquidity providers will earn this trading fee for each trade that uses this pool"
 msgstr ""
 
 #: src/pages/About/index.tsx
@@ -2136,10 +2136,6 @@ msgstr ""
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr ""
 
-#: src/pages/CreatePool/index.tsx
-msgid "You can choose fee that suit your pool based on those pre-made options."
-msgstr ""
-
 #: src/pages/CreateReferral/index.tsx
 msgid "You can create referral links here. If your referral link is used by anyone during a trade, you will receive a small commission from their transaction. The commission will be instantly sent to your wallet address. You can create multiple referral links with different configurations.<0/><1/>Read more <2>here</2>"
 msgstr ""
@@ -2154,6 +2150,10 @@ msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee."
 msgstr ""
 
 #: src/components/LiveChart/index.tsx

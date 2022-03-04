@@ -171,7 +171,6 @@ export function CurrencySearch({
 
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens: Token[] = useSearchInactiveTokenLists(debouncedQuery)
-  console.log('🚀 ~ file: CurrencySearch.tsx ~ line 171 ~ filteredInactiveTokens', filteredInactiveTokens)
 
   return (
     <ContentWrapper>

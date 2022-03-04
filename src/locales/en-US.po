@@ -70,12 +70,6 @@ msgstr "<0>dmm.exchange is now <1>KyberSwap.com</1>! Click <2>here</2> to learn 
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 
-#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
-#: src/pages/AddLiquidity/TokenPair.tsx
-#: src/pages/AddLiquidity/ZapIn.tsx
-msgid "A portion of each trade that will goes to liquidity providers as a protocol incentive."
-msgstr "A portion of each trade that will goes to liquidity providers as a protocol incentive."
-
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
@@ -1054,6 +1048,12 @@ msgstr "Liquidity"
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Liquidity Provider Fee"
 msgstr "Liquidity Provider Fee"
+
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Liquidity providers will earn this trading fee for each trade that uses this pool"
+msgstr "Liquidity providers will earn this trading fee for each trade that uses this pool"
 
 #: src/pages/About/index.tsx
 msgid "List your tokens permissionlessly"
@@ -2136,10 +2136,6 @@ msgstr "You are creating a pool"
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 msgstr "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
 
-#: src/pages/CreatePool/index.tsx
-msgid "You can choose fee that suit your pool based on those pre-made options."
-msgstr "You can choose fee that suit your pool based on those pre-made options."
-
 #: src/pages/CreateReferral/index.tsx
 msgid "You can create referral links here. If your referral link is used by anyone during a trade, you will receive a small commission from their transaction. The commission will be instantly sent to your wallet address. You can create multiple referral links with different configurations.<0/><1/>Read more <2>here</2>"
 msgstr "You can create referral links here. If your referral link is used by anyone during a trade, you will receive a small commission from their transaction. The commission will be instantly sent to your wallet address. You can create multiple referral links with different configurations.<0/><1/>Read more <2>here</2>"
@@ -2155,6 +2151,10 @@ msgstr "You can include the tokens to swap in your referral link"
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
 msgstr "You can manually import your pool"
+
+#: src/pages/CreatePool/index.tsx
+msgid "You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee."
+msgstr "You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee."
 
 #: src/components/LiveChart/index.tsx
 msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
