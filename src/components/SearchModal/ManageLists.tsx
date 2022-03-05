@@ -41,31 +41,33 @@ const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   opacity: ${({ disabled }) => (disabled ? '0.4' : '1')};
 `
 
+const StyledMenu = styled.div`
+  position: relative;
+`
+
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 100;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
+  background: ${({ theme }) => theme.bg1};
+  border-radius: 0.5rem;
+`
+
+const PopoverContent = styled.div<{ hasActiveTokens: boolean }>`
+  opacity: ${({ hasActiveTokens }) => (hasActiveTokens ? 1 : 0.4)};
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-gap: 8px;
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   color: ${({ theme }) => theme.text2};
-  border-radius: 0.5rem;
   padding: 1rem;
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-gap: 8px;
+  border-radius: 0.5rem;
   font-size: 1rem;
   text-align: left;
-`
-
-const StyledMenu = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  border: none;
 `
 
 const StyledTitleText = styled.div<{ active: boolean }>`
@@ -112,17 +114,17 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   const isActive = useIsListActive(listUrl)
 
   const [open, toggle] = useToggle(false)
-  const node = useRef<HTMLDivElement>()
+  const menuRelatedNode = useRef<Array<HTMLDivElement | null>>([])
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement>()
   const [popperElement, setPopperElement] = useState<HTMLDivElement>()
 
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'auto',
-    strategy: 'fixed',
+    strategy: 'absolute',
     modifiers: [{ name: 'offset', options: { offset: [8, 8] } }],
   })
 
-  useOnClickOutside(node, open ? toggle : undefined)
+  useOnClickOutside(menuRelatedNode, open ? toggle : undefined)
 
   const handleAcceptListUpdate = useCallback(() => {
     if (!pending) return
@@ -170,59 +172,66 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
 
   if (!list) return null
 
+  const hasActiveTokens = activeTokensOnThisChain > 0
   return (
-    <RowWrapper
-      active={isActive}
-      hasActiveTokens={activeTokensOnThisChain > 0}
-      bgColor={listColor}
-      key={listUrl}
-      id={listUrlRowHTMLId(listUrl)}
-    >
-      {list.logoURI ? (
-        <ListLogo size="40px" style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
-      ) : (
-        <div style={{ width: '24px', height: '24px', marginRight: '1rem' }} />
-      )}
-      <Column style={{ flex: '1' }}>
-        <Row>
-          <StyledTitleText active={isActive}>{list.name}</StyledTitleText>
-        </Row>
-        <RowFixed mt="4px">
-          <StyledListUrlText active={isActive} mr="6px">
-            <Trans>{activeTokensOnThisChain} tokens</Trans>
-          </StyledListUrlText>
-          <StyledMenu ref={node as any}>
-            <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
-              <Settings stroke={isActive ? theme.bg1 : theme.text1} size={12} />
-            </ButtonEmpty>
-            {open && (
-              <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
-                <div>{list && listVersionLabel(list.version)}</div>
-                <SeparatorDark />
-                <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
-                  <Trans>View list</Trans>
-                </ExternalLink>
-                <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
-                  <Trans>Remove list</Trans>
-                </UnpaddedLinkStyledButton>
-                {pending && (
-                  <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
-                    <Trans>Update list</Trans>
-                  </UnpaddedLinkStyledButton>
-                )}
-              </PopoverContainer>
-            )}
-          </StyledMenu>
-        </RowFixed>
-      </Column>
-      <ListToggle
-        isActive={isActive}
+    <>
+      <RowWrapper
+        active={isActive}
+        hasActiveTokens={hasActiveTokens}
         bgColor={listColor}
-        toggle={() => {
-          isActive ? handleDisableList() : handleEnableList()
-        }}
-      />
-    </RowWrapper>
+        key={listUrl}
+        id={listUrlRowHTMLId(listUrl)}
+      >
+        {list.logoURI ? (
+          <ListLogo size="40px" style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
+        ) : (
+          <div style={{ width: '24px', height: '24px', marginRight: '1rem' }} />
+        )}
+        <Column style={{ flex: '1' }}>
+          <Row>
+            <StyledTitleText active={isActive}>{list.name}</StyledTitleText>
+          </Row>
+          <RowFixed mt="4px">
+            <StyledListUrlText active={isActive} mr="6px">
+              <Trans>{activeTokensOnThisChain} tokens</Trans>
+            </StyledListUrlText>
+            <div ref={(el) => (menuRelatedNode.current[0] = el)}>
+              <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
+                <Settings stroke={isActive ? theme.bg1 : theme.text1} size={12} />
+              </ButtonEmpty>
+            </div>
+          </RowFixed>
+        </Column>
+        <ListToggle
+          isActive={isActive}
+          bgColor={listColor}
+          toggle={() => {
+            isActive ? handleDisableList() : handleEnableList()
+          }}
+        />
+      </RowWrapper>
+      <StyledMenu ref={(el) => (menuRelatedNode.current[1] = el)}>
+        {open && (
+          <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+            <PopoverContent hasActiveTokens={hasActiveTokens}>
+              <div>{list && listVersionLabel(list.version)}</div>
+              <SeparatorDark />
+              <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
+                <Trans>View list</Trans>
+              </ExternalLink>
+              <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
+                <Trans>Remove list</Trans>
+              </UnpaddedLinkStyledButton>
+              {pending && (
+                <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
+                  <Trans>Update list</Trans>
+                </UnpaddedLinkStyledButton>
+              )}
+            </PopoverContent>
+          </PopoverContainer>
+        )}
+      </StyledMenu>
+    </>
   )
 })
 
