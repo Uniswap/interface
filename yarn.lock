@@ -2359,6 +2359,11 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.6.0.tgz#e18ea901c84917f8dadd0185048a9d00573fe595"
   integrity sha512-Pz4+7HPzKvOFI1ICQ6pyUv/VgStEWq9IGiVaaV1cQLi66NIA1mD5INnY4CDNoVAxlkuZvDEUZ+cVHLQ8iwA2hQ==
 
+"@genesisprotocol/helpers@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@genesisprotocol/helpers/-/helpers-0.0.3.tgz#76d13ed406d52b31c919745b1499c7a67c94b084"
+  integrity sha512-ZLxulv3p7SI90OM54p/ACZ/z0vifx0oXG7TDcLJ9rkkpaR+jvJqE1cNAgfJ4sqpZxQb1fdfoCd6oaLXL+zOM2w==
+
 "@genesisprotocol/router-sdk@^1.0.8":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@genesisprotocol/router-sdk/-/router-sdk-1.0.8.tgz#c3cd109528892253a9b4b76df6de9eb814864a62"
