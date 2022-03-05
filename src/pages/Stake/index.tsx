@@ -113,27 +113,27 @@ export default function Stake() {
             <Trans>Total Staked Balance:</Trans>
           </Text>
           <Text fontSize={16} fontWeight={500}>
-            {/* $ {trim(`${bond.priceUSD}`, 3)} */}
-          </Text>
-        </FixedHeightRow>
-
-        <FixedHeightRow padding="0 15px">
-          <Text fontSize={14} fontWeight={500} color={theme.text3}>
-            <Trans>sGEN Balance:</Trans>
-          </Text>
-          <Text fontSize={14} fontWeight={500} color={theme.text3}>
             {formatCurrencyAmount(sGenBalance, 5)} {S_GEN.name}
           </Text>
         </FixedHeightRow>
 
-        <FixedHeightRow marginBottom="30px" padding="0 15px">
-          <Text fontSize={14} fontWeight={500} color={theme.text3}>
-            <Trans>gGEN Balance:</Trans>
-          </Text>
-          <Text fontSize={14} fontWeight={500} color={theme.text3}>
-            {formatCurrencyAmount(gGenBalance, 5)} {G_GEN.name}
-          </Text>
-        </FixedHeightRow>
+        {/* <FixedHeightRow padding="0 15px"> */}
+        {/*   <Text fontSize={14} fontWeight={500} color={theme.text3}> */}
+        {/*     <Trans>sGEN Balance:</Trans> */}
+        {/*   </Text> */}
+        {/*   <Text fontSize={14} fontWeight={500} color={theme.text3}> */}
+        {/*     {formatCurrencyAmount(sGenBalance, 5)} {S_GEN.name} */}
+        {/*   </Text> */}
+        {/* </FixedHeightRow> */}
+
+        {/* <FixedHeightRow marginBottom="30px" padding="0 15px"> */}
+        {/*   <Text fontSize={14} fontWeight={500} color={theme.text3}> */}
+        {/*     <Trans>gGEN Balance:</Trans> */}
+        {/*   </Text> */}
+        {/*   <Text fontSize={14} fontWeight={500} color={theme.text3}> */}
+        {/*     {formatCurrencyAmount(gGenBalance, 5)} {G_GEN.name} */}
+        {/*   </Text> */}
+        {/* </FixedHeightRow> */}
       </AutoColumn>
 
       {stake ? (
