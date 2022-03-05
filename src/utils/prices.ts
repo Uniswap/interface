@@ -1,10 +1,8 @@
 import { Trade } from '@genesisprotocol/router-sdk'
 import { Pair } from '@genesisprotocol/sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import axios from 'axios'
-import { getNetworkLibrary } from 'connectors'
 import JSBI from 'jsbi'
 
 import {
@@ -15,7 +13,6 @@ import {
   ONE_HUNDRED_PERCENT,
   ZERO_PERCENT,
 } from '../constants/misc'
-import { getContract } from './index'
 
 // import { getLibrary } from './getLibrary'
 const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
@@ -91,23 +88,6 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
     impact--
   }
   return 0
-}
-
-// TODO: check if chain is testnet, if it is use mainnet addresses to get the price
-export async function getLpTokenPrice(pairAddress: string): Promise<number> {
-  if (!pairAddress) return 0
-
-  const library = getNetworkLibrary()
-
-  try {
-    const pair = getContract(pairAddress, IUniswapV2PairABI, library)
-    const [token0, token1]: [string, string] = await Promise.all([pair.token0(), pair.token1()])
-
-    return 1
-  } catch (error) {
-    console.error(error)
-    return 0
-  }
 }
 
 export async function getGenesisLiquidityTokenPrice(address: string, chainId: number): Promise<number> {
