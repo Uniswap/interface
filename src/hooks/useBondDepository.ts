@@ -255,6 +255,6 @@ export function usePurchaseBondCallback(): PurchaseBondCallback {
         return { success: false, txHash: null }
       }
     },
-    [depository]
+    [depository, addTransaction]
   )
 }
