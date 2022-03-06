@@ -3,8 +3,8 @@ import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
 import { ReactComponent as StaticRouterIcon } from '../../assets/svg/static_route.svg'
+import AutoRouterIcon from './AutoRouterIcon'
 
 const StyledAutoRouterIcon = styled(AutoRouterIcon)`
   height: 16px;
