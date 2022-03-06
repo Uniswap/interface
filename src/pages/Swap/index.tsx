@@ -28,6 +28,7 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import TuxImg from '../../assets/images/tux1.png'
 
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
@@ -59,6 +60,15 @@ const StyledInfo = styled(Info)`
   :hover {
     opacity: 0.8;
   }
+`
+
+const Tux = styled.img`
+  position: absolute;
+  height: 250px;
+  margin-top: -140px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none
+  `};
 `
 
 export default function Swap({ history }: RouteComponentProps) {
@@ -334,6 +344,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
+      <Tux src={TuxImg} />
       <AppBody>
         <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
