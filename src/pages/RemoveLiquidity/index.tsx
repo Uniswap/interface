@@ -386,10 +386,12 @@ export default function RemoveLiquidity({
   )
 
   const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
+
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       WRAPPED_NATIVE_CURRENCY[chainId] &&
-      (currencyA?.equals(WRAPPED_NATIVE_CURRENCY[chainId]) || currencyB?.equals(WRAPPED_NATIVE_CURRENCY[chainId]))
+      ((currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA)) ||
+        (currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB)))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -533,16 +535,24 @@ export default function RemoveLiquidity({
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
                             to={`/remove/v2/${
-                              currencyA?.isNative ? WRAPPED_NATIVE_CURRENCY[chainId].address : currencyIdA
-                            }/${currencyB?.isNative ? WRAPPED_NATIVE_CURRENCY[chainId].address : currencyIdB}`}
+                              currencyA?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
+                                ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
+                                : currencyIdA
+                            }/${
+                              currencyB?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
+                                ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
+                                : currencyIdB
+                            }`}
                           >
                             Receive WETH
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
                             to={`/remove/v2/${
-                              currencyA?.equals(WRAPPED_NATIVE_CURRENCY[chainId]) ? 'ETH' : currencyIdA
-                            }/${currencyB?.equals(WRAPPED_NATIVE_CURRENCY[chainId]) ? 'ETH' : currencyIdB}`}
+                              currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA) ? 'ETH' : currencyIdA
+                            }/${
+                              currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB) ? 'ETH' : currencyIdB
+                            }`}
                           >
                             Receive ETH
                           </StyledInternalLink>

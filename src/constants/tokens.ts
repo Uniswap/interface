@@ -12,6 +12,7 @@ import {
   USDC_RINKEBY,
   USDC_ROPSTEN,
 } from '@uniswap/smart-order-router'
+import invariant from 'tiny-invariant'
 
 import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
@@ -209,7 +210,7 @@ export const UNI: { [chainId: number]: Token } = {
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
-  ...WETH9,
+  ...(WETH9 as Record<SupportedChainId, Token>),
   [SupportedChainId.OPTIMISM]: new Token(
     SupportedChainId.OPTIMISM,
     '0x4200000000000000000000000000000000000006',
@@ -265,7 +266,9 @@ class MaticNativeCurrency extends NativeCurrency {
 
   get wrapped(): Token {
     if (!isMatic(this.chainId)) throw new Error('Not matic')
-    return WRAPPED_NATIVE_CURRENCY[this.chainId] as Token
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
   }
 
   public constructor(chainId: number) {
@@ -276,7 +279,10 @@ class MaticNativeCurrency extends NativeCurrency {
 
 export class ExtendedEther extends Ether {
   public get wrapped(): Token {
-    if (this.chainId in WRAPPED_NATIVE_CURRENCY) return WRAPPED_NATIVE_CURRENCY[this.chainId] as Token
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    if (this.chainId in WRAPPED_NATIVE_CURRENCY && wrapped instanceof Token) {
+      return wrapped
+    }
     throw new Error('Unsupported chain ID')
   }
 

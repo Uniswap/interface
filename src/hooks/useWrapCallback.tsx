@@ -4,6 +4,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
+import { supportedChainId } from 'utils/supportedChainId'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { TransactionType } from '../state/transactions/actions'
@@ -58,6 +59,7 @@ export default function useWrapCallback(
   typedValue: string | undefined
 ): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: WrapInputError } {
   const { chainId, account } = useActiveWeb3React()
+  const formattedChainId = supportedChainId(chainId)
   const wethContract = useWETHContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
@@ -68,8 +70,8 @@ export default function useWrapCallback(
   const addTransaction = useTransactionAdder()
 
   return useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
-    const weth = WRAPPED_NATIVE_CURRENCY[chainId]
+    if (!wethContract || !chainId || !inputCurrency || !outputCurrency || !formattedChainId) return NOT_APPLICABLE
+    const weth = WRAPPED_NATIVE_CURRENCY[formattedChainId]
     if (!weth) return NOT_APPLICABLE
 
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))

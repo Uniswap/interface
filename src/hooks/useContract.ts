@@ -31,6 +31,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
+import { supportedChainId } from 'utils/supportedChainId'
 
 import { getContract } from '../utils'
 
@@ -75,8 +76,9 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
   const { chainId } = useActiveWeb3React()
+  const formattedChainId = supportedChainId(chainId)
   return useContract<Weth>(
-    chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
+    formattedChainId ? WRAPPED_NATIVE_CURRENCY[formattedChainId]?.address : undefined,
     WETH_ABI,
     withSignerIfPossible
   )
