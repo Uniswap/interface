@@ -208,7 +208,7 @@ export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
 }
 
-export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
+export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...WETH9,
   [SupportedChainId.OPTIMISM]: new Token(
     SupportedChainId.OPTIMISM,
@@ -265,7 +265,7 @@ class MaticNativeCurrency extends NativeCurrency {
 
   get wrapped(): Token {
     if (!isMatic(this.chainId)) throw new Error('Not matic')
-    return WRAPPED_NATIVE_CURRENCY[this.chainId]
+    return WRAPPED_NATIVE_CURRENCY[this.chainId] as Token
   }
 
   public constructor(chainId: number) {
@@ -276,7 +276,7 @@ class MaticNativeCurrency extends NativeCurrency {
 
 export class ExtendedEther extends Ether {
   public get wrapped(): Token {
-    if (this.chainId in WRAPPED_NATIVE_CURRENCY) return WRAPPED_NATIVE_CURRENCY[this.chainId]
+    if (this.chainId in WRAPPED_NATIVE_CURRENCY) return WRAPPED_NATIVE_CURRENCY[this.chainId] as Token
     throw new Error('Unsupported chain ID')
   }
 
