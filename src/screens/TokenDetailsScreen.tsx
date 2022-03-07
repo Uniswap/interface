@@ -18,7 +18,7 @@ import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { ChainId } from 'src/constants/chains'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
-import { selectFavoriteTokens } from 'src/features/favorites/selectors'
+import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -35,7 +35,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
-  const isFavoriteToken = useAppSelector(selectFavoriteTokens).indexOf(currencyId(currency)) !== -1
+  const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(currencyId(currency))
 
   const onFavoritePress = () => {
     if (isFavoriteToken) {
