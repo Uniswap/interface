@@ -1,6 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { ChainId } from '@swapr/sdk'
-import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
+import { UnsupportedChainIdError, useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
@@ -84,4 +84,9 @@ export function useInactiveListener(suppress = false) {
     }
     return undefined
   }, [active, error, suppress, activate])
+}
+
+export function useUnsupportedChainIdError(): boolean {
+  const { error } = useWeb3ReactCore()
+  return error instanceof UnsupportedChainIdError
 }
