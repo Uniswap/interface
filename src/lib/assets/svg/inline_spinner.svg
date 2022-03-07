@@ -12,6 +12,7 @@
         stroke="none"
       />
       <circle
+        id="track"
         cx="12"
         cy="12"
         r="10"

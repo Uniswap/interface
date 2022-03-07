@@ -6,6 +6,7 @@ import { ReactComponent as InlineSpinnerIcon } from 'lib/assets/svg/inline_spinn
 import { ReactComponent as LogoIcon } from 'lib/assets/svg/logo.svg'
 import { ReactComponent as SpinnerIcon } from 'lib/assets/svg/spinner.svg'
 import { ReactComponent as WalletIcon } from 'lib/assets/svg/wallet.svg'
+import { loadingCss } from 'lib/css/loading'
 import styled, { Color, css, keyframes } from 'lib/theme'
 import { FunctionComponent, SVGProps } from 'react'
 /* eslint-disable no-restricted-imports */
@@ -146,7 +147,10 @@ export const Spinner = styled(icon(SpinnerIcon))<{ color?: Color }>`
 export const InlineSpinner = styled(icon(InlineSpinnerIcon))<{ color?: Color }>`
   animation: ${rotate} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   color: ${({ color = 'active', theme }) => theme[color]};
-  fill: ${({ theme }) => theme.outline};
-  stroke: ${({ theme }) => theme.outline};
-  stroke-linecap: round;
+  fill: ${({ color = 'active', theme }) => theme[color]};
+
+  #track {
+    stroke: ${({ theme }) => theme.secondary};
+    ${loadingCss};
+  }
 `
