@@ -102,5 +102,8 @@
   "bridgeSwap": "Bridge Swap",
   "priceImpactTooHigh": "Price Impact Too High",
   "anyway": "Anyway",
-  "swapWith": "Swap with"
+  "swapWith": "Swap with",
+  "addRecipient": "Add recipient",
+  "recipient": "Recipient",
+  "addressOrENS": "Wallet address or ENS name"
 }

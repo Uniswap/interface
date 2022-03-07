@@ -6,6 +6,7 @@ import { RowBetween } from '../Row'
 import { CloseIcon, TYPE } from '../../theme'
 import useENS from '../../hooks/useENS'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const AddRecipientButtonStyled = styled.button`
   font-size: 11px;
@@ -35,6 +36,7 @@ interface RecipientField {
 }
 
 export const RecipientField = ({ recipient, action }: RecipientField) => {
+  const { t } = useTranslation()
   const [showInput, setShowInput] = useState(false)
   const dispatch = useDispatch()
   const { address, loading } = useENS(recipient)
@@ -66,17 +68,17 @@ export const RecipientField = ({ recipient, action }: RecipientField) => {
 
   return !showInput ? (
     <Flex justifyContent="center">
-      <AddRecipientButtonStyled onClick={() => setShowInput(true)}>Add recipient</AddRecipientButtonStyled>
+      <AddRecipientButtonStyled onClick={() => setShowInput(true)}>{t('addRecipient')}</AddRecipientButtonStyled>
     </Flex>
   ) : (
     <div>
       <RowBetween>
-        <TYPE.subHeader px={2}>Recipient</TYPE.subHeader>
+        <TYPE.subHeader px={2}>{t('recipient')}</TYPE.subHeader>
         <CloseIconStyled p={0} onClick={handleClose} />
       </RowBetween>
       <SearchInputStyled
         type="text"
-        placeholder={'Wallet address or ENS name'}
+        placeholder={t('addressOrENS')}
         value={(address || recipient) ?? undefined}
         onChange={handleInput}
         error={error}
