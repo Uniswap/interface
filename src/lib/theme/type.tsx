@@ -65,7 +65,7 @@ export function Caption(props: TextProps) {
 }
 
 export function Badge(props: TextProps) {
-  return <TextWrapper className="badge" fontSize={8} fontWeight={600} lineHeight="8px" noWrap />
+  return <TextWrapper className="badge" fontSize="8px" fontWeight={600} lineHeight="8px" noWrap {...props} />
 }
 
 export function ButtonLarge(props: TextProps) {

@@ -1,8 +1,7 @@
 import { Plural, Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { ReactComponent as DotLineImage } from 'assets/svg/dot_line.svg'
-import Badge from 'lib/components/Badge'
+import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
 import Column from 'lib/components/Column'
 import Row from 'lib/components/Row'
 import Rule from 'lib/components/Rule'
@@ -14,53 +13,72 @@ import { InterfaceTrade } from 'state/routing/types'
 
 import { getTokenPath, RoutingDiagramEntry } from './utils'
 
-const Wrapper = styled(Column)`
-  padding: 0.25em;
-`
-
-const RouteRow = styled(Row)`
-  grid-template-columns: 1em 1.15em 1fr 1em;
-  min-width: 430px;
-`
-
-const RouteDetailsContainer = styled(Row)`
-  padding: 0.1em 0.5em;
-  position: relative;
-`
-
-const DotsContainer = styled.div`
-  align-items: center;
-  display: flex;
-  opacity: 0.5;
-  position: absolute;
-  width: calc(100% - 1em);
-  z-index: ${Layer.UNDERLAYER};
-`
-
-const DotsContainerShort = styled(DotsContainer)`
-  overflow: hidden;
-  position: relative;
-  width: 71px;
-`
-
-const Dots = styled(DotLineImage)`
-  path {
-    stroke: ${({ theme }) => theme.secondary};
-  }
-`
-
-const DetailsRow = styled(Row)`
-  display: grid;
-  grid-template-columns: 4.8125em 1fr;
-  width: 100%;
-`
-
 const StyledAutoRouterLabel = styled(ThemedText.ButtonSmall)`
   @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
     background-image: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+`
+
+function Header({ routes }: { routes: RoutingDiagramEntry[] }) {
+  return (
+    <Row justify="space-between" gap={1}>
+      <ThemedText.Subhead2>
+        <Row gap={0.25}>
+          <AutoRouter />
+          <StyledAutoRouterLabel color="primary" lineHeight={'16px'}>
+            <Trans>Auto Router</Trans>
+          </StyledAutoRouterLabel>
+        </Row>
+      </ThemedText.Subhead2>
+      <ThemedText.Body2>
+        <Plural value={routes.length} _1="Best route via 1 hop" other="Best route via # hops" />
+      </ThemedText.Body2>
+    </Row>
+  )
+}
+
+const Dots = styled(DotLine)`
+  color: ${({ theme }) => theme.outline};
+  position: absolute;
+  z-index: ${Layer.UNDERLAYER};
+`
+
+const RouteRow = styled(Row)`
+  flex-wrap: nowrap;
+`
+
+const RouteNode = styled(Row)`
+  background-color: ${({ theme }) => theme.interactive};
+  border-radius: ${({ theme }) => `${(theme.borderRadius ?? 1) * 0.5}em`};
+  margin-left: 1.625em;
+  padding: 0.25em 0.375em;
+  width: max-content;
+`
+
+const RouteBadge = styled.div`
+  background-color: ${({ theme }) => theme.module};
+  border-radius: ${({ theme }) => `${(theme.borderRadius ?? 1) * 0.25}em`};
+  padding: 0.125em;
+`
+
+function RouteDetail({ route }: { route: RoutingDiagramEntry }) {
+  const protocol = route.protocol.toUpperCase()
+  return (
+    <RouteNode>
+      <Row gap={0.375}>
+        <ThemedText.Caption>{route.percent.toSignificant(2)}%</ThemedText.Caption>
+        <RouteBadge>
+          <ThemedText.Badge color="secondary">{protocol}</ThemedText.Badge>
+        </RouteBadge>
+      </Row>
+    </RouteNode>
+  )
+}
+
+const RoutePool = styled(RouteNode)`
+  margin: 0 0.75em;
 `
 
 function Pool({
@@ -73,15 +91,36 @@ function Pool({
   feeAmount: FeeAmount
 }) {
   return (
-    <Badge padding="0 4px" color="dialog">
-      <Badge gap={0.375}>
-        <Row>
+    <RoutePool>
+      <ThemedText.Caption>
+        <Row gap={0.25}>
           <TokenImg token={originCurrency} />
-          <TokenImg token={targetCurrency} />
+          <TokenImg token={targetCurrency} style={{ marginLeft: '-0.65em' }} />
+          {feeAmount / 10_000}%
         </Row>
-        <ThemedText.Subhead2>{feeAmount / 10_000}%</ThemedText.Subhead2>
-      </Badge>
-    </Badge>
+      </ThemedText.Caption>
+    </RoutePool>
+  )
+}
+
+function Route({ route }: { route: RoutingDiagramEntry }) {
+  const [originCurrency] = route.path[0]
+  const [, targetCurrency] = route.path[route.path.length - 1]
+
+  return (
+    <Row align="center" style={{ gridTemplateColumns: '1em 1fr 1em' }}>
+      <TokenImg token={originCurrency} />
+      <RouteRow flex style={{ position: 'relative' }}>
+        <Dots />
+        <RouteDetail route={route} />
+        <RouteRow justify="space-evenly" flex>
+          {route.path.map(([originCurrency, targetCurrency, feeAmount], index) => (
+            <Pool key={index} originCurrency={originCurrency} targetCurrency={targetCurrency} feeAmount={feeAmount} />
+          ))}
+        </RouteRow>
+      </RouteRow>
+      <TokenImg token={targetCurrency} />
+    </Row>
   )
 }
 
@@ -89,55 +128,12 @@ export default function RoutingDiagram({ trade }: { trade: InterfaceTrade<Curren
   const routes: RoutingDiagramEntry[] = useMemo(() => getTokenPath(trade), [trade])
 
   return (
-    <Wrapper gap={0.75}>
-      <Row justify="space-between">
-        <Row gap={0.25}>
-          <AutoRouter />
-          <StyledAutoRouterLabel color="primary" lineHeight={'16px'}>
-            <Trans>Auto Router</Trans>
-          </StyledAutoRouterLabel>
-        </Row>
-        <ThemedText.ButtonSmall>
-          <Plural value={routes.length} _1="Best route via 1 hop" other="Best route via # hops" />
-        </ThemedText.ButtonSmall>
-      </Row>
+    <Column gap={0.75}>
+      <Header routes={routes} />
       <Rule />
       {routes.map((route, index) => (
-        <RouteRow key={index} align="center">
-          <TokenImg token={trade.inputAmount.currency} />
-          <DotsContainerShort>
-            <Dots />
-          </DotsContainerShort>
-          <RouteDetailsContainer justify="flex-start" flex>
-            <DotsContainer>
-              <Dots />
-            </DotsContainer>
-            <DetailsRow>
-              <Badge padding="0 4px" color="dialog">
-                <Badge gap={0.375}>
-                  <ThemedText.ButtonSmall color="secondary">{route.percent.toSignificant(2)}%</ThemedText.ButtonSmall>
-                  <Badge padding="0.125em" borderRadius={0.25} color="module">
-                    <ThemedText.Badge color="secondary" fontSize={'0.5rem'}>
-                      {route.protocol.toUpperCase()}
-                    </ThemedText.Badge>
-                  </Badge>
-                </Badge>
-              </Badge>
-              <Row justify="space-evenly" flex style={{ width: '100%' }}>
-                {route.path.map(([originCurrency, targetCurrency, feeAmount], index) => (
-                  <Pool
-                    key={index}
-                    originCurrency={originCurrency}
-                    targetCurrency={targetCurrency}
-                    feeAmount={feeAmount}
-                  />
-                ))}
-              </Row>
-            </DetailsRow>
-          </RouteDetailsContainer>
-          <TokenImg token={trade.outputAmount.currency} />
-        </RouteRow>
+        <Route key={index} route={route} />
       ))}
-    </Wrapper>
+    </Column>
   )
 }
