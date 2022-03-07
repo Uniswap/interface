@@ -68,7 +68,7 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
   const [flip, setFlip] = useState(true)
   const { inputAmount: input, outputAmount: output, executionPrice } = trade
   const { inputUSDC, outputUSDC, priceImpact } = useUSDCPriceImpact(input, output)
-  const isPriceImpactHigh = priceImpact && getPriceImpactWarning(priceImpact) === 'error'
+  const isPriceImpactHigh = priceImpact && getPriceImpactWarning(priceImpact)
 
   const ratio = useMemo(() => {
     const [a, b] = flip ? [output, input] : [input, output]
