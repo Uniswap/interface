@@ -102,7 +102,6 @@ export function useGetAllBonds() {
       try {
         setBonds(await getMarkets())
       } catch (err) {
-        console.log('ERROR: ', err)
         setError(err.message)
       } finally {
         setIsLoading(false)
@@ -229,6 +228,7 @@ export function usePurchaseBondCallback(): PurchaseBondCallback {
 
         if (!depository) return { success: false, txHash }
 
+        // TODO: check if this fails with floating point numbers
         const amountBigNumber = BigNumber.from(`${amount}`).mul(BigNumber.from('10').pow(bond.quoteDecimals))
         const maxPriceBignNumber = parseEther(`${maxPrice * 1e18}`)
 
@@ -255,6 +255,6 @@ export function usePurchaseBondCallback(): PurchaseBondCallback {
         return { success: false, txHash: null }
       }
     },
-    [depository]
+    [depository, addTransaction]
   )
 }

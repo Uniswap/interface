@@ -1,7 +1,9 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import ERC20ABI from 'abis/erc20.json'
+import G_GEN_ABI from 'abis/genesis/g-genesis-token.json'
 import { Erc20Interface } from 'abis/types/Erc20'
+import { GGenesisTokenInterface } from 'abis/types/GGenesisToken'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
@@ -49,6 +51,7 @@ export function useNativeCurrencyBalances(uncheckedAddresses?: (string | undefin
 }
 
 const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
+const GGenInterface = new Interface(G_GEN_ABI) as GGenesisTokenInterface
 const tokenBalancesGasRequirement = { gasRequired: 125_000 }
 
 /**
@@ -166,4 +169,25 @@ export function useAggregateUniBalance(): CurrencyAmount<Token> | undefined {
       uniUnHarvested?.quotient ?? JSBI.BigInt(0)
     )
   )
+}
+
+export function useGGenToGenBalance(address?: string, token?: Token | undefined): CurrencyAmount<Token> | undefined {
+  const balances = useMultipleContractSingleData(
+    [token?.address],
+    GGenInterface,
+    'balanceFrom',
+    useMemo(() => [address], [address]),
+    tokenBalancesGasRequirement
+  )
+
+  return useMemo(() => {
+    const value = balances?.[0]?.result?.[0]
+    const amount = value ? JSBI.BigInt(value.toString()) : undefined
+
+    if (!token) return undefined
+
+    if (!amount) return undefined
+
+    return CurrencyAmount.fromRawAmount(token, amount)
+  }, [balances, token])
 }
