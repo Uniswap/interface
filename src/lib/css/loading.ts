@@ -1,8 +1,10 @@
 import { css } from 'lib/theme'
 
+export const loadingOpacity = 0.6
+
 export const loadingCss = css`
   filter: grayscale(1);
-  opacity: 0.4;
+  opacity: ${loadingOpacity};
 `
 
 // need to use isLoading as `loading` is a reserved prop
