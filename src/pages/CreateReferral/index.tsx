@@ -20,6 +20,7 @@ import ShareLinkModal from './ShareLinkModal'
 import { currencyId } from 'utils/currencyId'
 import { useMedia } from 'react-use'
 import { isAddress } from 'utils'
+
 const PageWrapper = styled.div`
   width: 100%;
   padding: 28px;

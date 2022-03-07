@@ -45,7 +45,8 @@ export const dexListConfig: DexList = {
   },
   sushiswap: {
     name: 'SushiSwap',
-    icon: 'https://sushi.com/favicon.ico',
+    icon:
+      'https://res.cloudinary.com/sushi-cdn/image/fetch/f_auto,c_limit,w_32,q_auto/https://app.sushi.com/images/logo.svg',
     chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM, ChainId.ARBITRUM]
   },
   shibaswap: {

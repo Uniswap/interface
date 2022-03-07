@@ -556,7 +556,7 @@ const TokenPair = ({
                           <QuestionHelper
                             text={
                               chainId && FEE_OPTIONS[chainId]
-                                ? t`A portion of each trade that will goes to liquidity providers as a protocol incentive.`
+                                ? t`Liquidity providers will earn this trading fee for each trade that uses this pool`
                                 : t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`
                             }
                           />

@@ -36,7 +36,7 @@ export const ARBITRUM_TOKEN_LIST = {
       address: '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f',
       symbol: 'WBTC',
       name: 'WBTC',
-      decimals: 18
+      decimals: 8
     }
   ],
   version: {

@@ -11,7 +11,6 @@ import { t } from '@lingui/macro'
 export default function useClaimReward() {
   const { chainId, account, library } = useActiveWeb3React()
   const rewardContract = useMemo(() => {
-    //TODO: update SC address for polygon when done
     return !!chainId && !!account && !!library ? getClaimRewardContract(chainId, library, account) : undefined
   }, [chainId, library, account])
   const isValid = !!chainId && !!account && !!library

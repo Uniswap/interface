@@ -70,12 +70,6 @@ msgstr ""
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
 msgstr "각 거래량의 일부가({0}%) 프로토콜 인센티브로써 유동성 공급자에게 전달됩니다."
 
-#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
-#: src/pages/AddLiquidity/TokenPair.tsx
-#: src/pages/AddLiquidity/ZapIn.tsx
-msgid "A portion of each trade that will goes to liquidity providers as a protocol incentive."
-msgstr ""
-
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "AMP"
@@ -93,10 +87,10 @@ msgstr "증폭된 유동성"
 msgid "AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity."
 msgstr "AMP 계수와 풀에 있는 유동성을 곱한 값."
 
-#: src/components/PoolList/index.tsx
 #: src/components/PoolList/ItemCard/TabInfoItems.tsx
-#: src/components/YieldPools/index.tsx
+#: src/components/PoolList/index.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "APR"
 msgstr "APR"
 
@@ -110,9 +104,9 @@ msgstr ""
 msgid "About"
 msgstr "About"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swapv2/SwapModalHeader.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Accept"
 msgstr "승인"
 
@@ -227,10 +221,10 @@ msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/migrate_sushi.tsx
-#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Approve"
 msgstr "승인"
 
@@ -239,10 +233,10 @@ msgstr "승인"
 msgid "Approve {0}"
 msgstr "승인{0}"
 
-#: src/pages/RemoveLiquidity/migrate_sushi.tsx
-#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Approved"
@@ -250,10 +244,10 @@ msgstr "승인됨"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/migrate_sushi.tsx
-#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Approving"
@@ -410,10 +404,10 @@ msgid "Common bases"
 msgstr "공통 기지"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/pages/RemoveLiquidity/migrate_sushi.tsx
-#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Confirm"
 msgstr "확인"
 
@@ -433,17 +427,17 @@ msgstr "지갑에서 이 거래를 승인하세요"
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
-#: src/pages/RemoveLiquidity/migrate_sushi.tsx
-#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
 msgid "Connect Wallet"
 msgstr "지갑 연결"
 
-#: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
 msgstr "지갑에 연결하여 풀 찾기"
 
@@ -636,8 +630,8 @@ msgstr "높은 슬리피지가 발생해도 거래를 가능하게 합니다. �
 msgid "Ended"
 msgstr "끝남"
 
-#: src/components/YieldPools/index.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Ending In"
 msgstr "종료"
 
@@ -704,8 +698,8 @@ msgstr "이번 거래 규모로 인한 예상 가격 변동"
 msgid "Estimated network fee for your transaction"
 msgstr "거래에 대한 예상 네트워크 수수료"
 
-#: src/components/PoolList/index.tsx
 #: src/components/PoolList/ItemCard/TabInfoItems.tsx
+#: src/components/PoolList/index.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Estimated return based on yearly fees of the pool"
 msgstr "풀의 연간 요금을 기준으로 한 예상 수익"
@@ -915,8 +909,8 @@ msgstr "DEX 집계 포함"
 msgid "Info"
 msgstr ""
 
-#: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 msgid "Information"
 msgstr "정보"
 
@@ -1039,9 +1033,9 @@ msgstr "더 알아보기"
 msgid "Learn More ↗"
 msgstr ""
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
-#: src/components/UpcomingFarms/ListItem.tsx
-#: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/YieldPools/index.tsx
 msgid "Learn more"
 msgstr "더 보기"
@@ -1054,6 +1048,12 @@ msgstr ""
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Liquidity Provider Fee"
 msgstr "유동성 공급자 수수료"
+
+#: src/components/PoolList/ItemCard/TabDetailsItems.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Liquidity providers will earn this trading fee for each trade that uses this pool"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "List your tokens permissionlessly"
@@ -1069,8 +1069,8 @@ msgstr "불러움"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/pages/Pool/lp.tsx
-#: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
 msgid "Loading"
 msgstr "로딩중"
 
@@ -1128,10 +1128,10 @@ msgid "Market Cap Rank"
 msgstr ""
 
 #: src/pages/CreateReferral/index.tsx
-#: src/pages/RemoveLiquidity/migrate_sushi.tsx
-#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Max"
 msgstr "최대"
 
@@ -1198,8 +1198,8 @@ msgstr "최소 수령 금액을 받을 수 없다면 거래는 진행 되지 않
 msgid "Minimum received"
 msgstr "최소 수령"
 
-#: src/components/YieldPools/index.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Deposit"
 msgstr "내 예치금"
 
@@ -1213,8 +1213,8 @@ msgstr "내 풀"
 msgid "My Pools on External Platforms"
 msgstr "외부 플랫폼의 내 풀"
 
-#: src/components/YieldPools/index.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Rewards"
 msgstr "내 보상"
 
@@ -1230,8 +1230,8 @@ msgstr "내 베스팅"
 msgid "My liquidity"
 msgstr "나의 유동성"
 
-#: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 msgid "Network"
 msgstr "네트워크"
 
@@ -1381,8 +1381,8 @@ msgstr "풀"
 msgid "Pool Address"
 msgstr "풀 주소"
 
-#: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "풀 발견!"
 
@@ -1431,8 +1431,8 @@ msgid "Pooled {0}:"
 msgstr "풀링된 {0}:"
 
 #: src/components/Header/index.tsx
-#: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 msgid "Pools"
 msgstr "풀"
 
@@ -1574,8 +1574,8 @@ msgstr "풀 토큰을 제거하면 풀 지분에 비례하는 현재 비율로 �
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} 및 {2} {3} 제거"
 
-#: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 #: src/components/YieldPools/HarvestAll.tsx
 msgid "Rewards"
 msgstr "내 보상"
@@ -1642,8 +1642,8 @@ msgstr "토큰 선택"
 msgid "Select a token"
 msgstr "토큰 선택"
 
-#: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your liquidity."
 msgstr "유동성을 찾기 위해 토큰을 선택하십시오."
 
@@ -1705,8 +1705,8 @@ msgstr ""
 msgid "Staked Only"
 msgstr "스테이킹 풀만 보기"
 
-#: src/components/YieldPools/index.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "스테이킹된 TVL"
 
@@ -1730,8 +1730,8 @@ msgstr "증폭 계수를 뜻합니다. AMP가 더 높은 풀은 더 높은 자�
 msgid "Start Earning"
 msgstr "적립 시작"
 
-#: src/components/UpcomingFarms/index.tsx
 #: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 msgid "Starting In"
 msgstr "이 기간에 시작됩니다. "
 
@@ -2134,14 +2134,10 @@ msgstr "풀 생성 중"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction"
-msgstr "단일 토큰(토큰 쌍의 토큰)을 제공하여 풀에 유동성을 추가할 수 있습니다. 한번의 트랜잭션으로 유동성 풀을 추가하고 LP 토큰을 생성합니다. "
+msgstr "단일 토큰(토큰 쌍의 토큰)을 제공하여 풀에 유동성을 추가할 수 있습니다. 한번의 트랜잭션으로 유동성 풀을 추가하고 LP 토큰을 생성합니다. <<<<<<< HEAD"
 
 #: src/pages/CreateReferral/index.tsx
 msgid "You can also include tokens to swap in your referral link so that referees are automatically re-directed to selected chain and selected tokens are also populated for the swap. You will still earn commission on other token swaps if they use your referral link."
-msgstr ""
-
-#: src/pages/CreatePool/index.tsx
-msgid "You can choose fee that suit your pool based on those pre-made options."
 msgstr ""
 
 #: src/pages/CreateReferral/index.tsx
@@ -2154,6 +2150,10 @@ msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "You can manually import your pool"
+msgstr ""
+
+#: src/pages/CreatePool/index.tsx
+msgid "You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee."
 msgstr ""
 
 #: src/components/LiveChart/index.tsx
@@ -2214,17 +2214,17 @@ msgstr ""
 msgid "Your available LP Token balance after staking (if applicable)"
 msgstr ""
 
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
 #: src/components/PositionCard/index.tsx
-#: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/components/PositionCard/PositionCardSUSHI.tsx
-#: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/PositionCardUNI.tsx
 msgid "Your pool share:"
 msgstr "풀 비중:"
 
-#: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
 msgid "Your position"
 msgstr "당신의 위치"
 

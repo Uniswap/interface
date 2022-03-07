@@ -46,7 +46,8 @@ const InfoMark = styled.span`
 `
 
 const InfoHelperWrapper = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
   align-items: center;
   margin-left: 0.25rem;
   line-height: 100%;
