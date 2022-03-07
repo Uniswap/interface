@@ -46,7 +46,7 @@ type ChainCurrencyList = {
 const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
   Object.entries(WRAPPED_NATIVE_CURRENCY)
     .map(([key, value]) => [key, [value]])
-    .filter((token) => !!token)
+    .filter(Boolean)
 )
 
 // used to construct intermediary pairs for trading
