@@ -280,9 +280,7 @@ class MaticNativeCurrency extends NativeCurrency {
 export class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
-    if (this.chainId in WRAPPED_NATIVE_CURRENCY && wrapped instanceof Token) {
-      return wrapped
-    }
+    if (wrapped) return wrapped
     throw new Error('Unsupported chain ID')
   }
 

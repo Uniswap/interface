@@ -52,7 +52,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
   } = useAtomValue(swapAtom)
 
   const wrapType = useMemo(() => {
-    if (!inputCurrency || !outputCurrency || !chainId || !chainId) {
+    if (!inputCurrency || !outputCurrency || !chainId) {
       return WrapType.NOT_APPLICABLE
     }
     if (inputCurrency.isNative && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(outputCurrency)) {
