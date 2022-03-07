@@ -35,7 +35,10 @@ const SizedCard = styled(DarkCard)`
 const FarmingBadge = styled.div<{ isGreyed?: boolean }>`
   height: 16px;
   border: ${props => !props.isGreyed && `solid 1.5px ${props.theme.green2}`};
-  color: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
+  div {
+    color: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
+  }
+
   border-radius: 6px;
   width: fit-content;
   display: flex;
