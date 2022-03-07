@@ -63,8 +63,7 @@ async function getClientSideQuote({
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    // baseUrl: 'https://api.uniswap.org/v1/',
-    baseUrl: 'http://localhost:3001',
+    baseUrl: process.env.REACT_APP_GENESIS_API,
   }),
   endpoints: (build) => ({
     getQuote: build.query<
