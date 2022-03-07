@@ -10,12 +10,12 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
 
   visibility: ${props => (props.show ? 'visible' : 'hidden')};
-  opacity: ${props => (props.show ? 1 : 0)};
+  opacity: ${props => (props.show ? 0.95 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
 
-  background: ${({ theme }) => theme.bg2};
-  border: 1px solid ${({ theme }) => theme.bg3};
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
+  background: ${({ theme }) => theme.background};
+  border: 1px solid transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.32);
   color: ${({ theme }) => theme.text2};
   border-radius: 8px;
 `
@@ -25,24 +25,24 @@ const ReferenceElement = styled.div`
 `
 
 const Arrow = styled.div`
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   z-index: 9998;
 
   ::before {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
     z-index: 9998;
 
     content: '';
-    border: 1px solid ${({ theme }) => theme.bg3};
+    border: 1px solid transparent;
     transform: rotate(45deg);
-    background: ${({ theme }) => theme.bg2};
+    background: ${({ theme }) => theme.background};
   }
 
   &.arrow-top {
-    bottom: -5px;
+    bottom: -7px;
     ::before {
       border-top: none;
       border-left: none;
@@ -50,7 +50,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-bottom {
-    top: -5px;
+    top: -7px;
     ::before {
       border-bottom: none;
       border-right: none;
@@ -58,7 +58,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-left {
-    right: -5px;
+    right: -7px;
 
     ::before {
       border-bottom: none;
@@ -67,7 +67,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-right {
-    left: -5px;
+    left: -7px;
     ::before {
       border-right: none;
       border-top: none;
