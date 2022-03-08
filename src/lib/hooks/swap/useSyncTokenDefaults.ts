@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
@@ -26,7 +27,8 @@ function useDefaultToken(
     address = defaultAddress[chainId]
   }
   const token = useToken(address)
-  if (chainId && address === 'NATIVE') {
+  // Only use native currency if chain ID is in supported chains. ExtendedEther will error otherwise.
+  if (chainId && address === 'NATIVE' && chainId in SupportedChainId) {
     return nativeOnChain(chainId)
   }
   return token
