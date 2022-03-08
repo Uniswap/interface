@@ -94,8 +94,9 @@ export function useGasInfo(): { loading: boolean; gas: Gas } {
         } else {
           // On Arbitrum (and other L2's), parse Gwei to decimal and round the number
           // There is no fast nor slow gas prices
-          normal = Math.round(parseInt(data.result, 16) / 1e9)
+          normal = parseFloat((parseInt(data.result, 16) / 1e9).toFixed(2))
         }
+        console.log(typeof normal, fast, slow)
         // Update state
         setGas({ normal, fast, slow })
       })

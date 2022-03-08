@@ -56,11 +56,11 @@ export const Row = styled.div`
 export const Text = styled.p`
   margin: 0;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 17px;
   color: ${({ theme }) => theme.text2};
   opacity: 0.8;
-  text-align: center;
+  text-align: left;
 `
 
 export const CloseButton = styled.button`

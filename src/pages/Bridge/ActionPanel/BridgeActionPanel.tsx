@@ -2,7 +2,6 @@ import React, { useCallback } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { ButtonPrimary } from '../../../components/Button'
 import { useNetworkSwitch } from '../../../hooks/useNetworkSwitch'
-import { useModalOpen, useWalletSwitcherPopoverToggle } from '../../../state/application/hooks'
 import { BridgeStep } from '../utils'
 import { NetworkSwitcher } from './NetworkSwitcher'
 import { BridgeButton } from './BridgeButton'
@@ -15,7 +14,7 @@ import ProgressSteps from '../../../components/ProgressSteps'
 import Column from '../../../components/Column'
 import { useBridgeActionPanel } from './useBridgeActionPanel'
 import { ApprovalState } from '../../../hooks/useApproveCallback'
-import { ApplicationModal } from '../../../state/application/actions'
+import { ButtonConnect } from '../../../components/ButtonConnect'
 
 export type BridgeActionPanelProps = {
   account: string | null | undefined
@@ -38,7 +37,7 @@ export const BridgeActionPanel = ({
   isNetworkConnected
 }: BridgeActionPanelProps) => {
   const { selectNetwork } = useNetworkSwitch()
-  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+
   const {
     approvalState,
     handleApprove,
@@ -48,7 +47,6 @@ export const BridgeActionPanel = ({
     isArbitrum,
     hasAmount
   } = useBridgeActionPanel()
-  const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
 
   const handleSelectFromNetwork = useCallback(() => {
     selectNetwork(fromNetworkChainId)
@@ -61,11 +59,7 @@ export const BridgeActionPanel = ({
   const selectPanel = () => {
     // No wallet
     if (!account) {
-      return (
-        <ButtonPrimary onClick={toggleWalletSwitcherPopover} disabled={networkSwitcherPopoverOpen}>
-          {networkSwitcherPopoverOpen ? 'Switch network' : 'Connect wallet'}
-        </ButtonPrimary>
-      )
+      return <ButtonConnect />
     }
 
     // Change network

@@ -12,9 +12,15 @@ import { PairsFilterType } from '../../Pool/ListFilter'
 import { Pair } from '@swapr/sdk'
 import { Box, Flex } from 'rebass'
 import { Switch } from '../../Switch'
-import { useActiveWeb3React } from '../../../hooks'
+import { useActiveWeb3React, useUnsupportedChainIdError } from '../../../hooks'
 import { Button } from '../../Web3Status'
-import { useWalletSwitcherPopoverToggle } from '../../../state/application/hooks'
+import {
+  useModalOpen,
+  useNetworkSwitcherPopoverToggle,
+  useWalletSwitcherPopoverToggle
+} from '../../../state/application/hooks'
+import { ApplicationModal } from '../../../state/application/actions'
+import { transparentize } from 'polished'
 
 const View = styled(AutoColumn)`
   margin-top: 20px;
@@ -35,6 +41,13 @@ const Container = styled('div')`
 
 const ConnectButton = styled(Button)`
   margin: 0;
+  &:disabled {
+    background-color: ${({ theme }) => theme.purple5};
+    color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
+    cursor: not-allowed;
+    box-shadow: none;
+    outline: none;
+  }
 `
 
 interface RewardsInterface {
@@ -50,6 +63,11 @@ export function RewardsList({ dataFilter, pair, setDataFiler, loading }: Rewards
   const { loading: loadingPairs, miningCampaigns } = useAllLiquidtyMiningCampaigns(pair ? pair : undefined, dataFilter)
 
   const [activeTab, setActiveTab] = useState(0)
+
+  const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
+  const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
+  const unsupportedChainIdError = useUnsupportedChainIdError()
+  const isSwitchNetwork = networkSwitcherPopoverOpen || unsupportedChainIdError
 
   return (
     <View gap="16px">
@@ -89,7 +107,12 @@ export function RewardsList({ dataFilter, pair, setDataFiler, loading }: Rewards
       {!account ? (
         <Container>
           <Box pb={4}>Wallet not connected</Box>
-          <ConnectButton onClick={toggleWalletSwitcherPopover}>Connect Wallet</ConnectButton>
+          <ConnectButton
+            onClick={isSwitchNetwork ? toggleNetworkSwitcherPopover : toggleWalletSwitcherPopover}
+            disabled={networkSwitcherPopoverOpen}
+          >
+            {isSwitchNetwork ? 'Switch network' : 'Connect wallet'}
+          </ConnectButton>
         </Container>
       ) : !loadingPairs && !loading ? (
         <>

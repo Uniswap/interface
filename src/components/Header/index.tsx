@@ -6,7 +6,7 @@ import { ChevronUp, ChevronDown } from 'react-feather'
 
 import styled, { css } from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useUnsupportedChainIdError } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useNativeCurrencyBalance, useTokenBalance } from '../../state/wallet/hooks'
 import { ReactComponent as GasInfoSvg } from '../../assets/svg/gas-info.svg'
@@ -21,12 +21,14 @@ import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
-import { useToggleShowClaimPopup } from '../../state/application/hooks'
+import { useModalOpen, useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
 import Skeleton from 'react-loading-skeleton'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
+import UnsupportedNetworkPopover from '../NetworkUnsupportedPopover'
+import { ApplicationModal } from '../../state/application/actions'
 import { useGasInfo } from '../../hooks/useGasInfo'
 
 const HeaderFrame = styled.div`
@@ -45,7 +47,7 @@ const HeaderFrame = styled.div`
 const HeaderControls = styled.div<{ isConnected: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    bottom: 48px;
+    bottom: 0px;
     left: 0px;
     display: flex;
     align-items: center;
@@ -157,14 +159,11 @@ const StyledExternalLink = styled(ExternalLink)`
   line-height: 19.5px;
   width: fit-content;
   text-decoration: none !important;
-<<<<<<< HEAD
-=======
   font-family: 'Montserrat';
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
->>>>>>> origin/develop
 `
 
 const HeaderSubRow = styled(RowFlat)`
@@ -212,7 +211,10 @@ const GasInfo = styled.div`
   border-radius: 8px;
   font-size: 10px;
   font-weight: 600;
-  color: ${({ theme }) => theme.orange1};
+
+  div {
+    color: ${({ theme }) => theme.orange1};
+  }
   align-items: center;
 `
 const GasColor = {
@@ -271,9 +273,9 @@ const StyledExternalLinkMobile = styled(ExternalLink)`
 `
 const AdditionalDataWrap = styled.div`
   margin-left: auto;
-  gap:10px;
+  gap: 10px;
   display: flex;
-  flex-direction:column
+  flex-direction: column;
   justify-content: end;
 `
 
@@ -292,6 +294,9 @@ function Header() {
   const accountOrUndefined = useMemo(() => account || undefined, [account])
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
+
+  const isUnsupportedNetworkModal = useModalOpen(ApplicationModal.UNSUPPORTED_NETWORK)
+  const isUnsupportedChainIdError = useUnsupportedChainIdError()
 
   useEffect(() => {
     window.addEventListener('scroll', e => {
@@ -357,17 +362,23 @@ function Header() {
             newSwprBalance={newSwprBalance}
             onToggleClaimPopup={toggleClaimPopup}
           />
-          <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
-            {!account ? (
-              '0.000'
-            ) : !userNativeCurrencyBalance ? (
-              <Skeleton width="40px" />
+          <UnsupportedNetworkPopover show={isUnsupportedNetworkModal}>
+            {isUnsupportedChainIdError ? (
+              <Amount zero>{'UNSUPPORTED NETWORK'}</Amount>
             ) : (
-              userNativeCurrencyBalance.toFixed(3)
-            )}{' '}
-            {nativeCurrency.symbol}
-          </Amount>
-          {gas.normal !== 0 && (
+              <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
+                {!account ? (
+                  '0.000'
+                ) : !userNativeCurrencyBalance ? (
+                  <Skeleton width="40px" />
+                ) : (
+                  userNativeCurrencyBalance.toFixed(3)
+                )}{' '}
+                {nativeCurrency.symbol}
+              </Amount>
+            )}
+          </UnsupportedNetworkPopover>
+          {gas.normal !== 0.0 && (
             <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
               <GasInfoSvg />
               <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
@@ -391,7 +402,6 @@ function Header() {
           </HeaderSubRow>
         )}
       </AdditionalDataWrap>
-
       <HeaderControls isConnected={!!account}>
         <Flex style={{ gap: '26px' }} minWidth={'unset'}>
           <StyledMobileLink id="swap-nav-link" to="/swap" activeClassName="active">
