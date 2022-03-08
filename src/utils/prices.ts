@@ -12,12 +12,21 @@ import {
   _10000,
   _100
 } from '@swapr/sdk'
-import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
+import {
+  ALLOWED_PRICE_IMPACT_HIGH,
+  ALLOWED_PRICE_IMPACT_LOW,
+  ALLOWED_PRICE_IMPACT_MEDIUM,
+  ALLOWED_FIAT_PRICE_IMPACT_HIGH,
+  PRICE_IMPACT_NON_EXPERT,
+  PRICE_IMPACT_HIGH,
+  PRICE_IMPACT_MEDIUM,
+  PRICE_IMPACT_LOW,
+  NO_PRICE_IMPACT
+} from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
 import Decimal from 'decimal.js-light'
 import { parseUnits } from 'ethers/lib/utils'
-import { ALLOWED_FIAT_PRICE_IMPACT_HIGH } from '../constants/index'
 
 const ONE_HUNDRED_PERCENT = new Percent(_10000, _10000)
 
@@ -90,22 +99,27 @@ export function computeSlippageAdjustedAmounts(
   }
 }
 
-export const PRICE_IMPACT_NON_EXPERT = 4
-export const PRICE_IMPACT_HIGH = 3
-export const PRICE_IMPACT_MEDIUM = 2
-export const PRICE_IMPACT_LOW = 3
-export const NO_PRICE_IMPACT = 0
+const ALLOWED_PRICE_IMPACT_PERCENTAGE: { [key: number]: Percent } = {
+  [PRICE_IMPACT_NON_EXPERT]: BLOCKED_PRICE_IMPACT_NON_EXPERT,
+  [PRICE_IMPACT_HIGH]: ALLOWED_PRICE_IMPACT_HIGH,
+  [PRICE_IMPACT_MEDIUM]: ALLOWED_PRICE_IMPACT_MEDIUM,
+  [PRICE_IMPACT_LOW]: ALLOWED_PRICE_IMPACT_LOW
+}
+
+const ALLOWED_FIAT_PRICE_IMPACT_PERCENTAGE: { [key: number]: Percent } = {
+  [PRICE_IMPACT_HIGH]: ALLOWED_FIAT_PRICE_IMPACT_HIGH
+}
 
 export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3 | 4 {
-  if (!priceImpact?.lessThan(BLOCKED_PRICE_IMPACT_NON_EXPERT)) return PRICE_IMPACT_NON_EXPERT
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return PRICE_IMPACT_HIGH
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return PRICE_IMPACT_MEDIUM
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) return NO_PRICE_IMPACT
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_PERCENTAGE[PRICE_IMPACT_NON_EXPERT])) return PRICE_IMPACT_NON_EXPERT
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_PERCENTAGE[PRICE_IMPACT_HIGH])) return PRICE_IMPACT_HIGH
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_PERCENTAGE[PRICE_IMPACT_MEDIUM])) return PRICE_IMPACT_MEDIUM
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_PERCENTAGE[PRICE_IMPACT_LOW])) return PRICE_IMPACT_LOW
   return NO_PRICE_IMPACT
 }
 
 export function warningFiatSeverity(priceImpact: Percent | undefined): 0 | 3 {
-  if (!priceImpact?.lessThan(ALLOWED_FIAT_PRICE_IMPACT_HIGH)) return PRICE_IMPACT_HIGH
+  if (!priceImpact?.lessThan(ALLOWED_FIAT_PRICE_IMPACT_PERCENTAGE[PRICE_IMPACT_HIGH])) return PRICE_IMPACT_HIGH
   return NO_PRICE_IMPACT
 }
 

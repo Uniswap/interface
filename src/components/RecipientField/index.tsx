@@ -24,6 +24,8 @@ const CloseIconStyled = styled(CloseIcon)`
 
 const SearchInputStyled = styled(SearchInput)<{ error: boolean }>`
   margin-top: 5px;
+  font-size: 14px;
+  font-weight: 500;
   padding: ${({ error }) => error && '15px 19px'};
   && {
     border: ${({ error }) => error && 'solid 1px red'};
@@ -73,7 +75,9 @@ export const RecipientField = ({ recipient, action }: RecipientField) => {
   ) : (
     <div>
       <RowBetween>
-        <TYPE.subHeader px={2}>{t('recipient')}</TYPE.subHeader>
+        <TYPE.subHeader lineHeight={'11px'} color={'purple3'}>
+          {t('recipient')}
+        </TYPE.subHeader>
         <CloseIconStyled p={0} onClick={handleClose} />
       </RowBetween>
       <SearchInputStyled

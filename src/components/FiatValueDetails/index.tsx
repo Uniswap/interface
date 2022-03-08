@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { TYPE } from '../../theme'
 import { JSBI, Percent } from '@swapr/sdk'
-import { PRICE_IMPACT_HIGH, warningFiatSeverity } from '../../utils/prices'
+import { warningFiatSeverity } from '../../utils/prices'
+import { PRICE_IMPACT_HIGH } from '../../constants'
 
 interface FiatValueDetailsProps {
   fiatValue?: string

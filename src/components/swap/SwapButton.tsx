@@ -4,7 +4,7 @@ import { ButtonProps } from 'rebass/styled-components'
 import { ButtonPrimary } from '../Button/index'
 import styled from 'styled-components'
 import { ROUTABLE_PLATFORM_STYLE } from '../../constants'
-import { PRICE_IMPACT_HIGH, PRICE_IMPACT_MEDIUM } from '../../utils/prices'
+import { PRICE_IMPACT_HIGH, PRICE_IMPACT_MEDIUM } from '../../constants'
 import { useTranslation } from 'react-i18next'
 
 const StyledSwapButton = styled(ButtonPrimary)<{ bgImage: string }>`
@@ -24,6 +24,7 @@ const StyledSwapButtonText = styled(Text)`
 
 const StyledPlataformText = styled(Text)`
   text-transform: none;
+  font-size: 15px;
 `
 
 interface SwapButtonProps {

@@ -1,25 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import Row from '../../components/Row'
+import Row from '../Row'
 import { ReactComponent as EcoRouter } from '../../assets/svg/eco-router.svg'
 import { useTranslation } from 'react-i18next'
-
-export const Tabs = () => {
-  const { t } = useTranslation()
-
-  return (
-    <TabsColumn>
-      <TabsRow>
-        <Button className="active">
-          <StyledEcoRouter />
-          Eco Router V1.5
-        </Button>
-        <Button disabled={true}>{t('limit')}</Button>
-        <Button disabled={true}>{t('bridgeSwap')}</Button>
-      </TabsRow>
-    </TabsColumn>
-  )
-}
 
 const TabsColumn = styled.div`
   max-width: 432px;
@@ -66,3 +49,20 @@ const Button = styled.button`
 const StyledEcoRouter = styled(EcoRouter)`
   margin-right: 5px;
 `
+
+export const Tabs = () => {
+  const { t } = useTranslation()
+
+  return (
+    <TabsColumn>
+      <TabsRow>
+        <Button className="active">
+          <StyledEcoRouter />
+          Eco Router V1.5
+        </Button>
+        <Button disabled={true}>{t('limit')}</Button>
+        <Button disabled={true}>{t('bridgeSwap')}</Button>
+      </TabsRow>
+    </TabsColumn>
+  )
+}

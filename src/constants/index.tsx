@@ -254,6 +254,12 @@ export const PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN: Percent = new Percent(JSBI.Bi
 export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(1500), BIPS_BASE) // 15%
 // used for fiat warning states
 export const ALLOWED_FIAT_PRICE_IMPACT_HIGH: Percent = new Percent(JSBI.BigInt(200), BIPS_BASE) // 2%
+// price impact numeric values
+export const PRICE_IMPACT_NON_EXPERT = 4
+export const PRICE_IMPACT_HIGH = 3
+export const PRICE_IMPACT_MEDIUM = 2
+export const PRICE_IMPACT_LOW = 1
+export const NO_PRICE_IMPACT = 0
 
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH

@@ -38,7 +38,7 @@ import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl
 import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
 import QuestionHelper from '../../components/QuestionHelper'
 import { ApplicationModal } from '../../state/application/actions'
-import { Tabs } from './Tabs'
+import { Tabs } from '../../components/swap/Tabs'
 import { ReactComponent as SwapIcon } from '../../assets/svg/swap-icon.svg'
 import { useUSDValue } from '../../hooks/useUSDValue'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
