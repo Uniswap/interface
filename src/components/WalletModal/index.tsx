@@ -250,7 +250,10 @@ export default function WalletModal({
             />
           )
         }
-        return null
+
+        if (option.mobileOnly) {
+          return null
+        }
       }
 
       // overwrite injected when needed
@@ -284,25 +287,23 @@ export default function WalletModal({
       }
 
       // return rest of options
-      return (
-        !isMobile &&
-        !option.mobileOnly && (
-          <Option
-            id={`connect-${key}`}
-            onClick={() => {
-              option.connector === connector
-                ? setWalletView(WALLET_VIEWS.ACCOUNT)
-                : !option.href && tryActivation(option.connector)
-            }}
-            key={key}
-            active={option.connector === connector}
-            color={option.color}
-            link={option.href}
-            header={option.name}
-            subheader={null} //use option.descriptio to bring back multi-line
-            icon={option.iconURL}
-          />
-        )
+      return
+      (
+        <Option
+          id={`connect-${key}`}
+          onClick={() => {
+            option.connector === connector
+              ? setWalletView(WALLET_VIEWS.ACCOUNT)
+              : !option.href && tryActivation(option.connector)
+          }}
+          key={key}
+          active={option.connector === connector}
+          color={option.color}
+          link={option.href}
+          header={option.name}
+          subheader={null} //use option.descriptio to bring back multi-line
+          icon={option.iconURL}
+        />
       )
     })
   }
@@ -337,7 +338,7 @@ export default function WalletModal({
               onClick={() => {
                 setWalletView(
                   (previousWalletView === WALLET_VIEWS.LEGAL ? WALLET_VIEWS.ACCOUNT : previousWalletView) ??
-                    WALLET_VIEWS.ACCOUNT
+                  WALLET_VIEWS.ACCOUNT
                 )
               }}
             >
