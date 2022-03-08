@@ -56,7 +56,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     useClientSideRouter: clientSideRouter,
   })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
+  const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`15s`,
     refetchOnFocus: true,
   })
@@ -71,8 +71,17 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   // get USD gas cost of trade in active chains stablecoin amount
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
 
+  const isSyncing = currentData !== data
+
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
+      return {
+        state: TradeState.INVALID,
+        trade: undefined,
+      }
+    }
+
+    if (!quoteResult) {
       return {
         state: TradeState.INVALID,
         trade: undefined,
@@ -107,14 +116,24 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
       return {
         // always return VALID regardless of isFetching status
-        state: TradeState.VALID,
+        state: isSyncing ? TradeState.SYNCING : TradeState.VALID,
         trade,
       }
     } catch (e) {
-      console.debug('transformRoutesToTrade failed: ', e)
       return { state: TradeState.INVALID, trade: undefined }
     }
-  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, gasUseEstimateUSD])
+  }, [
+    currencyIn,
+    currencyOut,
+    quoteResult,
+    isLoading,
+    tradeType,
+    isError,
+    route,
+    queryArgs,
+    gasUseEstimateUSD,
+    isSyncing,
+  ])
 }
 
 // only want to enable this when app hook called

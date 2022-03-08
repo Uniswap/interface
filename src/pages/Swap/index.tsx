@@ -148,12 +148,12 @@ export default function Swap({ history }: RouteComponentProps) {
     [trade, tradeState]
   )
 
-  const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
-  const priceImpact = useMemo(
-    () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
-    [fiatValueInput, fiatValueOutput, routeIsSyncing]
-  )
+  const fiatValueInput = useUSDCValue(trade?.inputAmount)
+  const fiatValueOutput = useUSDCValue(trade?.outputAmount)
+  const priceImpact = useMemo(() => {
+    const p = routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
+    return p
+  }, [fiatValueInput, fiatValueOutput, routeIsSyncing])
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
