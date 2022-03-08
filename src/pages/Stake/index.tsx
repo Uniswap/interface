@@ -12,17 +12,16 @@ import { G_GEN, GEN, S_GEN } from 'constants/tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useStakeGenCallback, useUnstakeGenCallback } from 'hooks/useStakeGen'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Text } from 'rebass'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useCurrencyBalance } from 'state/wallet/hooks'
-import { ThemeContext } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import AppBody from '../AppBody'
 
 export default function Stake() {
-  const theme = useContext(ThemeContext)
+  // const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
   const [stake, setStake] = useState<boolean>(true)
   const [amount, setAmount] = useState<string>('')
@@ -56,7 +55,7 @@ export default function Stake() {
 
   const genBalance = useCurrencyBalance(account ? account : undefined, GEN)
   const sGenBalance = useCurrencyBalance(account ? account : undefined, S_GEN)
-  const gGenBalance = useCurrencyBalance(account ? account : undefined, G_GEN)
+  // const gGenBalance = useCurrencyBalance(account ? account : undefined, G_GEN)
 
   const onToggle = () =>
     stakingToken.isSGen
