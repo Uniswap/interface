@@ -100,6 +100,7 @@ export default function PairsList({ aggregatedPairs, loading, filter, singleSide
             )}
             {itemsPage.length > 0 &&
               itemsPage.map(aggregatedPair => {
+                console.log(aggregatedPair)
                 return (
                   <UndecoratedLink
                     key={aggregatedPair.pair.liquidityToken.address}
@@ -112,7 +113,7 @@ export default function PairsList({ aggregatedPairs, loading, filter, singleSide
                       usdLiquidity={aggregatedPair.liquidityUSD}
                       apy={aggregatedPair.maximumApy}
                       containsKpiToken={aggregatedPair.containsKpiToken}
-                      hasFarming={aggregatedPair.hasFarming}
+                      hasFarming={aggregatedPair.hasFarming || aggregatedPair.staked}
                     />
                   </UndecoratedLink>
                 )
