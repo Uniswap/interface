@@ -103,9 +103,9 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
         ) : (
           <Column padded>
             <Row justify="center">
-              <ThemedText.Subhead2 color="secondary">
+              <ThemedText.Body1 color="secondary">
                 <Trans>No results found.</Trans>
-              </ThemedText.Subhead2>
+              </ThemedText.Body1>
             </Row>
           </Column>
         )
