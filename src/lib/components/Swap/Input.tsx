@@ -105,7 +105,7 @@ export default function Input({ disabled, focused }: InputProps) {
 
   const amount = useFormattedFieldAmount({
     disabled,
-    currencyAmount: inputCurrencyAmount,
+    currencyAmount: swapInputCurrencyAmount,
     fieldAmount: swapInputAmount,
   })
 
