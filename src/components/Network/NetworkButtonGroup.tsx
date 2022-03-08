@@ -1,5 +1,5 @@
 import { selectionAsync } from 'expo-haptics'
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
@@ -23,12 +23,9 @@ interface NetworkButtonGroupProps {
   onPress: (chainId: ChainId) => void
   selected: ChainId | null
   type?: NetworkButtonType
-  // optional custom button to be renderer before the network buttons
-  customButton?: ReactNode
 }
 
 export function NetworkButtonGroup({
-  customButton,
   type = NetworkButtonType.PILL,
   onPress,
   selected,
@@ -43,7 +40,6 @@ export function NetworkButtonGroup({
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
-        {customButton}
         {activeChains.map((chainId) => {
           return (
             <Button

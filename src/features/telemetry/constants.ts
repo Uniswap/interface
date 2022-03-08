@@ -15,9 +15,10 @@ export const enum SectionName {
   AccountCard = 'account-card',
   CurrencyInputPanel = 'currency-input-panel',
   CurrencyOutputPanel = 'currency-output-panel',
+  CurrencySelect = 'currency-select',
   ImportAccountForm = 'import-account-form',
-  QuickDetails = 'quick-details',
   NameAccountForm = 'name-account-form',
+  QuickDetails = 'quick-details',
   TokenBalance = 'token-balance',
 }
 
@@ -44,6 +45,7 @@ export const enum ElementName {
   Done = 'done',
   Edit = 'edit',
   EditCancel = 'edit-cancel',
+  FavoritesFilter = 'favorites-filter',
   ImportAccount = 'import',
   Manage = 'manage',
   NetworkButton = 'network-button',
@@ -53,6 +55,7 @@ export const enum ElementName {
   Remove = 'remove',
   Rename = 'rename',
   Restart = 'restart',
+  Reset = 'reset',
   SellToken = 'sell-token',
   Settings = 'settings',
   Submit = 'submit',

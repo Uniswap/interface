@@ -2,18 +2,14 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Button } from 'src/components/buttons/Button'
+import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
 import { Option } from 'src/components/CurrencySelector/Option'
 import { Flex } from 'src/components/layout'
-import { NetworkButtonGroup } from 'src/components/Network/NetworkButtonGroup'
-import { Pill } from 'src/components/text/Pill'
 import { ChainId } from 'src/constants/chains'
 import { useAllBalancesByChainId } from 'src/features/balances/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
-import { ElementName } from 'src/features/telemetry/constants'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyId } from 'src/utils/currencyId'
@@ -47,12 +43,13 @@ export function CurrencySelect({
 
   const {
     filteredCurrencies,
-    chainFilter,
     onChainPress,
     onChangeText,
     onClearChainFilter,
     onClearSearchFilter,
+    onToggleFavoritesFilter,
     searchFilter,
+    selected,
   } = useFilteredCurrencies(currencies, otherCurrency?.chainId ?? null)
 
   const { chainIdToPrices } = useTokenPrices(currencies)
@@ -66,17 +63,12 @@ export function CurrencySelect({
         <CurrencySearchTextInput value={searchFilter} onChangeText={onChangeText} />
       </Flex>
 
-      <NetworkButtonGroup
-        customButton={
-          <NetworkGroupPrefixButton
-            elementNameSuffix={showNonZeroBalancesOnly ? 'your-tokens' : 'all-tokens'}
-            label={showNonZeroBalancesOnly ? t('Your tokens') : t('All tokens')}
-            selected={chainFilter === null}
-            onPress={onClearChainFilter}
-          />
-        }
-        selected={chainFilter}
-        onPress={onChainPress}
+      <FilterGroup
+        resetButtonLabel={showNonZeroBalancesOnly ? t('Your tokens') : t('All tokens')}
+        selected={selected}
+        onPressFavorites={onToggleFavoritesFilter}
+        onPressNetwork={onChainPress}
+        onReset={onClearChainFilter}
       />
 
       <CurrencySearchResultList
@@ -103,33 +95,5 @@ export function CurrencySelect({
         }}
       />
     </Flex>
-  )
-}
-
-interface NetworkButtonGroupPrefixProps {
-  selected: boolean
-  elementNameSuffix: string
-  label: string
-  onPress: () => void
-}
-
-export function NetworkGroupPrefixButton({
-  onPress,
-  label,
-  elementNameSuffix,
-  selected,
-}: NetworkButtonGroupPrefixProps) {
-  const theme = useAppTheme()
-
-  return (
-    <Button mr="sm" name={`${ElementName.NetworkButton}-${elementNameSuffix}`} onPress={onPress}>
-      <Pill
-        backgroundColor="gray100"
-        borderColor={selected ? 'gray600' : 'gray50'}
-        foregroundColor={theme.colors.textColor}
-        height={36}
-        label={label}
-      />
-    </Button>
   )
 }

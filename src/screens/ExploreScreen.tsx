@@ -3,14 +3,13 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { TabScreenProp } from 'src/app/navigation/types'
-import { NetworkGroupPrefixButton } from 'src/components/CurrencySelector/CurrencySelect'
+import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
 import { useFilteredCurrencies } from 'src/components/CurrencySelector/hooks'
 import { Option } from 'src/components/CurrencySelector/Option'
 import { CurrencySearchTextInput } from 'src/components/CurrencySelector/SearchInput'
 import { CurrencySearchResultList } from 'src/components/CurrencySelector/SearchResults'
 import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { NetworkButtonGroup } from 'src/components/Network/NetworkButtonGroup'
 import { ChainId } from 'src/constants/chains'
 import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
@@ -26,7 +25,7 @@ export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
   }
 
   return (
-    <Screen edges={['top', 'left', 'right']}>
+    <Screen edges={['top', 'left', 'right', 'bottom']}>
       <Explorer
         currencies={flattenObjectOfObjects(currencies)}
         onSelectCurrency={onPressCurrency}
@@ -43,12 +42,13 @@ interface ExplorerProps {
 function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
   const {
     filteredCurrencies,
-    chainFilter,
     onChainPress,
     onChangeText,
     onClearSearchFilter,
     onClearChainFilter,
+    onToggleFavoritesFilter,
     searchFilter,
+    selected,
   } = useFilteredCurrencies(currencies)
 
   const { chainIdToPrices } = useTokenPrices(currencies)
@@ -56,20 +56,15 @@ function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
   const { t } = useTranslation()
 
   return (
-    <Flex centered gap="lg" p="md">
+    <Flex gap="lg" p="md">
       <CurrencySearchTextInput value={searchFilter} onChangeText={onChangeText} />
 
-      <NetworkButtonGroup
-        customButton={
-          <NetworkGroupPrefixButton
-            elementNameSuffix={'all-tokens'}
-            label={t('All tokens')}
-            selected={chainFilter === null}
-            onPress={onClearChainFilter}
-          />
-        }
-        selected={chainFilter}
-        onPress={onChainPress}
+      <FilterGroup
+        resetButtonLabel={t('All tokens')}
+        selected={selected}
+        onPressFavorites={onToggleFavoritesFilter}
+        onPressNetwork={onChainPress}
+        onReset={onClearChainFilter}
       />
 
       <CurrencySearchResultList

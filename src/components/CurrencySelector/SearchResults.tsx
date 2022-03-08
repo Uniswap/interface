@@ -5,7 +5,7 @@ import { FlatList, ListRenderItem, StyleSheet } from 'react-native'
 import { ElementName } from 'src/features/telemetry/constants'
 import { currencyId } from 'src/utils/currencyId'
 import { TextButton } from '../buttons/TextButton'
-import { Flex } from '../layout'
+import { Flex, Inset } from '../layout'
 import { Text } from '../Text'
 
 interface CurrencySearchResultListProps {
@@ -38,6 +38,11 @@ export function CurrencySearchResultList({
           </TextButton>
         </Flex>
       }
+      ListFooterComponent={
+        <Inset all="xxl">
+          <Inset all="md" />
+        </Inset>
+      }
       data={currencies}
       keyExtractor={currencyId}
       renderItem={renderItem}
@@ -48,6 +53,7 @@ export function CurrencySearchResultList({
 
 const styles = StyleSheet.create({
   list: {
+    height: '100%',
     width: '100%',
   },
 })

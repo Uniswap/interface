@@ -7,7 +7,7 @@ type PillProps = {
   customBorderColor?: string
   foregroundColor?: string
   icon?: ReactNode
-  label: string
+  label?: string
 } & FlexProps
 
 export function Pill({
@@ -40,9 +40,11 @@ export function Pill({
       }}
       {...rest}>
       {icon}
-      <Text style={{ color: foregroundColor }} variant="bodyMd">
-        {label}
-      </Text>
+      {label && (
+        <Text style={{ color: foregroundColor }} variant="bodyMd">
+          {label}
+        </Text>
+      )}
     </Flex>
   )
 }
