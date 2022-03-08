@@ -81,13 +81,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     }
 
-    if (!quoteResult) {
-      return {
-        state: TradeState.INVALID,
-        trade: undefined,
-      }
-    }
-
     if (isLoading && !quoteResult) {
       // only on first hook render
       return {
