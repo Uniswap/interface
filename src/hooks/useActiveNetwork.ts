@@ -38,6 +38,9 @@ export const SWITCH_NETWORK_PARAMS: {
   },
   [ChainId.BTTC]: {
     chainId: '0xc7'
+  },
+  [ChainId.VELAS]: {
+    chainId: '0x6a'
   }
 }
 
@@ -142,6 +145,17 @@ export const ADD_NETWORK_PARAMS: {
     },
     rpcUrls: ['https://bttc.dev.kyberengineering.io'],
     blockExplorerUrls: ['https://bttcscan.com']
+  },
+  [ChainId.VELAS]: {
+    chainId: '0x6a',
+    chainName: 'Velas',
+    nativeCurrency: {
+      name: 'VLX',
+      symbol: 'VLX',
+      decimals: 18
+    },
+    rpcUrls: ['https://evmexplorer.velas.com/rpc'],
+    blockExplorerUrls: ['https://evmexplorer.velas.com/']
   }
 }
 

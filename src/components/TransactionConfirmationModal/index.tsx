@@ -90,9 +90,9 @@ function AddTokenToMetaMask({ token, chainId }: { token: Token; chainId: ChainId
               address: tokenAddress,
               symbol: tokenSymbol,
               decimals: tokenDecimals,
-              image: tokenImage
-            }
-          }
+              image: tokenImage,
+            },
+          },
         })
       }
     } catch (error) {
@@ -113,7 +113,7 @@ function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
-  tokenAddtoMetaMask
+  tokenAddtoMetaMask,
 }: {
   onDismiss: () => void
   hash: string | undefined
@@ -158,7 +158,7 @@ export function ConfirmationModalContent({
   title,
   bottomContent,
   onDismiss,
-  topContent
+  topContent,
 }: {
   title: string
   onDismiss: () => void
@@ -264,7 +264,7 @@ export default function TransactionConfirmationModal({
   hash,
   pendingText,
   content,
-  tokenAddtoMetaMask
+  tokenAddtoMetaMask,
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 

@@ -16,7 +16,7 @@ import { Currency } from '@dynamic-amm/sdk'
 function MobileTradeRoutes({
   trade,
   parsedAmounts,
-  currencies
+  currencies,
 }: {
   trade: any
   parsedAmounts: any

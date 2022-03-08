@@ -518,6 +518,7 @@ export function convertToNativeTokenFromETH(currency: Currency, chainId?: ChainI
     if ([25, 338].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'CRO', 'CRO')
     if ([ChainId.BTTC].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'BTT', 'BTT')
     if ([ChainId.ARBITRUM].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'ETH', 'ETH')
+    if ([ChainId.VELAS].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'VLX', 'VLX')
   }
 
   return currency
@@ -632,6 +633,8 @@ export function useRewardTokensFullInfo(): Token[] {
       ? 'CRO'
       : chainId && chainId === ChainId.BTTC
       ? 'BTT'
+      : chainId && chainId === ChainId.VELAS
+      ? 'VLX'
       : 'ETH'
 
   return useMemo(

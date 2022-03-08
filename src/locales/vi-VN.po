@@ -1649,7 +1649,7 @@ msgstr "Chọn một token để tìm thanh khoản của bạn."
 
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
-msgstr "Chia sẽ của Pool"
+msgstr "Chia sẻ của Pool"
 
 #: src/components/ShareModal/index.tsx
 msgid "Share this pool with your friends!"

@@ -180,7 +180,7 @@ const UniIcon = styled.div`
 const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
+  activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
@@ -207,7 +207,7 @@ const StyledNavLink = styled(NavLink).attrs({
 `
 
 const StyledNavExternalLink = styled(ExternalLink).attrs({
-  activeClassName
+  activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
@@ -375,18 +375,20 @@ export default function Header() {
                 {chainId && [1, 3, 4, 5, 42].includes(chainId)
                   ? `ETH`
                   : chainId && [137, 80001].includes(chainId)
-                    ? `MATIC`
-                    : chainId && [56, 97].includes(chainId)
-                      ? `BNB`
-                      : chainId && [43113, 43114].includes(chainId)
-                        ? `AVAX`
-                        : chainId && [250].includes(chainId)
-                          ? `FTM`
-                          : chainId && [25, 338].includes(chainId)
-                            ? `CRO`
-                            : chainId && [199, 1028].includes(chainId)
-                              ? 'BTT'
-                              : `ETH`}
+                  ? `MATIC`
+                  : chainId && [56, 97].includes(chainId)
+                  ? `BNB`
+                  : chainId && [43113, 43114].includes(chainId)
+                  ? `AVAX`
+                  : chainId && [250].includes(chainId)
+                  ? `FTM`
+                  : chainId && [25, 338].includes(chainId)
+                  ? `CRO`
+                  : chainId && [199, 1028].includes(chainId)
+                  ? 'BTT'
+                  : chainId && [106, 111].includes(chainId)
+                  ? 'VLX'
+                  : `ETH`}
               </BalanceText>
             ) : null}
             <Web3Status />

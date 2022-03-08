@@ -6,12 +6,12 @@ export const defaultExchangeClient: ApolloClient<NormalizedCacheObject> = new Ap
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'
       : 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const ropstenExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-ropsten',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const mainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
@@ -19,7 +19,7 @@ const mainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloCli
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'
       : 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
@@ -27,28 +27,28 @@ const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClien
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic-staging'
       : 'https://polygon-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-matic',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const mumbaiExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 const bscTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-ropsten',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 const bscMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging'
       : 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-bsc',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const avaxTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
@@ -56,7 +56,7 @@ const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Apoll
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ''
       : 'https://avax-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-avax',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const fantomExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
@@ -64,32 +64,37 @@ const fantomExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClie
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-ftm'
       : '',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const cronosTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://testnet-cronos-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-cronos-testnet',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const cronosExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://cronos-subgraph.kyberswap.com/subgraphs/name/kyberswap/kyberswap-cronos',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const arbitrumTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-arbitrum-rinkeby',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const arbitrumExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-arbitrum',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const bttcExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://bttc-graph.dev.kyberengineering.io/subgraphs/name/dynamic-amm/kyberswap-bttc',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+})
+
+const velasExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri: 'https://velas-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-velas',
+  cache: new InMemoryCache(),
 })
 
 export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
@@ -109,75 +114,81 @@ export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCac
   [ChainId.CRONOS]: cronosExchangeClient,
   [ChainId.ARBITRUM_TESTNET]: arbitrumTestnetExchangeClient,
   [ChainId.ARBITRUM]: arbitrumExchangeClient,
-  [ChainId.BTTC]: bttcExchangeClient
+  [ChainId.BTTC]: bttcExchangeClient,
+  [ChainId.VELAS]: velasExchangeClient,
 }
 
 const ropstenBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/edwardevans094/ropsten-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const mainnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const maticBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ord786/matic-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const mumbaiBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/piavgh/mumbai-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 const bscTestnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-blocks-bsctestnet',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 const bscMainnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-blocks-bsc',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const avaxTestnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-block-fuji',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const avaxMainnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/avalache-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const fantomBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/fantom-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const cronosTestnetBlockClient = new ApolloClient({
   uri: 'https://testnet-cronos-subgraph.knstats.com/subgraphs/name/dynamic-amm/ethereum-blocks-cronos-testnet',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const cronosBlockClient = new ApolloClient({
   uri: 'https://cronos-subgraph.kyberswap.com/subgraphs/name/dynamic-amm/ethereum-blocks-cronos',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const arbitrumTestnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/arbitrum-rinkeby-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const arbitrumBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/viet-nv/arbitrum-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const bttcBlockClient = new ApolloClient({
   uri: 'https://bttc-graph.dev.kyberengineering.io/subgraphs/name/dynamic-amm/bttc-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+})
+
+const velasBlockClient = new ApolloClient({
+  uri: 'https://velas-graph.kyberengineering.io/subgraphs/name/kybernetwork/velas-blocks',
+  cache: new InMemoryCache(),
 })
 
 export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
@@ -197,7 +208,8 @@ export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheOb
   [ChainId.CRONOS]: cronosBlockClient,
   [ChainId.ARBITRUM_TESTNET]: arbitrumTestnetBlockClient,
   [ChainId.ARBITRUM]: arbitrumBlockClient,
-  [ChainId.BTTC]: bttcBlockClient
+  [ChainId.BTTC]: bttcBlockClient,
+  [ChainId.VELAS]: velasBlockClient,
 }
 
 //https://router.firebird.finance/bsc/route
@@ -209,7 +221,8 @@ export const routerUri: { [chainId in ChainId]?: string } = {
   [ChainId.FANTOM]: `${process.env.REACT_APP_AGGREGATOR_API}/fantom/route`,
   [ChainId.CRONOS]: `${process.env.REACT_APP_AGGREGATOR_API}/cronos/route`,
   [ChainId.ARBITRUM]: `${process.env.REACT_APP_AGGREGATOR_API}/arbitrum/route`,
-  [ChainId.BTTC]: `${process.env.REACT_APP_AGGREGATOR_API}/bttc/route`
+  [ChainId.BTTC]: `${process.env.REACT_APP_AGGREGATOR_API}/bttc/route`,
+  [ChainId.VELAS]: `${process.env.REACT_APP_AGGREGATOR_API}/velas/route`,
 }
 
 // TODO-swapv2: change price uri
@@ -217,5 +230,5 @@ export const priceUri: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: '',
   [ChainId.BSCMAINNET]: 'https://price-api.firebird.finance',
   [ChainId.MATIC]: 'https://price-api-polygon.firebird.finance',
-  [ChainId.AVAXMAINNET]: ''
+  [ChainId.AVAXMAINNET]: '',
 }

@@ -17,7 +17,7 @@ import {
   toggleURLWarning,
   toggleRebrandingAnnouncement,
   toggleLiveChart,
-  toggleTradeRoutes
+  toggleTradeRoutes,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 import { isMobile } from 'react-device-detect'
@@ -67,7 +67,7 @@ function pairKey(token0Address: string, token1Address: string) {
   return `${token0Address};${token1Address}`
 }
 
-export const defaultShowLiveCharts = {
+export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
   [ChainId.MAINNET]: isMobile ? false : true,
   [ChainId.MATIC]: isMobile ? false : true,
   [ChainId.BSCMAINNET]: isMobile ? false : true,
@@ -75,7 +75,17 @@ export const defaultShowLiveCharts = {
   [ChainId.AVAXMAINNET]: isMobile ? false : true,
   [ChainId.FANTOM]: isMobile ? false : true,
   [ChainId.ARBITRUM]: isMobile ? false : true,
-  [ChainId.BTTC]: false
+  [ChainId.BTTC]: false,
+  [ChainId.VELAS]: false,
+  [ChainId.ROPSTEN]: false,
+  [ChainId.RINKEBY]: false,
+  [ChainId.GÖRLI]: false,
+  [ChainId.KOVAN]: false,
+  [ChainId.MUMBAI]: false,
+  [ChainId.BSCTESTNET]: false,
+  [ChainId.CRONOSTESTNET]: false,
+  [ChainId.AVAXTESTNET]: false,
+  [ChainId.ARBITRUM_TESTNET]: false,
 }
 
 export const initialState: UserState = {
@@ -91,7 +101,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   rebrandingAnnouncement: true,
   showLiveCharts: defaultShowLiveCharts,
-  showTradeRoutes: isMobile ? false : true
+  showTradeRoutes: isMobile ? false : true,
 }
 
 export default createReducer(initialState, builder =>
@@ -171,19 +181,9 @@ export default createReducer(initialState, builder =>
       state.rebrandingAnnouncement = !state.rebrandingAnnouncement
     })
     .addCase(toggleLiveChart, (state, { payload: { chainId } }) => {
-      let currentState = !!(state.showLiveCharts || defaultShowLiveCharts)[chainId]
-      const newState = Object.keys(state.showLiveCharts || defaultShowLiveCharts).reduce(
-        (acc, id) => ({
-          ...acc,
-          [id]: !currentState,
-          [chainId]: !currentState
-        }),
-        {}
-      )
-      console.log(newState)
-      state.showLiveCharts = newState
+      state.showLiveCharts[chainId] = !state.showLiveCharts[chainId]
     })
     .addCase(toggleTradeRoutes, state => {
       state.showTradeRoutes = !state.showTradeRoutes
-    })
+    }),
 )

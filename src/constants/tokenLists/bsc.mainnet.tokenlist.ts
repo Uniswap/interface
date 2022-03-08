@@ -8,70 +8,70 @@ export const BSC_MAINNET_TOKEN_LIST = {
       address: '0xfe56d5892BDffC7BF58f2E84BE1b2C32D21C308b',
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
       symbol: 'ETH',
       name: 'Ether',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
       symbol: 'USDC',
       name: 'USDC',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0x55d398326f99059fF775485246999027B3197955',
       symbol: 'USDT',
       name: 'USDT',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
       symbol: 'DAI',
       name: 'DAI',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
       symbol: 'WBNB',
       name: 'Wrapped BNB',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
       symbol: 'BUSD',
       name: 'BUSD',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0x633237C6FA30FAe46Cc5bB22014DA30e50a718cC',
       symbol: 'FIWA',
       name: 'FIWA',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0xE8176d414560cFE1Bf82Fd73B986823B89E4F545',
       symbol: 'HERO',
       name: 'HERO',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
       address: '0xD6Cce248263ea1e2b8cB765178C944Fc16Ed0727',
       symbol: 'CTR',
       name: 'Creator Chain',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 56,
@@ -80,7 +80,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
       name: 'dForce',
       decimals: 18,
       logoURI:
-        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/DF.svg'
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/DF.svg',
     },
     {
       chainId: 56,
@@ -89,7 +89,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
       name: 'dForce USD',
       decimals: 18,
       logoURI:
-        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/USX.svg'
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/USX.svg',
     },
     {
       chainId: 56,
@@ -98,7 +98,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
       name: 'dForce EUR',
       decimals: 18,
       logoURI:
-        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/EUX.svg'
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/EUX.svg',
     },
     {
       chainId: 56,
@@ -106,7 +106,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
       symbol: 'EBA',
       name: 'Elpis Battle',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/Tzs373u.png'
+      logoURI: 'https://i.imgur.com/Tzs373u.png',
     },
     {
       chainId: 56,
@@ -114,7 +114,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
       symbol: 'ZUKI',
       name: 'ZUKI MOBA',
       decimals: 18,
-      logoURI: 'https://zukimoba.com/images/logos/logo.png'
+      logoURI: 'https://zukimoba.com/images/logos/logo.png',
     },
     {
       chainId: 56,
@@ -122,7 +122,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
       symbol: 'DEXT',
       name: 'DEXTools',
       decimals: 18,
-      logoURI: 'https://bscscan.com/token/images/dextools_32.png'
+      logoURI: 'https://bscscan.com/token/images/dextools_32.png',
     },
     {
       chainId: 56,
@@ -130,7 +130,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
       symbol: 'PRL',
       name: 'Parallel',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/99UaEcO.png'
+      logoURI: 'https://i.imgur.com/99UaEcO.png',
     },
     {
       chainId: 56,
@@ -138,12 +138,12 @@ export const BSC_MAINNET_TOKEN_LIST = {
       symbol: 'GENI',
       name: 'GemUni',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/f5JZgpy.png'
-    }
+      logoURI: 'https://i.imgur.com/f5JZgpy.png',
+    },
   ],
   version: {
     major: 0,
     minor: 0,
-    patch: 0
-  }
+    patch: 0,
+  },
 }

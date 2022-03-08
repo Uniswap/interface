@@ -7,6 +7,7 @@ import { useBlockNumber, useExchangeClient } from 'state/application/hooks'
 import { getExchangeSubgraphUrls } from 'apollo/manager'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
+import { SUPPORTED_NETWORKS } from 'constants/networks'
 
 interface GlobalData {
   dmmFactories: {
@@ -41,15 +42,15 @@ export function useGlobalData() {
         .toString()
     }
 
-    const getResultByChainIds = async (chainIds: ChainId[]) => {
+    const getResultByChainIds = async (chainIds: readonly ChainId[]) => {
       const allChainPromises = chainIds.map(chain => {
         const subgraphPromises = getExchangeSubgraphUrls(chain)
           .map(uri => new ApolloClient({ uri, cache: new InMemoryCache() }))
           .map(client =>
             client.query({
               query: GLOBAL_DATA(chain),
-              fetchPolicy: 'cache-first'
-            })
+              fetchPolicy: 'cache-first',
+            }),
           )
         return subgraphPromises
       })
@@ -70,49 +71,22 @@ export function useGlobalData() {
               totalLiquidityUSD: getSumValues(queryResult, 'totalLiquidityUSD'),
               totalLiquidityETH: getSumValues(queryResult, 'totalLiquidityETH'),
               totalAmplifiedLiquidityUSD: getSumValues(queryResult, 'totalAmplifiedLiquidityUSD'),
-              totalAmplifiedLiquidityETH: getSumValues(queryResult, 'totalAmplifiedLiquidityETH')
-            }
-          ]
-        }
+              totalAmplifiedLiquidityETH: getSumValues(queryResult, 'totalAmplifiedLiquidityETH'),
+            },
+          ],
+        },
       }
     }
 
     async function getGlobalData() {
-      let result
-
-      if (process.env.REACT_APP_MAINNET_ENV === 'production') {
-        result = await getResultByChainIds([
-          ChainId.MAINNET,
-          ChainId.MATIC,
-          ChainId.BSCMAINNET,
-          ChainId.AVAXMAINNET,
-          ChainId.FANTOM,
-          ChainId.CRONOS,
-          ChainId.ARBITRUM,
-          ChainId.BTTC
-        ])
-      } else if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
-        result = await getResultByChainIds([
-          ChainId.ROPSTEN,
-          ChainId.MUMBAI,
-          ChainId.BSCTESTNET,
-          ChainId.AVAXTESTNET,
-          ChainId.FANTOM,
-          ChainId.CRONOSTESTNET
-        ])
-      } else {
-        result = await apolloClient.query({
-          query: GLOBAL_DATA(chainId as ChainId),
-          fetchPolicy: 'cache-first'
-        })
-      }
+      const result = await getResultByChainIds(SUPPORTED_NETWORKS)
 
       setGlobalData({
         ...result.data,
         aggregatorData: {
           totalVolume: aggregatorData?.totalVolume,
-          last24hVolume: aggregatorData?.last24hVolume
-        }
+          last24hVolume: aggregatorData?.last24hVolume,
+        },
       })
     }
 

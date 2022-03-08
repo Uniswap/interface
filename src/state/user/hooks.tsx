@@ -26,7 +26,7 @@ import {
   updateUserLocale,
   toggleRebrandingAnnouncement,
   toggleLiveChart,
-  toggleTradeRoutes
+  toggleTradeRoutes,
 } from './actions'
 import { convertChainIdFromDmmToSushi } from 'utils/dmm'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
@@ -44,7 +44,7 @@ function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo)
     symbol: token.symbol,
     name: token.name,
     list: token instanceof WrappedTokenInfo ? token.list : undefined,
-    logoURI: token instanceof WrappedTokenInfo ? token.tokenInfo.logoURI : undefined
+    logoURI: token instanceof WrappedTokenInfo ? token.tokenInfo.logoURI : undefined,
   }
 }
 
@@ -57,16 +57,16 @@ function deserializeToken(serializedToken: SerializedToken): Token {
           name: serializedToken.name ?? '',
           symbol: serializedToken.symbol ?? '',
           decimals: serializedToken.decimals,
-          logoURI: serializedToken.logoURI
+          logoURI: serializedToken.logoURI,
         },
-        serializedToken.list
+        serializedToken.list,
       )
     : new Token(
         serializedToken.chainId,
         serializedToken.address,
         serializedToken.decimals,
         serializedToken.symbol,
-        serializedToken.name
+        serializedToken.name,
       )
 }
 // function deserializeTokenUNI(serializedToken: SerializedToken): TokenUNI {
@@ -86,9 +86,9 @@ export function useIsDarkMode(): boolean {
   >(
     ({ user: { matchesDarkMode, userDarkMode } }) => ({
       userDarkMode,
-      matchesDarkMode
+      matchesDarkMode,
     }),
-    shallowEqual
+    shallowEqual,
   )
 
   return userDarkMode === null ? matchesDarkMode : userDarkMode
@@ -117,7 +117,7 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
     (newLocale: SupportedLocale) => {
       dispatch(updateUserLocale({ userLocale: newLocale }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return [locale, setLocale]
@@ -148,7 +148,7 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
     (userSlippageTolerance: number) => {
       dispatch(updateUserSlippageTolerance({ userSlippageTolerance }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return [userSlippageTolerance, setUserSlippageTolerance]
@@ -164,7 +164,7 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
     (userDeadline: number) => {
       dispatch(updateUserDeadline({ userDeadline }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return [userDeadline, setUserDeadline]
@@ -176,7 +176,7 @@ export function useAddUserToken(): (token: Token) => void {
     (token: Token) => {
       dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -186,7 +186,7 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
     (chainId: number, address: string) => {
       dispatch(removeSerializedToken({ chainId, address }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -203,7 +203,7 @@ export function useUserAddedTokens(): Token[] {
 function serializePair(pair: Pair | PairUNI | PairSUSHI): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
-    token1: serializeToken(pair.token1)
+    token1: serializeToken(pair.token1),
   }
 }
 
@@ -214,7 +214,7 @@ export function usePairAdder(): (pair: PairUNI | PairSUSHI) => void {
     (pair: PairUNI | PairSUSHI) => {
       dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -227,12 +227,12 @@ export function usePairAdderByTokens(): (token0: Token, token1: Token) => void {
         addSerializedPair({
           serializedPair: {
             token0: serializeToken(token0),
-            token1: serializeToken(token1)
-          }
-        })
+            token1: serializeToken(token1),
+          },
+        }),
       )
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -269,11 +269,11 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
     tokenA.chainId,
     PairUNI.getAddress(
       new TokenUNI(tokenA.chainId as ChainIdUNI, tokenA.address, tokenA.decimals, tokenA.symbol, tokenA.name),
-      new TokenUNI(tokenB.chainId as ChainIdUNI, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name)
+      new TokenUNI(tokenB.chainId as ChainIdUNI, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name),
     ),
     18,
     'UNI-LP',
-    'UNI LP'
+    'UNI LP',
   )
 }
 
@@ -286,37 +286,37 @@ export function toV2LiquidityTokenSushi([tokenA, tokenB]: [Token, Token]): Token
         tokenA.address,
         tokenA.decimals,
         tokenA.symbol,
-        tokenA.name
+        tokenA.name,
       ),
       new TokenSUSHI(
         convertChainIdFromDmmToSushi(tokenB.chainId),
         tokenB.address,
         tokenB.decimals,
         tokenB.symbol,
-        tokenB.name
-      )
+        tokenB.name,
+      ),
     ),
     18,
     'SUSHI-LP',
-    'SUSHI LP'
+    'SUSHI LP',
   )
 }
 
 export function useToV2LiquidityTokens(
-  tokenCouples: [Token, Token][]
+  tokenCouples: [Token, Token][],
 ): { liquidityTokens: []; tokens: [Token, Token] }[] {
   const contract = useFactoryContract()
   const result = useSingleContractMultipleData(
     contract,
     'getPools',
-    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address])
+    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
   )
   return result.map((result, index) => ({
     tokens: tokenCouples[index],
     liquidityTokens:
       result.result?.[0].map(
-        (address: string) => new Token(tokenCouples[index][0].chainId, address, 18, 'DMM-LP', 'DMM LP')
-      ) || []
+        (address: string) => new Token(tokenCouples[index][0].chainId, address, 18, 'DMM-LP', 'DMM LP'),
+      ) || [],
   }))
 }
 
@@ -370,7 +370,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
     generatedPairs,
     pinnedPairs,
-    userPairs
+    userPairs,
   ])
 
   return useMemo(() => {
@@ -432,7 +432,7 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
   const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
     generatedPairs,
     pinnedPairs,
-    userPairs
+    userPairs,
   ])
 
   return useMemo(() => {

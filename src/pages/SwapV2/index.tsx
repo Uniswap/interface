@@ -29,7 +29,7 @@ import {
   PriceImpactHigh,
   LiveChartWrapper,
   RoutesWrapper,
-  StyledFlex
+  StyledFlex,
 } from 'components/swapv2/styleds'
 import TokenWarningModal from 'components/TokenWarningModal'
 import ProgressSteps from 'components/ProgressSteps'
@@ -68,7 +68,7 @@ import MobileTradeRoutes from 'components/swapv2/MobileTradeRoutes'
 
 enum ACTIVE_TAB {
   SWAP,
-  INFO
+  INFO,
 }
 
 const AppBodyWrapped = styled(AppBody)`
@@ -93,7 +93,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
-    useCurrency(loadedUrlParams?.outputCurrencyId)
+    useCurrency(loadedUrlParams?.outputCurrencyId),
   ]
   const referralAddress = loadedUrlParams?.referralAddress
   const feePercent = loadedUrlParams?.feePercent
@@ -103,13 +103,13 @@ export default function Swap({ history }: RouteComponentProps) {
           chargeFeeBy: 'currency_in',
           feeReceiver: referralAddress,
           isInBps: true,
-          feeAmount: parseInt(feePercent) < 100 ? (parseInt(feePercent) / 10).toString() : '10'
+          feeAmount: parseInt(feePercent) < 100 ? (parseInt(feePercent) / 10).toString() : '10',
         }
       : undefined
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
+    [loadedInputCurrency, loadedOutputCurrency],
   )
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
@@ -147,13 +147,13 @@ export default function Swap({ history }: RouteComponentProps) {
     inputError: swapInputError,
     tradeComparer,
     onRefresh,
-    loading: loadingAPI
+    loading: loadingAPI,
   } = useDerivedSwapInfoV2()
 
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
-    typedValue
+    typedValue,
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const trade = showWrap ? undefined : v2Trade
@@ -161,11 +161,11 @@ export default function Swap({ history }: RouteComponentProps) {
   const parsedAmounts = showWrap
     ? {
         [Field.INPUT]: parsedAmount,
-        [Field.OUTPUT]: parsedAmount
+        [Field.OUTPUT]: parsedAmount,
       }
     : {
         [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
       }
 
   const { onSwitchTokensV2, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
@@ -177,7 +177,7 @@ export default function Swap({ history }: RouteComponentProps) {
     (value: string) => {
       onUserInput(Field.INPUT, value)
     },
-    [onUserInput]
+    [onUserInput],
   )
   const handleTypeOutput = useCallback((): void => {
     // ...
@@ -201,18 +201,18 @@ export default function Swap({ history }: RouteComponentProps) {
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
-    txHash: undefined
+    txHash: undefined,
   })
 
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: showWrap
       ? parsedAmounts[independentField]?.toExact() ?? ''
-      : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+      : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
 
   const userHasSpecifiedInputOutput = Boolean(
-    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
+    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0)),
   )
   const noRoute = !trade?.swaps?.length
 
@@ -245,7 +245,7 @@ export default function Swap({ history }: RouteComponentProps) {
     trade,
     allowedSlippage,
     recipient,
-    feeConfig
+    feeConfig,
   )
 
   const handleSwap = useCallback(() => {
@@ -263,7 +263,7 @@ export default function Swap({ history }: RouteComponentProps) {
           tradeToConfirm,
           showConfirm,
           swapErrorMessage: error.message,
-          txHash: undefined
+          txHash: undefined,
         })
       })
   }, [tradeToConfirm, showConfirm, swapCallback])
@@ -293,7 +293,7 @@ export default function Swap({ history }: RouteComponentProps) {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
-    [onCurrencySelection]
+    [onCurrencySelection],
   )
 
   const handleMaxInput = useCallback(() => {
@@ -304,7 +304,7 @@ export default function Swap({ history }: RouteComponentProps) {
     outputCurrency => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
     },
-    [onCurrencySelection]
+    [onCurrencySelection],
   )
 
   const isLoading =
@@ -324,7 +324,7 @@ export default function Swap({ history }: RouteComponentProps) {
           feeConfig
             ? (parseFloat(trade.amountOutUsd) * (1 - parseInt(feeConfig.feeAmount) / 10000)).toString()
             : trade.amountOutUsd,
-          true
+          true,
         )}`
       : undefined
   }, [trade, trade?.amountOutUsd, feeConfig, feeConfig?.feeAmount])
@@ -583,7 +583,7 @@ export default function Swap({ history }: RouteComponentProps) {
                                   attemptingTxn: false,
                                   swapErrorMessage: undefined,
                                   showConfirm: true,
-                                  txHash: undefined
+                                  txHash: undefined,
                                 })
                               }
                             }}
@@ -607,7 +607,7 @@ export default function Swap({ history }: RouteComponentProps) {
                                 attemptingTxn: false,
                                 swapErrorMessage: undefined,
                                 showConfirm: true,
-                                txHash: undefined
+                                txHash: undefined,
                               })
                             }
                           }}
@@ -629,7 +629,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             trade &&
                             trade.priceImpact > 5
                               ? { background: theme.red, color: theme.white }
-                              : {})
+                              : {}),
                           }}
                         >
                           <Text fontWeight={500}>

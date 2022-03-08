@@ -9,7 +9,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'USDC_b',
       name: 'USD Coin_BSC',
       decimals: 18,
-      logoURI: 'https://coin.top/production/upload/logo/TEkxiTehnzSmSe2XqrBj4w32RUN966rdz81.png'
+      logoURI: 'https://coin.top/production/upload/logo/TEkxiTehnzSmSe2XqrBj4w32RUN966rdz81.png',
     },
     {
       chainId: 199,
@@ -17,7 +17,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'USDT_b',
       name: 'Tether USD_BSC',
       decimals: 18,
-      logoURI: 'https://coin.top/production/logo/usdtlogo.png'
+      logoURI: 'https://coin.top/production/logo/usdtlogo.png',
     },
     {
       chainId: 199,
@@ -26,7 +26,7 @@ export const BTTC_TOKEN_LIST = {
       name: 'Dai Stablecoin_Ethereum',
       decimals: 18,
       logoURI:
-        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3/logo.png'
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3/logo.png',
     },
     {
       chainId: 199,
@@ -34,7 +34,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'WBTT',
       name: 'Wrapped BTT',
       decimals: 18,
-      logoURI: 'https://coin.top/production/logo/1002000.png'
+      logoURI: 'https://coin.top/production/logo/1002000.png',
     },
     {
       chainId: 199,
@@ -43,7 +43,7 @@ export const BTTC_TOKEN_LIST = {
       name: 'Ethereum Token_BSC',
       decimals: 18,
       logoURI:
-        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/0x2170Ed0880ac9A755fd29B2688956BD959F933F8/logo.png'
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/0x2170Ed0880ac9A755fd29B2688956BD959F933F8/logo.png',
     },
     {
       chainId: 199,
@@ -51,7 +51,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'BNB',
       decimals: 18,
       name: 'Binance Coin',
-      logoURI: 'https://coin.top/production/upload/logo/TDgkC3ZZBgaDqkteSgx9F14rPfqRgktyzh.jpeg'
+      logoURI: 'https://coin.top/production/upload/logo/TDgkC3ZZBgaDqkteSgx9F14rPfqRgktyzh.jpeg',
     },
     {
       chainId: 199,
@@ -59,7 +59,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'TRX',
       decimals: 6,
       name: 'TRON',
-      logoURI: 'https://coin.top/production/upload/logo/TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR.png'
+      logoURI: 'https://coin.top/production/upload/logo/TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR.png',
     },
     {
       chainId: 199,
@@ -67,7 +67,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'XMN',
       name: 'Metronotes',
       decimals: 9,
-      logoURI: 'http://images.bt.io/0x5d9a3948a688aa40b5f2e1ab58b80872fff038a7.png'
+      logoURI: 'http://images.bt.io/0x5d9a3948a688aa40b5f2e1ab58b80872fff038a7.png',
     },
     {
       chainId: 199,
@@ -75,7 +75,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'TET',
       decimals: 18,
       name: 'Tetcoin',
-      logoURI: 'http://images.bt.io/0xa66bb5755391c0202353dc1b708d13a97444e5b8.png'
+      logoURI: 'http://images.bt.io/0xa66bb5755391c0202353dc1b708d13a97444e5b8.png',
     },
     {
       chainId: 199,
@@ -83,7 +83,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'USDT_t',
       decimals: 18,
       name: 'Tether USD_TRON',
-      logoURI: 'https://coin.top/production/logo/usdtlogo.png'
+      logoURI: 'https://coin.top/production/logo/usdtlogo.png',
     },
     {
       chainId: 199,
@@ -91,7 +91,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'BTT_b',
       name: 'BitTorrent_BSC',
       decimals: 18,
-      logoURI: 'https://coin.top/production/logo/1002000.png'
+      logoURI: 'https://coin.top/production/logo/1002000.png',
     },
     {
       chainId: 199,
@@ -99,7 +99,7 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'BTT_e',
       name: 'BitTorrent_Ethereum',
       decimals: 18,
-      logoURI: 'https://coin.top/production/logo/1002000.png'
+      logoURI: 'https://coin.top/production/logo/1002000.png',
     },
     {
       chainId: 199,
@@ -107,12 +107,12 @@ export const BTTC_TOKEN_LIST = {
       symbol: 'HYBERBTT',
       name: 'HYBERBTT',
       decimals: 18,
-      logoURI: 'https://coin.top/production/logo/1002000.png'
-    }
+      logoURI: 'https://coin.top/production/logo/1002000.png',
+    },
   ],
   version: {
     major: 0,
     minor: 0,
-    patch: 0
-  }
+    patch: 0,
+  },
 }

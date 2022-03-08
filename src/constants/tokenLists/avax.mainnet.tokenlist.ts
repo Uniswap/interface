@@ -8,35 +8,35 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       address: '0x39fC9e94Caeacb435842FADeDeCB783589F50f5f',
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 43114,
       address: '0x938fe3788222a74924e062120e7bfac829c719fb',
       symbol: 'APEIN',
       name: 'Ape In',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 43114,
       address: '0x961C8c0B1aaD0c0b10a51FeF6a867E3091BCef17',
       symbol: 'DYP',
       name: 'DeFiYieldProtocol',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 43114,
       address: '0xd1c3f94DE7e5B45fa4eDBBA472491a9f4B166FC4',
       symbol: 'XAVA',
       name: 'Avalaunch',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 43114,
       address: '0x130966628846BFd36ff31a822705796e8cb8C18D',
       symbol: 'MIM',
       name: 'Magic Internet Money',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 43114,
@@ -45,7 +45,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       name: 'Pangolin',
       symbol: 'PNG',
       logoURI:
-        'https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0x60781C2586D68229fde47564546784ab3fACA982/logo.png'
+        'https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0x60781C2586D68229fde47564546784ab3fACA982/logo.png',
     },
     {
       chainId: 43114,
@@ -54,7 +54,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       name: 'Wrapped AVAX',
       symbol: 'WAVAX',
       logoURI:
-        'https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7/logo.png'
+        'https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7/logo.png',
     },
     {
       chainId: 43114,
@@ -62,7 +62,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: '1INCH Token',
       symbol: '1INCH.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/1INCH/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/1INCH/logo.png',
     },
     {
       chainId: 43114,
@@ -70,7 +70,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Aave Token',
       symbol: 'AAVE.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/AAVE/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/AAVE/logo.png',
     },
     {
       chainId: 43114,
@@ -78,7 +78,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Basic Attention Token',
       symbol: 'BAT.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/BAT/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/BAT/logo.png',
     },
     {
       chainId: 43114,
@@ -86,7 +86,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Binance USD',
       symbol: 'BUSD.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/BUSD/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/BUSD/logo.png',
     },
     {
       chainId: 43114,
@@ -94,7 +94,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Compound',
       symbol: 'COMP.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/COMP/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/COMP/logo.png',
     },
     {
       chainId: 43114,
@@ -102,7 +102,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Curve DAO Token',
       symbol: 'CRV.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/CRV/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/CRV/logo.png',
     },
     {
       chainId: 43114,
@@ -110,7 +110,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Dai Stablecoin',
       symbol: 'DAI.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/DAI/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/DAI/logo.png',
     },
     {
       chainId: 43114,
@@ -118,7 +118,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Graph Token',
       symbol: 'GRT.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/GRT/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/GRT/logo.png',
     },
     {
       chainId: 43114,
@@ -126,7 +126,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'ChainLink Token',
       symbol: 'LINK.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/LINK/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/LINK/logo.png',
     },
     {
       chainId: 43114,
@@ -134,7 +134,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Maker',
       symbol: 'MKR.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/MKR/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/MKR/logo.png',
     },
     {
       chainId: 43114,
@@ -142,7 +142,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Synthetix Network Token',
       symbol: 'SNX.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/SNX/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/SNX/logo.png',
     },
     {
       chainId: 43114,
@@ -150,7 +150,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'SushiToken',
       symbol: 'SUSHI.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/SUSHI/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/SUSHI/logo.png',
     },
     {
       chainId: 43114,
@@ -158,7 +158,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'TrustSwap Token',
       symbol: 'SWAP.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/SWAP/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/SWAP/logo.png',
     },
     {
       chainId: 43114,
@@ -166,7 +166,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'UMA Voting Token v1',
       symbol: 'UMA.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/UMA/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/UMA/logo.png',
     },
     {
       chainId: 43114,
@@ -174,7 +174,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Uniswap',
       symbol: 'UNI.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/UNI/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/UNI/logo.png',
     },
     {
       chainId: 43114,
@@ -182,7 +182,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 6,
       name: 'USD Coin',
       symbol: 'USDC.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/USDC/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/USDC/logo.png',
     },
     {
       chainId: 43114,
@@ -190,7 +190,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 6,
       name: 'USD Coin',
       symbol: 'USDC',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/USDC/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/USDC/logo.png',
     },
     {
       chainId: 43114,
@@ -198,7 +198,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 6,
       name: 'TetherToken',
       symbol: 'USDt',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/USDT/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/USDT/logo.png',
     },
     {
       chainId: 43114,
@@ -206,7 +206,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 6,
       name: 'Tether USD',
       symbol: 'USDT.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/USDT/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/USDT/logo.png',
     },
     {
       chainId: 43114,
@@ -214,7 +214,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 8,
       name: 'Wrapped BTC',
       symbol: 'WBTC.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/WBTC/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/WBTC/logo.png',
     },
     {
       chainId: 43114,
@@ -222,7 +222,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'Wrapped ETH',
       symbol: 'WETH.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/WETH/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/WETH/logo.png',
     },
     {
       chainId: 43114,
@@ -230,7 +230,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: 'yearn.finance',
       symbol: 'YFI.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/YFI/logo.png'
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/YFI/logo.png',
     },
     {
       chainId: 43114,
@@ -238,12 +238,12 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       decimals: 18,
       name: '0x Protocol Token',
       symbol: 'ZRX.e',
-      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/ZRX/logo.png'
-    }
+      logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/ZRX/logo.png',
+    },
   ],
   version: {
     major: 0,
     minor: 0,
-    patch: 0
-  }
+    patch: 0,
+  },
 }

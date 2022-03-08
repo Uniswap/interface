@@ -279,7 +279,7 @@ export const POOLS_HISTORICAL_BULK_WITH_PAGINATION = (
   first: number,
   skip: number,
   block: number,
-  withoutDynamicFee?: boolean
+  withoutDynamicFee?: boolean,
 ) => {
   const queryString = `
   query pools {

@@ -42,7 +42,7 @@ function ClaimRewardModal() {
     txHash,
     pendingTx,
     error: claimRewardError,
-    resetTxn
+    resetTxn,
   } = useClaimReward()
   const KNCToken = KNC[(chainId as ChainId) || ChainId.MAINNET]
   const isCanClaim = isUserHasReward && rewardAmounts !== '0' && !pendingTx

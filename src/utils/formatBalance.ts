@@ -18,7 +18,7 @@ export const formatJSBIValue = (balance?: JSBI, decimals = 18, significant = 6):
   }
 
   return new Fraction(balance.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(
-    significant
+    significant,
   )
 }
 
@@ -39,7 +39,7 @@ export const formatBigLiquidity = (num: string, decimals: number, usd = true): s
     { value: 1e9, symbol: 'B' },
     { value: 1e12, symbol: 'T' },
     { value: 1e15, symbol: 'P' },
-    { value: 1e18, symbol: 'E' }
+    { value: 1e18, symbol: 'E' },
   ]
 
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/

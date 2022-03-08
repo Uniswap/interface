@@ -13,7 +13,7 @@ const getTokenListValidator = (() => {
       tokenListValidator = new Promise<ValidateFunction>(async resolve => {
         const [ajv, schema] = await Promise.all([
           import('ajv'),
-          import('@uniswap/token-lists/src/tokenlist.schema.json')
+          import('@uniswap/token-lists/src/tokenlist.schema.json'),
         ])
         const validator = new ajv.default({ allErrors: true }).compile(schema)
         resolve(validator)
@@ -30,7 +30,7 @@ const getTokenListValidator = (() => {
  */
 export default async function getTokenList(
   listUrl: string,
-  resolveENSContentHash: (ensName: string) => Promise<string>
+  resolveENSContentHash: (ensName: string) => Promise<string>,
 ): Promise<TokenList> {
   const tokenListValidator = getTokenListValidator()
   const parsedENS = parseENSAddress(listUrl)

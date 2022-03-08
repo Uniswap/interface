@@ -8,7 +8,7 @@ export const MAINNET_TOKEN_LIST = {
       address: '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202',
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
@@ -16,28 +16,28 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'KNCL',
       name: 'Kyber Network Crystal Legacy',
       decimals: 18,
-      logoURI: 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png'
+      logoURI: 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png',
     },
     {
       chainId: 1,
       address: '0x1F3F677Ecc58F6A1F9e2CF410dF4776a8546b5DE',
       symbol: 'VNDC',
       name: 'VNDC',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
       address: '0x27702a26126e0B3702af63Ee09aC4d1A084EF628',
       symbol: 'ALEPH',
       name: 'Aleph.im',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
       address: '0x196f4727526eA7FB1e17b2071B3d8eAA38486988',
       symbol: 'RSV',
       name: 'Reserve',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
@@ -45,7 +45,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'DFM',
       name: 'DFM',
       decimals: 18,
-      logoURI: 'https://mycoldwalletnow.wpcomstaging.com/htdocs/wp-content/mcwhp/img/logo.svg'
+      logoURI: 'https://mycoldwalletnow.wpcomstaging.com/htdocs/wp-content/mcwhp/img/logo.svg',
     },
     {
       chainId: 1,
@@ -53,42 +53,42 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'BUILD',
       name: 'BUILD Finance',
       decimals: 18,
-      logoURI: 'https://build.finance/images/logo.png'
+      logoURI: 'https://build.finance/images/logo.png',
     },
     {
       chainId: 1,
       address: '0xdB25f211AB05b1c97D595516F45794528a807ad8',
       symbol: 'EURS',
       name: 'STASIS EURS Token',
-      decimals: 2
+      decimals: 2,
     },
     {
       chainId: 1,
       address: '0xff56Cc6b1E6dEd347aA0B7676C85AB0B3D08B0FA',
       symbol: 'ORBS',
       name: 'ORBS',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
       address: '0xbE9375C6a420D2eEB258962efB95551A5b722803',
       symbol: 'STMX',
       name: 'StormX',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
       address: '0xEBd9D99A3982d547C5Bb4DB7E3b1F9F14b67Eb83',
       symbol: 'ID',
       name: 'Everest ID',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
       address: '0xC57d533c50bC22247d49a368880fb49a1caA39F7',
       symbol: 'PTF',
       name: 'PowerTrade Fuel Token',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
@@ -96,7 +96,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'XKNCA',
       name: 'xKNCa',
       decimals: 18,
-      logoURI: 'https://assets.coingecko.com/coins/images/13995/thumb/Token-4.png?1613545763'
+      logoURI: 'https://assets.coingecko.com/coins/images/13995/thumb/Token-4.png?1613545763',
     },
     {
       chainId: 1,
@@ -104,7 +104,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'MFG',
       name: 'Smart MFG',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/oReNLqf.png'
+      logoURI: 'https://i.imgur.com/oReNLqf.png',
     },
     {
       chainId: 1,
@@ -112,7 +112,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'XSGD',
       name: 'XSGD',
       decimals: 6,
-      logoURI: 'https://assets.website-files.com/600e34cbaf525c42912af8b6/600e34cbaf525c7ad82af99b_xgd-img%20(1).svg'
+      logoURI: 'https://assets.website-files.com/600e34cbaf525c42912af8b6/600e34cbaf525c7ad82af99b_xgd-img%20(1).svg',
     },
     {
       chainId: 1,
@@ -120,7 +120,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'RICE',
       name: 'RICE',
       decimals: 18,
-      logoURI: 'https://drive.google.com/uc?export=download&id=16PVXI1Da5P27cywWiyqrcV-Q17u1aXsi'
+      logoURI: 'https://drive.google.com/uc?export=download&id=16PVXI1Da5P27cywWiyqrcV-Q17u1aXsi',
     },
     {
       chainId: 1,
@@ -128,7 +128,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'jEUR',
       name: 'Jarvis Synthetic Euro',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/92uhfao.png'
+      logoURI: 'https://i.imgur.com/92uhfao.png',
     },
     {
       chainId: 1,
@@ -136,7 +136,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'jGBP',
       name: 'Jarvis Synthetic British Pound',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/HS7BMfs.png'
+      logoURI: 'https://i.imgur.com/HS7BMfs.png',
     },
     {
       chainId: 1,
@@ -144,14 +144,14 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'jCHF',
       name: 'Jarvis Synthetic Swiss Franc',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/Fp31dDB.png'
+      logoURI: 'https://i.imgur.com/Fp31dDB.png',
     },
     {
       chainId: 1,
       address: '0x7F3EDcdD180Dbe4819Bd98FeE8929b5cEdB3AdEB',
       symbol: 'XTK',
       name: 'xToken',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
@@ -159,14 +159,14 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'EVRY',
       name: 'Evrynet Token',
       decimals: 18,
-      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png'
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png',
     },
     {
       chainId: 1,
       address: '0x656C00e1BcD96f256F224AD9112FF426Ef053733',
       symbol: 'EFI',
       name: 'Efinity Token',
-      decimals: 18
+      decimals: 18,
     },
     {
       chainId: 1,
@@ -174,7 +174,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'UND',
       name: 'Unbound Dollar',
       decimals: 18,
-      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png'
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png',
     },
     {
       chainId: 1,
@@ -183,7 +183,7 @@ export const MAINNET_TOKEN_LIST = {
       name: 'dForce',
       decimals: 18,
       logoURI:
-        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/DF.svg'
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/DF.svg',
     },
     {
       chainId: 1,
@@ -192,7 +192,7 @@ export const MAINNET_TOKEN_LIST = {
       name: 'dForce USD',
       decimals: 18,
       logoURI:
-        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/USX.svg'
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/USX.svg',
     },
     {
       chainId: 1,
@@ -201,7 +201,7 @@ export const MAINNET_TOKEN_LIST = {
       name: 'dForce EUR',
       decimals: 18,
       logoURI:
-        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/EUX.svg'
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/EUX.svg',
     },
     {
       chainId: 1,
@@ -209,7 +209,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'MOCHI',
       name: 'Mochi Inu',
       decimals: 18,
-      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/14315.png'
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/14315.png',
     },
     {
       chainId: 1,
@@ -217,12 +217,12 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'SIPHER',
       name: 'SIPHER',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/zhZo9Bx.jpg'
-    }
+      logoURI: 'https://i.imgur.com/zhZo9Bx.jpg',
+    },
   ],
   version: {
     major: 0,
     minor: 0,
-    patch: 0
-  }
+    patch: 0,
+  },
 }

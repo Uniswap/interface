@@ -27,7 +27,7 @@ export default function useAggregatorVolume(): VolumeResponse {
 
       // Retry after 5 seconds.
       setTimeout(() => revalidate({ retryCount }), 5000)
-    }
+    },
   })
 
   if (error) {

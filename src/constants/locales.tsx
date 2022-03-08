@@ -41,5 +41,5 @@ export const LOCALE_LABEL: { [locale in SupportedLocale]: JSX.Element } = {
     <>
       <Flag src={FlagVI} /> &nbsp;Tiếng Việt
     </>
-  )
+  ),
 }
