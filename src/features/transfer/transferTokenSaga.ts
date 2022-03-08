@@ -1,59 +1,96 @@
-import { providers, utils } from 'ethers'
-import { getProviderManager, getSignerManager } from 'src/app/walletContext'
-import { ChainId } from 'src/constants/chains'
-import { ProviderManager } from 'src/features/providers/ProviderManager'
+import { BigNumber, BigNumberish, providers } from 'ethers'
+import ERC20_ABI from 'src/abis/erc20.json'
+import { Erc20 } from 'src/abis/types'
+import { getContractManager, getProvider } from 'src/app/walletContext'
+import { NULL_ADDRESS } from 'src/constants/accounts'
+import { ContractManager } from 'src/features/contracts/ContractManager'
+import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import {
+  TransactionOptions,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'src/features/transactions/types'
 import { TransferTokenParams } from 'src/features/transfer/types'
-import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
-import { Account } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
 export function* transferToken(params: TransferTokenParams) {
-  const { account, tokenAddress, amount, toAddress } = params
-  const signerManager = yield* call(getSignerManager)
-  const providerManager = yield* call(getProviderManager)
-  yield* call(
-    _transferToken,
+  const { account, chainId, tokenAddress, amountInWei } = params
+  const provider = yield* call(getProvider, chainId)
+  const contractManager = yield* call(getContractManager)
+
+  // NULL_ADDRESS represents a native (e.g. Eth) transfer
+  let transactionRequest: providers.TransactionRequest
+  if (tokenAddress === NULL_ADDRESS) {
+    transactionRequest = yield* call(prepareNativeTransfer, params, provider)
+  } else {
+    transactionRequest = yield* call(prepareTokenTransfer, params, provider, contractManager)
+  }
+
+  const typeInfo: TransactionTypeInfo = {
+    type: TransactionType.Send,
+    currencyAmountRaw: amountInWei,
+  }
+
+  const options: TransactionOptions = {
+    request: transactionRequest,
+    fetchBalanceOnSuccess: true,
+  }
+
+  yield* call(sendTransaction, {
+    chainId,
     account,
-    tokenAddress,
-    amount,
-    toAddress,
-    signerManager,
-    providerManager
-  )
+    options,
+    typeInfo,
+  })
+
+  logger.debug('transferToken', '', 'Transfer complete')
 }
 
-async function _transferToken(
-  account: Account,
-  tokenAddress: Address,
-  amount: string,
-  toAddress: Address,
-  signerManager: SignerManager,
-  providerManager: ProviderManager
-) {
-  // TODO use the appropriate provider for current chain
-  const provider = providerManager.getProvider(ChainId.Rinkeby)
-  const signer = await signerManager.getSignerForAccount(account)
-  const connectedSigner = signer.connect(provider)
-
-  // TODO check balance?
-  // TODO handle non ETH sending by checking tokenAddress
-  const currentGasPrice = await provider.getGasPrice()
-  const gasPrice = utils.hexlify(parseInt(currentGasPrice.toString(), 10))
-  const nonce = await provider.getTransactionCount(account.address, 'pending')
-  const transaction: providers.TransactionRequest = {
+async function prepareNativeTransfer(params: TransferTokenParams, provider: providers.Provider) {
+  const { account, toAddress, amountInWei } = params
+  const currentBalance = await provider.getBalance(account.address)
+  validateTransferAmount(amountInWei, currentBalance)
+  const transactionRequest: providers.TransactionRequest = {
     from: account.address,
     to: toAddress,
-    value: utils.parseEther(amount),
-    nonce,
-    gasPrice,
+    value: amountInWei,
   }
-  const gasLimit = await provider.estimateGas(transaction)
-  transaction.gasLimit = gasLimit
-  const signedTransaction = await connectedSigner.signTransaction(transaction)
-  const transactionResult = await provider.sendTransaction(signedTransaction)
-  logger.debug('transferToken', '', 'Send finished!', transactionResult)
+  return transactionRequest
+}
+
+async function prepareTokenTransfer(
+  params: TransferTokenParams,
+  provider: providers.Provider,
+  contractManager: ContractManager
+) {
+  const { account, toAddress, chainId, tokenAddress, amountInWei } = params
+  const tokenContract = contractManager.getOrCreateContract<Erc20>(
+    chainId,
+    tokenAddress,
+    provider,
+    ERC20_ABI
+  )
+  const currentBalance = await tokenContract.balanceOf(account.address)
+  validateTransferAmount(amountInWei, currentBalance)
+  const transactionRequest = await tokenContract.populateTransaction.transfer(
+    toAddress,
+    amountInWei
+  )
+  return transactionRequest
+}
+
+function validateTransferAmount(amountInWei: string, currentBalance: BigNumberish) {
+  const amount = BigNumber.from(amountInWei)
+  if (amount.lte(0)) {
+    logger.error('transferToken', 'validateTransferAmount', 'Invalid transfer amount')
+    throw new Error('Invalid transfer amount')
+  }
+  if (BigNumber.from(amountInWei).gt(currentBalance)) {
+    logger.error('transferToken', 'validateTransferAmount', 'Balance insufficient for transfer')
+    throw new Error('Insufficient balance')
+  }
 }
 
 export const {

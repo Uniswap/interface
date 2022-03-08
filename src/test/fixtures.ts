@@ -31,7 +31,8 @@ export const mockSignerManager = {
   getSignerForAccount: async () => mockSigner,
 }
 
-const mockProvider = {
+export const mockProvider = {
+  getBalance: jest.fn(() => BigNumber.from('1000000000000000000')),
   getGasPrice: jest.fn(() => BigNumber.from('100000000000')),
   getTransactionCount: jest.fn(() => 1000),
   estimateGas: jest.fn(() => BigNumber.from('30000')),
@@ -47,6 +48,17 @@ export const signerManager = new SignerManager()
 export const provider = new providers.JsonRpcProvider()
 export const providerManager = {
   getProvider: () => provider,
+}
+
+export const mockContractManager = {
+  getOrCreateContract: jest.fn(() => mockTokenContract),
+}
+
+export const mockTokenContract = {
+  balanceOf: jest.fn(() => BigNumber.from('1000000000000000000')),
+  populateTransaction: {
+    transfer: jest.fn(() => txRequest),
+  },
 }
 
 export const contractManager = new ContractManager()

@@ -85,11 +85,11 @@ export function* getProvider(chainId: ChainId) {
   return providerManager.getProvider(chainId)
 }
 
-export function useWalletContracts(): ContractManager {
+export function useContractManager(): ContractManager {
   return useContext(WalletContext).value.contracts
 }
 
-export function* getWalletContracts() {
+export function* getContractManager() {
   const contracts = yield* getContext<ContractManager>('contracts')
   return contracts
 }
