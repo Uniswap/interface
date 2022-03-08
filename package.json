@@ -210,7 +210,7 @@
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
     "@popperjs/core": "^2.4.4",
-    "@reduxjs/toolkit": "^1.8.0",
+    "@reduxjs/toolkit": "^1.6.1",
     "@uniswap/redux-multicall": "^1.0.0",
     "@uniswap/router-sdk": "^1.0.3",
     "@uniswap/sdk-core": "^3.0.1",
