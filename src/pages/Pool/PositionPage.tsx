@@ -23,6 +23,7 @@ import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -345,6 +346,8 @@ export function PositionPage({
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
+  const nativeCurrency = useNativeCurrency()
+  const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
   // construct Position from details returned
   const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, feeAmount)
@@ -778,7 +781,7 @@ export function PositionPage({
                     <AutoColumn gap="md">
                       <RowBetween>
                         <ThemedText.Main>
-                          <Trans>Collect as WETH</Trans>
+                          <Trans>Collect as {nativeWrappedSymbol}</Trans>
                         </ThemedText.Main>
                         <Toggle
                           id="receive-as-weth"

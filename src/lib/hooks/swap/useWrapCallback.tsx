@@ -55,11 +55,10 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     if (!inputCurrency || !outputCurrency || !chainId) {
       return WrapType.NOT_APPLICABLE
     }
-    const wrappedNativeCurrency = WRAPPED_NATIVE_CURRENCY[chainId]
-    if (inputCurrency.isNative && wrappedNativeCurrency.equals(outputCurrency)) {
+    if (inputCurrency.isNative && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(outputCurrency)) {
       return WrapType.WRAP
     }
-    if (wrappedNativeCurrency.equals(inputCurrency) && outputCurrency.isNative) {
+    if (WRAPPED_NATIVE_CURRENCY[chainId]?.equals(inputCurrency) && outputCurrency.isNative) {
       return WrapType.UNWRAP
     }
     return WrapType.NOT_APPLICABLE
