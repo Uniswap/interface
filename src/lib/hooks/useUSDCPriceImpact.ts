@@ -4,15 +4,15 @@ import { useMemo } from 'react'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 
 export default function useUSDCPriceImpact(
-  input: CurrencyAmount<Currency> | undefined,
-  output: CurrencyAmount<Currency> | undefined
+  inputAmount: CurrencyAmount<Currency> | undefined,
+  outputAmount: CurrencyAmount<Currency> | undefined
 ): {
   inputUSDC?: CurrencyAmount<Token>
   outputUSDC?: CurrencyAmount<Token>
   priceImpact?: Percent
 } {
-  const inputUSDC = useUSDCValue(input) ?? undefined
-  const outputUSDC = useUSDCValue(output) ?? undefined
+  const inputUSDC = useUSDCValue(inputAmount) ?? undefined
+  const outputUSDC = useUSDCValue(outputAmount) ?? undefined
   return useMemo(() => {
     const priceImpact = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
     return { inputUSDC, outputUSDC, priceImpact }
