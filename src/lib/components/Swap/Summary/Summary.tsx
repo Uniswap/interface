@@ -3,7 +3,9 @@ import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import useUSDCPriceImpact, { toHumanReadablePriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { ArrowRight } from 'lib/icons'
 import { ThemedText } from 'lib/theme'
+import { useMemo } from 'react'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../../Column'
 import Row from '../../Row'
@@ -17,6 +19,7 @@ interface TokenValueProps {
 
 function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
   const { i18n } = useLingui()
+  const priceImpactWarning = useMemo(() => getPriceImpactWarning(priceImpact), [priceImpact])
   return (
     <Column justify="flex-start">
       <Row gap={0.375} justify="flex-start">
@@ -30,7 +33,7 @@ function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
           <ThemedText.Caption color="secondary" userSelect>
             ${formatCurrencyAmount(usdc, 2, i18n.locale)}
             {priceImpact && (
-              <ThemedText.Caption color={priceImpact?.greaterThan(0) ? 'error' : 'success'}>
+              <ThemedText.Caption color={priceImpactWarning}>
                 ({toHumanReadablePriceImpact(priceImpact)})
               </ThemedText.Caption>
             )}
