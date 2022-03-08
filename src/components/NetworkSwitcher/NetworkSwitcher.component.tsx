@@ -70,7 +70,7 @@ export const NetworkSwitcher = ({
   }
 
   return (
-    <div ref={popoverRef}>
+    <div ref={popoverRef} data-testid="network-switcher">
       <StyledPopover
         placement={placement}
         content={
@@ -79,7 +79,7 @@ export const NetworkSwitcher = ({
               <OptionGrid key={index}>
                 <NetworkTagRow>{network.tag}</NetworkTagRow>
                 {network.networks.map((props, index) => (
-                  <Option key={index} {...props} />
+                  <div data-testid={"network-button-" + {}}><Option key={index} {...props} /></div>
                 ))}
               </OptionGrid>
             ))}

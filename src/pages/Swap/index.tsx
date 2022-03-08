@@ -397,7 +397,7 @@ export default function Swap() {
                       {networkSwitcherPopoverOpen ? 'Switch network' : 'Connect wallet'}
                     </ButtonPrimary>
                   ) : showWrap ? (
-                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} data-testid="wrap-button">
                       {wrapInputError ??
                         (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
                     </ButtonPrimary>

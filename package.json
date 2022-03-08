@@ -16,7 +16,7 @@
     "@swapr/core": "^0.3.18",
     "@swapr/periphery": "^0.3.20",
     "@swapr/sdk": "^0.11.1",
-    "@synthetixio/synpress": "1.1.1",
+    "@synthetixio/synpress": "^1.1.1",
     "@types/aos": "^3.0.4",
     "@types/jest": "^25.2.1",
     "@types/lodash.flatmap": "^4.5.6",
@@ -106,7 +106,7 @@
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
     "serve": "serve -s ./build",
     "lint": "eslint --fix ./src/**/*.ts",
-    "synpress": "NETWORK_NAME='mainnet' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' synpress run"
+    "synpress": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' synpress run"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -128,7 +128,6 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@synthetixio/synpress": "^1.1.1",
     "@web3-react/walletlink-connector": "^6.2.8",
     "aos": "^2.3.4",
     "arb-ts": "^1.0.2",
