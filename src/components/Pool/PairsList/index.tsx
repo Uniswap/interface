@@ -112,7 +112,7 @@ export default function PairsList({ aggregatedPairs, loading, filter, singleSide
                       usdLiquidity={aggregatedPair.liquidityUSD}
                       apy={aggregatedPair.maximumApy}
                       containsKpiToken={aggregatedPair.containsKpiToken}
-                      hasFarming={aggregatedPair.hasFarming || aggregatedPair.staked}
+                      hasFarming={aggregatedPair.hasFarming}
                     />
                   </UndecoratedLink>
                 )
