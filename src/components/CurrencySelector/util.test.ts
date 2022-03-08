@@ -25,14 +25,14 @@ describe(filter, () => {
     expect(filter(TEST_TOKEN_INPUT, null, 'ETH')).toEqual([ETH])
   })
 
-  it('ignores token symbol when no match', () => {
-    expect(filter(TEST_TOKEN_INPUT, null, 'DAI2')).toEqual([])
+  it('fuzzy matches on symbol', () => {
+    expect(filter(TEST_TOKEN_INPUT, null, 'DAI2')).toEqual([DAI, DAI_ARBITRUM_ONE])
   })
 
   it('filters by first characters of token address', () => {
     expect(filter(TEST_TOKEN_INPUT, null, DAI.address)).toEqual([DAI])
     expect(filter(TEST_TOKEN_INPUT, null, DAI.address.slice(0, 10))).toEqual([DAI])
-    expect(filter(TEST_TOKEN_INPUT, null, '0x')).toEqual([DAI, DAI_ARBITRUM_ONE])
+    expect(filter(TEST_TOKEN_INPUT, null, '0x')).toEqual([DAI, ETH, DAI_ARBITRUM_ONE])
   })
 
   it('ignores non-first characters of token address', () => {

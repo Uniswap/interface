@@ -73,6 +73,7 @@
     "expo-secure-store": "^11.0.3",
     "expo-splash-screen": "^0.13.5",
     "formik": "^2.2.9",
+    "fuse.js": "^6.5.3",
     "graphql": "^15.6.1",
     "graphql-request": "^3.7.0",
     "i18next": "^21.1.1",
