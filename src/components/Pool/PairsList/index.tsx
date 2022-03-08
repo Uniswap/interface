@@ -100,7 +100,6 @@ export default function PairsList({ aggregatedPairs, loading, filter, singleSide
             )}
             {itemsPage.length > 0 &&
               itemsPage.map(aggregatedPair => {
-                console.log(aggregatedPair)
                 return (
                   <UndecoratedLink
                     key={aggregatedPair.pair.liquidityToken.address}
