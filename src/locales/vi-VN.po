@@ -1353,7 +1353,7 @@ msgstr ""
 msgid "Please check the <0>Active Farms</0> or come back later."
 msgstr "Vui lòng kiểm tra <0>Farm đang hiệu lực</0> hoặc quay lại sau"
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WrongNetworkModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "Vui lòng kết nối với mạng thích hợp."
 
@@ -2117,6 +2117,7 @@ msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from mu
 msgstr "Với công nghệ Dynamic Trade Routing của chúng tôi, chúng tôi tổng hợp thanh khoản từ nhiều sàn DEX (bao gồm cả KyberSwap) và xác định lộ trình giao dịch tốt nhất cho bạn."
 
 #: src/components/Web3Status/index.tsx
+#: src/components/WrongNetworkModal/index.tsx
 msgid "Wrong Network"
 msgstr "Sai Mạng"
 

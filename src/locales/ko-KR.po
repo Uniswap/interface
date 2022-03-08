@@ -1353,7 +1353,7 @@ msgstr ""
 msgid "Please check the <0>Active Farms</0> or come back later."
 msgstr ""
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WrongNetworkModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "올바른 네트워크에 연결하십시오."
 
@@ -2117,6 +2117,7 @@ msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from mu
 msgstr "카이버의 다이나믹 트레이딩 라우딩 기술을 이용하여 여러 DEX(KyberSwap 포함)의 유동성을 집계한 후, 최적화 된 토큰 거래 가격을 제공합니다. "
 
 #: src/components/Web3Status/index.tsx
+#: src/components/WrongNetworkModal/index.tsx
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
 

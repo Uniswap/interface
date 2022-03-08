@@ -1,5 +1,4 @@
 import { Placement } from '@popperjs/core'
-import { transparentize } from 'polished'
 import React, { useCallback, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components'
@@ -91,8 +90,8 @@ export default function Popover({ content, show, children, placement = 'auto' }:
     strategy: 'fixed',
     modifiers: [
       { name: 'offset', options: { offset: [8, 8] } },
-      { name: 'arrow', options: { element: arrowElement } }
-    ]
+      { name: 'arrow', options: { element: arrowElement } },
+    ],
   })
   const updateCallback = useCallback(() => {
     update && update()

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 
-import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
+import { NETWORK_ICON, NETWORK_LABEL, SUPPORTED_NETWORKS } from '../../constants/networks'
 import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
 
 import { ApplicationModal } from '../../state/application/actions'
@@ -95,17 +95,7 @@ export default function NetworkModal(): JSX.Element | null {
           </Flex>
         </Flex>
         <NetworkList>
-          {[
-            ChainId.MAINNET,
-            ChainId.MATIC,
-            ChainId.BSCMAINNET,
-            ChainId.AVAXMAINNET,
-            ChainId.FANTOM,
-            ChainId.CRONOS,
-            ChainId.ARBITRUM,
-            // ChainId.BTTC
-            ChainId.VELAS,
-          ].map((key: ChainId, i: number) => {
+          {SUPPORTED_NETWORKS.map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (
                 <SelectNetworkButton key={i} padding="0">

@@ -240,6 +240,14 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       symbol: 'ZRX.e',
       logoURI: 'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/ZRX/logo.png',
     },
+    {
+      chainId: 43114,
+      address: '0xe19A1684873faB5Fb694CfD06607100A632fF21c',
+      decimals: 18,
+      name: 'BavaToken',
+      symbol: 'BAVA',
+      logoURI: 'https://i.imgur.com/mAeAIip.jpeg',
+    },
   ],
   version: {
     major: 0,

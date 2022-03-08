@@ -1353,7 +1353,7 @@ msgstr ""
 msgid "Please check the <0>Active Farms</0> or come back later."
 msgstr ""
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WrongNetworkModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr "请连接到适当的网络。"
 
@@ -2117,6 +2117,7 @@ msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from mu
 msgstr "通过我们的动态交易路由技术，我们从多个DEX（包括KyberSwap）汇总流动性，并为您提供最佳的交易路由。"
 
 #: src/components/Web3Status/index.tsx
+#: src/components/WrongNetworkModal/index.tsx
 msgid "Wrong Network"
 msgstr "错误的网络"
 

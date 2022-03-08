@@ -1353,7 +1353,7 @@ msgstr ""
 msgid "Please check the <0>Active Farms</0> or come back later."
 msgstr ""
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WrongNetworkModal/index.tsx
 msgid "Please connect to the appropriate network."
 msgstr ""
 
@@ -2117,6 +2117,7 @@ msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from mu
 msgstr ""
 
 #: src/components/Web3Status/index.tsx
+#: src/components/WrongNetworkModal/index.tsx
 msgid "Wrong Network"
 msgstr ""
 
