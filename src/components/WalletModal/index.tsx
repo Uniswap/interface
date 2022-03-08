@@ -287,8 +287,7 @@ export default function WalletModal({
       }
 
       // return rest of options
-      return
-      (
+      return (
         <Option
           id={`connect-${key}`}
           onClick={() => {
@@ -338,7 +337,7 @@ export default function WalletModal({
               onClick={() => {
                 setWalletView(
                   (previousWalletView === WALLET_VIEWS.LEGAL ? WALLET_VIEWS.ACCOUNT : previousWalletView) ??
-                  WALLET_VIEWS.ACCOUNT
+                    WALLET_VIEWS.ACCOUNT
                 )
               }}
             >
