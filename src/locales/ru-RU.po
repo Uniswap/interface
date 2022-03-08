@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-08 16:07\n"
+"PO-Revision-Date: 2022-03-08 21:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -194,7 +194,7 @@ msgstr "Против"
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow"
-msgstr "Разрешать"
+msgstr "Одобрить"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
@@ -210,7 +210,7 @@ msgstr "Разрешить протоколу Uniswap использовать �
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow {0} first"
-msgstr "Разрешить сначала {0}"
+msgstr "Сначала одобрите {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -226,7 +226,7 @@ msgstr "Произошла ошибка при попытке произвест
 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Approval pending"
-msgstr "Ожидается одобрение"
+msgstr "Одобрение подтверждается"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton.tsx
@@ -459,7 +459,7 @@ msgstr "Получить"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as {nativeWrappedSymbol}"
-msgstr "Собрать как {nativeWrappedSymbol}"
+msgstr "Получить в виде {nativeWrappedSymbol}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -2087,7 +2087,7 @@ msgstr "Развернуть <0/> в {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
-msgstr "Развернуть подтверждено"
+msgstr "Разворачивание подтверждено"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unwrap native currency."
@@ -2095,11 +2095,11 @@ msgstr "Развернуть нативную валюту."
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
-msgstr "Развернуть в ожидании"
+msgstr "Разворачивание подтверждается"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unwrapping native currency."
-msgstr "Распаковка нативной валюты."
+msgstr "Разворачивание нативной валюты."
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2280,19 +2280,19 @@ msgstr "Завернуть <0/> в {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap confirmed"
-msgstr "Обертывание подтверждено"
+msgstr "Обёртывание подтверждено"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Wrap native currency."
-msgstr "Оберните нативную валюту."
+msgstr "Обернуть нативную валюту."
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
-msgstr "Ожидание переноса"
+msgstr "Обёртывание подтверждается"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Wrapping native currency."
-msgstr "Накрутка нативной валюты."
+msgstr "Обёртывание нативной валюты."
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2511,11 +2511,11 @@ msgstr "из списка токенов {0}"
 
 #: src/lib/components/Swap/RoutingDiagram/index.tsx
 msgid "{0, plural, =1 {Best route via 1 hop} other {Best route via # hops}}"
-msgstr "{0, plural, =1 {Лучший маршрут через 1 прыжок} other {Лучший маршрут через #hops}}"
+msgstr "{0, plural, =1 {Лучший маршрут — 1 прыжок} few {Лучший маршрут — # прыжка} many {Лучший маршрут — # прыжков} other {Лучший маршрут — # прыжок}}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
-msgstr "{0, plural, =1 {Импортный токен} other {Импортируйте токены}}"
+msgstr "{0, plural, =1 {Импортировать токен} other {Импортировать токены}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2630,7 +2630,7 @@ msgstr "Уровень комиссии {0}%"
 
 #: src/components/RoutingDiagram/RoutingDiagram.tsx
 msgid "{0}% pool"
-msgstr "Пул с {0}%"
+msgstr "Пул {0}%"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
