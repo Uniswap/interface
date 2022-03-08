@@ -54,15 +54,18 @@ export default function AddLiquidity({
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
+
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
+  const wrappedNativeCurrency = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
+
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      ((currencyA && currencyA.equals(WRAPPED_NATIVE_CURRENCY[chainId])) ||
-        (currencyB && currencyB.equals(WRAPPED_NATIVE_CURRENCY[chainId])))
+      wrappedNativeCurrency &&
+      ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected

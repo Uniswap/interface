@@ -157,7 +157,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
 
   // if token1 is an ETH-/BTC-stable asset, set it as the base token
   const bases = [...Object.values(WRAPPED_NATIVE_CURRENCY), WBTC]
-  if (bases.some((base) => base.equals(token1))) {
+  if (bases.some((base) => base && base.equals(token1))) {
     return {
       priceLower: position.token0PriceUpper.invert(),
       priceUpper: position.token0PriceLower.invert(),

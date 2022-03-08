@@ -266,8 +266,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       liquidityValue1?.currency &&
       (liquidityValue0.currency.isNative ||
         liquidityValue1.currency.isNative ||
-        liquidityValue0.currency.wrapped.equals(WRAPPED_NATIVE_CURRENCY[liquidityValue0.currency.chainId]) ||
-        liquidityValue1.currency.wrapped.equals(WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]))
+        WRAPPED_NATIVE_CURRENCY[liquidityValue0.currency.chainId]?.equals(liquidityValue0.currency.wrapped) ||
+        WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]?.equals(liquidityValue1.currency.wrapped))
   )
   return (
     <AutoColumn>

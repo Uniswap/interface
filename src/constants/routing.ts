@@ -44,7 +44,9 @@ type ChainCurrencyList = {
 }
 
 const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
-  Object.entries(WRAPPED_NATIVE_CURRENCY).map(([key, value]) => [key, [value]])
+  Object.entries(WRAPPED_NATIVE_CURRENCY)
+    .map(([key, value]) => [key, [value]])
+    .filter(Boolean)
 )
 
 // used to construct intermediary pairs for trading
@@ -96,7 +98,7 @@ export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: To
  */
 export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET]],
+    [AMPL.address]: [DAI, WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token],
   },
 }
 
@@ -110,29 +112,35 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_MAINNET,
     USDT,
     WBTC,
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET],
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token,
   ],
   [SupportedChainId.ROPSTEN]: [
     nativeOnChain(SupportedChainId.ROPSTEN),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ROPSTEN],
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ROPSTEN] as Token,
   ],
   [SupportedChainId.RINKEBY]: [
     nativeOnChain(SupportedChainId.RINKEBY),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.RINKEBY],
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.RINKEBY] as Token,
   ],
-  [SupportedChainId.GOERLI]: [nativeOnChain(SupportedChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[SupportedChainId.GOERLI]],
-  [SupportedChainId.KOVAN]: [nativeOnChain(SupportedChainId.KOVAN), WRAPPED_NATIVE_CURRENCY[SupportedChainId.KOVAN]],
+  [SupportedChainId.GOERLI]: [
+    nativeOnChain(SupportedChainId.GOERLI),
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.GOERLI] as Token,
+  ],
+  [SupportedChainId.KOVAN]: [
+    nativeOnChain(SupportedChainId.KOVAN),
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.KOVAN] as Token,
+  ],
   [SupportedChainId.ARBITRUM_ONE]: [
     nativeOnChain(SupportedChainId.ARBITRUM_ONE),
     DAI_ARBITRUM_ONE,
     USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE],
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE] as Token,
   ],
   [SupportedChainId.ARBITRUM_RINKEBY]: [
     nativeOnChain(SupportedChainId.ARBITRUM_RINKEBY),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_RINKEBY],
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_RINKEBY] as Token,
   ],
   [SupportedChainId.OPTIMISM]: [
     nativeOnChain(SupportedChainId.OPTIMISM),
@@ -152,7 +160,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [SupportedChainId.POLYGON_MUMBAI]: [
     nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI] as Token,
     WETH_POLYGON_MUMBAI,
   ],
 }
