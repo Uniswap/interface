@@ -55,7 +55,17 @@ export default function Option({ preset, onClick, active = false, disabled = fal
       <OptionCardLeft>
         <AutoRow>
           {logoSrc && <Icon src={logoSrc} alt={'Icon'} />}
-          <HeaderText>{name}</HeaderText>
+          <HeaderText
+            data-testid={
+              preset.name
+                ?.valueOf()
+                .toString()
+                .toLowerCase()
+                .replace(' ', '-') + '-network-button'
+            }
+          >
+            {name}
+          </HeaderText>
         </AutoRow>
       </OptionCardLeft>
     </OptionCardClickable>

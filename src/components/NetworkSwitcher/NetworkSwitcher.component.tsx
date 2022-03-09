@@ -79,7 +79,7 @@ export const NetworkSwitcher = ({
               <OptionGrid key={index}>
                 <NetworkTagRow>{network.tag}</NetworkTagRow>
                 {network.networks.map((props, index) => (
-                  <div data-testid={"network-button-" + {}}><Option key={index} {...props} /></div>
+                  <Option key={index} {...props} />
                 ))}
               </OptionGrid>
             ))}
