@@ -2359,6 +2359,13 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.6.0.tgz#e18ea901c84917f8dadd0185048a9d00573fe595"
   integrity sha512-Pz4+7HPzKvOFI1ICQ6pyUv/VgStEWq9IGiVaaV1cQLi66NIA1mD5INnY4CDNoVAxlkuZvDEUZ+cVHLQ8iwA2hQ==
 
+"@genesisprotocol/helpers@0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@genesisprotocol/helpers/-/helpers-0.1.12.tgz#005d7093dc2096966a1c590b5b62c024fc998797"
+  integrity sha512-V93P16y202EYKRV8Aa5+KXbmuYNGWwo7G6r9GjED3vjAOhVrWXp7EIx/rN5hqgRGffiIx+zZPUMYNbkomVO/9Q==
+  dependencies:
+    case "^1.6.3"
+
 "@genesisprotocol/router-sdk@^1.0.8":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@genesisprotocol/router-sdk/-/router-sdk-1.0.8.tgz#c3cd109528892253a9b4b76df6de9eb814864a62"
@@ -7722,6 +7729,11 @@ case-sensitive-paths-webpack-plugin@2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.3.0.tgz#23ac613cc9a856e4f88ff8bb73bbb5e989825cf7"
   integrity sha512-/4YgnZS8y1UXXmC02xD5rRrBEu6T5ub+mQHLNRj0fzTRbgdBYhsNo2V5EqwgqrExjxsjtF/OpAKAMkKsxbD5XQ==
+
+case@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
+  integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
 
 caseless@~0.12.0:
   version "0.12.0"

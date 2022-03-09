@@ -171,6 +171,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@genesisprotocol/helpers": "0.1.12",
     "@genesisprotocol/router-sdk": "^1.0.8",
     "@genesisprotocol/sdk": "^3.0.3",
     "bignumber.js": "^9.0.2",
