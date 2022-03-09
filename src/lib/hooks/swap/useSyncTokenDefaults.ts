@@ -53,7 +53,7 @@ export default function useSyncTokenDefaults({
   const defaultInputToken =
     useDefaultToken(defaultInputTokenAddress, chainId) ??
     // Default the input token to the native currency if it is not the output token.
-    (defaultOutputToken === nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
+    (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
 
   const setToDefaults = useCallback(() => {
     const defaultSwapState: Swap = {
