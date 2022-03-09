@@ -92,10 +92,10 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
     const ratio = `1 ${a.currency.symbol} = ${priceString} ${b.currency.symbol}`
     const usdc = !flip
       ? inputUSDC
-        ? ` ($${inputUSDC.toSignificant(6)})`
+        ? ` ($${inputUSDC.toFixed(2, { groupSeparator: ',' })})`
         : null
       : outputUSDC
-      ? ` ($${outputUSDC.toSignificant(6)})`
+      ? ` ($${outputUSDC.toFixed(2, { groupSeparator: ',' })})`
       : null
 
     return (
