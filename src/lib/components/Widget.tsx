@@ -3,6 +3,7 @@ import { Provider as Eip1193Provider } from '@web3-react/types'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
 import { TransactionsUpdater } from 'lib/hooks/transactions'
+import { Web3Provider } from 'lib/hooks/useActiveWeb3React'
 import { BlockUpdater } from 'lib/hooks/useBlockNumber'
 import useEip1193Provider from 'lib/hooks/useEip1193Provider'
 import { UNMOUNTING } from 'lib/hooks/useUnmount'
@@ -15,7 +16,6 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { Modal, Provider as DialogProvider } from './Dialog'
 import ErrorBoundary, { ErrorHandler } from './Error/ErrorBoundary'
 import WidgetPropValidator from './Error/WidgetsPropsValidator'
-import Web3Provider from './Web3Provider'
 
 const WidgetWrapper = styled.div<{ width?: number | string }>`
   -moz-osx-font-smoothing: grayscale;
