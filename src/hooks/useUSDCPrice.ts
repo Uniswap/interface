@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from '../constants/tokens'
@@ -17,28 +18,40 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [SupportedChainId.POLYGON]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
 }
 
+const v2USDCPriceCache = new Map<Currency, Price<Currency, Token>>()
+const v3USDCPriceCache = new Map<Currency, Price<Currency, Token>>()
+
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
+  // Use a cache per block to avoid recomputing USDC price.
+  // USDC price computation involves finding the best route for a currency, and is computationally expensive and blocking.
+  const block = useBlockNumber()
+  useEffect(() => {
+    v2USDCPriceCache.clear()
+    v3USDCPriceCache.clear()
+  }, [block])
+
   const chainId = currency?.chainId
 
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
   // TODO(#2808): remove dependency on useBestV2Trade
-  const v2USDCTrade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountOut, currency, {
-    maxHops: 2,
-  })
-  const v3USDCTrade = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountOut, currency)
+  const v2Currency = currency && v2USDCPriceCache.has(currency) ? undefined : currency
+  const v2USDCTrade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountOut, v2Currency, { maxHops: 2 })
 
-  return useMemo(() => {
+  const v3Currency = currency && v2USDCPriceCache.has(currency) ? undefined : currency
+  const v3USDCTrade = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountOut, v3Currency)
+
+  const price = useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined
     }
 
-    // handle usdc
+    // handle stablecoin
     if (currency?.wrapped.equals(stablecoin)) {
       return new Price(stablecoin, stablecoin, '1', '1')
     }
@@ -46,14 +59,23 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     // use v2 price if available, v3 as fallback
     if (v2USDCTrade) {
       const { numerator, denominator } = v2USDCTrade.route.midPrice
-      return new Price(currency, stablecoin, denominator, numerator)
+      const price = new Price(currency, stablecoin, denominator, numerator)
+      v2USDCPriceCache.set(currency, price)
+      return price
+    } else if (v2USDCPriceCache.has(currency)) {
+      return v2USDCPriceCache.get(currency)
     } else if (v3USDCTrade.trade) {
       const { numerator, denominator } = v3USDCTrade.trade.routes[0].midPrice
-      return new Price(currency, stablecoin, denominator, numerator)
+      const price = new Price(currency, stablecoin, denominator, numerator)
+      v3USDCPriceCache.set(currency, price)
+      return price
+    } else if (v3USDCPriceCache.has(currency)) {
+      return v3USDCPriceCache.get(currency)
     }
 
     return undefined
   }, [currency, stablecoin, v2USDCTrade, v3USDCTrade.trade])
+  return price
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
