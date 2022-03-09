@@ -83,7 +83,7 @@ export function useIsAmountPopulated() {
 export function useSwapAmount(field: Field): [string | undefined, (amount: string) => void] {
   const amount = useAtomValue(amountAtom)
   const isFieldIndependent = useIsSwapFieldIndependent(field)
-  const value = useMemo(() => (isFieldIndependent ? amount : undefined), [amount, isFieldIndependent])
+  const value = isFieldIndependent ? amount : undefined
   const updateSwap = useUpdateAtom(swapAtom)
   const updateAmount = useCallback(
     (amount: string) =>
@@ -101,8 +101,9 @@ export function useSwapCurrencyAmount(field: Field): CurrencyAmount<Currency> | 
   const isAmountPopulated = useIsAmountPopulated()
   const [swapAmount] = useSwapAmount(field)
   const [swapCurrency] = useSwapCurrency(field)
+  const currencyAmount = useMemo(() => tryParseCurrencyAmount(swapAmount, swapCurrency), [swapAmount, swapCurrency])
   if (isFieldIndependent && isAmountPopulated) {
-    return tryParseCurrencyAmount(swapAmount, swapCurrency)
+    return currencyAmount
   }
   return
 }

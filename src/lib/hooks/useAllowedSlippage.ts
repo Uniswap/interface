@@ -2,6 +2,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useAtomValue } from 'jotai/utils'
 import { autoSlippageAtom, maxSlippageAtom } from 'lib/state/settings'
+import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
 export function toPercent(maxSlippage: number | undefined): Percent | undefined {
@@ -13,7 +14,8 @@ export function toPercent(maxSlippage: number | undefined): Percent | undefined 
 /** Returns the user-inputted max slippage. */
 export default function useAllowedSlippage(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined): Percent {
   const autoSlippage = useAutoSlippageTolerance(trade)
-  const maxSlippage = toPercent(useAtomValue(maxSlippageAtom))
+  const maxSlippageValue = useAtomValue(maxSlippageAtom)
+  const maxSlippage = useMemo(() => toPercent(maxSlippageValue), [maxSlippageValue])
   return useAtomValue(autoSlippageAtom) ? autoSlippage : maxSlippage ?? autoSlippage
 }
 
