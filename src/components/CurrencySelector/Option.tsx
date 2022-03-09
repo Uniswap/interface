@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import Fuse from 'fuse.js'
 import React from 'react'
 import { Pressable } from 'react-native'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
@@ -17,6 +18,7 @@ interface OptionProps {
   currencyPrice?: number
   onPress: () => void
   metadataType: 'balance' | 'price'
+  matches: Fuse.FuseResult<Currency>['matches']
 }
 
 export function Option({
@@ -24,6 +26,7 @@ export function Option({
   currencyAmount,
   currencyPrice,
   onPress,
+  matches,
   metadataType,
 }: OptionProps) {
   const info = CHAIN_INFO[currency.chainId]
@@ -34,13 +37,19 @@ export function Option({
       ? currencyPrice * parseFloat(currencyAmount?.toSignificant())
       : undefined
 
+  const symbolMatches = matches?.filter((m) => m.key === 'symbol')
+
   return (
     <Pressable testID={`currency-option-${currency.symbol}`} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="sm">
         <Flex centered row gap="xs">
           <Flex centered row gap="sm">
             <CurrencyLogo currency={currency} size={36} />
-            <Text variant="h4">{currency.symbol}</Text>
+            {symbolMatches?.length ? (
+              <TextWithMatches matches={symbolMatches} text={currency.symbol ?? ''} />
+            ) : (
+              <Text variant="h4">{currency.symbol}</Text>
+            )}
           </Flex>
           {currency.chainId !== ChainId.Mainnet && (
             <CenterBox borderRadius="sm" p="xs" style={{ backgroundColor: colors?.background }}>
@@ -64,6 +73,52 @@ export function Option({
       </Flex>
     </Pressable>
   )
+}
+
+interface TextWithMatchesProps {
+  text: string
+  matches: readonly Fuse.FuseResultMatch[]
+}
+
+function TextWithMatches({ matches, text }: TextWithMatchesProps) {
+  const charIsMatch = new Set()
+  for (const match of matches) {
+    for (const index of match.indices) {
+      for (let i = index[0]; i < index[1] + 1; i++) {
+        charIsMatch.add(i)
+      }
+    }
+  }
+
+  const pieces = []
+  for (let i = 0; i < text.length; i++) {
+    if (charIsMatch.has(i)) {
+      pieces.push([text[i], true])
+    } else {
+      pieces.push([text[i], false])
+    }
+  }
+
+  const elements = (
+    <>
+      {pieces.map((p) => {
+        if (p[1])
+          return (
+            <Text color="textColor" variant="h4">
+              {p[0]}
+            </Text>
+          )
+        else
+          return (
+            <Text color="gray400" variant="h4">
+              {p[0]}
+            </Text>
+          )
+      })}
+    </>
+  )
+
+  return elements
 }
 
 interface TokenMetadataProps {

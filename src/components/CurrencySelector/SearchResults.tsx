@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import Fuse from 'fuse.js'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItem, StyleSheet } from 'react-native'
@@ -9,9 +10,9 @@ import { Flex, Inset } from '../layout'
 import { Text } from '../Text'
 
 interface CurrencySearchResultListProps {
-  currencies: Currency[]
+  currencies: Fuse.FuseResult<Currency>[]
   onClearSearchFilter: () => void
-  renderItem: ListRenderItem<Currency> | null | undefined
+  renderItem: ListRenderItem<Fuse.FuseResult<Currency>> | null | undefined
   searchFilter: string | null
 }
 
@@ -44,7 +45,7 @@ export function CurrencySearchResultList({
         </Inset>
       }
       data={currencies}
-      keyExtractor={currencyId}
+      keyExtractor={(item) => currencyId(item.item)}
       renderItem={renderItem}
       style={styles.list}
     />

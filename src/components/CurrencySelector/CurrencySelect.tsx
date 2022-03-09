@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import Fuse from 'fuse.js'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
@@ -73,18 +74,21 @@ export function CurrencySelect({
 
       <CurrencySearchResultList
         currencies={filteredCurrencies}
-        renderItem={({ item }: ListRenderItemInfo<Currency>) => {
-          const tokenAddress = currencyId(item)
-          const cAmount = balances?.[item.chainId as ChainId]?.[tokenAddress]
+        renderItem={({ item }: ListRenderItemInfo<Fuse.FuseResult<Currency>>) => {
+          const currency = item.item
+          const tokenAddress = currencyId(currency)
+          const cAmount = balances?.[currency.chainId as ChainId]?.[tokenAddress]
           return (
             <Option
-              currency={item as Currency}
+              currency={currency}
               currencyAmount={cAmount}
               currencyPrice={
-                chainIdToPrices?.[item.chainId as ChainId]?.addressToPrice?.[tokenAddress]?.priceUSD
+                chainIdToPrices?.[currency.chainId as ChainId]?.addressToPrice?.[tokenAddress]
+                  ?.priceUSD
               }
+              matches={item.matches}
               metadataType="balance"
-              onPress={() => onSelectCurrency?.(item)}
+              onPress={() => onSelectCurrency?.(currency)}
             />
           )
         }}

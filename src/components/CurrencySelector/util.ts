@@ -6,10 +6,19 @@ import { ChainId } from 'src/constants/chains'
 // https://github.com/Uniswap/interface/blob/main/src/components/SearchModal/filtering.ts#L74
 
 const searchOptions: Fuse.IFuseOptions<Currency> = {
+  includeMatches: true,
   isCaseSensitive: false,
+  threshold: 0.5,
+  // require matches to be close to the start of the word
+  distance: 10,
+  keys: [
+    'chainId',
+    'symbol',
+    // prioritize other fields
+    { name: 'address', weight: 0.2 },
+  ],
   shouldSort: true,
   useExtendedSearch: true,
-  keys: [{ name: 'address', weight: 0.2 }, 'chainId', 'symbol'],
 }
 
 const getChainSearchPattern = (chain: ChainId | null) =>
@@ -19,7 +28,7 @@ const getChainSearchPattern = (chain: ChainId | null) =>
     : null
 
 const getAddressSearchPattern = (addressPrefix: string | null) =>
-  addressPrefix
+  addressPrefix && addressPrefix.startsWith('0x') && addressPrefix.length > 5
     ? // prefix-exact macth address
       { address: `^${addressPrefix}` }
     : null
@@ -40,9 +49,9 @@ export function filter(
   currencies: Currency[] | null,
   chainFilter: ChainId | null,
   searchFilter: string | null
-): Currency[] {
+): Fuse.FuseResult<Currency>[] {
   if (!currencies || !currencies.length) return []
-  if (!chainFilter && !searchFilter) return currencies
+  if (!chainFilter && !searchFilter) return currencies.map((t) => ({ item: t, refIndex: -1 }))
 
   let andPatterns: Fuse.Expression[] = []
   let orPatterns: Fuse.Expression[] = []
@@ -71,7 +80,6 @@ export function filter(
 
   const fuse = new Fuse(currencies, searchOptions)
 
-  const result = fuse.search(searchPattern).map((fuseResult) => fuseResult.item)
-
-  return result
+  const r = fuse.search(searchPattern)
+  return r
 }
