@@ -3,7 +3,6 @@ import {
   Trade,
   currencyEquals,
   Price,
-  Currency,
   CurrencyAmount,
   JSBI,
   ZERO,
@@ -11,8 +10,7 @@ import {
   Fraction,
   RoutablePlatform
 } from '@swapr/sdk'
-import { useTradeExactOutAllPlatforms } from './Trades'
-import { tryParseAmount } from '../state/swap/hooks'
+import { useTradeExactInAllPlatforms } from './Trades'
 import { ChainId } from '@swapr/sdk'
 import { USDC, DAI } from '../constants/index'
 import { useActiveWeb3React } from './index'
@@ -30,17 +28,16 @@ const ALLOWED_PLATAFORMS: { [chainId: number]: string[] } = {
   [ChainId.XDAI]: [RoutablePlatform.SUSHISWAP.name]
 }
 
-const AMOUNT_OUT = '1'
-
-export function useUSDPrice(currency?: Currency, selectedTrade?: Trade) {
+export function useUSDPrice(currencyAmount?: CurrencyAmount, selectedTrade?: Trade) {
   const { chainId } = useActiveWeb3React()
   const stablecoin = chainId ? STABLECOIN_OUT[chainId] : undefined
-  const parsedAmountOut = tryParseAmount(AMOUNT_OUT, stablecoin, chainId)
 
-  const tradeExactOutAllPlatforms = useTradeExactOutAllPlatforms(currency, parsedAmountOut)
+  const tradeExactOutAllPlatforms = useTradeExactInAllPlatforms(currencyAmount, stablecoin)
 
   return useMemo(() => {
-    if (!currency || !chainId || !stablecoin || !tradeExactOutAllPlatforms) return undefined
+    if (!currencyAmount || !chainId || !stablecoin || !tradeExactOutAllPlatforms) return undefined
+
+    const currency = currencyAmount.currency
 
     if (currencyEquals(currency, stablecoin)) return new Price(currency, currency, '1', '1')
 
@@ -54,9 +51,9 @@ export function useUSDPrice(currency?: Currency, selectedTrade?: Trade) {
       if (!trades || !trades.length) return undefined
 
       const topTrade = trades.filter(allowHighTVLPlataforms)
-
+      console.log(topTrade)
       const tradesTotal = topTrade.reduce(
-        (acc, trade) => (trade ? trade.nextMidPrice.raw.add(acc) : acc),
+        (acc, trade) => (trade ? trade.executionPrice.raw.add(acc) : acc),
         new Fraction(ZERO, ONE)
       )
 
@@ -66,11 +63,11 @@ export function useUSDPrice(currency?: Currency, selectedTrade?: Trade) {
     }
 
     return calculateBestPrice(tradeExactOutAllPlatforms)
-  }, [chainId, currency, selectedTrade, stablecoin, tradeExactOutAllPlatforms])
+  }, [chainId, currencyAmount, selectedTrade, stablecoin, tradeExactOutAllPlatforms])
 }
 
-export function useUSDValue(currencyAmount: CurrencyAmount | undefined | null, selectedTrade?: Trade) {
-  const price = useUSDPrice(currencyAmount?.currency, selectedTrade)
+export function useUSDValue(currencyAmount?: CurrencyAmount | null, selectedTrade?: Trade) {
+  const price = useUSDPrice(currencyAmount || undefined, selectedTrade)
 
   return useMemo(() => {
     if (!price || !currencyAmount) return null
