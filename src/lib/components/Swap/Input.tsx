@@ -123,7 +123,7 @@ export default function Input({ disabled, focused }: InputProps) {
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
             <USDC isLoading={isRouteLoading}>
-              {inputUSDC ? `$${formatCurrencyAmount(inputUSDC, 6, i18n.locale, 2)}` : '-'}
+              {inputUSDC ? `$${formatCurrencyAmount(inputUSDC, 6, 'en', 2)}` : '-'}
             </USDC>
             {balance && (
               <Balance color={balanceColor} focused={focused}>

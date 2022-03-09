@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import Column from 'lib/components/Column'
 import Rule from 'lib/components/Rule'
@@ -82,7 +81,6 @@ export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType
 }
 
 export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
-  const { i18n } = useLingui()
   const [flip, setFlip] = useState(true)
   const { inputAmount: input, outputAmount: output, executionPrice } = trade
   const { inputUSDC, outputUSDC, priceImpact } = useUSDCPriceImpact(input, output)
@@ -95,10 +93,10 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
     const ratio = `1 ${a.currency.symbol} = ${priceString} ${b.currency.symbol}`
     const usdc = !flip
       ? inputUSDC
-        ? ` ($${formatCurrencyAmount(inputUSDC, 6, i18n.locale, 2)})`
+        ? ` ($${formatCurrencyAmount(inputUSDC, 6, 'en', 2)})`
         : null
       : outputUSDC
-      ? ` ($${formatCurrencyAmount(outputUSDC, 6, i18n.locale, 2)})`
+      ? ` ($${formatCurrencyAmount(outputUSDC, 6, 'en', 2)})`
       : null
 
     return (
@@ -109,7 +107,7 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
         </Row>
       </ThemedText.Caption>
     )
-  }, [flip, output, input, executionPrice, inputUSDC, i18n.locale, outputUSDC])
+  }, [flip, output, input, executionPrice, inputUSDC, outputUSDC])
 
   return (
     <>
