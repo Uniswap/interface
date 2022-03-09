@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import EthereumLogo from 'assets/images/ethereum-logo.png'
 import MaticLogo from 'assets/svg/matic-token-icon.svg'
 import { SupportedChainId } from 'constants/chains'
+import { useAllTokens } from 'hooks/Tokens'
 import useHttpLocations from 'hooks/useHttpLocations'
 import React, { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -26,7 +27,8 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
 
 export const getTokenLogoURL = (
   address: string,
-  chainId: SupportedChainId = SupportedChainId.MAINNET
+  chainId: SupportedChainId = SupportedChainId.MAINNET,
+  tokens?: any
 ): string | void => {
   const networkName = chainIdToNetworkName(chainId)
   const networksWithUrls = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.MAINNET, SupportedChainId.OPTIMISM]
@@ -70,6 +72,7 @@ export default function CurrencyLogo({
   url?: string
   style?: React.CSSProperties
 }) {
+  const tokens = useAllTokens()
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
@@ -79,17 +82,25 @@ export default function CurrencyLogo({
 
     if (currency.isToken) {
       const defaultUrls = []
-      const url = getTokenLogoURL(currency.address, currency.chainId)
+      const url = getTokenLogoURL(currency.address, currency.chainId, tokens)
+
       if (url) {
         defaultUrls.push(url)
       }
+
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, ...defaultUrls]
       }
+
+      if (tokens[currency.address] instanceof WrappedTokenInfo) {
+        const { logoURI } = tokens[currency.address] as WrappedTokenInfo
+        return [logoURI || '', ...defaultUrls]
+      }
+
       return defaultUrls
     }
     return []
-  }, [currency, uriLocations, url])
+  }, [currency, uriLocations, url, tokens])
 
   if (currency?.isNative) {
     let nativeLogoUrl: string

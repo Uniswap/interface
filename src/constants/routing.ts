@@ -29,10 +29,12 @@ import {
   USDT_ARBITRUM_ONE,
   USDT_OPTIMISM,
   USDT_POLYGON,
+  WAVAX_POLYGON_MUMBAI,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
+  WBTC_POLYGON_MUMBAI,
   WETH_POLYGON,
   WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
@@ -147,31 +149,29 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_POLYGON,
     WBTC_POLYGON,
   ],
+  // TODO: Update with mainnet values
   [SupportedChainId.POLYGON_MUMBAI]: [
     nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],
-    WETH_POLYGON_MUMBAI,
-    DAI_POLYGON_MUMBAI,
     GEN,
   ],
 }
 
+// TODO: Change from Polygon Mumbai to default network
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
   [SupportedChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
   [SupportedChainId.POLYGON_MUMBAI]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.POLYGON_MUMBAI],
-    DAI_POLYGON_MUMBAI,
     GEN,
+    DAI_POLYGON_MUMBAI,
     USDC_POLYGON_MUMBAI,
+    WAVAX_POLYGON_MUMBAI,
+    WBTC_POLYGON_MUMBAI,
+    WETH_POLYGON_MUMBAI,
   ],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
-  [SupportedChainId.POLYGON_MUMBAI]: [
-    [
-      new Token(SupportedChainId.POLYGON_MUMBAI, '0x62ca00b6e212413f62fcbdf649dce8c697d40930', 18, 'TK0', 'Token1'),
-      new Token(SupportedChainId.POLYGON_MUMBAI, '0x230e8b7232124436e9be24a8ea5ff1b2861dcfd1', 18, 'TK0', 'Token2'),
-    ],
-  ],
+  [SupportedChainId.POLYGON_MUMBAI]: [],
 }

@@ -1,3 +1,4 @@
+import { getAddress } from '@genesisprotocol/helpers'
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 
 import { G_GEN_ADDRESS, GEN_ADDRESS, S_GEN_ADDRESS } from './addresses'
@@ -96,10 +97,17 @@ export const DAI_POLYGON = new Token(
 )
 export const DAI_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
-  '0xc00f6b6414289283f9942a32eb0c6c15db63aeb8',
+  getAddress({ chain: SupportedChainId.POLYGON_MUMBAI, name: 'DAI' }),
   18,
   'DAI',
   'Dai'
+)
+export const WAVAX_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  getAddress({ chain: SupportedChainId.POLYGON_MUMBAI, name: 'WRAPPED_AVAX' }),
+  18,
+  'WAVAX',
+  'Wrapped Avax'
 )
 export const USDT_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -113,6 +121,13 @@ export const WBTC_POLYGON = new Token(
   '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
   8,
   'WBTC',
+  'Wrapped BTC'
+)
+export const WBTC_POLYGON_MUMBAI = new Token(
+  SupportedChainId.POLYGON_MUMBAI,
+  getAddress({ chain: SupportedChainId.POLYGON_MUMBAI, name: 'WRAPPED_BTC' }),
+  18,
+  'wBTC',
   'Wrapped BTC'
 )
 export const USDC_OPTIMISM = new Token(
@@ -229,7 +244,7 @@ export const SWISE = new Token(
 )
 export const WETH_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
-  '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
+  getAddress({ chain: SupportedChainId.POLYGON_MUMBAI, name: 'WRAPPED_ETH' }),
   18,
   'WETH',
   'Wrapped Ether'
@@ -289,6 +304,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WMATIC',
     'Wrapped MATIC'
   ),
+  // TODO: change this to wAVAX when
   [SupportedChainId.POLYGON_MUMBAI]: new Token(
     SupportedChainId.POLYGON_MUMBAI,
     '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
