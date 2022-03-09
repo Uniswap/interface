@@ -64,7 +64,7 @@ export function CurrencySearch({
   showManageView,
   showImportView,
   setImportToken,
-  chainId = ChainId.CeloMainnet,
+  chainId = ChainId.Mainnet,
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const theme = useTheme()

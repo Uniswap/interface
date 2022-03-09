@@ -191,7 +191,7 @@ export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
   const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
   const ubeContract = useTokenContract(ube?.address)
   const poolManagerContract = usePoolManagerContract(
-    [ChainId.CeloMainnet, ChainId.Alfajores].includes(chainId) ? POOL_MANAGER[chainId] : undefined
+    [ChainId.Mainnet, ChainId.Alfajores].includes(chainId) ? POOL_MANAGER[chainId] : undefined
   )
   const poolsCountBigNumber = useSingleCallResult(poolManagerContract, 'poolsCount').result?.[0] as
     | BigNumber

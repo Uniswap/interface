@@ -1,4 +1,4 @@
-import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { parseUnits } from '@ethersproject/units'
 import { CELO, cEUR, ChainId as UbeswapChainId, cUSD, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { useUbeswapTradeExactIn, useUbeswapTradeExactOut } from 'components/swap/routing/hooks/useTrade'
@@ -216,9 +216,6 @@ function parseCurrencyFromURLParameter(urlParam: any, chainId: UbeswapChainId): 
     if (valid) return valid
     if (urlParam.toUpperCase() === 'CUSD') return cUSD[chainId].address
     if (valid === false) return cUSD[chainId].address
-  }
-  if ([ChainId.EthereumMainnet, ChainId.Kovan].includes(chainId as unknown as ChainId)) {
-    return ''
   }
   return cUSD[chainId].address ?? ''
 }
