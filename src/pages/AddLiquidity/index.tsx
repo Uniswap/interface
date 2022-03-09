@@ -5,6 +5,7 @@ import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -86,6 +87,7 @@ export default function AddLiquidity({
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
+  const parsedQs = useParsedQueryString()
 
   // check for existing position if tokenId in url
   const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
@@ -107,7 +109,8 @@ export default function AddLiquidity({
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
 
   // mint state
-  const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
+  const { independentField, typedValue, startPriceTypedValue, rightRangeTypedValue, leftRangeTypedValue } =
+    useV3MintState()
 
   const {
     pool,
@@ -151,29 +154,22 @@ export default function AddLiquidity({
   useEffect(() => setShowCapitalEfficiencyWarning(false), [baseCurrency, quoteCurrency, feeAmount])
 
   useEffect(() => {
-    if (history.location.search) {
-      const search = new URLSearchParams(history.location.search)
-      let updated = false
-
-      const minPrice = search.get('minPrice')
-      if (minPrice) {
-        updated = true
-        onLeftRangeInput(minPrice)
-        search.delete('minPrice')
-      }
-
-      const maxPrice = search.get('maxPrice')
-      if (maxPrice) {
-        updated = true
-        onRightRangeInput(maxPrice)
-        search.delete('maxPrice')
-      }
-
-      if (updated) {
-        history.replace({ search: search.toString() })
-      }
+    if (
+      typeof parsedQs.minPrice === 'string' &&
+      parsedQs.minPrice !== leftRangeTypedValue &&
+      !isNaN(parsedQs.minPrice as any)
+    ) {
+      onLeftRangeInput(parsedQs.minPrice)
     }
-  }, [history, onRightRangeInput, onLeftRangeInput])
+
+    if (
+      typeof parsedQs.maxPrice === 'string' &&
+      parsedQs.maxPrice !== rightRangeTypedValue &&
+      !isNaN(parsedQs.maxPrice as any)
+    ) {
+      onRightRangeInput(parsedQs.maxPrice)
+    }
+  }, [parsedQs, rightRangeTypedValue, leftRangeTypedValue, onRightRangeInput, onLeftRangeInput])
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
