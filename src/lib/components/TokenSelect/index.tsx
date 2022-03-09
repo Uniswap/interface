@@ -113,6 +113,7 @@ export default function TokenSelect({ value, collapsed, disabled, onSelect }: To
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
+  const onOpen = useCallback(() => setOpen(true), [])
   const selectAndClose = useCallback(
     (value: Currency) => {
       onSelect(value)
@@ -122,7 +123,7 @@ export default function TokenSelect({ value, collapsed, disabled, onSelect }: To
   )
   return (
     <>
-      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={() => setOpen(true)} />
+      <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <TokenSelectDialog value={value} onSelect={selectAndClose} />
