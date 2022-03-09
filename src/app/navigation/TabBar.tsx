@@ -4,7 +4,7 @@ import { BlurView } from 'expo-blur'
 import { impactAsync, notificationAsync } from 'expo-haptics'
 import React from 'react'
 import { useColorScheme, ViewStyle } from 'react-native'
-import { ExploreTabIcon, WalletTabIcon } from 'src/app/navigation/icons'
+import { ExploreTabIcon, NFTTabIcon, WalletTabIcon } from 'src/app/navigation/icons'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -53,9 +53,16 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
               <Button
                 onPress={() => {
                   impactAsync()
+                  navigation.navigate(Tabs.NFT, { merge: true })
+                }}>
+                <NFTTabIcon focused={state.index === 1} />
+              </Button>
+              <Button
+                onPress={() => {
+                  impactAsync()
                   navigation.navigate(Tabs.Explore, { merge: true })
                 }}>
-                <ExploreTabIcon focused={state.index === 1} />
+                <ExploreTabIcon focused={state.index === 2} />
               </Button>
             </Flex>
           </BlurView>

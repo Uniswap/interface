@@ -4,6 +4,7 @@ import {
   DEBUG,
   INFURA_PROJECT_ID,
   LOG_BUFFER_SIZE,
+  OPENSEA_API_KEY,
   SENTRY_DSN,
   VERSION,
 } from 'react-native-dotenv'
@@ -18,6 +19,7 @@ export interface Config {
   debug: boolean
   infuraProjectId: string
   logBufferSize: number
+  openseaApiKey: string
   sentryDsn: string
   version: string
 }
@@ -28,6 +30,7 @@ const _config: Config = {
   debug: parseBoolean(DEBUG),
   infuraProjectId: INFURA_PROJECT_ID,
   logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),
+  openseaApiKey: OPENSEA_API_KEY,
   sentryDsn: SENTRY_DSN,
   version: VERSION,
 }

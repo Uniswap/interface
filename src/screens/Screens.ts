@@ -10,6 +10,7 @@ export enum Screens {
   ImportAccount = 'ImportAccount',
   Ledger = 'Ledger',
   Notifications = 'Notifications',
+  NFTCollection = 'NFTCollection',
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',
   SettingsChains = 'SettingsChains',
@@ -27,5 +28,6 @@ export enum Screens {
 export enum Tabs {
   Explore = 'ExploreTab',
   Home = 'HomeTab',
+  NFT = 'NFTTab',
   Swap = 'SwapTab',
 }

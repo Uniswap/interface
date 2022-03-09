@@ -25,6 +25,7 @@
 		A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */; };
 		A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */; };
 		D7DC5B5087F94E2A95426E61 /* UniswapSansBeta3-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8A54E514DE6E4CB1A39FDB3A /* UniswapSansBeta3-Bold.otf */; };
+		C984362CBE87419489C23601 /* monospace.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B665738960844523B06BB63B /* monospace.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		D00AAFFCFCFDA5787532823F /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
 		D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Regular.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Regular.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		B665738960844523B06BB63B /* monospace.ttf */ = {isa = PBXFileReference; name = "monospace.ttf"; path = "../src/assets/fonts/monospace.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +202,7 @@
 				776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */,
 				D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */,
 				8D411CAE164C44F184DC5771 /* UniswapSansBeta3-Semibold.otf */,
+				B665738960844523B06BB63B /* monospace.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				4C3A060B4EC54191B2D05291 /* UniswapSansBeta3-Medium.otf in Resources */,
 				323758D670BD4239A88ED592 /* UniswapSansBeta3-Regular.otf in Resources */,
 				6E486741B8034E9C896EC0E6 /* UniswapSansBeta3-Semibold.otf in Resources */,
+				C984362CBE87419489C23601 /* monospace.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

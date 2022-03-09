@@ -8,6 +8,7 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
+import { OpenseaNFTAsset } from 'src/features/nfts/types'
 import { SwapFormState } from 'src/features/swap/swapFormSlice'
 import { Screens, Tabs } from 'src/screens/Screens'
 
@@ -15,6 +16,7 @@ export type TabParamList = {
   [Tabs.Home]: undefined
   [Tabs.Swap]: { swapFormState?: SwapFormState } | undefined
   [Tabs.Explore]: undefined
+  [Tabs.NFT]: undefined
 }
 
 export type AccountStackParamList = {
@@ -42,6 +44,9 @@ export type AppStackParamList = {
     selectedCurrencyChainId?: ChainId
   }
   [Screens.Notifications]: undefined
+  [Screens.NFTCollection]: {
+    nftAssets: OpenseaNFTAsset[]
+  }
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.Swap]: { swapFormState?: SwapFormState } | undefined
   [Screens.SwapConfig]: undefined

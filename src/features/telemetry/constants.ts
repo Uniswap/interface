@@ -27,6 +27,7 @@ export const enum ModalName {
   Account = 'account-modal',
   NetworkSelector = 'network-selector-modal',
   WalletQRCode = 'wallet-qr-code-modal',
+  NFTAsset = 'nft-asset',
 }
 
 /**
@@ -66,6 +67,9 @@ export const enum ElementName {
   TryAgain = 'try-again',
   Unwrap = 'unwrap',
   Wrap = 'wrap',
+  NFTAssetItem = 'nft-asset-item',
+  NFTCollectionItem = 'nft-collection-item',
+  ViewOnOpensea = 'view-on-opensea',
 }
 
 /**

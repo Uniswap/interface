@@ -18,6 +18,8 @@ import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
 import { LedgerScreen } from 'src/screens/LedgerScreen'
+import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
+import { NFTScreen } from 'src/screens/NFTScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
@@ -65,6 +67,12 @@ function TabNavigator() {
         options={navOptions.noHeader}
       />
       <Tab.Screen
+        component={NFTScreen}
+        listeners={genericTabListeners}
+        name={Tabs.NFT}
+        options={navOptions.noHeader}
+      />
+      <Tab.Screen
         component={ExploreScreen}
         listeners={genericTabListeners}
         name={Tabs.Explore}
@@ -108,6 +116,7 @@ export function AppStackNavigator() {
       <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
       <AppStack.Group>
         <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+        <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       </AppStack.Group>
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={AccountStackGroup} name={Screens.AccountStack} />

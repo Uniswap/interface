@@ -36,7 +36,7 @@ export function IconButton({ icon, name, ...rest }: IconButtonProps) {
   const backgroundColor = rest.variant === 'primary' ? 'primary1' : 'none'
   return (
     <TraceEvent actionProps={ButtonActionProps} elementName={name} elementType="button">
-      <IconBaseButton {...baseProps} backgroundColor={backgroundColor} p="md">
+      <IconBaseButton {...baseProps} backgroundColor={backgroundColor} p="sm">
         {icon}
       </IconBaseButton>
     </TraceEvent>
