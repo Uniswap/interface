@@ -22,6 +22,7 @@ import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
@@ -69,6 +70,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
+  const nativeCurrency = useNativeCurrency()
+  const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
   // burn state
   const { percent } = useBurnV3State()
@@ -394,7 +397,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               {showCollectAsWeth && (
                 <RowBetween>
                   <ThemedText.Main>
-                    <Trans>Collect as WETH</Trans>
+                    <Trans>Collect as {nativeWrappedSymbol}</Trans>
                   </ThemedText.Main>
                   <Toggle
                     id="receive-as-weth"

@@ -134,7 +134,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
       <Header title={<Trans>Swap summary</Trans>} ruled />
       <Body flex align="stretch" gap={0.75} padded open={open}>
         <SummaryColumn gap={0.75} flex justify="center">
-          <Summary input={inputAmount} output={outputAmount} usdc={true} />
+          <Summary input={inputAmount} output={outputAmount} showUSDC />
           <Row>
             <ThemedText.Caption userSelect>
               {formatLocaleNumber({ number: 1, sigFigs: 1, locale: i18n.locale })} {inputCurrency.symbol} ={' '}

@@ -23,6 +23,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
+  box-sizing: border-box;
   color: ${({ theme }) => theme.primary};
   display: flex;
   flex-direction: column;
@@ -30,7 +31,7 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   font-size: 16px;
   font-smooth: always;
   font-variant: none;
-  height: 348px;
+  height: 356px;
   min-width: 300px;
   padding: 0.25em;
   position: relative;

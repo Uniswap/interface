@@ -1,13 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import useUSDCPrice from 'hooks/useUSDCPrice'
+import Column from 'lib/components/Column'
+import Rule from 'lib/components/Rule'
 import Tooltip from 'lib/components/Tooltip'
 import { loadingCss } from 'lib/css/loading'
 import { WrapType } from 'lib/hooks/swap/useWrapCallback'
+import useUSDCPriceImpact, { toHumanReadablePriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { getPriceImpactWarning } from 'utils/prices'
 
 import { TextButton } from '../../Button'
 import Row from '../../Row'
@@ -78,21 +81,21 @@ export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType
 
 export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
   const [flip, setFlip] = useState(true)
-  const { inputAmount, outputAmount, executionPrice } = trade
-  const fiatValueInput = useUSDCPrice(inputAmount.currency)
-  const fiatValueOutput = useUSDCPrice(outputAmount.currency)
+  const { inputAmount: input, outputAmount: output, executionPrice } = trade
+  const { inputUSDC, outputUSDC, priceImpact } = useUSDCPriceImpact(input, output)
+  const isPriceImpactHigh = priceImpact && getPriceImpactWarning(priceImpact)
 
   const ratio = useMemo(() => {
-    const [a, b] = flip ? [outputAmount, inputAmount] : [inputAmount, outputAmount]
+    const [a, b] = flip ? [output, input] : [input, output]
     const priceString = (!flip ? executionPrice : executionPrice?.invert())?.toSignificant(6)
 
     const ratio = `1 ${a.currency.symbol} = ${priceString} ${b.currency.symbol}`
     const usdc = !flip
-      ? fiatValueInput
-        ? ` ($${fiatValueInput.toSignificant(6)})`
+      ? inputUSDC
+        ? ` ($${inputUSDC.toSignificant(6)})`
         : null
-      : fiatValueOutput
-      ? ` ($${fiatValueOutput.toSignificant(6)})`
+      : outputUSDC
+      ? ` ($${outputUSDC.toSignificant(6)})`
       : null
 
     return (
@@ -103,12 +106,23 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
         </Row>
       </ThemedText.Caption>
     )
-  }, [executionPrice, fiatValueInput, fiatValueOutput, flip, inputAmount, outputAmount])
+  }, [executionPrice, inputUSDC, outputUSDC, flip, input, output])
 
   return (
     <>
-      <Tooltip placement="bottom" icon={Info}>
-        <RoutingDiagram trade={trade} />
+      <Tooltip placement="bottom" icon={isPriceImpactHigh ? AlertTriangle : Info}>
+        <Column gap={0.75}>
+          {isPriceImpactHigh && (
+            <>
+              <ThemedText.Caption>
+                The output amount is estimated at {toHumanReadablePriceImpact(priceImpact)} less than the input amount
+                due to high price impact
+              </ThemedText.Caption>
+              <Rule />
+            </>
+          )}
+          <RoutingDiagram trade={trade} />
+        </Column>
       </Tooltip>
       <TextButton color="primary" onClick={() => setFlip(!flip)}>
         {ratio}
