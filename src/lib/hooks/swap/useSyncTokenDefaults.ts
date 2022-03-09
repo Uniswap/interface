@@ -47,12 +47,13 @@ export default function useSyncTokenDefaults({
 }: TokenDefaults) {
   const updateSwap = useUpdateAtom(swapAtom)
   const { chainId } = useActiveWeb3React()
+  const onSupportedNetwork = useOnSupportedNetwork()
   const nativeCurrency = useNativeCurrency()
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
   const defaultInputToken =
     useDefaultToken(defaultInputTokenAddress, chainId) ??
     // Default the input token to the native currency if it is not the output token.
-    (defaultOutputToken === nativeCurrency ? nativeCurrency : undefined)
+    (defaultOutputToken === nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
 
   const setToDefaults = useCallback(() => {
     const defaultSwapState: Swap = {
