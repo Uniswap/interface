@@ -3,8 +3,11 @@ import { nativeOnChain } from 'constants/tokens'
 import { useUpdateAtom } from 'jotai/utils'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useToken } from 'lib/hooks/useCurrency'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { Field, Swap, swapAtom } from 'lib/state/swap'
 import { useCallback, useLayoutEffect, useState } from 'react'
+
+import useOnSupportedNetwork from '../useOnSupportedNetwork'
 
 export type DefaultAddress = string | { [chainId: number]: string | 'NATIVE' } | 'NATIVE'
 
@@ -18,7 +21,7 @@ export interface TokenDefaults {
 function useDefaultToken(
   defaultAddress: DefaultAddress | undefined,
   chainId: number | undefined
-): Currency | null | undefined {
+): Currency | undefined {
   let address = undefined
   if (typeof defaultAddress === 'string') {
     address = defaultAddress
@@ -26,10 +29,14 @@ function useDefaultToken(
     address = defaultAddress[chainId]
   }
   const token = useToken(address)
-  if (chainId && address === 'NATIVE') {
+
+  const onSupportedNetwork = useOnSupportedNetwork()
+
+  // Only use native currency if chain ID is in supported chains. ExtendedEther will error otherwise.
+  if (chainId && address === 'NATIVE' && onSupportedNetwork) {
     return nativeOnChain(chainId)
   }
-  return token
+  return token ?? undefined
 }
 
 export default function useSyncTokenDefaults({
@@ -40,14 +47,19 @@ export default function useSyncTokenDefaults({
 }: TokenDefaults) {
   const updateSwap = useUpdateAtom(swapAtom)
   const { chainId } = useActiveWeb3React()
-  const defaultInputToken = useDefaultToken(defaultInputTokenAddress, chainId)
+  const onSupportedNetwork = useOnSupportedNetwork()
+  const nativeCurrency = useNativeCurrency()
   const defaultOutputToken = useDefaultToken(defaultOutputTokenAddress, chainId)
+  const defaultInputToken =
+    useDefaultToken(defaultInputTokenAddress, chainId) ??
+    // Default the input token to the native currency if it is not the output token.
+    (defaultOutputToken !== nativeCurrency && onSupportedNetwork ? nativeCurrency : undefined)
 
   const setToDefaults = useCallback(() => {
     const defaultSwapState: Swap = {
       amount: '',
-      [Field.INPUT]: defaultInputToken || undefined,
-      [Field.OUTPUT]: defaultOutputToken || undefined,
+      [Field.INPUT]: defaultInputToken,
+      [Field.OUTPUT]: defaultOutputToken,
       independentField: Field.INPUT,
     }
     if (defaultInputToken && defaultInputAmount) {

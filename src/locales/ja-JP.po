@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-03 22:06\n"
+"PO-Revision-Date: 2022-03-08 16:07\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -458,8 +458,8 @@ msgstr "取得する"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Collect as WETH"
-msgstr "WETHで取得"
+msgid "Collect as {nativeWrappedSymbol}"
+msgstr "{nativeWrappedSymbol}として収集"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"

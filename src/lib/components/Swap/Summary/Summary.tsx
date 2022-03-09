@@ -1,39 +1,25 @@
 import { useLingui } from '@lingui/react'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useUSDCValue } from 'hooks/useUSDCPrice'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import useUSDCPriceImpact, { toHumanReadablePriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { ArrowRight } from 'lib/icons'
-import styled from 'lib/theme'
 import { ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
-import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../../Column'
 import Row from '../../Row'
 import TokenImg from '../../TokenImg'
 
-const Percent = styled.span<{ gain: boolean }>`
-  color: ${({ gain, theme }) => (gain ? theme.success : theme.error)};
-`
-
 interface TokenValueProps {
   input: CurrencyAmount<Currency>
-  usdc?: boolean
-  change?: number
+  usdc?: CurrencyAmount<Token>
+  priceImpact?: Percent
 }
 
-function TokenValue({ input, usdc, change }: TokenValueProps) {
+function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
   const { i18n } = useLingui()
-  const percent = useMemo(() => {
-    if (change) {
-      const percent = change.toPrecision(3)
-      return change > 0 ? `(+${percent}%)` : `(${percent}%)`
-    }
-    return undefined
-  }, [change])
-
-  const usdcAmount = useUSDCValue(input)
-
+  const priceImpactWarning = useMemo(() => getPriceImpactWarning(priceImpact), [priceImpact])
   return (
     <Column justify="flex-start">
       <Row gap={0.375} justify="flex-start">
@@ -42,11 +28,15 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
           {formatCurrencyAmount(input, 6, i18n.locale)} {input.currency.symbol}
         </ThemedText.Body2>
       </Row>
-      {usdc && usdcAmount && (
+      {usdc && (
         <Row justify="flex-start">
           <ThemedText.Caption color="secondary" userSelect>
-            ${formatCurrencyAmount(usdcAmount, 2, i18n.locale)}
-            {change && <Percent gain={change > 0}> {percent}</Percent>}
+            ${formatCurrencyAmount(usdc, 2, i18n.locale)}
+            {priceImpact && (
+              <ThemedText.Caption color={priceImpactWarning}>
+                ({toHumanReadablePriceImpact(priceImpact)})
+              </ThemedText.Caption>
+            )}
           </ThemedText.Caption>
         </Row>
       )}
@@ -57,23 +47,17 @@ function TokenValue({ input, usdc, change }: TokenValueProps) {
 interface SummaryProps {
   input: CurrencyAmount<Currency>
   output: CurrencyAmount<Currency>
-  usdc?: boolean
+  showUSDC?: true
 }
 
-export default function Summary({ input, output, usdc }: SummaryProps) {
-  const inputUSDCValue = useUSDCValue(input)
-  const outputUSDCValue = useUSDCValue(output)
-
-  const priceImpact = useMemo(() => {
-    const computedChange = computeFiatValuePriceImpact(inputUSDCValue, outputUSDCValue)
-    return computedChange ? parseFloat(computedChange.multiply(-1)?.toSignificant(3)) : undefined
-  }, [inputUSDCValue, outputUSDCValue])
+export default function Summary({ input, output, showUSDC }: SummaryProps) {
+  const { inputUSDC, outputUSDC, priceImpact } = useUSDCPriceImpact(input, output)
 
   return (
-    <Row gap={usdc ? 1 : 0.25}>
-      <TokenValue input={input} usdc={usdc} />
+    <Row gap={showUSDC ? 1 : 0.25}>
+      <TokenValue input={input} usdc={showUSDC && inputUSDC} />
       <ArrowRight />
-      <TokenValue input={output} usdc={usdc} change={priceImpact} />
+      <TokenValue input={output} usdc={showUSDC && outputUSDC} priceImpact={priceImpact} />
     </Row>
   )
 }
