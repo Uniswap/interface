@@ -1,3 +1,4 @@
+import ImageColors from 'react-native-image-colors'
 import { useAppTheme } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { assert } from 'src/utils/validation'
@@ -36,4 +37,13 @@ export function useNetworkColors(chainId: ChainId) {
     foreground,
     background: opacify(10, foreground),
   }
+}
+
+export async function extractColors(imageUrl: string, fallback: string) {
+  const result = await ImageColors.getColors(imageUrl, {
+    fallback,
+    cache: true,
+    key: imageUrl,
+  })
+  return result
 }

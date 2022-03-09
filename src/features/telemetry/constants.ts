@@ -79,9 +79,9 @@ export const enum ElementName {
  *  const buttonProps = (({ onPress, onLongPress }) => ({ onPress, onLongPress }))(ActionProps)
  */
 export const ActionProps = {
-  onLongPress: { action: 'long-press' },
+  onLongPress: { action: 'long_press' },
   onPress: { action: 'press' },
-  onTextInput: { action: 'text-input' },
+  onTextInput: { action: 'text_input' },
   // more to be added
 }
 
