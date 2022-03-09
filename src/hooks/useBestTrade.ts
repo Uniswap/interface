@@ -36,21 +36,8 @@ export function useBestTrade(
     debouncedOtherCurrency
   )
 
-  const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
-
-  // consider trade debouncing when inputs/outputs do not match
-  const debouncing =
-    routingAPITrade.trade &&
-    amountSpecified &&
-    (tradeType === TradeType.EXACT_INPUT
-      ? !routingAPITrade.trade.inputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(routingAPITrade.trade.inputAmount.currency) ||
-        !debouncedOtherCurrency?.equals(routingAPITrade.trade.outputAmount.currency)
-      : !routingAPITrade.trade.outputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
-        !debouncedOtherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
-
-  const useFallback = !autoRouterSupported || (!debouncing && routingAPITrade.state === TradeState.NO_ROUTE_FOUND)
+  const isLoading = routingAPITrade.state === TradeState.LOADING
+  const useFallback = !autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND
 
   // only use client side router if routing api trade failed or is not supported
   const bestV3Trade = useClientSideV3Trade(
@@ -63,9 +50,8 @@ export function useBestTrade(
   return useMemo(
     () => ({
       ...(useFallback ? bestV3Trade : routingAPITrade),
-      ...(debouncing ? { state: TradeState.SYNCING } : {}),
       ...(isLoading ? { state: TradeState.LOADING } : {}),
     }),
-    [bestV3Trade, debouncing, isLoading, routingAPITrade, useFallback]
+    [bestV3Trade, isLoading, routingAPITrade, useFallback]
   )
 }
