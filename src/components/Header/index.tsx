@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
-import { ChevronUp, ChevronDown } from 'react-feather'
+import { ChevronUp } from 'react-feather'
 
 import styled, { css } from 'styled-components'
 
@@ -215,6 +215,7 @@ const GasInfo = styled.div`
   div {
     color: ${({ theme }) => theme.orange1};
   }
+
   align-items: center;
 `
 const GasColor = {
@@ -232,13 +233,16 @@ const GasColor = {
   }
 }
 const ColoredGas = styled.div<{ color: 'fast' | 'slow' | 'normal' }>`
+  display: flex;
   font-size: 10px;
+  height: 16.39px;
   font-weight: 600;
   color: ${props => GasColor[props.color].color};
   background-color: ${props => GasColor[props.color].backgroundColor};
-  padding: 3.19444px 4.25926px;
+  padding: 3px 4px;
+  line-height: 11px;
 
-  border-radius: 4.25926px;
+  border-radius: 4.26px;
 `
 const Divider = styled.div`
   height: 24px;
@@ -277,6 +281,10 @@ const AdditionalDataWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: end;
+`
+const StyledChevron = styled(ChevronUp)<{ isOpen: boolean }>`
+  stroke: ${({ theme }) => theme.orange1};
+  transform: ${({ isOpen }) => (isOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
 `
 
 function Header() {
@@ -384,13 +392,7 @@ function Header() {
               <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
                 {gas.normal}
               </Text>
-              {gas.fast === 0 && gas.slow === 0 ? (
-                ''
-              ) : isGasInfoOpen ? (
-                <ChevronUp size={12} />
-              ) : (
-                <ChevronDown size={12} />
-              )}
+              {gas.fast === 0 && gas.slow === 0 ? '' : <StyledChevron isOpen={isGasInfoOpen} size={12} />}
             </GasInfo>
           )}
         </Flex>
