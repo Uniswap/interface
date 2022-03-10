@@ -6,7 +6,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { BottomSheetScrollModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { OpenseaNFTAsset } from 'src/features/nfts/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -47,11 +47,10 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
     })
   }
 
-  // TODO Refactor with https://gorhom.github.io/react-native-bottom-sheet/components/bottomsheetscrollview and use Flex instead of margins
   return (
-    <BottomSheetModal isVisible={isVisible} name={ModalName.NFTAsset} onClose={onClose}>
-      <Box mb="xl">
-        <Flex alignItems="center" flexDirection="row" gap="sm" mx="lg" my="lg">
+    <BottomSheetScrollModal isVisible={isVisible} name={ModalName.NFTAsset} onClose={onClose}>
+      <Flex mb="xl" mx="lg">
+        <Flex alignItems="center" flexDirection="row" gap="sm" mt="md">
           <RemoteImage
             borderRadius={COLLECTION_IMAGE_WIDTH / 2}
             height={COLLECTION_IMAGE_WIDTH}
@@ -60,47 +59,38 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
           />
           <Text variant="h3">{name}</Text>
         </Flex>
-        <Box
-          alignItems="center"
-          flexDirection="column"
-          justifyContent="space-between"
-          width={dimensions.fullWidth}>
-          <RemoteImage
-            borderRadius={borderRadii.lg}
-            height={ITEM_WIDTH}
-            imageUrl={imageUrl}
-            width={ITEM_WIDTH}
-          />
-        </Box>
-        <Box mx="lg">
-          <PrimaryButton
-            label={t('View on Opensea')}
-            mt="lg"
-            name={ElementName.ViewOnOpensea}
-            testID={ElementName.ViewOnOpensea}
-            variant="gray"
-            onPress={openOnOpensea}
-          />
-        </Box>
-        <Box mt="sm" mx="lg">
-          <Box>
-            <Text my="sm" variant="h5">{t`Owned By`}</Text>
+        <RemoteImage
+          borderRadius={borderRadii.lg}
+          height={ITEM_WIDTH}
+          imageUrl={imageUrl}
+          width={ITEM_WIDTH}
+        />
+        <PrimaryButton
+          label={t('View on Opensea')}
+          name={ElementName.ViewOnOpensea}
+          testID={ElementName.ViewOnOpensea}
+          variant="gray"
+          onPress={openOnOpensea}
+        />
+        <Flex gap="sm">
+          <Flex gap="xs">
+            <Text variant="h5">{t`Owned By`}</Text>
             <Box bg="tabBackground" borderRadius="md" p="sm">
               <Text variant="body">{displayName}</Text>
             </Box>
-          </Box>
-          <Box>
-            <Text my="sm" variant="h5">{t`Collection`}</Text>
+          </Flex>
+          <Flex gap="xs">
+            <Text variant="h5">{t`Collection`}</Text>
             <Box bg="tabBackground" borderRadius="md" p="sm">
               <Text variant="body">{collectionName}</Text>
             </Box>
-          </Box>
-          <Box my="sm">
-            <Text my="sm" variant="h5">{t`About this collection`}</Text>
+          </Flex>
+          <Flex gap="xs">
+            <Text variant="h5">{t`About this collection`}</Text>
             <Text variant="bodySm">{collectionDescription}</Text>
-          </Box>
-        </Box>
-      </Box>
-    </BottomSheetModal>
+          </Flex>
+        </Flex>
+      </Flex>
+    </BottomSheetScrollModal>
   )
 }

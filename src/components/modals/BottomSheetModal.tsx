@@ -2,6 +2,7 @@ import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal as BaseModal,
+  BottomSheetScrollView,
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
@@ -39,12 +40,19 @@ const Backdrop = (props: BottomSheetBackdropProps) => {
   return <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.7} />
 }
 
-const DEFAULT_SNAP_POINTS = ['CONTENT_HEIGHT']
+const CONTENT_HEIGHT_SNAP_POINTS = ['CONTENT_HEIGHT']
+const FULL_HEIGHT_SNAP_POINTS = ['90%']
 
-export function BottomSheetModal({ isVisible, children, name, onClose, snapPoints }: Props) {
+export function BottomSheetModal({
+  isVisible,
+  children,
+  name,
+  onClose,
+  snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
+}: Props) {
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
-    useBottomSheetDynamicSnapPoints(snapPoints || DEFAULT_SNAP_POINTS)
+    useBottomSheetDynamicSnapPoints(snapPoints)
   const theme = useAppTheme()
 
   useEffect(() => {
@@ -67,6 +75,40 @@ export function BottomSheetModal({ isVisible, children, name, onClose, snapPoint
       onDismiss={onClose}>
       <Trace logImpression section={name}>
         <BottomSheetView onLayout={handleContentLayout}>{children}</BottomSheetView>
+      </Trace>
+    </BaseModal>
+  )
+}
+
+export function BottomSheetScrollModal({
+  isVisible,
+  children,
+  name,
+  onClose,
+  snapPoints = FULL_HEIGHT_SNAP_POINTS,
+}: Props) {
+  const modalRef = useRef<BaseModal>(null)
+
+  const theme = useAppTheme()
+
+  useEffect(() => {
+    if (isVisible) {
+      modalRef.current?.present()
+    } else {
+      modalRef.current?.close()
+    }
+  }, [isVisible])
+
+  return (
+    <BaseModal
+      ref={modalRef}
+      backdropComponent={Backdrop}
+      backgroundStyle={{ backgroundColor: theme.colors.mainBackground }}
+      handleComponent={HandleBar}
+      snapPoints={snapPoints}
+      onDismiss={onClose}>
+      <Trace logImpression section={name}>
+        <BottomSheetScrollView>{children}</BottomSheetScrollView>
       </Trace>
     </BaseModal>
   )
