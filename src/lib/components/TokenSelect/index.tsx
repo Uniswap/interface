@@ -97,7 +97,21 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
         )}
         <Rule padded />
       </Column>
-      {isLoaded ? <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} /> : <TokenOptionsSkeleton />}
+      {isLoaded ? (
+        tokens.length ? (
+          <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
+        ) : (
+          <Column padded>
+            <Row justify="center">
+              <ThemedText.Body1 color="secondary">
+                <Trans>No results found.</Trans>
+              </ThemedText.Body1>
+            </Row>
+          </Column>
+        )
+      ) : (
+        <TokenOptionsSkeleton />
+      )}
     </>
   )
 }
