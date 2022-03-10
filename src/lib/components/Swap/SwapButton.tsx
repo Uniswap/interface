@@ -18,7 +18,7 @@ import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
@@ -35,7 +35,7 @@ function useIsPendingApproval(token?: Token, spender?: string): boolean {
   return Boolean(usePendingApproval(token, spender))
 }
 
-export default function SwapButton({ disabled }: SwapButtonProps) {
+export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
 
   const { tokenColorExtraction } = useTheme()
@@ -234,4 +234,4 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       )}
     </>
   )
-}
+})
