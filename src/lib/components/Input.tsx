@@ -1,4 +1,3 @@
-import JSBI from 'jsbi'
 import styled, { css } from 'lib/theme'
 import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
 
@@ -78,12 +77,16 @@ interface EnforcedNumericInputProps extends NumericInputProps {
 }
 
 function isNumericallyEqual(a: string, b: string) {
-  const [aInteger, aDecimal] = a.split('.')
-  const [bInteger, bDecimal] = b.split('.')
-  return (
-    JSBI.equal(JSBI.BigInt(aInteger ?? 0), JSBI.BigInt(bInteger ?? 0)) &&
-    JSBI.equal(JSBI.BigInt(aDecimal ?? 0), JSBI.BigInt(bDecimal ?? 0))
-  )
+  const [aInteger, aDecimal] = toParts(a)
+  const [bInteger, bDecimal] = toParts(b)
+  return aInteger === bInteger && aDecimal === bDecimal
+
+  function toParts(num: string) {
+    let [integer, decimal] = num.split('.')
+    integer = integer?.match(/([1-9]\d*)/)?.[1] || ''
+    decimal = decimal?.match(/(\d*[1-9])/)?.[1] || ''
+    return [integer, decimal]
+  }
 }
 
 const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(function NumericInput(

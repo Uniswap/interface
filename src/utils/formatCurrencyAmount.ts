@@ -18,7 +18,7 @@ export function formatCurrencyAmount(
   }
 
   if (amount.divide(amount.decimalScale).lessThan(new Fraction(1, 100000))) {
-    return `<${formatLocaleNumber({ number: 0.00001, locale, fixedDecimals })}`
+    return `<${formatLocaleNumber({ number: 0.00001, locale })}`
   }
 
   return formatLocaleNumber({ number: amount, locale, sigFigs, fixedDecimals })
