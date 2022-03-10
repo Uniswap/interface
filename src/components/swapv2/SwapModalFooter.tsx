@@ -31,7 +31,7 @@ export default function SwapModalFooter({
   onConfirm: () => void
   swapErrorMessage: string | undefined
   disabledConfirm: boolean
-  feeConfig: FeeConfig | undefined
+  feeConfig: FeeConfig | null
 }) {
   const { chainId } = useActiveWeb3React()
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -122,7 +122,7 @@ export default function SwapModalFooter({
             </RowFixed>
             <TYPE.black color={theme.text} fontSize={14}>
               {formattedNum(
-                ((parseFloat(trade.amountInUsd) * parseFloat(feeConfig.feeAmount)) / 10000)?.toString(),
+                ((parseFloat(trade.amountInUsd) * parseFloat(feeConfig.feeAmount)) / 100000)?.toString(),
                 true
               )}
             </TYPE.black>

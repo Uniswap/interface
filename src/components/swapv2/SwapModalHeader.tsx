@@ -15,13 +15,14 @@ import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText, SwapShowAcceptChanges } from './styleds'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { Aggregator } from '../../utils/aggregator'
+import { useSwapState } from 'state/swap/hooks'
 
 export default function SwapModalHeader({
   trade,
   allowedSlippage,
   recipient,
   showAcceptChanges,
-  onAcceptChanges
+  onAcceptChanges,
 }: {
   trade: Aggregator
   allowedSlippage: number
@@ -31,7 +32,7 @@ export default function SwapModalHeader({
 }) {
   const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
     trade,
-    allowedSlippage
+    allowedSlippage,
   ])
 
   const theme = useContext(ThemeContext)
@@ -39,6 +40,8 @@ export default function SwapModalHeader({
   const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
 
   const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
+
+  const { feeConfig, typedValue } = useSwapState()
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
@@ -49,7 +52,7 @@ export default function SwapModalHeader({
             fontWeight={500}
             color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary : ''}
           >
-            {trade.inputAmount.toSignificant(6)}
+            {!!feeConfig ? typedValue : trade.inputAmount.toSignificant(6)}
           </TruncatedText>
         </RowFixed>
         <RowFixed gap={'0px'}>

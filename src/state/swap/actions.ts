@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 export enum Field {
   INPUT = 'INPUT',
@@ -16,5 +17,7 @@ export const replaceSwapState = createAction<{
   inputCurrencyId?: string
   outputCurrencyId?: string
   recipient: string | null
+  feeConfig: FeeConfig | null
 }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
+export const setFeeConfig = createAction<{ feeConfig: FeeConfig | null }>('swap/setFeeConfig')

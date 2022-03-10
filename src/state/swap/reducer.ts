@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { FeeConfig } from 'hooks/useSwapV2Callback'
 import {
   chooseToSaveGas,
   Field,
@@ -7,7 +8,8 @@ import {
   setRecipient,
   switchCurrencies,
   switchCurrenciesV2,
-  typeInput
+  typeInput,
+  setFeeConfig
 } from './actions'
 
 export interface SwapState {
@@ -22,6 +24,7 @@ export interface SwapState {
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
   readonly saveGas: boolean
+  readonly feeConfig: FeeConfig | null
 }
 
 const initialState: SwapState = {
@@ -34,14 +37,15 @@ const initialState: SwapState = {
     currencyId: ''
   },
   recipient: null,
-  saveGas: false
+  saveGas: false,
+  feeConfig: null
 }
 
 export default createReducer<SwapState>(initialState, builder =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, feeConfig } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId
@@ -52,7 +56,8 @@ export default createReducer<SwapState>(initialState, builder =>
           independentField: field,
           typedValue: typedValue,
           recipient,
-          saveGas: state.saveGas
+          saveGas: state.saveGas,
+          feeConfig
         }
       }
     )
@@ -105,5 +110,8 @@ export default createReducer<SwapState>(initialState, builder =>
     })
     .addCase(chooseToSaveGas, (state, { payload: { saveGas } }) => {
       state.saveGas = saveGas
+    })
+    .addCase(setFeeConfig, (state, { payload: { feeConfig } }) => {
+      state.feeConfig = feeConfig
     })
 )

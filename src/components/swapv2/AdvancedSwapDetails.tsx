@@ -26,7 +26,7 @@ const IconWrapper = styled.div<{ show: boolean }>`
 interface TradeSummaryProps {
   trade: Aggregator
   allowedSlippage: number
-  feeConfig: FeeConfig | undefined
+  feeConfig?: FeeConfig | null
 }
 
 function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) {
@@ -107,7 +107,7 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
                 </RowFixed>
                 <TYPE.black color={theme.text} fontSize={12}>
                   {formattedNum(
-                    ((parseFloat(trade.amountInUsd) * parseFloat(feeConfig.feeAmount)) / 10000)?.toString(),
+                    ((parseFloat(trade.amountInUsd) * parseFloat(feeConfig.feeAmount)) / 100000)?.toString(),
                     true
                   )}
                 </TYPE.black>
@@ -135,7 +135,7 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
 
 export interface AdvancedSwapDetailsProps {
   trade?: Aggregator
-  feeConfig?: FeeConfig | undefined
+  feeConfig?: FeeConfig | null
 }
 
 export function AdvancedSwapDetails({ trade, feeConfig }: AdvancedSwapDetailsProps) {

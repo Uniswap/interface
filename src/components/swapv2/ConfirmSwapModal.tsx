@@ -4,12 +4,12 @@ import { t } from '@lingui/macro'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
-  TransactionErrorContent
+  TransactionErrorContent,
 } from '../TransactionConfirmationModal'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 import { Aggregator } from '../../utils/aggregator'
-import { FeeConfig } from 'hooks/useSwapV2Callback'
+import { useSwapState } from 'state/swap/hooks'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
@@ -31,7 +31,6 @@ export default function ConfirmSwapModal({
   originalTrade,
   onAcceptChanges,
   allowedSlippage,
-  feeConfig,
   onConfirm,
   onDismiss,
   recipient,
@@ -39,7 +38,7 @@ export default function ConfirmSwapModal({
   isOpen,
   attemptingTxn,
   txHash,
-  tokenAddtoMetaMask
+  tokenAddtoMetaMask,
 }: {
   isOpen: boolean
   trade: Aggregator | undefined
@@ -48,16 +47,17 @@ export default function ConfirmSwapModal({
   txHash: string | undefined
   recipient: string | null
   allowedSlippage: number
-  feeConfig: FeeConfig | undefined
   tokenAddtoMetaMask: Currency | undefined
   onAcceptChanges: () => void
   onConfirm: () => void
   swapErrorMessage: string | undefined
   onDismiss: () => void
 }) {
+  const { feeConfig, typedValue } = useSwapState()
+
   const showAcceptChanges = useMemo(
     () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
-    [originalTrade, trade]
+    [originalTrade, trade],
   )
 
   const modalHeader = useCallback(() => {
@@ -88,7 +88,7 @@ export default function ConfirmSwapModal({
   const nativeInput = useCurrencyConvertedToNative(trade?.inputAmount?.currency)
   const nativeOutput = useCurrencyConvertedToNative(trade?.outputAmount?.currency)
   // text to show while loading
-  const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${
+  const pendingText = `Swapping ${!!feeConfig ? typedValue : trade?.inputAmount?.toSignificant(6)} ${
     nativeInput?.symbol
   } for ${trade?.outputAmount?.toSignificant(6)} ${nativeOutput?.symbol}`
 
@@ -104,7 +104,7 @@ export default function ConfirmSwapModal({
           bottomContent={modalBottom}
         />
       ),
-    [onDismiss, modalBottom, modalHeader, swapErrorMessage]
+    [onDismiss, modalBottom, modalHeader, swapErrorMessage],
   )
 
   return (
