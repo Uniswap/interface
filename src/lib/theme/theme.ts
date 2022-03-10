@@ -27,8 +27,12 @@ export type Color = keyof Colors
 
 export interface Attributes {
   borderRadius: boolean | number
-  fontFamily: string
-  fontFamilyVariable: string
+  fontFamily:
+    | string
+    | {
+        font: string
+        variable: string
+      }
   fontFamilyCode: string
   tokenColorExtraction: boolean
 }
