@@ -184,7 +184,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   }, [addTransaction, inputTradeCurrencyAmount, outputTradeCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
 
   const ButtonText = useCallback(() => {
-    if (wrapError !== WrapError.NO_ERROR) {
+    if ((wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP) && wrapError !== WrapError.NO_ERROR) {
       return <WrapErrorText wrapError={wrapError} />
     }
     switch (wrapType) {

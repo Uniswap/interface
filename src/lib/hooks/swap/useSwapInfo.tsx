@@ -13,6 +13,7 @@ import { isAddress } from '../../../utils'
 import useActiveWeb3React from '../useActiveWeb3React'
 import useSlippage, { Slippage } from '../useSlippage'
 import { useBestTrade } from './useBestTrade'
+import useWrapCallback, { WrapType } from './useWrapCallback'
 
 interface SwapInfo {
   currencies: { [field in Field]?: Currency }
@@ -81,12 +82,16 @@ function useComputeSwapInfo(): SwapInfo {
     [relevantTokenBalances]
   )
 
+  // Use same amount for input and output if user is wrapping.
+  const { type: wrapType } = useWrapCallback()
+  const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
+
   const tradeCurrencyAmounts = useMemo(
     () => ({
-      [Field.INPUT]: trade.trade?.inputAmount,
-      [Field.OUTPUT]: trade.trade?.outputAmount,
+      [Field.INPUT]: isWrapping ? parsedAmount : trade.trade?.inputAmount,
+      [Field.OUTPUT]: isWrapping ? parsedAmount : trade.trade?.outputAmount,
     }),
-    [trade.trade?.inputAmount, trade.trade?.outputAmount]
+    [isWrapping, parsedAmount, trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
   const slippage = useSlippage(trade.trade)
