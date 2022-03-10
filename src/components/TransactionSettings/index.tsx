@@ -118,7 +118,7 @@ export default function SlippageTabs({
     slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
   const preferredGasPriceInputIsValid =
     preferredGasPriceInput === '' ||
-    (!Number.isNaN(preferredGasPriceInput) &&
+    (!Number.isNaN(Number(preferredGasPriceInput)) &&
       rawPreferredGasPrice ===
         new Decimal(Number.parseFloat(preferredGasPriceInput).toFixed(10)).times('1000000000').toString())
   const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
@@ -141,7 +141,7 @@ export default function SlippageTabs({
     mainnetGasPrices &&
     preferredGasPriceInput !== '' &&
     preferredGasPriceInputIsValid &&
-    !Number.isNaN(rawPreferredGasPrice) &&
+    !Number.isNaN(Number(rawPreferredGasPrice)) &&
     BigNumber.from(rawPreferredGasPrice).lte(mainnetGasPrices[MainnetGasPrice.NORMAL])
   ) {
     preferredGasPriceError = PreferredGasPriceError.RiskyLow
@@ -174,7 +174,9 @@ export default function SlippageTabs({
       const valueAsFloat = Number.parseFloat(value)
       if (!Number.isNaN(valueAsFloat) && valueAsFloat > 0) {
         // converting to wei
-        setRawPreferredGasPrice(new Decimal(valueAsFloat.toFixed(10)).times('1000000000').toString())
+        const rawPreferredGasPriceWei = new Decimal(valueAsFloat.toFixed(10)).times('1000000000').toString()
+        if (Number(rawPreferredGasPriceWei) > Number.MAX_SAFE_INTEGER) throw new Error('Preferred gas price overflow')
+        setRawPreferredGasPrice(rawPreferredGasPriceWei)
       }
     } catch {}
   }
@@ -398,6 +400,26 @@ export default function SlippageTabs({
             </RowFixed>
           </>
         )}
+        {(!!slippageError || !!preferredGasPriceError) && (
+          <Text
+            fontWeight={500}
+            fontSize="12px"
+            lineHeight="15px"
+            color={
+              slippageError === SlippageError.InvalidInput ||
+              preferredGasPriceError === PreferredGasPriceError.InvalidInput
+                ? 'red'
+                : '#F3841E'
+            }
+          >
+            {slippageError === SlippageError.InvalidInput ||
+            preferredGasPriceError === PreferredGasPriceError.InvalidInput
+              ? `Enter a valid ${slippageError === SlippageError.InvalidInput ? 'slippage percentage' : 'gas price'}`
+              : slippageError === SlippageError.RiskyLow || preferredGasPriceError === PreferredGasPriceError.RiskyLow
+              ? 'Your transaction may fail'
+              : 'Your transaction may be frontrun'}
+          </Text>
+        )}
         <RowBetween mt="2px">
           <RowFixed>
             <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
@@ -424,22 +446,6 @@ export default function SlippageTabs({
             </TYPE.body>
           </RowFixed>
         </RowBetween>
-        {!!slippageError ||
-          (!!preferredGasPriceError && (
-            <Text
-              fontWeight={500}
-              fontSize="12px"
-              lineHeight="15px"
-              color={slippageError === SlippageError.InvalidInput ? 'red' : '#F3841E'}
-            >
-              {slippageError === SlippageError.InvalidInput ||
-              preferredGasPriceError === PreferredGasPriceError.InvalidInput
-                ? `Enter a valid ${slippageError === SlippageError.InvalidInput ? 'slippage percentage' : 'gas price'}`
-                : slippageError === SlippageError.RiskyLow || preferredGasPriceError === PreferredGasPriceError.RiskyLow
-                ? 'Your transaction may fail'
-                : 'Your transaction may be frontrun'}
-            </Text>
-          ))}
       </AutoColumn>
     </AutoColumn>
   )

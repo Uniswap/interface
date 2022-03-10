@@ -23,6 +23,7 @@ import CurrencyLogo from '../../../components/CurrencyLogo'
 import { useSingleSidedCampaign } from '../../../hooks/singleSidedStakeCampaigns/useSingleSidedCampaign'
 import { Location } from 'history'
 import { currencyId } from '../../../utils/currencyId'
+import { unwrappedToken } from '../../../utils/wrappedCurrency'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -106,12 +107,12 @@ export default function LiquidityMiningCampaign({
               </Box>
               <Box>
                 <TYPE.small color="text4" fontWeight="600" fontSize="16px" lineHeight="20px">
-                  {isSingleSidedCampaign ? (
-                    token0?.symbol
-                  ) : !token0 || !token1 ? (
+                  {!token0 || !token1 ? (
                     <Skeleton width="60px" />
+                  ) : isSingleSidedCampaign ? (
+                    unwrappedToken(token0)?.symbol
                   ) : (
-                    `${token0.symbol}/${token1.symbol}`
+                    `${unwrappedToken(token0)?.symbol}/${unwrappedToken(token1)?.symbol}`
                   )}
                 </TYPE.small>
               </Box>

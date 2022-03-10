@@ -1,6 +1,7 @@
 import { ConnectorUpdate } from '@web3-react/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import invariant from 'tiny-invariant'
+import { NetworkDetails } from '../constants'
 
 // taken from ethers.js, compatible interface with web3 provider
 type AsyncSendable = {
@@ -124,5 +125,19 @@ export class CustomNetworkConnector extends AbstractConnector {
     invariant(Object.keys(this.providers).includes(chainId.toString()), `No url found for chainId ${chainId}`)
     this.currentChainId = chainId
     this.emitUpdate({ provider: this.providers[this.currentChainId], chainId })
+  }
+
+  public switchUnsupportedNetwork(networkDetails?: NetworkDetails) {
+    if (!window.ethereum || !window.ethereum.request || !window.ethereum.isMetaMask || !networkDetails) return
+    window.ethereum
+      .request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: networkDetails.chainId }]
+      })
+      .catch(error => {
+        if (error.code !== 4902) {
+          console.error('error switching to chain id', networkDetails.chainId, error)
+        }
+      })
   }
 }

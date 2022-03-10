@@ -1,4 +1,4 @@
-import { Currency } from '@swapr/sdk'
+import { Token } from '@swapr/sdk'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { TYPE } from '../../../../../../theme'
@@ -6,6 +6,7 @@ import CurrencyLogo from '../../../../../CurrencyLogo'
 import DoubleCurrencyLogo from '../../../../../DoubleLogo'
 import { Box, Flex } from 'rebass'
 import { GradientCard } from '../../../../../Card'
+import { unwrappedToken } from '../../../../../../utils/wrappedCurrency'
 
 const Card = styled(GradientCard)`
   width: 100%;
@@ -14,8 +15,8 @@ const Card = styled(GradientCard)`
 `
 
 interface AssetLogoProps {
-  currency0?: Currency | null
-  currency1?: Currency | null
+  currency0?: Token | null
+  currency1?: Token | null
 }
 
 function AssetLogo({ currency0, currency1 }: AssetLogoProps) {
@@ -30,8 +31,8 @@ function AssetLogo({ currency0, currency1 }: AssetLogoProps) {
 
 interface AssetSelectorProps {
   title: string
-  currency0?: Currency | null
-  currency1?: Currency | null
+  currency0?: Token | null
+  currency1?: Token | null
   onClick: (event: React.MouseEvent<HTMLElement>) => void
 }
 
@@ -40,9 +41,9 @@ export default function AssetSelector({ title, currency0, currency1, onClick }: 
 
   useEffect(() => {
     if (currency0 && currency1) {
-      setAssetTitle(`${currency0.symbol}/${currency1.symbol}`)
-    } else if (currency0?.symbol) {
-      setAssetTitle(currency0.symbol)
+      setAssetTitle(`${unwrappedToken(currency0)?.symbol}/${unwrappedToken(currency1)?.symbol}`)
+    } else if (currency0) {
+      setAssetTitle(unwrappedToken(currency0)?.symbol || null)
     }
   }, [currency0, currency1])
 
