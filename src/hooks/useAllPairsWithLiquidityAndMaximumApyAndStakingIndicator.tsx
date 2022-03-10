@@ -43,7 +43,7 @@ export function useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator(
       })
     }
     let filteredData = aggregation
-    console.log(filter)
+
     if (filter !== PairsFilterType.ALL) {
       filteredData = filteredData.filter(data => {
         // TODO: fully implement filtering
