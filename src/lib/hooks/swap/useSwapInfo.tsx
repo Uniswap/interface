@@ -11,7 +11,7 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isAddress } from '../../../utils'
 import useActiveWeb3React from '../useActiveWeb3React'
-import useAllowedSlippage from '../useAllowedSlippage'
+import useSlippage, { Slippage } from '../useSlippage'
 import { useBestTrade } from './useBestTrade'
 
 interface SwapInfo {
@@ -22,7 +22,7 @@ interface SwapInfo {
     trade?: InterfaceTrade<Currency, Currency, TradeType>
     state: TradeState
   }
-  allowedSlippage: Percent
+  slippage: Slippage
   feeOptions: FeeOptions | undefined
 }
 
@@ -89,7 +89,7 @@ function useComputeSwapInfo(): SwapInfo {
     [trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
-  const allowedSlippage = useAllowedSlippage(trade.trade)
+  const slippage = useSlippage(trade.trade)
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -116,14 +116,14 @@ function useComputeSwapInfo(): SwapInfo {
     }
 
     // compare input balance to max input based on version
-    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]
+    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(slippage.allowed)]
 
     if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
       inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
     }
 
     return inputError
-  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, to, trade.trade])
+  }, [account, slippage.allowed, currencies, currencyBalances, parsedAmount, to, trade.trade])
 
   return useMemo(
     () => ({
@@ -132,10 +132,10 @@ function useComputeSwapInfo(): SwapInfo {
       inputError,
       trade,
       tradeCurrencyAmounts,
-      allowedSlippage,
+      slippage,
       feeOptions,
     }),
-    [currencies, currencyBalances, inputError, trade, tradeCurrencyAmounts, allowedSlippage, feeOptions]
+    [currencies, currencyBalances, inputError, trade, tradeCurrencyAmounts, slippage, feeOptions]
   )
 }
 
@@ -144,7 +144,7 @@ const swapInfoAtom = atom<SwapInfo>({
   currencyBalances: {},
   trade: { state: TradeState.INVALID },
   tradeCurrencyAmounts: {},
-  allowedSlippage: new Percent(0),
+  slippage: { auto: true, allowed: new Percent(0) },
   feeOptions: undefined,
 })
 

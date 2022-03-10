@@ -15,7 +15,7 @@ export default function useUSDCPriceImpact(
   inputUSDC?: CurrencyAmount<Token>
   outputUSDC?: CurrencyAmount<Token>
   priceImpact?: string
-  priceImpactWarning?: 'warning' | 'error'
+  warning?: 'warning' | 'error'
 } {
   const inputUSDC = useUSDCValue(inputAmount) ?? undefined
   const outputUSDC = useUSDCValue(outputAmount) ?? undefined

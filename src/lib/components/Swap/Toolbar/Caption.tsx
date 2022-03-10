@@ -82,7 +82,7 @@ export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType
 export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
   const [flip, setFlip] = useState(true)
   const { inputAmount: input, outputAmount: output, executionPrice } = trade
-  const { inputUSDC, outputUSDC, priceImpact, priceImpactWarning } = useUSDCPriceImpact(input, output)
+  const { inputUSDC, outputUSDC, priceImpact, warning: priceImpactWarning } = useUSDCPriceImpact(input, output)
 
   const ratio = useMemo(() => {
     const [a, b] = flip ? [output, input] : [input, output]

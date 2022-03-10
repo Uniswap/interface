@@ -58,7 +58,11 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   // different state true/null/false allow smoother color transition
   const hasColor = swapOutputCurrency ? Boolean(color) || null : false
 
-  const { outputUSDC, priceImpact, priceImpactWarning } = useUSDCPriceImpact(inputCurrencyAmount, outputCurrencyAmount)
+  const {
+    outputUSDC,
+    priceImpact,
+    warning: priceImpactWarning,
+  } = useUSDCPriceImpact(inputCurrencyAmount, outputCurrencyAmount)
 
   const amount = useFormattedFieldAmount({
     disabled,

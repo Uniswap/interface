@@ -44,7 +44,7 @@ interface SummaryProps {
 }
 
 export default function Summary({ input, output, usdcPriceImpact }: SummaryProps) {
-  const { inputUSDC, outputUSDC, priceImpact, priceImpactWarning } = usdcPriceImpact || {}
+  const { inputUSDC, outputUSDC, priceImpact, warning: priceImpactWarning } = usdcPriceImpact || {}
 
   return (
     <Row gap={usdcPriceImpact ? 1 : 0.25}>

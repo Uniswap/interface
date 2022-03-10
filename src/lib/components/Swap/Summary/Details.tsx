@@ -3,8 +3,6 @@ import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useAtomValue } from 'jotai/utils'
-import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
-import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
@@ -38,11 +36,11 @@ function Detail({ label, value, color }: DetailProps) {
 
 interface DetailsProps {
   trade: Trade<Currency, Currency, TradeType>
-  allowedSlippage: Percent
-  usdcPriceImpact: ReturnType<typeof useUSDCPriceImpact>
+  slippage: { auto: boolean; allowed: Percent; warning?: Color }
+  usdcPriceImpact: { priceImpact?: string; warning?: Color }
 }
 
-export default function Details({ trade, allowedSlippage, usdcPriceImpact }: DetailsProps) {
+export default function Details({ trade, slippage, usdcPriceImpact }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
@@ -63,9 +61,8 @@ export default function Details({ trade, allowedSlippage, usdcPriceImpact }: Det
       }
     }
 
-    const { priceImpact, priceImpactWarning } = usdcPriceImpact
-    if (priceImpact) {
-      rows.push([t`Price impact`, priceImpact, priceImpactWarning])
+    if (usdcPriceImpact.priceImpact) {
+      rows.push([t`Price impact`, usdcPriceImpact.priceImpact, usdcPriceImpact.warning])
     }
 
     if (lpFeeAmount) {
@@ -74,16 +71,16 @@ export default function Details({ trade, allowedSlippage, usdcPriceImpact }: Det
     }
 
     if (trade.tradeType === TradeType.EXACT_OUTPUT) {
-      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)
+      const localizedMaxSent = formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)
       rows.push([t`Maximum sent`, `${localizedMaxSent} ${inputCurrency.symbol}`])
     }
 
     if (trade.tradeType === TradeType.EXACT_INPUT) {
-      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)
+      const localizedMaxSent = formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)
       rows.push([t`Minimum received`, `${localizedMaxSent} ${outputCurrency.symbol}`])
     }
 
-    rows.push([t`Slippage tolerance`, `${allowedSlippage.toFixed(2)}%`, getSlippageWarning(allowedSlippage)])
+    rows.push([t`Slippage tolerance`, `${slippage.allowed.toFixed(2)}%`, slippage.warning])
 
     return rows
   }, [
@@ -91,7 +88,7 @@ export default function Details({ trade, allowedSlippage, usdcPriceImpact }: Det
     usdcPriceImpact,
     lpFeeAmount,
     trade,
-    allowedSlippage,
+    slippage,
     outputAmount,
     i18n.locale,
     integrator,

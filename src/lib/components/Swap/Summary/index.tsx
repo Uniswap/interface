@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { IconButton } from 'lib/components/Button'
 import { useSwapTradeType } from 'lib/hooks/swap'
-import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import useScrollbar from 'lib/hooks/useScrollbar'
+import { Slippage } from 'lib/hooks/useSlippage'
 import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
@@ -79,14 +79,15 @@ const Body = styled(Column)<{ open: boolean }>`
 
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
-  allowedSlippage: Percent
+  slippage: Slippage
   onConfirm: () => void
 }
 
-export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDialogProps) {
+export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps) {
   const { inputAmount, outputAmount, executionPrice } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
+  // TODO(zzmp): Finish the UI work here
   const usdcPriceImpact = useUSDCPriceImpact(inputAmount, outputAmount)
   const tradeType = useSwapTradeType()
   const { i18n } = useLingui()
@@ -96,8 +97,8 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const scrollbar = useScrollbar(details)
 
   const warning = useMemo(() => {
-    return usdcPriceImpact.priceImpactWarning || getSlippageWarning(allowedSlippage)
-  }, [allowedSlippage, usdcPriceImpact.priceImpactWarning])
+    return usdcPriceImpact.warning || slippage.warning
+  }, [slippage.warning, usdcPriceImpact.warning])
 
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
@@ -115,7 +116,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         onClick: () => setConfirmedTrade(trade),
         children: <Trans>Accept</Trans>,
       }
-    } else if (usdcPriceImpact.priceImpactWarning === 'error' && !ackPriceImpact) {
+    } else if (usdcPriceImpact.warning === 'error' && !ackPriceImpact) {
       return {
         message: <Trans>High price impact</Trans>,
         onClick: () => setAckPriceImpact(true),
@@ -123,7 +124,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, trade, usdcPriceImpact.priceImpactWarning])
+  }, [ackPriceImpact, doesTradeDiffer, trade, usdcPriceImpact.warning])
 
   if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
     return null
@@ -156,7 +157,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
           <Rule />
           <DetailsColumn>
             <Column gap={0.5} ref={setDetails} css={scrollbar}>
-              <Details trade={trade} allowedSlippage={allowedSlippage} usdcPriceImpact={usdcPriceImpact} />
+              <Details trade={trade} slippage={slippage} usdcPriceImpact={usdcPriceImpact} />
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
@@ -164,13 +165,13 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
             {tradeType === TradeType.EXACT_INPUT && (
               <Trans>
                 You will receive at least{' '}
-                {formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)} {outputCurrency.symbol}{' '}
+                {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)} {outputCurrency.symbol}{' '}
                 or the transaction will revert.
               </Trans>
             )}
             {tradeType === TradeType.EXACT_OUTPUT && (
               <Trans>
-                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)}{' '}
+                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
                 {inputCurrency.symbol} or the transaction will revert.
               </Trans>
             )}
