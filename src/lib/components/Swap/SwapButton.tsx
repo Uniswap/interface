@@ -207,14 +207,16 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       setActiveTrade(trade.trade)
     } else {
       const transaction = await wrapCallback()
-      addTransaction({
-        response: transaction,
-        type: TransactionType.WRAP,
-        unwrapped: wrapType === WrapType.UNWRAP,
-        currencyAmountRaw: transaction.value?.toString() ?? '0',
-        chainId,
-      })
-      setDisplayTxHash(transaction.hash)
+      if (transaction) {
+        addTransaction({
+          response: transaction,
+          type: TransactionType.WRAP,
+          unwrapped: wrapType === WrapType.UNWRAP,
+          currencyAmountRaw: transaction.value?.toString() ?? '0',
+          chainId,
+        })
+        setDisplayTxHash(transaction.hash)
+      }
     }
   }, [addTransaction, chainId, setDisplayTxHash, trade.trade, wrapCallback, wrapType])
 

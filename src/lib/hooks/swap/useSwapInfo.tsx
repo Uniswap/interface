@@ -13,6 +13,7 @@ import { isAddress } from '../../../utils'
 import useActiveWeb3React from '../useActiveWeb3React'
 import useAllowedSlippage from '../useAllowedSlippage'
 import { useBestTrade } from './useBestTrade'
+import useWrapCallback, { WrapType } from './useWrapCallback'
 
 interface SwapInfo {
   currencies: { [field in Field]?: Currency }
@@ -52,6 +53,10 @@ function useComputeSwapInfo(): SwapInfo {
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 
+  // Short circuit trade fetching and amount parsing if wrapping or unwrapping.
+  const { type: wrapType } = useWrapCallback()
+  const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
+
   const isExactIn = independentField === Field.INPUT
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
@@ -61,7 +66,7 @@ function useComputeSwapInfo(): SwapInfo {
   //@TODO(ianlapham): this would eventually be replaced with routing api logic.
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    parsedAmount,
+    isWrapping ? undefined : parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
 
@@ -83,10 +88,10 @@ function useComputeSwapInfo(): SwapInfo {
 
   const tradeCurrencyAmounts = useMemo(
     () => ({
-      [Field.INPUT]: trade.trade?.inputAmount,
-      [Field.OUTPUT]: trade.trade?.outputAmount,
+      [Field.INPUT]: isWrapping ? parsedAmount : trade.trade?.inputAmount,
+      [Field.OUTPUT]: isWrapping ? parsedAmount : trade.trade?.outputAmount,
     }),
-    [trade.trade?.inputAmount, trade.trade?.outputAmount]
+    [isWrapping, parsedAmount, trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
 
   const allowedSlippage = useAllowedSlippage(trade.trade)
