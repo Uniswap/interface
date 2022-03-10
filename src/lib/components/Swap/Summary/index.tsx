@@ -108,7 +108,6 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
   const { inputAmount, outputAmount, executionPrice } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
-  // TODO(zzmp): Finish the UI work here
   const usdcPriceImpact = useUSDCPriceImpact(inputAmount, outputAmount)
   const tradeType = useSwapTradeType()
   const { i18n } = useLingui()
