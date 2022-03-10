@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-08 16:07\n"
+"PO-Revision-Date: 2022-03-10 18:07\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -1247,6 +1247,7 @@ msgid "No proposals found."
 msgstr "לא נמצאו הצעות."
 
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/lib/components/TokenSelect/index.tsx
 msgid "No results found."
 msgstr "לא נמצאו תוצאות."
 
