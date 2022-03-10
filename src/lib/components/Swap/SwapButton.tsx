@@ -41,7 +41,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
 
   const {
-    allowedSlippage,
+    slippage,
     currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     feeOptions,
@@ -64,13 +64,13 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
     // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
-    useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval) || trade.trade
+    useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
 
   const approvalCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
   const { approvalState, signatureData, handleApproveOrPermit } = useApproveOrPermit(
     optimizedTrade,
-    allowedSlippage,
+    slippage.allowed,
     useIsPendingApproval,
     approvalCurrencyAmount
   )
@@ -151,7 +151,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
-    allowedSlippage,
+    allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
     signatureData,
     deadline,
@@ -229,7 +229,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       </ActionButton>
       {activeTrade && (
         <Dialog color="dialog" onClose={handleDialogClose}>
-          <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
+          <SummaryDialog trade={activeTrade} slippage={slippage} onConfirm={onConfirm} />
         </Dialog>
       )}
     </>

@@ -21,12 +21,12 @@ export default function useUSDCPriceImpact(
   const outputUSDC = useUSDCValue(outputAmount) ?? undefined
   return useMemo(() => {
     const priceImpact = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
-    const priceImpactWarning = getPriceImpactWarning(priceImpact)
+    const warning = getPriceImpactWarning(priceImpact)
     return {
       inputUSDC,
       outputUSDC,
       priceImpact: priceImpact && toHumanReadablePriceImpact(priceImpact),
-      priceImpactWarning,
+      warning,
     }
   }, [inputUSDC, outputUSDC])
 }

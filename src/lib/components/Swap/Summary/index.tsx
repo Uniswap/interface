@@ -8,7 +8,7 @@ import useScrollbar from 'lib/hooks/useScrollbar'
 import { Slippage } from 'lib/hooks/useSlippage'
 import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
-import styled, { ThemedText } from 'lib/theme'
+import styled, { Color, ThemedText } from 'lib/theme'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
@@ -77,6 +77,27 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
+function Subhead({ priceImpact, slippage }: { priceImpact: { warning?: Color }; slippage: { warning?: Color } }) {
+  return (
+    <Row gap={0.5}>
+      {priceImpact.warning || slippage.warning ? (
+        <AlertTriangle color={priceImpact.warning || slippage.warning} />
+      ) : (
+        <Info color="secondary" />
+      )}
+      <ThemedText.Subhead2 color={priceImpact.warning || slippage.warning || 'secondary'}>
+        {priceImpact.warning ? (
+          <Trans>High price impact</Trans>
+        ) : slippage.warning ? (
+          <Trans>High slippage</Trans>
+        ) : (
+          <Trans>Swap details</Trans>
+        )}
+      </ThemedText.Subhead2>
+    </Row>
+  )
+}
+
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
   slippage: Slippage
@@ -95,10 +116,6 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
   const [open, setOpen] = useState(false)
   const [details, setDetails] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(details)
-
-  const warning = useMemo(() => {
-    return usdcPriceImpact.warning || slippage.warning
-  }, [slippage.warning, usdcPriceImpact.warning])
 
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
@@ -145,12 +162,7 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
         </SummaryColumn>
         <Rule />
         <Row>
-          <Row gap={0.5}>
-            {warning ? <AlertTriangle color={warning} /> : <Info color="secondary" />}
-            <ThemedText.Subhead2 color="secondary">
-              <Trans>Swap details</Trans>
-            </ThemedText.Subhead2>
-          </Row>
+          <Subhead priceImpact={usdcPriceImpact} slippage={slippage} />
           <IconButton color="secondary" onClick={() => setOpen(!open)} icon={Expando} iconProps={{ open }} />
         </Row>
         <ExpandoColumn flex align="stretch">
