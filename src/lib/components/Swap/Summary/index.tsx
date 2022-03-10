@@ -156,7 +156,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
           <Rule />
           <DetailsColumn>
             <Column gap={0.5} ref={setDetails} css={scrollbar}>
-              <Details trade={trade} allowedSlippage={allowedSlippage} />
+              <Details trade={trade} allowedSlippage={allowedSlippage} usdcPriceImpact={usdcPriceImpact} />
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">

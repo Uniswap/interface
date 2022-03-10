@@ -4,12 +4,13 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useAtomValue } from 'jotai/utils'
 import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
+import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { computeRealizedLPFeeAmount, computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
+import { computeRealizedLPFeeAmount } from 'utils/prices'
 
 import Row from '../../Row'
 
@@ -38,15 +39,15 @@ function Detail({ label, value, color }: DetailProps) {
 interface DetailsProps {
   trade: Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
+  usdcPriceImpact: ReturnType<typeof useUSDCPriceImpact>
 }
 
-export default function Details({ trade, allowedSlippage }: DetailsProps) {
+export default function Details({ trade, allowedSlippage, usdcPriceImpact }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
   const feeOptions = useAtomValue(feeOptionsAtom)
-  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
   const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
   const { i18n } = useLingui()
 
@@ -62,7 +63,10 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
       }
     }
 
-    rows.push([t`Price impact`, `${priceImpact.toFixed(2)}%`, getPriceImpactWarning(priceImpact)])
+    const { priceImpact, priceImpactWarning } = usdcPriceImpact
+    if (priceImpact) {
+      rows.push([t`Price impact`, priceImpact, priceImpactWarning])
+    }
 
     if (lpFeeAmount) {
       const parsedLpFee = formatCurrencyAmount(lpFeeAmount, 6, i18n.locale)
@@ -84,7 +88,7 @@ export default function Details({ trade, allowedSlippage }: DetailsProps) {
     return rows
   }, [
     feeOptions,
-    priceImpact,
+    usdcPriceImpact,
     lpFeeAmount,
     trade,
     allowedSlippage,
