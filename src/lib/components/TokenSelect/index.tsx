@@ -5,7 +5,7 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import useTokenList, { useIsTokenListLoaded, useQueryCurrencies } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
-import { ElementRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
@@ -123,7 +123,7 @@ interface TokenSelectProps {
   onSelect: (value: Currency) => void
 }
 
-export default function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
+export default memo(function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
   usePrefetchBalances()
 
   const [open, setOpen] = useState(false)
@@ -145,4 +145,4 @@ export default function TokenSelect({ value, collapsed, disabled, onSelect }: To
       )}
     </>
   )
-}
+})
