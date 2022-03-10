@@ -51,7 +51,7 @@ export function useUSDPrice(currencyAmount?: CurrencyAmount, selectedTrade?: Tra
       if (!trades || !trades.length) return undefined
 
       const topTrade = trades.filter(allowHighTVLPlataforms)
-      console.log(topTrade)
+
       const tradesTotal = topTrade.reduce(
         (acc, trade) => (trade ? trade.executionPrice.raw.add(acc) : acc),
         new Fraction(ZERO, ONE)

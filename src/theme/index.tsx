@@ -57,6 +57,7 @@ export function colors(darkMode: boolean): Colors {
     bg4: darkMode ? '#686E94' : '#C0BBE9',
     bg5: darkMode ? '#9096BE' : '#7873A4',
     bg6: '#191A24',
+    bg7: '#2D3040',
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
@@ -85,7 +86,7 @@ export function colors(darkMode: boolean): Colors {
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     blue1: '#2172E5',
-
+    gray1: '#737798',
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',

@@ -83,7 +83,7 @@ export const RecipientField = ({ recipient, action }: RecipientField) => {
       <SearchInputStyled
         type="text"
         placeholder={t('addressOrENS')}
-        value={(address || recipient) ?? undefined}
+        value={(address || recipient) ?? ''}
         onChange={handleInput}
         error={error}
       />

@@ -32,16 +32,17 @@ import { TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { ClickableText } from '../Pools/styleds'
 import Loader from '../../components/Loader'
 import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
-import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
 import QuestionHelper from '../../components/QuestionHelper'
 import { ApplicationModal } from '../../state/application/actions'
 import { Tabs } from '../../components/swap/Tabs'
 import { ReactComponent as SwapIcon } from '../../assets/svg/swap-icon.svg'
 import { useUSDValue } from '../../hooks/useUSDValue'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
+import { SwapSettings } from './../../components/swap/SwapSettings'
+import { SwapButton } from '../../components/swap/SwapButton'
+import { RecipientField } from '../../components/RecipientField'
 
 // Landing Page Imports
 import './../../theme/landingPageTheme/stylesheet.css'
@@ -53,8 +54,6 @@ import CommunityLinks from './../../components/LandingPageComponents/CommunityLi
 import BlogNavigation from './../../components/LandingPageComponents/BlogNavigation'
 import Hero from './../../components/LandingPageComponents/layout/Hero'
 import Footer from './../../components/LandingPageComponents/layout/Footer'
-import { SwapButton } from '../../components/swap/SwapButton'
-import { RecipientField } from '../../components/RecipientField'
 
 const SwitchIconContainer = styled.div`
   height: 0;
@@ -379,12 +378,7 @@ export default function Swap() {
                       </RowBetween>
                     </PaddedCard>
                     <PaddedRowBetween align="center" px="8px">
-                      <RowFixed alignItems="center">
-                        {ROUTABLE_PLATFORM_LOGO[trade.platform.name]}
-                        <ClickableText marginLeft="4px" fontSize="14px" fontWeight="600" color="white">
-                          {trade.platform.name}
-                        </ClickableText>
-                      </RowFixed>
+                      <SwapSettings />
                       <RowFixed>
                         <TradePrice
                           price={trade?.executionPrice}
