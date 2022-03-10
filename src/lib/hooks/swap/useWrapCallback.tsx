@@ -16,7 +16,7 @@ export enum WrapType {
   UNWRAP,
 }
 interface UseWrapCallbackReturns {
-  callback: () => Promise<ContractTransaction | void>
+  callback: () => Promise<ContractTransaction>
   error: WrapError
   loading: boolean
   type: WrapType

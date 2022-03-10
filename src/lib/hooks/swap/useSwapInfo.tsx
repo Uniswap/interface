@@ -66,7 +66,7 @@ function useComputeSwapInfo(): SwapInfo {
   //@TODO(ianlapham): this would eventually be replaced with routing api logic.
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    isWrapping ? undefined : parsedAmount,
+    parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
 
