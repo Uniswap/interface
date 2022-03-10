@@ -6,12 +6,12 @@ import { IconButton } from 'lib/components/Button'
 import { useSwapTradeType } from 'lib/hooks/swap'
 import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import useScrollbar from 'lib/hooks/useScrollbar'
+import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
-import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton, { Action } from '../../ActionButton'
@@ -87,7 +87,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const { inputAmount, outputAmount, executionPrice } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
-  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
+  const usdcPriceImpact = useUSDCPriceImpact(inputAmount, outputAmount)
   const tradeType = useSwapTradeType()
   const { i18n } = useLingui()
 
@@ -96,8 +96,8 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
   const scrollbar = useScrollbar(details)
 
   const warning = useMemo(() => {
-    return getPriceImpactWarning(priceImpact) || getSlippageWarning(allowedSlippage)
-  }, [allowedSlippage, priceImpact])
+    return usdcPriceImpact.priceImpactWarning || getSlippageWarning(allowedSlippage)
+  }, [allowedSlippage, usdcPriceImpact.priceImpactWarning])
 
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
@@ -115,7 +115,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         onClick: () => setConfirmedTrade(trade),
         children: <Trans>Accept</Trans>,
       }
-    } else if (getPriceImpactWarning(priceImpact) === 'error' && !ackPriceImpact) {
+    } else if (usdcPriceImpact.priceImpactWarning === 'error' && !ackPriceImpact) {
       return {
         message: <Trans>High price impact</Trans>,
         onClick: () => setAckPriceImpact(true),
@@ -123,7 +123,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, priceImpact, trade])
+  }, [ackPriceImpact, doesTradeDiffer, trade, usdcPriceImpact.priceImpactWarning])
 
   if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
     return null
@@ -134,7 +134,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
       <Header title={<Trans>Swap summary</Trans>} ruled />
       <Body flex align="stretch" gap={0.75} padded open={open}>
         <SummaryColumn gap={0.75} flex justify="center">
-          <Summary input={inputAmount} output={outputAmount} showUSDC />
+          <Summary input={inputAmount} output={outputAmount} usdcPriceImpact={usdcPriceImpact} />
           <Row>
             <ThemedText.Caption userSelect>
               {formatLocaleNumber({ number: 1, sigFigs: 1, locale: i18n.locale })} {inputCurrency.symbol} ={' '}
