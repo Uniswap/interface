@@ -10,6 +10,7 @@ import { providersReducer } from 'src/features/providers/providerSlice'
 import { tokenListsReducer } from 'src/features/tokenLists/reducer'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
+import { userReducer } from 'src/features/user/slice'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 
 export const rootReducer = combineReducers({
@@ -22,6 +23,7 @@ export const rootReducer = combineReducers({
   tokenLists: tokenListsReducer,
   tokens: tokensReducer,
   transactions: transactionReducer,
+  user: userReducer,
   wallet: walletReducer,
   [multicall.reducerPath]: multicall.reducer,
   saga: monitoredSagaReducers,

@@ -36,6 +36,7 @@ export const enum ModalName {
  */
 export const enum ElementName {
   AccountCard = 'account-card',
+  ApplyThemeFromNFT = 'apply-theme-from-nft',
   Back = 'back',
   BuyToken = 'buy-token',
   ClearSearch = 'clear-search',

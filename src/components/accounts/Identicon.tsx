@@ -1,7 +1,10 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { useColorScheme } from 'react-native'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
+import { selectUserLocalPfp } from 'src/features/user/slice'
 import { colorsDark, colorsLight } from 'src/styles/color'
 import { Theme } from 'src/styles/theme'
 import { isValidAddress } from 'src/utils/addresses'
@@ -16,15 +19,28 @@ type Props = {
 export function Identicon({ address, size = 36, ...rest }: Props) {
   if (!isValidAddress(address)) throw new Error(`Invalid address for identicon ${address}`)
   const isDarkMode = useColorScheme() === 'dark'
+
   const color = useAddressColor(address, isDarkMode)
+  const userPfp = useAppSelector(selectUserLocalPfp)
+
+  const theme = useAppTheme()
+
   return (
     <Box
       borderRadius="full"
       height={size}
       style={{ backgroundColor: color }}
       width={size}
-      {...rest}
-    />
+      {...rest}>
+      {userPfp && (
+        <RemoteImage
+          borderRadius={theme.borderRadii.lg}
+          height={size}
+          imageUrl={userPfp}
+          width={size}
+        />
+      )}
+    </Box>
   )
 }
 

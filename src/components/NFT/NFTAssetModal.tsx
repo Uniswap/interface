@@ -1,14 +1,17 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Linking } from 'react-native'
+import { Linking, StyleSheet } from 'react-native'
 import { useAccountDisplayName } from 'src/components/accounts/useAccountDisplayName'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { BottomSheetScrollModal } from 'src/components/modals/BottomSheetModal'
+import { ApplyNFTPaletteButton, NFTPalette } from 'src/components/NFT/NFTPalette'
 import { Text } from 'src/components/Text'
 import { OpenseaNFTAsset } from 'src/features/nfts/types'
+import { isEnabled } from 'src/features/remoteConfig'
+import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { borderRadii, dimensions } from 'src/styles/sizing'
@@ -59,12 +62,22 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
           />
           <Text variant="h3">{name}</Text>
         </Flex>
-        <RemoteImage
-          borderRadius={borderRadii.lg}
-          height={ITEM_WIDTH}
-          imageUrl={imageUrl}
-          width={ITEM_WIDTH}
-        />
+        <Box>
+          <RemoteImage
+            borderRadius={borderRadii.lg}
+            height={ITEM_WIDTH}
+            imageUrl={imageUrl}
+            width={ITEM_WIDTH}
+          />
+          <Flex
+            alignItems="flex-end"
+            justifyContent="space-between"
+            m="md"
+            style={StyleSheet.absoluteFill}>
+            <ApplyNFTPaletteButton asset={nftAsset} />
+            {isEnabled(TestConfig.DisplayExtractedNFTColors) && <NFTPalette asset={nftAsset} />}
+          </Flex>
+        </Box>
         <PrimaryButton
           label={t('View on Opensea')}
           name={ElementName.ViewOnOpensea}
