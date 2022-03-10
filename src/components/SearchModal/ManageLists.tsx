@@ -50,12 +50,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
-  background: ${({ theme }) => theme.bg1};
   border-radius: 0.5rem;
-`
-
-const PopoverContent = styled.div<{ hasActiveTokens: boolean }>`
-  opacity: ${({ hasActiveTokens }) => (hasActiveTokens ? 1 : 0.4)};
   display: grid;
   grid-template-rows: 1fr;
   grid-gap: 8px;
@@ -65,7 +60,6 @@ const PopoverContent = styled.div<{ hasActiveTokens: boolean }>`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   color: ${({ theme }) => theme.text2};
   padding: 1rem;
-  border-radius: 0.5rem;
   font-size: 1rem;
   text-align: left;
 `
@@ -172,12 +166,11 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
 
   if (!list) return null
 
-  const hasActiveTokens = activeTokensOnThisChain > 0
   return (
     <>
       <RowWrapper
         active={isActive}
-        hasActiveTokens={hasActiveTokens}
+        hasActiveTokens={activeTokensOnThisChain > 0}
         bgColor={listColor}
         key={listUrl}
         id={listUrlRowHTMLId(listUrl)}
@@ -213,21 +206,19 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
       <StyledMenu ref={(el) => (menuRelatedNode.current[1] = el)}>
         {open && (
           <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
-            <PopoverContent hasActiveTokens={hasActiveTokens}>
-              <div>{list && listVersionLabel(list.version)}</div>
-              <SeparatorDark />
-              <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
-                <Trans>View list</Trans>
-              </ExternalLink>
-              <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
-                <Trans>Remove list</Trans>
+            <div>{list && listVersionLabel(list.version)}</div>
+            <SeparatorDark />
+            <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
+              <Trans>View list</Trans>
+            </ExternalLink>
+            <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
+              <Trans>Remove list</Trans>
+            </UnpaddedLinkStyledButton>
+            {pending && (
+              <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
+                <Trans>Update list</Trans>
               </UnpaddedLinkStyledButton>
-              {pending && (
-                <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
-                  <Trans>Update list</Trans>
-                </UnpaddedLinkStyledButton>
-              )}
-            </PopoverContent>
+            )}
           </PopoverContainer>
         )}
       </StyledMenu>

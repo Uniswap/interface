@@ -10,8 +10,8 @@ export function useOnClickOutside<T extends HTMLElement | Array<HTMLElement | nu
   }, [handler])
 
   useEffect(() => {
-    const nodeList = node.current ? (Array.isArray(node.current) ? node.current : [node.current]) : []
     const handleClickOutside = (e: MouseEvent) => {
+      const nodeList = node.current ? (Array.isArray(node.current) ? node.current : [node.current]) : []
       for (const node of nodeList) {
         if (node?.contains(e.target as Node) ?? false) {
           return
