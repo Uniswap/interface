@@ -20,6 +20,7 @@ interface TokenValueProps {
 function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
   const { i18n } = useLingui()
   const priceImpactWarning = useMemo(() => getPriceImpactWarning(priceImpact), [priceImpact])
+  const priceImpactColor = priceImpact?.lessThan(0) ? 'success' : priceImpactWarning
   return (
     <Column justify="flex-start">
       <Row gap={0.375} justify="flex-start">
@@ -33,7 +34,7 @@ function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
           <Row justify="flex-start" gap={0.25}>
             ${formatCurrencyAmount(usdc, 6, 'en', 2)}
             {priceImpact && (
-              <ThemedText.Caption color={priceImpactWarning}>
+              <ThemedText.Caption color={priceImpactColor}>
                 ({toHumanReadablePriceImpact(priceImpact)})
               </ThemedText.Caption>
             )}
