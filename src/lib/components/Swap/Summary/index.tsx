@@ -1,17 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { IconButton } from 'lib/components/Button'
 import { useSwapTradeType } from 'lib/hooks/swap'
-import { getSlippageWarning } from 'lib/hooks/useAllowedSlippage'
 import useScrollbar from 'lib/hooks/useScrollbar'
+import { Slippage } from 'lib/hooks/useSlippage'
+import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
-import styled, { ThemedText } from 'lib/theme'
+import styled, { Color, ThemedText } from 'lib/theme'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
 import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
-import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import ActionButton, { Action } from '../../ActionButton'
@@ -77,27 +77,44 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
+function Subhead({ priceImpact, slippage }: { priceImpact: { warning?: Color }; slippage: { warning?: Color } }) {
+  return (
+    <Row gap={0.5}>
+      {priceImpact.warning || slippage.warning ? (
+        <AlertTriangle color={priceImpact.warning || slippage.warning} />
+      ) : (
+        <Info color="secondary" />
+      )}
+      <ThemedText.Subhead2 color={priceImpact.warning || slippage.warning || 'secondary'}>
+        {priceImpact.warning ? (
+          <Trans>High price impact</Trans>
+        ) : slippage.warning ? (
+          <Trans>High slippage</Trans>
+        ) : (
+          <Trans>Swap details</Trans>
+        )}
+      </ThemedText.Subhead2>
+    </Row>
+  )
+}
+
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
-  allowedSlippage: Percent
+  slippage: Slippage
   onConfirm: () => void
 }
 
-export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDialogProps) {
+export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps) {
   const { inputAmount, outputAmount, executionPrice } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
-  const priceImpact = useMemo(() => computeRealizedPriceImpact(trade), [trade])
+  const usdcPriceImpact = useUSDCPriceImpact(inputAmount, outputAmount)
   const tradeType = useSwapTradeType()
   const { i18n } = useLingui()
 
   const [open, setOpen] = useState(false)
   const [details, setDetails] = useState<HTMLDivElement | null>(null)
   const scrollbar = useScrollbar(details)
-
-  const warning = useMemo(() => {
-    return getPriceImpactWarning(priceImpact) || getSlippageWarning(allowedSlippage)
-  }, [allowedSlippage, priceImpact])
 
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
 
@@ -115,7 +132,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         onClick: () => setConfirmedTrade(trade),
         children: <Trans>Accept</Trans>,
       }
-    } else if (getPriceImpactWarning(priceImpact) === 'error' && !ackPriceImpact) {
+    } else if (usdcPriceImpact.warning === 'error' && !ackPriceImpact) {
       return {
         message: <Trans>High price impact</Trans>,
         onClick: () => setAckPriceImpact(true),
@@ -123,7 +140,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, priceImpact, trade])
+  }, [ackPriceImpact, doesTradeDiffer, trade, usdcPriceImpact.warning])
 
   if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
     return null
@@ -134,7 +151,7 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
       <Header title={<Trans>Swap summary</Trans>} ruled />
       <Body flex align="stretch" gap={0.75} padded open={open}>
         <SummaryColumn gap={0.75} flex justify="center">
-          <Summary input={inputAmount} output={outputAmount} showUSDC />
+          <Summary input={inputAmount} output={outputAmount} usdcPriceImpact={usdcPriceImpact} />
           <Row>
             <ThemedText.Caption userSelect>
               {formatLocaleNumber({ number: 1, sigFigs: 1, locale: i18n.locale })} {inputCurrency.symbol} ={' '}
@@ -144,19 +161,14 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
         </SummaryColumn>
         <Rule />
         <Row>
-          <Row gap={0.5}>
-            {warning ? <AlertTriangle color={warning} /> : <Info color="secondary" />}
-            <ThemedText.Subhead2 color="secondary">
-              <Trans>Swap details</Trans>
-            </ThemedText.Subhead2>
-          </Row>
+          <Subhead priceImpact={usdcPriceImpact} slippage={slippage} />
           <IconButton color="secondary" onClick={() => setOpen(!open)} icon={Expando} iconProps={{ open }} />
         </Row>
         <ExpandoColumn flex align="stretch">
           <Rule />
           <DetailsColumn>
             <Column gap={0.5} ref={setDetails} css={scrollbar}>
-              <Details trade={trade} allowedSlippage={allowedSlippage} />
+              <Details trade={trade} slippage={slippage} usdcPriceImpact={usdcPriceImpact} />
             </Column>
           </DetailsColumn>
           <Estimate color="secondary">
@@ -164,13 +176,13 @@ export function SummaryDialog({ trade, allowedSlippage, onConfirm }: SummaryDial
             {tradeType === TradeType.EXACT_INPUT && (
               <Trans>
                 You will receive at least{' '}
-                {formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), 6, i18n.locale)} {outputCurrency.symbol}{' '}
+                {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)} {outputCurrency.symbol}{' '}
                 or the transaction will revert.
               </Trans>
             )}
             {tradeType === TradeType.EXACT_OUTPUT && (
               <Trans>
-                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(allowedSlippage), 6, i18n.locale)}{' '}
+                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
                 {inputCurrency.symbol} or the transaction will revert.
               </Trans>
             )}

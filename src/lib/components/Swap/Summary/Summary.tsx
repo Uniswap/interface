@@ -1,11 +1,10 @@
 import { useLingui } from '@lingui/react'
-import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import useUSDCPriceImpact, { toHumanReadablePriceImpact } from 'lib/hooks/useUSDCPriceImpact'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { ArrowRight } from 'lib/icons'
 import { ThemedText } from 'lib/theme'
-import { useMemo } from 'react'
+import { PropsWithChildren } from 'react'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../../Column'
 import Row from '../../Row'
@@ -14,12 +13,10 @@ import TokenImg from '../../TokenImg'
 interface TokenValueProps {
   input: CurrencyAmount<Currency>
   usdc?: CurrencyAmount<Token>
-  priceImpact?: Percent
 }
 
-function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
+function TokenValue({ input, usdc, children }: PropsWithChildren<TokenValueProps>) {
   const { i18n } = useLingui()
-  const priceImpactWarning = useMemo(() => getPriceImpactWarning(priceImpact), [priceImpact])
   return (
     <Column justify="flex-start">
       <Row gap={0.375} justify="flex-start">
@@ -29,16 +26,12 @@ function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
         </ThemedText.Body2>
       </Row>
       {usdc && (
-        <ThemedText.Caption color="secondary" userSelect>
-          <Row justify="flex-start" gap={0.25}>
+        <Row justify="flex-start">
+          <ThemedText.Caption color="secondary" userSelect>
             ${formatCurrencyAmount(usdc, 6, 'en', 2)}
-            {priceImpact && (
-              <ThemedText.Caption color={priceImpactWarning}>
-                ({toHumanReadablePriceImpact(priceImpact)})
-              </ThemedText.Caption>
-            )}
-          </Row>
-        </ThemedText.Caption>
+            {children}
+          </ThemedText.Caption>
+        </Row>
       )}
     </Column>
   )
@@ -47,17 +40,19 @@ function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
 interface SummaryProps {
   input: CurrencyAmount<Currency>
   output: CurrencyAmount<Currency>
-  showUSDC?: true
+  usdcPriceImpact?: ReturnType<typeof useUSDCPriceImpact>
 }
 
-export default function Summary({ input, output, showUSDC }: SummaryProps) {
-  const { inputUSDC, outputUSDC, priceImpact } = useUSDCPriceImpact(input, output)
+export default function Summary({ input, output, usdcPriceImpact }: SummaryProps) {
+  const { inputUSDC, outputUSDC, priceImpact, warning: priceImpactWarning } = usdcPriceImpact || {}
 
   return (
-    <Row gap={showUSDC ? 1 : 0.25}>
-      <TokenValue input={input} usdc={showUSDC && inputUSDC} />
+    <Row gap={usdcPriceImpact ? 1 : 0.25}>
+      <TokenValue input={input} usdc={inputUSDC} />
       <ArrowRight />
-      <TokenValue input={output} usdc={showUSDC && outputUSDC} priceImpact={priceImpact} />
+      <TokenValue input={output} usdc={outputUSDC}>
+        {priceImpact && <ThemedText.Caption color={priceImpactWarning}>({priceImpact})</ThemedText.Caption>}
+      </TokenValue>
     </Row>
   )
 }

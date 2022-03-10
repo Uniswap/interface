@@ -5,13 +5,12 @@ import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
-import useUSDCPriceImpact, { toHumanReadablePriceImpact } from 'lib/hooks/useUSDCPriceImpact'
+import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren } from 'react'
 import { TradeState } from 'state/routing/types'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { getPriceImpactWarning } from 'utils/prices'
 
 import Column from '../Column'
 import Row from '../Row'
@@ -59,8 +58,11 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   // different state true/null/false allow smoother color transition
   const hasColor = swapOutputCurrency ? Boolean(color) || null : false
 
-  const { outputUSDC, priceImpact } = useUSDCPriceImpact(inputCurrencyAmount, outputCurrencyAmount)
-  const priceImpactWarning = useMemo(() => getPriceImpactWarning(priceImpact), [priceImpact])
+  const {
+    outputUSDC,
+    priceImpact,
+    warning: priceImpactWarning,
+  } = useUSDCPriceImpact(inputCurrencyAmount, outputCurrencyAmount)
 
   const amount = useFormattedFieldAmount({
     disabled,
@@ -88,11 +90,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
             <Row>
               <USDC gap={0.5} isLoading={isRouteLoading}>
                 {outputUSDC ? `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)}` : '-'}{' '}
-                {priceImpact && (
-                  <ThemedText.Body2 color={priceImpactWarning}>
-                    ({toHumanReadablePriceImpact(priceImpact)})
-                  </ThemedText.Body2>
-                )}
+                {priceImpact && <ThemedText.Body2 color={priceImpactWarning}>({priceImpact})</ThemedText.Body2>}
               </USDC>
               {balance && (
                 <Balance focused={focused}>
