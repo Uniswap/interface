@@ -140,6 +140,7 @@ export function useLPPairs(
     liquidityUSD: CurrencyAmount
     maximumApy: Percent
     staked: boolean
+    hasFarming: boolean
     containsKpiToken: boolean
   }[]
 } {
@@ -244,6 +245,7 @@ export function useLPPairs(
           liquidityUSD: CurrencyAmount.usd(
             parseUnits(new Decimal(reserveUSD).toFixed(USD.decimals), USD.decimals).toString()
           ),
+          hasFarming: pair.liquidityMiningCampaigns.some(campaign => campaign.currentlyActive),
           staked: position.pair.liquidityMiningCampaigns.some(campaign => campaign.liquidityMiningPositions.length > 0),
           maximumApy: bestCampaign ? bestCampaign.apy : new Percent('0', '100'),
           containsKpiToken: !!bestCampaign?.rewards.some(reward => reward.token instanceof KpiToken)
