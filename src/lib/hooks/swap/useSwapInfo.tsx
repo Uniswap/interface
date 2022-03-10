@@ -53,10 +53,6 @@ function useComputeSwapInfo(): SwapInfo {
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 
-  // Short circuit trade fetching and amount parsing if wrapping or unwrapping.
-  const { type: wrapType } = useWrapCallback()
-  const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
-
   const isExactIn = independentField === Field.INPUT
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
@@ -85,6 +81,10 @@ function useComputeSwapInfo(): SwapInfo {
     }),
     [relevantTokenBalances]
   )
+
+  // Use same amount for input and output if user is wrapping.
+  const { type: wrapType } = useWrapCallback()
+  const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
 
   const tradeCurrencyAmounts = useMemo(
     () => ({

@@ -112,9 +112,9 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     const result = await (wrapType === WrapType.WRAP
       ? wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
       : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`)
-    ).catch(() => {
+    ).catch((e: unknown) => {
       setWrapState((state) => ({ ...state, loading: false }))
-      return Promise.reject('User denied wallet transaction.')
+      throw e
     })
     // resolve loading state after one confirmation
     result.wait(1).finally(() => setWrapState((state) => ({ ...state, loading: false })))
