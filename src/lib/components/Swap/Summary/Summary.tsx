@@ -29,16 +29,16 @@ function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
         </ThemedText.Body2>
       </Row>
       {usdc && (
-        <Row justify="flex-start" gap={0.25}>
-          <ThemedText.Caption color="secondary" userSelect>
-            ${formatCurrencyAmount(usdc, 4, i18n.locale)}
-          </ThemedText.Caption>
-          {priceImpact && (
-            <ThemedText.Caption color={priceImpactWarning}>
-              ({toHumanReadablePriceImpact(priceImpact)})
-            </ThemedText.Caption>
-          )}
-        </Row>
+        <ThemedText.Caption color="secondary" userSelect>
+          <Row justify="flex-start" gap={0.25}>
+            ${formatCurrencyAmount(usdc, 4, 'en', 2)}
+            {priceImpact && (
+              <ThemedText.Caption color={priceImpactWarning}>
+                ({toHumanReadablePriceImpact(priceImpact)})
+              </ThemedText.Caption>
+            )}
+          </Row>
+        </ThemedText.Caption>
       )}
     </Column>
   )

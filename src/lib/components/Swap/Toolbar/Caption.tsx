@@ -10,6 +10,7 @@ import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { getPriceImpactWarning } from 'utils/prices'
 
 import { TextButton } from '../../Button'
@@ -92,10 +93,10 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
     const ratio = `1 ${a.currency.symbol} = ${priceString} ${b.currency.symbol}`
     const usdc = !flip
       ? inputUSDC
-        ? ` ($${inputUSDC.toSignificant(6)})`
+        ? ` ($${formatCurrencyAmount(inputUSDC, 6, 'en', 2)})`
         : null
       : outputUSDC
-      ? ` ($${outputUSDC.toSignificant(6)})`
+      ? ` ($${formatCurrencyAmount(outputUSDC, 6, 'en', 2)})`
       : null
 
     return (
@@ -106,7 +107,7 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
         </Row>
       </ThemedText.Caption>
     )
-  }, [executionPrice, inputUSDC, outputUSDC, flip, input, output])
+  }, [flip, output, input, executionPrice, inputUSDC, outputUSDC])
 
   return (
     <>
