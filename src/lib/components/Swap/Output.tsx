@@ -87,7 +87,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
           <ThemedText.Body2 color="secondary" userSelect>
             <Row>
               <USDC gap={0.5} isLoading={isRouteLoading}>
-                {outputUSDC ? `$${outputUSDC.toFixed(2)}` : '-'}{' '}
+                {outputUSDC ? `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)}` : '-'}{' '}
                 {priceImpact && (
                   <ThemedText.Body2 color={priceImpactWarning}>
                     ({toHumanReadablePriceImpact(priceImpact)})

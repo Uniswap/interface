@@ -31,7 +31,7 @@ function TokenValue({ input, usdc, priceImpact }: TokenValueProps) {
       {usdc && (
         <ThemedText.Caption color="secondary" userSelect>
           <Row justify="flex-start" gap={0.25}>
-            ${formatCurrencyAmount(usdc, 2, i18n.locale)}
+            ${formatCurrencyAmount(usdc, 6, 'en', 2)}
             {priceImpact && (
               <ThemedText.Caption color={priceImpactWarning}>
                 ({toHumanReadablePriceImpact(priceImpact)})
