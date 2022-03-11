@@ -24,6 +24,7 @@ export type NetworkOptions = {
   active?: boolean
   disabled?: boolean
   onClick?: any
+  connected?: boolean
 }
 
 export type NetworksList = {

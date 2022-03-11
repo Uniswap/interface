@@ -8,7 +8,9 @@ import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, Pair, Routable
 import { TokenAddressMap } from '../state/lists/hooks'
 import Decimal from 'decimal.js-light'
 import { commify } from 'ethers/lib/utils'
+import styled from 'styled-components'
 import { NetworkDetails } from '../constants'
+import { ReactComponent as ConnectedSvg } from '../assets/svg/connected.svg'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -197,3 +199,9 @@ export const switchOrAddNetwork = (networkDetails?: NetworkDetails, account?: st
         })
     })
 }
+
+export const StyledConnectedIcon = styled(ConnectedSvg)<{ width?: string, padding?: string, margin?: string }>`
+  min-width: ${ props => (props.width ? props.width : "22px")};
+  padding: ${ props => (props.padding ? props.padding : "0")};
+  margin: ${ props => (props.margin ? props.margin : "0")};
+`

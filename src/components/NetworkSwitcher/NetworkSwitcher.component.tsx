@@ -20,7 +20,7 @@ export const NetworkSwitcher = ({
   showWalletConnector = true
 }: NetworkSwitcherProps) => {
   const popoverRef = useRef(null)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const ethereumOptionPopoverOpen = useModalOpen(ApplicationModal.ETHEREUM_OPTION)
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
@@ -39,7 +39,7 @@ export const NetworkSwitcher = ({
               <OptionGrid key={index}>
                 <NetworkTagRow>{network.tag}</NetworkTagRow>
                 {network.networks.map((props, index) => (
-                  <Option key={index} {...props} />
+                  <Option key={index} {...props} connected={!!account && chainId === props.preset.chainId} />
                 ))}
               </OptionGrid>
             ))}
