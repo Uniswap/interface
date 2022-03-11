@@ -389,7 +389,7 @@ function Header() {
           {gas.normal !== 0.0 && (
             <GasInfo onClick={() => setIsGasInfoOpen(!isGasInfoOpen)}>
               <GasInfoSvg />
-              <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600}>
+              <Text marginLeft={'4px'} marginRight={'2px'} fontSize={10} fontWeight={600} lineHeight={'9px'}>
                 {gas.normal}
               </Text>
               {gas.fast === 0 && gas.slow === 0 ? '' : <StyledChevron isOpen={isGasInfoOpen} size={12} />}
