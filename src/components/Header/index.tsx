@@ -5,7 +5,7 @@ import { SWPR } from '@swapr/sdk'
 
 import styled, { css } from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useUnsupportedChainIdError } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useNativeCurrencyBalance, useTokenBalance } from '../../state/wallet/hooks'
 
@@ -19,13 +19,15 @@ import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
-import { useToggleShowClaimPopup } from '../../state/application/hooks'
+import { useModalOpen, useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
 import Skeleton from 'react-loading-skeleton'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 import { SwprInfo } from './swpr-info'
 import { useSwaprSinglelSidedStakeCampaigns } from '../../hooks/singleSidedStakeCampaigns/useSwaprSingleSidedStakeCampaigns'
 import { useLiquidityMiningCampaignPosition } from '../../hooks/useLiquidityMiningCampaignPosition'
+import UnsupportedNetworkPopover from '../NetworkUnsupportedPopover'
+import { ApplicationModal } from '../../state/application/actions'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -235,15 +237,17 @@ function Header() {
   const newSwpr = useMemo(() => (chainId ? SWPR[chainId] : undefined), [chainId])
   const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
   const isMobileByMedia = useIsMobileByMedia()
+  const isUnsupportedNetworkModal = useModalOpen(ApplicationModal.UNSUPPORTED_NETWORK)
+  const isUnsupportedChainIdError = useUnsupportedChainIdError()
 
   useEffect(() => {
-    window.addEventListener('scroll', (e) => {
-      let headerControls = document.getElementById('header-controls');
+    window.addEventListener('scroll', e => {
+      const headerControls = document.getElementById('header-controls')
       if (headerControls) {
         if (window.scrollY > 0) {
-          headerControls.classList.add('hidden');
+          headerControls.classList.add('hidden')
         } else {
-          headerControls.classList.remove('hidden');
+          headerControls.classList.remove('hidden')
         }
       }
     })
@@ -306,16 +310,22 @@ function Header() {
             newSwprBalance={newSwprBalance}
             onToggleClaimPopup={toggleClaimPopup}
           />
-          <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
-            {!account ? (
-              '0.000'
-            ) : !userNativeCurrencyBalance ? (
-              <Skeleton width="40px" />
+          <UnsupportedNetworkPopover show={isUnsupportedNetworkModal}>
+            {isUnsupportedChainIdError ? (
+              <Amount zero>{'UNSUPPORTED NETWORK'}</Amount>
             ) : (
-              userNativeCurrencyBalance.toFixed(3)
-            )}{' '}
-            {nativeCurrency.symbol}
-          </Amount>
+              <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
+                {!account ? (
+                  '0.000'
+                ) : !userNativeCurrencyBalance ? (
+                  <Skeleton width="40px" />
+                ) : (
+                  userNativeCurrencyBalance.toFixed(3)
+                )}{' '}
+                {nativeCurrency.symbol}
+              </Amount>
+            )}
+          </UnsupportedNetworkPopover>
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
