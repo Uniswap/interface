@@ -60,8 +60,8 @@ function useComputeSwapInfo(): SwapInfo {
   const tradeCurrencyAmounts = useMemo(
     () => ({
       // Use same amount for input and output if user is wrapping.
-      [Field.INPUT]: isWrapping ? parsedAmount : trade.trade?.inputAmount,
-      [Field.OUTPUT]: isWrapping ? parsedAmount : trade.trade?.outputAmount,
+      [Field.INPUT]: isWrapping || isExactIn ? parsedAmount : trade.trade?.inputAmount,
+      [Field.OUTPUT]: isWrapping || !isExactIn ? parsedAmount : trade.trade?.outputAmount,
     }),
     [isWrapping, parsedAmount, trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
