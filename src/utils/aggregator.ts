@@ -13,7 +13,7 @@ import {
   TokenAmount,
   TradeType,
   WETH,
-  ZERO
+  ZERO,
 } from '@dynamic-amm/sdk'
 import { DEX_TO_COMPARE, DexConfig, dexIds, dexListConfig, dexTypes } from '../constants/dexes'
 import invariant from 'tiny-invariant'
@@ -52,7 +52,7 @@ export const getExchangeConfig = (exchange: string, chainId: ChainId): ExchangeC
   return {
     ...(getKeyValue(dexListConfig)(exchange) || {}),
     id: getKeyValue(allIds)(exchange) ?? 1,
-    type: getKeyValue(allTypes)(exchange) ?? 0
+    type: getKeyValue(allTypes)(exchange) ?? 0,
   }
 }
 
@@ -64,7 +64,7 @@ function encodeParameters(types: any[], values: any[]): string {
 function encodeUniSwap(data: any) {
   return encodeParameters(
     ['address', 'address', 'address', 'address', 'uint256', 'uint256'],
-    [data.pool, data.tokenIn, data.tokenOut, data.recipient, data.collectAmount, data.limitReturnAmount || '0']
+    [data.pool, data.tokenIn, data.tokenOut, data.recipient, data.collectAmount, data.limitReturnAmount || '0'],
   )
 }
 
@@ -80,8 +80,8 @@ function encodeStableSwap(data: any) {
       data.swapAmount,
       data.limitReturnAmount || '0',
       data.poolLength,
-      data.pool
-    ]
+      data.pool,
+    ],
   )
 }
 
@@ -103,15 +103,15 @@ function encodeCurveSwap(data: any) {
       data.swapAmount,
       '0',
       usePoolUnderlying,
-      isTriCrypto
-    ]
+      isTriCrypto,
+    ],
   )
 }
 
 function encodeBalancerSwap(data: any) {
   return encodeParameters(
     ['address', 'bytes32', 'address', 'address', 'uint256', 'uint256'],
-    [data.extra?.vault, data.pool, data.tokenIn, data.tokenOut, data.swapAmount, data.limitReturnAmount || '0']
+    [data.extra?.vault, data.pool, data.tokenIn, data.tokenOut, data.swapAmount, data.limitReturnAmount || '0'],
   )
 }
 
@@ -155,7 +155,7 @@ export function encodeSwapExecutor(swaps: any[][], chainId: ChainId) {
 export function encodeFeeConfig({
   feeReceiver,
   isInBps,
-  feeAmount
+  feeAmount,
 }: {
   feeReceiver: string
   isInBps: boolean
@@ -183,8 +183,8 @@ export function encodeSimpleModeData(data: {
         return encodeParameters(['(bytes,uint16)[]'], [data])
       }),
       data.deadline,
-      data.destTokenFeeData
-    ]
+      data.destTokenFeeData,
+    ],
   )
   // 0x...20 means first dynamic param's location.
   return '0x0000000000000000000000000000000000000000000000000000000000000020'.concat(bytesDes.toString().slice(2))
@@ -249,7 +249,7 @@ export class Aggregator {
     tokens: any,
     tradeType: TradeType,
     gasUsd: number,
-    priceImpact: number
+    priceImpact: number,
   ) {
     this.tradeType = tradeType
     this.inputAmount = inputAmount
@@ -261,7 +261,7 @@ export class Aggregator {
       this.inputAmount.currency,
       this.outputAmount.currency,
       this.inputAmount.raw,
-      this.outputAmount.raw
+      this.outputAmount.raw,
     )
     this.swaps = swaps
     this.tokens = tokens
@@ -317,7 +317,7 @@ export class Aggregator {
     saveGas = false,
     dexes = '',
     gasPrice?: GasPrice,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<Aggregator | null> {
     const chainId: ChainId | undefined =
       currencyAmountIn instanceof TokenAmount
@@ -342,19 +342,17 @@ export class Aggregator {
         gasInclude: saveGas ? '1' : '0',
         ...(gasPrice
           ? {
-              gasPrice: BigNumber.from(gasPrice.standard)
-                .mul(10 ** 9)
-                .toString()
+              gasPrice: gasPrice.standard,
             }
           : {}),
-        ...(dexes ? { dexes } : {})
+        ...(dexes ? { dexes } : {}),
       })
       try {
         const response = await fetch(`${baseURL}?${search}`, {
           signal,
           headers: {
-            'X-Request-Id': sentryRequestId
-          }
+            'X-Request-Id': sentryRequestId,
+          },
         })
         const result = await response.json()
         if (
@@ -387,7 +385,7 @@ export class Aggregator {
           result.tokens || {},
           TradeType.EXACT_INPUT,
           result.gasUsd,
-          priceImpact
+          priceImpact,
         )
       } catch (e) {
         console.error(e)
@@ -407,7 +405,7 @@ export class Aggregator {
     baseURL: string,
     currencyAmountIn: CurrencyAmount,
     currencyOut: Currency,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<AggregationComparer | null> {
     const chainId: ChainId | undefined =
       currencyAmountIn instanceof TokenAmount
@@ -436,7 +434,7 @@ export class Aggregator {
         amountIn: currencyAmountIn.raw?.toString(),
         saveGas: '0',
         gasInclude: '1',
-        dexes: comparedDex.value
+        dexes: comparedDex.value,
       })
       try {
         // const promises: any[] = [
@@ -452,8 +450,8 @@ export class Aggregator {
         const response = await fetch(`${baseURL}?${search}`, {
           signal,
           headers: {
-            'X-Request-Id': sentryRequestId
-          }
+            'X-Request-Id': sentryRequestId,
+          },
         })
         const swapData = await response.json()
 
@@ -481,7 +479,7 @@ export class Aggregator {
           amountOutUsd,
           receivedUsd,
           // outputPriceUSD: parseFloat(outputPriceUSD),
-          comparedDex
+          comparedDex,
         }
       } catch (e) {
         console.error(e)
