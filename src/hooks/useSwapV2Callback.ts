@@ -469,10 +469,13 @@ export function useSwapV2Callback(
           gasEstimate,
         } = successfulEstimation
 
-        console.log('gasPrice used: ', gasPrice?.standard ? `api: ${gasPrice?.standard} gwei` : 'metamask default')
+        console.log(
+          '[gas_price] swap used: ',
+          gasPrice?.standard ? `api/node: ${gasPrice?.standard} wei` : 'metamask default',
+        )
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
-          ...(gasPrice?.standard ? { gasPrice: ethers.utils.parseUnits(gasPrice?.standard, 'gwei') } : {}),
+          ...(gasPrice?.standard ? { gasPrice: ethers.utils.parseUnits(gasPrice?.standard, 'wei') } : {}),
           ...(value && !isZero(value) ? { value, from: account } : { from: account }),
         })
           .then((response: any) => {

@@ -28,6 +28,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import { Sidetab, Popover } from '@typeform/embed-react'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
+import { ethers } from 'ethers'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -35,7 +36,7 @@ const Pool = lazy(() => import(/* webpackChunkName: 'pool-page' */ './Pool'))
 const Yield = lazy(() => import(/* webpackChunkName: 'yield-page' */ './Yield'))
 const PoolFinder = lazy(() => import(/* webpackChunkName: 'pool-finder-page' */ './PoolFinder'))
 const PoolFinderExternal = lazy(() =>
-  import(/* webpackChunkName: 'pool-finder-external-page' */ './PoolFinder/PoolFinderExternal')
+  import(/* webpackChunkName: 'pool-finder-external-page' */ './PoolFinder/PoolFinderExternal'),
 )
 const Migration = lazy(() => import(/* webpackChunkName: 'migration-page' */ './Pool/lp'))
 
@@ -43,12 +44,12 @@ const CreatePool = lazy(() => import(/* webpackChunkName: 'create-pool-page' */ 
 const RedirectCreatePoolDuplicateTokenIds = lazy(() =>
   import(
     /* webpackChunkName: 'redirect-create-pool-duplicate-token-ids-page' */ './CreatePool/RedirectDuplicateTokenIds'
-  )
+  ),
 )
 const RedirectOldCreatePoolPathStructure = lazy(() =>
   import(
     /* webpackChunkName: 'redirect-old-create-pool-path-structure-page' */ './CreatePool/RedirectOldCreatePoolPathStructure'
-  )
+  ),
 )
 
 const AddLiquidity = lazy(() => import(/* webpackChunkName: 'add-liquidity-page' */ './AddLiquidity'))
@@ -56,10 +57,10 @@ const AddLiquidity = lazy(() => import(/* webpackChunkName: 'add-liquidity-page'
 const RemoveLiquidity = lazy(() => import(/* webpackChunkName: 'remove-liquidity-page' */ './RemoveLiquidity'))
 
 const MigrateLiquidityUNI = lazy(() =>
-  import(/* webpackChunkName: 'migrate-uni-page' */ './RemoveLiquidity/migrate_uni')
+  import(/* webpackChunkName: 'migrate-uni-page' */ './RemoveLiquidity/migrate_uni'),
 )
 const MigrateLiquiditySUSHI = lazy(() =>
-  import(/* webpackChunkName: 'migrate-sushi-page' */ './RemoveLiquidity/migrate_sushi')
+  import(/* webpackChunkName: 'migrate-sushi-page' */ './RemoveLiquidity/migrate_sushi'),
 )
 const About = lazy(() => import(/* webpackChunkName: 'about-page' */ './About'))
 
@@ -92,20 +93,40 @@ const BodyWrapper = styled.div<{ isAboutpage?: boolean }>`
 `
 
 export default function App() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const aboutPage = useRouteMatch('/about')
   const apolloClient = useExchangeClient()
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
-    const fetchGas = (chain: string) => {
-      fetch(process.env.REACT_APP_KRYSTAL_API + `/${chain}/v2/swap/gasPrice`)
-        .then(res => res.json())
-        .then(json => {
-          dispatch(setGasPrice(!!json.error ? undefined : json.gasPrice))
+    const fallback = () => {
+      library
+        ?.getGasPrice()
+        .then(res => {
+          console.log('[gas_price] full node: ', res.toString() + ' wei')
+          dispatch(setGasPrice({ standard: res.toString() }))
         })
         .catch(e => {
           dispatch(setGasPrice(undefined))
           console.error(e)
+        })
+    }
+    const fetchGas = (chain: string) => {
+      if (!chain) {
+        fallback()
+        return
+      }
+      fetch(process.env.REACT_APP_KRYSTAL_API + `/${chain}/v2/swap/gasPrice`)
+        .then(res => res.json())
+        .then(json => {
+          if (!!json && !json.error && !!json.gasPrice) {
+            console.log('[gas_price] api: ', json.gasPrice.standard + ' gwei')
+            dispatch(setGasPrice({ standard: ethers.utils.parseUnits(json.gasPrice.standard, 'gwei').toString() }))
+          } else {
+            fallback()
+          }
+        })
+        .catch(e => {
+          fallback()
         })
     }
 
@@ -124,9 +145,9 @@ export default function App() {
         : chainId === ChainId.CRONOS
         ? 'cronos'
         : ''
-    if (!!chain) {
+    if (!!chainId) {
       fetchGas(chain)
-      interval = setInterval(() => fetchGas(chain), 30000)
+      interval = setInterval(() => fetchGas(chain), 10000)
     } else dispatch(setGasPrice(undefined))
     return () => {
       clearInterval(interval)

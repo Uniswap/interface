@@ -12,18 +12,21 @@ import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 import { Aggregator } from '../utils/aggregator'
+import { useSelector } from 'react-redux'
+import { ethers } from 'ethers'
+import { AppState } from 'state'
 
 export enum ApprovalState {
   UNKNOWN,
   NOT_APPROVED,
   PENDING,
-  APPROVED
+  APPROVED,
 }
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
   amountToApprove?: CurrencyAmount,
-  spender?: string
+  spender?: string,
 ): [ApprovalState, () => Promise<void>] {
   const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
@@ -48,6 +51,7 @@ export function useApproveCallback(
   const tokenContract = useTokenContract(token?.address)
   const addTransactionWithType = useTransactionAdder()
 
+  const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
       console.error('approve was called unnecessarily')
@@ -80,22 +84,27 @@ export function useApproveCallback(
       return tokenContract.estimateGas.approve(spender, amountToApprove.raw.toString())
     })
 
+    console.log(
+      '[gas_price] approval used: ',
+      gasPrice?.standard ? `api/node: ${gasPrice?.standard} wei` : 'metamask default',
+    )
     return tokenContract
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas)
+        ...(gasPrice?.standard ? { gasPrice: ethers.utils.parseUnits(gasPrice?.standard, 'wei') } : {}),
+        gasLimit: calculateGasMargin(estimatedGas),
       })
       .then((response: TransactionResponse) => {
         addTransactionWithType(response, {
           type: 'Approve',
           summary: convertToNativeTokenFromETH(amountToApprove.currency, chainId).symbol,
-          approval: { tokenAddress: token.address, spender: spender }
+          approval: { tokenAddress: token.address, spender: spender },
         })
       })
       .catch((error: Error) => {
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, chainId])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, chainId, gasPrice])
 
   return [approvalState, approve]
 }
@@ -105,7 +114,7 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
   const { chainId } = useActiveWeb3React()
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
-    [trade, allowedSlippage]
+    [trade, allowedSlippage],
   )
   return useApproveCallback(amountToApprove, !!chainId ? ROUTER_ADDRESSES[chainId] : undefined)
 }
@@ -115,7 +124,7 @@ export function useApproveCallbackFromTradeV2(trade?: Aggregator, allowedSlippag
   const { chainId } = useActiveWeb3React()
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
-    [trade, allowedSlippage]
+    [trade, allowedSlippage],
   )
   return useApproveCallback(amountToApprove, !!chainId ? ROUTER_ADDRESSES_V2[chainId] : undefined)
 }
