@@ -54,6 +54,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "ethers": "^5.4.4",
+    "etherscan-api": "10.0.5",
     "git-revision-webpack-plugin": "^3.0.6",
     "graphql": "^15.5.1",
     "graphql-request": "^3.6.0",
@@ -106,7 +107,7 @@
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
     "serve": "serve -s ./build",
     "lint": "eslint --fix ./src/**/*.ts",
-    "synpress": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' synpress run -r mochawesome"
+    "synpress": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' synpress run"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -133,6 +134,7 @@
     "arb-ts": "^1.0.2",
     "cypress-localstorage-commands": "^1.7.0",
     "dotenv": "^16.0.0",
+    "etherscan-api-e": "github:luckyCoco3418/etherscan-api",
     "jquery": "^3.6.0",
     "mochawesome": "^7.1.2",
     "multiformats": "^9.4.10",
