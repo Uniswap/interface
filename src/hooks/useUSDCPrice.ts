@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from '../constants/tokens'
+import { useBestV2Trade } from './useBestV2Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
@@ -67,33 +68,35 @@ function useUSDCPriceCache(currency?: Currency): boolean {
  * @param currency currency to compute the USDC price of
  */
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
-  const chainId = currency?.chainId
-
-  const amountSpecified = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
+  const useCache = useUSDCPriceCache(currency)
+  const amountSpecified = currency?.chainId ? STABLECOIN_AMOUNT_OUT[currency.chainId] : undefined
+  const otherCurrency = useCache ? undefined : currency
   const stablecoin = amountSpecified?.currency
 
-  const useCache = useUSDCPriceCache(currency)
-  const { trade } = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountSpecified, useCache ? undefined : currency)
+  const v2Trade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountSpecified, otherCurrency, { maxHops: 2 })
+  const { trade: v3Trade } = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountSpecified, otherCurrency)
 
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined
     }
 
-    // handle stablecoin
+    // If currency is a stablecoin, return a stable price.
     if (currency?.wrapped.equals(stablecoin)) {
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    if (trade) {
-      const { numerator, denominator } = trade.routes[0].midPrice
+    // Use v2 price if available, and fallback to v3.
+    const route = v2Trade?.route || v3Trade?.routes[0]
+    if (route) {
+      const { numerator, denominator } = route.midPrice
       const price = new Price(currency, stablecoin, denominator, numerator)
       usdcPriceCache.set(currency, price)
       return price
     } else {
       return usdcPriceCache.get(currency)
     }
-  }, [currency, stablecoin, trade])
+  }, [currency, stablecoin, v2Trade, v3Trade])
   return price
 }
 
