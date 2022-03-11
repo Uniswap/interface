@@ -384,9 +384,9 @@ export function tokenAmountDmmToUni(amount: TokenAmountDMM): TokenAmountUNI | un
   const chainIdUNI = convertChainIdFromDmmToUni(amount.token.chainId)
   return !!chainIdUNI
     ? new TokenAmountUNI(
-        new TokenUNI(chainIdUNI, amount.token.address, amount.token.decimals, amount.token.symbol, amount.token.name),
-        amount.raw
-      )
+      new TokenUNI(chainIdUNI, amount.token.address, amount.token.decimals, amount.token.symbol, amount.token.name),
+      amount.raw
+    )
     : undefined
 }
 
@@ -516,6 +516,7 @@ export function convertToNativeTokenFromETH(currency: Currency, chainId?: ChainI
     if ([43113, 43114].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'AVAX', 'AVAX')
     if ([250].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'FTM', 'FTM')
     if ([25, 338].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'CRO', 'CRO')
+    if ([ChainId.AURORA].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'ETH', 'ETH')
     if ([ChainId.BTTC].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'BTT', 'BTT')
     if ([ChainId.ARBITRUM].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'ETH', 'ETH')
     if ([ChainId.VELAS].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'VLX', 'VLX')
@@ -624,27 +625,27 @@ export function useRewardTokensFullInfo(): Token[] {
     chainId && [137, 80001].includes(chainId)
       ? 'MATIC'
       : chainId && [97, 56].includes(chainId)
-      ? 'BNB'
-      : chainId && [43113, 43114].includes(chainId)
-      ? 'AVAX'
-      : chainId && [250].includes(chainId)
-      ? 'FTM'
-      : chainId && [25, 338].includes(chainId)
-      ? 'CRO'
-      : chainId && chainId === ChainId.BTTC
-      ? 'BTT'
-      : chainId && chainId === ChainId.VELAS
-      ? 'VLX'
-      : 'ETH'
+        ? 'BNB'
+        : chainId && [43113, 43114].includes(chainId)
+          ? 'AVAX'
+          : chainId && [250].includes(chainId)
+            ? 'FTM'
+            : chainId && [25, 338].includes(chainId)
+              ? 'CRO'
+              : chainId && chainId === ChainId.BTTC
+                ? 'BTT'
+                : chainId && chainId === ChainId.VELAS
+                  ? 'VLX'
+                  : 'ETH'
 
   return useMemo(
     () =>
       !!rewardTokens && allTokens
         ? rewardTokens.map(address =>
-            address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
-              ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
-              : allTokens[address]
-          )
+          address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
+            ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
+            : allTokens[address]
+        )
         : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [chainId, nativeName, JSON.stringify(rewardTokens)]

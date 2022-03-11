@@ -23,7 +23,7 @@ const StyledNativeCurrencyLogo = styled.img<{ size: string }>`
   border-radius: 24px;
 `
 
-const StyledLogo = styled(Logo)<{ size: string }>`
+const StyledLogo = styled(Logo) <{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: 50%;
@@ -49,7 +49,8 @@ const logo: { readonly [chainId in ChainId]?: string } = {
   [ChainId.ARBITRUM]: EthereumLogo,
   [ChainId.ARBITRUM_TESTNET]: EthereumLogo,
   [ChainId.BTTC]: bttLogo,
-  [ChainId.VELAS]: velasLogo
+  [ChainId.AURORA]: EthereumLogo,
+  [ChainId.VELAS]: velasLogo,
 }
 
 export default function CurrencyLogo({

@@ -165,6 +165,7 @@ export default function Menu() {
       return 'https://cronos.crypto.org/docs/bridge/cdcapp.html'
     if ([ChainId.ARBITRUM, ChainId.ARBITRUM_TESTNET].includes(chainId)) return 'https://bridge.arbitrum.io'
     if ([ChainId.BTTC].includes(chainId)) return 'https://wallet.bt.io/bridge'
+    if ([ChainId.AURORA].includes(chainId)) return 'https://rainbowbridge.app'
     if ([ChainId.VELAS].includes(chainId)) return 'https://bridge.velaspad.io'
 
     return ''

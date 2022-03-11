@@ -11,7 +11,7 @@ import { useSingleContractMultipleData, useMultipleContractSingleData } from '..
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
 export function useETHBalances(
-  uncheckedAddresses?: (string | undefined)[]
+  uncheckedAddresses?: (string | undefined)[],
 ): { [address: string]: CurrencyAmount | undefined } {
   const multicallContract = useMulticallContract()
 
@@ -23,13 +23,13 @@ export function useETHBalances(
             .filter((a): a is string => a !== false)
             .sort()
         : [],
-    [uncheckedAddresses]
+    [uncheckedAddresses],
   )
 
   const results = useSingleContractMultipleData(
     multicallContract,
     'getEthBalance',
-    addresses.map(address => [address])
+    addresses.map(address => [address]),
   )
 
   return useMemo(
@@ -39,7 +39,7 @@ export function useETHBalances(
         if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()))
         return memo
       }, {}),
-    [addresses, results]
+    [addresses, results],
   )
 }
 
@@ -48,11 +48,11 @@ export function useETHBalances(
  */
 export function useTokenBalancesWithLoadingIndicator(
   address?: string,
-  tokens?: (Token | undefined)[]
+  tokens?: (Token | undefined)[],
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
   const validatedTokens: Token[] = useMemo(
     () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
-    [tokens]
+    [tokens],
   )
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => vt.address), [validatedTokens])
@@ -74,15 +74,15 @@ export function useTokenBalancesWithLoadingIndicator(
               return memo
             }, {})
           : {},
-      [address, validatedTokens, balances]
+      [address, validatedTokens, balances],
     ),
-    anyLoading
+    anyLoading,
   ]
 }
 
 export function useTokenBalances(
   address?: string,
-  tokens?: (Token | undefined)[]
+  tokens?: (Token | undefined)[],
 ): { [tokenAddress: string]: TokenAmount | undefined } {
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
@@ -96,10 +96,10 @@ export function useTokenBalance(account?: string, token?: Token): TokenAmount | 
 
 export function useCurrencyBalances(
   account?: string,
-  currencies?: (Currency | undefined)[]
+  currencies?: (Currency | undefined)[],
 ): (CurrencyAmount | undefined)[] {
   const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
-    currencies
+    currencies,
   ])
 
   const tokenBalances = useTokenBalances(account, tokens)
@@ -113,7 +113,7 @@ export function useCurrencyBalances(
         if (currency === ETHER) return ethBalance[account]
         return undefined
       }) ?? [],
-    [account, currencies, ethBalance, tokenBalances]
+    [account, currencies, ethBalance, tokenBalances],
   )
 }
 

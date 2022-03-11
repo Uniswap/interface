@@ -172,7 +172,7 @@ function getSwapCallParameters(
       const src: { [p: string]: BigNumber } = {}
       const isEncodeUniswap = isEncodeUniswapCallback(chainId)
       if (feeConfig && feeConfig.chargeFeeBy === 'currency_in') {
-        const { feeReceiver, isInBps, feeAmount } = feeConfig
+        const { feeReceiver } = feeConfig
 
         src[feeReceiver] = BigNumber.from(amountWithFeeIn).sub(amountIn)
       }

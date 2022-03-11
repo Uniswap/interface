@@ -103,7 +103,9 @@ export default function SelectNetworkModal({
             ChainId.BSCMAINNET,
             ChainId.AVAXMAINNET,
             ChainId.FANTOM,
-            ChainId.CRONOS
+            ChainId.CRONOS,
+            ChainId.ARBITRUM,
+            ChainId.AURORA
           ].map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (

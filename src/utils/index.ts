@@ -43,6 +43,7 @@ import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 import { getFantomTokenLogoURL } from './fantomTokenMapping'
 import { getCronosTokenLogoURL } from './cronosTokenMapping'
+import { getAuroraTokenLogoURL } from './auroraTokenMapping'
 import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
 import { VELAS_TOKEN_LIST } from 'constants/tokenLists/velas.tokenlist'
 
@@ -92,7 +93,9 @@ function getEtherscanDomain(chainId: ChainId): string {
     case ChainId.CRONOSTESTNET:
       return 'https://cronos.crypto.org/explorer/testnet3'
     case ChainId.CRONOS:
-      return 'https://cronos.crypto.org/explorer'
+      return 'https://cronoscan.com'
+    case ChainId.AURORA:
+      return 'https://aurorascan.dev'
     case ChainId.ARBITRUM_TESTNET:
       return 'https://testnet.arbiscan.io'
     case ChainId.ARBITRUM:
@@ -148,6 +151,10 @@ export function getEtherscanLinkText(chainId: ChainId): string {
 
   if ([ChainId.CRONOSTESTNET, ChainId.CRONOS].includes(chainId)) {
     return 'View on Explorer'
+  }
+
+  if ([ChainId.AURORA].includes(chainId)) {
+    return 'View on Aurorascan'
   }
 
   if ([ChainId.ARBITRUM, ChainId.ARBITRUM_TESTNET].includes(chainId)) {
@@ -512,6 +519,9 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
     case ChainId.CRONOS:
       imageURL = getCronosTokenLogoURL(address)
       break
+    case ChainId.AURORA:
+      imageURL = getAuroraTokenLogoURL(address)
+      break
     case ChainId.ARBITRUM:
       imageURL = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${address}/logo.png`
       break
@@ -554,6 +564,8 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
         return 'CRO'
       case ChainId.CRONOS:
         return 'CRO'
+      case ChainId.AURORA:
+        return 'ETH'
       case ChainId.BTTC:
         return 'BTT'
       case ChainId.VELAS:

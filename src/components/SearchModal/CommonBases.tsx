@@ -55,13 +55,14 @@ export default function CommonBases({
         >
           <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
-            {chainId && [1, 3, 4, 5, 42, ChainId.ARBITRUM, ChainId.ARBITRUM_TESTNET].includes(chainId) && 'ETH'}
-            {chainId && [137, 80001].includes(chainId) && 'MATIC'}
-            {chainId && [97, 56].includes(chainId) && 'BNB'}
-            {chainId && [43113, 43114].includes(chainId) && 'AVAX'}
-            {chainId && [250].includes(chainId) && 'FTM'}
-            {chainId && [25, 338].includes(chainId) && 'CRO'}
-            {chainId && [ChainId.BTTC].includes(chainId) && 'BTT'}
+            {chainId && [1, 3, 4, 5, 42, ChainId.ARBITRUM, ChainId.ARBITRUM_TESTNET].includes(chainId) && `ETH`}
+            {chainId && [137, 80001].includes(chainId) && `MATIC`}
+            {chainId && [97, 56].includes(chainId) && `BNB`}
+            {chainId && [43113, 43114].includes(chainId) && `AVAX`}
+            {chainId && [250].includes(chainId) && `FTM`}
+            {chainId && [25, 338].includes(chainId) && `CRO`}
+            {chainId && [ChainId.BTTC].includes(chainId) && `BTT`}
+            {chainId && [ChainId.AURORA].includes(chainId) && `ETH`}
             {chainId && [ChainId.VELAS].includes(chainId) && 'VLX'}
           </Text>
         </BaseWrapper>

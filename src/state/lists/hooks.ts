@@ -13,6 +13,7 @@ import {
   UNSUPPORTED_LIST_URLS,
   ARBITRUM_TOKEN_LISTS,
   BTTC_TOKEN_LISTS,
+  AURORA_TOKEN_LISTS,
   VELAS_TOKEN_LISTS
 } from '../../constants/lists'
 import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
@@ -26,6 +27,7 @@ import { AVAX_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/avax.mainnet
 import { FANTOM_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/fantom.mainnet.tokenlist'
 import { CRONOS_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/cronos.testnet.tokenlist'
 import { CRONOS_TOKEN_LIST } from '../../constants/tokenLists/cronos.tokenlist'
+import { AURORA_TOKEN_LIST } from '../../constants/tokenLists/aurora.tokenlist'
 import { ARBITRUM_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/arbitrum.testnet.tokenlist'
 import { ARBITRUM_TOKEN_LIST } from '../../constants/tokenLists/arbitrum.tokenlist'
 import { useActiveWeb3React } from 'hooks'
@@ -66,6 +68,7 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.FANTOM]: {},
   [ChainId.CRONOSTESTNET]: {},
   [ChainId.CRONOS]: {},
+  [ChainId.AURORA]: {},
   [ChainId.ARBITRUM_TESTNET]: {},
   [ChainId.BTTC]: {},
   [ChainId.ARBITRUM]: {},
@@ -128,6 +131,8 @@ export const getTokenAddressMap = (chainId?: ChainId) => {
       return listToTokenMap(CRONOS_TESTNET_TOKEN_LIST)
     case ChainId.CRONOS:
       return listToTokenMap(CRONOS_TOKEN_LIST)
+    case ChainId.AURORA:
+      return listToTokenMap(AURORA_TOKEN_LIST)
     case ChainId.ARBITRUM_TESTNET:
       return listToTokenMap(ARBITRUM_TESTNET_TOKEN_LIST)
     case ChainId.ARBITRUM:
@@ -238,6 +243,13 @@ export function useAllListsByChainId(): {
   } else if (chainId && chainId === ChainId.VELAS) {
     lists = Object.keys(allLists)
       .filter(key => VELAS_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
+  } else if (chainId && chainId === ChainId.AURORA) {
+    lists = Object.keys(allLists)
+      .filter(key => AURORA_TOKEN_LISTS.includes(key))
       .reduce((obj, key) => {
         obj[key] = allLists[key]
         return obj

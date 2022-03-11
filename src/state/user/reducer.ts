@@ -75,6 +75,7 @@ export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
   [ChainId.AVAXMAINNET]: isMobile ? false : true,
   [ChainId.FANTOM]: isMobile ? false : true,
   [ChainId.ARBITRUM]: isMobile ? false : true,
+  [ChainId.AURORA]: isMobile ? false : true,
   [ChainId.BTTC]: false,
   [ChainId.VELAS]: false,
   [ChainId.ROPSTEN]: false,

@@ -183,6 +183,16 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
     }
   }
 
+  if (chainId === ChainId.AURORA) {
+    if (data?.token0?.id === '0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb') {
+      data.token0 = { ...data.token0, name: 'ETH (Wrapped)', symbol: 'ETH' }
+    }
+
+    if (data?.token1?.id === '0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb') {
+      data.token1 = { ...data.token1, name: 'ETH (Wrapped)', symbol: 'ETH' }
+    }
+  }
+
   return data
 }
 

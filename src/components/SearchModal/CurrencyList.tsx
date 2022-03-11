@@ -107,7 +107,7 @@ function CurrencyRow({
   onSelect,
   isSelected,
   otherSelected,
-  style
+  style,
 }: {
   currency: Currency
   currencyBalance: CurrencyAmount
@@ -163,7 +163,7 @@ export default function CurrencyList({
   showETH,
   showImportView,
   setImportToken,
-  breakIndex
+  breakIndex,
 }: {
   height: number
   currencies: Currency[]
@@ -185,6 +185,7 @@ export default function CurrencyList({
     }
     return formatted
   }, [breakIndex, currencies, showETH])
+
   const itemCurrencyBalances = useCurrencyBalances(account || undefined, itemCurrencies)
   const itemData = { currencies: itemCurrencies, currencyBalances: itemCurrencyBalances }
 
@@ -257,8 +258,8 @@ export default function CurrencyList({
       setImportToken,
       showImportView,
       breakIndex,
-      theme.text
-    ]
+      theme.text,
+    ],
   )
 
   const itemKey = useCallback((index: number, data: any) => currencyKey(data.currencies[index]), [])

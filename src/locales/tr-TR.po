@@ -55,7 +55,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
-msgstr "<0>Takas</0> ve <1>Kazan</1> En İyi Fiyatlar"
+msgstr ""
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
@@ -191,7 +191,7 @@ msgstr "Miktar"
 
 #: src/pages/About/index.tsx
 msgid "Amplified Liquidity Pools"
-msgstr "Güçlendirilmiş Likidite Havuzları"
+msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "An update is available for the token list \"{0}\" ({1} to {2})."
@@ -271,7 +271,7 @@ msgstr "Getiri çiftçiliği için kullanılabilir"
 
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
-msgstr "BONUS ÖDÜLLERİ"
+msgstr ""
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -292,7 +292,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Bug Bounty"
-msgstr "Hata Ödülü"
+msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
@@ -322,7 +322,7 @@ msgstr "İptal Et"
 
 #: src/pages/About/index.tsx
 msgid "Chains"
-msgstr "Zincirler"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -380,7 +380,7 @@ msgstr "Kapat"
 
 #: src/pages/About/index.tsx
 msgid "Code Audited"
-msgstr "Kod Denetlendi"
+msgstr ""
 
 #: src/components/UpcomingFarms/StartingIn.tsx
 msgid "Coming soon"
@@ -397,7 +397,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Committed to Security"
-msgstr "Güvenlik Taahhüdü"
+msgstr ""
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -549,7 +549,7 @@ msgstr "YATIR"
 
 #: src/pages/About/index.tsx
 msgid "DEXs"
-msgstr "DEX’ler"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Dark Mode"
@@ -557,7 +557,7 @@ msgstr "Koyu Tema"
 
 #: src/pages/About/index.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
-msgstr "Token varlıklarınızı yatırın ve harika ödülleri toplayın. Size en iyisini getirebilmek için projelerle işbirliği yapıyoruz."
+msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
 #: src/components/Vesting/index.tsx
@@ -603,7 +603,7 @@ msgstr "Dinamik Ücret Aralığı"
 
 #: src/pages/About/index.tsx
 msgid "Dynamic Fees"
-msgstr "Dinamik Ücretler"
+msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
@@ -616,11 +616,11 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Earn fees and rewards by depositing your tokens into our pools."
-msgstr "Token’larınızı havuzlarımıza yatırarak ücretlerden pay ve ekstra ödüller kazanın."
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Earn more with your crypto assets"
-msgstr "Kripto varlıklarınızla daha fazlasını kazanın"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
@@ -710,11 +710,11 @@ msgstr "Etkin olmayan Token Listelerinden genişletilmiş sonuçlar"
 
 #: src/pages/About/index.tsx
 msgid "FOR LIQUIDITY PROVIDERS"
-msgstr "LİKİDİTE SAĞLAYICILARI İÇİN"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "FOR TRADERS"
-msgstr "ALIM SATIM YAPANLAR İÇİN"
+msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
@@ -803,7 +803,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Github"
-msgstr "Github"
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "Go to farm"
@@ -820,7 +820,7 @@ msgstr "TOPLA"
 
 #: src/pages/About/index.tsx
 msgid "HIGHER RETURNS"
-msgstr "YÜKSEK GETİRİLER"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
@@ -902,7 +902,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Includes DEX aggregation"
-msgstr "DEX’lerden toplanan oranları içerir"
+msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -1004,7 +1004,7 @@ msgstr "Geçersiz alıcı"
 
 #: src/pages/About/index.tsx
 msgid "KyberSwap is DeFi’s first dynamic market maker, providing the best token rates for traders and maximizing returns for liquidity providers, in one decentralized platform"
-msgstr "KyberSwap, DeFi’yi merkezi olmayan tek bir platformda toplayan; alım satım yapacaklar için en iyi token oranlarını sağlayan ve likidite sağlayıcıları için de getirileri en üst düzeye çıkaran, ilk dinamik piyasa yapıcısıdır"
+msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
@@ -1012,7 +1012,7 @@ msgstr "KİLİTLİ"
 
 #: src/pages/About/index.tsx
 msgid "LOWER SLIPPAGE"
-msgstr "DAHA DÜŞÜK KAYMA ORANI"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1027,7 +1027,7 @@ msgstr "Dil"
 #: src/pages/About/index.tsx
 #: src/pages/About/index.tsx
 msgid "Learn More"
-msgstr "Daha Fazla Bilgi Edinin"
+msgstr ""
 
 #: src/pages/Pools/InstructionAndGlobalData.tsx
 msgid "Learn More ↗"
@@ -1057,7 +1057,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "List your tokens permissionlessly"
-msgstr "Token’larınızı izin gerekmeden, hemen listeleyin"
+msgstr ""
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -1137,7 +1137,7 @@ msgstr "Maksimum"
 
 #: src/pages/About/index.tsx
 msgid "Max APR Available"
-msgstr "Maks YYO Mevcut"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Max Slippage"
@@ -1247,11 +1247,11 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "No KYC or sign-ups required"
-msgstr "KYC veya kayıt gerekmez"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "No extra deposit or withdrawal fees"
-msgstr "Ekstra para yatırma veya çekme ücreti yoktur"
+msgstr ""
 
 #: src/pages/Pool/lp.tsx
 msgid "No liquidity found."
@@ -1307,7 +1307,7 @@ msgstr "Açık"
 
 #: src/pages/About/index.tsx
 msgid "On-chain & Open Source"
-msgstr "Zincir üzeri ve Açık Kaynak Kodlu"
+msgstr ""
 
 #: src/components/YieldPools/index.tsx
 msgid "Once a farm has ended, you will continue to receive returns through LP Fees"
@@ -1521,7 +1521,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Rainmaker Yield Farming"
-msgstr "Rainmaker Getiri Çiftçiliği"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
@@ -1728,7 +1728,7 @@ msgstr "Amplifikasyon faktörü anlamına gelir. Daha yüksek AMP'ye sahip havuz
 #: src/pages/About/index.tsx
 #: src/pages/About/index.tsx
 msgid "Start Earning"
-msgstr "Kazanmaya Başla"
+msgstr ""
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
@@ -1779,11 +1779,11 @@ msgstr "Eski Versiyona Geç"
 #: src/pages/About/index.tsx
 #: src/pages/About/index.tsx
 msgid "Swap Now"
-msgstr "Şimdi Takas Et"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Swap your tokens at the best rates. No limits"
-msgstr "Token’larınızı en iyi oranlarla takas edin. Limit yok"
+msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
@@ -1791,11 +1791,11 @@ msgstr "HASAT EDİLEN TOPLAM ÖDÜLLER"
 
 #: src/pages/About/index.tsx
 msgid "TVL From DEXs"
-msgstr "DEX'lerden TVL"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "TVL equivalent compared to AMMs"
-msgstr "AMM'lere kıyasla TVL eşdeğeri"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Terms"
@@ -1897,7 +1897,7 @@ msgstr "Etkin olmayan listelerdeki token varlıklarıdır. Aşağıdaki belirli 
 
 #: src/pages/About/index.tsx
 msgid "Total AMP Liquidity"
-msgstr "Toplam AMP Likiditesi"
+msgstr ""
 
 #: src/pages/Pools/InstructionAndGlobalData.tsx
 msgid "Total AMP Liquidity:"
@@ -1905,7 +1905,7 @@ msgstr "Toplam AMP Likiditesi:"
 
 #: src/pages/About/index.tsx
 msgid "Total Earnings"
-msgstr "Toplam Kazanç"
+msgstr ""
 
 #: src/components/PoolList/ItemCard/TabYourLiquidityItems.tsx
 #: src/components/PositionCard/index.tsx
@@ -1918,7 +1918,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Total Trading Volume"
-msgstr "Toplam İşlem Hacmi"
+msgstr ""
 
 #: src/pages/Pools/InstructionAndGlobalData.tsx
 msgid "Total Trading Volume:"
@@ -2065,7 +2065,7 @@ msgstr "Hak kazanma süreci (Vesting) başladı: {0}"
 
 #: src/pages/About/index.tsx
 msgid "View Farms"
-msgstr "Çiftlikleri Görüntüle"
+msgstr ""
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
@@ -2097,11 +2097,11 @@ msgstr "Cüzdan Adresi veya ENS Adı"
 
 #: src/pages/About/index.tsx
 msgid "We adjust trading fees dynamically based on market conditions to give you the best returns."
-msgstr "Size en iyi getiriyi sağlamak için alım satım ücretlerini piyasa koşullarına göre dinamik olarak ayarlıyoruz."
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "We can amplify liquidity pools to provide much higher capital efficiency and better slippage for you. Deposit less tokens and still achieve better liquidity and volume."
-msgstr "Sizin için çok daha yüksek sermaye verimliliği ve daha iyi oranlı kayma sağlamak için likidite havuzlarını büyütebiliriz. Daha az token yatırsanız bile daha iyi likidite ve hacim elde edeceksiniz."
+msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction."
@@ -2114,7 +2114,7 @@ msgstr "KNC ne için kullanılabilir?"
 
 #: src/pages/About/index.tsx
 msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from multiple DEXs (including KyberSwap) and identify the best trade route for you."
-msgstr "Dinamik Ticaret Yönlendirme teknolojimizle, birden fazla DEX'ten (KyberSwap da dahil) likidite topluyoruz ve sizin için en iyi alım satım yolunu belirliyoruz."
+msgstr ""
 
 #: src/components/Web3Status/index.tsx
 #: src/components/WrongNetworkModal/index.tsx

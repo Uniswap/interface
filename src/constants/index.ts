@@ -26,6 +26,7 @@ export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.ARBITRUM_TESTNET]: '0xfa33723F6fA00a35F69F8aCd72A5BE9AF3c8Bd25',
   [ChainId.ARBITRUM]: '0xf530a090EF6481cfB33F98c63532E7745abab58A',
   [ChainId.BTTC]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
+  [ChainId.AURORA]: '0xd1f345593cb69fa546852b2DEb90f373F8AdC903',
   [ChainId.VELAS]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
 }
 
@@ -60,9 +61,11 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.ARBITRUM_TESTNET]: '0x78Ad9A49327D73C6E3B9881eCD653232cF3E480C',
   [ChainId.ARBITRUM]: '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD',
   [ChainId.BTTC]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
+  [ChainId.AURORA]: '0x0622973c3A8893838A3bc0c5309a8c6897148795',
   [ChainId.VELAS]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
 }
 
+// Aggregation Router
 export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
   [ChainId.BSCMAINNET]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
   [ChainId.MATIC]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
@@ -72,6 +75,7 @@ export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
   [ChainId.CRONOS]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
   [ChainId.ARBITRUM]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
   [ChainId.BTTC]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
+  [ChainId.AURORA]: '0xDF1A1b60f2D438842916C0aDc43748768353EC25',
   [ChainId.VELAS]: '0xDF1A1b60f2D438842916C0aDc43748768353EC25',
 }
 
@@ -84,6 +88,7 @@ export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
   [ChainId.CRONOS]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
   [ChainId.BTTC]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
   [ChainId.ARBITRUM]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
+  [ChainId.AURORA]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
   [ChainId.VELAS]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
 }
 
@@ -114,10 +119,10 @@ export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
       : '0x78df70615ffc8066cc0887917f2Cd72092C86409',
   [ChainId.CRONOSTESTNET]: '0x9fE747AEA6173DD2c72e9D9BF4E2bCbbC0f8aD9e',
   [ChainId.CRONOS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
-
   [ChainId.ARBITRUM_TESTNET]: '0x9D4ffbf49cc21372c2115Ae4C155a1e5c0aACf36',
   [ChainId.ARBITRUM]: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
   [ChainId.BTTC]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
+  [ChainId.AURORA]: '0x39a8809fbbf22ccaeac450eaf559c076843eb910',
   [ChainId.VELAS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
 }
 
@@ -142,6 +147,7 @@ export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.ARBITRUM_TESTNET]: '',
   [ChainId.ARBITRUM]: '',
   [ChainId.BTTC]: '',
+  [ChainId.AURORA]: '',
   [ChainId.VELAS]: '',
 }
 
@@ -174,6 +180,7 @@ export const CLAIM_REWARD_SC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BTTC]: '',
   [ChainId.ARBITRUM]: '',
   [ChainId.ARBITRUM_TESTNET]: '',
+  [ChainId.AURORA]: '',
   [ChainId.VELAS]: '',
 }
 export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
@@ -206,6 +213,7 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.ARBITRUM_TESTNET]: 'https://dmm-info-plum.vercel.app',
   [ChainId.ARBITRUM]: 'https://arbitrum-analytics.kyberswap.com',
   [ChainId.BTTC]: 'https://bttc-analytics.kyberswap.com',
+  [ChainId.AURORA]: 'https://aurora-analytics.kyberswap.com',
   [ChainId.VELAS]: 'https://velas-analytics.kyberswap.com',
 }
 
@@ -295,7 +303,6 @@ export const DAI: { [chainId in ChainId]: Token } = {
     'DAI',
     'Dai Stablecoin',
   ),
-
   [ChainId.ARBITRUM_TESTNET]: new Token(
     ChainId.ARBITRUM_TESTNET,
     '0x340eefA7154BF23e328F59E936568607841FE027',
@@ -311,6 +318,13 @@ export const DAI: { [chainId in ChainId]: Token } = {
     'Dai Stablecoin_Ethereum',
   ),
   [ChainId.BTTC]: new Token(ChainId.BTTC, '0xe7dC549AE8DB61BDE71F22097BEcc8dB542cA100', 18, 'DAI', 'Dai Stablecoin'),
+  [ChainId.AURORA]: new Token(
+    ChainId.AURORA,
+    '0xe3520349F477A5F6EB06107066048508498A291b',
+    18,
+    'DAI',
+    'Dai Stablecoin',
+  ),
   //not existing on velas
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0xe7dC549AE8DB61BDE71F22097BEcc8dB542cA100', 18, 'DAI', 'Dai Stablecoin'),
 }
@@ -360,7 +374,6 @@ export const USDC: { [chainId in ChainId]: Token } = {
     'USD Coin',
   ),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', 6, 'USDC', 'USD Coin'),
-
   [ChainId.ARBITRUM_TESTNET]: new Token(
     ChainId.ARBITRUM_TESTNET,
     '0xB4BbD0250618917b3679578C58f6440A227C8c03',
@@ -371,6 +384,7 @@ export const USDC: { [chainId in ChainId]: Token } = {
 
   [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', 6, 'USDC', 'USD Coin'),
   [ChainId.BTTC]: new Token(ChainId.BTTC, '0xCa424b845497f7204D9301bd13Ff87C0E2e86FCF', 18, 'USDC_b', 'USD Coin_BSC'),
+  [ChainId.AURORA]: new Token(ChainId.AURORA, '0xB12BFcA5A55806AaF64E99521918A4bf0fC40802', 6, 'USDC', 'USD Coin'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0xe2C120f188eBd5389F71Cf4d9C16d05b62A58993', 6, 'USDC', 'Multichain USDC'),
 }
 
@@ -419,7 +433,6 @@ export const USDT: { [chainId in ChainId]: Token } = {
     'Tether USD',
   ),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x66e428c3f67a68878562e79A0234c1F83c208770', 6, 'USDT', 'Tether USD'),
-
   [ChainId.ARBITRUM_TESTNET]: new Token(
     ChainId.ARBITRUM_TESTNET,
     '0x41a56c30b881296859FB4db30Eb9a639B473619B',
@@ -427,7 +440,6 @@ export const USDT: { [chainId in ChainId]: Token } = {
     'USDT',
     'Tether USD',
   ),
-
   [ChainId.ARBITRUM]: new Token(
     ChainId.ARBITRUM,
     '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
@@ -436,6 +448,7 @@ export const USDT: { [chainId in ChainId]: Token } = {
     'Tether USD',
   ),
   [ChainId.BTTC]: new Token(ChainId.BTTC, '0x9B5F27f6ea9bBD753ce3793a07CbA3C74644330d', 18, 'USDT_b', 'Tether USD_BSC'),
+  [ChainId.AURORA]: new Token(ChainId.AURORA, '0x4988a896b1227218e4A686fdE5EabdcAbd91571f', 6, 'USDT', 'Tether USD'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0x01445C31581c354b7338AC35693AB2001B50b9aE', 6, 'USDT', 'Multichain USDT'),
 }
 
@@ -467,6 +480,7 @@ export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId in ChainId]: number } = {
   [ChainId.FANTOM]: 1,
   [ChainId.CRONOSTESTNET]: 6,
   [ChainId.CRONOS]: 5.6,
+  [ChainId.AURORA]: 1,
 
   // TODO: check these info
   [ChainId.ARBITRUM]: 1,
@@ -490,6 +504,7 @@ export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
   [ChainId.FANTOM]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.FANTOM]) * 60 * 24 * 365),
   [ChainId.CRONOSTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.CRONOSTESTNET]) * 60 * 24 * 365),
   [ChainId.CRONOS]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.CRONOS]) * 60 * 24 * 365),
+  [ChainId.AURORA]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.AURORA]) * 60 * 24 * 365),
   [ChainId.BTTC]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.BTTC]) * 60 * 24 * 365),
   [ChainId.ARBITRUM_TESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.ARBITRUM_TESTNET]) * 60 * 24 * 365),
   [ChainId.ARBITRUM]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.ARBITRUM]) * 60 * 24 * 365),
@@ -514,6 +529,7 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.FANTOM]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.CRONOSTESTNET]: new Token(ChainId.CRONOSTESTNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.AURORA]: new Token(ChainId.AURORA, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.ARBITRUM_TESTNET]: new Token(ChainId.ARBITRUM_TESTNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0', 18, 'UNI', 'Uniswap'),
   [ChainId.BTTC]: new Token(ChainId.BTTC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
@@ -535,6 +551,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.FANTOM]: [WETH[ChainId.FANTOM]],
   [ChainId.CRONOSTESTNET]: [WETH[ChainId.CRONOSTESTNET]],
   [ChainId.CRONOS]: [WETH[ChainId.CRONOS]],
+  [ChainId.AURORA]: [WETH[ChainId.AURORA]],
   [ChainId.BTTC]: [WETH[ChainId.BTTC]],
   [ChainId.ARBITRUM]: [WETH[ChainId.ARBITRUM]],
   [ChainId.ARBITRUM_TESTNET]: [WETH[ChainId.ARBITRUM_TESTNET]],
@@ -620,6 +637,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
     'Kyber Network Crystal',
   ),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
+  [ChainId.AURORA]: new Token(ChainId.AURORA, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
 
   [ChainId.ARBITRUM_TESTNET]: new Token(
     ChainId.ARBITRUM_TESTNET,
@@ -691,6 +709,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ],
   [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
   [ChainId.CRONOS]: [...WETH_ONLY[ChainId.CRONOS], DAI[ChainId.CRONOS], USDC[ChainId.CRONOS], USDT[ChainId.CRONOS]],
+  [ChainId.AURORA]: [...WETH_ONLY[ChainId.AURORA], DAI[ChainId.AURORA], USDC[ChainId.AURORA], USDT[ChainId.AURORA]],
   [ChainId.VELAS]: [...WETH_ONLY[ChainId.VELAS], USDC[ChainId.VELAS], USDT[ChainId.VELAS]],
 }
 
@@ -731,6 +750,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
 
   [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
   [ChainId.CRONOS]: [...WETH_ONLY[ChainId.CRONOS], DAI[ChainId.CRONOS], USDC[ChainId.CRONOS], USDT[ChainId.CRONOS]],
+  [ChainId.AURORA]: [...WETH_ONLY[ChainId.AURORA], DAI[ChainId.AURORA], USDC[ChainId.AURORA], USDT[ChainId.AURORA]],
   [ChainId.ARBITRUM_TESTNET]: [
     ...WETH_ONLY[ChainId.ARBITRUM_TESTNET],
     DAI[ChainId.ARBITRUM_TESTNET],
@@ -783,6 +803,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ],
   [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
   [ChainId.CRONOS]: [...WETH_ONLY[ChainId.CRONOS], DAI[ChainId.CRONOS], USDC[ChainId.CRONOS], USDT[ChainId.CRONOS]],
+  [ChainId.AURORA]: [...WETH_ONLY[ChainId.AURORA], DAI[ChainId.AURORA], USDC[ChainId.AURORA], USDT[ChainId.AURORA]],
   [ChainId.ARBITRUM]: [
     ...WETH_ONLY[ChainId.ARBITRUM],
     DAI[ChainId.ARBITRUM],
@@ -1082,6 +1103,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.FANTOM]: [],
   [ChainId.CRONOSTESTNET]: [],
   [ChainId.CRONOS]: [],
+  [ChainId.AURORA]: [],
   [ChainId.ARBITRUM]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
   [ChainId.BTTC]: [],
@@ -1110,6 +1132,7 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.ARBITRUM]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
   [ChainId.BTTC]: [],
+  [ChainId.AURORA]: [],
   [ChainId.VELAS]: [],
 }
 
@@ -1190,6 +1213,7 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
   [ChainId.FANTOM]: [],
   [ChainId.CRONOSTESTNET]: [],
   [ChainId.CRONOS]: [],
+  [ChainId.AURORA]: [],
   [ChainId.ARBITRUM]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
   [ChainId.BTTC]: [],
@@ -1206,12 +1230,12 @@ export const COINGECKO_NETWORK_ID: { [chainId in ChainId]: string } = {
   [ChainId.AVAXMAINNET]: 'avalanche',
   [ChainId.FANTOM]: 'fantom',
   [ChainId.CRONOS]: 'cronos',
+  [ChainId.AURORA]: 'aurora',
   [ChainId.ARBITRUM]: 'arbitrum-one',
   // TODO: check this
   [ChainId.BTTC]: 'tron',
   [ChainId.VELAS]: 'velas',
 
-  //set mainnet for testing purpose
   [ChainId.ROPSTEN]: '',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
@@ -1230,6 +1254,7 @@ export const COINGECKO_NATIVE_TOKEN_ID: { [chainId in ChainId]: string } = {
   [ChainId.AVAXMAINNET]: 'avalanche-2',
   [ChainId.FANTOM]: 'fantom',
   [ChainId.CRONOS]: 'crypto-com-chain',
+  [ChainId.AURORA]: 'ethereum',
   [ChainId.ARBITRUM]: 'ethereum',
   [ChainId.ARBITRUM_TESTNET]: 'ethereum',
   // TODO: check this
@@ -1308,6 +1333,7 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
   [ChainId.FANTOM]: [],
   [ChainId.CRONOSTESTNET]: [],
   [ChainId.CRONOS]: [],
+  [ChainId.AURORA]: [],
   [ChainId.ARBITRUM]: [],
   [ChainId.ARBITRUM_TESTNET]: [],
   [ChainId.BTTC]: [],
@@ -1335,5 +1361,6 @@ export const sentryRequestId = uuid()
 export const FEE_OPTIONS: { [chainId: number]: number[] } = {
   [ChainId.ARBITRUM]: [1, 5, 30, 50, 100],
   [ChainId.ARBITRUM_TESTNET]: [1, 5, 30, 50, 100],
+  [ChainId.AURORA]: [1, 5, 30, 50, 100],
   [ChainId.VELAS]: [1, 5, 30, 50, 100],
 }

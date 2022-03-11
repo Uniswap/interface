@@ -1,3 +1,5 @@
+import { ChainId } from '@dynamic-amm/sdk'
+
 // used to mark unsupported tokens, these are hosted lists of unsupported tokens
 
 const COMPOUND_LIST = 'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json'
@@ -19,6 +21,7 @@ const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.j
 const PANGOLIN = 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json'
 const SPOOKY = 'https://raw.githubusercontent.com/SpookySwap/spooky-info/master/src/constants/token/spookyswap.json'
 const COINGECKO = 'https://tokens.coingecko.com/uniswap/all.json'
+const AURORA = 'https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/assets/aurora.tokenlist.json'
 const ARBITRUM = 'https://bridge.arbitrum.io/token-list-42161.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
@@ -43,6 +46,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   PANCAKE_EXTENDED,
   PANGOLIN,
   SPOOKY,
+  AURORA,
   ARBITRUM,
   ...UNSUPPORTED_LIST_URLS, // need to load unsupported tokens as well
 ]
@@ -52,6 +56,56 @@ export const BSC_TOKEN_LISTS: string[] = [PANCAKE_TOP100, PANCAKE_EXTENDED]
 export const AVAX_TOKEN_LISTS: string[] = []
 export const FANTOM_TOKEN_LISTS: string[] = []
 export const CRONOS_TOKEN_LISTS: string[] = []
+export const AURORA_TOKEN_LISTS: string[] = [AURORA]
+
+export const LIST_OF_LISTS: Map<ChainId, string[]> = new Map([
+  [
+    ChainId.MAINNET,
+    [
+      COINGECKO,
+      COMPOUND_LIST,
+      AAVE_LIST,
+      SYNTHETIX_LIST,
+      UMA_LIST,
+      WRAPPED_LIST,
+      SET_LIST,
+      OPYN_LIST,
+      ROLL_LIST,
+      CMC_ALL_LIST,
+      CMC_STABLECOIN,
+      KLEROS_LIST,
+      GEMINI_LIST
+    ]
+  ],
+  [
+    ChainId.ROPSTEN,
+    [
+      COINGECKO,
+      COMPOUND_LIST,
+      AAVE_LIST,
+      SYNTHETIX_LIST,
+      UMA_LIST,
+      WRAPPED_LIST,
+      SET_LIST,
+      OPYN_LIST,
+      ROLL_LIST,
+      CMC_ALL_LIST,
+      CMC_STABLECOIN,
+      KLEROS_LIST,
+      GEMINI_LIST
+    ]
+  ],
+  [ChainId.MATIC, [QUICK_SWAP]],
+  [ChainId.MUMBAI, [QUICK_SWAP]],
+  [ChainId.BSCMAINNET, [PANCAKE_TOP100, PANCAKE_EXTENDED]],
+  [ChainId.BSCTESTNET, [PANCAKE_TOP100, PANCAKE_EXTENDED]],
+  [ChainId.AVAXMAINNET, []],
+  [ChainId.AVAXTESTNET, []],
+  [ChainId.FANTOM, []],
+  [ChainId.CRONOS, []],
+  [ChainId.CRONOSTESTNET, []],
+  [ChainId.AURORA, []]
+])
 export const ARBITRUM_TOKEN_LISTS: string[] = [ARBITRUM]
 export const BTTC_TOKEN_LISTS: string[] = []
 export const VELAS_TOKEN_LISTS: string[] = []

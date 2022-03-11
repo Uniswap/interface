@@ -22,6 +22,7 @@ export const dexListConfig: DexList = {
       ChainId.CRONOS,
       ChainId.ARBITRUM,
       ChainId.BTTC,
+      ChainId.AURORA,
       ChainId.VELAS,
     ],
   },
@@ -37,6 +38,7 @@ export const dexListConfig: DexList = {
       ChainId.CRONOS,
       ChainId.ARBITRUM,
       ChainId.BTTC,
+      ChainId.AURORA,
       ChainId.VELAS,
     ],
   },
@@ -271,6 +273,21 @@ export const dexListConfig: DexList = {
     icon: 'https://photonswap.finance/logo.png',
     chainIds: [ChainId.CRONOS],
   },
+  trisolaris: {
+    name: 'Trisolaris',
+    icon: 'https://www.trisolaris.io/favicon.png',
+    chainIds: [ChainId.AURORA],
+  },
+  wannaswap: {
+    name: 'WannaSwap',
+    icon: 'https://wannaswap.finance/icon.png',
+    chainIds: [ChainId.AURORA],
+  },
+  nearpad: {
+    name: 'NearPAD',
+    icon: 'https://i.imgur.com/6IFKjOZ.png',
+    chainIds: [ChainId.AURORA],
+  },
   swapr: {
     name: 'Swapr',
     icon: 'https://swapr.eth.link/favicon.png',
@@ -328,6 +345,7 @@ export const dexIds: DexTypes = {
     safeswap: 2,
     pantherswap: 3,
     morpheus: 4,
+    wannaswap: 3,
     swapr: 2,
     wagyuswap: 3,
     astroswap: 3,
@@ -372,6 +390,7 @@ export const DEX_TO_COMPARE: { [chainId in ChainId]?: DexConfig } = {
   [ChainId.MAINNET]: findDex('uniswap'),
   [ChainId.FANTOM]: findDex('spookyswap'),
   [ChainId.CRONOS]: findDex('vvs'),
+  [ChainId.AURORA]: findDex('trisolaris'),
   [ChainId.ARBITRUM]: findDex('sushiswap'),
   [ChainId.VELAS]: findDex('wagyuswap'),
 }

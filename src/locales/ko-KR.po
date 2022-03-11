@@ -55,7 +55,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "<0>Swap</0> and <1>Earn</1> Tokens at the Best Rates"
-msgstr "<0> 토큰</0> 과 <1>를</1> 가장 좋은 가격으로 교환하기"
+msgstr ""
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
@@ -191,7 +191,7 @@ msgstr "금액"
 
 #: src/pages/About/index.tsx
 msgid "Amplified Liquidity Pools"
-msgstr "증폭된 유동성 풀"
+msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "An update is available for the token list \"{0}\" ({1} to {2})."
@@ -271,7 +271,7 @@ msgstr "유동성 마이닝 지정 풀"
 
 #: src/pages/About/index.tsx
 msgid "BONUS REWARDS"
-msgstr "보너스 보상"
+msgstr ""
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -292,7 +292,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Bug Bounty"
-msgstr "버그 바운티"
+msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
@@ -322,7 +322,7 @@ msgstr "취소"
 
 #: src/pages/About/index.tsx
 msgid "Chains"
-msgstr "체인 네트워크"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -380,7 +380,7 @@ msgstr "닫기"
 
 #: src/pages/About/index.tsx
 msgid "Code Audited"
-msgstr "코드 감사"
+msgstr ""
 
 #: src/components/UpcomingFarms/StartingIn.tsx
 msgid "Coming soon"
@@ -397,7 +397,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Committed to Security"
-msgstr "보안에 전념"
+msgstr ""
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -549,7 +549,7 @@ msgstr "내 예치금"
 
 #: src/pages/About/index.tsx
 msgid "DEXs"
-msgstr "탈중앙 거래소"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Dark Mode"
@@ -557,7 +557,7 @@ msgstr "다크 모드"
 
 #: src/pages/About/index.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
-msgstr "해당 토큰을 예치하고 높은 보상을 얻으세요. 높은 보상을 제공하기 위해 다양한 프로젝트와 협업하고 있습니다. "
+msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
 #: src/components/Vesting/index.tsx
@@ -603,7 +603,7 @@ msgstr "다이나믹 수수료 범위"
 
 #: src/pages/About/index.tsx
 msgid "Dynamic Fees"
-msgstr "다이나믹 수수료"
+msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
@@ -616,11 +616,11 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Earn fees and rewards by depositing your tokens into our pools."
-msgstr "카이버 스왑풀에 보유하고 있는 토큰을 입금하여 수수료와 보상을 받으세요."
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Earn more with your crypto assets"
-msgstr "소지하고 있는 가상화폐로 더 많은 수익을 올리세요"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
@@ -710,11 +710,11 @@ msgstr "비활성 토큰 목록 확장하기"
 
 #: src/pages/About/index.tsx
 msgid "FOR LIQUIDITY PROVIDERS"
-msgstr "유동성 공급자를 위한"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "FOR TRADERS"
-msgstr "트레이더를 위한"
+msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
@@ -803,7 +803,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Github"
-msgstr "Github"
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "Go to farm"
@@ -820,7 +820,7 @@ msgstr "수확하다"
 
 #: src/pages/About/index.tsx
 msgid "HIGHER RETURNS"
-msgstr "더 높은 수익"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
@@ -902,7 +902,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Includes DEX aggregation"
-msgstr "DEX 집계 포함"
+msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -1004,7 +1004,7 @@ msgstr "잘못된 수신자"
 
 #: src/pages/About/index.tsx
 msgid "KyberSwap is DeFi’s first dynamic market maker, providing the best token rates for traders and maximizing returns for liquidity providers, in one decentralized platform"
-msgstr "KyberSwap은 DeFi의 첫 번째 다이내믹 마켓 메이커로써, 트레이더에게는 최고의 토큰 비율을 제공하고 유동성 공급자에게는 최고의 수익을 제공하는 단 하나의 디파이 플랫폼입니다. "
+msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
@@ -1012,7 +1012,7 @@ msgstr "잠김"
 
 #: src/pages/About/index.tsx
 msgid "LOWER SLIPPAGE"
-msgstr "낮은 슬립피지"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1027,7 +1027,7 @@ msgstr "언어"
 #: src/pages/About/index.tsx
 #: src/pages/About/index.tsx
 msgid "Learn More"
-msgstr "더 알아보기"
+msgstr ""
 
 #: src/pages/Pools/InstructionAndGlobalData.tsx
 msgid "Learn More ↗"
@@ -1057,7 +1057,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "List your tokens permissionlessly"
-msgstr "무허가성 토큰 리스팅하기"
+msgstr ""
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -1137,7 +1137,7 @@ msgstr "최대"
 
 #: src/pages/About/index.tsx
 msgid "Max APR Available"
-msgstr "최대 연이율은 "
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Max Slippage"
@@ -1247,11 +1247,11 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "No KYC or sign-ups required"
-msgstr "KYC 또는 가입이 필요하지 않습니다."
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "No extra deposit or withdrawal fees"
-msgstr "추가 입출금 수수료가 없습니다. "
+msgstr ""
 
 #: src/pages/Pool/lp.tsx
 msgid "No liquidity found."
@@ -1307,7 +1307,7 @@ msgstr "켜기"
 
 #: src/pages/About/index.tsx
 msgid "On-chain & Open Source"
-msgstr "온체인 및 오픈 소스"
+msgstr ""
 
 #: src/components/YieldPools/index.tsx
 msgid "Once a farm has ended, you will continue to receive returns through LP Fees"
@@ -1521,7 +1521,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Rainmaker Yield Farming"
-msgstr "Rainmaker 유동성 마이닝"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
@@ -1728,7 +1728,7 @@ msgstr "증폭 계수를 뜻합니다. AMP가 더 높은 풀은 더 높은 자�
 #: src/pages/About/index.tsx
 #: src/pages/About/index.tsx
 msgid "Start Earning"
-msgstr "적립 시작"
+msgstr ""
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
@@ -1779,11 +1779,11 @@ msgstr "레거시 스왑"
 #: src/pages/About/index.tsx
 #: src/pages/About/index.tsx
 msgid "Swap Now"
-msgstr "지금 거래하기"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Swap your tokens at the best rates. No limits"
-msgstr "제한 금액 없이 가장 좋은 가격으로 토큰을 교환하십시오."
+msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
@@ -1791,11 +1791,11 @@ msgstr "총 수확된 보상"
 
 #: src/pages/About/index.tsx
 msgid "TVL From DEXs"
-msgstr "DEX의 TVL"
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "TVL equivalent compared to AMMs"
-msgstr "AMM에 비해 동등한 TVL"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Terms"
@@ -1897,7 +1897,7 @@ msgstr "비활성 목록의 토큰. 아래에서 특정 토큰을 가져오거�
 
 #: src/pages/About/index.tsx
 msgid "Total AMP Liquidity"
-msgstr "총 AMP 유동성"
+msgstr ""
 
 #: src/pages/Pools/InstructionAndGlobalData.tsx
 msgid "Total AMP Liquidity:"
@@ -1905,7 +1905,7 @@ msgstr "총 AMP 유동성:"
 
 #: src/pages/About/index.tsx
 msgid "Total Earnings"
-msgstr "총 수익"
+msgstr ""
 
 #: src/components/PoolList/ItemCard/TabYourLiquidityItems.tsx
 #: src/components/PositionCard/index.tsx
@@ -1918,7 +1918,7 @@ msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "Total Trading Volume"
-msgstr "총 거래량"
+msgstr ""
 
 #: src/pages/Pools/InstructionAndGlobalData.tsx
 msgid "Total Trading Volume:"
@@ -2065,7 +2065,7 @@ msgstr "베스팅 시작됨: {0}"
 
 #: src/pages/About/index.tsx
 msgid "View Farms"
-msgstr "유동성 마이닝 풀 보기"
+msgstr ""
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
@@ -2097,11 +2097,11 @@ msgstr "지갑 주소 또는 ENS 이름"
 
 #: src/pages/About/index.tsx
 msgid "We adjust trading fees dynamically based on market conditions to give you the best returns."
-msgstr "유동성 공급자에게 최고의 수익을 제공하기 위해 시장 상황에 따라 거래 수수료를 다이나믹하게 조정합니다."
+msgstr ""
 
 #: src/pages/About/index.tsx
 msgid "We can amplify liquidity pools to provide much higher capital efficiency and better slippage for you. Deposit less tokens and still achieve better liquidity and volume."
-msgstr "유동성을 증폭하여 훨씬 더 높은 자본 효율성과 보다 나은 슬리피지를 제공할 수 있습니다. 적은 양의 토큰을 예치하여 보다 나은 유동성과 거래량을 달성 할 수 있습니다. "
+msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction."
@@ -2114,7 +2114,7 @@ msgstr "KNC의 사용처"
 
 #: src/pages/About/index.tsx
 msgid "With our Dynamic Trade Routing technology, we aggregate liquidity from multiple DEXs (including KyberSwap) and identify the best trade route for you."
-msgstr "카이버의 다이나믹 트레이딩 라우딩 기술을 이용하여 여러 DEX(KyberSwap 포함)의 유동성을 집계한 후, 최적화 된 토큰 거래 가격을 제공합니다. "
+msgstr ""
 
 #: src/components/Web3Status/index.tsx
 #: src/components/WrongNetworkModal/index.tsx

@@ -97,6 +97,12 @@ const velasExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClien
   cache: new InMemoryCache(),
 })
 
+
+const auroraExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri: 'https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-aurora',
+  cache: new InMemoryCache()
+})
+
 export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetExchangeClient,
   [ChainId.ROPSTEN]: ropstenExchangeClient,
@@ -115,6 +121,7 @@ export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCac
   [ChainId.ARBITRUM_TESTNET]: arbitrumTestnetExchangeClient,
   [ChainId.ARBITRUM]: arbitrumExchangeClient,
   [ChainId.BTTC]: bttcExchangeClient,
+  [ChainId.AURORA]: auroraExchangeClient,
   [ChainId.VELAS]: velasExchangeClient,
 }
 
@@ -191,6 +198,11 @@ const velasBlockClient = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
+const auroraBlockClient = new ApolloClient({
+  uri: 'https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/aurora-blocks',
+  cache: new InMemoryCache()
+})
+
 export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetBlockClient,
   [ChainId.ROPSTEN]: ropstenBlockClient,
@@ -209,6 +221,7 @@ export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheOb
   [ChainId.ARBITRUM_TESTNET]: arbitrumTestnetBlockClient,
   [ChainId.ARBITRUM]: arbitrumBlockClient,
   [ChainId.BTTC]: bttcBlockClient,
+  [ChainId.AURORA]: auroraBlockClient,
   [ChainId.VELAS]: velasBlockClient,
 }
 
@@ -222,6 +235,7 @@ export const routerUri: { [chainId in ChainId]?: string } = {
   [ChainId.CRONOS]: `${process.env.REACT_APP_AGGREGATOR_API}/cronos/route`,
   [ChainId.ARBITRUM]: `${process.env.REACT_APP_AGGREGATOR_API}/arbitrum/route`,
   [ChainId.BTTC]: `${process.env.REACT_APP_AGGREGATOR_API}/bttc/route`,
+  [ChainId.AURORA]: `${process.env.REACT_APP_AGGREGATOR_API}/aurora/route`,
   [ChainId.VELAS]: `${process.env.REACT_APP_AGGREGATOR_API}/velas/route`,
 }
 
