@@ -94,6 +94,8 @@ export function useAllLiquidtyMiningCampaigns(
   const pairAddress = useMemo(() => (pair ? pair.liquidityToken.address.toLowerCase() : undefined), [pair])
 
   const { chainId, account } = useActiveWeb3React()
+
+  const subgraphAccountId = useMemo(() => account?.toLowerCase() || '', [account])
   const SWPRToken = useSWPRToken()
   const nativeCurrency = useNativeCurrency()
   const timestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
@@ -109,7 +111,7 @@ export function useAllLiquidtyMiningCampaigns(
     singleSidedStakingCampaigns: SubgraphSingleSidedStakingCampaign[]
   }>(SINGLE_SIDED_CAMPAIGNS, {
     variables: {
-      userId: account?.toLowerCase()
+      userId: subgraphAccountId
     }
   })
 
@@ -117,7 +119,7 @@ export function useAllLiquidtyMiningCampaigns(
     liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
   }>(REGULAR_CAMPAIGN, {
     variables: {
-      userId: account?.toLowerCase()
+      userId: subgraphAccountId
     }
   })
   const kpiTokenAddresses = useMemo(() => {

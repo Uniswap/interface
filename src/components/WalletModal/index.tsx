@@ -1,5 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -13,6 +13,7 @@ import { AutoRow } from '../Row'
 import { AlertTriangle } from 'react-feather'
 import { ModalView } from '../Web3Status'
 import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
+import { useUnsupportedChainIdError } from '../../hooks'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -158,6 +159,7 @@ export default function WalletModal({
     setModal(null)
     toggleWalletSwitcherPopover()
   }
+  const unsupportedChainIdError = useUnsupportedChainIdError()
 
   function getModalContent() {
     if (error) {
@@ -170,14 +172,14 @@ export default function WalletModal({
             <AutoRow gap="6px">
               <StyledWarningIcon size="20px" />
               <TYPE.main fontSize="16px" lineHeight="22px" color={'text3'}>
-                {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
+                {unsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
               </TYPE.main>
             </AutoRow>
           </HeaderRow>
           <ContentWrapper>
             <TYPE.yellow color="text4">
               <h5>
-                {error instanceof UnsupportedChainIdError
+                {unsupportedChainIdError
                   ? 'Please connect to the appropriate network.'
                   : 'Error connecting. Try refreshing the page.'}
               </h5>
