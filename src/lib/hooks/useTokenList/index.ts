@@ -1,4 +1,4 @@
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -8,9 +8,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import fetchTokenList from './fetchTokenList'
-import { useQueryTokens } from './querying'
 import { ChainTokenMap, tokensToChainTokenMap } from './utils'
 import { validateTokens } from './validateTokenList'
+export { useQueryTokens } from './querying'
 
 export const DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 
@@ -73,10 +73,15 @@ export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST
   }, [chainTokenMap, list, resolver, setChainTokenMap])
 }
 
-export default function useTokenList(): WrappedTokenInfo[] {
+function useChainTokenMap() {
   const { chainId } = useActiveWeb3React()
   const chainTokenMap = useAtomValue(chainTokenMapAtom)
   const tokenMap = chainId && chainTokenMap?.[chainId]
+  return tokenMap
+}
+
+export default function useTokenList(): WrappedTokenInfo[] {
+  const tokenMap = useChainTokenMap()
   return useMemo(() => {
     if (!tokenMap) return []
     return Object.values(tokenMap).map(({ token }) => token)
@@ -86,9 +91,7 @@ export default function useTokenList(): WrappedTokenInfo[] {
 export type TokenMap = { [address: string]: Token }
 
 export function useTokenMap(): TokenMap {
-  const { chainId } = useActiveWeb3React()
-  const chainTokenMap = useAtomValue(chainTokenMapAtom)
-  const tokenMap = chainId && chainTokenMap?.[chainId]
+  const tokenMap = useChainTokenMap()
   return useMemo(() => {
     if (!tokenMap) return {}
     return Object.entries(tokenMap).reduce((map, [address, { token }]) => {
@@ -96,8 +99,4 @@ export function useTokenMap(): TokenMap {
       return map
     }, {} as TokenMap)
   }, [tokenMap])
-}
-
-export function useQueryCurrencies(query = ''): (WrappedTokenInfo | NativeCurrency)[] {
-  return useQueryTokens(query, useTokenList())
 }

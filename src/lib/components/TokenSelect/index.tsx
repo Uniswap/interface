@@ -3,9 +3,10 @@ import { Currency } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import useTokenList, { useIsTokenListLoaded, useQueryCurrencies } from 'lib/hooks/useTokenList'
+import useTokenList, { useIsTokenListLoaded, useQueryTokens } from 'lib/hooks/useTokenList'
 import styled, { ThemedText } from 'lib/theme'
 import { ElementRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { currencyId } from 'utils/currencyId'
 
 import Column from '../Column'
@@ -22,35 +23,34 @@ const SearchInput = styled(StringInput)`
   ${inputCss}
 `
 
-function usePrefetchBalances() {
+function usePrefetchBalances(tokenList: WrappedTokenInfo[]) {
   const { account } = useActiveWeb3React()
-  const tokenList = useTokenList()
   const [prefetchedTokenList, setPrefetchedTokenList] = useState(tokenList)
   useEffect(() => setPrefetchedTokenList(tokenList), [tokenList])
   useCurrencyBalances(account, tokenList !== prefetchedTokenList ? tokenList : undefined)
 }
 
-function useAreBalancesLoaded(): boolean {
+function useAreBalancesLoaded(tokenList: WrappedTokenInfo[]): boolean {
   const { account } = useActiveWeb3React()
-  const tokens = useTokenList()
   const native = useNativeCurrency()
-  const currencies = useMemo(() => [native, ...tokens], [native, tokens])
+  const currencies = useMemo(() => [native, ...tokenList], [native, tokenList])
   const balances = useCurrencyBalances(account, currencies).filter(Boolean)
   return !account || currencies.length === balances.length
 }
 
 interface TokenSelectDialogProps {
+  tokenList: WrappedTokenInfo[]
   value?: Currency
   onSelect: (token: Currency) => void
 }
 
-export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
+export function TokenSelectDialog({ tokenList, value, onSelect }: TokenSelectDialogProps) {
   const [query, setQuery] = useState('')
-  const queriedTokens = useQueryCurrencies(query)
+  const queriedTokens = useQueryTokens(tokenList, query)
   const tokens = useMemo(() => queriedTokens?.filter((token) => token !== value), [queriedTokens, value])
 
   const isTokenListLoaded = useIsTokenListLoaded()
-  const areBalancesLoaded = useAreBalancesLoaded()
+  const areBalancesLoaded = useAreBalancesLoaded(tokenList)
   const [isLoaded, setIsLoaded] = useState(isTokenListLoaded && areBalancesLoaded)
   // Give the balance-less tokens a small block period to avoid layout thrashing from re-sorting.
   useEffect(() => {
@@ -124,7 +124,8 @@ interface TokenSelectProps {
 }
 
 export default memo(function TokenSelect({ value, collapsed, disabled, onSelect }: TokenSelectProps) {
-  usePrefetchBalances()
+  const tokenList = useTokenList()
+  usePrefetchBalances(tokenList)
 
   const [open, setOpen] = useState(false)
   const onOpen = useCallback(() => setOpen(true), [])
@@ -140,7 +141,7 @@ export default memo(function TokenSelect({ value, collapsed, disabled, onSelect 
       <TokenButton value={value} collapsed={collapsed} disabled={disabled} onClick={onOpen} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
-          <TokenSelectDialog value={value} onSelect={selectAndClose} />
+          <TokenSelectDialog tokenList={tokenList} value={value} onSelect={selectAndClose} />
         </Dialog>
       )}
     </>
