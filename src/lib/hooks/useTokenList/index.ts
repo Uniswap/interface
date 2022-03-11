@@ -14,10 +14,10 @@ import { validateTokens } from './validateTokenList'
 
 export const DEFAULT_TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 
-const tokenListAtom = atom<{ list?: string | TokenInfo[]; map?: ChainTokenMap }>({})
+const chainTokenMapAtom = atom<ChainTokenMap | null>(null)
 
 export function useIsTokenListLoaded() {
-  return Boolean(useAtomValue(tokenListAtom).map)
+  return Boolean(useAtomValue(chainTokenMapAtom))
 }
 
 export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST): void {
@@ -25,8 +25,8 @@ export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST
   const [error, setError] = useState<Error>()
   if (error) throw error
 
-  const [tokenList, setTokenList] = useAtom(tokenListAtom)
-  useEffect(() => setTokenList({ list }), [list, setTokenList])
+  const [chainTokenMap, setChainTokenMap] = useAtom(chainTokenMapAtom)
+  useEffect(() => setChainTokenMap(null), [list, setChainTokenMap])
 
   const { chainId, library } = useActiveWeb3React()
   const resolver = useCallback(
@@ -40,7 +40,8 @@ export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST
   )
 
   useEffect(() => {
-    if (tokenList.map) return
+    // If the list was already loaded, don't reload it.
+    if (chainTokenMap) return
 
     let stale = false
     activateList(list)
@@ -59,7 +60,7 @@ export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST
         // tokensToChainTokenMap also caches the fetched tokens, so it must be invoked even if stale.
         const map = tokensToChainTokenMap(tokens)
         if (!stale) {
-          setTokenList({ list, map })
+          setChainTokenMap(map)
           setError(undefined)
         }
       } catch (e: unknown) {
@@ -69,12 +70,12 @@ export function useSyncTokenList(list: string | TokenInfo[] = DEFAULT_TOKEN_LIST
         }
       }
     }
-  }, [list, resolver, setTokenList, tokenList])
+  }, [chainTokenMap, list, resolver, setChainTokenMap])
 }
 
 export default function useTokenList(): WrappedTokenInfo[] {
   const { chainId } = useActiveWeb3React()
-  const chainTokenMap = useAtomValue(tokenListAtom).map
+  const chainTokenMap = useAtomValue(chainTokenMapAtom)
   const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
     if (!tokenMap) return []
@@ -86,7 +87,7 @@ export type TokenMap = { [address: string]: Token }
 
 export function useTokenMap(): TokenMap {
   const { chainId } = useActiveWeb3React()
-  const chainTokenMap = useAtomValue(tokenListAtom).map
+  const chainTokenMap = useAtomValue(chainTokenMapAtom)
   const tokenMap = chainId && chainTokenMap?.[chainId]
   return useMemo(() => {
     if (!tokenMap) return {}
