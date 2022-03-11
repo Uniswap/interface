@@ -44,12 +44,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
   const { account, chainId } = useActiveWeb3React()
   const [{ loading, error }, setWrapState] = useAtom(wrapState)
   const wrappedNativeCurrencyContract = useWETHContract()
-  const {
-    amount,
-    independentField,
-    [Field.INPUT]: inputCurrency,
-    [Field.OUTPUT]: outputCurrency,
-  } = useAtomValue(swapAtom)
+  const { amount, [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
 
   const wrapType = useMemo(() => {
     if (!inputCurrency || !outputCurrency || !chainId) {
@@ -64,12 +59,10 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     return WrapType.NOT_APPLICABLE
   }, [chainId, inputCurrency, outputCurrency])
 
-  const isExactIn = independentField === Field.INPUT
-  const parsedAmount = useMemo(
-    () => tryParseCurrencyAmount(amount, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
-    [inputCurrency, isExactIn, outputCurrency, amount]
+  const parsedAmountIn = useMemo(
+    () => tryParseCurrencyAmount(amount, inputCurrency ?? undefined),
+    [inputCurrency, amount]
   )
-  const parsedAmountIn = isExactIn ? parsedAmount : undefined
 
   const relevantTokenBalances = useCurrencyBalances(
     account,
@@ -83,7 +76,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     [relevantTokenBalances]
   )
 
-  const hasInputAmount = Boolean(parsedAmount?.greaterThan('0'))
+  const hasInputAmount = Boolean(parsedAmountIn?.greaterThan('0'))
   const sufficientBalance = parsedAmountIn && !currencyBalances[Field.INPUT]?.lessThan(parsedAmountIn)
 
   useEffect(() => {
@@ -118,7 +111,11 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     setWrapState((state) => ({ ...state, loading: true }))
     const result = await (wrapType === WrapType.WRAP
       ? wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
-      : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`))
+      : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`)
+    ).catch((e: unknown) => {
+      setWrapState((state) => ({ ...state, loading: false }))
+      throw e
+    })
     // resolve loading state after one confirmation
     result.wait(1).finally(() => setWrapState((state) => ({ ...state, loading: false })))
     return Promise.resolve(result)
