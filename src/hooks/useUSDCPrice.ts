@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
+import useBlockCache from 'lib/hooks/useBlockCache'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from '../constants/tokens'
@@ -18,11 +18,9 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [SupportedChainId.POLYGON]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
 }
 
-const usdcPriceCache = new Map<Currency, Price<Currency, Token> | undefined>()
-
 /**
- * Returns true if a currency should use the USDC price cache.
- * This prevents multiple calls to determine a currency's USDC price.
+ * Caches USDC prices so that they are only fetched once per currency.
+ * This prevents multiple calls to determine a currency's USDC price, an expensive operation.
  *
  * This is an optimization which mitigates useUSDCPrice being used throughout the component tree.
  * Because it is used on nested elements, it is called multiple times and is not memoized between
@@ -32,72 +30,39 @@ const usdcPriceCache = new Map<Currency, Price<Currency, Token> | undefined>()
  * cache external to React allows each currency to be fetched exactly once per block, and limits
  * blocking time to the first call.
  */
-function useUSDCPriceCache(currency?: Currency): boolean {
-  // This hooks should only take "lead" (ie not use the cache) if the cache has not yet been set.
-  // This avoids having multiple hooks taking "lead".
-  const [lead, setLead] = useState(currency ? !usdcPriceCache.has(currency) : false)
-  if (currency && !usdcPriceCache.has(currency)) {
-    usdcPriceCache.set(currency, undefined)
-    setLead(true)
-  }
-
-  // Clears the cache every block.
-  const block = useBlockNumber()
-  useEffect(() => {
-    usdcPriceCache.clear()
-    // Immediately set the cache to keep the "lead".
-    if (lead && currency) {
-      usdcPriceCache.set(currency, undefined)
-    }
-  }, [block, currency, lead])
-
-  useEffect(() => {
-    return () => {
-      // If there is not yet a cached value when unmounting, give up the "lead".
-      if (lead && currency && !usdcPriceCache.get(currency)) {
-        usdcPriceCache.delete(currency)
-      }
-    }
-  })
-
-  return !lead
-}
+const usdcPriceCache = new Map<Currency, Price<Currency, Token> | undefined>()
 
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
-  const useCache = useUSDCPriceCache(currency)
+  const [isCacheLeader, updateCache] = useBlockCache(usdcPriceCache, currency)
   const amountSpecified = currency?.chainId ? STABLECOIN_AMOUNT_OUT[currency.chainId] : undefined
-  const otherCurrency = useCache ? undefined : currency
+  const otherCurrency = isCacheLeader ? currency : undefined
   const stablecoin = amountSpecified?.currency
 
   const v2Trade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountSpecified, otherCurrency, { maxHops: 2 })
   const { trade: v3Trade } = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountSpecified, otherCurrency)
 
   const price = useMemo(() => {
-    if (!currency || !stablecoin) {
-      return undefined
-    }
+    if (!isCacheLeader) return
+    if (!currency || !stablecoin) return
 
-    // If currency is a stablecoin, return a stable price.
-    if (currency?.wrapped.equals(stablecoin)) {
-      return new Price(stablecoin, stablecoin, '1', '1')
-    }
+    // If currency is the stablecoin, return the stable price.
+    if (currency.wrapped.equals(stablecoin)) return new Price(stablecoin, stablecoin, '1', '1')
 
     // Use v2 price if available, and fallback to v3.
     const route = v2Trade?.route || v3Trade?.routes[0]
     if (route) {
       const { numerator, denominator } = route.midPrice
       const price = new Price(currency, stablecoin, denominator, numerator)
-      usdcPriceCache.set(currency, price)
       return price
-    } else {
-      return usdcPriceCache.get(currency)
     }
-  }, [currency, stablecoin, v2Trade, v3Trade])
-  return price
+
+    return undefined
+  }, [currency, isCacheLeader, stablecoin, v2Trade?.route, v3Trade?.routes])
+  return updateCache(price)
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
