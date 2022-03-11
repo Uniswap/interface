@@ -1,15 +1,4 @@
-import {
-  Token,
-  Trade,
-  currencyEquals,
-  Price,
-  CurrencyAmount,
-  JSBI,
-  ZERO,
-  ONE,
-  Fraction,
-  RoutablePlatform
-} from '@swapr/sdk'
+import { Token, Trade, currencyEquals, Price, CurrencyAmount } from '@swapr/sdk'
 import { useTradeExactInAllPlatforms } from './Trades'
 import { ChainId } from '@swapr/sdk'
 import { USDC, DAI } from '../constants/index'
@@ -20,12 +9,6 @@ const STABLECOIN_OUT: { [chainId: number]: Token } = {
   [ChainId.MAINNET]: DAI,
   [ChainId.ARBITRUM_ONE]: USDC[ChainId.ARBITRUM_ONE],
   [ChainId.XDAI]: USDC[ChainId.XDAI]
-}
-
-const ALLOWED_PLATAFORMS: { [chainId: number]: string[] } = {
-  [ChainId.MAINNET]: [RoutablePlatform.UNISWAP.name, RoutablePlatform.SUSHISWAP.name],
-  [ChainId.ARBITRUM_ONE]: [RoutablePlatform.SUSHISWAP.name],
-  [ChainId.XDAI]: [RoutablePlatform.SUSHISWAP.name]
 }
 
 export function useUSDPrice(currencyAmount?: CurrencyAmount, selectedTrade?: Trade) {
@@ -41,23 +24,19 @@ export function useUSDPrice(currencyAmount?: CurrencyAmount, selectedTrade?: Tra
 
     if (currencyEquals(currency, stablecoin)) return new Price(currency, currency, '1', '1')
 
-    const allowHighTVLPlataforms = (trade: Trade | undefined) => {
-      if (!trade) return false
-      if (selectedTrade) return selectedTrade.platform.name === trade.platform.name
-      else return ALLOWED_PLATAFORMS[chainId].includes(trade.platform.name)
+    const filterSelectedPlataforms = (trade: Trade | undefined) => {
+      if (!trade || !selectedTrade) return false
+      return selectedTrade.platform.name === trade.platform.name
     }
 
     const calculateBestPrice = (trades: (Trade | undefined)[]): Price | undefined => {
       if (!trades || !trades.length) return undefined
 
-      const topTrade = trades.filter(allowHighTVLPlataforms)
+      const selectedPlataformTrade = trades.filter(filterSelectedPlataforms)[0]
 
-      const tradesTotal = topTrade.reduce(
-        (acc, trade) => (trade ? trade.executionPrice.raw.add(acc) : acc),
-        new Fraction(ZERO, ONE)
-      )
+      if (!selectedPlataformTrade) return undefined
 
-      const { numerator, denominator } = tradesTotal.divide(JSBI.BigInt(topTrade.length))
+      const { numerator, denominator } = selectedPlataformTrade?.executionPrice
 
       return new Price(currency, stablecoin, denominator, numerator)
     }
