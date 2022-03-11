@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-11 03:07\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -1732,7 +1732,7 @@ msgstr "仍要兑换"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Swap confirmed"
-msgstr "交换确认"
+msgstr "交易已确认"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap details"
@@ -1749,7 +1749,7 @@ msgstr "兑换失败： {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Swap pending"
-msgstr "交换待处理"
+msgstr "交易处理中"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Swap summary"
@@ -1946,7 +1946,7 @@ msgstr "交易完成于"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Transaction confirmed"
-msgstr "交易确认"
+msgstr "交易已确认"
 
 #: src/components/TransactionSettings/index.tsx
 #: src/lib/components/Swap/Settings/TransactionTtlInput.tsx
@@ -2093,7 +2093,7 @@ msgstr "将 <0/> 换回为 {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap confirmed"
-msgstr "打开包装确认"
+msgstr "交易已确认"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unwrap native currency."
@@ -2101,11 +2101,11 @@ msgstr "解开本国货币。"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
-msgstr "打开待处理"
+msgstr "交易处理中"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unwrapping native currency."
-msgstr "解包本国货币。"
+msgstr "解包原生代币。"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2286,19 +2286,19 @@ msgstr "将 <0/> 换为 {0}"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap confirmed"
-msgstr "包裹确认"
+msgstr "交易已确认"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Wrap native currency."
-msgstr "包裹本国货币。"
+msgstr "Wrap 原生代币。"
 
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
-msgstr "包裹待处理"
+msgstr "交易处理中"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Wrapping native currency."
-msgstr "包装本国货币。"
+msgstr "包装原生代币。"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
