@@ -14,6 +14,7 @@ import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { flex } from 'src/styles/flex'
 import { borderRadii, dimensions } from 'src/styles/sizing'
 import { logger } from 'src/utils/logger'
 
@@ -60,7 +61,9 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
             imageUrl={collectionImageUrl}
             width={COLLECTION_IMAGE_WIDTH}
           />
-          <Text variant="h3">{name}</Text>
+          <Text style={flex.fill} variant="h3">
+            {name}
+          </Text>
         </Flex>
         <Box>
           <RemoteImage
