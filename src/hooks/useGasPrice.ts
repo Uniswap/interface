@@ -23,5 +23,5 @@ export default function useGasPrice(): JSBI | undefined {
   const contract = useContract(address ?? undefined, CHAIN_DATA_ABI, false)
 
   const resultStr = useSingleCallResult(contract, 'latestAnswer').result?.[0]?.toString()
-  return useMemo(() => (resultStr === 'string' ? JSBI.BigInt(resultStr) : undefined), [resultStr])
+  return useMemo(() => (typeof resultStr === 'string' ? JSBI.BigInt(resultStr) : undefined), [resultStr])
 }
