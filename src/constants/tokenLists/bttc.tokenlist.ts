@@ -81,7 +81,7 @@ export const BTTC_TOKEN_LIST = {
       chainId: 199,
       address: '0xdB28719F7f938507dBfe4f0eAe55668903D34a15',
       symbol: 'USDT_t',
-      decimals: 18,
+      decimals: 6,
       name: 'Tether USD_TRON',
       logoURI: 'https://coin.top/production/logo/usdtlogo.png',
     },

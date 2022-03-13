@@ -21,7 +21,6 @@ import { ChainId } from '@dynamic-amm/sdk'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { setGasPrice } from 'state/application/actions'
-import KyberSwapAnnounce from 'components/Header/KyberSwapAnnounce'
 import Footer from 'components/Footer/Footer'
 import GoogleAnalyticsReporter from 'components/GoogleAnalyticsReporter'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -180,7 +179,6 @@ export default function App() {
           <Route component={GoogleAnalyticsReporter} />
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
-            <KyberSwapAnnounce />
             {/* <URLWarning /> */}
             <HeaderWrapper>
               <Header />
