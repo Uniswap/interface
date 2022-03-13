@@ -8,9 +8,8 @@ import { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Price from '../Price'
 import RoutingDiagram from '../RoutingDiagram'
@@ -79,16 +78,8 @@ export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType
 }
 
 export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
-  const { inputAmount: input, outputAmount: output, executionPrice } = trade
+  const { inputAmount: input, outputAmount: output } = trade
   const { outputUSDC, priceImpact, warning: priceImpactWarning } = useUSDCPriceImpact(input, output)
-
-  // Compute the quote price from the output price, not the output currency (eg useUSDCValue).
-  // This ensures that it aligns with the displayed outputUSDC.
-  const quotePrice = useMemo(() => {
-    const quotePrice = outputUSDC?.divide(input.toExact())
-    return quotePrice ? `($${formatCurrencyAmount(quotePrice, 6, 'en', 2)})` : null
-  }, [outputUSDC, input])
-
   return (
     <>
       <Tooltip placement="bottom" icon={priceImpactWarning ? AlertTriangle : Info}>
@@ -104,8 +95,7 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
           <RoutingDiagram trade={trade} />
         </Column>
       </Tooltip>
-      <Price price={executionPrice} />
-      <ThemedText.Caption color="secondary">{quotePrice}</ThemedText.Caption>
+      <Price trade={trade} quoteUSDC={outputUSDC} />
     </>
   )
 }

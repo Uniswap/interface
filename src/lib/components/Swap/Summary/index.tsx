@@ -105,7 +105,7 @@ interface SummaryDialogProps {
 }
 
 export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps) {
-  const { inputAmount, outputAmount, executionPrice } = trade
+  const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const usdcPriceImpact = useUSDCPriceImpact(inputAmount, outputAmount)
@@ -152,7 +152,7 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
       <Body flex align="stretch" gap={0.75} padded open={open}>
         <SummaryColumn gap={0.75} flex justify="center">
           <Summary input={inputAmount} output={outputAmount} usdcPriceImpact={usdcPriceImpact} />
-          <Price price={executionPrice} />
+          <Price trade={trade} />
         </SummaryColumn>
         <Rule />
         <Row>
