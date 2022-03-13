@@ -248,6 +248,15 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       symbol: 'BAVA',
       logoURI: 'https://i.imgur.com/mAeAIip.jpeg',
     },
+
+    {
+      chainId: 43114,
+      address: '0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE',
+      decimals: 18,
+      name: 'Staked AVAX',
+      symbol: 'sAVAX',
+      logoURI: 'https://i.imgur.com/lqxXmU7.png',
+    },
   ],
   version: {
     major: 0,

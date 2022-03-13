@@ -586,7 +586,6 @@ msgstr "文挡"
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Don't see a pool you joined?"
 msgstr "没看到您加入的池吗?"
@@ -880,7 +879,6 @@ msgstr "导入代币"
 msgid "Import at your own risk"
 msgstr "导入的风险自负"
 
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx

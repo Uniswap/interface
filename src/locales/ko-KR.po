@@ -586,7 +586,6 @@ msgstr "문서"
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Don't see a pool you joined?"
 msgstr "예치한 풀이 보이지 않습니까?"
@@ -880,7 +879,6 @@ msgstr "토큰 가져오기"
 msgid "Import at your own risk"
 msgstr "자신의 책임하에 가져오기"
 
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx

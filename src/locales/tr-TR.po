@@ -586,7 +586,6 @@ msgstr "Dokümanlar"
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Don't see a pool you joined?"
 msgstr "Katıldığınız bir havuzu göremiyor musunuz?"
@@ -880,7 +879,6 @@ msgstr "Token’ları İçe Aktar"
 msgid "Import at your own risk"
 msgstr "Kendi sorumluluğunuzda içe aktarınız"
 
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx

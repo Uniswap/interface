@@ -586,7 +586,6 @@ msgstr "Tài liệu"
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/lp.tsx
 msgid "Don't see a pool you joined?"
 msgstr "Không thấy Pool mà bạn đã tham gia?"
@@ -880,7 +879,6 @@ msgstr "Nhập Các Token"
 msgid "Import at your own risk"
 msgstr "Nhập và hiểu rõ rủi ro"
 
-#: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
