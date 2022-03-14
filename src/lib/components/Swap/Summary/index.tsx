@@ -153,7 +153,7 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
             title={<Subhead priceImpact={usdcPriceImpact} slippage={slippage} />}
             open={open}
             onExpand={onExpand}
-            height={8}
+            height={7.25}
           >
             <Details trade={trade} slippage={slippage} usdcPriceImpact={usdcPriceImpact} />
           </Expando>
