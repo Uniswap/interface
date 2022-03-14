@@ -185,12 +185,12 @@ const HeaderSubRow = styled(RowFlat)`
 `
 
 export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadius?: string }>`
-  padding: 8px 12px;
+  padding: 6px 8px;
   margin: 0;
   display: inline-flex;
   font-weight: bold;
   font-size: 10px;
-  line-height: 12px;
+  line-height: 10px;
   text-align: center;
   letter-spacing: 0.08em;
   text-transform: uppercase;
