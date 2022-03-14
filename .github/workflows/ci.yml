@@ -32,6 +32,6 @@ jobs:
       - name: Start host
         run: yarn start
       - name: Test
-        run: yarn synpress:ct
+        run: yarn synpress
       - name: Build
         run: yarn run build
