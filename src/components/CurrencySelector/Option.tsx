@@ -4,11 +4,9 @@ import React from 'react'
 import { Pressable } from 'react-native'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
-import { CenterBox } from 'src/components/layout/CenterBox'
 import { InlinePriceChart } from 'src/components/PriceChart/InlinePriceChart'
 import { Text } from 'src/components/Text'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
-import { useNetworkColors } from 'src/utils/colors'
+import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 import { Flex } from '../layout'
 
@@ -29,35 +27,40 @@ export function Option({
   matches,
   metadataType,
 }: OptionProps) {
-  const info = CHAIN_INFO[currency.chainId]
-  const colors = useNetworkColors(currency.chainId)
-
   const balance =
     currencyPrice !== undefined && currencyAmount
       ? currencyPrice * parseFloat(currencyAmount?.toSignificant())
       : undefined
 
   const symbolMatches = matches?.filter((m) => m.key === 'symbol')
+  const nameMatches = matches?.filter((m) => m.key === 'name')
 
   return (
     <Pressable testID={`currency-option-${currency.symbol}`} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="sm">
         <Flex centered row gap="xs">
           <Flex centered row gap="sm">
-            <CurrencyLogo currency={currency} size={36} />
-            {symbolMatches?.length ? (
-              <TextWithMatches matches={symbolMatches} text={currency.symbol ?? ''} />
-            ) : (
-              <Text variant="h4">{currency.symbol}</Text>
-            )}
+            <CurrencyLogo currency={currency} size={40} />
+            <Flex alignItems="flex-start" gap="xs">
+              <Flex centered row>
+                {nameMatches?.length ? (
+                  <TextWithMatches matches={nameMatches} text={currency.name ?? ''} variant="h4" />
+                ) : (
+                  <Text variant="h4">{currency.name}</Text>
+                )}
+              </Flex>
+
+              {symbolMatches?.length ? (
+                <TextWithMatches
+                  matches={symbolMatches}
+                  text={currency.symbol ?? ''}
+                  variant="bodySmSoft"
+                />
+              ) : (
+                <Text variant="bodySmSoft">{currency.symbol}</Text>
+              )}
+            </Flex>
           </Flex>
-          {currency.chainId !== ChainId.Mainnet && (
-            <CenterBox borderRadius="sm" p="xs" style={{ backgroundColor: colors?.background }}>
-              <Text style={{ color: colors?.foreground }} variant="bodySm">
-                {info.label}
-              </Text>
-            </CenterBox>
-          )}
         </Flex>
         {metadataType === 'price' ? (
           <TokenMetadata
@@ -78,9 +81,10 @@ export function Option({
 interface TextWithMatchesProps {
   text: string
   matches: readonly Fuse.FuseResultMatch[]
+  variant: keyof Theme['textVariants']
 }
 
-function TextWithMatches({ matches, text }: TextWithMatchesProps) {
+function TextWithMatches({ matches, text, variant }: TextWithMatchesProps) {
   const charIsMatch = new Set()
   for (const match of matches) {
     for (const index of match.indices) {
@@ -101,16 +105,16 @@ function TextWithMatches({ matches, text }: TextWithMatchesProps) {
 
   const elements = (
     <>
-      {pieces.map((p) => {
+      {pieces.map((p, i) => {
         if (p[1])
           return (
-            <Text color="textColor" variant="h4">
+            <Text key={`${i}${p[0]}`} color="textColor" variant={variant}>
               {p[0]}
             </Text>
           )
         else
           return (
-            <Text color="gray400" variant="h4">
+            <Text key={`${i}${p[0]}`} color="gray400" variant={variant}>
               {p[0]}
             </Text>
           )
@@ -118,7 +122,7 @@ function TextWithMatches({ matches, text }: TextWithMatchesProps) {
     </>
   )
 
-  return elements
+  return <Flex row>{elements}</Flex>
 }
 
 interface TokenMetadataProps {

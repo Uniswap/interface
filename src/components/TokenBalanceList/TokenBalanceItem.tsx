@@ -61,13 +61,13 @@ export function TokenBalanceItem({
       py="sm"
       onPress={onPress}>
       <Flex centered row gap="sm">
-        <CurrencyLogo currency={currency} size={32} />
-        <Box alignItems="flex-start">
-          <Text variant="h4">{currency.symbol}</Text>
+        <CurrencyLogo currency={currency} size={40} />
+        <Flex alignItems="flex-start" gap="xxs">
+          <Text variant="h4">{currency.name}</Text>
           <Text color="gray600" variant="bodySm">{`${formatCurrencyAmount(currencyAmount)} ${
             currency.symbol
           }`}</Text>
-        </Box>
+        </Flex>
       </Flex>
       <Box alignItems="flex-end">
         <Text variant="h4">{formatUSDPrice(balance)}</Text>

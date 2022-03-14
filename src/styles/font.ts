@@ -73,6 +73,11 @@ export const textVariants = {
     fontSize: 10,
     color: 'mainForeground',
   },
+  bodySmSoft: {
+    fontFamily: fontFamily.sansSerif.regular,
+    fontSize: 12,
+    color: 'gray600',
+  },
   buttonLabel: {
     fontFamily: fontFamily.sansSerif.medium,
     fontSize: 16,

@@ -14,6 +14,7 @@ const searchOptions: Fuse.IFuseOptions<Currency> = {
   keys: [
     'chainId',
     'symbol',
+    'name',
     // prioritize other fields
     { name: 'address', weight: 0.2 },
   ],
@@ -37,6 +38,12 @@ const getSymbolSearchPattern = (symbol: string | null) =>
   symbol
     ? // fuzzy-match symbol
       { symbol }
+    : null
+
+const getNameSearchPattern = (name: string | null) =>
+  name
+    ? // fuzzy-match name
+      { name }
     : null
 
 /**
@@ -64,6 +71,9 @@ export function filter(
 
   const symbolSearchPattern = getSymbolSearchPattern(searchFilter)
   if (symbolSearchPattern) orPatterns.push(symbolSearchPattern)
+
+  const nameSearchPattern = getNameSearchPattern(searchFilter)
+  if (nameSearchPattern) orPatterns.push(nameSearchPattern)
 
   const searchPattern: Fuse.Expression = {
     $and: [
