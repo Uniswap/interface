@@ -148,19 +148,20 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
           <Summary input={inputAmount} output={outputAmount} usdcPriceImpact={usdcPriceImpact} />
           <Price trade={trade} />
         </Heading>
-        <Expando
-          title={<Subhead priceImpact={usdcPriceImpact} slippage={slippage} />}
-          open={open}
-          onExpand={onExpand}
-          height={8}
-          marginBottom={0.75}
-        >
-          <Details trade={trade} slippage={slippage} usdcPriceImpact={usdcPriceImpact} />
-        </Expando>
-        <Footing>
-          <Estimate trade={trade} slippage={slippage} />
-        </Footing>
-        <ConfirmButton trade={trade} highPriceImpact={usdcPriceImpact.warning === 'error'} onConfirm={onConfirm} />
+        <Column gap={open ? 0 : 0.75}>
+          <Expando
+            title={<Subhead priceImpact={usdcPriceImpact} slippage={slippage} />}
+            open={open}
+            onExpand={onExpand}
+            height={8}
+          >
+            <Details trade={trade} slippage={slippage} usdcPriceImpact={usdcPriceImpact} />
+          </Expando>
+          <Footing>
+            <Estimate trade={trade} slippage={slippage} />
+          </Footing>
+          <ConfirmButton trade={trade} highPriceImpact={usdcPriceImpact.warning === 'error'} onConfirm={onConfirm} />
+        </Column>
       </Body>
     </>
   )

@@ -66,13 +66,15 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
           <ThemedText.Body2>{header}</ThemedText.Body2>
         </ErrorHeader>
       </StatusHeader>
-      <Expando title={<Trans>Error details</Trans>} open={open} onExpand={onExpand} height={7.5} marginBottom={0.75}>
-        <ThemedText.Code userSelect>
-          {error.name}
-          {error.message ? `: ${error.message}` : ''}
-        </ThemedText.Code>
-      </Expando>
-      <ActionButton onClick={onClick}>{action}</ActionButton>
+      <Column gap={open ? 0 : 0.75}>
+        <Expando title={<Trans>Error details</Trans>} open={open} onExpand={onExpand} height={7.5}>
+          <ThemedText.Code userSelect>
+            {error.name}
+            {error.message ? `: ${error.message}` : ''}
+          </ThemedText.Code>
+        </Expando>
+        <ActionButton onClick={onClick}>{action}</ActionButton>
+      </Column>
     </Column>
   )
 }

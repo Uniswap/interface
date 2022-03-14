@@ -21,6 +21,7 @@ const Column = styled.div<{
   grid-template-columns: 1fr;
   justify-content: ${({ justify }) => justify ?? 'space-between'};
   padding: ${({ padded }) => padded && '0.75em'};
+  transition: gap 0.25s;
 
   ${({ css }) => css}
 `
