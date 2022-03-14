@@ -6,7 +6,7 @@ import { MouseoverTooltip } from '../../Tooltip'
 
 const KpiBadge = styled.div<{ isGreyed: boolean }>`
   height: 16px;
-  border: ${props => !props.isGreyed && `solid 1.5px ${props.theme.orange1}`};
+  border: ${props => (props.isGreyed ? `solid 1.5px transparent` : `solid 1.5px ${props.theme.orange1}`)};
   color: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.orange1)};
   svg {
     > path {
@@ -32,7 +32,7 @@ const StyledCarrotLogo = styled(CarrotLogo)`
   }
 `
 
-const CarrotBadge = ({ isGreyed = false }) => {
+const CarrotBadge = ({ isGreyed = false }: { isGreyed?: boolean }) => {
   return (
     <MouseoverTooltip content="Rewards at least a Carrot KPI token">
       <KpiBadge isGreyed={isGreyed}>

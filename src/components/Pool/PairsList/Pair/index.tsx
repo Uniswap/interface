@@ -34,11 +34,10 @@ const SizedCard = styled(DarkCard)`
 
 const FarmingBadge = styled.div<{ isGreyed?: boolean }>`
   height: 16px;
-  border: ${props => !props.isGreyed && `solid 1.5px ${props.theme.green2}`};
+  border: ${props => (props.isGreyed ? `solid 1.5px transparent` : `solid 1.5px ${props.theme.green2}`)};
   div {
     color: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
   }
-
   border-radius: 6px;
   width: fit-content;
   display: flex;
@@ -54,7 +53,6 @@ const FarmingBadge = styled.div<{ isGreyed?: boolean }>`
     }
   }
   font-weight: 700;
-  margin-left: 3px;
   font-size: 9px;
   line-height: 9px;
   letter-spacing: 0.02em;
