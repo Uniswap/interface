@@ -36,5 +36,7 @@ jobs:
         run: yarn lint
       - name: test
         run: yarn synpress:ct
+        env:
+          CYPRESS_CACHE_FOLDER: ${{ github.workspace }}/.cache/Cypress
       - name: Build
         run: yarn run build
