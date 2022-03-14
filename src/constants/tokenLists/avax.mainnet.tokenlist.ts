@@ -248,7 +248,6 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       symbol: 'BAVA',
       logoURI: 'https://i.imgur.com/mAeAIip.jpeg',
     },
-
     {
       chainId: 43114,
       address: '0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE',
@@ -256,6 +255,14 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       name: 'Staked AVAX',
       symbol: 'sAVAX',
       logoURI: 'https://i.imgur.com/lqxXmU7.png',
+    },
+    {
+      chainId: 43114,
+      address: '0x8729438EB15e2C8B576fCc6AeCdA6A148776C0F5',
+      decimals: 18,
+      name: 'BENQI',
+      symbol: 'QI',
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9288.png',
     },
   ],
   version: {

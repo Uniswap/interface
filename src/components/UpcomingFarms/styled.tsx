@@ -73,7 +73,6 @@ export const TableRow = styled.div<{ isLastItem?: boolean }>`
 
 export const StyledImg = styled.img`
   margin-right: 8px;
-  background: #fff;
   border-radius: 50%;
   object-fit: contain;
 `

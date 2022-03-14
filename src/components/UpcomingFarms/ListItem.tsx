@@ -33,9 +33,11 @@ const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolea
           ))}
         </Flex>
         <Flex grid-area="information" alignItems="center" justifyContent="flex-end">
-          <ExternalLink href={pool.information}>
-            <Trans>Learn more</Trans> ↗
-          </ExternalLink>
+          {pool.information && (
+            <ExternalLink href={pool.information}>
+              <Trans>Learn more</Trans> ↗
+            </ExternalLink>
+          )}
         </Flex>
       </TableRow>
     )
@@ -103,13 +105,15 @@ const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolea
       </GridItem>
 
       <GridItem noBorder>
-        <DataText>
-          <ExternalLink href={pool.information}>
-            <span style={{ fontWeight: 600 }}>
-              <Trans>Learn more</Trans> ↗
-            </span>
-          </ExternalLink>
-        </DataText>
+        {!!pool.information && (
+          <DataText>
+            <ExternalLink href={pool.information}>
+              <span style={{ fontWeight: 600 }}>
+                <Trans>Learn more</Trans> ↗
+              </span>
+            </ExternalLink>
+          </DataText>
+        )}
       </GridItem>
     </StyledItemCard>
   )

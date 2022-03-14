@@ -22,10 +22,6 @@ const StartingIn = ({ startingIn }: { startingIn?: string }) => {
     return null
   }
 
-  if (timeDiff < 0) {
-    return null
-  }
-
   const seconds = Math.abs(timeDiff) / 1000
 
   return <Text color={theme.text}>{getFormattedTimeFromSecond(seconds)}</Text>
