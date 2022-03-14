@@ -7,6 +7,7 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
+  
 
 jobs:
   CI:
@@ -35,9 +36,7 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: cyrpress bin
-        run: npx cypress install
-      - name: cyrpress bin2
-        run: cypress install
+        run: yarn add -D cypress && yarn cypress install && yarn cypress verify
       - name: test
         run: yarn synpress:ct
       - name: Build
