@@ -36,7 +36,7 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: cyrpress bin
-        run: yarn add -D cypress@9.2.0 && yarn cypress@9.2.0 install && yarn cypress@9.2.0 verify
+        run: yarn add -D cypress@9.2.0 && yarn cypress install && yarn cypress verify
       - name: test
         run: yarn synpress:ct
       - name: Build
