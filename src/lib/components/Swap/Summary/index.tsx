@@ -2,23 +2,23 @@ import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import ActionButton, { Action } from 'lib/components/ActionButton'
 import { IconButton } from 'lib/components/Button'
+import Column from 'lib/components/Column'
+import { Header } from 'lib/components/Dialog'
+import Row from 'lib/components/Row'
+import Rule from 'lib/components/Rule'
 import { useSwapTradeType } from 'lib/hooks/swap'
 import useScrollbar from 'lib/hooks/useScrollbar'
 import { Slippage } from 'lib/hooks/useSlippage'
 import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
 import styled, { Color, ThemedText } from 'lib/theme'
-import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 import { useMemo, useState } from 'react'
-import { formatCurrencyAmount, formatPrice } from 'utils/formatCurrencyAmount'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
-import ActionButton, { Action } from '../../ActionButton'
-import Column from '../../Column'
-import { Header } from '../../Dialog'
-import Row from '../../Row'
-import Rule from '../../Rule'
+import Price from '../Price'
 import Details from './Details'
 import Summary from './Summary'
 
@@ -105,7 +105,7 @@ interface SummaryDialogProps {
 }
 
 export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps) {
-  const { inputAmount, outputAmount, executionPrice } = trade
+  const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const usdcPriceImpact = useUSDCPriceImpact(inputAmount, outputAmount)
@@ -152,12 +152,7 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
       <Body flex align="stretch" gap={0.75} padded open={open}>
         <SummaryColumn gap={0.75} flex justify="center">
           <Summary input={inputAmount} output={outputAmount} usdcPriceImpact={usdcPriceImpact} />
-          <Row>
-            <ThemedText.Caption userSelect>
-              {formatLocaleNumber({ number: 1, sigFigs: 1, locale: i18n.locale })} {inputCurrency.symbol} ={' '}
-              {formatPrice(executionPrice, 6, i18n.locale)} {outputCurrency.symbol}
-            </ThemedText.Caption>
-          </Row>
+          <Price trade={trade} />
         </SummaryColumn>
         <Rule />
         <Row>

@@ -22,7 +22,11 @@ export default function formatLocaleNumber({
   } else {
     localeArg = [locale, DEFAULT_LOCALE]
   }
-  options.maximumSignificantDigits = options.maximumSignificantDigits || sigFigs
+  options.minimumFractionDigits = options.minimumFractionDigits || fixedDecimals
+  options.maximumFractionDigits = options.maximumFractionDigits || fixedDecimals
+
+  // Fixed decimals should override significant figures.
+  options.maximumSignificantDigits = options.maximumSignificantDigits || fixedDecimals ? undefined : sigFigs
 
   let numberString: number
   if (typeof number === 'number') {

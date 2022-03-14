@@ -8,12 +8,10 @@ import { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
-import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { TextButton } from '../../Button'
-import Row from '../../Row'
+import Price from '../Price'
 import RoutingDiagram from '../RoutingDiagram'
 
 const Loading = styled.span`
@@ -80,33 +78,8 @@ export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType
 }
 
 export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
-  const [flip, setFlip] = useState(true)
-  const { inputAmount: input, outputAmount: output, executionPrice } = trade
-  const { inputUSDC, outputUSDC, priceImpact, warning: priceImpactWarning } = useUSDCPriceImpact(input, output)
-
-  const ratio = useMemo(() => {
-    const [a, b] = flip ? [output, input] : [input, output]
-    const priceString = (!flip ? executionPrice : executionPrice?.invert())?.toSignificant(6)
-
-    const ratio = `1 ${a.currency.symbol} = ${priceString} ${b.currency.symbol}`
-    const usdc = !flip
-      ? inputUSDC
-        ? ` ($${formatCurrencyAmount(inputUSDC, 6, 'en', 2)})`
-        : null
-      : outputUSDC
-      ? ` ($${formatCurrencyAmount(outputUSDC, 6, 'en', 2)})`
-      : null
-
-    return (
-      <ThemedText.Caption userSelect>
-        <Row gap={0.25}>
-          {ratio}
-          {usdc && <ThemedText.Caption color="secondary">{usdc}</ThemedText.Caption>}
-        </Row>
-      </ThemedText.Caption>
-    )
-  }, [flip, output, input, executionPrice, inputUSDC, outputUSDC])
-
+  const { inputAmount: input, outputAmount: output } = trade
+  const { outputUSDC, priceImpact, warning: priceImpactWarning } = useUSDCPriceImpact(input, output)
   return (
     <>
       <Tooltip placement="bottom" icon={priceImpactWarning ? AlertTriangle : Info}>
@@ -122,9 +95,7 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
           <RoutingDiagram trade={trade} />
         </Column>
       </Tooltip>
-      <TextButton color="primary" onClick={() => setFlip(!flip)}>
-        {ratio}
-      </TextButton>
+      <Price trade={trade} outputUSDC={outputUSDC} />
     </>
   )
 }
