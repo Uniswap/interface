@@ -1,6 +1,6 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import { useMemo } from 'react'
 
 import { useTokenContract } from './useContract'
 
@@ -9,7 +9,10 @@ import { useTokenContract } from './useContract'
 export function useTotalSupply(token?: Currency): CurrencyAmount<Token> | undefined {
   const contract = useTokenContract(token?.isToken ? token.address : undefined, false)
 
-  const totalSupply: BigNumber = useSingleCallResult(contract, 'totalSupply')?.result?.[0]
+  const totalSupplyStr: string | undefined = useSingleCallResult(contract, 'totalSupply')?.result?.[0]?.toString()
 
-  return token?.isToken && totalSupply ? CurrencyAmount.fromRawAmount(token, totalSupply.toString()) : undefined
+  return useMemo(
+    () => (token?.isToken && totalSupplyStr ? CurrencyAmount.fromRawAmount(token, totalSupplyStr) : undefined),
+    [token, totalSupplyStr]
+  )
 }

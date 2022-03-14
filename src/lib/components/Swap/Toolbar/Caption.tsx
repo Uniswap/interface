@@ -5,13 +5,12 @@ import Rule from 'lib/components/Rule'
 import Tooltip from 'lib/components/Tooltip'
 import { loadingCss } from 'lib/css/loading'
 import { WrapType } from 'lib/hooks/swap/useWrapCallback'
-import useUSDCPriceImpact, { toHumanReadablePriceImpact } from 'lib/hooks/useUSDCPriceImpact'
+import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { getPriceImpactWarning } from 'utils/prices'
 
 import { TextButton } from '../../Button'
 import Row from '../../Row'
@@ -83,8 +82,7 @@ export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType
 export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
   const [flip, setFlip] = useState(true)
   const { inputAmount: input, outputAmount: output, executionPrice } = trade
-  const { inputUSDC, outputUSDC, priceImpact } = useUSDCPriceImpact(input, output)
-  const isPriceImpactHigh = priceImpact && getPriceImpactWarning(priceImpact)
+  const { inputUSDC, outputUSDC, priceImpact, warning: priceImpactWarning } = useUSDCPriceImpact(input, output)
 
   const ratio = useMemo(() => {
     const [a, b] = flip ? [output, input] : [input, output]
@@ -111,13 +109,12 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
 
   return (
     <>
-      <Tooltip placement="bottom" icon={isPriceImpactHigh ? AlertTriangle : Info}>
+      <Tooltip placement="bottom" icon={priceImpactWarning ? AlertTriangle : Info}>
         <Column gap={0.75}>
-          {isPriceImpactHigh && (
+          {priceImpactWarning && (
             <>
               <ThemedText.Caption>
-                The output amount is estimated at {toHumanReadablePriceImpact(priceImpact)} less than the input amount
-                due to high price impact
+                The output amount is estimated at {priceImpact} less than the input amount due to high price impact
               </ThemedText.Caption>
               <Rule />
             </>

@@ -18,7 +18,7 @@ import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
@@ -35,13 +35,13 @@ function useIsPendingApproval(token?: Token, spender?: string): boolean {
   return Boolean(usePendingApproval(token, spender))
 }
 
-export default function SwapButton({ disabled }: SwapButtonProps) {
+export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
 
   const { tokenColorExtraction } = useTheme()
 
   const {
-    allowedSlippage,
+    slippage,
     currencies: { [Field.INPUT]: inputCurrency },
     currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
     feeOptions,
@@ -64,13 +64,13 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
     // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
-    useSwapApprovalOptimizedTrade(trade.trade, allowedSlippage, useIsPendingApproval) || trade.trade
+    useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
 
   const approvalCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
   const { approvalState, signatureData, handleApproveOrPermit } = useApproveOrPermit(
     optimizedTrade,
-    allowedSlippage,
+    slippage.allowed,
     useIsPendingApproval,
     approvalCurrencyAmount
   )
@@ -151,7 +151,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
-    allowedSlippage,
+    allowedSlippage: slippage.allowed,
     recipientAddressOrName: account ?? null,
     signatureData,
     deadline,
@@ -184,7 +184,7 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
   }, [addTransaction, inputTradeCurrencyAmount, outputTradeCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
 
   const ButtonText = useCallback(() => {
-    if (wrapError !== WrapError.NO_ERROR) {
+    if ((wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP) && wrapError !== WrapError.NO_ERROR) {
       return <WrapErrorText wrapError={wrapError} />
     }
     switch (wrapType) {
@@ -229,9 +229,9 @@ export default function SwapButton({ disabled }: SwapButtonProps) {
       </ActionButton>
       {activeTrade && (
         <Dialog color="dialog" onClose={handleDialogClose}>
-          <SummaryDialog trade={activeTrade} allowedSlippage={allowedSlippage} onConfirm={onConfirm} />
+          <SummaryDialog trade={activeTrade} slippage={slippage} onConfirm={onConfirm} />
         </Dialog>
       )}
     </>
   )
-}
+})

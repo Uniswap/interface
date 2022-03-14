@@ -11,12 +11,24 @@ export function toPercent(maxSlippage: number | undefined): Percent | undefined 
   return new Percent(numerator, 10_000)
 }
 
-/** Returns the user-inputted max slippage. */
-export default function useAllowedSlippage(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined): Percent {
-  const autoSlippage = useAutoSlippageTolerance(trade)
+export interface Slippage {
+  auto: boolean
+  allowed: Percent
+  warning?: 'warning' | 'error'
+}
+
+/** Returns the allowed slippage, and whether it is auto-slippage. */
+export default function useSlippage(trade: InterfaceTrade<Currency, Currency, TradeType> | undefined): Slippage {
+  const shouldUseAutoSlippage = useAtomValue(autoSlippageAtom)
+  const autoSlippage = useAutoSlippageTolerance(shouldUseAutoSlippage ? trade : undefined)
   const maxSlippageValue = useAtomValue(maxSlippageAtom)
   const maxSlippage = useMemo(() => toPercent(maxSlippageValue), [maxSlippageValue])
-  return useAtomValue(autoSlippageAtom) ? autoSlippage : maxSlippage ?? autoSlippage
+  return useMemo(() => {
+    const auto = shouldUseAutoSlippage || !maxSlippage
+    const allowed = shouldUseAutoSlippage ? autoSlippage : maxSlippage ?? autoSlippage
+    const warning = auto ? undefined : getSlippageWarning(allowed)
+    return { auto, allowed, warning }
+  }, [autoSlippage, maxSlippage, shouldUseAutoSlippage])
 }
 
 export const MAX_VALID_SLIPPAGE = new Percent(1, 2)

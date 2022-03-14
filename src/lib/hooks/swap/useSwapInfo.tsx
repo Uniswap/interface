@@ -11,8 +11,9 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 
 import { isAddress } from '../../../utils'
 import useActiveWeb3React from '../useActiveWeb3React'
-import useAllowedSlippage from '../useAllowedSlippage'
+import useSlippage, { Slippage } from '../useSlippage'
 import { useBestTrade } from './useBestTrade'
+import useWrapCallback, { WrapType } from './useWrapCallback'
 
 interface SwapInfo {
   currencies: { [field in Field]?: Currency }
@@ -22,7 +23,7 @@ interface SwapInfo {
     trade?: InterfaceTrade<Currency, Currency, TradeType>
     state: TradeState
   }
-  allowedSlippage: Percent
+  slippage: Slippage
   feeOptions: FeeOptions | undefined
 }
 
@@ -35,61 +36,52 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 // from the current swap inputs, compute the best trade and return it.
 function useComputeSwapInfo(): SwapInfo {
   const { account } = useActiveWeb3React()
-
+  const { type: wrapType } = useWrapCallback()
+  const isWrapping = wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP
   const {
     independentField,
     amount,
     [Field.INPUT]: inputCurrency,
     [Field.OUTPUT]: outputCurrency,
   } = useAtomValue(swapAtom)
-
+  const isExactIn = independentField === Field.INPUT
   const feeOptions = useAtomValue(feeOptionsAtom)
 
-  const to = account
-
-  const relevantTokenBalances = useCurrencyBalances(
-    account,
-    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
-  )
-
-  const isExactIn = independentField === Field.INPUT
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
     [inputCurrency, isExactIn, outputCurrency, amount]
   )
-
-  //@TODO(ianlapham): this would eventually be replaced with routing api logic.
+  // TODO(ianlapham): this would eventually be replaced with routing api logic.
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
-
-  const currencies = useMemo(
-    () => ({
-      [Field.INPUT]: inputCurrency ?? undefined,
-      [Field.OUTPUT]: outputCurrency ?? undefined,
-    }),
-    [inputCurrency, outputCurrency]
-  )
-
-  const currencyBalances = useMemo(
-    () => ({
-      [Field.INPUT]: relevantTokenBalances[0],
-      [Field.OUTPUT]: relevantTokenBalances[1],
-    }),
-    [relevantTokenBalances]
-  )
-
   const tradeCurrencyAmounts = useMemo(
     () => ({
-      [Field.INPUT]: trade.trade?.inputAmount,
-      [Field.OUTPUT]: trade.trade?.outputAmount,
+      // Use same amount for input and output if user is wrapping.
+      [Field.INPUT]: isWrapping || isExactIn ? parsedAmount : trade.trade?.inputAmount,
+      [Field.OUTPUT]: isWrapping || !isExactIn ? parsedAmount : trade.trade?.outputAmount,
     }),
-    [trade.trade?.inputAmount, trade.trade?.outputAmount]
+    [isWrapping, parsedAmount, trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
+  const slippage = useSlippage(trade.trade)
 
-  const allowedSlippage = useAllowedSlippage(trade.trade)
+  const currencies = useMemo(
+    () => ({ [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency }),
+    [inputCurrency, outputCurrency]
+  )
+  const [inputCurrencyBalance, outputCurrencyBalance] = useCurrencyBalances(
+    account,
+    useMemo(() => [inputCurrency, outputCurrency], [inputCurrency, outputCurrency])
+  )
+  const currencyBalances = useMemo(
+    () => ({
+      [Field.INPUT]: inputCurrencyBalance,
+      [Field.OUTPUT]: outputCurrencyBalance,
+    }),
+    [inputCurrencyBalance, outputCurrencyBalance]
+  )
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -106,24 +98,24 @@ function useComputeSwapInfo(): SwapInfo {
       inputError = inputError ?? <Trans>Enter an amount</Trans>
     }
 
-    const formattedTo = isAddress(to)
-    if (!to || !formattedTo) {
+    const formattedAddress = isAddress(account)
+    if (!account || !formattedAddress) {
       inputError = inputError ?? <Trans>Enter a recipient</Trans>
     } else {
-      if (BAD_RECIPIENT_ADDRESSES[formattedTo]) {
+      if (BAD_RECIPIENT_ADDRESSES[formattedAddress]) {
         inputError = inputError ?? <Trans>Invalid recipient</Trans>
       }
     }
 
     // compare input balance to max input based on version
-    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]
+    const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(slippage.allowed)]
 
     if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
       inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
     }
 
     return inputError
-  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, to, trade.trade])
+  }, [account, slippage.allowed, currencies, currencyBalances, parsedAmount, trade.trade])
 
   return useMemo(
     () => ({
@@ -132,10 +124,10 @@ function useComputeSwapInfo(): SwapInfo {
       inputError,
       trade,
       tradeCurrencyAmounts,
-      allowedSlippage,
+      slippage,
       feeOptions,
     }),
-    [currencies, currencyBalances, inputError, trade, tradeCurrencyAmounts, allowedSlippage, feeOptions]
+    [currencies, currencyBalances, inputError, trade, tradeCurrencyAmounts, slippage, feeOptions]
   )
 }
 
@@ -144,7 +136,7 @@ const swapInfoAtom = atom<SwapInfo>({
   currencyBalances: {},
   trade: { state: TradeState.INVALID },
   tradeCurrencyAmounts: {},
-  allowedSlippage: new Percent(0),
+  slippage: { auto: true, allowed: new Percent(0) },
   feeOptions: undefined,
 })
 

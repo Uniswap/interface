@@ -5,7 +5,7 @@ import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { largeIconCss } from 'lib/icons'
 import { Field } from 'lib/state/swap'
 import styled, { ThemedText } from 'lib/theme'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { TradeState } from 'state/routing/types'
 
 import Row from '../../Row'
@@ -17,7 +17,7 @@ const ToolbarRow = styled(Row)`
   ${largeIconCss}
 `
 
-export default function Toolbar({ disabled }: { disabled?: boolean }) {
+export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
   const { chainId } = useActiveWeb3React()
   const {
     trade: { trade, state },
@@ -78,4 +78,4 @@ export default function Toolbar({ disabled }: { disabled?: boolean }) {
       </ThemedText.Caption>
     </>
   )
-}
+})

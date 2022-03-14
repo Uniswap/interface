@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import Row from 'lib/components/Row'
 import { Logo } from 'lib/icons'
 import styled, { brand, ThemedText } from 'lib/theme'
+import { memo } from 'react'
 
 import ExternalLink from './ExternalLink'
 
@@ -24,7 +25,7 @@ const UniswapA = styled(ExternalLink)`
   }
 `
 
-export default function BrandedFooter() {
+export default memo(function BrandedFooter() {
   return (
     <Row justify="center">
       <UniswapA href={`https://uniswap.org/`}>
@@ -37,4 +38,4 @@ export default function BrandedFooter() {
       </UniswapA>
     </Row>
   )
-}
+})
