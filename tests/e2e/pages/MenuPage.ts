@@ -6,4 +6,11 @@ export class MenuPage {
       .click()
       .acceptMetamaskAccess()
   }
+  static closeToastAlerts() {
+    cy.get('.Toastify__close-button').click({ multiple: true, force: true })
+  }
+  static checkToastMessage(message: string) {
+    cy.get('.Toastify__toast').should('contain', message)
+    this.closeToastAlerts()
+  }
 }

@@ -14,7 +14,8 @@ describe('SWAP - Wrapp functionality', () => {
   }
 
   beforeEach(() => {
-    cy.clearLocalStorage().clearCookies()
+    cy.clearLocalStorage()
+    cy.clearCookies()
     cy.visit('/')
     MenuPage.connectWallet()
     TransactionHelper.checkTokenBalance(AddressesEnum.WETH_TOKEN).then(balance => {
@@ -31,18 +32,17 @@ describe('SWAP - Wrapp functionality', () => {
       .chooseToken('weth')
       .typeValueIn(TRANSACTION_VALUE.toFixed(9).toString())
       .wrap()
-    cy.confirmMetamaskTransaction({ gasFee: 2 })
+    cy.confirmMetamaskTransaction({ gasFee: 11 })
 
-    cy.window().then(
-      async () =>
-        await TransactionHelper.checkIfTransactionIsValid(
-          parseInt(balanceBefore.result),
-          TRANSACTION_VALUE * Math.pow(10, 18),
-          AddressesEnum.WETH_TOKEN
-        )
+    TransactionHelper.checkIfTransactionIsValid(
+      parseInt(balanceBefore.result),
+      TRANSACTION_VALUE * Math.pow(10, 18),
+      AddressesEnum.WETH_TOKEN
     )
+
     //TODO Not sure why, but cypress do not wait until tx check above is executed
-    cy.wait(15000)
+    MenuPage.checkToastMessage('Wrap')
+    cy.wait(2000)
   })
 
   it('Should unwrap eth to weth', () => {
@@ -52,17 +52,16 @@ describe('SWAP - Wrapp functionality', () => {
       .chooseToken('weth')
       .typeValueIn(TRANSACTION_VALUE.toFixed(9).toString())
       .wrap()
-    cy.confirmMetamaskTransaction({ gasFee: 2 })
+    cy.confirmMetamaskTransaction({ gasFee: 11 })
 
-    cy.window().then(
-      async () =>
-        await TransactionHelper.checkIfTransactionIsValid(
-          parseInt(balanceBefore.result),
-          -(TRANSACTION_VALUE * Math.pow(10, 18)),
-          AddressesEnum.WETH_TOKEN
-        )
+    TransactionHelper.checkIfTransactionIsValid(
+      parseInt(balanceBefore.result),
+      -(TRANSACTION_VALUE * Math.pow(10, 18)),
+      AddressesEnum.WETH_TOKEN
     )
+
     //TODO Not sure why, but cypress do not wait until tx check above is executed
-    cy.wait(15000)
+    MenuPage.checkToastMessage('Unwrap')
+    cy.wait(2000)
   })
 })
