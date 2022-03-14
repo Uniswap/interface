@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useBlockCache from 'lib/hooks/useBlockCache'
+import useBlockCache, { ShouldUpdateCache } from 'lib/hooks/useBlockCache'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from '../constants/tokens'
@@ -37,16 +37,17 @@ const usdcPriceCache = new Map<Currency, Price<Currency, Token> | undefined>()
  * @param currency currency to compute the USDC price of
  */
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
-  const [isCacheLeader, updateCache] = useBlockCache(usdcPriceCache, currency)
+  const [cachedValue, setCachedValue] = useBlockCache(usdcPriceCache, currency)
   const amountSpecified = currency?.chainId ? STABLECOIN_AMOUNT_OUT[currency.chainId] : undefined
-  const otherCurrency = isCacheLeader ? currency : undefined
+  const otherCurrency = cachedValue === ShouldUpdateCache ? currency : undefined
   const stablecoin = amountSpecified?.currency
 
   const v2Trade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountSpecified, otherCurrency, { maxHops: 2 })
   const { trade: v3Trade } = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountSpecified, otherCurrency)
 
   const price = useMemo(() => {
-    if (!isCacheLeader) return
+    if (cachedValue !== ShouldUpdateCache) return cachedValue ?? undefined
+
     if (!currency || !stablecoin) return
 
     // If currency is the stablecoin, return the stable price.
@@ -60,9 +61,16 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
       return price
     }
 
-    return undefined
-  }, [currency, isCacheLeader, stablecoin, v2Trade?.route, v3Trade?.routes])
-  return updateCache(price)
+    return
+  }, [cachedValue, currency, stablecoin, v2Trade?.route, v3Trade?.routes])
+
+  useEffect(() => {
+    if (cachedValue === ShouldUpdateCache) {
+      setCachedValue(price)
+    }
+  }, [cachedValue, price, setCachedValue])
+
+  return price
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
