@@ -11,10 +11,11 @@ import { TextButton } from '../Button'
 
 interface PriceProps {
   trade: Trade<Currency, Currency, TradeType>
-  quoteUSDC?: CurrencyAmount<Token>
+  outputUSDC?: CurrencyAmount<Token>
 }
 
-export default function Price({ trade, quoteUSDC }: PriceProps) {
+/** Displays the price of a trade. If outputUSDC is included, also displays the unit price. */
+export default function Price({ trade, outputUSDC }: PriceProps) {
   const { i18n } = useLingui()
   const { inputAmount, outputAmount, executionPrice } = trade
 
@@ -27,15 +28,15 @@ export default function Price({ trade, quoteUSDC }: PriceProps) {
       case 'input':
         return {
           price: executionPrice,
-          usdcPrice: quoteUSDC?.multiply(inputAmount.decimalScale).divide(inputAmount),
+          usdcPrice: outputUSDC?.multiply(inputAmount.decimalScale).divide(inputAmount),
         }
       case 'output':
         return {
           price: executionPrice.invert(),
-          usdcPrice: quoteUSDC?.multiply(outputAmount.decimalScale).divide(outputAmount),
+          usdcPrice: outputUSDC?.multiply(outputAmount.decimalScale).divide(outputAmount),
         }
     }
-  }, [base, executionPrice, inputAmount, outputAmount, quoteUSDC])
+  }, [base, executionPrice, inputAmount, outputAmount, outputUSDC])
 
   return (
     <TextButton color="primary" onClick={onClick}>

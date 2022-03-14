@@ -95,7 +95,7 @@ export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, Tra
           <RoutingDiagram trade={trade} />
         </Column>
       </Tooltip>
-      <Price trade={trade} quoteUSDC={outputUSDC} />
+      <Price trade={trade} outputUSDC={outputUSDC} />
     </>
   )
 }
