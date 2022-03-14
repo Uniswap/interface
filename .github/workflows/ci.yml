@@ -29,6 +29,8 @@ jobs:
         run: yarn install
       - name: Lint
         run: yarn lint
+      - name: Start host
+        run: yarn start
       - name: Test
         run: yarn synpress:ct
       - name: Build
