@@ -45,7 +45,7 @@ export class WrappedTokenInfo extends Token {
   }
 
   sortsBefore(other: Token): boolean {
-    if (this.equals(other)) throw new Error('AddressesEnum should not be equal')
+    if (this.equals(other)) throw new Error('Addresses should not be equal')
     return this.address.toLowerCase() < other.address.toLowerCase()
   }
 }
