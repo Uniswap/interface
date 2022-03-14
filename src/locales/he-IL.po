@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-14 20:11\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -1310,10 +1310,6 @@ msgstr "את'רקאן אופטימי"
 msgid "Out of range"
 msgstr "מחוץ לטווח"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "התפוקה מוערכת."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1322,6 +1318,14 @@ msgstr "התפוקה משוערת. אם המחיר ישתנה ביותר מ- {0}
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "התפוקה משוערת. תקבל <0>{0} {1}</0> או שהעסקה תחזור."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "התפוקה מוערכת. תקבל לפחות {0} {1} או שהעסקה תחזור."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "התפוקה מוערכת. אתה תשלח לכל היותר {0} {1} או שהעסקה תחזור."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -2373,14 +2377,6 @@ msgstr "אתה גם יגבה עמלות שהרווחת מתפקיד זה."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "אתה תקבל"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "תקבל לפחות {0} {1} או שהעסקה תחזור."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "אתה תשלח לכל היותר {0} {1} או שהעסקה תחזור."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

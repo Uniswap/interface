@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-14 20:11\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -1310,10 +1310,6 @@ msgstr "Optimistinen eetteriskannaus"
 msgid "Out of range"
 msgstr "Alueen ulkopuolella"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "Tuotos on arvioitu."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1322,6 +1318,14 @@ msgstr "Tuotto on arvio. Jos hinta muuttuu enemmän kuin {0}%, tapahtuma perutaa
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Tuotos on arvioitu. Saat vähintään <0>{0} {1}</0> tai tapahtuma perutaan."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "Tuotos on arvioitu. Saat vähintään {0} {1} tai tapahtuma palautuu."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "Tuotos on arvioitu. Lähetät enintään {0} {1} tai tapahtuma palautuu."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -2373,14 +2377,6 @@ msgstr "Keräät myös tästä positiosta ansaittuja palkkioita."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Tulet vastaanottamaan"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "Saat vähintään {0} {1} tai tapahtuma palautuu."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Lähetät enintään {0} {1} tai tapahtuma palautuu."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

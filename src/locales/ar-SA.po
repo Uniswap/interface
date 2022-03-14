@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-14 20:11\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -1310,10 +1310,6 @@ msgstr "متفائل Etherscan"
 msgid "Out of range"
 msgstr "خارج النطاق"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "الناتج يقدر."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1322,6 +1318,14 @@ msgstr "الناتج تقديري. إذا تغير السعر بأكثر من {0
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "الناتج تقديري. سوف تتلقى على الأقل <0>{0} {1}</0> أو سوف تعود المعاملة."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "الناتج يقدر. سوف تتلقى {0} {1} على الأقل أو ستعود المعاملة."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "الناتج يقدر. سوف ترسل {0} {1} على الأكثر وإلا ستعود المعاملة."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -2373,14 +2377,6 @@ msgstr "سوف تحصل أيضا على الرسوم المكتسبة من هذ�
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "سوف تستقبل"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "سوف تتلقى {0} {1} على الأقل أو ستعود المعاملة."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "سوف ترسل {0} {1} على الأكثر وإلا ستعود المعاملة."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

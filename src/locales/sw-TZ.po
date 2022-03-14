@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-14 20:11\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -1310,10 +1310,6 @@ msgstr "Matarajio ya Etherscan"
 msgid "Out of range"
 msgstr "Kati ya masafa"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "Pato linakadiriwa."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1322,6 +1318,14 @@ msgstr "Pato inakadiriwa. Ikiwa bei itabadilika kwa zaidi ya {0}% shughuli yako 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Pato inakadiriwa. Utapokea angalau <0>{0} {1}</0> au shughuli itarejea."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "Pato linakadiriwa. Utapokea angalau {0} {1} au muamala utarejeshwa."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "Pato linakadiriwa. Utatuma angalau {0} {1} au muamala utarejeshwa."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -2373,14 +2377,6 @@ msgstr "Pia utakusanya ada inayopatikana kutoka kwa nafasi hii."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Utapokea"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "Utapokea angalau {0} {1} au muamala utarejeshwa."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Utatuma angalau {0} {1} au muamala utarejeshwa."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

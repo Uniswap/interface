@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-14 20:11\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -1310,10 +1310,6 @@ msgstr "Optimistic Etherscan"
 msgid "Out of range"
 msgstr "범위를 벗어남"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "예상되는 결과값."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1322,6 +1318,14 @@ msgstr "산출은 추정됩니다. 가격이 {0}% 이상 변경되면 거래가 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "산출은 추정됩니다. 최소한 <0>{0} {1}</0>을(를) 받거나 그렇지 않으면 거래가 취소됩니다."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "출력이 예상됩니다. 당신은 적어도 {0} {1} 을 받게 될 것입니다. 그렇지 않으면 거래가 되돌릴 것입니다."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "출력이 예상됩니다. 최대 {0} {1} 을 보내지 않으면 거래가 취소됩니다."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -2373,14 +2377,6 @@ msgstr "이 포지션에서 얻은 수수료도 징수합니다."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "다음을 받게 됩니다"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "당신은 적어도 {0} {1} 을 받게 될 것입니다. 그렇지 않으면 거래가 되돌릴 것입니다."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "{0} {1} 을 보내지 않으면 거래가 취소됩니다."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

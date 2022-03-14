@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-14 20:11\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -1310,10 +1310,6 @@ msgstr "Optimistiese Etherscan"
 msgid "Out of range"
 msgstr "Buite bereik"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "Uitset word geskat."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1322,6 +1318,14 @@ msgstr "Die uitset word geskat. As die prys met meer as {0}% verander, sal u tra
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "Die uitset word geskat. U sal minstens <0>{0} {1}</0> ontvang, anders gaan die transaksie terug."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "Uitset word geskat. Jy sal ten minste {0} {1} ontvang of die transaksie sal terugdraai."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "Uitset word geskat. Jy sal hoogstens {0} {1} stuur of die transaksie sal terugdraai."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -2373,14 +2377,6 @@ msgstr "U sal ook fooie wat u uit hierdie posisie verdien, invorder."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "U sal ontvang"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "Jy sal ten minste {0} {1} of die transaksie sal terugdraai."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "Jy sal hoogstens {0} {1} of die transaksie sal terugdraai."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

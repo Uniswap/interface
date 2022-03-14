@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-14 20:11\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -1310,10 +1310,6 @@ msgstr "มองโลกในแง่ดี Etherscan"
 msgid "Out of range"
 msgstr "ไม่อยู่ในขอบเขต"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "มีการประมาณการเอาท์พุต"
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1322,6 +1318,14 @@ msgstr "ประมาณการเอาท์พุต หากราค�
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "ประมาณการเอาท์พุต คุณจะได้รับอย่างน้อย <0>{0} {1}</0> หรือธุรกรรมจะเปลี่ยนกลับ"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "มีการประมาณการเอาท์พุต คุณจะได้รับอย่างน้อย {0} {1} มิฉะนั้นธุรกรรมจะเปลี่ยนกลับ"
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "มีการประมาณการเอาท์พุต คุณจะส่งไม่เกิน {0} {1} มิฉะนั้นธุรกรรมจะเปลี่ยนกลับ"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -2373,14 +2377,6 @@ msgstr "คุณจะเก็บค่าธรรมเนียมที่
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "คุณจะได้รับ"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "คุณจะได้รับอย่างน้อย {0} {1} ฉะนั้นธุรกรรมจะเปลี่ยนกลับ"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "คุณจะส่งไม่เกิน {0} {1} ฉะนั้นธุรกรรมจะเปลี่ยนกลับ"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"

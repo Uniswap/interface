@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-10 22:08\n"
+"PO-Revision-Date: 2022-03-14 20:11\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -1311,10 +1311,6 @@ msgstr "Optimista Etherscan"
 msgid "Out of range"
 msgstr "Tartományon kívül"
 
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "Output is estimated."
-msgstr "A kimenet becsült."
-
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1323,6 +1319,14 @@ msgstr "Az output becsült érték. Ha az ár {0}%-nál nagyobb mértékben vál
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
 msgstr "A teljesítmény becsült. Legalább <0>{0} {1}</0> vagy a tranzakció visszaáll."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
+msgstr "A kimenet becsült. Legalább {0} {1} -et fog kapni, különben a tranzakció visszaáll."
+
+#: src/lib/components/Swap/Summary/index.tsx
+msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
+msgstr "A kimenet becsült. Legfeljebb {0} {1} -et küld, vagy a tranzakció visszaáll."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -2374,14 +2378,6 @@ msgstr "Ezen a pozíción megszerzett díjakat is beszedi."
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
 msgstr "Kapni fog"
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will receive at least {0} {1} or the transaction will revert."
-msgstr "{0} {1} fog kapni, különben a tranzakció visszaáll."
-
-#: src/lib/components/Swap/Summary/index.tsx
-msgid "You will send at most {0} {1} or the transaction will revert."
-msgstr "{0} {1} küld, vagy a tranzakció visszaáll."
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
