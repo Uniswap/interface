@@ -2,7 +2,7 @@ import type { EthereumProvider } from 'lib/ethereum'
 import { useEffect, useState } from 'react'
 import { useWeb3React } from 'web3-react-core'
 
-import { gnosisSafe, injected } from '../connectors'
+import { gnosisSafe, injectedMetamask, injectedTally } from '../connectors'
 import { IS_IN_IFRAME } from '../constants/misc'
 import { isMobile } from '../utils/userAgent'
 
@@ -32,21 +32,39 @@ export function useEagerConnect() {
   // then, if that fails, try connecting to an injected connector
   useEffect(() => {
     if (!active && triedSafe) {
-      injected.isAuthorized().then((isAuthorized) => {
-        if (isAuthorized) {
-          activate(injected, undefined, true).catch(() => {
-            setTried(true)
-          })
-        } else {
-          if (isMobile && window.ethereum) {
-            activate(injected, undefined, true).catch(() => {
+      if (window?.ethereum?.isTally) {
+        injectedTally.isAuthorized().then((isAuthorized) => {
+          if (isAuthorized) {
+            activate(injectedTally, undefined, true).catch(() => {
               setTried(true)
             })
           } else {
-            setTried(true)
+            if (isMobile && window.ethereum) {
+              activate(injectedTally, undefined, true).catch(() => {
+                setTried(true)
+              })
+            } else {
+              setTried(true)
+            }
           }
-        }
-      })
+        })
+      } else {
+        injectedMetamask.isAuthorized().then((isAuthorized) => {
+          if (isAuthorized) {
+            activate(injectedMetamask, undefined, true).catch(() => {
+              setTried(true)
+            })
+          } else {
+            if (isMobile && window.ethereum) {
+              activate(injectedMetamask, undefined, true).catch(() => {
+                setTried(true)
+              })
+            } else {
+              setTried(true)
+            }
+          }
+        })
+      }
     }
   }, [activate, active, triedSafe])
 
@@ -73,17 +91,29 @@ export function useInactiveListener(suppress = false) {
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
         // eat errors
-        activate(injected, undefined, true).catch((error) => {
-          console.error('Failed to activate after chain changed', error)
-        })
+        if (window.ethereum?.isTally) {
+          activate(injectedTally, undefined, true).catch((error) => {
+            console.error('Failed to activate after chain changed', error)
+          })
+        } else {
+          activate(injectedMetamask, undefined, true).catch((error) => {
+            console.error('Failed to activate after chain changed', error)
+          })
+        }
       }
 
       const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {
           // eat errors
-          activate(injected, undefined, true).catch((error) => {
-            console.error('Failed to activate after accounts changed', error)
-          })
+          if (window.ethereum?.isTally) {
+            activate(injectedTally, undefined, true).catch((error) => {
+              console.error('Failed to activate after accounts changed', error)
+            })
+          } else {
+            activate(injectedMetamask, undefined, true).catch((error) => {
+              console.error('Failed to activate after accounts changed', error)
+            })
+          }
         }
       }
 
