@@ -3,14 +3,14 @@ import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useAtomValue } from 'jotai/utils'
+import Column from 'lib/components/Column'
+import Row from 'lib/components/Row'
 import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { computeRealizedLPFeeAmount } from 'utils/prices'
-
-import Row from '../../Row'
 
 const Value = styled.span<{ color?: Color }>`
   color: ${({ color, theme }) => color && theme[color]};
@@ -97,10 +97,10 @@ export default function Details({ trade, slippage, usdcPriceImpact }: DetailsPro
   ])
 
   return (
-    <>
+    <Column gap={0.5}>
       {details.map(([label, detail, color]) => (
         <Detail key={label} label={label} value={detail} color={color} />
       ))}
-    </>
+    </Column>
   )
 }

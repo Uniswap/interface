@@ -1,14 +1,10 @@
 import { Trans } from '@lingui/macro'
-import useScrollbar from 'lib/hooks/useScrollbar'
-import { AlertTriangle, Expando, Icon, Info, LargeIcon } from 'lib/icons'
+import ActionButton from 'lib/components/ActionButton'
+import Column from 'lib/components/Column'
+import Expando from 'lib/components/Expando'
+import { AlertTriangle, Icon, LargeIcon } from 'lib/icons'
 import styled, { Color, ThemedText } from 'lib/theme'
-import { ReactNode, useState } from 'react'
-
-import ActionButton from '../ActionButton'
-import { IconButton } from '../Button'
-import Column from '../Column'
-import Row from '../Row'
-import Rule from '../Rule'
+import { ReactNode, useCallback, useState } from 'react'
 
 const HeaderIcon = styled(LargeIcon)`
   flex-grow: 1;
@@ -35,7 +31,6 @@ export function StatusHeader({ icon: Icon, iconColor, iconSize = 4, children }: 
           {children}
         </Column>
       </Column>
-      <Rule />
     </>
   )
 }
@@ -49,40 +44,6 @@ const ErrorHeader = styled(Column)<{ open: boolean }>`
     transition: max-height 0.25s;
   }
 `
-const ErrorColumn = styled(Column)``
-const ExpandoColumn = styled(Column)<{ open: boolean }>`
-  flex-grow: ${({ open }) => (open ? 2 : 0)};
-  transition: flex-grow 0.25s, gap 0.25s;
-
-  ${Rule} {
-    margin-bottom: ${({ open }) => (open ? 0 : 0.75)}em;
-    transition: margin-bottom 0.25s;
-  }
-
-  ${ErrorColumn} {
-    flex-basis: 0;
-    flex-grow: ${({ open }) => (open ? 1 : 0)};
-    overflow-y: hidden;
-    position: relative;
-    transition: flex-grow 0.25s;
-
-    ${Column} {
-      height: 6.825em;
-      padding: ${({ open }) => (open ? '0.5em 0' : 0)};
-      transition: padding 0.25s;
-
-      :after {
-        background: linear-gradient(#ffffff00, ${({ theme }) => theme.dialog});
-        bottom: 0;
-        content: '';
-        height: 0.75em;
-        pointer-events: none;
-        position: absolute;
-        width: calc(100% - 1em);
-      }
-    }
-  }
-`
 
 interface ErrorDialogProps {
   header?: ReactNode
@@ -93,8 +54,8 @@ interface ErrorDialogProps {
 
 export default function ErrorDialog({ header, error, action, onClick }: ErrorDialogProps) {
   const [open, setOpen] = useState(false)
-  const [details, setDetails] = useState<HTMLDivElement | null>(null)
-  const scrollbar = useScrollbar(details)
+  const onExpand = useCallback(() => setOpen((open) => !open), [])
+
   return (
     <Column flex padded gap={0.75} align="stretch" style={{ height: '100%' }}>
       <StatusHeader icon={AlertTriangle} iconColor="error" iconSize={open ? 3 : 4}>
@@ -105,27 +66,15 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
           <ThemedText.Body2>{header}</ThemedText.Body2>
         </ErrorHeader>
       </StatusHeader>
-      <Row>
-        <Row gap={0.5}>
-          <Info color="secondary" />
-          <ThemedText.Subhead2 color="secondary">
-            <Trans>Error details</Trans>
-          </ThemedText.Subhead2>
-        </Row>
-        <IconButton color="secondary" onClick={() => setOpen(!open)} icon={Expando} iconProps={{ open }} />
-      </Row>
-      <ExpandoColumn flex align="stretch" open={open}>
-        <Rule />
-        <ErrorColumn>
-          <Column gap={0.5} ref={setDetails} css={scrollbar}>
-            <ThemedText.Code userSelect>
-              {error.name}
-              {error.message ? `: ${error.message}` : ''}
-            </ThemedText.Code>
-          </Column>
-        </ErrorColumn>
+      <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
+        <Expando title={<Trans>Error details</Trans>} open={open} onExpand={onExpand} height={7.5}>
+          <ThemedText.Code userSelect>
+            {error.name}
+            {error.message ? `: ${error.message}` : ''}
+          </ThemedText.Code>
+        </Expando>
         <ActionButton onClick={onClick}>{action}</ActionButton>
-      </ExpandoColumn>
+      </Column>
     </Column>
   )
 }

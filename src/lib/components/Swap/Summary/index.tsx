@@ -3,18 +3,15 @@ import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'lib/components/ActionButton'
-import { IconButton } from 'lib/components/Button'
 import Column from 'lib/components/Column'
 import { Header } from 'lib/components/Dialog'
+import Expando from 'lib/components/Expando'
 import Row from 'lib/components/Row'
-import Rule from 'lib/components/Rule'
-import { useSwapTradeType } from 'lib/hooks/swap'
-import useScrollbar from 'lib/hooks/useScrollbar'
 import { Slippage } from 'lib/hooks/useSlippage'
 import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
-import { AlertTriangle, BarChart, Expando, Info } from 'lib/icons'
+import { AlertTriangle, BarChart, Info } from 'lib/icons'
 import styled, { Color, ThemedText } from 'lib/theme'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -24,60 +21,27 @@ import Summary from './Summary'
 
 export default Summary
 
-const SummaryColumn = styled(Column)``
-const ExpandoColumn = styled(Column)``
-const DetailsColumn = styled(Column)``
-const Estimate = styled(ThemedText.Caption)``
+const Content = styled(Column)``
+const Heading = styled(Column)``
+const Footing = styled(Column)``
 const Body = styled(Column)<{ open: boolean }>`
   height: calc(100% - 2.5em);
 
-  ${SummaryColumn} {
-    flex-grow: ${({ open }) => (open ? 0 : 1)};
+  ${Content}, ${Heading} {
+    flex-grow: 1;
     transition: flex-grow 0.25s;
   }
 
-  ${ExpandoColumn} {
-    flex-grow: ${({ open }) => (open ? 1 : 0)};
-    transition: flex-grow 0.25s;
-
-    ${DetailsColumn} {
-      flex-basis: ${({ open }) => (open ? 6.75 : 0)}em;
-      overflow-y: hidden;
-      position: relative;
-      transition: flex-basis 0.25s;
-
-      ${Column} {
-        height: 6.75em;
-        grid-template-rows: repeat(auto-fill, 1em);
-        padding: ${({ open }) => (open ? '0.5em 0' : 0)};
-        transition: padding 0.25s;
-
-        :after {
-          background: linear-gradient(#ffffff00, ${({ theme }) => theme.dialog});
-          bottom: 0;
-          content: '';
-          height: 0.75em;
-          pointer-events: none;
-          position: absolute;
-          width: calc(100% - 1em);
-        }
-      }
-    }
-
-    ${Estimate} {
-      max-height: ${({ open }) => (open ? 0 : 56 / 12)}em; // 2 * line-height + padding
-      min-height: 0;
-      overflow-y: hidden;
-      padding: ${({ open }) => (open ? 0 : '1em 0')};
-      transition: ${({ open }) =>
-        open
-          ? 'max-height 0.1s ease-out, padding 0.25s ease-out'
-          : 'flex-grow 0.25s ease-out, max-height 0.1s ease-in, padding 0.25s ease-out'};
-    }
+  ${Footing} {
+    margin-bottom: ${({ open }) => (open ? '-0.75em' : undefined)};
+    max-height: ${({ open }) => (open ? 0 : '3em')};
+    opacity: ${({ open }) => (open ? 0 : 1)};
+    transition: max-height 0.25s, margin-bottom 0.25s, opacity 0.15s 0.1s;
+    visibility: ${({ open }) => (open ? 'hidden' : undefined)};
   }
 `
 
-function Subhead({ priceImpact, slippage }: { priceImpact: { warning?: Color }; slippage: { warning?: Color } }) {
+function Subhead({ priceImpact, slippage }: { priceImpact: { warning?: Color }; slippage: Slippage }) {
   return (
     <Row gap={0.5}>
       {priceImpact.warning || slippage.warning ? (
@@ -98,6 +62,71 @@ function Subhead({ priceImpact, slippage }: { priceImpact: { warning?: Color }; 
   )
 }
 
+function Estimate({ trade, slippage }: { trade: Trade<Currency, Currency, TradeType>; slippage: Slippage }) {
+  const { i18n } = useLingui()
+  const text = useMemo(() => {
+    switch (trade.tradeType) {
+      case TradeType.EXACT_INPUT:
+        return (
+          <Trans>
+            Output is estimated. You will receive at least{' '}
+            {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)}{' '}
+            {trade.outputAmount.currency.symbol} or the transaction will revert.
+          </Trans>
+        )
+      case TradeType.EXACT_OUTPUT:
+        return (
+          <Trans>
+            Output is estimated. You will send at most{' '}
+            {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
+            {trade.inputAmount.currency.symbol} or the transaction will revert.
+          </Trans>
+        )
+    }
+  }, [i18n.locale, slippage.allowed, trade])
+  return <ThemedText.Caption color="secondary">{text}</ThemedText.Caption>
+}
+
+function ConfirmButton({
+  trade,
+  highPriceImpact,
+  onConfirm,
+}: {
+  trade: Trade<Currency, Currency, TradeType>
+  highPriceImpact: boolean
+  onConfirm: () => void
+}) {
+  const [ackPriceImpact, setAckPriceImpact] = useState(false)
+  const [ackTrade, setAckTrade] = useState(trade)
+  const doesTradeDiffer = useMemo(
+    () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
+    [ackTrade, trade]
+  )
+  const action = useMemo((): Action | undefined => {
+    if (doesTradeDiffer) {
+      return {
+        message: <Trans>Price updated</Trans>,
+        icon: BarChart,
+        onClick: () => setAckTrade(trade),
+        children: <Trans>Accept</Trans>,
+      }
+    } else if (highPriceImpact && !ackPriceImpact) {
+      return {
+        message: <Trans>High price impact</Trans>,
+        onClick: () => setAckPriceImpact(true),
+        children: <Trans>Acknowledge</Trans>,
+      }
+    }
+    return
+  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, trade])
+
+  return (
+    <ActionButton onClick={onConfirm} action={action}>
+      <Trans>Confirm swap</Trans>
+    </ActionButton>
+  )
+}
+
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
   slippage: Slippage
@@ -106,86 +135,33 @@ interface SummaryDialogProps {
 
 export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps) {
   const { inputAmount, outputAmount } = trade
-  const inputCurrency = inputAmount.currency
-  const outputCurrency = outputAmount.currency
   const usdcPriceImpact = useUSDCPriceImpact(inputAmount, outputAmount)
-  const tradeType = useSwapTradeType()
-  const { i18n } = useLingui()
 
   const [open, setOpen] = useState(false)
-  const [details, setDetails] = useState<HTMLDivElement | null>(null)
-  const scrollbar = useScrollbar(details)
-
-  const [ackPriceImpact, setAckPriceImpact] = useState(false)
-
-  const [confirmedTrade, setConfirmedTrade] = useState(trade)
-  const doesTradeDiffer = useMemo(
-    () => Boolean(trade && confirmedTrade && tradeMeaningfullyDiffers(trade, confirmedTrade)),
-    [confirmedTrade, trade]
-  )
-
-  const action = useMemo((): Action | undefined => {
-    if (doesTradeDiffer) {
-      return {
-        message: <Trans>Price updated</Trans>,
-        icon: BarChart,
-        onClick: () => setConfirmedTrade(trade),
-        children: <Trans>Accept</Trans>,
-      }
-    } else if (usdcPriceImpact.warning === 'error' && !ackPriceImpact) {
-      return {
-        message: <Trans>High price impact</Trans>,
-        onClick: () => setAckPriceImpact(true),
-        children: <Trans>Acknowledge</Trans>,
-      }
-    }
-    return
-  }, [ackPriceImpact, doesTradeDiffer, trade, usdcPriceImpact.warning])
-
-  if (!(inputAmount && outputAmount && inputCurrency && outputCurrency)) {
-    return null
-  }
+  const onExpand = useCallback(() => setOpen((open) => !open), [])
 
   return (
     <>
       <Header title={<Trans>Swap summary</Trans>} ruled />
-      <Body flex align="stretch" gap={0.75} padded open={open}>
-        <SummaryColumn gap={0.75} flex justify="center">
+      <Body flex align="stretch" padded gap={0.75} open={open}>
+        <Heading gap={0.75} flex justify="center">
           <Summary input={inputAmount} output={outputAmount} usdcPriceImpact={usdcPriceImpact} />
           <Price trade={trade} />
-        </SummaryColumn>
-        <Rule />
-        <Row>
-          <Subhead priceImpact={usdcPriceImpact} slippage={slippage} />
-          <IconButton color="secondary" onClick={() => setOpen(!open)} icon={Expando} iconProps={{ open }} />
-        </Row>
-        <ExpandoColumn flex align="stretch">
-          <Rule />
-          <DetailsColumn>
-            <Column gap={0.5} ref={setDetails} css={scrollbar}>
-              <Details trade={trade} slippage={slippage} usdcPriceImpact={usdcPriceImpact} />
-            </Column>
-          </DetailsColumn>
-          <Estimate color="secondary">
-            <Trans>Output is estimated.</Trans>{' '}
-            {tradeType === TradeType.EXACT_INPUT && (
-              <Trans>
-                You will receive at least{' '}
-                {formatCurrencyAmount(trade.minimumAmountOut(slippage.allowed), 6, i18n.locale)} {outputCurrency.symbol}{' '}
-                or the transaction will revert.
-              </Trans>
-            )}
-            {tradeType === TradeType.EXACT_OUTPUT && (
-              <Trans>
-                You will send at most {formatCurrencyAmount(trade.maximumAmountIn(slippage.allowed), 6, i18n.locale)}{' '}
-                {inputCurrency.symbol} or the transaction will revert.
-              </Trans>
-            )}
-          </Estimate>
-          <ActionButton onClick={onConfirm} action={action}>
-            <Trans>Confirm swap</Trans>
-          </ActionButton>
-        </ExpandoColumn>
+        </Heading>
+        <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
+          <Expando
+            title={<Subhead priceImpact={usdcPriceImpact} slippage={slippage} />}
+            open={open}
+            onExpand={onExpand}
+            height={7.25}
+          >
+            <Details trade={trade} slippage={slippage} usdcPriceImpact={usdcPriceImpact} />
+          </Expando>
+          <Footing>
+            <Estimate trade={trade} slippage={slippage} />
+          </Footing>
+          <ConfirmButton trade={trade} highPriceImpact={usdcPriceImpact.warning === 'error'} onConfirm={onConfirm} />
+        </Column>
       </Body>
     </>
   )
