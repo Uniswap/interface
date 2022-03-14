@@ -1,10 +1,10 @@
 import { ChainId } from '@dynamic-amm/sdk'
-import React from 'react'
+import React, { useState } from 'react'
 import { Text } from 'rebass'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 import { DMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
@@ -252,38 +252,40 @@ const YieldMenuWrapper = styled.div`
   position: relative;
 `
 
-// const shine = keyframes`
-//   0% {
-//     background-position: 0;
-//   }
-//   60% {
-//     background-position: 50px;
-//   }
-//   100% {
-//     background-position: 100px;
-//   }
-// `
+const shine = keyframes`
+  0% {
+    background-position: 0;
+  }
+  60% {
+    background-position: 40px;
+  }
+  100% {
+    background-position: 65px;
+  }
+`
 
-// export const SlideToUnlock = styled.div`
-//   background: linear-gradient(
-//     to right,
-//     ${props => props.theme.subText} 0,
-//     white 10%,
-//     ${props => props.theme.subText} 20%
-//   );
-//   animation: ${shine} 1.3s infinite linear;
-//   animation-fill-mode: forwards;
-//   background-position: 0;
-//   -webkit-background-clip: text;
-//   -webkit-text-fill-color: transparent;
-//   -webkit-text-size-adjust: none;
-// `
+export const SlideToUnlock = styled.div<{ active?: boolean }>`
+  background: linear-gradient(
+    to right,
+    ${props => (props.active ? props.theme.primary : props.theme.subText)} 0,
+    white 10%,
+    ${props => (props.active ? props.theme.primary : props.theme.subText)} 20%
+  );
+  animation: ${shine} 1.3s infinite linear;
+  animation-fill-mode: forwards;
+  background-position: 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-size-adjust: none;
+`
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
   const isDark = useIsDarkMode()
+  const { pathname } = useLocation()
+  const [isHoverSlide, setIsHoverSlide] = useState(false)
 
   return (
     <HeaderFrame>
@@ -345,7 +347,13 @@ export default function Header() {
               isActive={match => Boolean(match)}
               style={{ alignItems: 'center' }}
             >
-              <Trans>Discover</Trans>
+              <SlideToUnlock
+                active={pathname.includes('discover') || isHoverSlide}
+                onMouseEnter={() => setIsHoverSlide(true)}
+                onMouseLeave={() => setIsHoverSlide(false)}
+              >
+                <Trans>Discover</Trans>
+              </SlideToUnlock>
               <DiscoverIcon size={14} style={{ marginTop: '-20px', marginLeft: '4px' }} />
             </StyledNavLink>
           </DiscoverWrapper>

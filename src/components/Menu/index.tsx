@@ -11,7 +11,7 @@ import { DMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useMedia } from 'react-use'
-// import { SlideToUnlock } from 'components/Header'
+import { SlideToUnlock } from 'components/Header'
 import MenuFlyout from 'components/MenuFlyout'
 import { ButtonPrimary } from 'components/Button'
 import useClaimReward from 'hooks/useClaimReward'
@@ -224,9 +224,11 @@ export default function Menu() {
         {!above768 && (
           <NavMenuItem to={'/discover?tab=trending_soon'} onClick={toggle}>
             <DiscoverIcon size={14} />
-            <Text width="max-content">
-              <Trans>Discover</Trans>
-            </Text>
+            <SlideToUnlock>
+              <Text width="max-content">
+                <Trans>Discover</Trans>
+              </Text>
+            </SlideToUnlock>
             <NewLabel>
               <Trans>New</Trans>
             </NewLabel>
