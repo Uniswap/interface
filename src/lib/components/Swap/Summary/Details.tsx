@@ -63,9 +63,6 @@ export default function Details({ trade, slippage, usdcPriceImpact }: DetailsPro
 
     if (usdcPriceImpact.priceImpact) {
       rows.push([t`Price impact`, usdcPriceImpact.priceImpact, usdcPriceImpact.warning])
-      rows.push([t`Price impact`, usdcPriceImpact.priceImpact, usdcPriceImpact.warning])
-      rows.push([t`Price impact`, usdcPriceImpact.priceImpact, usdcPriceImpact.warning])
-      rows.push([t`Price impact`, usdcPriceImpact.priceImpact, usdcPriceImpact.warning])
     }
 
     if (lpFeeAmount) {

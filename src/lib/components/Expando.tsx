@@ -57,8 +57,8 @@ export default function Expando({
   marginBottom,
   children,
 }: PropsWithChildren<ExpandoProps>) {
-  const [expando, setExpando] = useState<HTMLDivElement | null>(null)
-  const scrollbar = useScrollbar(expando)
+  const [scrollingEl, setScrollingEl] = useState<HTMLDivElement | null>(null)
+  const scrollbar = useScrollbar(scrollingEl)
   return (
     <MarginColumn style={{ marginBottom: open && marginBottom ? `${-marginBottom}em` : undefined }}>
       <HeaderColumn gap={open ? 0.5 : 0.75}>
@@ -70,7 +70,7 @@ export default function Expando({
         <Rule />
       </HeaderColumn>
       <ExpandoColumn open={open} height={height}>
-        <InnerColumn flex align="stretch" height={height} ref={setExpando} css={scrollbar}>
+        <InnerColumn flex align="stretch" height={height} ref={setScrollingEl} css={scrollbar}>
           {children}
         </InnerColumn>
       </ExpandoColumn>
