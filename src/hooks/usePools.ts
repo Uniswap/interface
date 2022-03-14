@@ -105,8 +105,18 @@ export function usePools(
       if (!tokens) return [PoolState.INVALID, null]
       const [token0, token1, fee] = tokens
 
-      const { result: slot0, loading: slot0Loading, valid: slot0Valid } = slot0s[index]
-      const { result: liquidity, loading: liquidityLoading, valid: liquidityValid } = liquidities[index]
+      const {
+        result: slot0,
+        loading: slot0Loading,
+        valid: slot0Valid,
+      } = slot0s[index] ?? { result: undefined, loading: false, valid: false }
+
+      const {
+        result: liquidity,
+        loading: liquidityLoading,
+        valid: liquidityValid,
+      } = liquidities[index] ?? { result: undefined, loading: false, valid: false }
+
       if (!tokens || !slot0Valid || !liquidityValid) return [PoolState.INVALID, null]
       if (slot0Loading || liquidityLoading) return [PoolState.LOADING, null]
       if (!slot0 || !liquidity) return [PoolState.NOT_EXISTS, null]
