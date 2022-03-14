@@ -26,9 +26,11 @@ jobs:
         with:
           node-version: '16'
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install
       - name: Lint
         run: yarn lint
+      - name: cyp
+        run: yarn add cypress --dev
       - name: test
         run: yarn synpress:ct
       - name: Build
