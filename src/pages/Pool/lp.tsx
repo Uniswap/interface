@@ -16,7 +16,7 @@ import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
 import { useTrackedTokenPairs, toV2LiquidityToken, toV2LiquidityTokenSushi } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
-import { DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+import { DataCard, CardNoise, CardBGImage } from 'components/earn/styled'
 import { usePairs } from 'data/ReservesUNI'
 import { usePairs as usePairsSUSHI } from 'data/ReservesSUSHI'
 

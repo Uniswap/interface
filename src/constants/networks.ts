@@ -71,3 +71,12 @@ export const NETWORK_LABEL: { [chainId in ChainId]?: string } = {
   [ChainId.BTTC]: 'BitTorrent',
   [ChainId.VELAS]: 'Velas',
 }
+
+export const TRUESIGHT_NETWORK_TO_CHAINID: { [p: string]: ChainId } = {
+  eth: ChainId.MAINNET,
+  bsc: ChainId.BSCMAINNET,
+  avax: ChainId.AVAXMAINNET,
+  polygon: ChainId.MATIC,
+  fantom: ChainId.FANTOM,
+  cronos: ChainId.CRONOS,
+}

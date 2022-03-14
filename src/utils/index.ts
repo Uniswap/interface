@@ -23,7 +23,7 @@ import {
   DEFAULT_GAS_LIMIT_MARGIN,
   CLAIM_REWARD_SC_ADDRESS,
   FEE_OPTIONS,
-} from '../constants'
+} from 'constants/index'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import ROUTER_ABI_WITHOUT_DYNAMIC_FEE from '../constants/abis/dmm-router-without-dynamic-fee.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
@@ -33,7 +33,7 @@ import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import ZAP_ABI from '../constants/abis/zap.json'
 import CLAIM_REWARD_ABI from '../constants/abis/claim-reward.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from '@dynamic-amm/sdk'
-import { TokenAddressMap } from '../state/lists/hooks'
+import { TokenAddressMap } from 'state/lists/hooks'
 import { getEthereumMainnetTokenLogoURL } from './ethereumMainnetTokenMapping'
 import { getMaticTokenLogoURL } from './maticTokenMapping'
 import { getBscMainnetTokenLogoURL } from './bscMainnetTokenMapping'
@@ -290,8 +290,14 @@ export const toK = (num: string) => {
   return Numeral(num).format('0.[00]a')
 }
 
+export const toKInChart = (num: string, unit?: string) => {
+  if (parseFloat(num) < 0.0000001) return `< ${unit ?? ''}0.0000001`
+  if (parseFloat(num) >= 0.1) return (unit ?? '') + Numeral(num).format('0.[00]a')
+  return (unit ?? '') + Numeral(num).format('0.[0000000]a')
+}
+
 // using a currency library here in case we want to add more in future
-export const formatDollarAmount = (num: number, digits: number) => {
+export const formatDollarFractionAmount = (num: number, digits: number) => {
   const formatter = new Intl.NumberFormat(['en-US'], {
     style: 'currency',
     currency: 'USD',
@@ -301,7 +307,17 @@ export const formatDollarAmount = (num: number, digits: number) => {
   return formatter.format(num)
 }
 
-export function formattedNum(number: string, usd = false, acceptNegatives = false) {
+export const formatDollarSignificantAmount = (num: number, minDigits: number, maxDigits?: number) => {
+  const formatter = new Intl.NumberFormat(['en-US'], {
+    style: 'currency',
+    currency: 'USD',
+    minimumSignificantDigits: minDigits,
+    maximumSignificantDigits: maxDigits ?? minDigits,
+  })
+  return formatter.format(num)
+}
+
+export function formattedNum(number: string, usd = false) {
   if (number === '' || number === undefined) {
     return usd ? '$0' : 0
   }
@@ -324,19 +340,62 @@ export function formattedNum(number: string, usd = false, acceptNegatives = fals
   }
 
   if (num > 1000) {
-    return usd ? formatDollarAmount(num, 0) : Number(num.toFixed(0)).toLocaleString()
+    return usd ? formatDollarFractionAmount(num, 0) : Number(num.toFixed(0)).toLocaleString()
   }
 
   if (usd) {
     if (num < 0.1) {
-      return formatDollarAmount(num, 4)
+      return formatDollarFractionAmount(num, 4)
     } else {
-      return formatDollarAmount(num, 2)
+      return formatDollarFractionAmount(num, 2)
     }
   }
 
   return Number(num.toFixed(5)).toLocaleString()
 }
+
+export function formattedNumLong(num: number, usd = false) {
+  if (num === 0) {
+    if (usd) {
+      return '$0'
+    }
+    return '0'
+  }
+
+  if (num > 1000) {
+    return usd ? formatDollarFractionAmount(num, 0) : Number(num.toFixed(0)).toLocaleString()
+  }
+
+  if (usd) return formatDollarSignificantAmount(num, 1, 4)
+
+  return Number(num.toFixed(5)).toLocaleString()
+}
+
+// console.log(formattedNumLong(123456789123456789.123456789123456789, true))
+// console.log(formattedNumLong(123456789123456.123456789123456789, true))
+// console.log(formattedNumLong(123456789123.123456789123456789, true))
+// console.log(formattedNumLong(123456789.123456789123456789, true))
+// console.log(formattedNumLong(123456.123456789123456789, true))
+// console.log(formattedNumLong(123.123456789123456789, true))
+// console.log(formattedNumLong(0.123456789123456789, true))
+// console.log(formattedNumLong(0.0123456789123456789, true))
+// console.log(formattedNumLong(0.00123456789123456789, true))
+// console.log(formattedNumLong(0.000123456789123456789, true))
+// console.log(formattedNumLong(0.0000123456789123456789, true))
+// console.log(formattedNumLong(0.00000123456789123456789, true))
+// console.log(formattedNumLong(0.000000123456789123456789, true))
+// console.log(formattedNumLong(0.0000000123456789123456789, true))
+// console.log(formattedNumLong(0.00000000123456789123456789, true))
+// console.log(formattedNumLong(0.000000000123456789123456789, true))
+// console.log(formattedNumLong(0.0000000000123456789123456789, true))
+// console.log(formattedNumLong(0.00000000000123456789123456789, true))
+// console.log(formattedNumLong(0.000000000000123456789123456789, true))
+// console.log(formattedNumLong(0.0000000000000123456789123456789, true))
+// console.log(formattedNumLong(0.00000000000000123456789123456789, true))
+// console.log(formattedNumLong(0.000000000000000123456789123456789, true))
+// console.log(formattedNumLong(123, false))
+// console.log(formattedNumLong(123456, false))
+// console.log(formattedNumLong(123456789, false))
 
 /**
  * get standard percent change between two values

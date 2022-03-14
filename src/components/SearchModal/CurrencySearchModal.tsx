@@ -24,7 +24,7 @@ export enum CurrencyModalView {
   search,
   manage,
   importToken,
-  importList
+  importList,
 }
 
 export default function CurrencySearchModal({
@@ -33,7 +33,7 @@ export default function CurrencySearchModal({
   onCurrencySelect,
   selectedCurrency,
   otherSelectedCurrency,
-  showCommonBases = false
+  showCommonBases = false,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
@@ -49,7 +49,7 @@ export default function CurrencySearchModal({
       onCurrencySelect(currency)
       onDismiss()
     },
-    [onDismiss, onCurrencySelect]
+    [onDismiss, onCurrencySelect],
   )
 
   // for token import view

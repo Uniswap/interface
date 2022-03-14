@@ -11,7 +11,7 @@ export enum LiveDataTimeframeEnum {
   DAY = '1D',
   WEEK = '1W',
   MONTH = '1M',
-  SIXMONTHS = '6M'
+  SIX_MONTHS = '6M',
 }
 
 const getTimeFrameHours = (timeFrame: LiveDataTimeframeEnum) => {
@@ -26,7 +26,7 @@ const getTimeFrameHours = (timeFrame: LiveDataTimeframeEnum) => {
       return 7 * 24
     case LiveDataTimeframeEnum.MONTH:
       return 30 * 24
-    case LiveDataTimeframeEnum.SIXMONTHS:
+    case LiveDataTimeframeEnum.SIX_MONTHS:
       return 180 * 24
     default:
       return 7 * 24
@@ -35,7 +35,7 @@ const getTimeFrameHours = (timeFrame: LiveDataTimeframeEnum) => {
 const generateCoingeckoUrl = (
   chainId: ChainId,
   address: string | undefined,
-  timeFrame: LiveDataTimeframeEnum | 'live'
+  timeFrame: LiveDataTimeframeEnum | 'live',
 ): string => {
   const timeTo = getUnixTime(new Date())
   const timeFrom =
@@ -67,7 +67,7 @@ const liveDataApi: { [chainId in ChainId]?: string } = {
   [ChainId.AVAXMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/avalanche/tokens`,
   [ChainId.FANTOM]: `${process.env.REACT_APP_AGGREGATOR_API}/fantom/tokens`,
   [ChainId.CRONOS]: `${process.env.REACT_APP_AGGREGATOR_API}/cronos/tokens`,
-  [ChainId.ARBITRUM]: `${process.env.REACT_APP_AGGREGATOR_API}/arbitrum/tokens`
+  [ChainId.ARBITRUM]: `${process.env.REACT_APP_AGGREGATOR_API}/arbitrum/tokens`,
 }
 const fetchKyberDataSWR = async (url: string) => {
   const res = await fetch(url)
@@ -87,8 +87,8 @@ const fetchCoingeckoDataSWR = async (tokenAddresses: any, chainId: any, timeFram
           throw new Error('No content')
         }
         return res.json()
-      })
-    )
+      }),
+    ),
   )
 }
 
@@ -106,7 +106,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
       tokens
         .filter(Boolean)
         .map(token => (token === ETHER ? WETH[chainId || ChainId.MAINNET].address : token?.address)?.toLowerCase()),
-    [tokens, chainId]
+    [tokens, chainId],
   )
   const { data: kyberData, error: kyberError } = useSWR(
     tokenAddresses[0] && tokenAddresses[1]
@@ -118,8 +118,8 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
     {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
-      revalidateIfStale: false
-    }
+      revalidateIfStale: false,
+    },
   )
   const isKyberDataNotValid = useMemo(() => {
     if (kyberError || kyberData === null) return true
@@ -139,8 +139,8 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
     {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
-      revalidateIfStale: false
-    }
+      revalidateIfStale: false,
+    },
   )
 
   const chartData = useMemo(() => {
@@ -150,7 +150,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
         .map((item: any) => {
           return {
             time: parseInt(item.timestamp) * 1000,
-            value: !isReverse ? item.token0Price : item.token1Price || 0
+            value: !isReverse ? item.token0Price : item.token1Price || 0,
           }
         })
     } else if (coingeckoData && coingeckoData[0]?.prices?.length > 0 && coingeckoData[1]?.prices?.length > 0) {
@@ -172,8 +172,8 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
       refreshInterval: 60000,
       shouldRetryOnError: false,
       revalidateOnFocus: false,
-      revalidateIfStale: false
-    }
+      revalidateIfStale: false,
+    },
   )
   const { data: liveCoingeckoData } = useSWR(
     isKyberDataNotValid && coingeckoData ? [tokenAddresses, chainId, 'live'] : null,
@@ -182,8 +182,8 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
       refreshInterval: 60000,
       shouldRetryOnError: false,
       revalidateOnFocus: false,
-      revalidateIfStale: false
-    }
+      revalidateIfStale: false,
+    },
   )
   const latestData = useMemo(() => {
     if (isKyberDataNotValid) {
@@ -191,7 +191,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
         const [data1, data2] = liveCoingeckoData
         if (data1.prices?.length > 0 && data2.prices?.length > 0) {
           const newValue = parseFloat(
-            (data1.prices[data1.prices.length - 1][1] / data2.prices[data2.prices.length - 1][1]).toPrecision(6)
+            (data1.prices[data1.prices.length - 1][1] / data2.prices[data2.prices.length - 1][1]).toPrecision(6),
           )
           return { time: new Date().getTime(), value: newValue }
         }
@@ -210,6 +210,6 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
   return {
     data: useMemo(() => (latestData ? [...chartData, latestData] : chartData), [latestData, chartData]),
     error: error,
-    loading: chartData.length === 0 && !error
+    loading: chartData.length === 0 && !error,
   }
 }

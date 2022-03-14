@@ -1,27 +1,13 @@
 import React, { useRef } from 'react'
-import {
-  Info,
-  PieChart,
-  Menu as MenuIcon,
-  Zap,
-  BookOpen,
-  FileText,
-  Monitor,
-  Triangle,
-  Edit,
-  Share2,
-  UserPlus,
-  MessageCircle
-} from 'react-feather'
 import styled, { css } from 'styled-components'
 import { NavLink } from 'react-router-dom'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Text } from 'rebass'
 import { ChainId } from '@dynamic-amm/sdk'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ExternalLink } from 'theme'
-import { DMM_ANALYTICS_URL } from '../../constants'
+import { DMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useMedia } from 'react-use'
@@ -30,7 +16,21 @@ import MenuFlyout from 'components/MenuFlyout'
 import { ButtonPrimary } from 'components/Button'
 import useClaimReward from 'hooks/useClaimReward'
 import Loader from 'components/Loader'
-import ClaimRewardModal from './ClaimRewardModal'
+import ClaimRewardModal from 'components/Menu/ClaimRewardModal'
+import DiscoverIcon from 'components/Icons/DiscoverIcon'
+import {
+  BookOpen,
+  Edit,
+  FileText,
+  Info,
+  Menu as MenuIcon,
+  MessageCircle,
+  Monitor,
+  PieChart,
+  Share2,
+  Triangle,
+  UserPlus,
+} from 'react-feather'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -87,10 +87,12 @@ const NavMenuItem = styled(NavLink)`
   white-space: nowrap;
   align-items: center;
   color: ${({ theme }) => theme.text2};
+
   :hover {
     color: ${({ theme }) => theme.text};
     cursor: pointer;
   }
+
   > svg {
     margin-right: 8px;
   }
@@ -104,11 +106,13 @@ const MenuItem = styled(ExternalLink)`
   align-items: center;
   white-space: nowrap;
   color: ${({ theme }) => theme.text2};
+
   :hover {
     color: ${({ theme }) => theme.text};
     cursor: pointer;
     text-decoration: none;
   }
+
   > svg {
     margin-right: 8px;
   }
@@ -200,6 +204,7 @@ export default function Menu() {
             </SlideToUnlock>
           </MenuItem>
           ) */}
+
         {bridgeLink && (
           <MenuItem href={bridgeLink}>
             <Share2 size={14} />
@@ -215,18 +220,26 @@ export default function Menu() {
             <Trans>My Pools</Trans>
           </NavMenuItem>
         )}
+
+        {!above768 && (
+          <NavMenuItem to={'/discover?tab=trending_soon'} onClick={toggle}>
+            <DiscoverIcon size={14} />
+            <Text width="max-content">
+              <Trans>Discover</Trans>
+            </Text>
+            <NewLabel>
+              <Trans>New</Trans>
+            </NewLabel>
+          </NavMenuItem>
+        )}
+
         {!above1320 && (
           <NavMenuItem to="/about" onClick={toggle}>
             <Info size={14} />
             <Trans>About</Trans>
           </NavMenuItem>
         )}
-        {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
-          <NavMenuItem to="/migration" onClick={toggle}>
-            <Zap size={14} />
-            <Trans>Migrate Liquidity</Trans>
-          </NavMenuItem>
-        )}
+
         <NavMenuItem to="/referral" onClick={toggle}>
           <UserPlus size={14} />
           <Trans>Referral</Trans>

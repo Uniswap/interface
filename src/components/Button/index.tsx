@@ -235,7 +235,7 @@ export const ButtonWhite = styled(Base)`
 `
 
 const ButtonConfirmedStyle = styled(Base)`
-  background-color: ${({ theme }) => rgba(theme.green, 0.2)};
+  background-color: ${({ theme }) => rgba(theme.apr, 0.2)};
   color: ${({ theme }) => theme.green};
 
   &:disabled {

@@ -335,12 +335,13 @@ export const ClickableText = styled(Text)`
   display: flex;
   align-items: center;
   color: ${({ theme }) => theme.subText};
+  user-select: none;
+  text-transform: uppercase;
+
   &:hover {
     cursor: pointer;
     opacity: 0.6;
   }
-  user-select: none;
-  text-transform: uppercase;
 `
 
 export const MenuFlyout = styled.span`

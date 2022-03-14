@@ -15,7 +15,7 @@ import { TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonPrimary, ButtonEmpty } from '../Button'
-import { CardNoise } from '../earn/styled'
+import { CardNoise } from 'components/earn/styled'
 
 import { useColor } from '../../hooks/useColor'
 

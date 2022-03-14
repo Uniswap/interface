@@ -5,7 +5,7 @@ import Card from 'components/Card'
 import NumericalInput from 'components/NumericalInput'
 
 export const PageWrapper = styled.div`
-  padding: 12px 16px 100px;
+  padding: 16px 16px 100px;
   width: 100%;
 
   @media only screen and (min-width: 768px) {

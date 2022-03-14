@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { Flex, Text } from 'rebass'
+import { Flex } from 'rebass'
 import { Currency } from '@dynamic-amm/sdk'
-import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp } from 'react-feather'
+import { ChevronDown, ChevronUp } from 'react-feather'
 import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
 import InfoHelper from 'components/InfoHelper'
@@ -17,7 +17,6 @@ import ListItemGroup from './ListItem'
 import ItemCardGroup from 'components/PoolList/ItemCard/ItemCardGroup'
 import PoolDetailModal from './PoolDetailModal'
 import { AMP_HINT, AMP_LIQUIDITY_HINT, MAX_ALLOW_APY } from 'constants/index'
-import useTheme from 'hooks/useTheme'
 import { useActiveWeb3React } from 'hooks'
 import LocalLoader from 'components/LocalLoader'
 import { Field } from 'state/pair/actions'
@@ -25,6 +24,8 @@ import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
 import { getTradingFeeAPR } from 'utils/dmm'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
+import Pagination from 'components/Pagination'
+import { ClickableText } from 'components/YieldPools/styleds'
 
 const TableHeader = styled.div`
   display: grid;
@@ -40,42 +41,7 @@ const TableHeader = styled.div`
   border-top-right-radius: 8px;
   z-index: 1;
   border-bottom: ${({ theme }) => `1px solid ${theme.border}`};
-`
-
-const ClickableText = styled(Text)`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.subText};
-
-  &:hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
-
-  user-select: none;
-  text-transform: uppercase;
-`
-
-const Pagination = styled.div`
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background-color: ${({ theme }) => theme.oddRow};
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0;
-    border: none;
-    background-color: revert;
-  `}
-`
-
-const PaginationText = styled.div`
-  font-size: 12px;
-  color: ${({ theme }) => theme.subText};
+  text-align: right;
 `
 
 interface PoolListProps {
@@ -95,7 +61,6 @@ const ITEM_PER_PAGE = 5
 
 const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolListProps) => {
   const above1000 = useMedia('(min-width: 1000px)')
-  const theme = useTheme()
 
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
@@ -399,17 +364,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
 
         return null
       })}
-      <Pagination>
-        <ClickableText>
-          <ArrowLeft size={16} color={theme.primary} onClick={onPrev} />
-        </ClickableText>
-        <PaginationText>
-          Page {currentPage} of {maxPage}
-        </PaginationText>
-        <ClickableText>
-          <ArrowRight size={16} color={theme.primary} onClick={onNext} />
-        </ClickableText>
-      </Pagination>
+      <Pagination onPrev={onPrev} onNext={onNext} currentPage={currentPage} maxPage={maxPage} />
       <PoolDetailModal />
     </div>
   )

@@ -173,7 +173,7 @@ export default function CurrencyInputPanel({
   fontSize,
   customCurrencySelect,
   estimatedUsd,
-  isSwitchMode = false
+  isSwitchMode = false,
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { chainId, account } = useActiveWeb3React()

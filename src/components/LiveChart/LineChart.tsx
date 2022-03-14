@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useContext } from 'react'
-import { AreaChart, Area, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import React, { useContext, useEffect, useMemo } from 'react'
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { format } from 'date-fns'
 import styled, { ThemeContext } from 'styled-components'
 import { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
 import { isMobile } from 'react-device-detect'
+import { toKInChart } from 'utils'
+
 const AreaChartWrapper = styled(AreaChart)`
   svg {
     overflow-x: visible;
@@ -21,7 +23,7 @@ const getHoverDateFormat = (timeFrame: LiveDataTimeframeEnum | undefined) => {
       return 'p MMM d (O)'
     case LiveDataTimeframeEnum.MONTH:
       return 'MMM d (O)'
-    case LiveDataTimeframeEnum.SIXMONTHS:
+    case LiveDataTimeframeEnum.SIX_MONTHS:
       return 'MMM d (O)'
     default:
       return 'p MMM d (O)'
@@ -40,7 +42,7 @@ const getAxisDateFormat = (timeFrame: LiveDataTimeframeEnum | undefined) => {
       return 'MMM d'
     case LiveDataTimeframeEnum.MONTH:
       return 'MMM d'
-    case LiveDataTimeframeEnum.SIXMONTHS:
+    case LiveDataTimeframeEnum.SIX_MONTHS:
       return 'MMM d'
     default:
       return 'p MMM d'
@@ -49,7 +51,7 @@ const getAxisDateFormat = (timeFrame: LiveDataTimeframeEnum | undefined) => {
 
 const HoverUpdater = ({
   payload,
-  setHoverValue
+  setHoverValue,
 }: {
   payload: any
   setHoverValue: React.Dispatch<React.SetStateAction<number | null>>
@@ -87,7 +89,7 @@ const CustomizedCursor = (props: any) => {
 const ONE_DAY_TIMESTAMP = 86400000
 
 const getFirstTimestamp = (timeFrame: LiveDataTimeframeEnum | undefined) => {
-  let nowTimestamp = new Date().getTime()
+  const nowTimestamp = new Date().getTime()
   switch (timeFrame) {
     case LiveDataTimeframeEnum.HOUR:
       return nowTimestamp - 3600000
@@ -99,41 +101,52 @@ const getFirstTimestamp = (timeFrame: LiveDataTimeframeEnum | undefined) => {
       return nowTimestamp - 7 * ONE_DAY_TIMESTAMP
     case LiveDataTimeframeEnum.MONTH:
       return nowTimestamp - 30 * ONE_DAY_TIMESTAMP
-    case LiveDataTimeframeEnum.SIXMONTHS:
+    case LiveDataTimeframeEnum.SIX_MONTHS:
       return nowTimestamp - 180 * ONE_DAY_TIMESTAMP
     default:
       return nowTimestamp - 7 * ONE_DAY_TIMESTAMP
   }
 }
 
-const addZeroData = (data: any[], timeFrame: LiveDataTimeframeEnum | undefined) => {
+const addZeroData = (data: { time: number; value: string }[], timeFrame: LiveDataTimeframeEnum | undefined) => {
   let timestamp = getFirstTimestamp(timeFrame)
-  let zeroData = []
+  const zeroData = []
 
   while (data[0]?.time - timestamp > ONE_DAY_TIMESTAMP) {
-    zeroData.push({ time: timestamp, value: 0 })
+    zeroData.push({ time: timestamp, value: '0' })
     timestamp += ONE_DAY_TIMESTAMP
   }
   return [...zeroData, ...data]
 }
 
 interface LineChartProps {
-  data: any[]
+  data: { time: number; value: string }[]
   setHoverValue: React.Dispatch<React.SetStateAction<number | null>>
   color: string
   timeFrame?: LiveDataTimeframeEnum
+  minHeight?: number
+  showYAsis?: boolean
+  unitYAsis?: string
 }
 
-const LineChart = ({ data, setHoverValue, color, timeFrame }: LineChartProps) => {
+const LineChart = ({
+  data,
+  setHoverValue,
+  color,
+  timeFrame,
+  minHeight = 292,
+  showYAsis,
+  unitYAsis = '',
+}: LineChartProps) => {
   const theme = useContext(ThemeContext)
   const formattedData = useMemo(() => {
     return addZeroData(
-      data.filter((item: any) => !!item.value),
-      timeFrame
+      data.filter(item => !!item.value),
+      timeFrame,
     )
   }, [data, timeFrame])
-  const dataMax = useMemo(() => Math.max(...formattedData.map((item: any) => parseFloat(item.value))), [formattedData])
-  const dataMin = useMemo(() => Math.min(...formattedData.map((item: any) => parseFloat(item.value))), [formattedData])
+  const dataMax = useMemo(() => Math.max(...formattedData.map(item => parseFloat(item.value))), [formattedData])
+  const dataMin = useMemo(() => Math.min(...formattedData.map(item => parseFloat(item.value))), [formattedData])
   const ticks = useMemo(() => {
     if (formattedData && formattedData.length > 0) {
       const firstTime = formattedData[0].time
@@ -153,8 +166,9 @@ const LineChart = ({ data, setHoverValue, color, timeFrame }: LineChartProps) =>
     }
     return []
   }, [formattedData])
+
   return (
-    <ResponsiveContainer minHeight={isMobile ? 240 : 292}>
+    <ResponsiveContainer minHeight={isMobile ? 240 : minHeight}>
       {formattedData && formattedData.length > 0 ? (
         <AreaChartWrapper
           data={formattedData}
@@ -162,7 +176,7 @@ const LineChart = ({ data, setHoverValue, color, timeFrame }: LineChartProps) =>
             top: 5,
             right: 0,
             left: 0,
-            bottom: 5
+            bottom: 5,
           }}
           onMouseLeave={() => setHoverValue(null)}
         >
@@ -174,8 +188,7 @@ const LineChart = ({ data, setHoverValue, color, timeFrame }: LineChartProps) =>
           </defs>
           <XAxis
             dataKey="time"
-            fontSize={'12px'}
-            fontWeight={600}
+            fontSize="12px"
             axisLine={false}
             tickLine={false}
             domain={[formattedData[0]?.time || 'auto', formattedData[formattedData.length - 1]?.time || 'auto']}
@@ -189,12 +202,24 @@ const LineChart = ({ data, setHoverValue, color, timeFrame }: LineChartProps) =>
             interval={0}
           />
           <YAxis
+            width={dataMin >= 0.1 ? 69 : 101}
             dataKey="value"
-            padding={{ top: 12 }}
+            fontSize="12px"
             tickLine={false}
             axisLine={false}
-            domain={[dataMin * 0.9 ?? 'auto', dataMax || 'auto']}
-            hide
+            tick={{ fill: theme.subText, fontWeight: 400 }}
+            tickFormatter={tick => toKInChart(tick, unitYAsis)}
+            ticks={[
+              dataMin,
+              dataMin + (1 * (dataMax - dataMin)) / 4,
+              dataMin + (2 * (dataMax - dataMin)) / 4,
+              dataMin + (3 * (dataMax - dataMin)) / 4,
+              dataMin + (4 * (dataMax - dataMin)) / 4,
+              dataMin + (5 * (dataMax - dataMin)) / 4,
+            ]}
+            orientation="right"
+            domain={[dataMin, (5 * (dataMax - dataMin)) / 4]}
+            hide={!showYAsis}
           />
           <Tooltip
             contentStyle={{ display: 'none' }}

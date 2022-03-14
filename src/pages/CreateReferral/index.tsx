@@ -1,5 +1,5 @@
 import Divider from 'components/Divider'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
@@ -8,13 +8,13 @@ import { VerticalDivider } from 'pages/About/styleds'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonPrimary } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
-import FarmingPoolsToggle from 'components/Toggle/FarmingPoolsToggle'
+import FilterBarToggle from 'components/Toggle/FilterBarToggle'
 import { ArrowRight, ChevronDown } from 'react-feather'
 import TokensSelect from './TokensSelect'
 import Slider from 'components/Slider'
-import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
+import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
 import { Currency } from '@dynamic-amm/sdk'
-import { useNetworkModalToggle } from '../../state/application/hooks'
+import { useNetworkModalToggle } from 'state/application/hooks'
 import NetworkModal from 'components/NetworkModal'
 import ShareLinkModal from './ShareLinkModal'
 import { currencyId } from 'utils/currencyId'
@@ -324,7 +324,7 @@ export default function CreateReferral() {
                   width="300px"
                 />
               </Text>
-              <FarmingPoolsToggle isActive={isShowChain} toggle={() => setIsShowChain(prev => !prev)} />
+              <FilterBarToggle isActive={isShowChain} toggle={() => setIsShowChain(prev => !prev)} />
             </Flex>
             {isShowChain && (
               <>
@@ -353,7 +353,7 @@ export default function CreateReferral() {
                       width="300px"
                     />
                   </Text>
-                  <FarmingPoolsToggle isActive={isShowTokens} toggle={() => setIsShowTokens(prev => !prev)} />
+                  <FilterBarToggle isActive={isShowTokens} toggle={() => setIsShowTokens(prev => !prev)} />
                 </Flex>
                 {isShowTokens && (
                   <Flex alignItems="flex-start" marginBottom="28px">

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import styled from 'styled-components'
 
 const StyledToggle = styled.div<{ isActive: boolean }>`
@@ -26,11 +26,12 @@ const ActiveDot = styled.div<{ isActive: boolean }>`
 export interface ToggleProps {
   isActive: boolean
   toggle: () => void
+  style?: CSSProperties
 }
 
-export default function FarmingPoolsToggle({ isActive, toggle }: ToggleProps) {
+export default function FilterBarToggle({ isActive, toggle, style }: ToggleProps) {
   return (
-    <StyledToggle isActive={isActive} onClick={toggle}>
+    <StyledToggle isActive={isActive} onClick={toggle} style={style}>
       <ActiveDot isActive={isActive} />
     </StyledToggle>
   )

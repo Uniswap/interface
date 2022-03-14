@@ -11,7 +11,7 @@ import { formattedNum } from 'utils'
 import { useRewardTokensFullInfo } from 'utils/dmm'
 import CurrencyLogo from 'components/CurrencyLogo'
 
-const RewardTokenPricesWrapper = styled.div`
+export const ScrollContainerWithGradient = styled.div<{ backgroundColor?: string }>`
   position: relative;
   display: flex;
   justify-content: center;
@@ -34,12 +34,16 @@ const RewardTokenPricesWrapper = styled.div`
   }
 
   &.left-visible:after {
-    background: linear-gradient(to right, ${({ theme }) => theme.bg12}, transparent);
+    background: linear-gradient(
+      to right,
+      ${({ theme, backgroundColor }) => backgroundColor ?? theme.bg12},
+      transparent
+    );
     left: 0;
   }
 
   &.right-visible:before {
-    background: linear-gradient(to left, ${({ theme }) => theme.bg12}, transparent);
+    background: linear-gradient(to left, ${({ theme, backgroundColor }) => backgroundColor ?? theme.bg12}, transparent);
     right: 0;
   }
 `
@@ -127,7 +131,7 @@ const RewardTokenPrices = () => {
   }, [chainId])
 
   return (
-    <RewardTokenPricesWrapper ref={shadowRef}>
+    <ScrollContainerWithGradient ref={shadowRef}>
       <ScrollContainer innerRef={scrollRef} vertical={false} className="scroll-container" onScroll={handleShadow}>
         <RewardTokensList ref={contentRef}>
           {rewardTokens.map((token, index) => {
@@ -147,7 +151,7 @@ const RewardTokenPrices = () => {
           })}
         </RewardTokensList>
       </ScrollContainer>
-    </RewardTokenPricesWrapper>
+    </ScrollContainerWithGradient>
   )
 }
 

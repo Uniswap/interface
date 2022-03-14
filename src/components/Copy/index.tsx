@@ -7,7 +7,7 @@ import useCopyClipboard from '../../hooks/useCopyClipboard'
 const CopyIcon = styled.div<{ margin?: string }>`
   flex-shrink: 0;
   margin-right: 1rem;
-  margin-left: 2px;
+  margin-left: 4px;
   ${({ margin }) => `margin: ${margin};`}
   text-decoration: none;
   :hover,
@@ -19,8 +19,8 @@ const CopyIcon = styled.div<{ margin?: string }>`
     color: ${({ theme }) => theme.text2};
   }
 `
+
 const TransactionStatusText = styled.span`
-  margin-left: 0.25rem;
   font-size: 0.825rem;
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;

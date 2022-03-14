@@ -16,6 +16,7 @@ import Web3Status from '../Web3Status'
 import { ExternalLink } from 'theme/components'
 import Web3Network from 'components/Web3Network'
 import { useIsDarkMode } from 'state/user/hooks'
+import DiscoverIcon from 'components/Icons/DiscoverIcon'
 // import { MouseoverTooltip } from 'components/Tooltip'
 
 const HeaderFrame = styled.div`
@@ -132,7 +133,13 @@ const HideSmall = styled.span`
 `
 
 const AnalyticsWrapper = styled.span`
-  @media (max-width: 1100px) {
+  @media (max-width: 576px) {
+    display: none;
+  }
+`
+
+const DiscoverWrapper = styled.span`
+  @media (max-width: 576px) {
     display: none;
   }
 `
@@ -200,8 +207,7 @@ const StyledNavLink = styled(NavLink).attrs({
     color: ${({ theme }) => theme.primary};
   }
 
-  :hover,
-  :focus {
+  :hover {
     color: ${({ theme }) => darken(0.1, theme.primary)};
   }
 `
@@ -244,16 +250,6 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
 
 const YieldMenuWrapper = styled.div`
   position: relative;
-  padding: 10px 16px 10px 0;
-`
-
-const NewText = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 10px;
-  font-weight: 500;
-  color: #ff537b;
 `
 
 // const shine = keyframes`
@@ -334,9 +330,6 @@ export default function Header() {
           <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
             <YieldMenuWrapper>
               <Trans>Farm</Trans>
-              <NewText>
-                <Trans>New</Trans>
-              </NewText>
             </YieldMenuWrapper>
           </StyledNavLink>
 
@@ -345,6 +338,17 @@ export default function Header() {
               <Trans>Analytics</Trans>
             </StyledNavExternalLink>
           </AnalyticsWrapper>
+
+          <DiscoverWrapper>
+            <StyledNavLink
+              to={'/discover?tab=trending_soon'}
+              isActive={match => Boolean(match)}
+              style={{ alignItems: 'center' }}
+            >
+              <Trans>Discover</Trans>
+              <DiscoverIcon size={14} style={{ marginTop: '-20px', marginLeft: '4px' }} />
+            </StyledNavLink>
+          </DiscoverWrapper>
 
           <AboutWrapper>
             <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
