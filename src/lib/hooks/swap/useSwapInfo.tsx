@@ -63,7 +63,7 @@ function useComputeSwapInfo(): SwapInfo {
       [Field.INPUT]: isWrapping || isExactIn ? parsedAmount : trade.trade?.inputAmount,
       [Field.OUTPUT]: isWrapping || !isExactIn ? parsedAmount : trade.trade?.outputAmount,
     }),
-    [isWrapping, parsedAmount, trade.trade?.inputAmount, trade.trade?.outputAmount]
+    [isExactIn, isWrapping, parsedAmount, trade.trade?.inputAmount, trade.trade?.outputAmount]
   )
   const slippage = useSlippage(trade.trade)
 
