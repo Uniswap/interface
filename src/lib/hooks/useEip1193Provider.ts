@@ -16,6 +16,12 @@ class Eip1193Bridge extends ExperimentalEip1193Bridge {
         const result = await this.provider.getNetwork()
         return '0x' + result.chainId.toString(16)
       }
+      case 'eth_requestAccounts':
+        try {
+          return await super.send(method, params)
+        } catch (e) {
+          return this.send('eth_accounts')
+        }
       case 'eth_sendTransaction': {
         if (!this.signer) break
 
