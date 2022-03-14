@@ -11,7 +11,10 @@ on:
 jobs:
   CI:
     name: Build
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
+    # Cypress Docker image with Chrome v78
+    # and Firefox v70 pre-installed
+    container: cypress/browsers:node12.13.0-chrome78-ff70
     strategy:
       matrix:
         node_version: [16]
@@ -31,6 +34,7 @@ jobs:
         run: yarn lint
       - name: cyp
         run: yarn add cypress --dev && cypress install
+        
       - name: test
         run: yarn synpress:ct
       - name: Build
