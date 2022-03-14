@@ -1,23 +1,28 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - develop
-      - master
   pull_request:
     types: [opened, synchronize, reopened]
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   CI:
     name: Build
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
+    container: cypress/browsers:node12.13.0-chrome78-ff70
+    env:
+      NODE_ENV: false
     strategy:
       matrix:
         node_version: [16]
 
     steps:
       - uses: actions/checkout@v2
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
@@ -25,7 +30,7 @@ jobs:
         run: yarn install
       - name: Lint
         run: yarn lint
-      - name: Test
-        run: yarn test
-      - name: Build
-        run: yarn run build
+      - name: Install cypress
+        run: yarn add -D cypress@9.2.0 && yarn cypress install && yarn cypress verify
+      - name: Run integration synpress tests
+        run: yarn synpress:ct
