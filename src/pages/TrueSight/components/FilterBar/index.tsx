@@ -38,7 +38,11 @@ export default function FilterBar({ activeTab, filter, setFilter }: FilterBarPro
   const [searchText, setSearchText] = useState('')
   const debouncedSearchText = useDebounce(searchText.toLowerCase().trim(), 200)
 
-  const { data: foundTokens } = useGetTokensForSearchBox(debouncedSearchText, filter.timeframe)
+  const { data: foundTokens } = useGetTokensForSearchBox(
+    debouncedSearchText,
+    filter.timeframe,
+    filter.isShowTrueSightOnly,
+  )
   const { data: foundTags } = useGetTagsFromSearchText(debouncedSearchText)
 
   const theme = useTheme()

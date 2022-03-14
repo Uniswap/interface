@@ -78,7 +78,7 @@ const TrendingSoonHero = () => {
         </Trans>
       </MainContent>
       <SubContent>
-        <Trans>Disclaimer: The information here should not be treated as any form of financial advise</Trans>
+        <Trans>Disclaimer: The information here should not be treated as any form of financial advice</Trans>
       </SubContent>
     </Hero>
   )

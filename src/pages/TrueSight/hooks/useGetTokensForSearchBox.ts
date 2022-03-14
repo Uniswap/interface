@@ -3,7 +3,11 @@ import { TrueSightTabs, TrueSightTimeframe } from 'pages/TrueSight/index'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 
-export default function useGetTokensForSearchBox(searchText: string, timeframe: TrueSightTimeframe) {
+export default function useGetTokensForSearchBox(
+  searchText: string,
+  timeframe: TrueSightTimeframe,
+  isShowTrueSightOnly: boolean,
+) {
   const [data, setData] = useState<TrueSightTokenData[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error>()
@@ -24,6 +28,9 @@ export default function useGetTokensForSearchBox(searchText: string, timeframe: 
           if (response.ok) {
             const json = await response.json()
             const rawResult = json.data
+            rawResult.tokens = isShowTrueSightOnly
+              ? rawResult.tokens.filter((token: TrueSightTokenData) => token.discovered_on > 0)
+              : rawResult.tokens
             setData(rawResult.tokens ?? [])
           }
           setIsLoading(false)
@@ -36,7 +43,7 @@ export default function useGetTokensForSearchBox(searchText: string, timeframe: 
     }
 
     fetchData()
-  }, [searchText, tab, timeframe])
+  }, [isShowTrueSightOnly, searchText, tab, timeframe])
 
   return useMemo(() => ({ isLoading, data, error }), [data, isLoading, error])
 }
