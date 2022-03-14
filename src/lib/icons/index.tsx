@@ -109,17 +109,18 @@ export const Check = styled(icon(CheckIcon))`
 `
 
 export const Expando = styled(icon(ExpandoIcon))<{ open: boolean }>`
-  path {
+  .left,
+  .right {
     transition: transform 0.25s ease-in-out;
     will-change: transform;
+  }
 
-    &:first-child {
-      transform: ${({ open }) => open && 'translateX(-25%)'};
-    }
+  .left {
+    transform: ${({ open }) => (open ? undefined : 'translateX(-25%)')};
+  }
 
-    &:last-child {
-      transform: ${({ open }) => open && 'translateX(25%)'};
-    }
+  .right {
+    transform: ${({ open }) => (open ? undefined : 'translateX(25%)')};
   }
 `
 
