@@ -82,7 +82,7 @@ exports[`renders a NetworkPill with border 1`] = `
         Object {
           "color": "#000000",
           "display": "flex",
-          "fontFamily": "UniswapSansBeta3-Medium",
+          "fontFamily": "UniswapSansBeta4-Medium",
           "fontSize": 14,
         },
         Object {
@@ -178,7 +178,7 @@ exports[`renders a NetworkPill without image 1`] = `
         Object {
           "color": "#000000",
           "display": "flex",
-          "fontFamily": "UniswapSansBeta3-Medium",
+          "fontFamily": "UniswapSansBeta4-Medium",
           "fontSize": 14,
         },
         Object {

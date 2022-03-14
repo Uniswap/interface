@@ -39,7 +39,7 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "color": "#CED0D9",
-          "fontFamily": "UniswapSansBeta3-Medium",
+          "fontFamily": "UniswapSansBeta4-Medium",
           "fontSize": 18,
         }
       }
@@ -102,7 +102,7 @@ exports[`renders correctly 1`] = `
       style={
         Object {
           "color": "#DA2D2B",
-          "fontFamily": "UniswapSansBeta3-Medium",
+          "fontFamily": "UniswapSansBeta4-Medium",
           "fontSize": 20,
         }
       }
@@ -391,7 +391,7 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "rgba(255, 255, 255, 1)",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
             "lineHeight": 24,
             "textAlign": "center",
@@ -434,7 +434,7 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "#FF007A",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
             "lineHeight": 24,
             "textAlign": "center",
@@ -477,7 +477,7 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "#FF007A",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
             "lineHeight": 24,
             "textAlign": "center",
@@ -520,7 +520,7 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "#FF007A",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
             "lineHeight": 24,
             "textAlign": "center",
@@ -563,7 +563,7 @@ exports[`renders correctly 1`] = `
           Object {
             "color": "#FF007A",
             "display": "flex",
-            "fontFamily": "UniswapSansBeta3-Medium",
+            "fontFamily": "UniswapSansBeta4-Medium",
             "fontSize": 16,
             "lineHeight": 24,
             "textAlign": "center",

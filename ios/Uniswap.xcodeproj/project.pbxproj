@@ -12,10 +12,11 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
-		323758D670BD4239A88ED592 /* UniswapSansBeta3-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */; };
-		4C3A060B4EC54191B2D05291 /* UniswapSansBeta3-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */; };
+		2A5635C4D1004128AACDE5B4 /* UniswapSansBeta4-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0336D04376104CA8961C6A43 /* UniswapSansBeta4-Semibold.otf */; };
+		3D656370579445F38785B2B6 /* UniswapSansBeta4-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC290279048A490AA42C5075 /* UniswapSansBeta4-Bold.otf */; };
+		478C8EADE2274469AF151F9B /* UniswapSansBeta4-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8131CF7ACA840A2959DA472 /* UniswapSansBeta4-Regular.otf */; };
 		6172F2D35A4C3AA820D92908 /* libPods-Uniswap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-Uniswap.a */; };
-		6E486741B8034E9C896EC0E6 /* UniswapSansBeta3-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D411CAE164C44F184DC5771 /* UniswapSansBeta3-Semibold.otf */; };
+		6BFD6E0A17CC43FA82F40599 /* UniswapSansBeta4-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D671DC161669472883FE2A12 /* UniswapSansBeta4-Medium.otf */; };
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
 		7EF68E3733C33B6898317E18 /* libPods-Uniswap-UniswapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-Uniswap-UniswapTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -25,7 +26,6 @@
 		A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */; };
 		A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */; };
 		C984362CBE87419489C23601 /* monospace.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B665738960844523B06BB63B /* monospace.ttf */; };
-		D7DC5B5087F94E2A95426E61 /* UniswapSansBeta3-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8A54E514DE6E4CB1A39FDB3A /* UniswapSansBeta3-Bold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +42,7 @@
 		00E356EE1AD99517003FC87E /* UniswapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniswapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UniswapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniswapTests.m; sourceTree = "<group>"; };
+		0336D04376104CA8961C6A43 /* UniswapSansBeta4-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta4-Semibold.otf"; path = "../src/assets/fonts/UniswapSansBeta4-Semibold.otf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Uniswap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Uniswap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Uniswap/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Uniswap/AppDelegate.m; sourceTree = "<group>"; };
@@ -62,12 +63,15 @@
 		A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwiftDistrib.swift; sourceTree = "<group>"; };
 		A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNEthersRS.swift; sourceTree = "<group>"; };
 		ABFE59519B596E51CEFDCCC0 /* libPods-Uniswap-UniswapTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap-UniswapTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B665738960844523B06BB63B /* monospace.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = monospace.ttf; path = ../src/assets/fonts/monospace.ttf; sourceTree = "<group>"; };
+		B665738960844523B06BB63B /* monospace.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = monospace.ttf; path = ../src/assets/fonts/monospace.ttf; sourceTree = "<group>"; };
+		BC290279048A490AA42C5075 /* UniswapSansBeta4-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta4-Bold.otf"; path = "../src/assets/fonts/UniswapSansBeta4-Bold.otf"; sourceTree = "<group>"; };
 		BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Uniswap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		C0A881CF5CF3F2B244570E2A /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
 		C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap-UniswapTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		D00AAFFCFCFDA5787532823F /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
 		D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta3-Regular.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Regular.otf"; sourceTree = "<group>"; };
+		D671DC161669472883FE2A12 /* UniswapSansBeta4-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta4-Medium.otf"; path = "../src/assets/fonts/UniswapSansBeta4-Medium.otf"; sourceTree = "<group>"; };
+		D8131CF7ACA840A2959DA472 /* UniswapSansBeta4-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "UniswapSansBeta4-Regular.otf"; path = "../src/assets/fonts/UniswapSansBeta4-Regular.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -203,6 +207,10 @@
 				D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */,
 				8D411CAE164C44F184DC5771 /* UniswapSansBeta3-Semibold.otf */,
 				B665738960844523B06BB63B /* monospace.ttf */,
+				BC290279048A490AA42C5075 /* UniswapSansBeta4-Bold.otf */,
+				D671DC161669472883FE2A12 /* UniswapSansBeta4-Medium.otf */,
+				D8131CF7ACA840A2959DA472 /* UniswapSansBeta4-Regular.otf */,
+				0336D04376104CA8961C6A43 /* UniswapSansBeta4-Semibold.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -315,11 +323,11 @@
 				A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */,
-				D7DC5B5087F94E2A95426E61 /* UniswapSansBeta3-Bold.otf in Resources */,
-				4C3A060B4EC54191B2D05291 /* UniswapSansBeta3-Medium.otf in Resources */,
-				323758D670BD4239A88ED592 /* UniswapSansBeta3-Regular.otf in Resources */,
-				6E486741B8034E9C896EC0E6 /* UniswapSansBeta3-Semibold.otf in Resources */,
 				C984362CBE87419489C23601 /* monospace.ttf in Resources */,
+				3D656370579445F38785B2B6 /* UniswapSansBeta4-Bold.otf in Resources */,
+				6BFD6E0A17CC43FA82F40599 /* UniswapSansBeta4-Medium.otf in Resources */,
+				478C8EADE2274469AF151F9B /* UniswapSansBeta4-Regular.otf in Resources */,
+				2A5635C4D1004128AACDE5B4 /* UniswapSansBeta4-Semibold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

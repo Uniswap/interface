@@ -2,10 +2,10 @@
 export const fontFamily = {
   serif: 'serif',
   sansSerif: {
-    regular: 'UniswapSansBeta3-Regular',
-    medium: 'UniswapSansBeta3-Medium',
-    semibold: 'UniswapSansBeta3-Semibold',
-    bold: 'UniswapSansBeta3-Bold',
+    regular: 'UniswapSansBeta4-Regular',
+    medium: 'UniswapSansBeta4-Medium',
+    semibold: 'UniswapSansBeta4-Semibold',
+    bold: 'UniswapSansBeta4-Bold',
   },
 }
 
