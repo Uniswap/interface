@@ -30,6 +30,8 @@ jobs:
           node-version: '16'
       - name: Install
         run: yarn install
+        env:
+          CYPRESS_CACHE_FOLDER: ${{ github.workspace }}/.cache/Cypress
       - name: Lint
         run: yarn lint
       - name: test
