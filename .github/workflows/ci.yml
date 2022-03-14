@@ -11,7 +11,7 @@ on:
 jobs:
   CI:
     name: Build
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node_version: [16]
