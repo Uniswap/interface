@@ -30,6 +30,6 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: Test
-        run: yarn test
+        run: yarn synpress:ct
       - name: Build
         run: yarn run build
