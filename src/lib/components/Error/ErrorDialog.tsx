@@ -66,7 +66,7 @@ export default function ErrorDialog({ header, error, action, onClick }: ErrorDia
           <ThemedText.Body2>{header}</ThemedText.Body2>
         </ErrorHeader>
       </StatusHeader>
-      <Column gap={open ? 0 : 0.75}>
+      <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
         <Expando title={<Trans>Error details</Trans>} open={open} onExpand={onExpand} height={7.5}>
           <ThemedText.Code userSelect>
             {error.name}

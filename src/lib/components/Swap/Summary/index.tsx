@@ -148,7 +148,7 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
           <Summary input={inputAmount} output={outputAmount} usdcPriceImpact={usdcPriceImpact} />
           <Price trade={trade} />
         </Heading>
-        <Column gap={open ? 0 : 0.75}>
+        <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
           <Expando
             title={<Subhead priceImpact={usdcPriceImpact} slippage={slippage} />}
             open={open}
