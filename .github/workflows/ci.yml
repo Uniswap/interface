@@ -36,8 +36,6 @@ jobs:
         run: yarn lint
       - name: cyrpress bin
         run: npx cypress install
-      - name: cyrpress bin
-        run: npm i cypress
       - name: cyrpress bin2
         run: cypress install
       - name: test
