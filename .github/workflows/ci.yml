@@ -29,8 +29,6 @@ jobs:
         run: yarn install
       - name: Lint
         run: yarn lint
-      - name: cypress install
-        run: cypress install
       - name: test
         run: yarn synpress:ct
       - name: Build
