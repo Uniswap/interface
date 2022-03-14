@@ -30,7 +30,7 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: cyp
-        run: yarn add cypress --dev
+        run: yarn add cypress --dev && cypress install
       - name: test
         run: yarn synpress:ct
       - name: Build
