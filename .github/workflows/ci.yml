@@ -15,6 +15,8 @@ jobs:
     # Cypress Docker image with Chrome v78
     # and Firefox v70 pre-installed
     container: cypress/browsers:node12.13.0-chrome78-ff70
+    env:
+      NODE_ENV: false
     strategy:
       matrix:
         node_version: [16]
