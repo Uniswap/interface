@@ -37,5 +37,3 @@ package-lock.json
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
-
-.cert

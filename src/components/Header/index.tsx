@@ -338,9 +338,11 @@ const StyledDrawerExternalLink = styled(StyledExternalLink).attrs({
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.Mainnet]: 'Celo',
+  [ChainId.CeloMainnet]: 'Celo',
   [ChainId.Alfajores]: 'Alfajores',
   [ChainId.Baklava]: 'Baklava',
+  [ChainId.EthereumMainnet]: 'Ethereum',
+  [ChainId.Kovan]: 'Kovan',
 }
 
 export default function Header() {
