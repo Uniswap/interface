@@ -24,7 +24,12 @@ const TokenButtonRow = styled(Row)<{ collapsed: boolean }>`
   height: 1.2em;
   // max-width must have an absolute value in order to transition.
   max-width: ${({ collapsed }) => (collapsed ? '1.2em' : '12em')};
+  overflow: hidden;
   transition: max-width 0.25s linear;
+
+  img {
+    min-width: 1.2em;
+  }
 `
 
 interface TokenButtonProps {
