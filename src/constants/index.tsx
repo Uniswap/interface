@@ -367,18 +367,26 @@ export const NETWORK_OPTIONAL_DETAIL: { [chainId: number]: NetworkOptionalDetail
 }
 
 export const ROUTABLE_PLATFORM_STYLE: {
-  [routablePaltformName: string]: { logo: string; alt: string; bgImage: string }
+  [routablePaltformName: string]: { logo: string; alt: string; gradientColor: string }
 } = {
-  [RoutablePlatform.UNISWAP.name]: { logo: UniswapLogo, alt: RoutablePlatform.UNISWAP.name, bgImage: '' },
+  [RoutablePlatform.UNISWAP.name]: { logo: UniswapLogo, alt: RoutablePlatform.UNISWAP.name, gradientColor: '#FB52A1' },
   [RoutablePlatform.SUSHISWAP.name]: {
     logo: SushiswapLogo,
     alt: RoutablePlatform.SUSHISWAP.name,
-    bgImage: 'linear-gradient(90deg, #2E17F2 19.74%, #FB52A1 120.26%)'
+    gradientColor: '#FB52A1'
   },
-  [RoutablePlatform.SWAPR.name]: { logo: SwaprLogo, alt: RoutablePlatform.SWAPR.name, bgImage: '' },
-  [RoutablePlatform.HONEYSWAP.name]: { logo: HoneyswapLogo, alt: RoutablePlatform.HONEYSWAP.name, bgImage: '' },
-  [RoutablePlatform.BAOSWAP.name]: { logo: BaoswapLogo, alt: RoutablePlatform.BAOSWAP.name, bgImage: '' },
-  [RoutablePlatform.LEVINSWAP.name]: { logo: LevinswapLogo, alt: RoutablePlatform.LEVINSWAP.name, bgImage: '' }
+  [RoutablePlatform.SWAPR.name]: { logo: SwaprLogo, alt: RoutablePlatform.SWAPR.name, gradientColor: '#FB52A1' },
+  [RoutablePlatform.HONEYSWAP.name]: {
+    logo: HoneyswapLogo,
+    alt: RoutablePlatform.HONEYSWAP.name,
+    gradientColor: '#FB52A1'
+  },
+  [RoutablePlatform.BAOSWAP.name]: { logo: BaoswapLogo, alt: RoutablePlatform.BAOSWAP.name, gradientColor: '#FB52A1' },
+  [RoutablePlatform.LEVINSWAP.name]: {
+    logo: LevinswapLogo,
+    alt: RoutablePlatform.LEVINSWAP.name,
+    gradientColor: '#FB52A1'
+  }
 }
 
 export const ROUTABLE_PLATFORM_LOGO: { [routablePaltformName: string]: ReactNode } = {

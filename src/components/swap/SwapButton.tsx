@@ -7,8 +7,9 @@ import { ROUTABLE_PLATFORM_STYLE } from '../../constants'
 import { PRICE_IMPACT_HIGH, PRICE_IMPACT_MEDIUM } from '../../constants'
 import { useTranslation } from 'react-i18next'
 
-const StyledSwapButton = styled(ButtonPrimary)<{ bgImage: string }>`
-  background-image: ${({ bgImage, disabled }) => !disabled && bgImage};
+const StyledSwapButton = styled(ButtonPrimary)<{ gradientColor: string }>`
+  background-image: ${({ gradientColor, disabled }) =>
+    !disabled && gradientColor && `linear-gradient(90deg, #2E17F2 19.74%, ${gradientColor} 120.26%)`};
 `
 
 const StyledPlataformImage = styled.img`
@@ -44,7 +45,7 @@ export const SwapButton = ({
   const { t } = useTranslation()
 
   return (
-    <StyledSwapButton bgImage={platformName && ROUTABLE_PLATFORM_STYLE[platformName].bgImage} {...rest}>
+    <StyledSwapButton gradientColor={platformName && ROUTABLE_PLATFORM_STYLE[platformName].gradientColor} {...rest}>
       <StyledSwapButtonText>
         {swapInputError ? (
           swapInputError
