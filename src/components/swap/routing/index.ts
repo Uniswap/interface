@@ -1,5 +1,5 @@
 import { useContractKit, useGetConnectedSigner } from '@celo-tools/use-contractkit'
-import { Signer } from '@ethersproject/abstract-signer'
+import { JsonRpcSigner } from '@ethersproject/providers'
 import { ChainId, Trade } from '@ubeswap/sdk'
 import { BigNumber, BigNumberish, CallOverrides, Contract, ContractTransaction, PayableOverrides } from 'ethers'
 import { useCallback } from 'react'
@@ -10,7 +10,7 @@ type Head<T extends any[]> = Required<T> extends [...infer H, any] ? H : never
 type Last<T extends Array<unknown>> = Required<T> extends [...unknown[], infer L] ? L : never
 type MethodArgs<C extends Contract, M extends keyof C['estimateGas']> = Head<Parameters<C['estimateGas'][M]>>
 
-type DoTransactionFn = <
+export type DoTransactionFn = <
   C extends Contract,
   M extends string & keyof C['estimateGas'],
   O extends Last<Parameters<C['estimateGas'][M]>> & (PayableOverrides | CallOverrides)
@@ -29,7 +29,18 @@ type DoTransactionFn = <
 export interface TradeExecutor<T extends Trade> {
   (args: {
     trade: T
-    signer: Signer
+    signer: JsonRpcSigner
+    chainId: ChainId.MAINNET | ChainId.ALFAJORES
+    doTransaction: DoTransactionFn
+  }): Promise<{
+    hash: string
+  }>
+}
+
+export interface CancelLimitOrderExecutor {
+  (args: {
+    orderHash: string
+    signer: JsonRpcSigner
     chainId: ChainId.MAINNET | ChainId.ALFAJORES
     doTransaction: DoTransactionFn
   }): Promise<{

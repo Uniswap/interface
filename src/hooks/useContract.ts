@@ -7,13 +7,24 @@ import { StakingInfo } from 'state/stake/hooks'
 
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ERC20_ABI, { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
+import LIMIT_ORDER_PROTOCOL_ABI from '../constants/abis/limit/LimitOrderProtocol.json'
+import ORDER_BOOK_ABI from '../constants/abis/limit/OrderBook.json'
+import ORDER_BOOK_REWARD_DISTRUBUTOR_ABI from '../constants/abis/limit/OrderBookRewardDistributor.json'
 import DUAL_REWARDS_ABI from '../constants/abis/moola/MoolaStakingRewards.json'
 import POOL_MANAGER_ABI from '../constants/abis/pool-manager.json'
 import RELEASE_UBE_ABI from '../constants/abis/ReleaseUbe.json'
 import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
 import VOTABLE_STAKING_REWARDS_ABI from '../constants/abis/VotableStakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
-import { Erc20, MoolaStakingRewards, PoolManager, StakingRewards } from '../generated'
+import {
+  Erc20,
+  LimitOrderProtocol,
+  MoolaStakingRewards,
+  OrderBook,
+  OrderBookRewardDistributor,
+  PoolManager,
+  StakingRewards,
+} from '../generated'
 import { getContract } from '../utils'
 
 // returns null on errors
@@ -118,4 +129,26 @@ export function useMultiStakingContract(
   withSignerIfPossible?: boolean
 ): MoolaStakingRewards | null {
   return useContract(stakingAddress, DUAL_REWARDS_ABI, withSignerIfPossible) as MoolaStakingRewards | null
+}
+
+export function useOrderBookContract(address?: string, withSignerIfPossible?: boolean): OrderBook | null {
+  return useContract(address, ORDER_BOOK_ABI, withSignerIfPossible) as OrderBook | null
+}
+
+export function useOrderBookRewardDistributorContract(
+  address?: string,
+  withSignerIfPossible?: boolean
+): OrderBookRewardDistributor | null {
+  return useContract(
+    address,
+    ORDER_BOOK_REWARD_DISTRUBUTOR_ABI,
+    withSignerIfPossible
+  ) as OrderBookRewardDistributor | null
+}
+
+export function useLimitOrderProtocolContract(
+  address?: string,
+  withSignerIfPossible?: boolean
+): LimitOrderProtocol | null {
+  return useContract(address, LIMIT_ORDER_PROTOCOL_ABI, withSignerIfPossible) as LimitOrderProtocol | null
 }

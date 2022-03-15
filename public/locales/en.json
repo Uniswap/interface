@@ -229,5 +229,8 @@
   "farmUBE": "Farm UBE",
   "youHaveUnclaimedRewards": "You have {{count}} farms with unclaimed rewards",
   "claimAllRewards": "Claim all rewards",
-  "featuredPools": "Featured Pools"
+  "featuredPools": "Featured Pools",
+  "limitOrder": "Limit Order",
+  "price": "Price",
+  "placeOrder": "Place Order"
 }

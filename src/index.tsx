@@ -113,6 +113,7 @@ function Updaters() {
 ReactDOM.render(
   <StrictMode>
     <FixedGlobalStyle />
+    {/* TODO: Mainnet, not alfajores */}
     <ContractKitProvider
       dapp={{
         name: 'Ubeswap',

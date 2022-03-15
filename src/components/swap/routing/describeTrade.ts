@@ -7,6 +7,7 @@ export enum RoutingMethod {
   UBESWAP = 0,
   MOOLA = 1,
   MOOLA_ROUTER = 2,
+  LIMIT = 3,
 }
 
 export const describeTrade = (

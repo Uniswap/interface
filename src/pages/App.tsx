@@ -19,6 +19,7 @@ import {
 } from './AddLiquidity/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import LimitOrder from './LimitOrder'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -101,6 +102,7 @@ export default function App() {
           <ErrorBoundary fallback={<p>An unexpected error occured on this part of the page. Please reload.</p>}>
             <Switch>
               <Route exact strict path="/swap" component={Swap} />
+              <Route exact strict path="/limit-order" component={LimitOrder} />
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/send" component={Send} />

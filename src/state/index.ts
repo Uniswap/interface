@@ -4,6 +4,7 @@ import { load, save } from 'redux-localstorage-simple'
 import application from './application/reducer'
 import burn from './burn/reducer'
 import { updateVersion } from './global/actions'
+import limit from './limit/reducer'
 import lists from './lists/reducer'
 import mint from './mint/reducer'
 import multicall from './multicall/reducer'
@@ -19,6 +20,7 @@ const store = configureStore({
     user,
     transactions,
     swap,
+    limit,
     mint,
     burn,
     multicall,

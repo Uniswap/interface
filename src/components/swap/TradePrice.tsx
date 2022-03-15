@@ -1,4 +1,4 @@
-import { Price } from '@ubeswap/sdk'
+import { JSBI, Price } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -15,7 +15,18 @@ interface TradePriceProps {
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
 
-  const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
+  let formattedPrice
+  if (price) {
+    if (showInverted) {
+      if (!JSBI.equal(price.denominator, JSBI.BigInt(0))) {
+        formattedPrice = price.toSignificant(6)
+      }
+    } else {
+      if (!JSBI.equal(price.numerator, JSBI.BigInt(0))) {
+        formattedPrice = price.invert().toSignificant(6)
+      }
+    }
+  }
 
   const show = Boolean(price?.baseCurrency && price?.quoteCurrency)
   const label = showInverted
