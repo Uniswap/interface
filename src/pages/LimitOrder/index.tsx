@@ -251,9 +251,15 @@ export default function LimitOrder() {
 
   const swapIsUnsupported = useIsTransactionUnsupported(currencies?.PRICE, currencies?.TOKEN)
 
+  const walletIsSupported =
+    walletType === WalletTypes.MetaMask ||
+    walletType === WalletTypes.CeloExtensionWallet ||
+    walletType === WalletTypes.PrivateKey ||
+    walletType === WalletTypes.Injected
+
   return (
     <>
-      {walletType != WalletTypes.MetaMask && walletType != WalletTypes.Unauthenticated && (
+      {!walletIsSupported && (
         <TopSectionLimitOrder gap="md">
           <DataCard>
             <CardNoise />
@@ -263,7 +269,9 @@ export default function LimitOrder() {
                   <TYPE.white fontWeight={600}>Notice</TYPE.white>
                 </RowBetween>
                 <RowBetween>
-                  <TYPE.white fontSize={14}>Must be connected to a Metamask wallet to place Limit Orders</TYPE.white>
+                  <TYPE.white fontSize={14}>
+                    You must be connected to a Metamask wallet to place limit orders
+                  </TYPE.white>
                 </RowBetween>{' '}
               </AutoColumn>
             </CardSection>
