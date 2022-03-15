@@ -782,6 +782,14 @@ export const FANTOM_MAINNET_TOKEN_LIST = {
       logoURI: 'https://assets.spookyswap.finance/tokens/RAVEN.png',
       bridgeId: '',
     },
+    {
+      name: 'PaintSwap',
+      symbol: 'BRUSH',
+      address: '0x85dec8c4B2680793661bCA91a8F129607571863d',
+      chainId: 250,
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/13229.png',
+    },
   ],
   version: {
     major: 0,

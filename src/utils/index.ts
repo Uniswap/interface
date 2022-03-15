@@ -46,6 +46,8 @@ import { getCronosTokenLogoURL } from './cronosTokenMapping'
 import { getAuroraTokenLogoURL } from './auroraTokenMapping'
 import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
 import { VELAS_TOKEN_LIST } from 'constants/tokenLists/velas.tokenlist'
+import { ARBITRUM_TOKEN_LIST } from 'constants/tokenLists/arbitrum.tokenlist'
+import { FANTOM_MAINNET_TOKEN_LIST } from 'constants/tokenLists/fantom.mainnet.tokenlist'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -573,7 +575,10 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
       imageURL = getAvaxMainnetTokenLogoURL(address)
       break
     case ChainId.FANTOM:
-      imageURL = getFantomTokenLogoURL(address)
+      imageURL =
+        FANTOM_MAINNET_TOKEN_LIST.tokens.find(
+          (item: { address: string }) => item.address.toLowerCase() === address.toLowerCase(),
+        )?.logoURI || getFantomTokenLogoURL(address)
       break
     case ChainId.CRONOS:
       imageURL = getCronosTokenLogoURL(address)
@@ -582,7 +587,9 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
       imageURL = getAuroraTokenLogoURL(address)
       break
     case ChainId.ARBITRUM:
-      imageURL = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${address}/logo.png`
+      imageURL =
+        ARBITRUM_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI ||
+        `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${address}/logo.png`
       break
     case ChainId.BTTC:
       imageURL =

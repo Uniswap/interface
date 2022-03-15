@@ -578,8 +578,8 @@ msgid "Details"
 msgstr "Details"
 
 #: src/pages/TrueSight/TrendingSoonHero.tsx
-msgid "Disclaimer: The information here should not be treated as any form of financial advise"
-msgstr "Disclaimer: The information here should not be treated as any form of financial advise"
+msgid "Disclaimer: The information here should not be treated as any form of financial advice"
+msgstr "Disclaimer: The information here should not be treated as any form of financial advice"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"

@@ -578,7 +578,7 @@ msgid "Details"
 msgstr "Chi tiết"
 
 #: src/pages/TrueSight/TrendingSoonHero.tsx
-msgid "Disclaimer: The information here should not be treated as any form of financial advise"
+msgid "Disclaimer: The information here should not be treated as any form of financial advice"
 msgstr ""
 
 #: src/components/AccountDetails/index.tsx
