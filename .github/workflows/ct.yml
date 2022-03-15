@@ -36,10 +36,13 @@ jobs:
         run: yarn synpress:ct
       - name: Merge test results into one
         run: npm run report:merge
+        continue-on-error: true
       - name: Generate HTML report
         run: npm run report:generate
+        continue-on-error: true
       - name: Deploy report page
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./public-report
+        continue-on-error: true
