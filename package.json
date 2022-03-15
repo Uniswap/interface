@@ -96,7 +96,10 @@
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
-    "wcag-contrast": "^3.0.0"
+    "wcag-contrast": "^3.0.0",
+    "mochawesome": "^7.1.2",
+    "etherscan-api-e": "github:luckyCoco3418/etherscan-api",
+    "cypress-localstorage-commands": "^1.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -108,7 +111,7 @@
     "serve": "serve -s ./build",
     "lint": "eslint --fix ./src/**/*.ts",
     "synpress": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' synpress run --configFile tests/synpress.json",
-    "synpress:ct": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' start-server-and-test 'yarn start' http-get://localhost:3000 'yarn synpress run'"
+    "synpress:ct": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' start-server-and-test 'yarn start' http-get://localhost:3000 'yarn synpress run --configFile tests/synpress.json'"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -133,11 +136,8 @@
     "@web3-react/walletlink-connector": "^6.2.8",
     "aos": "^2.3.4",
     "arb-ts": "^1.0.2",
-    "cypress-localstorage-commands": "^1.7.0",
     "dotenv": "^16.0.0",
-    "etherscan-api-e": "github:luckyCoco3418/etherscan-api",
     "jquery": "^3.6.0",
-    "mochawesome": "^7.1.2",
     "multiformats": "^9.4.10",
     "query-string": "^6.13.8",
     "rc-texty": "^0.2.0",
