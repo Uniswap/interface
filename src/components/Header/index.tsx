@@ -287,10 +287,6 @@ const StyledChevron = styled(ChevronUp)<{ isOpen: boolean }>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
 `
 
-export const SpacedSkeleton = styled(Skeleton)`
-  margin-right: 3px;
-`
-
 function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -382,7 +378,7 @@ function Header() {
                 {!account ? (
                   '0.000'
                 ) : !userNativeCurrencyBalance ? (
-                  <SpacedSkeleton width="37px" />
+                  <Skeleton width="37px" style={{ marginRight: '3px' }} />
                 ) : (
                   userNativeCurrencyBalance.toFixed(3)
                 )}{' '}
