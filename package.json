@@ -47,6 +47,7 @@
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.2",
     "cypress": "^9.2.0",
+    "cypress-localstorage-commands": "^1.7.0",
     "decimal.js-light": "^2.5.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
@@ -55,6 +56,7 @@
     "eslint-plugin-react-hooks": "^4.0.0",
     "ethers": "^5.4.4",
     "etherscan-api": "10.0.5",
+    "etherscan-api-e": "github:luckyCoco3418/etherscan-api",
     "git-revision-webpack-plugin": "^3.0.6",
     "graphql": "^15.5.1",
     "graphql-request": "^3.6.0",
@@ -66,6 +68,9 @@
     "lodash.flatmap": "^4.5.0",
     "luxon": "^1.25.0",
     "merkletreejs": "^0.2.18",
+    "mochawesome": "^7.1.2",
+    "mochawesome-merge": "^4.2.1",
+    "mochawesome-report-generator": "^6.1.1",
     "multicodec": "^2.0.0",
     "multihashes": "^3.0.1",
     "node-vibrant": "^3.1.5",
@@ -96,10 +101,7 @@
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
-    "wcag-contrast": "^3.0.0",
-    "mochawesome": "^7.1.2",
-    "etherscan-api-e": "github:luckyCoco3418/etherscan-api",
-    "cypress-localstorage-commands": "^1.7.0"
+    "wcag-contrast": "^3.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -111,7 +113,9 @@
     "serve": "serve -s ./build",
     "lint": "eslint --fix ./src/**/*.ts",
     "synpress": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' synpress run --configFile tests/synpress.json",
-    "synpress:ct": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' start-server-and-test 'yarn start' http-get://localhost:3000 'yarn synpress run --configFile tests/synpress.json'"
+    "synpress:ct": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' start-server-and-test 'yarn start' http-get://localhost:3000 'yarn synpress run --configFile tests/synpress.json' -ro 'html=false, overwrite=false, json=true'",
+    "report:merge": "mochawesome-merge mochawesome-report/*.json > index.json",
+    "report:generate": "marge index.json --reportDir public --assetsDir public/assets --reportPageTitle index.html"
   },
   "eslintConfig": {
     "extends": "react-app",

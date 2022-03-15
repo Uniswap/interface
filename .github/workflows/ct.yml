@@ -34,3 +34,12 @@ jobs:
         run: yarn add -D cypress@9.2.0 && yarn cypress install && yarn cypress verify
       - name: Run integration synpress tests
         run: yarn synpress:ct
+      - name: Merge test results into one
+        run: npm run report:merge
+      - name: Generate HTML report
+        run: npm run report:generate
+      - name: Deploy report page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
