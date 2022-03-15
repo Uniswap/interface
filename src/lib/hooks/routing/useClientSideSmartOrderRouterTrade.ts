@@ -9,6 +9,7 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
+import useBlockCache, { ShouldUpdate } from '../useBlockCache'
 import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
@@ -35,6 +36,12 @@ function getConfig(chainId: ChainId | undefined) {
   }
 }
 
+/**
+ * Caches fetches to getClientSideQuote per query per block.
+ * This prevents multiple fetches for the same data in the same block.
+ */
+const quoteCache = new Map<string, ReturnType<typeof getClientSideQuote>>()
+
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
@@ -43,12 +50,6 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
-  // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
-  // This helps provide a "syncing" state the UI can reference for loading animations.
-  const inputs = useMemo(() => [tradeType, amountSpecified, otherCurrency], [tradeType, amountSpecified, otherCurrency])
-  const debouncedInputs = useDebounce(inputs, 200)
-  const isDebouncing = inputs !== debouncedInputs
-
   const chainId = amountSpecified?.currency.chainId
   const { library } = useActiveWeb3React()
 
@@ -68,6 +69,15 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     useClientSideRouter: true,
   })
   const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
+  // Cache trades in this block so they do not need to be refetched.
+  const key = useMemo(() => JSON.stringify(queryArgs), [queryArgs])
+  const [cachedResult, setCachedResult] = useBlockCache(quoteCache, key)
+
+  // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
+  // This helps provide a "syncing" state the UI can reference for loading animations.
+  const inputs = useMemo(() => [tradeType, amountSpecified, otherCurrency], [tradeType, amountSpecified, otherCurrency])
+  const debouncedInputs = useDebounce(inputs, 200)
+  const isDebouncing = inputs !== debouncedInputs && !cachedResult
 
   const [loading, setLoading] = useState(false)
   const [{ data: quoteResult, error }, setResult] = useState<{
@@ -96,17 +106,23 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       if (queryArgs && params) {
         let result
         try {
-          result = await getClientSideQuote(queryArgs, params, config)
+          if (cachedResult === ShouldUpdate) {
+            const promise = getClientSideQuote(queryArgs, params, config)
+            setCachedResult(promise)
+            result = await promise
+          } else {
+            result = await cachedResult
+          }
         } catch {
           result = { error: true }
         }
-        if (!stale) {
+        if (!stale && result) {
           setResult(result)
           setLoading(false)
         }
       }
     }
-  }, [queryArgs, params, config, isDebouncing, wrapType])
+  }, [queryArgs, params, config, isDebouncing, wrapType, cachedResult, setCachedResult])
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
