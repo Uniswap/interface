@@ -93,6 +93,7 @@ export const useDoTransaction = (): DoTransactionFn => {
       try {
         const response: ContractTransaction = await contract[methodName](...args.args, {
           gasLimit: calculateGasMargin(gasEstimate),
+          chainId,
           ...args.overrides,
         })
         addTransaction(response, {
