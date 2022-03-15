@@ -154,7 +154,8 @@ export function AccountStatus({
     setNetworkSwitchingActive(
       connector instanceof CustomNetworkConnector ||
         connector instanceof InjectedConnector ||
-        connector instanceof CustomWalletLinkConnector
+        connector instanceof CustomWalletLinkConnector ||
+        connector instanceof AbstractConnector
     )
   }, [connector])
 

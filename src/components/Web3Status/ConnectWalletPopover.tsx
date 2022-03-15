@@ -11,6 +11,7 @@ import Popover from '../Popover'
 import { useCloseModals, useModalOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/actions'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+import { StyledConnectedIcon } from '../../utils'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -20,12 +21,31 @@ const List = styled.ul`
   padding: 0;
   margin: 0;
   list-style: none;
+  margin-top: 12px;
 `
 
 const ListItem = styled.li`
   & + & {
-    margin-top: 24px;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
+`
+
+export const DisconnectButton = styled.button`
+  width: 100%;
+  padding: 20px 18px;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text1};
+  background: ${({ theme }) => theme.dark2};;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 0px 0px 8px 8px;
 `
 
 const ListButton = styled.button`
@@ -40,10 +60,11 @@ const ListButton = styled.button`
   text-transform: uppercase;
   white-space: nowrap;
   color: ${({ theme }) => theme.text2};
-  border: 0;
   background: none;
+  border: 0;
   outline: none;
   cursor: pointer;
+  padding: 0 22px;
 
   &:disabled {
     cursor: not-allowed;
@@ -52,28 +73,28 @@ const ListButton = styled.button`
   }
 `
 
-const ListIconWrapper = styled.div`
+const ListIconWrapper = styled.div<{ isActive?: boolean }>`
   display: inline-flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   width: 20px;
   height: 20px;
-  margin-right: 8px;
+  margin-right: ${ props => (props.isActive ? "34px" : "8px")};
 
   img {
     max-width: 100%;
   }
 `
 
-const StyledPopover = styled(Popover)`
+const StyledPopover = styled(Popover)<{ isActive?: boolean }>`
   max-width: 290px;
-  padding: 22px;
   background-color: ${({ theme }) => theme.bg1};
   border-color: ${({ theme }) => theme.dark2};
   border-style: solid;
   border-width: 1.2px;
   border-radius: 12px;
   border-image: none;
+  padding: ${ props => (props.isActive ? "8px 0 0 0" : "8px")};
 `
 
 interface ConnectWalletProps {
@@ -83,7 +104,7 @@ interface ConnectWalletProps {
 }
 
 export const ConnectWalletPopover = ({ setModal, tryActivation, children }: ConnectWalletProps) => {
-  const { connector } = useWeb3React()
+  const { connector, active, deactivate } = useWeb3React()
   const popoverRef = useRef<HTMLDivElement | null>(null)
   const walletSwitcherPopoverOpen = useModalOpen(ApplicationModal.WALLET_SWITCHER)
   const closeModals = useCloseModals()
@@ -108,7 +129,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
                 option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
               icon={require('../../assets/images/' + option.iconName)}
-              active={option.connector && option.connector === connector}
+              isActive={option.connector && option.connector === connector}
             />
           )
         }
@@ -159,7 +180,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
             }}
             name={option.name}
             icon={require('../../assets/images/' + option.iconName)}
-            active={option.connector && option.connector === connector}
+            isActive={option.connector && option.connector === connector}
           />
         )
       )
@@ -170,8 +191,14 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
     <Wrapper>
       <StyledPopover
         innerRef={popoverRef}
-        content={<List>{getOptions()}</List>}
+        content={
+          <List>
+            {getOptions()}
+            { active && <DisconnectButton onClick={deactivate}>Disconnect Wallet</DisconnectButton> }
+          </List>
+        }
         show={walletSwitcherPopoverOpen}
+        isActive={active}
         placement="bottom-end"
       >
         {children}
@@ -186,13 +213,14 @@ interface ItemProps {
   name: string
   link?: string
   onClick?: () => void
-  active?: boolean
+  isActive?: boolean
 }
 
-export const Item = ({ id, onClick, name, icon, link, active }: ItemProps) => {
+export const Item = ({ id, onClick, name, icon, link, isActive }: ItemProps) => {
   const getContent = () => (
     <>
-      <ListIconWrapper>
+      <ListIconWrapper isActive={isActive}>
+        { isActive && <StyledConnectedIcon width="50px" padding="0 0 0 12px" /> }
         <img src={icon} alt={name + ' logo'} />
       </ListIconWrapper>
       {name}
@@ -206,7 +234,7 @@ export const Item = ({ id, onClick, name, icon, link, active }: ItemProps) => {
           {getContent()}
         </ListButton>
       ) : (
-        <ListButton disabled={active} onClick={onClick}>
+        <ListButton onClick={onClick}>
           {getContent()}
         </ListButton>
       )}
