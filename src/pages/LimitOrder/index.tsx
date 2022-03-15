@@ -408,8 +408,7 @@ export default function LimitOrder() {
                   disabled={
                     (limitOrderApproval !== ApprovalState.NOT_APPROVED &&
                       orderBookApproval !== ApprovalState.NOT_APPROVED) ||
-                    approvalSubmitted ||
-                    walletType != WalletTypes.MetaMask
+                    approvalSubmitted
                   }
                   width="48%"
                   altDisabledStyle={
@@ -444,8 +443,7 @@ export default function LimitOrder() {
                   disabled={
                     !isValid ||
                     limitOrderApproval !== ApprovalState.APPROVED ||
-                    orderBookApproval !== ApprovalState.APPROVED ||
-                    walletType != WalletTypes.MetaMask
+                    orderBookApproval !== ApprovalState.APPROVED
                   }
                   altDisabledStyle={queueOrderLoading} // show solid button while waiting
                   paddingY="14px"
