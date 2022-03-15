@@ -49,14 +49,12 @@ export class TransactionHelper {
     transactionValue: number,
     tokenAddress: AddressesEnum
   ) {
-    cy.window().then(() =>
-      TransactionHelper.waitUntilTxIsFinished().then(() => {
-        TransactionHelper.checkTokenBalance(tokenAddress).then(transaction => {
-          TransactionHelper.waitUntilBalanceUpdated(balanceBeforeTransaction, parseInt(transaction.result)).then(() => {
-            expect(parseInt(transaction.result)).to.be.eq(balanceBeforeTransaction + transactionValue)
-          })
+    TransactionHelper.waitUntilTxIsFinished().then(() => {
+      TransactionHelper.checkTokenBalance(tokenAddress).then(transaction => {
+        TransactionHelper.waitUntilBalanceUpdated(balanceBeforeTransaction, parseInt(transaction.result)).then(() => {
+          expect(parseInt(transaction.result)).to.be.eq(balanceBeforeTransaction + transactionValue)
         })
       })
-    )
+    })
   }
 }

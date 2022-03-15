@@ -45,7 +45,6 @@ describe('SWAP - Wrapp functionality', () => {
 
     //TODO Not sure why, but cypress do not wait until tx check above is executed
     MenuPage.checkToastMessage('Wrap')
-    cy.wait(2000)
   })
 
   it('Should unwrap eth to weth', () => {
@@ -57,14 +56,16 @@ describe('SWAP - Wrapp functionality', () => {
       .wrap()
     cy.confirmMetamaskTransaction({ gasFee: 5 })
 
-    TransactionHelper.checkIfTransactionIsValid(
-      parseInt(balanceBefore.result),
-      -(TRANSACTION_VALUE * Math.pow(10, 18)),
-      AddressesEnum.WETH_TOKEN
+    cy.window().then(
+      async () =>
+        await TransactionHelper.checkIfTransactionIsValid(
+          parseInt(balanceBefore.result),
+          -(TRANSACTION_VALUE * Math.pow(10, 18)),
+          AddressesEnum.WETH_TOKEN
+        )
     )
 
     //TODO Not sure why, but cypress do not wait until tx check above is executed
     MenuPage.checkToastMessage('Unwrap')
-    cy.wait(3000)
   })
 })
