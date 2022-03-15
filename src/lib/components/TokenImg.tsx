@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useToken } from 'lib/hooks/useCurrency'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { MissingToken } from 'lib/icons'
 import styled from 'lib/theme'
@@ -13,7 +14,10 @@ interface BaseProps {
 type TokenImgProps = BaseProps & Omit<React.ImgHTMLAttributes<HTMLImageElement>, keyof BaseProps>
 
 function TokenImg({ token, ...rest }: TokenImgProps) {
-  const srcs = useCurrencyLogoURIs(token)
+  // Use the wrapped token info so that it includes the logoURI.
+  const tokenInfo = useToken(token.isToken ? token.wrapped.address : undefined) ?? token
+
+  const srcs = useCurrencyLogoURIs(tokenInfo)
   const [src, setSrc] = useState<string | undefined>()
   useEffect(() => {
     setSrc(srcs.find((src) => !badSrcs.has(src)))
@@ -24,7 +28,7 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
   }, [src, srcs])
 
   if (src) {
-    return <img src={src} alt={token.name || token.symbol} onError={onError} {...rest} />
+    return <img src={src} alt={tokenInfo.name || tokenInfo.symbol} onError={onError} {...rest} />
   }
   return <MissingToken color="secondary" {...rest} />
 }
