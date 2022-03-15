@@ -1108,6 +1108,13 @@
       "name": "Ukraine DAO",
       "symbol": "Ukraine",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0x8290D7a64F25e6b5002d98367E8367c1b532b534",
+      "name": "oneUNI",
+      "symbol": "oneUNI",
+      "decimals": 18
     }
   ]
 }
