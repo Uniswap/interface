@@ -14,10 +14,19 @@ import { useCancelOrderCallback } from '../../pages/LimitOrder/useCancelOrderCal
 import { ExternalLink, LinkIcon, TYPE } from '../../theme'
 import { RowFlat } from '../Row'
 
-const Container = styled.div`
+const Container = styled.div<{
+  lastDisplayItem?: boolean
+}>`
   background-color: ${({ theme }) => theme.bg1};
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
   padding-left: 0.5rem;
+  border-bottom: 2px solid ${({ theme }) => theme.primary5};
+  ${({ lastDisplayItem }) =>
+    lastDisplayItem &&
+    `
+border-bottom-style: none;
+`}
 `
 
 const SymbolContainer = styled.div`
@@ -100,9 +109,10 @@ interface LimitOrderHistoryItemProps {
     transactionHash: string
   }
   rewardCurrency: Token | undefined
+  lastDisplayItem: boolean
 }
 
-export default function LimitOrderHistoryItem({ item, rewardCurrency }: LimitOrderHistoryItemProps) {
+export default function LimitOrderHistoryItem({ item, rewardCurrency, lastDisplayItem }: LimitOrderHistoryItemProps) {
   const { network } = useContractKit()
   const chainId = network.chainId as unknown as UbeswapChainId
   const { callback: cancelOrder } = useCancelOrderCallback(item.orderHash)
@@ -136,7 +146,7 @@ export default function LimitOrderHistoryItem({ item, rewardCurrency }: LimitOrd
   const remaining = new TokenAmount(makerToken, item.remaining.toString())
 
   return (
-    <Container>
+    <Container lastDisplayItem={lastDisplayItem}>
       <BaselineRow>
         <SymbolContainer>
           <AssetRow>

@@ -1,6 +1,7 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { useContractKit, WalletTypes } from '@celo-tools/use-contractkit'
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { ChainId as UbeswapChainId, cUSD, JSBI, TokenAmount, Trade } from '@ubeswap/sdk'
+import { CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import { useQueueLimitOrderTrade } from 'components/swap/routing/limit/queueLimitOrderTrade'
 import { useTradeCallback } from 'components/swap/routing/useTradeCallback'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
@@ -10,13 +11,18 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
-import { useDerivedLimitOrderInfo, useLimitOrderActionHandlers, useLimitOrderState } from 'state/limit/hooks'
+import {
+  useDerivedLimitOrderInfo,
+  useLimitOrderActionHandlers,
+  useLimitOrderState,
+  useMarketPriceDiff,
+} from 'state/limit/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { ThemeContext } from 'styled-components'
 
 import { ButtonConfirmed, ButtonLight, ButtonPrimary, TabButton } from '../../components/Button'
 import Card from '../../components/Card'
-import Column, { AutoColumn } from '../../components/Column'
+import Column, { AutoColumn, TopSectionLimitOrder } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -38,7 +44,7 @@ import { LimitOrderHistory } from './LimitOrderHistory'
 export const BPS_DENOMINATOR = JSBI.BigInt(1_000_000)
 
 export default function LimitOrder() {
-  const { address: account, network } = useContractKit()
+  const { address: account, network, walletType } = useContractKit()
   const chainId = network.chainId as unknown as UbeswapChainId
   const { queueLimitOrderCallback, loading: queueOrderLoading } = useQueueLimitOrderTrade()
 
@@ -132,6 +138,9 @@ export default function LimitOrder() {
           JSBI.divide(JSBI.multiply(parsedInputTotal.raw, JSBI.BigInt(orderBookFee.toString())), BPS_DENOMINATOR)
         )
       : undefined
+
+  const { aboveMarketPrice, marketPriceDiffIndicator } = useMarketPriceDiff()
+
   const reward =
     parsedInputTotal && rewardCurrency && rewardRate
       ? new TokenAmount(
@@ -158,6 +167,10 @@ export default function LimitOrder() {
       setApprovalSubmitted(true)
     }
   }, [limitOrderApproval, orderBookApproval, approvalSubmitted])
+
+  const getColor = () => {
+    return buying ? (aboveMarketPrice ? theme.green1 : theme.red1) : aboveMarketPrice ? theme.red1 : theme.green1
+  }
 
   // the callback to execute the swap
   const { callback: swapCallback } = useTradeCallback(tradeToConfirm, allowedSlippage, recipient)
@@ -240,6 +253,24 @@ export default function LimitOrder() {
 
   return (
     <>
+      {walletType != WalletTypes.MetaMask && walletType != WalletTypes.Unauthenticated && (
+        <TopSectionLimitOrder gap="md">
+          <DataCard>
+            <CardNoise />
+            <CardSection>
+              <AutoColumn gap="md">
+                <RowBetween>
+                  <TYPE.white fontWeight={600}>Notice</TYPE.white>
+                </RowBetween>
+                <RowBetween>
+                  <TYPE.white fontSize={14}>Must be connected to a Metamask wallet to place Limit Orders</TYPE.white>
+                </RowBetween>{' '}
+              </AutoColumn>
+            </CardSection>
+            <CardNoise />
+          </DataCard>
+        </TopSectionLimitOrder>
+      )}
       <AppBody>
         <SwapHeader title={t('limitOrder')} hideSettings={true} />
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -294,6 +325,18 @@ export default function LimitOrder() {
             <Card padding={'0px'} borderRadius={'20px'}>
               <AutoColumn gap="8px" style={{ padding: '0 16px' }}>
                 <>
+                  <RowBetween align="center" style={{ marginBottom: '0.5rem' }}>
+                    {marketPriceDiffIndicator && (
+                      <div style={{ display: 'flex' }}>
+                        <Text fontWeight={500} fontSize={14} color={getColor()}>
+                          {marketPriceDiffIndicator.toSignificant(4)}% {aboveMarketPrice ? 'below' : 'above'} &nbsp;
+                        </Text>
+                        <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                          market price
+                        </Text>
+                      </div>
+                    )}
+                  </RowBetween>
                   <RowBetween align="center">
                     <Text fontWeight={500} fontSize={14} color={theme.text2}>
                       Market Price
@@ -365,7 +408,8 @@ export default function LimitOrder() {
                   disabled={
                     (limitOrderApproval !== ApprovalState.NOT_APPROVED &&
                       orderBookApproval !== ApprovalState.NOT_APPROVED) ||
-                    approvalSubmitted
+                    approvalSubmitted ||
+                    walletType != WalletTypes.MetaMask
                   }
                   width="48%"
                   altDisabledStyle={
@@ -400,7 +444,8 @@ export default function LimitOrder() {
                   disabled={
                     !isValid ||
                     limitOrderApproval !== ApprovalState.APPROVED ||
-                    orderBookApproval !== ApprovalState.APPROVED
+                    orderBookApproval !== ApprovalState.APPROVED ||
+                    walletType != WalletTypes.MetaMask
                   }
                   altDisabledStyle={queueOrderLoading} // show solid button while waiting
                   paddingY="14px"

@@ -1,6 +1,6 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { parseUnits } from '@ethersproject/units'
-import { CELO, cEUR, ChainId as UbeswapChainId, cUSD, Token, TokenAmount } from '@ubeswap/sdk'
+import { CELO, cEUR, ChainId as UbeswapChainId, cUSD, Fraction, Token, TokenAmount } from '@ubeswap/sdk'
 import { useUbeswapTradeExactIn, useUbeswapTradeExactOut } from 'components/swap/routing/hooks/useTrade'
 import { UbeswapTrade } from 'components/swap/routing/trade'
 import { useCallback } from 'react'
@@ -155,6 +155,38 @@ export function useDerivedLimitOrderInfo(): {
     showRamp,
     inputError,
     buying,
+  }
+}
+
+export function useMarketPriceDiff(): {
+  marketPriceDiffIndicator: Fraction | undefined
+  aboveMarketPrice: boolean | undefined
+} {
+  const {
+    priceTypedValue,
+    [Field.PRICE]: { currencyId: priceCurrencyId },
+  } = useLimitOrderState()
+  const { v2Trade: trade, buying } = useDerivedLimitOrderInfo()
+
+  const priceCurrency = useCurrency(priceCurrencyId)
+  const parsedPrice = tryParseAmount(priceTypedValue, priceCurrency ?? undefined)
+  const marketDiffFraction =
+    trade && parsedPrice
+      ? new Fraction(
+          parsedPrice?.numerator,
+          buying ? trade.executionPrice.invert().numerator : trade.executionPrice.invert().denominator
+        )
+      : undefined
+  const aboveMarketPrice = marketDiffFraction && marketDiffFraction.lessThan('1')
+  const marketPriceDiffIndicator = marketDiffFraction
+    ? aboveMarketPrice
+      ? new Fraction('1', '1').subtract(marketDiffFraction).multiply(new Fraction('1000', '10'))
+      : marketDiffFraction.subtract(new Fraction('1', '1')).multiply(new Fraction('1000', '10'))
+    : undefined
+
+  return {
+    marketPriceDiffIndicator,
+    aboveMarketPrice,
   }
 }
 

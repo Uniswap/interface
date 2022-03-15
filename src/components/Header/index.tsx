@@ -383,9 +383,9 @@ export default function Header() {
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>
-          <StyledNavLink id={`swap-nav-link`} to={'/limit-order'}>
+          <StyledNavLinkExtraSmall id={`swap-nav-link`} to={'/limit-order'}>
             {t('limitOrder')}
-          </StyledNavLink>
+          </StyledNavLinkExtraSmall>
           <StyledNavLink
             id={`pool-nav-link`}
             to={'/pool'}
@@ -420,6 +420,16 @@ export default function Header() {
           >
             <StyledMenu>
               <StyledMenuItem>
+                <StyledNavLink id={'stake-drawer-nav-link'} to={'/stake'} onClick={onDrawerClose}>
+                  {t('stake')}
+                </StyledNavLink>
+              </StyledMenuItem>
+              <StyledMenuItem>
+                <StyledNavLink id={'limit-orders-drawer-nav-link'} to={'/limit-order'} onClick={onDrawerClose}>
+                  Limit Orders
+                </StyledNavLink>
+              </StyledMenuItem>
+              <StyledMenuItem>
                 <StyledNavLink id={'stake-drawer-nav-link'} to={'#'}>
                   Bridge
                 </StyledNavLink>
@@ -444,11 +454,6 @@ export default function Header() {
                   Orbit
                 </StyledDrawerExternalLink>
               </StyledSubMenuItem>
-              <StyledMenuItem>
-                <StyledNavLink id={'stake-drawer-nav-link'} to={'/stake'} onClick={onDrawerClose}>
-                  {t('stake')}
-                </StyledNavLink>
-              </StyledMenuItem>
               <StyledMenuItem>
                 <StyledNavLink id={'charts-drawer-nav-link'} to={'#'}>
                   Charts

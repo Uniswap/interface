@@ -45,12 +45,13 @@ export const LimitOrderHistory: React.FC = () => {
             return !limitOrderHist.isOrderOpen
           })
           .reverse()
-          .map((limitOrderHist) => {
+          .map((limitOrderHist, idx, arr) => {
             return (
               <LimitOrderHistoryItem
                 key={limitOrderHist.orderHash}
                 item={limitOrderHist}
                 rewardCurrency={rewardCurrency || undefined}
+                lastDisplayItem={idx === arr.length - 1}
               />
             )
           })}
