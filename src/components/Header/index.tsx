@@ -209,8 +209,6 @@ const GasInfo = styled.div`
   border: 1.06481px solid rgba(242, 153, 74, 0.65);
   background: rgba(242, 153, 74, 0.08);
   border-radius: 8px;
-  font-size: 10px;
-  font-weight: 600;
 
   div {
     color: ${({ theme }) => theme.orange1};
@@ -364,7 +362,7 @@ function Header() {
           <Settings />
         </HeaderSubRow>
 
-        <Flex justifyContent={'end'}>
+        <Flex maxHeight={'22px'} justifyContent={'end'}>
           <SwprInfo
             hasActiveCampaigns={!loading && !!data}
             newSwprBalance={newSwprBalance}
