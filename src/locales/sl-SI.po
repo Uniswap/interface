@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-14 20:11\n"
+"PO-Revision-Date: 2022-03-15 09:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -817,7 +817,7 @@ msgstr "Razširjeni rezultati z onemogočenih seznamov žetonov"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
-msgstr "Pričakovani rezultat"
+msgstr "Pričakovani izhodni znesek"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
@@ -1317,19 +1317,19 @@ msgstr "Izhodni znesek je ocenjen. Če se cena spremeni za več kot {0} %, bo tr
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "Rezultat je ocenjen. Prejeli boste vsaj <0>{0} {1}</0> ali pa bo transakcija stornirana."
+msgstr "Izhodni znesek je ocenjen. Prejeli boste vsaj <0>{0} {1}</0> ali pa bo transakcija stornirana."
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated. You will receive at least {0} {1} or the transaction will revert."
-msgstr "Izhod je ocenjen. Prejeli boste vsaj {0} {1} ali pa se bo transakcija povrnila."
+msgstr "Izhodni znesek je ocenjen. Prejeli boste vsaj {0} {1} ali pa bo transakcija stornirana."
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Output is estimated. You will send at most {0} {1} or the transaction will revert."
-msgstr "Izhod je ocenjen. Poslali boste največ {0} {1} ali pa se bo transakcija povrnila."
+msgstr "Izhodni znesek je ocenjen. Poslali boste največ {0} {1} ali pa bo transakcija stornirana."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "Izhod bo poslan na <0>{0}</0>"
+msgstr "Izhodni znesek bo poslan na <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
