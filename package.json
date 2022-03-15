@@ -113,7 +113,7 @@
     "serve": "serve -s ./build",
     "lint": "eslint --fix ./src/**/*.ts",
     "synpress": "NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' synpress run --configFile tests/synpress.json -r mochawesome",
-    "synpress:ct": "MOCHAWESOME_HTML='false' MOCHAWESOME_OVERWRITE='FALSE' NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' start-server-and-test 'yarn start' http-get://localhost:3000 'synpress run --configFile tests/synpress.json'",
+    "synpress:ct": "MOCHAWESOME_HTML='false' MOCHAWESOME_OVERWRITE='FALSE' NETWORK_NAME='rinkeby' CYPRESS_SKIP_RESOURCES_WAIT='true' FAIL_ON_ERROR='1' PRIVATE_KEY='367f6baeb27b33408c85040e13d1ba3e2a173a9112eb3b103f79df0729ddda72' ETHERSCAN_KEY='25VF97IQZ8EFIYSYFI72UCTJJII3HSZU7Z' start-server-and-test 'yarn start' http-get://localhost:3000 'synpress run --configFile tests/synpress.json -r mochawesome'",
     "report:merge": "mochawesome-merge mochawesome-report/*.json > index.json",
     "report:generate": "marge index.json --reportDir public --assetsDir public/assets --reportPageTitle index.html"
   },
