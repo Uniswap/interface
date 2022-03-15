@@ -97,5 +97,9 @@
   "liquidityMining.create.subtitle": "Follow these simple steps to preview and create a liquidity mining pool on swapr",
   "bridge": "Bridge",
   "vote": "Vote",
-  "charts": "Charts"
+  "charts": "Charts",
+  "insufficientETHBalance": "Insufficient ETH balance",
+  "insufficientWETHBalance": "Insufficient WETH balance",
+  "enterETHAmount": "Enter ETH amount",
+  "enterWETHAmount": "Enter WETH amount"
 }
