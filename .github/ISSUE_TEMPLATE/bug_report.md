@@ -10,7 +10,6 @@ assignees: ''
 **Description**
 A clear and concise description of what the bug is.
 
-
 #### Definition of done
 - [ ] Description is created (Task creator)
 - [ ] Code is complete (Developer)
