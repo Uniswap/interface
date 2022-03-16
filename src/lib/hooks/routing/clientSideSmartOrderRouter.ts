@@ -100,10 +100,7 @@ export async function getClientSideQuote(
   )
 }
 
-export function useFreshQuote<T>(
-  quoteResult: GetQuoteResult | undefined,
-  maxBlockAge = 10
-): GetQuoteResult | undefined {
+export function useFreshQuote(quoteResult: GetQuoteResult | undefined, maxBlockAge = 10): GetQuoteResult | undefined {
   const block = useBlockNumber()
   if (!block || !quoteResult) return undefined
   if (block - (Number(quoteResult.blockNumber) || 0) > maxBlockAge) return undefined
