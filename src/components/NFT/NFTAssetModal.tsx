@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Linking, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { useAccountDisplayName } from 'src/components/accounts/useAccountDisplayName'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { RemoteImage } from 'src/components/images/RemoteImage'
@@ -15,8 +15,9 @@ import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { flex } from 'src/styles/flex'
-import { borderRadii, dimensions } from 'src/styles/sizing'
-import { logger } from 'src/utils/logger'
+import { dimensions } from 'src/styles/sizing'
+import { theme } from 'src/styles/theme'
+import { openUri } from 'src/utils/linking'
 
 interface Props {
   nftAsset?: OpenseaNFTAsset
@@ -41,22 +42,12 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
     description: collectionDescription,
   } = collection
 
-  const openOnOpensea = () => {
-    Linking.canOpenURL(permalink).then((supported) => {
-      if (supported) {
-        Linking.openURL(permalink)
-      } else {
-        logger.debug('NFTAssetModal', 'openOnOpensea', 'Cannot open Opensea link')
-      }
-    })
-  }
-
   return (
     <BottomSheetScrollModal isVisible={isVisible} name={ModalName.NFTAsset} onClose={onClose}>
       <Flex mb="xl" mx="lg">
         <Flex alignItems="center" flexDirection="row" gap="sm" mt="md">
           <RemoteImage
-            borderRadius={COLLECTION_IMAGE_WIDTH / 2}
+            borderRadius={theme.borderRadii.full}
             height={COLLECTION_IMAGE_WIDTH}
             imageUrl={collectionImageUrl}
             width={COLLECTION_IMAGE_WIDTH}
@@ -67,7 +58,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
         </Flex>
         <Box>
           <RemoteImage
-            borderRadius={borderRadii.lg}
+            borderRadius={theme.borderRadii.lg}
             height={ITEM_WIDTH}
             imageUrl={imageUrl}
             width={ITEM_WIDTH}
@@ -82,11 +73,11 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
           </Flex>
         </Box>
         <PrimaryButton
-          label={t('View on Opensea')}
-          name={ElementName.ViewOnOpensea}
-          testID={ElementName.ViewOnOpensea}
+          label={t('View on OpenSea')}
+          name={ElementName.NFTAssetViewOnOpensea}
+          testID={ElementName.NFTAssetViewOnOpensea}
           variant="gray"
-          onPress={openOnOpensea}
+          onPress={() => openUri(permalink)}
         />
         <Flex gap="sm">
           <Flex gap="xs">

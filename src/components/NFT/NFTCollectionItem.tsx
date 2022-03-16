@@ -8,6 +8,7 @@ import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
 import { OpenseaNFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
+import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 
 interface Props {
@@ -18,14 +19,21 @@ interface Props {
 
 export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: Props) {
   const renderItem = ({ item }: ListRenderItemInfo<OpenseaNFTAsset>) => (
-    <NFTAssetItem nft={item} onPress={() => onPressNFT(item)} />
+    <NFTAssetItem
+      mx="sm"
+      nft={item}
+      size={dimensions.fullWidth / 3}
+      onPress={(nftAsset) => onPressNFT(nftAsset)}
+    />
   )
 
   return (
     <Button name={ElementName.NFTCollectionItem} onPress={() => onPressCollection(nftAssets)}>
       <Box
         bg="tabBackground"
-        borderRadius="sm"
+        borderColor="gray100"
+        borderRadius="md"
+        borderWidth={1}
         flexDirection="column"
         justifyContent="space-between"
         mx="md"

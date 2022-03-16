@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo } from 'react'
 import { ListRenderItemInfo, SectionList } from 'react-native'
+import { Inset } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -109,6 +110,11 @@ export function TokenBalanceList({
   return (
     <Trace logImpression section={SectionName.TokenBalance}>
       <SectionList
+        ListFooterComponent={
+          <Inset all="xxl">
+            <Inset all="md" />
+          </Inset>
+        }
         keyExtractor={key}
         refreshing={refreshing}
         renderItem={renderItem}

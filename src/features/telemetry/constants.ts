@@ -20,6 +20,7 @@ export const enum SectionName {
   NameAccountForm = 'name-account-form',
   QuickDetails = 'quick-details',
   TokenBalance = 'token-balance',
+  NFTCollectionHeader = 'nft-collection-header',
 }
 
 /** Known modals for telemetry purposes. */
@@ -70,7 +71,11 @@ export const enum ElementName {
   Wrap = 'wrap',
   NFTAssetItem = 'nft-asset-item',
   NFTCollectionItem = 'nft-collection-item',
-  ViewOnOpensea = 'view-on-opensea',
+  NFTAssetViewOnOpensea = 'nft-asset-view-on-opensea',
+  NFTCollectionViewOnOpensea = 'nft-collection-view-on-opensea',
+  NFTCollectionDiscord = 'nft-collection-discord',
+  NFTCollectionTwitter = 'nft-collection-twitter',
+  NFTCollectionWebsite = 'nft-collection-website',
 }
 
 /**

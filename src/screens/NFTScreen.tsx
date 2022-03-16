@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, ListRenderItemInfo } from 'react-native'
 import { TabScreenProp } from 'src/app/navigation/types'
+import { Inset } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Screen } from 'src/components/layout/Screen'
@@ -12,7 +13,6 @@ import { OpenseaNFTAsset } from 'src/features/nfts/types'
 import { useAllNFTs } from 'src/features/nfts/useNfts'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens, Tabs } from 'src/screens/Screens'
-import { bottomTabBarPadding } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 
 export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
@@ -31,7 +31,9 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
 
   const renderItem = ({ item }: ListRenderItemInfo<OpenseaNFTAsset[]>) => {
     const onPressCollection = (nftAssets: OpenseaNFTAsset[]) => {
-      navigation.navigate(Screens.NFTCollection, { nftAssets: nftAssets })
+      if (nftAssets.length > 0) {
+        navigation.navigate(Screens.NFTCollection, { nftAssets: nftAssets })
+      }
     }
 
     return (
@@ -46,7 +48,7 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
   return (
     <Screen edges={['top', 'left', 'right']}>
       <Box mb="sm" mt="lg" mx="lg">
-        <Text variant="h3">{t('Your NFTs')}</Text>
+        <Text variant="h3">{t('Collectibles')}</Text>
       </Box>
       {loading ? (
         <ActivityIndicator color={theme.colors.gray100} size={25} />
@@ -59,7 +61,11 @@ export function NFTScreen({ navigation }: TabScreenProp<Tabs.NFT>) {
               </Text>
             </CenterBox>
           }
-          contentContainerStyle={{ paddingBottom: bottomTabBarPadding }}
+          ListFooterComponent={
+            <Inset all="xxl">
+              <Inset all="md" />
+            </Inset>
+          }
           data={nftsByCollection}
           keyExtractor={key}
           renderItem={renderItem}

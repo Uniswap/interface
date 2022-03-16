@@ -1,40 +1,35 @@
+import { SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { Button } from 'src/components/buttons/Button'
 import { RemoteImage } from 'src/components/images/RemoteImage'
-import { Box } from 'src/components/layout/Box'
+import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { OpenseaNFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
-import { borderRadii, dimensions } from 'src/styles/sizing'
+import { theme, Theme } from 'src/styles/theme'
 
-interface Props {
+type Props = {
   nft: OpenseaNFTAsset
+  size: number
   onPress: (nft: OpenseaNFTAsset) => void
-}
+} & SpacingShorthandProps<Theme>
 
-const ITEM_WIDTH = dimensions.fullWidth / 4
-
-export function NFTAssetItem({ nft, onPress }: Props) {
+export function NFTAssetItem({ nft, size, onPress, ...rest }: Props) {
   const { name, image_url: imageUrl } = nft
 
   return (
     <Button name={ElementName.NFTAssetItem} onPress={() => onPress(nft)}>
-      <Box
-        alignItems="center"
-        flexDirection="column"
-        justifyContent="space-between"
-        mx="sm"
-        width={ITEM_WIDTH}>
+      <Flex flexDirection="column" gap="md" justifyContent="space-between" width={size} {...rest}>
         <RemoteImage
-          borderRadius={borderRadii.md}
-          height={ITEM_WIDTH}
+          borderRadius={theme.borderRadii.md}
+          height={size}
           imageUrl={imageUrl}
-          width={ITEM_WIDTH}
+          width={size}
         />
-        <Text fontWeight="500" mt="sm" numberOfLines={1} textAlign="center" variant="bodySm">
+        <Text color="gray600" fontWeight="500" numberOfLines={1} variant="bodySm">
           {name}
         </Text>
-      </Box>
+      </Flex>
     </Button>
   )
 }

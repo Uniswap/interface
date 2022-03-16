@@ -1,7 +1,11 @@
 import { useEffect } from 'react'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import { config } from 'src/config'
-import { OpenseaNFTAsset, OpenseaResponse } from 'src/features/nfts/types'
+import {
+  OpenseaNFTAsset,
+  OpenseaNFTAssetResponse,
+  OpenseaNFTCollectionResponse,
+} from 'src/features/nfts/types'
 import { logger } from 'src/utils/logger'
 
 const OPENSEA_BASE_URL = 'https://api.opensea.io/api/v1'
@@ -23,13 +27,10 @@ export function useAllNFTs(address?: Address) {
     }
   }
 
-  const { data, hasNextPage, fetchNextPage, status, error } = useInfiniteQuery<OpenseaResponse>(
-    `nfts-${address}`,
-    fetchPage,
-    {
-      getNextPageParam: (lastPage: OpenseaResponse) => lastPage.next ?? false,
-    }
-  )
+  const { data, hasNextPage, fetchNextPage, status, error } =
+    useInfiniteQuery<OpenseaNFTAssetResponse>(`nfts-${address}`, fetchPage, {
+      getNextPageParam: (lastPage: OpenseaNFTAssetResponse) => lastPage.next ?? false,
+    })
 
   const numPages = data?.pages.length ?? 0
 
@@ -55,4 +56,25 @@ export function useAllNFTs(address?: Address) {
   )
 
   return { nftsByCollection, loading: hasNextPage, error, status }
+}
+
+export function useNFTCollection(slug: string) {
+  async function fetchPage() {
+    const collectionUrl = `${OPENSEA_BASE_URL}/collection/${slug}`
+
+    try {
+      const response = await fetch(collectionUrl, OPENSEA_API_OPTIONS)
+      return await response.json()
+    } catch (e) {
+      logger.error('useNfts', 'useNFTCollection', `Error fetching ${collectionUrl}: ${e}`)
+      throw e
+    }
+  }
+
+  const { data, error, status } = useQuery<OpenseaNFTCollectionResponse>(
+    `nft-collection-${slug}`,
+    fetchPage
+  )
+
+  return { collection: data?.collection, error, status }
 }

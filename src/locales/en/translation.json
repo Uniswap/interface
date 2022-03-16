@@ -123,10 +123,19 @@
   "Send those tokens around": "Send those tokens around",
   "Uniswap Wallet": "Uniswap Wallet",
   "Create New Account": "Create New Account",
-  "Your NFTs": "Your NFTs",
+  "Collectibles": "Collectibles",
   "No NFTs found": "No NFTs found",
-  "View on Opensea": "View on Opensea",
+  "View Collection": "View Collection",
+  "View on OpenSea": "View on OpenSea",
   "Owned By": "Owned By",
   "Collection": "Collection",
-  "About this collection": "About this collection"
+  "About this collection": "About this collection",
+  "Your {{collection}}": "Your {{collection}}",
+  "Items": "Items",
+  "Owners": "Owners",
+  "Floor": "Floor",
+  "{{price}} ETH": "{{price}} ETH",
+  "Twitter ↗": "Twitter ↗",
+  "Discord ↗": "Discord ↗",
+  "Website ↗": "Website ↗"
 }

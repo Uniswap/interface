@@ -5,6 +5,8 @@
  * @param uri to convert to fetch-able http url
  */
 export function uriToHttp(uri: string): string[] {
+  if (!uri) return []
+
   const protocol = uri.split(':')[0].toLowerCase()
   switch (protocol) {
     case 'https':
