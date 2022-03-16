@@ -341,7 +341,7 @@ export default function StakeCard({
 
   return (
     <>
-      <StyledPositionCard>
+      <StyledPositionCard style={{ zIndex: 1 }}>
         <AutoColumn gap="8px">
           <Flex flexDirection="column">
             <Box mb="20px">
