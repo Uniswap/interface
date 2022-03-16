@@ -3,12 +3,14 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
 import useDebounce from 'hooks/useDebounce'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
+import useBlockNumber from '../useBlockNumber'
+import usePoll from '../usePoll'
 import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
@@ -23,16 +25,21 @@ const DistributionPercents: { [key: number]: number } = {
   [ChainId.ARBITRUM_ONE]: 25,
   [ChainId.ARBITRUM_RINKEBY]: 25,
 }
-
 const DEFAULT_DISTRIBUTION_PERCENT = 10
-
 function getConfig(chainId: ChainId | undefined) {
   return {
     // Limit to only V2 and V3.
     protocols: [Protocol.V2, Protocol.V3],
-
     distributionPercent: (chainId && DistributionPercents[chainId]) ?? DEFAULT_DISTRIBUTION_PERCENT,
   }
+}
+
+function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
+  const localBlockNumber = useBlockNumber()
+  if (!localBlockNumber || localBlockNumber - dataBlockNumber > maxBlockAge) {
+    return undefined
+  }
+  return data
 }
 
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
@@ -68,45 +75,25 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     useClientSideRouter: true,
   })
   const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
-
-  const [loading, setLoading] = useState(false)
-  const [{ data: quoteResult, error }, setResult] = useState<{
-    data?: GetQuoteResult
-    error?: unknown
-  }>({ error: undefined })
   const config = useMemo(() => getConfig(chainId), [chainId])
   const { type: wrapType } = useWrapCallback()
 
-  // When arguments update, make a new call to SOR for updated quote
-  useEffect(() => {
-    if (wrapType !== WrapType.NOT_APPLICABLE) {
-      return
+  const getQuoteResult = useCallback(async (): Promise<{ data?: GetQuoteResult; error?: unknown }> => {
+    if (wrapType !== WrapType.NOT_APPLICABLE) return { error: undefined }
+    if (!queryArgs || !params) return { error: undefined }
+    try {
+      return await getClientSideQuote(queryArgs, params, config)
+    } catch {
+      return { error: true }
     }
-    setLoading(true)
-    if (isDebouncing) return
-
-    let stale = false
-    fetchQuote()
-    return () => {
-      stale = true
-      setLoading(false)
-    }
-
-    async function fetchQuote() {
-      if (queryArgs && params) {
-        let result
-        try {
-          result = await getClientSideQuote(queryArgs, params, config)
-        } catch {
-          result = { error: true }
-        }
-        if (!stale) {
-          setResult(result)
-          setLoading(false)
-        }
-      }
-    }
-  }, [queryArgs, params, config, isDebouncing, wrapType])
+  }, [config, params, queryArgs, wrapType])
+  const { data, error } = usePoll(
+    getQuoteResult,
+    useMemo(() => JSON.stringify(queryArgs), [queryArgs])
+  ) ?? {
+    error: undefined,
+  }
+  const quoteResult = useFreshData(data, Number(data?.blockNumber) || 0)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -130,10 +117,12 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     }
 
     // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
-    if (isDebouncing) {
-      return { state: TradeState.SYNCING, trade }
-    } else if (loading) {
-      return { state: TradeState.LOADING, trade }
+    if (!quoteResult && !error) {
+      if (isDebouncing) {
+        return { state: TradeState.SYNCING, trade }
+      } else {
+        return { state: TradeState.LOADING, trade }
+      }
     }
 
     let otherAmount = undefined
@@ -156,5 +145,5 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.VALID, trade }
     }
     return { state: TradeState.INVALID, trade: undefined }
-  }, [currencyIn, currencyOut, isDebouncing, loading, quoteResult, error, route, queryArgs, trade, tradeType])
+  }, [currencyIn, currencyOut, quoteResult, error, route, queryArgs, trade, tradeType])
 }
