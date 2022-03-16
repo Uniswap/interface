@@ -18,7 +18,7 @@ import { useNFTCollection } from 'src/features/nfts/useNfts'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { Screens } from 'src/screens/Screens'
-import { bottomTabBarPadding, dimensions } from 'src/styles/sizing'
+import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 import { openUri } from 'src/utils/linking'
 
