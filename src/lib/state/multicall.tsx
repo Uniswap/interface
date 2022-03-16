@@ -1,12 +1,23 @@
+import { configureStore } from '@reduxjs/toolkit'
 import { createMulticall } from '@uniswap/redux-multicall'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useInterfaceMulticall } from 'hooks/useContract'
+import { clientSideSORApi } from 'lib/hooks/routing/slice'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
-import { combineReducers, createStore } from 'redux'
 
 const multicall = createMulticall()
-const reducer = combineReducers({ [multicall.reducerPath]: multicall.reducer })
-export const store = createStore(reducer)
+
+export const store = configureStore({
+  reducer: {
+    multicall: multicall.reducer,
+    [clientSideSORApi.reducerPath]: clientSideSORApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: true,
+      serializableCheck: false,
+    }).concat(clientSideSORApi.middleware),
+})
 
 export default multicall
 

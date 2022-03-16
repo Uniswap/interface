@@ -1,15 +1,16 @@
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
-import useDebounce from 'hooks/useDebounce'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
-import { useEffect, useMemo, useState } from 'react'
+import ms from 'ms.macro'
+import { useMemo } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
 import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
-import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
-import { getClientSideQuote } from './clientSideSmartOrderRouter'
+import useBlockNumber from '../useBlockNumber'
+import { useGetQuoteQuery } from './slice'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 /**
@@ -35,6 +36,17 @@ function getConfig(chainId: ChainId | undefined) {
   }
 }
 
+export function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
+  const localBlockNumber = useBlockNumber()
+
+  if (!localBlockNumber) return undefined
+  if (localBlockNumber - dataBlockNumber > maxBlockAge) {
+    return undefined
+  }
+
+  return data
+}
+
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
@@ -43,12 +55,6 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
-  // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
-  // This helps provide a "syncing" state the UI can reference for loading animations.
-  const inputs = useMemo(() => [tradeType, amountSpecified, otherCurrency], [tradeType, amountSpecified, otherCurrency])
-  const debouncedInputs = useDebounce(inputs, 200)
-  const isDebouncing = inputs !== debouncedInputs
-
   const chainId = amountSpecified?.currency.chainId
   const { library } = useActiveWeb3React()
 
@@ -67,52 +73,35 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     tradeType,
     useClientSideRouter: true,
   })
+
   const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
-
-  const [loading, setLoading] = useState(false)
-  const [{ data: quoteResult, error }, setResult] = useState<{
-    data?: GetQuoteResult
-    error?: unknown
-  }>({ error: undefined })
   const config = useMemo(() => getConfig(chainId), [chainId])
-  const { type: wrapType } = useWrapCallback()
 
-  // When arguments update, make a new call to SOR for updated quote
-  useEffect(() => {
-    if (wrapType !== WrapType.NOT_APPLICABLE) {
-      return
+  // Need populated params and config to pass to local api, otherwise entire argument should be undefined.
+  const formattedArgs = useMemo(() => {
+    if (!params || !config || !queryArgs) return undefined
+    return {
+      ...queryArgs,
+      params,
+      config,
     }
-    setLoading(true)
-    if (isDebouncing) return
+  }, [config, params, queryArgs])
 
-    let stale = false
-    fetchQuote()
-    return () => {
-      stale = true
-      setLoading(false)
-    }
+  const { isLoading, isError, data, currentData } = useGetQuoteQuery(formattedArgs ?? skipToken, {
+    pollingInterval: ms`15s`,
+    refetchOnFocus: true,
+  })
 
-    async function fetchQuote() {
-      if (queryArgs && params) {
-        let result
-        try {
-          result = await getClientSideQuote(queryArgs, params, config)
-        } catch {
-          result = { error: true }
-        }
-        if (!stale) {
-          setResult(result)
-          setLoading(false)
-        }
-      }
-    }
-  }, [queryArgs, params, config, isDebouncing, wrapType])
+  const isSyncing = currentData !== data
+
+  const quoteResult: GetQuoteResult | undefined = useFreshData(data, Number(data?.blockNumber) || 0)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
+
   const trade = useMemo(() => {
     if (route) {
       try {
@@ -126,35 +115,44 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
-      return { state: TradeState.INVALID, trade: undefined }
-    }
-
-    // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
-    if (isDebouncing) {
-      return { state: TradeState.SYNCING, trade }
-    } else if (loading) {
-      return { state: TradeState.LOADING, trade }
-    }
-
-    let otherAmount = undefined
-    if (quoteResult) {
-      switch (tradeType) {
-        case TradeType.EXACT_INPUT:
-          otherAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
-          break
-        case TradeType.EXACT_OUTPUT:
-          otherAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
-          break
+      return {
+        state: TradeState.INVALID,
+        trade: undefined,
       }
     }
 
-    if (error || !otherAmount || !route || route.length === 0 || !queryArgs) {
-      return { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
+    if (isLoading && !quoteResult) {
+      // only on first hook render
+      return {
+        state: TradeState.LOADING,
+        trade: undefined,
+      }
     }
 
-    if (trade) {
-      return { state: TradeState.VALID, trade }
+    const otherAmount =
+      tradeType === TradeType.EXACT_INPUT
+        ? currencyOut && quoteResult
+          ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote)
+          : undefined
+        : currencyIn && quoteResult
+        ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
+        : undefined
+
+    if (isError || !otherAmount || !route || route.length === 0 || !queryArgs) {
+      return {
+        state: TradeState.NO_ROUTE_FOUND,
+        trade: undefined,
+      }
     }
-    return { state: TradeState.INVALID, trade: undefined }
-  }, [currencyIn, currencyOut, isDebouncing, loading, quoteResult, error, route, queryArgs, trade, tradeType])
+
+    try {
+      return {
+        // always return VALID regardless of isFetching status
+        state: isSyncing ? TradeState.SYNCING : TradeState.VALID,
+        trade,
+      }
+    } catch (e) {
+      return { state: TradeState.INVALID, trade: undefined }
+    }
+  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, isSyncing, trade])
 }
