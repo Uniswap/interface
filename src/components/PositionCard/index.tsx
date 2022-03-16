@@ -230,7 +230,7 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
   const showRemoveButton = !!userPoolBalance?.greaterThan('0')
 
   return (
-    <StyledPositionCard border={border}>
+    <StyledPositionCard border={border} style={{ zIndex: 1 }}>
       <AutoColumn gap="12px">
         <AutoColumn gap="11px">
           <FixedHeightRow justifyContent="space-between">
