@@ -1125,7 +1125,7 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.BSCTESTNET]: [],
   [ChainId.BSCMAINNET]: [],
   [ChainId.AVAXTESTNET]: [],
-  [ChainId.AVAXMAINNET]: [],
+  [ChainId.AVAXMAINNET]: ['0xa107e6466Be74361840059a11e390200371a7538', '0x89929Bc485cE72D2Af7b7283B40b921e9F4f80b3'],
   [ChainId.FANTOM]: [],
   [ChainId.CRONOSTESTNET]: [],
   [ChainId.CRONOS]: [],

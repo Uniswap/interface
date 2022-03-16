@@ -13,12 +13,12 @@ import {
   DMM_ANALYTICS_URL,
   FARMING_POOLS_CHAIN_STAKING_LINK,
   MAX_ALLOW_APY,
-  OUTSIDE_FAIRLAUNCH_ADDRESSES
+  OUTSIDE_FAIRLAUNCH_ADDRESSES,
 } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Dots } from 'components/swap/styleds'
-import { ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonOutlined, ButtonPrimary, ButtonLight } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { Farm, Reward } from 'state/farms/types'
@@ -53,12 +53,13 @@ import {
   Seperator,
   StakeGroup,
   StyledItemCard,
-  TableRow
+  TableRow,
 } from './styleds'
 import CurrencyLogo from 'components/CurrencyLogo'
 import useTheme from 'hooks/useTheme'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import IconLock from 'assets/svg/icon_lock.svg'
+import { useWalletModalToggle } from 'state/application/hooks'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -77,6 +78,8 @@ interface ListItemProps {
 
 const ListItem = ({ farm }: ListItemProps) => {
   const { account, chainId } = useActiveWeb3React()
+  const toggleWalletModal = useWalletModalToggle()
+
   const [expand, setExpand] = useState<boolean>(false)
   const breakpoint = useMedia('(min-width: 992px)')
   const dispatch = useAppDispatch()
@@ -98,23 +101,23 @@ const ListItem = ({ farm }: ListItemProps) => {
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
     farm.totalStake.toString(),
-    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals)),
   ).divide(
     new Fraction(
       ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
-      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
-    )
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals)),
+    ),
   )
 
   // Ratio in % of user's LP tokens balance, vs the total number in circulation
   const lpUserLPBalanceRatio = new Fraction(
     userTokenBalance.toString(),
-    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals)),
   ).divide(
     new Fraction(
       ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
-      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
-    )
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals)),
+    ),
   )
 
   const userToken0Balance = parseFloat(lpUserLPBalanceRatio.toSignificant(6)) * parseFloat(farm.reserve0)
@@ -123,12 +126,12 @@ const ListItem = ({ farm }: ListItemProps) => {
   // Ratio in % of LP tokens that user staked, vs the total number in circulation
   const lpUserStakedTokenRatio = new Fraction(
     userStakedBalance.toString(),
-    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals)),
   ).divide(
     new Fraction(
       ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
-      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
-    )
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals)),
+    ),
   )
 
   const userStakedToken0Balance = parseFloat(lpUserStakedTokenRatio.toSignificant(6)) * parseFloat(farm.reserve0)
@@ -161,9 +164,9 @@ const ListItem = ({ farm }: ListItemProps) => {
   const [approvalState, approve] = useApproveCallback(
     new TokenAmount(
       new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
-      MaxUint256.toString()
+      MaxUint256.toString(),
     ),
-    !!chainId ? farm.fairLaunchAddress : undefined
+    !!chainId ? farm.fairLaunchAddress : undefined,
   )
 
   let isStakeInvalidAmount
@@ -357,7 +360,13 @@ const ListItem = ({ farm }: ListItemProps) => {
             )}
             <StakeGroup>
               <>
-                {approvalState === ApprovalState.UNKNOWN && <Dots></Dots>}
+                {!account ? (
+                  <ButtonLight onClick={toggleWalletModal}>
+                    <Trans>Connect Wallet</Trans>
+                  </ButtonLight>
+                ) : (
+                  approvalState === ApprovalState.UNKNOWN && <Dots></Dots>
+                )}
                 {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) && (
                   <ButtonPrimary
                     color="blue"
@@ -510,7 +519,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                   <Link
                     to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
                       farm.token1?.id,
-                      chainId
+                      chainId,
                     )}/${farm.id}`}
                     style={{ textDecoration: 'none' }}
                   >
@@ -820,7 +829,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                   <Link
                     to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
                       farm.token1?.id,
-                      chainId
+                      chainId,
                     )}/${farm.id}`}
                     style={{ textDecoration: 'none' }}
                   >

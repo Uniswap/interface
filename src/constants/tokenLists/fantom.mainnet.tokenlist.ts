@@ -790,6 +790,14 @@ export const FANTOM_MAINNET_TOKEN_LIST = {
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/13229.png',
     },
+    {
+      name: 'PILLS Token',
+      symbol: 'PILLS',
+      address: '0xB66b5D38E183De42F21e92aBcAF3c712dd5d6286',
+      chainId: 250,
+      decimals: 18,
+      logoURI: 'https://ftmscan.com/token/images/morpheusfinftm_32.png',
+    },
   ],
   version: {
     major: 0,
