@@ -17,6 +17,7 @@ import { injected, walletConnect, walletLink } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
 import SushiswapLogo from '../assets/svg/sushiswap-logo.svg'
+import SushiswapNewLogo from '../assets/svg/sushiswap-new-logo.svg'
 import HoneyswapLogo from '../assets/svg/honeyswap-logo.svg'
 import BaoswapLogo from '../assets/images/baoswap-logo.png'
 import LevinswapLogo from '../assets/images/levinswap-logo.svg'
@@ -367,25 +368,43 @@ export const NETWORK_OPTIONAL_DETAIL: { [chainId: number]: NetworkOptionalDetail
 }
 
 export const ROUTABLE_PLATFORM_STYLE: {
-  [routablePaltformName: string]: { logo: string; alt: string; gradientColor: string }
+  [routablePaltformName: string]: { logo: string; alt: string; gradientColor: string; name: string }
 } = {
-  [RoutablePlatform.UNISWAP.name]: { logo: UniswapLogo, alt: RoutablePlatform.UNISWAP.name, gradientColor: '#FB52A1' },
-  [RoutablePlatform.SUSHISWAP.name]: {
-    logo: SushiswapLogo,
-    alt: RoutablePlatform.SUSHISWAP.name,
-    gradientColor: '#FB52A1'
+  [RoutablePlatform.UNISWAP.name]: {
+    logo: UniswapLogo,
+    alt: RoutablePlatform.UNISWAP.name,
+    gradientColor: '#FB52A1',
+    name: RoutablePlatform.UNISWAP.name
   },
-  [RoutablePlatform.SWAPR.name]: { logo: SwaprLogo, alt: RoutablePlatform.SWAPR.name, gradientColor: '#FB52A1' },
+  [RoutablePlatform.SUSHISWAP.name]: {
+    logo: SushiswapNewLogo,
+    alt: RoutablePlatform.SUSHISWAP.name,
+    gradientColor: '#FB52A1',
+    name: 'Sushi'
+  },
+  [RoutablePlatform.SWAPR.name]: {
+    logo: SwaprLogo,
+    alt: RoutablePlatform.SWAPR.name,
+    gradientColor: '#FB52A1',
+    name: RoutablePlatform.SWAPR.name
+  },
   [RoutablePlatform.HONEYSWAP.name]: {
     logo: HoneyswapLogo,
     alt: RoutablePlatform.HONEYSWAP.name,
-    gradientColor: '#FB52A1'
+    gradientColor: '#FB52A1',
+    name: RoutablePlatform.HONEYSWAP.name
   },
-  [RoutablePlatform.BAOSWAP.name]: { logo: BaoswapLogo, alt: RoutablePlatform.BAOSWAP.name, gradientColor: '#FB52A1' },
+  [RoutablePlatform.BAOSWAP.name]: {
+    logo: BaoswapLogo,
+    alt: RoutablePlatform.BAOSWAP.name,
+    gradientColor: '#FB52A1',
+    name: RoutablePlatform.BAOSWAP.name
+  },
   [RoutablePlatform.LEVINSWAP.name]: {
     logo: LevinswapLogo,
     alt: RoutablePlatform.LEVINSWAP.name,
-    gradientColor: '#FB52A1'
+    gradientColor: '#FB52A1',
+    name: RoutablePlatform.LEVINSWAP.name
   }
 }
 

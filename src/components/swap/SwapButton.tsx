@@ -63,7 +63,7 @@ export const SwapButton = ({
                   src={ROUTABLE_PLATFORM_STYLE[platformName].logo}
                   alt={ROUTABLE_PLATFORM_STYLE[platformName].alt}
                 />
-                <StyledPlataformText>{platformName}</StyledPlataformText>
+                <StyledPlataformText>{ROUTABLE_PLATFORM_STYLE[platformName].name}</StyledPlataformText>
               </>
             )}
             {priceImpactSeverity > PRICE_IMPACT_MEDIUM ? ` ${t('anyway')}` : ''}
