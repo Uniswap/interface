@@ -437,6 +437,7 @@ msgid "Confirm this transaction in your wallet"
 msgstr "在您的钱包中确认此交易"
 
 #: src/components/Web3Status/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
