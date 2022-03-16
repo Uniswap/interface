@@ -43,8 +43,10 @@ export default function usePoll<T>(
     }
   }, [cache, fetch, keepUnusedDataFor, key, pollingInterval])
 
-  // Cleanup stale entries.
   useEffect(() => {
+    // Cleanup stale entries when a new key is used.
+    void key
+
     const now = Date.now()
     cache.forEach(({ ttl }, key) => {
       if (ttl + keepUnusedDataFor <= now) {

@@ -9,9 +9,8 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
-import useBlockNumber from '../useBlockNumber'
 import usePoll from '../usePoll'
-import { getClientSideQuote } from './clientSideSmartOrderRouter'
+import { getClientSideQuote, useFreshQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 /**
@@ -32,14 +31,6 @@ function getConfig(chainId: ChainId | undefined) {
     protocols: [Protocol.V2, Protocol.V3],
     distributionPercent: (chainId && DistributionPercents[chainId]) ?? DEFAULT_DISTRIBUTION_PERCENT,
   }
-}
-
-function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
-  const localBlockNumber = useBlockNumber()
-  if (!localBlockNumber || localBlockNumber - dataBlockNumber > maxBlockAge) {
-    return undefined
-  }
-  return data
 }
 
 export default function useClientSideSmartOrderRouterTrade<TTradeType extends TradeType>(
@@ -87,13 +78,10 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { error: true }
     }
   }, [config, params, queryArgs, wrapType])
-  const { data, error } = usePoll(
-    getQuoteResult,
-    useMemo(() => JSON.stringify(queryArgs), [queryArgs])
-  ) ?? {
+  const { data, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs)) ?? {
     error: undefined,
   }
-  const quoteResult = useFreshData(data, Number(data?.blockNumber) || 0)
+  const quoteResult = useFreshQuote(data)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),

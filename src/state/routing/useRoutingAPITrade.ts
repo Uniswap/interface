@@ -2,8 +2,8 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
+import { useFreshQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import ReactGA from 'react-ga'
@@ -12,17 +12,6 @@ import { useClientSideRouter } from 'state/user/hooks'
 
 import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
-
-function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
-  const localBlockNumber = useBlockNumber()
-
-  if (!localBlockNumber) return undefined
-  if (localBlockNumber - dataBlockNumber > maxBlockAge) {
-    return undefined
-  }
-
-  return data
-}
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -61,7 +50,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnFocus: true,
   })
 
-  const quoteResult: GetQuoteResult | undefined = useFreshData(data, Number(data?.blockNumber) || 0)
+  const quoteResult: GetQuoteResult | undefined = useFreshQuote(data)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
