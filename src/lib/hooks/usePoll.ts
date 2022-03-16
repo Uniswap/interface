@@ -47,7 +47,7 @@ export default function usePoll<T>(
   useEffect(() => {
     const now = Date.now()
     cache.forEach(({ ttl }, key) => {
-      if (ttl + keepUnusedDataFor > now) {
+      if (ttl + keepUnusedDataFor <= now) {
         cache.delete(key)
       }
     })
