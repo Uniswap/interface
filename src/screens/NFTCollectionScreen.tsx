@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
-import { ArrowBackButton } from 'src/components/buttons/BackButton'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Flex } from 'src/components/layout'
@@ -166,7 +166,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
     <Screen>
       <Box flex={1}>
         <CenterBox flexDirection="row" justifyContent="space-between" mx="lg" my="md">
-          <ArrowBackButton />
+          <BackButton />
           <Box alignItems="center" flexDirection="row">
             <Text variant="h4">{nftAssets[0].collection.name}</Text>
           </Box>
@@ -182,7 +182,6 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
             </Box>
           }
           columnWrapperStyle={{ marginHorizontal: theme.spacing.md }}
-          contentContainerStyle={{ paddingBottom: bottomTabBarPadding }}
           data={nftAssets}
           keyExtractor={key}
           numColumns={NUM_COLUMNS}
