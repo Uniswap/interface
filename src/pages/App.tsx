@@ -28,6 +28,7 @@ import { Sidetab, Popover } from '@typeform/embed-react'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ethers } from 'ethers'
+import TopBanner from 'components/Header/TopBanner'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -183,6 +184,7 @@ export default function App() {
           <Route component={GoogleAnalyticsReporter} />
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
+            <TopBanner />
             {/* <URLWarning /> */}
             <HeaderWrapper>
               <Header />
