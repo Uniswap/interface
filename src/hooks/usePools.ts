@@ -18,8 +18,36 @@ const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3
 // Classes are expensive to instantiate, so this caches the recently instantiated pools.
 // This avoids re-instantiating pools as the other pools in the same request are loaded.
 class PoolCache {
-  // pools is a FIFO, using unshift/pop. This makes recent entries faster to find.
+  // Evict after 128 entries. Empirically, a swap uses 64 entries.
+  private static MAX_ENTRIES = 128
+
+  // These are FIFOs, using unshift/pop. This makes recent entries faster to find.
   private static pools: Pool[] = []
+  private static addresses: { key: string; address: string }[] = []
+
+  static getPoolAddress(factoryAddress: string, tokenA: Token, tokenB: Token, fee: FeeAmount): string {
+    if (this.addresses.length > this.MAX_ENTRIES) {
+      this.addresses = this.addresses.slice(0, this.MAX_ENTRIES / 2)
+    }
+
+    const { address: addressA } = tokenA
+    const { address: addressB } = tokenB
+    const key = `${factoryAddress}:${addressA}:${addressB}:${fee.toString()}`
+    const found = this.addresses.find((address) => address.key === key)
+    if (found) return found.address
+
+    const address = {
+      key,
+      address: computePoolAddress({
+        factoryAddress,
+        tokenA,
+        tokenB,
+        fee,
+      }),
+    }
+    this.addresses.unshift(address)
+    return address.address
+  }
 
   static getPool(
     tokenA: Token,
@@ -29,9 +57,8 @@ class PoolCache {
     liquidity: BigintIsh,
     tick: number
   ): Pool {
-    // Evict after 128 entries. Empirically, a swap uses 64 entries.
-    if (this.pools.length > 128) {
-      this.pools = this.pools.slice(0, 64)
+    if (this.pools.length > this.MAX_ENTRIES) {
+      this.pools = this.pools.slice(0, this.MAX_ENTRIES / 2)
     }
 
     const found = this.pools.find(
@@ -43,9 +70,7 @@ class PoolCache {
         JSBI.EQ(pool.liquidity, liquidity) &&
         pool.tickCurrent === tick
     )
-    if (found) {
-      return found
-    }
+    if (found) return found
 
     const pool = new Pool(tokenA, tokenB, fee, sqrtPriceX96, liquidity, tick)
     this.pools.unshift(pool)
@@ -84,16 +109,7 @@ export function usePools(
     const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
     if (!v3CoreFactoryAddress) return new Array(poolTokens.length)
 
-    return poolTokens.map(
-      (value) =>
-        value &&
-        computePoolAddress({
-          factoryAddress: v3CoreFactoryAddress,
-          tokenA: value[0],
-          tokenB: value[1],
-          fee: value[2],
-        })
-    )
+    return poolTokens.map((value) => value && PoolCache.getPoolAddress(v3CoreFactoryAddress, ...value))
   }, [chainId, poolTokens])
 
   const slot0s = useMultipleContractSingleData(poolAddresses, POOL_STATE_INTERFACE, 'slot0')
