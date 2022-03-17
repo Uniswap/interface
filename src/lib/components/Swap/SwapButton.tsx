@@ -94,13 +94,24 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const disableSwap = useMemo(
     () =>
       disabled ||
+      !optimizedTrade ||
       !chainId ||
       wrapLoading ||
       (wrapType !== WrapType.NOT_APPLICABLE && wrapError) ||
       approvalState === ApproveOrPermitState.PENDING_SIGNATURE ||
       !(inputTradeCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputTradeCurrencyAmount),
-    [disabled, chainId, wrapLoading, wrapType, wrapError, approvalState, inputTradeCurrencyAmount, inputCurrencyBalance]
+    [
+      disabled,
+      optimizedTrade,
+      chainId,
+      wrapLoading,
+      wrapType,
+      wrapError,
+      approvalState,
+      inputTradeCurrencyAmount,
+      inputCurrencyBalance,
+    ]
   )
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
