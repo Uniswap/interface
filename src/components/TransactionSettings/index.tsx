@@ -115,7 +115,9 @@ export default function SlippageTabs({
   const [deadlineFocused, setDeadlineFocused] = useState(false)
 
   const slippageInputIsValid =
-    slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
+    slippageInput === '' ||
+    (!Number.isNaN(Number(slippageInput)) &&
+      (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2))
   const preferredGasPriceInputIsValid =
     preferredGasPriceInput === '' ||
     (!Number.isNaN(Number(preferredGasPriceInput)) &&
@@ -161,7 +163,12 @@ export default function SlippageTabs({
 
     try {
       const valueAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(value) * 100).toString())
-      if (!Number.isNaN(valueAsIntFromRoundedFloat) && valueAsIntFromRoundedFloat < 5000) {
+
+      if (
+        !Number.isNaN(valueAsIntFromRoundedFloat) &&
+        valueAsIntFromRoundedFloat >= 0 &&
+        valueAsIntFromRoundedFloat < 5000
+      ) {
         setRawSlippage(valueAsIntFromRoundedFloat)
       }
     } catch {}
@@ -187,6 +194,7 @@ export default function SlippageTabs({
     try {
       const valueAsInt: number = Number.parseInt(value) * 60
       if (!Number.isNaN(valueAsInt) && valueAsInt > 0) {
+        if (Number(valueAsInt) > Number.MAX_SAFE_INTEGER) throw new Error('Preferred gas price overflow')
         setDeadline(valueAsInt)
       }
     } catch {}
