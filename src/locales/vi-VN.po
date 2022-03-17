@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-14 20:11\n"
+"PO-Revision-Date: 2022-03-17 04:06\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -687,10 +687,6 @@ msgstr "Chi tiết"
 msgid "Details"
 msgstr "Chi tiết"
 
-#: src/components/Popups/DonationLink.tsx
-msgid "Directly support the Ukrainian government by donating tokens."
-msgstr "Trực tiếp hỗ trợ chính phủ Ukraine bằng cách quyên góp mã thông báo."
-
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Ngắt kết nối"
@@ -707,10 +703,6 @@ msgstr "Bỏ qua"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "Docs"
-
-#: src/components/Popups/DonationLink.tsx
-msgid "Donate to Ukraine"
-msgstr "Quyên góp cho Ukraine"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-14 20:11\n"
+"PO-Revision-Date: 2022-03-17 04:06\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -687,10 +687,6 @@ msgstr "Detallada"
 msgid "Details"
 msgstr "Detalls"
 
-#: src/components/Popups/DonationLink.tsx
-msgid "Directly support the Ukrainian government by donating tokens."
-msgstr "Donar suport directe al govern ucraïnès donant fitxes."
-
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Desconnecta"
@@ -707,10 +703,6 @@ msgstr "Destitueix"
 #: src/components/Menu/index.tsx
 msgid "Docs"
 msgstr "Documents"
-
-#: src/components/Popups/DonationLink.tsx
-msgid "Donate to Ukraine"
-msgstr "Donar a Ucraïna"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
