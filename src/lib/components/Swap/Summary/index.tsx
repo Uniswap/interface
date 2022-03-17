@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import ActionButton, { Action } from 'lib/components/ActionButton'
 import Column from 'lib/components/Column'
 import { Header } from 'lib/components/Dialog'
 import Expando from 'lib/components/Expando'
 import Row from 'lib/components/Row'
 import { Slippage } from 'lib/hooks/useSlippage'
-import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
+import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Info } from 'lib/icons'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useCallback, useMemo, useState } from 'react'
@@ -130,12 +130,14 @@ function ConfirmButton({
 interface SummaryDialogProps {
   trade: Trade<Currency, Currency, TradeType>
   slippage: Slippage
+  inputUSDC?: CurrencyAmount<Currency>
+  outputUSDC?: CurrencyAmount<Currency>
+  impact: PriceImpact
   onConfirm: () => void
 }
 
-export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps) {
+export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, onConfirm }: SummaryDialogProps) {
   const { inputAmount, outputAmount } = trade
-  const usdcPriceImpact = useUSDCPriceImpact(inputAmount, outputAmount)
 
   const [open, setOpen] = useState(false)
   const onExpand = useCallback(() => setOpen((open) => !open), [])
@@ -145,22 +147,28 @@ export function SummaryDialog({ trade, slippage, onConfirm }: SummaryDialogProps
       <Header title={<Trans>Swap summary</Trans>} ruled />
       <Body flex align="stretch" padded gap={0.75} open={open}>
         <Heading gap={0.75} flex justify="center">
-          <Summary input={inputAmount} output={outputAmount} usdcPriceImpact={usdcPriceImpact} />
+          <Summary
+            input={inputAmount}
+            output={outputAmount}
+            inputUSDC={inputUSDC}
+            outputUSDC={outputUSDC}
+            priceImpact={impact}
+          />
           <Price trade={trade} />
         </Heading>
         <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
           <Expando
-            title={<Subhead priceImpact={usdcPriceImpact} slippage={slippage} />}
+            title={<Subhead priceImpact={impact} slippage={slippage} />}
             open={open}
             onExpand={onExpand}
             height={7.25}
           >
-            <Details trade={trade} slippage={slippage} usdcPriceImpact={usdcPriceImpact} />
+            <Details trade={trade} slippage={slippage} priceImpact={impact} />
           </Expando>
           <Footing>
             <Estimate trade={trade} slippage={slippage} />
           </Footing>
-          <ConfirmButton trade={trade} highPriceImpact={usdcPriceImpact.warning === 'error'} onConfirm={onConfirm} />
+          <ConfirmButton trade={trade} highPriceImpact={impact.warning === 'error'} onConfirm={onConfirm} />
         </Column>
       </Body>
     </>

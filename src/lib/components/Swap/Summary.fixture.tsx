@@ -22,8 +22,11 @@ const UNI = (function () {
 function Fixture() {
   const setState = useUpdateAtom(swapAtom)
   const {
-    slippage,
+    [Field.INPUT]: { usdc: inputUSDC },
+    [Field.OUTPUT]: { usdc: outputUSDC },
     trade: { trade },
+    slippage,
+    impact,
   } = useSwapInfo()
 
   useEffect(() => {
@@ -37,7 +40,14 @@ function Fixture() {
 
   return trade ? (
     <Modal color="dialog">
-      <SummaryDialog onConfirm={() => void 0} trade={trade} slippage={slippage} />
+      <SummaryDialog
+        onConfirm={() => void 0}
+        trade={trade}
+        slippage={slippage}
+        inputUSDC={inputUSDC}
+        outputUSDC={outputUSDC}
+        impact={impact}
+      />
     </Modal>
   ) : null
 }

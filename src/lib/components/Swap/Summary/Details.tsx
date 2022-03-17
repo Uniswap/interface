@@ -37,10 +37,10 @@ function Detail({ label, value, color }: DetailProps) {
 interface DetailsProps {
   trade: Trade<Currency, Currency, TradeType>
   slippage: { auto: boolean; allowed: Percent; warning?: Color }
-  usdcPriceImpact: { priceImpact?: string; warning?: Color }
+  priceImpact: { priceImpact?: string; warning?: Color }
 }
 
-export default function Details({ trade, slippage, usdcPriceImpact }: DetailsProps) {
+export default function Details({ trade, slippage, priceImpact }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
@@ -61,8 +61,8 @@ export default function Details({ trade, slippage, usdcPriceImpact }: DetailsPro
       }
     }
 
-    if (usdcPriceImpact.priceImpact) {
-      rows.push([t`Price impact`, usdcPriceImpact.priceImpact, usdcPriceImpact.warning])
+    if (priceImpact.priceImpact) {
+      rows.push([t`Price impact`, priceImpact.priceImpact, priceImpact.warning])
     }
 
     if (lpFeeAmount) {
@@ -85,7 +85,7 @@ export default function Details({ trade, slippage, usdcPriceImpact }: DetailsPro
     return rows
   }, [
     feeOptions,
-    usdcPriceImpact,
+    priceImpact,
     lpFeeAmount,
     trade,
     slippage,

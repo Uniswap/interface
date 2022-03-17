@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
-import { useUpdateAtom } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { WrapErrorText } from 'lib/components/Swap/WrapErrorText'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
 import {
@@ -15,7 +15,7 @@ import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Spinner } from 'lib/icons'
-import { displayTxHashAtom, Field } from 'lib/state/swap'
+import { displayTxHashAtom, feeOptionsAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
@@ -41,13 +41,18 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
 
   const {
-    slippage,
-    currencies: { [Field.INPUT]: inputCurrency },
-    currencyBalances: { [Field.INPUT]: inputCurrencyBalance },
-    feeOptions,
+    [Field.INPUT]: {
+      currency: inputCurrency,
+      amount: inputTradeCurrencyAmount,
+      balance: inputCurrencyBalance,
+      usdc: inputUSDC,
+    },
+    [Field.OUTPUT]: { amount: outputTradeCurrencyAmount, usdc: outputUSDC },
     trade,
-    tradeCurrencyAmounts: { [Field.INPUT]: inputTradeCurrencyAmount, [Field.OUTPUT]: outputTradeCurrencyAmount },
+    slippage,
+    impact,
   } = useSwapInfo()
+  const feeOptions = useAtomValue(feeOptionsAtom)
 
   const tradeType = useSwapTradeType()
 
@@ -240,7 +245,14 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       </ActionButton>
       {activeTrade && (
         <Dialog color="dialog" onClose={handleDialogClose}>
-          <SummaryDialog trade={activeTrade} slippage={slippage} onConfirm={onConfirm} />
+          <SummaryDialog
+            trade={activeTrade}
+            slippage={slippage}
+            inputUSDC={inputUSDC}
+            outputUSDC={outputUSDC}
+            impact={impact}
+            onConfirm={onConfirm}
+          />
         </Dialog>
       )}
     </>

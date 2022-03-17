@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import Column from 'lib/components/Column'
 import Rule from 'lib/components/Rule'
 import Tooltip from 'lib/components/Tooltip'
 import { loadingCss } from 'lib/css/loading'
 import { WrapType } from 'lib/hooks/swap/useWrapCallback'
-import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
+import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
 import { ReactNode, useCallback } from 'react'
@@ -77,17 +77,23 @@ export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType
   return <Caption icon={Info} caption={<WrapText />} />
 }
 
-export function Trade({ trade }: { trade: InterfaceTrade<Currency, Currency, TradeType> }) {
-  const { inputAmount: input, outputAmount: output } = trade
-  const { outputUSDC, priceImpact, warning: priceImpactWarning } = useUSDCPriceImpact(input, output)
+export function Trade({
+  trade,
+  outputUSDC,
+  impact,
+}: {
+  trade: InterfaceTrade<Currency, Currency, TradeType>
+  outputUSDC?: CurrencyAmount<Currency>
+  impact: PriceImpact
+}) {
   return (
     <>
-      <Tooltip placement="bottom" icon={priceImpactWarning ? AlertTriangle : Info}>
+      <Tooltip placement="bottom" icon={impact.warning ? AlertTriangle : Info}>
         <Column gap={0.75}>
-          {priceImpactWarning && (
+          {impact.warning && (
             <>
               <ThemedText.Caption>
-                The output amount is estimated at {priceImpact} less than the input amount due to high price impact
+                The output amount is estimated at {impact.display} less than the input amount due to high price impact
               </ThemedText.Caption>
               <Rule />
             </>
