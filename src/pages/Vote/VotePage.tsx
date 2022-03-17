@@ -336,7 +336,12 @@ export default function VotePage({
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
-                  {forPercentage && <Progress status={'for'} percentageString={`${forPercentage.toFixed(0)}%`} />}
+                  <Progress
+                    status={'for'}
+                    percentageString={
+                      proposalData?.forCount.greaterThan(0) ? `${forPercentage?.toFixed(0) ?? 0}%` : '0%'
+                    }
+                  />
                 </ProgressWrapper>
               </CardSection>
             </StyledDataCard>
@@ -355,9 +360,12 @@ export default function VotePage({
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
-                  {againstPercentage && (
-                    <Progress status={'against'} percentageString={`${againstPercentage.toFixed(0)}%`} />
-                  )}
+                  <Progress
+                    status={'against'}
+                    percentageString={
+                      proposalData?.againstCount?.greaterThan(0) ? `${againstPercentage?.toFixed(0) ?? 0}%` : '0%'
+                    }
+                  />
                 </ProgressWrapper>
               </CardSection>
             </StyledDataCard>
