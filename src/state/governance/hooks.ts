@@ -269,7 +269,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
       data: proposalsCallData.map((proposal, i) => {
         const startBlock = parseInt(proposal?.result?.startBlock?.toString())
 
-        let description = formattedLogs[i]?.description
+        let description = formattedLogs[i]?.description ?? ''
         if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
           description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
         }
