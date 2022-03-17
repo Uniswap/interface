@@ -38,6 +38,7 @@ const StyledPositionCard = styled(GreyCard)`
   overflow: hidden;
   background: radial-gradient(147.37% 164.97% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%), #1f1d2c;
   background-blend-mode: overlay, normal;
+  z-index: 1;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 24px;
@@ -341,7 +342,7 @@ export default function StakeCard({
 
   return (
     <>
-      <StyledPositionCard style={{ zIndex: 1 }}>
+      <StyledPositionCard>
         <AutoColumn gap="8px">
           <Flex flexDirection="column">
             <Box mb="20px">

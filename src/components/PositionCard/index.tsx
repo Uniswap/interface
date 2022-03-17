@@ -41,6 +41,7 @@ const StyledPositionCard = styled(GreyCard)`
   overflow: hidden;
   background: radial-gradient(147.37% 164.97% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%), #1f1d2c;
   background-blend-mode: overlay, normal;
+  z-index: 1;
 `
 
 interface MinimalPositionCardProps {
@@ -230,7 +231,7 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
   const showRemoveButton = !!userPoolBalance?.greaterThan('0')
 
   return (
-    <StyledPositionCard border={border} style={{ zIndex: 1 }}>
+    <StyledPositionCard border={border}>
       <AutoColumn gap="12px">
         <AutoColumn gap="11px">
           <FixedHeightRow justifyContent="space-between">
