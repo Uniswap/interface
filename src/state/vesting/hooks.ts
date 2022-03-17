@@ -27,28 +27,28 @@ export const useRewardLockerAddressesWithVersion = (): { [rewardLockerAddress: s
   const rewardLockerAddressesV1MulticallResult = useMultipleContractSingleData(
     fairLaunchAddresses,
     fairLaunchInterface,
-    'rewardLocker'
+    'rewardLocker',
   )
   const rewardLockerAddressesV2MulticallResult = useMultipleContractSingleData(
     fairLaunchV2Addresses,
     fairLaunchV2Interface,
-    'rewardLocker'
+    'rewardLocker',
   )
 
   return useMemo(() => {
     const result: { [rewardLockerAddress: string]: RewardLockerVersion } = {}
 
-    rewardLockerAddressesV1MulticallResult.forEach(callState => {
-      callState.result &&
-        callState.result.forEach(address => {
-          if (result[address] === undefined) result[address] = RewardLockerVersion.V1
-        })
-    })
-
     rewardLockerAddressesV2MulticallResult.forEach(callState => {
       callState.result &&
         callState.result.forEach(address => {
           if (result[address] === undefined) result[address] = RewardLockerVersion.V2
+        })
+    })
+
+    rewardLockerAddressesV1MulticallResult.forEach(callState => {
+      callState.result &&
+        callState.result.forEach(address => {
+          if (result[address] === undefined) result[address] = RewardLockerVersion.V1
         })
     })
 
@@ -64,20 +64,20 @@ export const useRewardTokensByRewardLocker = () => {
    */
   const fairLaunchAddresses = useMemo(
     () => [...FAIRLAUNCH_ADDRESSES[chainId as ChainId], ...FAIRLAUNCH_V2_ADDRESSES[chainId as ChainId]],
-    [chainId]
+    [chainId],
   )
   const fairLaunchInterface = useMemo(() => new Interface(FAIRLAUNCH_ABI), [])
 
   const rewardTokensMulticallResult = useMultipleContractSingleData(
     fairLaunchAddresses,
     fairLaunchInterface,
-    'getRewardTokens'
+    'getRewardTokens',
   )
 
   const rewardLockerAddressesMulticallResult = useMultipleContractSingleData(
     fairLaunchAddresses,
     fairLaunchInterface,
-    'rewardLocker'
+    'rewardLocker',
   )
 
   const fairLaunchToTokensMapping: { [key: string]: string[] } = useMemo(() => {
@@ -106,7 +106,7 @@ export const useRewardTokensByRewardLocker = () => {
 
       if (result[rewardLockerAddress]) {
         result[rewardLockerAddress] = result[rewardLockerAddress].concat(
-          rewardTokens.filter((item: string) => result[rewardLockerAddress].indexOf(item) < 0)
+          rewardTokens.filter((item: string) => result[rewardLockerAddress].indexOf(item) < 0),
         )
       } else {
         result[rewardLockerAddress] = rewardTokens
@@ -174,7 +174,7 @@ export const useSchedules = () => {
     rewardLockerAddressesWithVersion,
     rewardLockerContracts,
     rewardTokensByRewardLocker,
-    rewardTokensFullInfo
+    rewardTokensFullInfo,
   ])
 
   return { schedulesByRewardLocker }

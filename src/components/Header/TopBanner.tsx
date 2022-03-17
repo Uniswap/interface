@@ -44,7 +44,9 @@ const banner = {
   text: (
     <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff">
       Liquidity Mining with Benqi is <b>LIVE!</b> Find out more{' '}
-      <ExternalLink href="https://kyberswap.com/#/farms?networkId=43114">here</ExternalLink>
+      <ExternalLink href="https://kyberswap.com/?utm_source=kyberswap&utm_medium=banner&utm_campaign=benqi&utm_content=launch#/farms?networkId=43114">
+        here
+      </ExternalLink>
     </Text>
   ),
 }

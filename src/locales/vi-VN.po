@@ -69,10 +69,6 @@ msgstr ""
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
 msgstr "<0>Mẹo:</0> Sử dụng công cụ này để tìm các cặp Token không xuất hiện trên giao diện."
 
-#: src/components/Header/KyberSwapAnnounce.tsx
-msgid "<0>dmm.exchange is now <1>KyberSwap.com</1>! Click <2>here</2> to learn more.</0>"
-msgstr "<0>dmm.exchange bây giờ là <1>KyberSwap.com</1>! Bấm vào <2>đây</2> để biết thêm chi tiết.</0>"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
@@ -437,6 +433,7 @@ msgid "Confirm this transaction in your wallet"
 msgstr "Chấp thuận giao dịch này trong ví của bạn"
 
 #: src/components/Web3Status/index.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
