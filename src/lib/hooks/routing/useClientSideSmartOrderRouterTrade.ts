@@ -42,10 +42,10 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
-  // This helps provide a "syncing" state the UI can reference for loading animations.
-  const inputs = useMemo(() => [tradeType, amountSpecified, otherCurrency], [tradeType, amountSpecified, otherCurrency])
-  const debouncedInputs = useDebounce(inputs, 200)
-  const isDebouncing = inputs !== debouncedInputs
+  // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
+  const debouncedAmountSpecified = useDebounce(amountSpecified, 200)
+  const isDebouncing =
+    amountSpecified !== debouncedAmountSpecified && amountSpecified?.currency === debouncedAmountSpecified?.currency
 
   const chainId = amountSpecified?.currency.chainId
   const { library } = useActiveWeb3React()
