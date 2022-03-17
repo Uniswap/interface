@@ -20,9 +20,9 @@ const ToolbarRow = styled(Row)`
 export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
   const { chainId } = useActiveWeb3React()
   const {
+    [Field.INPUT]: { currency: inputCurrency, balance },
+    [Field.OUTPUT]: { currency: outputCurrency },
     trade: { trade, state },
-    currencies: { [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency },
-    currencyBalances: { [Field.INPUT]: balance },
   } = useSwapInfo()
   const isRouteLoading = state === TradeState.SYNCING || state === TradeState.LOADING
   const isAmountPopulated = useIsAmountPopulated()

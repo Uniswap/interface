@@ -4,6 +4,11 @@ import { useMemo } from 'react'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { getPriceImpactWarning } from 'utils/prices'
 
+export interface PriceImpact {
+  display?: string
+  warning?: 'warning' | 'error'
+}
+
 /**
  * Computes input/output USDC equivalents and the price impact.
  * Returns the price impact as a human readable string.
@@ -14,8 +19,7 @@ export default function useUSDCPriceImpact(
 ): {
   inputUSDC?: CurrencyAmount<Token>
   outputUSDC?: CurrencyAmount<Token>
-  priceImpact?: string
-  warning?: 'warning' | 'error'
+  priceImpact: PriceImpact
 } {
   const inputUSDC = useUSDCValue(inputAmount) ?? undefined
   const outputUSDC = useUSDCValue(outputAmount) ?? undefined
@@ -25,8 +29,11 @@ export default function useUSDCPriceImpact(
     return {
       inputUSDC,
       outputUSDC,
-      priceImpact: priceImpact && toHumanReadablePriceImpact(priceImpact),
-      warning,
+      priceImpact: {
+        priceImpact,
+        display: priceImpact && toHumanReadablePriceImpact(priceImpact),
+        warning,
+      },
     }
   }, [inputUSDC, outputUSDC])
 }

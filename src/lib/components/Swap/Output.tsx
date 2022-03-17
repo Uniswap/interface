@@ -5,7 +5,6 @@ import { useAtomValue } from 'jotai/utils'
 import BrandedFooter from 'lib/components/BrandedFooter'
 import { useIsSwapFieldIndependent, useSwapAmount, useSwapCurrency, useSwapInfo } from 'lib/hooks/swap'
 import useCurrencyColor from 'lib/hooks/useCurrencyColor'
-import useUSDCPriceImpact from 'lib/hooks/useUSDCPriceImpact'
 import { Field } from 'lib/state/swap'
 import styled, { DynamicThemeProvider, ThemedText } from 'lib/theme'
 import { PropsWithChildren } from 'react'
@@ -39,9 +38,9 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   const { i18n } = useLingui()
 
   const {
-    currencyBalances: { [Field.OUTPUT]: balance },
+    [Field.OUTPUT]: { balance, amount: outputCurrencyAmount, usdc: outputUSDC },
     trade: { state: tradeState },
-    tradeCurrencyAmounts: { [Field.INPUT]: inputCurrencyAmount, [Field.OUTPUT]: outputCurrencyAmount },
+    impact,
   } = useSwapInfo()
 
   const [swapOutputAmount, updateSwapOutputAmount] = useSwapAmount(Field.OUTPUT)
@@ -57,12 +56,6 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
 
   // different state true/null/false allow smoother color transition
   const hasColor = swapOutputCurrency ? Boolean(color) || null : false
-
-  const {
-    outputUSDC,
-    priceImpact,
-    warning: priceImpactWarning,
-  } = useUSDCPriceImpact(inputCurrencyAmount, outputCurrencyAmount)
 
   const amount = useFormattedFieldAmount({
     disabled,
@@ -90,7 +83,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
             <Row>
               <USDC gap={0.5} isLoading={isRouteLoading}>
                 {outputUSDC ? `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)}` : '-'}{' '}
-                {priceImpact && <ThemedText.Body2 color={priceImpactWarning}>({priceImpact})</ThemedText.Body2>}
+                {impact.display && <ThemedText.Body2 color={impact.warning}>({impact.display})</ThemedText.Body2>}
               </USDC>
               {balance && (
                 <Balance focused={focused}>

@@ -1,6 +1,5 @@
 import { useLingui } from '@lingui/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { loadingTransitionCss } from 'lib/css/loading'
 import {
   useIsSwapFieldIndependent,
@@ -70,18 +69,16 @@ export function useFormattedFieldAmount({ disabled, currencyAmount, fieldAmount 
 export default function Input({ disabled, focused }: InputProps) {
   const { i18n } = useLingui()
   const {
-    currencyBalances: { [Field.INPUT]: balance },
+    [Field.INPUT]: { balance, amount: tradeCurrencyAmount, usdc },
     trade: { state: tradeState },
-    tradeCurrencyAmounts: { [Field.INPUT]: swapInputCurrencyAmount },
   } = useSwapInfo()
-  const inputUSDC = useUSDCValue(swapInputCurrencyAmount)
 
-  const [swapInputAmount, updateSwapInputAmount] = useSwapAmount(Field.INPUT)
-  const [swapInputCurrency, updateSwapInputCurrency] = useSwapCurrency(Field.INPUT)
+  const [inputAmount, updateInputAmount] = useSwapAmount(Field.INPUT)
+  const [inputCurrency, updateInputCurrency] = useSwapCurrency(Field.INPUT)
   const inputCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
 
   // extract eagerly in case of reversal
-  usePrefetchCurrencyColor(swapInputCurrency)
+  usePrefetchCurrencyColor(inputCurrency)
 
   const isRouteLoading = tradeState === TradeState.SYNCING || tradeState === TradeState.LOADING
   const isDependentField = !useIsSwapFieldIndependent(Field.INPUT)
@@ -99,32 +96,30 @@ export default function Input({ disabled, focused }: InputProps) {
   const balanceColor = useMemo(() => {
     const insufficientBalance =
       balance &&
-      (inputCurrencyAmount ? inputCurrencyAmount.greaterThan(balance) : swapInputCurrencyAmount?.greaterThan(balance))
+      (inputCurrencyAmount ? inputCurrencyAmount.greaterThan(balance) : tradeCurrencyAmount?.greaterThan(balance))
     return insufficientBalance ? 'error' : undefined
-  }, [balance, inputCurrencyAmount, swapInputCurrencyAmount])
+  }, [balance, inputCurrencyAmount, tradeCurrencyAmount])
 
   const amount = useFormattedFieldAmount({
     disabled,
-    currencyAmount: swapInputCurrencyAmount,
-    fieldAmount: swapInputAmount,
+    currencyAmount: tradeCurrencyAmount,
+    fieldAmount: inputAmount,
   })
 
   return (
     <InputColumn gap={0.5} approved={mockApproved}>
       <TokenInput
-        currency={swapInputCurrency}
+        currency={inputCurrency}
         amount={amount}
         max={max}
         disabled={disabled}
-        onChangeInput={updateSwapInputAmount}
-        onChangeCurrency={updateSwapInputCurrency}
+        onChangeInput={updateInputAmount}
+        onChangeCurrency={updateInputCurrency}
         loading={isLoading}
       >
         <ThemedText.Body2 color="secondary" userSelect>
           <Row>
-            <USDC isLoading={isRouteLoading}>
-              {inputUSDC ? `$${formatCurrencyAmount(inputUSDC, 6, 'en', 2)}` : '-'}
-            </USDC>
+            <USDC isLoading={isRouteLoading}>{usdc ? `$${formatCurrencyAmount(usdc, 6, 'en', 2)}` : '-'}</USDC>
             {balance && (
               <Balance color={balanceColor} focused={focused}>
                 Balance: <span>{formatCurrencyAmount(balance, 4, i18n.locale)}</span>
