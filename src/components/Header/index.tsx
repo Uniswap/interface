@@ -249,6 +249,10 @@ const Divider = styled.div`
   width: 1px;
   background-color: ${({ theme }) => theme.purple3};
   margin-left: 40px;
+  @media (max-width: 1080px) and (min-width: 960px) {
+    width: 0;
+    margin-left: 0px;
+  }
 `
 const StyledMobileLink = styled(NavLink)`
   display: none;
@@ -355,6 +359,12 @@ function Header() {
           </StyledActiveNavLinkWithBadge>
           <StyledExternalLink id="vote-nav-link" href={`https://snapshot.org/#/swpr.eth`}>
             {t('vote')}
+          </StyledExternalLink>
+          <StyledExternalLink id="charts-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
+            {t('charts')}
+            <Text ml="4px" fontSize="11px">
+              ↗
+            </Text>
           </StyledExternalLink>
         </HeaderLinks>
       </HeaderRow>
