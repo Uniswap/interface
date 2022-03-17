@@ -187,7 +187,7 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-dmm-info.knstats.com'
-      : 'https://analytics.kyberswap.com',
+      : 'https://analytics.kyberswap.com/ethereum',
   [ChainId.ROPSTEN]: 'https://dev-dmm-info.knstats.com',
   [ChainId.RINKEBY]: 'https://analytics.kyberswap.com',
   [ChainId.GÖRLI]: 'https://analytics.kyberswap.com',
@@ -195,26 +195,27 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.MATIC]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-matic-dmm-info.knstats.com'
-      : 'https://polygon-analytics.kyberswap.com',
+      : 'https://analytics.kyberswap.com/polygon',
   [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com',
   [ChainId.BSCTESTNET]: 'https://mumbai-dmm-info.knstats.com',
   [ChainId.BSCMAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-bsc-dmm-info.knstats.com'
-      : 'https://bsc-analytics.kyberswap.com',
+      : 'https://analytics.kyberswap.com/bsc',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : 'https://avax-analytics.kyberswap.com',
+  [ChainId.AVAXMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : 'https://analytics.kyberswap.com/avalanche',
   [ChainId.FANTOM]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-fantom-dmm-info.knstats.com'
-      : 'https://fantom-analytics.kyberswap.com',
+      : 'https://analytics.kyberswap.com/fantom',
   [ChainId.CRONOSTESTNET]: 'https://cronos-testnet-analytics.kyberswap.com',
-  [ChainId.CRONOS]: 'https://cronos-analytics.kyberswap.com',
+  [ChainId.CRONOS]: 'https://analytics.kyberswap.com/cronos',
   [ChainId.ARBITRUM_TESTNET]: 'https://dmm-info-plum.vercel.app',
-  [ChainId.ARBITRUM]: 'https://arbitrum-analytics.kyberswap.com',
-  [ChainId.BTTC]: 'https://bttc-analytics.kyberswap.com',
-  [ChainId.AURORA]: 'https://aurora-analytics.kyberswap.com',
-  [ChainId.VELAS]: 'https://velas-analytics.kyberswap.com',
+  [ChainId.ARBITRUM]: 'https://analytics.kyberswap.com/arbitrum',
+  [ChainId.BTTC]: 'https://analytics.kyberswap.com/bittorrent',
+  [ChainId.AURORA]: 'https://analytics.kyberswap.com/aurora',
+  [ChainId.VELAS]: 'https://analytics.kyberswap.com/velas',
 }
 
 // a list of tokens by chain
