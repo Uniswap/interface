@@ -98,8 +98,6 @@
   "bridge": "Bridge",
   "vote": "Vote",
   "charts": "Charts",
-  "insufficientETHBalance": "Insufficient ETH balance",
-  "insufficientWETHBalance": "Insufficient WETH balance",
-  "enterETHAmount": "Enter ETH amount",
-  "enterWETHAmount": "Enter WETH amount"
+  "insufficientCurrencyBalance": "Insufficient {{ currency }} balance",
+  "enterCurrencyAmount": "Enter {{ currency }} amount"
 }

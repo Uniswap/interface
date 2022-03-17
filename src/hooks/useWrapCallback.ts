@@ -69,7 +69,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : !typedValue ? t('enterETHAmount') : t('insufficientETHBalance')
+        inputError: sufficientBalance
+          ? undefined
+          : !typedValue
+          ? t('enterCurrencyAmount', { currency: nativeCurrency.symbol })
+          : t('insufficientCurrencyBalance', { currency: nativeCurrency.symbol })
       }
     } else if (
       nativeCurrencyWrapperToken &&
@@ -93,7 +97,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : !typedValue ? t('enterWETHAmount') : t('insufficientWETHBalance')
+        inputError: sufficientBalance
+          ? undefined
+          : !typedValue
+          ? t('enterCurrencyAmount', { currency: nativeCurrencyWrapperToken.symbol })
+          : t('insufficientCurrencyBalance', { currency: nativeCurrencyWrapperToken.symbol })
       }
     } else {
       return NOT_APPLICABLE
