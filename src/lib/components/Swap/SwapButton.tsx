@@ -41,10 +41,16 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { tokenColorExtraction } = useTheme()
 
   const {
-    [Field.INPUT]: { currency: inputCurrency, amount: inputTradeCurrencyAmount, balance: inputCurrencyBalance },
-    [Field.OUTPUT]: { amount: outputTradeCurrencyAmount },
+    [Field.INPUT]: {
+      currency: inputCurrency,
+      amount: inputTradeCurrencyAmount,
+      balance: inputCurrencyBalance,
+      usdc: inputUSDC,
+    },
+    [Field.OUTPUT]: { amount: outputTradeCurrencyAmount, usdc: outputUSDC },
     trade,
     slippage,
+    impact,
   } = useSwapInfo()
   const feeOptions = useAtomValue(feeOptionsAtom)
 
@@ -228,7 +234,14 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       </ActionButton>
       {activeTrade && (
         <Dialog color="dialog" onClose={handleDialogClose}>
-          <SummaryDialog trade={activeTrade} slippage={slippage} onConfirm={onConfirm} />
+          <SummaryDialog
+            trade={activeTrade}
+            slippage={slippage}
+            inputUSDC={inputUSDC}
+            outputUSDC={outputUSDC}
+            impact={impact}
+            onConfirm={onConfirm}
+          />
         </Dialog>
       )}
     </>

@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import Row from 'lib/components/Row'
 import { ThemedText } from 'lib/theme'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
@@ -11,7 +11,7 @@ import { TextButton } from '../Button'
 
 interface PriceProps {
   trade: Trade<Currency, Currency, TradeType>
-  outputUSDC?: CurrencyAmount<Token>
+  outputUSDC?: CurrencyAmount<Currency>
 }
 
 /** Displays the price of a trade. If outputUSDC is included, also displays the unit price. */
