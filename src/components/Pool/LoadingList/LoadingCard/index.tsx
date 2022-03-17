@@ -14,9 +14,10 @@ const SizedCard = styled(DarkCard)<{ isMobile: boolean }>`
   ${props =>
     props.isMobile &&
     `
-   height:128px;
-       overflow: hidden;
+    height: 128px;
+    overflow: hidden;
   `};
+
   ::before {
     background-blend-mode: normal, overlay, normal;
     background: linear-gradient(143.3deg, rgba(46, 23, 242, 0.5) -185.11%, rgba(46, 23, 242, 0) 49.63%),
