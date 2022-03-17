@@ -378,7 +378,7 @@ function Header() {
                 {!account ? (
                   '0.000'
                 ) : !userNativeCurrencyBalance ? (
-                  <Skeleton width="40px" />
+                  <Skeleton width="37px" style={{ marginRight: '3px' }} />
                 ) : (
                   userNativeCurrencyBalance.toFixed(3)
                 )}{' '}
