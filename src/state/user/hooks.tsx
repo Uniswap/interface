@@ -1,26 +1,15 @@
-import { Percent, Token } from '@uniswap/sdk-core'
-import { computePairAddress, Pair } from '@uniswap/v2-sdk'
-import { L2_CHAIN_IDS } from 'constants/chains'
-import { SupportedLocale } from 'constants/locales'
-import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
-import JSBI from 'jsbi'
-import flatMap from 'lodash.flatmap'
-import { useCallback, useMemo } from 'react'
-import { shallowEqual } from 'react-redux'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
-import { useAllTokens } from '../../hooks/Tokens'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { AppState } from '../index'
+import { Pair, computePairAddress } from '@uniswap/v2-sdk'
+import { Percent, Token } from '@uniswap/sdk-core'
 import {
+  SerializedPair,
+  SerializedToken,
   addSerializedPair,
   addSerializedToken,
   removeSerializedToken,
-  SerializedPair,
-  SerializedToken,
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
+  updateUseAutoSlippage,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
@@ -28,6 +17,19 @@ import {
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
 } from './actions'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useCallback, useMemo } from 'react'
+
+import { AppState } from '../index'
+import JSBI from 'jsbi'
+import { L2_CHAIN_IDS } from 'constants/chains'
+import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { SupportedLocale } from 'constants/locales'
+import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
+import flatMap from 'lodash.flatmap'
+import { shallowEqual } from 'react-redux'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useAllTokens } from '../../hooks/Tokens'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -111,6 +113,21 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
   )
 
   return [singleHopOnly, setSingleHopOnly]
+}
+
+export function useSetAutoSlippage(): [boolean, (newSingleHopOnly: boolean) => void] {
+  const dispatch = useAppDispatch()
+
+  const useAutoSlippage = useAppSelector((state) => state.user.useAutoSlippage)
+
+  const setUseAutoSlippage = useCallback(
+    (useAutoSlippage: boolean) => {
+      dispatch(updateUseAutoSlippage({ useAutoSlippage }))
+    },
+    [dispatch]
+  )
+
+  return [useAutoSlippage, setUseAutoSlippage]
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

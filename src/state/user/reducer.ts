@@ -1,24 +1,26 @@
-import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
-import { createReducer } from '@reduxjs/toolkit'
-import { updateVersion } from '../global/actions'
 import {
+  SerializedPair,
+  SerializedToken,
   addSerializedPair,
   addSerializedToken,
   removeSerializedPair,
   removeSerializedToken,
-  SerializedPair,
-  SerializedToken,
-  updateMatchesDarkMode,
-  updateUserDarkMode,
-  updateUserExpertMode,
-  updateUserSlippageTolerance,
-  updateUserDeadline,
-  updateUserSingleHopOnly,
-  updateHideClosedPositions,
-  updateUserLocale,
   updateArbitrumAlphaAcknowledged,
+  updateHideClosedPositions,
+  updateMatchesDarkMode,
+  updateUseAutoSlippage,
+  updateUserDarkMode,
+  updateUserDeadline,
+  updateUserExpertMode,
+  updateUserLocale,
+  updateUserSingleHopOnly,
+  updateUserSlippageTolerance,
 } from './actions'
+
+import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { SupportedLocale } from 'constants/locales'
+import { createReducer } from '@reduxjs/toolkit'
+import { updateVersion } from '../global/actions'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -43,7 +45,7 @@ export interface UserState {
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number | 'auto'
   userSlippageToleranceHasBeenMigratedToAuto: boolean // temporary flag for migration status
-
+  useAutoSlippage: boolean;
   // deadline set by user in minutes, used in all txns
   userDeadline: number
 
@@ -83,6 +85,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
+  useAutoSlippage: false
 }
 
 export default createReducer(initialState, (builder) =>
@@ -160,6 +163,9 @@ export default createReducer(initialState, (builder) =>
       state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
       state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUseAutoSlippage, (state, action ) => {
+      state.useAutoSlippage = action.payload.useAutoSlippage;
     })
     .addCase(removeSerializedToken, (state, { payload: { address, chainId } }) => {
       if (!state.tokens) {
