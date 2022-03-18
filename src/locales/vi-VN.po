@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-17 04:06\n"
+"PO-Revision-Date: 2022-03-18 00:15\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -516,7 +516,6 @@ msgstr "Xác nhận giao dịch trong ví"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -724,7 +723,6 @@ msgstr "So sánh hiệu quả"
 msgid "Enter a percent"
 msgstr "Nhập một phần trăm"
 
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Nhập người nhận"
@@ -740,7 +738,6 @@ msgstr "Nhập địa chỉ để kích hoạt khiếu nại UNI. Nếu địa c
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -980,7 +977,6 @@ msgstr "Không đủ thanh khoản trong pool cho giao dịch của bạn"
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1012,7 +1008,6 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Đã chọn dải ô không hợp lệ. Giá tối thiểu phải thấp hơn giá tối đa."
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Người nhận không hợp lệ"
@@ -1596,7 +1591,6 @@ msgstr "Chọn một mạng"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx

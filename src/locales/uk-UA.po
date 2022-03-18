@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-17 04:06\n"
+"PO-Revision-Date: 2022-03-18 00:15\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -516,7 +516,6 @@ msgstr "Підтвердіть транзакцію в гаманці"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -724,7 +723,6 @@ msgstr "Порівняння ефективності"
 msgid "Enter a percent"
 msgstr "Введіть відсоток"
 
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Введіть одержувача"
@@ -740,7 +738,6 @@ msgstr "Введіть адресу для ініціювання збору UNI
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -980,7 +977,6 @@ msgstr "Недостатня ліквідність у пулі для вашо�
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 #: src/lib/components/Swap/WrapErrorText.tsx
 #: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -1012,7 +1008,6 @@ msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Вибрано недійсний діапазон. Мінімальна ціна має бути нижчою за максимальну."
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Недійсний одержувач"
@@ -1596,7 +1591,6 @@ msgstr "Виберіть мережу"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/lib/components/TokenSelect/TokenButton.tsx
 #: src/lib/components/TokenSelect/index.tsx
-#: src/lib/hooks/swap/useSwapInfo.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.tsx
