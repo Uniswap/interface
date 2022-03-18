@@ -100,6 +100,7 @@ export async function getClientSideQuote(
   )
 }
 
+/**  Used to keep quotes up to date given a certain block age. Returns undefined if past limit. */
 export function useFreshQuote(quoteResult: GetQuoteResult | undefined, maxBlockAge = 10): GetQuoteResult | undefined {
   const block = useBlockNumber()
   if (!block || !quoteResult) return undefined

@@ -2,6 +2,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
 import useDebounce from 'hooks/useDebounce'
+import useLast from 'hooks/useLast'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useCallback, useMemo } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
@@ -78,15 +79,21 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { error: true }
     }
   }, [config, params, queryArgs, wrapType])
+
   const { data, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs)) ?? {
     error: undefined,
   }
-  const quoteResult = useFreshQuote(data)
+
+  // Keep stale data around to populate trade while fetch updated quotes. Used for UI loading states.
+  const lastData = useLast(data, (data) => !!data)
+
+  const quoteResult = useFreshQuote(data ?? lastData ?? undefined)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
+
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
   const trade = useMemo(() => {
     if (route) {
@@ -102,6 +109,11 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
       return { state: TradeState.INVALID, trade: undefined }
+    }
+
+    // If fetching new quote but stale trade exists, return stale trade and syncing state
+    if (lastData && !data && trade) {
+      return { state: TradeState.SYNCING, trade }
     }
 
     // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.

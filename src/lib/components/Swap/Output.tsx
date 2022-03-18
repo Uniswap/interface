@@ -57,6 +57,9 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
   // different state true/null/false allow smoother color transition
   const hasColor = swapOutputCurrency ? Boolean(color) || null : false
 
+  // console.log('amount from trade:', outputCurrencyAmount?.toFixed(6))
+  // console.log('---------')
+
   const amount = useFormattedFieldAmount({
     disabled,
     currencyAmount: outputCurrencyAmount,
