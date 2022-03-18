@@ -1,9 +1,23 @@
 {
   "baseUrl": "http://localhost:3000",
-  "pluginsFile": false,
-  "fixturesFolder": false,
-  "supportFile": "cypress/support/index.js",
+  "userAgent": "synpress",
+  "retries": { "runMode": 2, "openMode": 2 },
+  "integrationFolder": "tests/cypress/integration",
+  "screenshotsFolder": "tests/screenshots",
+  "videosFolder": "tests/videos",
+  "chromeWebSecurity": true,
+  "viewportWidth": 1366,
+  "viewportHeight": 768,
+  "supportFile": "tests/cypress/support/index.ts",
   "video": false,
-  "defaultCommandTimeout": 10000,
-  "chromeWebSecurity": true
+  "component": {
+    "componentFolder": ".",
+    "testFiles": "**/*spec.{js,jsx,ts,tsx}"
+  },
+  "env": {
+    "coverage": false
+  },
+  "defaultCommandTimeout": 30000,
+  "pageLoadTimeout": 30000,
+  "requestTimeout": 30000
 }

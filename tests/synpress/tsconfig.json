@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "strict": true,
-        "baseUrl": "",
+        "baseUrl": "tsconfig",
         "types": ["cypress","cypress-localstorage-commands", "@types/puppeteer-core", "@synthetixio/synpress/support", "cypress-wait-until", "@testing-library/cypress"],
         "outDir": "./output",
         "target": "es5",

@@ -1,3 +1,5 @@
+import { SwapPage } from '../../pages/SwapPage'
+
 describe('Add Liquidity', () => {
   it('loads the two correct tokens', () => {
     cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85-0xc778417E063141139Fce010982780140Aa0cD5Ab')
