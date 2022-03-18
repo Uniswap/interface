@@ -88,6 +88,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   const lastData = useLast(data, (data) => !!data)
 
   const quoteResult = useFreshQuote(data ?? lastData ?? undefined)
+  const isLoading = !quoteResult
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
