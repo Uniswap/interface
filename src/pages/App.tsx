@@ -23,8 +23,8 @@ import LiquidityMiningCampaign from './Pools/LiquidityMiningCampaign'
 import NetworkWarningModal from '../components/NetworkWarningModal'
 import { Slide, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 import Bridge from './Bridge'
 
 import Rewards from './Rewards'
@@ -76,10 +76,14 @@ export default function App() {
   const theme = useContext(ThemeContext)
 
   useEffect(() => {
-    setTimeout(function () { AOS.init({
+    document.body.classList.add('no-margin')
+
+    setTimeout(function() {
+      AOS.init({
         duration: 500
-    }); }, 1000);
-  }, []);
+      })
+    }, 1000)
+  }, [])
 
   return (
     <Suspense fallback={null}>
