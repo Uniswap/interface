@@ -100,7 +100,11 @@ export async function getClientSideQuote(
   )
 }
 
-export function useFreshQuote(quoteResult: GetQuoteResult | undefined, maxBlockAge = 10): GetQuoteResult | undefined {
+/**  Used to keep quotes up to date given a certain block age. Returns undefined if past limit. */
+export function useFilterFreshQuote(
+  quoteResult: GetQuoteResult | undefined,
+  maxBlockAge = 10
+): GetQuoteResult | undefined {
   const block = useBlockNumber()
   if (!block || !quoteResult) return undefined
   if (block - (Number(quoteResult.blockNumber) || 0) > maxBlockAge) return undefined
