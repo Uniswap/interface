@@ -2,6 +2,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
 import useDebounce from 'hooks/useDebounce'
+import useLast from 'hooks/useLast'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
 import { useCallback, useMemo } from 'react'
 import { GetQuoteResult, InterfaceTrade, TradeState } from 'state/routing/types'
@@ -82,22 +83,27 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     error: undefined,
   }
   const quoteResult = useFreshQuote(data)
+  const isLoading = !quoteResult
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
-  const trade = useMemo(() => {
-    if (route) {
-      try {
-        return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-      } catch (e: unknown) {
-        console.debug('transformRoutesToTrade failed: ', e)
-      }
-    }
-    return
-  }, [gasUseEstimateUSD, route, tradeType])
+  const trade =
+    useLast(
+      useMemo(() => {
+        if (route) {
+          try {
+            return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+          } catch (e: unknown) {
+            console.debug('transformRoutesToTrade failed: ', e)
+          }
+        }
+        return
+      }, [gasUseEstimateUSD, route, tradeType]),
+      Boolean
+    ) ?? undefined
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
@@ -108,7 +114,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     if (!error) {
       if (isDebouncing) {
         return { state: TradeState.SYNCING, trade }
-      } else if (!quoteResult) {
+      } else if (isLoading) {
         return { state: TradeState.LOADING, trade }
       }
     }
