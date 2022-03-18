@@ -49,6 +49,16 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.PolygonMumbai,
 ]
 
+export const TESTNET_CHAIN_IDS = [
+  ChainId.Rinkeby,
+  ChainId.Ropsten,
+  ChainId.Goerli,
+  ChainId.Kovan,
+  ChainId.ArbitrumRinkeby,
+  ChainId.OptimisticKovan,
+  ChainId.PolygonMumbai,
+]
+
 export const L1_CHAIN_IDS = [
   ChainId.Mainnet,
   ChainId.Ropsten,

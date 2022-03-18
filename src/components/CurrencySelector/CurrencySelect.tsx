@@ -8,11 +8,8 @@ import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
 import { Option } from 'src/components/CurrencySelector/Option'
 import { Flex } from 'src/components/layout'
 import { ChainId } from 'src/constants/chains'
-import { useAllBalancesByChainId } from 'src/features/balances/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
-import { useTokenPrices } from 'src/features/historicalChainData/useTokenPrices'
-import { useAllTokens } from 'src/features/tokens/useTokens'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { currencyId } from 'src/utils/currencyId'
 import { useFilteredCurrencies } from './hooks'
 import { CurrencySearchTextInput } from './SearchInput'
@@ -32,15 +29,8 @@ export function CurrencySelect({
   otherCurrency,
   showNonZeroBalancesOnly,
 }: CurrencySearchProps) {
-  const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
-  const chainIdToTokens = useAllTokens()
-
-  const { balances } = useAllBalancesByChainId(
-    currentChains,
-    chainIdToTokens,
-    activeAccount?.address
-  )
+  const { balances } = useAllBalancesByChainId(currentChains)
 
   const {
     filteredCurrencies,
@@ -52,8 +42,6 @@ export function CurrencySelect({
     searchFilter,
     selected,
   } = useFilteredCurrencies(currencies, otherCurrency?.chainId ?? null)
-
-  const { chainIdToPrices } = useTokenPrices(currencies)
 
   const { t } = useTranslation()
 
@@ -77,15 +65,12 @@ export function CurrencySelect({
         renderItem={({ item }: ListRenderItemInfo<Fuse.FuseResult<Currency>>) => {
           const currency = item.item
           const tokenAddress = currencyId(currency)
-          const cAmount = balances?.[currency.chainId as ChainId]?.[tokenAddress]
+          const portfolioBalance = balances?.[currency.chainId as ChainId]?.[tokenAddress]
           return (
             <Option
+              balance={portfolioBalance}
               currency={currency}
-              currencyAmount={cAmount}
-              currencyPrice={
-                chainIdToPrices?.[currency.chainId as ChainId]?.addressToPrice?.[tokenAddress]
-                  ?.priceUSD
-              }
+              currencyPrice={portfolioBalance?.balanceUSD}
               matches={item.matches}
               metadataType="balance"
               onPress={() => onSelectCurrency?.(currency)}

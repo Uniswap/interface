@@ -1,6 +1,6 @@
 import {
   ACTIVE_CHAINS,
-  API_URL,
+  COVALENT_API_KEY,
   DEBUG,
   INFURA_PROJECT_ID,
   LOG_BUFFER_SIZE,
@@ -15,7 +15,7 @@ import { parseActiveChains } from 'src/utils/chainId'
 
 export interface Config {
   activeChains: ChainIdTo<ChainState>
-  apiUrl: string
+  covalentApiKey: string
   debug: boolean
   infuraProjectId: string
   logBufferSize: number
@@ -26,7 +26,7 @@ export interface Config {
 
 const _config: Config = {
   activeChains: chainListToStateMap(parseActiveChains(ACTIVE_CHAINS)),
-  apiUrl: API_URL,
+  covalentApiKey: COVALENT_API_KEY,
   debug: parseBoolean(DEBUG),
   infuraProjectId: INFURA_PROJECT_ID,
   logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),

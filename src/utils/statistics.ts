@@ -92,3 +92,8 @@ export function samplingCurve(sumWeight: number, sampleMin: number, sampleMax: n
   if (sumWeight >= sampleMax) return 1
   return (1 - Math.cos(((sumWeight - sampleMin) * 2 * Math.PI) / (sampleMax - sampleMin))) / 2
 }
+
+/** Calculates the percentage difference between two numbers. */
+export function percentDifference(t1: number, t2: number) {
+  return 100 * (Math.abs(t2 - t1) / t1)
+}

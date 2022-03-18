@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React from 'react'
 import { Pressable } from 'react-native'
@@ -6,13 +6,14 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { InlinePriceChart } from 'src/components/PriceChart/InlinePriceChart'
 import { Text } from 'src/components/Text'
+import { PortfolioBalance } from 'src/features/dataApi/types'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 import { Flex } from '../layout'
 
 interface OptionProps {
+  balance?: PortfolioBalance
   currency: Currency
-  currencyAmount?: CurrencyAmount<Currency>
   currencyPrice?: number
   onPress: () => void
   metadataType: 'balance' | 'price'
@@ -20,18 +21,13 @@ interface OptionProps {
 }
 
 export function Option({
+  balance,
   currency,
-  currencyAmount,
   currencyPrice,
   onPress,
   matches,
   metadataType,
 }: OptionProps) {
-  const balance =
-    currencyPrice !== undefined && currencyAmount
-      ? currencyPrice * parseFloat(currencyAmount?.toSignificant())
-      : undefined
-
   const symbolMatches = matches?.filter((m) => m.key === 'symbol')
   const nameMatches = matches?.filter((m) => m.key === 'name')
 
@@ -67,10 +63,10 @@ export function Option({
             main={formatUSDPrice(currencyPrice)}
             pre={<InlinePriceChart currency={currency} />}
           />
-        ) : currencyAmount && !currencyAmount.equalTo(0) ? (
+        ) : balance?.amount && !balance.amount.equalTo(0) ? (
           <TokenMetadata
-            main={formatCurrencyAmount(currencyAmount)}
-            sub={formatUSDPrice(balance)}
+            main={formatCurrencyAmount(balance.amount)}
+            sub={formatUSDPrice(balance.balanceUSD)}
           />
         ) : null}
       </Flex>

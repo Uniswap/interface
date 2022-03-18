@@ -8,7 +8,6 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
-import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
@@ -133,9 +132,6 @@ export function DevScreen({ navigation }: any) {
               {`Normal fee: ${gasInfo.fee.normal}`}
             </Text>
           )}
-          <Text mt="sm" textAlign="center">
-            {`Config: ${config.apiUrl} - Debug: ${config.debug}`}
-          </Text>
         </Box>
       </ScrollView>
     </SheetScreen>

@@ -2,6 +2,7 @@
 
 import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useCombinedActiveList, useUnsupportedTokenList } from 'src/features/tokenLists/hooks'
@@ -46,6 +47,13 @@ export function useNativeCurrencies(): ChainIdToCurrencyIdToNativeCurrency {
       activeChains.reduce<ChainIdToCurrencyIdToNativeCurrency>((result, chainId) => {
         const currency = NativeCurrency.onChain(chainId)
         result[chainId] = { [currencyId(currency)]: currency }
+
+        if (chainId === ChainId.Polygon) {
+          // MATIC has an alternative address
+          // TODO: consider another way to reconcile
+          result[chainId]![buildCurrencyId(chainId, NATIVE_ADDRESS_ALT)] = currency
+        }
+
         return result
       }, {}),
     [activeChains]

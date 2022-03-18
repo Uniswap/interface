@@ -3,11 +3,10 @@ import React from 'react'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { CurrencySelect } from 'src/components/CurrencySelector/CurrencySelect'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
-import { useAllBalances } from 'src/features/balances/hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
+import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { useAllCurrencies, useAllTokens } from 'src/features/tokens/useTokens'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { Screens } from 'src/screens/Screens'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
@@ -65,24 +64,15 @@ function CurrencySearchWithBalancesOnly({
   onSelectCurrency: (currency: Currency) => void
 }) {
   const navigation = useAppStackNavigation()
-
   const chainIds = useActiveChainIds()
-  const tokens = useAllTokens()
-  const activeAccount = useActiveAccount()
 
-  // TODO: pass down balances lookup table
-  // const balances = useAllBalancesByChainId(chainIds, tokens, activeAccount?.address)
-
-  const currenciesWithBalance = useAllBalances(
-    chainIds,
-    tokens,
-    activeAccount?.address
-  ).balances.map((currencyAmount) => currencyAmount.currency)
+  const balances = useAllBalancesByChainId(chainIds)
+  const currencies = flattenObjectOfObjects(balances.balances).map((b) => b.amount.currency)
 
   return (
     <CurrencySelect
       showNonZeroBalancesOnly
-      currencies={currenciesWithBalance}
+      currencies={currencies}
       otherCurrency={otherCurrency}
       selectedCurrency={selectedCurrency}
       onSelectCurrency={(currency: Currency) => {

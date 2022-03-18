@@ -17,13 +17,12 @@ import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { ChainId } from 'src/constants/chains'
-import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
+import { useSingleBalance } from 'src/features/dataApi/balances'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { CurrencyField, SwapFormState } from 'src/features/swap/swapFormSlice'
 import { ElementName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
 
@@ -68,12 +67,7 @@ export function TokenDetailsScreen({
 }: AppStackScreenProp<Screens.TokenDetails>) {
   const { currency } = route.params
 
-  const activeAccount = useActiveAccount()
-  const { balance } = useTokenBalance(
-    currency.isToken ? currency : undefined,
-    activeAccount?.address
-  )
-  const { balance: ethBalance } = useNativeCurrencyBalance(currency.chainId, activeAccount?.address)
+  const balance = useSingleBalance(currency)
 
   const { t } = useTranslation()
 
@@ -114,11 +108,7 @@ export function TokenDetailsScreen({
             <Text color="gray600" mx="lg" variant="bodyMd">
               {t('Your balance')}
             </Text>
-            {balance ? (
-              <TokenBalanceItem currencyAmount={balance} currencyPrice={undefined} />
-            ) : (
-              <TokenBalanceItem currencyAmount={ethBalance} currencyPrice={undefined} />
-            )}
+            {balance && <TokenBalanceItem balance={balance} />}
             <Box flexDirection="row" mx="lg" my="md">
               <PrimaryButton
                 flex={1}

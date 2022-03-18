@@ -3,6 +3,7 @@ import { monitoredSagaReducers } from 'src/app/rootSaga'
 import { balancesReducer } from 'src/features/balances/balancesSlice'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
+import { dataApi } from 'src/features/dataApi/slice'
 import { favoritesReducer } from 'src/features/favorites/slice'
 import { multicall } from 'src/features/multicall'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
@@ -27,6 +28,7 @@ export const rootReducer = combineReducers({
   wallet: walletReducer,
   [multicall.reducerPath]: multicall.reducer,
   saga: monitoredSagaReducers,
+  [dataApi.reducerPath]: dataApi.reducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

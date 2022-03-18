@@ -15,7 +15,10 @@ const SUPPORTED_L1_L2_CHAINS = [
 ]
 
 /** Address that represents native currencies on ETH, Polygon, etc. */
-export const NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+export const NATIVE_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+
+/** Alternative addres used to denote a native currency (e.g. MATIC on Polygon) */
+export const NATIVE_ADDRESS_ALT = '0x0000000000000000000000000000000000001010'
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap(
   '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'

@@ -15,6 +15,7 @@ import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
+import { dataApi } from 'src/features/dataApi/slice'
 import { swapActions } from 'src/features/swap/swapSaga'
 import { tokenWrapActions } from 'src/features/swap/wrapSaga'
 
@@ -39,7 +40,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     const middleware = [
       ...getDefaultMiddleware({
-        thunk: false,
+        thunk: true, // required for rtk-query
         serializableCheck: {
           ignoredActions: [
             FLUSH,
@@ -62,6 +63,7 @@ export const store = configureStore({
         },
       }),
       sagaMiddleware,
+      dataApi.middleware,
     ]
 
     return middleware

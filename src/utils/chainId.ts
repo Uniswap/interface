@@ -18,3 +18,8 @@ export function toSupportedChainId(chainId: number | string) {
 export function parseActiveChains(activeChainsString: string): ChainId[] {
   return activeChainsString.split(',').map((id) => parseInt(id, 10) as ChainId)
 }
+
+export function isTestnet(_chainId: ChainId): boolean {
+  // prevents network request to covalent
+  return true
+}

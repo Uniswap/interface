@@ -10,8 +10,8 @@ import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
-import { ChainIdToCurrencyIdToCurrencyAmount } from 'src/features/balances/hooks'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
+import { ChainIdToCurrencyIdToPortfolioBalance } from 'src/features/dataApi/types'
 import { Account } from 'src/features/wallet/accounts/types'
 import { dimensions } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
@@ -19,7 +19,7 @@ import { opacify } from 'src/utils/colors'
 
 interface Props {
   account: Account
-  balances: ChainIdToCurrencyIdToCurrencyAmount
+  balances: ChainIdToCurrencyIdToPortfolioBalance
   isActive?: boolean
   onPress?: (address: Address) => void
   onPressQRCode: () => void

@@ -2,13 +2,13 @@ import React, { useRef } from 'react'
 import { FlatList, ListRenderItemInfo, ViewabilityConfig, ViewToken } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { AccountCardItem } from 'src/components/AccountCardList/AccountCardItem'
-import { ChainIdToCurrencyIdToCurrencyAmount } from 'src/features/balances/hooks'
+import { ChainIdToCurrencyIdToPortfolioBalance } from 'src/features/dataApi/types'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 
 interface AccountCardListProps {
-  balances: ChainIdToCurrencyIdToCurrencyAmount
+  balances: ChainIdToCurrencyIdToPortfolioBalance
   onPressQRCode: () => void
   onPressSend: () => void
 }

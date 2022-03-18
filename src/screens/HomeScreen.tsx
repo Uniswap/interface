@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppStackParamList } from 'src/app/navigation/types'
@@ -18,13 +18,12 @@ import { Screen } from 'src/components/layout/Screen'
 import { WalletQRCode } from 'src/components/modals/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
-import { useAllBalancesByChainId } from 'src/features/balances/hooks'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
+import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { ElementName } from 'src/features/telemetry/constants'
-import { useAllTokens } from 'src/features/tokens/useTokens'
 import { TransactionStatusBanner } from 'src/features/transactions/TransactionStatusBanner'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -43,12 +42,9 @@ export function HomeScreen({ navigation }: Props) {
 
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()
-  const chainIdToTokens = useAllTokens()
-  const { balances, loading } = useAllBalancesByChainId(
-    currentChains,
-    chainIdToTokens,
-    activeAccount?.address
-  )
+
+  const { balances, loading } = useAllBalancesByChainId(currentChains)
+
   const [refreshing, setRefreshing] = useState(false)
   const onRefresh = useCallback(() => {
     setRefreshing(true)
@@ -66,8 +62,8 @@ export function HomeScreen({ navigation }: Props) {
 
   const onPressNotifications = () => navigation.navigate(Screens.Notifications)
 
-  const onPressToken = (currencyAmount: CurrencyAmount<Currency>) =>
-    navigation.navigate(Screens.TokenDetails, { currency: currencyAmount.currency })
+  const onPressToken = (currency: Currency) =>
+    navigation.navigate(Screens.TokenDetails, { currency })
 
   const onPressSettings = () =>
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })

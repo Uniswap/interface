@@ -7,3 +7,7 @@ export function toSupportedChainId(chainId) {
 export function parseActiveChains() {
   return [ChainId.Mainnet]
 }
+
+export function isTestnet(chainId) {
+  return chainId !== ChainId.Mainnet
+}

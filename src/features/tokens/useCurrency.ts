@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { NATIVE_ADDRESS } from 'src/constants/addresses'
+import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
@@ -12,7 +12,7 @@ import { currencyIdToChain } from 'src/utils/currencyId'
  */
 export function useCurrency(currencyId?: string): Currency | null | undefined {
   const chainId = currencyIdToChain(currencyId)
-  const isNative = currencyId?.toLowerCase().endsWith(NATIVE_ADDRESS)
+  const isNative = currencyId?.endsWith(NATIVE_ADDRESS) || currencyId?.endsWith(NATIVE_ADDRESS_ALT)
   const token = useTokenInfoFromAddress(
     chainId ?? ChainId.Mainnet,
     isNative ? undefined : currencyId

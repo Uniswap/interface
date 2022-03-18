@@ -1,0 +1,3 @@
+export const TESTNET_BALANCE_AMOUNT = 1234
+export const TESTNET_BALANCE_USD = 47.89
+export const TESTNET_RELATIVE_CHANGE_24 = 5.12
