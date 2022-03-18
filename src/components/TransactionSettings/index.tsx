@@ -117,12 +117,14 @@ export default function SlippageTabs({
   const slippageInputIsValid =
     slippageInput === '' ||
     (!Number.isNaN(Number(slippageInput)) &&
-      (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2))
+      rawSlippage.toFixed(2) === Math.round(Number.parseFloat(slippageInput) * 100).toFixed(2))
+
   const preferredGasPriceInputIsValid =
     preferredGasPriceInput === '' ||
     (!Number.isNaN(Number(preferredGasPriceInput)) &&
       rawPreferredGasPrice ===
         new Decimal(Number.parseFloat(preferredGasPriceInput).toFixed(10)).times('1000000000').toString())
+
   const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
 
   let slippageError: SlippageError | undefined
@@ -162,11 +164,11 @@ export default function SlippageTabs({
     setSlippageInput(slippage)
 
     try {
-      const slippageAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(slippage) * 100).toString())
+      const slippageAsIntFromRoundedFloat = Number.parseInt(Math.round(Number.parseFloat(slippage) * 100).toString())
 
       if (
         !Number.isNaN(slippageAsIntFromRoundedFloat) &&
-        slippageAsIntFromRoundedFloat >= 0 &&
+        slippageAsIntFromRoundedFloat > 0 &&
         slippageAsIntFromRoundedFloat < 5000
       ) {
         setRawSlippage(slippageAsIntFromRoundedFloat)
