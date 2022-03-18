@@ -3,7 +3,7 @@ import { darken } from 'polished'
 import styled from 'styled-components/macro'
 import { AbstractConnector } from 'web3-react-abstract-connector'
 
-import { injected } from '../../connectors'
+import { injectedMetamask } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import Loader from '../Loader'
 import Option from './Option'
@@ -106,7 +106,7 @@ export default function PendingView({
       {Object.keys(SUPPORTED_WALLETS).map((key) => {
         const option = SUPPORTED_WALLETS[key]
         if (option.connector === connector) {
-          if (option.connector === injected) {
+          if (option.connector === injectedMetamask) {
             if (isMetamask && option.name !== 'MetaMask') {
               return null
             }

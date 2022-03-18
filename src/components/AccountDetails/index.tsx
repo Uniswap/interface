@@ -8,7 +8,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { AbstractConnector } from 'web3-react-abstract-connector'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, portis, walletlink } from '../../connectors'
+import { injectedMetamask, portis, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { clearAllTransactions } from '../../state/transactions/actions'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
@@ -249,7 +249,8 @@ export default function AccountDetails({
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         (k) =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+          SUPPORTED_WALLETS[k].connector === connector &&
+          (connector !== injectedMetamask || isMetaMask === (k === 'METAMASK'))
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
     return (
@@ -278,7 +279,7 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && connector !== walletlink && (
+                  {connector !== injectedMetamask && connector !== walletlink && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
