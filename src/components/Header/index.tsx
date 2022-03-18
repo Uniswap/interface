@@ -179,6 +179,7 @@ const HeaderSubRow = styled(RowFlat)`
 export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadius?: string }>`
   padding: 6px 8px;
   margin: 0;
+  max-height: 22px;
   display: inline-flex;
   font-weight: bold;
   font-size: 10px;
