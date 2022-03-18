@@ -10,5 +10,5 @@ export const loadingCss = css`
 // need to use isLoading as `loading` is a reserved prop
 export const loadingTransitionCss = css<{ isLoading: boolean }>`
   ${({ isLoading }) => isLoading && loadingCss};
-  transition: opacity 0.2s ease-in-out;
+  transition: opacity ${({ isLoading }) => (isLoading ? 0 : 0.2)}s ease-in-out;
 `

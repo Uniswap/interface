@@ -7,6 +7,7 @@ const DEFAULT_KEEP_UNUSED_DATA_FOR = ms`10s`
 export default function usePoll<T>(
   fetch: () => Promise<T>,
   key = '',
+  check = false, // set to true to check the cache without initiating a new request
   pollingInterval = DEFAULT_POLLING_INTERVAL,
   keepUnusedDataFor = DEFAULT_KEEP_UNUSED_DATA_FOR
 ): T | undefined {
@@ -14,6 +15,8 @@ export default function usePoll<T>(
   const [, setData] = useState<{ key: string; result?: T }>({ key })
 
   useEffect(() => {
+    if (check) return
+
     let timeout: number
 
     const entry = cache.get(key)
@@ -41,7 +44,7 @@ export default function usePoll<T>(
         return data.key === key ? { key, result } : data
       })
     }
-  }, [cache, fetch, keepUnusedDataFor, key, pollingInterval])
+  }, [cache, check, fetch, keepUnusedDataFor, key, pollingInterval])
 
   useEffect(() => {
     // Cleanup stale entries when a new key is used.
