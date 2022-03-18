@@ -77,11 +77,11 @@ const AppBodyContainer = styled.section`
   align-items: center;
   z-index: 3;
   min-height: calc(100vh - 340px);
-`;
+`
 
 const LandingBodyContainer = styled.section`
   width: calc(100% + 32px) !important;
-`;
+`
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
