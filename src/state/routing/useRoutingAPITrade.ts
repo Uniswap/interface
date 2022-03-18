@@ -2,7 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useUSDCPrice'
-import { useFreshQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { useFilterFreshQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
@@ -50,7 +50,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnFocus: true,
   })
 
-  const quoteResult: GetQuoteResult | undefined = useFreshQuote(data)
+  const quoteResult: GetQuoteResult | undefined = useFilterFreshQuote(data)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
