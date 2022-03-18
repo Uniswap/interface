@@ -182,7 +182,7 @@ export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadiu
   display: inline-flex;
   font-weight: bold;
   font-size: 10px;
-  line-height: 10px;
+  line-height: 11px;
   text-align: center;
   letter-spacing: 0.08em;
   text-transform: uppercase;
