@@ -523,5 +523,17 @@ export function useSwapV2Callback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransactionWithType, gasPrice])
+  }, [
+    trade,
+    library,
+    account,
+    chainId,
+    recipient,
+    recipientAddressOrName,
+    swapCalls,
+    gasPrice,
+    feeConfig,
+    typedValue,
+    addTransactionWithType,
+  ])
 }

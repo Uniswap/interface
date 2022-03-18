@@ -16,7 +16,7 @@ const ItemCardGroup = ({
   poolData,
   userLiquidityPositions,
   expandedPoolKey,
-  setExpandedPoolKey
+  setExpandedPoolKey,
 }: ListItemGroupProps) => {
   const poolKey = poolData.token0.id + '-' + poolData.token1.id
 

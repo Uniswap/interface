@@ -292,4 +292,7 @@ export const ButtonGroupContainer = styled.div`
   }
 `
 
-export const FooterContainer = styled.div``
+export const FooterContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`

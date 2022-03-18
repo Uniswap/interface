@@ -1714,6 +1714,10 @@ msgstr "토큰 선택"
 msgid "Select a token to find your liquidity."
 msgstr "유동성을 찾기 위해 토큰을 선택하십시오."
 
+#: src/components/PoolList/ItemCard/index.tsx
+msgid "Share"
+msgstr ""
+
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr "풀 점유율"

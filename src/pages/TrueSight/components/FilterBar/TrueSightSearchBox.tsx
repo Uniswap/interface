@@ -100,7 +100,12 @@ export default function TrueSightSearchBox({
           </ButtonEmpty>
         </SelectedOption>
       ) : (
-        <Search searchValue={searchText} setSearchValue={setSearchText} placeholder={placeholder} minWidth={minWidth} />
+        <Search
+          searchValue={searchText}
+          onSearch={(newSearchText: string) => setSearchText(newSearchText)}
+          placeholder={placeholder}
+          minWidth={minWidth}
+        />
       )}
       {isShowOptions && (
         <OptionsContainer>

@@ -9,3 +9,4 @@ export const setSelectedPool = createAction<{
   poolData: SubgraphPoolData
   myLiquidity?: UserLiquidityPosition
 }>('pools/setSelectedPool')
+export const setSharedPoolId = createAction<{ poolId: string | undefined }>('pools/setSharedPoolId')

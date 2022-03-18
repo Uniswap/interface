@@ -1714,6 +1714,10 @@ msgstr "选择一个代币"
 msgid "Select a token to find your liquidity."
 msgstr "选择一个代币以找到您的流动性。"
 
+#: src/components/PoolList/ItemCard/index.tsx
+msgid "Share"
+msgstr ""
+
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr "池的份额"

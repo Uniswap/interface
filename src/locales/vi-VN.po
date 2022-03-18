@@ -1714,6 +1714,10 @@ msgstr "Chọn một token"
 msgid "Select a token to find your liquidity."
 msgstr "Chọn một token để tìm thanh khoản của bạn."
 
+#: src/components/PoolList/ItemCard/index.tsx
+msgid "Share"
+msgstr ""
+
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr "Chia sẻ của Pool"

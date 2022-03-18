@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Flex } from 'rebass'
-import { ChevronDown, ChevronUp, Info, Minus, Plus } from 'react-feather'
+import { ChevronDown, ChevronUp, Info, Minus, Plus, Share2 } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import { t, Trans } from '@lingui/macro'
 import { ChainId, Fraction, JSBI } from '@dynamic-amm/sdk'
@@ -11,7 +11,7 @@ import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import { MouseoverTooltip } from 'components/Tooltip'
 import CopyHelper from 'components/Copy'
 import { usePoolDetailModalToggle } from 'state/application/hooks'
-import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
+import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager } from 'state/pools/hooks'
 import { formattedNum, shortenAddress } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { getMyLiquidity, getTradingFeeAPR, parseSubgraphPoolData, useCheckIsFarmingPool } from 'utils/dmm'
@@ -38,7 +38,7 @@ import {
   TextShowMorePools,
   TextTokenPair,
   TextTVL,
-  TokenPairContainer
+  TokenPairContainer,
 } from 'components/PoolList/styled'
 
 export interface ListItemGroupProps {
@@ -62,7 +62,7 @@ const ListItemGroup = ({
   poolData,
   userLiquidityPositions,
   expandedPoolKey,
-  setExpandedPoolKey
+  setExpandedPoolKey,
 }: ListItemGroupProps) => {
   const poolKey = poolData.token0.id + '-' + poolData.token1.id
 
@@ -120,7 +120,7 @@ const ListItem = ({
   myLiquidity,
   isShowExpandedPools,
   isFirstPoolInGroup,
-  isDisableShowTwoPools
+  isDisableShowTwoPools,
 }: ListItemProps) => {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch()
@@ -134,7 +134,7 @@ const ListItem = ({
   const shortenPoolAddress = shortenAddress(poolData.id, 3)
   const { currency0, currency1, reserve0, virtualReserve0, reserve1, virtualReserve1 } = parseSubgraphPoolData(
     poolData,
-    chainId as ChainId
+    chainId as ChainId,
   )
   const realPercentToken0 =
     reserve0 && virtualReserve0 && reserve1 && virtualReserve1
@@ -159,140 +159,159 @@ const ListItem = ({
     dispatch(
       setSelectedPool({
         poolData,
-        myLiquidity
-      })
+        myLiquidity,
+      }),
     )
     togglePoolDetailModal()
   }
 
   const theme = useTheme()
 
-  return (
-    <TableRow isShowExpandedPools={isShowExpandedPools} isShowBorderBottom={isShowExpandedPools} onClick={() => null}>
-      <DataText>
-        {isFirstPoolInGroup && (
-          <Flex>
-            <TokenPairContainer>
-              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} />
-              <TextTokenPair>
-                {poolData.token0.symbol} - {poolData.token1.symbol}
-              </TextTokenPair>
-            </TokenPairContainer>
-          </Flex>
-        )}
-      </DataText>
+  const [, setSharedPoolId] = useSharedPoolIdManager()
 
-      <DataText style={{ position: 'relative' }}>
-        <div
-          style={{
-            position: 'absolute',
-            top: '-16px',
-            left: '-22px',
-            display: 'flex',
-            flexDirection: 'column'
-          }}
-        >
-          {isFarmingPool && (
-            <div style={{ overflow: 'hidden', borderTopLeftRadius: '8px' }}>
-              <MouseoverTooltip text={t`Available for yield farming`}>
-                <DropIcon />
-              </MouseoverTooltip>
-            </div>
+  return (
+    <>
+      <TableRow isShowExpandedPools={isShowExpandedPools} isShowBorderBottom={isShowExpandedPools} onClick={() => null}>
+        <DataText>
+          {isFirstPoolInGroup && (
+            <Flex>
+              <TokenPairContainer>
+                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} />
+                <TextTokenPair>
+                  {poolData.token0.symbol} - {poolData.token1.symbol}
+                </TextTokenPair>
+              </TokenPairContainer>
+            </Flex>
           )}
-          {isWarning && (
-            <div style={{ overflow: 'hidden', borderTopLeftRadius: '8px' }}>
-              <MouseoverTooltip text={`One token is close to 0% in the pool ratio. Pool might go inactive.`}>
-                <WarningLeftIcon />
-              </MouseoverTooltip>
-            </div>
+        </DataText>
+
+        <DataText style={{ position: 'relative' }}>
+          <div
+            style={{
+              position: 'absolute',
+              top: '-16px',
+              left: '-22px',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            {isFarmingPool && (
+              <div style={{ overflow: 'hidden', borderTopLeftRadius: '8px' }}>
+                <MouseoverTooltip text={t`Available for yield farming`}>
+                  <DropIcon />
+                </MouseoverTooltip>
+              </div>
+            )}
+            {isWarning && (
+              <div style={{ overflow: 'hidden', borderTopLeftRadius: '8px' }}>
+                <MouseoverTooltip text={`One token is close to 0% in the pool ratio. Pool might go inactive.`}>
+                  <WarningLeftIcon />
+                </MouseoverTooltip>
+              </div>
+            )}
+          </div>
+          <PoolAddressContainer>
+            <AddressAndAMPContainer>
+              <AddressWrapper>
+                {shortenPoolAddress}
+                <CopyHelper toCopy={poolData.id} />
+              </AddressWrapper>
+              <TextAMP>AMP = {formattedNum(amp.toSignificant(5))}</TextAMP>
+            </AddressAndAMPContainer>
+          </PoolAddressContainer>
+        </DataText>
+        <DataText>
+          {!poolData ? (
+            <Loader />
+          ) : (
+            <AMPLiquidityAndTVLContainer>
+              <TextAMPLiquidity>{ampLiquidity}</TextAMPLiquidity>
+              <TextTVL>{totalValueLocked}</TextTVL>
+            </AMPLiquidityAndTVLContainer>
           )}
-        </div>
-        <PoolAddressContainer>
-          <AddressAndAMPContainer>
-            <AddressWrapper>
-              {shortenPoolAddress}
-              <CopyHelper toCopy={poolData.id} />
-            </AddressWrapper>
-            <TextAMP>AMP = {formattedNum(amp.toSignificant(5))}</TextAMP>
-          </AddressAndAMPContainer>
-        </PoolAddressContainer>
-      </DataText>
-      <DataText>
-        {!poolData ? (
-          <Loader />
-        ) : (
-          <AMPLiquidityAndTVLContainer>
-            <TextAMPLiquidity>{ampLiquidity}</TextAMPLiquidity>
-            <TextTVL>{totalValueLocked}</TextTVL>
-          </AMPLiquidityAndTVLContainer>
-        )}
-      </DataText>
-      <APR alignItems="flex-end">
-        {!poolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}
-      </APR>
-      <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(volume, true)}</DataText>
-      <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(fee, true)}</DataText>
-      <DataText alignItems="flex-end">{getMyLiquidity(myLiquidity)}</DataText>
-      <ButtonWrapper style={{ marginRight: '-3px' }}>
-        <ButtonEmpty
-          padding="0"
-          as={Link}
-          to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`}
-          style={{
-            background: rgba(theme.primary, 0.2),
-            minWidth: '28px',
-            minHeight: '28px',
-            width: '28px',
-            height: '28px'
-          }}
-        >
-          <Plus size={16} color={theme.primary} />
-        </ButtonEmpty>
-        {myLiquidity && myLiquidity.liquidityTokenBalance !== '0' && (
+        </DataText>
+        <APR alignItems="flex-end">
+          {!poolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}
+        </APR>
+        <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(volume, true)}</DataText>
+        <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(fee, true)}</DataText>
+        <DataText alignItems="flex-end">{getMyLiquidity(myLiquidity)}</DataText>
+        <ButtonWrapper style={{ marginRight: '-3px' }}>
           <ButtonEmpty
             padding="0"
             as={Link}
-            to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`}
+            to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`}
             style={{
-              background: rgba(theme.subText, 0.2),
+              background: rgba(theme.primary, 0.2),
               minWidth: '28px',
               minHeight: '28px',
               width: '28px',
-              height: '28px'
+              height: '28px',
             }}
           >
-            <Minus size={16} />
+            <Plus size={16} color={theme.primary} />
           </ButtonEmpty>
-        )}
-
-        <ButtonEmpty
-          padding="0"
-          onClick={onTogglePoolDetailModal}
-          style={{
-            background: rgba(theme.buttonGray, 0.2),
-            minWidth: '28px',
-            minHeight: '28px',
-            width: '28px',
-            height: '28px'
-          }}
-        >
-          <Info size="16px" color={theme.subText} />
-        </ButtonEmpty>
-        <ChevronContainer>
-          {isFirstPoolInGroup && isShowExpandedPools && (
-            <ChevronUp size={20} style={{ minWidth: '20px', minHeight: '20px' }} />
+          {myLiquidity && myLiquidity.liquidityTokenBalance !== '0' && (
+            <ButtonEmpty
+              padding="0"
+              as={Link}
+              to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`}
+              style={{
+                background: rgba(theme.subText, 0.2),
+                minWidth: '28px',
+                minHeight: '28px',
+                width: '28px',
+                height: '28px',
+              }}
+            >
+              <Minus size={16} />
+            </ButtonEmpty>
           )}
-          {isFirstPoolInGroup && !isShowExpandedPools && (
-            <ChevronDown
-              size={20}
-              style={{ minWidth: '20px', minHeight: '20px' }}
-              color={isDisableShowTwoPools ? theme.buttonGray : theme.text}
-            />
-          )}
-          {!isFirstPoolInGroup && <div style={{ visibility: 'hidden', minWidth: '20px', minHeight: '20px' }} />}
-        </ChevronContainer>
-      </ButtonWrapper>
-    </TableRow>
+          <ButtonEmpty
+            padding="0"
+            onClick={e => {
+              e.stopPropagation()
+              setSharedPoolId(poolData.id)
+            }}
+            style={{
+              background: rgba(theme.buttonBlack, 0.2),
+              minWidth: '28px',
+              minHeight: '28px',
+              width: '28px',
+              height: '28px',
+            }}
+          >
+            <Share2 size="14px" color={theme.subText} />
+          </ButtonEmpty>
+          <ButtonEmpty
+            padding="0"
+            onClick={onTogglePoolDetailModal}
+            style={{
+              background: rgba(theme.buttonGray, 0.2),
+              minWidth: '28px',
+              minHeight: '28px',
+              width: '28px',
+              height: '28px',
+            }}
+          >
+            <Info size="16px" color={theme.subText} />
+          </ButtonEmpty>
+          <ChevronContainer>
+            {isFirstPoolInGroup && isShowExpandedPools && (
+              <ChevronUp size={20} style={{ minWidth: '20px', minHeight: '20px' }} />
+            )}
+            {isFirstPoolInGroup && !isShowExpandedPools && (
+              <ChevronDown
+                size={20}
+                style={{ minWidth: '20px', minHeight: '20px' }}
+                color={isDisableShowTwoPools ? theme.buttonGray : theme.text}
+              />
+            )}
+            {!isFirstPoolInGroup && <div style={{ visibility: 'hidden', minWidth: '20px', minHeight: '20px' }} />}
+          </ChevronContainer>
+        </ButtonWrapper>
+      </TableRow>
+    </>
   )
 }
 

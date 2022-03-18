@@ -1,24 +1,22 @@
-import React, { useContext, useState, useMemo } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import TwitterIcon from 'components/Icons/TwitterIcon'
 import Discord from 'components/Icons/Discord'
 import { Telegram } from 'components/Icons'
 import Facebook from 'components/Icons/Facebook'
-import { ExternalLink } from 'theme'
+import { ExternalLink, ButtonText } from 'theme'
 import Modal from 'components/Modal'
-import { Text, Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import { RowBetween } from '../Row'
-import { ButtonText } from '../../theme'
 import { Trans } from '@lingui/macro'
-import { X, Share2 } from 'react-feather'
+import { Share2, X } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
 import { ButtonPrimary } from '../Button'
-import { currencyId } from 'utils/currencyId'
-import { Field } from 'state/swap/actions'
-import { Currency } from '@dynamic-amm/sdk'
 import { useActiveWeb3React } from 'hooks'
 import { useLocation } from 'react-router-dom'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { isMobile } from 'react-device-detect'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/actions'
 
 const ButtonWrapper = styled.div`
   text-align: center;
@@ -93,7 +91,7 @@ const IconButton = styled.button`
   }
 `
 
-const ShareButton = styled(IconButton)`
+const StyledShareButton = styled(IconButton)`
   svg {
     circle {
       fill: ${({ theme }) => theme.text};
@@ -117,28 +115,18 @@ const ButtonWithHoverEffect = ({ children }: { children: (color: string) => any 
   )
 }
 
-export default function ShareModal({ currencies }: { currencies?: { [field in Field]?: Currency } }) {
+export default function ShareModal({ url }: { url?: string }) {
+  const isOpen = useModalOpen(ApplicationModal.SHARE)
+  const toggle = useToggleModal(ApplicationModal.SHARE)
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
-  const [isShow, setIsShow] = useState<boolean>(false)
   const { pathname } = useLocation()
   const isSwapPage = pathname.startsWith('/swap')
 
   const shareUrl = useMemo(() => {
-    if (!isSwapPage) {
-      return window.location.href + `?networkId=${chainId}`
-    }
-    if (isSwapPage && currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]) {
-      return (
-        window.location.origin +
-        `/#/swap?inputCurrency=${currencyId(currencies[Field.INPUT] as Currency, chainId)}&outputCurrency=${currencyId(
-          currencies[Field.OUTPUT] as Currency,
-          chainId
-        )}&networkId=${chainId}`
-      )
-    }
-    return window.location.href
-  }, [currencies, isSwapPage, chainId])
+    if (url) return url
+    return window.location.href + `?networkId=${chainId}`
+  }, [chainId, url])
 
   const [showAlert, setShowAlert] = useState(false)
   const handleCopyClick = () => {
@@ -147,86 +135,94 @@ export default function ShareModal({ currencies }: { currencies?: { [field in Fi
   }
 
   return (
-    <>
-      <ShareButton onClick={() => setIsShow(true)}>
-        <Share2 size={16} color={theme.text} />
-      </ShareButton>
-
-      <Modal isOpen={isShow} onDismiss={() => setIsShow(false)} minHeight={isMobile && 50}>
-        <Flex flexDirection="column" alignItems="center" padding="25px" width="100%">
-          <RowBetween>
-            <Text fontSize={18} fontWeight={500}>
-              {isSwapPage ? (
-                <Trans>Share this token with your friends!</Trans>
-              ) : (
-                <Trans>Share this pool with your friends!</Trans>
-              )}
-            </Text>
-            <ButtonText onClick={() => setIsShow(false)}>
-              <X color={theme.text} />
-            </ButtonText>
-          </RowBetween>
-          <Flex justifyContent="space-between" padding="32px 0" width="100%">
-            <ButtonWithHoverEffect>
-              {(color: string) => (
-                <>
-                  <ExternalLink href={'https://telegram.me/share/url?url=' + encodeURIComponent(shareUrl)}>
-                    <Telegram size={36} color={color} />
-                  </ExternalLink>
-                  <Text>Telegram</Text>
-                </>
-              )}
-            </ButtonWithHoverEffect>
-            <ButtonWithHoverEffect>
-              {(color: string) => (
-                <>
-                  <ExternalLink href={'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareUrl)}>
-                    <TwitterIcon width={36} height={36} color={color} />
-                  </ExternalLink>
-                  <Text>Twitter</Text>
-                </>
-              )}
-            </ButtonWithHoverEffect>
-            <ButtonWithHoverEffect>
-              {(color: string) => (
-                <>
-                  <ExternalLink href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl)}>
-                    <Facebook color={color} />
-                  </ExternalLink>
-                  <Text>Facebook</Text>
-                </>
-              )}
-            </ButtonWithHoverEffect>
-            <ButtonWithHoverEffect>
-              {(color: string) => (
-                <CopyToClipboard
-                  text={shareUrl}
-                  onCopy={() => {
-                    handleCopyClick()
-                    window.open('https://discord.com/app/', '_blank')
-                  }}
-                >
-                  <div>
-                    <a href="https://discord.com/app/" onClick={e => e.preventDefault()}>
-                      <Discord width={36} height={36} color={color} />
-                    </a>
-                    <Text>Discord</Text>
-                  </div>
-                </CopyToClipboard>
-              )}
-            </ButtonWithHoverEffect>
-          </Flex>
-          <InputWrapper>
-            <input type="text" value={shareUrl} />
-            <CopyToClipboard text={shareUrl} onCopy={handleCopyClick}>
-              <ButtonPrimary fontSize={14} padding="12px" width="auto">
-                Copy Link
-                <AlertMessage className={showAlert ? 'show' : ''}>Copied!</AlertMessage>
-              </ButtonPrimary>
-            </CopyToClipboard>
-          </InputWrapper>
+    <Modal isOpen={isOpen} onDismiss={toggle} minHeight={isMobile && 50}>
+      <Flex flexDirection="column" alignItems="center" padding="25px" width="100%">
+        <RowBetween>
+          <Text fontSize={18} fontWeight={500}>
+            {isSwapPage ? (
+              <Trans>Share this token with your friends!</Trans>
+            ) : (
+              <Trans>Share this pool with your friends!</Trans>
+            )}
+          </Text>
+          <ButtonText onClick={toggle}>
+            <X color={theme.text} />
+          </ButtonText>
+        </RowBetween>
+        <Flex justifyContent="space-between" padding="32px 0" width="100%">
+          <ButtonWithHoverEffect>
+            {(color: string) => (
+              <>
+                <ExternalLink href={'https://telegram.me/share/url?url=' + encodeURIComponent(shareUrl)}>
+                  <Telegram size={36} color={color} />
+                </ExternalLink>
+                <Text>Telegram</Text>
+              </>
+            )}
+          </ButtonWithHoverEffect>
+          <ButtonWithHoverEffect>
+            {(color: string) => (
+              <>
+                <ExternalLink href={'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareUrl)}>
+                  <TwitterIcon width={36} height={36} color={color} />
+                </ExternalLink>
+                <Text>Twitter</Text>
+              </>
+            )}
+          </ButtonWithHoverEffect>
+          <ButtonWithHoverEffect>
+            {(color: string) => (
+              <>
+                <ExternalLink href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl)}>
+                  <Facebook color={color} />
+                </ExternalLink>
+                <Text>Facebook</Text>
+              </>
+            )}
+          </ButtonWithHoverEffect>
+          <ButtonWithHoverEffect>
+            {(color: string) => (
+              <CopyToClipboard
+                text={shareUrl}
+                onCopy={() => {
+                  handleCopyClick()
+                  window.open('https://discord.com/app/', '_blank')
+                }}
+              >
+                <div>
+                  <a href="https://discord.com/app/" onClick={e => e.preventDefault()}>
+                    <Discord width={36} height={36} color={color} />
+                  </a>
+                  <Text>Discord</Text>
+                </div>
+              </CopyToClipboard>
+            )}
+          </ButtonWithHoverEffect>
         </Flex>
-      </Modal>
+        <InputWrapper>
+          <input type="text" value={shareUrl} />
+          <CopyToClipboard text={shareUrl} onCopy={handleCopyClick}>
+            <ButtonPrimary fontSize={14} padding="12px" width="auto">
+              Copy Link
+              <AlertMessage className={showAlert ? 'show' : ''}>Copied!</AlertMessage>
+            </ButtonPrimary>
+          </CopyToClipboard>
+        </InputWrapper>
+      </Flex>
+    </Modal>
+  )
+}
+
+export function ShareButtonWithModal({ url }: { url?: string }) {
+  const theme = useContext(ThemeContext)
+  const toggle = useToggleModal(ApplicationModal.SHARE)
+
+  return (
+    <>
+      <StyledShareButton onClick={toggle}>
+        <Share2 size={16} color={theme.text} />
+      </StyledShareButton>
+      <ShareModal url={url} />
     </>
   )
 }

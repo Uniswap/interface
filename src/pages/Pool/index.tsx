@@ -260,7 +260,7 @@ export default function Pool() {
               <Search
                 minWidth="254px"
                 searchValue={searchText}
-                setSearchValue={setSearchText}
+                onSearch={(newSearchText: string) => setSearchText(newSearchText)}
                 placeholder={t`Search by token name or pool address`}
               />
             </TitleRow>

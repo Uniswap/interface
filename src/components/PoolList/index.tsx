@@ -11,7 +11,8 @@ import {
   useAllPoolsData,
   useResetPools,
   UserLiquidityPosition,
-  useUserLiquidityPositions
+  useSharedPoolIdManager,
+  useUserLiquidityPositions,
 } from 'state/pools/hooks'
 import ListItemGroup from './ListItem'
 import ItemCardGroup from 'components/PoolList/ItemCard/ItemCardGroup'
@@ -26,6 +27,9 @@ import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import Pagination from 'components/Pagination'
 import { ClickableText } from 'components/YieldPools/styleds'
+import ShareModal from 'components/ShareModal'
+import { useModalOpen, useOpenModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/actions'
 
 const TableHeader = styled.div`
   display: grid;
@@ -54,7 +58,7 @@ const SORT_FIELD = {
   LIQ: 0,
   VOL: 1,
   FEES: 2,
-  APR: 3
+  APR: 3,
 }
 
 const ITEM_PER_PAGE = 5
@@ -115,7 +119,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
 
       return 0
     },
-    [sortDirection, sortedColumn]
+    [sortDirection, sortedColumn],
   )
 
   const renderHeader = () => {
@@ -246,7 +250,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
       const wca = wrappedCurrency(ca, chainId)
       const wcaAddress = wca && wca.address.toLowerCase()
       res = res.filter(
-        poolData => wcaAddress && (poolData.token0.id === wcaAddress || poolData.token1.id === wcaAddress)
+        poolData => wcaAddress && (poolData.token0.id === wcaAddress || poolData.token1.id === wcaAddress),
       )
     }
 
@@ -254,7 +258,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
       const wcb = wrappedCurrency(cb, chainId)
       const wcbAddress = wcb && wcb.address.toLowerCase()
       res = res.filter(
-        poolData => wcbAddress && (poolData.token0.id === wcbAddress || poolData.token1.id === wcbAddress)
+        poolData => wcbAddress && (poolData.token0.id === wcbAddress || poolData.token1.id === wcbAddress),
       )
     }
 
@@ -318,9 +322,28 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
 
     firstPoolHasMoreThanTwoExpandedPools.length &&
       setExpandedPoolKey(
-        firstPoolHasMoreThanTwoExpandedPools[0].token0.id + '-' + firstPoolHasMoreThanTwoExpandedPools[0].token1.id
+        firstPoolHasMoreThanTwoExpandedPools[0].token0.id + '-' + firstPoolHasMoreThanTwoExpandedPools[0].token1.id,
       )
   }, [above1000, sortedFilteredPaginatedSubgraphPoolsList, expandedPoolKey, sortedFilteredSubgraphPoolsObject])
+
+  const [sharedPoolId, setSharedPoolId] = useSharedPoolIdManager()
+  const openShareModal = useOpenModal(ApplicationModal.SHARE)
+  const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
+  const shareUrl = sharedPoolId
+    ? window.location.origin + '/#/pools?search=' + sharedPoolId + '&networkId=' + chainId
+    : undefined
+
+  useEffect(() => {
+    if (sharedPoolId) {
+      openShareModal()
+    }
+  }, [openShareModal, sharedPoolId])
+
+  useEffect(() => {
+    if (!isShareModalOpen) {
+      setSharedPoolId(undefined)
+    }
+  }, [isShareModalOpen, setSharedPoolId])
 
   if (loadingUserLiquidityPositions || loadingPoolsData) return <LocalLoader />
 
@@ -366,6 +389,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
       })}
       <Pagination onPrev={onPrev} onNext={onNext} currentPage={currentPage} maxPage={maxPage} />
       <PoolDetailModal />
+      <ShareModal url={shareUrl} />
     </div>
   )
 }

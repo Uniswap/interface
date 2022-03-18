@@ -1714,6 +1714,10 @@ msgstr ""
 msgid "Select a token to find your liquidity."
 msgstr ""
 
+#: src/components/PoolList/ItemCard/index.tsx
+msgid "Share"
+msgstr ""
+
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr ""

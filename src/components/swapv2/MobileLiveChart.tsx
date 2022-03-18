@@ -13,7 +13,7 @@ import { Currency } from '@dynamic-amm/sdk'
 
 function MobileLiveChart({
   handleRotateClick,
-  currencies
+  currencies,
 }: {
   handleRotateClick: () => void
   currencies: { [field in Field]?: Currency }
