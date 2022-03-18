@@ -84,10 +84,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     error: undefined,
   }
 
-  // Keep stale data around to populate trade while fetch updated quotes. Used for UI loading states.
-  const lastData = useLast(data, (data) => !!data)
-
-  const quoteResult = useFreshQuote(data ?? lastData ?? undefined)
+  const quoteResult = useFreshQuote(data)
   const isLoading = !quoteResult
 
   const route = useMemo(
@@ -96,32 +93,40 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   )
 
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
-  const trade = useMemo(() => {
-    if (route) {
-      try {
-        return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-      } catch (e: unknown) {
-        console.debug('transformRoutesToTrade failed: ', e)
-      }
-    }
-    return
-  }, [gasUseEstimateUSD, route, tradeType])
+  const trade =
+    useLast(
+      useMemo(() => {
+        if (route) {
+          try {
+            return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+          } catch (e: unknown) {
+            console.debug('transformRoutesToTrade failed: ', e)
+          }
+        }
+        return
+      }, [gasUseEstimateUSD, route, tradeType]),
+      Boolean
+    ) ?? undefined
+
+  // Dont return old trade if currencies dont match.
+  const isStale =
+    (currencyIn && !trade?.inputAmount?.currency.equals(currencyIn)) ||
+    (currencyOut && !trade?.outputAmount?.currency.equals(currencyOut))
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
       return { state: TradeState.INVALID, trade: undefined }
     }
 
-    // If fetching new quote but stale trade exists, return stale trade and syncing state
-    if (lastData && !data && trade) {
-      return { state: TradeState.SYNCING, trade }
-    }
-
     // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
     if (!error) {
+      if (isStale) {
+        return { state: TradeState.LOADING, trade: undefined }
+      }
+
       if (isDebouncing) {
         return { state: TradeState.SYNCING, trade }
-      } else if (!quoteResult) {
+      } else if (isLoading) {
         return { state: TradeState.LOADING, trade }
       }
     }
@@ -146,5 +151,5 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.VALID, trade }
     }
     return { state: TradeState.INVALID, trade: undefined }
-  }, [currencyIn, currencyOut, lastData, data, trade, quoteResult, error, route, queryArgs, isDebouncing, tradeType])
+  }, [currencyIn, currencyOut, error, quoteResult, route, queryArgs, trade, isDebouncing, isLoading, tradeType])
 }
