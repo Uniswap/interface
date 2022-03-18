@@ -11,7 +11,7 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
 import usePoll from '../usePoll'
-import { getClientSideQuote, useFreshQuote } from './clientSideSmartOrderRouter'
+import { getClientSideQuote, useFilterFreshQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 /**
@@ -84,14 +84,13 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     error: undefined,
   }
 
-  const quoteResult = useFreshQuote(data)
+  const quoteResult = useFilterFreshQuote(data)
   const isLoading = !quoteResult
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
-
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
   const trade =
     useLast(
@@ -122,9 +121,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     if (!error) {
       if (isStale) {
         return { state: TradeState.LOADING, trade: undefined }
-      }
-
-      if (isDebouncing) {
+      } else if (isDebouncing) {
         return { state: TradeState.SYNCING, trade }
       } else if (isLoading) {
         return { state: TradeState.LOADING, trade }
@@ -151,5 +148,17 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.VALID, trade }
     }
     return { state: TradeState.INVALID, trade: undefined }
-  }, [currencyIn, currencyOut, error, quoteResult, route, queryArgs, trade, isDebouncing, isLoading, tradeType])
+  }, [
+    currencyIn,
+    currencyOut,
+    error,
+    quoteResult,
+    route,
+    queryArgs,
+    trade,
+    isStale,
+    isDebouncing,
+    isLoading,
+    tradeType,
+  ])
 }
