@@ -41,22 +41,20 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
 } {
+  const amount = useMemo(() => amountSpecified?.asFraction, [amountSpecified])
+  const [currencyIn, currencyOut] =
+    tradeType === TradeType.EXACT_INPUT
+      ? [amountSpecified?.currency, otherCurrency]
+      : [otherCurrency, amountSpecified?.currency]
+
   // Debounce is used to prevent excessive requests to SOR, as it is data intensive.
   // Fast user actions (ie updating the input) should be debounced, but currency changes should not.
-  const debouncedAmountSpecified = useDebounce(amountSpecified, 200)
-  const isDebouncing =
-    amountSpecified !== debouncedAmountSpecified && amountSpecified?.currency === debouncedAmountSpecified?.currency
-
-  const chainId = amountSpecified?.currency.chainId
-  const { library } = useActiveWeb3React()
-
-  const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
-    () =>
-      tradeType === TradeType.EXACT_INPUT
-        ? [amountSpecified?.currency, otherCurrency]
-        : [otherCurrency, amountSpecified?.currency],
-    [amountSpecified, otherCurrency, tradeType]
+  const [debouncedAmount, debouncedCurrencyIn, debouncedCurrencyOut] = useDebounce(
+    useMemo(() => [amount, currencyIn, currencyOut], [amount, currencyIn, currencyOut]),
+    200
   )
+  const isDebouncing =
+    amount !== debouncedAmount && currencyIn === debouncedCurrencyIn && currencyOut === debouncedCurrencyOut
 
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
@@ -65,6 +63,8 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     tradeType,
     useClientSideRouter: true,
   })
+  const chainId = amountSpecified?.currency.chainId
+  const { library } = useActiveWeb3React()
   const params = useMemo(() => chainId && library && { chainId, provider: library }, [chainId, library])
   const config = useMemo(() => getConfig(chainId), [chainId])
   const { type: wrapType } = useWrapCallback()
@@ -105,10 +105,10 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     }
 
     // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
-    if (!quoteResult && !error) {
+    if (!error) {
       if (isDebouncing) {
         return { state: TradeState.SYNCING, trade }
-      } else {
+      } else if (!quoteResult) {
         return { state: TradeState.LOADING, trade }
       }
     }

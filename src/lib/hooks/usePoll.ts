@@ -11,7 +11,7 @@ export default function usePoll<T>(
   keepUnusedDataFor = DEFAULT_KEEP_UNUSED_DATA_FOR
 ): T | undefined {
   const cache = useMemo(() => new Map<string, { ttl: number; result?: T }>(), [])
-  const [data, setData] = useState<{ key: string; result?: T }>({ key })
+  const [, setData] = useState<{ key: string; result?: T }>({ key })
 
   useEffect(() => {
     let timeout: number
@@ -55,5 +55,7 @@ export default function usePoll<T>(
     })
   }, [cache, keepUnusedDataFor, key])
 
-  return data.result
+  // Use data.result to force a re-render, but actually retrieve the data from the cache.
+  // This gives the _first_ render access to a new result, avoiding lag introduced by React.
+  return cache.get(key)?.result
 }
