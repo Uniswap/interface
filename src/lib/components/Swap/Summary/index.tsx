@@ -161,7 +161,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
             title={<Subhead priceImpact={impact} slippage={slippage} />}
             open={open}
             onExpand={onExpand}
-            height={7.25}
+            height={7}
           >
             <Details trade={trade} slippage={slippage} priceImpact={impact} />
           </Expando>
