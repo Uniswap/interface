@@ -42,16 +42,16 @@ interface SummaryProps {
   output: CurrencyAmount<Currency>
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
-  priceImpact?: PriceImpact
+  impact?: PriceImpact
 }
 
-export default function Summary({ input, output, inputUSDC, outputUSDC, priceImpact }: SummaryProps) {
+export default function Summary({ input, output, inputUSDC, outputUSDC, impact }: SummaryProps) {
   return (
-    <Row gap={priceImpact ? 1 : 0.25}>
+    <Row gap={impact ? 1 : 0.25}>
       <TokenValue input={input} usdc={inputUSDC} />
       <ArrowRight />
       <TokenValue input={output} usdc={outputUSDC}>
-        {priceImpact && <ThemedText.Caption color={priceImpact.warning}>({priceImpact.display})</ThemedText.Caption>}
+        {impact && <ThemedText.Caption color={impact.warning}>({impact.toString()})</ThemedText.Caption>}
       </TokenValue>
     </Row>
   )

@@ -5,8 +5,9 @@ import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { getPriceImpactWarning } from 'utils/prices'
 
 export interface PriceImpact {
-  display?: string
+  percent: Percent
   warning?: 'warning' | 'error'
+  toString(): string
 }
 
 /**
@@ -19,22 +20,20 @@ export default function useUSDCPriceImpact(
 ): {
   inputUSDC?: CurrencyAmount<Token>
   outputUSDC?: CurrencyAmount<Token>
-  priceImpact: PriceImpact
+  impact?: PriceImpact
 } {
   const inputUSDC = useUSDCValue(inputAmount) ?? undefined
   const outputUSDC = useUSDCValue(outputAmount) ?? undefined
   return useMemo(() => {
     const priceImpact = computeFiatValuePriceImpact(inputUSDC, outputUSDC)
-    const warning = getPriceImpactWarning(priceImpact)
-    return {
-      inputUSDC,
-      outputUSDC,
-      priceImpact: {
-        priceImpact,
-        display: priceImpact && toHumanReadablePriceImpact(priceImpact),
-        warning,
-      },
-    }
+    const impact = priceImpact
+      ? {
+          percent: priceImpact,
+          warning: getPriceImpactWarning(priceImpact),
+          toString: () => toHumanReadablePriceImpact(priceImpact),
+        }
+      : undefined
+    return { inputUSDC, outputUSDC, impact }
   }, [inputUSDC, outputUSDC])
 }
 

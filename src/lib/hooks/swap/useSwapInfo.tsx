@@ -28,7 +28,7 @@ interface SwapInfo {
     state: TradeState
   }
   slippage: Slippage
-  impact: PriceImpact
+  impact?: PriceImpact
 }
 
 // from the current swap inputs, compute the best trade and return it.
@@ -65,11 +65,7 @@ function useComputeSwapInfo(): SwapInfo {
   // Compute slippage and impact off of the trade so that it refreshes with the trade.
   // (Using amountIn/amountOut would show (incorrect) intermediate values.)
   const slippage = useSlippage(trade.trade)
-  const {
-    inputUSDC: usdcIn,
-    outputUSDC: usdcOut,
-    priceImpact: impact,
-  } = useUSDCPriceImpact(trade.trade?.inputAmount, trade.trade?.outputAmount)
+  const { inputUSDC, outputUSDC, impact } = useUSDCPriceImpact(trade.trade?.inputAmount, trade.trade?.outputAmount)
 
   return useMemo(
     () => ({
@@ -77,19 +73,31 @@ function useComputeSwapInfo(): SwapInfo {
         currency: currencyIn,
         amount: amountIn,
         balance: balanceIn,
-        usdc: usdcIn,
+        usdc: inputUSDC,
       },
       [Field.OUTPUT]: {
         currency: currencyOut,
         amount: amountOut,
         balance: balanceOut,
-        usdc: usdcOut,
+        usdc: outputUSDC,
       },
       trade,
       slippage,
       impact,
     }),
-    [amountIn, amountOut, balanceIn, balanceOut, currencyIn, currencyOut, impact, slippage, trade, usdcIn, usdcOut]
+    [
+      amountIn,
+      amountOut,
+      balanceIn,
+      balanceOut,
+      currencyIn,
+      currencyOut,
+      impact,
+      inputUSDC,
+      outputUSDC,
+      slippage,
+      trade,
+    ]
   )
 }
 
@@ -98,7 +106,6 @@ const swapInfoAtom = atom<SwapInfo>({
   [Field.OUTPUT]: {},
   trade: { state: TradeState.INVALID },
   slippage: { auto: true, allowed: new Percent(0) },
-  impact: {},
 })
 
 export function SwapInfoUpdater() {

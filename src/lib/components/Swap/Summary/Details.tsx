@@ -1,10 +1,12 @@
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useAtomValue } from 'jotai/utils'
 import Column from 'lib/components/Column'
 import Row from 'lib/components/Row'
+import { Slippage } from 'lib/hooks/useSlippage'
+import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
@@ -36,11 +38,11 @@ function Detail({ label, value, color }: DetailProps) {
 
 interface DetailsProps {
   trade: Trade<Currency, Currency, TradeType>
-  slippage: { auto: boolean; allowed: Percent; warning?: Color }
-  priceImpact: { priceImpact?: string; warning?: Color }
+  slippage: Slippage
+  impact?: PriceImpact
 }
 
-export default function Details({ trade, slippage, priceImpact }: DetailsProps) {
+export default function Details({ trade, slippage, impact }: DetailsProps) {
   const { inputAmount, outputAmount } = trade
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
@@ -61,8 +63,8 @@ export default function Details({ trade, slippage, priceImpact }: DetailsProps) 
       }
     }
 
-    if (priceImpact.priceImpact) {
-      rows.push([t`Price impact`, priceImpact.priceImpact, priceImpact.warning])
+    if (impact) {
+      rows.push([t`Price impact`, impact.toString(), impact.warning])
     }
 
     if (lpFeeAmount) {
@@ -85,15 +87,15 @@ export default function Details({ trade, slippage, priceImpact }: DetailsProps) 
     return rows
   }, [
     feeOptions,
-    priceImpact,
-    lpFeeAmount,
-    trade,
-    slippage,
-    outputAmount,
     i18n.locale,
-    integrator,
-    outputCurrency,
+    impact,
     inputCurrency,
+    integrator,
+    lpFeeAmount,
+    outputAmount,
+    outputCurrency,
+    slippage,
+    trade,
   ])
 
   return (
