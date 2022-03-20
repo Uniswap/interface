@@ -60,6 +60,7 @@ const slideUp = keyframes`
 `
 
 const DialogWrapper = styled.div`
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   height: calc(100% - 0.5em);
   left: 0;
   margin: 0.25em;
