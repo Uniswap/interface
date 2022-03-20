@@ -75,6 +75,7 @@ import { ButtonEmpty } from 'components/Button'
 import { FooterSocialLink } from 'components/Footer/Footer'
 import { dexListConfig } from 'constants/dexes'
 import { SUPPORTED_NETWORKS } from 'constants/networks'
+import Banner from 'components/Banner'
 
 const KNC_NOT_AVAILABLE_IN = [
   ChainId.CRONOS,
@@ -264,6 +265,8 @@ function About() {
   return (
     <div style={{ position: 'relative', background: isDarkMode ? theme.buttonBlack : theme.white, width: '100%' }}>
       <AboutPage>
+        <Banner margin="32px auto 0" padding="0 16px" maxWidth="1224px" />
+
         <Wrapper>
           <Text as="h2" fontSize={['28px', '48px']} textAlign="center" lineHeight={['32px', '60px']} fontWeight="300">
             <Trans>

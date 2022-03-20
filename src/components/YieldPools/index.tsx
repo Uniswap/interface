@@ -2,8 +2,6 @@ import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
 import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
 
-import RainMakerBanner from 'assets/images/rain-maker.png'
-import RainMakerMobileBanner from 'assets/images/rain-maker-mobile.png'
 import { AMP_HINT } from 'constants/index'
 import FairLaunchPools from 'components/YieldPools/FairLaunchPools'
 import InfoHelper from 'components/InfoHelper'
@@ -11,7 +9,6 @@ import { useFarmsData } from 'state/farms/hooks'
 import { formattedNum } from 'utils'
 import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import {
-  AdContainer,
   TotalRewardsContainer,
   TableHeader,
   ClickableText,
@@ -20,10 +17,9 @@ import {
   StakedOnlyToggleText,
   HeadingContainer,
   HeadingRight,
-  LearnMoreBtn,
   MenuFlyout,
   SearchContainer,
-  SearchInput
+  SearchInput,
 } from './styleds'
 import ConfirmHarvestingModal from './ConfirmHarvestingModal'
 import { Flex, Text } from 'rebass'
@@ -41,14 +37,13 @@ import { BigNumber } from 'ethers'
 
 const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean }) => {
   const theme = useTheme()
-  const mdBreakpoint = useMedia('(min-width: 768px)')
   const above1000 = useMedia('(min-width: 1000px)')
   const { data: farmsByFairLaunch } = useFarmsData()
   const totalRewards = useFarmRewards(Object.values(farmsByFairLaunch).flat())
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
   const [stakedOnly, setStakedOnly] = useState({
     active: false,
-    ended: false
+    ended: false,
   })
 
   const activeTab = active ? 'active' : 'ended'
@@ -100,7 +95,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         )
       }
     },
-    [active, activeTab, blockNumber, debouncedSearchText, stakedOnly, currentTimestamp]
+    [active, activeTab, blockNumber, debouncedSearchText, stakedOnly, currentTimestamp],
   )
 
   const farms = useMemo(
@@ -110,7 +105,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         if (currentFarms.length) acc[address] = currentFarms
         return acc
       }, {}),
-    [farmsByFairLaunch, filterFarm]
+    [farmsByFairLaunch, filterFarm],
   )
 
   const noFarms = !Object.keys(farms).length
@@ -152,12 +147,6 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
   return (
     <>
       <ConfirmHarvestingModal />
-      <AdContainer>
-        <LearnMoreBtn href="https://docs.kyberswap.com/guides/yield-farming" target="_blank" rel="noopener noreferrer">
-          <Trans>Learn more</Trans> -&gt;
-        </LearnMoreBtn>
-        <img src={mdBreakpoint ? RainMakerBanner : RainMakerMobileBanner} alt="RainMaker" width="100%" />
-      </AdContainer>
       <HeadingContainer>
         <StakedOnlyToggleWrapper>
           <StakedOnlyToggle

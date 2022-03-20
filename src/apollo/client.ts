@@ -55,7 +55,7 @@ const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Apoll
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ''
-      : 'https://avax-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-avax',
+      : 'https://avalanche-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-avalanche',
   cache: new InMemoryCache(),
 })
 
@@ -97,10 +97,9 @@ const velasExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClien
   cache: new InMemoryCache(),
 })
 
-
 const auroraExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-aurora',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
@@ -200,7 +199,7 @@ const velasBlockClient = new ApolloClient({
 
 const auroraBlockClient = new ApolloClient({
   uri: 'https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/aurora-blocks',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {

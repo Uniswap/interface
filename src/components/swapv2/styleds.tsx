@@ -11,13 +11,15 @@ import Modal from 'components/Modal'
 
 export const PageWrapper = styled.div`
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   padding: 24px 16px 100px;
+  gap: 24px;
   width: 100%;
 
   @media only screen and (min-width: 768px) {
     flex-direction: column;
     padding: 24px 16px 100px;
+    gap: 16px;
   }
 
   @media only screen and (min-width: 1000px) {

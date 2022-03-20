@@ -39,6 +39,7 @@ export default function ConfirmSwapModal({
   attemptingTxn,
   txHash,
   tokenAddtoMetaMask,
+  showFarmBanner,
 }: {
   isOpen: boolean
   trade: Aggregator | undefined
@@ -52,6 +53,7 @@ export default function ConfirmSwapModal({
   onConfirm: () => void
   swapErrorMessage: string | undefined
   onDismiss: () => void
+  showFarmBanner?: boolean
 }) {
   const { feeConfig, typedValue } = useSwapState()
 
@@ -116,6 +118,7 @@ export default function ConfirmSwapModal({
       content={confirmationContent}
       pendingText={pendingText}
       tokenAddtoMetaMask={tokenAddtoMetaMask}
+      showFarmBanner={showFarmBanner}
     />
   )
 }
