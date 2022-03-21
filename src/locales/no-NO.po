@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-21 18:12\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -193,6 +193,7 @@ msgid "Against"
 msgstr "Mot"
 
 #: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow"
 msgstr "Tillate"
 
@@ -211,6 +212,10 @@ msgstr "Tillat Uniswap-protokollen å bruke din {0}"
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow {0} first"
 msgstr "Tillat {0} først"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allowance pending"
+msgstr "Godtgjørelse venter"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

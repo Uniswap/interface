@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-21 18:12\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -193,6 +193,7 @@ msgid "Against"
 msgstr "Vastaan"
 
 #: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow"
 msgstr "Sallia"
 
@@ -211,6 +212,10 @@ msgstr "Salli Uniswap-protokollan käyttää {0}"
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow {0} first"
 msgstr "Salli ensin {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allowance pending"
+msgstr "Korvaus vireillä"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
