@@ -157,12 +157,7 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
           <Price trade={trade} />
         </Heading>
         <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
-          <Expando
-            title={<Subhead impact={impact} slippage={slippage} />}
-            open={open}
-            onExpand={onExpand}
-            height={7}
-          >
+          <Expando title={<Subhead impact={impact} slippage={slippage} />} open={open} onExpand={onExpand} height={7}>
             <Details trade={trade} slippage={slippage} impact={impact} />
           </Expando>
           <Footing>
