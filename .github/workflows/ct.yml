@@ -22,10 +22,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - name: Sync git addresses
-        run: mkdir -p ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       - name: Install
         run: yarn install
+          - uses: webfactory/ssh-agent@v0.5.4
+            with:
+              ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Lint
         run: yarn lint
       - name: Install cypress
