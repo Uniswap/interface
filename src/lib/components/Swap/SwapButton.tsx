@@ -13,7 +13,7 @@ import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import useWrapCallback, { WrapError, WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
-import { useSetMinimumFreshBlock } from 'lib/hooks/useIsFreshBlock'
+import { useSetOldestValidBlock } from 'lib/hooks/useIsValidBlock'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, feeOptionsAtom, Field } from 'lib/state/swap'
@@ -178,7 +178,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   //@TODO(ianlapham): add a loading state, process errors
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
 
-  const setMinimumFreshBlock = useSetMinimumFreshBlock()
+  const setOldestValidBlock = useSetOldestValidBlock()
   const onConfirm = useCallback(() => {
     swapCallback?.()
       .then((response) => {
@@ -192,10 +192,10 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
           outputCurrencyAmount: outputTradeCurrencyAmount,
         })
 
-        // Set the block containing the response to the minimum fresh block to ensure that the
+        // Set the block containing the response to the oldest valid block to ensure that the
         // completed trade's impact is reflected in future fetched trades.
         response.wait(1).then((receipt) => {
-          setMinimumFreshBlock(receipt.blockNumber)
+          setOldestValidBlock(receipt.blockNumber)
         })
       })
       .catch((error) => {
@@ -210,7 +210,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     inputTradeCurrencyAmount,
     outputTradeCurrencyAmount,
     setDisplayTxHash,
-    setMinimumFreshBlock,
+    setOldestValidBlock,
     swapCallback,
     tradeType,
   ])
