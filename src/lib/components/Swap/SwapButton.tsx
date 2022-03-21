@@ -39,9 +39,6 @@ function useIsPendingApproval(token?: Token, spender?: string): boolean {
 
 export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
-
-  const { tokenColorExtraction } = useTheme()
-
   const {
     [Field.INPUT]: {
       currency: inputCurrency,
@@ -56,32 +53,23 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   } = useSwapInfo()
   const [feeOptions] = useFeeOptions()
 
-  const tradeType = useSwapTradeType()
-
   const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>()
-  useEffect(() => {
-    setActiveTrade((activeTrade) => activeTrade && trade.trade)
-  }, [trade])
-
-  // clear active trade on chain change
-  useEffect(() => {
-    setActiveTrade(undefined)
-  }, [chainId])
+  // If there is an active trade, keep it up-to-date.
+  useEffect(() => setActiveTrade((activeTrade) => activeTrade && trade.trade), [trade])
+  // Clear any active trade if the chain is changed.
+  useEffect(() => setActiveTrade(undefined), [chainId])
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
     // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
     useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
-
   const approvalCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
-
   const { approvalState, signatureData, handleApproveOrPermit } = useApproveOrPermit(
     optimizedTrade,
     slippage.allowed,
     useIsPendingApproval,
     approvalCurrencyAmount
   )
-
   const approvalHash = usePendingApproval(
     inputCurrency?.isToken ? inputCurrency : undefined,
     useSwapRouterAddress(optimizedTrade)
@@ -186,6 +174,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
 
   const setOldestValidBlock = useSetOldestValidBlock()
+  const tradeType = useSwapTradeType()
   const onConfirm = useCallback(async () => {
     if (!swapCallback) return
 
@@ -254,6 +243,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     }
   }, [addTransaction, chainId, setDisplayTxHash, trade.trade, wrapCallback, wrapType])
 
+  const { tokenColorExtraction } = useTheme()
   return (
     <>
       <ActionButton
