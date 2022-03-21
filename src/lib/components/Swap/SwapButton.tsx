@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { useUpdateAtom } from 'jotai/utils'
 import { WrapErrorText } from 'lib/components/Swap/WrapErrorText'
-import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
+import { useSwapCurrencyAmount, useSwapInfo } from 'lib/hooks/swap'
 import useFeeOptions from 'lib/hooks/swap/useFeeOptions'
 import {
   ApproveOrPermitState,
@@ -42,22 +42,16 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const {
     [Field.INPUT]: {
       currency: inputCurrency,
-      amount: inputTradeCurrencyAmount,
+      amount: inputCurrencyAmount,
       balance: inputCurrencyBalance,
       usdc: inputUSDC,
     },
-    [Field.OUTPUT]: { amount: outputTradeCurrencyAmount, usdc: outputUSDC },
+    [Field.OUTPUT]: { usdc: outputUSDC },
     trade,
     slippage,
     impact,
   } = useSwapInfo()
   const [feeOptions] = useFeeOptions()
-
-  const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>()
-  // If there is an active trade, keep it up-to-date.
-  useEffect(() => setActiveTrade((activeTrade) => activeTrade && trade.trade), [trade])
-  // Clear any active trade if the chain is changed.
-  useEffect(() => setActiveTrade(undefined), [chainId])
 
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
@@ -92,18 +86,9 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       !chainId ||
       wrapLoading ||
       (wrapType !== WrapType.NOT_APPLICABLE && wrapError) ||
-      !(inputTradeCurrencyAmount && inputCurrencyBalance) ||
-      inputCurrencyBalance.lessThan(inputTradeCurrencyAmount),
-    [
-      disabled,
-      optimizedTrade,
-      chainId,
-      wrapLoading,
-      wrapType,
-      wrapError,
-      inputTradeCurrencyAmount,
-      inputCurrencyBalance,
-    ]
+      !(inputCurrencyAmount && inputCurrencyBalance) ||
+      inputCurrencyBalance.lessThan(inputCurrencyAmount),
+    [disabled, optimizedTrade, chainId, wrapLoading, wrapType, wrapError, inputCurrencyAmount, inputCurrencyBalance]
   )
 
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
@@ -159,8 +144,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   }, [approvalCurrencyAmount?.currency, approvalHash, approvalState, disableSwap, inputCurrency, onApprove, wrapType])
 
   const deadline = useTransactionDeadline()
-
-  // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
     allowedSlippage: slippage.allowed,
@@ -173,21 +156,26 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   //@TODO(ianlapham): add a loading state, process errors
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
 
+  const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>()
+  // If there is an active trade, keep it up-to-date.
+  useEffect(() => setActiveTrade((activeTrade) => activeTrade && trade.trade), [trade])
+  // Clear any active trade if the chain is changed.
+  useEffect(() => setActiveTrade(undefined), [chainId])
+
   const setOldestValidBlock = useSetOldestValidBlock()
-  const tradeType = useSwapTradeType()
   const onConfirm = useCallback(async () => {
     if (!swapCallback) return
 
     try {
       const response = await swapCallback()
       setDisplayTxHash(response.hash)
-      invariant(inputTradeCurrencyAmount && outputTradeCurrencyAmount)
+      invariant(activeTrade)
       addTransaction({
         response,
         type: TransactionType.SWAP,
-        tradeType,
-        inputCurrencyAmount: inputTradeCurrencyAmount,
-        outputCurrencyAmount: outputTradeCurrencyAmount,
+        tradeType: activeTrade.tradeType,
+        inputCurrencyAmount: activeTrade.inputAmount,
+        outputCurrencyAmount: activeTrade.outputAmount,
       })
 
       // Set the block containing the response to the oldest valid block to ensure that the
@@ -198,15 +186,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       console.log(error)
     }
     setActiveTrade(undefined)
-  }, [
-    addTransaction,
-    inputTradeCurrencyAmount,
-    outputTradeCurrencyAmount,
-    setDisplayTxHash,
-    setOldestValidBlock,
-    swapCallback,
-    tradeType,
-  ])
+  }, [activeTrade, addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback])
 
   const ButtonText = useCallback(() => {
     if ((wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP) && wrapError !== WrapError.NO_ERROR) {
@@ -223,10 +203,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     }
   }, [wrapError, wrapType])
 
-  const handleDialogClose = useCallback(() => {
-    setActiveTrade(undefined)
-  }, [])
-
+  const { tokenColorExtraction } = useTheme()
   const handleActionButtonClick = useCallback(async () => {
     if (wrapType === WrapType.NOT_APPLICABLE) {
       setActiveTrade(trade.trade)
@@ -242,8 +219,8 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       setDisplayTxHash(transaction.hash)
     }
   }, [addTransaction, chainId, setDisplayTxHash, trade.trade, wrapCallback, wrapType])
+  const handleDialogClose = useCallback(() => setActiveTrade(undefined), [])
 
-  const { tokenColorExtraction } = useTheme()
   return (
     <>
       <ActionButton
