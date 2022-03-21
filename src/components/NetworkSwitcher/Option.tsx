@@ -69,7 +69,8 @@ export default function Option({
                 ?.valueOf()
                 .toString()
                 .toLowerCase()
-                .replace(' ', '-') + '-network-button'
+                .replace(/\s/g, '-')
+                .replace('.', '') + '-network-button'
             }
           >
             {name}

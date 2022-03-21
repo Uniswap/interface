@@ -1,15 +1,15 @@
 import { TokenMenu } from './TokenMenu'
 export class SwapPage {
   static openTokenToSwapMenu() {
-    cy.findByTestId('select-token-button').click()
+    cy.get('[data-testid=select-token-button]').click()
     return TokenMenu
   }
   static typeValueIn(value: string) {
-    cy.findByTestId('from-value-input').type(value)
+    cy.get('[data-testid=from-value-input]').type(value)
     return this
   }
   static wrap() {
-    cy.findByTestId('wrap-button').click()
+    cy.get('[data-testid=wrap-button]').click()
     return this
   }
   static swap() {
@@ -18,5 +18,8 @@ export class SwapPage {
   }
   static confirmSwap() {
     cy.get('#confirm-swap-or-send').click()
+  }
+  static connectOrSwitchButton() {
+    return cy.get('[data-testid=switch-connect-button]')
   }
 }

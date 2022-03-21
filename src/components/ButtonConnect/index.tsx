@@ -19,6 +19,7 @@ export const ButtonConnect = () => {
     <ButtonPrimary
       onClick={isSwitchNetwork ? toggleNetworkSwitcherPopover : toggleWalletSwitcherPopover}
       disabled={networkSwitcherPopoverOpen}
+      data-testid="switch-connect-button"
     >
       {isSwitchNetwork ? 'Switch network' : 'Connect wallet'}
     </ButtonPrimary>
