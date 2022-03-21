@@ -10,8 +10,9 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
+import { useGetIsValidBlock } from '../useIsValidBlock'
 import usePoll from '../usePoll'
-import { getClientSideQuote, useFilterFreshQuote } from './clientSideSmartOrderRouter'
+import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 /**
@@ -80,11 +81,13 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     }
   }, [config, params, queryArgs, wrapType])
 
-  const { data, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), isDebouncing) ?? {
+  const getIsValidBlock = useGetIsValidBlock()
+  const { data: quoteResult, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), {
+    debounce: isDebouncing,
+    staleCallback: useCallback(({ data }) => getIsValidBlock(Number(data?.blockNumber) || 0), [getIsValidBlock]),
+  }) ?? {
     error: undefined,
   }
-
-  const quoteResult = useFilterFreshQuote(data)
   const isLoading = !quoteResult
 
   const route = useMemo(
