@@ -17,6 +17,7 @@ function TokenImg({ token, ...rest }: TokenImgProps) {
   // Use the wrapped token info so that it includes the logoURI.
   const tokenInfo = useToken(token.isToken ? token.wrapped.address : undefined) ?? token
 
+  // TODO(zzmp): TokenImg takes a frame to switch.
   const srcs = useCurrencyLogoURIs(tokenInfo)
   const [src, setSrc] = useState<string | undefined>()
   useEffect(() => {

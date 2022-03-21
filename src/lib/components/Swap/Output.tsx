@@ -83,7 +83,7 @@ export default function Output({ disabled, focused, children }: PropsWithChildre
             <Row>
               <USDC gap={0.5} isLoading={isRouteLoading}>
                 {outputUSDC ? `$${formatCurrencyAmount(outputUSDC, 6, 'en', 2)}` : '-'}{' '}
-                {impact.display && <ThemedText.Body2 color={impact.warning}>({impact.display})</ThemedText.Body2>}
+                {impact && <ThemedText.Body2 color={impact.warning}>({impact.toString()})</ThemedText.Body2>}
               </USDC>
               {balance && (
                 <Balance focused={focused}>
