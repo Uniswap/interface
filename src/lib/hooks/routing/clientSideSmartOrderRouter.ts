@@ -4,8 +4,6 @@ import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
-import useIsFreshBlock from '../useIsFreshBlock'
-
 export const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((chainId): chainId is ChainId =>
   Number.isInteger(chainId)
 )
@@ -99,10 +97,4 @@ export async function getClientSideQuote(
     routerParams,
     routerConfig
   )
-}
-
-/**  Used to keep quotes up to date given a certain block age. Returns undefined if past limit. */
-export function useFilterFreshQuote(quoteResult: GetQuoteResult | undefined): GetQuoteResult | undefined {
-  const isFreshBlock = useIsFreshBlock(Number(quoteResult?.blockNumber) || 0)
-  return isFreshBlock ? quoteResult : undefined
 }

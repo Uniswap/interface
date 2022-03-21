@@ -13,7 +13,7 @@ import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import useWrapCallback, { WrapError, WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
-import { useSetMinimumFreshBlock } from 'lib/hooks/useFilterFreshBlock'
+import { useSetMinimumFreshBlock } from 'lib/hooks/useIsFreshBlock'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, feeOptionsAtom, Field } from 'lib/state/swap'
@@ -205,7 +205,15 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       .finally(() => {
         setActiveTrade(undefined)
       })
-  }, [addTransaction, inputTradeCurrencyAmount, outputTradeCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
+  }, [
+    addTransaction,
+    inputTradeCurrencyAmount,
+    outputTradeCurrencyAmount,
+    setDisplayTxHash,
+    setMinimumFreshBlock,
+    swapCallback,
+    tradeType,
+  ])
 
   const ButtonText = useCallback(() => {
     if ((wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP) && wrapError !== WrapError.NO_ERROR) {
