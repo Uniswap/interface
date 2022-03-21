@@ -84,7 +84,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   const getIsFreshBlock = useGetIsFreshBlock()
   const { data: quoteResult, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), {
     debounce: isDebouncing,
-    staleCallback: useCallback(({ data }) => getIsFreshBlock(Number(data.blockNumber) || 0), [getIsFreshBlock]),
+    staleCallback: useCallback(({ data }) => getIsFreshBlock(Number(data?.blockNumber) || 0), [getIsFreshBlock]),
   }) ?? {
     error: undefined,
   }
