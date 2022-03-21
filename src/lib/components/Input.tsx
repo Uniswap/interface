@@ -1,5 +1,5 @@
 import styled, { css } from 'lib/theme'
-import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
+import { forwardRef, HTMLProps, useCallback } from 'react'
 
 const Input = styled.input`
   -webkit-appearance: textfield;
@@ -76,46 +76,23 @@ interface EnforcedNumericInputProps extends NumericInputProps {
   enforcer: (nextUserInput: string) => string | null
 }
 
-function isNumericallyEqual(a: string, b: string) {
-  const [aInteger, aDecimal] = toParts(a)
-  const [bInteger, bDecimal] = toParts(b)
-  return aInteger === bInteger && aDecimal === bDecimal
-
-  function toParts(num: string) {
-    let [integer, decimal] = num.split('.')
-    integer = integer?.match(/([1-9]\d*)/)?.[1] || ''
-    decimal = decimal?.match(/(\d*[1-9])/)?.[1] || ''
-    return [integer, decimal]
-  }
-}
-
 const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(function NumericInput(
   { value, onChange, enforcer, pattern, ...props }: EnforcedNumericInputProps,
   ref
 ) {
-  const [state, setState] = useState(value ?? '')
-  useEffect(() => {
-    if (!isNumericallyEqual(state, value)) {
-      setState(value ?? '')
-    }
-  }, [value, state, setState])
-
   const validateChange = useCallback(
     (event) => {
       const nextInput = enforcer(event.target.value.replace(/,/g, '.'))
       if (nextInput !== null) {
-        setState(nextInput ?? '')
-        if (!isNumericallyEqual(nextInput, value)) {
-          onChange(nextInput)
-        }
+        onChange(nextInput)
       }
     },
-    [value, onChange, enforcer]
+    [onChange, enforcer]
   )
 
   return (
     <Input
-      value={state}
+      value={value}
       onChange={validateChange}
       // universal input options
       inputMode="decimal"
