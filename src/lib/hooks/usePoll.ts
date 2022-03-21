@@ -5,11 +5,11 @@ const DEFAULT_POLLING_INTERVAL = ms`15s`
 const DEFAULT_KEEP_UNUSED_DATA_FOR = ms`10s`
 
 interface PollingOptions<T> {
-  // When true, any cached result will be returned, but no new fetch will be initiated.
+  // If true, any cached result will be returned, but no new fetch will be initiated.
   debounce?: boolean
 
-  // When stale, a result will not be returned, and a new fetch will be immediately initiated.
-  checkStale?: (value: T) => boolean
+  // If stale, a result will not be returned, and a new fetch will be immediately initiated.
+  staleCallback?: (value: T) => boolean
 
   pollingInterval?: number
   keepUnusedDataFor?: number
@@ -20,7 +20,7 @@ export default function usePoll<T>(
   key = '',
   {
     debounce = false,
-    checkStale,
+    staleCallback,
     pollingInterval = DEFAULT_POLLING_INTERVAL,
     keepUnusedDataFor = DEFAULT_KEEP_UNUSED_DATA_FOR,
   }: PollingOptions<T>
@@ -34,7 +34,7 @@ export default function usePoll<T>(
     let timeout: number
 
     const entry = cache.get(key)
-    const isStale = checkStale && entry?.result !== undefined ? checkStale(entry.result) : false
+    const isStale = staleCallback && entry?.result !== undefined ? staleCallback(entry.result) : false
     if (entry && entry.ttl + keepUnusedDataFor > Date.now() && !isStale) {
       // If there is a fresh entry, return it and queue the next poll.
       setData({ key, result: entry.result })
@@ -59,7 +59,7 @@ export default function usePoll<T>(
         return data.key === key ? { key, result } : data
       })
     }
-  }, [cache, checkStale, debounce, fetch, keepUnusedDataFor, key, pollingInterval])
+  }, [cache, debounce, fetch, keepUnusedDataFor, key, pollingInterval, staleCallback])
 
   useEffect(() => {
     // Cleanup stale entries when a new key is used.
