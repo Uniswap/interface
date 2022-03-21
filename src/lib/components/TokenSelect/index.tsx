@@ -68,7 +68,7 @@ export function TokenSelectDialog({ value, onSelect }: TokenSelectDialogProps) {
   const baseTokens: Currency[] = [] // TODO(zzmp): Add base tokens to token list functionality
 
   const input = useRef<HTMLInputElement>(null)
-  useEffect(() => input.current?.focus(), [input])
+  useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
   const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
 
