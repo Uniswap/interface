@@ -7,7 +7,6 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { useCallback, useMemo, useState } from 'react'
-import invariant from 'tiny-invariant'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
 import { ApprovalState, useApproval, useApprovalStateForSpender } from '../useApproval'
@@ -75,10 +74,6 @@ export default function useSwapApproval(
   const spender = useSwapRouterAddress(trade)
 
   const approval = useApproval(amountToApprove, spender, useIsPendingApproval)
-  if (trade instanceof V2Trade || trade instanceof V3Trade) {
-    const approvalState = approval[0]
-    invariant(approvalState === ApprovalState.APPROVED, 'Trying to approve legacy router')
-  }
   return approval
 }
 
