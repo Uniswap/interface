@@ -13,6 +13,7 @@ import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import useWrapCallback, { WrapError, WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
+import { useSetOldestValidBlock } from 'lib/hooks/useIsValidBlock'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, feeOptionsAtom, Field } from 'lib/state/swap'
@@ -86,12 +87,11 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   )
 
   const addTransaction = useAddTransaction()
-  const onApprove = useCallback(() => {
-    handleApproveOrPermit().then((transaction) => {
-      if (transaction) {
-        addTransaction({ type: TransactionType.APPROVAL, ...transaction })
-      }
-    })
+  const onApprove = useCallback(async () => {
+    const transaction = await handleApproveOrPermit()
+    if (transaction) {
+      addTransaction({ type: TransactionType.APPROVAL, ...transaction })
+    }
   }, [addTransaction, handleApproveOrPermit])
 
   const { type: wrapType, callback: wrapCallback, error: wrapError, loading: wrapLoading } = useWrapCallback()
@@ -103,7 +103,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       !chainId ||
       wrapLoading ||
       (wrapType !== WrapType.NOT_APPLICABLE && wrapError) ||
-      approvalState === ApproveOrPermitState.PENDING_SIGNATURE ||
       !(inputTradeCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputTradeCurrencyAmount),
     [
@@ -113,7 +112,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       wrapLoading,
       wrapType,
       wrapError,
-      approvalState,
       inputTradeCurrencyAmount,
       inputCurrencyBalance,
     ]
@@ -154,8 +152,17 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
             </EtherscanLink>
           ),
           icon: Spinner,
-          onClick: () => void 0, // @TODO: should not require an onclick
           children: <Trans>Approve</Trans>,
+        },
+      }
+    }
+    if (approvalState === ApproveOrPermitState.PENDING_SIGNATURE) {
+      return {
+        disabled: true,
+        action: {
+          message: <Trans>Allowance pending</Trans>,
+          icon: Spinner,
+          children: <Trans>Allow</Trans>,
         },
       }
     }
@@ -177,6 +184,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   //@TODO(ianlapham): add a loading state, process errors
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
 
+  const setOldestValidBlock = useSetOldestValidBlock()
   const onConfirm = useCallback(() => {
     swapCallback?.()
       .then((response) => {
@@ -189,6 +197,12 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
           inputCurrencyAmount: inputTradeCurrencyAmount,
           outputCurrencyAmount: outputTradeCurrencyAmount,
         })
+
+        // Set the block containing the response to the oldest valid block to ensure that the
+        // completed trade's impact is reflected in future fetched trades.
+        response.wait(1).then((receipt) => {
+          setOldestValidBlock(receipt.blockNumber)
+        })
       })
       .catch((error) => {
         //@TODO(ianlapham): add error handling
@@ -197,7 +211,15 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       .finally(() => {
         setActiveTrade(undefined)
       })
-  }, [addTransaction, inputTradeCurrencyAmount, outputTradeCurrencyAmount, setDisplayTxHash, swapCallback, tradeType])
+  }, [
+    addTransaction,
+    inputTradeCurrencyAmount,
+    outputTradeCurrencyAmount,
+    setDisplayTxHash,
+    setOldestValidBlock,
+    swapCallback,
+    tradeType,
+  ])
 
   const ButtonText = useCallback(() => {
     if ((wrapType === WrapType.WRAP || wrapType === WrapType.UNWRAP) && wrapError !== WrapError.NO_ERROR) {

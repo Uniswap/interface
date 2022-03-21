@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-21 18:12\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -193,6 +193,7 @@ msgid "Against"
 msgstr "Proti"
 
 #: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow"
 msgstr "Dovoli"
 
@@ -211,6 +212,10 @@ msgstr "Dovoli protokolu Uniswap, da uporabi vaše {0}"
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow {0} first"
 msgstr "Najprej dovoli {0}"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allowance pending"
+msgstr "Dodatek v teku"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

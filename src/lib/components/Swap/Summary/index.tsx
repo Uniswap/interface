@@ -10,7 +10,7 @@ import Row from 'lib/components/Row'
 import { Slippage } from 'lib/hooks/useSlippage'
 import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Info } from 'lib/icons'
-import styled, { Color, ThemedText } from 'lib/theme'
+import styled, { ThemedText } from 'lib/theme'
 import { useCallback, useMemo, useState } from 'react'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -41,16 +41,16 @@ const Body = styled(Column)<{ open: boolean }>`
   }
 `
 
-function Subhead({ priceImpact, slippage }: { priceImpact: { warning?: Color }; slippage: Slippage }) {
+function Subhead({ impact, slippage }: { impact?: PriceImpact; slippage: Slippage }) {
   return (
     <Row gap={0.5}>
-      {priceImpact.warning || slippage.warning ? (
-        <AlertTriangle color={priceImpact.warning || slippage.warning} />
+      {impact?.warning || slippage.warning ? (
+        <AlertTriangle color={impact?.warning || slippage.warning} />
       ) : (
         <Info color="secondary" />
       )}
-      <ThemedText.Subhead2 color={priceImpact.warning || slippage.warning || 'secondary'}>
-        {priceImpact.warning ? (
+      <ThemedText.Subhead2 color={impact?.warning || slippage.warning || 'secondary'}>
+        {impact?.warning ? (
           <Trans>High price impact</Trans>
         ) : slippage.warning ? (
           <Trans>High slippage</Trans>
@@ -132,7 +132,7 @@ interface SummaryDialogProps {
   slippage: Slippage
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
-  impact: PriceImpact
+  impact?: PriceImpact
   onConfirm: () => void
 }
 
@@ -152,23 +152,23 @@ export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, 
             output={outputAmount}
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}
-            priceImpact={impact}
+            impact={impact}
           />
           <Price trade={trade} />
         </Heading>
         <Column gap={open ? 0 : 0.75} style={{ transition: 'gap 0.25s' }}>
           <Expando
-            title={<Subhead priceImpact={impact} slippage={slippage} />}
+            title={<Subhead impact={impact} slippage={slippage} />}
             open={open}
             onExpand={onExpand}
             height={7}
           >
-            <Details trade={trade} slippage={slippage} priceImpact={impact} />
+            <Details trade={trade} slippage={slippage} impact={impact} />
           </Expando>
           <Footing>
             <Estimate trade={trade} slippage={slippage} />
           </Footing>
-          <ConfirmButton trade={trade} highPriceImpact={impact.warning === 'error'} onConfirm={onConfirm} />
+          <ConfirmButton trade={trade} highPriceImpact={impact?.warning === 'error'} onConfirm={onConfirm} />
         </Column>
       </Body>
     </>

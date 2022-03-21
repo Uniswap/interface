@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-21 18:12\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -193,6 +193,7 @@ msgid "Against"
 msgstr "Karşısında"
 
 #: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow"
 msgstr "İzin vermek"
 
@@ -211,6 +212,10 @@ msgstr "Uniswap Protokolünün {0} kullanmasına izin verin"
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow {0} first"
 msgstr "Önce {0} izin ver"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allowance pending"
+msgstr "ödenek beklemede"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

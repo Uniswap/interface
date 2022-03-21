@@ -1,8 +1,8 @@
 import 'wicg-inert'
 
-import useUnmount from 'lib/hooks/useUnmount'
 import { X } from 'lib/icons'
 import styled, { Color, Layer, ThemeProvider } from 'lib/theme'
+import { delayUnmountForAnimation } from 'lib/utils/animations'
 import { createContext, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -97,8 +97,10 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
     context.setActive(true)
     return () => context.setActive(false)
   }, [context])
-  const dialog = useRef<HTMLDivElement>(null)
-  useUnmount(dialog)
+
+  const modal = useRef<HTMLDivElement>(null)
+  useEffect(() => delayUnmountForAnimation(modal), [])
+
   useEffect(() => {
     const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()
     document.addEventListener('keydown', close, true)
@@ -108,9 +110,11 @@ export default function Dialog({ color, children, onClose = () => void 0 }: Dial
     context.element &&
     createPortal(
       <ThemeProvider>
-        <Modal color={color} ref={dialog}>
-          <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
-        </Modal>
+        <OnCloseContext.Provider value={onClose}>
+          <Modal color={color} ref={modal}>
+            {children}
+          </Modal>
+        </OnCloseContext.Provider>
       </ThemeProvider>,
       context.element
     )

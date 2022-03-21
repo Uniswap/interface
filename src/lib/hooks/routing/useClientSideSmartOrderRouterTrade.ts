@@ -10,8 +10,9 @@ import { computeRoutes, transformRoutesToTrade } from 'state/routing/utils'
 
 import useWrapCallback, { WrapType } from '../swap/useWrapCallback'
 import useActiveWeb3React from '../useActiveWeb3React'
+import { useGetIsValidBlock } from '../useIsValidBlock'
 import usePoll from '../usePoll'
-import { getClientSideQuote, useFilterFreshQuote } from './clientSideSmartOrderRouter'
+import { getClientSideQuote } from './clientSideSmartOrderRouter'
 import { useRoutingAPIArguments } from './useRoutingAPIArguments'
 
 /**
@@ -80,11 +81,13 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     }
   }, [config, params, queryArgs, wrapType])
 
-  const { data, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), isDebouncing) ?? {
+  const getIsValidBlock = useGetIsValidBlock()
+  const { data: quoteResult, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), {
+    debounce: isDebouncing,
+    staleCallback: useCallback(({ data }) => getIsValidBlock(Number(data?.blockNumber) || 0), [getIsValidBlock]),
+  }) ?? {
     error: undefined,
   }
-
-  const quoteResult = useFilterFreshQuote(data)
   const isLoading = !quoteResult
 
   const route = useMemo(
@@ -92,20 +95,17 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
-  const trade =
-    useLast(
-      useMemo(() => {
-        if (route) {
-          try {
-            return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-          } catch (e: unknown) {
-            console.debug('transformRoutesToTrade failed: ', e)
-          }
-        }
-        return
-      }, [gasUseEstimateUSD, route, tradeType]),
-      Boolean
-    ) ?? undefined
+  const trade = useMemo(() => {
+    if (route) {
+      try {
+        return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+      } catch (e: unknown) {
+        console.debug('transformRoutesToTrade failed: ', e)
+      }
+    }
+    return
+  }, [gasUseEstimateUSD, route, tradeType])
+  const lastTrade = useLast(trade, Boolean) ?? undefined
 
   // Dont return old trade if currencies dont match.
   const isStale =
@@ -122,9 +122,9 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       if (isStale) {
         return { state: TradeState.LOADING, trade: undefined }
       } else if (isDebouncing) {
-        return { state: TradeState.SYNCING, trade }
+        return { state: TradeState.SYNCING, trade: lastTrade }
       } else if (isLoading) {
-        return { state: TradeState.LOADING, trade }
+        return { state: TradeState.LOADING, trade: lastTrade }
       }
     }
 
@@ -151,14 +151,15 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   }, [
     currencyIn,
     currencyOut,
-    error,
     quoteResult,
+    error,
     route,
     queryArgs,
     trade,
     isStale,
     isDebouncing,
     isLoading,
+    lastTrade,
     tradeType,
   ])
 }

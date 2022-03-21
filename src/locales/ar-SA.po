@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-21 18:12\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -193,6 +193,7 @@ msgid "Against"
 msgstr "ضد"
 
 #: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow"
 msgstr "السماح"
 
@@ -211,6 +212,10 @@ msgstr "السماح لبروتوكول Uniswap باستخدام {0} الخاص 
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow {0} first"
 msgstr "اسمح بـ {0} أولاً"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allowance pending"
+msgstr "البدل معلق"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

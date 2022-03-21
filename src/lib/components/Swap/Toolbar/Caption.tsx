@@ -84,16 +84,17 @@ export function Trade({
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   outputUSDC?: CurrencyAmount<Currency>
-  impact: PriceImpact
+  impact?: PriceImpact
 }) {
   return (
     <>
-      <Tooltip placement="bottom" icon={impact.warning ? AlertTriangle : Info}>
+      <Tooltip placement="bottom" icon={impact?.warning ? AlertTriangle : Info}>
         <Column gap={0.75}>
-          {impact.warning && (
+          {impact?.warning && (
             <>
               <ThemedText.Caption>
-                The output amount is estimated at {impact.display} less than the input amount due to high price impact
+                The output amount is estimated at {impact.toString()} less than the input amount due to high price
+                impact
               </ThemedText.Caption>
               <Rule />
             </>

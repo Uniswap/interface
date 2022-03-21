@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-18 00:15\n"
+"PO-Revision-Date: 2022-03-21 18:12\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -193,6 +193,7 @@ msgid "Against"
 msgstr "반대"
 
 #: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow"
 msgstr "허용하다"
 
@@ -211,6 +212,10 @@ msgstr "Uniswap 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
 #: src/lib/components/Swap/SwapButton.tsx
 msgid "Allow {0} first"
 msgstr "먼저 {0} 허용"
+
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Allowance pending"
+msgstr "수당 보류"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"

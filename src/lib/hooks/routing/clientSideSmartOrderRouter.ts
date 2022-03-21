@@ -1,7 +1,6 @@
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, AlphaRouterConfig, AlphaRouterParams, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { GetQuoteResult } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
@@ -98,15 +97,4 @@ export async function getClientSideQuote(
     routerParams,
     routerConfig
   )
-}
-
-/**  Used to keep quotes up to date given a certain block age. Returns undefined if past limit. */
-export function useFilterFreshQuote(
-  quoteResult: GetQuoteResult | undefined,
-  maxBlockAge = 10
-): GetQuoteResult | undefined {
-  const block = useBlockNumber()
-  if (!block || !quoteResult) return undefined
-  if (block - (Number(quoteResult.blockNumber) || 0) > maxBlockAge) return undefined
-  return quoteResult
 }
