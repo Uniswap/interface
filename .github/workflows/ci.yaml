@@ -1,6 +1,6 @@
 name: "DMM Interface CI"
 
-concurrency: 
+concurrency:
   group: ci-workflow-${{ github.ref }}
   cancel-in-progress: true
 
@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - develop
-      - fix-ci
 
 env:
   SERVICE: dmm-interface
@@ -19,8 +18,8 @@ jobs:
     outputs:
       current_branch: ${{ steps.current_branch.outputs.value }}
       head_sha: ${{ steps.head_sha.outputs.value }}
-      image_name: "kybernetwork/${{ env.SERVICE }}"
-      image_tag: ${{ steps.get_tag.outputs.value }} 
+      image_name: "asia.gcr.io/kyber-operation/core/${{ env.SERVICE }}"
+      image_tag: ${{ steps.get_tag.outputs.value }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -34,22 +33,22 @@ jobs:
               HEAD_REF=$(printf "%q" "${{ github.head_ref }}")
               HEAD_REF=${HEAD_REF/refs\/heads\//}
               BRANCH=$HEAD_REF
-            else 
+            else
               REF=$(printf "%q" "${{ github.ref }}")
               REF_BRANCH=${REF/refs\/pull\//}
               REF_BRANCH=${REF_BRANCH/refs\/heads\//}
               BRANCH=$REF_BRANCH
             fi
-          else 
+          else
             REF=$(printf "%q" "${{ github.ref }}")
             REF_BRANCH=${REF/refs\/tags\//}
             BRANCH=$REF_BRANCH
           fi
-          echo "::set-output name=value::$BRANCH" 
+          echo "::set-output name=value::$BRANCH"
 
-      - name: Extract GitHub HEAD SHA 
-        id: head_sha 
-        run: echo "::set-output name=value::$(git rev-parse HEAD)"   
+      - name: Extract GitHub HEAD SHA
+        id: head_sha
+        run: echo "::set-output name=value::$(git rev-parse HEAD)"
 
       - name: Get Docker image tag
         id: get_tag
@@ -58,7 +57,7 @@ jobs:
         run: |
           short_sha="$(git rev-parse --short HEAD)"
           branch_tag="$(echo "$CURRENT_BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | sed 's/--*/-/g' | sed 's/-$//g')"
-          echo "::set-output name=value::$branch_tag-$short_sha"  
+          echo "::set-output name=value::$branch_tag-$short_sha"
 
   build:
     runs-on: ubuntu-18.04
@@ -79,7 +78,7 @@ jobs:
       - name: Docker login
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }} 
+          username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Cache Docker layers
@@ -99,10 +98,10 @@ jobs:
 
       - name: Yarn Build
         env:
-          CI: false 
+          CI: false
           REACT_APP_VERSION: ${{ github.sha }}
         run: yarn build-ropsten
-      
+
       - name: Docker build and push
         uses: docker/build-push-action@v2
         with:
@@ -115,11 +114,11 @@ jobs:
             org.label-schema.name=${{ env.SERVICE }}
           tags: |
             ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.image_tag }}
-            ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.current_branch }} 
+            ${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.current_branch }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
-      - name: Move Docker cache 
+      - name: Move Docker cache
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
