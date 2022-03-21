@@ -1,11 +1,10 @@
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, AlphaRouterConfig, AlphaRouterParams, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
-import { useCallback } from 'react'
 import { GetQuoteResult } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
-import useFilterFreshBlock from '../useFilterFreshBlock'
+import useIsFreshBlock from '../useIsFreshBlock'
 
 export const AUTO_ROUTER_SUPPORTED_CHAINS: ChainId[] = Object.values(ChainId).filter((chainId): chainId is ChainId =>
   Number.isInteger(chainId)
@@ -104,8 +103,6 @@ export async function getClientSideQuote(
 
 /**  Used to keep quotes up to date given a certain block age. Returns undefined if past limit. */
 export function useFilterFreshQuote(quoteResult: GetQuoteResult | undefined): GetQuoteResult | undefined {
-  return useFilterFreshBlock(
-    quoteResult,
-    useCallback((quoteResult: GetQuoteResult) => Number(quoteResult.blockNumber) || 0, [])
-  )
+  const isFreshBlock = useIsFreshBlock(Number(quoteResult?.blockNumber) || 0)
+  return isFreshBlock ? quoteResult : undefined
 }
