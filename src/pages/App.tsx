@@ -76,6 +76,7 @@ export default function App() {
   const theme = useContext(ThemeContext)
 
   useEffect(() => {
+    document.body.classList.add('no-margin')
     setTimeout(function() {
       AOS.init({
         duration: 500

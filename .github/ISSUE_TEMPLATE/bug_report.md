@@ -10,6 +10,16 @@ assignees: ''
 **Description**
 A clear and concise description of what the bug is.
 
+#### Definition of done
+- [ ] Description is created (Task creator)
+- [ ] Code is complete (Developer)
+- [ ] Scope of test and what was done section is defined in task (Developer)
+- [ ] Review passed (Code reviewer)
+- [ ] Verified manually (QA)
+- [ ] Test cases created/updated if necessary (QA)
+- [ ] Change successfully merged
+- [ ] Release notes added if needed
+
 **How to Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
