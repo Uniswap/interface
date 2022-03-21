@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '16'
       - name: Sync git addresses
-        run: ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+        run: mkdir -p ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       - name: Install
         run: yarn install
       - name: Lint
