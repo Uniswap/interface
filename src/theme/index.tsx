@@ -230,6 +230,10 @@ html {
 a {
   text-decoration: none;
 }
+
+body.no-margin {
+  margin: 0 !important;
+}
 `
 
 export const ThemedGlobalStyle = createGlobalStyle`

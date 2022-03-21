@@ -135,81 +135,88 @@ export function CampaignCard({
 
   return (
     <SizedCard cardColor={status !== undefined ? STATUS[status].cardColor : 'transperent'} {...rest}>
-      <Flex justifyContent="space-between">
-        <Flex flexDirection="column">
-          {isSingleSidedStakingCampaign ? (
-            <CurrencyLogo size={'30px'} marginRight={14} currency={token0} />
-          ) : (
-            <DoubleCurrencyLogo spaceBetween={-5} currency0={token0} currency1={token1} size={30} />
-          )}
-          <EllipsizedText
-            marginTop="10px"
-            marginBottom="6px"
-            color="purple2"
-            fontWeight="700"
-            fontSize="16px"
-            fontFamily="Montserrat"
-          >
-            {unwrappedToken(token0)?.symbol}
-            {!isSingleSidedStakingCampaign && `/${unwrappedToken(token1)?.symbol}`}
-          </EllipsizedText>
-          <EllipsizedText
-            fontFamily="Fira Mono"
-            fontWeight="bold"
-            fontSize="18px"
-            color="#EBE9F8"
-            letterSpacing="0.02em"
-          >
-            {apy.toFixed(2)}% APY
-          </EllipsizedText>
-        </Flex>
-        <RightSection>
-          <Flex width="max-content" alignItems="center">
-            <ClockSvg width={'10px'} height={'10px'} />
-            <TYPE.body marginLeft="4px" fontSize="10px" fontFamily="Fira Code" fontWeight="500">
-              <Countdown
-                to={
-                  status === StatusKeys.UPCOMING
-                    ? parseInt(campaign.startsAt.toString())
-                    : status === StatusKeys.ENDED
-                    ? 0
-                    : parseInt(campaign.endsAt.toString())
-                }
-                excludeSeconds
-              />
-            </TYPE.body>
+      <Flex flexDirection="column" height={'100%'}>
+        <Flex justifyContent="space-between" flexGrow={1}>
+          <Flex flexDirection="column">
+            {isSingleSidedStakingCampaign ? (
+              <CurrencyLogo size={'30px'} marginRight={14} currency={token0} />
+            ) : (
+              <DoubleCurrencyLogo spaceBetween={-5} currency0={token0} currency1={token1} size={30} />
+            )}
+            <EllipsizedText
+              marginTop="10px"
+              marginBottom="6px"
+              color="purple2"
+              fontWeight="700"
+              fontSize="16px"
+              fontFamily="Montserrat"
+            >
+              {unwrappedToken(token0)?.symbol}
+              {!isSingleSidedStakingCampaign && `/${unwrappedToken(token1)?.symbol}`}
+            </EllipsizedText>
+            <EllipsizedText
+              fontFamily="Fira Mono"
+              fontWeight="bold"
+              fontSize="18px"
+              color="#EBE9F8"
+              letterSpacing="0.02em"
+            >
+              {apy.toFixed(2)}% APY
+            </EllipsizedText>
           </Flex>
-          {status !== undefined && (
-            <Flex>
-              <SimpleTextBadge text={STATUS[status].key} color={STATUS[status].color} />
+          <RightSection>
+            <Flex width="max-content" alignItems="center">
+              <ClockSvg width={'10px'} height={'10px'} />
+              <TYPE.body marginLeft="4px" fontSize="10px" fontFamily="Fira Code" fontWeight="500">
+                <Countdown
+                  to={
+                    status === StatusKeys.UPCOMING
+                      ? parseInt(campaign.startsAt.toString())
+                      : status === StatusKeys.ENDED
+                      ? 0
+                      : parseInt(campaign.endsAt.toString())
+                  }
+                  excludeSeconds
+                />
+              </TYPE.body>
             </Flex>
-          )}
+            {status !== undefined && (
+              <Flex>
+                <SimpleTextBadge text={STATUS[status].key} color={STATUS[status].color} />
+              </Flex>
+            )}
 
-          {containsKpiToken && <CarrotBadge />}
-        </RightSection>
-      </Flex>
-      <Flex flexDirection="column" marginTop="6px">
-        <Flex justifyContent="space-between">
-          <Flex>
-            {campaign.locked && <LockSvg />}
-            <TYPE.body alignSelf={'center'} marginLeft={campaign.locked ? '4px' : '0'} fontSize="10px" fontWeight="600">
-              ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
-            </TYPE.body>
-          </Flex>
-          {staked && (
+            {containsKpiToken && <CarrotBadge />}
+          </RightSection>
+        </Flex>
+        <Flex flexDirection="column" marginTop="6px">
+          <Flex justifyContent="space-between">
             <Flex>
-              <SimpleTextBadge text={'STAKING'} color="#C7C0FF" />
+              {campaign.locked && <LockSvg />}
+              <TYPE.body
+                alignSelf={'center'}
+                marginLeft={campaign.locked ? '4px' : '0'}
+                fontSize="10px"
+                fontWeight="600"
+              >
+                ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
+              </TYPE.body>
+            </Flex>
+            {staked && (
+              <Flex>
+                <SimpleTextBadge text={'STAKING'} color="#C7C0FF" />
+              </Flex>
+            )}
+          </Flex>
+          {isLimitedCampaign && (
+            <Flex>
+              <PercentageBar>
+                {!staked && <RelativePercentage>{percentage()}%</RelativePercentage>}
+                <Loaded width={percentage() + '%'} />
+              </PercentageBar>
             </Flex>
           )}
         </Flex>
-        {isLimitedCampaign && (
-          <Flex>
-            <PercentageBar>
-              {!staked && <RelativePercentage>{percentage()}%</RelativePercentage>}
-              <Loaded width={percentage() + '%'} />
-            </PercentageBar>
-          </Flex>
-        )}
       </Flex>
     </SizedCard>
   )

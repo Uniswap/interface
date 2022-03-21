@@ -110,5 +110,7 @@
   "multihopEnabled": "Multihop enabled",
   "multihopDisabled": "Multihop disabled",
   "alternateReceiver": "Alternate Receiver",
-  "MEVProtectionComingSoon": "MEV Protection (coming soon)"
+  "MEVProtectionComingSoon": "MEV Protection (coming soon)",
+  "insufficientCurrencyBalance": "Insufficient {{ currency }} balance",
+  "enterCurrencyAmount": "Enter {{ currency }} amount"
 }
