@@ -87,12 +87,11 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   )
 
   const addTransaction = useAddTransaction()
-  const onApprove = useCallback(() => {
-    handleApproveOrPermit().then((transaction) => {
-      if (transaction) {
-        addTransaction({ type: TransactionType.APPROVAL, ...transaction })
-      }
-    })
+  const onApprove = useCallback(async () => {
+    const transaction = await handleApproveOrPermit()
+    if (transaction) {
+      addTransaction({ type: TransactionType.APPROVAL, ...transaction })
+    }
   }, [addTransaction, handleApproveOrPermit])
 
   const { type: wrapType, callback: wrapCallback, error: wrapError, loading: wrapLoading } = useWrapCallback()
@@ -104,7 +103,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       !chainId ||
       wrapLoading ||
       (wrapType !== WrapType.NOT_APPLICABLE && wrapError) ||
-      approvalState === ApproveOrPermitState.PENDING_SIGNATURE ||
       !(inputTradeCurrencyAmount && inputCurrencyBalance) ||
       inputCurrencyBalance.lessThan(inputTradeCurrencyAmount),
     [
@@ -114,7 +112,6 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       wrapLoading,
       wrapType,
       wrapError,
-      approvalState,
       inputTradeCurrencyAmount,
       inputCurrencyBalance,
     ]
@@ -155,8 +152,17 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
             </EtherscanLink>
           ),
           icon: Spinner,
-          onClick: () => void 0, // @TODO: should not require an onclick
           children: <Trans>Approve</Trans>,
+        },
+      }
+    }
+    if (approvalState === ApproveOrPermitState.PENDING_SIGNATURE) {
+      return {
+        disabled: true,
+        action: {
+          message: <Trans>Allowance pending</Trans>,
+          icon: Spinner,
+          children: <Trans>Allow</Trans>,
         },
       }
     }

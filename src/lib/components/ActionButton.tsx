@@ -57,7 +57,7 @@ export const Overlay = styled(Row)<{ hasAction: boolean }>`
 export interface Action {
   message: ReactNode
   icon?: Icon
-  onClick: () => void
+  onClick?: () => void
   children: ReactNode
 }
 
