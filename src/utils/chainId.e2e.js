@@ -9,5 +9,6 @@ export function parseActiveChains() {
 }
 
 export function isTestnet(chainId) {
-  return chainId !== ChainId.Mainnet
+  // prevents network request to covalent
+  return true
 }

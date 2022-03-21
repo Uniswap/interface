@@ -41,4 +41,7 @@ jest.mock('@ledgerhq/react-native-hw-transport-ble', () => {})
 
 jest.mock('expo-linear-gradient', () => {})
 
+// required polyfill for rtk-query baseQueryFn
+import 'cross-fetch/polyfill'
+
 global.__reanimatedWorkletInit = jest.fn()

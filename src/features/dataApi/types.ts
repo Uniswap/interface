@@ -3,8 +3,7 @@ import { ChainIdToCurrencyIdTo } from 'src/constants/chains'
 import { CovalentWalletBalanceItem } from 'src/features/dataApi/covalentTypes'
 import { CurrencyId } from 'src/utils/currencyId'
 
-export type SpotPrices = Record<CurrencyId, number>
-
+/** Portfolio Types */
 export type ChainIdToCurrencyIdToPortfolioBalance = ChainIdToCurrencyIdTo<PortfolioBalance>
 export type PortfolioBalances = Record<CurrencyId, PortfolioBalance>
 // Portfolio balance as exposed to the app
@@ -19,3 +18,17 @@ export type SerializablePortfolioBalance = {
   balanceUSD: number
   relativeChange24: number
 } & Pick<CovalentWalletBalanceItem, 'contract_address' | 'contract_ticker_symbol'>
+
+/** Spot Prices Types */
+export type SpotPrice = {
+  price: number
+  relativeChange24: number
+}
+export type SpotPrices = Record<CurrencyId, SpotPrice>
+
+/** Historical Prices Types */
+export type DailyPrice = {
+  timestamp: number
+  close: number
+}
+export type DailyPrices = DailyPrice[]

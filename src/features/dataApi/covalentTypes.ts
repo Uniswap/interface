@@ -6,23 +6,22 @@
  * https://www.covalenthq.com/docs/api/
  */
 
-export type CovalentWalletBalanceItem = {
+export type CovalentContractMetadata = {
+  contract_address: string // Smart contract address.
+  contract_decimals: number // Smart contract decimals.
+  contract_name: string // Smart contract name.
+  contract_ticker_symbol: string // Smart contract ticker symbol.
+  logo_url: string // Smart contract URL.
+  supports_erc: string[] // The standard interface(s) supported for this token, eg: ERC-20.
+}
+
+export type CovalentWalletBalanceItem = CovalentContractMetadata & {
   // The asset balance. Use contract_decimals to scale this balance for display purposes.
   balance: number
   // The asset balance 24 hours ago.
   balance_24h: number
-  // Smart contract address.
-  contract_address: string
-  // Smart contract decimals.
-  contract_decimals: number
-  // Smart contract name.
-  contract_name: string
-  // Smart contract ticker symbol.
-  contract_ticker_symbol: string
   // Last transferred date for a wallet
   last_transferred_at: string
-  // Smart contract URL.
-  logo_url: string
   // Array of NFTs that are held under this contract.
   nft_data: unknown[]
   // Array of NFTs that are held under this contract.
@@ -35,12 +34,9 @@ export type CovalentWalletBalanceItem = {
   quote_rate: number
   // The spot exchange rate in quote-currency as of 24 hours ago.
   quote_rate_24h: number
-  // The standard interface(s) supported for this token, eg: ERC-20.
-  supports_erc: string[]
   // One of cryptocurrency, stablecoin, nft or dust.
   type: 'cryptocurrency' | 'stablecoin' | 'nft' | 'dust'
 }
-
 export type CovalentBalances = {
   //The requested wallet address.
   address: string
@@ -56,21 +52,18 @@ export type CovalentBalances = {
 export type CovalentSpotPrices = {
   items: CovalentTickerPriceItemWithRank[]
 }
-
-export type CovalentTickerPriceItemWithRank = {
-  // Smart contract address.
-  contract_address: string
-  // Smart contract decimals.
-  contract_decimals: number | number
-  // Smart contract name.
-  contract_name: string
-  // Smart contract ticker symbol.
-  contract_ticker_symbol: string
-  // Smart contract URL.
-  logo_url: string
+export type CovalentTickerPriceItemWithRank = CovalentContractMetadata & {
   // The current spot exchange rate in quote-currency.
   quote_rate: number | number
   // Market cap rank.
   rank: number | number
-  supports_erc: string[] // The standard interface(s) supported for this token, eg: ERC-20.
 }
+
+export type CovalentHistoricalPriceItem = {
+  date: string
+  price: number
+}
+export type CovalentHistoricalPriceForAddress = CovalentContractMetadata & {
+  prices: CovalentHistoricalPriceItem[]
+}
+export type CovalentHistoricalPrices = CovalentHistoricalPriceForAddress[]

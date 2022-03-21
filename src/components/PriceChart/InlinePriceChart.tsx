@@ -6,7 +6,7 @@ import Svg, { Path } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout/Box'
 import { buildGraph } from 'src/components/PriceChart/Model'
-import { useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
+import { useDailyTokenPricesQuery } from 'src/features/dataApi/slice'
 import { logger } from 'src/utils/logger'
 
 // number of datapoints to normalize to
@@ -21,22 +21,29 @@ interface InlineGraphProps {
 export const InlinePriceChart = ({ currency }: InlineGraphProps) => {
   const theme = useAppTheme()
 
-  // startOf hour to stabilize the reference
-  const yesterday = dayjs().subtract(1, 'day').startOf('hour').unix()
+  const lastWeek = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
 
-  const { prices, error, loading } = useHourlyTokenPrices({
-    token: currency.wrapped,
-    periodStartUnix: yesterday,
+  const {
+    currentData: prices,
+    isError,
+    error,
+    isLoading,
+  } = useDailyTokenPricesQuery({
+    chainId: currency.chainId,
+    address: currency.wrapped.address,
+    from: lastWeek,
   })
 
-  if (error) {
+  if (isError) {
     logger.error('InlineGraph', '', `Error fetching price for ${currency.wrapped.symbol}: ${error}`)
   }
 
   const graph = useMemo(
     () =>
-      !error && !loading && prices ? buildGraph(prices, GRAPH_PRECISION, WIDTH, HEIGHT) : undefined,
-    [error, loading, prices]
+      !error && !isLoading && prices
+        ? buildGraph(prices, GRAPH_PRECISION, WIDTH, HEIGHT)
+        : undefined,
+    [error, isLoading, prices]
   )
 
   if (!graph) {

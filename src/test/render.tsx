@@ -3,7 +3,7 @@ import { render as RNRender } from '@testing-library/react-native'
 import React, { ReactElement } from 'react'
 import { theme } from 'src/styles/theme'
 
-const WithTheme = ({ component }: { component: ReactElement }) => {
+export const WithTheme = ({ component }: { component: ReactElement }) => {
   return <ThemeProvider theme={theme}>{component}</ThemeProvider>
 }
 

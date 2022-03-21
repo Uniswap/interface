@@ -22,7 +22,7 @@ export const PriceChart = ({ currency }: PriceChartProps) => {
 
   const showLoading = loading || !graphs
   return (
-    <Box margin="lg" overflow="hidden">
+    <Box m="lg" mt="none" overflow="hidden">
       {showLoading ? (
         <Flex gap="lg" mb="lg" mt="xl">
           <Loading type="header" />

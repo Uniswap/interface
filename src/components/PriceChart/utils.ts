@@ -2,7 +2,7 @@ import { scaleLinear } from 'd3-scale'
 import { curveBasis, line } from 'd3-shape'
 import { getYForX, parse, Path } from 'react-native-redash'
 
-export function takeSubset(arr: Array<any> | undefined, end: number) {
+export function takeSubset(arr: Array<any> | undefined, end?: number) {
   return arr?.slice(0, end)
 }
 
