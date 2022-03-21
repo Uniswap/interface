@@ -70,7 +70,14 @@ export function CurrencySelect({
             <Option
               balance={portfolioBalance}
               currency={currency}
-              currencyPrice={portfolioBalance?.balanceUSD}
+              currencyPrice={
+                portfolioBalance
+                  ? {
+                      price: portfolioBalance.balanceUSD,
+                      relativeChange24: portfolioBalance.relativeChange24,
+                    }
+                  : undefined
+              }
               matches={item.matches}
               metadataType="balance"
               onPress={() => onSelectCurrency?.(currency)}

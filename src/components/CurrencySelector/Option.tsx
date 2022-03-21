@@ -6,7 +6,8 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { InlinePriceChart } from 'src/components/PriceChart/InlinePriceChart'
 import { Text } from 'src/components/Text'
-import { PortfolioBalance } from 'src/features/dataApi/types'
+import { RelativeChange } from 'src/components/text/RelativeChange'
+import { PortfolioBalance, SpotPrice } from 'src/features/dataApi/types'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 import { Flex } from '../layout'
@@ -14,7 +15,7 @@ import { Flex } from '../layout'
 interface OptionProps {
   balance?: PortfolioBalance
   currency: Currency
-  currencyPrice?: number
+  currencyPrice?: SpotPrice
   onPress: () => void
   metadataType: 'balance' | 'price'
   matches: Fuse.FuseResult<Currency>['matches']
@@ -60,8 +61,9 @@ export function Option({
         </Flex>
         {metadataType === 'price' ? (
           <TokenMetadata
-            main={formatUSDPrice(currencyPrice)}
+            main={formatUSDPrice(currencyPrice?.price)}
             pre={<InlinePriceChart currency={currency} />}
+            sub={<RelativeChange change={currencyPrice?.relativeChange24} />}
           />
         ) : balance?.amount && !balance.amount.equalTo(0) ? (
           <TokenMetadata

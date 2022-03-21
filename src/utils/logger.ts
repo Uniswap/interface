@@ -27,6 +27,9 @@ function logMessage(
   message: string,
   ...args: any[]
 ) {
+  // disable logs in jest
+  if (__DEV__ && process.env.JEST_WORKER_ID !== undefined) return
+
   if (!fileName || !message) {
     console.warn('Invalid log message format, skipping')
     return

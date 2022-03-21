@@ -5,6 +5,7 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
+import { RelativeChange } from 'src/components/text/RelativeChange'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 
@@ -40,11 +41,7 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
       </Flex>
       <Box alignItems="flex-end">
         <Text variant="h4">{formatUSDPrice(balance.balanceUSD)}</Text>
-        <Text
-          color={relativeChange24 ? (relativeChange24 > 0 ? 'green' : 'red') : 'gray600'}
-          variant="bodySm">
-          {relativeChange24 ? `${relativeChange24.toFixed(1)}%` : '-'}
-        </Text>
+        <RelativeChange change={relativeChange24} />
       </Box>
     </Button>
   )

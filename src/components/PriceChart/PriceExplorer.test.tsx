@@ -1,11 +1,10 @@
-import { ThemeProvider } from '@shopify/restyle'
 import { fireEvent, render } from '@testing-library/react-native'
 import React from 'react'
 import 'react-native'
 import 'react-native-gesture-handler'
 import { buildGraph } from 'src/components/PriceChart/Model'
 import { PriceExplorer } from 'src/components/PriceChart/PriceExplorer'
-import { theme } from 'src/styles/theme'
+import { renderWithTheme, WithTheme } from 'src/test/render'
 
 const graphDatapoints = buildGraph(
   [
@@ -37,19 +36,13 @@ const graphs = [
 ] as const
 
 it('renders correctly', () => {
-  const tree = render(
-    <ThemeProvider theme={theme}>
-      <PriceExplorer graphs={graphs} title="My Token" />
-    </ThemeProvider>
-  ).toJSON()
+  const tree = renderWithTheme(<PriceExplorer graphs={graphs} title="My Token" />)
   expect(tree).toMatchSnapshot()
 })
 
 it('navigates between ranges', () => {
   const { getByText } = render(
-    <ThemeProvider theme={theme}>
-      <PriceExplorer graphs={graphs} title="My token" />
-    </ThemeProvider>
+    <WithTheme component={<PriceExplorer graphs={graphs} title="My token" />} />
   )
 
   fireEvent.press(getByText(graphs[1].label))

@@ -105,12 +105,17 @@ export function TokenDetailsScreen({
         <Flex gap="lg">
           <PriceChart currency={currency} />
           <Box>
-            <Text color="gray600" mx="lg" variant="bodyMd">
-              {t('Your balance')}
-            </Text>
-            {balance && <TokenBalanceItem balance={balance} />}
+            {balance && (
+              <>
+                <Text color="gray600" mx="lg" variant="bodyMd">
+                  {t('Your balance')}
+                </Text>
+                <TokenBalanceItem balance={balance} />
+              </>
+            )}
             <Box flexDirection="row" mx="lg" my="md">
               <PrimaryButton
+                disabled={!balance}
                 flex={1}
                 label={t('Buy')}
                 mr="sm"

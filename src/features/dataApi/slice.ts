@@ -1,9 +1,20 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import dayjs from 'dayjs'
 import { utils } from 'ethers/lib/ethers'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
-import { CovalentBalances, CovalentSpotPrices } from 'src/features/dataApi/covalentTypes'
-import { SerializablePortfolioBalance, SpotPrices } from 'src/features/dataApi/types'
+import { START_OF_TIME } from 'src/features/dataApi/constants'
+import {
+  CovalentBalances,
+  CovalentHistoricalPriceItem,
+  CovalentHistoricalPrices,
+} from 'src/features/dataApi/covalentTypes'
+import {
+  DailyPrice,
+  DailyPrices,
+  SerializablePortfolioBalance,
+  SpotPrices,
+} from 'src/features/dataApi/types'
 import { serializeQueryParams } from 'src/features/swap/utils'
 import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
 import { percentDifference } from 'src/utils/statistics'
@@ -24,6 +35,10 @@ export const dataApi = createApi({
     baseUrl: COVALENT_API,
   }),
   endpoints: (builder) => ({
+    /**
+     * Fetches portfolio balances for a given account address.
+     * https://www.covalenthq.com/docs/api/#/0/Get%20token%20balances%20for%20address/USD/1
+     */
     balances: builder.query<
       { [currencyId: CurrencyId]: SerializablePortfolioBalance },
       { chainId: ChainId; address: Address }
@@ -48,56 +63,62 @@ export const dataApi = createApi({
         ),
     }),
 
-    spotPrices: builder.query<SpotPrices, { tickers: string[] }>({
-      query: ({ tickers }) => {
+    /**
+     * Fetches spot prices for the given chainId and addresses.
+     * Note: leverages the historical token prices endpoint instead of spot prices
+     *       to get 24h change, and chain disambiguation.
+     * https://www.covalenthq.com/docs/api/#/0/Get%20historical%20prices%20by%20ticker%20symbol/USD/1
+     */
+    spotPrices: builder.query<SpotPrices, { chainId: ChainId; addresses: Address[] }>({
+      query: ({ addresses, chainId }) => {
+        const yesterday = dayjs().subtract(1, 'day').startOf('day').format('YYYY-MM-DD')
         const q = serializeQueryParams({
           ...baseQueryOptions,
-          ['page-size']: tickers.length,
-          // TODO: send a body to avoid url char limit
-          tickers: tickers.slice(0, 50).join(','),
+          ['prices-at-asc']: false, // prices in chronological descending order
+          from: yesterday,
         })
-        return `pricing/tickers/?${q}`
+        // TODO: send a body to avoid url char limit
+        const serializedAddresses = addresses.slice(0, 50).join(',')
+        return `pricing/historical_by_addresses_v2/${chainId}/${baseQueryOptions['quote-currency']}/${serializedAddresses}/?${q}`
       },
-      transformResponse: (response: { data: CovalentSpotPrices }) =>
-        response.data.items?.reduce<SpotPrices>((memo, item) => {
-          // TODO: ensure app never has duplicate symbols?
-          memo[item.contract_ticker_symbol] = item.quote_rate
-          return memo
+      transformResponse: (response: { data: CovalentHistoricalPrices }, _, args) =>
+        response.data.reduce<SpotPrices>((spotPrices, cur) => {
+          // first will always be today as result is in chronological descending order
+          const [today, yesterday] = cur.prices
+          spotPrices[buildCurrencyId(args.chainId, utils.getAddress(cur.contract_address))] = {
+            price: today.price,
+            relativeChange24: percentDifference(yesterday.price, today.price),
+          }
+          return spotPrices
         }, {}),
     }),
 
-    historicalTokenPrices: builder.query<unknown, { address: string; chainId: ChainId }>({
-      query: ({ address, chainId }) => {
+    /**
+     * Fetches daily prices given a chain and contract address.
+     * https://www.covalenthq.com/docs/api/#/0/Get%20historical%20prices%20by%20ticker%20symbol/USD/1
+     */
+    dailyTokenPrices: builder.query<
+      DailyPrices,
+      { address: string; chainId: ChainId; from?: string; to?: string }
+    >({
+      query: ({ address, chainId, from = START_OF_TIME, to = '' }) => {
         const q = serializeQueryParams({
           ...baseQueryOptions,
-          // TODO: revisit range
-          from: '2022-01-01',
-          to: '2022-03-01',
+          ['prices-at-asc']: false, // prices in chronological descending order
+          from,
+          to,
         })
-        return `pricing/historical_by_address_v2/${chainId}/${baseQueryOptions['quote-currency']}/${address}/?${q}`
+        return `pricing/historical_by_addresses_v2/${chainId}/${baseQueryOptions['quote-currency']}/${address}/?${q}`
       },
-      // TODO: transform response
-      // transformResponse: () => {}
-    }),
-
-    historicalTickerPrices: builder.query<unknown, { ticker: string }>({
-      query: ({ ticker }) => {
-        const q = serializeQueryParams({
-          ...baseQueryOptions,
-          from: '2022-01-01',
-          to: '2022-03-01',
-        })
-        return `pricing/historical/${baseQueryOptions['quote-currency']}/${ticker}/?${q}`
-      },
-      // TODO: transform response
-      // transformResponse: () => {}
+      transformResponse: (response: { data: CovalentHistoricalPrices }) =>
+        response.data[0]?.prices.map(
+          (p: CovalentHistoricalPriceItem): DailyPrice => ({
+            timestamp: dayjs(p.date).unix(),
+            close: p.price,
+          })
+        ) ?? [],
     }),
   }),
 })
 
-export const {
-  useBalancesQuery,
-  useHistoricalTickerPricesQuery,
-  useHistoricalTokenPricesQuery,
-  useSpotPricesQuery,
-} = dataApi
+export const { useBalancesQuery, useDailyTokenPricesQuery, useSpotPricesQuery } = dataApi

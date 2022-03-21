@@ -1,6 +1,5 @@
 import Animated from 'react-native-reanimated'
 import { Path, Vector } from 'react-native-redash'
-import { DailyTokenPricesQuery } from 'src/features/historicalChainData/generated/uniswap-hooks'
 
 export type AnimatedNumber = Animated.SharedValue<number>
 export type AnimatedTranslation = Vector<Animated.SharedValue<number>>
@@ -30,5 +29,8 @@ export type GraphMetadatas = readonly [
   GraphMetadata
 ]
 
-type Price = Pick<DailyTokenPricesQuery['tokenDayDatas'][0], 'timestamp' | 'close'>
+type Price = {
+  timestamp: number
+  close: number
+}
 export type PriceList = Price[]

@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a relative change 1`] = `
+<Text
+  style={
+    Array [
+      Object {
+        "color": "#28CD88",
+        "display": "flex",
+        "fontFamily": "UniswapSansBeta4-Regular",
+        "fontSize": 12,
+      },
+    ]
+  }
+>
+  ↑ 
+  12.0%
+</Text>
+`;
+
+exports[`renders placeholders without a change 1`] = `
+<Text
+  style={
+    Array [
+      Object {
+        "color": "#888D9B",
+        "display": "flex",
+        "fontFamily": "UniswapSansBeta4-Regular",
+        "fontSize": 12,
+      },
+    ]
+  }
+>
+  
+  -
+</Text>
+`;

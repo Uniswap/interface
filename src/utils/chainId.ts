@@ -1,5 +1,4 @@
-import { ChainId } from 'src/constants/chains'
-import { logger } from 'src/utils/logger'
+import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
 
@@ -7,8 +6,6 @@ const supportedChains = Object.values(ChainId).map((c) => c.toString())
 // This validates them as coerces into SupportedChainId
 export function toSupportedChainId(chainId: number | string) {
   if (!supportedChains.includes(chainId.toString())) {
-    // Too noisy as lists include Polygon tokens.
-    logger.debug('chainId', 'toSupportedChainId', 'Unsupported chain:', chainId)
     return null
   }
   return parseInt(chainId.toString(), 10) as ChainId
@@ -19,7 +16,6 @@ export function parseActiveChains(activeChainsString: string): ChainId[] {
   return activeChainsString.split(',').map((id) => parseInt(id, 10) as ChainId)
 }
 
-export function isTestnet(_chainId: ChainId): boolean {
-  // prevents network request to covalent
-  return true
+export function isTestnet(chainId: ChainId): boolean {
+  return TESTNET_CHAIN_IDS.includes(chainId)
 }

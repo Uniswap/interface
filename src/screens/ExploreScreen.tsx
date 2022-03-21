@@ -14,6 +14,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { useSpotPrices } from 'src/features/dataApi/prices'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { Screens, Tabs } from 'src/screens/Screens'
+import { currencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export function ExploreScreen({ navigation }: TabScreenProp<Tabs.Explore>) {
@@ -73,7 +74,7 @@ function Explorer({ currencies, onSelectCurrency }: ExplorerProps) {
           return (
             <Option
               currency={currency}
-              currencyPrice={spotPrices?.[currency.symbol ?? '']}
+              currencyPrice={spotPrices?.[currencyId(currency)]}
               matches={item.matches}
               metadataType="price"
               onPress={() => onSelectCurrency?.(currency)}
