@@ -1,7 +1,5 @@
 import { css } from 'lib/theme'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-
-import useNativeEvent from './useNativeEvent'
+import { useMemo } from 'react'
 
 const overflowCss = css`
   overflow-y: scroll;
@@ -48,21 +46,15 @@ interface ScrollbarOptions {
 }
 
 export default function useScrollbar(element: HTMLElement | null, { padded = false }: ScrollbarOptions = {}) {
-  const [overflow, setOverflow] = useState(true)
-  useEffect(() => {
-    setOverflow(hasOverflow(element))
-  }, [element])
-  useNativeEvent(
-    element,
-    'transitionend',
-    useCallback(() => setOverflow(hasOverflow(element)), [element])
+  return useMemo(
+    // NB: The css must be applied on an element's first render. WebKit will not re-apply overflow
+    // properties until any transitions have ended, so waiting a frame for state would cause jank.
+    () => (hasOverflow(element) ? scrollbarCss(padded) : overflowCss),
+    [element, padded]
   )
-  return useMemo(() => (overflow ? scrollbarCss(padded) : overflowCss), [overflow, padded])
 
   function hasOverflow(element: HTMLElement | null) {
-    if (!element) {
-      return true
-    }
+    if (!element) return true
     return element.scrollHeight > element.clientHeight
   }
 }

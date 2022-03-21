@@ -6,10 +6,10 @@ import { TransactionsUpdater } from 'lib/hooks/transactions'
 import { Web3Provider } from 'lib/hooks/useActiveWeb3React'
 import { BlockUpdater } from 'lib/hooks/useBlockNumber'
 import useEip1193Provider from 'lib/hooks/useEip1193Provider'
-import { UNMOUNTING } from 'lib/hooks/useUnmount'
 import { Provider as I18nProvider } from 'lib/i18n'
 import { MulticallUpdater, store as multicallStore } from 'lib/state/multicall'
 import styled, { keyframes, Theme, ThemeProvider } from 'lib/theme'
+import { UNMOUNTING } from 'lib/utils/animations'
 import { PropsWithChildren, StrictMode, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
@@ -48,18 +48,19 @@ const WidgetWrapper = styled.div<{ width?: number | string }>`
   }
 `
 
-const slideDown = keyframes`
-  to {
+const slideIn = keyframes`
+  from {
     transform: translateY(calc(100% - 0.25em));
   }
 `
-const slideUp = keyframes`
-  from {
+const slideOut = keyframes`
+  to {
     transform: translateY(calc(100% - 0.25em));
   }
 `
 
 const DialogWrapper = styled.div`
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   height: calc(100% - 0.5em);
   left: 0;
   margin: 0.25em;
@@ -73,11 +74,11 @@ const DialogWrapper = styled.div`
   }
 
   ${Modal} {
-    animation: ${slideUp} 0.25s ease-in-out;
-  }
+    animation: ${slideIn} 0.25s ease-in;
 
-  ${Modal}.${UNMOUNTING} {
-    animation: ${slideDown} 0.25s ease-in-out;
+    &.${UNMOUNTING} {
+      animation: ${slideOut} 0.25s ease-out;
+    }
   }
 `
 
