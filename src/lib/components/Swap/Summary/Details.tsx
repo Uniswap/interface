@@ -2,12 +2,11 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { useAtomValue } from 'jotai/utils'
 import Column from 'lib/components/Column'
 import Row from 'lib/components/Row'
+import useFeeOptions from 'lib/hooks/swap/useFeeOptions'
 import { Slippage } from 'lib/hooks/useSlippage'
 import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
-import { feeOptionsAtom } from 'lib/state/swap'
 import styled, { Color, ThemedText } from 'lib/theme'
 import { useMemo } from 'react'
 import { currencyId } from 'utils/currencyId'
@@ -47,7 +46,7 @@ export default function Details({ trade, slippage, impact }: DetailsProps) {
   const inputCurrency = inputAmount.currency
   const outputCurrency = outputAmount.currency
   const integrator = window.location.hostname
-  const feeOptions = useAtomValue(feeOptionsAtom)
+  const [feeOptions] = useFeeOptions()
   const lpFeeAmount = useMemo(() => computeRealizedLPFeeAmount(trade), [trade])
   const { i18n } = useLingui()
 

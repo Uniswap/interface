@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useUpdateAtom } from 'jotai/utils'
 import { WrapErrorText } from 'lib/components/Swap/WrapErrorText'
 import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
+import useFeeOptions from 'lib/hooks/swap/useFeeOptions'
 import {
   ApproveOrPermitState,
   useApproveOrPermit,
@@ -16,7 +17,7 @@ import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useSetOldestValidBlock } from 'lib/hooks/useIsValidBlock'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
 import { Spinner } from 'lib/icons'
-import { displayTxHashAtom, feeOptionsAtom, Field } from 'lib/state/swap'
+import { displayTxHashAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
@@ -53,7 +54,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     slippage,
     impact,
   } = useSwapInfo()
-  const feeOptions = useAtomValue(feeOptionsAtom)
+  const [feeOptions] = useFeeOptions()
 
   const tradeType = useSwapTradeType()
 
