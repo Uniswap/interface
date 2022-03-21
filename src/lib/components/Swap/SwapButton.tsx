@@ -185,32 +185,29 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
 
   const setOldestValidBlock = useSetOldestValidBlock()
-  const onConfirm = useCallback(() => {
-    swapCallback?.()
-      .then((response) => {
-        setDisplayTxHash(response.hash)
-        invariant(inputTradeCurrencyAmount && outputTradeCurrencyAmount)
-        addTransaction({
-          response,
-          type: TransactionType.SWAP,
-          tradeType,
-          inputCurrencyAmount: inputTradeCurrencyAmount,
-          outputCurrencyAmount: outputTradeCurrencyAmount,
-        })
+  const onConfirm = useCallback(async () => {
+    if (!swapCallback) return
 
-        // Set the block containing the response to the oldest valid block to ensure that the
-        // completed trade's impact is reflected in future fetched trades.
-        response.wait(1).then((receipt) => {
-          setOldestValidBlock(receipt.blockNumber)
-        })
+    try {
+      const response = await swapCallback()
+      setDisplayTxHash(response.hash)
+      invariant(inputTradeCurrencyAmount && outputTradeCurrencyAmount)
+      addTransaction({
+        response,
+        type: TransactionType.SWAP,
+        tradeType,
+        inputCurrencyAmount: inputTradeCurrencyAmount,
+        outputCurrencyAmount: outputTradeCurrencyAmount,
       })
-      .catch((error) => {
-        //@TODO(ianlapham): add error handling
-        console.log(error)
-      })
-      .finally(() => {
-        setActiveTrade(undefined)
-      })
+
+      // Set the block containing the response to the oldest valid block to ensure that the
+      // completed trade's impact is reflected in future fetched trades.
+      response.wait(1).then((receipt) => setOldestValidBlock(receipt.blockNumber))
+    } catch (error) {
+      // TODO(ianlapham): add error handling
+      console.log(error)
+    }
+    setActiveTrade(undefined)
   }, [
     addTransaction,
     inputTradeCurrencyAmount,
