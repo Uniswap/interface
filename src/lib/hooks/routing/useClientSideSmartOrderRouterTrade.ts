@@ -95,20 +95,17 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
   const gasUseEstimateUSD = useStablecoinAmountFromFiatValue(quoteResult?.gasUseEstimateUSD) ?? null
-  const trade =
-    useLast(
-      useMemo(() => {
-        if (route) {
-          try {
-            return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
-          } catch (e: unknown) {
-            console.debug('transformRoutesToTrade failed: ', e)
-          }
-        }
-        return
-      }, [gasUseEstimateUSD, route, tradeType]),
-      Boolean
-    ) ?? undefined
+  const trade = useMemo(() => {
+    if (route) {
+      try {
+        return route && transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+      } catch (e: unknown) {
+        console.debug('transformRoutesToTrade failed: ', e)
+      }
+    }
+    return
+  }, [gasUseEstimateUSD, route, tradeType])
+  const lastTrade = useLast(trade, Boolean) ?? undefined
 
   // Dont return old trade if currencies dont match.
   const isStale =
@@ -125,9 +122,9 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       if (isStale) {
         return { state: TradeState.LOADING, trade: undefined }
       } else if (isDebouncing) {
-        return { state: TradeState.SYNCING, trade }
+        return { state: TradeState.SYNCING, trade: lastTrade }
       } else if (isLoading) {
-        return { state: TradeState.LOADING, trade }
+        return { state: TradeState.LOADING, trade: lastTrade }
       }
     }
 
@@ -154,14 +151,15 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   }, [
     currencyIn,
     currencyOut,
-    error,
     quoteResult,
+    error,
     route,
     queryArgs,
     trade,
     isStale,
     isDebouncing,
     isLoading,
+    lastTrade,
     tradeType,
   ])
 }
