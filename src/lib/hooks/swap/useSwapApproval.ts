@@ -6,7 +6,7 @@ import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from 'con
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
@@ -171,39 +171,45 @@ export const useApproveOrPermit = (
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
 
-  const notApproved = approval === ApprovalState.NOT_APPROVED && !(signatureState === UseERC20PermitState.SIGNED)
+  // Track when the interaction is blocked on a wallet so a PENDING state can be returned.
+  const [isPendingWallet, setIsPendingWallet] = useState(false)
 
   // If permit is supported, trigger a signature, if not create approval transaction.
   const handleApproveOrPermit = useCallback(async () => {
-    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
-      try {
-        return await gatherPermitSignature()
-      } catch (error) {
-        // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
-        if (error?.code !== 4001) {
-          return getApproval()
+    setIsPendingWallet(true)
+    try {
+      if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
+        try {
+          return await gatherPermitSignature()
+        } catch (error) {
+          // Try to approve if gatherPermitSignature failed for any reason other than the user rejecting it.
+          if (error?.code !== 4001) {
+            return await getApproval()
+          }
         }
+      } else {
+        return await getApproval()
       }
-    } else {
-      return getApproval()
+    } catch (e) {
+      // Swallow approval errors - user rejections do not need to be displayed.
+    } finally {
+      setIsPendingWallet(false)
     }
   }, [signatureState, gatherPermitSignature, getApproval])
 
   const approvalState = useMemo(() => {
     if (approval === ApprovalState.PENDING) {
       return ApproveOrPermitState.PENDING_APPROVAL
-    }
-    if (signatureState === UseERC20PermitState.LOADING) {
+    } else if (signatureState === UseERC20PermitState.LOADING) {
       return ApproveOrPermitState.PENDING_SIGNATURE
+    } else if (approval !== ApprovalState.NOT_APPROVED || signatureState === UseERC20PermitState.SIGNED) {
+      return ApproveOrPermitState.APPROVED
+    } else if (gatherPermitSignature) {
+      return isPendingWallet ? ApproveOrPermitState.PENDING_SIGNATURE : ApproveOrPermitState.REQUIRES_SIGNATURE
+    } else {
+      return isPendingWallet ? ApproveOrPermitState.PENDING_APPROVAL : ApproveOrPermitState.REQUIRES_APPROVAL
     }
-    if (notApproved && Boolean(gatherPermitSignature)) {
-      return ApproveOrPermitState.REQUIRES_SIGNATURE
-    }
-    if (notApproved) {
-      return ApproveOrPermitState.REQUIRES_APPROVAL
-    }
-    return ApproveOrPermitState.APPROVED
-  }, [approval, gatherPermitSignature, notApproved, signatureState])
+  }, [approval, gatherPermitSignature, isPendingWallet, signatureState])
 
   return {
     approvalState,
