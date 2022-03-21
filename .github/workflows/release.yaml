@@ -139,6 +139,7 @@ jobs:
         run: |
           gsutil -m rsync -r $PWD/build gs://$BUCKET
           gsutil setmeta -h "Cache-Control: no-cache" gs://$BUCKET/*.html
+          gsutil setmeta -h "X-Frame-Options: SAMEORIGIN" gs://$BUCKET/*.html
 
   release:
     needs:
