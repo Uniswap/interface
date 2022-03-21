@@ -97,5 +97,7 @@
   "liquidityMining.create.subtitle": "Follow these simple steps to preview and create a liquidity mining pool on swapr",
   "bridge": "Bridge",
   "vote": "Vote",
-  "charts": "Charts"
+  "charts": "Charts",
+  "insufficientCurrencyBalance": "Insufficient {{ currency }} balance",
+  "enterCurrencyAmount": "Enter {{ currency }} amount"
 }

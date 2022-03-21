@@ -6,6 +6,7 @@ import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useActiveWeb3React } from './index'
 import { useNativeCurrencyWrapperContract, useWrappingToken } from './useContract'
 import { useNativeCurrency } from './useNativeCurrency'
+import { useTranslation } from 'react-i18next'
 
 export enum WrapType {
   NOT_APPLICABLE,
@@ -30,6 +31,7 @@ export default function useWrapCallback(
   const nativeCurrencyWrapperToken = useWrappingToken(nativeCurrency)
   const nativeCurrencyWrapperContract = useNativeCurrencyWrapperContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
+  const { t } = useTranslation()
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency, chainId), [
     inputCurrency,
@@ -67,7 +69,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : 'Insufficient ETH balance'
+        inputError: sufficientBalance
+          ? undefined
+          : !typedValue
+          ? t('enterCurrencyAmount', { currency: nativeCurrency.symbol })
+          : t('insufficientCurrencyBalance', { currency: nativeCurrency.symbol })
       }
     } else if (
       nativeCurrencyWrapperToken &&
@@ -91,7 +97,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : 'Insufficient WETH balance'
+        inputError: sufficientBalance
+          ? undefined
+          : !typedValue
+          ? t('enterCurrencyAmount', { currency: nativeCurrencyWrapperToken.symbol })
+          : t('insufficientCurrencyBalance', { currency: nativeCurrencyWrapperToken.symbol })
       }
     } else {
       return NOT_APPLICABLE
@@ -105,6 +115,8 @@ export default function useWrapCallback(
     balance,
     nativeCurrencyWrapperToken,
     nativeCurrency,
-    addTransaction
+    addTransaction,
+    typedValue,
+    t
   ])
 }
