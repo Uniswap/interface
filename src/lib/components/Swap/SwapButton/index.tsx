@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
+import { useSwapInfo } from 'lib/hooks/swap'
 import { useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import useWrapCallback, { WrapType } from 'lib/hooks/swap/useWrapCallback'
@@ -25,9 +25,6 @@ interface SwapButtonProps {
 
 export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const { account, chainId } = useActiveWeb3React()
-
-  const { tokenColorExtraction } = useTheme()
-
   const {
     [Field.INPUT]: {
       currency: inputCurrency,
@@ -35,53 +32,21 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       balance: inputCurrencyBalance,
       usdc: inputUSDC,
     },
-    [Field.OUTPUT]: { amount: outputCurrencyAmount, usdc: outputUSDC },
+    [Field.OUTPUT]: { usdc: outputUSDC },
     trade,
     slippage,
     impact,
   } = useSwapInfo()
   const feeOptions = useAtomValue(feeOptionsAtom)
 
-  const tradeType = useSwapTradeType()
-
-  const [activeTrade, setActiveTrade] = useState<typeof trade.trade | undefined>()
-  useEffect(() => {
-    setActiveTrade((activeTrade) => activeTrade && trade.trade)
-  }, [trade])
-
-  // clear active trade on chain change
-  useEffect(() => {
-    setActiveTrade(undefined)
-  }, [chainId])
-
   // TODO(zzmp): Return an optimized trade directly from useSwapInfo.
   const optimizedTrade =
     // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
     useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
-
-  const addTransaction = useAddTransaction()
-  const { type: wrapType, callback: wrapCallback } = useWrapCallback()
-  const { approvalData, signatureData } = useApprovalData(optimizedTrade, slippage)
-
-  const disableSwap = useMemo(
-    () =>
-      disabled ||
-      (wrapType === WrapType.NONE && !optimizedTrade) ||
-      !chainId ||
-      !(inputCurrencyAmount && inputCurrencyBalance) ||
-      inputCurrencyBalance.lessThan(inputCurrencyAmount),
-    [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
-  )
-
-  const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
-    if (disableSwap) return { disabled: true }
-    if (wrapType !== WrapType.NONE) return
-    return approvalData
-  }, [approvalData, disableSwap, wrapType])
-
   const deadline = useTransactionDeadline()
 
-  // the callback to execute the swap
+  const { type: wrapType, callback: wrapCallback } = useWrapCallback()
+  const { approvalData, signatureData } = useApprovalData(optimizedTrade, slippage)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
     allowedSlippage: slippage.allowed,
@@ -91,47 +56,68 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     feeOptions,
   })
 
-  //@TODO(ianlapham): add a loading state, process errors
+  const [open, setOpen] = useState(false)
+  // Close the review modal if there is no available trade.
+  useEffect(() => setOpen((open) => (trade.trade ? open : false)), [trade.trade])
+  // Close the review modal on chain change.
+  useEffect(() => setOpen(false), [chainId])
+
+  const addTransaction = useAddTransaction()
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
-
   const setOldestValidBlock = useSetOldestValidBlock()
-  const onConfirm = useCallback(() => {
-    swapCallback?.()
-      .then((response) => {
-        setDisplayTxHash(response.hash)
-        invariant(inputCurrencyAmount && outputCurrencyAmount)
-        addTransaction({
-          response,
-          type: TransactionType.SWAP,
-          tradeType,
-          inputCurrencyAmount,
-          outputCurrencyAmount,
-        })
 
-        // Set the block containing the response to the oldest valid block to ensure that the
-        // completed trade's impact is reflected in future fetched trades.
-        response.wait(1).then((receipt) => {
-          setOldestValidBlock(receipt.blockNumber)
-        })
-      })
-      .catch((error) => {
-        //@TODO(ianlapham): add error handling
-        console.log(error)
-      })
-      .finally(() => {
-        setActiveTrade(undefined)
-      })
-  }, [
-    addTransaction,
-    inputCurrencyAmount,
-    outputCurrencyAmount,
-    setDisplayTxHash,
-    setOldestValidBlock,
-    swapCallback,
-    tradeType,
-  ])
+  const onWrap = useCallback(async () => {
+    const transaction = await wrapCallback?.()
+    if (!transaction) return
+    addTransaction({
+      response: transaction,
+      type: TransactionType.WRAP,
+      unwrapped: wrapType === WrapType.UNWRAP,
+      currencyAmountRaw: transaction.value?.toString() ?? '0',
+      chainId,
+    })
+    setDisplayTxHash(transaction.hash)
+  }, [addTransaction, chainId, setDisplayTxHash, wrapCallback, wrapType])
+  const onSwap = useCallback(async () => {
+    const transaction = await swapCallback?.()
+    if (!transaction) return
+    invariant(trade.trade)
+    addTransaction({
+      response: transaction,
+      type: TransactionType.SWAP,
+      tradeType: trade.trade.tradeType,
+      inputCurrencyAmount: trade.trade.inputAmount,
+      outputCurrencyAmount: trade.trade.outputAmount,
+    })
+    setDisplayTxHash(transaction.hash)
+    setOpen(false)
 
-  const ButtonText = useCallback(() => {
+    // Set the block containing the response to the oldest valid block to ensure that the
+    // completed trade's impact is reflected in future fetched trades.
+    transaction.wait(1).then((receipt) => {
+      setOldestValidBlock(receipt.blockNumber)
+    })
+  }, [addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback, trade.trade])
+
+  const disableSwap = useMemo(
+    () =>
+      disabled ||
+      !chainId ||
+      (wrapType === WrapType.NONE && !optimizedTrade) ||
+      !(inputCurrencyAmount && inputCurrencyBalance) ||
+      inputCurrencyBalance.lessThan(inputCurrencyAmount),
+    [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
+  )
+  const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
+    if (disableSwap) {
+      return { disabled: true }
+    } else if (wrapType === WrapType.NONE) {
+      return approvalData || { onClick: () => setOpen(true) }
+    } else {
+      return { onClick: onWrap }
+    }
+  }, [approvalData, disableSwap, onWrap, wrapType])
+  const Label = useCallback(() => {
     switch (wrapType) {
       case WrapType.UNWRAP:
         return <Trans>Unwrap {inputCurrency?.symbol}</Trans>
@@ -142,47 +128,23 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
         return <Trans>Review swap</Trans>
     }
   }, [inputCurrency?.symbol, wrapType])
+  const onClose = useCallback(() => setOpen(false), [])
 
-  const handleDialogClose = useCallback(() => {
-    setActiveTrade(undefined)
-  }, [])
-
-  const handleActionButtonClick = useCallback(async () => {
-    if (wrapType === WrapType.NONE) {
-      setActiveTrade(trade.trade)
-    } else {
-      const transaction = await wrapCallback()
-      if (!transaction) return
-
-      addTransaction({
-        response: transaction,
-        type: TransactionType.WRAP,
-        unwrapped: wrapType === WrapType.UNWRAP,
-        currencyAmountRaw: transaction.value?.toString() ?? '0',
-        chainId,
-      })
-      setDisplayTxHash(transaction.hash)
-    }
-  }, [addTransaction, chainId, setDisplayTxHash, trade.trade, wrapCallback, wrapType])
-
+  const { tokenColorExtraction } = useTheme()
   return (
     <>
-      <ActionButton
-        color={tokenColorExtraction ? 'interactive' : 'accent'}
-        onClick={handleActionButtonClick}
-        {...actionProps}
-      >
-        <ButtonText />
+      <ActionButton color={tokenColorExtraction ? 'interactive' : 'accent'} {...actionProps}>
+        <Label />
       </ActionButton>
-      {activeTrade && (
-        <Dialog color="dialog" onClose={handleDialogClose}>
+      {open && trade.trade && (
+        <Dialog color="dialog" onClose={onClose}>
           <SummaryDialog
-            trade={activeTrade}
+            trade={trade.trade}
             slippage={slippage}
             inputUSDC={inputUSDC}
             outputUSDC={outputUSDC}
             impact={impact}
-            onConfirm={onConfirm}
+            onConfirm={onSwap}
           />
         </Dialog>
       )}

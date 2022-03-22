@@ -3,7 +3,7 @@ import { useWETHContract } from 'hooks/useContract'
 import { useAtomValue } from 'jotai/utils'
 import { Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../../../constants/tokens'
 import useActiveWeb3React from '../useActiveWeb3React'
@@ -15,7 +15,7 @@ export enum WrapType {
   UNWRAP,
 }
 interface UseWrapCallbackReturns {
-  callback: () => Promise<ContractTransaction | undefined>
+  callback?: () => Promise<ContractTransaction | undefined>
   type: WrapType
 }
 
@@ -42,28 +42,27 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
   )
   const balanceIn = useCurrencyBalance(account, inputCurrency)
 
-  const callback = useCallback(async () => {
-    if (wrapType === WrapType.NONE) {
-      return Promise.reject('Wrapping not applicable to this asset.')
-    }
-    if (!parsedAmountIn) {
-      return Promise.reject('Must provide an input amount to wrap.')
-    }
-    if (!balanceIn || balanceIn.lessThan(parsedAmountIn)) {
-      return Promise.reject('Insufficient balance to wrap desired amount.')
-    }
-    if (!wrappedNativeCurrencyContract) {
-      return Promise.reject('Wrap contract not found.')
+  const callback = useMemo(() => {
+    if (
+      wrapType === WrapType.NONE ||
+      !parsedAmountIn ||
+      !balanceIn ||
+      balanceIn.lessThan(parsedAmountIn) ||
+      !wrappedNativeCurrencyContract
+    ) {
+      return
     }
 
-    try {
-      return await (wrapType === WrapType.WRAP
-        ? wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
-        : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`))
-    } catch (e) {
-      // TODO(zzmp): add error handling
-      console.error(e)
-      return
+    return async () => {
+      try {
+        return await (wrapType === WrapType.WRAP
+          ? wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
+          : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`))
+      } catch (e) {
+        // TODO(zzmp): add error handling
+        console.error(e)
+        return
+      }
     }
   }, [wrapType, parsedAmountIn, balanceIn, wrappedNativeCurrencyContract])
 
