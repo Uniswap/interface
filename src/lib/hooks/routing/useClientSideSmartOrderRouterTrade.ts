@@ -107,11 +107,6 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   }, [gasUseEstimateUSD, route, tradeType])
   const lastTrade = useLast(trade, Boolean) ?? undefined
 
-  // Dont return old trade if currencies dont match.
-  const isStale =
-    (currencyIn && !trade?.inputAmount?.currency.equals(currencyIn)) ||
-    (currencyOut && !trade?.outputAmount?.currency.equals(currencyOut))
-
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
       return { state: TradeState.INVALID, trade: undefined }
@@ -119,12 +114,18 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
 
     // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
     if (!trade && !error) {
+      // Dont return last trade if currencies dont match.
+      const isStale =
+        (currencyIn && !lastTrade?.inputAmount?.currency.equals(currencyIn)) ||
+        (currencyOut && !lastTrade?.outputAmount?.currency.equals(currencyOut))
+
       if (isStale) {
         return { state: TradeState.LOADING, trade: undefined }
       } else if (isDebouncing) {
         return { state: TradeState.SYNCING, trade: lastTrade }
       }
-    } else if (!isValid && !error) {
+    }
+    if (!isValid && !error) {
       return { state: TradeState.LOADING, trade: lastTrade }
     }
 
@@ -140,7 +141,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       }
     }
 
-    if (error || !otherAmount || !route || route.length === 0 || !queryArgs) {
+    if (error || !otherAmount || !route || route.length === 0) {
       return { state: TradeState.NO_ROUTE_FOUND, trade: undefined }
     }
 
@@ -148,18 +149,5 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
       return { state: TradeState.VALID, trade }
     }
     return { state: TradeState.INVALID, trade: undefined }
-  }, [
-    currencyIn,
-    currencyOut,
-    trade,
-    error,
-    isValid,
-    quoteResult,
-    route,
-    queryArgs,
-    isStale,
-    isDebouncing,
-    lastTrade,
-    tradeType,
-  ])
+  }, [currencyIn, currencyOut, trade, error, isValid, quoteResult, route, isDebouncing, lastTrade, tradeType])
 }
