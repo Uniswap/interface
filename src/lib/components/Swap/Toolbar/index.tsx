@@ -39,7 +39,7 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
       if (balance && inputAmount?.greaterThan(balance)) {
-        return <Caption.InsufficientBalance currency={inputAmount.currency} />
+        return <Caption.InsufficientBalance currency={inputCurrency} />
       }
       if (wrapType !== WrapType.NOT_APPLICABLE) {
         return <Caption.WrapCurrency wrapType={wrapType} />
