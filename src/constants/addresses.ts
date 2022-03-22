@@ -3,12 +3,26 @@ import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
-export const XSP_ADDRESS: AddressMap = constructSameAddressMap('0xbC4979e749c28F81F22f95B603B350D9Ab0F172A')
-export const WXDC_ADDRESS: AddressMap = constructSameAddressMap('0x2a5c77b016Df1b3b0AE4E79a68F8adF64Ee741ba')
-export const MULTICALL_ADDRESS: AddressMap = constructSameAddressMap('0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB')
-export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap('0xCae66ac135d6489BDF5619Ae8F8f1e724765eb8f')
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x3F11A24EB45d3c3737365b97A996949dA6c2EdDf')
-// 0xbC4979e749c28F81F22f95B603B350D9Ab0F172A
+export const XSP_ADDRESS: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x36726235dAdbdb4658D33E62a249dCA7c4B2bC68',
+  [SupportedChainId.TESTNET]: '0xbC4979e749c28F81F22f95B603B350D9Ab0F172A',
+}
+export const WXDC_ADDRESS: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x951857744785e80e2de051c32ee7b25f9c458c42',
+  [SupportedChainId.TESTNET]: '0x2a5c77b016Df1b3b0AE4E79a68F8adF64Ee741ba',
+}
+export const MULTICALL_ADDRESS: AddressMap = {
+  [SupportedChainId.MAINNET]: '0xe877f72545e0038558aD2DdD7a4063fCc28AD61b',
+  [SupportedChainId.TESTNET]: '0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB',
+}
+export const V2_FACTORY_ADDRESSES: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x347D14b13a68457186b2450bb2a6c2Fd7B38352f',
+  [SupportedChainId.TESTNET]: '0xCae66ac135d6489BDF5619Ae8F8f1e724765eb8f',
+}
+export const V2_ROUTER_ADDRESS: AddressMap = {
+  [SupportedChainId.MAINNET]: '0xf9c5E4f6E627201aB2d6FB6391239738Cf4bDcf9',
+  [SupportedChainId.TESTNET]: '0x3F11A24EB45d3c3737365b97A996949dA6c2EdDf',
+}
 
 /**
  * The oldest V0 governance address
