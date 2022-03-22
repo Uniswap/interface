@@ -174,7 +174,8 @@ export function useERC20Permit(
       signatureData.tokenAddress === tokenAddress &&
       signatureData.nonce === nonceNumber &&
       signatureData.spender === spender &&
-      ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
+      ('allowed' in signatureData ||
+        JSBI.greaterThanOrEqual(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
 
     return {
       state: isSignatureDataValid ? UseERC20PermitState.SIGNED : UseERC20PermitState.NOT_SIGNED,
