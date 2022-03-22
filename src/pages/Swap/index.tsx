@@ -2,7 +2,6 @@ import { CurrencyAmount, JSBI, Trade, Token, RoutablePlatform } from '@swapr/sdk
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ButtonError, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
-import Card from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -58,14 +57,6 @@ const SwitchIconContainer = styled.div`
   height: 0;
   position: relative;
   width: 100%;
-`
-
-const PaddedRowBetween = styled(RowBetween)`
-  padding: 0 8px;
-`
-
-const PaddedCard = styled(Card)`
-  padding: 0 8px;
 `
 
 const AppBodyContainer = styled.section`
@@ -356,22 +347,20 @@ export default function Swap() {
                 </AutoColumn>
                 {!showWrap && !!trade && (
                   <AutoColumn gap="8px">
-                    <PaddedCard py="0px" px="8px">
-                      <RowBetween alignItems="center">
-                        <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
-                          Best price found on{' '}
-                          <span style={{ color: 'white', fontWeight: 700 }}>{bestPricedTrade?.platform.name}</span>.
-                          {trade.platform.name !== RoutablePlatform.SWAPR.name ? (
-                            <>
-                              {' '}
-                              Swap with <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
-                            </>
-                          ) : null}
-                        </TYPE.body>
-                        <QuestionHelper text="The trade is routed directly to the selected platform, so no swap or network fees are ever added by Swapr." />
-                      </RowBetween>
-                    </PaddedCard>
-                    <PaddedRowBetween align="center" px="8px">
+                    <RowBetween alignItems="center">
+                      <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
+                        Best price found on{' '}
+                        <span style={{ color: 'white', fontWeight: 700 }}>{bestPricedTrade?.platform.name}</span>.
+                        {trade.platform.name !== RoutablePlatform.SWAPR.name ? (
+                          <>
+                            {' '}
+                            Swap with <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
+                          </>
+                        ) : null}
+                      </TYPE.body>
+                      <QuestionHelper text="The trade is routed directly to the selected platform, so no swap or network fees are ever added by Swapr." />
+                    </RowBetween>
+                    <RowBetween>
                       <SwapSettings />
                       <RowFixed>
                         <TradePrice
@@ -380,7 +369,7 @@ export default function Swap() {
                           setShowInverted={setShowInverted}
                         />
                       </RowFixed>
-                    </PaddedRowBetween>
+                    </RowBetween>
                   </AutoColumn>
                 )}
                 {isExpertMode && !showWrap && <RecipientField recipient={recipient} action={setRecipient} />}
