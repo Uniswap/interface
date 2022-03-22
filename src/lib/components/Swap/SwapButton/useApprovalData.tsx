@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ActionButtonProps } from 'lib/components/ActionButton'
 import EtherscanLink from 'lib/components/EtherscanLink'
-import { useSwapCurrencyAmount } from 'lib/hooks/swap'
 import {
   ApproveOrPermitState,
   useApproveOrPermit,
@@ -12,7 +11,6 @@ import {
 import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
 import { Slippage } from 'lib/hooks/useSlippage'
 import { Spinner } from 'lib/icons'
-import { Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useCallback, useMemo } from 'react'
 import { ExplorerDataType } from 'utils/getExplorerLink'
@@ -21,8 +19,11 @@ export function useIsPendingApproval(token?: Token, spender?: string): boolean {
   return Boolean(usePendingApproval(token, spender))
 }
 
-export default function useApprovalData(trade: ReturnType<typeof useSwapApprovalOptimizedTrade>, slippage: Slippage) {
-  const currencyAmount = useSwapCurrencyAmount(Field.INPUT)
+export default function useApprovalData(
+  trade: ReturnType<typeof useSwapApprovalOptimizedTrade>,
+  slippage: Slippage,
+  currencyAmount?: CurrencyAmount<Currency>
+) {
   const currency = currencyAmount?.currency
   const { approvalState, signatureData, handleApproveOrPermit } = useApproveOrPermit(
     trade,
