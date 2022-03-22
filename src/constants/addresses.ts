@@ -12,7 +12,7 @@ export const WXDC_ADDRESS: AddressMap = {
   [SupportedChainId.TESTNET]: '0x2a5c77b016Df1b3b0AE4E79a68F8adF64Ee741ba',
 }
 export const MULTICALL_ADDRESS: AddressMap = {
-  [SupportedChainId.MAINNET]: '0xe877f72545e0038558aD2DdD7a4063fCc28AD61b',
+  [SupportedChainId.MAINNET]: '0x2aE7DcaF1e1AEf5Be1Ef63FCb0E70a519A4b8d7E',
   [SupportedChainId.TESTNET]: '0xFC96B6C4A1775aD2Cbe3fF6E2d82A190A69f7ABB',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = {
