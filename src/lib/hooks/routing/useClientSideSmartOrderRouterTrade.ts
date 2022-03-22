@@ -72,7 +72,7 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   const { type: wrapType } = useWrapCallback()
 
   const getQuoteResult = useCallback(async (): Promise<{ data?: GetQuoteResult; error?: unknown }> => {
-    if (wrapType !== WrapType.NOT_APPLICABLE) return { error: undefined }
+    if (wrapType !== WrapType.NONE) return { error: undefined }
     if (!queryArgs || !params) return { error: undefined }
     try {
       return await getClientSideQuote(queryArgs, params, config)

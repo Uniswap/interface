@@ -20,14 +20,14 @@ const ToolbarRow = styled(Row)`
 export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
   const { chainId } = useActiveWeb3React()
   const {
-    [Field.INPUT]: { currency: inputCurrency, balance },
+    [Field.INPUT]: { currency: inputCurrency, balance: inputBalance, amount: inputAmount },
     [Field.OUTPUT]: { currency: outputCurrency, usdc: outputUSDC },
     trade: { trade, state },
     impact,
   } = useSwapInfo()
   const isRouteLoading = state === TradeState.SYNCING || state === TradeState.LOADING
   const isAmountPopulated = useIsAmountPopulated()
-  const { type: wrapType, loading: wrapLoading } = useWrapCallback()
+  const { type: wrapType } = useWrapCallback()
   const caption = useMemo(() => {
     if (disabled) {
       return <Caption.ConnectWallet />
@@ -38,17 +38,17 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
     }
 
     if (inputCurrency && outputCurrency && isAmountPopulated) {
-      if (wrapType !== WrapType.NOT_APPLICABLE) {
-        return <Caption.WrapCurrency wrapType={wrapType} loading={wrapLoading} />
+      if (inputBalance && inputAmount?.greaterThan(inputBalance)) {
+        return <Caption.InsufficientBalance currency={inputCurrency} />
+      }
+      if (wrapType !== WrapType.NONE) {
+        return <Caption.WrapCurrency inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
       }
       if (isRouteLoading) {
         return <Caption.LoadingTrade />
       }
       if (!trade?.swaps) {
         return <Caption.InsufficientLiquidity />
-      }
-      if (balance && trade?.inputAmount.greaterThan(balance)) {
-        return <Caption.InsufficientBalance currency={trade.inputAmount.currency} />
       }
       if (trade.inputAmount && trade.outputAmount) {
         return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
@@ -57,17 +57,17 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
 
     return <Caption.Empty />
   }, [
-    balance,
     chainId,
     disabled,
     impact,
+    inputAmount,
+    inputBalance,
     inputCurrency,
     isAmountPopulated,
     isRouteLoading,
     outputCurrency,
     outputUSDC,
     trade,
-    wrapLoading,
     wrapType,
   ])
 

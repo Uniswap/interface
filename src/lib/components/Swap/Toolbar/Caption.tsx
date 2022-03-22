@@ -4,7 +4,6 @@ import Column from 'lib/components/Column'
 import Rule from 'lib/components/Rule'
 import Tooltip from 'lib/components/Tooltip'
 import { loadingCss } from 'lib/css/loading'
-import { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, Icon, Info, InlineSpinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
@@ -38,7 +37,7 @@ export function ConnectWallet() {
 }
 
 export function UnsupportedNetwork() {
-  return <Caption caption={<Trans>Unsupported network - switch to another to trade.</Trans>} />
+  return <Caption caption={<Trans>Unsupported network - switch to another to trade</Trans>} />
 }
 
 export function InsufficientBalance({ currency }: { currency: Currency }) {
@@ -66,15 +65,17 @@ export function LoadingTrade() {
   )
 }
 
-export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType: WrapType.UNWRAP | WrapType.WRAP }) {
-  const WrapText = useCallback(() => {
-    if (wrapType === WrapType.WRAP) {
-      return loading ? <Trans>Wrapping native currency.</Trans> : <Trans>Wrap native currency.</Trans>
-    }
-    return loading ? <Trans>Unwrapping native currency.</Trans> : <Trans>Unwrap native currency.</Trans>
-  }, [loading, wrapType])
+export function WrapCurrency({ inputCurrency, outputCurrency }: { inputCurrency: Currency; outputCurrency: Currency }) {
+  const Text = useCallback(
+    () => (
+      <Trans>
+        Convert {inputCurrency.symbol} to {outputCurrency.symbol} with no slippage
+      </Trans>
+    ),
+    [inputCurrency.symbol, outputCurrency.symbol]
+  )
 
-  return <Caption icon={Info} caption={<WrapText />} />
+  return <Caption icon={Info} caption={<Text />} />
 }
 
 export function Trade({
