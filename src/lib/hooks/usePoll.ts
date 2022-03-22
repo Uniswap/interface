@@ -8,11 +8,16 @@ interface PollingOptions<T> {
   // If true, any cached result will be returned, but no new fetch will be initiated.
   debounce?: boolean
 
-  // If stale, a result will not be returned, and a new fetch will be immediately initiated.
+  // If stale, any cached result will be returned, and a new fetch will be initiated.
   staleCallback?: (value: T) => boolean
 
   pollingInterval?: number
   keepUnusedDataFor?: number
+}
+
+interface CacheEntry<T> {
+  ttl: number | null // null denotes a pending fetch
+  result?: T
 }
 
 export default function usePoll<T>(
@@ -25,7 +30,7 @@ export default function usePoll<T>(
     keepUnusedDataFor = DEFAULT_KEEP_UNUSED_DATA_FOR,
   }: PollingOptions<T>
 ): T | undefined {
-  const cache = useMemo(() => new Map<string, { ttl: number; result?: T }>(), [])
+  const cache = useMemo(() => new Map<string, CacheEntry<T>>(), [])
   const [, setData] = useState<{ key: string; result?: T }>({ key })
 
   useEffect(() => {
@@ -35,29 +40,33 @@ export default function usePoll<T>(
 
     const entry = cache.get(key)
     const isStale = staleCallback && entry?.result !== undefined ? staleCallback(entry.result) : false
-    if (entry && entry.ttl + keepUnusedDataFor > Date.now() && !isStale) {
-      // If there is a fresh entry, return it and queue the next poll.
-      setData({ key, result: entry.result })
-      timeout = setTimeout(poll, Math.max(0, entry.ttl - Date.now()))
+    if (entry) {
+      // If there is not a pending fetch (and there should be), queue one.
+      if (entry.ttl) {
+        if (isStale) {
+          poll() // stale results should be refetched immediately
+        } else if (entry.ttl && entry.ttl + keepUnusedDataFor > Date.now()) {
+          timeout = setTimeout(poll, Math.max(0, entry.ttl - Date.now()))
+        }
+      }
     } else {
-      // Otherwise, set a new entry (to avoid duplicate polling) and trigger a poll immediately.
-      cache.set(key, { ttl: Date.now() + pollingInterval })
-      setData({ key })
+      // If there is no cached entry, trigger a poll immediately.
       poll()
     }
+    setData({ key, result: entry?.result })
 
     return () => {
       clearTimeout(timeout)
     }
 
     async function poll(ttl = Date.now() + pollingInterval) {
-      timeout = setTimeout(poll, pollingInterval)
-      const result = await fetch()
+      timeout = setTimeout(poll, pollingInterval) // queue the next poll
+      cache.set(key, { ttl: null, ...cache.get(key) }) // mark the entry as a pending fetch
+
       // Always set the result in the cache, but only set it as data if the key is still being queried.
+      const result = await fetch()
       cache.set(key, { ttl, result })
-      setData((data) => {
-        return data.key === key ? { key, result } : data
-      })
+      setData((data) => (data.key === key ? { key, result } : data))
     }
   }, [cache, debounce, fetch, keepUnusedDataFor, key, pollingInterval, staleCallback])
 
@@ -67,7 +76,7 @@ export default function usePoll<T>(
 
     const now = Date.now()
     cache.forEach(({ ttl }, key) => {
-      if (ttl + keepUnusedDataFor <= now) {
+      if (ttl && ttl + keepUnusedDataFor <= now) {
         cache.delete(key)
       }
     })

@@ -84,11 +84,11 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   const getIsValidBlock = useGetIsValidBlock()
   const { data: quoteResult, error } = usePoll(getQuoteResult, JSON.stringify(queryArgs), {
     debounce: isDebouncing,
-    staleCallback: useCallback(({ data }) => getIsValidBlock(Number(data?.blockNumber) || 0), [getIsValidBlock]),
+    staleCallback: useCallback(({ data }) => !getIsValidBlock(Number(data?.blockNumber) || 0), [getIsValidBlock]),
   }) ?? {
     error: undefined,
   }
-  const isLoading = !quoteResult
+  const isValid = getIsValidBlock(Number(quoteResult?.blockNumber) || 0)
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
@@ -118,14 +118,14 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     }
 
     // Returns the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
-    if (!quoteResult && !error) {
+    if (!trade && !error) {
       if (isStale) {
         return { state: TradeState.LOADING, trade: undefined }
       } else if (isDebouncing) {
         return { state: TradeState.SYNCING, trade: lastTrade }
-      } else if (isLoading) {
-        return { state: TradeState.LOADING, trade: lastTrade }
       }
+    } else if (!isValid && !error) {
+      return { state: TradeState.LOADING, trade: lastTrade }
     }
 
     let otherAmount = undefined
@@ -151,14 +151,14 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
   }, [
     currencyIn,
     currencyOut,
-    quoteResult,
+    trade,
     error,
+    isValid,
+    quoteResult,
     route,
     queryArgs,
-    trade,
     isStale,
     isDebouncing,
-    isLoading,
     lastTrade,
     tradeType,
   ])
