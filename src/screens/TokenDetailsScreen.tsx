@@ -115,7 +115,6 @@ export function TokenDetailsScreen({
             )}
             <Box flexDirection="row" mx="lg" my="md">
               <PrimaryButton
-                disabled={!balance}
                 flex={1}
                 label={t('Buy')}
                 mr="sm"
@@ -124,6 +123,7 @@ export function TokenDetailsScreen({
                 onPress={onPressBuy}
               />
               <PrimaryButton
+                disabled={!balance}
                 flex={1}
                 label={t('Sell')}
                 name={ElementName.SellToken}

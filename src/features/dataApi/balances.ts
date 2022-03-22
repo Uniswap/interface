@@ -19,6 +19,7 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { isTestnet } from 'src/utils/chainId'
 import { buildCurrencyId, currencyId, CurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
+import { percentDifference } from 'src/utils/statistics'
 
 function useChainBalances(
   chainId: ChainId,
@@ -58,7 +59,7 @@ function useChainBalances(
                 portfolioBalances[id] = {
                   amount: CurrencyAmount.fromRawAmount(currency, item.balance),
                   balanceUSD: item.balanceUSD,
-                  relativeChange24: item.relativeChange24,
+                  relativeChange24: percentDifference(item.quote_rate, item.quote_rate_24h),
                 }
               }
 
@@ -143,7 +144,7 @@ export function useSingleBalance(currency: Currency): PortfolioBalance | null {
         return {
           amount: CurrencyAmount.fromRawAmount(currency, cacheEntry.balance),
           balanceUSD: cacheEntry.balanceUSD,
-          relativeChange24: cacheEntry.relativeChange24,
+          relativeChange24: percentDifference(cacheEntry.quote_rate, cacheEntry.quote_rate_24h),
         }
       },
     }

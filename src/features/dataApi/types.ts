@@ -16,8 +16,10 @@ export type PortfolioBalance = {
 export type SerializablePortfolioBalance = {
   balance: number
   balanceUSD: number
-  relativeChange24: number
-} & Pick<CovalentWalletBalanceItem, 'contract_address' | 'contract_ticker_symbol'>
+} & Pick<
+  CovalentWalletBalanceItem,
+  'contract_address' | 'contract_ticker_symbol' | 'quote_rate' | 'quote_rate_24h'
+>
 
 /** Spot Prices Types */
 export type SpotPrice = {

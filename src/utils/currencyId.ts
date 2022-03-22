@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { NATIVE_ADDRESS } from 'src/constants/addresses'
+import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { toSupportedChainId } from 'src/utils/chainId'
 
@@ -14,7 +14,10 @@ export function buildCurrencyId(chainId: ChainId, address: string) {
 }
 
 export function currencyAddress(currency: Currency): string {
-  if (currency.isNative) return NATIVE_ADDRESS
+  if (currency.isNative) {
+    if (currency.chainId === ChainId.Polygon) return NATIVE_ADDRESS_ALT
+    else return NATIVE_ADDRESS
+  }
   if (currency.isToken) return currency.address
   throw new Error('invalid currency')
 }

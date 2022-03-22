@@ -48,14 +48,18 @@ export const dataApi = createApi({
       transformResponse: (response: { data: CovalentBalances }, _, args) =>
         response.data.items.reduce<{ [currencyId: CurrencyId]: SerializablePortfolioBalance }>(
           (memo, item) => {
-            // skips address validation for performance
+            if (item.quote === 0) return memo
+
+            // PERF: skips address validation for performance
+            // ideally address could be left lower case to avoid checksumming it
             const contract_address = utils.getAddress(item.contract_address)
             memo[buildCurrencyId(args.chainId, contract_address)] = {
               balance: item.balance,
               balanceUSD: item.quote,
-              relativeChange24: percentDifference(item.quote_rate, item.quote_rate_24h),
               contract_address,
               contract_ticker_symbol: item.contract_ticker_symbol,
+              quote_rate: item.quote_rate,
+              quote_rate_24h: item.quote_rate_24h,
             }
             return memo
           },
