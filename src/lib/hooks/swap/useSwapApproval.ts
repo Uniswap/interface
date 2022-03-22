@@ -133,6 +133,7 @@ export function useSwapApprovalOptimizedTrade(
 }
 
 export enum ApproveOrPermitState {
+  UNKNOWN,
   REQUIRES_APPROVAL,
   PENDING_APPROVAL,
   REQUIRES_SIGNATURE,
@@ -193,6 +194,8 @@ export const useApproveOrPermit = (
   }, [signatureState, gatherPermitSignature, getApproval])
 
   const approvalState = useMemo(() => {
+    if (!trade) return ApprovalState.UNKNOWN
+
     if (approval === ApprovalState.PENDING) {
       return ApproveOrPermitState.PENDING_APPROVAL
     } else if (signatureState === UseERC20PermitState.LOADING) {
@@ -204,7 +207,7 @@ export const useApproveOrPermit = (
     } else {
       return isPendingWallet ? ApproveOrPermitState.PENDING_APPROVAL : ApproveOrPermitState.REQUIRES_APPROVAL
     }
-  }, [approval, gatherPermitSignature, isPendingWallet, signatureState])
+  }, [approval, gatherPermitSignature, isPendingWallet, signatureState, trade])
 
   return {
     approvalState,

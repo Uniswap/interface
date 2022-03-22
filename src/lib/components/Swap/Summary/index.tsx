@@ -94,7 +94,7 @@ function ConfirmButton({
 }: {
   trade: Trade<Currency, Currency, TradeType>
   highPriceImpact: boolean
-  onConfirm: () => void
+  onConfirm: () => Promise<void>
 }) {
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
   const [ackTrade, setAckTrade] = useState(trade)
@@ -133,7 +133,7 @@ interface SummaryDialogProps {
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
-  onConfirm: () => void
+  onConfirm: () => Promise<void>
 }
 
 export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, onConfirm }: SummaryDialogProps) {

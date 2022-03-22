@@ -4,7 +4,7 @@ import { atom, useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { Field, swapAtom } from 'lib/state/swap'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../../../constants/tokens'
 import useActiveWeb3React from '../useActiveWeb3React'
@@ -17,32 +17,15 @@ export enum WrapType {
 }
 interface UseWrapCallbackReturns {
   callback: () => Promise<ContractTransaction>
-  error: WrapError
   loading: boolean
   type: WrapType
 }
 
-export enum WrapError {
-  NO_ERROR = 0, // must be equal to 0 so all other errors are truthy
-  ENTER_NATIVE_AMOUNT,
-  ENTER_WRAPPED_AMOUNT,
-  INSUFFICIENT_NATIVE_BALANCE,
-  INSUFFICIENT_WRAPPED_BALANCE,
-}
-
-interface WrapState {
-  loading: boolean
-  error: WrapError
-}
-
-const wrapState = atom<WrapState>({
-  loading: false,
-  error: WrapError.NO_ERROR,
-})
+const loadingAtom = atom(false)
 
 export default function useWrapCallback(): UseWrapCallbackReturns {
   const { account, chainId } = useActiveWeb3React()
-  const [{ loading, error }, setWrapState] = useAtom(wrapState)
+  const [loading, setLoading] = useAtom(loadingAtom)
   const wrappedNativeCurrencyContract = useWETHContract()
   const { amount, [Field.INPUT]: inputCurrency, [Field.OUTPUT]: outputCurrency } = useAtomValue(swapAtom)
 
@@ -76,24 +59,7 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     [relevantTokenBalances]
   )
 
-  const hasInputAmount = Boolean(parsedAmountIn?.greaterThan('0'))
   const sufficientBalance = parsedAmountIn && !currencyBalances[Field.INPUT]?.lessThan(parsedAmountIn)
-
-  useEffect(() => {
-    if (sufficientBalance) {
-      setWrapState((state) => ({ ...state, error: WrapError.NO_ERROR }))
-    } else if (wrapType === WrapType.WRAP) {
-      setWrapState((state) => ({
-        ...state,
-        error: hasInputAmount ? WrapError.INSUFFICIENT_NATIVE_BALANCE : WrapError.ENTER_NATIVE_AMOUNT,
-      }))
-    } else if (wrapType === WrapType.UNWRAP) {
-      setWrapState((state) => ({
-        ...state,
-        error: hasInputAmount ? WrapError.INSUFFICIENT_WRAPPED_BALANCE : WrapError.ENTER_WRAPPED_AMOUNT,
-      }))
-    }
-  }, [hasInputAmount, setWrapState, sufficientBalance, wrapType])
 
   const callback = useCallback(async () => {
     if (!parsedAmountIn) {
@@ -108,26 +74,25 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
     if (!wrappedNativeCurrencyContract) {
       return Promise.reject('Wrap contract not found.')
     }
-    setWrapState((state) => ({ ...state, loading: true }))
+    setLoading(true)
     const result = await (wrapType === WrapType.WRAP
       ? wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
       : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`)
     ).catch((e: unknown) => {
-      setWrapState((state) => ({ ...state, loading: false }))
+      setLoading(false)
       throw e
     })
     // resolve loading state after one confirmation
-    result.wait(1).finally(() => setWrapState((state) => ({ ...state, loading: false })))
+    result.wait(1).finally(() => setLoading(false))
     return Promise.resolve(result)
-  }, [wrappedNativeCurrencyContract, sufficientBalance, parsedAmountIn, wrapType, setWrapState])
+  }, [parsedAmountIn, wrapType, sufficientBalance, wrappedNativeCurrencyContract, setLoading])
 
   return useMemo(
     () => ({
       callback,
-      error,
       loading,
       type: wrapType,
     }),
-    [callback, error, loading, wrapType]
+    [callback, loading, wrapType]
   )
 }

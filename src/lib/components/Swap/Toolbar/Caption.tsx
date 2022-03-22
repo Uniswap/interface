@@ -66,13 +66,13 @@ export function LoadingTrade() {
   )
 }
 
-export function WrapCurrency({ loading, wrapType }: { loading: boolean; wrapType: WrapType.UNWRAP | WrapType.WRAP }) {
+export function WrapCurrency({ wrapType }: { wrapType: WrapType.UNWRAP | WrapType.WRAP }) {
   const WrapText = useCallback(() => {
     if (wrapType === WrapType.WRAP) {
-      return loading ? <Trans>Wrapping native currency.</Trans> : <Trans>Wrap native currency.</Trans>
+      return <Trans>Wrap native currency with no slippage.</Trans>
     }
-    return loading ? <Trans>Unwrapping native currency.</Trans> : <Trans>Unwrap native currency.</Trans>
-  }, [loading, wrapType])
+    return <Trans>Unwrap native currency with no slippage.</Trans>
+  }, [wrapType])
 
   return <Caption icon={Info} caption={<WrapText />} />
 }
