@@ -1,3 +1,5 @@
+import { TransactionReceipt } from '@ethersproject/abstract-provider'
+import { poll } from '@ethersproject/web'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -49,18 +51,77 @@ export default function Updater(): null {
 
   const getReceipt = useCallback(
     (hash: string) => {
+      const myGetTransactionReceipt = async (
+        transactionHash: string | Promise<string>
+      ): Promise<TransactionReceipt | null | undefined> => {
+        if (!library) {
+          return null
+        }
+        await library.getNetwork()
+
+        transactionHash = await transactionHash
+
+        const params = { transactionHash: library.formatter.hash(transactionHash, true) }
+        return poll(
+          async () => {
+            const result = await library.perform('getTransactionReceipt', params)
+
+            if (result == null) {
+              if (library._emitted['t:' + transactionHash] == null) {
+                return null
+              }
+              return undefined
+            }
+
+            result.from = result.from.substring(0, 3) === 'xdc' ? '0x' + result.from.substring(3) : result.from
+            result.to = result.to.substring(0, 3) === 'xdc' ? '0x' + result.to.substring(3) : result.to
+            result.logs = result.logs.map((log: any) => ({
+              ...log,
+              address: log.address.substring(0, 3) === 'xdc' ? '0x' + log.address.substring(3) : log.address.to,
+            }))
+
+            // "geth-etc" returns receipts before they are ready
+            if (result.blockHash == null) {
+              return undefined
+            }
+
+            const receipt = library.formatter.receipt(result)
+
+            if (receipt.blockNumber == null) {
+              receipt.confirmations = 0
+            } else if (receipt.confirmations == null) {
+              const blockNumber = await library._getInternalBlockNumber(100 + 2 * library.pollingInterval)
+
+              // Add the confirmations using the fast block number (pessimistic)
+              let confirmations = blockNumber - receipt.blockNumber + 1
+              if (confirmations <= 0) {
+                confirmations = 1
+              }
+              receipt.confirmations = confirmations
+            }
+
+            return receipt
+          },
+          { oncePoll: library }
+        )
+      }
+
       if (!library || !chainId) throw new Error('No library or chainId')
-      return retry(
-        () =>
-          library.getTransactionReceipt(hash).then((receipt) => {
+      return retry(() => {
+        console.log(hash)
+        return myGetTransactionReceipt(hash)
+          .then((receipt) => {
             if (receipt === null) {
               console.debug('Retrying for hash', hash)
               throw new RetryableError()
             }
+            console.log(receipt, '---------')
             return receipt
-          }),
-        DEFAULT_RETRY_OPTIONS
-      )
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+      }, DEFAULT_RETRY_OPTIONS)
     },
     [chainId, library]
   )
@@ -75,22 +136,22 @@ export default function Updater(): null {
         promise
           .then((receipt) => {
             if (receipt) {
-              dispatch(
-                finalizeTransaction({
-                  chainId,
-                  hash,
-                  receipt: {
-                    blockHash: receipt.blockHash,
-                    blockNumber: receipt.blockNumber,
-                    contractAddress: receipt.contractAddress,
-                    from: receipt.from.substring(0, 3) === 'xdc' ? '0x' + receipt.from.substring(3) : receipt.from,
-                    status: receipt.status,
-                    to: receipt.to.substring(0, 3) === 'xdc' ? '0x' + receipt.to.substring(3) : receipt.to,
-                    transactionHash: receipt.transactionHash,
-                    transactionIndex: receipt.transactionIndex,
-                  },
-                })
-              )
+              const payload = {
+                chainId,
+                hash,
+                receipt: {
+                  blockHash: receipt.blockHash,
+                  blockNumber: receipt.blockNumber,
+                  contractAddress: receipt.contractAddress,
+                  from: receipt.from.substring(0, 3) === 'xdc' ? '0x' + receipt.from.substring(3) : receipt.from,
+                  status: receipt.status,
+                  to: receipt.to.substring(0, 3) === 'xdc' ? '0x' + receipt.to.substring(3) : receipt.to,
+                  transactionHash: receipt.transactionHash,
+                  transactionIndex: receipt.transactionIndex,
+                },
+              }
+              console.log(payload)
+              dispatch(finalizeTransaction(payload))
 
               addPopup(
                 {
