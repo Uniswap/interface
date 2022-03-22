@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -564,6 +564,10 @@ msgstr "지갑 연결"
 msgid "Connected with {name}"
 msgstr "{name}와(과) 연결됨"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "미끄러짐 없이 {0} 을 {1} 로 변환"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "복사 됨"
@@ -761,8 +765,6 @@ msgstr "유효한 토큰 주소를 입력하세요."
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "{0} 금액을 입력하세요"
 
@@ -980,8 +982,6 @@ msgstr "거래를 위한 풀의 유동성 부족"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "지원되지 않는 자산"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "지원되지 않는 네트워크 - 거래하려면 다른 네트워크로 전환하세요."
+msgid "Unsupported network - switch to another to trade"
+msgstr "지원되지 않는 네트워크 - 거래를 위해 다른 네트워크로 전환"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "제목 없음"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "언랩"
@@ -2090,17 +2089,13 @@ msgstr "<0/> 에서 {0}풀기"
 msgid "Unwrap confirmed"
 msgstr "포장 풀기 확인"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "기본 통화 포장을 풉니다."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "언래핑 보류"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "기본 통화 포장 풀기."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "포장 풀기 {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "{0} UNI-V2 인출"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 인출!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "랩"
@@ -2283,17 +2277,13 @@ msgstr "<0/> 에서 {0}바꿈"
 msgid "Wrap confirmed"
 msgstr "랩 확인됨"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "기본 통화를 포장합니다."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "랩 대기 중"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "기본 통화 래핑."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "랩 {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

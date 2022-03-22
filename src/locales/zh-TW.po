@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -564,6 +564,10 @@ msgstr "連接你的錢包"
 msgid "Connected with {name}"
 msgstr "已與 {name} 連接"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "將 {0} 轉換為 {1} 沒有滑點"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "已複製"
@@ -761,8 +765,6 @@ msgstr "輸入有效的代幣地址"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "輸入 {0} 數額"
 
@@ -980,8 +982,6 @@ msgstr "您想交易的池中流動性不足"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "不支持的資產"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "不支持的網絡 - 切換到另一個進行交易。"
+msgid "Unsupported network - switch to another to trade"
+msgstr "不支持的網絡 - 切換到另一個進行交易"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "無標題"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "展開"
@@ -2090,17 +2089,13 @@ msgstr "將 <0/> 換回為 {0}"
 msgid "Unwrap confirmed"
 msgstr "打開包裝確認"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "解開本國貨幣。"
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "打開待處理"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "解包本國貨幣。"
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "展開 {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "贖回 {0} UNI-V2 流動池代幣"
 msgid "Withdrew UNI-V2!"
 msgstr "已贖回 UNI-V2！"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "包裹"
@@ -2283,17 +2277,13 @@ msgstr "將 <0/> 換為 {0}"
 msgid "Wrap confirmed"
 msgstr "包裹確認"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "包裹本國貨幣。"
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "包裹待處理"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "包裝本國貨幣。"
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "換行 {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

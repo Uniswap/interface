@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -564,6 +564,10 @@ msgstr "ウォレットを接続する"
 msgid "Connected with {name}"
 msgstr "{name} と接続しました"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "スリッページなしで {0} を {1} に変換します"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "コピーしました"
@@ -761,8 +765,6 @@ msgstr "有効なトークンアドレスを入力してください"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "{0} 金額を入力してください"
 
@@ -980,8 +982,6 @@ msgstr "あなたの取引のためのプールの不十分な流動性"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "サポートされていないアセット"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "サポートされていないネットワーク-別のネットワークに切り替えて取引します。"
+msgid "Unsupported network - switch to another to trade"
+msgstr "サポートされていないネットワーク-別のネットワークに切り替えて取引する"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "タイトル未設定"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "アンラップ"
@@ -2090,17 +2089,13 @@ msgstr "<0/> から {0} にアンラップ"
 msgid "Unwrap confirmed"
 msgstr "開封確認済み"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "自国通貨をアンラップします。"
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "保留中のアンラップ"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "自国通貨の開封。"
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "{0}をアンラップ"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "{0} UNI-V2を引き出し中"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2を引き出しました"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "ラップ"
@@ -2283,17 +2277,13 @@ msgstr "<0/> から {0} にラップ"
 msgid "Wrap confirmed"
 msgstr "ラップが確認されました"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "自国通貨をラップします。"
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "ラップ保留中"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "自国通貨のラッピング。"
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "ラップ {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

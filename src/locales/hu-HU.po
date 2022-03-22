@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -564,6 +564,10 @@ msgstr "Csatlakoztassa a pénztárcáját"
 msgid "Connected with {name}"
 msgstr "Csatlakoztatva: {name}"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Konvertálja {0} -t {1} -re csúszás nélkül"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "Másolva"
@@ -761,8 +765,6 @@ msgstr "Adja meg az érvényes token címet"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Adjon meg {0} összeget"
 
@@ -981,8 +983,6 @@ msgstr "Nincs elegendő likviditás a poolban a kereskedéshez"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2071,14 +2071,13 @@ msgid "Unsupported Assets"
 msgstr "Nem támogatott eszközök"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Nem támogatott hálózat – váltson másikra a kereskedéshez."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Nem támogatott hálózat – váltson másikra a kereskedéshez"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Névtelen"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Kicsomagolás"
@@ -2091,17 +2090,13 @@ msgstr "Kicsomagolás <0/> tól {0}"
 msgid "Unwrap confirmed"
 msgstr "Kibontás megerősítve"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Bontsa ki a natív valutát."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Felbontás függőben"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "A natív valuta kibontása."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "Kicsomagolás {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2271,7 +2266,6 @@ msgstr "{0} UNI-V2 visszavonása"
 msgid "Withdrew UNI-V2!"
 msgstr "Visszavonta az UNI-V2-t!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Becsomagolás"
@@ -2284,17 +2278,13 @@ msgstr "Tekerje <0/> tól {0}"
 msgid "Wrap confirmed"
 msgstr "Wrap megerősítve"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Wrap natív valuta."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Becsomagolás függőben"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "A natív valuta csomagolása."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "Tekercs {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -564,6 +564,10 @@ msgstr "Povežite svojo denarnico"
 msgid "Connected with {name}"
 msgstr "Povezano z: {name}"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Pretvorite {0} v {1} brez zdrsa"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "Kopirano"
@@ -761,8 +765,6 @@ msgstr "Vnesite veljaven naslov žetona"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Vnesite znesek {0}"
 
@@ -980,8 +982,6 @@ msgstr "Sklad ima prenizko likvidnost za ta posel."
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "Nepodprta sredstva"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "To omrežje ni podprto – za trgovanje preklopite na drugo omrežje."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Nepodprto omrežje - preklopite na drugo za trgovanje"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Brez naslova"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Odvij"
@@ -2090,17 +2089,13 @@ msgstr "Odvijte <0/> v {0}"
 msgid "Unwrap confirmed"
 msgstr "Odvijanje potrjeno"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Odvijanje avtohtone valute."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Odvijanje v teku"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "Odvijanje avtohtone valute."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "Odviti {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "Dvigujem {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 dvignjen!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Ovij"
@@ -2283,17 +2277,13 @@ msgstr "Ovijte <0/> v {0}"
 msgid "Wrap confirmed"
 msgstr "Ovijanje potrjeno"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Zavijte domačo valuto."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Ovijanje v teku"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "Ovijanje avtohtone valute."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "Zaviti {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

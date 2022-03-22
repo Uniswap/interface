@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -564,6 +564,10 @@ msgstr "Cüzdanını bağla"
 msgid "Connected with {name}"
 msgstr "{name} ile bağlantılı"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Kayma olmadan {0} {1} dönüştürün"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "Kopyalandı"
@@ -761,8 +765,6 @@ msgstr "Geçerli jeton adresini girin"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "{0} tutarı girin"
 
@@ -980,8 +982,6 @@ msgstr "İşleminiz için havuzda yetersiz likidite"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "Desteklenmeyen Varlıklar"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Desteklenmeyen ağ - ticaret yapmak için diğerine geçin."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Desteklenmeyen ağ - ticaret yapmak için diğerine geçin"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "başlıksız"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Paketi Aç"
@@ -2090,17 +2089,13 @@ msgstr "<0/> {0}paketi aç"
 msgid "Unwrap confirmed"
 msgstr "Paketi açma onaylandı"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Yerel para birimini açın."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Bekleyen paketi aç"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "Yerel para birimini açma."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "Paketi aç {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "{0} UNI-V2 çekiliyor"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 çekildi!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Paketle"
@@ -2283,17 +2277,13 @@ msgstr "<0/> {0}kaydır"
 msgid "Wrap confirmed"
 msgstr "sarma onaylandı"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Yerel para birimini sarın."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Beklemede sarıl"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "Yerel para birimini sarma."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "{0}sarın"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

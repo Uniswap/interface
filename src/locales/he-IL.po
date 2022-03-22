@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -564,6 +564,10 @@ msgstr "חבר את הארנק שלך"
 msgid "Connected with {name}"
 msgstr "מחובר עם {name}"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "המר {0} ל {1} ללא החלקה"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "מוּעֲתָק"
@@ -761,8 +765,6 @@ msgstr "הזן כתובת אסימון חוקית"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "הזן סכום {0}"
 
@@ -980,8 +982,6 @@ msgstr "אין מספיק נזילות במאגר למסחר שלך"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "נכסים שאינם נתמכים"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "רשת לא נתמכת - עבור לרשת אחרת כדי לסחור."
+msgid "Unsupported network - switch to another to trade"
+msgstr "רשת לא נתמכת - עבור לרשת אחרת כדי לסחור"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "ללא כותרת"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "לְגוֹלֵל"
@@ -2090,17 +2089,13 @@ msgstr "פרק <0/> עד {0}"
 msgid "Unwrap confirmed"
 msgstr "אישור ביטול הגלישה"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "שחרר את המטבע המקומי."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "ביטול הגלישה בהמתנה"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "ביטול גלישת המטבע המקומי."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "פרק {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "משיכת {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "משך את UNI-V2!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "לַעֲטוֹף"
@@ -2283,17 +2277,13 @@ msgstr "עטוף <0/> ל {0}"
 msgid "Wrap confirmed"
 msgstr "גלישה אושרה"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "עטוף מטבע מקומי."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "גלישה בהמתנה"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "עטיפת מטבע מקומי."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "לעטוף {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

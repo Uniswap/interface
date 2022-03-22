@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -564,6 +564,10 @@ msgstr "Koble til lommeboken"
 msgid "Connected with {name}"
 msgstr "Koblet til med {name}"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Konverter {0} til {1} uten glidning"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "Kopiert"
@@ -761,8 +765,6 @@ msgstr "Oppgi gyldig pollettadresse"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Skriv inn {0} beløp"
 
@@ -980,8 +982,6 @@ msgstr "Utilstrekkelig likviditet i bassenget for handelen din"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "Ikke støttede aktiva"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Ikke støttet nettverk - bytt til et annet for å handle."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Ikke støttet nettverk - bytt til et annet for å handle"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Uten navn"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Pakk opp"
@@ -2090,17 +2089,13 @@ msgstr "Pakk ut <0/> til {0}"
 msgid "Unwrap confirmed"
 msgstr "Utpakking bekreftet"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Pakk opp den opprinnelige valutaen."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Utpakning venter"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "Utpakning av innfødt valuta."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "Pakk ut {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "Trekker tilbake {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "Avsluttet UNI-V2!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Bryt"
@@ -2283,17 +2277,13 @@ msgstr "Pakk <0/> til {0}"
 msgid "Wrap confirmed"
 msgstr "Wrap bekreftet"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Pakk inn innfødt valuta."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Innpakning venter"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "Innpakning av innfødt valuta."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "Pakk inn {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

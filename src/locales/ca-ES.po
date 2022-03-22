@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -564,6 +564,10 @@ msgstr "Connecta la teva cartera"
 msgid "Connected with {name}"
 msgstr "Connectat amb {name}"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Converteix {0} a {1} sense lliscament"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "Copiat"
@@ -761,8 +765,6 @@ msgstr "Introduïu una adreça de fitxa vàlida"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Introduïu {0} import"
 
@@ -980,8 +982,6 @@ msgstr "Liquiditat insuficient al pool per al vostre comerç"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "Actius no admesos"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Xarxa no compatible: canvieu a una altra per operar."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Xarxa no compatible: canvieu a una altra per operar"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Sense títol"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Desembolicar"
@@ -2090,17 +2089,13 @@ msgstr "Desembolica de <0/> a {0}"
 msgid "Unwrap confirmed"
 msgstr "Desembolcall confirmat"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Desembolica la moneda nativa."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Desembolcall pendent"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "Desembolcall de la moneda nativa."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "Desembolica {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "Retirant {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "Va retirar UNI-V2!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Embolicar"
@@ -2283,17 +2277,13 @@ msgstr "Embolcalla de <0/> a {0}"
 msgid "Wrap confirmed"
 msgstr "Embolcall confirmat"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Embolica la moneda nativa."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Embolcall pendent"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "Embolcall de moneda nativa."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "Embolcall {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -564,6 +564,10 @@ msgstr "قم بتوصيل محفظتك"
 msgid "Connected with {name}"
 msgstr "متصل مع {name}"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "حوّل من {0} إلى {1} مع عدم وجود انزلاق"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "تم النسخ"
@@ -761,8 +765,6 @@ msgstr "أدخل عنوان رمز صالح"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "أدخل مبلغ {0}"
 
@@ -980,8 +982,6 @@ msgstr "سيولة غير كافية في المجمع لتداولك"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "الأصول غير المدعومة"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "شبكة غير مدعومة - قم بالتبديل إلى شبكة أخرى للتداول."
+msgid "Unsupported network - switch to another to trade"
+msgstr "شبكة غير مدعومة - قم بالتبديل إلى شبكة أخرى للتداول"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "بدون عنوان"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
@@ -2090,17 +2089,13 @@ msgstr "قم بفك التفاف <0/> إلى {0}"
 msgid "Unwrap confirmed"
 msgstr "أكد Unwrap"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "فك العملة المحلية."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "فك التفاف معلق"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "فك التفاف العملة المحلية."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "فك {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "سحب {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "سحب UNI-V2!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "التفاف"
@@ -2283,17 +2277,13 @@ msgstr "لف من <0/> إلى {0}"
 msgid "Wrap confirmed"
 msgstr "أكد التفاف"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "لف العملة المحلية."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "التفاف معلق"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "التفاف العملة المحلية."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "التفاف {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

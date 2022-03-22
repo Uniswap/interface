@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -564,6 +564,10 @@ msgstr "Підключіть гаманець"
 msgid "Connected with {name}"
 msgstr "Під'єднано через {name}"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Перетворіть {0} в {1} без проскоків"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "Скопійовано"
@@ -761,8 +765,6 @@ msgstr "Введіть дійсну адресу токена"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Введіть {0} суму"
 
@@ -980,8 +982,6 @@ msgstr "Недостатня ліквідність у пулі для вашо�
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "Непідтримувані активи"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Непідтримувана мережа - перейдіть на іншу для торгівлі."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Непідтримувана мережа - перейдіть на іншу для торгівлі"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Без назви"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Розгорнути"
@@ -2090,17 +2089,13 @@ msgstr "Розгорніть <0/> до {0}"
 msgid "Unwrap confirmed"
 msgstr "Розгортання підтверджено"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Розгорніть рідну валюту."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Очікує розгортання"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "Розгортання рідної валюти."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "Розгорнути {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "Зняття {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 знято!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Перенос"
@@ -2283,17 +2277,13 @@ msgstr "Оберніть <0/> до {0}"
 msgid "Wrap confirmed"
 msgstr "Wrap підтверджено"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Загорніть рідну валюту."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Очікується обгортання"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "Обгортання рідної валюти."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "Загорнути {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

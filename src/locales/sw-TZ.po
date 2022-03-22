@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-21 18:12\n"
+"PO-Revision-Date: 2022-03-22 20:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -564,6 +564,10 @@ msgstr "Unganisha mkoba wako"
 msgid "Connected with {name}"
 msgstr "Imeunganishwa na {name}"
 
+#: src/lib/components/Swap/Toolbar/Caption.tsx
+msgid "Convert {0} to {1} with no slippage"
+msgstr "Badilisha {0} hadi {1} bila kuteleza"
+
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
 msgstr "Imenakiliwa"
@@ -761,8 +765,6 @@ msgstr "Ingiza anwani halali ya ishara"
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 msgid "Enter {0} amount"
 msgstr "Weka kiasi {0}"
 
@@ -980,8 +982,6 @@ msgstr "Ukwasi hautoshi kwenye bwawa kwa biashara yako"
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
-#: src/lib/components/Swap/WrapErrorText.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
@@ -2070,14 +2070,13 @@ msgid "Unsupported Assets"
 msgstr "Mali zisizoungwa mkono"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unsupported network - switch to another to trade."
-msgstr "Mtandao usiotumika - badilisha hadi mwingine kufanya biashara."
+msgid "Unsupported network - switch to another to trade"
+msgstr "Mtandao usiotumika - badilisha hadi mwingine kufanya biashara"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
 msgstr "Haina Jina"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
@@ -2090,17 +2089,13 @@ msgstr "Fungua <0/> hadi {0}"
 msgid "Unwrap confirmed"
 msgstr "Ufunuo umethibitishwa"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrap native currency."
-msgstr "Fungua sarafu ya asili."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Unwrap pending"
 msgstr "Inasubiri kufunguliwa"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Unwrapping native currency."
-msgstr "Kufungua fedha za asili."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Unwrap {0}"
+msgstr "Fungua {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2270,7 +2265,6 @@ msgstr "Kuondoa {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "Umeondoa UNI-V2!"
 
-#: src/lib/components/Swap/SwapButton.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Funga"
@@ -2283,17 +2277,13 @@ msgstr "Funga <0/> hadi {0}"
 msgid "Wrap confirmed"
 msgstr "Ufungaji umethibitishwa"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrap native currency."
-msgstr "Funga fedha za asili."
-
 #: src/lib/components/Swap/Status/StatusDialog.tsx
 msgid "Wrap pending"
 msgstr "Funga inasubiri"
 
-#: src/lib/components/Swap/Toolbar/Caption.tsx
-msgid "Wrapping native currency."
-msgstr "Kufunga fedha za asili."
+#: src/lib/components/Swap/SwapButton.tsx
+msgid "Wrap {0}"
+msgstr "Funga {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
