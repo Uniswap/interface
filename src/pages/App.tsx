@@ -62,6 +62,7 @@ function TopLevelModals() {
 }
 
 export default function App() {
+  console.log('1.0.0')
   return (
     <ErrorBoundary>
       {/*<Route component={GoogleAnalyticsReporter} />*/}
