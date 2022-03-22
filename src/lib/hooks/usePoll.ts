@@ -45,7 +45,7 @@ export default function usePoll<T>(
       if (entry.ttl) {
         if (isStale) {
           poll() // stale results should be refetched immediately
-        } else if (entry.ttl && (entry.ttl + keepUnusedDataFor > Date.now() || isStale)) {
+        } else if (entry.ttl && entry.ttl + keepUnusedDataFor > Date.now()) {
           timeout = setTimeout(poll, Math.max(0, entry.ttl - Date.now()))
         }
       }
