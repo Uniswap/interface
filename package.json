@@ -29,7 +29,8 @@
     "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
-    "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos"
+    "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos",
+    "bad": "yarn build && firebase deploy"
   },
   "devDependencies": {
     "@ethersproject/experimental": "^5.4.0",

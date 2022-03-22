@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: x-swap-protocol\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-11-18 19:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: x-swap-protocol\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: hu\n"
 "X-Crowdin-File: en-US.po\n"
@@ -34,6 +34,10 @@ msgstr "(${0})"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(Max)"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0}"
+msgstr "Balance: {0}"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -59,8 +63,8 @@ msgstr "- Távolítsa el a címzettet"
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
-msgid "0 UNI / week"
-msgstr "0 UNI / hét"
+msgid "0 XSP / week"
+msgstr "0 XSP / hét"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -116,8 +120,8 @@ msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Üdvözöljük az Unicorn csapatában :) <1> 🎉</1>"
 
 #: src/pages/Vote/Landing.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "A pályázatok benyújtásához az UNI teljes kínálatának minimum 0,25% -a szükséges"
+msgid "A minimum threshold of 0.25% of the total XSP supply is required to submit proposals"
+msgstr "A pályázatok benyújtásához az XSP teljes kínálatának minimum 0,25% -a szükséges"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -142,8 +146,8 @@ msgid "Add"
 msgstr "Hozzáadás"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "A <0/> és <1/> hozzáadása a Uniswap V2 -hez"
+msgid "Add <0/> and <1/> to XSwapProtocol"
+msgstr "A <0/> és <1/> hozzáadása a XSwapProtocol -hez"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -199,8 +203,8 @@ msgid "Allow high price impact trades and skip the confirm screen. Use at your o
 msgstr "Engedélyezze a magas árfolyamú kereskedéseket, és hagyja ki a megerősítő képernyőt. Használat csak saját felelősségre."
 
 #: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Engedélyezze az Uniswap protokollnak a(z) {0} használatát"
+msgid "Allow the X-Swap-Protocol to use your {0}"
+msgstr "Engedélyezze az XSwapProtocol protokollnak a(z) {0} használatát"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -215,8 +219,8 @@ msgid "Amount"
 msgstr "Összeg"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az XSwapProtocol Next verzióval."
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -268,8 +272,8 @@ msgid "Are you sure?"
 msgstr "Biztos ebben?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Az Uniswap közösség tagjaként igényelheti az UNI-t, hogy szavazásra és kormányzásra használhassa.<0/><1/><2>Bővebben az UNI-ról</2>"
+msgid "As a member of the XSwapProtocol community you may claim XSP to be used for voting and governance.<0/><1/><2>Read more about XSP</2>"
+msgstr "Az XSwapProtocol közösség tagjaként igényelheti az XSP-t, hogy szavazásra és kormányzásra használhassa.<0/><1/><2>Bővebben az XSP-ról</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -329,7 +333,7 @@ msgstr "A lista hozzáadásával hallgatólagosan megbízik az adatok helyesség
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to XSwapProtocol’ <0>Terms of Service</0> and acknowledge that you have read and understand the XSwapProtocol <1>Disclaimer</1>."
-msgstr "A pénztárca csatlakoztatásával Ön elfogadja az XSwapProtocol <0>szolgáltatási feltételeit</0> és elismeri, hogy elolvasta és megértette az Uniswap <1>Protokoll Jogi nyilatkozatát</1>."
+msgstr "A pénztárca csatlakoztatásával Ön elfogadja az XSwapProtocol <0>szolgáltatási feltételeit</0> és elismeri, hogy elolvasta és megértette az XSwapProtocol <1>Protokoll Jogi nyilatkozatát</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -366,24 +370,24 @@ msgstr "<0/>. Igénypont {0}"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
-msgstr "UNI igénylése"
+msgid "Claim XSP"
+msgstr "XSP igénylése"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
-msgstr "UNI token igénylése"
+msgid "Claim XSP Token"
+msgstr "XSP token igénylése"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Claim UNI reward for {0}"
-msgstr "Kérjen UNI jutalmat {0}"
+msgid "Claim XSP reward for {0}"
+msgstr "Kérjen XSP jutalmat {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "Követelési díjak"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Claim your UNI tokens"
-msgstr "Saját UNI tokenek igénylése"
+msgid "Claim your XSP tokens"
+msgstr "Saját XSP tokenek igénylése"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -391,8 +395,8 @@ msgstr "Igényelt"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Claimed UNI!"
-msgstr "Igényelt UNI!"
+msgid "Claimed XSP!"
+msgstr "Igényelt XSP!"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
@@ -404,13 +408,13 @@ msgid "Claiming"
 msgstr "Igénylés"
 
 #: src/components/Header/index.tsx
-msgid "Claiming UNI"
-msgstr "Az UNI igénylése"
+msgid "Claiming XSP"
+msgstr "Az XSP igénylése"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Claiming {0} UNI"
-msgstr "{0} UNI igénylése"
+msgid "Claiming {0} XSP"
+msgstr "{0} XSP igénylése"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -621,24 +625,24 @@ msgid "Deposit Assets"
 msgstr "Betéti eszközök"
 
 #: src/pages/Earn/Manage.tsx
-msgid "Deposit UNI-V2 LP Tokens"
-msgstr "UNI-V2 LP tokenek letétbe helyezése"
+msgid "Deposit XSP LP Tokens"
+msgstr "XSP-V2 LP tokenek letétbe helyezése"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Likviditás letétbe helyezése"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Helyezze letétbe a likviditásszolgáltatói tokeneket, hogy megkapja az UNI-t, az Uniswap protokoll irányítási tokent."
+msgid "Deposit your Liquidity Provider tokens to receive XSP, the XSwapProtocol governance token."
+msgstr "Helyezze letétbe a likviditásszolgáltatói tokeneket, hogy megkapja az XSP-t, az XSwapProtocol protokoll irányítási tokent."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "Letétbe helyezett likviditás:"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Deposited {0} UNI-V2"
-msgstr "Letétbe helyezett {0} UNI-V2"
+msgid "Deposited {0} XSP"
+msgstr "Letétbe helyezett {0} XSP"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
@@ -677,8 +681,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Nem látja az egyik v2 pozícióját? <0> Importálja.</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "A megszerzett UNI-tokenek a szavazati részesedéseket jelentik az Uniswap irányításában."
+msgid "Earned XSP tokens represent voting shares in XSwapProtocol governance."
+msgstr "A megszerzett XSP-tokenek a szavazati részesedéseket jelentik az XSwapProtocol irányításában."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -701,8 +705,8 @@ msgid "Enter a valid slippage percentage"
 msgstr "Adjon meg érvényes csúszási százalékot"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Adjon meg egy címet az UNI-követelés kiváltásához. Ha a címnek van igényelhető UNI-ja, akkor azt a címre történő benyújtáskor elküldjük."
+msgid "Enter an address to trigger a XSP claim. If the address has any claimable XSP it will be sent to them on submission."
+msgstr "Adjon meg egy címet az XSP-követelés kiváltásához. Ha a címnek van igényelhető XSP-ja, akkor azt a címre történő benyújtáskor elküldjük."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -763,8 +767,8 @@ msgid "Expired"
 msgstr "Lejárt"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Fedezze fel az Uniswap Analytics népszerű pooljait."
+msgid "Explore popular pools on XSwapProtocol Analytics."
+msgstr "Fedezze fel az XSwapProtocol Analytics népszerű pooljait."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
@@ -783,8 +787,8 @@ msgid "For"
 msgstr "Számára"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Az alább látható egyes poolok esetében kattintson a migrálás gombra, hogy eltávolítsa a likviditását az Uniswap V2-ből, és letétbe helyezze az Uniswap V3-ban."
+msgid "For each pool shown below, click migrate to remove your liquidity from XSwapProtocol and deposit it into XSwapProtocol Next."
+msgstr "Az alább látható egyes poolok esetében kattintson a migrálás gombra, hogy eltávolítsa a likviditását az XSwapProtocol-ből, és letétbe helyezze az XSwapProtocol Next-ban."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1058,8 +1062,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "V2 likviditás migrálása"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Likviditási tokenek migrálása az Uniswap V2-ről az Uniswap V3-ra."
+msgid "Migrate your liquidity tokens from XSwapProtocol to XSwapProtocol Next."
+msgstr "Likviditási tokenek migrálása az XSwapProtocol-ről az XSwapProtocol Next-ra."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1164,8 +1168,8 @@ msgid "Once you are happy with the rate click supply to review."
 msgstr "Ha elégedett az árfolyammal, kattintson a kínálatra az áttekintéshez."
 
 #: src/pages/Vote/VotePage.tsx
-msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Csak azok az UNI-szavazatok jogosultak szavazni, amelyeket a {0} blokk előtt saját maguk vagy más címre delegáltak."
+msgid "Only XSP votes that were self delegated or delegated to another address before block {0} are eligible for voting."
+msgstr "Csak azok az XSP-szavazatok jogosultak szavazni, amelyeket a {0} blokk előtt saját maguk vagy más címre delegáltak."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
@@ -1180,8 +1184,8 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Az optimista Ethereum bétaverzióban van, és leállhat. Az optimizmus a tervezett leállásoktól a közeljövőben a hálózat korszerűsítését várja. Az állásidőben pozíciója nem jár díjakkal, és nem tudja eltávolítani a likviditást. <0> További információ.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
-msgstr "Optimista Etherscan"
+msgid "Optimistic Explorer"
+msgstr "Optimista Explorer"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1221,7 +1225,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Kérjük, csatlakozzon az 1. réteg Ethereumhoz"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Kérjük, csatlakozzon a megfelelő Ethereum hálózathoz."
 
 #: src/components/Settings/index.tsx
@@ -1343,12 +1347,12 @@ msgid "Rates"
 msgstr "Árfolyamok"
 
 #: src/pages/Earn/index.tsx
-msgid "Read more about UNI"
-msgstr "További információk az UNI-ról"
+msgid "Read more about XSP"
+msgstr "További információk az XSP-ról"
 
 #: src/pages/Vote/Landing.tsx
-msgid "Read more about Uniswap governance"
-msgstr "További információk az Uniswap irányításáról"
+msgid "Read more about XSwapProtocol governance"
+msgstr "További információk az XSwapProtocol irányításáról"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1501,8 +1505,8 @@ msgid "Status"
 msgstr "Állapot"
 
 #: src/pages/Earn/Manage.tsx
-msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "1. lépés: Szerezzen UNI-V2 likviditási tokeneket"
+msgid "Step 1. Get XSP Liquidity tokens"
+msgstr "1. lépés: Szerezzen XSP-V2 likviditási tokeneket"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
@@ -1563,16 +1567,16 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} cseréje a következőre {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Köszönjük, hogy az Uniswap közösség tagja <0/>"
+msgid "Thanks for being part of the XSwapProtocol community <0/>"
+msgstr "Köszönjük, hogy az XSwapProtocol közösség tagja <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "A díjakban keresett%."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "A Uniswap invariáns x*y=k nem teljesült a swap során. Ez általában azt jelenti, hogy a cserélendő tokenek egyike egyéni viselkedést tartalmaz az átadáskor."
+msgid "The XSwapProtocol invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "A XSwapProtocol invariáns x*y=k nem teljesült a swap során. Ez általában azt jelenti, hogy a cserélendő tokenek egyike egyéni viselkedést tartalmaz az átadáskor."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
@@ -1607,8 +1611,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "Az output token nem transzferálható. Probléma lehet az output tokennel."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "A kimeneti token nem vihető át. Probléma lehet a kimeneti tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "A kimeneti token nem vihető át. Probléma lehet a kimeneti tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az XSwapProtocol Next verzióval."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1659,8 +1663,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "Ez az eszköz biztonságosan migrálja a {0} likviditását a V3-ba. A folyamat teljesen megbízhatatlan köszönhetően"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ez a tranzakció az ármozgás miatt nem fog sikerülni. Próbáld meg növelni a csúszástűrést. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "Ez a tranzakció az ármozgás miatt nem fog sikerülni. Próbáld meg növelni a csúszástűrést. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az XSwapProtocol Next verzióval."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1762,37 +1766,37 @@ msgid "Turn On Expert Mode"
 msgstr "Kapcsolja be a Szakértő módot"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "UNI has arrived"
-msgstr "Megérkezett az UNI"
+msgid "XSP has arrived"
+msgstr "Megérkezett az XSP"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "Forgalomban lévő UNI:"
+msgid "XSP in circulation:"
+msgstr "Forgalomban lévő XSP:"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "UNI ár:"
+msgid "XSP price:"
+msgstr "XSP ár:"
 
 #: src/pages/Vote/Landing.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Az UNI tokenek szavazati részvényeket képviselnek az Uniswap irányításában. Az egyes javaslatokról saját maga is szavazhat, vagy szavazatait átruházhatja egy harmadik félre."
+msgid "XSP tokens represent voting shares in XSwapProtocol governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Az XSP tokenek szavazati részvényeket képviselnek az XSwapProtocol irányításában. Az egyes javaslatokról saját maga is szavazhat, vagy szavazatait átruházhatja egy harmadik félre."
 
 #: src/pages/RemoveLiquidity/index.tsx
-msgid "UNI {0}/{1} Burned"
-msgstr "UNI {0}/{1} Elégett"
+msgid "XSP {0}/{1} Burned"
+msgstr "XSP {0}/{1} Elégett"
 
 #: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "UNI-V2 LP tokenek szükségesek. Miután hozzáadta a likviditást a {0}-{1} készlethez, ezen az oldalon elhelyezheti likviditási zsetonjait."
+msgid "XSP-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
+msgstr "XSP-V2 LP tokenek szükségesek. Miután hozzáadta a likviditást a {0}-{1} készlethez, ezen az oldalon elhelyezheti likviditási zsetonjait."
 
 #: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 {0}-{1}"
-msgstr "UNI-V2 {0}-{1}"
+msgid "XSP {0}-{1}"
+msgstr "XSP {0}-{1}"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Unclaimed UNI"
-msgstr "Nem igényelt UNI"
+msgid "Unclaimed XSP"
+msgstr "Nem igényelt XSP"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
@@ -1815,28 +1819,28 @@ msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Váratlan probléma a gáz becslésével. Kérlek próbáld újra."
 
 #: src/pages/Vote/Landing.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap irányítás"
+msgid "XSwapProtocol Governance"
+msgstr "XSwapProtocol irányítás"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "XSwapProtocol' Terms of Service"
 msgstr "Az XSwapProtocol szolgáltatási feltételei"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Az Uniswap itt érhető el: <0>{0}</0>"
+msgid "XSwapProtocol available in: <0>{0}</0>"
+msgstr "Az XSwapProtocol itt érhető el: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgid "XSwapProtocol governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Az uniswap irányítás csak az 1. rétegben érhető el. A javaslatok és a szavazatok megtekintéséhez kapcsolja hálózatát Ethereum Mainnet-re."
 
 #: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Uniswap likviditásbányászat"
+msgid "XSwapProtocol liquidity mining"
+msgstr "XSwapProtocol likviditásbányászat"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
-msgstr "Uniswap migrációs szerződés↗"
+msgid "XSwapProtocol migration contract↗"
+msgstr "XSwapProtocol migrációs szerződés↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "XSwapProtocol on {0}"
@@ -1847,8 +1851,8 @@ msgid "Unknown Source"
 msgstr "Ismeretlen forrás"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ismeretlen hiba{0}. Próbálja meg növelni a csúszástűrést. Megjegyzés: az átutalási és újbóli alapkivonási díjak nem kompatibilisek az Uniswap V3 -mal."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
+msgstr "Ismeretlen hiba{0}. Próbálja meg növelni a csúszástűrést. Megjegyzés: az átutalási és újbóli alapkivonási díjak nem kompatibilisek az XSwapProtocol Next -mal."
 
 #: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1923,8 +1927,8 @@ msgid "V3 {0} Price:"
 msgstr "V3 {0} ár:"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "UNI analitika megtekintése"
+msgid "View XSP Analytics"
+msgstr "XSP analitika megtekintése"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -1939,8 +1943,8 @@ msgid "View list"
 msgstr "Lista megtekintése"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
-msgstr "Nézd meg az Etherscan webhelyen"
+msgid "View on Explorer"
+msgstr "Nézd meg az Explorer webhelyen"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2040,12 +2044,12 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "Ha visszavonás nélkül igényel, a likviditása a bányászpoolban marad."
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Amikor visszavonja, a szerződés automatikusan UNI-t követel az Ön nevében!"
+msgid "When you withdraw, the contract will automagically claim XSP on your behalf!"
+msgstr "Amikor visszavonja, a szerződés automatikusan XSP-t követel az Ön nevében!"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Ha visszavonja, az UNI-ját igényli, és a likviditása kikerül a bányászpoolból."
+msgid "When you withdraw, your XSP is claimed and your liquidity is removed from the mining pool."
+msgstr "Ha visszavonja, az XSP-ját igényli, és a likviditása kikerül a bányászpoolból."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -2061,12 +2065,12 @@ msgid "Withdraw deposited liquidity"
 msgstr "A letétbe helyezett likviditás visszavonása"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "Withdrawing {0} UNI-V2"
-msgstr "{0} UNI-V2 visszavonása"
+msgid "Withdrawing {0} XSP"
+msgstr "{0} XSP visszavonása"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "Withdrew UNI-V2!"
-msgstr "Visszavonta az UNI-V2-t!"
+msgid "Withdrew XSP-V2!"
+msgstr "Visszavonta az XSP-V2-t!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
@@ -2090,8 +2094,8 @@ msgid "You are creating a pool"
 msgstr "Poolt hoz létre"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Ön az első likviditásszolgáltató ebben az Uniswap V3 poolban. Likviditása a jelenlegi {0} áron migrál."
+msgid "You are the first liquidity provider for this XSwapProtocol Next pool. Your liquidity will migrate at the current {0} price."
+msgstr "Ön az első likviditásszolgáltató ebben az XSwapProtocol Next poolban. Likviditása a jelenlegi {0} áron migrál."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -2126,16 +2130,16 @@ msgid "You must connect an account."
 msgstr "Csatlakoznia kell egy fiókhoz."
 
 #: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Engedélyt kell adnia az Uniswap intelligens szerződéseknek a(z) {0} használatához. Ezt tokenenként csak egyszer kell megtennie."
+msgid "You must give the XSwapProtocol smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "Engedélyt kell adnia az XSwapProtocol intelligens szerződéseknek a(z) {0} használatához. Ezt tokenenként csak egyszer kell megtennie."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "A javaslat benyújtásához {formattedProposalThreshold} szavazattal kell rendelkeznie"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Csak olyan áron helyezhet el likviditást az Uniswap V3-ban, amelyet helyesnek tart. <0/>Ha az ár helytelennek tűnik, akkor vagy cserét hajt végre az ár elmozdítása érdekében, vagy megvárhatja, hogy valaki más megtegye ezt."
+msgid "You should only deposit liquidity into XSwapProtocol Next at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "Csak olyan áron helyezhet el likviditást az XSwapProtocol Next-ban, amelyet helyesnek tart. <0/>Ha az ár helytelennek tűnik, akkor vagy cserét hajt végre az ár elmozdítása érdekében, vagy megvárhatja, hogy valaki más megtegye ezt."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -2147,8 +2151,8 @@ msgid "You will receive"
 msgstr "Kapni fog"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "Saját UNI lebontása"
+msgid "Your XSP Breakdown"
+msgstr "Saját XSP lebontása"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your liquidity"
@@ -2234,8 +2238,8 @@ msgid "Your transactions will appear here..."
 msgstr "A tranzakciói itt jelennek meg..."
 
 #: src/pages/Earn/Manage.tsx
-msgid "Your unclaimed UNI"
-msgstr "Nem igényelt UNI"
+msgid "Your unclaimed XSP"
+msgstr "Nem igényelt XSP"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2300,8 +2304,8 @@ msgstr "{0} letétbe helyezve"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2319,24 +2323,24 @@ msgstr "{0} függőben van"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "{0} UNI"
-msgstr "{0} UNI"
+msgid "{0} XSP"
+msgstr "{0} XSP"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
-msgid "{0} UNI / week"
-msgstr "{0} UNI / hét"
+msgid "{0} XSP / week"
+msgstr "{0} XSP / hét"
 
 #: src/components/earn/StakingModal.tsx
-msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2"
+msgid "{0} XSP"
+msgstr "{0} XSP"
 
 #: src/pages/Earn/Manage.tsx
-msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} UNI-V2 LP token érhető el"
+msgid "{0} XSP LP tokens available"
+msgstr "{0} XSP LP token érhető el"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -2401,12 +2405,12 @@ msgid "{0}/{1} LP Tokens"
 msgstr "{0}/{1} LP token"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} UNI"
+msgid "{SOCKS_AMOUNT} XSP"
+msgstr "{SOCKS_AMOUNT} XSP"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} UNI"
+msgid "{USER_AMOUNT} XSP"
+msgstr "{USER_AMOUNT} XSP"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"

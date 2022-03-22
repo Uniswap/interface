@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: uniswap-interface\n"
+"Project-Id-Version: x-swap-protocol\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2021-11-18 19:06\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project: x-swap-protocol\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: sr\n"
 "X-Crowdin-File: en-US.po\n"
@@ -34,6 +34,10 @@ msgstr "(${0})"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(Макс)"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0}"
+msgstr "Balance: {0}"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
@@ -59,7 +63,7 @@ msgstr "- Уклоните примаоца"
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
-msgid "0 UNI / week"
+msgid "0 XSP / week"
 msgstr "0 УНИ / недељно"
 
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -116,7 +120,7 @@ msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Добродошли у тим Unicorn :) <1> 🎉</1>"
 
 #: src/pages/Vote/Landing.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
+msgid "A minimum threshold of 0.25% of the total XSP supply is required to submit proposals"
 msgstr "За подношење предлога потребан је минимални праг од 0,25% укупне УНИ понуде"
 
 #: src/components/Menu/index.tsx
@@ -142,7 +146,7 @@ msgid "Add"
 msgstr "Додати"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Add <0/> and <1/> to Uniswap V2"
+msgid "Add <0/> and <1/> to XSwapProtocol"
 msgstr "Додајте <0/> и <1/> у Унисвап В2"
 
 #: src/components/vote/DelegateModal.tsx
@@ -199,8 +203,8 @@ msgid "Allow high price impact trades and skip the confirm screen. Use at your o
 msgstr "Омогућите трговање утицајем високе цене и прескочите екран за потврду. Користите на властиту одговорност."
 
 #: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Дозволите Uniswap протоколу да користи вашу {0}"
+msgid "Allow the X-Swap-Protocol to use your {0}"
+msgstr "Дозволите XSwapProtocol протоколу да користи вашу {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -215,7 +219,7 @@ msgid "Amount"
 msgstr "Износ"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
 msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ћете морати повећати толеранцију клизања. Ако то не успе, можда постоји некомпатибилност са токеном којим тргујете. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
 #: src/components/earn/StakingModal.tsx
@@ -268,8 +272,8 @@ msgid "Are you sure?"
 msgstr "Јеси ли сигуран?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Као члан Uniswap заједнице можете затражити да се УНИ користи за гласање и управљање. <0/> <1/> <2> Прочитајте више о УНИ</2>"
+msgid "As a member of the XSwapProtocol community you may claim XSP to be used for voting and governance.<0/><1/><2>Read more about XSP</2>"
+msgstr "Као члан XSwapProtocol заједнице можете затражити да се УНИ користи за гласање и управљање. <0/> <1/> <2> Прочитајте више о УНИ</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -366,15 +370,15 @@ msgstr "Потраживање <0/> за {0}"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
+msgid "Claim XSP"
 msgstr "Преузми УНИ"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
+msgid "Claim XSP Token"
 msgstr "Преузми УНИ токен"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
-msgid "Claim UNI reward for {0}"
+msgid "Claim XSP reward for {0}"
 msgstr "Затражите УНИ награду за {0}"
 
 #: src/pages/Pool/PositionPage.tsx
@@ -382,7 +386,7 @@ msgid "Claim fees"
 msgstr "Преузми накнаде"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Claim your UNI tokens"
+msgid "Claim your XSP tokens"
 msgstr "Преузми своје УНИ токене"
 
 #: src/components/claim/AddressClaimModal.tsx
@@ -391,7 +395,7 @@ msgstr "Преузето"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Claimed UNI!"
+msgid "Claimed XSP!"
 msgstr "Преузет УНИ!"
 
 #: src/components/claim/ClaimModal.tsx
@@ -404,12 +408,12 @@ msgid "Claiming"
 msgstr "Преузимање"
 
 #: src/components/Header/index.tsx
-msgid "Claiming UNI"
+msgid "Claiming XSP"
 msgstr "Преузимање УНИ"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Claiming {0} UNI"
+msgid "Claiming {0} XSP"
 msgstr "Преузимање {0} УНИ"
 
 #: src/pages/AddLiquidity/index.tsx
@@ -621,23 +625,23 @@ msgid "Deposit Assets"
 msgstr "Депозитна средства"
 
 #: src/pages/Earn/Manage.tsx
-msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Положите UNI-V2 LP токене"
+msgid "Deposit XSP LP Tokens"
+msgstr "Положите XSP-V2 LP токене"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Ликвидност депозита"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Положите своје токене Добављача ликвидности да бисте добили УНИ, токен управљања протоколом Uniswap."
+msgid "Deposit your Liquidity Provider tokens to receive XSP, the XSwapProtocol governance token."
+msgstr "Положите своје токене Добављача ликвидности да бисте добили УНИ, токен управљања протоколом XSwapProtocol."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "Депонована ликвидност:"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Deposited {0} UNI-V2"
+msgid "Deposited {0} XSP"
 msgstr "Положено {0} УНИ-V2"
 
 #: src/components/earn/StakingModal.tsx
@@ -677,8 +681,8 @@ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Не видите ниједну од ваших V2 позиција? <0> Увезите их.</0>"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Зарађени UNI токени представљају акције са правом гласа у управљању Uniswap-ом."
+msgid "Earned XSP tokens represent voting shares in XSwapProtocol governance."
+msgstr "Зарађени XSP токени представљају акције са правом гласа у управљању XSwapProtocol-ом."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -701,7 +705,7 @@ msgid "Enter a valid slippage percentage"
 msgstr "Унесите важећи клизни проценат"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
+msgid "Enter an address to trigger a XSP claim. If the address has any claimable XSP it will be sent to them on submission."
 msgstr "Унесите адресу да бисте покренули преузимање УНИ-ја. Ако адреса има УНИ који се може преузети, они ће им бити послати по предаји."
 
 #: src/components/earn/ClaimRewardModal.tsx
@@ -762,8 +766,8 @@ msgid "Expired"
 msgstr "Истекло"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Истражите популарне фондове на Uniswap Аналитици."
+msgid "Explore popular pools on XSwapProtocol Analytics."
+msgstr "Истражите популарне фондове на XSwapProtocol Аналитици."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
@@ -782,8 +786,8 @@ msgid "For"
 msgstr "За"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "За сваки фонд приказан у наставку кликните на мигрирај да бисте уклонили своју ликвидност из Uniswap V2 и депоновали је у Uniswap V3."
+msgid "For each pool shown below, click migrate to remove your liquidity from XSwapProtocol and deposit it into XSwapProtocol Next."
+msgstr "За сваки фонд приказан у наставку кликните на мигрирај да бисте уклонили своју ликвидност из XSwapProtocol и депоновали је у XSwapProtocol Next."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1057,8 +1061,8 @@ msgid "Migrate V2 Liquidity"
 msgstr "Миграција V2 ликвидности"
 
 #: src/pages/MigrateV2/index.tsx
-msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Пребаците своје токене ликвидности са Uniswap V2 на Uniswap V3."
+msgid "Migrate your liquidity tokens from XSwapProtocol to XSwapProtocol Next."
+msgstr "Пребаците своје токене ликвидности са XSwapProtocol на XSwapProtocol Next."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
@@ -1163,7 +1167,7 @@ msgid "Once you are happy with the rate click supply to review."
 msgstr "Једном када сте задовољни курсом, кликните снабдевање како бисте прегледали."
 
 #: src/pages/Vote/VotePage.tsx
-msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
+msgid "Only XSP votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Само УНИ гласови који су самостално или делегирани на другу адресу пре блока {0} испуњавају услове за гласање."
 
 #: src/components/Web3ReactManager/index.tsx
@@ -1179,7 +1183,7 @@ msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expe
 msgstr "Оптимистични Етхереум је у бета верзији и може доћи до застоја. Оптимизам очекује планиране застоје за надоградњу мреже у блиској будућности. Током застоја, ваша позиција неће зарађивати накнаде и нећете моћи да уклоните ликвидност. <0> Прочитајте више.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
+msgid "Optimistic Explorer"
 msgstr "Оптимистични Етхерсцан"
 
 #: src/components/Badge/RangeBadge.tsx
@@ -1220,7 +1224,7 @@ msgid "Please connect to Layer 1 Ethereum"
 msgstr "Повежите се са слојем 1 Етхереум"
 
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate XinFin network."
 msgstr "Повежите се са одговарајућом мрежом Ethereum."
 
 #: src/components/Settings/index.tsx
@@ -1342,12 +1346,12 @@ msgid "Rates"
 msgstr "Стопе"
 
 #: src/pages/Earn/index.tsx
-msgid "Read more about UNI"
-msgstr "Прочитајте више о UNI-ју"
+msgid "Read more about XSP"
+msgstr "Прочитајте више о XSP-ју"
 
 #: src/pages/Vote/Landing.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Прочитајте више о управљању Uniswap-ом"
+msgid "Read more about XSwapProtocol governance"
+msgstr "Прочитајте више о управљању XSwapProtocol-ом"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1500,8 +1504,8 @@ msgid "Status"
 msgstr "Статус"
 
 #: src/pages/Earn/Manage.tsx
-msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Корак 1. Набавите UNI-V2 токене ликвидности"
+msgid "Step 1. Get XSP Liquidity tokens"
+msgstr "Корак 1. Набавите XSP-V2 токене ликвидности"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
@@ -1562,16 +1566,16 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Замена {0} {1} за {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Хвала вам што сте део заједнице Uniswap <0/>"
+msgid "Thanks for being part of the XSwapProtocol community <0/>"
+msgstr "Хвала вам што сте део заједнице XSwapProtocol <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
 msgstr "% Који ћете зарадити на накнадама."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Uniswap непроменљива x*y=k није испоштована разменом. То обично значи да један од токена које замењујете укључује прилагођено понашање приликом преноса."
+msgid "The XSwapProtocol invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "XSwapProtocol непроменљива x*y=k није испоштована разменом. То обично значи да један од токена које замењујете укључује прилагођено понашање приликом преноса."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
@@ -1606,7 +1610,7 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "Излазни токен се не може пренети. Можда постоји проблем са излазним токеном."
 
 #: src/hooks/useSwapCallback.tsx
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
 msgstr "Излазни токен се не може пренети. Можда постоји проблем са излазним токеном. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
 #: src/components/Badge/RangeBadge.tsx
@@ -1658,7 +1662,7 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "Овај алат ће безбедно пребацити вашу {0} ликвидност на V3. Процес је потпуно неповерљив захваљујући"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
 msgstr "Ова трансакција неће успети због кретања цена. Покушајте да повећате толеранцију на клизање. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
 #: src/hooks/useSwapCallback.tsx
@@ -1761,37 +1765,37 @@ msgid "Turn On Expert Mode"
 msgstr "Укључите експертни режим"
 
 #: src/components/Popups/ClaimPopup.tsx
-msgid "UNI has arrived"
-msgstr "UNI је стигао"
+msgid "XSP has arrived"
+msgstr "XSP је стигао"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "UNI in circulation:"
-msgstr "UNI у оптицају:"
+msgid "XSP in circulation:"
+msgstr "XSP у оптицају:"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "UNI price:"
-msgstr "UNI цена:"
+msgid "XSP price:"
+msgstr "XSP цена:"
 
 #: src/pages/Vote/Landing.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI токени представљају акције са правом гласа у управљању Uniswap-ом. Можете сами гласати за сваки предлог или пренети своје гласове трећој страни."
+msgid "XSP tokens represent voting shares in XSwapProtocol governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "XSP токени представљају акције са правом гласа у управљању XSwapProtocol-ом. Можете сами гласати за сваки предлог или пренети своје гласове трећој страни."
 
 #: src/pages/RemoveLiquidity/index.tsx
-msgid "UNI {0}/{1} Burned"
-msgstr "UNI {0}/{1} спаљен"
+msgid "XSP {0}/{1} Burned"
+msgstr "XSP {0}/{1} спаљен"
 
 #: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "Потребни су UNI-V2 LP токени. Једном када додате ликвидност у {0}-{1} можете уложити своје токене ликвидности на овој страници."
+msgid "XSP-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
+msgstr "Потребни су XSP-V2 LP токени. Једном када додате ликвидност у {0}-{1} можете уложити своје токене ликвидности на овој страници."
 
 #: src/pages/Earn/Manage.tsx
-msgid "UNI-V2 {0}-{1}"
-msgstr "UNI-V2 {0}-{1}"
+msgid "XSP {0}-{1}"
+msgstr "XSP {0}-{1}"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-msgid "Unclaimed UNI"
-msgstr "UNI без захтева"
+msgid "Unclaimed XSP"
+msgstr "XSP без захтева"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
@@ -1814,28 +1818,28 @@ msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Неочекивани проблем са проценом гаса. Молим вас, покушајте поново."
 
 #: src/pages/Vote/Landing.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap управљање"
+msgid "XSwapProtocol Governance"
+msgstr "XSwapProtocol управљање"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "XSwapProtocol' Terms of Service"
 msgstr "Uslovi korišćenja usluge XSwapProtocol"
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap доступан у: <0>{0}</0>"
+msgid "XSwapProtocol available in: <0>{0}</0>"
+msgstr "XSwapProtocol доступан у: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
-msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgid "XSwapProtocol governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Управљање разменом је доступно само на слоју 1. Пребаците мрежу на Етхереум Маиннет да бисте видели предлоге и гласали."
 
 #: src/pages/Earn/index.tsx
-msgid "Uniswap liquidity mining"
-msgstr "Uniswap рударење ликвидности"
+msgid "XSwapProtocol liquidity mining"
+msgstr "XSwapProtocol рударење ликвидности"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "Uniswap migration contract↗"
-msgstr "Uniswap уговор о миграцији↗"
+msgid "XSwapProtocol migration contract↗"
+msgstr "XSwapProtocol уговор о миграцији↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "XSwapProtocol on {0}"
@@ -1846,7 +1850,7 @@ msgid "Unknown Source"
 msgstr "Непознат извор"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with XSwapProtocol Next."
 msgstr "Непозната грешка{0}. Покушајте повећати толеранцију клизања. Напомена: накнада за токене за пренос и поновну надоградњу није компатибилна са Унисвап В3."
 
 #: src/pages/Vote/Landing.tsx
@@ -1922,8 +1926,8 @@ msgid "V3 {0} Price:"
 msgstr "V3 {0} Цена:"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "View UNI Analytics"
-msgstr "Погледајте UNI аналитику"
+msgid "View XSP Analytics"
+msgstr "Погледајте XSP аналитику"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -1938,7 +1942,7 @@ msgid "View list"
 msgstr "Погледајте листу"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
-msgid "View on Etherscan"
+msgid "View on Explorer"
 msgstr "Поглед на Етхерсцан-у"
 
 #: src/components/AccountDetails/index.tsx
@@ -2039,12 +2043,12 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "Када потражите без повлачења, ваша ликвидност остаје у фонду рударења."
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Када одустанете, уговор ће аутоматски захтевати UNI у ваше име!"
+msgid "When you withdraw, the contract will automagically claim XSP on your behalf!"
+msgstr "Када одустанете, уговор ће аутоматски захтевати XSP у ваше име!"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Када се повучете, полаже се право на ваш UNI и ваша ликвидност се уклања из фонда рударења."
+msgid "When you withdraw, your XSP is claimed and your liquidity is removed from the mining pool."
+msgstr "Када се повучете, полаже се право на ваш XSP и ваша ликвидност се уклања из фонда рударења."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -2060,12 +2064,12 @@ msgid "Withdraw deposited liquidity"
 msgstr "Повући депоновану ликвидност"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "Withdrawing {0} UNI-V2"
-msgstr "Повлачење {0} UNI-V2"
+msgid "Withdrawing {0} XSP"
+msgstr "Повлачење {0} XSP"
 
 #: src/components/earn/UnstakingModal.tsx
-msgid "Withdrew UNI-V2!"
-msgstr "Повукао UNI-V2!"
+msgid "Withdrew XSP-V2!"
+msgstr "Повукао XSP-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
@@ -2089,8 +2093,8 @@ msgid "You are creating a pool"
 msgstr "Стварате фонд"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Ви сте први пружалац ликвидности за овај Uniswap V3 фонд. Ваша ликвидност ће се мигрирати по тренутној цени {0}."
+msgid "You are the first liquidity provider for this XSwapProtocol Next pool. Your liquidity will migrate at the current {0} price."
+msgstr "Ви сте први пружалац ликвидности за овај XSwapProtocol Next фонд. Ваша ликвидност ће се мигрирати по тренутној цени {0}."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -2125,16 +2129,16 @@ msgid "You must connect an account."
 msgstr "Морате повезати налог."
 
 #: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Морате да дате дозволу Uniswap паметним уговорима да бисте користили {0}. То морате учинити само једном по токену."
+msgid "You must give the XSwapProtocol smart contracts permission to use your {0}. You only have to do this once per token."
+msgstr "Морате да дате дозволу XSwapProtocol паметним уговорима да бисте користили {0}. То морате учинити само једном по токену."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
 msgstr "Морате да имате {formattedProposalThreshold} гласова да бисте поднели предлог"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
-msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Ликвидност треба да депонујете у Uniswap V3 само по цени за коју сматрате да је тачна. <0/> Ако се цена чини нетачном, можете извршити замену да бисте преместили цену или сачекајте да то учини неко други."
+msgid "You should only deposit liquidity into XSwapProtocol Next at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "Ликвидност треба да депонујете у XSwapProtocol Next само по цени за коју сматрате да је тачна. <0/> Ако се цена чини нетачном, можете извршити замену да бисте преместили цену или сачекајте да то учини неко други."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -2146,8 +2150,8 @@ msgid "You will receive"
 msgstr "Добићете"
 
 #: src/components/Header/UniBalanceContent.tsx
-msgid "Your UNI Breakdown"
-msgstr "Ваша UNI анализа"
+msgid "Your XSP Breakdown"
+msgstr "Ваша XSP анализа"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your liquidity"
@@ -2233,8 +2237,8 @@ msgid "Your transactions will appear here..."
 msgstr "Ваше трансакције ће се појавити овде ..."
 
 #: src/pages/Earn/Manage.tsx
-msgid "Your unclaimed UNI"
-msgstr "Ваш непотраживани UNI"
+msgid "Your unclaimed XSP"
+msgstr "Ваш непотраживани XSP"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2299,8 +2303,8 @@ msgstr "{0} Депоновано"
 
 #: src/components/Header/index.tsx
 #: src/components/earn/PoolCard.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
+msgid "{0} XDC"
+msgstr "{0} XDC"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2318,24 +2322,24 @@ msgstr "{0} чекању"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "{0} UNI"
-msgstr "{0} UNI"
+msgid "{0} XSP"
+msgstr "{0} XSP"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
-msgid "{0} UNI / week"
-msgstr "{0} UNI / недељно"
+msgid "{0} XSP / week"
+msgstr "{0} XSP / недељно"
 
 #: src/components/earn/StakingModal.tsx
-msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2"
+msgid "{0} XSP"
+msgstr "{0} XSP"
 
 #: src/pages/Earn/Manage.tsx
-msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} UNI-V2 LP токена доступно"
+msgid "{0} XSP LP tokens available"
+msgstr "{0} XSP LP токена доступно"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -2399,12 +2403,12 @@ msgid "{0}/{1} LP Tokens"
 msgstr "{0}/{1} LP Токени"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} UNI"
+msgid "{SOCKS_AMOUNT} XSP"
+msgstr "{SOCKS_AMOUNT} XSP"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} UNI"
+msgid "{USER_AMOUNT} XSP"
+msgstr "{USER_AMOUNT} XSP"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"

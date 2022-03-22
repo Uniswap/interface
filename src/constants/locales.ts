@@ -63,7 +63,7 @@ export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
   'pt-BR': 'português',
   'pt-PT': 'português',
   'ro-RO': 'Română',
-  'ru-RU': 'русский',
+  'ru-RU': 'Русский',
   'sr-SP': 'Српски',
   'sv-SE': 'svenska',
   'sw-TZ': 'Kiswahili',
