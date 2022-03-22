@@ -37,7 +37,7 @@ export function ConnectWallet() {
 }
 
 export function UnsupportedNetwork() {
-  return <Caption caption={<Trans>Unsupported network - switch to another to trade.</Trans>} />
+  return <Caption caption={<Trans>Unsupported network - switch to another to trade</Trans>} />
 }
 
 export function InsufficientBalance({ currency }: { currency: Currency }) {
@@ -69,7 +69,7 @@ export function WrapCurrency({ inputCurrency, outputCurrency }: { inputCurrency:
   const Text = useCallback(
     () => (
       <Trans>
-        Convert {inputCurrency.symbol} to {outputCurrency.symbol} with no slippage.
+        Convert {inputCurrency.symbol} to {outputCurrency.symbol} with no slippage
       </Trans>
     ),
     [inputCurrency.symbol, outputCurrency.symbol]
