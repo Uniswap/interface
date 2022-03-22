@@ -25,7 +25,7 @@ const SizedCard = styled(Card)<{ cardColor: string }>`
   padding: 16px;
   border-radius: 12px;
 
-  background: ${props => props.cardColor}, linear-gradient(#171621, #171621);
+  background: ${props => `${props.cardColor}, linear-gradient(${props.theme.bg6}, ${props.theme.bg6})`};
   border: solid 1px #44416380;
 
   ${props => props.theme.mediaWidth.upToMedium`
