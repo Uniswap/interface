@@ -67,36 +67,46 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const setOldestValidBlock = useSetOldestValidBlock()
 
   const onWrap = useCallback(async () => {
-    const transaction = await wrapCallback?.()
-    if (!transaction) return
-    addTransaction({
-      response: transaction,
-      type: TransactionType.WRAP,
-      unwrapped: wrapType === WrapType.UNWRAP,
-      currencyAmountRaw: transaction.value?.toString() ?? '0',
-      chainId,
-    })
-    setDisplayTxHash(transaction.hash)
+    try {
+      const transaction = await wrapCallback?.()
+      if (!transaction) return
+      addTransaction({
+        response: transaction,
+        type: TransactionType.WRAP,
+        unwrapped: wrapType === WrapType.UNWRAP,
+        currencyAmountRaw: transaction.value?.toString() ?? '0',
+        chainId,
+      })
+      setDisplayTxHash(transaction.hash)
+    } catch (e) {
+      // TODO(zzmp): Surface errors from wrap.
+      console.log(e)
+    }
   }, [addTransaction, chainId, setDisplayTxHash, wrapCallback, wrapType])
   const onSwap = useCallback(async () => {
-    const transaction = await swapCallback?.()
-    if (!transaction) return
-    invariant(trade.trade)
-    addTransaction({
-      response: transaction,
-      type: TransactionType.SWAP,
-      tradeType: trade.trade.tradeType,
-      inputCurrencyAmount: trade.trade.inputAmount,
-      outputCurrencyAmount: trade.trade.outputAmount,
-    })
-    setDisplayTxHash(transaction.hash)
-    setOpen(false)
+    try {
+      const transaction = await swapCallback?.()
+      if (!transaction) return
+      invariant(trade.trade)
+      addTransaction({
+        response: transaction,
+        type: TransactionType.SWAP,
+        tradeType: trade.trade.tradeType,
+        inputCurrencyAmount: trade.trade.inputAmount,
+        outputCurrencyAmount: trade.trade.outputAmount,
+      })
+      setDisplayTxHash(transaction.hash)
+      setOpen(false)
 
-    // Set the block containing the response to the oldest valid block to ensure that the
-    // completed trade's impact is reflected in future fetched trades.
-    transaction.wait(1).then((receipt) => {
-      setOldestValidBlock(receipt.blockNumber)
-    })
+      // Set the block containing the response to the oldest valid block to ensure that the
+      // completed trade's impact is reflected in future fetched trades.
+      transaction.wait(1).then((receipt) => {
+        setOldestValidBlock(receipt.blockNumber)
+      })
+    } catch (e) {
+      // TODO(zzmp): Surface errors from swap.
+      console.log(e)
+    }
   }, [addTransaction, setDisplayTxHash, setOldestValidBlock, swapCallback, trade.trade])
 
   const disableSwap = useMemo(

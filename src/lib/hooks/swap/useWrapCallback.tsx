@@ -15,7 +15,7 @@ export enum WrapType {
   UNWRAP,
 }
 interface UseWrapCallbackReturns {
-  callback?: () => Promise<ContractTransaction | undefined>
+  callback?: () => Promise<ContractTransaction>
   type: WrapType
 }
 
@@ -53,17 +53,10 @@ export default function useWrapCallback(): UseWrapCallbackReturns {
       return
     }
 
-    return async () => {
-      try {
-        return await (wrapType === WrapType.WRAP
-          ? wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
-          : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`))
-      } catch (e) {
-        // TODO(zzmp): add error handling
-        console.error(e)
-        return
-      }
-    }
+    return async () =>
+      wrapType === WrapType.WRAP
+        ? wrappedNativeCurrencyContract.deposit({ value: `0x${parsedAmountIn.quotient.toString(16)}` })
+        : wrappedNativeCurrencyContract.withdraw(`0x${parsedAmountIn.quotient.toString(16)}`)
   }, [wrapType, parsedAmountIn, balanceIn, wrappedNativeCurrencyContract])
 
   return useMemo(() => ({ callback, type: wrapType }), [callback, wrapType])

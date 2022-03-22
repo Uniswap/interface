@@ -20,7 +20,7 @@ export enum SwapCallbackState {
 
 interface UseSwapCallbackReturns {
   state: SwapCallbackState
-  callback?: () => Promise<TransactionResponse | undefined>
+  callback?: () => Promise<TransactionResponse>
   error?: ReactNode
 }
 interface UseSwapCallbackArgs {
@@ -71,14 +71,7 @@ export function useSwapCallback({
 
     return {
       state: SwapCallbackState.VALID,
-      callback: async () => {
-        try {
-          return await callback()
-        } catch (e) {
-          // TODO(ianlapham): add error handling
-          return
-        }
-      },
+      callback: async () => callback(),
     }
   }, [trade, library, account, chainId, callback, recipient, recipientAddressOrName])
 }
