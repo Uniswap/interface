@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 20:06\n"
+"PO-Revision-Date: 2022-03-22 22:07\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -192,8 +192,8 @@ msgstr "Anwani haina dai linalopatikana"
 msgid "Against"
 msgstr "Kupinga"
 
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "Ruhusu"
 
@@ -209,11 +209,11 @@ msgstr "Ruhusu biashara ya athari za bei ya juu na uruke skrini ya thibitisho. T
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Ruhusu Itifaki ya Uniswap kutumia {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "Ruhusu {0} kwanza"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
 msgstr "Posho inasubiri"
 
@@ -229,13 +229,13 @@ msgstr "Kiasi"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Idhini inasubiri"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Sibitisha"
@@ -252,7 +252,7 @@ msgstr "Sibitisha Tokeni"
 msgid "Approve {0}"
 msgstr "Sibitisha {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Idhinisha {0} kwanza"
 
@@ -1572,7 +1572,7 @@ msgstr "Weka upya"
 msgid "Return"
 msgstr "Kurudi"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Kagua ubadilishaji"
 
@@ -2093,7 +2093,7 @@ msgstr "Ufunuo umethibitishwa"
 msgid "Unwrap pending"
 msgstr "Inasubiri kufunguliwa"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Unwrap {0}"
 msgstr "Fungua {0}"
 
@@ -2281,7 +2281,7 @@ msgstr "Ufungaji umethibitishwa"
 msgid "Wrap pending"
 msgstr "Funga inasubiri"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
 msgstr "Funga {0}"
 

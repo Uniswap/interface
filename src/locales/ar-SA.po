@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 20:06\n"
+"PO-Revision-Date: 2022-03-22 22:07\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -192,8 +192,8 @@ msgstr "العنوان ليس لديه مطالبة متاحة"
 msgid "Against"
 msgstr "ضد"
 
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "السماح"
 
@@ -209,11 +209,11 @@ msgstr "السماح بتداول تأثير الأسعار المرتفعة و�
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "السماح لبروتوكول Uniswap باستخدام {0} الخاص بك"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "اسمح بـ {0} أولاً"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
 msgstr "البدل معلق"
 
@@ -229,13 +229,13 @@ msgstr "المبلغ"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "حدث خطأ أثناء محاولة تنفيذ هذا التبادل. قد تحتاج إلى زيادة تحملك للانزلاق. إذا لم يفلح ذلك ، فقد يكون هناك عدم توافق مع الرمز الذي تتداوله. ملاحظة: رسوم النقل وإعادة الرموز المميزة غير متوافقة مع Uniswap V3."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "في انتظار الموافقة"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "الموافقة"
@@ -252,7 +252,7 @@ msgstr "الموافقة على رمز"
 msgid "Approve {0}"
 msgstr "الموافقة على {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "الموافقة على {0} أولاً"
 
@@ -1572,7 +1572,7 @@ msgstr "إعادة ضبط"
 msgid "Return"
 msgstr "رجوع"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "مراجعة المبادلة"
 
@@ -2093,7 +2093,7 @@ msgstr "أكد Unwrap"
 msgid "Unwrap pending"
 msgstr "فك التفاف معلق"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Unwrap {0}"
 msgstr "فك {0}"
 
@@ -2281,7 +2281,7 @@ msgstr "أكد التفاف"
 msgid "Wrap pending"
 msgstr "التفاف معلق"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
 msgstr "التفاف {0}"
 

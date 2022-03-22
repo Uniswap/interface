@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 20:06\n"
+"PO-Revision-Date: 2022-03-22 22:07\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -192,8 +192,8 @@ msgstr "Adresse hat keinen gültigen Anspruch"
 msgid "Against"
 msgstr "Gegen"
 
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "Erlauben"
 
@@ -209,11 +209,11 @@ msgstr "Erlaube hohe Preisauswirkungen und überspringe den Bestätigungsbildsch
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Erlaube dem Uniswap Protokoll, {0} zu verwenden"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "Lassen Sie zuerst {0} zu"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
 msgstr "Genehmigung ausstehend"
 
@@ -229,13 +229,13 @@ msgstr "Betrag"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Beim Versuch, diesen Swap auszuführen, ist ein Fehler aufgetreten. Möglicherweise müssen Sie Ihre Schlupftoleranz erhöhen. Wenn dies nicht funktioniert, liegt möglicherweise eine Inkompatibilität mit dem Token vor, den Sie handeln. Hinweis: Gebühren für Transfer- und Rebase-Token sind nicht mit Uniswap V3 kompatibel."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Bestätigung ausstehend"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Bestätigen"
@@ -252,7 +252,7 @@ msgstr "Token genehmigen"
 msgid "Approve {0}"
 msgstr "{0} freischalten"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Genehmigen Sie zuerst {0}"
 
@@ -1572,7 +1572,7 @@ msgstr "Zurücksetzen"
 msgid "Return"
 msgstr "Zurück"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Bewertungstausch"
 
@@ -2093,7 +2093,7 @@ msgstr "Auspacken bestätigt"
 msgid "Unwrap pending"
 msgstr "Auspacken steht an"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Unwrap {0}"
 msgstr "{0}auspacken"
 
@@ -2281,7 +2281,7 @@ msgstr "Wrap bestätigt"
 msgid "Wrap pending"
 msgstr "Umbruch ausstehend"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
 msgstr "Wickeln Sie {0}"
 

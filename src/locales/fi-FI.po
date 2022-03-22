@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 20:06\n"
+"PO-Revision-Date: 2022-03-22 22:07\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -192,8 +192,8 @@ msgstr "Osoitteella ei ole lunastettavaa"
 msgid "Against"
 msgstr "Vastaan"
 
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "Sallia"
 
@@ -209,11 +209,11 @@ msgstr "Salli korkean hintavaikutuksen kaupat ja ohita vahvistusnäyttö. Käyt�
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Salli Uniswap-protokollan käyttää {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "Salli ensin {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
 msgstr "Korvaus vireillä"
 
@@ -229,13 +229,13 @@ msgstr "Määrä"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Tapahtui virhe yritettäessä suorittaa tämä vaihto. Saatat joutua lisäämään luistonsietokykyäsi. Jos se ei toimi, kaupankäynnin kohteena olevan tunnuksen kanssa saattaa olla ristiriita. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Uniswap V3: n kanssa."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Hyväksyntä odottaa"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Hyväksy"
@@ -252,7 +252,7 @@ msgstr "Hyväksy tunnus"
 msgid "Approve {0}"
 msgstr "Hyväksy {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Hyväksy ensin {0}"
 
@@ -1572,7 +1572,7 @@ msgstr "Nollaa"
 msgid "Return"
 msgstr "Palaa"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Arvostelun vaihto"
 
@@ -2093,7 +2093,7 @@ msgstr "Purkaminen vahvistettu"
 msgid "Unwrap pending"
 msgstr "Purkaminen odottaa"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Unwrap {0}"
 msgstr "Avaa paketti {0}"
 
@@ -2281,7 +2281,7 @@ msgstr "Wrap vahvistettu"
 msgid "Wrap pending"
 msgstr "Wrap odottaa"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
 msgstr "Kääri {0}"
 

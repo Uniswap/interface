@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 20:06\n"
+"PO-Revision-Date: 2022-03-22 22:07\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -192,8 +192,8 @@ msgstr "地址没有可领取的代币"
 msgid "Against"
 msgstr "反对"
 
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "允许"
 
@@ -209,11 +209,11 @@ msgstr "允许高度影响价格的交易，并跳过确认步骤。须自行承
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "允许 Uniswap 调用您的 {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "先允许 {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
 msgstr "待定津贴"
 
@@ -229,13 +229,13 @@ msgstr "数额"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Uniswap不兼容。注：Uniswap V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "等待批准"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "批准"
@@ -252,7 +252,7 @@ msgstr "批准代币"
 msgid "Approve {0}"
 msgstr "批准 {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "先授权 {0}"
 
@@ -1572,7 +1572,7 @@ msgstr "重置"
 msgid "Return"
 msgstr "返回"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "检查交易"
 
@@ -2093,7 +2093,7 @@ msgstr "交易已确认"
 msgid "Unwrap pending"
 msgstr "交易处理中"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Unwrap {0}"
 msgstr "展开 {0}"
 
@@ -2281,7 +2281,7 @@ msgstr "交易已确认"
 msgid "Wrap pending"
 msgstr "交易处理中"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
 msgstr "换行 {0}"
 

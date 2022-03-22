@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 20:06\n"
+"PO-Revision-Date: 2022-03-22 22:07\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -192,8 +192,8 @@ msgstr "Adreste herhangi bir hak talebi yok"
 msgid "Against"
 msgstr "Karşısında"
 
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "İzin vermek"
 
@@ -209,11 +209,11 @@ msgstr "Yüksek fiyat etkili işlemlere izin verin ve onay ekranını atlayın. 
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Uniswap Protokolünün {0} kullanmasına izin verin"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "Önce {0} izin ver"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
 msgstr "ödenek beklemede"
 
@@ -229,13 +229,13 @@ msgstr "Miktar"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Bu takas yürütülmeye çalışılırken bir hata oluştu. Kayma toleransınızı artırmanız gerekebilir. Bu işe yaramazsa, işlem yaptığınız token ile uyumsuzluk olabilir. Not: Transfer ve rebase jetonlarındaki ücret, Uniswap V3 ile uyumlu değildir."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "Onay Bekliyor"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Onayla"
@@ -252,7 +252,7 @@ msgstr "Onay Simgesi"
 msgid "Approve {0}"
 msgstr "Onayla {0}"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "Önce {0} onayla"
 
@@ -1572,7 +1572,7 @@ msgstr "Sıfırla"
 msgid "Return"
 msgstr "Geri Dön"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "Değişimi gözden geçir"
 
@@ -2093,7 +2093,7 @@ msgstr "Paketi açma onaylandı"
 msgid "Unwrap pending"
 msgstr "Bekleyen paketi aç"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Unwrap {0}"
 msgstr "Paketi aç {0}"
 
@@ -2281,7 +2281,7 @@ msgstr "sarma onaylandı"
 msgid "Wrap pending"
 msgstr "Beklemede sarıl"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
 msgstr "{0}sarın"
 

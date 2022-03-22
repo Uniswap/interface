@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 20:06\n"
+"PO-Revision-Date: 2022-03-22 22:07\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -192,8 +192,8 @@ msgstr "주소에 사용 가능한 청구가 없습니다."
 msgid "Against"
 msgstr "반대"
 
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "허용하다"
 
@@ -209,11 +209,11 @@ msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁�
 msgid "Allow the Uniswap Protocol to use your {0}"
 msgstr "Uniswap 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow {0} first"
 msgstr "먼저 {0} 허용"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
 msgstr "수당 보류"
 
@@ -229,13 +229,13 @@ msgstr "금액"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "교환을 실행하는 중에 오류가 발생했습니다. 가격변동 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 교환중인 토큰이 Uniswap과 호환되지 않는 것일 수 있습니다. 참고: 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approval pending"
 msgstr "승인 대기 중"
 
 #: src/components/earn/StakingModal.tsx
-#: src/lib/components/Swap/SwapButton.tsx
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "승인"
@@ -252,7 +252,7 @@ msgstr "토큰 승인"
 msgid "Approve {0}"
 msgstr "{0} 승인"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Approve {0} first"
 msgstr "{0} 먼저 승인"
 
@@ -1572,7 +1572,7 @@ msgstr "초기화"
 msgid "Return"
 msgstr "반환"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Review swap"
 msgstr "스왑 검토"
 
@@ -2093,7 +2093,7 @@ msgstr "포장 풀기 확인"
 msgid "Unwrap pending"
 msgstr "언래핑 보류"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Unwrap {0}"
 msgstr "포장 풀기 {0}"
 
@@ -2281,7 +2281,7 @@ msgstr "랩 확인됨"
 msgid "Wrap pending"
 msgstr "랩 대기 중"
 
-#: src/lib/components/Swap/SwapButton.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
 msgstr "랩 {0}"
 
