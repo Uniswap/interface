@@ -1,24 +1,21 @@
 import { Trans } from '@lingui/macro'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useSwapCurrency, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
-import { ApproveOrPermitState, useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
+import { useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
+import { useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import useWrapCallback, { WrapType } from 'lib/hooks/swap/useWrapCallback'
 import { useAddTransaction } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useSetOldestValidBlock } from 'lib/hooks/useIsValidBlock'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
-import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, feeOptionsAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
-import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import ActionButton, { ActionButtonProps } from '../../ActionButton'
 import Dialog from '../../Dialog'
-import EtherscanLink from '../../EtherscanLink'
 import { SummaryDialog } from '../Summary'
 import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 
@@ -64,7 +61,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
 
   const addTransaction = useAddTransaction()
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
-  const { approvalState, signatureData, onApprove, approvalHash } = useApprovalData(optimizedTrade, slippage)
+  const { approvalData, signatureData } = useApprovalData(optimizedTrade, slippage)
 
   const disableSwap = useMemo(
     () =>
@@ -76,56 +73,11 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
   )
 
-  const [approvalCurrency] = useSwapCurrency(Field.INPUT)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) return { disabled: true }
-
-    if (
-      wrapType === WrapType.NONE &&
-      (approvalState === ApproveOrPermitState.REQUIRES_APPROVAL ||
-        approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE) &&
-      approvalCurrency
-    ) {
-      return {
-        action: {
-          message:
-            approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE ? (
-              <Trans>Allow {approvalCurrency.symbol} first</Trans>
-            ) : (
-              <Trans>Approve {approvalCurrency.symbol} first</Trans>
-            ),
-          onClick: onApprove,
-          children:
-            approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE ? <Trans>Allow</Trans> : <Trans>Approve</Trans>,
-        },
-      }
-    }
-    if (approvalState === ApproveOrPermitState.PENDING_APPROVAL) {
-      return {
-        disabled: true,
-        action: {
-          message: (
-            <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
-              <Trans>Approval pending</Trans>
-            </EtherscanLink>
-          ),
-          icon: Spinner,
-          children: <Trans>Approve</Trans>,
-        },
-      }
-    }
-    if (approvalState === ApproveOrPermitState.PENDING_SIGNATURE) {
-      return {
-        disabled: true,
-        action: {
-          message: <Trans>Allowance pending</Trans>,
-          icon: Spinner,
-          children: <Trans>Allow</Trans>,
-        },
-      }
-    }
-    return {}
-  }, [approvalCurrency, approvalHash, approvalState, disableSwap, onApprove, wrapType])
+    if (wrapType !== WrapType.NONE) return
+    return approvalData
+  }, [approvalData, disableSwap, wrapType])
 
   const deadline = useTransactionDeadline()
 
