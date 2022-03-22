@@ -20,8 +20,8 @@ export enum SwapCallbackState {
 
 interface UseSwapCallbackReturns {
   state: SwapCallbackState
-  callback: null | (() => Promise<TransactionResponse>)
-  error: ReactNode | null
+  callback?: () => Promise<TransactionResponse>
+  error?: ReactNode
 }
 interface UseSwapCallbackArgs {
   trade: AnyTrade | undefined // trade to execute, required
@@ -59,24 +59,19 @@ export function useSwapCallback({
 
   return useMemo(() => {
     if (!trade || !library || !account || !chainId || !callback) {
-      return { state: SwapCallbackState.INVALID, callback: null, error: <Trans>Missing dependencies</Trans> }
+      return { state: SwapCallbackState.INVALID, error: <Trans>Missing dependencies</Trans> }
     }
     if (!recipient) {
       if (recipientAddressOrName !== null) {
-        return { state: SwapCallbackState.INVALID, callback: null, error: <Trans>Invalid recipient</Trans> }
+        return { state: SwapCallbackState.INVALID, error: <Trans>Invalid recipient</Trans> }
       } else {
-        return { state: SwapCallbackState.LOADING, callback: null, error: null }
+        return { state: SwapCallbackState.LOADING }
       }
     }
 
     return {
       state: SwapCallbackState.VALID,
-      callback: async function onSwap(): Promise<TransactionResponse> {
-        return callback().then((response) => {
-          return response
-        })
-      },
-      error: null,
+      callback: async () => callback(),
     }
   }, [trade, library, account, chainId, callback, recipient, recipientAddressOrName])
 }
