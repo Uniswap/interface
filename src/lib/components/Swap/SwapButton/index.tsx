@@ -1,16 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useSwapCurrencyAmount, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
-import {
-  ApproveOrPermitState,
-  useApproveOrPermit,
-  useSwapApprovalOptimizedTrade,
-  useSwapRouterAddress,
-} from 'lib/hooks/swap/useSwapApproval'
+import { useSwapCurrency, useSwapInfo, useSwapTradeType } from 'lib/hooks/swap'
+import { ApproveOrPermitState, useSwapApprovalOptimizedTrade } from 'lib/hooks/swap/useSwapApproval'
 import { useSwapCallback } from 'lib/hooks/swap/useSwapCallback'
 import useWrapCallback, { WrapType } from 'lib/hooks/swap/useWrapCallback'
-import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
+import { useAddTransaction } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useSetOldestValidBlock } from 'lib/hooks/useIsValidBlock'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
@@ -26,13 +20,10 @@ import ActionButton, { ActionButtonProps } from '../../ActionButton'
 import Dialog from '../../Dialog'
 import EtherscanLink from '../../EtherscanLink'
 import { SummaryDialog } from '../Summary'
+import useApprovalData, { useIsPendingApproval } from './useApprovalData'
 
 interface SwapButtonProps {
   disabled?: boolean
-}
-
-function useIsPendingApproval(token?: Token, spender?: string): boolean {
-  return Boolean(usePendingApproval(token, spender))
 }
 
 export default memo(function SwapButton({ disabled }: SwapButtonProps) {
@@ -71,29 +62,9 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     // Use trade.trade if there is no swap optimized trade. This occurs if approvals are still pending.
     useSwapApprovalOptimizedTrade(trade.trade, slippage.allowed, useIsPendingApproval) || trade.trade
 
-  const approvalCurrencyAmount = useSwapCurrencyAmount(Field.INPUT)
-
-  const { approvalState, signatureData, handleApproveOrPermit } = useApproveOrPermit(
-    optimizedTrade,
-    slippage.allowed,
-    useIsPendingApproval,
-    approvalCurrencyAmount
-  )
-
-  const approvalHash = usePendingApproval(
-    inputCurrency?.isToken ? inputCurrency : undefined,
-    useSwapRouterAddress(optimizedTrade)
-  )
-
   const addTransaction = useAddTransaction()
-  const onApprove = useCallback(async () => {
-    const transaction = await handleApproveOrPermit()
-    if (transaction) {
-      addTransaction({ type: TransactionType.APPROVAL, ...transaction })
-    }
-  }, [addTransaction, handleApproveOrPermit])
-
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
+  const { approvalState, signatureData, onApprove, approvalHash } = useApprovalData(optimizedTrade, slippage)
 
   const disableSwap = useMemo(
     () =>
@@ -105,23 +76,23 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     [disabled, wrapType, optimizedTrade, chainId, inputCurrencyAmount, inputCurrencyBalance]
   )
 
+  const [approvalCurrency] = useSwapCurrency(Field.INPUT)
   const actionProps = useMemo((): Partial<ActionButtonProps> | undefined => {
     if (disableSwap) return { disabled: true }
 
     if (
       wrapType === WrapType.NONE &&
       (approvalState === ApproveOrPermitState.REQUIRES_APPROVAL ||
-        approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE)
+        approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE) &&
+      approvalCurrency
     ) {
-      const currency = inputCurrency || approvalCurrencyAmount?.currency
-      invariant(currency)
       return {
         action: {
           message:
             approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE ? (
-              <Trans>Allow {currency.symbol} first</Trans>
+              <Trans>Allow {approvalCurrency.symbol} first</Trans>
             ) : (
-              <Trans>Approve {currency.symbol} first</Trans>
+              <Trans>Approve {approvalCurrency.symbol} first</Trans>
             ),
           onClick: onApprove,
           children:
@@ -154,7 +125,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       }
     }
     return {}
-  }, [approvalCurrencyAmount?.currency, approvalHash, approvalState, disableSwap, inputCurrency, onApprove, wrapType])
+  }, [approvalCurrency, approvalHash, approvalState, disableSwap, onApprove, wrapType])
 
   const deadline = useTransactionDeadline()
 
