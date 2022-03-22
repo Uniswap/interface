@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import ErrorDialog, { StatusHeader } from 'lib/components/Error/ErrorDialog'
 import EtherscanLink from 'lib/components/EtherscanLink'
+import Rule from 'lib/components/Rule'
 import SwapSummary from 'lib/components/Swap/Summary'
 import useInterval from 'lib/hooks/useInterval'
 import { CheckCircle, Clock, Spinner } from 'lib/icons'
@@ -84,6 +85,7 @@ function TransactionStatus({ tx, onClose }: TransactionStatusProps) {
           <SwapSummary input={tx.info.inputCurrencyAmount} output={tx.info.outputCurrencyAmount} />
         ) : null}
       </StatusHeader>
+      <Rule />
       <TransactionRow flex>
         <ThemedText.ButtonSmall>
           <EtherscanLink type={ExplorerDataType.TRANSACTION} data={tx.info.response.hash}>
