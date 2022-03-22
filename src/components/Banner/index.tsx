@@ -55,7 +55,7 @@ function Banner({ margin, padding, maxWidth }: { margin?: string; padding?: stri
       end: new Date(1651276800000), // April 30, 2022 - 0h GMT+0
       img: w >= 768 ? AvaxLMDesktop : w >= 500 ? AvaxLMTablet : AvaxLMMobile,
       link:
-        'https://medium.com/kybernetwork/avalanche-rush-phase-2-starts-now-on-kyberswap-with-1m-in-liquidity-mining-rewards-bf22536df4dc',
+        'https://kyberswap.com/?utm_source=kyberswap&utm_medium=banner&utm_campaign=avaxphase2&utm_content=lm#/farms?networkId=43114',
     },
   ]
 
