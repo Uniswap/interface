@@ -39,27 +39,27 @@ const SizedCard = styled(DarkCard)`
 
 const FarmingBadge = styled.div<{ isGreyed?: boolean }>`
   height: 16px;
-  border: ${props => !props.isGreyed && `solid 1.5px ${props.theme.green2}`};
+  border: solid 1px;
+  border-color: ${props => (props.isGreyed ? `transparent` : `${props.theme.green2}`)};
   div {
     color: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
   }
-
   border-radius: 6px;
   width: fit-content;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  padding: 0 4px;
+  padding: 0 2px;
   background-color: ${props => props.isGreyed && props.theme.bg3};
   opacity: ${props => props.isGreyed && '0.5'};
+  gap: 4px;
   svg {
     > path {
       fill: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
     }
   }
   font-weight: 700;
-  margin-left: 3px;
   font-size: 9px;
   line-height: 9px;
   letter-spacing: 0.02em;
@@ -67,7 +67,6 @@ const FarmingBadge = styled.div<{ isGreyed?: boolean }>`
 
 const BadgeText = styled.div`
   font-weight: 700;
-  margin-left: 3px;
   font-size: 9px;
   line-height: 9px;
   letter-spacing: 0.02em;
