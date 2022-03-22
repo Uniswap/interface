@@ -19,6 +19,8 @@ import getLibrary from './utils/getLibrary'
 import SEO from './components/SEO'
 import ReactGA from 'react-ga'
 import * as Sentry from '@sentry/react'
+import 'swiper/swiper-bundle.min.css'
+import 'swiper/swiper.min.css'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -68,7 +70,7 @@ if (process.env.REACT_APP_MAINNET_ENV === 'production') {
 
 if (window.location.href.includes('kyberswap')) {
   Sentry.init({
-    dsn: process.env.REACT_APP_SENTRY_DNS
+    dsn: process.env.REACT_APP_SENTRY_DNS,
   })
   Sentry.configureScope(scope => {
     scope.setTag('request_id', sentryRequestId)
