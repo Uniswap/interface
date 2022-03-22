@@ -8,7 +8,7 @@ export const XSP_ADDRESS: AddressMap = {
   [SupportedChainId.TESTNET]: '0xbC4979e749c28F81F22f95B603B350D9Ab0F172A',
 }
 export const WXDC_ADDRESS: AddressMap = {
-  [SupportedChainId.MAINNET]: '0x951857744785e80e2de051c32ee7b25f9c458c42',
+  [SupportedChainId.MAINNET]: '0x951857744785E80e2De051c32EE7b25f9c458C42',
   [SupportedChainId.TESTNET]: '0x2a5c77b016Df1b3b0AE4E79a68F8adF64Ee741ba',
 }
 export const MULTICALL_ADDRESS: AddressMap = {
