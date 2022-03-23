@@ -9,9 +9,9 @@ import Expando from 'lib/components/Expando'
 import Row from 'lib/components/Row'
 import { Slippage } from 'lib/hooks/useSlippage'
 import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
-import { AlertTriangle, BarChart, Info } from 'lib/icons'
+import { AlertTriangle, BarChart, Info, Spinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -94,16 +94,28 @@ function ConfirmButton({
 }: {
   trade: Trade<Currency, Currency, TradeType>
   highPriceImpact: boolean
-  onConfirm: () => void
+  onConfirm: () => Promise<void>
 }) {
   const [ackPriceImpact, setAckPriceImpact] = useState(false)
+
   const [ackTrade, setAckTrade] = useState(trade)
   const doesTradeDiffer = useMemo(
     () => Boolean(trade && ackTrade && tradeMeaningfullyDiffers(trade, ackTrade)),
     [ackTrade, trade]
   )
+
+  const [isPending, setIsPending] = useState(false)
+  const onClick = useCallback(async () => {
+    setIsPending(true)
+    await onConfirm()
+    setIsPending(false)
+  }, [onConfirm])
+  useEffect(() => setIsPending(false), [onClick])
+
   const action = useMemo((): Action | undefined => {
-    if (doesTradeDiffer) {
+    if (isPending) {
+      return { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner }
+    } else if (doesTradeDiffer) {
       return {
         message: <Trans>Price updated</Trans>,
         icon: BarChart,
@@ -118,7 +130,7 @@ function ConfirmButton({
       }
     }
     return
-  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, trade])
+  }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, trade])
 
   return (
     <ActionButton onClick={onConfirm} action={action}>
@@ -133,7 +145,7 @@ interface SummaryDialogProps {
   inputUSDC?: CurrencyAmount<Currency>
   outputUSDC?: CurrencyAmount<Currency>
   impact?: PriceImpact
-  onConfirm: () => void
+  onConfirm: () => Promise<void>
 }
 
 export function SummaryDialog({ trade, slippage, inputUSDC, outputUSDC, impact, onConfirm }: SummaryDialogProps) {
