@@ -11,7 +11,7 @@ import { Slippage } from 'lib/hooks/useSlippage'
 import { PriceImpact } from 'lib/hooks/useUSDCPriceImpact'
 import { AlertTriangle, BarChart, Info, Spinner } from 'lib/icons'
 import styled, { ThemedText } from 'lib/theme'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -110,7 +110,6 @@ function ConfirmButton({
     await onConfirm()
     setIsPending(false)
   }, [onConfirm])
-  useEffect(() => setIsPending(false), [onClick])
 
   const action = useMemo((): Action | undefined => {
     if (isPending) {
@@ -133,7 +132,7 @@ function ConfirmButton({
   }, [ackPriceImpact, doesTradeDiffer, highPriceImpact, isPending, trade])
 
   return (
-    <ActionButton onClick={onConfirm} action={action}>
+    <ActionButton onClick={onClick} action={action}>
       <Trans>Confirm swap</Trans>
     </ActionButton>
   )

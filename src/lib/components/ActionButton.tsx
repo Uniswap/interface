@@ -5,10 +5,20 @@ import { ReactNode, useMemo } from 'react'
 import Button from './Button'
 import Row from './Row'
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`
+
 const StyledButton = styled(Button)`
+  animation: ${fadeIn} 0.25s ease-in;
   border-radius: ${({ theme }) => theme.borderRadius}em;
   flex-grow: 1;
-  transition: background-color 0.25s ease-out, flex-grow 0.25s ease-out, padding 0.25s ease-out;
+  transition: background-color 0.25s ease-out, flex-grow 0.25s ease-out, padding 0.25s ease-in;
 
   :disabled {
     margin: -1px;

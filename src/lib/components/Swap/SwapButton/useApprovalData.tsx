@@ -42,7 +42,8 @@ export default function useApprovalData(
     }
     setIsPending(false)
   }, [addTransaction, handleApproveOrPermit])
-  useEffect(() => setIsPending(false), [onApprove])
+  // Reset the pending state if currency changes.
+  useEffect(() => setIsPending(false), [currency])
 
   const approvalHash = usePendingApproval(currency?.isToken ? currency : undefined, useSwapRouterAddress(trade))
   const approvalAction = useMemo((): Action | undefined => {
