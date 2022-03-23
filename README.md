@@ -49,7 +49,7 @@ The last line of the output will have the IPFS hash. Different machines should o
 # Summary
 Added integration tests for wrapping. Pipeline runs tests and deploy results on gh-page (in case of my branch it would be https://niemam29.github.io/dxswap-dapp/ not sure how it would work on develop on master) on each pull request and each day
 
-# Run
+# Run tests
 ### Remember to start server 
 `yarn start`
 
