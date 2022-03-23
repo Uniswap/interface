@@ -14,7 +14,7 @@ export default function Updater(): null {
 
   const [state, setState] = useState<{ chainId: number | undefined; blockNumber: number | null }>({
     chainId,
-    blockNumber: null
+    blockNumber: null,
   })
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Updater(): null {
         return state
       })
     },
-    [chainId, setState]
+    [chainId, setState],
   )
 
   // attach/detach listeners

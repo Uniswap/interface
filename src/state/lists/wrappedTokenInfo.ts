@@ -23,7 +23,7 @@ export class WrappedTokenInfo extends Token {
       isAddress(tokenInfo.address) || tokenInfo.address,
       tokenInfo.decimals,
       tokenInfo.symbol,
-      tokenInfo.name
+      tokenInfo.name,
     )
     this.tokenInfo = tokenInfo
     this.list = list
@@ -43,7 +43,7 @@ export class WrappedTokenInfo extends Token {
     return (this._tags = this.tokenInfo.tags.map(tagId => {
       return {
         ...listTags[tagId],
-        id: tagId
+        id: tagId,
       }
     }))
   }

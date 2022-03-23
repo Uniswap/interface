@@ -11,7 +11,7 @@ const TabContainer = styled.div`
   background-color: ${({ theme }) => theme.buttonBlack};
 `
 
-const Tab = styled(ButtonEmpty) <{ isActive?: boolean; isLeft?: boolean }>`
+const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,7 +37,7 @@ const TabText = styled.div<{ isActive: boolean }>`
 const LiquidityProviderMode = ({
   activeTab,
   setActiveTab,
-  singleTokenInfo
+  singleTokenInfo,
 }: {
   activeTab: number
   setActiveTab: (activeTab: number) => void

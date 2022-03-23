@@ -19,7 +19,7 @@ export default function useClaimReward() {
   const [error, setError] = useState<string | null>(null)
   const { data } = useSWR(
     isValid ? (chainId === ChainId.ROPSTEN ? 'claim-reward-data.json' : CLAIM_REWARDS_DATA_URL) : '',
-    (url: string) => fetch(url).then(r => r.json())
+    (url: string) => fetch(url).then(r => r.json()),
   )
   const userReward = data && account && data.userRewards[account]
 
@@ -55,7 +55,7 @@ export default function useClaimReward() {
       Object.keys(allTransactions)
         .map(key => allTransactions[key])
         .filter(item => item.type === 'Claim reward' && !item.receipt)[0],
-    [allTransactions]
+    [allTransactions],
   )
   const resetTxn = useCallback(() => {
     setAttemptingTxn(false)
@@ -98,7 +98,7 @@ export default function useClaimReward() {
                 account,
                 data.tokens,
                 userReward.amounts,
-                userReward.proof
+                userReward.proof,
               )
             } else {
               setRewardAmounts('0')
@@ -113,7 +113,7 @@ export default function useClaimReward() {
           setTxHash(tx.hash)
           addTransactionWithType(tx, {
             type: 'Claim reward',
-            summary: rewardAmounts + ' KNC'
+            summary: rewardAmounts + ' KNC',
           })
         })
         .catch((err: any) => {
@@ -133,7 +133,7 @@ export default function useClaimReward() {
     userReward?.amounts,
     userReward?.index,
     userReward?.proof,
-    addTransactionWithType
+    addTransactionWithType,
   ])
 
   return {
@@ -144,6 +144,6 @@ export default function useClaimReward() {
     txHash,
     resetTxn,
     pendingTx: !!tx && !tx.receipt,
-    error
+    error,
   }
 }

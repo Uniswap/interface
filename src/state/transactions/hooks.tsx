@@ -16,7 +16,7 @@ export function useTransactionAdder(): (
     approval?: { tokenAddress: string; spender: string }
     claim?: { recipient: string }
     arbitrary?: any
-  }
+  },
 ) => void {
   const { chainId, account } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
@@ -29,14 +29,14 @@ export function useTransactionAdder(): (
         summary,
         approval,
         claim,
-        arbitrary
+        arbitrary,
       }: {
         type?: string
         summary?: string
         claim?: { recipient: string }
         approval?: { tokenAddress: string; spender: string }
         arbitrary?: any
-      } = {}
+      } = {},
     ) => {
       if (!account) return
       if (!chainId) return
@@ -47,7 +47,7 @@ export function useTransactionAdder(): (
       }
       dispatch(addTransaction({ hash, from: account, chainId, approval, type, summary, claim, arbitrary }))
     },
-    [dispatch, chainId, account]
+    [dispatch, chainId, account],
   )
 }
 
@@ -94,14 +94,14 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
           return approval.spender === spender && approval.tokenAddress === tokenAddress && isTransactionRecent(tx)
         }
       }),
-    [allTransactions, spender, tokenAddress]
+    [allTransactions, spender, tokenAddress],
   )
 }
 
 // watch for submissions to claim
 // return null if not done loading, return undefined if not found
 export function useUserHasSubmittedClaim(
-  account?: string
+  account?: string,
 ): { claimSubmitted: boolean; claimTxn: TransactionDetails | undefined } {
   const allTransactions = useAllTransactions()
 

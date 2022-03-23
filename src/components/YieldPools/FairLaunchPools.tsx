@@ -94,7 +94,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
 
           return {
             ...farm,
-            time: `${isFarmEnded ? 'Ended' : (isFarmStarted ? '' : 'Starting in ') + formattedEstimatedRemainingTime}`
+            time: `${isFarmEnded ? 'Ended' : (isFarmStarted ? '' : 'Starting in ') + formattedEstimatedRemainingTime}`,
           }
         })
       : (farms || []).map(farm => {
@@ -111,7 +111,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
 
           return {
             ...farm,
-            time: `${isFarmEnded ? 'Ended' : (isFarmStarted ? '' : 'Starting in ') + formattedEstimatedRemainingTime}`
+            time: `${isFarmEnded ? 'Ended' : (isFarmStarted ? '' : 'Starting in ') + formattedEstimatedRemainingTime}`,
           }
         })
 

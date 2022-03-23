@@ -51,7 +51,7 @@ const AlertMessage = styled.span`
 export default function ShareLinkModal({
   isOpen,
   onDismiss,
-  shareUrl
+  shareUrl,
 }: {
   isOpen: boolean
   onDismiss: () => void

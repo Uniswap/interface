@@ -23,75 +23,75 @@ export const SUMMARY: {
   Wrap: {
     success: summary => 'Wrapped ' + summary,
     pending: summary => 'Wrapping ' + summary,
-    failure: summary => 'Error wrapping ' + summary
+    failure: summary => 'Error wrapping ' + summary,
   },
   Unwrap: {
     success: summary => 'Unwrapped ' + summary,
     pending: summary => 'Unwrapping ' + summary,
-    failure: summary => 'Error unwrapping ' + summary
+    failure: summary => 'Error unwrapping ' + summary,
   },
   Approve: {
     success: summary => summary + ' was approved',
     pending: summary => 'Approving ' + summary,
-    failure: summary => 'Error approving ' + summary
+    failure: summary => 'Error approving ' + summary,
   },
   Swap: {
     success: summary => 'Swapped ' + summary,
     pending: summary => 'Swapping ' + summary,
-    failure: summary => 'Error swapping ' + summary
+    failure: summary => 'Error swapping ' + summary,
   },
   'Create pool': {
     success: summary => 'Created pool ' + summary,
     pending: summary => 'Creating pool ' + summary,
-    failure: summary => 'Error creating pool ' + summary
+    failure: summary => 'Error creating pool ' + summary,
   },
   'Add liquidity': {
     success: summary => 'Added ' + summary,
     pending: summary => 'Adding ' + summary,
-    failure: summary => 'Error adding ' + summary
+    failure: summary => 'Error adding ' + summary,
   },
   'Remove liquidity': {
     success: summary => 'Removed ' + summary,
     pending: summary => 'Removing ' + summary,
-    failure: summary => 'Error removing ' + summary
+    failure: summary => 'Error removing ' + summary,
   },
   Stake: {
     success: summary => 'Staked ' + summary,
     pending: summary => 'Staking ' + summary,
-    failure: summary => 'Error staking ' + summary
+    failure: summary => 'Error staking ' + summary,
   },
   Unstake: {
     success: summary => 'Unstaked ' + summary,
     pending: summary => 'Unstaking ' + summary,
-    failure: summary => 'Error unstaking ' + summary
+    failure: summary => 'Error unstaking ' + summary,
   },
   Harvest: {
     success: () => 'Harvested your rewards',
     pending: () => 'Harvesting your rewards',
-    failure: () => 'Error harvesting your rewards'
+    failure: () => 'Error harvesting your rewards',
   },
   Claim: {
     success: summary => 'Claimed ' + summary,
     pending: summary => 'Claiming ' + summary,
-    failure: summary => 'Error claiming ' + summary
+    failure: summary => 'Error claiming ' + summary,
   },
   Migrate: {
     success: () => 'Migrated your liquidity',
     pending: () => 'Migrating your liquidity',
-    failure: () => 'Error migrating your liquidity'
+    failure: () => 'Error migrating your liquidity',
   },
   'Claim reward': {
     success: summary => 'Claimed ' + summary,
     pending: summary => 'Claiming ' + summary,
-    failure: summary => 'Error claiming ' + summary
-  }
+    failure: summary => 'Error claiming ' + summary,
+  },
 }
 
 export default function TransactionPopup({
   hash,
   success,
   type,
-  summary
+  summary,
 }: {
   hash: string
   success?: boolean

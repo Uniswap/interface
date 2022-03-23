@@ -28,7 +28,7 @@ import useTheme from 'hooks/useTheme'
 
 enum Fields {
   TOKEN0 = 0,
-  TOKEN1 = 1
+  TOKEN1 = 1,
 }
 
 function usePoolUNI(currency0: Currency | null, currency1: Currency | null) {
@@ -40,7 +40,7 @@ function usePoolUNI(currency0: Currency | null, currency1: Currency | null) {
       pairState === PairState.EXISTS &&
         pair &&
         JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
-        JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+        JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)),
     )
 
   const position: TokenAmount | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
@@ -57,12 +57,12 @@ function usePoolSUSHI(currency0: Currency | null, currency1: Currency | null) {
       pairState === PairState.EXISTS &&
         pair &&
         JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
-        JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+        JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)),
     )
 
   const position: TokenAmount | undefined = useTokenBalance(
     account ?? undefined,
-    !pair?.liquidityToken ? undefined : tokenSushiToDmm(pair?.liquidityToken)
+    !pair?.liquidityToken ? undefined : tokenSushiToDmm(pair?.liquidityToken),
   )
   const hasPosition = Boolean(position && JSBI.greaterThan(position.raw, JSBI.BigInt(0)))
   return { pairState, pair, validPairNoLiquidity, position, hasPosition }
@@ -83,7 +83,7 @@ export default function PoolFinderExternal() {
     pair: pairSushi,
     validPairNoLiquidity: validPairNoLiquiditySushi,
     position: positionSushi,
-    hasPosition: hasPositionSushi
+    hasPosition: hasPositionSushi,
   } = usePoolSUSHI(currency0, currency1)
   const addPair = usePairAdder()
   useEffect(() => {
@@ -102,7 +102,7 @@ export default function PoolFinderExternal() {
         setCurrency1(currency)
       }
     },
-    [activeField]
+    [activeField],
   )
 
   const handleSearchDismiss = useCallback(() => {
@@ -124,7 +124,7 @@ export default function PoolFinderExternal() {
     position: any,
     hasPosition: any,
     type: string,
-    Comp: any
+    Comp: any,
   ) {
     return (
       <>
@@ -251,7 +251,7 @@ export default function PoolFinderExternal() {
               positionSushi,
               hasPositionSushi,
               'SUSHI',
-              MinimalPositionCardSUSHI
+              MinimalPositionCardSUSHI,
             )}
           </>
         ) : (

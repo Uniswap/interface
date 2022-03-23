@@ -6,8 +6,8 @@ const OLD_PATH_STRUCTURE = /^(0x[a-fA-F0-9]{40})-(0x[a-fA-F0-9]{40})$/
 export default function RedirectOldCreatePoolPathStructure(props: RouteComponentProps<{ currencyIdA: string }>) {
   const {
     match: {
-      params: { currencyIdA }
-    }
+      params: { currencyIdA },
+    },
   } = props
   const match = currencyIdA.match(OLD_PATH_STRUCTURE)
   if (match?.length) {

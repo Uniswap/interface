@@ -16,7 +16,7 @@ const useZap = () => {
         throw err
       }
     },
-    [zapContract]
+    [zapContract],
   )
 
   const calculateZapOutAmount = useCallback(
@@ -30,13 +30,13 @@ const useZap = () => {
         throw err
       }
     },
-    [zapContract]
+    [zapContract],
   )
 
   return {
     zapContract,
     calculateZapInAmounts,
-    calculateZapOutAmount
+    calculateZapOutAmount,
   }
 }
 
@@ -51,9 +51,9 @@ export const useZapInAmounts = (tokenIn?: string, tokenOut?: string, pool?: stri
   }>({
     amounts: {
       tokenInAmount: BigNumber.from(0),
-      tokenOutAmount: BigNumber.from(0)
+      tokenOutAmount: BigNumber.from(0),
     },
-    error: undefined
+    error: undefined,
   })
 
   useEffect(() => {
@@ -62,9 +62,9 @@ export const useZapInAmounts = (tokenIn?: string, tokenOut?: string, pool?: stri
         setResult({
           amounts: {
             tokenInAmount: BigNumber.from(0),
-            tokenOutAmount: BigNumber.from(0)
+            tokenOutAmount: BigNumber.from(0),
           },
-          error: undefined
+          error: undefined,
         })
 
         return
@@ -76,16 +76,16 @@ export const useZapInAmounts = (tokenIn?: string, tokenOut?: string, pool?: stri
 
           setResult({
             amounts,
-            error: undefined
+            error: undefined,
           })
         }
       } catch (err) {
         setResult({
           amounts: {
             tokenInAmount: BigNumber.from(0),
-            tokenOutAmount: BigNumber.from(0)
+            tokenOutAmount: BigNumber.from(0),
           },
-          error: err as Error
+          error: err as Error,
         })
       }
     }
@@ -100,7 +100,7 @@ export const useZapOutAmount = (tokenIn?: string, tokenOut?: string, pool?: stri
   const { calculateZapOutAmount } = useZap()
   const [result, setResult] = useState<{ amount: BigNumber; error?: any }>({
     amount: BigNumber.from(0),
-    error: undefined
+    error: undefined,
   })
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export const useZapOutAmount = (tokenIn?: string, tokenOut?: string, pool?: stri
       if (!lpQty || lpQty.eq(0)) {
         setResult({
           amount: BigNumber.from(0),
-          error: undefined
+          error: undefined,
         })
 
         return
@@ -119,13 +119,13 @@ export const useZapOutAmount = (tokenIn?: string, tokenOut?: string, pool?: stri
           const amount = await calculateZapOutAmount(tokenIn, tokenOut, pool, lpQty)
           setResult({
             amount,
-            error: undefined
+            error: undefined,
           })
         }
       } catch (err) {
         setResult({
           amount: BigNumber.from(0),
-          error: err as Error
+          error: err as Error,
         })
       }
     }

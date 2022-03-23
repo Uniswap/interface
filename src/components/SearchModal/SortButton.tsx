@@ -19,7 +19,7 @@ export const FilterWrapper = styled(RowFixed)`
 
 export default function SortButton({
   toggleSortOrder,
-  ascending
+  ascending,
 }: {
   toggleSortOrder: () => void
   ascending: boolean

@@ -10,7 +10,7 @@ import { useActiveWeb3React } from 'hooks'
 
 export default function TabYourLiquidityItems({
   poolData,
-  myLiquidity
+  myLiquidity,
 }: {
   poolData: SubgraphPoolData
   myLiquidity: UserLiquidityPosition | undefined

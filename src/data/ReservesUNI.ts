@@ -13,7 +13,7 @@ export enum PairState {
   LOADING,
   NOT_EXISTS,
   EXISTS,
-  INVALID
+  INVALID,
 }
 
 export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
@@ -23,9 +23,9 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     () =>
       currencies.map(([currencyA, currencyB]) => [
         wrappedCurrency(currencyA, chainId),
-        wrappedCurrency(currencyB, chainId)
+        wrappedCurrency(currencyB, chainId),
       ]),
-    [chainId, currencies]
+    [chainId, currencies],
   )
 
   const pairAddresses = useMemo(
@@ -38,11 +38,11 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
           tokenB.chainId in ChainIdUNI
           ? Pair.getAddress(
               new TokenUNI(tokenA.chainId as ChainIdUNI, tokenA.address, tokenA.decimals, tokenA.symbol, tokenA.name),
-              new TokenUNI(tokenB.chainId as ChainIdUNI, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name)
+              new TokenUNI(tokenB.chainId as ChainIdUNI, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name),
             )
           : undefined
       }),
-    [tokens]
+    [tokens],
   )
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
@@ -70,13 +70,13 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         new Pair(
           new TokenAmount(
             new TokenUNI(token0.chainId as ChainIdUNI, token0.address, token0.decimals, token0.symbol, token0.name),
-            reserve0.toString()
+            reserve0.toString(),
           ),
           new TokenAmount(
             new TokenUNI(token1.chainId as ChainIdUNI, token1.address, token1.decimals, token1.symbol, token1.name),
-            reserve1.toString()
-          )
-        )
+            reserve1.toString(),
+          ),
+        ),
       ]
     })
   }, [results, tokens])

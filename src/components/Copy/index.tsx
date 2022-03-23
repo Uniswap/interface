@@ -28,7 +28,7 @@ const TransactionStatusText = styled.span`
 
 export default function CopyHelper({
   toCopy,
-  margin
+  margin,
 }: {
   toCopy: string
   children?: React.ReactNode

@@ -8,7 +8,7 @@ import { formattedNum } from 'utils'
 
 export default function TabInfoItems({
   poolData,
-  myLiquidity
+  myLiquidity,
 }: {
   poolData: SubgraphPoolData
   myLiquidity: UserLiquidityPosition | undefined

@@ -106,13 +106,13 @@ export default function Slider({
   max = 100,
   size = 28,
   style,
-  className
+  className,
 }: InputSliderProps) {
   const changeCallback = useCallback(
     e => {
       onChange(parseInt(e.target.value))
     },
-    [onChange]
+    [onChange],
   )
 
   return (

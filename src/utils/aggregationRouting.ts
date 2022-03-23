@@ -45,7 +45,7 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
           const swapPool: any = (b.pools && b.pools[ind]) || ({} as any)
           const totalSwapAmount = JSBI.add(
             sub.reduce((sum, x2) => JSBI.add(sum, x2.swapAmount || ZERO), ZERO),
-            swapPool.swapAmount || ZERO
+            swapPool.swapAmount || ZERO,
           )
           // merge hop with same exchange
           let existed = false
@@ -66,7 +66,7 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
             const percent = new Percent(swapPool.swapAmount || ZERO, totalSwapAmount).toFixed(
               0,
               undefined,
-              Rounding.ROUND_HALF_UP
+              Rounding.ROUND_HALF_UP,
             )
             newSub.push({ ...swapPool, swapPercentage: parseInt(percent) })
           }
@@ -78,7 +78,7 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
         subRoutes = b.pools.map(p => [{ ...p, swapPercentage: 100 }])
       }
       return Object.assign({}, a, {
-        [b.slug]: { index, swapPercentage, path: b.path, subRoutes }
+        [b.slug]: { index, swapPercentage, path: b.path, subRoutes },
       })
     }, {} as any)
 
@@ -90,7 +90,7 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
       routesV2.splice(route.index, 1, {
         swapPercentage: route.swapPercentage,
         path: route.path,
-        subRoutes: route.subRoutes
+        subRoutes: route.subRoutes,
       })
     })
     return routesV2
@@ -103,7 +103,7 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
 export function getTradeComposition(
   trade?: Aggregator,
   chainId?: ChainId,
-  allTokens?: { [address: string]: Token }
+  allTokens?: { [address: string]: Token },
 ): SwapRouteV2[] | undefined {
   if (!trade || !trade.swaps || !chainId) {
     return undefined
@@ -131,7 +131,7 @@ export function getTradeComposition(
       const hop = sorMultiSwap[0]
       const path = [
         allTokens?.[getAddress(hop.tokenIn)] || tokens[hop.tokenIn],
-        allTokens?.[getAddress(hop.tokenOut)] || tokens[hop.tokenOut]
+        allTokens?.[getAddress(hop.tokenOut)] || tokens[hop.tokenOut],
       ]
       routes.push({
         slug: hop.tokenOut?.toLowerCase(),
@@ -140,10 +140,10 @@ export function getTradeComposition(
             id: hop.pool?.toLowerCase(),
             exchange: hop.exchange,
             swapAmount: JSBI.BigInt(hop.swapAmount),
-            swapPercentage: calcSwapPercentage(hop.tokenIn, hop.swapAmount)
-          }
+            swapPercentage: calcSwapPercentage(hop.tokenIn, hop.swapAmount),
+          },
         ],
-        path
+        path,
       })
     } else if (sorMultiSwap.length > 1) {
       const path: PathItem[] = []
@@ -153,19 +153,19 @@ export function getTradeComposition(
           id: hop.pool?.toLowerCase(),
           exchange: hop.exchange,
           swapAmount: JSBI.BigInt(hop.swapAmount),
-          swapPercentage: index === 0 ? calcSwapPercentage(hop.tokenIn, hop.swapAmount) : 100
+          swapPercentage: index === 0 ? calcSwapPercentage(hop.tokenIn, hop.swapAmount) : 100,
         })
         if (index === 0) {
           const token = tokens[hop.tokenIn] || ({} as any)
           path.push(
             allTokens?.[getAddress(token.address)] ||
-              new Token(chainId, token.address, token.decimals, token.symbol, token.name)
+              new Token(chainId, token.address, token.decimals, token.symbol, token.name),
           )
         }
         const token = tokens[hop.tokenOut] || ({} as any)
         path.push(
           allTokens?.[getAddress(token.address)] ||
-            new Token(chainId, token.address, token.decimals, token.symbol, token.name)
+            new Token(chainId, token.address, token.decimals, token.symbol, token.name),
         )
       })
       routes.push({
@@ -175,7 +175,7 @@ export function getTradeComposition(
           .join('-')
           .toLowerCase(),
         path,
-        pools
+        pools,
       })
     }
   })

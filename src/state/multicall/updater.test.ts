@@ -9,14 +9,14 @@ describe('multicall updater', () => {
             [1]: {
               ['abc']: {
                 4: 2, // 2 listeners care about 4 block old data
-                1: 0 // 0 listeners care about 1 block old data
-              }
-            }
+                1: 0, // 0 listeners care about 1 block old data
+              },
+            },
           },
-          1
-        )
+          1,
+        ),
       ).toEqual({
-        abc: 4
+        abc: 4,
       })
     })
     it('applies min', () => {
@@ -27,14 +27,14 @@ describe('multicall updater', () => {
               ['abc']: {
                 4: 2, // 2 listeners care about 4 block old data
                 3: 1, // 1 listener cares about 3 block old data
-                1: 0 // 0 listeners care about 1 block old data
-              }
-            }
+                1: 0, // 0 listeners care about 1 block old data
+              },
+            },
           },
-          1
-        )
+          1,
+        ),
       ).toEqual({
-        abc: 3
+        abc: 3,
       })
     })
     it('works for infinity', () => {
@@ -44,18 +44,18 @@ describe('multicall updater', () => {
             [1]: {
               ['abc']: {
                 4: 2, // 2 listeners care about 4 block old data
-                1: 0 // 0 listeners care about 1 block old data
+                1: 0, // 0 listeners care about 1 block old data
               },
               ['def']: {
-                Infinity: 2
-              }
-            }
+                Infinity: 2,
+              },
+            },
           },
-          1
-        )
+          1,
+        ),
       ).toEqual({
         abc: 4,
-        def: Infinity
+        def: Infinity,
       })
     })
     it('multiple keys', () => {
@@ -65,19 +65,19 @@ describe('multicall updater', () => {
             [1]: {
               ['abc']: {
                 4: 2, // 2 listeners care about 4 block old data
-                1: 0 // 0 listeners care about 1 block old data
+                1: 0, // 0 listeners care about 1 block old data
               },
               ['def']: {
                 2: 1,
-                5: 2
-              }
-            }
+                5: 2,
+              },
+            },
           },
-          1
-        )
+          1,
+        ),
       ).toEqual({
         abc: 4,
-        def: 2
+        def: 2,
       })
     })
     it('ignores negative numbers', () => {
@@ -88,14 +88,14 @@ describe('multicall updater', () => {
               ['abc']: {
                 4: 2,
                 1: -1,
-                [-3]: 4
-              }
-            }
+                [-3]: 4,
+              },
+            },
           },
-          1
-        )
+          1,
+        ),
       ).toEqual({
-        abc: 4
+        abc: 4,
       })
     })
     it('applies min to infinity', () => {
@@ -106,14 +106,14 @@ describe('multicall updater', () => {
               ['abc']: {
                 Infinity: 2, // 2 listeners care about any data
                 4: 2, // 2 listeners care about 4 block old data
-                1: 0 // 0 listeners care about 1 block old data
-              }
-            }
+                1: 0, // 0 listeners care about 1 block old data
+              },
+            },
           },
-          1
-        )
+          1,
+        ),
       ).toEqual({
-        abc: 4
+        abc: 4,
       })
     })
   })
@@ -129,19 +129,19 @@ describe('multicall updater', () => {
     })
     it('returns only outdated keys', () => {
       expect(
-        outdatedListeningKeys({ [1]: { abc: { data: '0x', blockNumber: 2 } } }, { abc: 1, def: 1 }, 1, 2)
+        outdatedListeningKeys({ [1]: { abc: { data: '0x', blockNumber: 2 } } }, { abc: 1, def: 1 }, 1, 2),
       ).toEqual(['def'])
     })
     it('returns only keys not being fetched', () => {
       expect(
         outdatedListeningKeys(
           {
-            [1]: { abc: { data: '0x', blockNumber: 2 }, def: { fetchingBlockNumber: 2 } }
+            [1]: { abc: { data: '0x', blockNumber: 2 }, def: { fetchingBlockNumber: 2 } },
           },
           { abc: 1, def: 1 },
           1,
-          2
-        )
+          2,
+        ),
       ).toEqual([])
     })
     it('returns keys being fetched for old blocks', () => {
@@ -150,8 +150,8 @@ describe('multicall updater', () => {
           { [1]: { abc: { data: '0x', blockNumber: 2 }, def: { fetchingBlockNumber: 1 } } },
           { abc: 1, def: 1 },
           1,
-          2
-        )
+          2,
+        ),
       ).toEqual(['def'])
     })
     it('respects blocks per fetch', () => {
@@ -160,8 +160,8 @@ describe('multicall updater', () => {
           { [1]: { abc: { data: '0x', blockNumber: 2 }, def: { data: '0x', fetchingBlockNumber: 1 } } },
           { abc: 2, def: 2 },
           1,
-          3
-        )
+          3,
+        ),
       ).toEqual(['def'])
     })
   })

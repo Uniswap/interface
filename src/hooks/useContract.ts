@@ -4,7 +4,7 @@ import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.
 import { useMemo } from 'react'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
-  ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
+  ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
 } from '../constants/abis/argent-wallet-detector'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
@@ -42,7 +42,7 @@ export function useContract(address: string | undefined, ABI: any, withSignerIfP
 export function useContractForReading(
   address: string | undefined,
   ABI: any,
-  withSignerIfPossible = true
+  withSignerIfPossible = true,
 ): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useMemo(() => {
@@ -61,7 +61,7 @@ export function useContractForReading(
 export function useMultipleContracts(
   addresses: string[] | undefined,
   ABI: any,
-  withSignerIfPossible = true
+  withSignerIfPossible = true,
 ): {
   [key: string]: Contract
 } | null {
@@ -112,7 +112,7 @@ export function useArgentWalletDetectorContract(): Contract | null {
   return useContract(
     chainId === ChainId.MAINNET ? ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS : undefined,
     ARGENT_WALLET_DETECTOR_ABI,
-    false
+    false,
   )
 }
 
@@ -154,7 +154,7 @@ export function useSocksController(): Contract | null {
   return useContract(
     chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
     UNISOCKS_ABI,
-    false
+    false,
   )
 }
 
@@ -171,7 +171,7 @@ export function useZapContract(): Contract | null {
 }
 
 export function useFairLaunchV1Contracts(
-  withSignerIfPossible?: boolean
+  withSignerIfPossible?: boolean,
 ): {
   [key: string]: Contract
 } | null {
@@ -181,7 +181,7 @@ export function useFairLaunchV1Contracts(
 }
 
 export function useFairLaunchV2Contracts(
-  withSignerIfPossible?: boolean
+  withSignerIfPossible?: boolean,
 ): {
   [key: string]: Contract
 } | null {
@@ -191,7 +191,7 @@ export function useFairLaunchV2Contracts(
 }
 
 export function useFairLaunchContracts(
-  withSignerIfPossible?: boolean
+  withSignerIfPossible?: boolean,
 ): {
   [key: string]: Contract
 } | null {
@@ -243,7 +243,7 @@ export function useFairLaunchContract(address: string, withSignerIfPossible?: bo
 }
 
 export function useRewardLockerContracts(
-  withSignerIfPossible?: boolean
+  withSignerIfPossible?: boolean,
 ): {
   [key: string]: Contract
 } | null {
@@ -251,26 +251,26 @@ export function useRewardLockerContracts(
   const rewardLockerV1Addresses = useMemo(
     () =>
       Object.keys(rewardLockerAddressesWithVersion).filter(
-        address => rewardLockerAddressesWithVersion[address] === RewardLockerVersion.V1
+        address => rewardLockerAddressesWithVersion[address] === RewardLockerVersion.V1,
       ),
-    [rewardLockerAddressesWithVersion]
+    [rewardLockerAddressesWithVersion],
   )
   const rewardLockerV2Addresses = useMemo(
     () =>
       Object.keys(rewardLockerAddressesWithVersion).filter(
-        address => rewardLockerAddressesWithVersion[address] === RewardLockerVersion.V2
+        address => rewardLockerAddressesWithVersion[address] === RewardLockerVersion.V2,
       ),
-    [rewardLockerAddressesWithVersion]
+    [rewardLockerAddressesWithVersion],
   )
   const rewardLockerV1Contracts = useMultipleContracts(rewardLockerV1Addresses, REWARD_LOCKER_ABI, withSignerIfPossible)
   const rewardLockerV2Contracts = useMultipleContracts(
     rewardLockerV2Addresses,
     REWARD_LOCKER_V2_ABI,
-    withSignerIfPossible
+    withSignerIfPossible,
   )
   return useMemo(() => ({ ...rewardLockerV1Contracts, ...rewardLockerV2Contracts }), [
     rewardLockerV1Contracts,
-    rewardLockerV2Contracts
+    rewardLockerV2Contracts,
   ])
 }
 

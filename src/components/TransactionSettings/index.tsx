@@ -15,7 +15,7 @@ import {
   useShowLiveChart,
   useShowTradeRoutes,
   useToggleLiveChart,
-  useToggleTradeRoutes
+  useToggleTradeRoutes,
 } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useModalOpen, useToggleTransactionSettingsMenu, useToggleModal } from 'state/application/hooks'
@@ -30,11 +30,11 @@ import { isMobile } from 'react-device-detect'
 enum SlippageError {
   InvalidInput = 'InvalidInput',
   RiskyLow = 'RiskyLow',
-  RiskyHigh = 'RiskyHigh'
+  RiskyHigh = 'RiskyHigh',
 }
 
 enum DeadlineError {
-  InvalidInput = 'InvalidInput'
+  InvalidInput = 'InvalidInput',
 }
 
 const FancyButton = styled.button`
@@ -337,7 +337,7 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
             style={{
               fontSize: '14px',
               paddingTop: '7px',
-              color: slippageError === SlippageError.InvalidInput ? 'red' : '#F3841E'
+              color: slippageError === SlippageError.InvalidInput ? 'red' : '#F3841E',
             }}
           >
             {slippageError === SlippageError.InvalidInput
@@ -379,7 +379,7 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
 
 export default function TransactionSettings({
   tradeValid = false,
-  isShowDisplaySettings = false
+  isShowDisplaySettings = false,
 }: {
   tradeValid?: boolean
   isShowDisplaySettings?: boolean
@@ -452,7 +452,7 @@ export default function TransactionSettings({
               style={{
                 border: 'none',
                 background: theme.warning,
-                fontSize: '18px'
+                fontSize: '18px',
               }}
               onClick={() => {
                 if (confirmText.trim().toLowerCase() === 'confirm') {

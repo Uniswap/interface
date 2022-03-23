@@ -74,7 +74,7 @@ const SelectNetworkButton = styled(ButtonEmpty)`
 
 export default function SelectNetworkModal({
   chainId = ChainId.MAINNET,
-  onNetworkSelect
+  onNetworkSelect,
 }: {
   chainId: ChainId | undefined
   onNetworkSelect: (chainId: number) => void
@@ -105,7 +105,7 @@ export default function SelectNetworkModal({
             ChainId.FANTOM,
             ChainId.CRONOS,
             ChainId.ARBITRUM,
-            ChainId.AURORA
+            ChainId.AURORA,
           ].map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (

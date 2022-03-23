@@ -23,7 +23,7 @@ export default function ConfirmHarvestingModal() {
   const confirmationContent = useCallback(
     () =>
       yieldPoolsError ? <TransactionErrorContent onDismiss={handleConfirmDismiss} message={yieldPoolsError} /> : null,
-    [handleConfirmDismiss, yieldPoolsError]
+    [handleConfirmDismiss, yieldPoolsError],
   )
 
   return (

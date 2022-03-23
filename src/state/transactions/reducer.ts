@@ -4,7 +4,7 @@ import {
   checkedTransaction,
   clearAllTransactions,
   finalizeTransaction,
-  SerializableTransactionReceipt
+  SerializableTransactionReceipt,
 } from './actions'
 
 const now = () => new Date().getTime()
@@ -42,7 +42,7 @@ export default createReducer(initialState, builder =>
         const txs = transactions[chainId] ?? {}
         txs[hash] = { hash, approval, type, summary, claim, arbitrary, from, addedTime: now() }
         transactions[chainId] = txs
-      }
+      },
     )
     .addCase(clearAllTransactions, (transactions, { payload: { chainId } }) => {
       if (!transactions[chainId]) return
@@ -66,5 +66,5 @@ export default createReducer(initialState, builder =>
       }
       tx.receipt = receipt
       tx.confirmedTime = now()
-    })
+    }),
 )

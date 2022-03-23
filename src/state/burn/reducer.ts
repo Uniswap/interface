@@ -10,7 +10,7 @@ export interface BurnState {
 const initialState: BurnState = {
   independentField: Field.LIQUIDITY_PERCENT,
   independentTokenField: Field.CURRENCY_A,
-  typedValue: ''
+  typedValue: '',
 }
 
 export default createReducer<BurnState>(initialState, builder =>
@@ -19,13 +19,13 @@ export default createReducer<BurnState>(initialState, builder =>
       return {
         ...state,
         independentField: field,
-        typedValue
+        typedValue,
       }
     })
     .addCase(switchTokenField, (state, { payload: { field } }) => {
       return {
         ...state,
-        independentTokenField: field
+        independentTokenField: field,
       }
-    })
+    }),
 )

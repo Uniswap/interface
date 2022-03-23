@@ -12,7 +12,7 @@ import { useWETHContract } from './useContract'
 export enum WrapType {
   NOT_APPLICABLE,
   WRAP,
-  UNWRAP
+  UNWRAP,
 }
 
 const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE }
@@ -25,7 +25,7 @@ const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE }
 export default function useWrapCallback(
   inputCurrency: Currency | undefined,
   outputCurrency: Currency | undefined,
-  typedValue: string | undefined
+  typedValue: string | undefined,
 ): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: string } {
   const { chainId, account } = useActiveWeb3React()
   const wethContract = useWETHContract()
@@ -49,17 +49,17 @@ export default function useWrapCallback(
             ? async () => {
                 try {
                   const estimateGas = await wethContract.estimateGas.deposit({
-                    value: `0x${inputAmount.raw.toString(16)}`
+                    value: `0x${inputAmount.raw.toString(16)}`,
                   })
                   const txReceipt = await wethContract.deposit({
                     value: `0x${inputAmount.raw.toString(16)}`,
-                    gasLimit: calculateGasMargin(estimateGas)
+                    gasLimit: calculateGasMargin(estimateGas),
                   })
                   addTransactionWithType(txReceipt, {
                     type: 'Wrap',
                     summary: `${inputAmount.toSignificant(6)} ${nativeTokenSymbol} to ${inputAmount.toSignificant(
-                      6
-                    )} W${nativeTokenSymbol}`
+                      6,
+                    )} W${nativeTokenSymbol}`,
                   })
                 } catch (error) {
                   console.error('Could not deposit', error)
@@ -70,7 +70,7 @@ export default function useWrapCallback(
           ? t`Enter an amount`
           : sufficientBalance
           ? undefined
-          : t`Insufficient ${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`
+          : t`Insufficient ${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`,
       }
     } else if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
       return {
@@ -81,13 +81,13 @@ export default function useWrapCallback(
                 try {
                   const estimateGas = await wethContract.estimateGas.withdraw(`0x${inputAmount.raw.toString(16)}`)
                   const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`, {
-                    gasLimit: calculateGasMargin(estimateGas)
+                    gasLimit: calculateGasMargin(estimateGas),
                   })
                   addTransactionWithType(txReceipt, {
                     type: 'Unwrap',
                     summary: `${inputAmount.toSignificant(6)} W${nativeTokenSymbol} to ${inputAmount.toSignificant(
-                      6
-                    )} ${nativeTokenSymbol}`
+                      6,
+                    )} ${nativeTokenSymbol}`,
                   })
                 } catch (error) {
                   console.error('Could not withdraw', error)
@@ -98,7 +98,7 @@ export default function useWrapCallback(
           ? t`Enter an amount`
           : sufficientBalance
           ? undefined
-          : t`Insufficient W${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`
+          : t`Insufficient W${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`,
       }
     } else {
       return NOT_APPLICABLE

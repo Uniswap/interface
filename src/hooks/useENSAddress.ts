@@ -23,13 +23,13 @@ export default function useENSAddress(ensName?: string | null): { loading: boole
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
     resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
-    false
+    false,
   )
   const addr = useSingleCallResult(resolverContract, 'addr', ensNodeArgument)
 
   const changed = debouncedName !== ensName
   return {
     address: changed ? null : addr.result?.[0] ?? null,
-    loading: changed || resolverAddress.loading || addr.loading
+    loading: changed || resolverAddress.loading || addr.loading,
   }
 }

@@ -82,14 +82,14 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             pair.token0,
             tokenAmountDmmToSushi(totalPoolTokens),
             tokenAmountDmmToSushi(userPoolBalance),
-            false
+            false,
           ),
           pair.getLiquidityValue(
             pair.token1,
             tokenAmountDmmToSushi(totalPoolTokens),
             tokenAmountDmmToSushi(userPoolBalance),
-            false
-          )
+            false,
+          ),
         ]
       : [undefined, undefined]
 
@@ -213,14 +213,14 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             pair.token0,
             tokenAmountDmmToSushi(totalPoolTokens),
             tokenAmountDmmToSushi(userPoolBalance),
-            false
+            false,
           ),
           pair.getLiquidityValue(
             pair.token1,
             tokenAmountDmmToSushi(totalPoolTokens),
             tokenAmountDmmToSushi(userPoolBalance),
-            false
-          )
+            false,
+          ),
         ]
       : [undefined, undefined]
 

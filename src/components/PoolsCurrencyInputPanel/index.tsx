@@ -120,7 +120,7 @@ export default function PoolsCurrencyInputPanel({
   pair = null, // used for double token logo
   otherCurrency,
   id,
-  showCommonBases
+  showCommonBases,
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
 

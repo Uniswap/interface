@@ -167,7 +167,7 @@ export default function CreateReferral() {
           isShowTokens
             ? `&inputCurrency=${currencyId(currencyA as Currency, chainId)}&outputCurrency=${currencyId(
                 currencyB as Currency,
-                chainId
+                chainId,
               )}`
             : ''
         }${isShowChain ? `&networkId=${chainId}` : ''}`
@@ -256,7 +256,7 @@ export default function CreateReferral() {
             <AddressBox
               style={{
                 marginBottom: !above1000 ? '24px' : '',
-                border: !isValidAddress && touched ? `1px solid ${theme.red}` : undefined
+                border: !isValidAddress && touched ? `1px solid ${theme.red}` : undefined,
               }}
             >
               <Text fontSize={12} color={theme.subText} marginBottom="8px">

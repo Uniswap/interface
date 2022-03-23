@@ -16,7 +16,7 @@ import {
   Percent,
   Token,
   TokenAmount,
-  WETH
+  WETH,
 } from '@dynamic-amm/sdk'
 import { ZAP_ADDRESSES, FEE_OPTIONS } from 'constants/index'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
@@ -24,7 +24,7 @@ import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
-  TransactionErrorContent
+  TransactionErrorContent,
 } from 'components/TransactionConfirmationModal'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
@@ -66,13 +66,13 @@ import {
   DetailBox,
   TokenWrapper,
   ModalDetailWrapper,
-  CurrentPriceWrapper
+  CurrentPriceWrapper,
 } from './styled'
 
 export default function ZapOut({
   currencyIdA,
   currencyIdB,
-  pairAddress
+  pairAddress,
 }: {
   currencyIdA: string
   currencyIdB: string
@@ -86,7 +86,7 @@ export default function ZapOut({
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
     currencyA,
     currencyB,
-    chainId
+    chainId,
   ])
 
   const theme = useContext(ThemeContext)
@@ -108,7 +108,7 @@ export default function ZapOut({
     amountsMin,
     insufficientLiquidity,
     price,
-    error
+    error,
   } = useDerivedZapOutInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
   const { onUserInput: _onUserInput, onSwitchField } = useZapOutActionHandlers()
 
@@ -150,7 +150,7 @@ export default function ZapOut({
     [Field.CURRENCY_A]:
       independentField === Field.CURRENCY_A ? typedValue : parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? '',
     [Field.CURRENCY_B]:
-      independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
+      independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? '',
   }
 
   // pair contract
@@ -160,7 +160,7 @@ export default function ZapOut({
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(
     parsedAmounts[Field.LIQUIDITY],
-    !!chainId ? ZAP_ADDRESSES[chainId] : undefined
+    !!chainId ? ZAP_ADDRESSES[chainId] : undefined,
   )
 
   const isArgentWallet = useIsArgentWallet()
@@ -183,36 +183,36 @@ export default function ZapOut({
       { name: 'name', type: 'string' },
       { name: 'version', type: 'string' },
       { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' }
+      { name: 'verifyingContract', type: 'address' },
     ]
     const domain = {
       name: !isWithoutDynamicFee ? 'KyberDMM LP' : 'KyberSwap LP',
       version: '1',
       chainId: chainId,
-      verifyingContract: pair.liquidityToken.address
+      verifyingContract: pair.liquidityToken.address,
     }
     const Permit = [
       { name: 'owner', type: 'address' },
       { name: 'spender', type: 'address' },
       { name: 'value', type: 'uint256' },
       { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' }
+      { name: 'deadline', type: 'uint256' },
     ]
     const message = {
       owner: account,
       spender: ZAP_ADDRESSES[chainId],
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
-      deadline: deadline.toNumber()
+      deadline: deadline.toNumber(),
     }
     const data = JSON.stringify({
       types: {
         EIP712Domain,
-        Permit
+        Permit,
       },
       domain,
       primaryType: 'Permit',
-      message
+      message,
     })
 
     library
@@ -223,7 +223,7 @@ export default function ZapOut({
           v: signature.v,
           r: signature.r,
           s: signature.s,
-          deadline: deadline.toNumber()
+          deadline: deadline.toNumber(),
         })
       })
       .catch(error => {
@@ -240,15 +240,15 @@ export default function ZapOut({
       setSignatureData(null)
       return _onUserInput(field, typedValue)
     },
-    [_onUserInput]
+    [_onUserInput],
   )
 
   const onLiquidityInput = useCallback((typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue), [
-    onUserInput
+    onUserInput,
   ])
   const onCurrencyInput = useCallback((typedValue: string): void => onUserInput(independentTokenField, typedValue), [
     independentTokenField,
-    onUserInput
+    onUserInput,
   ])
 
   // tx sending
@@ -281,7 +281,7 @@ export default function ZapOut({
           pairAddress,
           account,
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          deadline.toHexString()
+          deadline.toHexString(),
         ]
       }
       // zapOut
@@ -296,7 +296,7 @@ export default function ZapOut({
           independentTokenField === Field.CURRENCY_A
             ? amountsMin[Field.CURRENCY_A].toString()
             : amountsMin[Field.CURRENCY_B].toString(),
-          deadline.toHexString()
+          deadline.toHexString(),
         ]
       }
     }
@@ -315,7 +315,7 @@ export default function ZapOut({
           false,
           signatureData.v,
           signatureData.r,
-          signatureData.s
+          signatureData.s,
         ]
       }
       // zapOutPermit
@@ -334,7 +334,7 @@ export default function ZapOut({
           false,
           signatureData.v,
           signatureData.r,
-          signatureData.s
+          signatureData.s,
         ]
       }
     } else {
@@ -361,12 +361,12 @@ export default function ZapOut({
             }
 
             return undefined
-          })
-      )
+          }),
+      ),
     )
 
     const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(safeGasEstimate =>
-      BigNumber.isBigNumber(safeGasEstimate)
+      BigNumber.isBigNumber(safeGasEstimate),
     )
 
     // all estimations failed...
@@ -378,7 +378,7 @@ export default function ZapOut({
 
       setAttemptingTxn(true)
       await router[methodName](...args, {
-        gasLimit: safeGasEstimate
+        gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {
           if (!!currencyA && !!currencyB) {
@@ -386,7 +386,7 @@ export default function ZapOut({
 
             addTransactionWithType(response, {
               type: 'Remove liquidity',
-              summary: parsedAmounts[independentTokenField]?.toSignificant(6) + ' ' + independentToken?.symbol
+              summary: parsedAmounts[independentTokenField]?.toSignificant(6) + ' ' + independentToken?.symbol,
             })
 
             setTxHash(response.hash)
@@ -414,7 +414,7 @@ export default function ZapOut({
     (value: number) => {
       onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -430,7 +430,7 @@ export default function ZapOut({
 
   const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
-    liquidityPercentChangeCallback
+    liquidityPercentChangeCallback,
   )
 
   const handleSwitchCurrency = useCallback(() => {
@@ -444,7 +444,7 @@ export default function ZapOut({
     noZapAmounts[independentTokenField] &&
     !(parsedAmounts[independentTokenField] as TokenAmount).lessThan(noZapAmounts[independentTokenField] as TokenAmount)
       ? (parsedAmounts[independentTokenField] as TokenAmount).subtract(
-          noZapAmounts[independentTokenField] as TokenAmount
+          noZapAmounts[independentTokenField] as TokenAmount,
         )
       : undefined
 
@@ -545,7 +545,7 @@ export default function ZapOut({
                           independentTokenField === Field.CURRENCY_A
                             ? amountsMin[Field.CURRENCY_A]
                             : amountsMin[Field.CURRENCY_B],
-                          independentToken?.decimals
+                          independentToken?.decimals,
                         )}{' '}
                         {independentToken?.symbol}
                       </TYPE.black>
@@ -642,7 +642,7 @@ export default function ZapOut({
                       pair.liquidityToken?.address,
                       pair.liquidityToken?.decimals,
                       `LP Tokens`,
-                      `LP Tokens`
+                      `LP Tokens`,
                     )
                   }
                   id="liquidity-amount"
@@ -726,7 +726,7 @@ export default function ZapOut({
                               independentTokenField === Field.CURRENCY_A
                                 ? amountsMin[Field.CURRENCY_A]
                                 : amountsMin[Field.CURRENCY_B],
-                              independentToken?.decimals
+                              independentToken?.decimals,
                             )}{' '}
                             {independentToken?.symbol}
                           </TYPE.black>

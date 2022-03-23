@@ -31,9 +31,9 @@ export default function AddTokenToMetaMask({ token, chainId }: { token: Token; c
               address: tokenAddress,
               symbol: tokenSymbol,
               decimals: tokenDecimals,
-              image: tokenImage
-            }
-          }
+              image: tokenImage,
+            },
+          },
         })
       }
     } catch (error) {

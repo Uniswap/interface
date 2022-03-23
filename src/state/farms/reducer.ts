@@ -18,7 +18,7 @@ const initialState: FarmsState = {
   showConfirm: false,
   attemptingTxn: false,
   txHash: '',
-  error: ''
+  error: '',
 }
 
 export default createReducer<FarmsState>(initialState, builder =>
@@ -26,13 +26,13 @@ export default createReducer<FarmsState>(initialState, builder =>
     .addCase(setFarmsData, (state, { payload: data }) => {
       return {
         ...state,
-        data
+        data,
       }
     })
     .addCase(setLoading, (state, { payload: loading }) => {
       return {
         ...state,
-        loading
+        loading,
       }
     })
     .addCase(setShowConfirm, (state, { payload: showConfirm }) => {
@@ -47,7 +47,7 @@ export default createReducer<FarmsState>(initialState, builder =>
     .addCase(setYieldPoolsError, (state, { payload: error }) => {
       return {
         ...state,
-        error
+        error,
       }
-    })
+    }),
 )

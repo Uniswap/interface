@@ -17,13 +17,13 @@ const useVesting = (rewardLockerAddress: string) => {
 
       const estimateGas = await lockerContract.estimateGas.vestScheduleAtIndices(token, index)
       const tx = await lockerContract.vestScheduleAtIndices(token, index, {
-        gasLimit: calculateGasMargin(estimateGas)
+        gasLimit: calculateGasMargin(estimateGas),
       })
       addTransactionWithType(tx, { type: 'Claim', summary: 'reward' })
 
       return tx.hash
     },
-    [lockerContract, addTransactionWithType]
+    [lockerContract, addTransactionWithType],
   )
 
   const vestMultipleTokensAtIndices = useCallback(
@@ -34,13 +34,13 @@ const useVesting = (rewardLockerAddress: string) => {
 
       const estimateGas = await lockerContract.estimateGas.vestScheduleForMultipleTokensAtIndices(tokens, indices)
       const tx = await lockerContract.vestScheduleForMultipleTokensAtIndices(tokens, indices, {
-        gasLimit: calculateGasMargin(estimateGas)
+        gasLimit: calculateGasMargin(estimateGas),
       })
       addTransactionWithType(tx, { type: 'Claim', summary: 'all rewards' })
 
       return tx.hash
     },
-    [lockerContract, addTransactionWithType]
+    [lockerContract, addTransactionWithType],
   )
 
   return { vestAtIndex, vestMultipleTokensAtIndices }

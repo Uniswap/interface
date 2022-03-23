@@ -50,7 +50,7 @@ export default function useTokenInfo(token: Token | undefined): { data: TokenInf
 
       // Retry after 20 seconds.
       setTimeout(() => revalidate({ retryCount }), 20000)
-    }
+    },
   })
 
   if (error && process.env.NODE_ENV === 'development') {
@@ -67,7 +67,7 @@ export default function useTokenInfo(token: Token | undefined): { data: TokenInf
     totalSupply: data?.market_data?.total_supply || 0,
     allTimeHigh: data?.market_data?.ath?.usd || 0,
     allTimeLow: data?.market_data?.atl?.usd || 0,
-    tradingVolume: data?.market_data?.total_volume?.usd || 0
+    tradingVolume: data?.market_data?.total_volume?.usd || 0,
   }
 
   return { data: result, loading, error }

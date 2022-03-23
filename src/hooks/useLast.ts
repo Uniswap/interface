@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
  */
 export default function useLast<T>(
   value: T | undefined | null,
-  filterFn?: (value: T | null | undefined) => boolean
+  filterFn?: (value: T | null | undefined) => boolean,
 ): T | null | undefined {
   const [last, setLast] = useState<T | null | undefined>(filterFn && filterFn(value) ? value : undefined)
   useEffect(() => {

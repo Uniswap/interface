@@ -17,7 +17,7 @@ export default function TabYourStakedItems({ poolData }: { poolData: SubgraphPoo
     userStakedToken0Balance,
     userStakedToken1Balance,
     userStakedBalance,
-    userStakedBalanceUSD
+    userStakedBalanceUSD,
   } = useUserStakedBalance(poolData)
 
   return (

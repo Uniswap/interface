@@ -55,7 +55,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
         fullyAmount: BigNumber.from(0),
         totalAmount: BigNumber.from(0),
         unlockedAmount: BigNumber.from(0),
-        token: schedule[4] as Token
+        token: schedule[4] as Token,
       }
     }
 
@@ -96,7 +96,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
       result[address].vestableIndexes.push(schedule[5])
     }
     result[address].vestableAmount = result[address].vestableAmount.add(
-      vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
+      vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount,
     )
 
     if (!fullyVestedAlready && !!currentBlockNumber && BigNumber.from(currentBlockNumber).gt(schedule[1])) {
@@ -111,22 +111,22 @@ const Vesting = ({ loading }: { loading: boolean }) => {
   const totalUSD = useFarmRewardsUSD(
     Object.keys(info).map(k => {
       return { token: info[k].token, amount: info[k].totalAmount } as Reward
-    })
+    }),
   )
   const lockedUSD = useFarmRewardsUSD(
     Object.keys(info).map(k => {
       return { token: info[k].token, amount: info[k].totalAmount.sub(info[k].unlockedAmount) } as Reward
-    })
+    }),
   )
   const claimedUSD = useFarmRewardsUSD(
     Object.keys(info).map(k => {
       return { token: info[k].token, amount: info[k].unlockedAmount.sub(info[k].vestableAmount) } as Reward
-    })
+    }),
   )
   const unlockedUSD = useFarmRewardsUSD(
     Object.keys(info).map(k => {
       return { token: info[k].token, amount: info[k].vestableAmount } as Reward
-    })
+    }),
   )
 
   const totalBlock = (
@@ -290,7 +290,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
   )
 
   const noVesting = Object.keys(rewardLockerAddressesWithVersion).every(
-    rewardLockerAddress => !schedulesByRewardLocker[rewardLockerAddress]?.length
+    rewardLockerAddress => !schedulesByRewardLocker[rewardLockerAddress]?.length,
   )
 
   return (
@@ -372,7 +372,7 @@ const Vesting = ({ loading }: { loading: boolean }) => {
           style={{
             backgroundColor: theme.background,
             borderRadius: '8px',
-            boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.04)'
+            boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.04)',
           }}
         >
           {Object.keys(rewardLockerAddressesWithVersion)

@@ -17,7 +17,7 @@ const TimeframePickerItem = ({ text, active, onClick }: { text: string; active: 
         fontSize: '12px',
         fontWeight: 500,
         lineHeight: '14px',
-        cursor: 'pointer'
+        cursor: 'pointer',
       }}
       onClick={onClick}
     >
@@ -28,7 +28,7 @@ const TimeframePickerItem = ({ text, active, onClick }: { text: string; active: 
 
 const TimeframePicker = ({
   activeTimeframe,
-  setActiveTimeframe
+  setActiveTimeframe,
 }: {
   activeTimeframe: TrueSightTimeframe
   setActiveTimeframe: (timeframe: TrueSightTimeframe) => void

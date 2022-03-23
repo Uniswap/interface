@@ -27,7 +27,7 @@ export function useKNCMarketPrice() {
 
       // Retry after 20 seconds.
       setTimeout(() => revalidate({ retryCount }), 20000)
-    }
+    },
   })
 
   if (error && process.env.NODE_ENV === 'development') {
@@ -66,7 +66,7 @@ export default function useTokensMarketPrice(tokens: (Token | null | undefined)[
 
       // Retry after 20 seconds.
       setTimeout(() => revalidate({ retryCount }), 20000)
-    }
+    },
   })
 
   if (error && process.env.NODE_ENV === 'development') {

@@ -17,7 +17,7 @@ import { reportException } from 'utils/sentry'
 export enum SwapCallbackState {
   INVALID,
   LOADING,
-  VALID
+  VALID,
 }
 
 interface SwapCall {
@@ -46,7 +46,7 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
 function useSwapCallArguments(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -67,8 +67,8 @@ function useSwapCallArguments(
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
-        deadline: deadline.toNumber()
-      })
+        deadline: deadline.toNumber(),
+      }),
     ]
 
     if (trade.tradeType === TradeType.EXACT_INPUT) {
@@ -77,8 +77,8 @@ function useSwapCallArguments(
           feeOnTransfer: true,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
-          deadline: deadline.toNumber()
-        })
+          deadline: deadline.toNumber(),
+        }),
       )
     } else if (!!tradeBestExactInAnyway) {
       swapMethods.push(
@@ -86,8 +86,8 @@ function useSwapCallArguments(
           feeOnTransfer: true,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
-          deadline: deadline.toNumber()
-        })
+          deadline: deadline.toNumber(),
+        }),
       )
     }
 
@@ -100,7 +100,7 @@ function useSwapCallArguments(
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -130,7 +130,7 @@ export function useSwapCallback(
           swapCalls.map(call => {
             const {
               parameters: { methodName, args, value },
-              contract
+              contract,
             } = call
             const options = !value || isZero(value) ? {} : { value }
 
@@ -138,7 +138,7 @@ export function useSwapCallback(
               .then(gasEstimate => {
                 return {
                   call,
-                  gasEstimate
+                  gasEstimate,
                 }
               })
               .catch(gasError => {
@@ -167,13 +167,13 @@ export function useSwapCallback(
                     return { call, error: new Error(errorMessage) }
                   })
               })
-          })
+          }),
         )
 
         // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
         const successfulEstimation = estimatedCalls.find(
           (el, ix, list): el is SuccessfulCall =>
-            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
+            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1]),
         )
         // return new Promise((resolve, reject) => resolve(""))
         if (!successfulEstimation) {
@@ -185,14 +185,14 @@ export function useSwapCallback(
         const {
           call: {
             contract,
-            parameters: { methodName, args, value }
+            parameters: { methodName, args, value },
           },
-          gasEstimate
+          gasEstimate,
         } = successfulEstimation
 
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
-          ...(value && !isZero(value) ? { value, from: account } : { from: account })
+          ...(value && !isZero(value) ? { value, from: account } : { from: account }),
         })
           .then((response: any) => {
             const inputSymbol = convertToNativeTokenFromETH(trade.inputAmount.currency, chainId).symbol
@@ -212,7 +212,7 @@ export function useSwapCallback(
 
             addTransactionWithType(response, {
               type: 'Swap',
-              summary: withRecipient
+              summary: withRecipient,
             })
 
             return response.hash
@@ -228,7 +228,7 @@ export function useSwapCallback(
             }
           })
       },
-      error: null
+      error: null,
     }
   }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransactionWithType])
 }

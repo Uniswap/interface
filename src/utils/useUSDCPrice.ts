@@ -20,12 +20,12 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
     () => [
       [
         chainId && wrapped && currencyEquals(WETH[chainId], wrapped) ? undefined : currency,
-        chainId ? WETH[chainId] : undefined
+        chainId ? WETH[chainId] : undefined,
       ],
       [wrapped?.equals(USDC) ? undefined : wrapped, USDC],
-      [chainId ? WETH[chainId] : undefined, USDC]
+      [chainId ? WETH[chainId] : undefined, USDC],
     ],
-    [chainId, currency, wrapped]
+    [chainId, currency, wrapped],
   )
   const p0 = useUnAmplifiedPairsFull([tokenPairs[0]])
   const [ethPairState, ethPair] = p0.length > 0 ? p0[0] : [PairState.INVALID, null]

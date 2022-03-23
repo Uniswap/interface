@@ -12,7 +12,7 @@ import {
   updateKNCPrice,
   updateChainIdWhenNotConnected,
   setExchangeSubgraphClient,
-  setGasPrice
+  setGasPrice,
 } from './actions'
 import { exchangeClients } from 'apollo/client'
 
@@ -43,7 +43,7 @@ const initialState: ApplicationState = {
   ethPrice: {},
   kncPrice: '',
   chainIdWhenNotConnected: ChainId.MAINNET,
-  exchangeSubgraphClients: exchangeClients
+  exchangeSubgraphClients: exchangeClients,
 }
 
 export default createReducer(initialState, builder =>
@@ -65,8 +65,8 @@ export default createReducer(initialState, builder =>
           key: key || nanoid(),
           show: true,
           content,
-          removeAfterMs
-        }
+          removeAfterMs,
+        },
       ])
     })
     .addCase(removePopup, (state, { payload: { key } }) => {
@@ -92,5 +92,5 @@ export default createReducer(initialState, builder =>
     })
     .addCase(setGasPrice, (state, { payload: gasPrice }) => {
       state.gasPrice = gasPrice as GasPrice
-    })
+    }),
 )

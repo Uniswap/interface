@@ -26,7 +26,7 @@ export enum PairState {
   LOADING,
   NOT_EXISTS,
   EXISTS,
-  INVALID
+  INVALID,
 }
 
 export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
@@ -36,9 +36,9 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     () =>
       currencies.map(([currencyA, currencyB]) => [
         wrappedCurrency(currencyA, chainId),
-        wrappedCurrency(currencyB, chainId)
+        wrappedCurrency(currencyB, chainId),
       ]),
-    [chainId, currencies]
+    [chainId, currencies],
   )
 
   const pairAddresses = useMemo(
@@ -51,19 +51,19 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
                 tokenA.address,
                 tokenA.decimals,
                 tokenA.symbol,
-                tokenA.name
+                tokenA.name,
               ),
               new TokenSUSHI(
                 convertChainIdFromDmmToSushi(tokenB.chainId),
                 tokenB.address,
                 tokenB.decimals,
                 tokenB.symbol,
-                tokenB.name
-              )
+                tokenB.name,
+              ),
             )
           : undefined
       }),
-    [tokens]
+    [tokens],
   )
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
@@ -88,9 +88,9 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
               token0.address,
               token0.decimals,
               token0.symbol,
-              token0.name
+              token0.name,
             ),
-            reserve0.toString()
+            reserve0.toString(),
           ),
           new TokenAmount(
             new TokenSUSHI(
@@ -98,11 +98,11 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
               token1.address,
               token1.decimals,
               token1.symbol,
-              token1.name
+              token1.name,
             ),
-            reserve1.toString()
-          )
-        )
+            reserve1.toString(),
+          ),
+        ),
       ]
     })
   }, [results, tokens])

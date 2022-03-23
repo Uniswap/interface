@@ -22,7 +22,7 @@ export default function ConfirmVestingModal() {
 
   const confirmationContent = useCallback(
     () => (vestingError ? <TransactionErrorContent onDismiss={handleConfirmDismiss} message={vestingError} /> : null),
-    [handleConfirmDismiss, vestingError]
+    [handleConfirmDismiss, vestingError],
   )
 
   return (

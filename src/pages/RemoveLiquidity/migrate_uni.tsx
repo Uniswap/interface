@@ -55,15 +55,15 @@ const DashedLine = styled.div`
 
 export default function MigrateLiquidity({
   match: {
-    params: { currencyIdA, currencyIdB }
-  }
+    params: { currencyIdA, currencyIdB },
+  },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
     currencyA,
     currencyB,
-    chainId
+    chainId,
   ])
   const theme = useContext(ThemeContext)
 
@@ -76,7 +76,7 @@ export default function MigrateLiquidity({
   const { independentField, typedValue } = useBurnState()
   const { pair, parsedAmounts, unAmplifiedPairAddress, error } = useDerivedBurnInfoUNI(
     currencyA ?? undefined,
-    currencyB ?? undefined
+    currencyB ?? undefined,
   )
 
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
@@ -102,7 +102,7 @@ export default function MigrateLiquidity({
     [Field.CURRENCY_A]:
       independentField === Field.CURRENCY_A ? typedValue : parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? '',
     [Field.CURRENCY_B]:
-      independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
+      independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? '',
   }
 
   // pair contract
@@ -130,36 +130,36 @@ export default function MigrateLiquidity({
       { name: 'name', type: 'string' },
       { name: 'version', type: 'string' },
       { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' }
+      { name: 'verifyingContract', type: 'address' },
     ]
     const domain = {
       name: 'Uniswap V2',
       version: '1',
       chainId: chainId,
-      verifyingContract: pair.liquidityToken.address
+      verifyingContract: pair.liquidityToken.address,
     }
     const Permit = [
       { name: 'owner', type: 'address' },
       { name: 'spender', type: 'address' },
       { name: 'value', type: 'uint256' },
       { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' }
+      { name: 'deadline', type: 'uint256' },
     ]
     const message = {
       owner: account,
       spender: MIGRATE_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
-      deadline: deadline.toNumber()
+      deadline: deadline.toNumber(),
     }
     const data = JSON.stringify({
       types: {
         EIP712Domain,
-        Permit
+        Permit,
       },
       domain,
       primaryType: 'Permit',
-      message
+      message,
     })
 
     library
@@ -170,7 +170,7 @@ export default function MigrateLiquidity({
           v: signature.v,
           r: signature.r,
           s: signature.s,
-          deadline: deadline.toNumber()
+          deadline: deadline.toNumber(),
         })
       })
       .catch(error => {
@@ -187,7 +187,7 @@ export default function MigrateLiquidity({
       setSignatureData(null)
       return _onUserInput(field, typedValue)
     },
-    [_onUserInput]
+    [_onUserInput],
   )
 
   // tx sending
@@ -195,25 +195,25 @@ export default function MigrateLiquidity({
   const {
     parsedAmounts: parsedAmountsMaxA,
     liquidityMinted: liquidityMintedMaxA,
-    poolTokenPercentage: poolTokenPercentageMaxA
+    poolTokenPercentage: poolTokenPercentageMaxA,
   } = useDerivedMintInfoMigration(
     currencyA ?? undefined,
     currencyB ?? undefined,
     unAmplifiedPairAddress,
     FieldMint.CURRENCY_A,
-    formattedAmounts[Field.CURRENCY_A]
+    formattedAmounts[Field.CURRENCY_A],
   )
 
   const {
     parsedAmounts: parsedAmountsMaxB,
     liquidityMinted: liquidityMintedMaxB,
-    poolTokenPercentage: poolTokenPercentageMaxB
+    poolTokenPercentage: poolTokenPercentageMaxB,
   } = useDerivedMintInfoMigration(
     currencyA ?? undefined,
     currencyB ?? undefined,
     unAmplifiedPairAddress,
     FieldMint.CURRENCY_B,
-    formattedAmounts[Field.CURRENCY_B]
+    formattedAmounts[Field.CURRENCY_B],
   )
   const liquidityMinted =
     !liquidityMintedMaxA || !liquidityMintedMaxB
@@ -241,10 +241,10 @@ export default function MigrateLiquidity({
     //       }
     const {
       // [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
-      [FieldMint.CURRENCY_B]: currencyAmountBOfMaxA
+      [FieldMint.CURRENCY_B]: currencyAmountBOfMaxA,
     } = parsedAmountsMaxA
     const {
-      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB
+      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB,
       // [FieldMint.CURRENCY_B]: currencyAmountBOfMaxB
     } = parsedAmountsMaxB
 
@@ -312,7 +312,7 @@ export default function MigrateLiquidity({
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
-      [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
+      [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0],
     }
     if (!currencyA || !currencyB) throw new Error('missing tokens')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
@@ -330,17 +330,17 @@ export default function MigrateLiquidity({
 
       const currentRate = JSBI.divide(
         JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-        virtualReserveA.raw
+        virtualReserveA.raw,
       )
 
       const allowedSlippageAmount = JSBI.divide(
         JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
-        JSBI.BigInt(10000)
+        JSBI.BigInt(10000),
       )
 
       const vReserveRatioBounds = [
         JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
-        JSBI.add(currentRate, allowedSlippageAmount).toString()
+        JSBI.add(currentRate, allowedSlippageAmount).toString(),
       ]
 
       //co pool amp = 1
@@ -349,7 +349,7 @@ export default function MigrateLiquidity({
       }
       const amountsMinToAddPool = {
         [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountAToAddPool, allowedSlippage)[0],
-        [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountBToAddPool, allowedSlippage)[0]
+        [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountBToAddPool, allowedSlippage)[0],
       }
 
       // we have approval, use normal remove liquidity
@@ -368,7 +368,7 @@ export default function MigrateLiquidity({
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
             ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
             : [ZERO_ADDRESS, 10000],
-          deadline.toHexString()
+          deadline.toHexString(),
         ]
       }
       // we have a signataure, use permit versions of remove liquidity
@@ -390,7 +390,7 @@ export default function MigrateLiquidity({
             ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
             : [ZERO_ADDRESS, 10000],
           signatureData.deadline,
-          [false, signatureData.v, signatureData.r, signatureData.s]
+          [false, signatureData.v, signatureData.r, signatureData.s],
         ]
       } else {
         throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
@@ -410,7 +410,7 @@ export default function MigrateLiquidity({
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
           [ZERO_ADDRESS, 10000, ['0', '0']],
-          deadline.toHexString()
+          deadline.toHexString(),
         ]
       }
       // we have a signataure, use permit versions of remove liquidity
@@ -430,7 +430,7 @@ export default function MigrateLiquidity({
           amountsMin[Field.CURRENCY_B].toString(),
           [ZERO_ADDRESS, 10000, ['0', '0']],
           signatureData.deadline,
-          [false, signatureData.v, signatureData.r, signatureData.s]
+          [false, signatureData.v, signatureData.r, signatureData.s],
         ]
       } else {
         throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
@@ -444,12 +444,12 @@ export default function MigrateLiquidity({
           .catch(error => {
             console.error(`estimateGas failed`, methodName, args, error)
             return undefined
-          })
-      )
+          }),
+      ),
     )
 
     const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(safeGasEstimate =>
-      BigNumber.isBigNumber(safeGasEstimate)
+      BigNumber.isBigNumber(safeGasEstimate),
     )
 
     // all estimations failed...
@@ -461,7 +461,7 @@ export default function MigrateLiquidity({
 
       setAttemptingTxn(true)
       await migrator[methodName](...args, {
-        gasLimit: safeGasEstimate
+        gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {
           setAttemptingTxn(false)
@@ -486,7 +486,7 @@ export default function MigrateLiquidity({
     (value: number) => {
       onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
@@ -503,7 +503,7 @@ export default function MigrateLiquidity({
 
   const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
-    liquidityPercentChangeCallback
+    liquidityPercentChangeCallback,
   )
 
   function uniInfo() {

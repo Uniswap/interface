@@ -18,12 +18,12 @@ import { AggregationComparer } from './types'
 
 function tryReplaceScientificNotation(x: any) {
   if (Math.abs(x) < 1.0) {
-    var num = x
+    const num = x
       .toString()
       .split('e-')[0]
       .replace(/\.?0+$/, '')
       .replace('.', '')
-    var e = parseInt(x.toString().split('e-')[1])
+    const e = parseInt(x.toString().split('e-')[1])
     if (e) {
       x = '0.' + new Array(e).join('0') + num
     }

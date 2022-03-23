@@ -20,7 +20,7 @@ export function useBurnState(): AppState['burn'] {
 
 export function useDerivedBurnInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
 ): {
   pair?: Pair | null
   pairAddress?: string | null
@@ -41,7 +41,7 @@ export function useDerivedBurnInfo(
 
   // balances
   const relevantTokenBalances = useTokenBalances(account ?? undefined, [
-    !!pair?.liquidityToken ? tokenSushiToDmm(pair?.liquidityToken) : undefined
+    !!pair?.liquidityToken ? tokenSushiToDmm(pair?.liquidityToken) : undefined,
   ])
   const userLiquidity: undefined | TokenAmount = !!relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
     ? tokenAmountDmmToSushi(relevantTokenBalances?.[pair?.liquidityToken?.address ?? ''] as TokenAmountDMM)
@@ -51,7 +51,7 @@ export function useDerivedBurnInfo(
   const tokens = {
     [Field.CURRENCY_A]: tokenA,
     [Field.CURRENCY_B]: tokenB,
-    [Field.LIQUIDITY]: pair?.liquidityToken
+    [Field.LIQUIDITY]: pair?.liquidityToken,
   }
 
   // liquidity values
@@ -66,7 +66,7 @@ export function useDerivedBurnInfo(
     JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
       ? new TokenAmount(
           tokenDmmToSushi(tokenA),
-          pair.getLiquidityValue(tokenDmmToSushi(tokenA), tokenAmountDmmToSushi(totalSupply), userLiquidity, false).raw
+          pair.getLiquidityValue(tokenDmmToSushi(tokenA), tokenAmountDmmToSushi(totalSupply), userLiquidity, false).raw,
         )
       : undefined
   const liquidityValueB =
@@ -78,12 +78,12 @@ export function useDerivedBurnInfo(
     JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
       ? new TokenAmount(
           tokenDmmToSushi(tokenB),
-          pair.getLiquidityValue(tokenDmmToSushi(tokenB), tokenAmountDmmToSushi(totalSupply), userLiquidity, false).raw
+          pair.getLiquidityValue(tokenDmmToSushi(tokenB), tokenAmountDmmToSushi(totalSupply), userLiquidity, false).raw,
         )
       : undefined
   const liquidityValues: { [Field.CURRENCY_A]?: TokenAmount; [Field.CURRENCY_B]?: TokenAmount } = {
     [Field.CURRENCY_A]: liquidityValueA,
-    [Field.CURRENCY_B]: liquidityValueB
+    [Field.CURRENCY_B]: liquidityValueB,
   }
 
   let percentToRemove: Percent = new Percent('0', '100')
@@ -129,7 +129,7 @@ export function useDerivedBurnInfo(
     [Field.CURRENCY_B]:
       tokenB && percentToRemove && percentToRemove.greaterThan('0') && liquidityValueB
         ? new TokenAmount(tokenDmmToSushi(tokenB), percentToRemove.multiply(liquidityValueB.raw).quotient)
-        : undefined
+        : undefined,
   }
 
   let error: string | undefined
@@ -153,10 +153,10 @@ export function useBurnActionHandlers(): {
     (field: Field, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return {
-    onUserInput
+    onUserInput,
   }
 }

@@ -20,7 +20,7 @@ import {
   setRecipient,
   switchCurrencies,
   switchCurrenciesV2,
-  typeInput
+  typeInput,
 } from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
@@ -53,11 +53,11 @@ export function useSwapActionHandlers(): {
               ? currency.address
               : currency === ETHER
               ? (convertToNativeTokenFromETH(ETHER, chainId).symbol as string)
-              : ''
-        })
+              : '',
+        }),
       )
     },
-    [dispatch, chainId]
+    [dispatch, chainId],
   )
 
   const onSwitchTokens = useCallback(() => {
@@ -72,21 +72,21 @@ export function useSwapActionHandlers(): {
     (field: Field, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   const onChangeRecipient = useCallback(
     (recipient: string | null) => {
       dispatch(setRecipient({ recipient }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   const onChooseToSaveGas = useCallback(
     (saveGas: boolean) => {
       dispatch(chooseToSaveGas({ saveGas }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return {
@@ -95,7 +95,7 @@ export function useSwapActionHandlers(): {
     onCurrencySelection,
     onUserInput,
     onChangeRecipient,
-    onChooseToSaveGas
+    onChooseToSaveGas,
   }
 }
 
@@ -146,7 +146,7 @@ export function useDerivedSwapInfo(): {
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
-    recipient
+    recipient,
   } = useSwapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
@@ -156,7 +156,7 @@ export function useDerivedSwapInfo(): {
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     inputCurrency ?? undefined,
-    outputCurrency ?? undefined
+    outputCurrency ?? undefined,
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
@@ -169,12 +169,12 @@ export function useDerivedSwapInfo(): {
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
-    [Field.OUTPUT]: relevantTokenBalances[1]
+    [Field.OUTPUT]: relevantTokenBalances[1],
   }
 
   const currencies: { [field in Field]?: Currency } = {
     [Field.INPUT]: inputCurrency ?? undefined,
-    [Field.OUTPUT]: outputCurrency ?? undefined
+    [Field.OUTPUT]: outputCurrency ?? undefined,
   }
 
   let inputError: string | undefined
@@ -211,7 +211,7 @@ export function useDerivedSwapInfo(): {
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [
     currencyBalances[Field.INPUT],
-    slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null
+    slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null,
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
@@ -223,7 +223,7 @@ export function useDerivedSwapInfo(): {
     currencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
-    inputError
+    inputError,
   }
 }
 
@@ -278,20 +278,20 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
           chargeFeeBy: 'currency_in',
           feeReceiver: parsedQs.referral.toString(),
           isInBps: true,
-          feeAmount: parsedQs['fee_percent'].toString()
+          feeAmount: parsedQs['fee_percent'].toString(),
         }
       : null
   return {
     [Field.INPUT]: {
-      currencyId: inputCurrency
+      currencyId: inputCurrency,
     },
     [Field.OUTPUT]: {
-      currencyId: outputCurrency
+      currencyId: outputCurrency,
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
     recipient,
-    feeConfig
+    feeConfig,
   }
 }
 
@@ -321,7 +321,7 @@ export function useDefaultsFromURLSearch():
       ChainId.ROPSTEN,
       ChainId.BSCMAINNET,
       ChainId.MATIC,
-      ChainId.AVAXMAINNET
+      ChainId.AVAXMAINNET,
     ].includes(chainId)
       ? KNC[chainId].address
       : USDC[chainId].address
@@ -333,13 +333,13 @@ export function useDefaultsFromURLSearch():
         inputCurrencyId: parsed[Field.INPUT].currencyId,
         outputCurrencyId: parsed[Field.OUTPUT].currencyId || outputCurrencyAddress,
         recipient: parsed.recipient,
-        feeConfig: parsed.feeConfig
-      })
+        feeConfig: parsed.feeConfig,
+      }),
     )
 
     setResult({
       inputCurrencyId: parsed[Field.INPUT].currencyId,
-      outputCurrencyId: parsed[Field.OUTPUT].currencyId || outputCurrencyAddress
+      outputCurrencyId: parsed[Field.OUTPUT].currencyId || outputCurrencyAddress,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, chainId])

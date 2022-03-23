@@ -4,12 +4,12 @@ import { Token } from '@dynamic-amm/sdk'
 
 export enum FairLaunchVersion {
   V1,
-  V2
+  V2,
 }
 
 export enum RewardLockerVersion {
   V1,
-  V2
+  V2,
 }
 
 export interface FarmV1 {
@@ -126,7 +126,7 @@ export enum FarmHistoryMethod {
   DEPOSIT,
   WITHDRAW,
   HARVEST,
-  CLAIM
+  CLAIM,
 }
 
 export interface FarmHistory {

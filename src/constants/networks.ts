@@ -22,7 +22,7 @@ export const SUPPORTED_NETWORKS = [
   // ChainId.BTTC,
   ChainId.VELAS,
   ChainId.AURORA,
-  ChainId.OASIS,
+  // ChainId.OASIS,
 
   ...(process.env.REACT_APP_MAINNET_ENV === 'staging'
     ? [ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.BSCTESTNET, ChainId.AVAXTESTNET, ChainId.FANTOM, ChainId.CRONOSTESTNET]

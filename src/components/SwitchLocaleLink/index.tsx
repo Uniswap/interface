@@ -36,7 +36,7 @@ export function SwitchLocaleLink() {
 
     const target = {
       ...location,
-      search: stringify({ ...qs, lng: targetLocale })
+      search: stringify({ ...qs, lng: targetLocale }),
     }
 
     return (

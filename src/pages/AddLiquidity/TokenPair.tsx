@@ -11,7 +11,7 @@ import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
-  TransactionErrorContent
+  TransactionErrorContent,
 } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
@@ -52,13 +52,13 @@ import {
   ActiveText,
   CurrentPriceWrapper,
   PoolRatioWrapper,
-  DynamicFeeRangeWrapper
+  DynamicFeeRangeWrapper,
 } from './styled'
 
 const TokenPair = ({
   currencyIdA,
   currencyIdB,
-  pairAddress
+  pairAddress,
 }: {
   currencyIdA: string
   currencyIdB: string
@@ -92,7 +92,7 @@ const TokenPair = ({
     liquidityMinted,
     poolTokenPercentage,
     error,
-    unAmplifiedPairAddress
+    unAmplifiedPairAddress,
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
 
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
@@ -125,7 +125,7 @@ const TokenPair = ({
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+    [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
 
   // get the max amounts user can add
@@ -133,20 +133,20 @@ const TokenPair = ({
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field])
+        [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined
+    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined
+    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
   )
 
   const addTransactionWithType = useTransactionAdder()
@@ -162,7 +162,7 @@ const TokenPair = ({
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
-      [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
+      [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0],
     }
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
@@ -175,25 +175,25 @@ const TokenPair = ({
       const tokenBIsETH = currencyB === ETHER
 
       const virtualReserveToken = pair.virtualReserveOf(
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId) as Token
+        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId) as Token,
       )
       const virtualReserveETH = pair.virtualReserveOf(
-        wrappedCurrency(tokenBIsETH ? currencyB : currencyA, chainId) as Token
+        wrappedCurrency(tokenBIsETH ? currencyB : currencyA, chainId) as Token,
       )
 
       const currentRate = JSBI.divide(
         JSBI.multiply(virtualReserveETH.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-        virtualReserveToken.raw
+        virtualReserveToken.raw,
       )
 
       const allowedSlippageAmount = JSBI.divide(
         JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
-        JSBI.BigInt(10000)
+        JSBI.BigInt(10000),
       )
 
       const vReserveRatioBounds = [
         JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
-        JSBI.add(currentRate, allowedSlippageAmount).toString()
+        JSBI.add(currentRate, allowedSlippageAmount).toString(),
       ]
 
       estimate = router.estimateGas.addLiquidityETH
@@ -207,7 +207,7 @@ const TokenPair = ({
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         vReserveRatioBounds,
         account,
-        deadline.toHexString()
+        deadline.toHexString(),
       ]
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
@@ -216,17 +216,17 @@ const TokenPair = ({
 
       const currentRate = JSBI.divide(
         JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-        virtualReserveA.raw
+        virtualReserveA.raw,
       )
 
       const allowedSlippageAmount = JSBI.divide(
         JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
-        JSBI.BigInt(10000)
+        JSBI.BigInt(10000),
       )
 
       const vReserveRatioBounds = [
         JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
-        JSBI.add(currentRate, allowedSlippageAmount).toString()
+        JSBI.add(currentRate, allowedSlippageAmount).toString(),
       ]
 
       estimate = router.estimateGas.addLiquidity
@@ -242,7 +242,7 @@ const TokenPair = ({
         amountsMin[Field.CURRENCY_B].toString(),
         vReserveRatioBounds,
         account,
-        deadline.toHexString()
+        deadline.toHexString(),
       ]
       value = null
     }
@@ -252,7 +252,7 @@ const TokenPair = ({
       .then(estimatedGasLimit =>
         method(...args, {
           ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit)
+          gasLimit: calculateGasMargin(estimatedGasLimit),
         }).then(response => {
           const cA = currencies[Field.CURRENCY_A]
           const cB = currencies[Field.CURRENCY_B]
@@ -267,12 +267,12 @@ const TokenPair = ({
                 ' and ' +
                 parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
-                convertToNativeTokenFromETH(cB, chainId).symbol
+                convertToNativeTokenFromETH(cB, chainId).symbol,
             })
 
             setTxHash(response.hash)
           }
-        })
+        }),
       )
       .catch(err => {
         setAttemptingTxn(false)
@@ -318,7 +318,7 @@ const TokenPair = ({
   const tokens = useMemo(
     () =>
       [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]].map(currency => wrappedCurrency(currency, chainId)),
-    [chainId, currencies]
+    [chainId, currencies],
   )
 
   const usdPrices = useTokensPrice(tokens)
@@ -571,7 +571,9 @@ const TokenPair = ({
                                 '%'
                               : ''
                             : feeRangeCalc(
-                                !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
+                                !!pair?.amp
+                                  ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
+                                  : +amp,
                               )}
                         </Text>
                       </DynamicFeeRangeWrapper>

@@ -13,7 +13,7 @@ import { getFullDisplayBalance } from 'utils/formatBalance'
 
 export function shouldCheck(
   lastBlockNumber: number,
-  tx: { addedTime: number; receipt?: {}; lastCheckedBlockNumber?: number }
+  tx: { addedTime: number; receipt?: {}; lastCheckedBlockNumber?: number },
 ): boolean {
   if (tx.receipt) return false
   if (!tx.lastCheckedBlockNumber) return true
@@ -49,7 +49,7 @@ export default function Updater(): null {
     (receipt: TransactionReceipt): string | undefined => {
       return transactions[receipt.transactionHash]?.type
     },
-    [transactions]
+    [transactions],
   )
 
   const parseTransactionSummary = useCallback(
@@ -85,7 +85,7 @@ export default function Updater(): null {
 
       const decodedValues = ethers.utils.defaultAbiCoder.decode(
         ['address', 'address', 'address', 'address', 'uint256', 'uint256'],
-        log.data
+        log.data,
       )
 
       const inputAmount = getFullDisplayBalance(BigNumber.from(decodedValues[4].toString()), inputDecimals, 3)
@@ -95,7 +95,7 @@ export default function Updater(): null {
 
       return `${base} ${withRecipient ?? ''}`
     },
-    [transactions]
+    [transactions],
   )
 
   useEffect(() => {
@@ -120,9 +120,9 @@ export default function Updater(): null {
                     status: receipt.status,
                     to: receipt.to,
                     transactionHash: receipt.transactionHash,
-                    transactionIndex: receipt.transactionIndex
-                  }
-                })
+                    transactionIndex: receipt.transactionIndex,
+                  },
+                }),
               )
 
               addPopup(
@@ -131,10 +131,10 @@ export default function Updater(): null {
                     hash,
                     success: receipt.status === 1,
                     type: parseTransactionType(receipt),
-                    summary: parseTransactionSummary(receipt)
-                  }
+                    summary: parseTransactionSummary(receipt),
+                  },
                 },
-                hash
+                hash,
               )
             } else {
               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
@@ -152,7 +152,7 @@ export default function Updater(): null {
     dispatch,
     addPopup,
     parseTransactionSummary,
-    parseTransactionType
+    parseTransactionType,
   ])
 
   return null

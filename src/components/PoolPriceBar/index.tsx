@@ -89,7 +89,7 @@ export function PoolPriceBar({
   currencies,
   noLiquidity,
   poolTokenPercentage,
-  price
+  price,
 }: {
   currencies: { [field in Field]?: Currency }
   noLiquidity?: boolean
@@ -154,7 +154,7 @@ export function PoolPriceBar({
 export function ToggleComponent({
   children,
   title = '',
-  question = ''
+  question = '',
 }: {
   children: ReactNode
   title: string
@@ -195,7 +195,7 @@ export function PoolPriceRangeBarToggle({
   currencies,
   price,
   pair,
-  amplification
+  amplification,
 }: {
   currencies: { [field in Field]?: Currency }
   price?: Price | Fraction
@@ -218,7 +218,7 @@ export function PoolPriceRangeBar({
   currencies,
   price,
   pair,
-  amplification
+  amplification,
 }: {
   currencies: { [field in Field]?: Currency }
   price?: Price | Fraction

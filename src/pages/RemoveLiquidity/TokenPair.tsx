@@ -14,7 +14,7 @@ import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
-  TransactionErrorContent
+  TransactionErrorContent,
 } from 'components/TransactionConfirmationModal'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
@@ -53,13 +53,13 @@ import {
   DetailBox,
   TokenWrapper,
   ModalDetailWrapper,
-  CurrentPriceWrapper
+  CurrentPriceWrapper,
 } from './styled'
 
 export default function TokenPair({
   currencyIdA,
   currencyIdB,
-  pairAddress
+  pairAddress,
 }: {
   currencyIdA: string
   currencyIdB: string
@@ -73,7 +73,7 @@ export default function TokenPair({
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
     currencyA,
     currencyB,
-    chainId
+    chainId,
   ])
 
   const currencyAIsETHER = !!(chainId && currencyA && currencyEquals(currencyA, ETHER))
@@ -91,7 +91,7 @@ export default function TokenPair({
   const { pair, userLiquidity, parsedAmounts, amountsMin, price, error } = useDerivedBurnInfo(
     currencyA ?? undefined,
     currencyB ?? undefined,
-    pairAddress
+    pairAddress,
   )
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
@@ -117,7 +117,7 @@ export default function TokenPair({
     [Field.CURRENCY_A]:
       independentField === Field.CURRENCY_A ? typedValue : parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? '',
     [Field.CURRENCY_B]:
-      independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
+      independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? '',
   }
 
   // pair contract
@@ -127,7 +127,7 @@ export default function TokenPair({
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(
     parsedAmounts[Field.LIQUIDITY],
-    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined
+    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined,
   )
 
   const isArgentWallet = useIsArgentWallet()
@@ -151,36 +151,36 @@ export default function TokenPair({
       { name: 'name', type: 'string' },
       { name: 'version', type: 'string' },
       { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' }
+      { name: 'verifyingContract', type: 'address' },
     ]
     const domain = {
       name: !isWithoutDynamicFee ? 'KyberDMM LP' : 'KyberSwap LP',
       version: '1',
       chainId: chainId,
-      verifyingContract: pair.liquidityToken.address
+      verifyingContract: pair.liquidityToken.address,
     }
     const Permit = [
       { name: 'owner', type: 'address' },
       { name: 'spender', type: 'address' },
       { name: 'value', type: 'uint256' },
       { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' }
+      { name: 'deadline', type: 'uint256' },
     ]
     const message = {
       owner: account,
       spender: ROUTER_ADDRESSES[chainId],
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
-      deadline: deadline.toNumber()
+      deadline: deadline.toNumber(),
     }
     const data = JSON.stringify({
       types: {
         EIP712Domain,
-        Permit
+        Permit,
       },
       domain,
       primaryType: 'Permit',
-      message
+      message,
     })
 
     library
@@ -191,7 +191,7 @@ export default function TokenPair({
           v: signature.v,
           r: signature.r,
           s: signature.s,
-          deadline: deadline.toNumber()
+          deadline: deadline.toNumber(),
         })
       })
       .catch(error => {
@@ -208,17 +208,17 @@ export default function TokenPair({
       setSignatureData(null)
       return _onUserInput(field, typedValue)
     },
-    [_onUserInput]
+    [_onUserInput],
   )
 
   const onLiquidityInput = useCallback((typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue), [
-    onUserInput
+    onUserInput,
   ])
   const onCurrencyAInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue), [
-    onUserInput
+    onUserInput,
   ])
   const onCurrencyBInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue), [
-    onUserInput
+    onUserInput,
   ])
 
   // tx sending
@@ -233,7 +233,7 @@ export default function TokenPair({
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
-      [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
+      [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0],
     }
 
     if (!currencyA || !currencyB) throw new Error('missing tokens')
@@ -258,7 +258,7 @@ export default function TokenPair({
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
-          deadline.toHexString()
+          deadline.toHexString(),
         ]
       }
       // removeLiquidity
@@ -272,7 +272,7 @@ export default function TokenPair({
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
           account,
-          deadline.toHexString()
+          deadline.toHexString(),
         ]
       }
     }
@@ -292,7 +292,7 @@ export default function TokenPair({
           false,
           signatureData.v,
           signatureData.r,
-          signatureData.s
+          signatureData.s,
         ]
       }
       // removeLiquidityETHWithPermit
@@ -310,7 +310,7 @@ export default function TokenPair({
           false,
           signatureData.v,
           signatureData.r,
-          signatureData.s
+          signatureData.s,
         ]
       }
     } else {
@@ -324,12 +324,12 @@ export default function TokenPair({
           .catch(error => {
             console.error(`estimateGas failed`, methodName, args, error)
             return undefined
-          })
-      )
+          }),
+      ),
     )
 
     const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(safeGasEstimate =>
-      BigNumber.isBigNumber(safeGasEstimate)
+      BigNumber.isBigNumber(safeGasEstimate),
     )
 
     // all estimations failed...
@@ -341,7 +341,7 @@ export default function TokenPair({
 
       setAttemptingTxn(true)
       await router[methodName](...args, {
-        gasLimit: safeGasEstimate
+        gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {
           if (!!currencyA && !!currencyB) {
@@ -356,7 +356,7 @@ export default function TokenPair({
                 ' and ' +
                 parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
                 ' ' +
-                convertToNativeTokenFromETH(currencyB, chainId).symbol
+                convertToNativeTokenFromETH(currencyB, chainId).symbol,
             })
 
             setTxHash(response.hash)
@@ -398,7 +398,7 @@ export default function TokenPair({
     (value: number) => {
       onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -414,7 +414,7 @@ export default function TokenPair({
 
   const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
-    liquidityPercentChangeCallback
+    liquidityPercentChangeCallback,
   )
 
   function modalHeader() {
@@ -602,7 +602,7 @@ export default function TokenPair({
                       pair.liquidityToken?.address,
                       pair.liquidityToken?.decimals,
                       `LP Tokens`,
-                      `LP Tokens`
+                      `LP Tokens`,
                     )
                   }
                   id="liquidity-amount"

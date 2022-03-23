@@ -16,8 +16,8 @@ import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName 
 
 export default function RemoveLiquidity({
   match: {
-    params: { currencyIdA, currencyIdB, pairAddress }
-  }
+    params: { currencyIdA, currencyIdB, pairAddress },
+  },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { chainId } = useActiveWeb3React()
@@ -30,7 +30,7 @@ export default function RemoveLiquidity({
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH[chainId], currencyB)))
+        (currencyB && currencyEquals(WETH[chainId], currencyB))),
   )
 
   const [activeTab, setActiveTab] = useState(0)

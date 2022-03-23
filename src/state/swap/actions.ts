@@ -3,7 +3,7 @@ import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 export enum Field {
   INPUT = 'INPUT',
-  OUTPUT = 'OUTPUT'
+  OUTPUT = 'OUTPUT',
 }
 
 export const selectCurrency = createAction<{ field: Field; currencyId: string }>('swap/selectCurrency')

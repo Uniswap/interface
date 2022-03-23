@@ -31,7 +31,7 @@ const Pagination = ({
   onNext,
   currentPage,
   maxPage,
-  style
+  style,
 }: {
   onPrev: () => void
   onNext: () => void

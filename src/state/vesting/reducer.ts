@@ -8,7 +8,7 @@ import {
   setSchedulesByRewardLocker,
   setShowConfirm,
   setTxHash,
-  setVestingError
+  setVestingError,
 } from './actions'
 import { RewardLockerVersion } from 'state/farms/types'
 
@@ -29,7 +29,7 @@ const initialState: VestingState = {
   showConfirm: false,
   attemptingTxn: false,
   txHash: '',
-  error: ''
+  error: '',
 }
 
 export default createReducer<VestingState>(initialState, builder =>
@@ -51,5 +51,5 @@ export default createReducer<VestingState>(initialState, builder =>
     })
     .addCase(setVestingError, (state, { payload: error }) => {
       state.error = error
-    })
+    }),
 )

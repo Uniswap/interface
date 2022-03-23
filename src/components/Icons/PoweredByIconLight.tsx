@@ -3,7 +3,7 @@ import React from 'react'
 const PoweredByIconLight = ({
   width,
   height,
-  color = '#5C6468'
+  color = '#5C6468',
 }: {
   width?: number
   height?: number

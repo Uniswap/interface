@@ -36,7 +36,7 @@ export const getAvaxMainnetTokenLogoURL = (address: string) => {
 
   if (!uri) {
     uri = `https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/${isAddress(
-      address
+      address,
     )}/logo.png`
   }
 

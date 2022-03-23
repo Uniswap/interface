@@ -10,7 +10,7 @@ export interface MintState {
 const initialState: MintState = {
   independentField: Field.CURRENCY_A,
   typedValue: '',
-  otherTypedValue: ''
+  otherTypedValue: '',
 }
 
 export default createReducer<MintState>(initialState, builder =>
@@ -23,7 +23,7 @@ export default createReducer<MintState>(initialState, builder =>
           return {
             ...state,
             independentField: field,
-            typedValue
+            typedValue,
           }
         }
         // they're typing into a new field, store the other value
@@ -32,7 +32,7 @@ export default createReducer<MintState>(initialState, builder =>
             ...state,
             independentField: field,
             typedValue,
-            otherTypedValue: state.typedValue
+            otherTypedValue: state.typedValue,
           }
         }
       } else {
@@ -40,14 +40,14 @@ export default createReducer<MintState>(initialState, builder =>
           ...state,
           independentField: field,
           typedValue,
-          otherTypedValue: ''
+          otherTypedValue: '',
         }
       }
     })
     .addCase(switchTokenField, (state, { payload: { field } }) => {
       return {
         ...state,
-        independentField: field
+        independentField: field,
       }
-    })
+    }),
 )

@@ -24,7 +24,7 @@ import { Dots } from '../Pool/styleds'
 
 enum Fields {
   TOKEN0 = 0,
-  TOKEN1 = 1
+  TOKEN1 = 1,
 }
 
 export default function PoolFinder() {
@@ -50,7 +50,7 @@ export default function PoolFinder() {
 
   const positions: { [tokenAddress: string]: TokenAmount | undefined } = useTokenBalances(
     account ?? undefined,
-    pairs.map(([, pair]) => pair?.liquidityToken)
+    pairs.map(([, pair]) => pair?.liquidityToken),
   )
 
   const handleCurrencySelect = useCallback(
@@ -61,7 +61,7 @@ export default function PoolFinder() {
         setCurrency1(currency)
       }
     },
-    [activeField]
+    [activeField],
   )
 
   const myPairs = pairs
@@ -78,7 +78,7 @@ export default function PoolFinder() {
       if (pair && pair.liquidityToken.address && positions[pair.liquidityToken.address]) {
         hasPosition = Boolean(
           positions[pair.liquidityToken.address] &&
-            JSBI.greaterThan((positions[pair.liquidityToken.address] as TokenAmount).raw, JSBI.BigInt(0))
+            JSBI.greaterThan((positions[pair.liquidityToken.address] as TokenAmount).raw, JSBI.BigInt(0)),
         )
       }
       return pairState === PairState.EXISTS && hasPosition && pair

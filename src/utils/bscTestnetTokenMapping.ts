@@ -32,7 +32,7 @@ export const getBscTestnetTokenLogoURL = (address: string) => {
 
   if (!uri) {
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${isAddress(
-      address
+      address,
     )}/logo.png`
   }
 

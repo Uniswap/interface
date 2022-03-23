@@ -17,8 +17,8 @@ import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName 
 
 export default function AddLiquidity({
   match: {
-    params: { currencyIdA, currencyIdB, pairAddress }
-  }
+    params: { currencyIdA, currencyIdB, pairAddress },
+  },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const { chainId } = useActiveWeb3React()
   const currencyA = useCurrency(currencyIdA)
@@ -35,7 +35,7 @@ export default function AddLiquidity({
   const { pair, pairState, noLiquidity } = useDerivedMintInfo(
     currencyA ?? undefined,
     currencyB ?? undefined,
-    pairAddress
+    pairAddress,
   )
 
   const [activeTab, setActiveTab] = useState(0)

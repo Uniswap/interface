@@ -58,46 +58,46 @@ export default function Pool() {
   //trackedTokenPairs = [ [Token, Token],  [Token, Token] ]
   const tokenPairsWithLiquidityTokensUNI = useMemo(
     () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
+    [trackedTokenPairs],
   )
 
   const tokenPairsWithLiquidityTokensSUSHI = useMemo(
     () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityTokenSushi(tokens), tokens })),
-    [trackedTokenPairs]
+    [trackedTokenPairs],
   )
   //All are Token DMM
   // const tokenPairsWithLiquidityTokens = [...tokenPairsWithLiquidityTokensUNI, ...tokenPairsWithLiquidityTokensSUSHI]
   // const tokenPairsWithLiquidityTokens = [...tokenPairsWithLiquidityTokensUNI, ...tokenPairsWithLiquidityTokensSUSHI]
 
   const liquidityTokensUNI = useMemo(() => tokenPairsWithLiquidityTokensUNI.map(tpwlt => tpwlt.liquidityToken), [
-    tokenPairsWithLiquidityTokensUNI
+    tokenPairsWithLiquidityTokensUNI,
   ])
   const liquidityTokensSUSHI = useMemo(() => tokenPairsWithLiquidityTokensSUSHI.map(tpwlt => tpwlt.liquidityToken), [
-    tokenPairsWithLiquidityTokensSUSHI
+    tokenPairsWithLiquidityTokensSUSHI,
   ])
 
   const [v2PairsBalancesUNI, fetchingV2PairBalancesUNI] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
-    liquidityTokensUNI
+    liquidityTokensUNI,
   )
   const [v2PairsBalancesSUSHI, fetchingV2PairBalancesSUSHI] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
-    liquidityTokensSUSHI
+    liquidityTokensSUSHI,
   )
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalancesUNI = useMemo(
     () =>
       tokenPairsWithLiquidityTokensUNI.filter(({ liquidityToken }) =>
-        v2PairsBalancesUNI[liquidityToken.address]?.greaterThan('0')
+        v2PairsBalancesUNI[liquidityToken.address]?.greaterThan('0'),
       ),
-    [tokenPairsWithLiquidityTokensUNI, v2PairsBalancesUNI]
+    [tokenPairsWithLiquidityTokensUNI, v2PairsBalancesUNI],
   )
   const liquidityTokensWithBalancesSUSHI = useMemo(
     () =>
       tokenPairsWithLiquidityTokensSUSHI.filter(({ liquidityToken }) =>
-        v2PairsBalancesSUSHI[liquidityToken.address]?.greaterThan('0')
+        v2PairsBalancesSUSHI[liquidityToken.address]?.greaterThan('0'),
       ),
-    [tokenPairsWithLiquidityTokensSUSHI, v2PairsBalancesSUSHI]
+    [tokenPairsWithLiquidityTokensSUSHI, v2PairsBalancesSUSHI],
   )
   const v2PairsUNI = usePairs(liquidityTokensWithBalancesUNI.map(({ tokens }) => tokens))
   const v2PairsSUSHI = usePairsSUSHI(liquidityTokensWithBalancesSUSHI.map(({ tokens }) => tokens))

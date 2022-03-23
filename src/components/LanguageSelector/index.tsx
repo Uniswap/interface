@@ -32,7 +32,7 @@ const GridWrapper = styled.div`
 `
 
 export default function LanguageSelector({
-  setIsSelectingLanguage
+  setIsSelectingLanguage,
 }: {
   setIsSelectingLanguage: (isSelectingLanguage: boolean) => void
 }) {
@@ -45,7 +45,7 @@ export default function LanguageSelector({
   const handleSelectLanguage = (locale: SupportedLocale) => {
     const target = {
       ...location,
-      search: stringify({ ...qs, lng: locale })
+      search: stringify({ ...qs, lng: locale }),
     }
 
     history.push(target)
@@ -75,7 +75,7 @@ export default function LanguageSelector({
                 textDecoration: 'none',
                 marginBottom: isLastItem ? '0' : '16px',
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
               }}
             >
               <OptionTitle isSelected={locale === userLocale}>{label}</OptionTitle>

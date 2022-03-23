@@ -14,7 +14,7 @@ export default function DarkModeQueryParamReader({ location: { search } }: Route
 
     const parsed = parse(search, {
       parseArrays: false,
-      ignoreQueryPrefix: true
+      ignoreQueryPrefix: true,
     })
 
     const theme = parsed.theme

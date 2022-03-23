@@ -24,7 +24,7 @@ export default function SwapModalFooter({
   allowedSlippage,
   swapErrorMessage,
   disabledConfirm,
-  feeConfig
+  feeConfig,
 }: {
   trade: Aggregator
   allowedSlippage: number
@@ -38,7 +38,7 @@ export default function SwapModalFooter({
   const theme = useContext(ThemeContext)
   const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
     allowedSlippage,
-    trade
+    trade,
   ])
 
   const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
@@ -60,7 +60,7 @@ export default function SwapModalFooter({
               alignItems: 'center',
               display: 'flex',
               textAlign: 'right',
-              paddingLeft: '10px'
+              paddingLeft: '10px',
             }}
           >
             {formatExecutionPrice(trade, showInverted, chainId)}
@@ -123,7 +123,7 @@ export default function SwapModalFooter({
             <TYPE.black color={theme.text} fontSize={14}>
               {formattedNum(
                 ((parseFloat(trade.amountInUsd) * parseFloat(feeConfig.feeAmount)) / 100000)?.toString(),
-                true
+                true,
               )}
             </TYPE.black>
           </RowBetween>
@@ -139,8 +139,8 @@ export default function SwapModalFooter({
             ...(trade.priceImpact > 5 && {
               border: 'none',
               background: theme.red,
-              color: theme.white
-            })
+              color: theme.white,
+            }),
           }}
           id="confirm-swap-or-send"
         >

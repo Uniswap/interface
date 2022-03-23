@@ -38,7 +38,7 @@ const MarqueeItem = ({ token0, token1 }: { token0: Token; token1: Token }) => {
         borderRadius: '5px',
         minWidth: 'fit-content',
         color: theme.text,
-        textDecoration: 'none'
+        textDecoration: 'none',
       }}
       to={`/pools/${token0Address}/${token1Address}`}
     >
@@ -68,7 +68,7 @@ const FarmingPoolsMarquee = () => {
       itv = setInterval(() => {
         if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
           increaseRef.current.scrollTo({
-            left: increaseRef.current.scrollLeft + 1
+            left: increaseRef.current.scrollLeft + 1,
           })
         }
       }, 50)

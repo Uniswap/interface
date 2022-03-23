@@ -14,7 +14,7 @@ import {
   removePopup,
   setOpenModal,
   updateETHPrice,
-  updateKNCPrice
+  updateKNCPrice,
 } from './actions'
 import { getPercentChange, getBlockFromTimestamp } from 'utils'
 import { useDeepCompareEffect } from 'react-use'
@@ -110,7 +110,7 @@ export function useAddPopup(): (content: PopupContent, key?: string) => void {
     (content: PopupContent, key?: string) => {
       dispatch(addPopup({ content, key }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -121,7 +121,7 @@ export function useRemovePopup(): (key: string) => void {
     (key: string) => {
       dispatch(removePopup({ key }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -149,11 +149,11 @@ const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<Normaliz
     const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId)
     const result = await apolloClient.query({
       query: ETH_PRICE(),
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
     })
     const resultOneDay = await apolloClient.query({
       query: ETH_PRICE(oneDayBlock),
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
     })
     const currentPrice = result?.data?.bundles[0]?.ethPrice
     const oneDayBackPrice = resultOneDay?.data?.bundles[0]?.ethPrice
@@ -183,8 +183,8 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
         updateETHPrice({
           currentPrice: (newPrice ? newPrice : 0).toString(),
           oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
-          pricePercentChange
-        })
+          pricePercentChange,
+        }),
       )
     }
     checkForEthPrice()
@@ -202,7 +202,7 @@ const getKNCPriceByETH = async (chainId: ChainId, apolloClient: ApolloClient<Nor
   try {
     const result = await apolloClient.query({
       query: TOKEN_DERIVED_ETH(KNC[chainId as ChainId].address),
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     })
 
     const derivedETH = result?.data?.tokens[0]?.derivedETH
@@ -245,7 +245,7 @@ const getTokenPriceByETH = async (tokenAddress: string, apolloClient: ApolloClie
   try {
     const result = await apolloClient.query({
       query: TOKEN_DERIVED_ETH(tokenAddress),
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     })
 
     const derivedETH = result?.data?.tokens[0]?.derivedETH
@@ -257,8 +257,8 @@ const getTokenPriceByETH = async (tokenAddress: string, apolloClient: ApolloClie
       const res = await fetch(temp.subgraphAPI, {
         method: 'POST',
         body: JSON.stringify({
-          query: temp.query
-        })
+          query: temp.query,
+        }),
       }).then(res => res.json())
 
       const derivedETH = res?.data?.tokens[0]?.derivedBNB

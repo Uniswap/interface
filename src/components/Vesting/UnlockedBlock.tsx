@@ -20,7 +20,7 @@ const UnlockedBlock = ({ info, onClaimAll }: { info: any; onClaimAll?: () => voi
   const unlockedUSD = useFarmRewardsUSD(
     Object.keys(info).map(k => {
       return { token: info[k].token, amount: info[k].vestableAmount } as Reward
-    })
+    }),
   )
 
   return (

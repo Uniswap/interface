@@ -24,7 +24,7 @@ export function useBurnState(): AppState['burn'] {
 export function useDerivedBurnInfo(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  pairAddress: string | undefined
+  pairAddress: string | undefined,
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
@@ -52,9 +52,9 @@ export function useDerivedBurnInfo(
   const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
       [Field.CURRENCY_A]: currencyA ?? undefined,
-      [Field.CURRENCY_B]: currencyB ?? undefined
+      [Field.CURRENCY_B]: currencyB ?? undefined,
     }),
-    [currencyA, currencyB]
+    [currencyA, currencyB],
   )
 
   const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
@@ -73,7 +73,7 @@ export function useDerivedBurnInfo(
   const tokens = {
     [Field.CURRENCY_A]: tokenA,
     [Field.CURRENCY_B]: tokenB,
-    [Field.LIQUIDITY]: pair?.liquidityToken
+    [Field.LIQUIDITY]: pair?.liquidityToken,
   }
 
   // liquidity values
@@ -98,7 +98,7 @@ export function useDerivedBurnInfo(
       : undefined
   const liquidityValues: { [Field.CURRENCY_A]?: TokenAmount; [Field.CURRENCY_B]?: TokenAmount } = {
     [Field.CURRENCY_A]: liquidityValueA,
-    [Field.CURRENCY_B]: liquidityValueB
+    [Field.CURRENCY_B]: liquidityValueB,
   }
 
   let percentToRemove: Percent = new Percent('0', '100')
@@ -148,7 +148,7 @@ export function useDerivedBurnInfo(
     [Field.CURRENCY_B]:
       tokenB && percentToRemove && percentToRemove.greaterThan('0') && liquidityValueB
         ? new TokenAmount(tokenB, percentToRemove.multiply(liquidityValueB.raw).quotient)
-        : undefined
+        : undefined,
   }
 
   const amountsMin = {
@@ -159,7 +159,7 @@ export function useDerivedBurnInfo(
     [Field.CURRENCY_B]:
       parsedAmounts && parsedAmounts[Field.CURRENCY_B]
         ? calculateSlippageAmount(parsedAmounts[Field.CURRENCY_B] as CurrencyAmount, allowedSlippage)[0]
-        : undefined
+        : undefined,
   }
 
   const price = useMemo(() => {
@@ -191,18 +191,18 @@ export function useBurnActionHandlers(): {
     (field: Field, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return {
-    onUserInput
+    onUserInput,
   }
 }
 
 export function useDerivedZapOutInfo(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  pairAddress: string | undefined
+  pairAddress: string | undefined,
 ): {
   dependentTokenField: Field
   currencies: { [field in Field]?: Currency }
@@ -234,9 +234,9 @@ export function useDerivedZapOutInfo(
   const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
       [Field.CURRENCY_A]: currencyA ?? undefined,
-      [Field.CURRENCY_B]: currencyB ?? undefined
+      [Field.CURRENCY_B]: currencyB ?? undefined,
     }),
-    [currencyA, currencyB]
+    [currencyA, currencyB],
   )
 
   const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
@@ -259,7 +259,7 @@ export function useDerivedZapOutInfo(
   const tokens = {
     [Field.CURRENCY_A]: tokenA,
     [Field.CURRENCY_B]: tokenB,
-    [Field.LIQUIDITY]: pair?.liquidityToken
+    [Field.LIQUIDITY]: pair?.liquidityToken,
   }
 
   // liquidity values
@@ -284,7 +284,7 @@ export function useDerivedZapOutInfo(
       : undefined
   const liquidityValues: { [field in Field]?: TokenAmount } = {
     [Field.CURRENCY_A]: liquidityValueA,
-    [Field.CURRENCY_B]: liquidityValueB
+    [Field.CURRENCY_B]: liquidityValueB,
   }
 
   let percentToRemove: Percent = new Percent('0', '100')
@@ -324,7 +324,7 @@ export function useDerivedZapOutInfo(
 
     const liquidityToRemove = JSBI.divide(
       JSBI.multiply(userLiquidity.raw, percentToRemove.numerator),
-      percentToRemove.denominator
+      percentToRemove.denominator,
     )
 
     return BigNumber.from(liquidityToRemove.toString())
@@ -337,7 +337,7 @@ export function useDerivedZapOutInfo(
   const independentTokenAmount: CurrencyAmount | undefined = tryParseAmount(
     zapOutAmount.amount.toString(),
     currencies[independentTokenField],
-    false
+    false,
   )
 
   const dependentTokenAmount: CurrencyAmount | undefined = useMemo(() => {
@@ -358,7 +358,7 @@ export function useDerivedZapOutInfo(
     dependentTokenField,
     percentToRemove.numerator,
     percentToRemove.denominator,
-    currencies
+    currencies,
   ])
 
   const noZapAmounts: {
@@ -372,7 +372,7 @@ export function useDerivedZapOutInfo(
     [Field.CURRENCY_B]:
       tokenB && liquidityValueB && percentToRemove && percentToRemove.greaterThan('0')
         ? new TokenAmount(tokenB, percentToRemove.multiply(liquidityValueB.raw).quotient)
-        : undefined
+        : undefined,
   }
 
   const parsedAmounts: {
@@ -389,7 +389,7 @@ export function useDerivedZapOutInfo(
     [independentTokenField]:
       tokenOut && independentTokenAmount ? new TokenAmount(tokenOut, independentTokenAmount.raw) : undefined,
     [dependentTokenField]:
-      tokenIn && dependentTokenAmount ? new TokenAmount(tokenIn, dependentTokenAmount.raw) : undefined
+      tokenIn && dependentTokenAmount ? new TokenAmount(tokenIn, dependentTokenAmount.raw) : undefined,
   }
 
   const amountsMin = {
@@ -400,7 +400,7 @@ export function useDerivedZapOutInfo(
     [Field.CURRENCY_B]:
       parsedAmounts && parsedAmounts[Field.CURRENCY_B]
         ? calculateSlippageAmount(parsedAmounts[Field.CURRENCY_B] as CurrencyAmount, allowedSlippage)[0]
-        : JSBI.BigInt(0)
+        : JSBI.BigInt(0),
   }
 
   const price = useMemo(() => {
@@ -446,7 +446,7 @@ export function useDerivedZapOutInfo(
     amountsMin,
     insufficientLiquidity,
     price,
-    error
+    error,
   }
 }
 
@@ -461,17 +461,17 @@ export function useZapOutActionHandlers(): {
     (field: Field, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   const onSwitchField = useCallback(() => {
     dispatch(
-      switchTokenField({ field: independentTokenField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A })
+      switchTokenField({ field: independentTokenField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A }),
     )
   }, [dispatch, independentTokenField])
 
   return {
     onUserInput,
-    onSwitchField
+    onSwitchField,
   }
 }

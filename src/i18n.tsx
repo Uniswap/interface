@@ -15,7 +15,7 @@ const plurals: LocalePlural = {
   'ko-KR': ko,
   'tr-TR': tr,
   'vi-VN': vi,
-  'zh-CN': zh
+  'zh-CN': zh,
 }
 
 async function dynamicActivate(locale: SupportedLocale) {

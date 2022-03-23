@@ -8,7 +8,7 @@ describe('actions', () => {
     it('does not throw for invalid calldata', () => {
       expect(parseCallKey('0x6b175474e89094c44da98b954eedeac495271d0f-abc')).toEqual({
         address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-        callData: 'abc'
+        callData: 'abc',
       })
     })
     it('throws for invalid format', () => {
@@ -17,13 +17,13 @@ describe('actions', () => {
     it('throws for uppercase calldata', () => {
       expect(parseCallKey('0x6b175474e89094c44da98b954eedeac495271d0f-0xabcD')).toEqual({
         address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-        callData: '0xabcD'
+        callData: '0xabcD',
       })
     })
     it('parses pieces into address', () => {
       expect(parseCallKey('0x6b175474e89094c44da98b954eedeac495271d0f-0xabcd')).toEqual({
         address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-        callData: '0xabcd'
+        callData: '0xabcd',
       })
     })
   })
@@ -36,21 +36,21 @@ describe('actions', () => {
       expect(() =>
         toCallKey({
           address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-          callData: 'abc'
-        })
+          callData: 'abc',
+        }),
       ).toThrow('Invalid hex: abc')
     })
     it('throws for uppercase hex', () => {
       expect(() =>
         toCallKey({
           address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-          callData: '0xabcD'
-        })
+          callData: '0xabcD',
+        }),
       ).toThrow('Invalid hex: 0xabcD')
     })
     it('concatenates address to data', () => {
       expect(toCallKey({ address: '0x6b175474e89094c44da98b954eedeac495271d0f', callData: '0xabcd' })).toEqual(
-        '0x6b175474e89094c44da98b954eedeac495271d0f-0xabcd'
+        '0x6b175474e89094c44da98b954eedeac495271d0f-0xabcd',
       )
     })
   })

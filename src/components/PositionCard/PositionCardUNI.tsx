@@ -84,7 +84,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
           pair.getLiquidityValue(pair.token0, totalPoolTokensUNI, userPoolBalanceUNI, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokensUNI, userPoolBalanceUNI, false)
+          pair.getLiquidityValue(pair.token1, totalPoolTokensUNI, userPoolBalanceUNI, false),
         ]
       : [undefined, undefined]
 
@@ -209,7 +209,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
           pair.getLiquidityValue(pair.token0, totalPoolTokensUNI, userPoolBalanceUNI, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokensUNI, userPoolBalanceUNI, false)
+          pair.getLiquidityValue(pair.token1, totalPoolTokensUNI, userPoolBalanceUNI, false),
         ]
       : [undefined, undefined]
 

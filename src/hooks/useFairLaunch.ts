@@ -33,7 +33,7 @@ const useFairLaunch = (address: string) => {
         return err
       }
     },
-    [fairLaunchContract]
+    [fairLaunchContract],
   )
 
   const getRewardTokens = useCallback(async (): Promise<string[]> => {
@@ -56,13 +56,13 @@ const useFairLaunch = (address: string) => {
 
       const estimateGas = await fairLaunchContract.estimateGas.deposit(pid, amount, shouldHaverst)
       const tx = await fairLaunchContract.deposit(pid, amount, shouldHaverst, {
-        gasLimit: calculateGasMargin(estimateGas)
+        gasLimit: calculateGasMargin(estimateGas),
       })
       addTransactionWithType(tx, { type: 'Stake', summary: `${getFullDisplayBalance(amount)} ${name} Tokens` })
 
       return tx.hash
     },
-    [addTransactionWithType, fairLaunchContract]
+    [addTransactionWithType, fairLaunchContract],
   )
 
   // Withdraw
@@ -74,13 +74,13 @@ const useFairLaunch = (address: string) => {
 
       const estimateGas = await fairLaunchContract.estimateGas.withdraw(pid, amount)
       const tx = await fairLaunchContract.withdraw(pid, amount, {
-        gasLimit: calculateGasMargin(estimateGas)
+        gasLimit: calculateGasMargin(estimateGas),
       })
       addTransactionWithType(tx, { type: 'Unstake', summary: `${getFullDisplayBalance(amount)} ${name} Tokens` })
 
       return tx.hash
     },
-    [addTransactionWithType, fairLaunchContract]
+    [addTransactionWithType, fairLaunchContract],
   )
 
   const harvest = useCallback(
@@ -91,13 +91,13 @@ const useFairLaunch = (address: string) => {
 
       const estimateGas = await fairLaunchContract.estimateGas.harvest(pid)
       const tx = await fairLaunchContract.harvest(pid, {
-        gasLimit: calculateGasMargin(estimateGas)
+        gasLimit: calculateGasMargin(estimateGas),
       })
       addTransactionWithType(tx, { type: 'Harvest' })
 
       return tx.hash
     },
-    [addTransactionWithType, fairLaunchContract]
+    [addTransactionWithType, fairLaunchContract],
   )
 
   const harvestMultiplePools = useCallback(
@@ -108,13 +108,13 @@ const useFairLaunch = (address: string) => {
 
       const estimateGas = await fairLaunchContract.estimateGas.harvestMultiplePools(pids)
       const tx = await fairLaunchContract.harvestMultiplePools(pids, {
-        gasLimit: calculateGasMargin(estimateGas)
+        gasLimit: calculateGasMargin(estimateGas),
       })
       addTransactionWithType(tx, { type: 'Harvest' })
 
       return tx.hash
     },
-    [addTransactionWithType, fairLaunchContract]
+    [addTransactionWithType, fairLaunchContract],
   )
 
   return {
@@ -125,7 +125,7 @@ const useFairLaunch = (address: string) => {
     deposit,
     withdraw,
     harvest,
-    harvestMultiplePools
+    harvestMultiplePools,
   }
 }
 

@@ -8,15 +8,14 @@ export interface PairState {
 
 const initialState: PairState = {
   [Field.CURRENCY_A]: { currencyId: '' },
-  [Field.CURRENCY_B]: { currencyId: '' }
+  [Field.CURRENCY_B]: { currencyId: '' },
 }
 
 export default createReducer<PairState>(initialState, builder =>
   builder.addCase(selectCurrency, (state, { payload: { currencyId, field } }) => {
     return {
       ...state,
-      [field]: { currencyId: currencyId }
+      [field]: { currencyId: currencyId },
     }
-  })
+  }),
 )
-

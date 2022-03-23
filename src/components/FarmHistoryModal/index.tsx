@@ -107,7 +107,7 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
       }
       return
     },
-    [farms]
+    [farms],
   )
 
   const getTokenLabel = (history: FarmHistory, chainId?: ChainId) => {

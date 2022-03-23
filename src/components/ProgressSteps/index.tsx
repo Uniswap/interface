@@ -37,7 +37,7 @@ const Connector = styled.div<{ prevConfirmed?: boolean; disabled?: boolean }>`
   background: linear-gradient(
     90deg,
     ${({ theme, prevConfirmed, disabled }) =>
-    disabled ? theme.bg4 : transparentize(0.5, prevConfirmed ? theme.green1 : theme.primary)}
+        disabled ? theme.bg4 : transparentize(0.5, prevConfirmed ? theme.green1 : theme.primary)}
       0%,
     ${({ theme, prevConfirmed, disabled }) => (disabled ? theme.bg4 : prevConfirmed ? theme.primary : theme.bg4)} 80%
   );

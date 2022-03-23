@@ -26,7 +26,7 @@ import { RewardLockerVersion } from 'state/farms/types'
 const Schedule = ({
   rewardLockerAddress,
   schedule,
-  currentTimestamp
+  currentTimestamp,
 }: {
   rewardLockerAddress: string
   schedule: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number, RewardLockerVersion]
@@ -93,8 +93,8 @@ const Schedule = ({
     : schedule[2]
         .mul(
           BigNumber.from(rewardLockerVersion === RewardLockerVersion.V1 ? currentBlockNumber : currentTimestamp).sub(
-            schedule[0]
-          )
+            schedule[0],
+          ),
         )
         .div(schedule[1].sub(schedule[0]))
         .sub(schedule[3])
@@ -105,7 +105,7 @@ const Schedule = ({
   const toUSD: (value: BigNumber, decimals: number) => string = useCallback(
     (value, decimals) =>
       tokenPrices[0] && value ? `$${(tokenPrices[0] * parseFloat(fixedFormatting(value, decimals))).toFixed(2)}` : '',
-    [tokenPrices]
+    [tokenPrices],
   )
 
   const onVest = async () => {
@@ -148,7 +148,7 @@ const Schedule = ({
             fontSize: '14px',
             padding: '6px 18px',
             borderRadius: '999px',
-            backgroundColor: '#2FC99E'
+            backgroundColor: '#2FC99E',
           }}
         >
           <Trans>Fully Vested</Trans>
@@ -182,7 +182,7 @@ const Schedule = ({
     chainId &&
     getFormattedTimeFromSecond(
       schedule[1].sub(schedule[0]).toNumber() *
-        (rewardLockerVersion === RewardLockerVersion.V1 ? AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId] : 1)
+        (rewardLockerVersion === RewardLockerVersion.V1 ? AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId] : 1),
     )
 
   return (
@@ -208,7 +208,7 @@ const Schedule = ({
       <div
         style={{
           position: 'relative',
-          margin: '60px 0 0 0'
+          margin: '60px 0 0 0',
         }}
       >
         <AutoRow>
@@ -220,7 +220,7 @@ const Schedule = ({
               fontSize={12}
               style={{
                 position: 'absolute',
-                top: '-35px'
+                top: '-35px',
               }}
             >
               <Trans>CLAIMED</Trans> <br />
@@ -247,7 +247,7 @@ const Schedule = ({
                 width: `${vestedPercent}%`,
                 background: theme.primary,
                 borderRadius: '26px',
-                zIndex: 3
+                zIndex: 3,
               }}
             ></div>
 
@@ -259,7 +259,7 @@ const Schedule = ({
                 width: `${vestedAndVestablePercent}%`,
                 background: theme.lightGreen,
                 borderRadius: '26px',
-                zIndex: 2
+                zIndex: 2,
               }}
             ></div>
             {vestedPercent < 100 && above1400 && (
@@ -283,7 +283,7 @@ const Schedule = ({
                   style={{
                     position: 'absolute',
                     top: '-35px',
-                    left: `${vestedPercent < 10 ? '10' : vestedPercent > 80 ? '80' : vestedPercent}%`
+                    left: `${vestedPercent < 10 ? '10' : vestedPercent > 80 ? '80' : vestedPercent}%`,
                   }}
                 >
                   <Trans>UNLOCKED</Trans> <br />
@@ -305,7 +305,7 @@ const Schedule = ({
                     top: '13px',
                     padding: '5px 0 0 3px',
                     borderLeft: '1px dashed gray',
-                    left: `${vestedAndVestablePercent}%`
+                    left: `${vestedAndVestablePercent}%`,
                   }}
                 >
                   <Text color={theme.text} fontWeight={600} as="span">
@@ -344,7 +344,7 @@ const Schedule = ({
                 textAlign: 'end',
                 position: 'absolute',
                 top: '-35px',
-                right: '0'
+                right: '0',
               }}
             >
               <Text fontSize={14}>

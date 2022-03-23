@@ -60,7 +60,7 @@ export default function InfoHelper({
   isActive = false,
   color,
   placement,
-  width
+  width,
 }: {
   text: string | ReactNode
   size?: number

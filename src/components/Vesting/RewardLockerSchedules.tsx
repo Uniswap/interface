@@ -21,7 +21,7 @@ const RewardLockerSchedules = ({
   rewardLockerAddress,
   schedules,
   idx,
-  rewardLockerVersion
+  rewardLockerVersion,
 }: {
   rewardLockerAddress: string
   schedules: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number, RewardLockerVersion][]
@@ -62,7 +62,7 @@ const RewardLockerSchedules = ({
         fullyAmount: BigNumber.from(0),
         totalAmount: BigNumber.from(0),
         unlockedAmount: BigNumber.from(0),
-        token: schedule[4] as Token
+        token: schedule[4] as Token,
       }
     }
 
@@ -101,7 +101,7 @@ const RewardLockerSchedules = ({
       result[address].vestableIndexes.push(schedule[5])
     }
     result[address].vestableAmount = result[address].vestableAmount.add(
-      vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
+      vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount,
     )
     if (!fullyVestedAlready && (rewardLockerVersion === RewardLockerVersion.V2 || !!currentBlockNumber) && isEnd) {
       result[address].fullyIndexes.push(schedule[5])
@@ -183,7 +183,7 @@ const RewardLockerSchedules = ({
                   key={index}
                   currentTimestamp={currentTimestamp}
                 />
-              )
+              ),
           )}
 
           {schedules.map(
@@ -197,7 +197,7 @@ const RewardLockerSchedules = ({
                   key={index}
                   currentTimestamp={currentTimestamp}
                 />
-              )
+              ),
           )}
         </>
       )}

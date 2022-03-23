@@ -5,7 +5,7 @@ import {
   fetchingMulticallResults,
   removeMulticallListeners,
   toCallKey,
-  updateMulticallResults
+  updateMulticallResults,
 } from './actions'
 
 export interface MulticallState {
@@ -32,7 +32,7 @@ export interface MulticallState {
 }
 
 const initialState: MulticallState = {
-  callResults: {}
+  callResults: {},
 }
 
 export default createReducer(initialState, builder =>
@@ -67,7 +67,7 @@ export default createReducer(initialState, builder =>
             listeners[chainId][callKey][blocksPerFetch]--
           }
         })
-      }
+      },
     )
     .addCase(fetchingMulticallResults, (state, { payload: { chainId, fetchingBlockNumber, calls } }) => {
       state.callResults[chainId] = state.callResults[chainId] ?? {}
@@ -76,7 +76,7 @@ export default createReducer(initialState, builder =>
         const current = state.callResults[chainId][callKey]
         if (!current) {
           state.callResults[chainId][callKey] = {
-            fetchingBlockNumber
+            fetchingBlockNumber,
           }
         } else {
           if ((current.fetchingBlockNumber ?? 0) >= fetchingBlockNumber) return
@@ -104,8 +104,8 @@ export default createReducer(initialState, builder =>
         if ((current?.blockNumber ?? 0) > blockNumber) return
         state.callResults[chainId][callKey] = {
           data: results[callKey],
-          blockNumber
+          blockNumber,
         }
       })
-    })
+    }),
 )

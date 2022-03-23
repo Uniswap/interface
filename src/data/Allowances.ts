@@ -14,7 +14,7 @@ export function useTokenAllowance(token?: Token, owner?: string, spender?: strin
 
   return useMemo(() => (token && allowance ? new TokenAmount(token, allowance.toString()) : undefined), [
     token,
-    allowance
+    allowance,
   ])
 }
 
@@ -26,14 +26,14 @@ export function useTokenAllowanceUNI(token?: TokenUNI, owner?: string, spender?:
 
   return useMemo(() => (token && allowance ? new TokenAmountUNI(token, allowance.toString()) : undefined), [
     token,
-    allowance
+    allowance,
   ])
 }
 
 export function useTokenAllowanceSUSHI(
   token?: TokenSUSHI,
   owner?: string,
-  spender?: string
+  spender?: string,
 ): TokenAmountSUSHI | undefined {
   const contract = useTokenContract(token?.address, false)
 
@@ -42,6 +42,6 @@ export function useTokenAllowanceSUSHI(
 
   return useMemo(() => (token && allowance ? new TokenAmountSUSHI(token, allowance.toString()) : undefined), [
     token,
-    allowance
+    allowance,
   ])
 }

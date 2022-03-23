@@ -14,7 +14,7 @@ import {
   UpcomingPoolsWrapper,
   NewText,
   HistoryButton,
-  Divider
+  Divider,
 } from 'components/YieldPools/styleds'
 import Vesting from 'components/Vesting'
 import FarmHistoryModal from 'components/FarmHistoryModal'
