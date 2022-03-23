@@ -14,7 +14,8 @@ import {
   ARBITRUM_TOKEN_LISTS,
   BTTC_TOKEN_LISTS,
   AURORA_TOKEN_LISTS,
-  VELAS_TOKEN_LISTS
+  VELAS_TOKEN_LISTS,
+  OASIS_TOKEN_LISTS,
 } from '../../constants/lists'
 import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
 import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
@@ -36,6 +37,7 @@ import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupp
 import { WrappedTokenInfo } from './wrappedTokenInfo'
 import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
 import { VELAS_TOKEN_LIST } from 'constants/tokenLists/velas.tokenlist'
+import { OASIS_TOKEN_LIST } from 'constants/tokenLists/oasis.tokenlist'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -72,7 +74,8 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.ARBITRUM_TESTNET]: {},
   [ChainId.BTTC]: {},
   [ChainId.ARBITRUM]: {},
-  [ChainId.VELAS]: {}
+  [ChainId.VELAS]: {},
+  [ChainId.OASIS]: {},
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -95,12 +98,12 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
           ...tokenMap[token.chainId as ChainId],
           [token.address]: {
             token,
-            list: list
-          }
-        }
+            list: list,
+          },
+        },
       }
     },
-    { ...EMPTY_LIST }
+    { ...EMPTY_LIST },
   )
 
   listCache?.set(list, map)
@@ -141,6 +144,8 @@ export const getTokenAddressMap = (chainId?: ChainId) => {
       return listToTokenMap(BTTC_TOKEN_LIST)
     case ChainId.VELAS:
       return listToTokenMap(VELAS_TOKEN_LIST)
+    case ChainId.OASIS:
+      return listToTokenMap(OASIS_TOKEN_LIST)
     default:
       return listToTokenMap(MAINNET_TOKEN_LIST)
   }
@@ -254,10 +259,17 @@ export function useAllListsByChainId(): {
         obj[key] = allLists[key]
         return obj
       }, INITIAL_LISTS)
+  } else if (chainId && chainId === ChainId.OASIS) {
+    lists = Object.keys(allLists)
+      .filter(key => OASIS_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
   } else {
     lists = Object.keys(allLists)
       .filter(
-        key => !MATIC_TOKEN_LISTS.includes(key) && !BSC_TOKEN_LISTS.includes(key) && !AVAX_TOKEN_LISTS.includes(key)
+        key => !MATIC_TOKEN_LISTS.includes(key) && !BSC_TOKEN_LISTS.includes(key) && !AVAX_TOKEN_LISTS.includes(key),
       )
       .reduce((obj, key) => {
         obj[key] = allLists[key]
@@ -275,14 +287,14 @@ export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): Token
       .reduce<{ [chainId: string]: true }>((memo, value) => {
         memo[value] = true
         return memo
-      }, {})
+      }, {}),
   ).map(id => parseInt(id))
 
   return chainIds.reduce<Mutable<TokenAddressMap>>((memo, chainId) => {
     memo[chainId] = {
       ...map2[chainId],
       // map1 takes precedence
-      ...map1[chainId]
+      ...map1[chainId],
     }
     return memo
   }, {}) as TokenAddressMap
@@ -328,7 +340,7 @@ export function useInactiveListUrls(): string[] {
 
   return useMemo(
     () => Object.keys(lists).filter(url => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url)),
-    [lists, allActiveListUrls]
+    [lists, allActiveListUrls],
   )
 }
 

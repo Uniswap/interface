@@ -199,7 +199,7 @@ export const FooterContainer = styled.div`
 
 export const Powered = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 48px;
   gap: 52px;
   align-items: center;

@@ -46,6 +46,9 @@ export const SWITCH_NETWORK_PARAMS: {
   [ChainId.VELAS]: {
     chainId: '0x6a',
   },
+  [ChainId.OASIS]: {
+    chainId: '0xa516',
+  },
 }
 
 export const ADD_NETWORK_PARAMS: {
@@ -170,7 +173,18 @@ export const ADD_NETWORK_PARAMS: {
       decimals: 18,
     },
     rpcUrls: ['https://evmexplorer.velas.com/rpc'],
-    blockExplorerUrls: ['https://evmexplorer.velas.com/'],
+    blockExplorerUrls: ['https://evmexplorer.velas.com'],
+  },
+  [ChainId.OASIS]: {
+    chainId: '0xa516',
+    chainName: 'Oasis',
+    nativeCurrency: {
+      name: 'ROSE',
+      symbol: 'ROSE',
+      decimals: 18,
+    },
+    rpcUrls: ['https://emerald.oasis.dev'],
+    blockExplorerUrls: ['https://explorer.emerald.oasis.dev'],
   },
 }
 

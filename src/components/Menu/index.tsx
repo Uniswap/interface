@@ -171,6 +171,7 @@ export default function Menu() {
     if ([ChainId.BTTC].includes(chainId)) return 'https://wallet.bt.io/bridge'
     if ([ChainId.AURORA].includes(chainId)) return 'https://rainbowbridge.app'
     if ([ChainId.VELAS].includes(chainId)) return 'https://bridge.velaspad.io'
+    if ([ChainId.OASIS].includes(chainId)) return 'https://oasisprotocol.org/b-ridges'
 
     return ''
   }

@@ -34,6 +34,7 @@ const EXCHANGE_SUBGRAPH_URLS = {
   bttc: ['https://bttc-graph.dev.kyberengineering.io/subgraphs/name/dynamic-amm/kyberswap-bttc'],
   aurora: ['https://aurora-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-aurora'],
   velas: ['https://velas-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-velas'],
+  oasis: ['https://oasis-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-oasis'],
 }
 
 export function getExchangeSubgraphUrls(networkId: ChainId): string[] {
@@ -89,6 +90,8 @@ export function getExchangeSubgraphUrls(networkId: ChainId): string[] {
       return EXCHANGE_SUBGRAPH_URLS.aurora
     case ChainId.VELAS:
       return EXCHANGE_SUBGRAPH_URLS.velas
+    case ChainId.OASIS:
+      return EXCHANGE_SUBGRAPH_URLS.oasis
     default:
       return EXCHANGE_SUBGRAPH_URLS.mainnet
   }
@@ -161,6 +164,7 @@ export const getExchangeSubgraphClients = async () => {
     ChainId.BTTC,
     ChainId.AURORA,
     ChainId.VELAS,
+    ChainId.OASIS,
   ]
   const promises = chainIds.map(chainId => getExchangeSubgraphClient(chainId))
 

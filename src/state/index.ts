@@ -31,13 +31,13 @@ const store = configureStore({
     pair,
     pools,
     farms,
-    vesting
+    vesting,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ thunk: false, immutableCheck: false, serializableCheck: false }).concat(
-      save({ states: PERSISTED_KEYS, debounce: 1000 })
+      save({ states: PERSISTED_KEYS, debounce: 1000 }),
     ),
-  preloadedState: load({ states: PERSISTED_KEYS })
+  preloadedState: load({ states: PERSISTED_KEYS }),
 })
 
 store.dispatch(updateVersion())

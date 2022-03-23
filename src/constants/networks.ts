@@ -8,6 +8,7 @@ import CRONOS from '../assets/networks/cronos-network.png'
 import AURORA from '../assets/networks/aurora-network.svg'
 import ARBITRUM from '../assets/networks/arbitrum-network.svg'
 import VELAS from '../assets/networks/velas-network.png'
+import OASIS from '../assets/networks/oasis-network.svg'
 import BTT from '../assets/networks/bttc.png'
 
 export const SUPPORTED_NETWORKS = [
@@ -21,6 +22,7 @@ export const SUPPORTED_NETWORKS = [
   // ChainId.BTTC,
   ChainId.VELAS,
   ChainId.AURORA,
+  ChainId.OASIS,
 
   ...(process.env.REACT_APP_MAINNET_ENV === 'staging'
     ? [ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.BSCTESTNET, ChainId.AVAXTESTNET, ChainId.FANTOM, ChainId.CRONOSTESTNET]
@@ -48,6 +50,7 @@ export const NETWORK_ICON = {
   [ChainId.ARBITRUM]: ARBITRUM,
   [ChainId.ARBITRUM_TESTNET]: ARBITRUM,
   [ChainId.VELAS]: VELAS,
+  [ChainId.OASIS]: OASIS,
 }
 
 export const NETWORK_LABEL: { [chainId in ChainId]?: string } = {
@@ -70,6 +73,7 @@ export const NETWORK_LABEL: { [chainId in ChainId]?: string } = {
   [ChainId.ARBITRUM_TESTNET]: 'Arbitrum Testnet',
   [ChainId.BTTC]: 'BitTorrent',
   [ChainId.VELAS]: 'Velas',
+  [ChainId.OASIS]: 'Oasis',
 }
 
 export const TRUESIGHT_NETWORK_TO_CHAINID: { [p: string]: ChainId } = {

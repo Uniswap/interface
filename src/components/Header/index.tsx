@@ -34,7 +34,7 @@ const HeaderFrame = styled.div`
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
-    padding: 0 1rem;
+    padding: 1rem;
     width: calc(100%);
     position: relative;
   `};
@@ -398,8 +398,10 @@ export default function Header() {
                   ? `CRO`
                   : chainId && [199, 1028].includes(chainId)
                   ? 'BTT'
-                  : chainId && [106, 111].includes(chainId)
+                  : chainId && [ChainId.VELAS, 111].includes(chainId)
                   ? 'VLX'
+                  : chainId && [ChainId.OASIS].includes(chainId)
+                  ? 'ROSE'
                   : `ETH`}
               </BalanceText>
             ) : null}

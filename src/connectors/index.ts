@@ -53,6 +53,7 @@ export const injected = new InjectedConnector({
     ChainId.ARBITRUM_TESTNET,
     ChainId.AURORA,
     ChainId.VELAS,
+    ChainId.OASIS,
   ],
 })
 
@@ -73,6 +74,7 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.ARBITRUM_TESTNET,
   ChainId.AURORA,
   ChainId.VELAS,
+  ChainId.OASIS,
 ]
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
@@ -97,6 +99,7 @@ export const NETWORK_URLS: {
   [ChainId.ARBITRUM_TESTNET]: `https://rinkeby.arbitrum.io/rpc`,
   [ChainId.VELAS]: 'https://evmexplorer.velas.com/rpc',
   [ChainId.AURORA]: `https://mainnet.aurora.dev/GvfzNcGULXzWqaVahC8WPTdqEuSmwNCu3Nu3rtcVv9MD`,
+  [ChainId.OASIS]: `https://emerald.oasis.dev`,
 }
 
 export const walletconnect = new WalletConnectConnector({

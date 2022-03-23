@@ -74,8 +74,8 @@ export const LIST_OF_LISTS: Map<ChainId, string[]> = new Map([
       CMC_ALL_LIST,
       CMC_STABLECOIN,
       KLEROS_LIST,
-      GEMINI_LIST
-    ]
+      GEMINI_LIST,
+    ],
   ],
   [
     ChainId.ROPSTEN,
@@ -92,8 +92,8 @@ export const LIST_OF_LISTS: Map<ChainId, string[]> = new Map([
       CMC_ALL_LIST,
       CMC_STABLECOIN,
       KLEROS_LIST,
-      GEMINI_LIST
-    ]
+      GEMINI_LIST,
+    ],
   ],
   [ChainId.MATIC, [QUICK_SWAP]],
   [ChainId.MUMBAI, [QUICK_SWAP]],
@@ -104,12 +104,12 @@ export const LIST_OF_LISTS: Map<ChainId, string[]> = new Map([
   [ChainId.FANTOM, []],
   [ChainId.CRONOS, []],
   [ChainId.CRONOSTESTNET, []],
-  [ChainId.AURORA, []]
+  [ChainId.AURORA, []],
 ])
 export const ARBITRUM_TOKEN_LISTS: string[] = [ARBITRUM]
 export const BTTC_TOKEN_LISTS: string[] = []
 export const VELAS_TOKEN_LISTS: string[] = []
-
+export const OASIS_TOKEN_LISTS: string[] = []
 // default lists to be 'active' aka searched across
 export const DEFAULT_ACTIVE_LIST_URLS: string[] = [ARBITRUM]
 

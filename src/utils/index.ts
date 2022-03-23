@@ -46,6 +46,7 @@ import { getCronosTokenLogoURL } from './cronosTokenMapping'
 import { getAuroraTokenLogoURL } from './auroraTokenMapping'
 import { BTTC_TOKEN_LIST } from 'constants/tokenLists/bttc.tokenlist'
 import { VELAS_TOKEN_LIST } from 'constants/tokenLists/velas.tokenlist'
+import { OASIS_TOKEN_LIST } from 'constants/tokenLists/oasis.tokenlist'
 import { ARBITRUM_TOKEN_LIST } from 'constants/tokenLists/arbitrum.tokenlist'
 import { FANTOM_MAINNET_TOKEN_LIST } from 'constants/tokenLists/fantom.mainnet.tokenlist'
 
@@ -106,6 +107,8 @@ function getEtherscanDomain(chainId: ChainId): string {
       return 'https://bttcscan.com'
     case ChainId.VELAS:
       return 'https://evmexplorer.velas.com'
+    case ChainId.OASIS:
+      return 'https://explorer.emerald.oasis.dev'
     default:
       return ''
   }
@@ -166,6 +169,8 @@ export function getEtherscanLinkText(chainId: ChainId): string {
   if (ChainId.BTTC === chainId) return 'View on BTTCScan'
 
   if (ChainId.VELAS === chainId) return 'View on Velas Evm Explorer'
+
+  if (ChainId.OASIS === chainId) return 'View on Oasis Emerald Explorer'
 
   return 'View on Etherscan'
 }
@@ -373,32 +378,6 @@ export function formattedNumLong(num: number, usd = false) {
   return Number(num.toFixed(5)).toLocaleString()
 }
 
-// console.log(formattedNumLong(123456789123456789.123456789123456789, true))
-// console.log(formattedNumLong(123456789123456.123456789123456789, true))
-// console.log(formattedNumLong(123456789123.123456789123456789, true))
-// console.log(formattedNumLong(123456789.123456789123456789, true))
-// console.log(formattedNumLong(123456.123456789123456789, true))
-// console.log(formattedNumLong(123.123456789123456789, true))
-// console.log(formattedNumLong(0.123456789123456789, true))
-// console.log(formattedNumLong(0.0123456789123456789, true))
-// console.log(formattedNumLong(0.00123456789123456789, true))
-// console.log(formattedNumLong(0.000123456789123456789, true))
-// console.log(formattedNumLong(0.0000123456789123456789, true))
-// console.log(formattedNumLong(0.00000123456789123456789, true))
-// console.log(formattedNumLong(0.000000123456789123456789, true))
-// console.log(formattedNumLong(0.0000000123456789123456789, true))
-// console.log(formattedNumLong(0.00000000123456789123456789, true))
-// console.log(formattedNumLong(0.000000000123456789123456789, true))
-// console.log(formattedNumLong(0.0000000000123456789123456789, true))
-// console.log(formattedNumLong(0.00000000000123456789123456789, true))
-// console.log(formattedNumLong(0.000000000000123456789123456789, true))
-// console.log(formattedNumLong(0.0000000000000123456789123456789, true))
-// console.log(formattedNumLong(0.00000000000000123456789123456789, true))
-// console.log(formattedNumLong(0.000000000000000123456789123456789, true))
-// console.log(formattedNumLong(123, false))
-// console.log(formattedNumLong(123456, false))
-// console.log(formattedNumLong(123456789, false))
-
 /**
  * get standard percent change between two values
  * @param {*} valueNow
@@ -599,6 +578,10 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
       imageURL =
         VELAS_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
       break
+    case ChainId.OASIS:
+      imageURL =
+        OASIS_TOKEN_LIST.tokens.find(item => item.address.toLowerCase() === address.toLowerCase())?.logoURI || ''
+      break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
         address,
@@ -636,6 +619,8 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
         return 'BTT'
       case ChainId.VELAS:
         return 'VLX'
+      case ChainId.OASIS:
+        return 'ROSE'
       default:
         return 'ETH'
     }

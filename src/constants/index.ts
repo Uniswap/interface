@@ -28,6 +28,7 @@ export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.BTTC]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
   [ChainId.AURORA]: '0xd1f345593cb69fa546852b2DEb90f373F8AdC903',
   [ChainId.VELAS]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
+  [ChainId.OASIS]: '0x83D4908c1B4F9Ca423BEE264163BC1d50F251c31',
 }
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -63,6 +64,7 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.BTTC]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
   [ChainId.AURORA]: '0x0622973c3A8893838A3bc0c5309a8c6897148795',
   [ChainId.VELAS]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
+  [ChainId.OASIS]: '0xEaE47c5D99f7B31165a7f0c5f7E0D6afA25CFd55',
 }
 
 // Aggregation Router
@@ -77,6 +79,7 @@ export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
   [ChainId.BTTC]: '0xdf1a1b60f2d438842916c0adc43748768353ec25',
   [ChainId.AURORA]: '0xDF1A1b60f2D438842916C0aDc43748768353EC25',
   [ChainId.VELAS]: '0xDF1A1b60f2D438842916C0aDc43748768353EC25',
+  [ChainId.OASIS]: '0xDF1A1b60f2D438842916C0aDc43748768353EC25',
 }
 
 export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
@@ -90,6 +93,7 @@ export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
   [ChainId.ARBITRUM]: '0xd12bcdfb9a39be79da3bdf02557efdcd5ca59e77',
   [ChainId.AURORA]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
   [ChainId.VELAS]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
+  [ChainId.OASIS]: '0xd12bcdFB9A39BE79DA3bDF02557EFdcD5CA59e77',
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -124,6 +128,7 @@ export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.BTTC]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
   [ChainId.AURORA]: '0x39a8809fbbf22ccaeac450eaf559c076843eb910',
   [ChainId.VELAS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
+  [ChainId.OASIS]: '0xD9bfE9979e9CA4b2fe84bA5d4Cf963bBcB376974',
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -149,6 +154,7 @@ export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.BTTC]: '',
   [ChainId.AURORA]: '',
   [ChainId.VELAS]: '',
+  [ChainId.OASIS]: '',
 }
 
 export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xa650f16F41cA35bF21594eef706290D26B12FF2e'
@@ -182,6 +188,7 @@ export const CLAIM_REWARD_SC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ARBITRUM_TESTNET]: '',
   [ChainId.AURORA]: '',
   [ChainId.VELAS]: '',
+  [ChainId.OASIS]: '',
 }
 export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
@@ -216,6 +223,7 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.BTTC]: 'https://analytics.kyberswap.com/bittorrent',
   [ChainId.AURORA]: 'https://analytics.kyberswap.com/aurora',
   [ChainId.VELAS]: 'https://analytics.kyberswap.com/velas',
+  [ChainId.OASIS]: 'https://analytics.kyberswap.com/oasis',
 }
 
 // a list of tokens by chain
@@ -326,8 +334,10 @@ export const DAI: { [chainId in ChainId]: Token } = {
     'DAI',
     'Dai Stablecoin',
   ),
-  //not existing on velas
+  //not existing on Velas
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0xe7dC549AE8DB61BDE71F22097BEcc8dB542cA100', 18, 'DAI', 'Dai Stablecoin'),
+  //not existing on Oasis
+  [ChainId.OASIS]: new Token(ChainId.OASIS, '0xe7dC549AE8DB61BDE71F22097BEcc8dB542cA100', 18, 'DAI', 'Dai Stablecoin'),
 }
 
 export const USDC: { [chainId in ChainId]: Token } = {
@@ -387,6 +397,7 @@ export const USDC: { [chainId in ChainId]: Token } = {
   [ChainId.BTTC]: new Token(ChainId.BTTC, '0xCa424b845497f7204D9301bd13Ff87C0E2e86FCF', 18, 'USDC_b', 'USD Coin_BSC'),
   [ChainId.AURORA]: new Token(ChainId.AURORA, '0xB12BFcA5A55806AaF64E99521918A4bf0fC40802', 6, 'USDC', 'USD Coin'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0xe2C120f188eBd5389F71Cf4d9C16d05b62A58993', 6, 'USDC', 'Multichain USDC'),
+  [ChainId.OASIS]: new Token(ChainId.OASIS, '0x94fbffe5698db6f54d6ca524dbe673a7729014be', 6, 'USDC', 'USD Coin'),
 }
 
 export const USDT: { [chainId in ChainId]: Token } = {
@@ -451,6 +462,13 @@ export const USDT: { [chainId in ChainId]: Token } = {
   [ChainId.BTTC]: new Token(ChainId.BTTC, '0x9B5F27f6ea9bBD753ce3793a07CbA3C74644330d', 18, 'USDT_b', 'Tether USD_BSC'),
   [ChainId.AURORA]: new Token(ChainId.AURORA, '0x4988a896b1227218e4A686fdE5EabdcAbd91571f', 6, 'USDT', 'Tether USD'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0x01445C31581c354b7338AC35693AB2001B50b9aE', 6, 'USDT', 'Multichain USDT'),
+  [ChainId.OASIS]: new Token(
+    ChainId.OASIS,
+    '0xdC19A122e268128B5eE20366299fc7b5b199C8e3',
+    6,
+    'USDT',
+    'Tether USD (Wormhole)',
+  ),
 }
 
 export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
@@ -488,54 +506,13 @@ export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId in ChainId]: number } = {
   [ChainId.ARBITRUM_TESTNET]: 1,
   [ChainId.BTTC]: 2,
   [ChainId.VELAS]: 1,
+  [ChainId.OASIS]: 10,
 }
 
-export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
-  [ChainId.MAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.MAINNET]) * 60 * 24 * 365),
-  [ChainId.RINKEBY]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.RINKEBY]) * 60 * 24 * 365),
-  [ChainId.ROPSTEN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.ROPSTEN]) * 60 * 24 * 365),
-  [ChainId.GÖRLI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.GÖRLI]) * 60 * 24 * 365),
-  [ChainId.KOVAN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.KOVAN]) * 60 * 24 * 365),
-  [ChainId.MATIC]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.MATIC]) * 60 * 24 * 365),
-  [ChainId.MUMBAI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.MUMBAI]) * 60 * 24 * 365),
-  [ChainId.BSCTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.BSCTESTNET]) * 60 * 24 * 365),
-  [ChainId.BSCMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.BSCMAINNET]) * 60 * 24 * 365),
-  [ChainId.AVAXTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.AVAXTESTNET]) * 60 * 24 * 365),
-  [ChainId.AVAXMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.AVAXMAINNET]) * 60 * 24 * 365),
-  [ChainId.FANTOM]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.FANTOM]) * 60 * 24 * 365),
-  [ChainId.CRONOSTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.CRONOSTESTNET]) * 60 * 24 * 365),
-  [ChainId.CRONOS]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.CRONOS]) * 60 * 24 * 365),
-  [ChainId.AURORA]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.AURORA]) * 60 * 24 * 365),
-  [ChainId.BTTC]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.BTTC]) * 60 * 24 * 365),
-  [ChainId.ARBITRUM_TESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.ARBITRUM_TESTNET]) * 60 * 24 * 365),
-  [ChainId.ARBITRUM]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.ARBITRUM]) * 60 * 24 * 365),
-  [ChainId.VELAS]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.VELAS]) * 60 * 24 * 365),
-}
+export const BLOCKS_PER_YEAR = (chainId: ChainId): number =>
+  Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[chainId]) * 60 * 24 * 365)
 
 export const SECONDS_PER_YEAR = 31556926
-
-const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
-export const UNI: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.BSCTESTNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.BSCMAINNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.AVAXTESTNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.AVAXMAINNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.FANTOM]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.CRONOSTESTNET]: new Token(ChainId.CRONOSTESTNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.CRONOS]: new Token(ChainId.CRONOS, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.AURORA]: new Token(ChainId.AURORA, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.ARBITRUM_TESTNET]: new Token(ChainId.ARBITRUM_TESTNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0', 18, 'UNI', 'Uniswap'),
-  [ChainId.BTTC]: new Token(ChainId.BTTC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.VELAS]: new Token(ChainId.VELAS, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-}
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
@@ -557,6 +534,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.ARBITRUM]: [WETH[ChainId.ARBITRUM]],
   [ChainId.ARBITRUM_TESTNET]: [WETH[ChainId.ARBITRUM_TESTNET]],
   [ChainId.VELAS]: [WETH[ChainId.VELAS]],
+  [ChainId.OASIS]: [WETH[ChainId.OASIS]],
 }
 
 export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
@@ -652,6 +630,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.BTTC]: new Token(ChainId.BTTC, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
+  [ChainId.OASIS]: new Token(ChainId.OASIS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
 }
 
 export const KNCL_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
@@ -712,6 +691,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.CRONOS]: [...WETH_ONLY[ChainId.CRONOS], DAI[ChainId.CRONOS], USDC[ChainId.CRONOS], USDT[ChainId.CRONOS]],
   [ChainId.AURORA]: [...WETH_ONLY[ChainId.AURORA], DAI[ChainId.AURORA], USDC[ChainId.AURORA], USDT[ChainId.AURORA]],
   [ChainId.VELAS]: [...WETH_ONLY[ChainId.VELAS], USDC[ChainId.VELAS], USDT[ChainId.VELAS]],
+  [ChainId.OASIS]: [...WETH_ONLY[ChainId.OASIS], USDC[ChainId.OASIS], USDT[ChainId.OASIS]],
 }
 
 /**
@@ -767,6 +747,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
   ],
   [ChainId.BTTC]: [...WETH_ONLY[ChainId.BTTC], DAI[ChainId.BTTC], USDC[ChainId.BTTC], USDT[ChainId.BTTC]],
   [ChainId.VELAS]: [...WETH_ONLY[ChainId.VELAS], USDC[ChainId.VELAS], USDT[ChainId.VELAS]],
+  [ChainId.OASIS]: [...WETH_ONLY[ChainId.OASIS], USDC[ChainId.OASIS], USDT[ChainId.OASIS]],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -812,6 +793,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     USDT[ChainId.ARBITRUM],
   ],
   [ChainId.VELAS]: [...WETH_ONLY[ChainId.VELAS], USDC[ChainId.VELAS], USDT[ChainId.VELAS]],
+  [ChainId.OASIS]: [...WETH_ONLY[ChainId.OASIS], USDC[ChainId.OASIS], USDT[ChainId.OASIS]],
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -1109,6 +1091,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.ARBITRUM_TESTNET]: [],
   [ChainId.BTTC]: [],
   [ChainId.VELAS]: [],
+  [ChainId.OASIS]: [],
 }
 
 export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
@@ -1139,6 +1122,7 @@ export const FAIRLAUNCH_V2_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.BTTC]: [],
   [ChainId.AURORA]: [],
   [ChainId.VELAS]: [],
+  [ChainId.OASIS]: [],
 }
 
 export const FARMING_POOLS_CHAIN_STAKING_LINK: { [key: string]: string } = {
@@ -1223,11 +1207,13 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
   [ChainId.ARBITRUM_TESTNET]: [],
   [ChainId.BTTC]: [],
   [ChainId.VELAS]: [],
+  [ChainId.OASIS]: [],
 }
 
 export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 export const KNC_COINGECKO_ID = 'kyber-network-crystal'
 
+//https://api.coingecko.com/api/v3/asset_platforms
 export const COINGECKO_NETWORK_ID: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: 'ethereum',
   [ChainId.BSCMAINNET]: 'binance-smart-chain',
@@ -1240,6 +1226,7 @@ export const COINGECKO_NETWORK_ID: { [chainId in ChainId]: string } = {
   // TODO: check this
   [ChainId.BTTC]: 'tron',
   [ChainId.VELAS]: 'velas',
+  [ChainId.OASIS]: 'oasis',
 
   [ChainId.ROPSTEN]: '',
   [ChainId.RINKEBY]: '',
@@ -1252,6 +1239,7 @@ export const COINGECKO_NETWORK_ID: { [chainId in ChainId]: string } = {
   [ChainId.ARBITRUM_TESTNET]: '',
 }
 
+//https://api.coingecko.com/api/v3/coins/list
 export const COINGECKO_NATIVE_TOKEN_ID: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: 'ethereum',
   [ChainId.BSCMAINNET]: 'binancecoin',
@@ -1265,6 +1253,7 @@ export const COINGECKO_NATIVE_TOKEN_ID: { [chainId in ChainId]: string } = {
   // TODO: check this
   [ChainId.BTTC]: 'bittorrent',
   [ChainId.VELAS]: 'velas',
+  [ChainId.OASIS]: 'oasis-network',
 
   [ChainId.ROPSTEN]: '',
   [ChainId.RINKEBY]: '',
@@ -1343,6 +1332,7 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
   [ChainId.ARBITRUM_TESTNET]: [],
   [ChainId.BTTC]: [],
   [ChainId.VELAS]: [],
+  [ChainId.OASIS]: [],
 }
 
 // This variable to handle crazy APR which it can be wrong calculations or a bug
@@ -1368,4 +1358,5 @@ export const FEE_OPTIONS: { [chainId: number]: number[] } = {
   [ChainId.ARBITRUM_TESTNET]: [1, 5, 30, 50, 100],
   [ChainId.AURORA]: [1, 5, 30, 50, 100],
   [ChainId.VELAS]: [1, 5, 30, 50, 100],
+  [ChainId.OASIS]: [1, 5, 30, 50, 100],
 }

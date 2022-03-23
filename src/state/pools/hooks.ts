@@ -373,6 +373,7 @@ export function useAllPoolsData(): {
 
   const getPoolsData = useCallback(
     async (currentRenderTime: number) => {
+      if (currentRenderTime > 200) return //preventing infinity loop may happen accidentally in the future
       try {
         if (poolCountSubgraph > 0 && poolsData.length === 0 && !error && ethPrice) {
           dispatch(setLoading(true))
@@ -390,7 +391,7 @@ export function useAllPoolsData(): {
         currentRenderTime === latestRenderTime.current && dispatch(setLoading(false))
       }
     },
-    [apolloClient, chainId, dispatch, error, ethPrice, poolsData, poolCountSubgraph],
+    [apolloClient, chainId, dispatch, error, ethPrice, poolCountSubgraph, poolsData.length],
   )
 
   useEffect(() => {
