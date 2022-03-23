@@ -8,6 +8,7 @@ import { useAddTransaction } from 'lib/hooks/transactions'
 import useActiveWeb3React from 'lib/hooks/useActiveWeb3React'
 import { useSetOldestValidBlock } from 'lib/hooks/useIsValidBlock'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
+import { Spinner } from 'lib/icons'
 import { displayTxHashAtom, feeOptionsAtom, Field } from 'lib/state/swap'
 import { TransactionType } from 'lib/state/transactions'
 import { useTheme } from 'lib/theme'
@@ -66,7 +67,9 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const setDisplayTxHash = useUpdateAtom(displayTxHashAtom)
   const setOldestValidBlock = useSetOldestValidBlock()
 
+  const [isPending, setIsPending] = useState(false)
   const onWrap = useCallback(async () => {
+    setIsPending(true)
     try {
       const transaction = await wrapCallback?.()
       if (!transaction) return
@@ -82,7 +85,10 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
       // TODO(zzmp): Surface errors from wrap.
       console.log(e)
     }
+    setIsPending(true)
   }, [addTransaction, chainId, setDisplayTxHash, wrapCallback, wrapType])
+  useEffect(() => setIsPending(false), [onWrap])
+
   const onSwap = useCallback(async () => {
     try {
       const transaction = await swapCallback?.()
@@ -124,9 +130,11 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     } else if (wrapType === WrapType.NONE) {
       return approvalAction ? { action: approvalAction } : { onClick: () => setOpen(true) }
     } else {
-      return { onClick: onWrap }
+      return isPending
+        ? { action: { message: <Trans>Confirm in your wallet</Trans>, icon: Spinner } }
+        : { onClick: onWrap }
     }
-  }, [approvalAction, disableSwap, onWrap, wrapType])
+  }, [approvalAction, disableSwap, isPending, onWrap, wrapType])
   const Label = useCallback(() => {
     switch (wrapType) {
       case WrapType.UNWRAP:
