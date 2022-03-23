@@ -51,6 +51,7 @@ function KeyButton({ action, disabled, label, setValue, value }: KeyButtonProps)
       disabled={isDisabled}
       height="25%"
       justifyContent="center"
+      testID={'decimal-pad-' + label}
       textAlign="center"
       textColor={isDisabled ? 'gray400' : 'textColor'}
       textVariant="h1"

@@ -10,13 +10,20 @@ export function Swap() {
   it('fills the swap form', async () => {
     await element(by.id(ElementName.TabBarSwap)).tap()
 
-    await element(by.id('amount-input-in')).typeText('1')
-
     await element(by.id('currency-selector-toggle-in')).tap()
-    await element(by.id('currency-option-ETH')).tap()
+    await element(by.id('currency-option-1-ETH')).tap()
 
     await element(by.id('currency-selector-toggle-out')).tap()
-    await element(by.id('currency-option-DAI')).tap()
+    await element(by.id('currency-option-1-DAI')).tap()
+
+    // type 1.23
+    await element(by.id('decimal-pad-1')).tap()
+    await element(by.id('decimal-pad-.')).tap()
+    await element(by.id('decimal-pad-2')).tap()
+    await element(by.id('decimal-pad-.')).tap() // should be ignored
+    await element(by.id('decimal-pad-0')).tap()
+    await element(by.id('decimal-pad-←')).tap()
+    await element(by.id('decimal-pad-3')).tap()
 
     // TODO: mock routing api request
     // wait for routing api

@@ -33,7 +33,7 @@ export function Option({
   const nameMatches = matches?.filter((m) => m.key === 'name')
 
   return (
-    <Pressable testID={`currency-option-${currency.symbol}`} onPress={onPress}>
+    <Pressable testID={`currency-option-${currency.chainId}-${currency.symbol}`} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="sm">
         <Flex centered row gap="xs">
           <Flex centered row gap="sm">
