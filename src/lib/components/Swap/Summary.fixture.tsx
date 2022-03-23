@@ -41,7 +41,7 @@ function Fixture() {
   return trade ? (
     <Modal color="dialog">
       <SummaryDialog
-        onConfirm={() => void 0}
+        onConfirm={async () => void 0}
         trade={trade}
         slippage={slippage}
         inputUSDC={inputUSDC}
