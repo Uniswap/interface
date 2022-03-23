@@ -54,7 +54,7 @@ The last line of the output will have the IPFS hash. Different machines should o
 `cypress open`
 
 ### Cypress run
-`cypress run`
+`yarn cypress:run`
 
 ### Synpress
 `yarn synpress:run`
