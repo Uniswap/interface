@@ -87,6 +87,8 @@ export const dataApi = createApi({
       },
       transformResponse: (response: { data: CovalentHistoricalPrices }, _, args) =>
         response.data.reduce<SpotPrices>((spotPrices, cur) => {
+          if (cur.prices.length < 2) return spotPrices
+
           // first will always be today as result is in chronological descending order
           const [today, yesterday] = cur.prices
           spotPrices[buildCurrencyId(args.chainId, utils.getAddress(cur.contract_address))] = {
@@ -100,6 +102,8 @@ export const dataApi = createApi({
     /**
      * Fetches daily prices given a chain and contract address.
      * https://www.covalenthq.com/docs/api/#/0/Get%20historical%20prices%20by%20ticker%20symbol/USD/1
+     *
+     * PERF: consider batching addresses
      */
     dailyTokenPrices: builder.query<
       DailyPrices,
@@ -115,7 +119,7 @@ export const dataApi = createApi({
         return `pricing/historical_by_addresses_v2/${chainId}/${baseQueryOptions['quote-currency']}/${address}/?${q}`
       },
       transformResponse: (response: { data: CovalentHistoricalPrices }) =>
-        response.data[0]?.prices.map(
+        response.data?.[0]?.prices.map(
           (p: CovalentHistoricalPriceItem): DailyPrice => ({
             timestamp: dayjs(p.date).unix(),
             close: p.price,

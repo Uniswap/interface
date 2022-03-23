@@ -5,6 +5,7 @@ import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from 'src/constants/chain
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useSpotPricesQuery } from 'src/features/dataApi/slice'
 import { SpotPrices } from 'src/features/dataApi/types'
+import { isTestnet } from 'src/utils/chainId'
 
 export function useSpotPrices(currencies: Currency[]): {
   spotPrices: SpotPrices
@@ -26,6 +27,7 @@ export function useSpotPrices(currencies: Currency[]): {
   let loading = false
   for (const chainId of ALL_SUPPORTED_CHAIN_IDS) {
     if (!activeChainsIds.includes(chainId)) continue
+    if (isTestnet(chainId)) continue
 
     const addressesToFetch = addresses[chainId]
     // eslint-disable-next-line react-hooks/rules-of-hooks

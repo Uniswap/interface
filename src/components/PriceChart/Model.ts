@@ -72,7 +72,7 @@ export function buildGraph(
   height = HEIGHT
 ): GraphData | null {
   if (!priceList || priceList.length === 0) return null
-  priceList = priceList.reverse()
+  priceList = priceList.slice().reverse()
 
   const formattedValues = priceList.map(
     (price) => [price.timestamp, price.close] as [number, number]

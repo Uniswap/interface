@@ -48,6 +48,7 @@ export function CurrencySearchResultList({
       keyExtractor={(item) => currencyId(item.item)}
       renderItem={renderItem}
       style={styles.list}
+      windowSize={2}
     />
   )
 }

@@ -1,12 +1,14 @@
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Currency } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { serialize } from 'react-native-redash'
 import Svg, { Path } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout/Box'
 import { buildGraph } from 'src/components/PriceChart/Model'
 import { useDailyTokenPricesQuery } from 'src/features/dataApi/slice'
+import { isTestnet } from 'src/utils/chainId'
 import { logger } from 'src/utils/logger'
 
 // number of datapoints to normalize to
@@ -28,15 +30,16 @@ export const InlinePriceChart = ({ currency }: InlineGraphProps) => {
     isError,
     error,
     isLoading,
-  } = useDailyTokenPricesQuery({
-    chainId: currency.chainId,
-    address: currency.wrapped.address,
-    from: lastWeek,
-  })
-
-  if (isError) {
-    logger.error('InlineGraph', '', `Error fetching price for ${currency.wrapped.symbol}: ${error}`)
-  }
+    isSuccess,
+  } = useDailyTokenPricesQuery(
+    isTestnet(currency.chainId)
+      ? skipToken
+      : {
+          address: currency.wrapped.address,
+          chainId: currency.chainId,
+          from: lastWeek,
+        }
+  )
 
   const graph = useMemo(
     () =>
@@ -46,8 +49,27 @@ export const InlinePriceChart = ({ currency }: InlineGraphProps) => {
     [error, isLoading, prices]
   )
 
-  if (!graph) {
-    logger.debug('InlinePriceChart', '', `No price data to display for ${currency.wrapped.symbol}`)
+  useEffect(() => {
+    if (isError) {
+      logger.error(
+        'InlineGraph',
+        '',
+        `Error fetching price for ${currency.wrapped.symbol}: ${error}`
+      )
+    }
+  }, [currency.wrapped.symbol, error, isError])
+
+  useEffect(() => {
+    if (isSuccess && !graph) {
+      logger.debug(
+        'InlinePriceChart',
+        '',
+        `No price data to display for ${currency.wrapped.symbol}`
+      )
+    }
+  }, [currency.wrapped.symbol, error, graph, isSuccess])
+
+  if (isError || !graph) {
     return null
   }
 
