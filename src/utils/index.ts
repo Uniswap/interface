@@ -200,8 +200,8 @@ export const switchOrAddNetwork = (networkDetails?: NetworkDetails, account?: st
     })
 }
 
-export const StyledConnectedIcon = styled(ConnectedSvg)<{ width?: string, padding?: string, margin?: string }>`
-  min-width: ${ props => (props.width ? props.width : "22px")};
-  padding: ${ props => (props.padding ? props.padding : "0")};
-  margin: ${ props => (props.margin ? props.margin : "0")};
+export const StyledConnectedIcon = styled(ConnectedSvg)<{ width?: string; padding?: string; margin?: string }>`
+  min-width: ${props => (props.width ? props.width : '22px')};
+  padding: ${props => (props.padding ? props.padding : '0')};
+  margin: ${props => (props.margin ? props.margin : '0')};
 `

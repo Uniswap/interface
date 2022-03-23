@@ -29,9 +29,11 @@ notes.txt
 
 package-lock.json
 
-cypress/videos
-cypress/screenshots
-cypress/fixtures/example.json
+tests/videos
+tests/screenshots
+tests/cypress/fixtures/example.json
+
+mochawesome-report
 
 .env
 

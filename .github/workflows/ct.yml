@@ -1,0 +1,45 @@
+name: CT
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  CI:
+    name: Build
+    runs-on: ubuntu-20.04
+    container: cypress/browsers:node12.13.0-chrome78-ff70
+    env:
+      NODE_ENV: false
+    strategy:
+      matrix:
+        node_version: [16]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Install
+        run: yarn install
+      - name: Lint
+        run: yarn lint
+      - name: Install cypress
+        run: yarn add -D cypress@9.2.0 && yarn cypress install && yarn cypress verify
+      - name: Run integration synpress tests
+        run: yarn synpress:ct
+        continue-on-error: true
+      - name: Merge test results into one
+        run: npm run report:merge
+        continue-on-error: true
+      - name: Generate HTML report
+        run: npm run report:generate
+        continue-on-error: true
+      - name: Deploy report page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public-report
+        continue-on-error: true

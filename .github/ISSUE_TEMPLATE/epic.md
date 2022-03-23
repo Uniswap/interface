@@ -7,6 +7,16 @@ about: Create a new Epic
 **Description**
 A clear and concise description of what the feature is about.
 
+#### Definition of done
+- [ ] Description is created (Task creator)
+- [ ] Code is complete (Developer)
+- [ ] Scope of test and what was done section is defined in task (Developer)
+- [ ] Review passed (Code reviewer)
+- [ ] Verified manually (QA)
+- [ ] Test cases created/updated if necessary (QA)
+- [ ] Change successfully merged
+- [ ] Release notes added if needed
+
 **Additional resources**
 Some examples of resources that might be added here
 * Problem statement definition

@@ -1,14 +1,13 @@
 {
   "baseUrl": "http://localhost:3000",
   "userAgent": "synpress",
-  "retries": { "runMode": 0, "openMode": 0 },
-  "integrationFolder": "tests/cypress/integration",
+  "retries": { "runMode": 2, "openMode": 2 },
+  "integrationFolder": "tests/synpress/specs",
   "screenshotsFolder": "tests/screenshots",
   "videosFolder": "tests/videos",
   "chromeWebSecurity": true,
   "viewportWidth": 1366,
   "viewportHeight": 768,
-  "supportFile": "tests/cypress/support/index.ts",
   "video": false,
   "component": {
     "componentFolder": ".",

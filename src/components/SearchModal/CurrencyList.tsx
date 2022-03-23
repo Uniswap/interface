@@ -104,7 +104,7 @@ function CurrencyRow({
       <Box>
         <AutoRow>
           <CurrencyLogo currency={currency} size={'20px'} />
-          <Text marginLeft={'6px'} fontWeight={500}>
+          <Text marginLeft={'6px'} fontWeight={500} data-testid={"select-button-" + currency.symbol?.toLowerCase()}>
             {currency.symbol}
           </Text>
         </AutoRow>

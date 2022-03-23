@@ -30,7 +30,7 @@ export const NetworkSwitcher = ({
   })
 
   return (
-    <div ref={popoverRef}>
+    <div ref={popoverRef} data-testid="network-switcher">
       <StyledPopover
         placement={placement}
         content={

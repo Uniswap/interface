@@ -62,7 +62,19 @@ export default function Option({
         <AutoRow>
           {connected && <StyledConnectedIcon margin="0 5px 0 0" />}
           {logoSrc && <Icon src={logoSrc} alt={'Icon'} />}
-          <HeaderText connected={connected}>{name}</HeaderText>
+          <HeaderText
+            connected={connected}
+            data-testid={
+              preset.name
+                ?.valueOf()
+                .toString()
+                .toLowerCase()
+                .replace(/\s/g, '-')
+                .replace('.', '') + '-network-button'
+            }
+          >
+            {name}
+          </HeaderText>
         </AutoRow>
       </OptionCardLeft>
     </OptionCardClickable>
