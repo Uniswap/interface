@@ -256,7 +256,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = 'ipfs://QmSbyVo6Kz5BuqyAHYcN7UkeCk5cALFp6QmPUN6NtPpDWL'
+export const DEFAULT_TOKEN_LIST = 'ipfs://QmUWnK6AFHZ3S1hR7Up1h3Ntax3fP1ZyiTptDNG2cWLTeK'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 

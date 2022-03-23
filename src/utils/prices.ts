@@ -20,10 +20,14 @@ import { parseUnits } from 'ethers/lib/utils'
 
 const ONE_HUNDRED_PERCENT = new Percent(_10000, _10000)
 
+interface TradePriceBreakdown {
+  priceImpactWithoutFee?: Percent
+  realizedLPFee?: Percent
+  realizedLPFeeAmount?: CurrencyAmount
+}
+
 // computes price breakdown for the trade
-export function computeTradePriceBreakdown(
-  trade?: Trade
-): { priceImpactWithoutFee?: Percent; realizedLPFee?: Percent; realizedLPFeeAmount?: CurrencyAmount } {
+export function computeTradePriceBreakdown(trade?: Trade): TradePriceBreakdown {
   // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
   const realizedLPFee = !trade
