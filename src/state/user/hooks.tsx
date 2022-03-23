@@ -452,7 +452,7 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
 export function useShowLiveChart(): boolean {
   const { chainId } = useActiveWeb3React()
   let showLiveChart = useSelector((state: AppState) => state.user.showLiveCharts)
-  if (!showLiveChart) {
+  if (typeof showLiveChart?.[chainId || 1] !== 'boolean') {
     showLiveChart = defaultShowLiveCharts
   }
 

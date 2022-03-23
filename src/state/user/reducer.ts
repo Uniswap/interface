@@ -182,6 +182,9 @@ export default createReducer(initialState, builder =>
       state.rebrandingAnnouncement = !state.rebrandingAnnouncement
     })
     .addCase(toggleLiveChart, (state, { payload: { chainId } }) => {
+      if (typeof state.showLiveCharts?.[chainId] !== 'boolean') {
+        state.showLiveCharts = defaultShowLiveCharts
+      }
       state.showLiveCharts[chainId] = !state.showLiveCharts[chainId]
     })
     .addCase(toggleTradeRoutes, state => {
