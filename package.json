@@ -220,7 +220,7 @@
     "@uniswap/v2-sdk": "^3.0.1",
     "@uniswap/v3-sdk": "^3.8.2",
     "@web3-react/core": "8.0.17-beta.0",
-    "@web3-react/eip1193": "8.0.12-beta.0",
+    "@web3-react/eip1193": "8.0.15-beta.0",
     "@web3-react/empty": "8.0.10-beta.0",
     "@web3-react/types": "8.0.10-beta.0",
     "@web3-react/url": "8.0.12-beta.0",
