@@ -35,6 +35,8 @@ const actionCss = css`
 
   ${ActionRow} {
     animation: ${grow} 0.25s ease-in;
+    flex-grow: 1;
+    justify-content: flex-start;
     white-space: nowrap;
   }
 
@@ -58,7 +60,7 @@ export interface Action {
   message: ReactNode
   icon?: Icon
   onClick?: () => void
-  children: ReactNode
+  children?: ReactNode
 }
 
 export interface BaseProps {
@@ -72,11 +74,13 @@ export default function ActionButton({ color = 'accent', disabled, action, onCli
   const textColor = useMemo(() => (color === 'accent' && !disabled ? 'onAccent' : 'currentColor'), [color, disabled])
   return (
     <Overlay hasAction={Boolean(action)} flex align="stretch">
-      <StyledButton color={color} disabled={disabled} onClick={action ? action.onClick : onClick}>
-        <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
-          {action ? action.children : children}
-        </ThemedText.TransitionButton>
-      </StyledButton>
+      {(action ? action.onClick : true) && (
+        <StyledButton color={color} disabled={disabled} onClick={action?.onClick || onClick}>
+          <ThemedText.TransitionButton buttonSize={action ? 'medium' : 'large'} color={textColor}>
+            {action?.children || children}
+          </ThemedText.TransitionButton>
+        </StyledButton>
+      )}
       {action && (
         <ActionRow gap={0.5}>
           <LargeIcon color="currentColor" icon={action.icon || AlertTriangle} />

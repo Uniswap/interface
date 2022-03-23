@@ -46,7 +46,7 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
   const deadline = useTransactionDeadline()
 
   const { type: wrapType, callback: wrapCallback } = useWrapCallback()
-  const { approvalData, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
+  const { approvalAction, signatureData } = useApprovalData(optimizedTrade, slippage, inputCurrencyAmount)
   const { callback: swapCallback } = useSwapCallback({
     trade: optimizedTrade,
     allowedSlippage: slippage.allowed,
@@ -122,11 +122,11 @@ export default memo(function SwapButton({ disabled }: SwapButtonProps) {
     if (disableSwap) {
       return { disabled: true }
     } else if (wrapType === WrapType.NONE) {
-      return approvalData || { onClick: () => setOpen(true) }
+      return approvalAction ? { action: approvalAction } : { onClick: () => setOpen(true) }
     } else {
       return { onClick: onWrap }
     }
-  }, [approvalData, disableSwap, onWrap, wrapType])
+  }, [approvalAction, disableSwap, onWrap, wrapType])
   const Label = useCallback(() => {
     switch (wrapType) {
       case WrapType.UNWRAP:
