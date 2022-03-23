@@ -6,7 +6,7 @@ import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from 'con
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useERC20PermitFromTrade, UseERC20PermitState } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'lib/hooks/useTransactionDeadline'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
 import { ApprovalState, useApproval, useApprovalStateForSpender } from '../useApproval'
@@ -166,12 +166,8 @@ export const useApproveOrPermit = (
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage, deadline)
 
-  // Track when the interaction is blocked on a wallet so a PENDING state can be returned.
-  const [isPendingWallet, setIsPendingWallet] = useState(false)
-
   // If permit is supported, trigger a signature, if not create approval transaction.
   const handleApproveOrPermit = useCallback(async () => {
-    setIsPendingWallet(true)
     try {
       if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
         try {
@@ -187,8 +183,6 @@ export const useApproveOrPermit = (
       }
     } catch (e) {
       // Swallow approval errors - user rejections do not need to be displayed.
-    } finally {
-      setIsPendingWallet(false)
     }
   }, [signatureState, gatherPermitSignature, getApproval])
 
@@ -200,11 +194,11 @@ export const useApproveOrPermit = (
     } else if (approval !== ApprovalState.NOT_APPROVED || signatureState === UseERC20PermitState.SIGNED) {
       return ApproveOrPermitState.APPROVED
     } else if (gatherPermitSignature) {
-      return isPendingWallet ? ApproveOrPermitState.PENDING_SIGNATURE : ApproveOrPermitState.REQUIRES_SIGNATURE
+      return ApproveOrPermitState.REQUIRES_SIGNATURE
     } else {
-      return isPendingWallet ? ApproveOrPermitState.PENDING_APPROVAL : ApproveOrPermitState.REQUIRES_APPROVAL
+      return ApproveOrPermitState.REQUIRES_APPROVAL
     }
-  }, [approval, gatherPermitSignature, isPendingWallet, signatureState])
+  }, [approval, gatherPermitSignature, signatureState])
 
   return {
     approvalState,

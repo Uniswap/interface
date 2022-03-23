@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { ActionButtonProps } from 'lib/components/ActionButton'
+import { Action } from 'lib/components/ActionButton'
 import EtherscanLink from 'lib/components/EtherscanLink'
 import {
   ApproveOrPermitState,
@@ -12,7 +12,7 @@ import { useAddTransaction, usePendingApproval } from 'lib/hooks/transactions'
 import { Slippage } from 'lib/hooks/useSlippage'
 import { Spinner } from 'lib/icons'
 import { TransactionType } from 'lib/state/transactions'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 export function useIsPendingApproval(token?: Token, spender?: string): boolean {
@@ -32,61 +32,57 @@ export default function useApprovalData(
     currencyAmount
   )
 
+  const [isPending, setIsPending] = useState(false)
   const addTransaction = useAddTransaction()
   const onApprove = useCallback(async () => {
+    setIsPending(true)
     const transaction = await handleApproveOrPermit()
     if (transaction) {
       addTransaction({ type: TransactionType.APPROVAL, ...transaction })
     }
+    setIsPending(false)
   }, [addTransaction, handleApproveOrPermit])
+  // Reset the pending state if currency changes.
+  useEffect(() => setIsPending(false), [currency])
 
   const approvalHash = usePendingApproval(currency?.isToken ? currency : undefined, useSwapRouterAddress(trade))
-  const approvalData = useMemo((): Partial<ActionButtonProps> | undefined => {
+  const approvalAction = useMemo((): Action | undefined => {
     if (!trade || !currency) return
 
-    if (approvalState === ApproveOrPermitState.REQUIRES_APPROVAL) {
-      return {
-        action: {
+    switch (approvalState) {
+      case ApproveOrPermitState.REQUIRES_APPROVAL:
+        if (isPending) {
+          return { message: <Trans>Approve in your wallet</Trans>, icon: Spinner }
+        }
+        return {
           message: <Trans>Approve {currency.symbol} first</Trans>,
           onClick: onApprove,
           children: <Trans>Approve</Trans>,
-        },
-      }
-    } else if (approvalState === ApproveOrPermitState.REQUIRES_SIGNATURE) {
-      return {
-        action: {
+        }
+      case ApproveOrPermitState.REQUIRES_SIGNATURE:
+        if (isPending) {
+          return { message: <Trans>Allow in your wallet</Trans>, icon: Spinner }
+        }
+        return {
           message: <Trans>Allow {currency.symbol} first</Trans>,
           onClick: onApprove,
           children: <Trans>Allow</Trans>,
-        },
-      }
-    }
-    if (approvalState === ApproveOrPermitState.PENDING_APPROVAL) {
-      return {
-        disabled: true,
-        action: {
+        }
+      case ApproveOrPermitState.PENDING_APPROVAL:
+        return {
           message: (
             <EtherscanLink type={ExplorerDataType.TRANSACTION} data={approvalHash}>
               <Trans>Approval pending</Trans>
             </EtherscanLink>
           ),
           icon: Spinner,
-          children: <Trans>Approve</Trans>,
-        },
-      }
+        }
+      case ApproveOrPermitState.PENDING_SIGNATURE:
+        return { message: <Trans>Allowance pending</Trans>, icon: Spinner }
+      case ApproveOrPermitState.APPROVED:
+        return
     }
-    if (approvalState === ApproveOrPermitState.PENDING_SIGNATURE) {
-      return {
-        disabled: true,
-        action: {
-          message: <Trans>Allowance pending</Trans>,
-          icon: Spinner,
-          children: <Trans>Allow</Trans>,
-        },
-      }
-    }
-    return
-  }, [approvalHash, approvalState, currency, onApprove, trade])
+  }, [approvalHash, approvalState, currency, isPending, onApprove, trade])
 
-  return { approvalData, signatureData: signatureData ?? undefined }
+  return { approvalAction, signatureData: signatureData ?? undefined }
 }

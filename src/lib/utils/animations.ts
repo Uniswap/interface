@@ -1,6 +1,6 @@
 import { RefObject } from 'react'
 
-export function isAnimating(node: HTMLElement) {
+export function isAnimating(node: Animatable | Document) {
   return (node.getAnimations().length ?? 0) > 0
 }
 
