@@ -130,7 +130,7 @@ function Title({
                   <CurrencyLogo currency={filteredToken} size="21px" />
                 </Box>
               )}
-              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px" data-testid='all-token-list' >
                 {filteredToken ? unwrappedToken(filteredToken)?.symbol : 'ALL'}
               </Text>
               <Box>
@@ -148,7 +148,7 @@ function Title({
 
           <TransperentButton as={Link} to="/create">
             <Plus size="16" />
-            <Text marginLeft="5px" fontWeight="500" fontSize="12px">
+            <Text marginLeft="5px" fontWeight="500" fontSize="12px" data-testid='create-pair' >
               CREATE PAIR
             </Text>
           </TransperentButton>
