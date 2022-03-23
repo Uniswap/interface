@@ -47,11 +47,13 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
       if (isRouteLoading) {
         return <Caption.LoadingTrade />
       }
-      if (!trade?.swaps) {
-        return <Caption.InsufficientLiquidity />
-      }
-      if (trade.inputAmount && trade.outputAmount) {
-        return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
+      if (trade) {
+        if (!trade.swaps) {
+          return <Caption.InsufficientLiquidity />
+        }
+        if (trade.inputAmount && trade.outputAmount) {
+          return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
+        }
       }
     }
 
