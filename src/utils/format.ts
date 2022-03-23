@@ -20,7 +20,7 @@ export function formatCurrencyAmount(
   }
 
   const formatter = new Intl.NumberFormat('en-US', {
-    notation: compact ? 'compact' : 'decimal',
+    notation: compact ? 'compact' : 'standard',
     maximumFractionDigits: sigFigs,
   })
 
@@ -72,4 +72,13 @@ export function formatDate(date: Date) {
 export function formatUSDPrice(price?: number | string) {
   const options: Intl.NumberFormatOptions = { notation: 'standard' }
   return formatPrice(price, options)
+}
+
+export function formatNumber(num: number) {
+  const formatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumSignificantDigits: 2,
+  })
+
+  return formatter.format(num)
 }

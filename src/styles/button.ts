@@ -3,6 +3,11 @@ export const primaryButtonVariants = {
     backgroundColor: 'primary1',
     color: 'white',
   },
+  black: {
+    backgroundColor: 'black',
+    color: 'white',
+    borderRadius: 'md',
+  },
   gray: {
     backgroundColor: 'gray100',
     color: 'textColor',

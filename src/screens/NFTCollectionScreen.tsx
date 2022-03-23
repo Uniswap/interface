@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo } from 'react-native'
+import { FlatList, Image, ListRenderItemInfo, Share, StyleSheet } from 'react-native'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import { VERIFIED_ICON } from 'src/assets'
+import ShareIcon from 'src/assets/icons/share.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
@@ -18,9 +20,12 @@ import { useNFTCollection } from 'src/features/nfts/useNfts'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { Screens } from 'src/screens/Screens'
+import { nftCollectionBlurImageStyle } from 'src/styles/image'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
+import { formatNumber } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
+import { logger } from 'src/utils/logger'
 
 interface Props {
   collection?: OpenseaNFTCollection
@@ -39,81 +44,109 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
   return (
     <Trace section={SectionName.NFTCollectionHeader}>
       <Flex gap="xxs">
-        <Flex borderColor="gray100" borderRadius="md" borderWidth={1} gap="sm" my="sm" p="md">
-          <Flex alignItems="center" flexDirection="row" gap="sm">
-            {collection?.image_url && (
-              <RemoteImage
-                borderRadius={theme.borderRadii.md}
-                height={24}
-                imageUrl={collection.image_url}
-                width={24}
-              />
-            )}
-            <Text variant="h4">{collectionName}</Text>
-          </Flex>
-          {collection?.description && (
-            <Text color="gray400" variant="bodySm">
-              {collection.description}
-            </Text>
+        <Box my="sm">
+          {collection?.image_url && (
+            <Image
+              blurRadius={5}
+              source={{ uri: collection.image_url }}
+              style={[StyleSheet.absoluteFill, nftCollectionBlurImageStyle]}
+            />
           )}
-          <Flex flexDirection="row" gap="md">
-            {collection?.external_link && (
-              <Button
-                borderRadius="md"
-                name={ElementName.NFTCollectionWebsite}
-                testID={ElementName.NFTCollectionWebsite}
-                onPress={() => collection.external_link && openUri(collection.external_link)}>
-                <Text variant="bodySm">{t('Website ↗')}</Text>
-              </Button>
-            )}
-            {collection?.twitter_username && (
-              <Button
-                borderRadius="md"
-                name={ElementName.NFTCollectionTwitter}
-                testID={ElementName.NFTCollectionTwitter}
-                onPress={() => openUri(`https://twitter.com/${collection.twitter_username}`)}>
-                <Text variant="bodySm">{t('Twitter ↗')}</Text>
-              </Button>
-            )}
-            {collection?.discord_url && (
-              <Button
-                borderRadius="md"
-                name={ElementName.NFTCollectionDiscord}
-                testID={ElementName.NFTCollectionDiscord}
-                onPress={() => collection.discord_url && openUri(collection.discord_url)}>
-                <Text variant="bodySm">{t('Discord ↗')}</Text>
-              </Button>
-            )}
-          </Flex>
-          <Flex flexDirection="row" gap="xl">
-            <Flex gap="xs">
-              <Text color="gray400" variant="bodySm">
-                {t('Items')}
-              </Text>
-              {collection?.stats.total_supply && (
-                <Text variant="h3">{collection.stats.total_supply}</Text>
+          <Flex
+            bg={collection?.image_url ? 'imageTintBackground' : 'tabBackground'}
+            borderColor="gray100"
+            borderRadius="md"
+            borderWidth={1}
+            gap="sm"
+            p="md">
+            <Flex alignItems="center" flexDirection="row" gap="sm">
+              {collection?.image_url && (
+                <RemoteImage
+                  borderRadius={theme.borderRadii.md}
+                  height={24}
+                  imageUrl={collection?.image_url}
+                  width={24}
+                />
+              )}
+              <Text variant="h4">{collectionName}</Text>
+              {collection?.safelist_request_status === 'verified' && (
+                <Image height={25} source={VERIFIED_ICON} width={25} />
               )}
             </Flex>
-            <Flex gap="xs">
+            {collection?.description && (
               <Text color="gray400" variant="bodySm">
-                {t('Owners')}
+                {collection?.description}
               </Text>
-              {collection?.stats.num_owners && (
-                <Text variant="h3">{collection.stats.num_owners}</Text>
+            )}
+            <Flex flexDirection="row" gap="md">
+              {collection?.external_link && (
+                <Button
+                  borderRadius="md"
+                  name={ElementName.NFTCollectionWebsite}
+                  testID={ElementName.NFTCollectionWebsite}
+                  onPress={() => collection?.external_link && openUri(collection?.external_link)}>
+                  <Text fontWeight="600" variant="bodySm">
+                    {t('Website ↗')}
+                  </Text>
+                </Button>
+              )}
+              {collection?.twitter_username && (
+                <Button
+                  borderRadius="md"
+                  name={ElementName.NFTCollectionTwitter}
+                  testID={ElementName.NFTCollectionTwitter}
+                  onPress={() => openUri(`https://twitter.com/${collection?.twitter_username}`)}>
+                  <Text fontWeight="600" variant="bodySm">
+                    {t('Twitter ↗')}
+                  </Text>
+                </Button>
+              )}
+              {collection?.discord_url && (
+                <Button
+                  borderRadius="md"
+                  name={ElementName.NFTCollectionDiscord}
+                  testID={ElementName.NFTCollectionDiscord}
+                  onPress={() => collection?.discord_url && openUri(collection?.discord_url)}>
+                  <Text fontWeight="600" variant="bodySm">
+                    {t('Discord ↗')}
+                  </Text>
+                </Button>
               )}
             </Flex>
-            {collection?.stats.floor_price && (
+            <Flex flexDirection="row" gap="xl">
               <Flex gap="xs">
                 <Text color="gray400" variant="bodySm">
-                  {t('Floor')}
+                  {t('Items')}
                 </Text>
-                <Text variant="h3">
-                  {t('{{price}} ETH', { price: collection.stats.floor_price })}
-                </Text>
+                {collection?.stats.total_supply && (
+                  <Text fontWeight="600" variant="h3">
+                    {formatNumber(collection?.stats.total_supply)}
+                  </Text>
+                )}
               </Flex>
-            )}
+              <Flex gap="xs">
+                <Text color="gray400" variant="bodySm">
+                  {t('Owners')}
+                </Text>
+                {collection?.stats.num_owners && (
+                  <Text fontWeight="600" variant="h3">
+                    {formatNumber(collection?.stats.num_owners)}
+                  </Text>
+                )}
+              </Flex>
+              {collection?.stats.floor_price && (
+                <Flex gap="xs">
+                  <Text color="gray400" variant="bodySm">
+                    {t('Floor')}
+                  </Text>
+                  <Text fontWeight="600" variant="h3">
+                    {t('{{price}} ETH', { price: collection?.stats.floor_price })}
+                  </Text>
+                </Flex>
+              )}
+            </Flex>
           </Flex>
-        </Flex>
+        </Box>
         <Button
           bg="gray50"
           borderColor="gray200"
@@ -162,22 +195,35 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
     setShowNFTModal(true)
   }
 
+  const onPressShare = async () => {
+    try {
+      await Share.share({
+        title: collection?.name,
+        url: `https://opensea.io/collection/${collection?.slug}`,
+      })
+    } catch (e) {
+      logger.error('NFTCollectionScreen', 'onPressShare', 'Error sharing NFT Collection', e)
+    }
+  }
+
   return (
     <Screen>
       <Box flex={1}>
         <CenterBox flexDirection="row" justifyContent="space-between" mx="lg" my="md">
           <BackButton />
           <Box alignItems="center" flexDirection="row">
-            <Text variant="h4">{nftAssets[0].collection.name}</Text>
+            <Text variant="h4">{collection?.name}</Text>
           </Box>
-          <Box height={20} width={20} />
+          <Button onPress={onPressShare}>
+            <ShareIcon height={24} width={24} />
+          </Button>
         </CenterBox>
         <FlatList
           ListHeaderComponent={
             <Box mb="sm" mx="lg">
               <NFTCollectionHeader
                 collection={collection}
-                collectionName={nftAssets[0].collection.name}
+                collectionName={nftAssets[0].collection?.name}
               />
             </Box>
           }
