@@ -3,14 +3,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { View } from 'react-native'
+import { useAppSelector } from 'src/app/hooks'
 import { TabBar } from 'src/app/navigation/TabBar'
 import {
   AccountStackParamList,
   AppStackParamList,
+  OnboardingStackParamList,
   SettingsStackParamList,
   TabParamList,
   useAppStackNavigation,
 } from 'src/app/navigation/types'
+import { selectFinishedOnboarding } from 'src/features/user/slice'
 import { AccountsScreen } from 'src/screens/AccountsScreen'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
@@ -21,7 +24,8 @@ import { LedgerScreen } from 'src/screens/LedgerScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTScreen } from 'src/screens/NFTScreen'
 import { NotificationsScreen } from 'src/screens/NotificationsScreen'
-import { Screens, Tabs } from 'src/screens/Screens'
+import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
+import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
@@ -31,6 +35,7 @@ import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/screens/TransferTokenScreen'
 
 const Tab = createBottomTabNavigator<TabParamList>()
+const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const AccountStack = createNativeStackNavigator<AccountStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
@@ -111,9 +116,18 @@ function SettingsStackGroup() {
 }
 
 export function AppStackNavigator() {
+  const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
+
   return (
     <AppStack.Navigator screenOptions={navOptions.noHeader}>
-      <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
+      {finishedOnboarding ? (
+        <AppStack.Group>
+          <OnboardingStack.Screen component={LandingScreen} name={OnboardingScreens.Landing} />
+        </AppStack.Group>
+      ) : (
+        <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
+      )}
+
       <AppStack.Group>
         <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
         <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />

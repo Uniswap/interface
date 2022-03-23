@@ -16,7 +16,7 @@ export function SettingsTestConfigs() {
       <ScrollView contentContainerStyle={flex.fill}>
         <Flex>
           <Flex row alignItems="center">
-            <BackButton size={30} />
+            <BackButton />
             <Text variant="bodyLg">Test Configs</Text>
           </Flex>
           <Text variant="body">List of all test configs available to the app</Text>

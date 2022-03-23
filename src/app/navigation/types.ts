@@ -10,7 +10,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
 import { OpenseaNFTAsset } from 'src/features/nfts/types'
 import { SwapFormState } from 'src/features/swap/swapFormSlice'
-import { Screens, Tabs } from 'src/screens/Screens'
+import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 
 export type TabParamList = {
   [Tabs.Home]: undefined
@@ -31,6 +31,11 @@ export type SettingsStackParamList = {
   [Screens.SettingsSupport]: undefined
   [Screens.SettingsTestConfigs]: undefined
   [Screens.Dev]: undefined
+  [OnboardingScreens.Landing]: undefined // temporary to be able to view onboarding from settings
+}
+
+export type OnboardingStackParamList = {
+  [OnboardingScreens.Landing]: undefined
 }
 
 export type AppStackParamList = {
@@ -47,6 +52,7 @@ export type AppStackParamList = {
   [Screens.NFTCollection]: {
     nftAssets: OpenseaNFTAsset[]
   }
+  [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.Swap]: { swapFormState?: SwapFormState } | undefined
   [Screens.SwapConfig]: undefined

@@ -20,7 +20,7 @@ export interface Palette {
   blue: string
   green: string
   pink: string
-  palePink: string
+  purple: string
   orange: string
   paleOrange: string
   red: string
@@ -63,7 +63,7 @@ export const colorsLight: Palette = {
   blue: '#426CFF',
   green: '#28CD88',
   pink: '#FF007A',
-  palePink: '#FFF2F8',
+  purple: '#F36BFF',
   orange: '#FD4040',
   paleOrange: '#FFECEC',
   red: '#DA2D2B',
@@ -106,7 +106,7 @@ export const colorsDark: Palette = {
   blue: '#2172E5',
   green: '#27AE60',
   pink: '#FF007A',
-  palePink: '#FFF2F8',
+  purple: '#F36BFF',
   orange: '#FD4040',
   paleOrange: '#FD404020',
   red: '#FF4343',

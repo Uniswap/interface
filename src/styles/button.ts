@@ -13,7 +13,7 @@ export const primaryButtonVariants = {
   },
   palePink: {
     backgroundColor: 'secondary1',
-    color: 'primary1',
+    color: 'white',
   },
   paleOrange: {
     backgroundColor: 'paleOrange',

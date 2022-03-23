@@ -76,6 +76,9 @@ export const enum ElementName {
   NFTCollectionDiscord = 'nft-collection-discord',
   NFTCollectionTwitter = 'nft-collection-twitter',
   NFTCollectionWebsite = 'nft-collection-website',
+  OnboardingCreateWallet = 'onboarding-create-wallet',
+  OnboardingImportWallet = 'onboarding-import-wallet',
+  OnboardingExplore = 'onboarding-explore',
 }
 
 /**

@@ -11,6 +11,7 @@ export enum Screens {
   Ledger = 'Ledger',
   Notifications = 'Notifications',
   NFTCollection = 'NFTCollection',
+  OnboardingStack = 'OnboardingStack',
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',
   SettingsChains = 'SettingsChains',
@@ -23,6 +24,10 @@ export enum Screens {
   TokenDetails = 'TokenDetails',
   Transfer = 'Transfer',
   Welcome = 'Welcome',
+}
+
+export enum OnboardingScreens {
+  Landing = 'Landing',
 }
 
 export enum Tabs {

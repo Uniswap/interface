@@ -2,6 +2,7 @@ import { BaseTheme, useTheme } from '@shopify/restyle'
 import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
+import { useDispatch } from 'react-redux'
 import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
@@ -9,6 +10,7 @@ import {
 } from 'src/app/navigation/types'
 import ChatBubbleIcon from 'src/assets/icons/chat-bubble.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
+import StarIcon from 'src/assets/icons/star.svg'
 import { Identicon } from 'src/components/accounts/Identicon'
 import { useAccountDisplayName } from 'src/components/accounts/useAccountDisplayName'
 import { BackX } from 'src/components/buttons/BackX'
@@ -21,6 +23,7 @@ import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
+import { setFinishedOnboarding } from 'src/features/user/slice'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
@@ -108,8 +111,44 @@ export function SettingsScreen() {
         {pages.map((o) => (
           <SettingsRow key={o.screen} navigation={navigation} page={o} theme={theme} />
         ))}
+        <OnboardingRow />
       </ScrollView>
     </SheetScreen>
+  )
+}
+
+function OnboardingRow() {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigation = useSettingsStackNavigation()
+
+  return (
+    <Button
+      mt="md"
+      name="DEBUG_Settings_Navigate"
+      px="sm"
+      py="sm"
+      onPress={() => {
+        navigation.goBack()
+        dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+      }}>
+      <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+        <Box alignItems="center" flexDirection="row">
+          <StarIcon
+            height={20}
+            stroke={theme.colors.textColor}
+            strokeLinecap="round"
+            strokeWidth="1.5"
+            width={20}
+          />
+          <Text fontWeight="500" ml="md" variant="bodyLg">
+            {t('Onboarding')}
+          </Text>
+        </Box>
+        <Chevron color={theme.colors.gray200} direction="e" height={16} width={16} />
+      </Box>
+    </Button>
   )
 }
 

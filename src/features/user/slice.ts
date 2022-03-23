@@ -7,11 +7,13 @@ type DynamicPalette = Pick<Palette, 'primary1' | 'secondary1' | 'background1' | 
 export interface UserState {
   palette: DynamicPalette | null
   localPfp: string | null
+  finishedOnboarding: boolean
 }
 
 const initialState: UserState = {
   palette: null,
   localPfp: null,
+  finishedOnboarding: false,
 }
 
 export const slice = createSlice({
@@ -27,11 +29,18 @@ export const slice = createSlice({
     setUserPfp: (state, { payload: { newPfp } }: PayloadAction<{ newPfp: string }>) => {
       state.localPfp = newPfp
     },
+    setFinishedOnboarding: (
+      state,
+      { payload: { finishedOnboarding } }: PayloadAction<{ finishedOnboarding: boolean }>
+    ) => {
+      state.finishedOnboarding = finishedOnboarding
+    },
   },
 })
 
 export const selectUserPalette = (state: RootState) => state.user.palette
 export const selectUserLocalPfp = (state: RootState) => state.user.localPfp
+export const selectFinishedOnboarding = (state: RootState) => state.user.finishedOnboarding
 
-export const { setUserPalette, setUserPfp } = slice.actions
+export const { setUserPalette, setUserPfp, setFinishedOnboarding } = slice.actions
 export const { reducer: userReducer, actions: userActions } = slice
