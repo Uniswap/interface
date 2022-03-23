@@ -3,13 +3,14 @@ import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { AnyAction } from 'redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { LongPressButton } from 'src/components/buttons/LongPressButton'
 import { SwapArrow } from 'src/components/icons/SwapArrow'
 import { CurrencyInput } from 'src/components/input/CurrencyInput'
+import { DecimalPad } from 'src/components/input/DecimalPad'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
@@ -56,6 +57,7 @@ export function SwapForm(props: SwapFormProps) {
     currencies,
     currencyAmounts,
     currencyBalances,
+    exactCurrencyField,
     formattedAmounts,
     trade: { trade: trade, status: quoteStatus },
     wrapType,
@@ -72,7 +74,7 @@ export function SwapForm(props: SwapFormProps) {
 
   return (
     <Box flex={1} justifyContent="space-between" px="md">
-      <Box flex={1}>
+      <Box>
         <Trace section={SectionName.CurrencyInputPanel}>
           <CurrencyInput
             autofocus
@@ -136,7 +138,7 @@ export function SwapForm(props: SwapFormProps) {
           />
         </Trace>
       </Box>
-      <Flex flex={1} gap="md" justifyContent={'flex-end'} my="xs">
+      <Flex flexGrow={1} gap="md" justifyContent="space-between" my="xs">
         {showDetails && !isWrapAction(wrapType) && trade && quoteStatus === 'success' && (
           <SwapDetails
             currencyIn={currencyAmounts[CurrencyField.INPUT]}
@@ -146,14 +148,18 @@ export function SwapForm(props: SwapFormProps) {
         )}
         {!isWrapAction(wrapType) && (
           <Button
+            disabled={!!swapInputStatusMessage}
             name={ElementName.SwapQuickDetails}
             onPress={() => {
-              Keyboard.dismiss()
               setShowDetails(!showDetails)
             }}>
             <QuickDetails label={swapInputStatusMessage} trade={trade} />
           </Button>
         )}
+        <DecimalPad
+          setValue={(value) => onEnterExactAmount(exactCurrencyField, value)}
+          value={formattedAmounts[exactCurrencyField]}
+        />
         <ActionButton
           callback={isWrapAction(wrapType) ? wrapCallback : swapCallback}
           disabled={actionButtonDisabled}

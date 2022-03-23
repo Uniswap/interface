@@ -80,9 +80,11 @@ export function CurrencyInput(props: CurrencyInputProps) {
           placeholder="0"
           px="none"
           py="none"
+          showSoftInputOnFocus={false}
           testID={`amount-input-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
           value={value}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
+          onPressIn={() => onSetAmount('')}
         />
         {
           // TODO: use `soft` button variant when available
