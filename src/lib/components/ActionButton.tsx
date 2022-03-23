@@ -16,9 +16,9 @@ const fadeIn = keyframes`
 
 const StyledButton = styled(Button)`
   animation: ${fadeIn} 0.25s ease-in;
-  border-radius: ${({ theme }) => theme.borderRadius}em;
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   flex-grow: 1;
-  transition: background-color 0.25s ease-out, flex-grow 0.25s ease-out, padding 0.25s ease-in;
+  transition: background-color 0.25s ease-out, border-radius 0.25s ease-out, flex-grow 0.25s ease-out;
 
   :disabled {
     margin: -1px;
@@ -51,7 +51,7 @@ const actionCss = css`
   }
 
   ${StyledButton} {
-    border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
+    border-radius: ${({ theme }) => theme.borderRadius}em;
     flex-grow: 0;
     padding: 1em;
   }
