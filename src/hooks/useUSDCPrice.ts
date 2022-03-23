@@ -2,16 +2,12 @@ import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-
 import { useMemo } from 'react'
 import { tryParseAmount } from 'state/swap/hooks'
 
-import { SupportedChainId } from '../constants/chains'
-import { USDC } from '../constants/tokens'
 import { useBestV2Trade } from './useBestV2Trade'
 import { useActiveWeb3React } from './web3'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
-  [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
-}
+export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {}
 
 /**
  * Returns the price in USDC of the input currency
