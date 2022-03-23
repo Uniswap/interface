@@ -1,5 +1,5 @@
 import styled, { css } from 'lib/theme'
-import { forwardRef, HTMLProps, useCallback } from 'react'
+import { ChangeEvent, forwardRef, HTMLProps, useCallback } from 'react'
 
 const Input = styled.input`
   -webkit-appearance: textfield;
@@ -81,13 +81,13 @@ const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(fun
   ref
 ) {
   const validateChange = useCallback(
-    (event) => {
-      const nextInput = enforcer(event.target.value.replace(/,/g, '.'))
-      if (nextInput !== null) {
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const nextInput = enforcer(event.target.value.replace(/,/g, '.'))?.replace(/^0+$/, '0')
+      if (nextInput !== undefined) {
         onChange(nextInput)
       }
     },
-    [onChange, enforcer]
+    [enforcer, onChange]
   )
 
   return (
