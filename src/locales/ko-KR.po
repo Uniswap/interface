@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 22:07\n"
+"PO-Revision-Date: 2022-03-23 19:09\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -193,7 +193,6 @@ msgid "Against"
 msgstr "반대"
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "허용하다"
 
@@ -204,6 +203,10 @@ msgstr "LP 토큰 마이그레이션 허용"
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁니다. 자신의 책임하에 사용하십시오."
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "지갑에서 허용"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -235,7 +238,6 @@ msgstr "승인 대기 중"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "승인"
@@ -243,6 +245,10 @@ msgstr "승인"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "토큰 승인"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "지갑에서 승인"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -502,6 +508,11 @@ msgstr "공급 확인"
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
 msgstr "스왑 확인"
+
+#: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "지갑에서 확인"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"

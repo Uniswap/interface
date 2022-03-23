@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 22:07\n"
+"PO-Revision-Date: 2022-03-23 19:09\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -193,7 +193,6 @@ msgid "Against"
 msgstr "Vastaan"
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "Sallia"
 
@@ -204,6 +203,10 @@ msgstr "Salli LP-rahakkeen siirtäminen"
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Salli korkean hintavaikutuksen kaupat ja ohita vahvistusnäyttö. Käytä omalla vastuullasi."
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "Salli lompakossasi"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -235,7 +238,6 @@ msgstr "Hyväksyntä odottaa"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Hyväksy"
@@ -243,6 +245,10 @@ msgstr "Hyväksy"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Hyväksy tunnus"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "Hyväksy lompakossasi"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -502,6 +508,11 @@ msgstr "Vahvista tarjonta"
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
 msgstr "Vahvista vaihto"
+
+#: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "Vahvista lompakossasi"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"

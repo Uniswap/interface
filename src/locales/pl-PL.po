@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 22:07\n"
+"PO-Revision-Date: 2022-03-23 19:09\n"
 "Last-Translator: \n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
@@ -193,7 +193,6 @@ msgid "Against"
 msgstr "Przeciwko"
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allow"
 msgstr "Dopuszczać"
 
@@ -204,6 +203,10 @@ msgstr "Zezwalaj na migrację tokenu LP"
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "Pozwól na transakcje o wysokim wpływie cenowym i pominąć ekran potwierdzający. Używaj na własne ryzyko."
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Allow in your wallet"
+msgstr "Pozwól w swoim portfelu"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -235,7 +238,6 @@ msgstr "Oczekuje na zatwierdzenie"
 
 #: src/components/earn/StakingModal.tsx
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
-#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Zatwierdź"
@@ -243,6 +245,10 @@ msgstr "Zatwierdź"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
 msgstr "Zatwierdź token"
+
+#: src/lib/components/Swap/SwapButton/useApprovalData.tsx
+msgid "Approve in your wallet"
+msgstr "Zatwierdź w swoim portfelu"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -502,6 +508,11 @@ msgstr "Potwierdź dostawę"
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
 msgstr "Potwierdź zamianę"
+
+#: src/lib/components/Swap/Summary/index.tsx
+#: src/lib/components/Swap/SwapButton/index.tsx
+msgid "Confirm in your wallet"
+msgstr "Potwierdź w swoim portfelu"
 
 #: src/lib/components/Swap/Summary/index.tsx
 msgid "Confirm swap"
