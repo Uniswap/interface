@@ -11,7 +11,8 @@ export const NumberBadge = styled.div<NumberBadgeProps>`
   padding:0 2px;
   height:16px;
   width: auto;
-  border: 1.75px solid ${props => props.theme.bg3};
+  border: 1.75px solid;
+  border-color: ${props => props.theme.bg3};
   border-radius: 4px;
   background-color: ${props => transparentize(0.3, props.theme.bg3)};
 
@@ -25,7 +26,7 @@ export const NumberBadge = styled.div<NumberBadgeProps>`
     theme === 'green' &&
     css`
       background: rgba(14, 159, 110, 0.08);
-      border: 1.75px solid rgba(14, 159, 110, 0.65);
+      border-color: rgba(14, 159, 110, 0.65);
       color: #0e9f6e;
     `}
   
@@ -33,7 +34,7 @@ export const NumberBadge = styled.div<NumberBadgeProps>`
     badgeTheme === 'orange' &&
     css`
       background: rgba(242, 153, 74, 0.08);
-      border: 1.75px solid rgba(242, 153, 74, 0.65);
+      border-color: rgba(242, 153, 74, 0.65);
       color: #f2994a;
     `}
 
@@ -41,7 +42,7 @@ export const NumberBadge = styled.div<NumberBadgeProps>`
     badgeTheme === 'red' &&
     css`
       background: rgba(240, 46, 81, 0.08);
-      border: 1.75px solid rgba(240, 46, 81, 0.65);
+      border-color: rgba(240, 46, 81, 0.65);
       color: #f02e51;
     `}
 `

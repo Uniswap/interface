@@ -177,12 +177,13 @@ const HeaderSubRow = styled(RowFlat)`
 `
 
 export const Amount = styled.p<{ clickable?: boolean; zero: boolean; borderRadius?: string }>`
-  padding: 8px 12px;
+  padding: 6px 8px;
   margin: 0;
+  max-height: 22px;
   display: inline-flex;
   font-weight: bold;
   font-size: 10px;
-  line-height: 12px;
+  line-height: 11px;
   text-align: center;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -209,8 +210,6 @@ const GasInfo = styled.div`
   border: 1.06481px solid rgba(242, 153, 74, 0.65);
   background: rgba(242, 153, 74, 0.08);
   border-radius: 8px;
-  font-size: 10px;
-  font-weight: 600;
 
   div {
     color: ${({ theme }) => theme.orange1};
@@ -374,7 +373,7 @@ function Header() {
           <Settings />
         </HeaderSubRow>
 
-        <Flex justifyContent={'end'}>
+        <Flex maxHeight={'22px'} justifyContent={'end'}>
           <SwprInfo
             hasActiveCampaigns={!loading && !!data}
             newSwprBalance={newSwprBalance}

@@ -113,7 +113,7 @@ export const ButtonInvisbile = styled.button`
 
 export const ButtonDark = styled(Base)`
   border: 1px solid #252237;
-  background-color: #171621;
+  background-color: ${({ theme }) => theme.bg6};
   color: ${({ theme }) => theme.text5};
   font-size: 16px;
   padding: ${({ padding }) => (padding ? padding : '10px')};

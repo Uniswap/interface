@@ -52,7 +52,7 @@ const TabsRow = styled(Row)`
   width: auto;
   margin: 0 0 10px;
   padding: 2px;
-  background: ${({ theme }) => theme.bg6};
+  background: ${({ theme }) => theme.bg8};
   border-radius: 12px;
 `
 
