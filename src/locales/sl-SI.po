@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-03-22 22:07\n"
+"PO-Revision-Date: 2022-03-23 08:07\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -215,7 +215,7 @@ msgstr "Najprej dovoli {0}"
 
 #: src/lib/components/Swap/SwapButton/useApprovalData.tsx
 msgid "Allowance pending"
-msgstr "Dodatek v teku"
+msgstr "Izdaja dovoljenja v teku"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -2071,7 +2071,7 @@ msgstr "Nepodprta sredstva"
 
 #: src/lib/components/Swap/Toolbar/Caption.tsx
 msgid "Unsupported network - switch to another to trade"
-msgstr "Nepodprto omrežje - preklopite na drugo za trgovanje"
+msgstr "Nepodprto omrežje - za trgovanje preklopite na drugo omrežje"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
@@ -2095,7 +2095,7 @@ msgstr "Odvijanje v teku"
 
 #: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Unwrap {0}"
-msgstr "Odviti {0}"
+msgstr "Odvij {0}"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2283,7 +2283,7 @@ msgstr "Ovijanje v teku"
 
 #: src/lib/components/Swap/SwapButton/index.tsx
 msgid "Wrap {0}"
-msgstr "Zaviti {0}"
+msgstr "Ovij {0}"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
