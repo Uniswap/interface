@@ -1,5 +1,8 @@
 import { TokenMenu } from './TokenMenu'
 export class SwapPage {
+  static visitSwapPage() {
+    cy.visit('/swap')
+  }
   static openTokenToSwapMenu() {
     cy.get('[data-testid=select-token-button]').click()
     return TokenMenu

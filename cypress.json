@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost:3000",
   "userAgent": "synpress",
-  "retries": { "runMode": 2, "openMode": 2 },
+  "retries": { "runMode": 0, "openMode": 0 },
   "integrationFolder": "tests/cypress/integration",
   "screenshotsFolder": "tests/screenshots",
   "videosFolder": "tests/videos",

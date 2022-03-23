@@ -239,7 +239,7 @@ export default function SettingsTab() {
           </EmojiWrapper>
         )}
         <MenuModal isOpen={open} onDismiss={toggle}>
-          <MenuModalContentWrapper>
+          <MenuModalContentWrapper data-testid="settings-dialog">
             <MenuModalHeader>
               <Text fontWeight="400" fontSize="14px" lineHeight="17px">
                 Transaction settings

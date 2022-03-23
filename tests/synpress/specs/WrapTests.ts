@@ -1,10 +1,10 @@
 import 'cypress-localstorage-commands'
 import { TransactionHelper } from '../../utils/TransactionHelper'
-import { MenuPage } from '../../pages/MenuPage'
+import { MenuBar } from '../../pages/MenuBar'
 import { SwapPage } from '../../pages/SwapPage'
 import { AddressesEnum } from '../../utils/AddressesEnum'
 
-describe('SWAP - Wrapp functionality', () => {
+describe('SWAP', () => {
   const TRANSACTION_VALUE: number = 0.000000001
 
   let balanceBefore: {
@@ -17,7 +17,7 @@ describe('SWAP - Wrapp functionality', () => {
     cy.clearLocalStorage()
     cy.clearCookies()
     cy.visit('/')
-    MenuPage.connectWallet()
+    MenuBar.connectWallet()
     TransactionHelper.checkTokenBalance(AddressesEnum.WETH_TOKEN).then(balance => {
       console.log('Balance before test:', balance)
       balanceBefore = balance
@@ -25,6 +25,11 @@ describe('SWAP - Wrapp functionality', () => {
   })
   afterEach(() => {
     cy.disconnectMetamaskWalletFromAllDapps()
+  })
+
+  it('Should display that wallet is connected to rinkeby', () => {
+    MenuBar.web3Status().should('be.visible')
+    MenuBar.networkSwitcher().should('contain.text', 'Rinkeby')
   })
 
   it('Should wrap eth to weth', () => {
@@ -42,12 +47,12 @@ describe('SWAP - Wrapp functionality', () => {
           AddressesEnum.WETH_TOKEN
         )
     )
-
     //TODO Not sure why, but cypress do not wait until tx check above is executed
-    MenuPage.checkToastMessage('Wrap')
+    MenuBar.checkToastMessage('Wrap')
   })
 
   it('Should unwrap eth to weth', () => {
+    console.log('tx', Object.keys(JSON.parse(localStorage.getItem('swapr_transactions')!)[4])[0])
     SwapPage.openTokenToSwapMenu()
       .chooseToken('eth')
       .openTokenToSwapMenu()
@@ -66,6 +71,6 @@ describe('SWAP - Wrapp functionality', () => {
     )
 
     //TODO Not sure why, but cypress do not wait until tx check above is executed
-    MenuPage.checkToastMessage('Unwrap')
+    MenuBar.checkToastMessage('Unwrap')
   })
 })
