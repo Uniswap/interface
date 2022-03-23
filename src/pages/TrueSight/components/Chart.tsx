@@ -33,10 +33,19 @@ const Chart = ({
   const oldestValue = chartData.length ? parseFloat(chartData[0].value) : undefined
   const latestValue = chartData.length ? parseFloat(chartData[chartData.length - 1].value) : undefined
   const mainValueNumber = hoverValue ?? latestValue
-  const subValueNumber =
-    oldestValue && latestValue ? (hoverValue ? hoverValue - latestValue : latestValue - oldestValue) : undefined
-  const subValuePercent =
-    subValueNumber !== undefined && oldestValue ? ((subValueNumber * 100) / oldestValue).toFixed(2) : undefined
+  let subValueNumber, subValuePercent
+  if (oldestValue && latestValue) {
+    let currentValue, comparedValue
+    if (hoverValue) {
+      currentValue = hoverValue
+      comparedValue = latestValue
+    } else {
+      currentValue = latestValue
+      comparedValue = oldestValue
+    }
+    subValueNumber = currentValue - comparedValue
+    subValuePercent = ((subValueNumber * 100) / comparedValue).toFixed(2)
+  }
 
   const mainValue = mainValueNumber ? formattedNumLong(mainValueNumber, true) : '--'
   const subValue =
