@@ -35,6 +35,7 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
   margin-right: ${({ marginRight }) => marginRight}px;
   margin-left: ${({ marginLeft }) => marginLeft}px;
   border-radius: ${({ size }) => size};
+  z-index: 1;
 
   &::after {
     content: '';

@@ -115,12 +115,16 @@ export default function SlippageTabs({
   const [deadlineFocused, setDeadlineFocused] = useState(false)
 
   const slippageInputIsValid =
-    slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
+    slippageInput === '' ||
+    (!Number.isNaN(Number(slippageInput)) &&
+      rawSlippage.toFixed(2) === Math.round(Number.parseFloat(slippageInput) * 100).toFixed(2))
+
   const preferredGasPriceInputIsValid =
     preferredGasPriceInput === '' ||
     (!Number.isNaN(Number(preferredGasPriceInput)) &&
       rawPreferredGasPrice ===
         new Decimal(Number.parseFloat(preferredGasPriceInput).toFixed(10)).times('1000000000').toString())
+
   const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
 
   let slippageError: SlippageError | undefined
@@ -156,38 +160,44 @@ export default function SlippageTabs({
     deadlineError = undefined
   }
 
-  function parseCustomSlippage(value: string) {
-    setSlippageInput(value)
+  function parseCustomSlippage(slippage: string) {
+    setSlippageInput(slippage)
 
     try {
-      const valueAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(value) * 100).toString())
-      if (!Number.isNaN(valueAsIntFromRoundedFloat) && valueAsIntFromRoundedFloat < 5000) {
-        setRawSlippage(valueAsIntFromRoundedFloat)
+      const slippageAsIntFromRoundedFloat = Number.parseInt(Math.round(Number.parseFloat(slippage) * 100).toString())
+
+      if (
+        !Number.isNaN(slippageAsIntFromRoundedFloat) &&
+        slippageAsIntFromRoundedFloat > 0 &&
+        slippageAsIntFromRoundedFloat < 5000
+      ) {
+        setRawSlippage(slippageAsIntFromRoundedFloat)
       }
     } catch {}
   }
 
-  function parseCustomPreferredGasPrice(value: string) {
-    setPreferredGasPriceInput(value)
+  function parseCustomPreferredGasPrice(gasPrice: string) {
+    setPreferredGasPriceInput(gasPrice)
 
     try {
-      const valueAsFloat = Number.parseFloat(value)
-      if (!Number.isNaN(valueAsFloat) && valueAsFloat > 0) {
+      const gasPriceAsFloat = Number.parseFloat(gasPrice)
+      if (!Number.isNaN(gasPriceAsFloat) && gasPriceAsFloat > 0) {
         // converting to wei
-        const rawPreferredGasPriceWei = new Decimal(valueAsFloat.toFixed(10)).times('1000000000').toString()
+        const rawPreferredGasPriceWei = new Decimal(gasPriceAsFloat.toFixed(10)).times('1000000000').toString()
         if (Number(rawPreferredGasPriceWei) > Number.MAX_SAFE_INTEGER) throw new Error('Preferred gas price overflow')
         setRawPreferredGasPrice(rawPreferredGasPriceWei)
       }
     } catch {}
   }
 
-  function parseCustomDeadline(value: string) {
-    setDeadlineInput(value)
+  function parseCustomDeadline(customDeadline: string) {
+    setDeadlineInput(customDeadline)
 
     try {
-      const valueAsInt: number = Number.parseInt(value) * 60
-      if (!Number.isNaN(valueAsInt) && valueAsInt > 0) {
-        setDeadline(valueAsInt)
+      const customDeadlineAsInt: number = Number.parseInt(customDeadline) * 60
+      if (!Number.isNaN(customDeadlineAsInt) && customDeadlineAsInt > 0) {
+        if (Number(customDeadlineAsInt) > Number.MAX_SAFE_INTEGER) throw new Error('Deadline overflow')
+        setDeadline(customDeadlineAsInt)
       }
     } catch {}
   }

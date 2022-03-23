@@ -30,31 +30,36 @@ const SizedCard = styled(DarkCard)`
     height: initial;
     padding: 22px 16px;
   `}
+  ::before {
+    background-blend-mode: normal, overlay, normal;
+    background: ${props => `linear-gradient(143.3deg, rgba(46, 23, 242, 0.5) -185.11%, rgba(46, 23, 242, 0) 49.63%),
+      linear-gradient(113.18deg, rgba(255, 255, 255, 0.15) -0.1%, rgba(0, 0, 0, 0) 98.9%), ${props.theme.bg6}`};
+  }
 `
 
 const FarmingBadge = styled.div<{ isGreyed?: boolean }>`
   height: 16px;
-  border: ${props => !props.isGreyed && `solid 1.5px ${props.theme.green2}`};
+  border: solid 1px;
+  border-color: ${props => (props.isGreyed ? `transparent` : `${props.theme.green2}`)};
   div {
     color: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
   }
-
   border-radius: 6px;
   width: fit-content;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  padding: 0 4px;
+  padding: 0 2px;
   background-color: ${props => props.isGreyed && props.theme.bg3};
   opacity: ${props => props.isGreyed && '0.5'};
+  gap: 4px;
   svg {
     > path {
       fill: ${props => (props.isGreyed ? props.theme.purple2 : props.theme.green2)};
     }
   }
   font-weight: 700;
-  margin-left: 3px;
   font-size: 9px;
   line-height: 9px;
   letter-spacing: 0.02em;
@@ -62,7 +67,6 @@ const FarmingBadge = styled.div<{ isGreyed?: boolean }>`
 
 const BadgeText = styled.div`
   font-weight: 700;
-  margin-left: 3px;
   font-size: 9px;
   line-height: 9px;
   letter-spacing: 0.02em;

@@ -31,7 +31,10 @@ describe('multicall reducer', () => {
               address: DAI_ADDRESS,
               callData: '0x'
             }
-          ]
+          ],
+          options: {
+            blocksPerFetch: 1
+          }
         })
       )
       expect(store.getState()).toEqual({
@@ -57,7 +60,10 @@ describe('multicall reducer', () => {
               callData: '0x'
             }
           ],
-          chainId: 1
+          chainId: 1,
+          options: {
+            blocksPerFetch: 1
+          }
         })
       )
       expect(store.getState()).toEqual({ callResults: {}, callListeners: {} })
@@ -71,7 +77,10 @@ describe('multicall reducer', () => {
               address: DAI_ADDRESS,
               callData: '0x'
             }
-          ]
+          ],
+          options: {
+            blocksPerFetch: 1
+          }
         })
       )
       store.dispatch(
@@ -82,7 +91,10 @@ describe('multicall reducer', () => {
               callData: '0x'
             }
           ],
-          chainId: 1
+          chainId: 1,
+          options: {
+            blocksPerFetch: 1
+          }
         })
       )
       expect(store.getState()).toEqual({
