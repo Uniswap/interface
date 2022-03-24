@@ -130,7 +130,7 @@ function Title({
                   <CurrencyLogo currency={filteredToken} size="21px" />
                 </Box>
               )}
-              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px" data-testid="all-token-list" >
                 {filteredToken ? unwrappedToken(filteredToken)?.symbol : 'ALL'}
               </Text>
               <Box>
