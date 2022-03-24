@@ -20,34 +20,38 @@ export function useBestTrade(
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
-  const clientSORTrade = useClientSideSmartOrderRouterTrade(tradeType, amountSpecified, otherCurrency)
+  const clientSORTradeObject = useClientSideSmartOrderRouterTrade(tradeType, amountSpecified, otherCurrency)
 
   // Use a simple client side logic as backup if SOR is not available.
-  const useFallback = clientSORTrade.state === TradeState.NO_ROUTE_FOUND || clientSORTrade.state === TradeState.INVALID
-  const fallbackTrade = useClientSideV3Trade(
+  const useFallback =
+    clientSORTradeObject.state === TradeState.NO_ROUTE_FOUND || clientSORTradeObject.state === TradeState.INVALID
+  const fallbackTradeObject = useClientSideV3Trade(
     tradeType,
     useFallback ? amountSpecified : undefined,
     useFallback ? otherCurrency : undefined
   )
 
-  const trade = useFallback ? fallbackTrade : clientSORTrade
-  const lastTrade = useLast(trade.trade, Boolean) ?? undefined
+  const tradeObject = useFallback ? fallbackTradeObject : clientSORTradeObject
+  const lastTrade = useLast(tradeObject.trade, Boolean) ?? undefined
 
-  const [currencyIn, currencyOut] =
-    tradeType === TradeType.EXACT_INPUT
-      ? [amountSpecified?.currency, otherCurrency]
-      : [otherCurrency, amountSpecified?.currency]
-
-  // Return the last trade state while syncing/loading to avoid jank from clearing the last trade while loading.
+  // Return the last trade while syncing/loading to avoid jank from clearing the last trade while loading.
+  // If the trade is unsettled and not stale, return the last trade as a placeholder during settling.
   return useMemo(() => {
-    if ((trade.state !== TradeState.LOADING && trade.state !== TradeState.SYNCING) || trade.trade) return trade
+    const { state, trade } = tradeObject
+    // If the trade is in a settled state, return it.
+    if ((state !== TradeState.LOADING && state !== TradeState.SYNCING) || trade) return tradeObject
 
-    // Dont return last trade if currencies dont match.
+    const [currencyIn, currencyOut] =
+      tradeType === TradeType.EXACT_INPUT
+        ? [amountSpecified?.currency, otherCurrency]
+        : [otherCurrency, amountSpecified?.currency]
+
+    // If the trade currencies have switched, consider it stale - do not return the last trade.
     const isStale =
       (currencyIn && !lastTrade?.inputAmount?.currency.equals(currencyIn)) ||
       (currencyOut && !lastTrade?.outputAmount?.currency.equals(currencyOut))
-    if (isStale) return trade
+    if (isStale) return tradeObject
 
-    return { state: trade.state, trade: lastTrade }
-  }, [currencyIn, currencyOut, lastTrade, trade])
+    return { state, trade: lastTrade }
+  }, [amountSpecified?.currency, lastTrade, otherCurrency, tradeObject, tradeType])
 }
