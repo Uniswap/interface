@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import { isAddress } from 'utils';
 import { simpleRpcProvider } from 'utils/binance.utils';
 export const getTaxesForBscToken = async (address: string, provider: any): Promise<{honeypot: boolean, buy: number | null, sell: number | null}>=> {
-  const web3 = new Web3('https://https://bsc-dataseed1.binance.org' as any);
+  const web3 = new Web3('https://bsc-dataseed1.binance.org' as any);
   let maxTXAmount = 0;
   let maxSell = 0;
 
