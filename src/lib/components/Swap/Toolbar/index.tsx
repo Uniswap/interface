@@ -52,6 +52,9 @@ export default memo(function Toolbar({ disabled }: { disabled?: boolean }) {
       if (trade?.inputAmount && trade.outputAmount) {
         return <Caption.Trade trade={trade} outputUSDC={outputUSDC} impact={impact} />
       }
+      if (state === TradeState.INVALID) {
+        return <Caption.Error />
+      }
     }
 
     return <Caption.Empty />
