@@ -1,3 +1,5 @@
+import 'setimmediate'
+
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ChainId } from '@uniswap/smart-order-router'
@@ -75,7 +77,11 @@ export default function useClientSideSmartOrderRouterTrade<TTradeType extends Tr
     if (wrapType !== WrapType.NONE) return { error: undefined }
     if (!queryArgs || !params) return { error: undefined }
     try {
-      return await getClientSideQuote(queryArgs, params, config)
+      const quoteResult = await getClientSideQuote(queryArgs, params, config)
+      // There is significant post-fetch processing, so delay a tick to prevent dropped frames.
+      // This is only important in the context of integrations - if we control the whole site,
+      // then we can afford to drop a few frames.
+      return new Promise((resolve) => setImmediate(() => resolve(quoteResult)))
     } catch {
       return { error: true }
     }
