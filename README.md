@@ -1,3 +1,6 @@
+# Uniswap Widgets
+For information about the [@uniswap/widgets](https://www.npmjs.com/package/@uniswap/widgets) package, please see [WIDGETS_README](./WIDGETS_README.md).
+
 # Uniswap Interface
 
 [![Unit Tests](https://github.com/Uniswap/uniswap-interface/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/unit-tests.yaml)
