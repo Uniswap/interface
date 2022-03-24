@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useCallback } from 'react'
+import React, { useState, useRef, useContext, useCallback, useEffect } from 'react'
 import styled, { css, ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Text, Flex } from 'rebass'
@@ -27,6 +27,7 @@ import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
 import Tooltip from 'components/Tooltip'
 import MenuFlyout from 'components/MenuFlyout'
 import { isMobile } from 'react-device-detect'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 enum SlippageError {
   InvalidInput = 'InvalidInput',
   RiskyLow = 'RiskyLow',
@@ -377,13 +378,7 @@ export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadlin
   )
 }
 
-export default function TransactionSettings({
-  tradeValid = false,
-  isShowDisplaySettings = false,
-}: {
-  tradeValid?: boolean
-  isShowDisplaySettings?: boolean
-}) {
+export default function TransactionSettings({ isShowDisplaySettings = false }: { isShowDisplaySettings?: boolean }) {
   const theme = useTheme()
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
   const [ttl, setTtl] = useUserTransactionTTL()
@@ -408,6 +403,7 @@ export default function TransactionSettings({
   const toggleMobileLiveChart = useToggleModal(ApplicationModal.MOBILE_LIVE_CHART)
   const toggleTradeRoutes = useToggleTradeRoutes()
   const toggleMobileTradeRoutes = useToggleModal(ApplicationModal.MOBILE_TRADE_ROUTES)
+  const { mixpanelHandler } = useMixpanel()
   return (
     <>
       <Modal
@@ -548,8 +544,12 @@ export default function TransactionSettings({
                       isActive={isMobile ? isShowMobileLiveChart : isShowLiveChart}
                       toggle={() => {
                         if (isMobile) {
+                          if (!isShowMobileLiveChart) {
+                            mixpanelHandler(MIXPANEL_TYPE.LIVE_CHART_ON_MOBILE)
+                          }
                           toggleMobileLiveChart()
                         } else {
+                          mixpanelHandler(MIXPANEL_TYPE.LIVE_CHART_ON_OFF, { live_chart_on_or_off: !isShowLiveChart })
                           toggleLiveChart()
                         }
                       }}
@@ -567,8 +567,14 @@ export default function TransactionSettings({
                       isActive={isMobile ? isShowMobileTradeRoutes : isShowTradeRoutes}
                       toggle={() => {
                         if (isMobile) {
+                          if (!isShowMobileTradeRoutes) {
+                            mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_MOBILE)
+                          }
                           toggleMobileTradeRoutes()
                         } else {
+                          mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_OFF, {
+                            trading_route_on_or_off: !isShowTradeRoutes,
+                          })
                           toggleTradeRoutes()
                         }
                       }}

@@ -65,6 +65,7 @@ import { ShareButtonWithModal } from 'components/ShareModal'
 import TokenInfo from 'components/swapv2/TokenInfo'
 import MobileLiveChart from 'components/swapv2/MobileLiveChart'
 import MobileTradeRoutes from 'components/swapv2/MobileTradeRoutes'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { currencyId } from 'utils/currencyId'
 import Banner from 'components/Banner'
 
@@ -297,6 +298,21 @@ export default function Swap({ history }: RouteComponentProps) {
     loadingAPI ||
     ((!currencyBalances[Field.INPUT] || !currencyBalances[Field.OUTPUT]) && userHasSpecifiedInputOutput && !v2Trade)
 
+  const { mixpanelHandler } = useMixpanel(trade, currencies)
+  const mixpanelSwapInit = () => {
+    mixpanelHandler(MIXPANEL_TYPE.SWAP_INITIATED)
+  }
+
+  useEffect(() => {
+    if (isExpertMode) {
+      mixpanelHandler(MIXPANEL_TYPE.ADVANCED_MODE_ON)
+    }
+  }, [isExpertMode])
+  useEffect(() => {
+    if (allowedSlippage !== 50) {
+      mixpanelHandler(MIXPANEL_TYPE.SLIPPAGE_CHANGED, { new_slippage: allowedSlippage / 100 })
+    }
+  }, [allowedSlippage])
   const shareUrl =
     currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]
       ? window.location.origin +
@@ -327,7 +343,13 @@ export default function Swap({ history }: RouteComponentProps) {
                     <Tab onClick={() => setActiveTab(ACTIVE_TAB.SWAP)} isActive={activeTab === ACTIVE_TAB.SWAP}>
                       <TYPE.black fontSize={18} fontWeight={500}>{t`Swap`}</TYPE.black>
                     </Tab>
-                    <Tab onClick={() => setActiveTab(ACTIVE_TAB.INFO)} isActive={activeTab === ACTIVE_TAB.INFO}>
+                    <Tab
+                      onClick={() => {
+                        mixpanelHandler(MIXPANEL_TYPE.TOKEN_INFO_CHECKED)
+                        setActiveTab(ACTIVE_TAB.INFO)
+                      }}
+                      isActive={activeTab === ACTIVE_TAB.INFO}
+                    >
                       <TYPE.black fontSize={18} fontWeight={500}>{t`Info`}</TYPE.black>
                     </Tab>
                   </TabWrapper>
@@ -335,8 +357,13 @@ export default function Swap({ history }: RouteComponentProps) {
 
                 <SwapFormActions>
                   <RefreshButton isConfirming={showConfirm} trade={trade} onRefresh={onRefresh} />
-                  <TransactionSettings tradeValid={!!trade} isShowDisplaySettings />
-                  <ShareButtonWithModal url={shareUrl} />
+                  <TransactionSettings isShowDisplaySettings />
+                  <ShareButtonWithModal
+                    url={shareUrl}
+                    onShared={() => {
+                      mixpanelHandler(MIXPANEL_TYPE.TOKEN_SWAP_LINK_SHARED)
+                    }}
+                  />
                 </SwapFormActions>
               </RowBetween>
 
@@ -549,6 +576,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           </ButtonConfirmed>
                           <ButtonError
                             onClick={() => {
+                              mixpanelSwapInit()
                               if (isExpertMode) {
                                 handleSwap()
                               } else {
@@ -573,6 +601,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       ) : (
                         <ButtonError
                           onClick={() => {
+                            mixpanelSwapInit()
                             if (isExpertMode) {
                               handleSwap()
                             } else {

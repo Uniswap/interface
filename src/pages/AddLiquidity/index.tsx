@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 
@@ -14,6 +14,7 @@ import { useCurrencyConvertedToNative } from 'utils/dmm'
 import ZapIn from './ZapIn'
 import TokenPair from './TokenPair'
 import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName } from './styled'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 export default function AddLiquidity({
   match: {
@@ -40,6 +41,10 @@ export default function AddLiquidity({
 
   const [activeTab, setActiveTab] = useState(0)
 
+  const { mixpanelHandler } = useMixpanel()
+  useEffect(() => {
+    mixpanelHandler(MIXPANEL_TYPE.ADD_LIQUIDITY_INITIATED, { token_1: nativeA?.symbol, token_2: nativeB?.symbol })
+  }, [])
   return (
     <>
       <PageWrapper>

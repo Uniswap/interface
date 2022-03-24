@@ -21,6 +21,7 @@ import FarmingPoolsMarquee from 'pages/Pools/FarmingPoolsMarquee'
 import useTheme from 'hooks/useTheme'
 import FilterBarToggle from 'components/Toggle/FilterBarToggle'
 import { PageWrapper } from 'pages/CreatePool/styled'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useDebounce from 'hooks/useDebounce'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 
@@ -81,7 +82,7 @@ const Pools = ({
   const handleClearCurrencyB = useCallback(() => {
     history.push(`/pools/${currencyIdA}/undefined`)
   }, [currencyIdA, history])
-
+  const { mixpanelHandler } = useMixpanel()
   return (
     <>
       <PoolsPageWrapper>
@@ -99,6 +100,9 @@ const Pools = ({
                 to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
                   currencyIdB === '' ? undefined : currencyIdB
                 }`}
+                onClick={() => {
+                  mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_INITITATED)
+                }}
                 style={{ float: 'right', borderRadius: '4px', fontSize: '14px' }}
               >
                 <Trans>+ Create New Pool</Trans>

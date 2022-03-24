@@ -28,6 +28,7 @@ import InfoHelper from 'components/InfoHelper'
 import { isMobile } from 'react-device-detect'
 import { Info } from 'react-feather'
 import { OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const Tab = styled.div<{ active: boolean }>`
   padding: 4px 0;
@@ -208,6 +209,8 @@ export default function Pool() {
 
   const loading = v2IsLoading || loadingUserLiquidityPositions || farmLoading
 
+  const { mixpanelHandler } = useMixpanel()
+
   return (
     <>
       <PageWrapper>
@@ -234,10 +237,28 @@ export default function Pool() {
             <TitleRow>
               <Flex justifyContent="space-between" flex={1} alignItems="center">
                 <Flex sx={{ gap: '1.5rem' }} alignItems="center">
-                  <Tab active={!showStaked} onClick={() => setShowStaked(false)} role="button">
+                  <Tab
+                    active={!showStaked}
+                    onClick={() => {
+                      if (showStaked) {
+                        mixpanelHandler(MIXPANEL_TYPE.MYPOOLS_POOLS_VIEWED)
+                      }
+                      setShowStaked(false)
+                    }}
+                    role="button"
+                  >
                     Pools
                   </Tab>
-                  <Tab active={showStaked} onClick={() => setShowStaked(true)} role="button">
+                  <Tab
+                    active={showStaked}
+                    onClick={() => {
+                      if (!showStaked) {
+                        mixpanelHandler(MIXPANEL_TYPE.MYPOOLS_STAKED_VIEWED)
+                      }
+                      setShowStaked(true)
+                    }}
+                    role="button"
+                  >
                     Staked Pools
                   </Tab>
                 </Flex>

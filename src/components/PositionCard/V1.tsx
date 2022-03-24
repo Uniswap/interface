@@ -11,6 +11,7 @@ import { FixedHeightRow, HoverCard } from './index'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { useActiveWeb3React } from '../../hooks'
 import { ThemeContext } from 'styled-components'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 interface PositionCardProps extends RouteComponentProps<{}> {
   token: Token
@@ -21,6 +22,7 @@ function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
   const theme = useContext(ThemeContext)
 
   const { chainId } = useActiveWeb3React()
+  const { mixpanelHandler } = useMixpanel()
 
   return (
     <HoverCard>
@@ -48,7 +50,14 @@ function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
 
         <AutoColumn gap="8px">
           <RowBetween marginTop="10px">
-            <ButtonSecondary width="68%" as={Link} to={`/migrate/v1/${V1LiquidityBalance.token.address}`}>
+            <ButtonSecondary
+              width="68%"
+              as={Link}
+              onClick={() => {
+                mixpanelHandler(MIXPANEL_TYPE.MIGRATE_LIQUIDITY_INITIATED)
+              }}
+              to={`/migrate/v1/${V1LiquidityBalance.token.address}`}
+            >
               <Trans>Migrate</Trans>
             </ButtonSecondary>
 

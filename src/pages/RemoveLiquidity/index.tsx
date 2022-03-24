@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { t, Trans } from '@lingui/macro'
 
@@ -13,6 +13,7 @@ import ZapOut from './ZapOut'
 import TokenPair from './TokenPair'
 import { useDerivedBurnInfo } from 'state/burn/hooks'
 import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName } from './styled'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 export default function RemoveLiquidity({
   match: {
@@ -34,6 +35,10 @@ export default function RemoveLiquidity({
   )
 
   const [activeTab, setActiveTab] = useState(0)
+  const { mixpanelHandler } = useMixpanel()
+  useEffect(() => {
+    mixpanelHandler(MIXPANEL_TYPE.REMOVE_LIQUIDITY_INITIATED, { token_1: nativeA?.symbol, token_2: nativeB?.symbol })
+  }, [])
 
   return (
     <>

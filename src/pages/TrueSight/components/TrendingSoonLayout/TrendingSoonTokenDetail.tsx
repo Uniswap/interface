@@ -46,7 +46,7 @@ const TrendingSoonTokenDetail = ({
             {tokenData.name}
           </Text>
         </LogoNameContainer>
-        <SwapButtonWithOptions platforms={tokenData.platforms} />
+        <SwapButtonWithOptions platforms={tokenData.platforms} tokenData={tokenData} />
       </LogoNameSwapContainer>
       <TagWebsiteCommunityAddressContainer>
         <Tags tags={tokenData.tags} setFilter={setFilter} />

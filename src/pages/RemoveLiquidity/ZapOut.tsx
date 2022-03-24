@@ -51,7 +51,7 @@ import { useIsExpertMode, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { Wrapper } from '../Pool/styleds'
 import { calculateGasMargin, formattedNum, getZapContract } from 'utils'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { convertToNativeTokenFromETH, useCurrencyConvertedToNative } from 'utils/dmm'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
@@ -387,6 +387,11 @@ export default function ZapOut({
             addTransactionWithType(response, {
               type: 'Remove liquidity',
               summary: parsedAmounts[independentTokenField]?.toSignificant(6) + ' ' + independentToken?.symbol,
+              arbitrary: {
+                token_1: convertToNativeTokenFromETH(currencyA, chainId).symbol,
+                token_2: convertToNativeTokenFromETH(currencyB, chainId).symbol,
+                add_liquidity_method: '1 Token',
+              },
             })
 
             setTxHash(response.hash)

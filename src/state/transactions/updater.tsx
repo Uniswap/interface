@@ -10,6 +10,7 @@ import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
 import { AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC } from 'constants/index'
 import { getFullDisplayBalance } from 'utils/formatBalance'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -97,6 +98,7 @@ export default function Updater(): null {
     },
     [transactions],
   )
+  const { mixpanelHandler } = useMixpanel()
 
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
@@ -108,6 +110,7 @@ export default function Updater(): null {
           .getTransactionReceipt(hash)
           .then(receipt => {
             if (receipt) {
+              const transaction = transactions[receipt.transactionHash]
               dispatch(
                 finalizeTransaction({
                   chainId,
@@ -136,6 +139,43 @@ export default function Updater(): null {
                 },
                 hash,
               )
+              if (receipt.status === 1 && transaction && transaction.arbitrary) {
+                switch (transaction.type) {
+                  case 'Swap': {
+                    mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
+                      arbitrary: transaction.arbitrary,
+                      actual_gas: receipt.gasUsed,
+                    })
+                    break
+                  }
+                  case 'Create pool': {
+                    mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_COMPLETED, {
+                      token_1: transaction.arbitrary.token_1,
+                      token_2: transaction.arbitrary.token_2,
+                      amp: transaction.arbitrary.amp,
+                    })
+                    break
+                  }
+                  case 'Add liquidity': {
+                    mixpanelHandler(MIXPANEL_TYPE.ADD_LIQUIDITY_COMPLETED, {
+                      token_1: transaction.arbitrary.token_1,
+                      token_2: transaction.arbitrary.token_2,
+                      amp: transaction.arbitrary.amp,
+                    })
+                    break
+                  }
+                  case 'Remove liquidity': {
+                    mixpanelHandler(MIXPANEL_TYPE.REMOVE_LIQUIDITY_COMPLETED, {
+                      token_1: transaction.arbitrary.token_1,
+                      token_2: transaction.arbitrary.token_2,
+                      amp: transaction.arbitrary.amp,
+                    })
+                    break
+                  }
+                  default:
+                    break
+                }
+              }
             } else {
               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
             }

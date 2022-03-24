@@ -29,6 +29,7 @@ import { UPCOMING_POOLS } from 'constants/upcoming-pools'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useHistory } from 'react-router-dom'
 import { PageWrapper } from 'pages/CreatePool/styled'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const Farms = () => {
   const { loading, data: farms } = useFarmsData()
@@ -52,6 +53,7 @@ const Farms = () => {
         return <YieldPools loading={loading} active />
     }
   }
+  const { mixpanelHandler } = useMixpanel()
 
   return (
     <>
@@ -66,7 +68,15 @@ const Farms = () => {
 
         <TabContainer>
           <TabWrapper>
-            <Tab onClick={() => history.push('/farms?tab=active')} isActive={!tab || tab === 'active'}>
+            <Tab
+              onClick={() => {
+                if (tab && tab !== 'active') {
+                  mixpanelHandler(MIXPANEL_TYPE.FARMS_ACTIVE_VIEWED)
+                }
+                history.push('/farms?tab=active')
+              }}
+              isActive={!tab || tab === 'active'}
+            >
               <PoolTitleContainer>
                 <span>
                   <Trans>Active</Trans>
@@ -74,7 +84,15 @@ const Farms = () => {
                 {loading && <Loader style={{ marginLeft: '4px' }} />}
               </PoolTitleContainer>
             </Tab>
-            <Tab onClick={() => history.push('/farms?tab=ended')} isActive={tab === 'ended'}>
+            <Tab
+              onClick={() => {
+                if (tab !== 'ended') {
+                  mixpanelHandler(MIXPANEL_TYPE.FARMS_ENDING_VIEWED)
+                }
+                history.push('/farms?tab=ended')
+              }}
+              isActive={tab === 'ended'}
+            >
               <PoolTitleContainer>
                 <span>
                   <Trans>Ended</Trans>
@@ -82,7 +100,15 @@ const Farms = () => {
               </PoolTitleContainer>
             </Tab>
 
-            <Tab onClick={() => history.push('/farms?tab=coming')} isActive={tab === 'coming'}>
+            <Tab
+              onClick={() => {
+                if (tab !== 'coming') {
+                  mixpanelHandler(MIXPANEL_TYPE.FARMS_UPCOMING_VIEWED)
+                }
+                history.push('/farms?tab=coming')
+              }}
+              isActive={tab === 'coming'}
+            >
               <UpcomingPoolsWrapper>
                 <Trans>Upcoming</Trans>
                 {UPCOMING_POOLS.length > 0 && (
@@ -95,7 +121,15 @@ const Farms = () => {
 
             <Divider />
 
-            <Tab onClick={() => history.push('/farms?tab=vesting')} isActive={tab === 'vesting'}>
+            <Tab
+              onClick={() => {
+                if (tab !== 'vesting') {
+                  mixpanelHandler(MIXPANEL_TYPE.FARMS_MYVESTING_VIEWED)
+                }
+                history.push('/farms?tab=vesting')
+              }}
+              isActive={tab === 'vesting'}
+            >
               <PoolTitleContainer>
                 <Text>
                   <Trans>My Vesting</Trans>

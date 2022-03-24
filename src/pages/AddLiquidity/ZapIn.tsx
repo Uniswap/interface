@@ -53,7 +53,7 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
+import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
 import { Dots, Wrapper } from '../Pool/styleds'
 import {
@@ -248,8 +248,12 @@ const ZapIn = ({
             addTransactionWithType(tx, {
               type: 'Add liquidity',
               summary: userInCurrencyAmount?.toSignificant(6) + ' ' + independentToken?.symbol,
+              arbitrary: {
+                token_1: convertToNativeTokenFromETH(cA, chainId).symbol,
+                token_2: convertToNativeTokenFromETH(cB, chainId).symbol,
+                add_liquidity_method: '1 Token',
+              },
             })
-
             setTxHash(tx.hash)
           }
         }),

@@ -78,6 +78,7 @@ import { ButtonEmpty } from 'components/Button'
 import { FooterSocialLink } from 'components/Footer/Footer'
 import { dexListConfig } from 'constants/dexes'
 import { SUPPORTED_NETWORKS } from 'constants/networks'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import Banner from 'components/Banner'
 
 const KNC_NOT_AVAILABLE_IN = [
@@ -121,6 +122,7 @@ function About() {
     [chainId as ChainId]: -1,
   })
   const [indexx, setIndexx] = useState<number>(0)
+  const { mixpanelHandler } = useMixpanel()
 
   useEffect(() => {
     setIndexx(0)
@@ -319,13 +321,17 @@ function About() {
             marginTop={['40px', '48px']}
             sx={{ gap: above768 ? '24px' : '16px' }}
           >
-            <BtnPrimary as={Link} to="/swap">
+            <BtnPrimary onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_SWAP_CLICKED)} as={Link} to="/swap">
               <Repeat />
               <Text fontSize={['16px', '20px']} marginLeft="8px">
                 <Trans>Swap Now</Trans>
               </Text>
             </BtnPrimary>
-            <BtnOutlined as={Link} to={poolsMenuLink}>
+            <BtnOutlined
+              as={Link}
+              to={poolsMenuLink}
+              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
+            >
               <MoneyBag color={theme.btnOutline} />
               <Text fontSize={['16px', '20px']} marginLeft="8px">
                 <Trans>Start Earning</Trans>
@@ -450,7 +456,13 @@ function About() {
               </Flex>
 
               {above500 && (
-                <BtnPrimary margin="48px 0" width="216px" as={Link} to="/swap">
+                <BtnPrimary
+                  margin="48px 0"
+                  width="216px"
+                  as={Link}
+                  to="/swap"
+                  onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_SWAP_CLICKED)}
+                >
                   <Repeat />
                   <Text fontSize="16px" marginLeft="8px">
                     <Trans>Swap Now</Trans>
@@ -515,7 +527,12 @@ function About() {
               </div>
             </Flex>
             {!above500 && (
-              <BtnPrimary margin="40px 0" as={Link} to="/swap">
+              <BtnPrimary
+                margin="40px 0"
+                as={Link}
+                to="/swap"
+                onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_SWAP_CLICKED)}
+              >
                 <Repeat />
                 <Text fontSize={['16px', '20px']} marginLeft="8px">
                   <Trans>Swap Now</Trans>
@@ -563,13 +580,17 @@ function About() {
             marginTop={['40px', '48px']}
             sx={{ gap: above768 ? '24px' : '16px' }}
           >
-            <BtnPrimary as={Link} to={poolsMenuLink}>
+            <BtnPrimary
+              as={Link}
+              to={poolsMenuLink}
+              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
+            >
               <MoneyBag color={theme.textReverse} />
               <Text fontSize="16px" marginLeft="8px">
                 <Trans>Start Earning</Trans>
               </Text>
             </BtnPrimary>
-            <BtnOutlined as={Link} to="/farms">
+            <BtnOutlined as={Link} to="/farms" onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_VIEW_FARMS_CLICKED)}>
               <FarmIcon color={theme.btnOutline} />
               <Text fontSize="16px" marginLeft="8px">
                 <Trans>View Farms</Trans>
@@ -636,7 +657,11 @@ function About() {
             flexDirection={above768 ? 'row' : 'column'}
             maxWidth="696px"
           >
-            <BtnPrimary as={Link} to={createPoolLink}>
+            <BtnPrimary
+              as={Link}
+              to={createPoolLink}
+              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED)}
+            >
               <Plus />
               <Text marginLeft="8px">
                 <Trans>Create New Pool</Trans>

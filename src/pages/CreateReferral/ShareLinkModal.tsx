@@ -76,7 +76,7 @@ export default function ShareLinkModal({
           <Trans>Successfully Created</Trans>
         </Text>
         <InputWrapper>
-          <input type="text" value={shareUrl} />
+          <input type="text" value={shareUrl} readOnly />
           <CopyToClipboard text={shareUrl || ''} onCopy={handleCopyClick}>
             <ButtonPrimary fontSize={14} padding="12px" width="auto">
               Copy Link

@@ -107,7 +107,11 @@ const TrendingTokenItemMobileOnly = ({
                 <Trans>View chart</Trans>
               </span>
             </ButtonOutlined>
-            <SwapButtonWithOptions platforms={tokenData.platforms} style={{ flex: 1, padding: 0, minWidth: 'unset' }} />
+            <SwapButtonWithOptions
+              platforms={tokenData.platforms}
+              style={{ flex: 1, padding: 0, minWidth: 'unset' }}
+              tokenData={tokenData}
+            />
           </Flex>
 
           <Flex flexDirection="column" style={{ gap: '16px', marginTop: '4px' }}>

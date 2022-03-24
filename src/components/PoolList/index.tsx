@@ -389,7 +389,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
       })}
       <Pagination onPrev={onPrev} onNext={onNext} currentPage={currentPage} maxPage={maxPage} />
       <PoolDetailModal />
-      <ShareModal url={shareUrl} />
+      <ShareModal url={shareUrl} onShared={() => {}} />
     </div>
   )
 }

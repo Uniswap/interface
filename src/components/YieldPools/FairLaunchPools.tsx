@@ -20,6 +20,8 @@ import { useFairLaunchVersion } from 'hooks/useContract'
 import { Text } from 'rebass'
 import { Trans } from '@lingui/macro'
 import { ExternalLink } from 'theme'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { getFullDisplayBalance } from 'utils/formatBalance'
 
 interface FarmsListProps {
   fairLaunchAddress: string
@@ -35,6 +37,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const totalRewards = useFarmRewards(farms)
   const fairLaunchVersion = useFairLaunchVersion(fairLaunchAddress)
   const { harvestMultiplePools } = useFairLaunch(fairLaunchAddress)
+  const { mixpanelHandler } = useMixpanel()
 
   const handleHarvestAll = async () => {
     if (!chainId || !account) {
@@ -57,6 +60,20 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
       })
 
       const txHash = await harvestMultiplePools(poolsHaveReward.map(farm => farm.pid))
+      if (txHash) {
+        mixpanelHandler(MIXPANEL_TYPE.ALL_REWARDS_HARVESTED, {
+          reward_tokens_and_amounts:
+            totalRewards &&
+            Object.assign(
+              {},
+              ...totalRewards.map(reward => {
+                if (reward?.token?.symbol)
+                  return { [reward.token.symbol]: getFullDisplayBalance(reward.amount, reward.token.decimals) }
+                return {}
+              }),
+            ),
+        })
+      }
       dispatch(setTxHash(txHash))
     } catch (err) {
       console.error(err)

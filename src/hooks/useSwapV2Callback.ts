@@ -375,7 +375,7 @@ export function useSwapV2Callback(
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
-  const { typedValue, feeConfig } = useSwapState()
+  const { typedValue, feeConfig, saveGas } = useSwapState()
 
   const swapCalls = useSwapV2CallArguments(trade, allowedSlippage, recipientAddressOrName, feeConfig)
 
@@ -505,6 +505,8 @@ export function useSwapV2Callback(
                 inputDecimals: trade.inputAmount.currency.decimals,
                 outputDecimals: trade.outputAmount.currency.decimals,
                 withRecipient,
+                saveGas,
+                inputAmount: trade.inputAmount.toExact(),
               },
             })
 

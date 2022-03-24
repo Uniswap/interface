@@ -108,7 +108,15 @@ export function FindPoolTabs() {
   )
 }
 
-export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+export function AddRemoveTabs({
+  adding,
+  creating,
+  onShared,
+}: {
+  adding: boolean
+  creating: boolean
+  onShared?: () => void
+}) {
   const history = useHistory()
 
   const goBack = () => {
@@ -133,7 +141,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
         </Flex>
         <Flex style={{ gap: '8px' }}>
           <TransactionSettings />
-          <ShareButtonWithModal />
+          <ShareButtonWithModal onShared={onShared} />
         </Flex>
       </Wrapper>
     </Tabs>

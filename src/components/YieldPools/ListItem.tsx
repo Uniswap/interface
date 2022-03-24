@@ -33,7 +33,7 @@ import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 
 import { formattedNum, isAddressString } from 'utils'
 import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
-import { ExternalLink } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { currencyIdFromAddress } from 'utils/currencyId'
 import { t, Trans } from '@lingui/macro'
 import InfoHelper from 'components/InfoHelper'
@@ -59,6 +59,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import useTheme from 'hooks/useTheme'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import IconLock from 'assets/svg/icon_lock.svg'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useWalletModalToggle } from 'state/application/hooks'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
@@ -160,6 +161,7 @@ const ListItem = ({ farm }: ListItemProps) => {
   const balance = useTokenBalance(pairAddressChecksum)
   const staked = useStakedBalance(farm.fairLaunchAddress, farm.pid)
   const rewardUSD = useFarmRewardsUSD(farmRewards)
+  const { mixpanelHandler } = useMixpanel()
 
   const [approvalState, approve] = useApproveCallback(
     new TokenAmount(
@@ -254,6 +256,22 @@ const ListItem = ({ farm }: ListItemProps) => {
 
     try {
       const txHash = await harvest(pid, pairSymbol)
+      if (txHash) {
+        mixpanelHandler(MIXPANEL_TYPE.INDIVIDUAL_REWARD_HARVESTED, {
+          reward_tokens_and_amounts: JSON.stringify(
+            farmRewards &&
+              Object.assign(
+                {},
+                ...farmRewards.map(
+                  reward =>
+                    reward?.token?.symbol && {
+                      [reward.token.symbol]: getFullDisplayBalance(reward.amount, reward.token.decimals),
+                    },
+                ),
+              ),
+          ),
+        })
+      }
       dispatch(setTxHash(txHash))
     } catch (err) {
       console.error(err)

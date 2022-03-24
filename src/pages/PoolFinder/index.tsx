@@ -21,6 +21,7 @@ import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 enum Fields {
   TOKEN0 = 0,
@@ -99,6 +100,11 @@ export default function PoolFinder() {
 
   const native0 = useCurrencyConvertedToNative(currency0 || undefined)
   const native1 = useCurrencyConvertedToNative(currency1 || undefined)
+
+  const { mixpanelHandler } = useMixpanel()
+  useEffect(() => {
+    mixpanelHandler(MIXPANEL_TYPE.IMPORT_POOL_INITIATED)
+  }, [])
   return (
     <AppBody>
       <FindPoolTabs />

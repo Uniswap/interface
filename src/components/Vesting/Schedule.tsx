@@ -22,6 +22,7 @@ import { fixedFormatting } from 'utils/formatBalance'
 import { ScheduleWrapper, Tag } from './styleds'
 import { Flex, Text } from 'rebass'
 import { RewardLockerVersion } from 'state/farms/types'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 const Schedule = ({
   rewardLockerAddress,
@@ -37,6 +38,7 @@ const Schedule = ({
   const above768 = useMedia('(min-width: 768px)') // Extra large screen
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useTheme()
+  const { mixpanelHandler } = useMixpanel()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const rewardTokens = useMemo(() => [schedule[4]], [JSON.stringify(schedule)])
   const tokenPrices = useRewardTokenPrices(rewardTokens)
@@ -119,6 +121,13 @@ const Schedule = ({
 
     try {
       const txHash = await vestAtIndex(schedule[4].address, [schedule[5]])
+      if (txHash) {
+        mixpanelHandler(MIXPANEL_TYPE.SINGLE_REWARD_CLAIMED, {
+          reward_tokens_and_amounts: {
+            [getTokenSymbol(schedule[4], chainId)]: fixedFormatting(vestableAmount, schedule[4].decimals),
+          },
+        })
+      }
       dispatch(setTxHash(txHash))
     } catch (err) {
       console.error(err)

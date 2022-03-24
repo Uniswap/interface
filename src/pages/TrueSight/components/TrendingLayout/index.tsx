@@ -158,6 +158,7 @@ const TrendingLayout = ({
                 height: '28px',
                 zIndex: 'unset',
               }}
+              tokenData={tokenData}
             />
             <ButtonEmpty padding="0" height="100%" width="unset">
               <ChevronDown
