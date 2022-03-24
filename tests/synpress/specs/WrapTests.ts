@@ -28,8 +28,8 @@ describe('SWAP', () => {
   })
 
   it('Should display that wallet is connected to rinkeby', () => {
-    MenuBar.web3Status().should('be.visible')
-    MenuBar.networkSwitcher().should('contain.text', 'Rinkeby')
+    MenuBar.getWeb3Status().should('be.visible')
+    MenuBar.getNetworkSwitcher().should('contain.text', 'Rinkeby')
   })
 
   it('Should wrap eth to weth', () => {

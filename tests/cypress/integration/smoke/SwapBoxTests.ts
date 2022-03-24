@@ -1,7 +1,8 @@
 import { SwapPage } from '../../../pages/SwapPage'
 import { TokenPicker } from '../../../pages/TokenPicker'
+import { TokenMenu } from '../../../pages/TokenMenu'
 
-describe('Menu bar tests', () => {
+describe('Swap page smoke tests', () => {
   beforeEach(() => {
     SwapPage.visitSwapPage()
   })
@@ -38,5 +39,48 @@ describe('Menu bar tests', () => {
   it('Should not allow to type not numbers into from input', () => {
     SwapPage.typeValueTo('!#$%^&*(*)_qewruip')
     SwapPage.getToInput().should('contain.value', '')
+  })
+  it('Should allow to select wrapped eth token as to input', () => {
+    SwapPage.openTokenToSwapMenu().chooseToken('weth')
+    SwapPage.getCurrencySelectors()
+      .last()
+      .should('contain.text', 'WETH')
+  })
+  it('Should allow to select other token as to input', () => {
+    SwapPage.openTokenToSwapMenu().chooseToken('dxd')
+    SwapPage.getCurrencySelectors()
+      .last()
+      .should('contain.text', 'DXD')
+  })
+  it('Should switch the currency selectors when choosing the same value', () => {
+    SwapPage.openTokenToSwapMenu().chooseToken('weth')
+    SwapPage.getCurrencySelectors()
+      .first()
+      .click()
+    TokenMenu.chooseToken('weth')
+    SwapPage.getCurrencySelectors()
+      .first()
+      .should('contain.text', 'WETH')
+    SwapPage.getCurrencySelectors()
+      .last()
+      .should('contain.text', 'ETH')
+  })
+  it('Should switch token places when using switch button', () => {
+    SwapPage.openTokenToSwapMenu().chooseToken('weth')
+    SwapPage.switchTokens()
+    SwapPage.getCurrencySelectors()
+      .first()
+      .should('contain.text', 'WETH')
+    SwapPage.getCurrencySelectors()
+      .last()
+      .should('contain.text', 'ETH')
+  })
+  it('Should connect button be displayed instead of confirm button', () => {
+    SwapPage.getConfirmButton()
+      .should('be.visible')
+      .should('contain.text', 'Connect wallet')
+      .click()
+    cy.scrollTo('top')
+    SwapPage.getWalletConnectList().should('be.visible')
   })
 })

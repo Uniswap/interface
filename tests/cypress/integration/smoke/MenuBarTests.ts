@@ -2,29 +2,29 @@ import { MenuBar } from '../../../pages/MenuBar'
 import { NetworkSwitcher } from '../../../pages/NetworkSwitcher'
 import { SettingsDialog } from '../../../pages/SettingsDialog'
 
-describe('Menu bar tests', () => {
+describe('Menu bar smoke tests', () => {
   before(() => {
     cy.visit('/')
   })
   it('Should display nav items on every page', () => {
     MenuBar.checkHrefs()
-    MenuBar.rewards().click()
+    MenuBar.getRewards().click()
     MenuBar.checkHrefs()
-    MenuBar.bridge().click()
+    MenuBar.getBridge().click()
     MenuBar.checkHrefs()
     MenuBar.liquidity()
     MenuBar.checkHrefs()
   })
   it('Charts and Votes should have href to dxstats and snapshot', () => {
-    MenuBar.charts()
+    MenuBar.getCharts()
       .should('have.attr', 'href')
       .and('include', 'dxstats.eth.link')
-    MenuBar.vote()
+    MenuBar.getVote()
       .should('have.attr', 'href')
       .and('include', 'snapshot.org/#/swpr.eth')
   })
   it('Should redirect to correct page after clicking on nav item', () => {
-    MenuBar.rewards()
+    MenuBar.getRewards()
       .click()
       .url()
       .should('include', 'rewards')
@@ -32,25 +32,25 @@ describe('Menu bar tests', () => {
       .click()
       .url()
       .should('include', 'pools')
-    MenuBar.swap()
+    MenuBar.getSwap()
       .click()
       .url()
       .should('include', 'swap')
-    MenuBar.bridge()
+    MenuBar.getBridge()
       .click()
       .url()
       .should('include', 'bridge')
   })
   it('Should open network switcher with all networks', () => {
-    MenuBar.networkSwitcher().click()
+    MenuBar.getNetworkSwitcher().click()
     NetworkSwitcher.ethereum().should('be.visible')
     NetworkSwitcher.rinkeby().should('be.visible')
     NetworkSwitcher.arbitrum().should('be.visible')
     NetworkSwitcher.gnosis().should('be.visible')
     NetworkSwitcher.arinkeby().should('be.visible')
   })
-  it('Should open setting dialog', () => {
-    MenuBar.settings().click()
+  it('Should open settings dialog', () => {
+    MenuBar.getSettings().click()
     SettingsDialog.get().should('be.visible')
   })
 })

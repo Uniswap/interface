@@ -51,4 +51,13 @@ export class SwapPage {
   static getToInput() {
     return cy.get('[data-testid=to-value-input]')
   }
+  static switchTokens() {
+    return cy.get('[data-testid=switch-tokens-button').click()
+  }
+  static getWalletConnectList() {
+    return cy.get('[data-testid=wallet-connect-list]')
+  }
+  static getConfirmButton() {
+    return cy.get('[data-testid=switch-connect-button]')
+  }
 }

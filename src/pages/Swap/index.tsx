@@ -334,7 +334,7 @@ export default function Swap() {
                         onSwitchTokens()
                       }}
                     >
-                      <ArrowWrapper clickable>
+                      <ArrowWrapper clickable data-testid="switch-tokens-button">
                         <RotatedRepeat color={theme.text4} />
                       </ArrowWrapper>
                     </SwitchTokensAmountsContainer>
