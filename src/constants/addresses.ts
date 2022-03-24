@@ -1,7 +1,7 @@
+import { SupportedChainId } from './chains'
 import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
-import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
@@ -13,8 +13,9 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
-
+const  _V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
+_V2_ROUTER_ADDRESS[SupportedChainId.BINANCE] = '0x10ed43c718714eb63d5aa57b78b54704e256024e'
+export const V2_ROUTER_ADDRESS = _V2_ROUTER_ADDRESS
 /**
  * The older V0 governance account
  */
