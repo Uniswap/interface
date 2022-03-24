@@ -15,7 +15,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { Field } from 'state/pair/actions'
 import { currencyId } from 'utils/currencyId'
-import { CurrencyWrapper, SearchWrapper, ToolbarWrapper } from './styleds'
+import { CurrencyWrapper, SearchWrapper, ToolbarWrapper, PoolsPageWrapper } from './styleds'
 import InstructionAndGlobalData from 'pages/Pools/InstructionAndGlobalData'
 import FarmingPoolsMarquee from 'pages/Pools/FarmingPoolsMarquee'
 import useTheme from 'hooks/useTheme'
@@ -84,7 +84,7 @@ const Pools = ({
 
   return (
     <>
-      <PageWrapper>
+      <PoolsPageWrapper>
         <InstructionAndGlobalData />
 
         {above1000 ? (
@@ -258,7 +258,7 @@ const Pools = ({
             isShowOnlyActiveFarmPools={isShowOnlyActiveFarmPools}
           />
         </Panel>
-      </PageWrapper>
+      </PoolsPageWrapper>
       <SwitchLocaleLink />
     </>
   )

@@ -26,8 +26,8 @@ export default function TabInfoItems({
         value={Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}
         infoHelperText={t`Estimated return based on yearly fees of the pool`}
       />
-      <ItemCardInfoRow name={t`Volume (24H)`} value={volume} />
-      <ItemCardInfoRow name={t`Fees (24H)`} value={fee} />
+      <ItemCardInfoRow name={t`Volume (24H)`} value={formattedNum(volume, true)} />
+      <ItemCardInfoRow name={t`Fees (24H)`} value={formattedNum(fee, true)} />
       <ItemCardInfoRow name={t`Your Liquidity Balance`} value={getMyLiquidity(myLiquidity)} />
     </>
   )

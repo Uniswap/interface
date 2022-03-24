@@ -185,7 +185,7 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
           isEnded:
             poolInfo.fairLaunchVersion === FairLaunchVersion.V2
               ? poolInfo.endTime <= currentTimestamp
-              : poolInfo.endBlock <= (blockNumber || 0),
+              : poolInfo.endBlock <= (blockNumber || Number.MAX_SAFE_INTEGER),
         }
       })
 
