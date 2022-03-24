@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair } from '@swapr/sdk'
+import { Currency, CurrencyAmount, Pair, Percent } from '@swapr/sdk'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -12,9 +12,11 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
+import { FiatValueDetails } from '../FiatValueDetails'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
+  margin-bottom: 8px;
   align-items: center;
 `
 
@@ -69,17 +71,14 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
 `
 
 const Container = styled.div<{ focused: boolean }>`
-  height: 80px;
   background-color: ${({ theme }) => theme.bg1And2};
   border: solid 1px ${({ focused, theme }) => (focused ? theme.bg3 : theme.bg1And2)};
   border-radius: 12px;
   transition: border 0.3s ease;
-  padding: 17px 22px;
+  padding: 18px 22px;
 `
 
-const Content = styled.div`
-  height: 46px;
-`
+const Content = styled.div``
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   margin: ${({ active }) => (active ? '0 0 0 6px' : '0')};
@@ -88,28 +87,16 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   letter-spacing: 0.08em;
 `
 
-const StyledBalanceMax = styled.button`
-  font-size: 11px;
-  line-height: 13px;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  margin-right: 4px;
-  color: ${({ theme }) => theme.purple3};
-  text-decoration: underline;
-  outline: none;
-  background: transparent;
-  border: none;
-`
-
 const UppercaseHelper = styled.span`
   text-transform: uppercase;
 `
+
+const FiatRow = styled.div``
 
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
   onMax?: () => void
-  showMaxButton: boolean
   label?: string
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
@@ -123,14 +110,15 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   customBalanceText?: string
   balance?: CurrencyAmount
+  fiatValue?: CurrencyAmount | null
+  priceImpact?: Percent
 }
 
 export default function CurrencyInputPanel({
   value,
   onUserInput,
   onMax,
-  showMaxButton,
-  label = 'Input',
+  label,
   onCurrencySelect,
   currency,
   disableCurrencySelect = false,
@@ -142,7 +130,9 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
-  balance
+  balance,
+  fiatValue,
+  priceImpact
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -168,34 +158,12 @@ export default function CurrencyInputPanel({
     <InputPanel id={id}>
       <Container focused={focused}>
         <Content>
-          {!hideInput && (
+          {!hideInput && label && (
             <LabelRow>
               <RowBetween>
                 <TYPE.body fontWeight="600" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
                   <UppercaseHelper>{label}</UppercaseHelper>
                 </TYPE.body>
-                {account && (
-                  <TYPE.body
-                    onClick={onMax}
-                    fontWeight="600"
-                    fontSize="11px"
-                    lineHeight="13px"
-                    letterSpacing="0.08em"
-                    style={{
-                      display: 'inline',
-                      cursor:
-                        !hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance)
-                          ? 'pointer'
-                          : 'auto'
-                    }}
-                  >
-                    <UppercaseHelper>
-                      {!hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance)
-                        ? (customBalanceText ?? 'Balance: ') + (balance || selectedCurrencyBalance)?.toSignificant(6)
-                        : '-'}
-                    </UppercaseHelper>
-                  </TYPE.body>
-                )}
               </RowBetween>
             </LabelRow>
           )}
@@ -212,9 +180,6 @@ export default function CurrencyInputPanel({
                   }}
                   disabled={disabled}
                 />
-                {account && (currency || pair) && showMaxButton && label !== 'To' && (
-                  <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
-                )}
               </>
             )}
             <CurrencySelect
@@ -250,6 +215,37 @@ export default function CurrencyInputPanel({
               </Aligner>
             </CurrencySelect>
           </InputRow>
+          <FiatRow>
+            <RowBetween>
+              {fiatValue && <FiatValueDetails fiatValue={fiatValue?.toFixed(2)} priceImpact={priceImpact} />}
+              {account && (
+                <TYPE.body
+                  onClick={onMax}
+                  fontWeight="600"
+                  fontSize="10px"
+                  lineHeight="13px"
+                  letterSpacing="0.08em"
+                  style={{
+                    display: 'inline',
+                    marginLeft: 'auto',
+                    cursor:
+                      !hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance) ? 'pointer' : 'auto'
+                  }}
+                >
+                  <UppercaseHelper>
+                    {!hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance) && (
+                      <>
+                        {customBalanceText ?? t('balance')}
+                        <TYPE.small as="span" fontWeight="600" color="text3" style={{ textDecoration: 'underline' }}>
+                          {(balance || selectedCurrencyBalance)?.toSignificant(6)}
+                        </TYPE.small>
+                      </>
+                    )}
+                  </UppercaseHelper>
+                </TYPE.body>
+              )}
+            </RowBetween>
+          </FiatRow>
         </Content>
       </Container>
       {!disableCurrencySelect && onCurrencySelect && (

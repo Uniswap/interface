@@ -12,7 +12,7 @@ export interface Colors {
   text3: Color
   text4: Color
   text5: Color
-
+  text6: Color
   // backgrounds / greys
   bg1: Color
   bg1And2: Color
@@ -21,6 +21,8 @@ export interface Colors {
   bg4: Color
   bg5: Color
   bg6: Color
+  bg7: Color
+  bg8: Color
 
   modalBG: Color
   advancedBG: Color
@@ -48,7 +50,7 @@ export interface Colors {
   yellow1: Color
   yellow2: Color
   blue1: Color
-
+  gray1: Color
   // new UI refactor colors, taken from ZeroHeight
   mainPurple: Color
   purpleBase: Color

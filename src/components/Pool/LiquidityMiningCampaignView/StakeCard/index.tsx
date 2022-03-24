@@ -103,7 +103,7 @@ export const StyledButtonDark = styled(ButtonDark)`
   text-transform: uppercase;
   color: #c0baf7;
   border: 1px solid #2a2f42;
-  background: #191a24;
+  background: ${({ theme }) => theme.bg8};
 `
 
 interface FullPositionCardProps {
