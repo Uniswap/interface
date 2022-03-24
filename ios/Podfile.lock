@@ -1,5 +1,6 @@
 PODS:
   - boost (1.76.0)
+  - CryptoSwift (1.4.3)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.5)
   - EXApplication (4.0.0):
@@ -483,6 +484,7 @@ PODS:
   - Sentry (7.3.0):
     - Sentry/Core (= 7.3.0)
   - Sentry/Core (7.3.0)
+  - Starscream (3.1.1)
   - vision-camera-ocr (0.1.0):
     - GoogleMLKit/TextRecognition
     - React-Core
@@ -490,6 +492,9 @@ PODS:
     - React
     - React-callinvoker
     - React-Core
+  - WalletConnectSwift (1.6.0):
+    - CryptoSwift (~> 1.4)
+    - Starscream (~> 3.1)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -552,10 +557,12 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - vision-camera-ocr (from `../node_modules/vision-camera-ocr`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
+  - WalletConnectSwift (= 1.6.0)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
+    - CryptoSwift
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -581,6 +588,8 @@ SPEC REPOS:
     - PromisesObjC
     - Protobuf
     - Sentry
+    - Starscream
+    - WalletConnectSwift
 
 EXTERNAL SOURCES:
   boost:
@@ -702,6 +711,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
+  CryptoSwift: a0799ee936271bd2253a006f1e4523df21845000
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   EthersRS: d9bd4b6d742bfc017670e52badf9cb08cf8715fe
   EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
@@ -781,10 +791,12 @@ SPEC CHECKSUMS:
   RNSentry: 49abc89b0190b4c8afe0fa5d065f98e36cb53233
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   Sentry: 9a4e621430e2dae4477d791f2f7e905720b6efbf
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   vision-camera-ocr: 4a70ae5bbc6a8ed83b607bfb27bf1ccfbe7fc25d
   VisionCamera: e3f4eea37f32f9a2ab40ce560940174a5258abaf
+  WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
   Yoga: c11abbf5809216c91fcd62f5571078b83d9b6720
 
-PODFILE CHECKSUM: 081665618de463ee5a571b8a1f30b52b86c89bd8
+PODFILE CHECKSUM: ff6f61d18f8b28de33c9c2772484c1be21b81652
 
 COCOAPODS: 1.11.3

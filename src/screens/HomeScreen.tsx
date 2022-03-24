@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { AppStackParamList } from 'src/app/navigation/types'
 import Clock from 'src/assets/icons/clock.svg'
 import QrCode from 'src/assets/icons/qr-code.svg'
+import Scan from 'src/assets/icons/scan.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AccountCardList } from 'src/components/AccountCardList/AccountCardList'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -68,6 +69,8 @@ export function HomeScreen({ navigation }: Props) {
   const onPressSettings = () =>
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
 
+  const onPressScan = () => {}
+
   if (!activeAccount)
     return (
       <Screen>
@@ -85,7 +88,10 @@ export function HomeScreen({ navigation }: Props) {
       <Flex gap="md" mt="lg" mx="lg">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between">
           <AccountHeader />
-          <Flex flexDirection="row">
+          <Flex centered row>
+            <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+              <Scan height={20} stroke="gray100" width={20} />
+            </Button>
             <Button name={ElementName.Settings} onPress={onPressSettings}>
               <Settings height={24} stroke="gray100" width={24} />
             </Button>

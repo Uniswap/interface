@@ -68,6 +68,7 @@ export const enum ElementName {
   TransactionSummaryHash = 'transaction-summary',
   TryAgain = 'try-again',
   Unwrap = 'unwrap',
+  WalletConnectScan = 'wallet-connect-scan',
   Wrap = 'wrap',
   NFTAssetItem = 'nft-asset-item',
   NFTCollectionItem = 'nft-collection-item',
