@@ -28,26 +28,24 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): { state: TradeState; trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined } {
-  const [currencyIn, currencyOut] = useMemo(
-    () =>
-      tradeType === TradeType.EXACT_INPUT
-        ? [amountSpecified?.currency, otherCurrency]
-        : [otherCurrency, amountSpecified?.currency],
-    [tradeType, amountSpecified, otherCurrency]
-  )
+  const [currencyIn, currencyOut] =
+    tradeType === TradeType.EXACT_INPUT
+      ? [amountSpecified?.currency, otherCurrency]
+      : [otherCurrency, amountSpecified?.currency]
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, currencyOut)
 
   const quoter = useV3Quoter()
   const { chainId } = useActiveWeb3React()
-  const quotesResults = useSingleContractWithCallData(
-    quoter,
-    amountSpecified
-      ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType).calldata)
-      : [],
-    {
-      gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
-    }
+  const callData = useMemo(
+    () =>
+      amountSpecified
+        ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType).calldata)
+        : [],
+    [amountSpecified, routes, tradeType]
   )
+  const quotesResults = useSingleContractWithCallData(quoter, callData, {
+    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
+  })
 
   return useMemo(() => {
     if (
