@@ -1,22 +1,23 @@
-import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
-import styled from 'styled-components/macro'
-import { DarkGreyCard, GreyCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import { RowFixed, RowFlat } from 'components/Row'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { TYPE, StyledInternalLink, CustomLightSpinner } from 'theme'
-import HoverInlineText from 'components/HoverInlineText'
-import { getBlockFromTimestamp, getTokenData, useEthPrice, useKibaPairData, useTopPairData } from 'state/logs/utils'
-import { useCurrency } from 'hooks/Tokens'
-import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers'
-import _ from 'lodash'
-import { TrendingUp as ChevronUp, TrendingDown as  ChevronDown } from 'react-feather'
-import { LoadingRows } from 'pages/Pool/styleds'
 import Badge, { BadgeVariant } from 'components/Badge'
-import { useWeb3React } from '@web3-react/core'
-import { fetchBscTokenData, getBlocksFromTimestamps, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from 'state/logs/bscUtils'
+import { TrendingDown as ChevronDown, TrendingUp as ChevronUp } from 'react-feather'
+import { CustomLightSpinner, StyledInternalLink, TYPE } from 'theme'
+import { DarkGreyCard, GreyCard } from 'components/Card'
 import Marquee, { Motion } from "react-marquee-slider";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { RowFixed, RowFlat } from 'components/Row'
+import { fetchBscTokenData, getBlocksFromTimestamps, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from 'state/logs/bscUtils'
+import { getBlockFromTimestamp, getTokenData, useCulturePairData, useEthPrice, useKibaPairData, useTopPairData } from 'state/logs/utils'
+
+import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers'
+import { AutoColumn } from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import HoverInlineText from 'components/HoverInlineText'
+import { LoadingRows } from 'pages/Pool/styleds'
+import _ from 'lodash'
+import styled from 'styled-components/macro'
+import { useCurrency } from 'hooks/Tokens'
 import useInterval from 'hooks/useInterval'
+import { useWeb3React } from '@web3-react/core'
 
 const CardWrapper = styled(StyledInternalLink)`
   min-width: 190px;
@@ -92,14 +93,14 @@ const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: numb
     <CardWrapper to={'/selective-charts/' + tokenData.id + '/' + tokenData.symbol}>
       <GreyCard padding="3px">
         <RowFixed>
-          <AutoColumn gap="3px" style={{ marginLeft: '12px' }}>
+          <AutoColumn gap="3px" style={{ marginLeft: '3px' }}>
             <TYPE.label fontSize="13px">
 
               <div style={{ display: 'flex', flexFlow: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <small><Badge style={{ marginRight: "2px" }} variant={BadgeVariant.POSITIVE_OUTLINE}>{index + 1}</Badge></small>
 
                 <CurrencyLogo style={{ marginRight: "2px" }} currency={(chainId === 1 || !chainId) ? token : tokenData} size="20px" />
-                <HoverInlineText text={chainId === 56 ? tokenData?.symbol : tokenData?.symbol?.substring(0, tokenData?.symbol?.length >= 5 ? 5 : tokenData.symbol.length)} />
+                <HoverInlineText text={chainId === 56 ? tokenData?.symbol : tokenData?.symbol?.substring(0, tokenData?.symbol?.length >= 7 ? 7 : tokenData.symbol.length)} />
                 {!!tokenData?.priceChangeUSD && (
                   <>
                     {tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp;
@@ -127,6 +128,7 @@ export default function TopTokenMovers() {
   const [t24, t48, ,] = getDeltaTimestamps()
   const timestampsFromBlocks = useBlocksFromTimestamps([t24, t48])
   const kibaPair = useKibaPairData()
+  const culturePairs = useCulturePairData()
   const [hasEffectRan, setHasEffectRan] = React.useState(false);
   React.useEffect(() => {
     //clear out the tokens for refetch on network switch
@@ -134,6 +136,7 @@ export default function TopTokenMovers() {
     setAllTokens([])
   }, [chainId])
   const fn = useCallback(async (isIntervalled: boolean) => {
+    console.log(culturePairs)
     // validate the required parameters are all met before initializing a fetch
     const { blocks } = timestampsFromBlocks;
     const shouldEffectRun = !hasEffectRan || isIntervalled;
@@ -146,6 +149,8 @@ export default function TopTokenMovers() {
         kibaPair.data &&
         allTokenData.data.pairs &&
         kibaPair.data.pairs && 
+        culturePairs.data && 
+        culturePairs.data.pairs &&
         ((chainId === 1 && 
           ethPrice &&
           ethPriceOld || 
@@ -159,8 +164,9 @@ export default function TopTokenMovers() {
         const blockOne: number = blocks[0].number, blockTwo: number = blocks[1].number;
         const allTokens = await Promise.all(
           [
+            ...kibaPair.data.pairs,
+            ...culturePairs.data.pairs,
             ...allTokenData.data.pairs,
-            ...kibaPair.data.pairs
           ].map(async (pair: any) => {
             const value = (!chainId || chainId === 1) ? await getTokenData(pair.token0.id, ethPrice, ethPriceOld, blockOne, blockTwo) as any : await fetchBscTokenData(pair.token0.id, bnbPrices?.current, bnbPrices?.oneDay, blockOne, blockTwo)
             value.chainId = chainId ?? 1;
@@ -170,12 +176,13 @@ export default function TopTokenMovers() {
         setAllTokens(allTokens);
       }
     }
-  }, [timestampsFromBlocks, ethPrice, ethPriceOld, bnbPrices, hasEffectRan, chainId, kibaPair, allTokens, allTokenData])
+  }, [timestampsFromBlocks, ethPrice, ethPriceOld, bnbPrices, hasEffectRan, chainId, kibaPair, allTokens, allTokenData, culturePairs])
 
   React.useEffect(() => {
     let cancelled = false;
     if (allTokenData.loading) return;
     if (kibaPair.loading) return;
+    if (culturePairs.loading) return;
     if (!hasEffectRan &&
       !cancelled &&
       allTokenData &&
@@ -193,6 +200,7 @@ export default function TopTokenMovers() {
 
   },
     [
+      culturePairs,
       hasEffectRan,
       allTokenData,
       ethPrice,
@@ -206,7 +214,8 @@ export default function TopTokenMovers() {
   const topPriceIncrease = useMemo(() => {
     return _.uniqBy([
       // slot kiba and any paying / partnerships at #1 always
-      ...allTokens.filter((a: any) => ["KIBA", "CCv2"].includes(a?.symbol) || a?.name === 'CryptoCart V2'),
+      ...allTokens.filter((a:any) => ["kiba"].includes(a?.symbol?.toLowerCase()) || a?.name?.toLowerCase() === 'kiba inu'),
+      ...allTokens.filter((a: any) => [ "ccv2", "stilton", "vulture"].includes(a?.symbol.toLowerCase()) || ['vulture', 'stilton musk', 'cryptocartv2'].includes(a?.name?.toLowerCase())),
       ..._.uniqBy(allTokens, (i: any) => {
         return i?.id
       }).sort((a: any, b: any) => {

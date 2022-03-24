@@ -1,25 +1,26 @@
-// a list of tokens by chain
-import { Currency, Token } from '@uniswap/sdk-core'
-import { binanceTokens } from 'utils/binance.tokens'
-import { SupportedChainId } from './chains'
 import {
   AMPL,
   DAI,
+  DAI_OPTIMISM,
+  ETH2X_FLI,
   ExtendedEther,
   FEI,
   FRAX,
   FXS,
-  renBTC,
   TRIBE,
   USDC,
   USDT,
-  WBTC,
-  ETH2X_FLI,
-  WETH9_EXTENDED,
-  DAI_OPTIMISM,
   USDT_OPTIMISM,
+  WBTC,
   WBTC_OPTIMISM,
+  WETH9_EXTENDED,
+  renBTC,
 } from './tokens'
+// a list of tokens by chain
+import { Currency, Token } from '@uniswap/sdk-core'
+
+import { SupportedChainId } from './chains'
+import { binanceTokens } from 'utils/binance.tokens'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -65,7 +66,7 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  */
 export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.MAINNET]: [
-    new Token(SupportedChainId.MAINNET, '0x005D1123878Fc55fbd56b54C73963b234a64af3c', 9, 'KIBA', 'Kiba Inu'),
+    new Token(SupportedChainId.MAINNET, '0x005d1123878fc55fbd56b54c73963b234a64af3c', 9, 'KIBA', 'Kiba Inu'),
     ExtendedEther.onChain(SupportedChainId.MAINNET),
     DAI,
     USDC,
