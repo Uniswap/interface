@@ -5,7 +5,7 @@ import { SUBGRAPH_BLOCK_NUMBER } from './queries'
 const EXCHANGE_SUBGRAPH_URLS = {
   mainnet: ['https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm'],
   mainnetStaging: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'],
-  ropsten: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-ropsten'],
+  ropsten: ['https://api.thegraph.com/subgraphs/name/nguyenhuudungz/dmm-exchange-ropsten'],
   polygon: [
     'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-matic',
     'https://polygon-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-matic',

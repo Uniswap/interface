@@ -10,7 +10,7 @@ export const defaultExchangeClient: ApolloClient<NormalizedCacheObject> = new Ap
 })
 
 const ropstenExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-ropsten',
+  uri: 'https://api.thegraph.com/subgraphs/name/nguyenhuudungz/dmm-exchange-ropsten',
   cache: new InMemoryCache(),
 })
 
