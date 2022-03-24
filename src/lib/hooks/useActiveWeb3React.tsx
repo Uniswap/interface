@@ -59,5 +59,13 @@ export function Web3Provider({ provider, jsonRpcEndpoint, children }: PropsWithC
     setWeb3(priorityWeb3React)
   }, [priorityWeb3React, setWeb3])
 
+  // Log web3 errors to facilitate debugging.
+  const error = priorityConnector.usePriorityError()
+  useEffect(() => {
+    if (error) {
+      console.error('web3 error:', error)
+    }
+  }, [error])
+
   return <>{children}</>
 }
